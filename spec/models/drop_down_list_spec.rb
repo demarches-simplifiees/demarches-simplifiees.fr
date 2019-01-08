@@ -40,24 +40,4 @@ describe DropDownList do
 
     it { expect(dropdownlist.disabled_options).to match(['--top--', '--troupt--']) }
   end
-
-  describe 'selected_options' do
-    let(:dropdownlist) do
-      create(:drop_down_list, type_de_champ: type_de_champ)
-    end
-
-    context 'when multiple' do
-      let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list) }
-      let(:champ) { type_de_champ.champ.build(value: '["1","2"]').decorate }
-
-      it { expect(dropdownlist.selected_options(champ)).to match(['1', '2']) }
-    end
-
-    context 'when simple' do
-      let(:type_de_champ) { build(:type_de_champ_drop_down_list) }
-      let(:champ) { type_de_champ.champ.build(value: '1').decorate }
-
-      it { expect(dropdownlist.selected_options(champ)).to match(['1']) }
-    end
-  end
 end

@@ -11,12 +11,17 @@ feature 'Creating a new dossier:' do
     end
 
     context 'when the procedure has identification by individual' do
-      let(:procedure) { create(:procedure, :published, :for_individual, :with_type_de_champ, :with_two_type_de_piece_justificative, ask_birthday: ask_birthday) }
+      let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_type_de_champ, :with_two_type_de_piece_justificative, ask_birthday: ask_birthday) }
       let(:ask_birthday) { false }
       let(:expected_birthday) { nil }
 
       before do
         visit commencer_path(path: procedure.path)
+
+        expect(page).to have_content(procedure.libelle)
+        expect(page).to have_content(procedure.description)
+        expect(page).to have_content(procedure.service.email)
+
         fill_in 'individual_nom',    with: 'Nom'
         fill_in 'individual_prenom', with: 'Prenom'
       end
@@ -58,7 +63,7 @@ feature 'Creating a new dossier:' do
     end
 
     context 'when identifying through SIRET' do
-      let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_two_type_de_piece_justificative) }
+      let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ, :with_two_type_de_piece_justificative) }
       let(:dossier) { procedure.dossiers.last }
 
       before do
@@ -74,7 +79,11 @@ feature 'Creating a new dossier:' do
 
       scenario 'the user can enter the SIRET of its etablissement and create a new draft', vcr: { cassette_name: 'api_adresse_search_paris_3' }, js: true do
         visit commencer_path(path: procedure.path)
+
         expect(page).to have_current_path(siret_dossier_path(dossier))
+        expect(page).to have_content(procedure.libelle)
+        expect(page).to have_content(procedure.description)
+        expect(page).to have_content(procedure.service.email)
 
         fill_in 'Numéro SIRET', with: siret
         click_on 'Valider'

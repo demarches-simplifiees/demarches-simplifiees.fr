@@ -1,7 +1,7 @@
 #first-block
   .en-cours
     - if @procedure.logo.present?
-      = image_tag @procedure.decorate.logo_img, style: 'width: 30px;'
+      = image_tag logo_img(@procedure), style: 'width: 30px;'
     %b
       = @procedure.libelle
 
@@ -14,6 +14,10 @@
       .procedure-list-element{ class: ('active' if active == 'Informations') }
         Publication
 
+    %a#onglet-description{ href: url_for(edit_admin_procedure_path(@procedure)) }
+      .procedure-list-element{ class: ('active' if active == 'Description') }
+        Description
+
     %a#onglet-services{ href: current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)) }
       .procedure-list-element
         Services
@@ -21,10 +25,6 @@
     %a#onglet-instructeurs{ href: url_for(admin_procedure_instructeurs_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Instructeurs') }
         Instructeurs
-
-    %a#onglet-description{ href: url_for(edit_admin_procedure_path(@procedure)) }
-      .procedure-list-element{ class: ('active' if active == 'Description') }
-        Description
 
     - if !@procedure.locked?
       %a#onglet-champs{ href: url_for(admin_procedure_types_de_champ_path(@procedure)) }
@@ -41,16 +41,17 @@
         .procedure-list-element{ class: ('active' if active == 'Annotations privées') }
           Annotations privées
 
-    %a#onglet-inemailsfos{ href: url_for(admin_procedure_mail_templates_path(@procedure)) }
-      .procedure-list-element{ class: ('active' if active == 'E-mails') }
-        E-mails
-
     %a#onglet-preview{ href: url_for(apercu_procedure_path(@procedure)), target: "_blank" }
       .procedure-list-element{ class: ('active' if active == 'Prévisualisation') }
         Prévisualisation
 
+    %a#onglet-inemailsfos{ href: url_for(admin_procedure_mail_templates_path(@procedure)) }
+      .procedure-list-element{ class: ('active' if active == 'E-mails') }
+        E-mails
+
     %a#onglet-attestation{ href: url_for(edit_admin_procedure_attestation_template_path(@procedure)) }
-      .procedure-list-element{ class: ('active' if active == 'Attestation') } Attestation
+      .procedure-list-element{ class: ('active' if active == 'Attestation') }
+        Attestation
 
   .split-hr-left
 

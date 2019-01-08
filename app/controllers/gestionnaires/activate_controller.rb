@@ -1,8 +1,6 @@
 class Gestionnaires::ActivateController < ApplicationController
   include TrustedDeviceConcern
 
-  layout "new_application"
-
   def new
     @gestionnaire = Gestionnaire.with_reset_password_token(params[:token])
 

@@ -39,6 +39,10 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'GET #index with sorting and pagination' do
+    before do
+      admin.procedures << create(:procedure, administrateur: admin)
+    end
+
     subject {
       get :index, params: {
         'procedures_smart_listing[page]': 1,
@@ -130,7 +134,7 @@ describe Admin::ProceduresController, type: :controller do
 
       subject { delete :destroy, params: { id: procedure_not_owned.id } }
 
-      it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 
@@ -196,6 +200,19 @@ describe Admin::ProceduresController, type: :controller do
         it { is_expected.to redirect_to(admin_procedure_types_de_champ_path(procedure_id: Procedure.last.id)) }
 
         it { expect(flash[:notice]).to be_present }
+      end
+
+      context 'when procedure is correctly saved' do
+        let!(:gestionnaire) { create(:gestionnaire, email: admin.email) }
+
+        before do
+          post :create, params: { procedure: procedure_params }
+        end
+
+        describe "admin can also instruct the procedure as a gestionnaire" do
+          subject { Procedure.last }
+          it { expect(subject.gestionnaires).to include(gestionnaire) }
+        end
       end
     end
 
@@ -494,7 +511,7 @@ describe Admin::ProceduresController, type: :controller do
 
     subject { get :new_from_existing }
     let(:grouped_procedures) { subject; assigns(:grouped_procedures) }
-    let(:response_procedures) { grouped_procedures.map{ |o, procedures| procedures }.flatten }
+    let(:response_procedures) { grouped_procedures.map { |_o, procedures| procedures }.flatten }
 
     describe 'selecting' do
       let!(:large_draft_procedure)     { create(:procedure_with_dossiers, dossiers_count: 2) }
@@ -525,8 +542,8 @@ describe Admin::ProceduresController, type: :controller do
 
       it 'groups procedures with services as well as procedures with organisations' do
         expect(grouped_procedures.length).to eq 2
-        expect(grouped_procedures.find{ |o, p| o == 'DDT des Vosges' }.last).to contain_exactly(procedure_with_service_1)
-        expect(grouped_procedures.find{ |o, p| o == 'DDT du Loiret'  }.last).to contain_exactly(procedure_with_service_2, procedure_without_service)
+        expect(grouped_procedures.find { |o, _p| o == 'DDT des Vosges' }.last).to contain_exactly(procedure_with_service_1)
+        expect(grouped_procedures.find { |o, _p| o == 'DDT du Loiret'  }.last).to contain_exactly(procedure_with_service_2, procedure_without_service)
       end
     end
   end

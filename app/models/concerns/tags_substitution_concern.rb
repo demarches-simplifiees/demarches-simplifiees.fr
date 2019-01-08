@@ -133,7 +133,7 @@ module TagsSubstitutionConcern
   end
 
   def external_link(url)
-    link_to(url, url, target: '_blank')
+    link_to(url, url, target: '_blank', rel: 'noopener')
   end
 
   def dossier_tags

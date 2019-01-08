@@ -14,7 +14,7 @@ Bundler/InsecureProtocolSource:
   Enabled: true
 
 Bundler/OrderedGems:
-  Enabled: false
+  Enabled: true
 
 Gemspec/DuplicatedAssignment:
   Enabled: true
@@ -58,7 +58,7 @@ Layout/CommentIndentation:
   Enabled: true
 
 Layout/ConditionPosition:
-  Enabled: false
+  Enabled: true
 
 Layout/DefEndAlignment:
   Enabled: false
@@ -200,7 +200,7 @@ Layout/SpaceAfterColon:
   Enabled: true
 
 Layout/SpaceAfterComma:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAfterMethodName:
   Enabled: true
@@ -224,7 +224,7 @@ Layout/SpaceAroundOperators:
   Enabled: true
 
 Layout/SpaceBeforeBlockBraces:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceBeforeComma:
   Enabled: true
@@ -252,7 +252,8 @@ Layout/SpaceInsideHashLiteralBraces:
   Enabled: true
 
 Layout/SpaceInsideArrayLiteralBrackets:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: no_space
 
 Layout/SpaceInsideParens:
   Enabled: true
@@ -339,40 +340,40 @@ Lint/EnsureReturn:
   Enabled: false
 
 Lint/FloatOutOfRange:
-  Enabled: false
+  Enabled: true
 
 Lint/FormatParameterMismatch:
-  Enabled: false
+  Enabled: true
 
 Lint/HandleExceptions:
   Enabled: false
 
 Lint/ImplicitStringConcatenation:
-  Enabled: false
+  Enabled: true
 
 Lint/IneffectiveAccessModifier:
   Enabled: false
 
 Lint/InheritException:
-  Enabled: false
+  Enabled: true
 
 Lint/InterpolationCheck:
   Enabled: true
 
 Lint/LiteralAsCondition:
-  Enabled: false
+  Enabled: true
 
 Lint/LiteralInInterpolation:
-  Enabled: false
+  Enabled: true
 
 Lint/Loop:
-  Enabled: false
+  Enabled: true
 
 Lint/MissingCopEnableDirective:
   Enabled: true
 
 Lint/MultipleCompare:
-  Enabled: false
+  Enabled: true
 
 Lint/NestedMethodDefinition:
   Enabled: false
@@ -381,7 +382,7 @@ Lint/NestedPercentLiteral:
   Enabled: true
 
 Lint/NextWithoutAccumulator:
-  Enabled: false
+  Enabled: true
 
 Lint/NonLocalExitFromIterator:
   Enabled: false
@@ -393,7 +394,9 @@ Lint/OrderedMagicComments:
   Enabled: true
 
 Lint/ParenthesesAsGroupedExpression:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - "spec/**/*"
 
 Lint/PercentStringArray:
   Enabled: false
@@ -417,16 +420,16 @@ Lint/RequireParentheses:
   Enabled: false
 
 Lint/RescueException:
-  Enabled: false
+  Enabled: true
 
 Lint/RescueType:
-  Enabled: false
+  Enabled: true
 
 Lint/ReturnInVoidContext:
   Enabled: false
 
 Lint/SafeNavigationChain:
-  Enabled: false
+  Enabled: true
 
 Lint/ScriptPermission:
   Enabled: false
@@ -435,25 +438,25 @@ Lint/ShadowedArgument:
   Enabled: true
 
 Lint/ShadowedException:
-  Enabled: false
+  Enabled: true
 
 Lint/ShadowingOuterLocalVariable:
   Enabled: false
 
 Lint/StringConversionInInterpolation:
-  Enabled: false
+  Enabled: true
 
 Lint/Syntax:
   Enabled: true
 
 Lint/UnderscorePrefixedVariableName:
-  Enabled: false
+  Enabled: true
 
 Lint/UnifiedInteger:
-  Enabled: false
+  Enabled: true
 
 Lint/UnneededCopDisableDirective:
-  Enabled: false
+  Enabled: true
 
 Lint/UnneededCopEnableDirective:
   Enabled: true
@@ -465,10 +468,10 @@ Lint/UnneededSplatExpansion:
   Enabled: false
 
 Lint/UnreachableCode:
-  Enabled: false
+  Enabled: true
 
 Lint/UnusedBlockArgument:
-  Enabled: false
+  Enabled: true
 
 Lint/UnusedMethodArgument:
   Enabled: false
@@ -483,19 +486,21 @@ Lint/UselessAccessModifier:
   Enabled: false
 
 Lint/UselessAssignment:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - "spec/**/*"
 
 Lint/UselessComparison:
-  Enabled: false
+  Enabled: true
 
 Lint/UselessElseWithoutRescue:
-  Enabled: false
+  Enabled: true
 
 Lint/UselessSetterCall:
-  Enabled: false
+  Enabled: true
 
 Lint/Void:
-  Enabled: false
+  Enabled: true
 
 Metrics/AbcSize:
   Enabled: false

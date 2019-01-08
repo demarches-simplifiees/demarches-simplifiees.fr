@@ -1,6 +1,4 @@
 class SupportController < ApplicationController
-  layout "new_application"
-
   def index
     setup_context
   end

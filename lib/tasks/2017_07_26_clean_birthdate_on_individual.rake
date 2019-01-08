@@ -3,7 +3,7 @@ require Rails.root.join("lib", "tasks", "task_helper")
 namespace :'2017_07_26_clean_birthdate_on_individual' do
   task clean: :environment do
     # remove duplicates
-    duplicate_individuals = Individual.group("dossier_id").count.select{ |_dossier_id, count| count > 1 }.keys
+    duplicate_individuals = Individual.group("dossier_id").count.select { |_dossier_id, count| count > 1 }.keys
     duplicate_individuals.each { |dossier_id| Individual.where(dossier_id: dossier_id, nom: nil).delete_all }
 
     # Match "" => nil

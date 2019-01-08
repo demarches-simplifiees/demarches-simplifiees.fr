@@ -5,12 +5,16 @@ class Admin::ProceduresController < AdminController
   before_action :retrieve_procedure, only: [:show, :edit, :delete_logo, :delete_deliberation, :delete_notice]
 
   def index
-    @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.publiees.order(published_at: :desc),
-      partial: "admin/procedures/list",
-      array: true
+    if current_administrateur.procedures.count != 0
+      @procedures = smart_listing_create :procedures,
+        current_administrateur.procedures.publiees.order(published_at: :desc),
+        partial: "admin/procedures/list",
+        array: true
 
-    active_class
+      active_class
+    else
+      redirect_to new_from_existing_admin_procedures_path
+    end
   end
 
   def archived
@@ -71,6 +75,10 @@ class Admin::ProceduresController < AdminController
       render 'new'
     else
       flash.notice = 'Démarche enregistrée.'
+      gestionnaire = Gestionnaire.find_by(email: current_administrateur.email)
+      if gestionnaire
+        gestionnaire.assign_to_procedure(@procedure)
+      end
       redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
     end
   end

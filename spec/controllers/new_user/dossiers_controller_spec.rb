@@ -7,7 +7,7 @@ describe NewUser::DossiersController, type: :controller do
     it 'are present' do
       before_actions = NewUser::DossiersController
         ._process_action_callbacks
-        .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
+        .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!, :forbid_invite_submission!)
@@ -913,8 +913,8 @@ describe NewUser::DossiersController, type: :controller do
     subject { delete :purge_champ_piece_justificative, params: { id: champ.dossier.id, champ_id: champ.id }, format: :js }
 
     context 'when dossier is owned by user' do
-      let(:dossier){ create(:dossier, user: user) }
-      let(:champ){ create(:champ_piece_justificative, dossier_id: dossier.id) }
+      let(:dossier) { create(:dossier, user: user) }
+      let(:champ) { create(:champ_piece_justificative, dossier_id: dossier.id) }
 
       it { is_expected.to have_http_status(200) }
 
@@ -924,7 +924,7 @@ describe NewUser::DossiersController, type: :controller do
       end
 
       context 'but champ is not linked to this dossier' do
-        let(:champ){ create(:champ_piece_justificative, dossier: create(:dossier)) }
+        let(:champ) { create(:champ_piece_justificative, dossier: create(:dossier)) }
 
         it { is_expected.to redirect_to(root_path) }
 
@@ -936,8 +936,8 @@ describe NewUser::DossiersController, type: :controller do
     end
 
     context 'when dossier is not owned by user' do
-      let(:dossier){ create(:dossier, user: create(:user)) }
-      let(:champ){ create(:champ_piece_justificative, dossier_id: dossier.id) }
+      let(:dossier) { create(:dossier, user: create(:user)) }
+      let(:champ) { create(:champ_piece_justificative, dossier_id: dossier.id) }
 
       it { is_expected.to redirect_to(root_path) }
 

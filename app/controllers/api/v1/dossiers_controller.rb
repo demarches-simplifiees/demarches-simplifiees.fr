@@ -6,7 +6,7 @@ class API::V1::DossiersController < APIController
   def index
     dossiers = @dossiers.page(params[:page]).per(per_page)
 
-    render json: { dossiers: dossiers.map{ |dossier| DossiersSerializer.new(dossier) }, pagination: pagination(dossiers) }, status: 200
+    render json: { dossiers: dossiers.map { |dossier| DossiersSerializer.new(dossier) }, pagination: pagination(dossiers) }, status: 200
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: 404
   end

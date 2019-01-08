@@ -36,7 +36,7 @@ class Champ < ApplicationRecord
   end
 
   def search_terms
-    [ to_s ]
+    [to_s]
   end
 
   def to_s

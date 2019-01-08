@@ -30,7 +30,7 @@ Rails.application.configure do
   end
 
   config.lograge.keep_original_rails_log = true
-  config.lograge.logger = ActiveSupport::Logger.new Rails.root.join('log', "logstash_#{Rails.env}.log")
+  config.lograge.logger = ActiveSupport::Logger.new(Rails.root.join('log', "logstash_#{Rails.env}.log"))
 
   if config.lograge.enabled
     ActiveJobLogSubscriber.attach_to(:active_job)

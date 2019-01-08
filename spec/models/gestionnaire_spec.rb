@@ -95,14 +95,14 @@ describe Gestionnaire, type: :model do
       let(:procedure_to_assign) { procedure_3 }
 
       it { is_expected.to be_truthy }
-      it { expect{ subject }.to change(gestionnaire.procedures, :count) }
+      it { expect { subject }.to change(gestionnaire.procedures, :count) }
     end
 
     context "with an already assigned procedure" do
       let(:procedure_to_assign) { procedure }
 
       it { is_expected.to be_falsey }
-      it { expect{ subject }.not_to change(gestionnaire.procedures, :count) }
+      it { expect { subject }.not_to change(gestionnaire.procedures, :count) }
     end
   end
 
@@ -390,6 +390,26 @@ describe Gestionnaire, type: :model do
       after { Timecop.return }
 
       it { expect(follow.demande_seen_at).to eq(freeze_date) }
+    end
+  end
+
+  describe '#login_token_valid?' do
+    let!(:gestionnaire) { create(:gestionnaire) }
+    let!(:good_token) { gestionnaire.login_token! }
+
+    it { expect(gestionnaire.login_token_valid?(good_token)).to be true }
+    it { expect(gestionnaire.login_token_valid?('bad_token')).to be false }
+
+    context 'when the token as expired' do
+      before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_VALIDITY + 1.minute).ago) }
+
+      it { expect(gestionnaire.login_token_valid?(good_token)).to be false }
+    end
+
+    context 'when the gestionnaire does not have a token' do
+      before { gestionnaire.update(encrypted_login_token: nil) }
+
+      it { expect(gestionnaire.login_token_valid?(nil)).to be false }
     end
   end
 

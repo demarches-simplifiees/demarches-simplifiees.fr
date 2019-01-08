@@ -12,7 +12,7 @@
       %th Actions
 
     - @procedures.each do |procedure|
-      - procedure = procedure.decorate
+      - procedure = procedure
       - admin_procedure_href = admin_procedure_path(procedure)
       %tr{ id: "tr_dossier_#{procedure.id}", data: { href: admin_procedure_href } }
         %td= link_to(procedure.id, admin_procedure_href)
@@ -20,9 +20,9 @@
         - if procedure.publiee?
           %td.procedure-lien= link_to(procedure_lien(procedure), procedure_lien(procedure))
         - if procedure.publiee_ou_archivee?
-          %td= link_to(procedure.published_at_fr, admin_procedure_href)
+          %td= link_to(procedure.published_at.present? ? procedure.published_at.strftime('%d/%m/%Y %H:%M') : "", admin_procedure_href)
         - else
-          %td= link_to(procedure.created_at_fr, admin_procedure_href)
+          %td= link_to(procedure.created_at.strftime('%d/%m/%Y %H:%M'), admin_procedure_href)
         %td
           = link_to('Cloner', admin_procedure_clone_path(procedure.id), data: { method: :put }, class: 'btn-sm btn-primary clone-btn')
           - if !procedure.publiee_ou_archivee?

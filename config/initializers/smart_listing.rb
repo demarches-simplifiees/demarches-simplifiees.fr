@@ -10,7 +10,7 @@ SmartListing.configure do |config|
     # :unlimited_per_page             => false,                       # allow infinite page size
     # :paginate                       => true,                        # allow pagination
     # :memorize_per_page              => false,                       # save per page settings in the cookie
-    :page_sizes => [10, 20, 50, 100], # set available page sizes array
+    :page_sizes => [10, 20, 50, 100] # set available page sizes array
     # :kaminari_options               => {:theme => "smart_listing"}, # Kaminari's paginate helper options
   })
 

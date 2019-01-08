@@ -5,7 +5,7 @@ describe ApplicationController, type: :controller do
     it 'is present' do
       before_actions = ApplicationController
         ._process_action_callbacks
-        .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
+        .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:set_raven_context)

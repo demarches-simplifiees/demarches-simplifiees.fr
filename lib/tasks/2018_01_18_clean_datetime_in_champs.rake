@@ -19,11 +19,11 @@ namespace :'2018_01_18_clean_datetime_in_champs' do
 
     # Match "ddmmYYYY HH:MM" => "YYYY-mm-dd HH:MM"
     datetime_champs.select { |c| /^\d{8}\s\d{2}:\d{2}$/ =~ c.value }.each do |c|
-      day = c.value[0,2]
-      month = c.value[2,2]
-      year = c.value[4,4]
-      hours = c.value[9,2]
-      minutes = c.value[12,2]
+      day = c.value[0, 2]
+      month = c.value[2, 2]
+      year = c.value[4, 4]
+      hours = c.value[9, 2]
+      minutes = c.value[12, 2]
       formated_date = "#{year}-#{month}-#{day} #{hours}:#{minutes}"
       rake_puts "cleaning #{c.value} => #{formated_date}"
       c.update_columns(value: formated_date)
