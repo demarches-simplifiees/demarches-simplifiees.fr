@@ -1,6 +1,6 @@
 .two-columns.auth
   .columns-container
-    .column.preview
+    .column.procedure-preview
       - if !@dossier
         = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo"
         .baseline.center
@@ -22,7 +22,7 @@
         .procedure-description
           = h simple_format(@dossier.procedure.description)
 
-    .column.auth-form.sign-in-form
+    .column.procedure-context-content.auth-form.sign-in-form
       - if resource_name == :user
         %p.register
           %span
