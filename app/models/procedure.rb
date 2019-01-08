@@ -4,8 +4,8 @@ class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
-  has_many :types_de_champ, -> { public_only.ordered }, dependent: :destroy
-  has_many :types_de_champ_private, -> { private_only.ordered }, class_name: 'TypeDeChamp', dependent: :destroy
+  has_many :types_de_champ, -> { root.public_only.ordered }, dependent: :destroy
+  has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', dependent: :destroy
   has_many :dossiers
   has_many :deleted_dossiers, dependent: :destroy
 
