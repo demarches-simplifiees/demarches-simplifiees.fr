@@ -104,7 +104,7 @@ Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il 
 
 ### Linting
 
-Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité code.
+Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
 
 - Faire tourner tous les linters : `bin/rake lint`
 - [AccessLint](http://accesslint.com/) tourne automatiquement sur les PRs
@@ -121,16 +121,10 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 
 ## Tâches courantes
 
-### Tâches Super Admin
+### Tâches de gestion des comptes super-admin
 
-- ajouter un compte super admin :
-  `bin/rake admin:create_admin[email-du-compte-github@exemple.com]`
-
-- lister les comptes super admin :
-  `bin/rake admin:list`
-
-- supprimer un compte super admin :
-  `bin/rake admin:delete_admin[email-du-compte-github@exemple.com]`
+Des tâches de gestion des comptes super-admin sont prévues dans le namespace `superadmin`.
+Pour les lister : `bin/rake -D superadmin:`.
 
 ### Tâches d’aide au support
 

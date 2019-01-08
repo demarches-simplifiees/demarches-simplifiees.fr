@@ -116,7 +116,7 @@ describe StatsController, type: :controller do
       create(:procedure, published_at: Time.zone.now, administrateur: administrateur_4)
     end
 
-    let(:association){ Procedure.all }
+    let(:association) { Procedure.all }
 
     subject { StatsController.new.send(:procedures_count_per_administrateur, association) }
 

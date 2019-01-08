@@ -1,12 +1,11 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe ChampDecorator do
+RSpec.describe ChampHelper, type: :helper do
   let(:type_de_champ) { create(:type_de_champ) }
   let(:champ) { type_de_champ.champ.create }
-  let(:decorator) { champ.decorate }
 
-  describe 'value' do
-    subject { decorator.value }
+  describe '.formatted_value' do
+    subject { formatted_value(champ) }
 
     describe 'for a checkbox' do
       let(:type_de_champ) { create(:type_de_champ_checkbox) }

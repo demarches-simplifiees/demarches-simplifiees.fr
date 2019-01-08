@@ -17,7 +17,7 @@ class RenderPartialService
   def self.left_panel_exist?(left_panel_url)
     file = left_panel_url.split('/').last
 
-    File.exist?(Rails.root.join('app','views', 'layouts', 'left_panels', "_#{file}.html.haml"))
+    File.exist?(Rails.root.join('app', 'views', 'layouts', 'left_panels', "_#{file}.html.haml"))
   end
 
   private
@@ -31,6 +31,6 @@ class RenderPartialService
   end
 
   def retrieve_name
-    "#{controller.to_s.parameterize.underscore}_#{method.to_s}"
+    "#{controller.to_s.parameterize.underscore}_#{method}"
   end
 end

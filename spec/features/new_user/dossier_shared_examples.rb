@@ -31,7 +31,7 @@ RSpec.shared_examples 'the user can send messages to the instructeur' do
     expect(page).to have_content(commentaire.body)
 
     fill_in 'commentaire_body', with: message_body
-    click_on 'Envoyer'
+    click_on 'Envoyer le message'
 
     expect(page).to have_current_path(messagerie_dossier_path(dossier))
     expect(page).to have_content('Message envoyé')

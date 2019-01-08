@@ -1,6 +1,4 @@
 class DemandesController < ApplicationController
-  layout "new_application"
-
   def new
   end
 

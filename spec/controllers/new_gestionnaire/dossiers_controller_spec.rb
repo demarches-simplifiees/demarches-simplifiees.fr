@@ -412,7 +412,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
     subject { delete :purge_champ_piece_justificative, params: { procedure_id: champ.dossier.procedure.id, dossier_id: champ.dossier.id, champ_id: champ.id }, format: :js }
 
     context 'when gestionnaire can process dossier' do
-      let(:champ){ create(:champ_piece_justificative, dossier_id: dossier.id, private: true) }
+      let(:champ) { create(:champ_piece_justificative, dossier_id: dossier.id, private: true) }
 
       it { is_expected.to have_http_status(200) }
 
@@ -422,7 +422,7 @@ describe NewGestionnaire::DossiersController, type: :controller do
       end
 
       context 'but champ is not linked to this dossier' do
-        let(:champ){ create(:champ_piece_justificative, dossier: create(:dossier), private: true) }
+        let(:champ) { create(:champ_piece_justificative, dossier: create(:dossier), private: true) }
 
         it { is_expected.to redirect_to(root_path) }
 
@@ -434,8 +434,8 @@ describe NewGestionnaire::DossiersController, type: :controller do
     end
 
     context 'when gestionnaire cannot process dossier' do
-      let(:dossier){ create(:dossier, procedure: create(:procedure)) }
-      let(:champ){ create(:champ_piece_justificative, dossier_id: dossier.id, private: true) }
+      let(:dossier) { create(:dossier, procedure: create(:procedure)) }
+      let(:champ) { create(:champ_piece_justificative, dossier_id: dossier.id, private: true) }
 
       it { is_expected.to redirect_to(root_path) }
 

@@ -11,7 +11,7 @@ describe ProcedurePresentation do
         { "label" => "test1", "table" => "user", "column" => "email" },
         { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }
       ],
-      sort: { "table" => "user","column" => "email","order" => "asc" },
+      sort: { "table" => "user", "column" => "email", "order" => "asc" },
       filters: { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] }
     ).id
   }
@@ -22,7 +22,7 @@ describe ProcedurePresentation do
   end
 
   describe "#sort" do
-    it { expect(procedure_presentation.sort).to eq({ "table" => "user","column" => "email","order" => "asc" }) }
+    it { expect(procedure_presentation.sort).to eq({ "table" => "user", "column" => "email", "order" => "asc" }) }
   end
 
   describe "#filters" do
@@ -78,10 +78,10 @@ describe ProcedurePresentation do
       }
 
       before do
-        procedure.types_de_champ[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.types_de_champ[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
-        procedure.types_de_champ_private[2].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.types_de_champ_private[3].update_attribute(:type_champ,TypeDeChamp.type_champs.fetch(:explication))
+        procedure.types_de_champ[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+        procedure.types_de_champ[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+        procedure.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+        procedure.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
       end
 
       subject { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure)) }

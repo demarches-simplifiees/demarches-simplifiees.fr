@@ -1,6 +1,6 @@
 .two-columns.auth
   .columns-container
-    .column.preview
+    .column.procedure-preview
       - if !@dossier
         = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo"
         .baseline.center
@@ -13,7 +13,7 @@
         .text-right
           = link_to "Fermer", users_no_procedure_url, class: "link close-procedure"
         .procedure-logos
-          = image_tag @dossier.procedure.decorate.logo_img
+          = image_tag logo_img(@dossier.procedure)
           - if @dossier.procedure.euro_flag
             = image_tag "flag_of_europe.svg"
 
@@ -22,7 +22,7 @@
         .procedure-description
           = h simple_format(@dossier.procedure.description)
 
-    .column.auth-form
+    .column.procedure-context-content.auth-form.sign-in-form
       - if resource_name == :user
         %p.register
           %span
@@ -40,13 +40,15 @@
         = f.label :password, "Mot de passe"
         = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
 
-        - if [:user, :gestionnaire].include?(resource_name)
-          .reset-password.text-right
-            = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
+        .auth-options
+          - if devise_mapping.rememberable?
+            %div
+              = f.check_box :remember_me, as: :boolean
+              = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
 
-        - if devise_mapping.rememberable?
-          = f.check_box :remember_me, as: :boolean
-          = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
+          - if [:user, :gestionnaire].include?(resource_name)
+            .text-right
+              = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
 
         = f.submit "Se connecter", class: "button large primary expand"
 
@@ -58,4 +60,4 @@
         = link_to "", france_connect_particulier_path, class: "login-with-fc"
 
       .center
-        = link_to "Qu’est-ce que FranceConnect ?", "https://app.franceconnect.gouv.fr/en-savoir-plus", target: "_blank", class: "link"
+        = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"

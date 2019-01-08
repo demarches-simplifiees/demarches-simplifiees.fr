@@ -1,6 +1,6 @@
 = form_for(commentaire, url: form_url, html: { class: 'form' }) do |f|
   = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true, class: 'message-textarea'
-  .flex.justify-between
+  .flex.justify-between.wrap
     %div
       = f.file_field :file, id: :file, accept: commentaire.file.accept_extension_list
       %label{ for: :file }
@@ -8,4 +8,4 @@
           (taille max : 20 Mo)
 
     %div
-      = f.submit 'Envoyer', class: 'button primary send', data: { disable: true }
+      = f.submit 'Envoyer le message', class: 'button primary send', data: { disable: true }

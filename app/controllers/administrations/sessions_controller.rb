@@ -1,6 +1,4 @@
 class Administrations::SessionsController < ApplicationController
-  layout "new_application"
-
   def new
   end
 

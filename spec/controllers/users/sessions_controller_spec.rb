@@ -253,13 +253,15 @@ describe Users::SessionsController, type: :controller do
   describe '#sign_in_by_link' do
     context 'when the gestionnaire has non other account' do
       let(:gestionnaire) { create(:gestionnaire) }
+      let!(:good_jeton) { gestionnaire.login_token! }
+
       before do
         allow(controller).to receive(:trust_device)
         post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }
       end
 
       context 'when the token is valid' do
-        let(:jeton) { gestionnaire.login_token! }
+        let(:jeton) { good_jeton }
 
         # TODO when the gestionnaire has no other account, and the token is valid, and the user signing in was not starting a demarche,
         # redirect to root_path, then redirect to gestionnaire_procedures_path (see root_controller)

@@ -1,7 +1,7 @@
 class Champs::YesNoChamp < Champs::CheckboxChamp
   def search_terms
     if value == 'true'
-      [ libelle ]
+      [libelle]
     end
   end
 

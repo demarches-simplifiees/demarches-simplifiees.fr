@@ -46,7 +46,7 @@ class ProcedurePresentation < ApplicationRecord
       )
     end
 
-    explanatory_types_de_champ = [:header_section, :explication].map{ |k| TypeDeChamp.type_champs.fetch(k) }
+    explanatory_types_de_champ = [:header_section, :explication].map { |k| TypeDeChamp.type_champs.fetch(k) }
 
     fields.concat procedure.types_de_champ
       .reject { |tdc| explanatory_types_de_champ.include?(tdc.type_champ) }
@@ -215,7 +215,7 @@ class ProcedurePresentation < ApplicationRecord
   def valid_columns_for_table(table)
     @column_whitelist ||= fields
       .group_by { |field| field['table'] }
-      .map { |table, fields| [table, Set.new(fields.map { |field| field['column'] }) ] }
+      .map { |table, fields| [table, Set.new(fields.map { |field| field['column'] })] }
       .to_h
 
     @column_whitelist[table] || []
