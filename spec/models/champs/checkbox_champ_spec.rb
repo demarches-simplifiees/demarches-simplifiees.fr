@@ -9,13 +9,13 @@ describe Champs::CheckboxChamp do
     context 'when the value is on' do
       let(:value) { 'on' }
 
-      it { is_expected.to eq('oui') }
+      it { is_expected.to eq('Oui') }
     end
 
     context 'when the value is off' do
       let(:value) { 'off' }
 
-      it { is_expected.to eq('non') }
+      it { is_expected.to eq('Non') }
     end
   end
 end
