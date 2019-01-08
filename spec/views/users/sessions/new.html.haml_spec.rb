@@ -10,24 +10,12 @@ describe 'users/sessions/new.html.haml', type: :view do
 
   before do
     assign(:user, User.new)
+    render
   end
 
-  context 'when user_return_to session params contains a procedure_id' do
-    before do
-      assign(:dossier, dossier)
-      render
-    end
-
-    it { expect(rendered).to have_selector('.procedure-logos') }
-    it { expect(rendered).to have_content(dossier.procedure.libelle) }
-    it { expect(rendered).to have_content(dossier.procedure.description) }
-  end
-
-  context 'when user_return_to session params not contains a procedure_id' do
-    before do
-      render
-    end
-
-    it { expect(rendered).to have_content('Un outil simple') }
+  it 'renders' do
+    expect(rendered).to have_field('Email')
+    expect(rendered).to have_field('Mot de passe')
+    expect(rendered).to have_button('Se connecter')
   end
 end
