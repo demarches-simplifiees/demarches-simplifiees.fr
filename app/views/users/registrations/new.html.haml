@@ -1,6 +1,6 @@
 .two-columns.auth
   .columns-container
-    .column.preview
+    .column.procedure-preview
       = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo"
       .baseline.center
         %h3 Un outil simple
@@ -9,7 +9,7 @@
           %br
           administratifs dématérialisés.
 
-    .column.auth-form
+    .column.procedure-context-content.auth-form
       = devise_error_messages!
       = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
         %h1 Créez-vous un compte
