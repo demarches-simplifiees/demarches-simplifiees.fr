@@ -3,20 +3,17 @@
     .columns-container
 
       .column.procedure-preview
-        - procedure = @dossier.procedure
-        .procedure-logos
-          = image_tag logo_img(procedure)
-          - if procedure.euro_flag
-            = image_tag "flag_of_europe.svg"
-        %h2.procedure-title
-          = procedure.libelle
-        .procedure-description
-          = h string_to_html(procedure.description)
+        - if @dossier
+          = render partial: 'layouts/commencer/procedure_description', locals: { procedure: @dossier.procedure }
+        - else
+          = render partial: 'layouts/commencer/no_procedure'
 
       .column.procedure-context-content
         = yield
 
 - content_for :footer do
-  = render partial: 'new_user/procedure_footer', locals: { dossier: @dossier }
+  / TODO: display the procedure footer even if there is no dossier yet
+  - if @dossier
+    = render partial: 'new_user/procedure_footer', locals: { dossier: @dossier }
 
 = render template: 'layouts/application'
