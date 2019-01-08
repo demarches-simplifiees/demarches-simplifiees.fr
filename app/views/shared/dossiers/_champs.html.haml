@@ -2,74 +2,30 @@
   %tbody
     - champs.reject(&:exclude_from_view?).each do |c|
       %tr
-        - value = formatted_value(c)
-        - case c.type_champ
-        - when TypeDeChamp.type_champs.fetch(:header_section)
+        - if c.type_champ == TypeDeChamp.type_champs.fetch(:header_section)
           %th.header-section{ colspan: 3 }
             = c.libelle
-        - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            - if value.present?
-              %ul
-                - value.split(", ").each do |item|
-                  %li
-                    = item
-        - when TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td= c.for_display
-        - when TypeDeChamp.type_champs.fetch(:dossier_link)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            - dossier = Dossier.includes(:procedure).find_by(id: value)
-            - if dossier
-              - path = dossier_linked_path(current_gestionnaire, dossier)
-              - if path.present?
-                = link_to("Dossier nº #{dossier.id}", path, target: '_blank')
-              - else
-                Dossier nº #{dossier.id}
-              %br
-              = sanitize(dossier.text_summary)
-            - else
-              Pas de dossier associé
-        - when TypeDeChamp.type_champs.fetch(:piece_justificative)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            - pj = c.piece_justificative_file
-            - if pj.attached?
-              = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: c, user_can_upload: false }
-            - else
-              Pièce justificative non fournie
-        - when TypeDeChamp.type_champs.fetch(:textarea)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = simple_format(value)
-        - when TypeDeChamp.type_champs.fetch(:siret)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              - if c.etablissement.present?
-                = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: c.etablissement, profile: profile }
-        - when TypeDeChamp.type_champs.fetch(:carte)
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              - if value.present?
-                = render partial: "shared/champs/carte/show", locals: { champ: c }
         - else
           %th.libelle
             = "#{c.libelle} :"
           %td.rich-text
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              = sanitize(value)
+              - case c.type_champ
+              - when TypeDeChamp.type_champs.fetch(:carte)
+                = render partial: "shared/champs/carte/show", locals: { champ: c }
+              - when TypeDeChamp.type_champs.fetch(:dossier_link)
+                = render partial: "shared/champs/dossier_link/show", locals: { champ: c }
+              - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+                = render partial: "shared/champs/multiple_drop_down_list/show", locals: { champ: c }
+              - when TypeDeChamp.type_champs.fetch(:piece_justificative)
+                = render partial: "shared/champs/piece_justificative/show", locals: { champ: c }
+              - when TypeDeChamp.type_champs.fetch(:siret)
+                = render partial: "shared/champs/siret/show", locals: { champ: c, profile: profile }
+              - when TypeDeChamp.type_champs.fetch(:textarea)
+                = render partial: "shared/champs/text_area/show", locals: { champ: c }
+              - else
+                = sanitize(c.to_s)
+
         - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
           %td.updated-at
             %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }

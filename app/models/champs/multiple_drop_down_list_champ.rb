@@ -2,7 +2,19 @@ class Champs::MultipleDropDownListChamp < Champ
   before_save :format_before_save
 
   def search_terms
-    drop_down_list.selected_options_without_decorator(self)
+    selected_options
+  end
+
+  def selected_options
+    value.blank? ? [] : JSON.parse(value)
+  end
+
+  def to_s
+    selected_options.join(', ')
+  end
+
+  def for_export
+    value.present? ? selected_options.join(', ') : nil
   end
 
   private
@@ -17,13 +29,5 @@ class Champs::MultipleDropDownListChamp < Champ
         self.value = json.to_s
       end
     end
-  end
-
-  def string_value
-    drop_down_list.selected_options_without_decorator(self).join(', ')
-  end
-
-  def value_for_export
-    drop_down_list.selected_options_without_decorator(self).join(', ')
   end
 end

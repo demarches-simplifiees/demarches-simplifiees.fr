@@ -1,7 +1,7 @@
 - if champ.drop_down_list && champ.drop_down_list.options.any?
   = form.select :value,
       champ.drop_down_list.options,
-      { selected: champ.drop_down_list.selected_options_without_decorator(champ),
+      { selected: champ.selected_options,
         disabled: champ.drop_down_list.disabled_options },
       multiple: true,
       class: 'select2'
