@@ -68,6 +68,7 @@ class Procedure < ApplicationRecord
 
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
+  before_create :ensure_path_exists
 
   include AASM
 
@@ -450,6 +451,14 @@ class Procedure < ApplicationRecord
 
     if times.present?
       times.percentile(p).ceil
+    end
+  end
+
+  def ensure_path_exists
+    if Flipflop.publish_draft?
+      if self.path.nil?
+        self.path = SecureRandom.uuid
+      end
     end
   end
 end
