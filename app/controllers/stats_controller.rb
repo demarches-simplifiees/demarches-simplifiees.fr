@@ -146,11 +146,13 @@ class StatsController < ApplicationController
         .count
         .map do |week, count|
           total = totals[week]
+          # By default a week is displayed by the first day of the week – but we'd rather display the last day
+          label = week.next_week
 
           if total > 0
-            [week, (count.to_f / total * 100).round(2)]
+            [label, (count.to_f / total * 100).round(2)]
           else
-            [week, 0]
+            [label, 0]
           end
         end.to_h
 
