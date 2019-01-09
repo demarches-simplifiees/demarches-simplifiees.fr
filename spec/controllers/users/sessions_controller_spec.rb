@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Users::SessionsController, type: :controller do
   let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
   let(:user) { create(:user, loged_in_with_france_connect: loged_in_with_france_connect) }
@@ -9,8 +7,6 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#create' do
-    it { expect(described_class).to be < Sessions::SessionsController }
-
     describe 'France Connect attribut' do
       before do
         post :create, params: { user: { email: user.email, password: user.password } }
