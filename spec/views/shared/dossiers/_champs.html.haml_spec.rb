@@ -17,7 +17,8 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     let(:champ2) { create(:champ, :header_section, value: "Section") }
     let(:champ3) { create(:champ, :explication, value: "mazette") }
     let(:champ4) { create(:champ, :dossier_link, value: dossier.id) }
-    let(:champs) { [champ1, champ2, champ3, champ4] }
+    let(:champ5) { create(:champ_textarea, value: "Some long text in a textarea.") }
+    let(:champs) { [champ1, champ2, champ3, champ4, champ5] }
 
     before { dossier.avis << avis }
 
@@ -32,6 +33,9 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
 
     it { is_expected.to have_link("Dossier nº #{dossier.id}") }
     it { is_expected.to include(dossier.text_summary) }
+
+    it { is_expected.to include(champ5.libelle) }
+    it { is_expected.to include(champ5.libelle) }
   end
 
   context "with a dossier champ, but we are not authorized to acces the dossier" do
