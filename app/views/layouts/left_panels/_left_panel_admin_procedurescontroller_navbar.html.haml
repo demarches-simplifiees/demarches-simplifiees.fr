@@ -20,11 +20,15 @@
 
     %a#onglet-services{ href: current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)) }
       .procedure-list-element
-        Services
+        Service
+        - if @procedure.missing_steps.include?(:service)
+          %p.missing-steps (à compléter)
 
     %a#onglet-instructeurs{ href: url_for(admin_procedure_instructeurs_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Instructeurs') }
         Instructeurs
+        - if @procedure.missing_steps.include?(:instructeurs)
+          %p.missing-steps (à compléter)
 
     - if !@procedure.locked?
       %a#onglet-champs{ href: url_for(admin_procedure_types_de_champ_path(@procedure)) }
