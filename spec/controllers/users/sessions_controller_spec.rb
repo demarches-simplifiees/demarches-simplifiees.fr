@@ -7,16 +7,8 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#create' do
-    describe 'France Connect attribut' do
-      before do
-        post :create, params: { user: { email: user.email, password: user.password } }
-        user.reload
-      end
 
-      subject { user.loged_in_with_france_connect.present? }
 
-      it { is_expected.to be_falsey }
-    end
 
     context "unified login" do
       let(:email) { 'unique@plop.com' }
