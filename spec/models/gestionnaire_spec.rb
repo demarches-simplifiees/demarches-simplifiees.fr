@@ -149,13 +149,12 @@ describe Gestionnaire, type: :model do
     end
 
     it 'syncs credentials to associated administrateur' do
-      gestionnaire = create(:gestionnaire)
-      admin = create(:administrateur, email: gestionnaire.email)
+      admin = create(:administrateur)
+      gestionnaire = admin.gestionnaire
 
-      gestionnaire.update(email: 'whoami@plop.com', password: 'super secret')
+      gestionnaire.update(password: 'super secret')
 
       admin.reload
-      expect(admin.email).to eq('whoami@plop.com')
       expect(admin.valid_password?('super secret')).to be(true)
     end
   end
