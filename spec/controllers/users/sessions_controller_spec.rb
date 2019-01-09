@@ -60,43 +60,6 @@ describe Users::SessionsController, type: :controller do
         end
       end
 
-      context 'signs administrateur in' do
-        # an admin has always an gestionnaire role
-        before { gestionnaire }
-
-        it 'signs administrateur in' do
-          post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
-
-          expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
-
-          expect(subject.current_user).to eq(user)
-          expect(subject.current_gestionnaire).to be(nil)
-          expect(subject.current_administrateur).to eq(nil)
-        end
-      end
-
-      context {
-        before do
-          user
-          gestionnaire
-        end
-
-        it 'signs user + gestionnaire + administrateur in' do
-          post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
-
-          expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
-
-          # TODO: fix me
-          # Strange behaviour: sign_out(:user) does not work in spec
-          # but seems to work in live
-          # expect(controller.current_user).to be(nil)
-
-          expect(subject.current_gestionnaire).to be(nil)
-          expect(subject.current_administrateur).to be(nil)
-          expect(user.reload.loged_in_with_france_connect).to be(nil)
-        end
-      }
-
       it 'fails to sign in with bad credentials' do
         post :create, params: { user: { email: user.email, password: 'wrong_password' } }
         expect(@response.unauthorized?).to be(true)
