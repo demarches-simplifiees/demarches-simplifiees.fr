@@ -1,59 +1,64 @@
 describe Users::SessionsController, type: :controller do
+  let(:email) { 'unique@plop.com' }
+  let(:password) { 'un super mot de passe' }
   let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
-  let(:user) { create(:user, loged_in_with_france_connect: loged_in_with_france_connect) }
+  let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
 
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
   describe '#create' do
-
-
-
-    context "unified login" do
-      let(:email) { 'unique@plop.com' }
-      let(:password) { 'un super mot de passe' }
-
-      let!(:user) { create(:user, email: email, password: password) }
+    context "when the user is also a gestionnaire and an administrateur" do
       let!(:administrateur) { create(:administrateur, :with_admin_trusted_device, email: email, password: password) }
       let(:gestionnaire) { administrateur.gestionnaire }
+      let(:trusted_device) { true }
+      let(:send_password) { password }
 
-      it 'signs user in' do
-        post :create, params: { user: { email: email, password: password } }
+      before do
+        allow(controller).to receive(:trusted_device?).and_return(trusted_device)
+        post :create, params: { user: { email: email, password: send_password } }
+        user.reload
+      end
 
-        expect(subject).to redirect_to link_sent_path(email: email)
+      context 'when the device is not trusted' do
+        let(:trusted_device) { false }
 
-        # do not know why, should be test related
-        expect(subject.current_user).to eq(user)
+        it 'redirects to the confirmation link path' do
+          expect(subject).to redirect_to link_sent_path(email: email)
 
-        expect(subject.current_gestionnaire).to be(nil)
-        expect(subject.current_administrateur).to be(nil)
-        expect(user.reload.loged_in_with_france_connect).to be(nil)
+          # do not know why, should be test related
+          expect(subject.current_user).to eq(user)
+
+          expect(subject.current_gestionnaire).to be(nil)
+          expect(subject.current_administrateur).to be(nil)
+          expect(user.reload.loged_in_with_france_connect).to be(nil)
+        end
       end
 
       context 'when the device is trusted' do
-        before do
-          allow(controller).to receive(:trusted_device?).and_return(true)
-          post :create, params: { user: { email: email, password: password } }
-        end
-
-        it 'directly log the gestionnaire' do
+        it 'signs in as user, gestionnaire and adminstrateur' do
           expect(@response.redirect?).to be(true)
           expect(subject).not_to redirect_to link_sent_path(email: email)
           # TODO when signing in as non-administrateur, and not starting a demarche, log in to gestionnaire path
           # expect(subject).to redirect_to gestionnaire_procedures_path
+
           expect(subject.current_user).to eq(user)
           expect(subject.current_gestionnaire).to eq(gestionnaire)
           expect(subject.current_administrateur).to eq(administrateur)
+          expect(user.loged_in_with_france_connect).to be(nil)
         end
       end
 
-      it 'fails to sign in with bad credentials' do
-        post :create, params: { user: { email: user.email, password: 'wrong_password' } }
-        expect(@response.unauthorized?).to be(true)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to be(nil)
-        expect(subject.current_administrateur).to be(nil)
+      context 'when the credentials are wrong' do
+        let(:send_password) { 'wrong_password' }
+
+        it 'fails to sign in with bad credentials' do
+          expect(@response.unauthorized?).to be(true)
+          expect(subject.current_user).to be(nil)
+          expect(subject.current_gestionnaire).to be(nil)
+          expect(subject.current_administrateur).to be(nil)
+        end
       end
     end
   end
