@@ -60,7 +60,14 @@
           Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers demarches-simplifiees.fr. Ne dites pas non plus aux usagers de se rendre sur le site générique demarches-simplifiees.fr, donnez-leur toujours le lien complet.
         - elsif @procedure.brouillon_avec_lien?
           - if @procedure.gestionnaires.present? && @procedure.service.present?
-            = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
+            %p
+              Cette démarche est actuellement
+              %strong en brouillon.
+            %p
+              Vous pouvez tester cette démarche avec ce lien temporaire :
+              = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
+            %p
+              Une fois que vous êtes prêt à publier définitivement votre démarche, cliquez sur le bouton "Publier" pour choisir le lien définitif de votre démarche.
           - else
             .alert.alert-info
               Pour pouvoir tester cette démarche, vous devez d’abord lui affecter
