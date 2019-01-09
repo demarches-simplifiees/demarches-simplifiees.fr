@@ -22,7 +22,7 @@
               - when TypeDeChamp.type_champs.fetch(:siret)
                 = render partial: "shared/champs/siret/show", locals: { champ: c, profile: profile }
               - when TypeDeChamp.type_champs.fetch(:textarea)
-                = render partial: "shared/champs/text_area/show", locals: { champ: c }
+                = render partial: "shared/champs/textarea/show", locals: { champ: c }
               - else
                 = sanitize(c.to_s)
 
