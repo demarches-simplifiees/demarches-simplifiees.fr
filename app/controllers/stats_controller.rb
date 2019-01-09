@@ -133,17 +133,16 @@ class StatsController < ApplicationController
       Feedback.ratings.fetch(:neutral)  => "Neutres",
       Feedback.ratings.fetch(:unhappy)  => "Mécontents"
     }
-    interval = 6.weeks.ago.beginning_of_week..1.week.ago.beginning_of_week
 
+    number_of_weeks = 6
     totals = Feedback
-      .where(created_at: interval)
-      .group_by_week(:created_at)
+      .group_by_week(:created_at, last: number_of_weeks, current: false)
       .count
 
     Feedback.ratings.values.map do |rating|
       data = Feedback
-        .where(created_at: interval, rating: rating)
-        .group_by_week(:created_at)
+        .where(rating: rating)
+        .group_by_week(:created_at, last: number_of_weeks, current: false)
         .count
         .map do |week, count|
           total = totals[week]
@@ -151,7 +150,7 @@ class StatsController < ApplicationController
           if total > 0
             [week, (count.to_f / total * 100).round(2)]
           else
-            0
+            [week, 0]
           end
         end.to_h
 
