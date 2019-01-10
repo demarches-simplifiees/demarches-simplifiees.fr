@@ -203,7 +203,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when procedure is correctly saved' do
-        let!(:gestionnaire) { create(:gestionnaire, email: admin.email) }
+        let(:gestionnaire) { admin.gestionnaire }
 
         before do
           post :create, params: { procedure: procedure_params }

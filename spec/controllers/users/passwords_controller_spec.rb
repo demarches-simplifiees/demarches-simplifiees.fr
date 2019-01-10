@@ -8,12 +8,10 @@ describe Users::PasswordsController, type: :controller do
   describe "update" do
     context "unified login" do
       let(:user) { create(:user, email: 'unique@plop.com', password: 'mot de passe complexe') }
-      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'mot de passe complexe') }
       let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'mot de passe complexe') }
 
       before do
         @token = user.send(:set_reset_password_token)
-        gestionnaire # make sure it's created
         administrateur # make sure it's created
       end
 
@@ -26,7 +24,7 @@ describe Users::PasswordsController, type: :controller do
           }
         }
         expect(subject.current_user).to eq(user)
-        expect(subject.current_gestionnaire).to eq(gestionnaire)
+        expect(subject.current_gestionnaire.email).to eq(administrateur.email)
       end
 
       it "also signs administrateur in" do

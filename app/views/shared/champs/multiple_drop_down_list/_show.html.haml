@@ -1,0 +1,5 @@
+- if champ.to_s.present?
+  %ul
+    - champ.to_s.split(", ").each do |item|
+      %li
+        = item

@@ -22,7 +22,7 @@ describe Administrateur, type: :model do
 
     it 'syncs credentials to associated administrateur' do
       administrateur = create(:administrateur)
-      gestionnaire = create(:gestionnaire, email: administrateur.email)
+      gestionnaire = administrateur.gestionnaire
 
       administrateur.update(email: 'whoami@plop.com', password: 'et encore un autre mdp')
 
