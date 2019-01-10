@@ -205,6 +205,10 @@ class Procedure < ApplicationRecord
     [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
 
     procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
+    if is_different_admin || from_library
+      procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+    end
+
     procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
     procedure.received_mail = received_mail&.dup
