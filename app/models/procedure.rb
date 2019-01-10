@@ -187,7 +187,6 @@ class Procedure < ApplicationRecord
     populate_champ_stable_ids
     procedure = self.deep_clone(include:
       {
-        types_de_piece_justificative: nil,
         attestation_template: nil,
         types_de_champ: :drop_down_list,
         types_de_champ_private: :drop_down_list
@@ -203,6 +202,7 @@ class Procedure < ApplicationRecord
 
     [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
 
+    procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
     procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
     procedure.received_mail = received_mail&.dup

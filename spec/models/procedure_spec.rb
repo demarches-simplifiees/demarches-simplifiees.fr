@@ -366,21 +366,16 @@ describe Procedure do
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
 
-      expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
-      expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size
+      expect(subject.types_de_champ.size).to eq(procedure.types_de_champ.size + 1 + procedure.types_de_piece_justificative.size)
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
       expect(subject.types_de_champ.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ.map(&:drop_down_list).compact.size
       expect(subject.types_de_champ_private.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_list).compact.size
 
-      subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
+      procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 
       subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
-        expect(stc).to have_same_attributes_as(ptc)
-      end
-
-      subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 
@@ -393,7 +388,18 @@ describe Procedure do
       expect(cloned_procedure).to have_same_attributes_as(procedure)
     end
 
-    context 'when the procedure is clone from the library' do
+    it 'should not clone piece justificatives but create corresponding champs' do
+      expect(subject.types_de_piece_justificative.size).to eq(0)
+
+      champs_pj = subject.types_de_champ[procedure.types_de_champ.size + 1, procedure.types_de_piece_justificative.size]
+      champs_pj.zip(procedure.types_de_piece_justificative).each do |stc, ptpj|
+        expect(stc.libelle).to eq(ptpj.libelle)
+        expect(stc.description).to eq(ptpj.description)
+        expect(stc.mandatory).to eq(ptpj.mandatory)
+      end
+    end
+
+    context 'when the procedure is cloned from the library' do
       let(:from_library) { true }
 
       it { expect(subject.cloned_from_library).to be(true) }
