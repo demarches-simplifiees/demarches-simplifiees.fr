@@ -41,5 +41,9 @@ describe ProcedureSerializer do
         ]
       )
     end
+
+    it "is not exposed as a type de champ" do
+      expect(subject[:types_de_champ]).not_to include(a_hash_including(libelle: type_pj.libelle))
+    end
   end
 end
