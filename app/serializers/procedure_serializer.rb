@@ -44,6 +44,10 @@ class ProcedureSerializer < ActiveModel::Serializer
     end
   end
 
+  def types_de_champ
+    object.types_de_champ.reject { |c| c.old_pj.present? }
+  end
+
   def types_de_piece_justificative
     ActiveModelSerializers::SerializableResource.new(object.types_de_piece_justificative).serializable_hash +
       PiecesJustificativesService.serialize_types_de_champ_as_type_pj(object)
