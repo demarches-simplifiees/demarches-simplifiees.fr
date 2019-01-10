@@ -412,6 +412,27 @@ describe Gestionnaire, type: :model do
     end
   end
 
+  describe '#young_login_token?' do
+    let!(:gestionnaire) { create(:gestionnaire) }
+
+    context 'when there is a token' do
+      let!(:good_token) { gestionnaire.login_token! }
+
+      context 'when the token has just been created' do
+        it { expect(gestionnaire.young_login_token?).to be true }
+      end
+
+      context 'when the token is a bit old' do
+        before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
+        it { expect(gestionnaire.young_login_token?).to be false }
+      end
+    end
+
+    context 'when there are no token' do
+      it { expect(gestionnaire.young_login_token?).to be false }
+    end
+  end
+
   private
 
   def assign(procedure_to_assign)
