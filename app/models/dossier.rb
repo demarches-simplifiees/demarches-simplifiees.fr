@@ -274,6 +274,12 @@ class Dossier < ApplicationRecord
     log_dossier_operation(gestionnaire, :passer_en_instruction)
   end
 
+  def passer_automatiquement_en_instruction!
+    en_instruction!
+
+    log_dossier_operation(nil, :passer_en_instruction, automatic_operation: true)
+  end
+
   def repasser_en_construction!(gestionnaire)
     self.en_instruction_at = nil
     en_construction!
@@ -317,10 +323,11 @@ class Dossier < ApplicationRecord
 
   private
 
-  def log_dossier_operation(gestionnaire, operation)
+  def log_dossier_operation(gestionnaire, operation, automatic_operation: false)
     dossier_operation_logs.create(
       gestionnaire: gestionnaire,
-      operation: DossierOperationLog.operations.fetch(operation)
+      operation: DossierOperationLog.operations.fetch(operation),
+      automatic_operation: automatic_operation
     )
   end
 

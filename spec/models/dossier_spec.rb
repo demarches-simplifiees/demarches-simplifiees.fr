@@ -760,4 +760,25 @@ describe Dossier do
       it { expect(long_expired_dossier).to be_retention_expired }
     end
   end
+
+  describe '#passer_en_instruction!' do
+    let(:dossier) { create(:dossier) }
+    let(:gestionnaire) { create(:gestionnaire) }
+
+    before { dossier.passer_en_instruction!(gestionnaire) }
+
+    it { expect(dossier.state).to eq('en_instruction') }
+    it { expect(dossier.followers_gestionnaires).to include(gestionnaire) }
+    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation)).to match([[gestionnaire.id, 'passer_en_instruction']]) }
+  end
+
+  describe '#passer_automatiquement_en_instruction!' do
+    let(:dossier) { create(:dossier) }
+    let(:gestionnaire) { create(:gestionnaire) }
+
+    before { dossier.passer_automatiquement_en_instruction! }
+
+    it { expect(dossier.followers_gestionnaires).not_to include(gestionnaire) }
+    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'passer_en_instruction', true]]) }
+  end
 end
