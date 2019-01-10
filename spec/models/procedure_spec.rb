@@ -336,6 +336,7 @@ describe Procedure do
     let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, order_place: 2) }
+    let!(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, procedure: procedure, order_place: 3, old_pj: { stable_id: 2713 }) }
     let!(:type_de_champ_private_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, order_place: 2) }
