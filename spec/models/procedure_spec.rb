@@ -409,6 +409,12 @@ describe Procedure do
       it 'should set service_id to nil' do
         expect(subject.service).to eq(nil)
       end
+
+      it 'should discard old pj information' do
+        subject.types_de_champ.each do |stc|
+          expect(stc.old_pj).to be_nil
+        end
+      end
     end
 
     it 'should keep service_id' do
@@ -422,6 +428,12 @@ describe Procedure do
         expect(subject.service.id).not_to eq(service.id)
         expect(subject.service.administrateur_id).not_to eq(service.administrateur_id)
         expect(subject.service.attributes.except("id", "administrateur_id", "created_at", "updated_at")).to eq(service.attributes.except("id", "administrateur_id", "created_at", "updated_at"))
+      end
+
+      it 'should discard old pj information' do
+        subject.types_de_champ.each do |stc|
+          expect(stc.old_pj).to be_nil
+        end
       end
     end
 
