@@ -96,5 +96,9 @@ describe DossierSerializer do
         ]
       )
     end
+
+    it "does not expose the PJ as a champ" do
+      expect(subject[:champs]).not_to include(a_hash_including(type_de_champ: a_hash_including(id: migrated_type_champ.id)))
+    end
   end
 end
