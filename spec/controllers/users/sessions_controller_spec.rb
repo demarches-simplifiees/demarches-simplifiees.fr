@@ -17,6 +17,10 @@ describe Users::SessionsController, type: :controller do
 
       before do
         allow(controller).to receive(:trusted_device?).and_return(trusted_device)
+        allow(GestionnaireMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
+      end
+
+      subject do
         post :create, params: { user: { email: email, password: send_password } }
         user.reload
       end
@@ -25,28 +29,47 @@ describe Users::SessionsController, type: :controller do
         let(:trusted_device) { false }
 
         it 'redirects to the confirmation link path' do
-          expect(subject).to redirect_to link_sent_path(email: email)
+          subject
+
+          expect(controller).to redirect_to link_sent_path(email: email)
 
           # do not know why, should be test related
-          expect(subject.current_user).to eq(user)
+          expect(controller.current_user).to eq(user)
 
-          expect(subject.current_gestionnaire).to be(nil)
-          expect(subject.current_administrateur).to be(nil)
-          expect(user.reload.loged_in_with_france_connect).to be(nil)
+          expect(controller.current_gestionnaire).to be(nil)
+          expect(controller.current_administrateur).to be(nil)
+          expect(user.loged_in_with_france_connect).to be(nil)
+          expect(GestionnaireMailer).to have_received(:send_login_token)
+        end
+
+        context 'and the user try to connect multiple times in a short period' do
+          before do
+            allow_any_instance_of(Gestionnaire).to receive(:young_login_token?).and_return(true)
+            allow(GestionnaireMailer).to receive(:send_login_token)
+          end
+
+          it 'does not renew nor send a new login token' do
+            subject
+
+            expect(GestionnaireMailer).not_to have_received(:send_login_token)
+          end
         end
       end
 
       context 'when the device is trusted' do
         it 'signs in as user, gestionnaire and adminstrateur' do
-          expect(@response.redirect?).to be(true)
-          expect(subject).not_to redirect_to link_sent_path(email: email)
-          # TODO when signing in as non-administrateur, and not starting a demarche, log in to gestionnaire path
-          # expect(subject).to redirect_to gestionnaire_procedures_path
+          subject
 
-          expect(subject.current_user).to eq(user)
-          expect(subject.current_gestionnaire).to eq(gestionnaire)
-          expect(subject.current_administrateur).to eq(administrateur)
+          expect(response.redirect?).to be(true)
+          expect(controller).not_to redirect_to link_sent_path(email: email)
+          # TODO when signing in as non-administrateur, and not starting a demarche, log in to gestionnaire path
+          # expect(controller).to redirect_to gestionnaire_procedures_path
+
+          expect(controller.current_user).to eq(user)
+          expect(controller.current_gestionnaire).to eq(gestionnaire)
+          expect(controller.current_administrateur).to eq(administrateur)
           expect(user.loged_in_with_france_connect).to be(nil)
+          expect(GestionnaireMailer).not_to have_received(:send_login_token)
         end
       end
 
@@ -54,10 +77,12 @@ describe Users::SessionsController, type: :controller do
         let(:send_password) { 'wrong_password' }
 
         it 'fails to sign in with bad credentials' do
-          expect(@response.unauthorized?).to be(true)
-          expect(subject.current_user).to be(nil)
-          expect(subject.current_gestionnaire).to be(nil)
-          expect(subject.current_administrateur).to be(nil)
+          subject
+
+          expect(response.unauthorized?).to be(true)
+          expect(controller.current_user).to be(nil)
+          expect(controller.current_gestionnaire).to be(nil)
+          expect(controller.current_administrateur).to be(nil)
         end
       end
     end
