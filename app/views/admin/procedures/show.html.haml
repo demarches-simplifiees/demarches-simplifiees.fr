@@ -62,7 +62,7 @@
           - if @procedure.gestionnaires.present? && @procedure.service.present?
             %p
               Cette démarche est actuellement
-              %strong en brouillon.
+              %strong en test.
             %p
               Vous pouvez tester cette démarche avec ce lien temporaire :
               = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
