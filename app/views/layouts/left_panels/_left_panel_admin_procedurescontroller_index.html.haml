@@ -11,7 +11,10 @@
   #procedure-list
     %a#draft-procedures{ :href => "#{url_for :admin_procedures_draft}" }
       .procedure-list-element{ class: @draft_class }
-        Brouillons
+        - if Flipflop.publish_draft?
+          En test
+        - else
+          Brouillons
         .badge.progress-bar-default
           = current_administrateur.procedures.brouillons.count
 
