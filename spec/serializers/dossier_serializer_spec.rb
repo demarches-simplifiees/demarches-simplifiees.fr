@@ -65,6 +65,7 @@ describe DossierSerializer do
     end
 
     let(:type_pj) { original_procedure.types_de_piece_justificative.first }
+    let(:migrated_type_champ) { procedure.types_de_champ.find_by(libelle: type_pj.libelle) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:champ_pj) { dossier.champs.last }
 
@@ -76,6 +77,15 @@ describe DossierSerializer do
 
     it "exposes the PJ in the legacy format" do
       is_expected.to include(
+        types_de_piece_justificative: [
+          {
+            "id" => type_pj.id,
+            "libelle" => type_pj.libelle,
+            "description" => type_pj.description,
+            "lien_demarche" => type_pj.lien_demarche,
+            "order_place" => type_pj.order_place
+          }
+        ],
         pieces_justificatives: [
           {
             "content_url" => champ_pj.for_api,
