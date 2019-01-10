@@ -49,7 +49,9 @@ class Champs::PieceJustificativeChamp < Champ
   end
 
   def for_api
-    Rails.application.routes.url_helpers.url_for(piece_justificative_file)
+    if piece_justificative_file.attached?
+      Rails.application.routes.url_helpers.url_for(piece_justificative_file)
+    end
   end
 
   private
