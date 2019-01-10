@@ -1,3 +1,4 @@
-.carte{ data: { geo: geo_data(champ) } }
-.geo-areas
-  = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, error: false }
+- if champ.to_s.present?
+  .carte{ data: { geo: geo_data(champ) } }
+  .geo-areas
+    = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, error: false }

@@ -149,13 +149,12 @@ describe Gestionnaire, type: :model do
     end
 
     it 'syncs credentials to associated administrateur' do
-      gestionnaire = create(:gestionnaire)
-      admin = create(:administrateur, email: gestionnaire.email)
+      admin = create(:administrateur)
+      gestionnaire = admin.gestionnaire
 
-      gestionnaire.update(email: 'whoami@plop.com', password: 'super secret')
+      gestionnaire.update(password: 'super secret')
 
       admin.reload
-      expect(admin.email).to eq('whoami@plop.com')
       expect(admin.valid_password?('super secret')).to be(true)
     end
   end
@@ -410,6 +409,27 @@ describe Gestionnaire, type: :model do
       before { gestionnaire.update(encrypted_login_token: nil) }
 
       it { expect(gestionnaire.login_token_valid?(nil)).to be false }
+    end
+  end
+
+  describe '#young_login_token?' do
+    let!(:gestionnaire) { create(:gestionnaire) }
+
+    context 'when there is a token' do
+      let!(:good_token) { gestionnaire.login_token! }
+
+      context 'when the token has just been created' do
+        it { expect(gestionnaire.young_login_token?).to be true }
+      end
+
+      context 'when the token is a bit old' do
+        before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
+        it { expect(gestionnaire.young_login_token?).to be false }
+      end
+    end
+
+    context 'when there are no token' do
+      it { expect(gestionnaire.young_login_token?).to be false }
     end
   end
 

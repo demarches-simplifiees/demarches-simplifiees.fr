@@ -1,0 +1,11 @@
+- dossier = Dossier.includes(:procedure).find_by(id: champ.to_s)
+- if dossier
+  - path = dossier_linked_path(current_gestionnaire || current_user, dossier)
+  - if path.present?
+    = link_to("Dossier nº #{dossier.id}", path, target: '_blank')
+  - else
+    Dossier nº #{dossier.id}
+  %br
+  = sanitize(dossier.text_summary)
+- else
+  Pas de dossier associé

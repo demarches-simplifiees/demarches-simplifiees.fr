@@ -4,8 +4,8 @@ class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
-  has_many :types_de_champ, -> { public_only.ordered }, dependent: :destroy
-  has_many :types_de_champ_private, -> { private_only.ordered }, class_name: 'TypeDeChamp', dependent: :destroy
+  has_many :types_de_champ, -> { root.public_only.ordered }, dependent: :destroy
+  has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', dependent: :destroy
   has_many :dossiers
   has_many :deleted_dossiers, dependent: :destroy
 
@@ -218,6 +218,8 @@ class Procedure < ApplicationRecord
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
+    admin.gestionnaire.assign_to_procedure(procedure)
+
     procedure
   end
 
@@ -358,6 +360,20 @@ class Procedure < ApplicationRecord
     TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
       type_de_champ.update_column(:stable_id, type_de_champ.id)
     end
+  end
+
+  def missing_steps
+    result = []
+
+    if service.nil?
+      result << :service
+    end
+
+    if gestionnaires.empty?
+      result << :instructeurs
+    end
+
+    result
   end
 
   private

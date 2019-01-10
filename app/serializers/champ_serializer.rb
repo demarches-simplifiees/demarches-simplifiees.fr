@@ -13,28 +13,8 @@ class ChampSerializer < ActiveModel::Serializer
     case object
     when GeoArea
       object.geometry
-    when Champs::CarteChamp
-      if object.geo_json.present?
-        object.geo_json.to_json
-      end
-    when Champs::DecimalNumberChamp
-      if object.value.present?
-        object.value.to_f
-      end
-    when Champs::IntegerNumberChamp
-      if object.value.present?
-        object.value.to_i
-      end
-    when Champs::LinkedDropDownListChamp
-      if object.value.present?
-        { primary: object.primary_value, secondary: object.secondary_value }
-      end
-    when Champs::PieceJustificativeChamp
-      if object.piece_justificative_file.attached?
-        url_for(object.piece_justificative_file)
-      end
     else
-      object.value
+      object.for_api
     end
   end
 
