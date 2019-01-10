@@ -30,8 +30,8 @@ class Users::SessionsController < Sessions::SessionsController
         redirect_to after_sign_in_path_for(:user)
       else
         gestionnaire = current_gestionnaire
-        login_token = gestionnaire.login_token!
-        GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
+
+        send_login_token_or_bufferize(gestionnaire)
 
         [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
 
@@ -102,6 +102,13 @@ class Users::SessionsController < Sessions::SessionsController
   end
 
   private
+
+  def send_login_token_or_bufferize(gestionnaire)
+    if !gestionnaire.young_login_token?
+      login_token = gestionnaire.login_token!
+      GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
+    end
+  end
 
   def error_procedure
     session["user_return_to"] = nil

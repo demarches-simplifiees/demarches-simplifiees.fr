@@ -4,6 +4,7 @@ class Gestionnaire < ApplicationRecord
   include ActiveRecord::SecureToken
 
   LOGIN_TOKEN_VALIDITY = 30.minutes
+  LOGIN_TOKEN_YOUTH = 15.minutes
 
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
@@ -209,6 +210,11 @@ class Gestionnaire < ApplicationRecord
     Flipflop.feature_set.feature(feature)
     features[feature.to_s] = true
     save
+  end
+
+  def young_login_token?
+    login_token_created_at.present? &&
+      LOGIN_TOKEN_YOUTH.ago < login_token_created_at
   end
 
   private
