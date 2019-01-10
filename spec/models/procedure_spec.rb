@@ -396,6 +396,7 @@ describe Procedure do
         expect(stc.libelle).to eq(ptpj.libelle)
         expect(stc.description).to eq(ptpj.description)
         expect(stc.mandatory).to eq(ptpj.mandatory)
+        expect(stc.old_pj[:stable_id]).to eq(ptpj.id)
       end
     end
 

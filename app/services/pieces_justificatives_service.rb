@@ -55,7 +55,10 @@ class PiecesJustificativesService
         type_champ: TypeDeChamp.type_champs.fetch(:piece_justificative),
         description: description,
         order_place: order_place,
-        mandatory: tpj.mandatory
+        mandatory: tpj.mandatory,
+        old_pj: {
+          stable_id: tpj.id
+        }
       )
     end
     if types_de_champ.count > 1
