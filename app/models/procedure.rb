@@ -184,6 +184,8 @@ class Procedure < ApplicationRecord
   end
 
   def clone(admin, from_library)
+    is_different_admin = self.administrateur_id != admin.id
+
     populate_champ_stable_ids
     procedure = self.deep_clone(include:
       {
@@ -215,7 +217,7 @@ class Procedure < ApplicationRecord
 
     if from_library
       procedure.service = nil
-    elsif self.service.present? && (self.administrateur_id != admin.id)
+    elsif self.service.present? && is_different_admin
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
