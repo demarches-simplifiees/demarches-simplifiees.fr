@@ -3,7 +3,7 @@ class Gestionnaire < ApplicationRecord
   include EmailSanitizableConcern
   include ActiveRecord::SecureToken
 
-  LOGIN_TOKEN_VALIDITY = 30.minutes
+  LOGIN_TOKEN_VALIDITY = 45.minutes
   LOGIN_TOKEN_YOUTH = 15.minutes
 
   devise :database_authenticatable, :registerable, :async,
