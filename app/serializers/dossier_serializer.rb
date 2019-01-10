@@ -52,6 +52,11 @@ class DossierSerializer < ActiveModel::Serializer
       PiecesJustificativesService.serialize_champs_as_pjs(object)
   end
 
+  def types_de_piece_justificative
+    ActiveModelSerializers::SerializableResource.new(object.types_de_piece_justificative).serializable_hash +
+      PiecesJustificativesService.serialize_types_de_champ_as_type_pj(object)
+  end
+
   def email
     object.user&.email
   end
