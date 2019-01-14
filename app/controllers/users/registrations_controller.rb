@@ -1,10 +1,9 @@
 class Users::RegistrationsController < Devise::RegistrationsController
+  include ProcedureContextConcern
+
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
-
-  # def after_sign_up_path_for(resource_or_scope)
-  #   super
-  # end
+  before_action :restore_procedure_context, only: [:new, :create]
 
   layout 'procedure_context', only: [:new, :create]
 
