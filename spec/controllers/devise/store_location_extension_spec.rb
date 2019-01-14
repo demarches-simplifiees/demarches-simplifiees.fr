@@ -9,6 +9,21 @@ RSpec.describe Devise::StoreLocationExtension, type: :controller do
   controller TestController do
   end
 
+  describe '#get_stored_location_for' do
+    context 'when a location has been previously stored' do
+      before { subject.store_location_for(:user, dossiers_path) }
+
+      it 'returns the stored location without clearing it' do
+        expect(subject.get_stored_location_for(:user)).to eq dossiers_path
+        expect(subject.stored_location_for(:user)).to eq dossiers_path
+      end
+    end
+
+    context 'when no location has been stored' do
+      it { expect(subject.get_stored_location_for(:user)).to be nil }
+    end
+  end
+
   describe "#clear_stored_location_for" do
     context 'when a location has been previously stored' do
       before { subject.store_location_for(:user, dossiers_path) }
