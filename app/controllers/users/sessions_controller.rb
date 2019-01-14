@@ -1,18 +1,15 @@
 class Users::SessionsController < Sessions::SessionsController
+  include ProcedureContextConcern
   include TrustedDeviceConcern
   include ActionView::Helpers::DateHelper
 
   layout 'procedure_context', only: [:new, :create]
 
+  before_action :restore_procedure_context, only: [:new, :create]
+
   # GET /resource/sign_in
   def new
-    if user_return_to_procedure_id.present?
-      @procedure = Procedure.active(user_return_to_procedure_id)
-    end
-
     @user = User.new
-  rescue ActiveRecord::RecordNotFound
-    error_procedure
   end
 
   # POST /resource/sign_in
@@ -80,7 +77,7 @@ class Users::SessionsController < Sessions::SessionsController
   end
 
   def no_procedure
-    session['user_return_to'] = nil
+    clear_stored_location_for(:user)
     redirect_to new_user_session_path
   end
 
@@ -110,20 +107,6 @@ class Users::SessionsController < Sessions::SessionsController
       login_token = gestionnaire.login_token!
       GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
     end
-  end
-
-  def error_procedure
-    session["user_return_to"] = nil
-    flash.alert = t('errors.messages.procedure_not_found')
-    redirect_to url_for root_path
-  end
-
-  def user_return_to_procedure_id
-    if session["user_return_to"].nil?
-      return nil
-    end
-
-    NumberService.to_number session["user_return_to"].split("?procedure_id=").second
   end
 
   def try_to_authenticate(klass, remember_me = false)
