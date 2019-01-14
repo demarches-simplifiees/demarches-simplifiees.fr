@@ -1,10 +1,10 @@
 module NewUser
   class DossiersController < UserController
+    include Devise::StoreLocationExtension
     include DossierHelper
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
-    SESSION_USER_RETURN_LOCATION = 'user_return_to'
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire, :purge_champ_piece_justificative]
 
@@ -247,7 +247,7 @@ module NewUser
     end
 
     def erase_user_location!
-      session.delete(SESSION_USER_RETURN_LOCATION)
+      clear_stored_location_for(:user)
     end
 
     def show_demarche_en_test_banner
