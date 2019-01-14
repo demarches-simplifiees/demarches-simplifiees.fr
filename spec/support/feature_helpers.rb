@@ -50,6 +50,14 @@ module FeatureHelpers
 
     visit "/users/confirmation?#{token_params}"
   end
+
+  def expect_page_to_have_procedure_description(procedure)
+    # Procedure context on the page
+    expect(page).to have_content(procedure.libelle)
+    expect(page).to have_content(procedure.description)
+    # Procedure contact infos in the footer
+    expect(page).to have_content(procedure.service.email)
+  end
 end
 
 RSpec.configure do |config|
