@@ -38,7 +38,7 @@ module NewUser
 
     def store_user_location!
       procedure = Procedure.find_by(path: params[:path])
-      store_location_for(:user, new_dossier_path(procedure_id: procedure.id))
+      store_location_for(:user, commencer_path(path: procedure.path))
     end
   end
 end

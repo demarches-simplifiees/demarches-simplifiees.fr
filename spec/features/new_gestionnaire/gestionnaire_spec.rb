@@ -19,6 +19,10 @@ feature 'The gestionnaire part' do
       expect(page).to have_current_path new_user_session_path
       sign_in_with(gestionnaire.email, password, true)
 
+      expect(page).to have_current_path(commencer_path(path: procedure.path))
+      click_on 'Commencer la démarche'
+
+      expect(page).to have_content('Identifier votre établissement')
       expect(page).to have_current_path(siret_dossier_path(procedure.reload.dossiers.last))
       expect(page).to have_content(procedure.libelle)
     end
