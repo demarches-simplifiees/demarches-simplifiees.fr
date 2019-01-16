@@ -6,6 +6,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
+  layout 'procedure_context', only: [:new, :create]
+
   # GET /resource/sign_up
   def new
     # Allow pre-filling the user email from a query parameter
