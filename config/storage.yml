@@ -4,6 +4,9 @@ local:
 test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
+proxied:
+  service: DsProxy
+  wrapped: openstack
 openstack:
   service: OpenStack
   container: "<%= ENV['FOG_ACTIVESTORAGE_DIRECTORY'] %>"
