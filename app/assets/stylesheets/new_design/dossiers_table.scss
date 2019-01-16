@@ -70,10 +70,17 @@
     width: 110px;
   }
 
-  .follow-col {
-    width: 200px;
+  .action-col {
     text-align: right;
     padding-left: $default-spacer;
     padding-right: $default-spacer;
+  }
+
+  .follow-col {
+    width: 200px;
+  }
+
+  .delete-col {
+    width: 150px;
   }
 }
