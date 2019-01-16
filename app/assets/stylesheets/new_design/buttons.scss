@@ -60,6 +60,10 @@
       color: #FFFFFF;
       border-color: $medium-red;
       background-color: $medium-red;
+
+      > .icon {
+        filter: brightness(100);
+      }
     }
   }
 
