@@ -70,7 +70,7 @@ describe NewUser::CommencerController, type: :controller do
 
     it 'set the path to return after sign-in to the dossier creation path' do
       subject
-      expect(controller.stored_location_for(:user)).to eq(new_dossier_path(procedure_id: published_procedure.id))
+      expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
     end
 
     it { expect(subject).to redirect_to(new_user_session_path) }
@@ -81,7 +81,7 @@ describe NewUser::CommencerController, type: :controller do
 
     it 'set the path to return after sign-up to the dossier creation path' do
       subject
-      expect(controller.stored_location_for(:user)).to eq(new_dossier_path(procedure_id: published_procedure.id))
+      expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
     end
 
     it { expect(subject).to redirect_to(new_user_registration_path) }

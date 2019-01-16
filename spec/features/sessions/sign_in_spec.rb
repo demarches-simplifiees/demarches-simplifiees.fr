@@ -27,6 +27,9 @@ feature 'Signin in:' do
 
       sign_in_with user.email, password
 
+      expect(page).to have_current_path(commencer_path(path: procedure.path))
+      click_on 'Commencer la démarche'
+
       expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
       expect_page_to_have_procedure_description(procedure)
       expect(page).to have_content "Données d'identité"

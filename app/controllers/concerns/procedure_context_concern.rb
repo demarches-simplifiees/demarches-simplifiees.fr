@@ -5,8 +5,8 @@ module ProcedureContextConcern
   include Devise::StoreLocationExtension
 
   def restore_procedure_context
-    if stored_procedure_id.present?
-      @procedure = Procedure.publiees.find_by(id: stored_procedure_id)
+    if has_stored_procedure_path?
+      @procedure = find_procedure_in_context
 
       if @procedure.blank?
         invalid_procedure_context
@@ -16,11 +16,18 @@ module ProcedureContextConcern
 
   private
 
-  def stored_procedure_id
-    stored_location = get_stored_location_for(:user)
+  def has_stored_procedure_path?
+    get_stored_location_for(:user)&.start_with?('/commencer/')
+  end
 
-    if stored_location.present? && stored_location.include?('procedure_id=')
-      stored_location.split('procedure_id=').second
+  def find_procedure_in_context
+    uri = URI(get_stored_location_for(:user))
+    path_components = uri.path.split('/')
+
+    if uri.path.start_with?('/commencer/test/')
+      Procedure.brouillon.find_by(path: path_components[3])
+    elsif uri.path.start_with?('/commencer/')
+      Procedure.publiee.find_by(path: path_components[2])
     else
       nil
     end
