@@ -301,6 +301,19 @@ class Dossier < ApplicationRecord
     log_dossier_operation(gestionnaire, :accepter)
   end
 
+  def accepter_automatiquement!
+    self.en_instruction_at ||= Time.zone.now
+
+    accepte!
+
+    if attestation.nil?
+      update(attestation: build_attestation)
+    end
+
+    NotificationMailer.send_closed_notification(self).deliver_later
+    log_dossier_operation(nil, :accepter, automatic_operation: true)
+  end
+
   def refuser!(gestionnaire, motivation)
     self.motivation = motivation
     self.en_instruction_at ||= Time.zone.now
