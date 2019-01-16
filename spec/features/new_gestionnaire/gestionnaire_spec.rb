@@ -14,10 +14,12 @@ feature 'The gestionnaire part' do
 
     scenario 'a gestionnaire can fill a dossier' do
       visit commencer_path(path: procedure.path)
+      click_on 'J’ai déjà un compte'
 
       expect(page).to have_current_path new_user_session_path
       sign_in_with(gestionnaire.email, password, true)
 
+      expect(page).to have_current_path(siret_dossier_path(procedure.reload.dossiers.last))
       expect(page).to have_content(procedure.libelle)
     end
   end
