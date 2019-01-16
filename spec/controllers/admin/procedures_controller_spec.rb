@@ -723,7 +723,7 @@ describe Admin::ProceduresController, type: :controller do
       let(:path) { procedure_owned.path }
 
       it {
-        expect(response.body).to include('Un brouillon de démarche existe déjà avec ce lien.')
+        expect(response.body).to include('Une démarche en test existe déjà avec ce lien.')
       }
     end
 
