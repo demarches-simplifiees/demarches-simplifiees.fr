@@ -21,6 +21,7 @@ feature 'Signin in:' do
     end
 
     scenario 'an existing user can sign-in and fill the procedure' do
+      click_on 'J’ai déjà un compte'
       expect(page).to have_current_path new_user_session_path
       expect_page_to_have_procedure_description(procedure)
 

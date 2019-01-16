@@ -130,6 +130,8 @@ feature 'The user' do
 
   def log_in(email, password, procedure)
     visit "/commencer/#{procedure.path}"
+    click_on 'J’ai déjà un compte'
+
     expect(page).to have_current_path(new_user_session_path)
 
     fill_in 'user_email', with: email

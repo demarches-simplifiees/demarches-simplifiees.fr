@@ -1,0 +1,30 @@
+- content_for(:title, @procedure.libelle)
+
+.commencer.form
+  - if !user_signed_in?
+    %h1 Commencer la démarche
+    = link_to 'Créer un compte demarches-simplifiees.fr', commencer_sign_up_path(path: @procedure.path), class: ['button large expand primary']
+    = link_to 'J’ai déjà un compte', commencer_sign_in_path(path: @procedure.path), class: ['button large expand']
+
+  - else
+    - dossiers = current_user.dossiers.where(procedure: @procedure)
+    - drafts = dossiers.merge(Dossier.state_brouillon)
+    - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
+
+    - if dossiers.count == 0
+      = link_to 'Commencer la démarche', url_for_new_dossier(@procedure), class: ['button large expand primary']
+
+    - elsif drafts.count == 1 && not_drafts.count == 0
+      %h1 Vous avez déjà commencé à remplir un dossier
+      = link_to 'Continuer à remplir mon dossier', brouillon_dossier_path(drafts.first), class: ['button large expand primary']
+      = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
+
+    - elsif not_drafts.count == 1
+      %h1 Vous avez déjà déposé un dossier
+      = link_to 'Voir mon dossier', dossier_path(not_drafts.first), class: ['button large expand primary']
+      = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
+
+    - else
+      %h1 Vous avez déjà des dossiers pour cette démarche
+      = link_to 'Voir mes dossiers en cours', dossiers_path, class: ['button large expand primary']
+      = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
