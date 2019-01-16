@@ -84,7 +84,7 @@ class Etablissement < ApplicationRecord
 
   def validate_signature
     if champ && !verify
-      errors.add(:base, 'Numéro SIRET introuvable.')
+      errors.add(:base, 'Numéro TAHITI introuvable.')
     end
   end
 

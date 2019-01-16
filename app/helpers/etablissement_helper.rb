@@ -30,7 +30,18 @@ module EtablissementHelper
       '42' => '1 000 à 1 999 salariés',
       '51' => '2 000 à 4 999 salariés',
       '52' => '5 000 à 9 999 salariés',
-      '53' => '10 000 salariés et plus'
+      '53' => '10 000 salariés et plus',
+      # Codes ISPF
+      '1' => '1 à 2 personnes',
+      '2' => '3 à 4 personnes',
+      '3' => '5 à 9 personnes',
+      '4' => '10 à 19 personnes',
+      '5' => '20 à 49 personnes',
+      '6' => '50 à 99 personnes',
+      '7' => '100 à 199 personnes',
+      '8' => '200 à 499 personnes',
+      '9' => '500 personnes et plus',
+      '10' => 'Aucune personne'
     }[etablissement.entreprise_code_effectif_entreprise]
   end
 end

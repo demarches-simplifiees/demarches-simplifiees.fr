@@ -270,9 +270,9 @@ describe NewUser::DossiersController, type: :controller do
     end
 
     context 'with an invalid SIRET' do
-      let(:params_siret) { '000 000' }
+      let(:params_siret) { '000 000 000' }
 
-      it_behaves_like 'the request fails with an error', ['Siret Le numéro SIRET doit comporter 14 chiffres']
+      it_behaves_like 'the request fails with an error', ["Numéro TAHITI doit commencer par une lettre ou un chiffre, suivi de 5 chiffres"]
     end
 
     context 'with a valid SIRET' do

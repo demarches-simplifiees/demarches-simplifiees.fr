@@ -44,6 +44,11 @@ RSpec.describe EtablissementHelper, type: :helper do
       let(:code_effectif) { '32' }
       it { is_expected.to eq('250 à 499 salariés') }
     end
+
+    context 'when code effectif is polynesian code 6' do
+      let(:code_effectif) { '8' }
+      it { is_expected.to eq('200 à 499 personnes') }
+    end
   end
 
   describe '#pretty_currency' do

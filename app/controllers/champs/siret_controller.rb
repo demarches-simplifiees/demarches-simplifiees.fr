@@ -8,7 +8,7 @@ class Champs::SiretController < ApplicationController
 
     if @siret.empty?
       @etablissement&.mark_for_destruction
-    elsif @siret.present? && @siret.length == 14
+    elsif @siret.present? && (@siret.length == 6 || @siret.length == 14)
       etablissement = find_etablisement_with_siret
       if etablissement.present?
         @etablissement = etablissement

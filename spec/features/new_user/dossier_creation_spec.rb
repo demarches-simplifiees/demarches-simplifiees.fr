@@ -62,7 +62,7 @@ feature 'Creating a new dossier:' do
       end
     end
 
-    context 'when identifying through SIRET' do
+    context 'when identifying through TAHITI' do
       let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ, :with_two_type_de_piece_justificative) }
       let(:dossier) { procedure.dossiers.last }
 
@@ -77,7 +77,7 @@ feature 'Creating a new dossier:' do
           .to_return(status: 404, body: '')
       end
 
-      scenario 'the user can enter the SIRET of its etablissement and create a new draft', vcr: { cassette_name: 'api_adresse_search_paris_3' }, js: true do
+      scenario 'the user can enter the numéro TAHITI of its etablissement and create a new draft', vcr: { cassette_name: 'api_adresse_search_paris_3' }, js: true do
         visit commencer_path(path: procedure.path)
 
         expect(page).to have_current_path(siret_dossier_path(dossier))
@@ -85,7 +85,7 @@ feature 'Creating a new dossier:' do
         expect(page).to have_content(procedure.description)
         expect(page).to have_content(procedure.service.email)
 
-        fill_in 'Numéro SIRET', with: siret
+        fill_in 'Numéro TAHITI', with: siret
         click_on 'Valider'
 
         expect(page).to have_current_path(etablissement_dossier_path(dossier))
@@ -95,16 +95,16 @@ feature 'Creating a new dossier:' do
         expect(page).to have_current_path(brouillon_dossier_path(dossier))
       end
 
-      scenario 'the user is notified when its SIRET is invalid' do
+      scenario 'the user is notified when its numéro TAHITI is invalid' do
         visit commencer_path(path: procedure.path)
         expect(page).to have_current_path(siret_dossier_path(dossier))
 
-        fill_in 'Numéro SIRET', with: '0000'
+        fill_in 'Numéro TAHITI', with: '0000'
         click_on 'Valider'
 
         expect(page).to have_current_path(siret_dossier_path(dossier))
-        expect(page).to have_content('Le numéro SIRET doit comporter 14 chiffres')
-        expect(page).to have_field('Numéro SIRET', with: '0000')
+        expect(page).to have_content("doit commencer par une lettre ou un chiffre, suivi de 5 chiffres")
+        expect(page).to have_field('Numéro TAHITI', with: '0000')
       end
     end
   end

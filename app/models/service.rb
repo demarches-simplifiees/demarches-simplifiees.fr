@@ -18,7 +18,7 @@ class Service < ApplicationRecord
   validates :nom, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :nom, uniqueness: { scope: :administrateur, message: 'existe déjà' }
   validates :organisme, presence: { message: 'doit être renseigné' }, allow_nil: false
-  validates :siret, length: { is: 14, message: 'doit être une suite de 14 chiffres' }, allow_nil: true
+  validates :siret, length: { is: SIRET_LENGTH, message: "doit être une suite de #{SIRET_LENGTH} caractères" }, allow_nil: true
   validates :type_organisme, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :email, presence: { message: 'doit être renseigné' }, allow_nil: false
   validates :telephone, presence: { message: 'doit être renseigné' }, allow_nil: false

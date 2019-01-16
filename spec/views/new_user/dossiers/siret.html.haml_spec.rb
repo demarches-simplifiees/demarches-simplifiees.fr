@@ -11,6 +11,6 @@ describe 'new_user/dossiers/siret.html.haml', type: :view do
   subject! { render }
 
   it 'affiche le formulaire de SIRET' do
-    expect(rendered).to have_field('Numéro SIRET')
+    expect(rendered).to have_field('Numéro TAHITI')
   end
 end

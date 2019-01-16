@@ -1,9 +1,9 @@
 %ul.etablissement-infos-entreprise
   %li
-    Siret :
+    Numéro TAHITI :
     = etablissement.siret
 
-  - if etablissement.siret != etablissement.entreprise.siret_siege_social
+  - if etablissement.siret != etablissement.entreprise.siret_siege_social && etablissement.entreprise.siret_siege_social.present?
     %li
       SIRET siègle social :
       = etablissement.entreprise.siret_siege_social
@@ -32,18 +32,20 @@
     Code effectif :
     = etablissement.entreprise.code_effectif_entreprise
 
-  %li
-    Numéro TVA intracommunautaire :
-    = etablissement.entreprise.numero_tva_intracommunautaire
+  - if etablissement.entreprise.numero_tva_intracommunautaire.present?
+    %li
+      Numéro TVA intracommunautaire :
+      = etablissement.entreprise.numero_tva_intracommunautaire
 
   %li
     Adresse :
     - etablissement.adresse.split("\n").each do |line|
       = line
 
-  %li
-    Capital social :
-    = pretty_currency(etablissement.entreprise.capital_social)
+  - if etablissement.entreprise.capital_social.present?
+    %li
+      Capital social :
+      = pretty_currency(etablissement.entreprise.capital_social)
 
 - if etablissement.exercices.present?
   %p.etablissement-exercices Les exercices comptables des trois dernières années seront joints à votre dossier.

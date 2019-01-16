@@ -40,19 +40,19 @@ describe Champs::SiretController, type: :controller do
         }
 
         it 'invalid error' do
-          expect(response.body).to include('Le numéro de SIRET doit comporter exactement 14 chiffres.')
+          expect(response.body).to include("Le numéro TAHITI doit comporter exactement #{SIRET_LENGTH} caractères.")
         end
       end
 
       context 'when siret not found' do
-        let(:siret) { '0' * 14 }
+        let(:siret) { '0' * SIRET_LENGTH }
         before {
           expect(subject).to receive(:find_etablisement_with_siret).and_return(false)
           get :show, params: params, format: 'js'
         }
 
         it 'not found error' do
-          expect(response.body).to include('Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.')
+          expect(response.body).to include("Nous n’avons pas trouvé d’établissement correspondant à ce numéro TAHITI.")
         end
       end
 

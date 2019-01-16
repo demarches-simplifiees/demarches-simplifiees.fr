@@ -4,10 +4,10 @@
   = form_for current_user, url: siret_dossier_path(@dossier), html: { class: 'form', method: 'post' } do |f|
     %h1 Identifier votre établissement
 
-    %p.mb-1 Merci de remplir le numéro de SIRET de votre entreprise, administration ou association pour commencer la démarche.
+    %p.mb-1 Merci de remplir le numéro TAHITI de votre entreprise, administration ou association pour commencer la démarche.
 
     = f.label :siret, style: "display: none"
-    = f.text_field :siret, placeholder: "Numéro SIRET à 14 chiffres", required: true
+    = f.text_field :siret, placeholder: "Numéro TAHITI (6 caractères)", required: true
 
     = f.hidden_field :dossier_id, value: @dossier.id
 

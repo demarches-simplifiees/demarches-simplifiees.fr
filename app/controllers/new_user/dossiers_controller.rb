@@ -83,9 +83,11 @@ module NewUser
       # This is the only remaining use of User#siret: it could be refactored away.
       # However some existing users have a siret but no associated etablissement,
       # so we would need to analyze the legacy data and decide what to do with it.
-      current_user.siret = siret_params[:siret]
+      siret = siret_params[:siret]
 
-      siret_model = Siret.new(siret: siret_params[:siret])
+      current_user.siret = siret
+
+      siret_model = Siret.new(siret: siret)
       if !siret_model.valid?
         return render_siret_error(siret_model.errors.full_messages)
       end

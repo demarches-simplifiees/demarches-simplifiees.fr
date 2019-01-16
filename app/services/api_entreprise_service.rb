@@ -1,5 +1,9 @@
 class ApiEntrepriseService
   def self.get_etablissement_params_for_siret(siret, procedure_id)
+    tahiti_params = ApiEntreprise::PfEtablissementAdapter.new(siret, procedure_id).to_params
+    if tahiti_params.present?
+      return tahiti_params
+    end
     etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
     entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
 

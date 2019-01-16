@@ -1,15 +1,18 @@
 fr:
   activemodel:
     models:
-      siret: 'SIRET'
       exercices_summary:
         one: L’exercice comptable de l’année dernière a été joint à votre dossier.
         other: "Les exercices comptables des %{count} dernières années ont été joints à votre dossier."
+    attributes:
+      siret:
+        siret: "Numéro TAHITI"
     errors:
       models:
         siret:
           attributes:
             siret:
-              format: 'Le numéro SIRET doit comporter 14 chiffres'
-              checksum: 'Le numéro SIRET comporte une erreur, vérifiez les chiffres composant le numéro'
-              invalid: 'Le numéro SIRET ne correspond pas à un établissement existant'
+              format: 'doit commencer par une lettre ou un chiffre, suivi de 5 chiffres'
+              invalid: 'ne correspond pas à un établissement existant'
+              checksum: 'comporte une erreur, vérifiez les chiffres composant le numéro'
+
