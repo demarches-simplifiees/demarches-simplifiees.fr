@@ -2,10 +2,12 @@ class Users::SessionsController < Sessions::SessionsController
   include TrustedDeviceConcern
   include ActionView::Helpers::DateHelper
 
+  layout 'procedure_context', only: [:new, :create]
+
   # GET /resource/sign_in
   def new
-    if user_return_to_procedure_id.present? # WTF ?
-      @dossier = Dossier.new(procedure: Procedure.active(user_return_to_procedure_id))
+    if user_return_to_procedure_id.present?
+      @procedure = Procedure.active(user_return_to_procedure_id)
     end
 
     @user = User.new
