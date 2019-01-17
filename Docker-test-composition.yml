@@ -4,7 +4,7 @@ services:
   app:
     image: sipf/tps:0.1.3
     container_name: app
-    ports: 
+    ports:
       - 80:3000
     environment:
       - APP_HOST=beta.demarches-simplifiees.gov.pf
@@ -32,11 +32,11 @@ services:
       - DB_USERNAME="sysadmin"
       - DB_PASSWORD="sysadmin"
 
-#------ Mailjet Christian
-#      - MAILJET_API_KEY=6f6189d645e21e65d93a323efdac07a4
-#      - MAILJET_SECRET_KEY=e865ed7fa5a9fa9a9e10a203ab4765c9
+      #------ Mailjet Christian
+      #      - MAILJET_API_KEY=6f6189d645e21e65d93a323efdac07a4
+      #      - MAILJET_SECRET_KEY=e865ed7fa5a9fa9a9e10a203ab4765c9
 
-#------ Mailjet Leo
+      #------ Mailjet Leo
       - MAILJET_API_KEY=dc48bab177a12dfd8e416550599b2e0b
       - MAILJET_SECRET_KEY=79b592075e48a83c935e601dbe40d916
     volumes:
