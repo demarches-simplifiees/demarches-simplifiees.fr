@@ -760,4 +760,76 @@ describe Dossier do
       it { expect(long_expired_dossier).to be_retention_expired }
     end
   end
+
+  describe '#accepter!' do
+    let(:dossier) { create(:dossier) }
+    let!(:gestionnaire) { create(:gestionnaire) }
+    let!(:now) { Time.zone.parse('01/01/2100') }
+    let(:attestation) { Attestation.new }
+
+    before do
+      allow(NotificationMailer).to receive(:send_closed_notification).and_return(double(deliver_later: true))
+      allow(dossier).to receive(:build_attestation).and_return(attestation)
+
+      Timecop.freeze(now)
+      dossier.accepter!(gestionnaire, 'motivation')
+      dossier.reload
+    end
+
+    after { Timecop.return }
+
+    it { expect(dossier.motivation).to eq('motivation') }
+    it { expect(dossier.en_instruction_at).to eq(now) }
+    it { expect(dossier.processed_at).to eq(now) }
+    it { expect(dossier.state).to eq('accepte') }
+    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[gestionnaire.id, 'accepter', false]]) }
+    it { expect(NotificationMailer).to have_received(:send_closed_notification).with(dossier) }
+    it { expect(dossier.attestation).to eq(attestation) }
+  end
+
+  describe '#accepter_automatiquement!' do
+    let(:dossier) { create(:dossier) }
+    let!(:now) { Time.zone.parse('01/01/2100') }
+    let(:attestation) { Attestation.new }
+
+    before do
+      allow(NotificationMailer).to receive(:send_closed_notification).and_return(double(deliver_later: true))
+      allow(dossier).to receive(:build_attestation).and_return(attestation)
+
+      Timecop.freeze(now)
+      dossier.accepter_automatiquement!
+      dossier.reload
+    end
+
+    after { Timecop.return }
+
+    it { expect(dossier.motivation).to eq(nil) }
+    it { expect(dossier.en_instruction_at).to eq(now) }
+    it { expect(dossier.processed_at).to eq(now) }
+    it { expect(dossier.state).to eq('accepte') }
+    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'accepter', true]]) }
+    it { expect(NotificationMailer).to have_received(:send_closed_notification).with(dossier) }
+    it { expect(dossier.attestation).to eq(attestation) }
+  end
+
+  describe '#passer_en_instruction!' do
+    let(:dossier) { create(:dossier) }
+    let(:gestionnaire) { create(:gestionnaire) }
+
+    before { dossier.passer_en_instruction!(gestionnaire) }
+
+    it { expect(dossier.state).to eq('en_instruction') }
+    it { expect(dossier.followers_gestionnaires).to include(gestionnaire) }
+    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation)).to match([[gestionnaire.id, 'passer_en_instruction']]) }
+  end
+
+  describe '#passer_automatiquement_en_instruction!' do
+    let(:dossier) { create(:dossier) }
+    let(:gestionnaire) { create(:gestionnaire) }
+
+    before { dossier.passer_automatiquement_en_instruction! }
+
+    it { expect(dossier.followers_gestionnaires).not_to include(gestionnaire) }
+    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'passer_en_instruction', true]]) }
+  end
 end

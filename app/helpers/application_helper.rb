@@ -7,11 +7,20 @@ module ApplicationHelper
     end
   end
 
-  def flash_class(level, sticky = false)
-    case level
-    when "notice" then "alert-success#{sticky ? ' sticky' : ''}"
-    when "alert" then "alert-danger#{sticky ? ' sticky' : ''}"
+  def flash_class(level, sticky: false, fixed: false)
+    class_names = case level
+    when 'notice'
+      ['alert-success']
+    when 'alert'
+      ['alert-danger']
     end
+    if sticky
+      class_names << 'sticky'
+    end
+    if fixed
+      class_names << 'alert-fixed'
+    end
+    class_names.join(' ')
   end
 
   def render_to_element(selector, partial:, outer: false, locals: {})
@@ -22,9 +31,9 @@ module ApplicationHelper
     # rubocop:enable Rails/OutputSafety
   end
 
-  def render_flash(timeout: false, sticky: false)
+  def render_flash(timeout: false, sticky: false, fixed: false)
     if flash.any?
-      html = render_to_element('#flash_messages', partial: 'layouts/flash_messages', locals: { sticky: sticky }, outer: true)
+      html = render_to_element('#flash_messages', partial: 'layouts/flash_messages', locals: { sticky: sticky, fixed: fixed }, outer: true)
       flash.clear
       if timeout
         html += remove_element('#flash_messages', timeout: timeout, inner: true)
@@ -56,6 +65,12 @@ module ApplicationHelper
     # rubocop:enable Rails/OutputSafety
   end
 
+  def fire_event(event_name, data)
+    # rubocop:disable Rails/OutputSafety
+    raw("DS.fire('#{event_name}', #{raw(data)});")
+    # rubocop:enable Rails/OutputSafety
+  end
+
   def current_email
     current_user&.email ||
       current_gestionnaire&.email ||
@@ -70,13 +85,8 @@ module ApplicationHelper
     tags, type, dossier_id = options.values_at(:tags, :type, :dossier_id)
     options.except!(:tags, :type, :dossier_id)
 
-    if Flipflop.support_form?
-      params = { tags: tags, type: type, dossier_id: dossier_id }.compact
-      link_to title, contact_url(params), options
-    else
-      mail_to CONTACT_EMAIL, title,
-        options.merge(subject: "Question à propos de #{SITE_NAME}")
-    end
+    params = { tags: tags, type: type, dossier_id: dossier_id }.compact
+    link_to title, contact_url(params), options
   end
 
   def root_path_for_profile(nav_bar_profile)

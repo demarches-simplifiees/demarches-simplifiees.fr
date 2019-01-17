@@ -22,6 +22,8 @@ import '../new_design/select2';
 import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
 
+import '../new_design/administrateur/champs-editor';
+
 import { toggleCondidentielExplanation } from '../new_design/avis';
 import { scrollMessagerie } from '../new_design/messagerie';
 import { showMotivation, motivationCancel } from '../new_design/state-button';
@@ -30,6 +32,7 @@ import { replaceSemicolonByComma } from '../new_design/avis';
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
+  fire: (eventName, data) => Rails.fire(document, eventName, data),
   toggleCondidentielExplanation,
   scrollMessagerie,
   showMotivation,

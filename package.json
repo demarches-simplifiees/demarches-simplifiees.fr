@@ -15,7 +15,11 @@
     "rails-ujs": "^5.2.1",
     "ramda": "^0.25.0",
     "select2": "^4.0.6-rc.1",
-    "turbolinks": "^5.2.0"
+    "turbolinks": "^5.2.0",
+    "vue": "^2.5.21",
+    "vue-loader": "^15.5.1",
+    "vue-template-compiler": "^2.5.21",
+    "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
     "eclint": "^2.8.0",

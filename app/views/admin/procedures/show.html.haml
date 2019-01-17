@@ -42,25 +42,45 @@
             %i.fa.fa-remove
             Annuler
 
-    - if @procedure.locked?
-      #procedure_locked
-        .alert.alert-info
-          Cette démarche a été publiée, certains éléments ne peuvent plus être modifiés.
-
     .lien-demarche
-      %h3 Lien démarche
+      %h3
+        - if @procedure.brouillon_avec_lien?
+          Test et publication
+        - else
+          Publication
       %div{ style: 'margin-top: 30px;' }
         - if @procedure.archivee?
-          .alert.alert-info
-            Cette démarche est archivée et n’est donc pas accessible par le public.
+          Cette démarche est <strong>archivée</strong> et n’est donc plus accessible par le public.
         - elsif @procedure.publiee?
+          Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
+          Pour y accéder vous pouvez utiliser le lien :
           = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
           %br
           %br
           Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{SITE_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{SITE_NAME}, donnez-leur toujours le lien complet.
         - elsif @procedure.brouillon_avec_lien?
           - if @procedure.gestionnaires.present? && @procedure.service.present?
-            = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
+            %p
+              Cette démarche est actuellement <strong>en test</strong>,
+              pour y accéder vous pouvez utiliser le lien :
+              = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank
+            %p
+              Tout personne ayant la connaissance de ce lien pourra ainsi remplir des dossiers sur votre démarche.
+            %br
+
+            %h4 Ce que vous pouvez faire lorsque vous êtes en test
+            %p
+              Profitez de la phase de test pour tester la saisie de dossiers, ainsi que toutes les fonctionnalités associées (instruction, emails automatiques, attestations, etc.).
+            %p
+              Vous pouvez effectuer toutes les modifications que vous souhaitez sur votre démarche pendant cette phase de test.
+            %p
+              Les dossiers qui seront remplis pendant la phase de test seront automatiquement supprimés lors de la modification ou la publication de votre démarche.
+            %br
+
+            %h4 Ce qui se passe lorsque vous passez en publication
+            %p
+              Une fois que vous êtes prêt à publier définitivement votre démarche, cliquez sur le bouton "Publier" pour choisir le lien définitif de votre démarche, les modifications sur la démarches ne seront alors plus possibles.
+
           - else
             .alert.alert-info
               Pour pouvoir tester cette démarche, vous devez d’abord lui affecter

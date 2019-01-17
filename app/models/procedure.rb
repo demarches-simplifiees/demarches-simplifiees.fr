@@ -30,9 +30,9 @@ class Procedure < ApplicationRecord
   has_one_attached :notice
   has_one_attached :deliberation
 
-  accepts_nested_attributes_for :types_de_champ, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
-  accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
-  accepts_nested_attributes_for :types_de_champ_private
+  accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :types_de_piece_justificative, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   mount_uploader :logo, ProcedureLogoUploader
 
@@ -68,6 +68,7 @@ class Procedure < ApplicationRecord
 
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
+  before_create :ensure_path_exists
 
   include AASM
 
@@ -183,10 +184,11 @@ class Procedure < ApplicationRecord
   end
 
   def clone(admin, from_library)
+    is_different_admin = self.administrateur_id != admin.id
+
     populate_champ_stable_ids
     procedure = self.deep_clone(include:
       {
-        types_de_piece_justificative: nil,
         attestation_template: nil,
         types_de_champ: :drop_down_list,
         types_de_champ_private: :drop_down_list
@@ -202,6 +204,11 @@ class Procedure < ApplicationRecord
 
     [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
 
+    procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
+    if is_different_admin || from_library
+      procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+    end
+
     procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
     procedure.received_mail = received_mail&.dup
@@ -214,7 +221,7 @@ class Procedure < ApplicationRecord
 
     if from_library
       procedure.service = nil
-    elsif self.service.present? && (self.administrateur_id != admin.id)
+    elsif self.service.present? && is_different_admin
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
@@ -350,12 +357,6 @@ class Procedure < ApplicationRecord
     where.not(aasm_state: :archivee).where("path LIKE ?", "%#{path}%")
   end
 
-  def gestionnaire_for_cron_job
-    administrateur_email = administrateur.email
-    gestionnaire = Gestionnaire.find_by(email: administrateur_email)
-    gestionnaire || gestionnaires.first
-  end
-
   def populate_champ_stable_ids
     TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
       type_de_champ.update_column(:stable_id, type_de_champ.id)
@@ -456,6 +457,14 @@ class Procedure < ApplicationRecord
 
     if times.present?
       times.percentile(p).ceil
+    end
+  end
+
+  def ensure_path_exists
+    if Flipflop.publish_draft?
+      if self.path.nil?
+        self.path = SecureRandom.uuid
+      end
     end
   end
 end

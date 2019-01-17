@@ -357,9 +357,11 @@ Rails.application.routes.draw do
   #
 
   scope module: 'new_administrateur' do
-    resources :procedures, only: [] do
+    resources :procedures, only: [:update] do
       member do
         get 'apercu'
+        get 'champs'
+        get 'annotations'
       end
     end
 

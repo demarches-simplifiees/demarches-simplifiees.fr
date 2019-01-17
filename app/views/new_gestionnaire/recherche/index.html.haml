@@ -14,7 +14,7 @@
           %th Démarche
           %th Demandeur
           %th.status-col Statut
-          %th.follow-col
+          %th.action-col.follow-col
       %tbody
         - @dossiers.each do |dossier|
           / # FIXME: here we have a n+1, we fire a request
@@ -31,6 +31,6 @@
             %td.status-col
               = link_to(dossier_linked_path(current_gestionnaire, dossier), class: 'cell-link') do
                 = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
-            %td.follow-col= render partial: 'new_gestionnaire/procedures/dossier_actions', locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
+            %td.action-col.follow-col= render partial: 'new_gestionnaire/procedures/dossier_actions', locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
   - else
     %h2 Aucun dossier correspondant à votre recherche n'a été trouvé
