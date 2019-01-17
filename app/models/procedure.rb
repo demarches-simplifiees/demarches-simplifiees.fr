@@ -350,12 +350,6 @@ class Procedure < ApplicationRecord
     where.not(aasm_state: :archivee).where("path LIKE ?", "%#{path}%")
   end
 
-  def gestionnaire_for_cron_job
-    administrateur_email = administrateur.email
-    gestionnaire = Gestionnaire.find_by(email: administrateur_email)
-    gestionnaire || gestionnaires.first
-  end
-
   def populate_champ_stable_ids
     TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
       type_de_champ.update_column(:stable_id, type_de_champ.id)
