@@ -5,6 +5,7 @@ describe 'user access to the list of his dossier' do
   let!(:last_updated_dossier) { create(:dossier, :with_entreprise, user: user, state: Dossier.states.fetch(:en_construction)) }
   let!(:dossier1) { create(:dossier, :with_entreprise, user: user, state: Dossier.states.fetch(:en_construction)) }
   let!(:dossier2) { create(:dossier, :with_entreprise) }
+  let!(:dossier_brouillon) { create(:dossier, :with_entreprise, user: user) }
   let!(:dossier_archived) { create(:dossier, :with_entreprise, user: user, state: Dossier.states.fetch(:en_construction)) }
   let(:dossiers_per_page) { 25 }
 
@@ -41,6 +42,21 @@ describe 'user access to the list of his dossier' do
 
   it 'should list archived dossiers' do
     expect(page).to have_content(dossier_archived.procedure.libelle)
+  end
+
+  it 'should have link to only delete brouillon' do
+    expect(page).to have_link(nil, href: ask_deletion_dossier_path(dossier_brouillon))
+    expect(page).not_to have_link(nil, href: ask_deletion_dossier_path(dossier1))
+  end
+
+  context 'when user clicks on delete brouillon list', js: true do
+    before do
+      find(:xpath, "//a[@href='#{ask_deletion_dossier_path(dossier_brouillon)}']").click
+      page.driver.browser.switch_to.alert.accept
+    end
+    scenario 'dossier is deleted' do
+      expect(page).not_to have_link("Supprimer", href: dossier_brouillon.procedure.libelle)
+    end
   end
 
   context 'when user clicks on a projet in list', js: true do

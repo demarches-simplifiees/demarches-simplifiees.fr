@@ -77,7 +77,7 @@
 
             = render partial: "header_field", locals: { field: { "label" => "Statut", "table" => "self", "column" => "state" },  classname: "status-col" }
 
-            %th.follow-col
+            %th.action-col.follow-col
               %span.dropdown
                 %button.button.dropdown-button
                   Personnaliser
@@ -112,7 +112,7 @@
               %td.status-col
                 = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
                   = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
-              %td.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
+              %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
       = paginate @dossiers
     - else
       %h2.empty-text Aucun dossier
