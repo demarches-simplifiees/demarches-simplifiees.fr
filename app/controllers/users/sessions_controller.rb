@@ -2,12 +2,12 @@ class Users::SessionsController < Sessions::SessionsController
   include TrustedDeviceConcern
   include ActionView::Helpers::DateHelper
 
-  layout "new_application"
+  layout 'procedure_context', only: [:new, :create]
 
   # GET /resource/sign_in
   def new
-    if user_return_to_procedure_id.present? # WTF ?
-      @dossier = Dossier.new(procedure: Procedure.active(user_return_to_procedure_id))
+    if user_return_to_procedure_id.present?
+      @procedure = Procedure.active(user_return_to_procedure_id)
     end
 
     @user = User.new
@@ -23,7 +23,7 @@ class Users::SessionsController < Sessions::SessionsController
     try_to_authenticate(Administrateur, remember_me)
 
     if user_signed_in?
-      current_user.update(loged_in_with_france_connect: '')
+      current_user.update(loged_in_with_france_connect: nil)
     end
 
     if gestionnaire_signed_in?
@@ -32,8 +32,8 @@ class Users::SessionsController < Sessions::SessionsController
         redirect_to after_sign_in_path_for(:user)
       else
         gestionnaire = current_gestionnaire
-        login_token = gestionnaire.login_token!
-        GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
+
+        send_login_token_or_bufferize(gestionnaire)
 
         [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
 
@@ -104,6 +104,13 @@ class Users::SessionsController < Sessions::SessionsController
   end
 
   private
+
+  def send_login_token_or_bufferize(gestionnaire)
+    if !gestionnaire.young_login_token?
+      login_token = gestionnaire.login_token!
+      GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
+    end
+  end
 
   def error_procedure
     session["user_return_to"] = nil

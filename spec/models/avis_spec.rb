@@ -14,21 +14,21 @@ RSpec.describe Avis, type: :model do
     subject { avis.email_to_display }
 
     context 'when gestionnaire is not known' do
-      it{ is_expected.to eq(invited_email) }
+      it { is_expected.to eq(invited_email) }
     end
 
     context 'when gestionnaire is known' do
       let!(:avis) { create(:avis, email: nil, gestionnaire: create(:gestionnaire), dossier: create(:dossier)) }
 
-      it{ is_expected.to eq(avis.gestionnaire.email) }
+      it { is_expected.to eq(avis.gestionnaire.email) }
     end
   end
 
   describe '.by_latest' do
     context 'with 3 avis' do
-      let!(:avis){ create(:avis) }
-      let!(:avis2){ create(:avis, updated_at: 4.hours.ago) }
-      let!(:avis3){ create(:avis, updated_at: 3.hours.ago) }
+      let!(:avis) { create(:avis) }
+      let!(:avis2) { create(:avis, updated_at: 4.hours.ago) }
+      let!(:avis3) { create(:avis, updated_at: 3.hours.ago) }
 
       subject { Avis.by_latest }
 
@@ -37,13 +37,13 @@ RSpec.describe Avis, type: :model do
   end
 
   describe ".link_avis_to_gestionnaire" do
-    let(:gestionnaire){ create(:gestionnaire) }
+    let(:gestionnaire) { create(:gestionnaire) }
 
-    subject{ Avis.link_avis_to_gestionnaire(gestionnaire) }
+    subject { Avis.link_avis_to_gestionnaire(gestionnaire) }
 
     context 'when there are 2 avis linked by email to a gestionnaire' do
-      let!(:avis){ create(:avis, email: gestionnaire.email, gestionnaire: nil) }
-      let!(:avis2){ create(:avis, email: gestionnaire.email, gestionnaire: nil) }
+      let!(:avis) { create(:avis, email: gestionnaire.email, gestionnaire: nil) }
+      let!(:avis2) { create(:avis, email: gestionnaire.email, gestionnaire: nil) }
 
       before do
         subject

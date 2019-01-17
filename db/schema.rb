@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_18_204707) do
+ActiveRecord::Schema.define(version: 2018_12_21_103901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -495,19 +495,6 @@ ActiveRecord::Schema.define(version: 2018_12_18_204707) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_refused_mails_on_procedure_id"
-  end
-
-  create_table "rna_informations", id: :serial, force: :cascade do |t|
-    t.string "association_id"
-    t.string "titre"
-    t.text "objet"
-    t.date "date_creation"
-    t.date "date_declaration"
-    t.date "date_publication"
-    t.integer "entreprise_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["entreprise_id"], name: "index_rna_informations_on_entreprise_id"
   end
 
   create_table "services", force: :cascade do |t|

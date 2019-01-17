@@ -77,7 +77,7 @@ describe MailTemplateConcern do
       describe "in closed mail" do
         let(:mail) { create(:closed_mail, procedure: procedure) }
 
-        it { is_expected.to eq("<a target=\"_blank\" href=\"http://localhost:3000/dossiers/#{dossier.id}/attestation\">http://localhost:3000/dossiers/#{dossier.id}/attestation</a>") }
+        it { is_expected.to eq("<a target=\"_blank\" rel=\"noopener\" href=\"http://localhost:3000/dossiers/#{dossier.id}/attestation\">http://localhost:3000/dossiers/#{dossier.id}/attestation</a>") }
       end
 
       describe "in refuse mail" do

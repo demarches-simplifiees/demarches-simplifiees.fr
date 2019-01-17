@@ -95,14 +95,14 @@ describe Gestionnaire, type: :model do
       let(:procedure_to_assign) { procedure_3 }
 
       it { is_expected.to be_truthy }
-      it { expect{ subject }.to change(gestionnaire.procedures, :count) }
+      it { expect { subject }.to change(gestionnaire.procedures, :count) }
     end
 
     context "with an already assigned procedure" do
       let(:procedure_to_assign) { procedure }
 
       it { is_expected.to be_falsey }
-      it { expect{ subject }.not_to change(gestionnaire.procedures, :count) }
+      it { expect { subject }.not_to change(gestionnaire.procedures, :count) }
     end
   end
 
@@ -149,13 +149,12 @@ describe Gestionnaire, type: :model do
     end
 
     it 'syncs credentials to associated administrateur' do
-      gestionnaire = create(:gestionnaire)
-      admin = create(:administrateur, email: gestionnaire.email)
+      admin = create(:administrateur)
+      gestionnaire = admin.gestionnaire
 
-      gestionnaire.update(email: 'whoami@plop.com', password: 'super secret')
+      gestionnaire.update(password: 'super secret')
 
       admin.reload
-      expect(admin.email).to eq('whoami@plop.com')
       expect(admin.valid_password?('super secret')).to be(true)
     end
   end
@@ -390,6 +389,47 @@ describe Gestionnaire, type: :model do
       after { Timecop.return }
 
       it { expect(follow.demande_seen_at).to eq(freeze_date) }
+    end
+  end
+
+  describe '#login_token_valid?' do
+    let!(:gestionnaire) { create(:gestionnaire) }
+    let!(:good_token) { gestionnaire.login_token! }
+
+    it { expect(gestionnaire.login_token_valid?(good_token)).to be true }
+    it { expect(gestionnaire.login_token_valid?('bad_token')).to be false }
+
+    context 'when the token as expired' do
+      before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_VALIDITY + 1.minute).ago) }
+
+      it { expect(gestionnaire.login_token_valid?(good_token)).to be false }
+    end
+
+    context 'when the gestionnaire does not have a token' do
+      before { gestionnaire.update(encrypted_login_token: nil) }
+
+      it { expect(gestionnaire.login_token_valid?(nil)).to be false }
+    end
+  end
+
+  describe '#young_login_token?' do
+    let!(:gestionnaire) { create(:gestionnaire) }
+
+    context 'when there is a token' do
+      let!(:good_token) { gestionnaire.login_token! }
+
+      context 'when the token has just been created' do
+        it { expect(gestionnaire.young_login_token?).to be true }
+      end
+
+      context 'when the token is a bit old' do
+        before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
+        it { expect(gestionnaire.young_login_token?).to be false }
+      end
+    end
+
+    context 'when there are no token' do
+      it { expect(gestionnaire.young_login_token?).to be false }
     end
   end
 

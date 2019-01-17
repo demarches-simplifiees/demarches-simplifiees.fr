@@ -1,8 +1,10 @@
 class AdminController < ApplicationController
+  layout 'application_old'
+
   before_action :authenticate_administrateur!
 
   def index
-    redirect_to (admin_procedures_path)
+    redirect_to(admin_procedures_path)
   end
 
   def retrieve_procedure

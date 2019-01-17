@@ -1,0 +1,22 @@
+- procedure = @procedure || @dossier&.procedure || nil
+
+- content_for :content do
+  .two-columns.procedure-context
+    .columns-container
+
+      .column.procedure-preview
+        - if procedure
+          = render partial: 'layouts/commencer/procedure_description', locals: { procedure: procedure }
+        - else
+          = render partial: 'layouts/commencer/no_procedure'
+
+      .column.procedure-context-content
+        = yield
+
+- content_for :footer do
+  - if procedure
+    = render partial: 'new_user/procedure_footer', locals: { procedure: procedure, dossier: @dossier }
+  - else
+    = render partial: 'new_user/dossiers/index_footer'
+
+= render template: 'layouts/application'

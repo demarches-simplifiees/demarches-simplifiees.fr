@@ -1,7 +1,7 @@
 class AutoReceiveDossiersForProcedureJob < ApplicationJob
   queue_as :cron
 
-  def perform(procedure_id, state, gestionnaire_id = nil)
+  def perform(procedure_id, state)
     procedure = Procedure.find(procedure_id)
     gestionnaire = procedure.gestionnaire_for_cron_job
 

@@ -3,75 +3,16 @@
 @import "placeholders";
 @import "mixins";
 
-$auth-breakpoint: $two-columns-breakpoint;
-
-.preview {
-  font-size: 24px;
-
-  .paperless-logo {
-    width: 100%;
-    margin-bottom: 60px;
-
-    @media (max-width: $auth-breakpoint) {
-      display: none;
-    }
-  }
-
-  h3 {
-    color: $blue;
-    font-weight: bold;
-  }
-
-  .close-procedure {
-    font-size: 12px;
-  }
-
-  .procedure-title {
-    font-size: 30px;
-    margin: 20px 0 0;
-
-    @media (min-width: $auth-breakpoint) {
-      margin: 50px 0 32px;
-    }
-  }
-
-  .procedure-description {
-    font-size: 14px;
-
-    p {
-      margin-bottom: 2 * $default-spacer;
-    }
-
-    @media (max-width: $auth-breakpoint) {
-      display: none; // TO FIX : make this description available for small devices
-    }
-  }
-
-  .procedure-logos {
-    display: flex;
-    justify-content: space-around;
-
-    img {
-      max-height: 50px;
-      max-width: 100%;
-      margin: 0 10px;
-
-      @media (min-width: $auth-breakpoint) {
-        max-height: 130px;
-        max-width: 500px;
-      }
-    }
-  }
-}
-
 .auth-form {
-  .reset-password {
-    margin-top: - 3 * $default-spacer;
-    margin-bottom: $default-spacer;
+  .auth-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4 * $default-spacer;
   }
 
   .remember-me {
     display: inline-block;
+    margin-bottom: 0;
   }
 
   .separation {
@@ -120,10 +61,12 @@ $auth-breakpoint: $two-columns-breakpoint;
   }
 }
 
-.identity-form {
-  @media (max-width: $two-columns-breakpoint) {
-    input[type=submit] {
-      margin-bottom: 2 * $default-padding;
-    }
+.sign-in-form .form {
+  input[type="password"] {
+    margin-bottom: $default-spacer;
+  }
+
+  input[type="checkbox"] {
+    margin-bottom: 0;
   }
 }

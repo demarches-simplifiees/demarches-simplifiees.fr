@@ -120,11 +120,9 @@ class ProcedureExportService
 
   def etablissements_table_data
     @etablissements = @dossiers.flat_map do |dossier|
-      dossier.champs.select do |champ|
-        champ.is_a?(Champs::SiretChamp)
-      end + dossier.champs_private.select do |champ|
-        champ.is_a?(Champs::SiretChamp)
-      end
+      [dossier.champs, dossier.champs_private]
+        .flatten
+        .select { |champ| champ.is_a?(Champs::SiretChamp) }
     end.map(&:etablissement).compact
 
     if @etablissements.any?
@@ -139,22 +137,13 @@ class ProcedureExportService
   end
 
   def dossiers_headers
-    headers = ATTRIBUTES.map do |key|
-      label_for_export(key.to_s)
-    end
-    headers += @procedure.types_de_champ.reject(&:exclude_from_export?).map do |champ|
-      label_for_export(champ.libelle)
-    end
-    headers += @procedure.types_de_champ_private.reject(&:exclude_from_export?).map do |champ|
-      label_for_export(champ.libelle)
-    end
-    headers += ETABLISSEMENT_ATTRIBUTES.map do |key|
-      label_for_export("etablissement.#{key}")
-    end
-    headers += ENTREPRISE_ATTRIBUTES.map do |key|
-      label_for_export("entreprise.#{key}")
-    end
-    headers
+    headers = ATTRIBUTES.map(&:to_s) +
+      @procedure.types_de_champ.reject(&:exclude_from_export?).map(&:libelle) +
+      @procedure.types_de_champ_private.reject(&:exclude_from_export?).map(&:libelle) +
+      ETABLISSEMENT_ATTRIBUTES.map { |key| "etablissement.#{key}" } +
+      ENTREPRISE_ATTRIBUTES.map { |key| "entreprise.#{key}" }
+
+    headers.map { |header| label_for_export(header) }
   end
 
   def dossiers_data
@@ -183,36 +172,28 @@ class ProcedureExportService
           dossier.read_attribute(key)
         end
       end
-      values = normalize_values(values)
-      values += dossier.champs.reject(&:exclude_from_export?).map do |champ|
-        value_for_export(champ)
-      end
-      values += dossier.champs_private.reject(&:exclude_from_export?).map do |champ|
-        value_for_export(champ)
-      end
-      values += etablissement_data(dossier.etablissement)
-      values
+
+      normalize_values(values) +
+        dossier.champs.reject(&:exclude_from_export?).map(&:for_export) +
+        dossier.champs_private.reject(&:exclude_from_export?).map(&:for_export) +
+        etablissement_data(dossier.etablissement)
     end
   end
 
   def etablissements_headers
-    headers = [:dossier_id, :libelle]
-    headers += ETABLISSEMENT_ATTRIBUTES.map do |key|
-      label_for_export("etablissement.#{key}")
-    end
-    headers += ENTREPRISE_ATTRIBUTES.map do |key|
-      label_for_export("entreprise.#{key}")
-    end
-    headers
+    headers = ["dossier_id", "libelle"] +
+      ETABLISSEMENT_ATTRIBUTES.map { |key| "etablissement.#{key}" } +
+      ENTREPRISE_ATTRIBUTES.map { |key| "entreprise.#{key}" }
+
+    headers.map { |header| label_for_export(header) }
   end
 
   def etablissements_data
     @etablissements.map do |etablissement|
-      data = [
+      [
         etablissement.champ.dossier_id,
         label_for_export(etablissement.champ.libelle).to_s
-      ]
-      data += etablissement_data(etablissement)
+      ] + etablissement_data(etablissement)
     end
   end
 
@@ -242,10 +223,6 @@ class ProcedureExportService
 
   def label_for_export(label)
     label.parameterize.underscore.to_sym
-  end
-
-  def value_for_export(champ)
-    champ.for_export
   end
 
   def normalize_values(values)

@@ -10,14 +10,15 @@ FactoryBot.define do
     administrateur { create(:administrateur) }
     duree_conservation_dossiers_dans_ds { 3 }
     duree_conservation_dossiers_hors_ds { 6 }
+    ask_birthday { false }
 
     factory :procedure_with_dossiers do
       transient do
         dossiers_count { 1 }
       end
 
-      after(:build) do |procedure, _evaluator|
-        procedure.dossiers << create_list(:dossier, _evaluator.dossiers_count, procedure: procedure)
+      after(:build) do |procedure, evaluator|
+        procedure.dossiers << create_list(:dossier, evaluator.dossiers_count, procedure: procedure)
       end
     end
 

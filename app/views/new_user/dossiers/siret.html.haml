@@ -1,25 +1,14 @@
 - content_for(:title, "Nouveau dossier (#{@dossier.procedure.libelle})")
 
-- content_for :footer do
-  = render partial: "new_user/dossiers/dossier_footer", locals: { dossier: @dossier }
+- if !dossier_submission_is_closed?(@dossier)
+  = form_for current_user, url: siret_dossier_path(@dossier), html: { class: 'form', method: 'post' } do |f|
+    %h1 Identifier votre établissement
 
-.two-columns
-  .columns-container
-    .column.preview
-      = render partial: "new_user/dossiers/demarche_overview", locals: { procedure: @dossier.procedure }
+    %p.mb-1 Merci de remplir le numéro de SIRET de votre entreprise, administration ou association pour commencer la démarche.
 
-    .column.identity-form
-      = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
+    = f.label :siret, style: "display: none"
+    = f.text_field :siret, placeholder: "Numéro SIRET à 14 chiffres", required: true
 
-      - if !dossier_submission_is_closed?(@dossier)
-        = form_for current_user, url: siret_dossier_path(@dossier), html: { class: 'form', method: 'post' } do |f|
-          %h1 Identifier votre établissement
+    = f.hidden_field :dossier_id, value: @dossier.id
 
-          %p.mb-1 Merci de remplir le numéro de SIRET de votre entreprise, administration ou association pour commencer la démarche.
-
-          = f.label :siret, style: "display: none"
-          = f.text_field :siret, placeholder: "Numéro SIRET à 14 chiffres", required: true
-
-          = f.hidden_field :dossier_id, value: @dossier.id
-
-          = f.submit "Valider", class: "button large primary expand", data: { disable_with: "Récupération des informations…" }
+    = f.submit "Valider", class: "button large primary expand", data: { disable_with: "Récupération des informations…" }

@@ -119,4 +119,8 @@ class Administrateur < ApplicationRecord
   def owns?(procedure)
     id == procedure.administrateur_id
   end
+
+  def gestionnaire
+    Gestionnaire.find_by(email: email)
+  end
 end

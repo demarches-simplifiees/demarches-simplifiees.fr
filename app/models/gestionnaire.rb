@@ -3,6 +3,9 @@ class Gestionnaire < ApplicationRecord
   include EmailSanitizableConcern
   include ActiveRecord::SecureToken
 
+  LOGIN_TOKEN_VALIDITY = 45.minutes
+  LOGIN_TOKEN_YOUTH = 15.minutes
+
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
 
@@ -141,7 +144,7 @@ class Gestionnaire < ApplicationRecord
 
   def login_token_valid?(login_token)
     BCrypt::Password.new(encrypted_login_token) == login_token &&
-      30.minutes.ago < login_token_created_at
+      LOGIN_TOKEN_VALIDITY.ago < login_token_created_at
   rescue BCrypt::Errors::InvalidHash
     false
   end
@@ -207,6 +210,11 @@ class Gestionnaire < ApplicationRecord
     Flipflop.feature_set.feature(feature)
     features[feature.to_s] = true
     save
+  end
+
+  def young_login_token?
+    login_token_created_at.present? &&
+      LOGIN_TOKEN_YOUTH.ago < login_token_created_at
   end
 
   private

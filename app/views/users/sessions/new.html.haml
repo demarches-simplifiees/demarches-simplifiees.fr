@@ -1,61 +1,39 @@
-.two-columns.auth
-  .columns-container
-    .column.preview
-      - if !@dossier
-        = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo"
-        .baseline.center
-          %h3 Un outil simple
-          %p
-            pour gérer les formulaires
-            %br
-            administratifs dématérialisés.
-      - else
-        .text-right
-          = link_to "Fermer", users_no_procedure_url, class: "link close-procedure"
-        .procedure-logos
-          = image_tag @dossier.procedure.decorate.logo_img
-          - if @dossier.procedure.euro_flag
-            = image_tag "flag_of_europe.svg"
+.auth-form.sign-in-form
+  - if resource_name == :user
+    %p.register
+      %span
+        Nouveau sur #{SITE_NAME} ?
+      = link_to "Créer un compte", new_registration_path(resource_name), class: "button primary auth-signup-button"
 
-        %h2.procedure-title
-          = @dossier.procedure.libelle
-        .procedure-description
-          = h simple_format(@dossier.procedure.description)
+    %hr
 
-    .column.auth-form
-      - if resource_name == :user
-        %p.register
-          %span
-            Nouveau sur #{SITE_NAME} ?
-          = link_to "Créer un compte", new_registration_path(resource_name), class: "button primary auth-signup-button"
+  = form_for @user, url: user_session_path, html: { class: "form" } do |f|
+    %h1 Connectez-vous
 
-        %hr
+    = f.label :email, "Email"
+    = f.text_field :email, autofocus: true
 
-      = form_for @user, url: user_session_path, html: { class: "form" } do |f|
-        %h1 Connectez-vous
+    = f.label :password, "Mot de passe"
+    = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
 
-        = f.label :email, "Email"
-        = f.text_field :email, autofocus: true
-
-        = f.label :password, "Mot de passe"
-        = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
-
-        - if [:user, :gestionnaire].include?(resource_name)
-          .reset-password.text-right
-            = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
-
-        - if devise_mapping.rememberable?
+    .auth-options
+      - if devise_mapping.rememberable?
+        %div
           = f.check_box :remember_me, as: :boolean
           = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
 
-        = f.submit "Se connecter", class: "button large primary expand"
+      - if [:user, :gestionnaire].include?(resource_name)
+        .text-right
+          = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
 
-      .separation.center
-        ou
+    = f.submit "Se connecter", class: "button large primary expand"
 
-      .center
-        = image_tag "login-with-fc-hover.svg", style: "display: none"
-        = link_to "", france_connect_particulier_path, class: "login-with-fc"
+  .separation.center
+    ou
 
-      .center
-        = link_to "Qu’est-ce que FranceConnect ?", "https://app.franceconnect.gouv.fr/en-savoir-plus", target: "_blank", class: "link"
+  .center
+    = image_tag "login-with-fc-hover.svg", style: "display: none"
+    = link_to "", france_connect_particulier_path, class: "login-with-fc"
+
+  .center
+    = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"

@@ -61,12 +61,14 @@ class TypeDeChamp < ApplicationRecord
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
+  before_save :setup_procedure
 
   attr_reader :dynamic_type
 
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { order(order_place: :asc) }
+  scope :root, -> { where(parent_id: nil) }
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
@@ -82,6 +84,7 @@ class TypeDeChamp < ApplicationRecord
   has_one_attached :piece_justificative_template
 
   accepts_nested_attributes_for :drop_down_list
+  accepts_nested_attributes_for :types_de_champ, allow_destroy: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
@@ -159,6 +162,12 @@ class TypeDeChamp < ApplicationRecord
   end
 
   private
+
+  def setup_procedure
+    types_de_champ.each do |type_de_champ|
+      type_de_champ.procedure = procedure
+    end
+  end
 
   def populate_stable_id
     if !stable_id

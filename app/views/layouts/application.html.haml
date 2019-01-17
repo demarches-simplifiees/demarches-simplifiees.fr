@@ -1,20 +1,25 @@
-%html
+!!! 5
+%html{ lang: "fr" }
   %head
-    %meta{ :content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type" }/
+    %meta{ "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" }
+    %meta{ "http-equiv": "X-UA-Compatible", content: "IE=edge" }
     %meta{ name: "turbolinks-cache-control", content: "no-cache" }
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1" }
+    = csrf_meta_tags
+
     %title
-      = t('dynamics.page_title')
-    %meta{ 'http-equiv' => "X-UA-Compatible", :content => "IE=edge" }
+      = content_for?(:title) ? "#{yield(:title)} · demarches-simplifiees.fr" : "demarches-simplifiees.fr"
 
     = favicon_link_tag(image_url("favicons/16x16.png"), type: "image/png", sizes: "16x16")
     = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
 
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': "reload"
-    = stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track': "reload"
-    = javascript_pack_tag    'application-old', defer: true, 'data-turbolinks-track': 'reload'
-    = javascript_include_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
-    = csrf_meta_tags
+    = javascript_pack_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'new_design/new_application', media: 'all', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'new_design/print', media: 'print', 'data-turbolinks-track': 'reload'
+
+    - if Rails.env.development?
+      = stylesheet_link_tag :xray
 
     = render partial: "layouts/matomo"
 
@@ -24,29 +29,21 @@
       }];
 
   %body{ class: browser.platform.ios? ? 'ios' : nil }
-    = render partial: 'layouts/outdated_browser_banner'
-    = render partial: 'layouts/pre_maintenance'
-    - if staging?
-      #beta
-        Env Test
+    .page-wrapper
+      = render partial: "layouts/outdated_browser_banner"
+      = render partial: 'layouts/pre_maintenance'
+      - if staging?
+        #beta
+          Env Test
 
-    #wrap
-      .row
-        #header.navbar
-          = render partial: "layouts/navbar"
-      .row.no-margin
-        - if RenderPartialService.left_panel_exist? @left_pannel_url
-          .col-xs-2#left-panel
-            = render partial: @left_pannel_url
-            - main_container_size = 10
-        - else
-          - main_container_size = 12
+      = render partial: "layouts/new_header"
+      = render partial: "layouts/flash_messages"
+      = content_for?(:content) ? yield(:content) : yield
 
-        = render partial: 'layouts/main_container', locals: { main_container_size: main_container_size }
-    #mask-search
-      %h1
-        %i.fa.fa-times{ style: 'position: fixed; top: 10; right: 30; color: white;' }
+      - if content_for?(:footer)
+        = content_for(:footer)
 
-    = render partial: 'layouts/switch_devise_profile_module'
+      - if Rails.env.development?
+        = javascript_include_tag :xray
 
-    = render partial: 'layouts/footer', locals: { main_container_size: main_container_size }
+      = yield :charts_js

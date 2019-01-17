@@ -1,129 +1,88 @@
-require 'spec_helper'
-
 describe Users::SessionsController, type: :controller do
+  let(:email) { 'unique@plop.com' }
+  let(:password) { 'un super mot de passe' }
   let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
-  let(:user) { create(:user, loged_in_with_france_connect: loged_in_with_france_connect) }
+  let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
 
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
   describe '#create' do
-    it { expect(described_class).to be < Sessions::SessionsController }
+    context "when the user is also a gestionnaire and an administrateur" do
+      let!(:administrateur) { create(:administrateur, :with_admin_trusted_device, email: email, password: password) }
+      let(:gestionnaire) { administrateur.gestionnaire }
+      let(:trusted_device) { true }
+      let(:send_password) { password }
 
-    describe 'France Connect attribut' do
       before do
-        post :create, params: { user: { email: user.email, password: user.password } }
+        allow(controller).to receive(:trusted_device?).and_return(trusted_device)
+        allow(GestionnaireMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
+      end
+
+      subject do
+        post :create, params: { user: { email: email, password: send_password } }
         user.reload
       end
 
-      subject { user.loged_in_with_france_connect.present? }
+      context 'when the device is not trusted' do
+        let(:trusted_device) { false }
 
-      it { is_expected.to be_falsey }
-    end
+        it 'redirects to the confirmation link path' do
+          subject
 
-    context "unified login" do
-      let(:email) { 'unique@plop.com' }
-      let(:password) { 'un super mot de passe' }
+          expect(controller).to redirect_to link_sent_path(email: email)
 
-      let(:user) { create(:user, email: email, password: password) }
-      let(:gestionnaire) { create(:gestionnaire, :with_trusted_device, email: email, password: password) }
-      let(:administrateur) { create(:administrateur, email: email, password: password) }
+          # do not know why, should be test related
+          expect(controller.current_user).to eq(user)
 
-      it 'signs user in' do
-        post :create, params: { user: { email: user.email, password: user.password } }
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to eq(user)
-        expect(subject.current_gestionnaire).to be(nil)
-        expect(subject.current_administrateur).to be(nil)
-        expect(user.reload.loged_in_with_france_connect).to be(nil)
-      end
+          expect(controller.current_gestionnaire).to be(nil)
+          expect(controller.current_administrateur).to be(nil)
+          expect(user.loged_in_with_france_connect).to be(nil)
+          expect(GestionnaireMailer).to have_received(:send_login_token)
+        end
 
-      it 'signs gestionnaire in' do
-        post :create, params: { user: { email: gestionnaire.email, password: gestionnaire.password } }
+        context 'and the user try to connect multiple times in a short period' do
+          before do
+            allow_any_instance_of(Gestionnaire).to receive(:young_login_token?).and_return(true)
+            allow(GestionnaireMailer).to receive(:send_login_token)
+          end
 
-        expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to be(nil)
-        expect(subject.current_administrateur).to be(nil)
+          it 'does not renew nor send a new login token' do
+            subject
+
+            expect(GestionnaireMailer).not_to have_received(:send_login_token)
+          end
+        end
       end
 
       context 'when the device is trusted' do
-        before do
-          allow(controller).to receive(:trusted_device?).and_return(true)
-          post :create, params: { user: { email: gestionnaire.email, password: gestionnaire.password } }
-        end
+        it 'signs in as user, gestionnaire and adminstrateur' do
+          subject
 
-        it 'directly log the gestionnaire' do
-          expect(@response.redirect?).to be(true)
-          expect(subject).not_to redirect_to link_sent_path(email: gestionnaire.email)
+          expect(response.redirect?).to be(true)
+          expect(controller).not_to redirect_to link_sent_path(email: email)
           # TODO when signing in as non-administrateur, and not starting a demarche, log in to gestionnaire path
-          # expect(subject).to redirect_to gestionnaire_procedures_path
-          expect(subject.current_user).to be(nil)
-          expect(subject.current_gestionnaire).to eq(gestionnaire)
-          expect(subject.current_administrateur).to be(nil)
+          # expect(controller).to redirect_to gestionnaire_procedures_path
+
+          expect(controller.current_user).to eq(user)
+          expect(controller.current_gestionnaire).to eq(gestionnaire)
+          expect(controller.current_administrateur).to eq(administrateur)
+          expect(user.loged_in_with_france_connect).to be(nil)
+          expect(GestionnaireMailer).not_to have_received(:send_login_token)
         end
       end
 
-      context 'signs administrateur in' do
-        # an admin has always an gestionnaire role
-        before { gestionnaire }
+      context 'when the credentials are wrong' do
+        let(:send_password) { 'wrong_password' }
 
-        it 'signs administrateur in' do
-          post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
+        it 'fails to sign in with bad credentials' do
+          subject
 
-          expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
-          expect(subject.current_user).to be(nil)
-          expect(subject.current_gestionnaire).to be(nil)
-          expect(subject.current_administrateur).to eq(nil)
-        end
-      end
-
-      context {
-        before do
-          user
-          gestionnaire
-        end
-
-        it 'signs user + gestionnaire + administrateur in' do
-          post :create, params: { user: { email: administrateur.email, password: administrateur.password } }
-
-          expect(subject).to redirect_to link_sent_path(email: gestionnaire.email)
-
-          # TODO: fix me
-          # Strange behaviour: sign_out(:user) does not work in spec
-          # but seems to work in live
-          # expect(controller.current_user).to be(nil)
-
-          expect(subject.current_gestionnaire).to be(nil)
-          expect(subject.current_administrateur).to be(nil)
-          expect(user.reload.loged_in_with_france_connect).to be(nil)
-        end
-      }
-
-      it 'fails to sign in with bad credentials' do
-        post :create, params: { user: { email: user.email, password: 'wrong_password' } }
-        expect(@response.unauthorized?).to be(true)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to be(nil)
-        expect(subject.current_administrateur).to be(nil)
-      end
-
-      context 'with different passwords' do
-        let!(:gestionnaire) { create(:gestionnaire, email: email, password: 'mot de passe complexe') }
-        let!(:administrateur) { create(:administrateur, email: email, password: 'mot de passe complexe') }
-
-        before do
-          user
-        end
-
-        it 'should sync passwords on login' do
-          post :create, params: { user: { email: email, password: password } }
-          gestionnaire.reload
-          administrateur.reload
-          expect(user.valid_password?(password)).to be(true)
-          expect(gestionnaire.valid_password?(password)).to be(true)
-          expect(administrateur.valid_password?(password)).to be(true)
+          expect(response.unauthorized?).to be(true)
+          expect(controller.current_user).to be(nil)
+          expect(controller.current_gestionnaire).to be(nil)
+          expect(controller.current_administrateur).to be(nil)
         end
       end
     end
@@ -193,20 +152,20 @@ describe Users::SessionsController, type: :controller do
         delete :destroy
         expect(@response.headers["Location"]).to eq(FRANCE_CONNECT[:particulier][:logout_endpoint])
       end
+    end
 
-      context "when associated administrateur" do
-        let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
+    context "when associated administrateur" do
+      let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
 
-        it 'signs user + gestionnaire + administrateur out' do
-          sign_in user
-          sign_in gestionnaire
-          sign_in administrateur
-          delete :destroy
-          expect(@response.redirect?).to be(true)
-          expect(subject.current_user).to be(nil)
-          expect(subject.current_gestionnaire).to be(nil)
-          expect(subject.current_administrateur).to be(nil)
-        end
+      it 'signs user + gestionnaire + administrateur out' do
+        sign_in user
+        sign_in administrateur.gestionnaire
+        sign_in administrateur
+        delete :destroy
+        expect(@response.redirect?).to be(true)
+        expect(subject.current_user).to be(nil)
+        expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_administrateur).to be(nil)
       end
     end
   end
@@ -253,13 +212,15 @@ describe Users::SessionsController, type: :controller do
   describe '#sign_in_by_link' do
     context 'when the gestionnaire has non other account' do
       let(:gestionnaire) { create(:gestionnaire) }
+      let!(:good_jeton) { gestionnaire.login_token! }
+
       before do
         allow(controller).to receive(:trust_device)
         post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }
       end
 
       context 'when the token is valid' do
-        let(:jeton) { gestionnaire.login_token! }
+        let(:jeton) { good_jeton }
 
         # TODO when the gestionnaire has no other account, and the token is valid, and the user signing in was not starting a demarche,
         # redirect to root_path, then redirect to gestionnaire_procedures_path (see root_controller)
@@ -282,8 +243,8 @@ describe Users::SessionsController, type: :controller do
       let(:password) { 'un super mot de passe' }
 
       let!(:user) { create(:user, email: email, password: password) }
-      let!(:gestionnaire) { create(:gestionnaire, email: email, password: password) }
       let!(:administrateur) { create(:administrateur, email: email, password: password) }
+      let(:gestionnaire) { administrateur.gestionnaire }
 
       before do
         post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }

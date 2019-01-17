@@ -36,36 +36,22 @@ class Champ < ApplicationRecord
   end
 
   def search_terms
-    [ to_s ]
+    [to_s]
   end
 
   def to_s
-    if value.present?
-      string_value
-    else
-      ''
-    end
+    value.present? ? value.to_s : ''
   end
 
   def for_export
-    if value.present?
-      value_for_export
-    else
-      nil
-    end
+    value.presence
+  end
+
+  def for_api
+    value
   end
 
   def main_value_name
     :value
-  end
-
-  private
-
-  def string_value
-    value.to_s
-  end
-
-  def value_for_export
-    value
   end
 end

@@ -85,7 +85,9 @@
                 = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
                   = image_tag "icons/sign-out.svg"
                   Se déconnecter
-
       - elsif request.path != new_user_session_path
+        - if request.path == new_user_registration_path
+          %li
+            Vous avez déjà un compte ?
         %li
           = link_to "Connexion", new_user_session_path, class: "button navbar"

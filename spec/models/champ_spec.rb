@@ -104,19 +104,19 @@ describe Champ do
       context 'if yes' do
         let(:value) { 'true' }
 
-        it { expect(champ.for_export).to eq('oui') }
+        it { expect(champ.for_export).to eq('Oui') }
       end
 
       context 'if no' do
         let(:value) { 'false' }
 
-        it { expect(champ.for_export).to eq('non') }
+        it { expect(champ.for_export).to eq('Non') }
       end
 
       context 'if nil' do
         let(:value) { nil }
 
-        it { expect(champ.for_export).to eq(nil) }
+        it { expect(champ.for_export).to eq('Non') }
       end
     end
 
@@ -128,7 +128,7 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_address) }
         let(:value) { "10 rue du Pinson qui Piaille" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for checkbox champ' do
@@ -138,7 +138,7 @@ describe Champ do
         context 'when the box is checked' do
           let(:value) { 'on' }
 
-          it { is_expected.to eq([ libelle ]) }
+          it { is_expected.to eq([libelle]) }
         end
 
         context 'when the box is unchecked' do
@@ -152,7 +152,7 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_civilite) }
         let(:value) { "M." }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for date champ' do
@@ -173,28 +173,28 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_departements) }
         let(:value) { "69 - Rhône" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for dossier link champ' do
         let(:type_de_champ) { build(:type_de_champ_dossier_link) }
         let(:value) { "9103132886" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for drop down list champ' do
         let(:type_de_champ) { build(:type_de_champ_dossier_link) }
         let(:value) { "HLM" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for email champ' do
         let(:type_de_champ) { build(:type_de_champ_email) }
         let(:value) { "machin@example.com" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for engagement champ' do
@@ -204,7 +204,7 @@ describe Champ do
         context 'when the box is checked' do
           let(:value) { 'on' }
 
-          it { is_expected.to eq([ libelle ]) }
+          it { is_expected.to eq([libelle]) }
         end
 
         context 'when the box is unchecked' do
@@ -239,7 +239,7 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list) }
 
         context 'when there are multiple values selected' do
-          let(:value) { JSON.generate([ 'goodbye', 'cruel', 'world' ]) }
+          let(:value) { JSON.generate(['goodbye', 'cruel', 'world']) }
 
           it { is_expected.to eq(["goodbye", "cruel", "world"]) }
         end
@@ -255,21 +255,21 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_number) }
         let(:value) { "1234" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for pays champ' do
         let(:type_de_champ) { build(:type_de_champ_pays) }
         let(:value) { "FRANCE" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for phone champ' do
         let(:type_de_champ) { build(:type_de_champ_phone) }
         let(:value) { "0606060606" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for pièce justificative champ' do
@@ -283,7 +283,7 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_regions) }
         let(:value) { "Île-de-France" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for siret champ' do
@@ -325,14 +325,14 @@ describe Champ do
           end
           let(:champ) { type_de_champ.champ.build(value: etablissement.siret, etablissement: etablissement) }
 
-          it { is_expected.to eq([ etablissement.entreprise_siren, etablissement.entreprise_numero_tva_intracommunautaire, etablissement.entreprise_forme_juridique, etablissement.entreprise_forme_juridique_code, etablissement.entreprise_nom_commercial, etablissement.entreprise_raison_sociale, etablissement.entreprise_siret_siege_social, etablissement.entreprise_nom, etablissement.entreprise_prenom, etablissement.association_rna, etablissement.association_titre, etablissement.association_objet, etablissement.siret, etablissement.naf, etablissement.libelle_naf, etablissement.adresse, etablissement.code_postal, etablissement.localite, etablissement.code_insee_localite ]) }
+          it { is_expected.to eq([etablissement.entreprise_siren, etablissement.entreprise_numero_tva_intracommunautaire, etablissement.entreprise_forme_juridique, etablissement.entreprise_forme_juridique_code, etablissement.entreprise_nom_commercial, etablissement.entreprise_raison_sociale, etablissement.entreprise_siret_siege_social, etablissement.entreprise_nom, etablissement.entreprise_prenom, etablissement.association_rna, etablissement.association_titre, etablissement.association_objet, etablissement.siret, etablissement.naf, etablissement.libelle_naf, etablissement.adresse, etablissement.code_postal, etablissement.localite, etablissement.code_insee_localite]) }
         end
 
         context 'when there is no etablissement' do
           let(:siret) { "35130347400024" }
           let(:champ) { type_de_champ.champ.build(value: siret) }
 
-          it { is_expected.to eq([ siret ]) }
+          it { is_expected.to eq([siret]) }
         end
       end
 
@@ -340,14 +340,14 @@ describe Champ do
         let(:type_de_champ) { build(:type_de_champ_text) }
         let(:value) { "Blah" }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for text area champ' do
         let(:type_de_champ) { build(:type_de_champ_textarea) }
         let(:value) { "Bla\nBlah de bla." }
 
-        it { is_expected.to eq([ value ]) }
+        it { is_expected.to eq([value]) }
       end
 
       context 'for yes/no champ' do
@@ -357,7 +357,7 @@ describe Champ do
         context 'when the box is checked' do
           let(:value) { "true" }
 
-          it { is_expected.to eq([ libelle ]) }
+          it { is_expected.to eq([libelle]) }
         end
 
         context 'when the box is unchecked' do
@@ -385,32 +385,46 @@ describe Champ do
       context 'and there is a blob' do
         before { champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain") }
 
-        it { expect{ champ.save }.to change(VirusScan, :count).by(1) }
+        it { expect { champ.save }.to change(VirusScan, :count).by(1) }
       end
 
       context 'and there is no blob' do
-        it { expect{ champ.save }.to_not change(VirusScan, :count) }
+        it { expect { champ.save }.to_not change(VirusScan, :count) }
       end
     end
 
     context 'when type_champ is not type_de_champ_piece_justificative' do
       let(:type_de_champ) { create(:type_de_champ_textarea) }
 
-      it { expect{ champ.save }.to_not change(VirusScan, :count) }
+      it { expect { champ.save }.to_not change(VirusScan, :count) }
     end
   end
 
   describe "repetition" do
-    let(:champ) { create(:champ_repetition) }
+    let(:dossier) { create(:dossier) }
+    let(:champ) { create(:champ_repetition, dossier: dossier) }
     let(:champ_text) { create(:champ_text, row: 0) }
     let(:champ_integer_number) { create(:champ_integer_number, row: 0) }
-    let(:champ_text2) { create(:champ_text, row: 1) }
+    let(:champ_text_attrs) { attributes_for(:champ_text, row: 1) }
 
-    it {
+    it "associates nested champs to the parent dossier" do
       expect(champ.rows.size).to eq(0)
+      dossier.reload
+      expect(dossier.champs.size).to eq(2)
 
-      champ.champs << champ_text2
+      dossier.update(champs_attributes: [
+        {
+          id: champ.id,
+          champs_attributes: [champ_text_attrs]
+        }
+      ])
+
+      champ.reload
+      dossier.reload
+      expect(dossier.champs.size).to eq(2)
       expect(champ.rows.size).to eq(1)
+
+      expect(champ.champs.first.dossier).to eq(dossier)
 
       champ.champs << champ_integer_number
       row = champ.reload.rows.first
@@ -423,6 +437,6 @@ describe Champ do
       expect(row.second).to eq(champ_text)
 
       expect(champ.rows.size).to eq(2)
-    }
+    end
   end
 end

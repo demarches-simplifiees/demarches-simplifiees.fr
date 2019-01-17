@@ -24,7 +24,7 @@ RSpec.describe ConservationDeDonneesHelper, type: :helper do
       let(:dans_ds) { nil }
       let(:hors_ds) { 6 }
 
-      it { is_expected.to eq([ "Par l’administration : 6 mois" ]) }
+      it { is_expected.to eq(["Par l’administration : 6 mois"]) }
     end
 
     context "when the retention time is not set" do

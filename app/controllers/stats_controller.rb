@@ -1,6 +1,4 @@
 class StatsController < ApplicationController
-  layout "new_application"
-
   before_action :authenticate_administration!, only: [:download]
 
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
@@ -135,25 +133,26 @@ class StatsController < ApplicationController
       Feedback.ratings.fetch(:neutral)  => "Neutres",
       Feedback.ratings.fetch(:unhappy)  => "Mécontents"
     }
-    interval = 6.weeks.ago.beginning_of_week..1.week.ago.beginning_of_week
 
+    number_of_weeks = 6
     totals = Feedback
-      .where(created_at: interval)
-      .group_by_week(:created_at)
+      .group_by_week(:created_at, last: number_of_weeks, current: false)
       .count
 
     Feedback.ratings.values.map do |rating|
       data = Feedback
-        .where(created_at: interval, rating: rating)
-        .group_by_week(:created_at)
+        .where(rating: rating)
+        .group_by_week(:created_at, last: number_of_weeks, current: false)
         .count
         .map do |week, count|
           total = totals[week]
+          # By default a week is displayed by the first day of the week – but we'd rather display the last day
+          label = week.next_week
 
           if total > 0
-            [week, (count.to_f / total * 100).round(2)]
+            [label, (count.to_f / total * 100).round(2)]
           else
-            0
+            [label, 0]
           end
         end.to_h
 
@@ -165,10 +164,15 @@ class StatsController < ApplicationController
   end
 
   def contact_percentage
-    from = Date.new(2017, 10)
+    from = Date.new(2018, 1)
     to = Date.today.prev_month
 
-    Helpscout::UserConversationsAdapter.new(from, to)
+    adapter = Helpscout::UserConversationsAdapter.new(from, to)
+    if !adapter.can_fetch_reports?
+      return nil
+    end
+
+    adapter
       .reports
       .map do |monthly_report|
         start_date = monthly_report[:start_date].to_time.localtime
@@ -211,7 +215,7 @@ class StatsController < ApplicationController
 
     association
       .where(date_attribute => min_date..max_date)
-      .group("DATE_TRUNC('month', #{date_attribute.to_s})")
+      .group("DATE_TRUNC('month', #{date_attribute})")
       .count
       .to_a
       .sort_by { |a| a[0] }
@@ -221,8 +225,8 @@ class StatsController < ApplicationController
   def cumulative_hash(association, date_attribute)
     sum = 0
     association
-      .where("#{date_attribute.to_s} < ?", max_date)
-      .group("DATE_TRUNC('month', #{date_attribute.to_s})")
+      .where("#{date_attribute} < ?", max_date)
+      .group("DATE_TRUNC('month', #{date_attribute})")
       .count
       .to_a
       .sort_by { |a| a[0] }
@@ -271,7 +275,7 @@ class StatsController < ApplicationController
       dossiers_grouped_by_procedure = value.group_by { |dossier| dossier[0] }
 
       # Compute the mean time for this procedure
-      procedure_processing_times = dossiers_grouped_by_procedure.map do |procedure_id, procedure_dossiers|
+      procedure_processing_times = dossiers_grouped_by_procedure.map do |_procedure_id, procedure_dossiers|
         procedure_dossiers_processing_time = procedure_dossiers.map do |dossier|
           (dossier[2] - dossier[1]).to_f / (3600 * 24)
         end

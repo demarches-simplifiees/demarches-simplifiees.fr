@@ -116,7 +116,7 @@ describe StatsController, type: :controller do
       create(:procedure, published_at: Time.zone.now, administrateur: administrateur_4)
     end
 
-    let(:association){ Procedure.all }
+    let(:association) { Procedure.all }
 
     subject { StatsController.new.send(:procedures_count_per_administrateur, association) }
 
@@ -227,6 +227,63 @@ describe StatsController, type: :controller do
     subject { StatsController.new.send(:dossier_filling_mean_time, association) }
 
     it { expect(subject).to eq(@expected_hash) }
+  end
+
+  describe "#satisfaction_usagers" do
+    before do
+      # Test the stats on October 2018 – where the 1st, 8th, 15th, 22th and 29th are conveniently Mondays
+      # Current week: 1 negative feedback
+      Timecop.freeze(Time.zone.local(2018, 10, 22, 12, 00)) { create(:feedback, :unhappy) }
+      # Last week: 3 positive, 1 negative
+      Timecop.freeze(Time.zone.local(2018, 10, 21, 12, 00)) { create(:feedback, :unhappy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 19, 12, 00)) { create(:feedback, :happy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 17, 12, 00)) { create(:feedback, :happy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 15, 12, 00)) { create(:feedback, :happy) }
+      # N-2 week: 2 positive, 2 negative
+      Timecop.freeze(Time.zone.local(2018, 10, 14, 12, 00)) { create(:feedback, :unhappy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 12, 12, 00)) { create(:feedback, :happy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 10, 12, 00)) { create(:feedback, :unhappy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 8, 12, 00)) { create(:feedback, :happy) }
+      # N-3 week: 1 positive, 3 negative
+      Timecop.freeze(Time.zone.local(2018, 10, 1, 12, 00)) { create(:feedback, :unhappy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 3, 12, 00)) { create(:feedback, :happy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 5, 12, 00)) { create(:feedback, :unhappy) }
+      Timecop.freeze(Time.zone.local(2018, 10, 7, 12, 00)) { create(:feedback, :unhappy) }
+    end
+
+    subject(:stats) do
+      Timecop.freeze(Time.zone.local(2018, 10, 28, 12, 00)) {
+        StatsController.new.send(:satisfaction_usagers)
+      }
+    end
+
+    it 'returns one set of values for each kind of feedback' do
+      expect(stats.count).to eq 3
+      expect(stats.map { |g| g[:name] }).to contain_exactly('Satisfaits', 'Neutres', 'Mécontents')
+    end
+
+    it 'returns weekly ratios between a given feedback and all feedback' do
+      happy_data = stats.find { |g| g[:name] == 'Satisfaits' }[:data]
+      expect(happy_data.values[0]).to eq 0
+      expect(happy_data.values[1]).to eq 0
+      expect(happy_data.values[2]).to eq 0
+      expect(happy_data.values[3]).to eq 25.0
+      expect(happy_data.values[4]).to eq 50.0
+      expect(happy_data.values[5]).to eq 75.0
+
+      unhappy_data = stats.find { |g| g[:name] == 'Mécontents' }[:data]
+      expect(unhappy_data.values[0]).to eq 0
+      expect(unhappy_data.values[1]).to eq 0
+      expect(unhappy_data.values[2]).to eq 0
+      expect(unhappy_data.values[3]).to eq 75.0
+      expect(unhappy_data.values[4]).to eq 50.0
+      expect(unhappy_data.values[5]).to eq 25.0
+    end
+
+    it 'excludes values still in the current week' do
+      unhappy_data = stats.find { |g| g[:name] == 'Mécontents' }[:data]
+      expect(unhappy_data.values).not_to include(100.0)
+    end
   end
 
   describe '#avis_usage' do

@@ -5,7 +5,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
     it "is present" do
       before_actions = NewGestionnaire::ProceduresController
         ._process_action_callbacks
-        .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
+        .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:ensure_ownership!)
@@ -46,7 +46,7 @@ describe NewGestionnaire::ProceduresController, type: :controller do
     it "is present" do
       before_actions = NewGestionnaire::ProceduresController
         ._process_action_callbacks
-        .find_all{ |process_action_callbacks| process_action_callbacks.kind == :before }
+        .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:redirect_to_avis_if_needed)
@@ -253,10 +253,10 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
 
       describe 'statut' do
-        let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) } }
-        let!(:new_followed_dossier) { Timecop.freeze(2.days.ago){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) } }
-        let!(:termine_dossier) { Timecop.freeze(3.days.ago){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) } }
-        let!(:archived_dossier) { Timecop.freeze(4.days.ago){ create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) } }
+        let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) } }
+        let!(:new_followed_dossier) { Timecop.freeze(2.days.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) } }
+        let!(:termine_dossier) { Timecop.freeze(3.days.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) } }
+        let!(:archived_dossier) { Timecop.freeze(4.days.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) } }
 
         before do
           gestionnaire.followed_dossiers << new_followed_dossier
