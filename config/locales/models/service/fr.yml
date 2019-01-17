@@ -8,3 +8,15 @@ fr:
     prefecture: 'préfecture'
     region: 'région'
     autre: 'autre'
+  activerecord:
+    attributes:
+      service:
+        siret: "Numéro TAHITI"
+    errors:
+      models:
+        service:
+          attributes:
+            siret:
+              format: 'doit commencer par une lettre ou un chiffre, suivi de 5 chiffres'
+              invalid: 'ne correspond pas à un établissement existant'
+              checksum: 'comporte une erreur, vérifiez les chiffres composant le numéro'
