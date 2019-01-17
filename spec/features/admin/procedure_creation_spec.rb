@@ -150,7 +150,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         find('#publish-procedure').click
 
         within '#publish-modal' do
-          expect(page).to have_field('procedure_path', with: 'lien-de-la-procedure')
+          expect(page).to have_field('procedure_path')
           click_on 'publish'
         end
 

@@ -10,7 +10,7 @@ module ProcedureHelper
   end
 
   def procedure_libelle(procedure)
-    parts = procedure.brouillon? ? [content_tag(:span, 'démarche non publiée', class: 'badge')] : []
+    parts = procedure.brouillon? ? [content_tag(:span, 'démarche en test', class: 'badge')] : []
     parts << procedure.libelle
     safe_join(parts, ' ')
   end
