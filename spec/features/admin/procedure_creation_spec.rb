@@ -5,9 +5,11 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur, :with_procedure) }
+  let(:test_strategy) { Flipflop::FeatureSet.current.test! }
 
   before do
-    Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
+    test_strategy.switch!(:publish_draft, true)
+    test_strategy.switch!(:new_champs_editor, true)
     login_as administrateur, scope: :administrateur
     visit root_path
   end
@@ -45,13 +47,13 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         fill_in_dummy_procedure_details
         click_on 'save-procedure'
 
-        expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.last))
+        expect(page).to have_current_path(champs_procedure_path(Procedure.last))
       end
     end
 
     context "when publish_draft disabled" do
       before do
-        Flipflop::FeatureSet.current.test!.switch!(:publish_draft, false)
+        test_strategy.switch!(:publish_draft, false)
       end
 
       scenario 'Finding save button for new procedure, libelle, description and cadre_juridique required' do
@@ -68,7 +70,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         fill_in_dummy_procedure_details(fill_path: false)
         click_on 'save-procedure'
 
-        expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.last))
+        expect(page).to have_current_path(champs_procedure_path(Procedure.last))
       end
     end
   end
@@ -95,12 +97,22 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       end
 
       scenario 'Add champ, add file, visualize them in procedure preview' do
-        fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
-        click_on 'add_type_de_champ'
-        expect(page).to have_current_path(admin_procedure_types_de_champ_path(Procedure.last))
-        expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
-        expect(Procedure.last.types_de_champ.first.libelle).to eq('libelle de champ')
+        page.refresh
+        expect(page).to have_current_path(champs_procedure_path(Procedure.last))
 
+        within '.footer' do
+          click_on 'Ajouter un champ'
+        end
+        expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
+        fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
+        expect(page).to have_content('Champs enregistrés')
+
+        within '.footer' do
+          click_on 'Ajouter un champ'
+        end
+        expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
+
+        click_on Procedure.last.libelle
         click_on 'onglet-pieces'
         expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))
         fill_in 'procedure_types_de_piece_justificative_attributes_0_libelle', with: 'libelle de piece'
@@ -117,8 +129,15 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       end
 
       scenario 'After adding champ and file, make publication' do
+        page.refresh
+
+        within '.footer' do
+          click_on 'Ajouter un champ'
+        end
         fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
-        click_on 'add_type_de_champ'
+        expect(page).to have_content('Champs enregistrés')
+
+        click_on Procedure.last.libelle
         click_on 'onglet-pieces'
 
         expect(page).to have_current_path(admin_procedure_pieces_justificatives_path(Procedure.last))

@@ -107,6 +107,12 @@
     }
   }
 
+  input[type=checkbox] {
+    &.small-margin {
+      margin-bottom: $default-padding / 2;
+    }
+  }
+
   input[type=text]:not([data-address='true']),
   input[type=email],
   input[type=password],
