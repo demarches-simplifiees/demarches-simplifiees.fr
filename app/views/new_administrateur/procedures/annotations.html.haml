@@ -1,0 +1,12 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Configuration des annotations privées'], preview: true }
+
+.container
+  %h1 Configuration des annotations privées
+  %br
+
+  = form_for @procedure, remote: true, html: { class: 'form' } do |form|
+    #champs-editor{ data: types_de_champ_private_data(@procedure) }
+      .spinner

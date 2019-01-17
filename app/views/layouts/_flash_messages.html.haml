@@ -3,11 +3,12 @@
     #flash_message.center
       - flash.each do |key, value|
         - sticky = defined?(sticky) ? sticky : false
+        - fixed = defined?(fixed) ? fixed : false
         - if value.class == Array
-          .alert{ class: flash_class(key, sticky) }
+          .alert{ class: flash_class(key, sticky: sticky, fixed: fixed) }
             - value.each do |message|
               = sanitize(message)
               %br
         - else
-          .alert{ class: flash_class(key, sticky) }
+          .alert{ class: flash_class(key, sticky: sticky, fixed: fixed) }
             = sanitize(value)
