@@ -7,12 +7,13 @@
   })();
 
   sendinblue.identify('#{current_administrateur.email}', {
-  'nb_demarches_brouillons': '#{current_administrateur.procedures.brouillons.count}',
-  'nb_demarches_actives': '#{current_administrateur.procedures.publiees.count}',
-  'nb_demarches_archivees': '#{current_administrateur.procedures.archivees.count}',
-  'sign_in_count' : '#{current_administrateur.sign_in_count}',
-  'created_at' : '#{current_administrateur.created_at}',
-  'active' : '#{current_administrateur.active}'
+  'DS_NB_DEMARCHES_BROUILLONS': '#{current_administrateur.procedures.brouillons.count}',
+  'DS_NB_DEMARCHES_ACTIVES': '#{current_administrateur.procedures.publiees.count}',
+  'DS_NB_DEMARCHES_ARCHIVES': '#{current_administrateur.procedures.archivees.count}',
+  'DS_SIGN_IN_COUNT' : '#{current_administrateur.sign_in_count}',
+  'DS_CREATED_AT' : '#{current_administrateur.created_at}',
+  'DS_ACTIVE' : '#{current_administrateur.active}',
+  'DS_ID' : '#{current_administrateur.id}'
   // Dans l'ideal :
   // 'nom' : //pour personnaliser les emails
   // 'prenom' : //pour personnaliser les emails
