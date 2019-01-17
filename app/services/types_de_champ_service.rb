@@ -2,7 +2,6 @@ class TypesDeChampService
   include Rails.application.routes.url_helpers
 
   TOGGLES = {
-    TypeDeChamp.type_champs.fetch(:siret)                 => :champ_siret?,
     TypeDeChamp.type_champs.fetch(:integer_number)        => :champ_integer_number?,
     TypeDeChamp.type_champs.fetch(:repetition)            => :champ_repetition?
   }

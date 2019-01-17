@@ -7,8 +7,6 @@ Flipflop.configure do
   strategy :default
 
   group :champs do
-    feature :champ_siret,
-      title: "Champ SIRET"
     feature :champ_integer_number,
       title: "Champ nombre entier"
     feature :champ_repetition,
