@@ -854,6 +854,11 @@ describe NewUser::DossiersController, type: :controller do
 
     subject { get :new, params: { procedure_id: procedure_id } }
 
+    it 'clears the stored procedure context' do
+      subject
+      expect(controller.stored_location_for(:user)).to be nil
+    end
+
     context 'when params procedure_id is present' do
       context 'when procedure_id is valid' do
         context 'when user is logged in' do
