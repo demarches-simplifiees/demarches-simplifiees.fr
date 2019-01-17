@@ -171,7 +171,10 @@ describe InvitesController, type: :controller do
         let(:email) { nil }
 
         context 'and user is not connected' do
-          it { is_expected.to redirect_to new_user_session_path }
+          it 'redirects to the sign-in page' do
+            expect(subject).to redirect_to new_user_session_path
+            expect(controller.stored_location_for(:user)).to be_present
+          end
         end
 
         context 'and user is connected' do
@@ -186,20 +189,29 @@ describe InvitesController, type: :controller do
       context 'when email is blank' do
         let(:email) { '' }
 
-        it { is_expected.to redirect_to new_user_session_path }
+        it 'redirects to the sign-in page' do
+          expect(subject).to redirect_to new_user_session_path
+          expect(controller.stored_location_for(:user)).to be_present
+        end
       end
 
       context 'when email is not blank' do
         context 'when email is affected at an user' do
           let(:email) { user.email }
 
-          it { is_expected.to redirect_to new_user_session_path }
+          it 'redirects to the sign-in page' do
+            expect(subject).to redirect_to new_user_session_path
+            expect(controller.stored_location_for(:user)).to be_present
+          end
         end
 
         context 'when email is not affected at an user' do
           let(:email) { 'new_user@octo.com' }
 
-          it { is_expected.to redirect_to new_user_registration_path(user: { email: email }) }
+          it 'redirects to the sign-up page' do
+            expect(subject).to redirect_to new_user_registration_path(user: { email: email })
+            expect(controller.stored_location_for(:user)).to be_present
+          end
         end
       end
     end
@@ -212,6 +224,10 @@ describe InvitesController, type: :controller do
       end
 
       subject! { get :show, params: { id: invite.id } }
+
+      it 'clears the stored return location' do
+        expect(controller.stored_location_for(:user)).to be nil
+      end
 
       context 'when invitation ID is attached at the user email account' do
         let(:email) { user.email }

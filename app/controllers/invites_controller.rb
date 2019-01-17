@@ -1,5 +1,5 @@
 class InvitesController < ApplicationController
-  SESSION_USER_RETURN_LOCATION = 'user_return_to'
+  include Devise::StoreLocationExtension
 
   before_action :authenticate_user!, only: [:create]
   before_action :store_user_location!, only: [:show]
@@ -62,6 +62,6 @@ class InvitesController < ApplicationController
   end
 
   def erase_user_location!
-    session.delete(SESSION_USER_RETURN_LOCATION)
+    clear_stored_location_for(:user)
   end
 end

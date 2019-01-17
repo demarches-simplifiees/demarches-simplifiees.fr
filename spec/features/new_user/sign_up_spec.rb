@@ -34,7 +34,7 @@ feature 'Signing up:' do
   end
 
   context 'when visiting a procedure' do
-    let(:procedure) { create :simple_procedure }
+    let(:procedure) { create :simple_procedure, :with_service }
 
     before do
       visit commencer_path(path: procedure.path)
@@ -43,13 +43,14 @@ feature 'Signing up:' do
     scenario 'a new user can sign-up and fill the procedure' do
       expect(page).to have_current_path new_user_session_path
       click_on 'Créer un compte'
+      expect_page_to_have_procedure_description(procedure)
 
       sign_up_with user_email, user_password
       expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
 
       click_confirmation_link_for user_email
       expect(page).to have_content 'Votre compte a été activé'
-      expect(page).to have_content procedure.libelle
+      expect_page_to_have_procedure_description(procedure)
     end
   end
 
