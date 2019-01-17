@@ -6,7 +6,7 @@ module NewGestionnaire
     ITEMS_PER_PAGE = 25
 
     def index
-      @procedures = current_gestionnaire.visible_procedures.order(archived_at: :desc, published_at: :desc)
+      @procedures = current_gestionnaire.visible_procedures.order(archived_at: :desc, published_at: :desc, created_at: :desc)
 
       dossiers = current_gestionnaire.dossiers
       @dossiers_count_per_procedure = dossiers.all_state.group(:procedure_id).reorder(nil).count

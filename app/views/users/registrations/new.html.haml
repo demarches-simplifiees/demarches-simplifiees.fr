@@ -1,33 +1,22 @@
-.two-columns.auth
-  .columns-container
-    .column.procedure-preview
-      = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo"
-      .baseline.center
-        %h3 Un outil simple
-        %p
-          pour gérer les formulaires
-          %br
-          administratifs dématérialisés.
+.auth-form
+  = devise_error_messages!
+  = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
+    %h1 Créez-vous un compte demarches-simplifiees.fr
 
-    .column.procedure-context-content.auth-form
-      = devise_error_messages!
-      = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
-        %h1 Créez-vous un compte
+    = f.label :email, "Email"
+    = f.text_field :email, autofocus: true, placeholder: "Votre adresse email"
 
-        = f.label :email, "Email"
-        = f.text_field :email, autofocus: true
+    = f.label :password, "Mot de passe"
+    = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
 
-        = f.label :password, "Mot de passe"
-        = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
+    = f.submit "Créer un compte", class: "button large primary expand"
 
-        = f.submit "Créer un compte", class: "button large primary expand"
+  .separation.center
+    ou
 
-      .separation.center
-        ou
+  .center
+    = image_tag "login-with-fc-hover.svg", style: "display: none"
+    = link_to "", france_connect_particulier_path, class: "login-with-fc"
 
-      .center
-        = image_tag "login-with-fc-hover.svg", style: "display: none"
-        = link_to "", france_connect_particulier_path, class: "login-with-fc"
-
-      .center
-        = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"
+  .center
+    = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"

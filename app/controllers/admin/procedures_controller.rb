@@ -79,7 +79,12 @@ class Admin::ProceduresController < AdminController
       if gestionnaire
         gestionnaire.assign_to_procedure(@procedure)
       end
-      redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
+
+      if Flipflop.new_champs_editor?
+        redirect_to champs_procedure_path(@procedure)
+      else
+        redirect_to admin_procedure_types_de_champ_path(procedure_id: @procedure.id)
+      end
     end
   end
 

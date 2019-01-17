@@ -18,7 +18,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['config/webpack/*.js'],
+      files: ['config/webpack/**/*.js'],
       env: {
         node: true
       }

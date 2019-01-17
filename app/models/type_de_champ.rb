@@ -83,7 +83,7 @@ class TypeDeChamp < ApplicationRecord
 
   has_one_attached :piece_justificative_template
 
-  accepts_nested_attributes_for :drop_down_list
+  accepts_nested_attributes_for :drop_down_list, update_only: true
   accepts_nested_attributes_for :types_de_champ, allow_destroy: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
@@ -159,6 +159,18 @@ class TypeDeChamp < ApplicationRecord
 
   def self.type_champ_to_class_name(type_champ)
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
+  end
+
+  def piece_justificative_template_url
+    if piece_justificative_template.attached?
+      Rails.application.routes.url_helpers.url_for(piece_justificative_template)
+    end
+  end
+
+  def piece_justificative_template_filename
+    if piece_justificative_template.attached?
+      piece_justificative_template.filename
+    end
   end
 
   private
