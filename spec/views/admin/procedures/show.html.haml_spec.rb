@@ -72,7 +72,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
     end
 
     describe 'procedure link is present' do
-      it { expect(rendered).to have_content('Cette démarche est archivée et n’est donc pas accessible par le public.') }
+      it { expect(rendered).to have_content('Cette démarche est archivée et n’est donc plus accessible par le public.') }
     end
   end
 end

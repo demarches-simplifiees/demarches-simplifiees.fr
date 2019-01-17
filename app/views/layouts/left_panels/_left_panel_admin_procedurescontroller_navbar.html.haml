@@ -12,7 +12,10 @@
   #procedure-list
     %a#onglet-infos{ href: url_for(admin_procedure_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Informations') }
-        Publication
+        - if @procedure.brouillon_avec_lien?
+          Test et publication
+        - else
+          Publication
 
     %a#onglet-description{ href: url_for(edit_admin_procedure_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Description') }
