@@ -45,4 +45,60 @@ describe DossierSerializer do
       }
     end
   end
+
+  context 'when a type PJ was cloned to a type champ PJ' do
+    let(:original_procedure) do
+      p = create(:procedure, :published)
+      p.types_de_piece_justificative.create(
+        libelle: "Vidéo de votre demande de subvention",
+        description: "Pour optimiser vos chances, soignez la chorégraphie et privilégiez le chant polyphonique",
+        lien_demarche: "https://www.dance-academy.gouv.fr",
+        order_place: 0
+      )
+      p
+    end
+
+    let(:procedure) do
+      p = original_procedure.clone(original_procedure.administrateur, false)
+      p.save
+      p
+    end
+
+    let(:type_pj) { original_procedure.types_de_piece_justificative.first }
+    let(:migrated_type_champ) { procedure.types_de_champ.find_by(libelle: type_pj.libelle) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:champ_pj) { dossier.champs.last }
+
+    before do
+      champ_pj.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+    end
+
+    subject { DossierSerializer.new(dossier).serializable_hash }
+
+    it "exposes the PJ in the legacy format" do
+      is_expected.to include(
+        types_de_piece_justificative: [
+          {
+            "id" => type_pj.id,
+            "libelle" => type_pj.libelle,
+            "description" => type_pj.description,
+            "lien_demarche" => type_pj.lien_demarche,
+            "order_place" => type_pj.order_place
+          }
+        ],
+        pieces_justificatives: [
+          {
+            "content_url" => champ_pj.for_api,
+            "created_at" => champ_pj.created_at.in_time_zone('UTC').iso8601(3),
+            "type_de_piece_justificative_id" => type_pj.id,
+            "user" => a_hash_including("id" => dossier.user.id)
+          }
+        ]
+      )
+    end
+
+    it "does not expose the PJ as a champ" do
+      expect(subject[:champs]).not_to include(a_hash_including(type_de_champ: a_hash_including(id: migrated_type_champ.id)))
+    end
+  end
 end

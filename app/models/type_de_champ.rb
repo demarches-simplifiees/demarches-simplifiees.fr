@@ -37,7 +37,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, foreign_key: :parent_id, class_name: 'TypeDeChamp', dependent: :destroy
 
-  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles
+  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj
 
   # TODO simplify after migrating `options` column to (non YAML encoded) JSON
   class MaybeYaml
