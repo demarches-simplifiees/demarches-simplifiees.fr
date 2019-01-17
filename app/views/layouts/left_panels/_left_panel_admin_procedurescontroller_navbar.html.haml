@@ -12,7 +12,10 @@
   #procedure-list
     %a#onglet-infos{ href: url_for(admin_procedure_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Informations') }
-        Publication
+        - if @procedure.brouillon_avec_lien?
+          Test et publication
+        - else
+          Publication
 
     %a#onglet-description{ href: url_for(edit_admin_procedure_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Description') }
@@ -31,7 +34,8 @@
           %p.missing-steps (à compléter)
 
     - if !@procedure.locked?
-      %a#onglet-champs{ href: url_for(admin_procedure_types_de_champ_path(@procedure)) }
+      - champs_editor_path = Flipflop.new_champs_editor? ? champs_procedure_path(@procedure) : admin_procedure_types_de_champ_path(@procedure)
+      %a#onglet-champs{ href: champs_editor_path }
         .procedure-list-element{ class: ('active' if active == 'Champs') }
           Champs
 
@@ -41,7 +45,8 @@
           Pièces jointes
 
     - if !@procedure.locked?
-      %a#onglet-private-champs{ href: url_for(admin_procedure_types_de_champ_private_path(@procedure)) }
+      - annotations_editor_path = Flipflop.new_champs_editor? ? annotations_procedure_path(@procedure) : admin_procedure_types_de_champ_private_path(@procedure)
+      %a#onglet-private-champs{ href: annotations_editor_path }
         .procedure-list-element{ class: ('active' if active == 'Annotations privées') }
           Annotations privées
 

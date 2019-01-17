@@ -9,17 +9,30 @@ describe Users::RegistrationsController, type: :controller do
   end
 
   describe '#new' do
-    subject! { get :new }
+    subject { get :new }
 
-    it { expect(response).to have_http_status(:ok) }
-    it { expect(response).to render_template(:new) }
+    it { expect(subject).to have_http_status(:ok) }
+    it { expect(subject).to render_template(:new) }
 
     context 'when an email address is provided' do
       render_views true
-      subject! { get :new, params: { user: { email: 'test@exemple.fr' } } }
+      subject { get :new, params: { user: { email: 'test@exemple.fr' } } }
 
       it 'prefills the form with the email address' do
-        expect(response.body).to include('test@exemple.fr')
+        expect(subject.body).to include('test@exemple.fr')
+      end
+    end
+
+    context 'when a procedure location has been stored' do
+      let(:procedure) { create :procedure, :published }
+
+      before do
+        controller.store_location_for(:user, new_dossier_path(procedure_id: procedure.id))
+      end
+
+      it 'makes the saved procedure available' do
+        expect(subject.status).to eq 200
+        expect(assigns(:procedure)).to eq procedure
       end
     end
   end

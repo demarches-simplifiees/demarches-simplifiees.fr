@@ -182,6 +182,7 @@ describe Admin::ProceduresController, type: :controller do
 
       context 'when procedure is correctly save' do
         before do
+          Flipflop::FeatureSet.current.test!.switch!(:new_champs_editor, true)
           post :create, params: { procedure: procedure_params }
         end
 
@@ -197,8 +198,7 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
         end
 
-        it { is_expected.to redirect_to(admin_procedure_types_de_champ_path(procedure_id: Procedure.last.id)) }
-
+        it { is_expected.to redirect_to(champs_procedure_path(Procedure.last)) }
         it { expect(flash[:notice]).to be_present }
       end
 
@@ -723,7 +723,7 @@ describe Admin::ProceduresController, type: :controller do
       let(:path) { procedure_owned.path }
 
       it {
-        expect(response.body).to include('Un brouillon de démarche existe déjà avec ce lien.')
+        expect(response.body).to include('Une démarche en test existe déjà avec ce lien.')
       }
     end
 

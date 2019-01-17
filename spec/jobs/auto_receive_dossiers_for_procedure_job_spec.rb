@@ -13,13 +13,17 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
 
     before do
       Timecop.freeze(date)
-      nouveau_dossier1
-      nouveau_dossier2
-      dossier_recu
-      dossier_brouillon
+      dossiers = [
+        nouveau_dossier1,
+        nouveau_dossier2,
+        dossier_recu,
+        dossier_brouillon
+      ]
 
       create(:attestation_template, procedure: procedure)
       AutoReceiveDossiersForProcedureJob.new.perform(procedure.id, state)
+
+      dossiers.each(&:reload)
     end
 
     after { Timecop.return }
@@ -29,17 +33,18 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
         let(:state) { Dossier.states.fetch(:en_instruction) }
 
         it {
-          expect(nouveau_dossier1.reload.en_instruction?).to be true
-          expect(nouveau_dossier1.reload.en_instruction_at).to eq(date)
+          expect(nouveau_dossier1.en_instruction?).to be true
+          expect(nouveau_dossier1.en_instruction_at).to eq(date)
+          expect(nouveau_dossier1.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'passer_en_instruction', true]])
 
-          expect(nouveau_dossier2.reload.en_instruction?).to be true
-          expect(nouveau_dossier2.reload.en_instruction_at).to eq(date)
+          expect(nouveau_dossier2.en_instruction?).to be true
+          expect(nouveau_dossier2.en_instruction_at).to eq(date)
 
-          expect(dossier_recu.reload.en_instruction?).to be true
-          expect(dossier_recu.reload.en_instruction_at).to eq(instruction_date)
+          expect(dossier_recu.en_instruction?).to be true
+          expect(dossier_recu.en_instruction_at).to eq(instruction_date)
 
-          expect(dossier_brouillon.reload.brouillon?).to be true
-          expect(dossier_brouillon.reload.en_instruction_at).to eq(nil)
+          expect(dossier_brouillon.brouillon?).to be true
+          expect(dossier_brouillon.en_instruction_at).to eq(nil)
         }
       end
 
@@ -47,23 +52,24 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
         let(:state) { Dossier.states.fetch(:accepte) }
 
         it {
-          expect(nouveau_dossier1.reload.accepte?).to be true
-          expect(nouveau_dossier1.reload.en_instruction_at).to eq(date)
-          expect(nouveau_dossier1.reload.processed_at).to eq(date)
-          expect(nouveau_dossier1.reload.attestation).to be_present
+          expect(nouveau_dossier1.accepte?).to be true
+          expect(nouveau_dossier1.en_instruction_at).to eq(date)
+          expect(nouveau_dossier1.processed_at).to eq(date)
+          expect(nouveau_dossier1.attestation).to be_present
+          expect(nouveau_dossier1.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'accepter', true]])
 
-          expect(nouveau_dossier2.reload.accepte?).to be true
-          expect(nouveau_dossier2.reload.en_instruction_at).to eq(date)
-          expect(nouveau_dossier2.reload.processed_at).to eq(date)
-          expect(nouveau_dossier2.reload.attestation).to be_present
+          expect(nouveau_dossier2.accepte?).to be true
+          expect(nouveau_dossier2.en_instruction_at).to eq(date)
+          expect(nouveau_dossier2.processed_at).to eq(date)
+          expect(nouveau_dossier2.attestation).to be_present
 
-          expect(dossier_recu.reload.en_instruction?).to be true
-          expect(dossier_recu.reload.en_instruction_at).to eq(instruction_date)
-          expect(dossier_recu.reload.processed_at).to eq(nil)
+          expect(dossier_recu.en_instruction?).to be true
+          expect(dossier_recu.en_instruction_at).to eq(instruction_date)
+          expect(dossier_recu.processed_at).to eq(nil)
 
-          expect(dossier_brouillon.reload.brouillon?).to be true
-          expect(dossier_brouillon.reload.en_instruction_at).to eq(nil)
-          expect(dossier_brouillon.reload.processed_at).to eq(nil)
+          expect(dossier_brouillon.brouillon?).to be true
+          expect(dossier_brouillon.en_instruction_at).to eq(nil)
+          expect(dossier_brouillon.processed_at).to eq(nil)
         }
       end
     end

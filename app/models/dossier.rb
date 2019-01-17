@@ -274,6 +274,12 @@ class Dossier < ApplicationRecord
     log_dossier_operation(gestionnaire, :passer_en_instruction)
   end
 
+  def passer_automatiquement_en_instruction!
+    en_instruction!
+
+    log_dossier_operation(nil, :passer_en_instruction, automatic_operation: true)
+  end
+
   def repasser_en_construction!(gestionnaire)
     self.en_instruction_at = nil
     en_construction!
@@ -293,6 +299,19 @@ class Dossier < ApplicationRecord
 
     NotificationMailer.send_closed_notification(self).deliver_later
     log_dossier_operation(gestionnaire, :accepter)
+  end
+
+  def accepter_automatiquement!
+    self.en_instruction_at ||= Time.zone.now
+
+    accepte!
+
+    if attestation.nil?
+      update(attestation: build_attestation)
+    end
+
+    NotificationMailer.send_closed_notification(self).deliver_later
+    log_dossier_operation(nil, :accepter, automatic_operation: true)
   end
 
   def refuser!(gestionnaire, motivation)
@@ -317,10 +336,11 @@ class Dossier < ApplicationRecord
 
   private
 
-  def log_dossier_operation(gestionnaire, operation)
+  def log_dossier_operation(gestionnaire, operation, automatic_operation: false)
     dossier_operation_logs.create(
       gestionnaire: gestionnaire,
-      operation: DossierOperationLog.operations.fetch(operation)
+      operation: DossierOperationLog.operations.fetch(operation),
+      automatic_operation: automatic_operation
     )
   end
 

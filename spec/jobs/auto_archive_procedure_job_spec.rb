@@ -40,6 +40,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     it {
       expect(dossier1.state).to eq Dossier.states.fetch(:brouillon)
       expect(dossier2.state).to eq Dossier.states.fetch(:en_instruction)
+      expect(dossier2.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'passer_en_instruction', true]])
       expect(dossier3.state).to eq Dossier.states.fetch(:en_instruction)
       expect(dossier4.state).to eq Dossier.states.fetch(:en_instruction)
       expect(dossier5.state).to eq Dossier.states.fetch(:en_instruction)

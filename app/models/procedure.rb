@@ -30,9 +30,9 @@ class Procedure < ApplicationRecord
   has_one_attached :notice
   has_one_attached :deliberation
 
-  accepts_nested_attributes_for :types_de_champ, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
-  accepts_nested_attributes_for :types_de_piece_justificative, :reject_if => proc { |attributes| attributes['libelle'].blank? }, :allow_destroy => true
-  accepts_nested_attributes_for :types_de_champ_private
+  accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :types_de_piece_justificative, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   mount_uploader :logo, ProcedureLogoUploader
 
@@ -68,6 +68,7 @@ class Procedure < ApplicationRecord
 
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
+  before_create :ensure_path_exists
 
   include AASM
 
@@ -350,12 +351,6 @@ class Procedure < ApplicationRecord
     where.not(aasm_state: :archivee).where("path LIKE ?", "%#{path}%")
   end
 
-  def gestionnaire_for_cron_job
-    administrateur_email = administrateur.email
-    gestionnaire = Gestionnaire.find_by(email: administrateur_email)
-    gestionnaire || gestionnaires.first
-  end
-
   def populate_champ_stable_ids
     TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
       type_de_champ.update_column(:stable_id, type_de_champ.id)
@@ -456,6 +451,14 @@ class Procedure < ApplicationRecord
 
     if times.present?
       times.percentile(p).ceil
+    end
+  end
+
+  def ensure_path_exists
+    if Flipflop.publish_draft?
+      if self.path.nil?
+        self.path = SecureRandom.uuid
+      end
     end
   end
 end

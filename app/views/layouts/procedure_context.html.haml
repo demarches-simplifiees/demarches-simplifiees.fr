@@ -1,22 +1,22 @@
+- procedure = @procedure || @dossier&.procedure || nil
+
 - content_for :content do
   .two-columns.procedure-context
     .columns-container
 
       .column.procedure-preview
-        - procedure = @dossier.procedure
-        .procedure-logos
-          = image_tag logo_img(procedure)
-          - if procedure.euro_flag
-            = image_tag "flag_of_europe.svg"
-        %h2.procedure-title
-          = procedure.libelle
-        .procedure-description
-          = h string_to_html(procedure.description)
+        - if procedure
+          = render partial: 'layouts/commencer/procedure_description', locals: { procedure: procedure }
+        - else
+          = render partial: 'layouts/commencer/no_procedure'
 
       .column.procedure-context-content
         = yield
 
 - content_for :footer do
-  = render partial: "new_user/dossiers/dossier_footer", locals: { dossier: @dossier }
+  - if procedure
+    = render partial: 'new_user/procedure_footer', locals: { procedure: procedure, dossier: @dossier }
+  - else
+    = render partial: 'new_user/dossiers/index_footer'
 
 = render template: 'layouts/application'

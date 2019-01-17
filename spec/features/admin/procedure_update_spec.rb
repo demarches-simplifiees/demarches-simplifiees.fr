@@ -26,21 +26,18 @@ feature 'Administrateurs can edit procedures', js: true do
         administrateur: administrateur)
     end
 
-    scenario 'the administrator can edit the libelle and the path' do
+    scenario 'the administrator can edit the libelle' do
       visit admin_procedures_draft_path
       click_on procedure.libelle
       click_on 'Description'
 
       expect(page).to have_field('procedure_libelle', with: procedure.libelle)
-      expect(page).to have_field('procedure_path', with: procedure.path)
 
       fill_in('procedure_libelle', with: 'Ma petite démarche')
-      fill_in('procedure_path', with: 'nouveau-lien-demarche')
 
       click_on 'Enregistrer'
 
       expect(page).to have_field('procedure_libelle', with: 'Ma petite démarche')
-      expect(page).to have_field('procedure_path', with: 'nouveau-lien-demarche')
     end
   end
 
