@@ -35,7 +35,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :procedure
 
   belongs_to :parent, class_name: 'TypeDeChamp'
-  has_many :types_de_champ, foreign_key: :parent_id, class_name: 'TypeDeChamp', dependent: :destroy
+  has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', dependent: :destroy
 
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj
 
@@ -84,7 +84,7 @@ class TypeDeChamp < ApplicationRecord
   has_one_attached :piece_justificative_template
 
   accepts_nested_attributes_for :drop_down_list, update_only: true
-  accepts_nested_attributes_for :types_de_champ, allow_destroy: true
+  accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false

@@ -16,7 +16,6 @@
     <Draggable :list="state.typesDeChamp" :options="{handle:'.handle'}">
       <DraggableItem
         v-for="(item, index) in state.typesDeChamp"
-        prefix="procedure"
         :state="state"
         :update="update"
         :index="index"
