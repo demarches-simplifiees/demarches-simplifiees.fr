@@ -5,6 +5,7 @@ export default {
       this.state.typesDeChamp.push({
         type_champ: 'text',
         drop_down_list: {},
+        types_de_champ: [],
         options: {}
       });
     }
