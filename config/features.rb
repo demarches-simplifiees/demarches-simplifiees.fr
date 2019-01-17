@@ -7,8 +7,6 @@ Flipflop.configure do
   strategy :default
 
   group :champs do
-    feature :champ_siret,
-      title: "Champ SIRET"
     feature :champ_integer_number,
       title: "Champ nombre entier"
     feature :champ_repetition,
@@ -17,7 +15,6 @@ Flipflop.configure do
 
   feature :web_hook
   feature :publish_draft
-  feature :support_form
   feature :enable_email_login_token
   feature :new_champs_editor
 
