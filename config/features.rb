@@ -15,7 +15,6 @@ Flipflop.configure do
 
   feature :web_hook
   feature :enable_email_login_token
-  feature :new_champs_editor
 
   feature :operation_log_serialize_subject
 
