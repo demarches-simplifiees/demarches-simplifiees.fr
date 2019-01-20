@@ -57,7 +57,7 @@ export default {
       return this.typeChamp === 'header_section';
     },
     options() {
-      const options = this.item.options;
+      const options = this.item.options || {};
       for (let key of Object.keys(options)) {
         options[key] = castBoolean(options[key]);
       }
@@ -77,7 +77,7 @@ export default {
       libelle: this.item.libelle,
       mandatory: this.item.mandatory,
       description: this.item.description,
-      dropDownList: this.item.drop_down_list.value,
+      dropDownList: this.item.drop_down_list && this.item.drop_down_list.value,
       deleted: false,
       clientId: `id-${clientIds++}`
     };
