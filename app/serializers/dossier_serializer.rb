@@ -26,7 +26,7 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :champs, serializer: ChampSerializer
 
   def champs
-    champs = object.champs.to_a
+    champs = object.champs.reject { |c| c.type_de_champ.old_pj.present? }
 
     if object.expose_legacy_carto_api?
       champ_carte = champs.find do |champ|
@@ -45,6 +45,16 @@ class DossierSerializer < ActiveModel::Serializer
 
   def cerfa
     []
+  end
+
+  def pieces_justificatives
+    ActiveModelSerializers::SerializableResource.new(object.pieces_justificatives).serializable_hash +
+      PiecesJustificativesService.serialize_champs_as_pjs(object)
+  end
+
+  def types_de_piece_justificative
+    ActiveModelSerializers::SerializableResource.new(object.types_de_piece_justificative).serializable_hash +
+      PiecesJustificativesService.serialize_types_de_champ_as_type_pj(object)
   end
 
   def email

@@ -336,6 +336,7 @@ describe Procedure do
     let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, order_place: 2) }
+    let!(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, procedure: procedure, order_place: 3, old_pj: { stable_id: 2713 }) }
     let!(:type_de_champ_private_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, order_place: 2) }
@@ -366,21 +367,16 @@ describe Procedure do
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
 
-      expect(subject.types_de_piece_justificative.size).to eq procedure.types_de_piece_justificative.size
-      expect(subject.types_de_champ.size).to eq procedure.types_de_champ.size
+      expect(subject.types_de_champ.size).to eq(procedure.types_de_champ.size + 1 + procedure.types_de_piece_justificative.size)
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
       expect(subject.types_de_champ.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ.map(&:drop_down_list).compact.size
       expect(subject.types_de_champ_private.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_list).compact.size
 
-      subject.types_de_champ.zip(procedure.types_de_champ).each do |stc, ptc|
+      procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 
       subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
-        expect(stc).to have_same_attributes_as(ptc)
-      end
-
-      subject.types_de_piece_justificative.zip(procedure.types_de_piece_justificative).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 
@@ -393,13 +389,31 @@ describe Procedure do
       expect(cloned_procedure).to have_same_attributes_as(procedure)
     end
 
-    context 'when the procedure is clone from the library' do
+    it 'should not clone piece justificatives but create corresponding champs' do
+      expect(subject.types_de_piece_justificative.size).to eq(0)
+
+      champs_pj = subject.types_de_champ[procedure.types_de_champ.size + 1, procedure.types_de_piece_justificative.size]
+      champs_pj.zip(procedure.types_de_piece_justificative).each do |stc, ptpj|
+        expect(stc.libelle).to eq(ptpj.libelle)
+        expect(stc.description).to eq(ptpj.description)
+        expect(stc.mandatory).to eq(ptpj.mandatory)
+        expect(stc.old_pj[:stable_id]).to eq(ptpj.id)
+      end
+    end
+
+    context 'when the procedure is cloned from the library' do
       let(:from_library) { true }
 
       it { expect(subject.cloned_from_library).to be(true) }
 
       it 'should set service_id to nil' do
         expect(subject.service).to eq(nil)
+      end
+
+      it 'should discard old pj information' do
+        subject.types_de_champ.each do |stc|
+          expect(stc.old_pj).to be_nil
+        end
       end
     end
 
@@ -414,6 +428,12 @@ describe Procedure do
         expect(subject.service.id).not_to eq(service.id)
         expect(subject.service.administrateur_id).not_to eq(service.administrateur_id)
         expect(subject.service.attributes.except("id", "administrateur_id", "created_at", "updated_at")).to eq(service.attributes.except("id", "administrateur_id", "created_at", "updated_at"))
+      end
+
+      it 'should discard old pj information' do
+        subject.types_de_champ.each do |stc|
+          expect(stc.old_pj).to be_nil
+        end
       end
     end
 

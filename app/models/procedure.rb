@@ -184,10 +184,11 @@ class Procedure < ApplicationRecord
   end
 
   def clone(admin, from_library)
+    is_different_admin = self.administrateur_id != admin.id
+
     populate_champ_stable_ids
     procedure = self.deep_clone(include:
       {
-        types_de_piece_justificative: nil,
         attestation_template: nil,
         types_de_champ: :drop_down_list,
         types_de_champ_private: :drop_down_list
@@ -203,6 +204,11 @@ class Procedure < ApplicationRecord
 
     [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
 
+    procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
+    if is_different_admin || from_library
+      procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+    end
+
     procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
     procedure.received_mail = received_mail&.dup
@@ -215,7 +221,7 @@ class Procedure < ApplicationRecord
 
     if from_library
       procedure.service = nil
-    elsif self.service.present? && (self.administrateur_id != admin.id)
+    elsif self.service.present? && is_different_admin
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 

@@ -3,7 +3,6 @@ require 'spec_helper'
 describe 'layouts/_new_header.html.haml', type: :view do
   describe 'logo link' do
     before do
-      Flipflop::FeatureSet.current.test!.switch!(:support_form, true)
       sign_in user
       allow(controller).to receive(:nav_bar_profile).and_return(profile)
       render

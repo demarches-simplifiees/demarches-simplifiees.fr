@@ -10,6 +10,12 @@ Vue.component('DraggableItem', DraggableItem);
 
 addEventListener('DOMContentLoaded', () => {
   const el = document.querySelector('#champs-editor');
+  if (el) {
+    initEditor(el);
+  }
+});
+
+function initEditor(el) {
   const { directUploadsUrl, dragIconUrl } = el.dataset;
 
   const state = {
@@ -48,7 +54,7 @@ addEventListener('DOMContentLoaded', () => {
       this.updateAll = updateAll;
     }
   });
-});
+}
 
 function createUpdateFunctions(app, isAnnotation) {
   let isSaving = false;
