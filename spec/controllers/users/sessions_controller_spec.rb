@@ -179,7 +179,7 @@ describe Users::SessionsController, type: :controller do
       let(:procedure) { create :procedure, :published }
 
       before do
-        controller.store_location_for(:user, new_dossier_path(procedure_id: procedure.id))
+        controller.store_location_for(:user, commencer_path(path: procedure.path))
       end
 
       it 'makes the saved procedure available' do

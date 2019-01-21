@@ -17,10 +17,10 @@ feature 'Creating a new dossier:' do
 
       before do
         visit commencer_path(path: procedure.path)
+        click_on 'Commencer la démarche'
 
-        expect(page).to have_content(procedure.libelle)
-        expect(page).to have_content(procedure.description)
-        expect(page).to have_content(procedure.service.email)
+        expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
+        expect_page_to_have_procedure_description(procedure)
 
         fill_in 'individual_nom',    with: 'Nom'
         fill_in 'individual_prenom', with: 'Prenom'
@@ -77,13 +77,12 @@ feature 'Creating a new dossier:' do
           .to_return(status: 404, body: '')
       end
 
-      scenario 'the user can enter the SIRET of its etablissement and create a new draft', vcr: { cassette_name: 'api_adresse_search_paris_3' }, js: true do
+      scenario 'the user can enter the SIRET of its etablissement and create a new draft', vcr: { cassette_name: 'api_adresse_search_paris_3' } do
         visit commencer_path(path: procedure.path)
+        click_on 'Commencer la démarche'
 
-        expect(page).to have_current_path(siret_dossier_path(dossier))
-        expect(page).to have_content(procedure.libelle)
-        expect(page).to have_content(procedure.description)
-        expect(page).to have_content(procedure.service.email)
+        expect(page).to have_current_path siret_dossier_path(dossier)
+        expect_page_to_have_procedure_description(procedure)
 
         fill_in 'Numéro SIRET', with: siret
         click_on 'Valider'
@@ -97,7 +96,10 @@ feature 'Creating a new dossier:' do
 
       scenario 'the user is notified when its SIRET is invalid' do
         visit commencer_path(path: procedure.path)
+        click_on 'Commencer la démarche'
+
         expect(page).to have_current_path(siret_dossier_path(dossier))
+        expect_page_to_have_procedure_description(procedure)
 
         fill_in 'Numéro SIRET', with: '0000'
         click_on 'Valider'
