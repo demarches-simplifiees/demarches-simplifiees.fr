@@ -1,10 +1,9 @@
 fr:
   type_organisme:
-    administration_centrale: 'administration centrale'
-    association: 'association'
-    commune: 'commune'
-    departement: 'département'
-    etablissement_enseignement: 'établissement d’enseignement'
-    prefecture: 'préfecture'
-    region: 'région'
-    autre: 'autre'
+    Administrations_centrales: 'Administration centrale'
+    Services_déconcentrés_de_l'Etat: 'Services déconcentrés de l'Etat'
+    Collectivités_locales: 'Collectivités locales'
+    Opérateurs_d'Etat: 'Opérateurs d'Etat'
+    Associations: 'Associations'
+    Etablissements_d'enseignement: 'Etablissements d’enseignement'
+    Autres: 'Autres'
