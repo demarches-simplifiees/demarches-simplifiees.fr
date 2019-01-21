@@ -265,6 +265,8 @@ Rails.application.routes.draw do
     namespace :commencer do
       get '/test/:path', action: 'commencer_test', as: :test
       get '/:path', action: 'commencer'
+      get '/:path/sign_in', action: 'sign_in', as: :sign_in
+      get '/:path/sign_up', action: 'sign_up', as: :sign_up
     end
 
     resources :dossiers, only: [:index, :show, :new] do

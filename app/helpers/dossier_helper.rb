@@ -23,6 +23,14 @@ module DossierHelper
     end
   end
 
+  def url_for_new_dossier(procedure)
+    if procedure.brouillon?
+      new_dossier_url(procedure_id: procedure.id, brouillon: true)
+    else
+      new_dossier_url(procedure_id: procedure.id)
+    end
+  end
+
   def dossier_submission_is_closed?(dossier)
     dossier.brouillon? && dossier.procedure.archivee?
   end

@@ -130,11 +130,15 @@ feature 'The user' do
 
   def log_in(email, password, procedure)
     visit "/commencer/#{procedure.path}"
-    expect(page).to have_current_path(new_user_session_path)
+    click_on 'J’ai déjà un compte'
 
-    fill_in 'user_email', with: email
-    fill_in 'user_password', with: password
-    click_on 'Se connecter'
+    expect(page).to have_current_path(new_user_session_path)
+    sign_in_with(email, password)
+
+    expect(page).to have_current_path("/commencer/#{procedure.path}")
+    click_on 'Commencer la démarche'
+
+    expect(page).to have_content("Données d'identité")
     expect(page).to have_current_path(identite_dossier_path(user_dossier))
   end
 
