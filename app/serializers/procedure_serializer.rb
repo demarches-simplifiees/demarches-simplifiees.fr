@@ -16,7 +16,7 @@ class ProcedureSerializer < ActiveModel::Serializer
   has_one :geographic_information, serializer: ModuleApiCartoSerializer
   has_many :types_de_champ, serializer: TypeDeChampSerializer
   has_many :types_de_champ_private, serializer: TypeDeChampSerializer
-  has_many :types_de_piece_justificative, serializer: TypeDePieceJustificativeSerializer
+  has_many :types_de_piece_justificative
 
   def archived_at
     object.archived_at&.in_time_zone('UTC')
@@ -42,5 +42,14 @@ class ProcedureSerializer < ActiveModel::Serializer
     else
       ModuleAPICarto.new(procedure: object)
     end
+  end
+
+  def types_de_champ
+    object.types_de_champ.reject { |c| c.old_pj.present? }
+  end
+
+  def types_de_piece_justificative
+    ActiveModelSerializers::SerializableResource.new(object.types_de_piece_justificative).serializable_hash +
+      PiecesJustificativesService.serialize_types_de_champ_as_type_pj(object)
   end
 end

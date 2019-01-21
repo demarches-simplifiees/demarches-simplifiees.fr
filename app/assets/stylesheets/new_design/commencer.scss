@@ -1,0 +1,11 @@
+@import "constants";
+
+.commencer {
+  .button:first-of-type {
+    margin-top: 4 * $default-spacer;
+  }
+
+  .button {
+    margin-bottom: 2 * $default-spacer;
+  }
+}

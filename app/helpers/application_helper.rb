@@ -85,13 +85,8 @@ module ApplicationHelper
     tags, type, dossier_id = options.values_at(:tags, :type, :dossier_id)
     options.except!(:tags, :type, :dossier_id)
 
-    if Flipflop.support_form?
-      params = { tags: tags, type: type, dossier_id: dossier_id }.compact
-      link_to title, contact_url(params), options
-    else
-      mail_to CONTACT_EMAIL, title,
-        options.merge(subject: "Question à propos de demarches-simplifiees.fr")
-    end
+    params = { tags: tags, type: type, dossier_id: dossier_id }.compact
+    link_to title, contact_url(params), options
   end
 
   def root_path_for_profile(nav_bar_profile)

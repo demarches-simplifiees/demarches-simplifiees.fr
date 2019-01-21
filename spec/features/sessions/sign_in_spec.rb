@@ -21,10 +21,14 @@ feature 'Signin in:' do
     end
 
     scenario 'an existing user can sign-in and fill the procedure' do
+      click_on 'J’ai déjà un compte'
       expect(page).to have_current_path new_user_session_path
       expect_page_to_have_procedure_description(procedure)
 
       sign_in_with user.email, password
+
+      expect(page).to have_current_path(commencer_path(path: procedure.path))
+      click_on 'Commencer la démarche'
 
       expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
       expect_page_to_have_procedure_description(procedure)

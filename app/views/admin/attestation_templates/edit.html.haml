@@ -66,6 +66,12 @@
       = f.label :footer, 'Pied de page'
       = f.text_field :footer, class: 'form-control', maxlength: 190
 
+    - if @attestation_template.activated && @procedure.locked?
+      .row
+        .col-md-12
+          .pull-right
+            %p.help-block L’attestation ne peut plus être désactivée car la démarche a déjà été publiée.
+
     %button.btn.btn-primary{ formaction: admin_procedure_attestation_template_preview_path, formtarget: '_blank' } Prévisualiser
 
     .pull-right
