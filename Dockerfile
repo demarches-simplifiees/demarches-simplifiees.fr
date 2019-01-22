@@ -31,10 +31,9 @@ RUN adduser -Dh ${APP_PATH} userapp
 RUN echo "0   3   *   *   *   freshclam > ${APP_PATH}/freshclam.log.txt" | crontab -
 
 #----- copy from previous container the dependency gems plus the current application files
-COPY --chown=userapp:userapp --from=builder /app ${APP_PATH}/
-COPY --chown=userapp:userapp . ${APP_PATH}/
-
 USER userapp
+
+COPY --chown=userapp:userapp --from=builder /app ${APP_PATH}/
 RUN bundle install --deployment --without development test && \
     rm -fr .git && \
     yarn install --production
@@ -46,7 +45,7 @@ ENV \
 	BASIC_AUTH_ENABLED="disabled"\
 	BASIC_AUTH_PASSWORD=""\
 	BASIC_AUTH_USERNAME=""\
-	CARRIERWAVE_CACHE_DIR="/tmp/tps-local-cache"\
+	CARRIERWAVE_CACHE_DIR="$APP_PATH/tmp/tps-local-cache"\
 	DB_DATABASE="tps"\
 	DB_HOST="localhost"\
 	DB_PASSWORD="tps"\
@@ -70,7 +69,6 @@ ENV \
 	HELPSCOUT_CLIENT_SECRET=""\
 	HELPSCOUT_MAILBOX_ID=""\
 	HELPSCOUT_WEBHOOK_SECRET=""\
-	LOCAL_STORAGE="storage"\
 	LOGRAGE_ENABLED="disabled"\
 	MAILJET_API_KEY=""\
 	MAILJET_SECRET_KEY=""\
@@ -91,13 +89,13 @@ ENV \
 	SOURCE="tps_local"
 
 
-RUN mkdir ${LOCAL_STORAGE} && bundle exec rails assets:precompile
+COPY --chown=userapp:userapp . ${APP_PATH}
+RUN bundle exec rails assets:precompile
 
-VOLUME ${CARRIERWAVE_CACHE_DIR}
-VOLUME ${LOCAL_STORAGE}
+RUN chmod a+x $APP_PATH/app/lib/docker-entry-point.sh
 
 EXPOSE 3000
-ENTRYPOINT ["bundle", "exec"]
+ENTRYPOINT ["/app/app/lib/docker-entry-point.sh"]
 CMD ["rails", "server", "-b", "0.0.0.0"]
 
 
