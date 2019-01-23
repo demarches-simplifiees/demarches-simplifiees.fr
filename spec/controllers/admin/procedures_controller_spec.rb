@@ -97,24 +97,18 @@ describe Admin::ProceduresController, type: :controller do
 
     subject { delete :destroy, params: { id: procedure.id } }
 
-    context 'when procedure is draft' do
+    context 'when the procedure is a draft' do
       let!(:procedure) { procedure_draft }
 
-      describe 'tech params' do
-        before do
-          subject
-        end
-
-        it { expect(subject.status).to eq 302 }
-        it { expect(flash[:notice]).to be_present }
+      it 'destroys the procedure' do
+        expect { subject }.to change { Procedure.count }.by(-1)
       end
 
-      it 'destroy procedure is call' do
-        expect_any_instance_of(Procedure).to receive(:destroy)
+      it 'redirects to the procedure drafts page' do
         subject
+        expect(response).to redirect_to admin_procedures_draft_path
+        expect(flash[:notice]).to be_present
       end
-
-      it { expect { subject }.to change { Procedure.count }.by(-1) }
     end
 
     context 'when procedure is published' do
