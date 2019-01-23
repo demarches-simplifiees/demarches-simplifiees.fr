@@ -91,9 +91,9 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:procedure_draft) { create :procedure, administrateur: admin, published_at: nil, archived_at: nil }
-    let(:procedure_published) { create :procedure, administrateur: admin, aasm_state: :publiee, published_at: Time.zone.now, archived_at: nil }
-    let(:procedure_archived) { create :procedure, administrateur: admin, aasm_state: :archivee, published_at: nil, archived_at: Time.zone.now }
+    let(:procedure_draft) { create :procedure_with_dossiers, administrateur: admin, published_at: nil, archived_at: nil }
+    let(:procedure_published) { create :procedure_with_dossiers, administrateur: admin, aasm_state: :publiee, published_at: Time.zone.now, archived_at: nil }
+    let(:procedure_archived) { create :procedure_with_dossiers, administrateur: admin, aasm_state: :archivee, published_at: nil, archived_at: Time.zone.now }
 
     subject { delete :destroy, params: { id: procedure.id } }
 
@@ -104,6 +104,11 @@ describe Admin::ProceduresController, type: :controller do
         expect { subject }.to change { Procedure.count }.by(-1)
       end
 
+      it 'deletes associated dossiers' do
+        subject
+        expect(Dossier.find_by(procedure_id: procedure.id)).to be_blank
+      end
+
       it 'redirects to the procedure drafts page' do
         subject
         expect(response).to redirect_to admin_procedures_draft_path
@@ -112,14 +117,18 @@ describe Admin::ProceduresController, type: :controller do
     end
 
     context 'when procedure is published' do
-      let(:procedure) { procedure_published }
+      let!(:procedure) { procedure_published }
 
+      it { expect { subject }.not_to change { Procedure.count } }
+      it { expect { subject }.not_to change { Dossier.count } }
       it { expect(subject.status).to eq 401 }
     end
 
     context 'when procedure is archived' do
-      let(:procedure) { procedure_published }
+      let!(:procedure) { procedure_archived }
 
+      it { expect { subject }.not_to change { Procedure.count } }
+      it { expect { subject }.not_to change { Dossier.count } }
       it { expect(subject.status).to eq 401 }
     end
 
