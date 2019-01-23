@@ -316,6 +316,7 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
             get 'attestation'
+            get 'apercu_attestation'
             get 'messagerie'
             get 'annotations-privees' => 'dossiers#annotations_privees'
             get 'avis'

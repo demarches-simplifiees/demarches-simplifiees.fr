@@ -29,5 +29,7 @@
     - else
       = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: true
     .text-right
+      - if title == 'Accepter' && dossier.procedure.attestation_template&.activated?
+        = link_to "Voir l'attestation", apercu_attestation_gestionnaire_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'button', title: "Voir l'attestation qui sera envoyée au demandeur"
       %span.button{ onclick: 'DS.motivationCancel();' } Annuler
       = button_tag 'Valider la décision', name: :process_action, value: process_action, class: 'button primary', title: title, data: { confirm: confirm }
