@@ -6,7 +6,7 @@ class Procedure < ApplicationRecord
   has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
   has_many :types_de_champ, -> { root.public_only.ordered }, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', dependent: :destroy
-  has_many :dossiers
+  has_many :dossiers, dependent: :restrict_with_exception
   has_many :deleted_dossiers, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
