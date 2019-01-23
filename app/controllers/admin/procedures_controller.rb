@@ -54,6 +54,7 @@ class Admin::ProceduresController < AdminController
       return render json: {}, status: 401
     end
 
+    procedure.reset!
     procedure.destroy
 
     flash.notice = 'Démarche supprimée'
