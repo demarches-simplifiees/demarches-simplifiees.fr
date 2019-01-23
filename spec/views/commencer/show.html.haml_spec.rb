@@ -45,6 +45,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
 
       it 'renders a link to resume the pending draft' do
         subject
+        expect(rendered).to have_text(time_ago_in_words(brouillon.created_at))
         expect(rendered).to have_link('Continuer à remplir mon dossier', href: brouillon_dossier_path(brouillon))
       end
     end
@@ -57,6 +58,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
 
       it 'renders a link to the submitted dossier' do
         subject
+        expect(rendered).to have_text(time_ago_in_words(dossier.en_construction_at))
         expect(rendered).to have_link('Voir mon dossier', href: dossier_path(dossier))
       end
     end

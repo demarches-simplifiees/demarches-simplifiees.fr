@@ -90,5 +90,11 @@ describe DossierSearchService do
 
       it { expect(subject.size).to eq(1) }
     end
+
+    describe 'search with characters disallowed by the tsquery parser' do
+      let(:terms) { "'?\\:&!(OCTO) <plop>" }
+
+      it { expect(subject.size).to eq(1) }
+    end
   end
 end
