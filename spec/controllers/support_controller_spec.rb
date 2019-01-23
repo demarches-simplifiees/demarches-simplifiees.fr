@@ -7,6 +7,7 @@ describe SupportController, type: :controller do
     before do
       sign_in user
     end
+
     let(:user) { create(:user) }
 
     it 'should not have email field' do
@@ -51,55 +52,67 @@ describe SupportController, type: :controller do
     end
 
     describe "send form" do
-      it 'should create conversation' do
-        expect(subject).not_to receive(:create_commentaire)
-        allow(subject).to receive(:create_conversation).and_return(true)
+      subject do
+        post :create, params: { subject: 'bonjour', text: 'un message' }
+      end
 
-        post :create, params: {
-          subject: 'bonjour',
-          text: 'un message'
-        }
+      it 'creates a conversation on HelpScout' do
+        expect_any_instance_of(Helpscout::FormAdapter).to receive(:send_form).and_return(true)
+
+        expect { subject }.to change(Commentaire, :count).by(0)
 
         expect(flash[:notice]).to match('Votre message a été envoyé.')
         expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
       end
 
-      context "with dossier" do
-        let(:user) { dossier.user }
+      context 'when a drafted dossier is mentionned' do
         let(:dossier) { create(:dossier) }
+        let(:user) { dossier.user }
 
-        it 'should create conversation' do
-          expect(subject).not_to receive(:create_commentaire)
-          allow(subject).to receive(:create_conversation).and_return(true)
-
+        subject do
           post :create, params: {
             dossier_id: dossier.id,
             type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
             subject: 'bonjour',
             text: 'un message'
           }
+        end
+
+        it 'creates a conversation on HelpScout' do
+          expect_any_instance_of(Helpscout::FormAdapter).to receive(:send_form).and_return(true)
+
+          expect { subject }.to change(Commentaire, :count).by(0)
 
           expect(flash[:notice]).to match('Votre message a été envoyé.')
           expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
         end
+      end
 
-        context "en_construction" do
-          let(:dossier) { create(:dossier, :en_construction) }
+      context 'when a submitted dossier is mentionned' do
+        let(:dossier) { create(:dossier, :en_construction) }
+        let(:user) { dossier.user }
 
-          it 'should create commentaire' do
-            allow(subject).to receive(:create_commentaire).and_return(true)
-            expect(subject).not_to receive(:create_conversation)
+        subject do
+          post :create, params: {
+            dossier_id: dossier.id,
+            type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
+            subject: 'bonjour',
+            text: 'un message'
+          }
+        end
 
-            post :create, params: {
-              dossier_id: dossier.id,
-              type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
-              subject: 'bonjour',
-              text: 'un message'
-            }
+        it 'posts the message to the dossier messagerie' do
+          expect_any_instance_of(Helpscout::FormAdapter).not_to receive(:send_form)
 
-            expect(flash[:notice]).to match('Votre message a été envoyé sur la messagerie de votre dossier.')
-            expect(response).to redirect_to messagerie_dossier_path(dossier)
-          end
+          expect { subject }.to change(Commentaire, :count).by(1)
+
+          expect(Commentaire.last.email).to eq(user.email)
+          expect(Commentaire.last.dossier).to eq(dossier)
+          expect(Commentaire.last.body).to include('[bonjour]')
+          expect(Commentaire.last.body).to include('un message')
+
+          expect(flash[:notice]).to match('Votre message a été envoyé sur la messagerie de votre dossier.')
+          expect(response).to redirect_to messagerie_dossier_path(dossier)
         end
       end
     end
