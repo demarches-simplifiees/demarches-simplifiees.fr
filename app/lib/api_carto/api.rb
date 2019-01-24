@@ -15,7 +15,7 @@ class ApiCarto::API
     params = geojson.to_s
     RestClient.post(url, params, content_type: 'application/json')
 
-  rescue RestClient::InternalServerError => e
+  rescue RestClient::InternalServerError, RestClient::BadGateway, RestClient::GatewayTimeout => e
     Rails.logger.error "[ApiCarto] Error on #{url}: #{e}"
     raise RestClient::ResourceNotFound
   end
