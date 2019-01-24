@@ -112,20 +112,6 @@ feature 'The user' do
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
   end
 
-  scenario 'delete a draft', js: true do
-    log_in(user.email, password, simple_procedure)
-    fill_individual
-
-    page.accept_alert('Confirmer la suppression ?') do
-      click_on 'Supprimer le brouillon'
-    end
-
-    expect(page).to have_current_path(dossiers_path)
-    expect(page).to have_text('Votre dossier a bien été supprimé')
-    expect(page).not_to have_text(user_dossier.procedure.libelle)
-    expect(user_dossier.reload.hidden_at).to be_present
-  end
-
   private
 
   def log_in(email, password, procedure)
