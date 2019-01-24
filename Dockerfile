@@ -115,8 +115,8 @@ CMD ["rails", "server", "-b", "0.0.0.0"]
 # docker run -p 5432:5432 -e POSTGRES_USER=tps -e POSTGRES_PASSWORD=tps -d postgres:9.6-alpine
 # docker run --rm -e DB_HOST="192.168.1.45" sipf/tps:0.1.0 rails db:setup
 
-# docker run -e DB_HOST="192.168.1.45" -e MAILTRAP_ENABLED="enabled" -e MAILTRAP_USERNAME="xxxxxxxx" -e MAILTRAP_PASSWORD="yyyyyyyy" -e APP_HOST="beta.demarches-simplifiees.gov.pf" -d sipf/tps:0.1.0 rails jobs:work
-# docker run -e DB_HOST="192.168.1.45" -e MAILTRAP_ENABLED="enabled" -e MAILTRAP_USERNAME="xxxxxxxx" -e MAILTRAP_PASSWORD="yyyyyyyy" -e APP_HOST="beta.demarches-simplifiees.gov.pf" -d -p 80:3000 sipf/tps:0.1.0
+# docker run -e DB_HOST="192.168.1.45" -e MAILTRAP_ENABLED="enabled" -e MAILTRAP_USERNAME="xxxxxxxx" -e MAILTRAP_PASSWORD="yyyyyyyy" -e APP_HOST="beta.mes-demarches.gov.pf" -d sipf/tps:0.1.0 rails jobs:work
+# docker run -e DB_HOST="192.168.1.45" -e MAILTRAP_ENABLED="enabled" -e MAILTRAP_USERNAME="xxxxxxxx" -e MAILTRAP_PASSWORD="yyyyyyyy" -e APP_HOST="beta.mes-demarches.gov.pf" -d -p 80:3000 sipf/tps:0.1.0
 
 # Modify your /etc/hosts file so beta.demarches-simplifiees.gov.pf match your host.
 # Log to http://beta.demarches-simplifiees.gov.pf with your browser, it must works.

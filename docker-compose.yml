@@ -12,7 +12,7 @@ services:
   app:
     image: matau/mes-demarches:${TAG}
     container_name: app
-    ports: 
+    ports:
       - ${PORT}:3000
     environment:
       - APP_HOST
