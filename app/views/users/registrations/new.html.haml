@@ -1,7 +1,7 @@
 .auth-form
   = devise_error_messages!
   = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
-    %h1 Créez-vous un compte demarches-simplifiees.fr
+    %h1 Créez-vous un compte #{SITE_NAME}
 
     = f.label :email, "Email"
     = f.text_field :email, autofocus: true, placeholder: "Votre adresse email"
@@ -11,12 +11,15 @@
 
     = f.submit "Créer un compte", class: "button large primary expand"
 
+-#
   .separation.center
     ou
 
+-#
   .center
     = image_tag "login-with-fc-hover.svg", style: "display: none"
     = link_to "", france_connect_particulier_path, class: "login-with-fc"
 
+-#
   .center
     = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"
