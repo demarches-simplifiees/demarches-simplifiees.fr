@@ -1,0 +1,71 @@
+version: '3.3'
+
+#------------------------------------------------------------
+# This docker compose describes the two services running on
+# top of Rails.
+# To work, this configuration requires
+#    - a running Postgress instance
+#    - environment variables defined via .env file
+#
+#-------------------------------------------------------------
+services:
+  app:
+    image: matau/mes-demarches:${TAG}
+    container_name: app
+    ports: 
+      - ${PORT}:3000
+    environment:
+      - APP_HOST
+      - DB_DATABASE
+      - DB_HOST
+      - DB_USERNAME
+      - DB_PASSWORD
+      - API_ISPF_USER
+      - API_ISPF_PASSWORD
+    volumes:
+      - md-data-files:/app/storage
+      - md-temp-files:/app/tmp
+      #----- to set the timezone to the same as the host
+      # - /etc/localtime:/etc/localtime:ro
+    networks:
+      - md-network
+
+  worker:
+    image: matau/mes-demarches:b37
+    entrypoint: ["bundle", "exec"]
+    command: rails jobs:work
+    container_name: worker
+    environment:
+      - APP_HOST
+      - DB_DATABASE
+      - DB_HOST
+      - DB_USERNAME
+      - DB_PASSWORD
+      - MAILJET_API_KEY
+      - MAILJET_SECRET_KEY
+    # volumes:
+      #----- to set the timezone to the same as the host
+      # - /etc/localtime:/etc/localtime:ro
+    networks:
+      - md-network
+
+volumes:
+  md-data-files:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/data
+      o: bind
+  md-temp-files:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/tmp
+      o: bind
+
+networks:
+  md-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/24

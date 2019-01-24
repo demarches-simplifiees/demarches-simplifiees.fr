@@ -45,7 +45,7 @@ ENV \
 	BASIC_AUTH_ENABLED="disabled"\
 	BASIC_AUTH_PASSWORD=""\
 	BASIC_AUTH_USERNAME=""\
-	CARRIERWAVE_CACHE_DIR="$APP_PATH/tmp/tps-local-cache"\
+	CARRIERWAVE_CACHE_DIR="$APP_PATH/tmp/carrierwave"\
 	DB_DATABASE="tps"\
 	DB_HOST="localhost"\
 	DB_PASSWORD="tps"\
