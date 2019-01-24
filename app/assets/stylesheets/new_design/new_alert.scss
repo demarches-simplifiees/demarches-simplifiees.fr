@@ -1,4 +1,5 @@
 @import "colors";
+@import "constants";
 
 .alert {
   padding: 15px;
@@ -28,4 +29,6 @@
   width: 200px;
   top: 10px;
   border-radius: 10px;
+  // Ensure fixed flash messages are above `position: absolute` elements (like maps)
+  z-index: $alert-z-index;
 }
