@@ -265,6 +265,8 @@ Rails.application.routes.draw do
     namespace :commencer do
       get '/test/:path', action: 'commencer_test', as: :test
       get '/:path', action: 'commencer'
+      get '/:path/sign_in', action: 'sign_in', as: :sign_in
+      get '/:path/sign_up', action: 'sign_up', as: :sign_up
     end
 
     resources :dossiers, only: [:index, :show, :new] do
@@ -314,6 +316,7 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
             get 'attestation'
+            get 'apercu_attestation'
             get 'messagerie'
             get 'annotations-privees' => 'dossiers#annotations_privees'
             get 'avis'

@@ -20,8 +20,8 @@
     = f.number_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6', required: true
 
 .form-group
-  %h4 Lien site internet
-  = f.text_field :lien_site_web, class: 'form-control', placeholder: 'https://www.exemple.fr/'
+  %h4 Où les usagers trouveront-ils le lien vers la démarche ?
+  = f.text_field :lien_site_web, class: 'form-control', placeholder: 'https://exemple.gouv.fr/ma_demarche'
 
 - if  Flipflop.web_hook?
   .form-group

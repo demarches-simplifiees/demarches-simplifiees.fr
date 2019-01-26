@@ -13,6 +13,10 @@ module NewGestionnaire
       send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
     end
 
+    def apercu_attestation
+      send_data(dossier.build_attestation.pdf.read, filename: 'apercu_attestation.pdf', disposition: 'inline', type: 'application/pdf')
+    end
+
     def show
       @demande_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.demande_seen_at
     end
