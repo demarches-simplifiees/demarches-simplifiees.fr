@@ -25,8 +25,10 @@
 
       .chart-container
         .chart
-          = line_chart @satisfaction_usagers,
-            colors: ["#15AD70", "#F28900", "rgba(161, 0, 5, 0.9)"]
+          = area_chart @satisfaction_usagers,
+            stacked: true,
+            max: 100,
+            colors: ["#BD0107", "#F28900", "#15AD70"]
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
