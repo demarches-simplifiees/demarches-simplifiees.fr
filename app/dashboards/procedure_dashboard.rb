@@ -18,6 +18,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     id: Field::Number.with_options(searchable: true),
     libelle: Field::String,
     description: Field::String,
+    lien_site_web: Field::String, # TODO: use Field::Url when administrate-v0.12 will be released
     organisation: Field::String,
     direction: Field::String,
     created_at: Field::DateTime,
@@ -59,6 +60,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :administrateur,
     :libelle,
     :description,
+    :lien_site_web,
     :organisation,
     :direction,
     :service,

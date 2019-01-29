@@ -49,13 +49,13 @@ describe 'user access to the list of his dossier' do
     expect(page).not_to have_link(nil, href: ask_deletion_dossier_path(dossier1))
   end
 
-  context 'when user clicks on delete brouillon list', js: true do
-    before do
-      find(:xpath, "//a[@href='#{ask_deletion_dossier_path(dossier_brouillon)}']").click
-      page.driver.browser.switch_to.alert.accept
-    end
+  context 'when user clicks on delete brouillon', js: true do
     scenario 'dossier is deleted' do
-      expect(page).not_to have_link("Supprimer", href: dossier_brouillon.procedure.libelle)
+      page.accept_alert('Confirmer la suppression ?') do
+        find(:xpath, "//a[@href='#{ask_deletion_dossier_path(dossier_brouillon)}']").click
+      end
+
+      expect(page).to have_content('Votre dossier a bien été supprimé.')
     end
   end
 
