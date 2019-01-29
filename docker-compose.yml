@@ -10,7 +10,7 @@ version: '3.3'
 #-------------------------------------------------------------
 services:
   app:
-    image: matau/mes-demarches:${TAG}
+    image: ${IMAGE}:${TAG}
     container_name: app
     ports:
       - ${PORT}:3000
@@ -31,7 +31,7 @@ services:
       - md-network
 
   worker:
-    image: matau/mes-demarches:b37
+    image: ${IMAGE}:${TAG}
     entrypoint: ["bundle", "exec"]
     command: rails jobs:work
     container_name: worker
