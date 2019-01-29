@@ -1,6 +1,6 @@
-class Champs::YesNoChamp < Champs::CheckboxChamp
+class Champs::YesNoChamp < Champ
   def search_terms
-    if value == 'true'
+    if true?
       [libelle]
     end
   end
@@ -13,13 +13,13 @@ class Champs::YesNoChamp < Champs::CheckboxChamp
     processed_value
   end
 
-  def for_api
-    processed_value
+  def true?
+    value == 'true'
   end
 
   private
 
   def processed_value
-    value == 'true' ? 'Oui' : 'Non'
+    true? ? 'Oui' : 'Non'
   end
 end
