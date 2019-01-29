@@ -404,7 +404,9 @@ describe Procedure do
     context 'when the procedure is cloned from the library' do
       let(:from_library) { true }
 
-      it { expect(subject.cloned_from_library).to be(true) }
+      it 'should set cloned_from_library to true' do
+        expect(subject.cloned_from_library).to be(true)
+      end
 
       it 'should set service_id to nil' do
         expect(subject.service).to eq(nil)
@@ -414,6 +416,11 @@ describe Procedure do
         subject.types_de_champ.each do |stc|
           expect(stc.old_pj).to be_nil
         end
+      end
+
+      it 'should have one administrateur' do
+        expect(subject.administrateur).to eq(administrateur)
+        expect(subject.administrateurs).to eq([administrateur])
       end
     end
 
@@ -434,6 +441,11 @@ describe Procedure do
         subject.types_de_champ.each do |stc|
           expect(stc.old_pj).to be_nil
         end
+      end
+
+      it 'should have one administrateur' do
+        expect(subject.administrateur).to eq(administrateur)
+        expect(subject.administrateurs).to eq([administrateur])
       end
     end
 
