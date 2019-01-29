@@ -70,13 +70,6 @@
     - if !apercu
       .send-wrapper
         - if dossier.brouillon?
-          - if current_user.owns?(dossier)
-            = link_to ask_deletion_dossier_path(dossier),
-              method: :post,
-              class: 'button danger',
-              data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
-              Supprimer le brouillon
-
           = f.button 'Enregistrer le brouillon',
             formnovalidate: true,
             name: :save_draft,
