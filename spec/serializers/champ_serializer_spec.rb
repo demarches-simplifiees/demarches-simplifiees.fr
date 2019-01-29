@@ -196,5 +196,65 @@ describe ChampSerializer do
         expect(subject[:entreprise]).to include(capital_social: etablissement.entreprise_capital_social)
       }
     end
+
+    context 'when type champ yes_no' do
+      context 'true' do
+        let(:champ) { create(:champ_yes_no, value: 'true') }
+
+        it { is_expected.to include(value: 'true') }
+      end
+
+      context 'false' do
+        let(:champ) { create(:champ_yes_no, value: 'false') }
+
+        it { is_expected.to include(value: 'false') }
+      end
+
+      context 'nil' do
+        let(:champ) { create(:champ_yes_no, value: nil) }
+
+        it { is_expected.to include(value: nil) }
+      end
+    end
+
+    context 'when type champ checkbox' do
+      context 'on' do
+        let(:champ) { create(:champ_checkbox, value: 'on') }
+
+        it { is_expected.to include(value: 'on') }
+      end
+
+      context 'off' do
+        let(:champ) { create(:champ_checkbox, value: 'off') }
+
+        it { is_expected.to include(value: 'off') }
+      end
+
+      context 'nil' do
+        let(:champ) { create(:champ_checkbox, value: nil) }
+
+        it { is_expected.to include(value: nil) }
+      end
+    end
+
+    context 'when type champ engagement' do
+      context 'on' do
+        let(:champ) { create(:champ_engagement, value: 'on') }
+
+        it { is_expected.to include(value: 'on') }
+      end
+
+      context 'off' do
+        let(:champ) { create(:champ_engagement, value: 'off') }
+
+        it { is_expected.to include(value: 'off') }
+      end
+
+      context 'nil' do
+        let(:champ) { create(:champ_engagement, value: nil) }
+
+        it { is_expected.to include(value: nil) }
+      end
+    end
   end
 end
