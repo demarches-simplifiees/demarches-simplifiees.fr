@@ -26,6 +26,8 @@ namespace :support do
     procedure = Procedure.find(procedure_id)
 
     rake_puts("Changing owner of procedure ##{procedure_id} from ##{procedure.administrateur_id} to ##{new_owner.id}")
+    procedure.administrateurs.delete(procedure.administrateur)
+    procedure.administrateurs << new_owner
     procedure.update(administrateur: new_owner)
   end
 
@@ -68,6 +70,10 @@ namespace :support do
       fail "Must specify a new owner"
     end
 
+    procedures.each do |procedure|
+      procedure.administrateurs.delete(procedure.administrateur)
+      procedure.administrateurs << new_owner
+    end
     procedures.update_all(administrateur_id: new_owner.id)
   end
 
