@@ -1,5 +1,5 @@
 if !defined?(CONTACT_EMAIL)
-  CONTACT_EMAIL = "contact@#{SITE}"
+  CONTACT_EMAIL = "clautier@idt.pf" # "contact@#{SITE}"
   EQUIPE_EMAIL = "equipe@#{SITE}"
   TECH_EMAIL = "tech@#{SITE}"
 
