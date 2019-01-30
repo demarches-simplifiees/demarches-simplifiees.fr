@@ -7,11 +7,29 @@ version: '3.3'
 #    - a running Postgress instance
 #    - environment variables defined via .env file
 #
+# IMAGE : name of the docker image to run (sipf/mes-demarches)
+# TAG : Tag of the image to run (eg master or devpf or b38)
+#
+# APP_HOST: host:port pointing to the application to allows creation of absolute links
+#
+# API_ISPF_USER: ISPF API configuration
+# API_ISPF_PASSWORD
+#
+# DB_DATABASE: database configuration
+# DB_HOST
+# DB_USERNAME
+# DB_PASSWORD
+#
+# NETWORK_SLOT: Optional, default to 0, Number between 0 and 255 allowing to run multiple env (dev, staging)
+#
+# MAILJET_API_KEY:
+# MAILJET_SECRET_KEY: MAILJET configuration
+#
 #-------------------------------------------------------------
 services:
   app:
-    image: ${IMAGE}:${TAG}
-    container_name: app
+    image: ${IMAGE}:${TAG:-latest}
+    container_name: app-${ENV:-dev}
     ports:
       - ${PORT}:3000
     environment:
@@ -34,7 +52,7 @@ services:
     image: ${IMAGE}:${TAG}
     entrypoint: ["bundle", "exec"]
     command: rails jobs:work
-    container_name: worker
+    container_name: worker-${ENV:-dev}
     environment:
       - APP_HOST
       - DB_DATABASE
@@ -68,4 +86,5 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.5.0.0/24
+        - subnet: 10.5.${NETWORK_SLOT:-0}.0/24
+
