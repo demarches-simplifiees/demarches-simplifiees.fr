@@ -10,7 +10,7 @@ class Champ < ApplicationRecord
   has_many :geo_areas, dependent: :destroy
   belongs_to :etablissement, dependent: :destroy
 
-  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, to: :type_de_champ
+  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, :repetition?, to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }

@@ -83,6 +83,41 @@ feature 'The user' do
     expect(page).to have_field('dossier_link', with: '123')
   end
 
+  let(:procedure_with_repetition) do
+    tdc = create(:type_de_champ_repetition, libelle: 'repetition')
+    tdc.types_de_champ << create(:type_de_champ_text, libelle: 'text')
+    create(:procedure, :published, :for_individual, types_de_champ: [tdc])
+  end
+
+  scenario 'fill a dossier with repetition', js: true do
+    log_in(user.email, password, procedure_with_repetition)
+
+    fill_individual
+
+    fill_in('text', with: 'super texte')
+    expect(page).to have_field('text', with: 'super texte')
+
+    click_on 'Ajouter une ligne pour'
+
+    within '.row-1' do
+      fill_in('text', with: 'un autre texte')
+    end
+
+    expect(page).to have_content('Supprimer', count: 2)
+
+    click_on 'Enregistrer le brouillon'
+
+    expect(page).to have_content('Supprimer', count: 2)
+
+    within '.row-1' do
+      click_on 'Supprimer'
+    end
+
+    click_on 'Enregistrer le brouillon'
+
+    expect(page).to have_content('Supprimer', count: 1)
+  end
+
   let(:simple_procedure) do
     tdcs = [create(:type_de_champ, mandatory: true, libelle: 'texte obligatoire')]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
