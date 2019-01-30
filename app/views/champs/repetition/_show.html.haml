@@ -1,0 +1,10 @@
+- champs = champ.rows.last
+- index = (champ.rows.size - 1) * champs.size
+%div{ class: "row row-#{champs.first.row}" }
+  - champs.each.with_index(index) do |champ, index|
+    = fields_for "#{attribute}[#{index}]", champ do |form|
+      = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { champ: champ, form: form }
+      = form.hidden_field :id
+      = form.hidden_field :_destroy, disabled: true
+  %button.button.danger.remove-row
+    Supprimer

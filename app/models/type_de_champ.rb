@@ -150,6 +150,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:explication)
   end
 
+  def repetition?
+    type_champ == TypeDeChamp.type_champs.fetch(:repetition)
+  end
+
   def public?
     !private?
   end
