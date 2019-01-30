@@ -1,7 +1,8 @@
 require 'prawn/measurement_extensions'
 
 prawn_document(margin: [50, 100, 20, 100]) do |pdf|
-  pdf.font 'Times-Roman'
+  pdf.font_families.update( 'liberation serif' => { normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' )})
+  pdf.font 'liberation serif'
 
   grey = '555555'
   black = '333333'
