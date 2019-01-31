@@ -1,24 +1,14 @@
 module BizDev
   BIZ_DEV_MAPPING = {
-    8 =>
+    2 =>
       {
-        full_name: "Camille Garrigue",
-        pipedrive_id: 3189424
+        full_name: "Christian Lautier",
+        pipedrive_id: 7944215
       },
-    9 =>
+    3 =>
       {
-        full_name: "Philippe Vrignaud",
-        pipedrive_id: 2753338
-      },
-    10 =>
-      {
-        full_name: "Benjamin Doberset",
-        pipedrive_id: 4223834
-      },
-    11 =>
-      {
-        full_name: "Rédouane Bouchane",
-        pipedrive_id: 4438645
+        full_name: "Christian Lautier",
+        pipedrive_id: 7944215
       }
   }
 
