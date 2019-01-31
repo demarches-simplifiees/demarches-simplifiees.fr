@@ -40,6 +40,8 @@ services:
       - DB_PASSWORD
       - API_ISPF_USER
       - API_ISPF_PASSWORD
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
     volumes:
       - md-data-files:/app/storage
       - md-temp-files:/app/tmp
