@@ -23,20 +23,7 @@ class Users::SessionsController < Sessions::SessionsController
       current_user.update(loged_in_with_france_connect: nil)
     end
 
-    if gestionnaire_signed_in?
-      if trusted_device? || !current_gestionnaire.feature_enabled?(:enable_email_login_token)
-        set_flash_message :notice, :signed_in
-        redirect_to after_sign_in_path_for(:user)
-      else
-        gestionnaire = current_gestionnaire
-
-        send_login_token_or_bufferize(gestionnaire)
-
-        [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
-
-        redirect_to link_sent_path(email: gestionnaire.email)
-      end
-    elsif user_signed_in?
+    if gestionnaire_signed_in? || user_signed_in?
       set_flash_message :notice, :signed_in
       redirect_to after_sign_in_path_for(:user)
     else
@@ -87,27 +74,23 @@ class Users::SessionsController < Sessions::SessionsController
       trust_device
       flash.notice = "Merci d’avoir confirmé votre connexion. Votre navigateur est maintenant authentifié pour #{TRUSTED_DEVICE_PERIOD.to_i / ActiveSupport::Duration::SECONDS_PER_DAY} jours."
 
-      user = User.find_by(email: gestionnaire.email)
-      administrateur = Administrateur.find_by(email: gestionnaire.email)
-      [user, gestionnaire, administrateur].compact.each { |resource| sign_in(resource) }
-
       # redirect to procedure'url if stored by store_location_for(:user) in dossiers_controller
       # redirect to root_path otherwise
-      redirect_to after_sign_in_path_for(:user)
+
+      if gestionnaire_signed_in?
+        redirect_to after_sign_in_path_for(:user)
+      else
+        redirect_to new_user_session_path
+      end
     else
-      flash[:alert] = 'Votre lien est invalide ou expiré, veuillez-vous reconnecter.'
-      redirect_to new_user_session_path
+      flash[:alert] = 'Votre lien est invalide ou expiré, un nouveau vient de vous être envoyé.'
+
+      send_login_token_or_bufferize(gestionnaire)
+      redirect_to link_sent_path(email: gestionnaire.email)
     end
   end
 
   private
-
-  def send_login_token_or_bufferize(gestionnaire)
-    if !gestionnaire.young_login_token?
-      login_token = gestionnaire.login_token!
-      GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
-    end
-  end
 
   def try_to_authenticate(klass, remember_me = false)
     resource = klass.find_for_database_authentication(email: params[:user][:email])

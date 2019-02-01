@@ -40,6 +40,7 @@ describe Sessions::SessionsController, type: :controller do
       @request.env["devise.mapping"] = Devise.mappings[:gestionnaire]
 
       allow_any_instance_of(described_class).to receive(:gestionnaire_signed_in?).and_return(true)
+      allow_any_instance_of(described_class).to receive(:current_gestionnaire).and_return(gestionnaire)
     end
 
     it 'calls sign out for gestionnaire' do

@@ -17,6 +17,13 @@ module TrustedDeviceConcern
       (Time.zone.now - TRUSTED_DEVICE_PERIOD) < trusted_device_cookie_created_at
   end
 
+  def send_login_token_or_bufferize(gestionnaire)
+    if !gestionnaire.young_login_token?
+      login_token = gestionnaire.login_token!
+      GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
+    end
+  end
+
   private
 
   def trusted_device_cookie_created_at
