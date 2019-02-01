@@ -9,6 +9,7 @@ describe ApplicationController, type: :controller do
         .map(&:filter)
 
       expect(before_actions).to include(:set_raven_context)
+      expect(before_actions).to include(:redirect_if_untrusted)
     end
   end
 
@@ -143,6 +144,56 @@ describe ApplicationController, type: :controller do
       it { expect(@controller).not_to have_received(:sign_out) }
       it { expect(@controller).not_to have_received(:redirect_to) }
       it { expect(flash[:alert]).to eq(ApplicationController::MAINTENANCE_MESSAGE) }
+    end
+  end
+
+  describe '#redirect_if_unstrusted' do
+    let(:current_gestionnaire) { create(:gestionnaire) }
+
+    before do
+      allow(current_gestionnaire).to receive(:feature_enabled?).and_return(feature_enabled)
+      allow(@controller).to receive(:current_gestionnaire).and_return(current_gestionnaire)
+
+      allow(@controller).to receive(:redirect_to)
+      allow(@controller).to receive(:trusted_device?).and_return(trusted_device)
+      allow(@controller).to receive(:gestionnaire_signed_in?).and_return(gestionnaire_signed_in)
+      allow(@controller).to receive(:sensitive_path).and_return(sensitive_path)
+      allow(@controller).to receive(:send_login_token_or_bufferize)
+    end
+
+    subject { @controller.send(:redirect_if_untrusted) }
+
+    context 'when the path is sensitive' do
+      let(:sensitive_path) { true }
+
+      context 'when the gestionnaire is signed_in' do
+        let(:gestionnaire_signed_in) { true }
+
+        context 'when the feature is activated' do
+          let(:feature_enabled) { true }
+
+          context 'when the device is trusted' do
+            let(:trusted_device) { true }
+
+            before { subject }
+
+            it { expect(@controller).not_to have_received(:redirect_to) }
+          end
+        end
+
+        context 'when the feature is activated' do
+          let(:feature_enabled) { true }
+
+          context 'when the device is not trusted' do
+            let(:trusted_device) { false }
+
+            before { subject }
+
+            it { expect(@controller).to have_received(:redirect_to) }
+            it { expect(@controller).to have_received(:send_login_token_or_bufferize) }
+          end
+        end
+      end
     end
   end
 end
