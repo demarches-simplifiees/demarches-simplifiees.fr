@@ -1,19 +1,9 @@
-class Champs::CheckboxChamp < Champ
-  def search_terms
-    if value == 'on'
-      [libelle]
-    end
-  end
-
-  def to_s
-    value == 'on' ? 'Oui' : 'Non'
+class Champs::CheckboxChamp < Champs::YesNoChamp
+  def true?
+    value == 'on'
   end
 
   def for_export
-    value == 'on' ? 'on' : 'off'
-  end
-
-  def for_api
-    value == 'on' ? 'on' : 'off'
+    true? ? 'on' : 'off'
   end
 end

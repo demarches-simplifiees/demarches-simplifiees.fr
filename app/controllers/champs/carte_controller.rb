@@ -74,5 +74,9 @@ class Champs::CarteController < ApplicationController
     if @champ.persisted?
       @champ.save
     end
+
+  rescue RestClient::ResourceNotFound
+    flash.alert = 'Les données cartographiques sont temporairement indisponibles. Réessayez dans un instant.'
+    response.status = 503
   end
 end

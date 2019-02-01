@@ -52,7 +52,7 @@
                   = dossier.updated_at.strftime("%d/%m/%Y")
               %td.action-col.delete-col
                 - if dossier.brouillon?
-                  = link_to(ask_deletion_dossier_path(dossier), method: :post, class: 'button danger', data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" }) do
+                  = link_to(ask_deletion_dossier_path(dossier), method: :post, class: 'button danger', data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" }) do
                     %span.icon.delete
                     Supprimer
     = paginate(@dossiers)

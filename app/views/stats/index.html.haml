@@ -25,8 +25,12 @@
 
       .chart-container
         .chart
-          = line_chart @satisfaction_usagers,
-            colors: ["#15AD70", "#F28900", "rgba(161, 0, 5, 0.9)"]
+          = area_chart @satisfaction_usagers,
+            stacked: true,
+            suffix: ' %',
+            max: 100,
+            library: { plotOptions: { series: { marker: { enabled: true }}}},
+            colors: ["#C31C25", "#F5962A", "#25B177"]
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
