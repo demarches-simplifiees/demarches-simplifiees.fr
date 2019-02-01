@@ -14,10 +14,14 @@ module TrustedDeviceConcern
 
   def trusted_device?
     trusted_device_cookie.present? &&
-      Time.zone.now - TRUSTED_DEVICE_PERIOD < JSON.parse(trusted_device_cookie)['created_at']
+      (Time.zone.now - TRUSTED_DEVICE_PERIOD) < trusted_device_cookie_created_at
   end
 
   private
+
+  def trusted_device_cookie_created_at
+    Time.zone.parse(JSON.parse(trusted_device_cookie)['created_at'])
+  end
 
   def trusted_device_cookie
     cookies.encrypted[TRUSTED_DEVICE_COOKIE_NAME]
