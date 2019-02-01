@@ -17,7 +17,7 @@ module Manager
         flash.notice = "Administrateur créé"
         redirect_to manager_demandes_path
       else
-        flash.now.alert = administrateur.errors.full_messages
+        flash.now.alert = administrateur.errors.full_messages.to_sentence
         @pending_demandes = pending_demandes
         render :index
       end

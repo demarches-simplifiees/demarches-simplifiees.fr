@@ -1,8 +1,8 @@
 require 'prawn/measurement_extensions'
 
 prawn_document(margin: [50, 100, 20, 100]) do |pdf|
-  pdf.font_families.update( 'open sans' => { normal: './lib/prawn/fonts/OpenSans-Regular.ttf' })
-  pdf.font 'open sans'
+  pdf.font_families.update( 'liberation serif' => { normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' )})
+  pdf.font 'liberation serif'
 
   grey = '555555'
   black = '333333'
@@ -21,7 +21,7 @@ prawn_document(margin: [50, 100, 20, 100]) do |pdf|
     pdf.pad_top(40) { pdf.text @title, size: 18, character_spacing: -0.2 }
 
     pdf.fill_color grey
-    pdf.pad_top(30) { pdf.text @body, size: 10, character_spacing: -0.2 }
+    pdf.pad_top(30) { pdf.text @body, size: 10, character_spacing: -0.2, align: :justify }
 
     if @signature.present?
       pdf.pad_top(40) do
