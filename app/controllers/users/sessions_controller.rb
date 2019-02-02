@@ -70,7 +70,11 @@ class Users::SessionsController < Sessions::SessionsController
 
   def sign_in_by_link
     gestionnaire = Gestionnaire.find(params[:id])
-    if gestionnaire&.login_token_valid?(params[:jeton])
+    trusted_device_token = gestionnaire
+      .trusted_device_tokens
+      .find_by(token: params[:jeton])
+
+    if trusted_device_token&.token_valid?
       trust_device
       flash.notice = "Merci d’avoir confirmé votre connexion. Votre navigateur est maintenant authentifié pour #{TRUSTED_DEVICE_PERIOD.to_i / ActiveSupport::Duration::SECONDS_PER_DAY} jours."
 
