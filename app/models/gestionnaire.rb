@@ -2,7 +2,6 @@ class Gestionnaire < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
-  LOGIN_TOKEN_VALIDITY = 45.minutes
   LOGIN_TOKEN_YOUTH = 15.minutes
 
   devise :database_authenticatable, :registerable, :async,
@@ -138,13 +137,6 @@ class Gestionnaire < ApplicationRecord
   def login_token!
     trusted_device_token = trusted_device_tokens.create
     trusted_device_token.token
-  end
-
-  def login_token_valid?(login_token)
-    trusted_device_token = trusted_device_tokens.find_by(token: login_token)
-
-    trusted_device_token.present? &&
-      LOGIN_TOKEN_VALIDITY.ago < trusted_device_token.created_at
   end
 
   def dossiers_id_with_notifications(dossiers)
