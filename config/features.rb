@@ -10,7 +10,7 @@ Flipflop.configure do
     feature :champ_integer_number,
       title: "Champ nombre entier"
     feature :champ_repetition,
-      title: "Bloc répétable (NE MARCHE PAS – NE PAS ACTIVER)"
+      title: "Bloc répétable"
   end
 
   feature :web_hook
