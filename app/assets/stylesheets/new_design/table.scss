@@ -20,6 +20,10 @@
     padding: (3 * $default-spacer) 2px;
   }
 
+  th.padded {
+    padding-left: (2 * $default-spacer);
+  }
+
   &.hoverable {
     tbody tr:hover {
       background: $light-grey;

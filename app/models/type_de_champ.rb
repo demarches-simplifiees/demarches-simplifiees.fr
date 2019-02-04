@@ -147,10 +147,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def exclude_from_view?
-    type_champ.in?([
-      TypeDeChamp.type_champs.fetch(:explication),
-      TypeDeChamp.type_champs.fetch(:repetition)
-    ])
+    type_champ == TypeDeChamp.type_champs.fetch(:explication)
+  end
+
+  def repetition?
+    type_champ == TypeDeChamp.type_champs.fetch(:repetition)
   end
 
   def public?
