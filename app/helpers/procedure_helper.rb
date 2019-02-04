@@ -89,6 +89,9 @@ module ProcedureHelper
     .merge(include: TYPES_DE_CHAMP_INCLUDE.merge(types_de_champ: TYPES_DE_CHAMP_BASE))
 
   def types_de_champ_as_json(types_de_champ)
-    types_de_champ.as_json(TYPES_DE_CHAMP)
+    types_de_champ.includes(:drop_down_list,
+      piece_justificative_template_attachment: :blob,
+      types_de_champ: [:drop_down_list, piece_justificative_template_attachment: :blob])
+      .as_json(TYPES_DE_CHAMP)
   end
 end
