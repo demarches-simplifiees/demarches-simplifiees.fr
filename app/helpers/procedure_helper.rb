@@ -79,9 +79,16 @@ module ProcedureHelper
     types_de_champ
   end
 
+  TYPES_DE_CHAMP_INCLUDE = { drop_down_list: { only: :value } }
+  TYPES_DE_CHAMP_BASE = {
+    except: [:created_at, :updated_at, :stable_id, :type, :parent_id, :procedure_id, :private],
+    methods: [:piece_justificative_template_filename, :piece_justificative_template_url],
+    include: TYPES_DE_CHAMP_INCLUDE
+  }
+  TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE
+    .merge(include: TYPES_DE_CHAMP_INCLUDE.merge(types_de_champ: TYPES_DE_CHAMP_BASE))
+
   def types_de_champ_as_json(types_de_champ)
-    types_de_champ.as_json(except: [:created_at, :updated_at],
-      methods: [:piece_justificative_template_filename, :piece_justificative_template_url],
-      include: { drop_down_list: { only: :value } })
+    types_de_champ.as_json(TYPES_DE_CHAMP)
   end
 end

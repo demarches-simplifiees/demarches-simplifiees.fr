@@ -127,6 +127,7 @@ Rails.application.routes.draw do
     get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
     post ':position/carte', to: 'carte#show', as: :carte
+    post ':position/repetition', to: 'repetition#show', as: :repetition
   end
 
   get 'tour-de-france' => 'root#tour_de_france'
