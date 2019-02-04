@@ -2,8 +2,6 @@ class Gestionnaire < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
-  LOGIN_TOKEN_YOUTH = 15.minutes
-
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
 
@@ -204,8 +202,7 @@ class Gestionnaire < ApplicationRecord
 
   def young_login_token?
     trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
-    trusted_device_token.present? &&
-      LOGIN_TOKEN_YOUTH.ago < trusted_device_token.created_at
+    trusted_device_token&.token_young?
   end
 
   private

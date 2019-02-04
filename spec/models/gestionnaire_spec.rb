@@ -403,13 +403,13 @@ describe Gestionnaire, type: :model do
       end
 
       context 'when the token is a bit old' do
-        before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
+        before { gestionnaire.trusted_device_tokens.first.update(created_at: (TrustedDeviceToken::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
         it { expect(gestionnaire.young_login_token?).to be false }
       end
     end
 
     context 'when there are no token' do
-      it { expect(gestionnaire.young_login_token?).to be false }
+      it { expect(gestionnaire.young_login_token?).to be_falsey }
     end
   end
 
