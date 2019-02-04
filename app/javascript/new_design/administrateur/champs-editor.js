@@ -26,7 +26,8 @@ function initEditor(el) {
     isAnnotation: el.dataset.type === 'annotation',
     unsavedItems: new Set(),
     unsavedInvalidItems: new Set(),
-    version: 1
+    version: 1,
+    prefix: 'procedure'
   };
 
   new Vue({
