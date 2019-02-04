@@ -239,9 +239,8 @@ describe Users::SessionsController, type: :controller do
 
     context 'when the cookie is outdated' do
       before do
-        Timecop.freeze(Time.zone.now - TrustedDeviceConcern::TRUSTED_DEVICE_PERIOD - 1.minute)
-        controller.trust_device(Time.zone.now)
-        Timecop.return
+        emission_date = Time.zone.now - TrustedDeviceConcern::TRUSTED_DEVICE_PERIOD - 1.minute
+        controller.trust_device(emission_date)
       end
 
       it { is_expected.to be false }
