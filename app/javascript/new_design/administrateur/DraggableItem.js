@@ -130,9 +130,7 @@ export default {
     addChamp() {
       this.typesDeChamp.push({
         type_champ: 'text',
-        drop_down_list: {},
-        types_de_champ: [],
-        options: {}
+        types_de_champ: []
       });
     }
   }
