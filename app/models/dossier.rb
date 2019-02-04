@@ -121,7 +121,13 @@ class Dossier < ApplicationRecord
 
   def build_default_champs
     procedure.types_de_champ.each do |type_de_champ|
-      champs << type_de_champ.champ.build
+      champ = type_de_champ.champ.build
+
+      if type_de_champ.repetition?
+        champ.add_row
+      end
+
+      champs << champ
     end
     procedure.types_de_champ_private.each do |type_de_champ|
       champs_private << type_de_champ.champ.build
@@ -332,6 +338,14 @@ class Dossier < ApplicationRecord
 
     NotificationMailer.send_without_continuation_notification(self).deliver_later
     log_dossier_operation(gestionnaire, :classer_sans_suite)
+  end
+
+  def check_mandatory_champs
+    (champs + champs.select(&:repetition?).flat_map(&:champs))
+      .select(&:mandatory_and_blank?)
+      .map do |champ|
+        "Le champ #{champ.libelle.truncate(200)} doit être rempli."
+      end
   end
 
   private
