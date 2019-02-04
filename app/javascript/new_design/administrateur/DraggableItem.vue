@@ -4,19 +4,23 @@
     <input type="hidden" :name="nameFor('_destroy')" value="true">
   </div>
 
-  <div class="draggable-item" v-else :class="itemClassName">
-    <div class="row section head" :class="{ hr: !isHeaderSection }">
+  <div class="draggable-item flex column justify-start" v-else :class="itemClassName">
+    <div class="flex justify-start section head" :class="{ hr: !isHeaderSection }">
       <div class="handle">
         <img :src="state.dragIconUrl" alt="">
       </div>
       <div class="cell">
-        <select :name="nameFor('type_champ')" v-model="typeChamp" class="small-margin small inline">
-          <option v-for="option in state.typesDeChampOptions" :key="option[1]" :value="option[1]">
-            {{ option[0] }}
-          </option>
+        <select
+          :id="elementIdFor('type_champ')"
+          :name="nameFor('type_champ')"
+          v-model="typeChamp"
+          class="small-margin small inline">
+            <option v-for="option in state.typesDeChampOptions" :key="option[1]" :value="option[1]">
+              {{ option[0] }}
+            </option>
         </select>
       </div>
-      <div class="row delete">
+      <div class="flex justify-start delete">
         <div v-if="isDirty" class="error-message">
           <span v-if="isInvalid" class="content">
             Le libellé doit être rempli.
@@ -36,8 +40,8 @@
         </button>
       </div>
     </div>
-    <div class="row section" :class="{ hr: isDropDown || isFile || isCarte }">
-      <div class="column shift-left">
+    <div class="flex justify-start section" :class="{ hr: isDropDown || isFile || isCarte }">
+      <div class="flex column justify-start shift-left">
         <div class="cell libelle">
           <label :for="elementIdFor('libelle')">
             Libellé
@@ -65,7 +69,7 @@
             value="1">
         </div>
       </div>
-      <div class="row">
+      <div class="flex justify-start">
         <div class="cell" v-show="!isHeaderSection">
           <label :for="elementIdFor('description')">
             Description
@@ -81,7 +85,7 @@
         </div>
       </div>
     </div>
-    <div class="row section shift-left" v-show="!isHeaderSection">
+    <div class="flex justify-start section shift-left" v-show="!isHeaderSection">
       <div class="cell" v-show="isDropDown">
         <label :for="elementIdFor('drop_down_list')">
           Liste déroulante
@@ -153,6 +157,26 @@
             Parcelles Agricoles
           </label>
         </div>
+      </div>
+      <div class="flex-grow cell" v-show="isRepetition">
+        <Draggable :list="typesDeChamp" :options="{handle:'.handle'}">
+          <DraggableItem
+            v-for="(item, index) in typesDeChamp"
+            :state="stateForRepetition"
+            :update="update"
+            :index="index"
+            :item="item"
+            :key="item.id" />
+        </Draggable>
+
+        <button class="button" @click.prevent="addChamp">
+          <template v-if="state.isAnnotation">
+            Ajouter une annotation
+          </template>
+          <template v-else>
+            Ajouter un champ
+          </template>
+        </button>
       </div>
     </div>
     <div class="meta">

@@ -9,10 +9,6 @@
 }
 
 .draggable-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-
   border: 1px solid $border-grey;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -55,20 +51,7 @@
     }
   }
 
-  .column {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-
-    &.shift-left {
-      margin-left: 35px;
-    }
-  }
-
-  .row {
-    display: flex;
-    justify-content: flex-start;
-
+  .flex {
     &.section {
       padding: 10px 10px 0 10px;
       margin-bottom: 8px;
