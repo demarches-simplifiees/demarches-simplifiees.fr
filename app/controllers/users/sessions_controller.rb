@@ -75,8 +75,11 @@ class Users::SessionsController < Sessions::SessionsController
       .find_by(token: params[:jeton])
 
     if trusted_device_token&.token_valid?
-      trust_device
-      flash.notice = "Merci d’avoir confirmé votre connexion. Votre navigateur est maintenant authentifié pour #{TRUSTED_DEVICE_PERIOD.to_i / ActiveSupport::Duration::SECONDS_PER_DAY} jours."
+      trust_device(trusted_device_token.created_at)
+
+      period = ((trusted_device_token.created_at + TRUSTED_DEVICE_PERIOD) - Time.zone.now).to_i / ActiveSupport::Duration::SECONDS_PER_DAY
+
+      flash.notice = "Merci d’avoir confirmé votre connexion. Votre navigateur est maintenant authentifié pour #{period} jours."
 
       # redirect to procedure'url if stored by store_location_for(:user) in dossiers_controller
       # redirect to root_path otherwise

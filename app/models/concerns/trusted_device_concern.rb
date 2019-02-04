@@ -4,10 +4,10 @@ module TrustedDeviceConcern
   TRUSTED_DEVICE_COOKIE_NAME = :trusted_device
   TRUSTED_DEVICE_PERIOD = 1.month
 
-  def trust_device
+  def trust_device(start_at)
     cookies.encrypted[TRUSTED_DEVICE_COOKIE_NAME] = {
-      value: JSON.generate({ created_at: Time.zone.now }),
-      expires: TRUSTED_DEVICE_PERIOD,
+      value: JSON.generate({ created_at: start_at }),
+      expires: start_at + TRUSTED_DEVICE_PERIOD,
       httponly: true
     }
   end
