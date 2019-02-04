@@ -1,5 +1,5 @@
 export default {
-  props: ['state', 'update', 'index', 'item', 'prefix'],
+  props: ['state', 'update', 'index', 'item'],
   computed: {
     isDirty() {
       return (
@@ -56,6 +56,9 @@ export default {
     isHeaderSection() {
       return this.typeChamp === 'header_section';
     },
+    isRepetition() {
+      return this.typeChamp === 'repetition';
+    },
     options() {
       const options = this.item.options || {};
       for (let key of Object.keys(options)) {
@@ -69,6 +72,21 @@ export default {
       } else {
         return 'types_de_champ_attributes';
       }
+    },
+    typesDeChamp() {
+      return this.item.types_de_champ;
+    },
+    typesDeChampOptions() {
+      return this.state.typesDeChampOptions.filter(
+        ([, typeChamp]) => !EXCLUDE_FROM_REPETITION.includes(typeChamp)
+      );
+    },
+    stateForRepetition() {
+      return Object.assign({}, this.state, {
+        typesDeChamp: this.typesDeChamp,
+        typesDeChampOptions: this.typesDeChampOptions,
+        prefix: `${this.state.prefix}[${this.attribute}][${this.index}]`
+      });
     }
   },
   data() {
@@ -103,13 +121,29 @@ export default {
       }
     },
     nameFor(name) {
-      return `${this.prefix}[${this.attribute}][${this.index}][${name}]`;
+      return `${this.state.prefix}[${this.attribute}][${this.index}][${name}]`;
     },
     elementIdFor(name) {
-      return `${this.prefix}_${this.attribute}_${this.index}_${name}`;
+      const prefix = this.state.prefix.replace(/\[/g, '_').replace(/\]/g, '');
+      return `${prefix}_${this.attribute}_${this.index}_${name}`;
+    },
+    addChamp() {
+      this.typesDeChamp.push({
+        type_champ: 'text',
+        drop_down_list: {},
+        types_de_champ: [],
+        options: {}
+      });
     }
   }
 };
+
+const EXCLUDE_FROM_REPETITION = [
+  'carte',
+  'dossier_link',
+  'repetition',
+  'siret'
+];
 
 const PATHS_TO_WATCH = [
   'typeChamp',

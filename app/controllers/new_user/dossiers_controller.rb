@@ -282,7 +282,8 @@ module NewUser
       params.permit(dossier: {
         champs_attributes: [
           :id, :value, :primary_value, :secondary_value, :piece_justificative_file, value: [],
-          etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES
+          etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES,
+          champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
         ]
       })
     end
@@ -303,8 +304,7 @@ module NewUser
       end
 
       if !save_draft?
-        errors += @dossier.champs.select(&:mandatory_and_blank?)
-          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
+        errors += @dossier.check_mandatory_champs
         errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
       end
 

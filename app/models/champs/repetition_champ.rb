@@ -9,9 +9,21 @@ class Champs::RepetitionChamp < Champ
     champs.group_by(&:row).values
   end
 
+  def add_row(row = 0)
+    type_de_champ.types_de_champ.each do |type_de_champ|
+      self.champs << type_de_champ.champ.build(row: row)
+    end
+  end
+
+  def mandatory_and_blank?
+    mandatory? && champs.empty?
+  end
+
   def search_terms
     # The user cannot enter any information here so it doesn’t make much sense to search
   end
+
+  private
 
   def setup_dossier
     champs.each do |champ|

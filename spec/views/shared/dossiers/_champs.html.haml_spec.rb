@@ -8,7 +8,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     allow(view).to receive(:current_gestionnaire).and_return(gestionnaire)
   end
 
-  subject { render 'shared/dossiers/champs.html.haml', champs: champs, demande_seen_at: demande_seen_at }
+  subject { render 'shared/dossiers/champs.html.haml', champs: champs, demande_seen_at: demande_seen_at, profile: nil }
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
