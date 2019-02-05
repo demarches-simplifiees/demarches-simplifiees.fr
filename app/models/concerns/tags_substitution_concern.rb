@@ -196,8 +196,7 @@ module TagsSubstitutionConcern
   def replace_type_de_champ_tags(text, types_de_champ, dossier_champs)
     types_de_champ.inject(text) do |acc, tag|
       champ = dossier_champs
-        .select { |dossier_champ| dossier_champ.libelle == tag[:libelle] }
-        .first
+        .detect { |dossier_champ| dossier_champ.libelle == tag[:libelle] }
 
       replace_tag(acc, tag, champ)
     end
