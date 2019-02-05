@@ -53,6 +53,14 @@ function initEditor(el) {
 
       this.update = update;
       this.updateAll = updateAll;
+
+      // We add an initial type de champ here if form is empty
+      if (this.state.typesDeChamp.length === 0) {
+        this.state.typesDeChamp.push({
+          type_champ: 'text',
+          types_de_champ: []
+        });
+      }
     }
   });
 }
