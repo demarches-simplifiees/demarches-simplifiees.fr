@@ -179,8 +179,8 @@ module TagsSubstitutionConcern
       return ''
     end
 
-    text = replace_type_de_champ_tags(text, filter_tags(champ_public_tags), dossier.champs)
-    text = replace_type_de_champ_tags(text, filter_tags(champ_private_tags), dossier.champs_private)
+    text = replace_tags_with_values_from_data(text, filter_tags(champ_public_tags), dossier.champs)
+    text = replace_tags_with_values_from_data(text, filter_tags(champ_private_tags), dossier.champs_private)
 
     tags_and_datas = [
       [dossier_tags, dossier],
@@ -191,12 +191,6 @@ module TagsSubstitutionConcern
     tags_and_datas
       .map { |(tags, data)| [filter_tags(tags), data] }
       .inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
-  end
-
-  def replace_type_de_champ_tags(text, tags, dossier_champs)
-    tags.inject(text) do |acc, tag|
-      replace_tag(acc, tag, dossier_champs)
-    end
   end
 
   def replace_tags_with_values_from_data(text, tags, data)
