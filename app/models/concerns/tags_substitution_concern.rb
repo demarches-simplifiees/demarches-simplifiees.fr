@@ -167,15 +167,11 @@ module TagsSubstitutionConcern
   end
 
   def types_de_champ_tags(types_de_champ, available_for_states)
-    types_de_champ.flat_map do |tdc|
-      [
-        {
-          libelle: tdc.libelle,
-          description: tdc.description,
-          available_for_states: available_for_states
-        }
-      ]
+    tags = types_de_champ.flat_map(&:tags_for_template)
+    tags.each do |tag|
+      tag[:available_for_states] = available_for_states
     end
+    tags
   end
 
   def replace_tags(text, dossier)
