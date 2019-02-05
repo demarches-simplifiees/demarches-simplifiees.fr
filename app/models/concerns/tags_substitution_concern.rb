@@ -179,10 +179,9 @@ module TagsSubstitutionConcern
       return ''
     end
 
-    text = replace_tags_with_values_from_data(text, filter_tags(champ_public_tags), dossier.champs)
-    text = replace_tags_with_values_from_data(text, filter_tags(champ_private_tags), dossier.champs_private)
-
     tags_and_datas = [
+      [champ_public_tags, dossier.champs],
+      [champ_private_tags, dossier.champs_private],
       [dossier_tags, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],
       [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
