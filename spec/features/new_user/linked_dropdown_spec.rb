@@ -74,7 +74,8 @@ feature 'linked dropdown lists' do
 
   def secondary_id_for(libelle)
     primary_id = primary_id_for(libelle)
-    link = find("\##{primary_id}")['data-primary-id']
-    find("[data-secondary-id=\"#{link}\"]")['id']
+    find("\##{primary_id}")
+      .ancestor('.editable-champ')
+      .find("[data-secondary]")['id']
   end
 end

@@ -11,6 +11,8 @@ feature 'As an administrateur I edit procedure', js: true do
   end
 
   it "Add a new champ" do
+    click_on 'Supprimer'
+
     within '.footer' do
       click_on 'Ajouter un champ'
     end
@@ -28,7 +30,6 @@ feature 'As an administrateur I edit procedure', js: true do
 
   it "Add multiple champs" do
     within '.footer' do
-      click_on 'Ajouter un champ'
       click_on 'Ajouter un champ'
       click_on 'Ajouter un champ'
       click_on 'Ajouter un champ'
@@ -66,9 +67,6 @@ feature 'As an administrateur I edit procedure', js: true do
   end
 
   it "Remove champs" do
-    within '.footer' do
-      click_on 'Ajouter un champ'
-    end
     fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
     expect(page).to have_content('Formulaire mis à jour')
     page.refresh
@@ -78,13 +76,10 @@ feature 'As an administrateur I edit procedure', js: true do
     expect(page).not_to have_content('Supprimer')
     page.refresh
 
-    expect(page).not_to have_content('Supprimer')
+    expect(page).to have_content('Supprimer', count: 1)
   end
 
   it "Only add valid champs" do
-    within '.footer' do
-      click_on 'Ajouter un champ'
-    end
     expect(page).to have_selector('#procedure_types_de_champ_attributes_0_description')
     fill_in 'procedure_types_de_champ_attributes_0_description', with: 'déscription du champ'
     expect(page).to have_content('Le libellé doit être rempli.')
@@ -95,9 +90,6 @@ feature 'As an administrateur I edit procedure', js: true do
   end
 
   it "Add repetition champ" do
-    within '.footer' do
-      click_on 'Ajouter un champ'
-    end
     expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
     select('Bloc répétable', from: 'procedure_types_de_champ_attributes_0_type_champ')
     fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'

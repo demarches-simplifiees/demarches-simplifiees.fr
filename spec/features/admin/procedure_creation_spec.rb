@@ -100,9 +100,6 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         page.refresh
         expect(page).to have_current_path(champs_procedure_path(Procedure.last))
 
-        within '.footer' do
-          click_on 'Ajouter un champ'
-        end
         expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
         fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
         expect(page).to have_content('Formulaire mis à jour')
@@ -131,9 +128,6 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       scenario 'After adding champ and file, make publication' do
         page.refresh
 
-        within '.footer' do
-          click_on 'Ajouter un champ'
-        end
         fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
         expect(page).to have_content('Formulaire mis à jour')
 
