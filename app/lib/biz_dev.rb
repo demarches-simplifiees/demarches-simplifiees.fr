@@ -9,6 +9,16 @@ module BizDev
       {
         full_name: "Christian Lautier",
         pipedrive_id: 7944215
+      },
+    4 =>
+      {
+        full_name: "William JOSEPH",
+        pipedrive_id: 4223834
+      },
+    11 =>
+      {
+        full_name: "Heilhani BONNO",
+        pipedrive_id: 4438645
       }
   }
 

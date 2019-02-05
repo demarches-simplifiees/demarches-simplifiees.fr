@@ -26,10 +26,11 @@
   = link_to(ADMINISTRATEUR_TUTORIAL_URL, ADMINISTRATEUR_TUTORIAL_URL)
   \.
 
-%p
-  Enfin, vous pouvez vous inscrire à notre prochain webinaire en ligne pour découvrir les fonctionnalités de notre outil :
-  = link_to(WEBINAIRE_URL, WEBINAIRE_URL)
-  \.
+-#
+  %p
+    Enfin, vous pouvez vous inscrire à notre prochain webinaire en ligne pour découvrir les fonctionnalités de notre outil :
+    = link_to(WEBINAIRE_URL, WEBINAIRE_URL)
+    \.
 
 %p
   = render partial: "layouts/mailers/bizdev_signature", locals: { author_name: @author_name }
