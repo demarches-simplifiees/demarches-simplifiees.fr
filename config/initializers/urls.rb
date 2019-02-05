@@ -14,11 +14,12 @@ FOG_BASE_URL = "https://static.demarches-simplifiees.fr"
 
 # External services URLs
 DOC_URL = "https://doc.demarches-simplifiees.fr"
-ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-administrateur"].join("/")
+PF_DOC_URL = "https://doc.projet.gov.pf/display/DEM"
+ADMINISTRATEUR_TUTORIAL_URL = [PF_DOC_URL, "Dématérialiser+un+premier+formulaire"].join("/")
 INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-accompagnateur"].join("/")
 CADRE_JURIDIQUE_URL = [ADMINISTRATEUR_TUTORIAL_URL, "cadre-juridique"].join("#")
 WEBINAIRE_URL = [DOC_URL, "pour-aller-plus-loin", "webinaires"].join("/")
-LISTE_DES_DEMARCHES_URL = [DOC_URL, "listes-des-demarches"].join("/")
+LISTE_DES_DEMARCHES_URL = [PF_DOC_URL, "Liste+des+démarches"].join("/")
 CGU_URL = [DOC_URL, "cgu"].join("/")
 MENTIONS_LEGALES_URL = [CGU_URL, "4-mentions-legales"].join("#")
 API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "api"].join("/")
