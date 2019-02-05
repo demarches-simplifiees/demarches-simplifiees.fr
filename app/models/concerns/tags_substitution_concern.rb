@@ -193,8 +193,8 @@ module TagsSubstitutionConcern
       .inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
   end
 
-  def replace_type_de_champ_tags(text, types_de_champ, dossier_champs)
-    types_de_champ.inject(text) do |acc, tag|
+  def replace_type_de_champ_tags(text, tags, dossier_champs)
+    tags.inject(text) do |acc, tag|
       champ = dossier_champs
         .detect { |dossier_champ| dossier_champ.libelle == tag[:libelle] }
 
