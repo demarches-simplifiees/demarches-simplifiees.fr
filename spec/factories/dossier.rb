@@ -134,19 +134,21 @@ FactoryBot.define do
 
     trait :with_all_champs do
       after(:create) do |dossier, _evaluator|
-        dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|
-          build(:"champ_#{type_de_champ.type_champ}", type_de_champ: type_de_champ)
+        dossier.champs.destroy_all # destroy default champs
+        dossier.procedure.types_de_champ.each do |type_de_champ|
+          create(:"champ_#{type_de_champ.type_champ}", type_de_champ: type_de_champ, dossier: dossier)
         end
-        dossier.save!
+        dossier.reload
       end
     end
 
     trait :with_all_annotations do
       after(:create) do |dossier, _evaluator|
-        dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|
-          build(:"champ_#{type_de_champ.type_champ}", type_de_champ: type_de_champ)
+        dossier.champs_private.destroy_all # destroy default champs
+        dossier.procedure.types_de_champ_private.each do |type_de_champ|
+          create(:"champ_#{type_de_champ.type_champ}", private: true, type_de_champ: type_de_champ, dossier: dossier)
         end
-        dossier.save!
+        dossier.reload
       end
     end
   end

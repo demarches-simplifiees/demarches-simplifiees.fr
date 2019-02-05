@@ -334,6 +334,36 @@ describe API::V1::DossiersController do
           it { expect(subject[:code_insee_localite]).to eq('92009') }
           it { expect(subject.keys).to match_array(field_list) }
         end
+
+        describe 'full document' do
+          let(:big_procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_all_champs, :with_all_annotations, administrateur: admin) }
+          let(:big_dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :en_construction, :with_all_champs, :with_all_annotations, procedure: big_procedure) } }
+
+          let!(:procedure_id) { big_procedure.id }
+          let!(:dossier_id) { big_dossier.id }
+
+          let(:dossier_json) { JSON.parse(File.read('spec/fixtures/files/api/dossier.json')) }
+
+          def compare_value(value, expected_value)
+            if value.is_a?(Hash)
+              value.keys.each do |key|
+                compare_value(value[key], expected_value[key])
+              end
+            else
+              expect(value).to eq(expected_value)
+            end
+          end
+
+          it do
+            json_body = JSON.parse(retour.body)
+            # json_body.keys.each do |key|
+            #   # json_body[key]
+            #   expect(json_body[key]).to include(dossier_json[key])
+            # end
+            compare_value(json_body, dossier_json)
+            # expect().to include(dossier_json)
+          end
+        end
       end
     end
   end

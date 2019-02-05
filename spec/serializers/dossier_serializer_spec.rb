@@ -41,7 +41,7 @@ describe DossierSerializer do
 
         expect(subject[3][:value]).to eq(42)
         expect(subject[4][:value]).to eq(42.1)
-        expect(subject[5][:value]).to eq({ primary: nil, secondary: nil })
+        expect(subject[5][:value]).to eq({ primary: "Construction, habitat, urbanisme, transport", secondary: "Patrimoine bâti et urbanisme (hors autres catégories)" })
       }
     end
   end

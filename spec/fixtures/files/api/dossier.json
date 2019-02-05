@@ -1,0 +1,684 @@
+{
+   "dossier":{
+      "id":2,
+      "created_at":"2008-09-01T08:05:00.000Z",
+      "updated_at":"2008-09-01T08:05:00.000Z",
+      "archived":false,
+      "email":"user2@user.com",
+      "state":"initiated",
+      "simplified_state":"En construction",
+      "initiated_at":"2008-09-01T08:06:00.000Z",
+      "received_at":null,
+      "processed_at":null,
+      "motivation":null,
+      "instructeurs":[
+
+      ],
+      "individual":null,
+      "entreprise":{
+         "siren":"440117620",
+         "capital_social":537100000,
+         "numero_tva_intracommunautaire":"FR27440117620",
+         "forme_juridique":"SA à conseil d'administration (s.a.i.)",
+         "forme_juridique_code":"5599",
+         "nom_commercial":"GRTGAZ",
+         "raison_sociale":"GRTGAZ",
+         "siret_siege_social":"44011762001530",
+         "code_effectif_entreprise":"51",
+         "date_creation":"1990-04-24T00:00:00.000+00:00",
+         "nom":null,
+         "prenom":null
+      },
+      "etablissement":{
+         "siret":"44011762001530",
+         "siege_social":true,
+         "naf":"4950Z",
+         "libelle_naf":"Transports par conduites",
+         "adresse":"GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r",
+         "numero_voie":"6",
+         "type_voie":"RUE",
+         "nom_voie":"RAOUL NORDLING",
+         "complement_adresse":"IMMEUBLE BORA",
+         "code_postal":"92270",
+         "localite":"BOIS COLOMBES",
+         "code_insee_localite":"92009"
+      },
+      "cerfa":[
+
+      ],
+      "commentaires":[
+
+      ],
+      "champs_private":[
+         {
+            "value":"text",
+            "type_de_champ":{
+               "id":30,
+               "libelle":"text",
+               "type_champ":"text",
+               "order_place":0,
+               "description":"description du champ 29"
+            }
+         },
+         {
+            "value":"textarea",
+            "type_de_champ":{
+               "id":31,
+               "libelle":"textarea",
+               "type_champ":"textarea",
+               "order_place":1,
+               "description":"description du champ 30"
+            }
+         },
+         {
+            "value":"2008-08-31",
+            "type_de_champ":{
+               "id":32,
+               "libelle":"date",
+               "type_champ":"date",
+               "order_place":2,
+               "description":"description du champ 31"
+            }
+         },
+         {
+            "value":null,
+            "type_de_champ":{
+               "id":33,
+               "libelle":"datetime",
+               "type_champ":"datetime",
+               "order_place":3,
+               "description":"description du champ 32"
+            }
+         },
+         {
+            "value":"42",
+            "type_de_champ":{
+               "id":34,
+               "libelle":"number",
+               "type_champ":"number",
+               "order_place":4,
+               "description":"description du champ 33"
+            }
+         },
+         {
+            "value":42.1,
+            "type_de_champ":{
+               "id":35,
+               "libelle":"decimal_number",
+               "type_champ":"decimal_number",
+               "order_place":5,
+               "description":"description du champ 34"
+            }
+         },
+         {
+            "value":42,
+            "type_de_champ":{
+               "id":36,
+               "libelle":"integer_number",
+               "type_champ":"integer_number",
+               "order_place":6,
+               "description":"description du champ 35"
+            }
+         },
+         {
+            "value":"on",
+            "type_de_champ":{
+               "id":37,
+               "libelle":"checkbox",
+               "type_champ":"checkbox",
+               "order_place":7,
+               "description":"description du champ 36"
+            }
+         },
+         {
+            "value":"M.",
+            "type_de_champ":{
+               "id":38,
+               "libelle":"civilite",
+               "type_champ":"civilite",
+               "order_place":8,
+               "description":"description du champ 37"
+            }
+         },
+         {
+            "value":"yoda@beta.gouv.fr",
+            "type_de_champ":{
+               "id":39,
+               "libelle":"email",
+               "type_champ":"email",
+               "order_place":9,
+               "description":"description du champ 38"
+            }
+         },
+         {
+            "value":"0666666666",
+            "type_de_champ":{
+               "id":40,
+               "libelle":"phone",
+               "type_champ":"phone",
+               "order_place":10,
+               "description":"description du champ 39"
+            }
+         },
+         {
+            "value":"2 rue des Démarches",
+            "type_de_champ":{
+               "id":41,
+               "libelle":"address",
+               "type_champ":"address",
+               "order_place":11,
+               "description":"description du champ 40"
+            }
+         },
+         {
+            "value":"true",
+            "type_de_champ":{
+               "id":42,
+               "libelle":"yes_no",
+               "type_champ":"yes_no",
+               "order_place":12,
+               "description":"description du champ 41"
+            }
+         },
+         {
+            "value":"Lapin",
+            "type_de_champ":{
+               "id":43,
+               "libelle":"simple_drop_down_list",
+               "type_champ":"drop_down_list",
+               "order_place":13,
+               "description":"description du champ 42"
+            }
+         },
+         {
+            "value":"[\"BLOIS\"]",
+            "type_de_champ":{
+               "id":44,
+               "libelle":"multiple_drop_down_list",
+               "type_champ":"multiple_drop_down_list",
+               "order_place":14,
+               "description":"description du champ 43"
+            }
+         },
+         {
+            "value":{
+               "primary":"Construction, habitat, urbanisme, transport",
+               "secondary":"Patrimoine bâti et urbanisme (hors autres catégories)"
+            },
+            "type_de_champ":{
+               "id":45,
+               "libelle":"linked_drop_down_list",
+               "type_champ":"linked_drop_down_list",
+               "order_place":15,
+               "description":"description du champ 44"
+            }
+         },
+         {
+            "value":"France",
+            "type_de_champ":{
+               "id":46,
+               "libelle":"pays",
+               "type_champ":"pays",
+               "order_place":16,
+               "description":"description du champ 45"
+            }
+         },
+         {
+            "value":"Auvergne-Rhône-Alpes",
+            "type_de_champ":{
+               "id":47,
+               "libelle":"regions",
+               "type_champ":"regions",
+               "order_place":17,
+               "description":"description du champ 46"
+            }
+         },
+         {
+            "value":"77 - Seine-et-Marne",
+            "type_de_champ":{
+               "id":48,
+               "libelle":"departements",
+               "type_champ":"departements",
+               "order_place":18,
+               "description":"description du champ 47"
+            }
+         },
+         {
+            "value":"true",
+            "type_de_champ":{
+               "id":49,
+               "libelle":"engagement",
+               "type_champ":"engagement",
+               "order_place":19,
+               "description":"description du champ 48"
+            }
+         },
+         {
+            "value":"une section",
+            "type_de_champ":{
+               "id":50,
+               "libelle":"header_section",
+               "type_champ":"header_section",
+               "order_place":20,
+               "description":"description du champ 49"
+            }
+         },
+         {
+            "value":"une explication",
+            "type_de_champ":{
+               "id":51,
+               "libelle":"explication",
+               "type_champ":"explication",
+               "order_place":21,
+               "description":"description du champ 50"
+            }
+         },
+         {
+            "value":"4",
+            "type_de_champ":{
+               "id":52,
+               "libelle":"dossier_link",
+               "type_champ":"dossier_link",
+               "order_place":22,
+               "description":"description du champ 51"
+            }
+         },
+         {
+            "value":"http://localhost:3000/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--82613040d14f5ee80ed80f98da84cdf8d24b1752/toto.txt",
+            "type_de_champ":{
+               "id":53,
+               "libelle":"piece_justificative",
+               "type_champ":"piece_justificative",
+               "order_place":23,
+               "description":"description du champ 52"
+            }
+         },
+         {
+            "value":"44011762001530",
+            "type_de_champ":{
+               "id":54,
+               "libelle":"siret",
+               "type_champ":"siret",
+               "order_place":24,
+               "description":"description du champ 53"
+            },
+            "etablissement":{
+               "siret":"44011762001530",
+               "siege_social":true,
+               "naf":"4950Z",
+               "libelle_naf":"Transports par conduites",
+               "adresse":"GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r",
+               "numero_voie":"6",
+               "type_voie":"RUE",
+               "nom_voie":"RAOUL NORDLING",
+               "complement_adresse":"IMMEUBLE BORA",
+               "code_postal":"92270",
+               "localite":"BOIS COLOMBES",
+               "code_insee_localite":"92009"
+            },
+            "entreprise":{
+               "siren":"440117620",
+               "capital_social":537100000,
+               "numero_tva_intracommunautaire":"FR27440117620",
+               "forme_juridique":"SA à conseil d'administration (s.a.i.)",
+               "forme_juridique_code":"5599",
+               "nom_commercial":"GRTGAZ",
+               "raison_sociale":"GRTGAZ",
+               "siret_siege_social":"44011762001530",
+               "code_effectif_entreprise":"51",
+               "date_creation":"1990-04-24T00:00:00.000+00:00",
+               "nom":null,
+               "prenom":null
+            }
+         },
+         {
+            "value":"{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-1.6995763778686523,47.55169443125566],[-1.69964075088501,47.55153512556365],[-1.6997480392456057,47.55152064320398],[-1.7000269889831545,47.55170891356729],[-1.6999840736389162,47.551766842773795],[-1.6995763778686523,47.55169443125566]]]]}",
+            "type_de_champ":{
+               "id":55,
+               "libelle":"carte",
+               "type_champ":"carte",
+               "order_place":25,
+               "description":"description du champ 54"
+            },
+            "geo_areas":[
+
+            ]
+         },
+         {
+            "value":null,
+            "type_de_champ":{
+               "id":56,
+               "libelle":"repetition",
+               "type_champ":"repetition",
+               "order_place":26,
+               "description":"description du champ 55"
+            }
+         }
+      ],
+      "pieces_justificatives":[
+
+      ],
+      "types_de_piece_justificative":[
+         {
+            "id":3,
+            "libelle":"RIB",
+            "description":"Releve identité bancaire",
+            "order_place":1,
+            "lien_demarche":null
+         },
+         {
+            "id":4,
+            "libelle":"Attestation MSA",
+            "description":"recuperation automatique",
+            "order_place":2,
+            "lien_demarche":null
+         }
+      ],
+      "champs":[
+         {
+            "value":"text",
+            "type_de_champ":{
+               "id":3,
+               "libelle":"text",
+               "type_champ":"text",
+               "order_place":0,
+               "description":"description du champ 2"
+            }
+         },
+         {
+            "value":"textarea",
+            "type_de_champ":{
+               "id":4,
+               "libelle":"textarea",
+               "type_champ":"textarea",
+               "order_place":1,
+               "description":"description du champ 3"
+            }
+         },
+         {
+            "value":"2008-08-31",
+            "type_de_champ":{
+               "id":5,
+               "libelle":"date",
+               "type_champ":"date",
+               "order_place":2,
+               "description":"description du champ 4"
+            }
+         },
+         {
+            "value":null,
+            "type_de_champ":{
+               "id":6,
+               "libelle":"datetime",
+               "type_champ":"datetime",
+               "order_place":3,
+               "description":"description du champ 5"
+            }
+         },
+         {
+            "value":"42",
+            "type_de_champ":{
+               "id":7,
+               "libelle":"number",
+               "type_champ":"number",
+               "order_place":4,
+               "description":"description du champ 6"
+            }
+         },
+         {
+            "value":42.1,
+            "type_de_champ":{
+               "id":8,
+               "libelle":"decimal_number",
+               "type_champ":"decimal_number",
+               "order_place":5,
+               "description":"description du champ 7"
+            }
+         },
+         {
+            "value":42,
+            "type_de_champ":{
+               "id":9,
+               "libelle":"integer_number",
+               "type_champ":"integer_number",
+               "order_place":6,
+               "description":"description du champ 8"
+            }
+         },
+         {
+            "value":"on",
+            "type_de_champ":{
+               "id":10,
+               "libelle":"checkbox",
+               "type_champ":"checkbox",
+               "order_place":7,
+               "description":"description du champ 9"
+            }
+         },
+         {
+            "value":"M.",
+            "type_de_champ":{
+               "id":11,
+               "libelle":"civilite",
+               "type_champ":"civilite",
+               "order_place":8,
+               "description":"description du champ 10"
+            }
+         },
+         {
+            "value":"yoda@beta.gouv.fr",
+            "type_de_champ":{
+               "id":12,
+               "libelle":"email",
+               "type_champ":"email",
+               "order_place":9,
+               "description":"description du champ 11"
+            }
+         },
+         {
+            "value":"0666666666",
+            "type_de_champ":{
+               "id":13,
+               "libelle":"phone",
+               "type_champ":"phone",
+               "order_place":10,
+               "description":"description du champ 12"
+            }
+         },
+         {
+            "value":"2 rue des Démarches",
+            "type_de_champ":{
+               "id":14,
+               "libelle":"address",
+               "type_champ":"address",
+               "order_place":11,
+               "description":"description du champ 13"
+            }
+         },
+         {
+            "value":"true",
+            "type_de_champ":{
+               "id":15,
+               "libelle":"yes_no",
+               "type_champ":"yes_no",
+               "order_place":12,
+               "description":"description du champ 14"
+            }
+         },
+         {
+            "value":"Lapin",
+            "type_de_champ":{
+               "id":16,
+               "libelle":"simple_drop_down_list",
+               "type_champ":"drop_down_list",
+               "order_place":13,
+               "description":"description du champ 15"
+            }
+         },
+         {
+            "value":"[\"BLOIS\"]",
+            "type_de_champ":{
+               "id":17,
+               "libelle":"multiple_drop_down_list",
+               "type_champ":"multiple_drop_down_list",
+               "order_place":14,
+               "description":"description du champ 16"
+            }
+         },
+         {
+            "value":{
+               "primary":"Construction, habitat, urbanisme, transport",
+               "secondary":"Patrimoine bâti et urbanisme (hors autres catégories)"
+            },
+            "type_de_champ":{
+               "id":18,
+               "libelle":"linked_drop_down_list",
+               "type_champ":"linked_drop_down_list",
+               "order_place":15,
+               "description":"description du champ 17"
+            }
+         },
+         {
+            "value":"France",
+            "type_de_champ":{
+               "id":19,
+               "libelle":"pays",
+               "type_champ":"pays",
+               "order_place":16,
+               "description":"description du champ 18"
+            }
+         },
+         {
+            "value":"Auvergne-Rhône-Alpes",
+            "type_de_champ":{
+               "id":20,
+               "libelle":"regions",
+               "type_champ":"regions",
+               "order_place":17,
+               "description":"description du champ 19"
+            }
+         },
+         {
+            "value":"77 - Seine-et-Marne",
+            "type_de_champ":{
+               "id":21,
+               "libelle":"departements",
+               "type_champ":"departements",
+               "order_place":18,
+               "description":"description du champ 20"
+            }
+         },
+         {
+            "value":"true",
+            "type_de_champ":{
+               "id":22,
+               "libelle":"engagement",
+               "type_champ":"engagement",
+               "order_place":19,
+               "description":"description du champ 21"
+            }
+         },
+         {
+            "value":"une section",
+            "type_de_champ":{
+               "id":23,
+               "libelle":"header_section",
+               "type_champ":"header_section",
+               "order_place":20,
+               "description":"description du champ 22"
+            }
+         },
+         {
+            "value":"une explication",
+            "type_de_champ":{
+               "id":24,
+               "libelle":"explication",
+               "type_champ":"explication",
+               "order_place":21,
+               "description":"description du champ 23"
+            }
+         },
+         {
+            "value":"3",
+            "type_de_champ":{
+               "id":25,
+               "libelle":"dossier_link",
+               "type_champ":"dossier_link",
+               "order_place":22,
+               "description":"description du champ 24"
+            }
+         },
+         {
+            "value":"http://localhost:3000/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--dfccfc7bcb9c556b0ac329ff652ade938e55113c/toto.txt",
+            "type_de_champ":{
+               "id":26,
+               "libelle":"piece_justificative",
+               "type_champ":"piece_justificative",
+               "order_place":23,
+               "description":"description du champ 25"
+            }
+         },
+         {
+            "value":"44011762001530",
+            "type_de_champ":{
+               "id":27,
+               "libelle":"siret",
+               "type_champ":"siret",
+               "order_place":24,
+               "description":"description du champ 26"
+            },
+            "etablissement":{
+               "siret":"44011762001530",
+               "siege_social":true,
+               "naf":"4950Z",
+               "libelle_naf":"Transports par conduites",
+               "adresse":"GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r",
+               "numero_voie":"6",
+               "type_voie":"RUE",
+               "nom_voie":"RAOUL NORDLING",
+               "complement_adresse":"IMMEUBLE BORA",
+               "code_postal":"92270",
+               "localite":"BOIS COLOMBES",
+               "code_insee_localite":"92009"
+            },
+            "entreprise":{
+               "siren":"440117620",
+               "capital_social":537100000,
+               "numero_tva_intracommunautaire":"FR27440117620",
+               "forme_juridique":"SA à conseil d'administration (s.a.i.)",
+               "forme_juridique_code":"5599",
+               "nom_commercial":"GRTGAZ",
+               "raison_sociale":"GRTGAZ",
+               "siret_siege_social":"44011762001530",
+               "code_effectif_entreprise":"51",
+               "date_creation":"1990-04-24T00:00:00.000+00:00",
+               "nom":null,
+               "prenom":null
+            }
+         },
+         {
+            "value":"{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-1.6995763778686523,47.55169443125566],[-1.69964075088501,47.55153512556365],[-1.6997480392456057,47.55152064320398],[-1.7000269889831545,47.55170891356729],[-1.6999840736389162,47.551766842773795],[-1.6995763778686523,47.55169443125566]]]]}",
+            "type_de_champ":{
+               "id":28,
+               "libelle":"carte",
+               "type_champ":"carte",
+               "order_place":25,
+               "description":"description du champ 27"
+            },
+            "geo_areas":[
+
+            ]
+         },
+         {
+            "value":null,
+            "type_de_champ":{
+               "id":29,
+               "libelle":"repetition",
+               "type_champ":"repetition",
+               "order_place":26,
+               "description":"description du champ 28"
+            }
+         }
+      ]
+   }
+}

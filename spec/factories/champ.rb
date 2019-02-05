@@ -96,17 +96,17 @@ FactoryBot.define do
 
   factory :champ_drop_down_list, class: 'Champs::DropDownListChamp' do
     type_de_champ { create(:type_de_champ_drop_down_list) }
-    value { '' }
+    value { 'Lapin' }
   end
 
   factory :champ_multiple_drop_down_list, class: 'Champs::MultipleDropDownListChamp' do
     type_de_champ { create(:type_de_champ_multiple_drop_down_list) }
-    value { '' }
+    value { "[\"BLOIS\"]" }
   end
 
   factory :champ_linked_drop_down_list, class: 'Champs::LinkedDropDownListChamp' do
     type_de_champ { create(:type_de_champ_linked_drop_down_list) }
-    value { '{}' }
+    value { "[\"Construction, habitat, urbanisme, transport\",\"Patrimoine bâti et urbanisme (hors autres catégories)\"]" }
   end
 
   factory :champ_pays, class: 'Champs::PaysChamp' do
@@ -116,12 +116,12 @@ FactoryBot.define do
 
   factory :champ_regions, class: 'Champs::RegionChamp' do
     type_de_champ { create(:type_de_champ_regions) }
-    value { '' }
+    value { 'Auvergne-Rhône-Alpes' }
   end
 
   factory :champ_departements, class: 'Champs::DepartementChamp' do
     type_de_champ { create(:type_de_champ_departements) }
-    value { '' }
+    value { '77 - Seine-et-Marne' }
   end
 
   factory :champ_engagement, class: 'Champs::EngagementChamp' do
@@ -149,11 +149,13 @@ FactoryBot.define do
 
     after(:create) do |champ, _evaluator|
       champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+      champ.virus_scan.safe!
     end
   end
 
   factory :champ_carte, class: 'Champs::CarteChamp' do
     type_de_champ { create(:type_de_champ_carte) }
+    value { "{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-1.6995763778686523,47.55169443125566],[-1.69964075088501,47.55153512556365],[-1.6997480392456057,47.55152064320398],[-1.7000269889831545,47.55170891356729],[-1.6999840736389162,47.551766842773795],[-1.6995763778686523,47.55169443125566]]]]}" }
   end
 
   factory :champ_siret, class: 'Champs::SiretChamp' do

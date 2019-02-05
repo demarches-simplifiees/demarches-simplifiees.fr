@@ -11,7 +11,7 @@ describe ChampSerializer do
       before { champ.piece_justificative_file.attach({ filename: __FILE__, io: File.open(__FILE__) }) }
       after { champ.piece_justificative_file.purge }
 
-      it { is_expected.to include(value: url_for(champ.piece_justificative_file)) }
+      it { is_expected.to include(value: champ.value) }
     end
 
     context 'when type champ is not piece justificative' do
