@@ -8,7 +8,10 @@ describe ChampSerializer do
 
       let(:champ) { create(:champ_piece_justificative) }
 
-      before { champ.piece_justificative_file.attach({ filename: __FILE__, io: File.open(__FILE__) }) }
+      before do
+        champ.piece_justificative_file.attach({ filename: __FILE__, io: File.open(__FILE__) })
+        champ.reload.virus_scan.safe!
+      end
       after { champ.piece_justificative_file.purge }
 
       it { is_expected.to include(value: url_for(champ.piece_justificative_file)) }
