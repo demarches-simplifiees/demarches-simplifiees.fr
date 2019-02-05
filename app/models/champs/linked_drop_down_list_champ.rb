@@ -30,7 +30,7 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   def to_s
-    value.present? ? [primary_value, secondary_value].compact.join(' / ') : ""
+    value.present? ? [primary_value, secondary_value].select(&:present?).join(' / ') : ""
   end
 
   def for_export
