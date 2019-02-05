@@ -236,14 +236,15 @@ describe Dossier do
   end
 
   describe "#text_summary" do
-    let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme") }
+    let(:service) { create(:service, nom: 'nom du service') }
+    let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme", service: service) }
 
     context 'when the dossier has been en_construction' do
       let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: "31/12/2010".to_date }
 
       subject { dossier.text_summary }
 
-      it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la démarche Démarche gérée par l'organisme Organisme") }
+      it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la démarche Démarche gérée par l'organisme nom du service") }
     end
 
     context 'when the dossier has not been en_construction' do
@@ -251,7 +252,7 @@ describe Dossier do
 
       subject { dossier.text_summary }
 
-      it { is_expected.to eq("Dossier en brouillon répondant à la démarche Démarche gérée par l'organisme Organisme") }
+      it { is_expected.to eq("Dossier en brouillon répondant à la démarche Démarche gérée par l'organisme nom du service") }
     end
   end
 

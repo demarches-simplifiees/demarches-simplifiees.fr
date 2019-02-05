@@ -186,7 +186,7 @@ class Dossier < ApplicationRecord
         "Dossier en brouillon répondant à la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
-        procedure.organisation
+        procedure.organisation_name
       ]
     else
       parts = [
@@ -195,7 +195,7 @@ class Dossier < ApplicationRecord
         " sur la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
-        procedure.organisation
+        procedure.organisation_name
       ]
     end
 
