@@ -174,6 +174,15 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def tags_for_template
+    [
+      {
+        libelle: libelle,
+        description: description
+      }
+    ]
+  end
+
   private
 
   def setup_procedure
