@@ -129,7 +129,7 @@ describe TagsSubstitutionConcern, type: :model do
           c.primary_value = 'primo'
           c.save
         end
-        it { is_expected.to eq('tout : primo / , primaire : primo, secondaire : ') }
+        it { is_expected.to eq('tout : primo, primaire : primo, secondaire : ') }
       end
 
       context 'and the champ has a primary and secondary value' do
