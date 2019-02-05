@@ -195,34 +195,32 @@ module TagsSubstitutionConcern
 
   def replace_type_de_champ_tags(text, tags, dossier_champs)
     tags.inject(text) do |acc, tag|
-      champ = dossier_champs
-        .detect { |dossier_champ| dossier_champ.libelle == tag[:libelle] }
-
-      replace_tag(acc, tag, champ)
+      replace_tag(acc, tag, dossier_champs)
     end
   end
 
   def replace_tags_with_values_from_data(text, tags, data)
     if data.present?
       tags.inject(text) do |acc, tag|
-        if tag.key?(:target)
-          value = data.send(tag[:target])
-        else
-          value = instance_exec(data, &tag[:lambda])
-        end
-        replace_tag(acc, tag, value)
+        replace_tag(acc, tag, data)
       end
     else
       text
     end
   end
 
-  def replace_tag(text, tag, value)
+  def replace_tag(text, tag, data)
     libelle = Regexp.quote(tag[:libelle])
 
     # allow any kind of space (non-breaking or other) in the tag’s libellé to match any kind of space in the template
     # (the '\\ |' is there because plain ASCII spaces were escaped by preceding Regexp.quote)
     libelle.gsub!(/\\ |[[:blank:]]/, "[[:blank:]]")
+
+    if tag.key?(:target)
+      value = data.send(tag[:target])
+    else
+      value = instance_exec(data, &tag[:lambda])
+    end
 
     text.gsub(/--#{libelle}--/, value.to_s)
   end

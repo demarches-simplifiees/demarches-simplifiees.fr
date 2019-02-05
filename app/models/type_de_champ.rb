@@ -175,10 +175,14 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def tags_for_template
+    l = libelle
     [
       {
-        libelle: libelle,
-        description: description
+        libelle: l,
+        description: description,
+        lambda: -> (champs) {
+          champs.detect { |champ| champ.libelle == l }
+        }
       }
     ]
   end
