@@ -161,6 +161,10 @@ class ApplicationController < ActionController::Base
         current_gestionnaire.feature_enabled?(:enable_email_login_token) &&
         !trusted_device?
 
+      # return at this location
+      # after the device is trusted
+      store_location_for(:user, request.fullpath)
+
       send_login_token_or_bufferize(current_gestionnaire)
       redirect_to link_sent_path(email: current_gestionnaire.email)
     end
