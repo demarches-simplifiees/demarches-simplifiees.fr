@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'As an administrateur I edit procedure', js: true do
+feature 'As an administrateur I can edit types de champ', js: true do
   let(:administrateur) { procedure.administrateur }
   let(:procedure) { create(:procedure) }
 
@@ -18,6 +18,7 @@ feature 'As an administrateur I edit procedure', js: true do
     end
     expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
     fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
+    blur
     expect(page).to have_content('Formulaire mis à jour')
 
     page.refresh
@@ -34,33 +35,29 @@ feature 'As an administrateur I edit procedure', js: true do
       click_on 'Ajouter un champ'
       click_on 'Ajouter un champ'
     end
-    expect(page).not_to have_content('Le libellé doit être rempli.')
-    expect(page).not_to have_content('Modifications non sauvegardées.')
     expect(page).not_to have_content('Formulaire mis à jour')
+
     fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ 0'
+    fill_in 'procedure_types_de_champ_attributes_1_libelle', with: 'libellé de champ 1'
+    blur
+    expect(page).to have_content('Formulaire mis à jour')
 
     expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
     expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
     expect(page).to have_selector('#procedure_types_de_champ_attributes_2_libelle')
     expect(page).to have_selector('#procedure_types_de_champ_attributes_3_libelle')
 
-    expect(page).to have_content('Le libellé doit être rempli.')
-    expect(page).to have_content('Modifications non sauvegardées.')
-    expect(page).not_to have_content('Formulaire mis à jour')
-    fill_in 'procedure_types_de_champ_attributes_2_libelle', with: 'libellé de champ 2'
-
-    within '.draggable-item-3' do
+    within '.draggable-item-2' do
       click_on 'Supprimer'
     end
 
-    expect(page).to have_content('Le libellé doit être rempli.')
-    expect(page).to have_content('Modifications non sauvegardées.')
-    expect(page).not_to have_content('Formulaire mis à jour')
-    fill_in 'procedure_types_de_champ_attributes_1_libelle', with: 'libellé de champ 1'
-
-    expect(page).not_to have_content('Le libellé doit être rempli.')
-    expect(page).not_to have_content('Modifications non sauvegardées.')
+    expect(page).not_to have_selector('#procedure_types_de_champ_attributes_3_libelle')
+    fill_in 'procedure_types_de_champ_attributes_2_libelle', with: 'libellé de champ 2'
+    blur
     expect(page).to have_content('Formulaire mis à jour')
+
+    expect(page).to have_content('Supprimer', count: 3)
+
     page.refresh
 
     expect(page).to have_content('Supprimer', count: 3)
@@ -68,6 +65,7 @@ feature 'As an administrateur I edit procedure', js: true do
 
   it "Remove champs" do
     fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
+    blur
     expect(page).to have_content('Formulaire mis à jour')
     page.refresh
 
@@ -82,10 +80,11 @@ feature 'As an administrateur I edit procedure', js: true do
   it "Only add valid champs" do
     expect(page).to have_selector('#procedure_types_de_champ_attributes_0_description')
     fill_in 'procedure_types_de_champ_attributes_0_description', with: 'déscription du champ'
-    expect(page).to have_content('Le libellé doit être rempli.')
+    blur
     expect(page).not_to have_content('Formulaire mis à jour')
 
     fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
+    blur
     expect(page).to have_content('Formulaire mis à jour')
   end
 
@@ -93,6 +92,7 @@ feature 'As an administrateur I edit procedure', js: true do
     expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
     select('Bloc répétable', from: 'procedure_types_de_champ_attributes_0_type_champ')
     fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
+    blur
 
     expect(page).to have_content('Formulaire mis à jour')
     page.refresh
@@ -102,6 +102,7 @@ feature 'As an administrateur I edit procedure', js: true do
     end
 
     fill_in 'procedure_types_de_champ_attributes_0_types_de_champ_attributes_0_libelle', with: 'libellé de champ 1'
+    blur
 
     expect(page).to have_content('Formulaire mis à jour')
     expect(page).to have_content('Supprimer', count: 2)
@@ -112,6 +113,7 @@ feature 'As an administrateur I edit procedure', js: true do
 
     select('Bloc répétable', from: 'procedure_types_de_champ_attributes_1_type_champ')
     fill_in 'procedure_types_de_champ_attributes_1_libelle', with: 'libellé de champ 2'
+    blur
 
     expect(page).to have_content('Supprimer', count: 3)
   end

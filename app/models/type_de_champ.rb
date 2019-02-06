@@ -179,6 +179,14 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def drop_down_list_value
+    drop_down_list&.value
+  end
+
+  def drop_down_list_value=(value)
+    self.drop_down_list_attributes = { value: value }
+  end
+
   private
 
   def setup_procedure
