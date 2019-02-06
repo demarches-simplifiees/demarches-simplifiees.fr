@@ -170,6 +170,10 @@ class Dossier < ApplicationRecord
     brouillon? || en_construction?
   end
 
+  def can_be_deleted_by_user?
+    brouillon? || en_construction?
+  end
+
   def retention_end_date
     if instruction_commencee?
       en_instruction_at + procedure.duree_conservation_dossiers_dans_ds.months
