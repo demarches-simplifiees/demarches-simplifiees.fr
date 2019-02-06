@@ -14,6 +14,7 @@
           :id="elementIdFor('type_champ')"
           :name="nameFor('type_champ')"
           v-model="typeChamp"
+          @change="updateOnChange()"
           class="small-margin small inline">
             <option v-for="option in state.typesDeChampOptions" :key="option[1]" :value="option[1]">
               {{ option[0] }}
@@ -51,6 +52,7 @@
             :id="elementIdFor('libelle')"
             :name="nameFor('libelle')"
             v-model="libelle"
+            @change="updateOnChange()"
             class="small-margin small"
             :class="{ error: isDirty && isInvalid }">
         </div>
@@ -65,6 +67,7 @@
             :id="elementIdFor('mandatory')"
             :name="nameFor('mandatory')"
             v-model="mandatory"
+            @change="updateOnChange()"
             class="small-margin small"
             value="1">
         </div>
@@ -78,6 +81,7 @@
             :id="elementIdFor('description')"
             :name="nameFor('description')"
             v-model="description"
+            @change="updateOnChange()"
             rows=3
             cols=40
             class="small-margin small">
@@ -94,6 +98,7 @@
           :id="elementIdFor('drop_down_list')"
           :name="nameFor('drop_down_list_attributes[value]')"
           v-model="dropDownList"
+          @change="updateOnChange()"
           rows=3
           cols=40
           placeholder="Ecrire une valeur par ligne et --valeur-- pour un séparateur."
@@ -115,7 +120,7 @@
           :id="elementIdFor('piece_justificative_template')"
           :name="nameFor('piece_justificative_template')"
           :data-direct-upload-url="state.directUploadsUrl"
-          @change="update(changeLog)"
+          @change="updateOnChange()"
           class="small-margin small">
       </div>
       <div class="cell" v-show="isCarte">
@@ -130,6 +135,7 @@
               :id="elementIdFor('quartiers_prioritaires')"
               :name="nameFor('quartiers_prioritaires')"
               v-model="options.quartiers_prioritaires"
+              @change="updateOnChange()"
               class="small-margin small"
               value="1">
             Quartiers prioritaires
@@ -141,6 +147,7 @@
               :id="elementIdFor('cadastres')"
               :name="nameFor('cadastres')"
               v-model="options.cadastres"
+              @change="updateOnChange()"
               class="small-margin small"
               value="1">
             Cadastres
@@ -152,6 +159,7 @@
               :id="elementIdFor('parcelles_agricoles')"
               :name="nameFor('parcelles_agricoles')"
               v-model="options.parcelles_agricoles"
+              @change="updateOnChange()"
               class="small-margin small"
               value="1">
             Parcelles Agricoles

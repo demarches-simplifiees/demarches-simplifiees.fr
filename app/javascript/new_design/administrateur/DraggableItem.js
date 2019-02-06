@@ -100,9 +100,12 @@ export default {
       clientId: `id-${clientIds++}`
     };
   },
-  created() {
-    for (let path of PATHS_TO_WATCH) {
-      this.$watch(path, () => this.update(this.changeLog));
+  watch: {
+    index() {
+      this.updateOnChange();
+    },
+    deleted() {
+      this.updateOnChange();
     }
   },
   mounted() {
@@ -132,6 +135,9 @@ export default {
         type_champ: 'text',
         types_de_champ: []
       });
+    },
+    updateOnChange() {
+      this.update(this.changeLog);
     }
   }
 };
@@ -141,19 +147,6 @@ const EXCLUDE_FROM_REPETITION = [
   'dossier_link',
   'repetition',
   'siret'
-];
-
-const PATHS_TO_WATCH = [
-  'typeChamp',
-  'libelle',
-  'mandatory',
-  'description',
-  'dropDownList',
-  'options.quartiers_prioritaires',
-  'options.cadastres',
-  'options.parcelles_agricoles',
-  'index',
-  'deleted'
 ];
 
 function castBoolean(value) {
