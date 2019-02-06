@@ -102,7 +102,8 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
         expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
         fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
-        expect(page).to have_content('Formulaire mis à jour')
+        blur
+        expect(page).to have_content('Formulaire enregistré')
 
         within '.footer' do
           click_on 'Ajouter un champ'
@@ -129,7 +130,8 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         page.refresh
 
         fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
-        expect(page).to have_content('Formulaire mis à jour')
+        blur
+        expect(page).to have_content('Formulaire enregistré')
 
         click_on Procedure.last.libelle
         click_on 'onglet-pieces'
