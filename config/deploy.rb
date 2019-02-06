@@ -20,7 +20,8 @@ shared_dirs = [
   'log',
   'sockets',
   'tmp/cache',
-  'tmp/pids'
+  'tmp/pids',
+  'vendor/bundle'
 ]
 
 set :domain, ENV.fetch('domain')
