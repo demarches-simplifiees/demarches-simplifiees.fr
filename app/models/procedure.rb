@@ -190,8 +190,8 @@ class Procedure < ApplicationRecord
     procedure = self.deep_clone(include:
       {
         attestation_template: nil,
-        types_de_champ: :drop_down_list,
-        types_de_champ_private: :drop_down_list
+        types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
+        types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
       })
     procedure.path = nil
     procedure.aasm_state = :brouillon
