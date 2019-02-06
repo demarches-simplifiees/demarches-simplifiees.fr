@@ -257,7 +257,7 @@ module NewUser
     end
 
     def ensure_dossier_can_be_updated
-      if !dossier.can_be_updated_by_the_user?
+      if !dossier.can_be_updated_by_user?
         flash.alert = 'Votre dossier ne peut plus être modifié'
         redirect_to dossiers_path
       end
