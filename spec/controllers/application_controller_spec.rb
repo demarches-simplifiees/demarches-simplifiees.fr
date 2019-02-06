@@ -159,6 +159,7 @@ describe ApplicationController, type: :controller do
       allow(@controller).to receive(:gestionnaire_signed_in?).and_return(gestionnaire_signed_in)
       allow(@controller).to receive(:sensitive_path).and_return(sensitive_path)
       allow(@controller).to receive(:send_login_token_or_bufferize)
+      allow(@controller).to receive(:store_location_for)
     end
 
     subject { @controller.send(:redirect_if_untrusted) }
@@ -191,6 +192,7 @@ describe ApplicationController, type: :controller do
 
             it { expect(@controller).to have_received(:redirect_to) }
             it { expect(@controller).to have_received(:send_login_token_or_bufferize) }
+            it { expect(@controller).to have_received(:store_location_for) }
           end
         end
       end
