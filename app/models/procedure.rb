@@ -138,10 +138,15 @@ class Procedure < ApplicationRecord
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
-    champs = types_de_champ.map { |tdc| tdc.champ.build }
-    champs_private = types_de_champ_private.map { |tdc| tdc.champ.build }
+    Dossier.new(procedure: self, champs: build_champs, champs_private: build_champs_private)
+  end
 
-    Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
+  def build_champs
+    types_de_champ.map(&:build_champ)
+  end
+
+  def build_champs_private
+    types_de_champ_private.map(&:build_champ)
   end
 
   def default_path
