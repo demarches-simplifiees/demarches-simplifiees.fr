@@ -5,9 +5,16 @@
         = form.fields_for :champs, champ do |form|
           = render partial: 'shared/dossiers/editable_champs/editable_champ', locals: { champ: form.object, form: form }
           = form.hidden_field :_destroy, disabled: true
-      - if champ.persisted?
-        %button.button.danger.remove-row
-          Supprimer
+      .flex.row-reverse
+        - if champ.persisted?
+          %button.button.danger.remove-row
+            Supprimer
+        - else
+          %button.button.danger{ type: :button }
+            Supprimer
 
 - if champ.persisted?
   = link_to "Ajouter une ligne pour « #{champ.libelle} »", champs_repetition_path(form.index), class: 'button add-row', data: { remote: true, method: 'POST', params: { champ_id: champ&.id }.to_query }
+- else
+  %button.button{ type: :button }
+    = "Ajouter une ligne pour « #{champ.libelle} »"
