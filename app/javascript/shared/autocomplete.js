@@ -48,9 +48,8 @@ addEventListener('ajax:success', function() {
 function autocompleteSetup() {
   for (let { type, url } of sources) {
     for (let element of document.querySelectorAll(selector(type))) {
-      if (!element.dataset.autocompleteInitialized) {
-        autocompleteInitializeElement(element, url);
-      }
+      element.removeAttribute('data-autocomplete');
+      autocompleteInitializeElement(element, url);
     }
   }
 }
@@ -61,5 +60,4 @@ function autocompleteInitializeElement(element, url) {
     fire(target, 'autocomplete:select', suggestion);
     select.autocomplete.setVal(suggestion.label);
   });
-  element.dataset.autocompleteInitialized = true;
 }
