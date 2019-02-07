@@ -19,4 +19,8 @@ class TypesDeChamp::TypeDeChampBase
       }
     ]
   end
+
+  def build_champ
+    @type_de_champ.champ.build
+  end
 end
