@@ -120,17 +120,11 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs
-    procedure.types_de_champ.each do |type_de_champ|
-      champ = type_de_champ.champ.build
-
-      if type_de_champ.repetition?
-        champ.add_row
-      end
-
+    procedure.build_champs.each do |champ|
       champs << champ
     end
-    procedure.types_de_champ_private.each do |type_de_champ|
-      champs_private << type_de_champ.champ.build
+    procedure.build_champs_private.each do |champ|
+      champs_private << champ
     end
   end
 
