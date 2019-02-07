@@ -51,7 +51,7 @@
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = dossier.updated_at.strftime("%d/%m/%Y")
               %td.action-col.delete-col
-                - if dossier.brouillon?
+                - if dossier.can_be_deleted_by_user?
                   = link_to(ask_deletion_dossier_path(dossier), method: :post, class: 'button danger', data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" }) do
                     %span.icon.delete
                     Supprimer
