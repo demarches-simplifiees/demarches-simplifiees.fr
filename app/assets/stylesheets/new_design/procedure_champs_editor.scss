@@ -9,10 +9,16 @@
 }
 
 .draggable-item {
-  border: 1px solid $border-grey;
-  border-radius: 5px;
-  margin-bottom: 10px;
+  border: 1px solid #eee;
+  border-left: 4px solid #0069CC;
+  margin-bottom: 20px;
   width: 100%;
+  background: #f8f8f8;
+
+  .draggable-item {
+    background: white;
+    border-left-color: #B58EF5;
+  }
 
   .handle {
     cursor: ns-resize;
@@ -58,7 +64,7 @@
     }
 
     &.hr {
-      border-bottom: 1px solid $border-grey;
+      border-bottom: 1px solid #eee;
 
       &.head {
         padding-bottom: 10px;
