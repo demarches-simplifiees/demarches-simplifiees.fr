@@ -38,13 +38,28 @@ function source(url) {
 }
 
 addEventListener('turbolinks:load', function() {
+  autocompleteSetup();
+});
+
+addEventListener('ajax:success', function() {
+  autocompleteSetup();
+});
+
+function autocompleteSetup() {
   for (let { type, url } of sources) {
-    for (let target of document.querySelectorAll(selector(type))) {
-      let select = autocomplete(target, options, [source(url)]);
-      select.on('autocomplete:selected', ({ target }, suggestion) => {
-        fire(target, 'autocomplete:select', suggestion);
-        select.autocomplete.setVal(suggestion.label);
-      });
+    for (let element of document.querySelectorAll(selector(type))) {
+      if (!element.dataset.autocompleteInitialized) {
+        autocompleteInitializeElement(element, url);
+      }
     }
   }
-});
+}
+
+function autocompleteInitializeElement(element, url) {
+  const select = autocomplete(element, options, [source(url)]);
+  select.on('autocomplete:selected', ({ target }, suggestion) => {
+    fire(target, 'autocomplete:select', suggestion);
+    select.autocomplete.setVal(suggestion.label);
+  });
+  element.dataset.autocompleteInitialized = true;
+}
