@@ -91,6 +91,10 @@
 
     &.libelle {
       width: 300px;
+
+      input {
+        font-weight: bold;
+      }
     }
 
     label {

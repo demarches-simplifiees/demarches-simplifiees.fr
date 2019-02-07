@@ -9,17 +9,16 @@
       <div class="handle">
         <img :src="state.dragIconUrl" alt="">
       </div>
-      <div class="cell">
-        <select
-          :id="elementIdFor('type_champ')"
-          :name="nameFor('type_champ')"
-          v-model="typeChamp"
+      <div class="cell libelle">
+        <input
+          type="text"
+          placeholder="Libellé"
+          :id="elementIdFor('libelle')"
+          :name="nameFor('libelle')"
+          v-model="libelle"
           @change="update"
-          class="small-margin small inline">
-            <option v-for="option in state.typesDeChampOptions" :key="option[1]" :value="option[1]">
-              {{ option[0] }}
-            </option>
-        </select>
+          class="small-margin small"
+          :class="{ error: hasChanges && !isValid }">
       </div>
       <div class="flex justify-start delete">
         <button class="button danger" @click.prevent="removeChamp">
@@ -29,18 +28,20 @@
     </div>
     <div class="flex justify-start section" :class="{ hr: isDropDown || isFile || isCarte }">
       <div class="flex column justify-start shift-left">
-        <div class="cell libelle">
-          <label :for="elementIdFor('libelle')">
-            Libellé
+        <div class="cell">
+          <label :for="elementIdFor('type_champ')">
+            Type de champ
           </label>
-          <input
-            type="text"
-            :id="elementIdFor('libelle')"
-            :name="nameFor('libelle')"
-            v-model="libelle"
+          <select
+            :id="elementIdFor('type_champ')"
+            :name="nameFor('type_champ')"
+            v-model="typeChamp"
             @change="update"
-            class="small-margin small"
-            :class="{ error: hasChanges && !isValid }">
+            class="small-margin small inline">
+              <option v-for="option in state.typesDeChampOptions" :key="option[1]" :value="option[1]">
+                {{ option[0] }}
+              </option>
+          </select>
         </div>
 
         <div class="cell" v-show="!isHeaderSection && !isExplication && !state.isAnnotation">
