@@ -1,7 +1,7 @@
 <template>
   <div class="champs-editor">
     <div v-if="state.typesDeChamp.length > 3" class="header">
-      <button class="button" @click.prevent="addChamp">
+      <button class="button" v-scroll-to="'.footer'" @click.prevent="addChamp">
         <template v-if="state.isAnnotation">
           Ajouter une annotation
         </template>
@@ -23,7 +23,7 @@
     </Draggable>
 
     <div class="footer">
-      <button class="button" @click.prevent="addChamp">
+      <button class="button" v-scroll-to="'.footer'" @click.prevent="addChamp">
         <template v-if="state.isAnnotation">
           Ajouter une annotation
         </template>
