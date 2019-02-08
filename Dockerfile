@@ -21,14 +21,11 @@ RUN bundle config --global frozen 1 &&\
 #----------- final tps
 FROM base
 ENV APP_PATH /app
-#----- minimum set of packages including PostgreSQL client, clamav antivirus, yarn
-RUN apk add --no-cache --update tzdata libcurl postgresql-libs yarn clamav clamav-daemon
+#----- minimum set of packages including PostgreSQL client, yarn
+RUN apk add --no-cache --update tzdata libcurl postgresql-libs yarn
 
 WORKDIR ${APP_PATH}
 RUN adduser -Dh ${APP_PATH} userapp
-
-#----- refresh antivirus definitions every nigh at 3:00 AM
-RUN echo "0   3   *   *   *   freshclam > ${APP_PATH}/freshclam.log.txt" | crontab -
 
 #----- copy from previous container the dependency gems plus the current application files
 USER userapp
