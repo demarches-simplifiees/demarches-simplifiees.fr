@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import Draggable from 'vuedraggable';
+import VueScrollTo from 'vue-scrollto';
 
 import DraggableItem from './DraggableItem';
 import DraggableList from './DraggableList';
 
 Vue.component('Draggable', Draggable);
 Vue.component('DraggableItem', DraggableItem);
+Vue.use(VueScrollTo, { duration: 1500, easing: 'ease' });
 
 addEventListener('DOMContentLoaded', () => {
   const el = document.querySelector('#champs-editor');
