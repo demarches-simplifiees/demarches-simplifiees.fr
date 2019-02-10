@@ -37,7 +37,7 @@ Nous mettons en production au minimum une fois par semaine (et généralement pl
 
 demarches-simplifiees.fr est **compliqué à héberger**. Parmi les problématiques que nous rencontrons :
 
-- **Sécurité et confidentialité des données** : par nature, demarches-simplifiees.fr traite est appelé à traiter des natures de données qui peuvent présenter des caractéristiqus plus ou moins sensibles. La sécurité de l’infrastructure doit être contrôlée et certifiée pour garantir la confidentialité des données. Cela implique par exemple une démarche de mise en conformité avec le [Référentiel Général de Sécurité](https://www.ssi.gouv.fr/entreprise/reglementation/confiance-numerique/le-referentiel-general-de-securite-rgs/), qui est un processus assez lourd.
+- **Sécurité et confidentialité des données** : par nature, demarches-simplifiees.fr est appelé à traiter des natures de données qui peuvent présenter des caractéristiqus plus ou moins sensibles. La sécurité de l’infrastructure doit être contrôlée et certifiée pour garantir la confidentialité des données. Cela implique par exemple une démarche de mise en conformité avec le [Référentiel Général de Sécurité](https://www.ssi.gouv.fr/entreprise/reglementation/confiance-numerique/le-referentiel-general-de-securite-rgs/), qui est un processus assez lourd.
 
   C’est également valable pour le stockage des pièces-jointes, qui peuvent la aussi présenter des particularités et des sensibilités dont la confidentialité doit être garantie.
 - **Utilisation de services externes** : demarches-simplifiees.fr s’interconnecte à de nombreux services externes : des APIs (API Entreprise, API Carto, la Base Adresse Nationale, etc.) – mais aussi des services pour le stockage externe des pièces-jointes, l’analyse anti-virus ou l’envoi des emails. Le fonctionnement de demarches-simplifiees.fr dépend de la disponibilité de ces services externes.
@@ -46,3 +46,7 @@ demarches-simplifiees.fr est **compliqué à héberger**. Parmi les problématiq
 Si vous souhaitez adapter demarches-simplifiees.fr à votre besoin, nous vous recommandons de **proposer vos modifications à la base de code principale** (par exemple en créant une issue) **plutôt que d’héberger une autre instance vous-même**.
 
 Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous n'avons malheureusement pas les moyens de vous accompagner, ni d'assurer de support technique concernant votre installation.
+
+Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous n'avons malheureusement pas les moyens de vous accompagner, ni d'assurer de support technique concernant votre installation.
+
+Totefois, le ministère des armées a déployé une instance au sein de leur intranet. Nous proposons aux acteurs qui sont interessés de les mettre en relation avec eux afin de disposer d'un retour d'expérience, et bénéficier de leur retour.
