@@ -188,7 +188,7 @@ module NewUser
     def ask_deletion
       dossier = current_user.dossiers.includes(:user, procedure: :administrateur).find(params[:id])
 
-      if !dossier.instruction_commencee?
+      if dossier.can_be_deleted_by_user?
         dossier.delete_and_keep_track
         flash.notice = 'Votre dossier a bien été supprimé.'
         redirect_to dossiers_path
@@ -257,7 +257,7 @@ module NewUser
     end
 
     def ensure_dossier_can_be_updated
-      if !dossier.can_be_updated_by_the_user?
+      if !dossier.can_be_updated_by_user?
         flash.alert = 'Votre dossier ne peut plus être modifié'
         redirect_to dossiers_path
       end

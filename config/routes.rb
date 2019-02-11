@@ -367,6 +367,8 @@ Rails.application.routes.draw do
         get 'champs'
         get 'annotations'
       end
+
+      resources :types_de_champ, only: [:create, :update, :destroy]
     end
 
     resources :services, except: [:show] do
