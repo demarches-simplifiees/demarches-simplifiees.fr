@@ -1,6 +1,6 @@
 <template>
   <div class="deleted" v-if="deleted">
-    <input type="hidden" :name="nameFor('id')" :value="item.id">
+    <input type="hidden" :name="nameFor('id')" :value="id">
     <input type="hidden" :name="nameFor('_destroy')" value="true">
   </div>
 
@@ -14,6 +14,7 @@
           :id="elementIdFor('type_champ')"
           :name="nameFor('type_champ')"
           v-model="typeChamp"
+          @change="update"
           class="small-margin small inline">
             <option v-for="option in state.typesDeChampOptions" :key="option[1]" :value="option[1]">
               {{ option[0] }}
@@ -21,21 +22,7 @@
         </select>
       </div>
       <div class="flex justify-start delete">
-        <div v-if="isDirty" class="error-message">
-          <span v-if="isInvalid" class="content">
-            Le libellé doit être rempli.
-          </span>
-          <span v-else class="content">
-            <template v-if="state.isAnnotation">
-              Modifications non sauvegardées. Le libellé doit être rempli sur tous les annotations.
-            </template>
-            <template v-else>
-              Modifications non sauvegardées. Le libellé doit être rempli sur tous les champs.
-            </template>
-          </span>
-        </div>
-
-        <button class="button danger" @click.prevent="removeChamp(item)">
+        <button class="button danger" @click.prevent="removeChamp">
           Supprimer
         </button>
       </div>
@@ -51,8 +38,9 @@
             :id="elementIdFor('libelle')"
             :name="nameFor('libelle')"
             v-model="libelle"
+            @change="update"
             class="small-margin small"
-            :class="{ error: isDirty && isInvalid }">
+            :class="{ error: hasChanges && !isValid }">
         </div>
 
         <div class="cell" v-show="!isHeaderSection && !isExplication && !state.isAnnotation">
@@ -65,6 +53,7 @@
             :id="elementIdFor('mandatory')"
             :name="nameFor('mandatory')"
             v-model="mandatory"
+            @change="update"
             class="small-margin small"
             value="1">
         </div>
@@ -78,6 +67,7 @@
             :id="elementIdFor('description')"
             :name="nameFor('description')"
             v-model="description"
+            @change="update"
             rows=3
             cols=40
             class="small-margin small">
@@ -93,7 +83,8 @@
         <textarea
           :id="elementIdFor('drop_down_list')"
           :name="nameFor('drop_down_list_attributes[value]')"
-          v-model="dropDownList"
+          v-model="dropDownListValue"
+          @change="update"
           rows=3
           cols=40
           placeholder="Ecrire une valeur par ligne et --valeur-- pour un séparateur."
@@ -104,9 +95,9 @@
         <label :for="elementIdFor('piece_justificative_template')">
           Modèle
         </label>
-        <template v-if="item.piece_justificative_template_url">
-          <a :href="item.piece_justificative_template_url" target="_blank">
-            {{item.piece_justificative_template_filename}}
+        <template v-if="pieceJustificativeTemplateUrl">
+          <a :href="pieceJustificativeTemplateUrl" target="_blank">
+            {{pieceJustificativeTemplateFilename}}
           </a>
           <br> Modifier :
         </template>
@@ -114,8 +105,7 @@
           type="file"
           :id="elementIdFor('piece_justificative_template')"
           :name="nameFor('piece_justificative_template')"
-          :data-direct-upload-url="state.directUploadsUrl"
-          @change="update(changeLog)"
+          @change="upload"
           class="small-margin small">
       </div>
       <div class="cell" v-show="isCarte">
@@ -130,6 +120,7 @@
               :id="elementIdFor('quartiers_prioritaires')"
               :name="nameFor('quartiers_prioritaires')"
               v-model="options.quartiers_prioritaires"
+              @change="update"
               class="small-margin small"
               value="1">
             Quartiers prioritaires
@@ -141,6 +132,7 @@
               :id="elementIdFor('cadastres')"
               :name="nameFor('cadastres')"
               v-model="options.cadastres"
+              @change="update"
               class="small-margin small"
               value="1">
             Cadastres
@@ -152,6 +144,7 @@
               :id="elementIdFor('parcelles_agricoles')"
               :name="nameFor('parcelles_agricoles')"
               v-model="options.parcelles_agricoles"
+              @change="update"
               class="small-margin small"
               value="1">
             Parcelles Agricoles
@@ -163,7 +156,6 @@
           <DraggableItem
             v-for="(item, index) in typesDeChamp"
             :state="stateForRepetition"
-            :update="update"
             :index="index"
             :item="item"
             :key="item.id" />
@@ -181,7 +173,7 @@
     </div>
     <div class="meta">
       <input type="hidden" :name="nameFor('order_place')" :value="index">
-      <input type="hidden" :name="nameFor('id')" :value="item.id">
+      <input type="hidden" :name="nameFor('id')" :value="id">
     </div>
   </div>
 </template>

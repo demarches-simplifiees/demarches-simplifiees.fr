@@ -120,6 +120,10 @@ class TypeDeChamp < ApplicationRecord
     }
   end
 
+  def build_champ
+    dynamic_type.build_champ
+  end
+
   def self.type_de_champs_list_fr
     type_champs.map { |champ| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first] }
   end
@@ -173,6 +177,14 @@ class TypeDeChamp < ApplicationRecord
     if piece_justificative_template.attached?
       piece_justificative_template.filename
     end
+  end
+
+  def drop_down_list_value
+    drop_down_list&.value
+  end
+
+  def drop_down_list_value=(value)
+    self.drop_down_list_attributes = { value: value }
   end
 
   private

@@ -10,14 +10,13 @@
         </template>
       </button>
 
-      <button class="button primary" @click.prevent="updateAll">Enregistrer</button>
+      <button class="button primary" @click.prevent="save">Enregistrer</button>
     </div>
 
     <Draggable :list="state.typesDeChamp" :options="{handle:'.handle'}">
       <DraggableItem
         v-for="(item, index) in state.typesDeChamp"
         :state="state"
-        :update="update"
         :index="index"
         :item="item"
         :key="item.id" />
@@ -33,7 +32,7 @@
         </template>
       </button>
 
-      <button class="button primary" @click.prevent="updateAll">Enregistrer</button>
+      <button class="button primary" @click.prevent="save">Enregistrer</button>
     </div>
   </div>
 </template>
