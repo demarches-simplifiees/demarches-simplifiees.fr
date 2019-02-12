@@ -24,7 +24,7 @@
     - else
       %ul
         - champ.cadastres.each do |pc|
-          %li Parcelle n° #{pc.numero} - Feuille #{pc.code_arr} #{pc.section} #{pc.feuille}
+          %li Parcelle n° #{pc.numero} - Feuille #{pc.code_arr} #{pc.section} #{pc.feuille} - #{pc.surface_parcelle.round} m<sup>2</sup>
 
 - if champ.parcelles_agricoles?
   .areas-title Parcelles agricoles (RPG)

@@ -53,6 +53,11 @@ strong {
   font-weight: bold;
 }
 
+sup {
+  vertical-align: super;
+  font-size: 0.83em;
+}
+
 .container {
   @include horizontal-padding($default-padding);
   max-width: $page-width + 2 * $default-padding;
