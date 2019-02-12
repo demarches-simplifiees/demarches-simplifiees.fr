@@ -155,3 +155,11 @@ $big-number-card-padding: 2 * $segmented-control-item-border-radius;
   text-align: center;
   color: $blue;
 }
+
+.hide {
+  display:none;
+}
+
+.show{
+  display: block;
+}
