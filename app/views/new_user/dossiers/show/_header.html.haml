@@ -5,7 +5,7 @@
     .title-container
       %span.icon.folder
       %h1= dossier.procedure.libelle
-      %h2 Dossier nº #{dossier.id} - Déposé le #{I18n.l(dossier.created_at, format: '%d %B %Y')}
+      %h2 Dossier nº #{dossier.id} - Déposé le #{I18n.l(dossier.en_construction_at, format: '%d %B %Y')}
 
     - if current_user.owns?(dossier)
       .header-actions
