@@ -6,7 +6,7 @@
 
     .description
       Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.
-      Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux.
+      Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux
 
     = form_tag contact_path, method: :post, multipart: true, class: 'form' do |f|
       - if !logged_in?
@@ -20,7 +20,24 @@
         = label_tag :type do
           Votre problème
           %span.mandatory *
-        = select_tag :type, options_for_select(@options, params[:type])
+        = select_tag :type, options_for_select(@options, params[:type]),include_blank:"Choisir un problème", onchange:"show()"
+
+
+      #info_demarche.contact-champ.aidesupport.hide
+        Mon texte info_demarche
+        %br
+        %br
+
+      #usager_perdu.contact-champ.aidesupport.hide
+        Mon texte usager_perdu
+        %br
+        %br
+
+      #info_instruction.contact-champ.aidesupport.hide
+        Mon texte info_instruction
+        %br
+        %br
+
 
       .contact-champ
         = label_tag :dossier_id, 'Numéro du dossier concerné'
@@ -46,3 +63,45 @@
 
       .send-wrapper
         = button_tag 'Envoyer le message', type: :submit, class: 'button send primary'
+
+        :javascript
+          function show(){
+          var e = document.getElementById ("type");
+          var choix = e.options [e.selectedIndex] .value;
+          var divid = choix.replace(' ','_');
+          var div_info_demarche = document.getElementById("info_demarche");
+          var div_usager_perdu_ = document.getElementById("usager_perdu");
+          var div_info_instruction = document.getElementById("info_instruction");
+
+
+          console.log(divid);
+          switch (divid) {
+            case 'info_demarche':
+              console.log('info_demarche');
+              document.getElementById("info_demarche").classList.add("show");
+
+              break;
+
+            case 'usager_perdu':
+              console.log('usager_perdu');
+              document.getElementById("usager_perdu").classList.add("show");
+
+              break;
+
+            case 'info_instruction':
+              console.log('info_instruction');
+              document.getElementById("info_instruction").classList.add("show");
+
+              break;
+
+              default:
+                 console.log('defaut');
+
+              }
+
+
+
+
+
+            }
+
