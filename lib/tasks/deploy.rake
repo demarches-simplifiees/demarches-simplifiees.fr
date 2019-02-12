@@ -13,7 +13,7 @@ task :setup do
   domains = domains_for_stage(ENV.fetch('STAGE'))
 
   domains.each do |domain|
-    sh "mina setup domain=#{domain} force_asset_precompile=true"
+    sh "mina setup domain=#{domain}"
   end
 end
 
