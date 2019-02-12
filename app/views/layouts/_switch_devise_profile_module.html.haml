@@ -1,15 +1,14 @@
 - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
   %ul#switch-menu
-    %li Changer de rôle...
+    %li
+      Changer de rôle
     - if user_signed_in?
       %li
-        = link_to(dossiers_path, id: :menu_item_procedure, title:'Aller dans votre espace usager. Vous pourrez revenir ici ensuite') do
+        = link_to(dossiers_path, id: :menu_item_procedure, title: 'Aller dans votre espace usager. Vous pourrez revenir ici ensuite') do
           %i.fa.fa-users
-          &nbsp;
-          Usager
+          &nbsp; Usager
     - if gestionnaire_signed_in?
       %li
-        = link_to(gestionnaire_procedures_path, title:'Aller dans votre espace instructeur. Vous pourrez revenir ici ensuite.') do
+        = link_to(gestionnaire_procedures_path, title: 'Aller dans votre espace instructeur. Vous pourrez revenir ici ensuite.') do
           %i.fa.fa-user
-          &nbsp;
-          Instructeur
+          &nbsp; Instructeur
