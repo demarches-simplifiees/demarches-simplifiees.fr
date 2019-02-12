@@ -1,4 +1,5 @@
 @import "colors";
+@import "constants";
 
 #champs-editor {
   .spinner {
@@ -111,10 +112,21 @@
   }
 }
 
-.header,
 .footer {
+  margin-bottom: 70px;
+}
+
+.buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin: 0px;
+  position: fixed;
+  bottom: 0px;
+  background-color: $white;
+  max-width: $page-width;
+  width: 100%;
+  border: 1px solid $border-grey;
+  padding: 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
