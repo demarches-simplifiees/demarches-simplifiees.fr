@@ -1,49 +1,64 @@
 addEventListener('direct-upload:initialize', event => {
-  const target = event.target,
-    detail = event.detail,
-    id = detail.id,
-    file = detail.file;
+  const {
+    target,
+    detail: {
+      id,
+      file: { name: filename }
+    }
+  } = event;
 
-  target.insertAdjacentHTML(
-    'beforebegin',
-    '\n<div id="direct-upload-' +
-      id +
-      '" class="direct-upload direct-upload--pending">\n<div id="direct-upload-progress-' +
-      id +
-      '" class="direct-upload__progress" style="width: 0%"></div>\n<span class="direct-upload__filename">' +
-      file.name +
-      '</span>\n</div>\n'
+  const errorElements = target.parentElement.querySelectorAll(
+    '.direct-upload--error'
   );
+  for (let element of errorElements) {
+    element.remove();
+  }
+  target.insertAdjacentHTML('beforebegin', template(id, filename));
 });
 
 addEventListener('direct-upload:start', event => {
   const id = event.detail.id,
-    element = document.getElementById('direct-upload-' + id);
+    element = getDirectUploadElement(id);
 
   element.classList.remove('direct-upload--pending');
+  return false;
 });
 
 addEventListener('direct-upload:progress', event => {
-  const id = event.detail.id,
-    progress = event.detail.progress,
-    progressElement = document.getElementById('direct-upload-progress-' + id);
+  const { id, progress } = event.detail,
+    progressElement = getDirectUploadProgressElement(id);
 
   progressElement.style.width = `${progress}%`;
 });
 
 addEventListener('direct-upload:error', event => {
-  event.preventDefault();
-  const id = event.detail.id,
-    error = event.detail.error,
-    element = document.getElementById('direct-upload-' + id);
+  const { id, error } = event.detail,
+    element = getDirectUploadElement(id);
 
   element.classList.add('direct-upload--error');
   element.setAttribute('title', error);
 });
 
 addEventListener('direct-upload:end', event => {
-  const id = event.detail.id,
-    element = document.getElementById('direct-upload-' + id);
+  const { id } = event.detail,
+    element = getDirectUploadElement(id);
 
   element.classList.add('direct-upload--complete');
 });
+
+function template(id, filename) {
+  return `<div id="direct-upload-${id}" class="direct-upload direct-upload--pending">
+    <div class="direct-upload__progress" style="width: 0%"></div>
+    <span class="direct-upload__filename">${filename}</span>
+  </div>`;
+}
+
+function getDirectUploadElement(id) {
+  return document.getElementById(`direct-upload-${id}`);
+}
+
+function getDirectUploadProgressElement(id) {
+  return document.querySelector(
+    `#direct-upload-${id} .direct-upload__progress`
+  );
+}
