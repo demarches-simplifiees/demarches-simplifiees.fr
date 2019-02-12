@@ -20,6 +20,7 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 
 #### Développement
 
+- rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
 - Yarn : voir https://yarnpkg.com/en/docs/install
 - Overmind :
   * Mac : `brew install overmind`
