@@ -1,25 +1,15 @@
 - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
-  #switch-menu.dropdown.dropup
-    %button.btn.btn-default.dropdown-toggle{ type: :button, 'data-toggle' => 'dropdown', 'aria-haspopup' => true, 'aria-expanded' => false }
-      %i.fa.fa-toggle-on
-      %span.caret
-    %ul.dropdown-menu.dropdown-menu-left
-      - if user_signed_in?
-        %li
-          = link_to(dossiers_path, id: :menu_item_procedure) do
-            %i.fa.fa-user
-            &nbsp;
-            Usager
-      - if gestionnaire_signed_in?
-        %li
-          = link_to(gestionnaire_procedures_path) do
-            %i.fa.fa-user
-            &nbsp;
-            Instructeur
-
-      - if administrateur_signed_in?
-        %li
-          = link_to(admin_procedures_path) do
-            %i.fa.fa-user
-            &nbsp;
-            Administrateur
+  %ul#switch-menu
+    %li Tester en tant que...
+    - if user_signed_in?
+      %li
+        = link_to(dossiers_path, id: :menu_item_procedure, title:'Aller dans votre espace usager. Vous pourrez revenir ici ensuite') do
+          %i.fa.fa-users
+          &nbsp;
+          Usager
+    - if gestionnaire_signed_in?
+      %li
+        = link_to(gestionnaire_procedures_path, title:'Aller dans votre espace instructeur. Vous pourrez revenir ici ensuite.') do
+          %i.fa.fa-user
+          &nbsp;
+          Instructeur
