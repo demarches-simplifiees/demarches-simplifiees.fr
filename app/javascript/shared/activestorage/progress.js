@@ -28,7 +28,7 @@ addEventListener('direct-upload:progress', event => {
     progress = event.detail.progress,
     progressElement = document.getElementById('direct-upload-progress-' + id);
 
-  progressElement.style.width = `${progress} %`;
+  progressElement.style.width = `${progress}%`;
 });
 
 addEventListener('direct-upload:error', event => {
