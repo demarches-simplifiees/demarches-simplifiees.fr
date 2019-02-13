@@ -75,18 +75,18 @@
             name: :save_draft,
             value: true,
             class: 'button send secondary',
-            data: { disable: true }
+            data: { 'disable-with': "Envoi en cours…" }
 
           - if dossier.can_transition_to_en_construction?
             = f.button 'Soumettre le dossier',
               class: 'button send primary',
               disabled: !current_user.owns?(dossier),
-              data: { disable: true }
+              data: { 'disable-with': "Envoi en cours…" }
 
         - else
           = f.button 'Enregistrer les modifications du dossier',
             class: 'button send primary',
-            data: { disable: true }
+            data: { 'disable-with': "Envoi en cours…" }
 
       - if dossier.brouillon? && !current_user.owns?(dossier)
         .send-notice.invite-cannot-submit
