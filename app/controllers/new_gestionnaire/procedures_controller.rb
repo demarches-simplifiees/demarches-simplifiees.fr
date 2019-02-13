@@ -238,13 +238,7 @@ module NewGestionnaire
     end
 
     def available_fields_to_filters
-      current_filters_fields_ids = current_filters.map do |field|
-        "#{field['table']}/#{field['column']}"
-      end
-
-      procedure_presentation.fields_for_select.reject do |field|
-        current_filters_fields_ids.include?(field[1])
-      end
+      procedure_presentation.fields_for_select
     end
 
     def eager_load_displayed_fields
