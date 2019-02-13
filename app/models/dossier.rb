@@ -258,9 +258,8 @@ class Dossier < ApplicationRecord
   end
 
   def delete_and_keep_track
-    now = Time.zone.now
-    deleted_dossier = DeletedDossier.create!(dossier_id: id, procedure: procedure, state: state, deleted_at: now)
-    update(hidden_at: now)
+    deleted_dossier = DeletedDossier.create_from_dossier(self)
+    update(hidden_at: deleted_dossier.deleted_at)
 
     if en_construction?
       administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : [procedure.administrateur.email]
@@ -318,6 +317,13 @@ class Dossier < ApplicationRecord
     log_dossier_operation(nil, :accepter, automatic_operation: true)
   end
 
+  def hide!(administration)
+    update(hidden_at: Time.zone.now)
+
+    log_administration_dossier_operation(administration, :supprimer)
+    DeletedDossier.create_from_dossier(self)
+  end
+
   def refuser!(gestionnaire, motivation)
     self.motivation = motivation
     self.en_instruction_at ||= Time.zone.now
@@ -353,6 +359,13 @@ class Dossier < ApplicationRecord
       gestionnaire: gestionnaire,
       operation: DossierOperationLog.operations.fetch(operation),
       automatic_operation: automatic_operation
+    )
+  end
+
+  def log_administration_dossier_operation(administration, operation)
+    dossier_operation_logs.create(
+      administration: administration,
+      operation: DossierOperationLog.operations.fetch(operation)
     )
   end
 
