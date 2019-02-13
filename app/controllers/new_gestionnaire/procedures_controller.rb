@@ -158,11 +158,9 @@ module NewGestionnaire
 
     def remove_filter
       filters = procedure_presentation.filters
-      filter_to_remove = current_filters.find do |filter|
-        filter['table'] == params[:table] && filter['column'] == params[:column]
-      end
 
-      filters[statut] = filters[statut] - [filter_to_remove]
+      to_remove = params.values_at(:table, :column)
+      filters[statut].reject! { |filter| filter.values_at('table', 'column') == to_remove }
 
       procedure_presentation.update(filters: filters)
 
