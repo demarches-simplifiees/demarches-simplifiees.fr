@@ -195,7 +195,7 @@ module NewGestionnaire
     private
 
     def field_id(field)
-      "#{field['table']}/#{field['column']}"
+      field.values_at('table', 'column').join('/')
     end
 
     def statut
