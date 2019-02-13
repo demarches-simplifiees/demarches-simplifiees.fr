@@ -112,7 +112,7 @@ module NewGestionnaire
       procedure_presentation.update(displayed_fields: fields)
 
       current_sort = procedure_presentation.sort
-      if !values.include?("#{current_sort['table']}/#{current_sort['column']}")
+      if !values.include?(field_id(current_sort))
         procedure_presentation.update(sort: Procedure.default_sort)
       end
 
@@ -194,6 +194,10 @@ module NewGestionnaire
 
     private
 
+    def field_id(field)
+      "#{field['table']}/#{field['column']}"
+    end
+
     def statut
       @statut ||= (params[:statut].presence || 'a-suivre')
     end
@@ -228,9 +232,7 @@ module NewGestionnaire
     end
 
     def displayed_fields_values
-      procedure_presentation.displayed_fields.map do |field|
-        "#{field['table']}/#{field['column']}"
-      end
+      procedure_presentation.displayed_fields.map { |field| field_id(field) }
     end
 
     def current_filters
