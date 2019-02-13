@@ -13,6 +13,12 @@ describe Etablissement do
     let(:etablissement) { create(:etablissement, nom_voie: 'green    moon') }
 
     it { expect(etablissement.inline_adresse).to eq '6 RUE green moon, IMMEUBLE BORA, 92270 BOIS COLOMBES' }
+
+    context 'with missing complement adresse' do
+      let(:etablissement) { create(:etablissement, complement_adresse: '') }
+
+      it { expect(etablissement.inline_adresse).to eq '6 RUE RAOUL NORDLING, 92270 BOIS COLOMBES' }
+    end
   end
 
   describe '#verify' do
