@@ -49,7 +49,7 @@ class Etablissement < ApplicationRecord
       "#{numero_voie} #{type_voie} #{nom_voie}",
       complement_adresse,
       "#{code_postal} #{localite}"
-    ].map { |s| s.squeeze(' ') }.reject(&:blank?).join(', ')
+    ].reject(&:blank?).join(', ').squeeze(' ')
   end
 
   def verify
