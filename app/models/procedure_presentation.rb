@@ -111,36 +111,37 @@ class ProcedurePresentation < ApplicationRecord
     filters[statut].map do |filter|
       table = filter['table']
       column = sanitized_column(filter)
+      values = [filter['value']]
       case table
       when 'self'
-        date = Time.zone.parse(filter['value']).beginning_of_day rescue nil
+        dates = values.map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
         Filter.new(
           dossiers
-        ).where_datetime_matches(column, date)
+        ).where_datetime_matches(column, dates)
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
         Filter.new(
           dossiers
             .includes(relation)
             .where("champs.type_de_champ_id = ?", filter['column'].to_i)
-        ).where_ilike('champs.value', filter['value'])
+        ).where_ilike('champs.value', values)
       when 'etablissement'
         if filter['column'] == 'entreprise_date_creation'
-          date = filter['value'].to_date rescue nil
+          dates = values.map { |v| v.to_date rescue nil }
           Filter.new(
             dossiers.includes(table)
-          ).where_equals(column, date)
+          ).where_equals(column, dates)
         else
           Filter.new(
             dossiers
               .includes(table)
-          ).where_ilike(column, filter['value'])
+          ).where_ilike(column, values)
         end
       when 'user', 'individual'
         Filter.new(
           dossiers
             .includes(table)
-        ).where_ilike(column, filter['value'])
+        ).where_ilike(column, values)
       end.pluck(:id)
     end.reduce(:&)
   end
@@ -152,20 +153,23 @@ class ProcedurePresentation < ApplicationRecord
       @dossiers = dossiers
     end
 
-    def where_datetime_matches(column, date)
-      if date.present?
-        @dossiers.where("#{column} BETWEEN ? AND ?", date, date + 1.day)
+    def where_datetime_matches(column, dates)
+      dates = dates.compact.flat_map { |d| [d, d + 1.day] }
+      if dates.present?
+        q = Array.new(dates.count / 2, "(#{column} BETWEEN ? AND ?)").join(' OR ')
+        @dossiers.where(q, *dates)
       else
         []
       end
     end
 
-    def where_ilike(column, value)
-      @dossiers.where("#{column} ILIKE ?", "%#{value}%")
+    def where_ilike(column, values)
+      q = Array.new(values.count, "(#{column} ILIKE ?)").join(' OR ')
+      @dossiers.where(q, *(values.map { |value| "%#{value}%" }))
     end
 
-    def where_equals(column, value)
-      @dossiers.where("#{column} = ?", value)
+    def where_equals(column, values)
+      @dossiers.where("#{column} IN (?)", values)
     end
   end
 
