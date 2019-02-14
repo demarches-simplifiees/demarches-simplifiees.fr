@@ -20,23 +20,10 @@
         = label_tag :type do
           Votre problème
           %span.mandatory *
-        = select_tag :type, options_for_select(@options, params[:type]),include_blank:"Choisir un problème", onchange:"show()"
+        = select_tag :type, options_for_select(@options, params[:type]),include_blank:"Choisir un problème",onchange:"show()", required: true
 
 
-      #info_demarche.contact-champ.aidesupport.hide
-        Mon texte info_demarche
-        %br
-        %br
-
-      #usager_perdu.contact-champ.aidesupport.hide
-        Mon texte usager_perdu
-        %br
-        %br
-
-      #info_instruction.contact-champ.aidesupport.hide
-        Mon texte info_instruction
-        %br
-        %br
+      #aidesupport
 
 
       .contact-champ
@@ -65,6 +52,7 @@
         = button_tag 'Envoyer le message', type: :submit, class: 'button send primary'
 
         :javascript
+
           function show(){
           var e = document.getElementById ("type");
           var choix = e.options [e.selectedIndex] .value;
@@ -73,29 +61,26 @@
           var div_usager_perdu_ = document.getElementById("usager_perdu");
           var div_info_instruction = document.getElementById("info_instruction");
 
-
-          console.log(divid);
           switch (divid) {
             case 'info_demarche':
               console.log('info_demarche');
-              document.getElementById("info_demarche").classList.add("show");
-
+              document.getElementById("aidesupport").innerHTML = "aaaaa";
               break;
 
             case 'usager_perdu':
               console.log('usager_perdu');
-              document.getElementById("usager_perdu").classList.add("show");
-
+              document.getElementById("aidesupport").innerHTML = "bbbbb";
               break;
 
             case 'info_instruction':
               console.log('info_instruction');
-              document.getElementById("info_instruction").classList.add("show");
+            document.getElementById("aidesupport").innerHTML = "cccc";
 
               break;
 
               default:
                  console.log('defaut');
+                 document.getElementById("aidesupport").innerHTML = "";
 
               }
 
