@@ -22,11 +22,12 @@
     var previousPageUrl = null;
     addEventListener('turbolinks:load', function(event) {
       if (previousPageUrl) {
-        var loadTimeMs = event.data.timing.visitEnd - event.data.timing.visitStart;
         _paq.push(['setReferrerUrl', previousPageUrl]);
         _paq.push(['setCustomUrl', '/' + window.location.href]);
         _paq.push(['setDocumentTitle', document.title]);
-        _paq.push(['setGenerationTimeMs', loadTimeMs]);
+        if (event.data && event.data.timing) {
+          _paq.push(['setGenerationTimeMs', event.data.timing.visitEnd - event.data.timing.visitStart]);
+        }
         _paq.push(['trackPageView']);
       }
       previousPageUrl = window.location.href;

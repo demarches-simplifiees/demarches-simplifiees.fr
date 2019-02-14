@@ -5,8 +5,6 @@
 
 .dossiers-headers.sub-header
   .container
-    = link_to "Commencer une nouvelle démarche", demarches_url, class: "button secondary new-demarche"
-
     - if @dossiers_invites.count == 0
       %h1.page-title Mes dossiers
 
@@ -71,5 +69,7 @@
   - else
     .blank-tab
       %h2.empty-text Aucun dossier.
-      %p.empty-text-details Vous n’avez pas encore commencé de démarche.
-      = link_to "Commencer une nouvelle démarche", demarches_url, class: "button primary"
+      %p.empty-text-details
+        Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
+        %br
+        Celui ci doit ressembler à https://www.demarches-simplifiees.fr/commencer/xxx.

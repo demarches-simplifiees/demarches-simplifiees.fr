@@ -13,7 +13,7 @@ feature 'As an administrateur I can edit types de champ', js: true do
   it "Add a new champ" do
     click_on 'Supprimer'
 
-    within '.footer' do
+    within '.buttons' do
       click_on 'Ajouter un champ'
     end
     expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
@@ -22,7 +22,7 @@ feature 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_content('Formulaire enregistré')
 
     page.refresh
-    within '.footer' do
+    within '.buttons' do
       click_on 'Enregistrer'
     end
 
@@ -30,7 +30,7 @@ feature 'As an administrateur I can edit types de champ', js: true do
   end
 
   it "Add multiple champs" do
-    within '.footer' do
+    within '.buttons' do
       click_on 'Ajouter un champ'
       click_on 'Ajouter un champ'
       click_on 'Ajouter un champ'
@@ -107,7 +107,7 @@ feature 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_content('Formulaire enregistré')
     expect(page).to have_content('Supprimer', count: 2)
 
-    within '.footer' do
+    within '.buttons' do
       click_on 'Ajouter un champ'
     end
 
