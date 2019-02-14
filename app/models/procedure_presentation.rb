@@ -114,37 +114,60 @@ class ProcedurePresentation < ApplicationRecord
       case table
       when 'self'
         date = Time.zone.parse(filter['value']).beginning_of_day rescue nil
-        if date.present?
-          dossiers.where("#{column} BETWEEN ? AND ?", date, date + 1.day)
-        else
-          []
-        end
+        Filter.new(
+          dossiers
+        ).where_datetime_matches(column, date)
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
-        dossiers
-          .includes(relation)
-          .where("champs.type_de_champ_id = ?", filter['column'].to_i)
-          .where("champs.value ILIKE ?", "%#{filter['value']}%")
+        Filter.new(
+          dossiers
+            .includes(relation)
+            .where("champs.type_de_champ_id = ?", filter['column'].to_i)
+        ).where_ilike('champs.value', filter['value'])
       when 'etablissement'
         if filter['column'] == 'entreprise_date_creation'
           date = filter['value'].to_date rescue nil
-          dossiers
-            .includes(table)
-            .where("#{column} = ?", date)
+          Filter.new(
+            dossiers.includes(table)
+          ).where_equals(column, date)
         else
-          dossiers
-            .includes(table)
-            .where("#{column} ILIKE ?", "%#{filter['value']}%")
+          Filter.new(
+            dossiers
+              .includes(table)
+          ).where_ilike(column, filter['value'])
         end
       when 'user', 'individual'
-        dossiers
-          .includes(table)
-          .where("#{column} ILIKE ?", "%#{filter['value']}%")
+        Filter.new(
+          dossiers
+            .includes(table)
+        ).where_ilike(column, filter['value'])
       end.pluck(:id)
     end.reduce(:&)
   end
 
   private
+
+  class Filter
+    def initialize(dossiers)
+      @dossiers = dossiers
+    end
+
+    def where_datetime_matches(column, date)
+      if date.present?
+        @dossiers.where("#{column} BETWEEN ? AND ?", date, date + 1.day)
+      else
+        []
+      end
+    end
+
+    def where_ilike(column, value)
+      @dossiers.where("#{column} ILIKE ?", "%#{value}%")
+    end
+
+    def where_equals(column, value)
+      @dossiers.where("#{column} = ?", value)
+    end
+  end
 
   def check_allowed_displayed_fields
     displayed_fields.each do |field|
