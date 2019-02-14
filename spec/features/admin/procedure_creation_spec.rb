@@ -105,7 +105,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         blur
         expect(page).to have_content('Formulaire enregistré')
 
-        within '.footer' do
+        within '.buttons' do
           click_on 'Ajouter un champ'
         end
         expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
