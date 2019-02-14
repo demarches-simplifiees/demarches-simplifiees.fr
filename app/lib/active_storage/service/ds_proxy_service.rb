@@ -27,7 +27,7 @@ module ActiveStorage
 
     def publicize(url)
       search = %r{^https://[^/]+/v1/AUTH_[a-f0-9]{32}}
-      replace = 'https://static.demarches-simplifiees.fr'
+      replace = "https://#{ENV['APP_HOST']}/direct-upload"
       url.gsub(search, replace)
     end
   end
