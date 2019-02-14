@@ -25,3 +25,4 @@ storage/
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+/.vscode
