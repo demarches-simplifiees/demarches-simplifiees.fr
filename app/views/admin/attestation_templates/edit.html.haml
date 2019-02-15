@@ -10,7 +10,11 @@
           - else
             %small Désactivée
 
-    %p.notice Les attestations, si elles sont activées, sont délivrées par email aux usagers lorsque leurs dossiers sont acceptés, et sont également disponibles au téléchargement sur leur espace personnel.
+    %p.notice
+      L’attestation, si elle est activée, est émise au moment où un dossier est accepté.
+      %br
+      L’email d’accusé d’acceptation envoyé à l’usager comporte alors un lien vers l’attestation ;
+      celle-ci est également disponible au téléchargement depuis l’espace personnel de l’usager.
 
     .image-upload
       - if @attestation_template.logo.present?
