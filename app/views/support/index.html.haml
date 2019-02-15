@@ -23,7 +23,7 @@
         = select_tag :type, options_for_select(@options, params[:type]),include_blank:"Choisir un problème",onchange:"show()", required: true
 
 
-      #aidesupport
+      #aidesupport.new-h2
 
 
       .contact-champ
@@ -64,17 +64,17 @@
           switch (divid) {
             case 'info_demarche':
               console.log('info_demarche');
-              document.getElementById("aidesupport").innerHTML = "aaaaa";
+              document.getElementById("aidesupport").innerHTML = "👉 Notre réponse : <br>Avez-vous bien vérifié que votre navigateur était à jour et que tous les champs obligatoire (*) étaient remplis ?<br/>Si vous avez des questions sur les informations à saisir, contactez les services en charge de la démarche<br/><br/>";
               break;
 
             case 'usager_perdu':
               console.log('usager_perdu');
-              document.getElementById("aidesupport").innerHTML = "bbbbb";
+              document.getElementById("aidesupport").innerHTML = "👉 Notre réponse : <br>Nous vous invitons à contacter l’administration en charge de votre démarche pour qu’elle vous indique le lien à suivre. Celui-ci devrait ressembler à cela : https://www.demarches-simplifiees.fr/commencer/NOM_DE_LA_DEMARCHE .<br/><br/>Vous pouvez aussi consulter ici la liste de nos démarches les plus frequentes (permis, detr etc) : <a href='https://doc.demarches-simplifiees.fr/listes-des-demarches' >https://doc.demarches-simplifiees.fr/listes-des-demarches</a> <br/><br>";
               break;
 
             case 'info_instruction':
               console.log('info_instruction');
-            document.getElementById("aidesupport").innerHTML = "cccc";
+            document.getElementById("aidesupport").innerHTML = "👉 Notre réponse : <br>Nous n’avons pas réponse à tout ! Nous nous occupons de la partie technique du site demarches-simplifiees.fr . Si vous avez des questions sur l’instruction de votre dossier, nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie<br/><br/>Pour cela, cliquez sur votre dossier dans votre tableau de bord puis sur l'onglet 'Messagerie'. Pour vous connecter <a href='https://www.demarches-simplifiees.fr/users/sign_in'>cliquez-ici </a>";
 
               break;
 
