@@ -1,5 +1,5 @@
 import { getJSON, debounce } from '@utils';
-import { DirectUpload } from 'activestorage';
+import Uploader from '../../shared/activestorage/uploader';
 
 export default {
   props: ['state', 'index', 'item'],
@@ -181,7 +181,12 @@ export default {
         const file = input.files[0];
         if (file) {
           this.isUploading = true;
-          uploadFile(this.state.directUploadUrl, file).then(({ signed_id }) => {
+          const controller = new Uploader(
+            input,
+            file,
+            this.state.directUploadUrl
+          );
+          controller.start().then(signed_id => {
             this.pieceJustificativeTemplate = signed_id;
             this.isUploading = false;
             this.debouncedSave();
@@ -246,18 +251,4 @@ const EXCLUDE_FROM_REPETITION = [
 
 function castBoolean(value) {
   return value && value != 0;
-}
-
-function uploadFile(directUploadUrl, file) {
-  const upload = new DirectUpload(file, directUploadUrl);
-
-  return new Promise((resolve, reject) => {
-    upload.create((error, blob) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(blob);
-      }
-    });
-  });
 }

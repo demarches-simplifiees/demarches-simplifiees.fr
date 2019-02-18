@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
     resources :dossiers, only: [:index, :show] do
       post 'change_state_to_instruction', on: :member
+      post 'hide', on: :member
     end
 
     resources :administrateurs, only: [:index, :show, :new, :create] do
