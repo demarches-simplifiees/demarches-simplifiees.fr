@@ -392,44 +392,24 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#login_token_valid?' do
-    let!(:gestionnaire) { create(:gestionnaire) }
-    let!(:good_token) { gestionnaire.login_token! }
-
-    it { expect(gestionnaire.login_token_valid?(good_token)).to be true }
-    it { expect(gestionnaire.login_token_valid?('bad_token')).to be false }
-
-    context 'when the token as expired' do
-      before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_VALIDITY + 1.minute).ago) }
-
-      it { expect(gestionnaire.login_token_valid?(good_token)).to be false }
-    end
-
-    context 'when the gestionnaire does not have a token' do
-      before { gestionnaire.update(encrypted_login_token: nil) }
-
-      it { expect(gestionnaire.login_token_valid?(nil)).to be false }
-    end
-  end
-
   describe '#young_login_token?' do
     let!(:gestionnaire) { create(:gestionnaire) }
 
     context 'when there is a token' do
-      let!(:good_token) { gestionnaire.login_token! }
+      let!(:good_token) { gestionnaire.create_trusted_device_token }
 
       context 'when the token has just been created' do
         it { expect(gestionnaire.young_login_token?).to be true }
       end
 
       context 'when the token is a bit old' do
-        before { gestionnaire.update(login_token_created_at: (Gestionnaire::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
+        before { gestionnaire.trusted_device_tokens.first.update(created_at: (TrustedDeviceToken::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
         it { expect(gestionnaire.young_login_token?).to be false }
       end
     end
 
     context 'when there are no token' do
-      it { expect(gestionnaire.young_login_token?).to be false }
+      it { expect(gestionnaire.young_login_token?).to be_falsey }
     end
   end
 
