@@ -33,6 +33,8 @@ as well as a link to its edit page.
   </div>
 
   <div>
+    <%= link_to 'aperçu', apercu_procedure_path(procedure), class: 'button' %>
+
     <% if !procedure.whitelisted? %>
       <%= link_to 'whitelister', whitelist_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% end %>
