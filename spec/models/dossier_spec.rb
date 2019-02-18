@@ -892,4 +892,21 @@ describe Dossier do
       end
     end
   end
+
+  describe '#hide!' do
+    let(:dossier) { create(:dossier) }
+    let(:administration) { create(:administration) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
+
+    before do
+      Timecop.freeze
+      dossier.hide!(administration)
+    end
+
+    after { Timecop.return }
+
+    it { expect(dossier.hidden_at).to eq(Time.zone.now) }
+    it { expect(last_operation.operation).to eq('supprimer') }
+    it { expect(last_operation.administration).to eq(administration) }
+  end
 end
