@@ -19,7 +19,7 @@ module TrustedDeviceConcern
 
   def send_login_token_or_bufferize(gestionnaire)
     if !gestionnaire.young_login_token?
-      login_token = gestionnaire.login_token!
+      login_token = gestionnaire.create_trusted_device_token
       GestionnaireMailer.send_login_token(gestionnaire, login_token).deliver_later
     end
   end
