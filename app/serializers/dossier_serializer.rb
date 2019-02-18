@@ -22,6 +22,7 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :champs_private
   has_many :pieces_justificatives
   has_many :types_de_piece_justificative
+  has_one :justificatif_motivation
 
   has_many :champs, serializer: ChampSerializer
 
@@ -50,6 +51,12 @@ class DossierSerializer < ActiveModel::Serializer
   def pieces_justificatives
     ActiveModelSerializers::SerializableResource.new(object.pieces_justificatives).serializable_hash +
       PiecesJustificativesService.serialize_champs_as_pjs(object)
+  end
+
+  def justificatif_motivation
+    if object.justificatif_motivation.attached?
+      Rails.application.routes.url_helpers.url_for(object.justificatif_motivation)
+    end
   end
 
   def types_de_piece_justificative
