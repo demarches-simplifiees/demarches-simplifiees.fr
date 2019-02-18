@@ -15,7 +15,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
             nom: 'super service',
             organisme: 'organisme',
             siret: '01234567891234',
-            type_organisme: 'region',
+            type_organisme: 'association',
             email: 'email@toto.com',
             telephone: '1234',
             horaires: 'horaires',
@@ -30,7 +30,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(Service.last.nom).to eq('super service') }
       it { expect(Service.last.organisme).to eq('organisme') }
       it { expect(Service.last.siret).to eq('01234567891234') }
-      it { expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:region)) }
+      it { expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:association)) }
       it { expect(Service.last.email).to eq('email@toto.com') }
       it { expect(Service.last.telephone).to eq('1234') }
       it { expect(Service.last.horaires).to eq('horaires') }
@@ -49,7 +49,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
 
   describe '#update' do
     let!(:service) { create(:service, administrateur: admin) }
-    let(:service_params) { { nom: 'nom', type_organisme: Service.type_organismes.fetch(:region) } }
+    let(:service_params) { { nom: 'nom', type_organisme: Service.type_organismes.fetch(:association) } }
 
     before do
       sign_in admin
@@ -65,12 +65,12 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(flash.alert).to be_nil }
       it { expect(flash.notice).to eq('nom modifié') }
       it { expect(Service.last.nom).to eq('nom') }
-      it { expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:region)) }
+      it { expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:association)) }
       it { expect(response).to redirect_to(services_path(procedure_id: procedure.id)) }
     end
 
     context 'when updating a service with invalid data' do
-      let(:service_params) { { nom: '', type_organisme: Service.type_organismes.fetch(:region) } }
+      let(:service_params) { { nom: '', type_organisme: Service.type_organismes.fetch(:association) } }
 
       it { expect(flash.alert).not_to be_nil }
       it { expect(response).to render_template(:edit) }
