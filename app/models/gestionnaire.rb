@@ -1,10 +1,6 @@
 class Gestionnaire < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
-  include ActiveRecord::SecureToken
-
-  LOGIN_TOKEN_VALIDITY = 45.minutes
-  LOGIN_TOKEN_YOUTH = 15.minutes
 
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable
@@ -20,6 +16,7 @@ class Gestionnaire < ApplicationRecord
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
+  has_many :trusted_device_tokens
 
   def visible_procedures
     procedures.merge(Procedure.avec_lien.or(Procedure.archivees))
@@ -135,18 +132,9 @@ class Gestionnaire < ApplicationRecord
     Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
   end
 
-  def login_token!
-    login_token = Gestionnaire.generate_unique_secure_token
-    encrypted_login_token = BCrypt::Password.create(login_token)
-    update(encrypted_login_token: encrypted_login_token, login_token_created_at: Time.zone.now)
-    login_token
-  end
-
-  def login_token_valid?(login_token)
-    BCrypt::Password.new(encrypted_login_token) == login_token &&
-      LOGIN_TOKEN_VALIDITY.ago < login_token_created_at
-  rescue BCrypt::Errors::InvalidHash
-    false
+  def create_trusted_device_token
+    trusted_device_token = trusted_device_tokens.create
+    trusted_device_token.token
   end
 
   def dossiers_id_with_notifications(dossiers)
@@ -213,8 +201,8 @@ class Gestionnaire < ApplicationRecord
   end
 
   def young_login_token?
-    login_token_created_at.present? &&
-      LOGIN_TOKEN_YOUTH.ago < login_token_created_at
+    trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
+    trusted_device_token&.token_young?
   end
 
   private
