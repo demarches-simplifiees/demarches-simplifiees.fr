@@ -28,6 +28,10 @@
                 %li= unspecified_annotations_privee.libelle
     - else
       = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: true
+    %span{ id: "justificatif_motivation_suggest_#{popup_class}", onclick: "DS.showImportJustificatif('#{popup_class}');" }
+      .button Ajouter un justificatif (optionnel)
+    .hidden{ id: "justificatif_motivation_import_#{popup_class}" }
+      = file_field :dossier, :justificatif_motivation, direct_upload: true
     .text-right
       - if title == 'Accepter' && dossier.procedure.attestation_template&.activated?
         = link_to "Voir l'attestation", apercu_attestation_gestionnaire_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', class: 'button', title: "Voir l'attestation qui sera envoyée au demandeur"
