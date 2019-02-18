@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_10_163655) do
+ActiveRecord::Schema.define(version: 2019_02_13_144145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,6 +219,8 @@ ActiveRecord::Schema.define(version: 2019_01_10_163655) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "automatic_operation", default: false, null: false
+    t.bigint "administration_id"
+    t.index ["administration_id"], name: "index_dossier_operation_logs_on_administration_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["gestionnaire_id"], name: "index_dossier_operation_logs_on_gestionnaire_id"
   end
@@ -597,6 +599,7 @@ ActiveRecord::Schema.define(version: 2019_01_10_163655) do
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
+  add_foreign_key "dossier_operation_logs", "administrations"
   add_foreign_key "dossier_operation_logs", "dossiers"
   add_foreign_key "dossier_operation_logs", "gestionnaires"
   add_foreign_key "dossiers", "users"
