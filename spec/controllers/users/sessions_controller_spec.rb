@@ -28,31 +28,15 @@ describe Users::SessionsController, type: :controller do
       context 'when the device is not trusted' do
         let(:trusted_device) { false }
 
-        it 'redirects to the confirmation link path' do
+        it 'redirects to the root path' do
           subject
 
-          expect(controller).to redirect_to link_sent_path(email: email)
+          expect(controller).to redirect_to(root_path)
 
-          # do not know why, should be test related
           expect(controller.current_user).to eq(user)
-
-          expect(controller.current_gestionnaire).to be(nil)
-          expect(controller.current_administrateur).to be(nil)
-          expect(user.loged_in_with_france_connect).to be(nil)
-          expect(GestionnaireMailer).to have_received(:send_login_token)
-        end
-
-        context 'and the user try to connect multiple times in a short period' do
-          before do
-            allow_any_instance_of(Gestionnaire).to receive(:young_login_token?).and_return(true)
-            allow(GestionnaireMailer).to receive(:send_login_token)
-          end
-
-          it 'does not renew nor send a new login token' do
-            subject
-
-            expect(GestionnaireMailer).not_to have_received(:send_login_token)
-          end
+          expect(controller.current_gestionnaire).to eq(gestionnaire)
+          expect(controller.current_administrateur).to eq(administrateur)
+          expect(user.loged_in_with_france_connect).to eq(nil)
         end
       end
 
@@ -69,7 +53,6 @@ describe Users::SessionsController, type: :controller do
           expect(controller.current_gestionnaire).to eq(gestionnaire)
           expect(controller.current_administrateur).to eq(administrateur)
           expect(user.loged_in_with_france_connect).to be(nil)
-          expect(GestionnaireMailer).not_to have_received(:send_login_token)
         end
       end
 
@@ -192,50 +175,57 @@ describe Users::SessionsController, type: :controller do
   describe '#sign_in_by_link' do
     context 'when the gestionnaire has non other account' do
       let(:gestionnaire) { create(:gestionnaire) }
-      let!(:good_jeton) { gestionnaire.login_token! }
+      let!(:good_jeton) { gestionnaire.create_trusted_device_token }
+      let(:logged) { false }
 
       before do
+        if logged
+          sign_in gestionnaire
+        end
         allow(controller).to receive(:trust_device)
+        allow(controller).to receive(:send_login_token_or_bufferize)
         post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }
       end
 
-      context 'when the token is valid' do
-        let(:jeton) { good_jeton }
+      context 'when the gestionnaire is not logged in' do
+        context 'when the token is valid' do
+          let(:jeton) { good_jeton }
 
-        # TODO when the gestionnaire has no other account, and the token is valid, and the user signing in was not starting a demarche,
-        # redirect to root_path, then redirect to gestionnaire_procedures_path (see root_controller)
-        it { is_expected.to redirect_to root_path }
-        it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
-        it { expect(controller).to have_received(:trust_device) }
+          it { is_expected.to redirect_to new_user_session_path }
+          it { expect(controller.current_gestionnaire).to be_nil }
+          it { expect(controller).to have_received(:trust_device) }
+        end
+
+        context 'when the token is invalid' do
+          let(:jeton) { 'invalid_token' }
+
+          it { is_expected.to redirect_to link_sent_path(email: gestionnaire.email) }
+          it { expect(controller.current_gestionnaire).to be_nil }
+          it { expect(controller).not_to have_received(:trust_device) }
+          it { expect(controller).to have_received(:send_login_token_or_bufferize) }
+        end
       end
 
-      context 'when the token is invalid' do
-        let(:jeton) { 'invalid_token' }
+      context 'when the gestionnaire is logged in' do
+        let(:logged) { true }
 
-        it { is_expected.to redirect_to new_user_session_path }
-        it { expect(controller.current_gestionnaire).to be_nil }
-        it { expect(controller).not_to have_received(:trust_device) }
-      end
-    end
+        context 'when the token is valid' do
+          let(:jeton) { good_jeton }
 
-    context 'when the gestionnaire has an user and admin account' do
-      let(:email) { 'unique@plop.com' }
-      let(:password) { 'un super mot de passe' }
+          # redirect to root_path, then redirect to gestionnaire_procedures_path (see root_controller)
+          it { is_expected.to redirect_to root_path }
+          it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
+          it { expect(controller).to have_received(:trust_device) }
+        end
 
-      let!(:user) { create(:user, email: email, password: password) }
-      let!(:administrateur) { create(:administrateur, email: email, password: password) }
-      let(:gestionnaire) { administrateur.gestionnaire }
+        context 'when the token is invalid' do
+          let(:jeton) { 'invalid_token' }
 
-      before do
-        post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }
-      end
-
-      context 'when the token is valid' do
-        let(:jeton) { gestionnaire.login_token! }
-
-        it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
-        it { expect(controller.current_administrateur).to eq(administrateur) }
-        it { expect(controller.current_user).to eq(user) }
+          it { is_expected.to redirect_to link_sent_path(email: gestionnaire.email) }
+          it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
+          it { expect(controller).not_to have_received(:trust_device) }
+          it { expect(controller).to have_received(:send_login_token_or_bufferize) }
+        end
       end
     end
   end
@@ -249,16 +239,15 @@ describe Users::SessionsController, type: :controller do
 
     context 'when the cookie is outdated' do
       before do
-        Timecop.freeze(Time.zone.now - TrustedDeviceConcern::TRUSTED_DEVICE_PERIOD - 1.minute)
-        controller.trust_device
-        Timecop.return
+        emission_date = Time.zone.now - TrustedDeviceConcern::TRUSTED_DEVICE_PERIOD - 1.minute
+        controller.trust_device(emission_date)
       end
 
       it { is_expected.to be false }
     end
 
     context 'when the cookie is ok' do
-      before { controller.trust_device }
+      before { controller.trust_device(Time.zone.now) }
 
       it { is_expected.to be true }
     end

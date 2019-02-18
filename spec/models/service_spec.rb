@@ -5,7 +5,7 @@ describe Service, type: :model do
       {
         nom: 'service des jardins',
         organisme: 'mairie des iles',
-        type_organisme: Service.type_organismes.fetch(:commune),
+        type_organisme: Service.type_organismes.fetch(:association),
         email: 'super@email.com',
         telephone: '1212202',
         horaires: 'du lundi au vendredi',

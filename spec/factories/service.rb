@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :service do
     nom { 'service' }
     organisme { 'organisme' }
-    type_organisme { Service.type_organismes.fetch(:commune) }
+    type_organisme { Service.type_organismes.fetch(:association) }
     administrateur { create(:administrateur) }
     email { 'email@toto.com' }
     telephone { '1234' }
