@@ -100,19 +100,15 @@
   input[type=date],
   input[type=number],
   input[type=tel],
-  input[type=file],
   textarea,
-  select {
+  select,
+  .piece-justificative {
     display: block;
     margin-bottom: 2 * $default-padding;
 
     &.small-margin {
       margin-bottom: $default-padding / 2;
     }
-  }
-
-  .direct-upload {
-    margin-bottom: 2 * $default-padding;
   }
 
   .add-row {
