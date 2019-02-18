@@ -1,24 +1,22 @@
 - pj = champ.piece_justificative_file
 
-- if champ.type_de_champ.piece_justificative_template.attached?
-  %p.edit-pj-template.mb-1
-    Veuillez télécharger, remplir et joindre
-    = link_to('le modèle suivant', url_for(champ.type_de_champ.piece_justificative_template), target: '_blank')
+.piece-justificative
+  - if champ.type_de_champ.piece_justificative_template.attached?
+    %p.edit-pj-template.mb-1
+      Veuillez télécharger, remplir et joindre
+      = link_to('le modèle suivant', url_for(champ.type_de_champ.piece_justificative_template), target: '_blank')
 
-- if !pj.attached?
+  - if pj.attached?
+    .piece-justificative-actions{ id: "piece_justificative_#{champ.id}" }
+      .piece-justificative-action
+        = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
+      .piece-justificative-action
+        - if champ.private?
+          = link_to 'Supprimer', gestionnaire_champ_purge_champ_piece_justificative_path(procedure_id: champ.dossier.procedure_id, dossier_id: champ.dossier_id, champ_id: champ.id), remote: true, method: :delete, class: 'button small danger'
+        - else
+          = link_to 'Supprimer', champ_purge_champ_piece_justificative_path(id: champ.dossier_id, champ_id: champ.id), remote: true, method: :delete, class: 'button small danger'
+
   = form.file_field :piece_justificative_file,
     id: "champs_#{champ.id}",
-    direct_upload: true
-- else
-  %div{ id: "piece_justificative_#{champ.id}" }
-    = render partial: "shared/champs/piece_justificative/pj_link", locals: { champ: champ, user_can_upload: true }
-    %br
-    - if champ.private?
-      = link_to 'supprimer', gestionnaire_champ_purge_champ_piece_justificative_path(procedure_id: champ.dossier.procedure_id, dossier_id: champ.dossier_id, champ_id: champ.id), remote: true, method: :delete
-    - else
-      = link_to 'supprimer', champ_purge_champ_piece_justificative_path(id: champ.dossier_id, champ_id: champ.id), remote: true, method: :delete
-    %br
-    Modifier :
-  = form.file_field :piece_justificative_file,
-    id: "champs_#{champ.id}",
+    class: "piece-justificative-input",
     direct_upload: true
