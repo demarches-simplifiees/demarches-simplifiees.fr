@@ -29,6 +29,17 @@ module Manager
       redirect_to manager_dossier_path(dossier)
     end
 
+    def hide
+      dossier = Dossier.find(params[:id])
+      deleted_dossier = dossier.hide!(current_administration)
+
+      DossierMailer.notify_deletion_to_user(deleted_dossier, dossier.user.email).deliver_later
+      logger.info("Le dossier #{dossier.id} est supprimé par #{current_administration.email}")
+      flash[:notice] = "Le dossier #{dossier.id} est supprimé"
+
+      redirect_to manager_dossier_path(dossier)
+    end
+
     private
 
     def unfiltered_list?
