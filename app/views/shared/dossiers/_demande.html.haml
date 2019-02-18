@@ -1,4 +1,8 @@
 .container
+  - if dossier.en_construction_at.present?
+    .card
+      = render partial: "shared/dossiers/horodatage", locals: { dossier: dossier }
+
   .tab-title Identité du demandeur
   .card
     = render partial: "shared/dossiers/user_infos", locals: { user: dossier.user }
