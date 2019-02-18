@@ -175,7 +175,7 @@ describe Users::SessionsController, type: :controller do
   describe '#sign_in_by_link' do
     context 'when the gestionnaire has non other account' do
       let(:gestionnaire) { create(:gestionnaire) }
-      let!(:good_jeton) { gestionnaire.login_token! }
+      let!(:good_jeton) { gestionnaire.create_trusted_device_token }
       let(:logged) { false }
 
       before do

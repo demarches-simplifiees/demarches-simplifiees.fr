@@ -396,7 +396,7 @@ describe Gestionnaire, type: :model do
     let!(:gestionnaire) { create(:gestionnaire) }
 
     context 'when there is a token' do
-      let!(:good_token) { gestionnaire.login_token! }
+      let!(:good_token) { gestionnaire.create_trusted_device_token }
 
       context 'when the token has just been created' do
         it { expect(gestionnaire.young_login_token?).to be true }

@@ -132,7 +132,7 @@ class Gestionnaire < ApplicationRecord
     Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
   end
 
-  def login_token!
+  def create_trusted_device_token
     trusted_device_token = trusted_device_tokens.create
     trusted_device_token.token
   end
