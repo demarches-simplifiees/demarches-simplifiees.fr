@@ -430,6 +430,23 @@ describe ProcedurePresentation do
           it { is_expected.to match([]) }
         end
       end
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' },
+            { 'table' => 'self', 'column' => 'en_construction_at', 'value' => '19/10/2018' }
+          ]
+        end
+
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
+        let!(:other_kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 19)) }
+        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for type_de_champ table' do
@@ -445,6 +462,25 @@ describe ProcedurePresentation do
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' },
+            { 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'and' }
+          ]
+        end
+
+        let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          type_de_champ.champ.create(dossier: other_kept_dossier, value: 'and me too')
+        end
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for type_de_champ_private table' do
@@ -460,6 +496,25 @@ describe ProcedurePresentation do
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' },
+            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'and' }
+          ]
+        end
+
+        let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          type_de_champ_private.champ.create(dossier: other_kept_dossier, value: 'and me too')
+        end
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for etablissement table' do
@@ -470,6 +525,21 @@ describe ProcedurePresentation do
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
+
+        context 'with multiple search values' do
+          let(:filter) do
+            [
+              { 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2016' },
+              { 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }
+            ]
+          end
+
+          let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2016, 6, 21))) }
+
+          it 'returns every dossier that matches any of the search criteria for a given column' do
+            is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+          end
+        end
       end
 
       context 'for code_postal column' do
@@ -481,6 +551,21 @@ describe ProcedurePresentation do
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '25000')) }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
+
+        context 'with multiple search values' do
+          let(:filter) do
+            [
+              { 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' },
+              { 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '88100' }
+            ]
+          end
+
+          let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '88100')) }
+
+          it 'returns every dossier that matches any of the search criteria for a given column' do
+            is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+          end
+        end
       end
     end
 
@@ -491,6 +576,21 @@ describe ProcedurePresentation do
       let!(:discarded_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@discard.com')) }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' },
+            { 'table' => 'user', 'column' => 'email', 'value' => 'beta.gouv.fr' }
+          ]
+        end
+
+        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'bazinga@beta.gouv.fr')) }
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for individual table' do
@@ -514,6 +614,21 @@ describe ProcedurePresentation do
         let(:filter) { [{ 'table' => 'individual', 'column' => 'nom', 'value' => 'Baker' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'individual', 'column' => 'prenom', 'value' => 'Josephine' },
+            { 'table' => 'individual', 'column' => 'prenom', 'value' => 'Romuald' }
+          ]
+        end
+
+        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'M', prenom: 'Romuald', nom: 'Pistis')) }
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
       end
     end
   end
