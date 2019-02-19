@@ -1,0 +1,18 @@
+@import "../constants";
+
+.piece-justificative-actions {
+  display: flex;
+  margin-bottom: $default-spacer;
+}
+
+.piece-justificative-action {
+  margin-right: $default-spacer;
+
+  .button {
+    text-transform: lowercase;
+  }
+}
+
+.piece-justificative-input.hidden {
+  display: none;
+}
