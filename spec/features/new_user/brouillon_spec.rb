@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 feature 'The user' do
   let(:password) { 'secret_password' }
