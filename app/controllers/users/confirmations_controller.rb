@@ -34,7 +34,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     # Avoid keeping auto-sign-in links in users inboxes for too long.
     # 95% of users confirm their account within two hours.
     auto_sign_in_timeout = 2.hours
-    resource.confirmation_sent_at + auto_sign_in_timeout > DateTime.current
+    resource.confirmation_sent_at + auto_sign_in_timeout > Time.zone.now
   end
 
   # The path used after confirmation.
