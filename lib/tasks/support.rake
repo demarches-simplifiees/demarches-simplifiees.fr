@@ -130,4 +130,28 @@ namespace :support do
 
     user.update(email: new_email)
   end
+
+  desc <<~EOD
+    Activate feature publish draft
+  EOD
+  task activate_publish_draft: :environment do
+    start_with = ENV['START_WITH']
+
+    administrateurs = Administrateur.where("email like ?", "#{start_with}%")
+
+    rake_puts("Activating publish draft for #{administrateurs.count} administrateurs...")
+
+    administrateurs.each do |a|
+      rake_puts("Activating publish draft for #{a.email}")
+      a.features["publish_draft"] = true
+      a.save
+
+      a.procedures.brouillon.each do |p|
+        if p.path.nil?
+          p.path = SecureRandom.uuid
+          p.save
+        end
+      end
+    end
+  end
 end
