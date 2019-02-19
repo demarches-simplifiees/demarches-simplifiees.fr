@@ -9,4 +9,12 @@ module ChampHelper
     raw(champ.to_render_data.to_json)
     # rubocop:enable Rails/OutputSafety
   end
+
+  def champ_carte_params(champ)
+    if champ.persisted?
+      { champ_id: champ.id }
+    else
+      { type_de_champ_id: champ.type_de_champ_id }
+    end
+  end
 end

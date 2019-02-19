@@ -16,7 +16,7 @@ class DossierDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     hidden_at: Field::DateTime,
-    types_de_champ: TypesDeChampCollectionField
+    champs: ChampCollectionField
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -38,7 +38,7 @@ class DossierDashboard < Administrate::BaseDashboard
     :state,
     :procedure,
     :user,
-    :types_de_champ,
+    :champs,
     :created_at,
     :updated_at,
     :hidden_at
