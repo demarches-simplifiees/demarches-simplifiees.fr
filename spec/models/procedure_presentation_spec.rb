@@ -377,25 +377,28 @@ describe ProcedurePresentation do
 
     context 'for self table' do
       context 'for created_at column' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
+
         let!(:kept_dossier) { create(:dossier, procedure: procedure, created_at: Time.zone.local(2018, 9, 18, 14, 28)) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, created_at: Time.zone.local(2018, 9, 17, 23, 59)) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
       context 'for en_construction_at column' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' }] }
+
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
       context 'for updated_at column' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '18/9/2018' }] }
+
         let(:kept_dossier) { create(:dossier, procedure: procedure) }
         let(:discarded_dossier) { create(:dossier, procedure: procedure) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '18/9/2018' }] }
 
         before do
           kept_dossier.touch(time: Time.zone.local(2018, 9, 18, 14, 28))
@@ -406,9 +409,10 @@ describe ProcedurePresentation do
       end
 
       context 'ignore time of day' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018 19:30' }] }
+
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17, 15, 56)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 18, 5, 42)) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018 19:30' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
@@ -416,6 +420,7 @@ describe ProcedurePresentation do
       context 'for a malformed date' do
         context 'when its a string' do
           let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => 'malformed date' }] }
+
           it { is_expected.to match([]) }
         end
 
@@ -428,10 +433,11 @@ describe ProcedurePresentation do
     end
 
     context 'for type_de_champ table' do
+      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' }] }
+
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
       let(:type_de_champ) { procedure.types_de_champ.first }
-      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' }] }
 
       before do
         type_de_champ.champ.create(dossier: kept_dossier, value: 'keep me')
@@ -442,10 +448,11 @@ describe ProcedurePresentation do
     end
 
     context 'for type_de_champ_private table' do
+      let(:filter) { [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' }] }
+
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
       let(:type_de_champ_private) { procedure.types_de_champ_private.first }
-      let(:filter) { [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' }] }
 
       before do
         type_de_champ_private.champ.create(dossier: kept_dossier, value: 'keep me')
@@ -457,9 +464,10 @@ describe ProcedurePresentation do
 
     context 'for etablissement table' do
       context 'for entreprise_date_creation column' do
+        let(:filter) { [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }] }
+
         let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2018, 6, 21))) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
-        let(:filter) { [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
@@ -467,18 +475,20 @@ describe ProcedurePresentation do
       context 'for code_postal column' do
         # All columns except entreprise_date_creation work exacly the same, just testing one
 
+        let(:filter) { [{ 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' }] }
+
         let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75017')) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '25000')) }
-        let(:filter) { [{ 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
     end
 
     context 'for user table' do
+      let(:filter) { [{ 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' }] }
+
       let!(:kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@keepmail.com')) }
       let!(:discarded_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@discard.com')) }
-      let(:filter) { [{ 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' }] }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
     end
