@@ -7,9 +7,11 @@ feature "procedure filters" do
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
   let!(:champ) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier.id) }
   let!(:new_unfollow_dossier_2) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+  let!(:champ_2) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier_2.id) }
 
   before do
     champ.update(value: "Mon champ rempli")
+    champ_2.update(value: "Mon autre champ rempli différemment")
     login_as gestionnaire, scope: :gestionnaire
     visit gestionnaire_procedure_path(procedure)
   end
@@ -66,7 +68,7 @@ feature "procedure filters" do
       expect(page).not_to have_link(new_unfollow_dossier_2.user.email)
     end
 
-    remove_filter
+    remove_filter(champ.value)
 
     within ".dossiers-table" do
       expect(page).to have_link(new_unfollow_dossier.id)
@@ -77,8 +79,43 @@ feature "procedure filters" do
     end
   end
 
-  def remove_filter
-    find(:xpath, "//span[contains(@class, 'filter')]/a").click
+  scenario "should be able to add and remove two filters for the same field", js: true do
+    add_filter(type_de_champ.libelle, champ.value)
+    add_filter(type_de_champ.libelle, champ_2.value)
+
+    expect(page).to have_content("#{type_de_champ.libelle} : #{champ.value}")
+
+    within ".dossiers-table" do
+      expect(page).to have_link(new_unfollow_dossier.id, exact: true)
+      expect(page).to have_link(new_unfollow_dossier.user.email)
+
+      expect(page).to have_link(new_unfollow_dossier_2.id, exact: true)
+      expect(page).to have_link(new_unfollow_dossier_2.user.email)
+    end
+
+    remove_filter(champ.value)
+
+    within ".dossiers-table" do
+      expect(page).not_to have_link(new_unfollow_dossier.id)
+      expect(page).not_to have_link(new_unfollow_dossier.user.email)
+
+      expect(page).to have_link(new_unfollow_dossier_2.id)
+      expect(page).to have_link(new_unfollow_dossier_2.user.email)
+    end
+
+    remove_filter(champ_2.value)
+
+    within ".dossiers-table" do
+      expect(page).to have_link(new_unfollow_dossier.id)
+      expect(page).to have_link(new_unfollow_dossier.user.email)
+
+      expect(page).to have_link(new_unfollow_dossier_2.id)
+      expect(page).to have_link(new_unfollow_dossier_2.user.email)
+    end
+  end
+
+  def remove_filter(filter_value)
+    find(:xpath, "(//span[contains(@class, 'filter')]/a[contains(@href, '#{URI.encode(filter_value)}')])[1]").click
   end
 
   def add_filter(column_name, filter_value)
