@@ -1,2 +1,5 @@
 <%= render_flash(timeout: 5000, sticky: true) %>
 <%= remove_element("#piece_justificative_#{@champ.id}") %>
+
+let fileInputSelector = '<%= "#champs_#{@champ.id}" %>';
+document.querySelector(fileInputSelector).classList.remove('hidden');
