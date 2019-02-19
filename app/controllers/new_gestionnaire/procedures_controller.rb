@@ -87,7 +87,7 @@ module NewGestionnaire
 
       @dossiers = @dossiers.where(id: filtered_sorted_paginated_ids)
 
-      eager_load_displayed_fields
+      @dossiers = eager_load_displayed_fields(@dossiers)
 
       @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
 
@@ -241,7 +241,7 @@ module NewGestionnaire
       procedure_presentation.fields_for_select
     end
 
-    def eager_load_displayed_fields
+    def eager_load_displayed_fields(dossiers)
       procedure_presentation.displayed_fields
         .reject { |field| field['table'] == 'self' }
         .group_by do |field|
@@ -250,24 +250,24 @@ module NewGestionnaire
           else
             field['table']
           end
-        end.each do |group_key, fields|
+        end.reduce(dossiers) do |dossiers, (group_key, fields)|
           case group_key
           when 'type_de_champ_group'
             if fields.any? { |field| field['table'] == 'type_de_champ' }
-              @dossiers = @dossiers.includes(:champs).references(:champs)
+              dossiers = dossiers.includes(:champs).references(:champs)
             end
 
             if fields.any? { |field| field['table'] == 'type_de_champ_private' }
-              @dossiers = @dossiers.includes(:champs_private).references(:champs_private)
+              dossiers = dossiers.includes(:champs_private).references(:champs_private)
             end
 
             where_conditions = fields.map do |field|
               "champs.type_de_champ_id = #{field['column']}"
             end.join(" OR ")
 
-            @dossiers = @dossiers.where(where_conditions)
+            dossiers.where(where_conditions)
           else
-            @dossiers = @dossiers.includes(fields.first['table'])
+            dossiers.includes(fields.first['table'])
           end
         end
     end
