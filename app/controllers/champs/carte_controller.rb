@@ -13,19 +13,16 @@ class Champs::CarteController < ApplicationController
       coordinates = params[:dossier][:champs_private_attributes][params[:position]][:value]
     end
 
-    if params[:champ_id].present?
-      @champ = Champ
+    @champ = if params[:champ_id].present?
+      Champ
         .joins(:dossier)
         .where(dossiers: { user_id: logged_user_ids })
         .find(params[:champ_id])
     else
-      @champ = Champs::CarteChamp.new(type_de_champ: TypeDeChamp.new(
-        type_champ: TypeDeChamp.type_champs.fetch(:carte),
-        options: {
-          quartiers_prioritaires: true,
-          cadastres: true
-        }
-      ))
+      TypeDeChamp
+        .joins(:procedure)
+        .where(procedures: { administrateur_id: logged_user_ids })
+        .find(params[:type_de_champ_id]).champ.build
     end
 
     geo_areas = []

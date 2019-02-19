@@ -117,4 +117,19 @@ feature 'As an administrateur I can edit types de champ', js: true do
 
     expect(page).to have_content('Supprimer', count: 3)
   end
+
+  it "Add carte champ" do
+    select('Carte', from: 'procedure_types_de_champ_attributes_0_type_champ')
+    fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ carte'
+    blur
+    check 'Quartiers prioritaires'
+    expect(page).to have_content('Formulaire enregistré')
+
+    preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
+    within_window(preview_window) do
+      expect(page).to have_content('libellé de champ carte')
+      expect(page).to have_content('Quartiers prioritaires')
+      expect(page).not_to have_content('Cadastres')
+    end
+  end
 end
