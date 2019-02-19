@@ -168,11 +168,8 @@ class ProcedurePresentation < ApplicationRecord
             dossiers = dossiers.includes(:champs_private).references(:champs_private)
           end
 
-          where_conditions = fields.map do |field|
-            "champs.type_de_champ_id = #{field['column']}"
-          end.join(" OR ")
-
-          dossiers.where(where_conditions)
+          Filter.new(dossiers)
+            .where_equals('champs.type_de_champ_id', fields.pluck('column'))
         end
       end
   end
