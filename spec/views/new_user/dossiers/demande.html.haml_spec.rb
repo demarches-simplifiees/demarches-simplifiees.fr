@@ -16,6 +16,7 @@ describe 'new_user/dossiers/demande.html.haml', type: :view do
   end
 
   it 'renders the dossier infos' do
+    expect(rendered).to have_text('Déposé le')
     expect(rendered).to have_text('Identité')
     expect(rendered).to have_text('Demande')
     expect(rendered).to have_text('Pièces jointes')
@@ -28,5 +29,11 @@ describe 'new_user/dossiers/demande.html.haml', type: :view do
   context 'when the dossier is read-only' do
     let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure: procedure) }
     it { is_expected.not_to have_link('Modifier le dossier') }
+  end
+
+  context 'when the dossier has no en_construction_at date' do
+    let(:dossier) { create(:dossier, :with_entreprise, procedure: procedure) }
+
+    it { expect(rendered).not_to have_text('Déposé le') }
   end
 end
