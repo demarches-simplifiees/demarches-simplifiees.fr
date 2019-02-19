@@ -42,6 +42,7 @@ feature 'The user' do
     # find('form input[type="file"]').set(Rails.root.join('spec/fixtures/files/white.png'))
 
     click_on 'Enregistrer le brouillon'
+    expect(page).to have_content('Votre brouillon a bien été sauvegardé')
 
     # check data on the dossier
     expect(user_dossier.brouillon?).to be true
