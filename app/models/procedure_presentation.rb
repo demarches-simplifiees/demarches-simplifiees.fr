@@ -146,6 +146,37 @@ class ProcedurePresentation < ApplicationRecord
     end.reduce(:&)
   end
 
+  def eager_load_displayed_fields(dossiers)
+    displayed_fields
+      .reject { |field| field['table'] == 'self' }
+      .group_by do |field|
+        case field['table']
+        when 'type_de_champ', 'type_de_champ_private'
+          'type_de_champ_group'
+        else
+          field['table']
+        end
+      end.reduce(dossiers) do |dossiers, (group_key, fields)|
+        if group_key != 'type_de_champ_group'
+          dossiers.includes(fields.first['table'])
+        else
+          if fields.any? { |field| field['table'] == 'type_de_champ' }
+            dossiers = dossiers.includes(:champs).references(:champs)
+          end
+
+          if fields.any? { |field| field['table'] == 'type_de_champ_private' }
+            dossiers = dossiers.includes(:champs_private).references(:champs_private)
+          end
+
+          where_conditions = fields.map do |field|
+            "champs.type_de_champ_id = #{field['column']}"
+          end.join(" OR ")
+
+          dossiers.where(where_conditions)
+        end
+      end
+  end
+
   private
 
   class Filter
