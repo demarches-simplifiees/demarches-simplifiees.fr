@@ -108,10 +108,10 @@ class ProcedurePresentation < ApplicationRecord
 
   def filtered_ids(dossiers, statut)
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
-    filters[statut].map do |filter|
-      table = filter['table']
-      column = sanitized_column(filter)
-      values = [filter['value']]
+    filters[statut].group_by { |filter| filter.slice('table', 'column') } .map do |field, filters|
+      table = field['table']
+      column = sanitized_column(field)
+      values = filters.map { |filter| filter['value'] }
       case table
       when 'self'
         dates = values.map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
@@ -123,10 +123,10 @@ class ProcedurePresentation < ApplicationRecord
         Filter.new(
           dossiers
             .includes(relation)
-            .where("champs.type_de_champ_id = ?", filter['column'].to_i)
+            .where("champs.type_de_champ_id = ?", field['column'].to_i)
         ).where_ilike('champs.value', values)
       when 'etablissement'
-        if filter['column'] == 'entreprise_date_creation'
+        if field['column'] == 'entreprise_date_creation'
           dates = values.map { |v| v.to_date rescue nil }
           Filter.new(
             dossiers.includes(table)
