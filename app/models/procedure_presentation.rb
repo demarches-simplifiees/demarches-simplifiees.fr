@@ -111,7 +111,7 @@ class ProcedurePresentation < ApplicationRecord
     filters[statut].group_by { |filter| filter.slice('table', 'column') } .map do |field, filters|
       table = field['table']
       column = sanitized_column(field)
-      values = filters.map { |filter| filter['value'] }
+      values = filters.pluck('value')
       case table
       when 'self'
         dates = values.map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
@@ -272,7 +272,7 @@ class ProcedurePresentation < ApplicationRecord
   def valid_columns_for_table(table)
     @column_whitelist ||= fields
       .group_by { |field| field['table'] }
-      .map { |table, fields| [table, Set.new(fields.map { |field| field['column'] })] }
+      .map { |table, fields| [table, Set.new(fields.pluck('column'))] }
       .to_h
 
     @column_whitelist[table] || []
