@@ -15,8 +15,10 @@
           = link_to 'Supprimer', gestionnaire_champ_purge_champ_piece_justificative_path(procedure_id: champ.dossier.procedure_id, dossier_id: champ.dossier_id, champ_id: champ.id), remote: true, method: :delete, class: 'button small danger'
         - else
           = link_to 'Supprimer', champ_purge_champ_piece_justificative_path(id: champ.dossier_id, champ_id: champ.id), remote: true, method: :delete, class: 'button small danger'
+      .piece-justificative-action
+        = button_tag 'Remplacer', type: 'button', class: 'button small', data: { 'toggle-target': "#champs_#{champ.id}" }
 
   = form.file_field :piece_justificative_file,
     id: "champs_#{champ.id}",
-    class: "piece-justificative-input",
+    class: "piece-justificative-input #{'hidden' if pj.attached?}",
     direct_upload: true
