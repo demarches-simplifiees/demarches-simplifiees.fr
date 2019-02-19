@@ -245,14 +245,16 @@ module NewGestionnaire
       procedure_presentation.displayed_fields
         .reject { |field| field['table'] == 'self' }
         .group_by do |field|
-          if ['type_de_champ', 'type_de_champ_private'].include?(field['table'])
+          case field['table']
+          when 'type_de_champ', 'type_de_champ_private'
             'type_de_champ_group'
           else
             field['table']
           end
         end.reduce(dossiers) do |dossiers, (group_key, fields)|
-          case group_key
-          when 'type_de_champ_group'
+          if group_key != 'type_de_champ_group'
+            dossiers.includes(fields.first['table'])
+          else
             if fields.any? { |field| field['table'] == 'type_de_champ' }
               dossiers = dossiers.includes(:champs).references(:champs)
             end
@@ -266,8 +268,6 @@ module NewGestionnaire
             end.join(" OR ")
 
             dossiers.where(where_conditions)
-          else
-            dossiers.includes(fields.first['table'])
           end
         end
     end
