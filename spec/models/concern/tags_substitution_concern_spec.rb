@@ -4,12 +4,15 @@ describe TagsSubstitutionConcern, type: :model do
   let(:for_individual) { false }
   let(:state) { Dossier.states.fetch(:accepte) }
 
+  let(:service) { create(:service, nom: 'Service instructeur') }
+
   let(:procedure) do
     create(:procedure,
       libelle: 'Une magnifique démarche',
       types_de_champ: types_de_champ,
       types_de_champ_private: types_de_champ_private,
-      for_individual: for_individual)
+      for_individual: for_individual,
+      service: service)
   end
 
   let(:template_concern) do
@@ -142,6 +145,12 @@ describe TagsSubstitutionConcern, type: :model do
 
         it { is_expected.to eq('tout : primo / secundo, primaire : primo, secondaire : secundo') }
       end
+    end
+
+    context 'when the dossier has a service' do
+      let(:template) { 'Dossier traité par --nom du service--' }
+
+      it { is_expected.to eq("Dossier traité par #{service.nom}") }
     end
 
     context 'when the dossier has a motivation' do
