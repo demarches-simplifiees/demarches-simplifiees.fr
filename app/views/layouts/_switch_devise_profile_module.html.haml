@@ -1,6 +1,6 @@
 - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
   %ul#switch-menu
-    %li Tester en tant que...
+    %li Changer de rôle...
     - if user_signed_in?
       %li
         = link_to(dossiers_path, id: :menu_item_procedure, title:'Aller dans votre espace usager. Vous pourrez revenir ici ensuite') do
