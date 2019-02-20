@@ -426,6 +426,10 @@ describe Champ do
 
       expect(champ.champs.first.dossier).to eq(dossier)
 
+      # Make champs ordered
+      champ_integer_number.type_de_champ.update(order_place: 0)
+      champ_text.type_de_champ.update(order_place: 1)
+
       champ.champs << champ_integer_number
       row = champ.reload.rows.first
       expect(row.size).to eq(1)
