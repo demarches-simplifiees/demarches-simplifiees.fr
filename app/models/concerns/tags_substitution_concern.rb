@@ -40,6 +40,12 @@ module TagsSubstitutionConcern
       description: '',
       target: :id,
       available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'nom du service',
+      description: 'Le nom du service instructeur qui traite le dossier',
+      lambda: -> (d) { d.procedure.organisation_name || '' },
+      available_for_states: Dossier::SOUMIS
     }
   ]
 
