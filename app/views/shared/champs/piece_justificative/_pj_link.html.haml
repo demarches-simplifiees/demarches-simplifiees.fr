@@ -1,12 +1,12 @@
 - pj = champ.piece_justificative_file
 
 .pj-link
-  - if champ.virus_scan.safe? || champ.virus_scan.blank?
+  - if champ.virus_scan.blank? || champ.virus_scan.safe?
     = link_to url_for(pj), target: '_blank', title: "Télécharger la pièce jointe" do
       %span.icon.attachment
       = pj.filename.to_s
     - if champ.virus_scan.blank?
-      (ce fichier n'a pas été analysé par notre antivirus, téléchargez-le avec précaution)
+      (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
 
   - else
     = pj.filename.to_s
@@ -16,6 +16,6 @@
       )
     - elsif champ.virus_scan.infected?
       - if user_can_upload
-        (virus détecté, merci d'envoyer un autre fichier)
+        (virus détecté, merci d’envoyer un autre fichier)
       - else
         (virus détecté, le téléchargement de ce fichier est bloqué)
