@@ -14,11 +14,12 @@ import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
 
-import '../new_design/spinner';
+import '../new_design/carto';
 import '../new_design/dropdown';
 import '../new_design/form-validation';
-import '../new_design/carto';
 import '../new_design/select2';
+import '../new_design/spinner';
+import '../new_design/support';
 
 import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
