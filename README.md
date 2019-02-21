@@ -80,6 +80,8 @@ Pour mettre à jour votre environnement de développement, installer les nouvell
 
 ### Exécution des tests (RSpec)
 
+Les tests ont besoin de leur propre base de données et certains d'entre eux utilisent Selenium pour s'exécuter dans un navigateur. N'oubliez pas de créer la base de test et d'installer chrome et chromedriver pour exécuter tous les tests.
+
 Pour exécuter les tests de l'application, plusieurs possibilités :
 
 - Lancer tous les tests
