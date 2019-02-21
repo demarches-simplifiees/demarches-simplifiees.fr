@@ -12,7 +12,8 @@ describe TagsSubstitutionConcern, type: :model do
       types_de_champ: types_de_champ,
       types_de_champ_private: types_de_champ_private,
       for_individual: for_individual,
-      service: service)
+      service: service,
+      organisation: nil)
   end
 
   let(:template_concern) do
@@ -147,10 +148,17 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
-    context 'when the dossier has a service' do
+    context 'when the user requests the service' do
       let(:template) { 'Dossier traité par --nom du service--' }
 
-      it { is_expected.to eq("Dossier traité par #{service.nom}") }
+      context 'and there is a service' do
+        it { is_expected.to eq("Dossier traité par #{service.nom}") }
+      end
+
+      context 'and there is no service yet' do
+        let(:service) { nil }
+        it { is_expected.to eq("Dossier traité par ") }
+      end
     end
 
     context 'when the dossier has a motivation' do
