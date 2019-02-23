@@ -1,0 +1,114 @@
+version: '3.3'
+
+#------------------------------------------------------------
+# This docker compose describes the two services running on
+# top of Rails.
+# To work, this configuration requires
+#    - a running Postgress instance
+#    - environment variables defined via .env file
+#
+# IMAGE : name of the docker image to run (sipf/mes-demarches)
+# TAG : Tag of the image to run (eg master or devpf or b38)
+#
+# APP_HOST: host:port pointing to the application to allows creation of absolute links
+#
+# API_ISPF_USER: ISPF API configuration
+# API_ISPF_PASSWORD
+#
+# DB_DATABASE: database configuration
+# DB_HOST
+# DB_USERNAME
+# DB_PASSWORD
+#
+# NETWORK_SLOT: Optional, default to 0, Number between 0 and 255 allowing to run multiple env (dev, staging)
+#
+# MAILJET_API_KEY:
+# MAILJET_SECRET_KEY: MAILJET configuration
+#
+#-------------------------------------------------------------
+services:
+  app:
+    image: ${IMAGE}:${TAG:-latest}
+    container_name: app-${ENV:-dev}
+    ports:
+      - ${PORT}:3000
+    environment:
+      - APP_HOST
+      - DB_DATABASE
+      - DB_HOST
+      - DB_USERNAME
+      - DB_PASSWORD
+      - API_ISPF_USER
+      - API_ISPF_PASSWORD
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
+      - CLAMD_TCP_HOST=clamav
+      - CLAMD_TCP_PORT=3310
+    volumes:
+      - md-data-files:/app/storage
+      - md-temp-files:/app/tmp
+      #----- to set the timezone to the same as the host
+      # - /etc/localtime:/etc/localtime:ro
+    networks:
+      - md-network
+
+  worker:
+    image: ${IMAGE}:${TAG}
+    entrypoint: ["bundle", "exec"]
+    command: rails jobs:work
+    container_name: worker-${ENV:-dev}
+    environment:
+      - APP_HOST
+      - DB_DATABASE
+      - DB_HOST
+      - DB_USERNAME
+      - DB_PASSWORD
+      - MAILJET_API_KEY
+      - MAILJET_SECRET_KEY
+    # volumes:
+      #----- to set the timezone to the same as the host
+      # - /etc/localtime:/etc/localtime:ro
+    networks:
+      - md-network
+
+  clamav:
+    image: tiredofit/clamav
+    ports:
+      - 3310:3310
+    volumes:
+      - clamav-db:/data
+      - clamav-logs:/var/log/clamav
+volumes:
+  md-data-files:
+    driver: local
+    driver_opts:
+      type: none
+      device: $ROOT/data
+      o: bind
+  md-temp-files:
+    driver: local
+    driver_opts:
+      type: none
+      device: $ROOT/tmp
+      o: bind
+  clamav-db:
+    driver: local
+    driver_opts:
+      type: none
+      device: $ROOT/clamav/db
+      o: bind
+  clamav-logs:
+    driver: local
+    driver_opts:
+      type: none
+      device: $ROOT/clamav/logs
+      o: bind
+
+
+networks:
+  md-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.${NETWORK_SLOT:-0}.0/24
+
