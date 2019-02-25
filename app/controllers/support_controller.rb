@@ -53,7 +53,7 @@ class SupportController < ApplicationController
       phone: params[:phone],
       text: params[:text],
       file: params[:file],
-      dossier_id: params[:dossier_id],
+      dossier_id: dossier&.id,
       browser: browser_name,
       tags: tags
     ).send_form
