@@ -7,10 +7,11 @@ class ApiEntrepriseService
       association_params = ApiEntreprise::RNAAdapter.new(siret, procedure_id).to_params
       exercices_params = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id).to_params
 
-      etablissement_params
-        .merge(entreprise_params)
-        .merge(association_params)
-        .merge(exercices_params)
+      etablissement_params.merge(
+        entreprise_params,
+        association_params,
+        exercices_params
+      )
     end
   end
 end
