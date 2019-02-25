@@ -101,9 +101,9 @@ GEM
       axlsx (>= 2.0, < 4)
     bcrypt (3.1.12)
     bindata (2.4.4)
-    bootstrap-sass (3.3.7)
+    bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
-      sass (>= 3.3.4)
+      sassc (>= 2.0.0)
     bootstrap-wysihtml5-rails (0.3.3.8)
       railties (>= 3.0)
     brakeman (4.3.1)
@@ -652,7 +652,7 @@ DEPENDENCIES
   after_party
   axlsx (~> 3.0.0.pre)
   bcrypt
-  bootstrap-sass (~> 3.3.5)
+  bootstrap-sass (>= 3.4.1)
   bootstrap-wysihtml5-rails (~> 0.3.3.8)
   brakeman
   browser
