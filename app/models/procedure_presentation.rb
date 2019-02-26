@@ -88,19 +88,14 @@ class ProcedurePresentation < ApplicationRecord
         return (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
             dossiers_id_with_notification
       end
-    when 'self'
-      return dossiers
-          .order("#{column} #{order}")
-          .pluck(:id)
     when 'type_de_champ', 'type_de_champ_private'
       return dossiers
           .includes(table == 'type_de_champ' ? :champs : :champs_private)
           .where("champs.type_de_champ_id = #{sort['column'].to_i}")
           .order("champs.value #{order}")
           .pluck(:id)
-    when 'user', 'individual', 'etablissement'
-      return dossiers
-          .includes(table)
+    when 'self', 'user', 'individual', 'etablissement'
+      return (table == 'self' ? dossiers : dossiers.includes(table))
           .order("#{column} #{order}")
           .pluck(:id)
     end
