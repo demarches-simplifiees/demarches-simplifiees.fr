@@ -270,10 +270,9 @@ class ProcedurePresentation < ApplicationRecord
 
   def sanitized_column(field)
     table = field['table']
-    table = ActiveRecord::Base.connection.quote_column_name((table == 'self' ? 'dossier' : table).pluralize)
-    column = ActiveRecord::Base.connection.quote_column_name(field['column'])
-
-    table + '.' + column
+    [(table == 'self' ? 'dossier' : table).pluralize, field['column']]
+      .map { |name| ActiveRecord::Base.connection.quote_column_name(name) }
+      .join('.')
   end
 
   def dossier_field_service
