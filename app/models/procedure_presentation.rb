@@ -123,9 +123,9 @@ class ProcedurePresentation < ApplicationRecord
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values.map { |v| v.to_date rescue nil }
-          Filter.new(
-            dossiers.includes(table)
-          ).where_equals(table, column, dates)
+          dossiers
+            .includes(table)
+            .where(table.pluralize => { column => dates })
         else
           Filter.new(
             dossiers
@@ -163,8 +163,7 @@ class ProcedurePresentation < ApplicationRecord
             dossiers = dossiers.includes(:champs_private).references(:champs_private)
           end
 
-          Filter.new(dossiers)
-            .where_equals(:champ, :type_de_champ_id, fields.pluck('column'))
+          dossiers.where(champs: { type_de_champ_id: fields.pluck('column') })
         end
       end
   end
@@ -189,10 +188,6 @@ class ProcedurePresentation < ApplicationRecord
     def where_ilike(table_column, values)
       q = Array.new(values.count, "(#{table_column} ILIKE ?)").join(' OR ')
       @dossiers.where(q, *(values.map { |value| "%#{value}%" }))
-    end
-
-    def where_equals(table, column, values)
-      @dossiers.where(table.to_s.pluralize => { column => values })
     end
   end
 
