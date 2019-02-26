@@ -69,7 +69,7 @@ class Admin::ProceduresController < AdminController
   def create
     @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
     @path = @procedure.path
-    @availability = Procedure.path_availability(current_administrateur, @procedure.path)
+    @availability = Procedure.path_availability([current_administrateur], @procedure.path)
 
     if !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
@@ -195,7 +195,7 @@ class Admin::ProceduresController < AdminController
       .pluck('procedures.id')
 
     @grouped_procedures = Procedure
-      .includes(:administrateur, :service)
+      .includes(:administrateurs, :service)
       .where(id: significant_procedure_ids)
       .group_by(&:organisation_name)
       .sort_by { |_, procedures| procedures.first.created_at }
@@ -217,11 +217,10 @@ class Admin::ProceduresController < AdminController
     json_path_list = Procedure
       .find_with_path(params[:request])
       .order(:id)
-      .pluck(:path, :administrateur_id)
-      .map do |path, administrateur_id|
+      .map do |procedure|
         {
-          label: path,
-          mine: administrateur_id == current_administrateur.id
+          label: procedure.path,
+          mine: current_administrateur.owns?(procedure)
         }
       end.to_json
 
@@ -236,7 +235,7 @@ class Admin::ProceduresController < AdminController
       procedure = current_administrateur.procedures.find(procedure_id)
       @availability = procedure.path_availability(path)
     else
-      @availability = Procedure.path_availability(current_administrateur, path)
+      @availability = Procedure.path_availability([current_administrateur], path)
     end
   end
 
@@ -273,7 +272,7 @@ class Admin::ProceduresController < AdminController
     if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
-      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, :path).merge(administrateur_id: current_administrateur.id)
+      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, :path)
     end
   end
 end
