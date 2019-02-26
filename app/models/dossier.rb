@@ -264,7 +264,7 @@ class Dossier < ApplicationRecord
     update(hidden_at: deleted_dossier.deleted_at)
 
     if en_construction?
-      administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : [procedure.administrateur.email]
+      administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : procedure.administrateurs.pluck(:email)
       administration_emails.each do |email|
         DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
       end

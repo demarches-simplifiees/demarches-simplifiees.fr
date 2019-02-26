@@ -7,9 +7,8 @@ class Administrateur < ApplicationRecord
     :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :gestionnaires
-  has_many :procedures
   has_many :administrateurs_procedures
-  has_many :admin_procedures, through: :administrateurs_procedures, source: :procedure
+  has_many :procedures, through: :administrateurs_procedures
   has_many :services
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
@@ -117,7 +116,7 @@ class Administrateur < ApplicationRecord
   end
 
   def owns?(procedure)
-    id == procedure.administrateur_id
+    procedure.administrateurs.include?(self)
   end
 
   def gestionnaire

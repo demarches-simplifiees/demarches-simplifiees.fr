@@ -3,8 +3,10 @@ class APIController < ApplicationController
 
   protected
 
-  def valid_token_for_administrateur?(administrateur)
-    administrateur.valid_api_token?(token)
+  def valid_token_for_administrateur?(administrateurs)
+    administrateurs.any? do |administrateur|
+      administrateur.valid_api_token?(token)
+    end
   end
 
   private

@@ -235,7 +235,7 @@ class StatsController < ApplicationController
   end
 
   def procedures_count_per_administrateur(procedures)
-    count_per_administrateur = procedures.group(:administrateur_id).count.values
+    count_per_administrateur = procedures.joins(:administrateurs).group('administrateurs.id').count.values
     {
       'Une démarche' => count_per_administrateur.select { |count| count == 1 }.count,
       'Entre deux et cinq démarches' => count_per_administrateur.select { |count| count.in?(2..5) }.count,

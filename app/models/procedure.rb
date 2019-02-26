@@ -1,6 +1,8 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
+  self.ignored_columns = [:administrateur_id]
+
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
@@ -12,7 +14,6 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
 
-  belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
   belongs_to :service
 
@@ -48,7 +49,7 @@ class Procedure < ApplicationRecord
 
   scope :for_api, -> {
     includes(
-      :administrateur,
+      :administrateurs,
       :types_de_champ_private,
       :types_de_champ,
       :types_de_piece_justificative,
@@ -220,7 +221,6 @@ class Procedure < ApplicationRecord
       procedure.administrateurs = administrateurs
     end
 
-    procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
     procedure.received_mail = received_mail&.dup
     procedure.closed_mail = closed_mail&.dup
@@ -341,10 +341,10 @@ class Procedure < ApplicationRecord
   PATH_CAN_PUBLISH = [PATH_AVAILABLE, PATH_AVAILABLE_PUBLIEE]
 
   def path_availability(path)
-    Procedure.path_availability(administrateur, path, id)
+    Procedure.path_availability(administrateurs, path, id)
   end
 
-  def self.path_availability(administrateur, path, exclude_id = nil)
+  def self.path_availability(administrateurs, path, exclude_id = nil)
     if exclude_id.present?
       procedure = where.not(id: exclude_id).find_by(path: path)
     else
@@ -353,7 +353,7 @@ class Procedure < ApplicationRecord
 
     if procedure.blank?
       PATH_AVAILABLE
-    elsif administrateur.owns?(procedure)
+    elsif administrateurs.any? { |administrateur| administrateur.owns?(procedure) }
       if procedure.brouillon?
         PATH_NOT_AVAILABLE_BROUILLON
       else
@@ -391,7 +391,9 @@ class Procedure < ApplicationRecord
   private
 
   def claim_path_ownership!(path)
-    procedure = Procedure.where(administrateur: administrateur).find_by(path: path)
+    procedure = Procedure.joins(:administrateurs)
+      .where(administrateurs: { id: administrateur_ids })
+      .find_by(path: path)
 
     if procedure&.publiee? && procedure != self
       procedure.archive!
