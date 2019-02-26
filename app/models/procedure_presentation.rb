@@ -74,8 +74,7 @@ class ProcedurePresentation < ApplicationRecord
 
   def sorted_ids(dossiers, gestionnaire)
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
-    table = sort['table']
-    order = sort['order']
+    table, column, order = sort.values_at('table', 'column', 'order')
 
     case table
     when 'notifications'
@@ -90,7 +89,7 @@ class ProcedurePresentation < ApplicationRecord
     when 'type_de_champ', 'type_de_champ_private'
       return dossiers
           .includes(table == 'type_de_champ' ? :champs : :champs_private)
-          .where("champs.type_de_champ_id = #{sort['column'].to_i}")
+          .where("champs.type_de_champ_id = #{column.to_i}")
           .order("champs.value #{order}")
           .pluck(:id)
     when 'self', 'user', 'individual', 'etablissement'
