@@ -40,7 +40,8 @@ describe Admin::ProceduresController, type: :controller do
 
   describe 'GET #index with sorting and pagination' do
     before do
-      admin.procedures << create(:procedure, administrateur: admin)
+      create(:procedure, administrateur: admin)
+      admin.reload
     end
 
     subject {
@@ -196,7 +197,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.description).to eq(description) }
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.direction).to eq(direction) }
-          it { expect(subject.administrateur_id).to eq(admin.id) }
           it { expect(subject.administrateurs).to eq([admin]) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
           it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
@@ -636,7 +636,7 @@ describe Admin::ProceduresController, type: :controller do
           subject
         end
 
-        it { expect(Procedure.last.administrateur).to eq new_admin }
+        it { expect(Procedure.last.administrateurs).to eq [new_admin] }
       end
     end
   end

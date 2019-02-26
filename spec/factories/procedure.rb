@@ -7,13 +7,20 @@ FactoryBot.define do
     direction { "direction DINSIC" }
     cadre_juridique { "un cadre juridique important" }
     published_at { nil }
-    administrateur { create(:administrateur) }
     duree_conservation_dossiers_dans_ds { 3 }
     duree_conservation_dossiers_hors_ds { 6 }
     ask_birthday { false }
 
-    after(:build) do |procedure|
-      procedure.administrateurs = [procedure.administrateur]
+    transient do
+      administrateur {}
+    end
+
+    after(:build) do |procedure, evaluator|
+      if evaluator.administrateur
+        procedure.administrateurs = [evaluator.administrateur]
+      elsif procedure.administrateurs.empty?
+        procedure.administrateurs = [create(:administrateur)]
+      end
     end
 
     factory :procedure_with_dossiers do
