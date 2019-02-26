@@ -75,7 +75,6 @@ class ProcedurePresentation < ApplicationRecord
   def sorted_ids(dossiers, gestionnaire)
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
     table = sort['table']
-    column = sanitized_column(sort)
     order = sort['order']
 
     case table
@@ -96,7 +95,7 @@ class ProcedurePresentation < ApplicationRecord
           .pluck(:id)
     when 'self', 'user', 'individual', 'etablissement'
       return (table == 'self' ? dossiers : dossiers.includes(table))
-          .order("#{column} #{order}")
+          .order("#{sanitized_column(sort)} #{order}")
           .pluck(:id)
     end
   end
