@@ -125,7 +125,7 @@ class ProcedurePresentation < ApplicationRecord
           dates = values.map { |v| v.to_date rescue nil }
           Filter.new(
             dossiers.includes(table)
-          ).where_equals(table_column, dates)
+          ).where_equals(table, column, dates)
         else
           Filter.new(
             dossiers
@@ -164,7 +164,7 @@ class ProcedurePresentation < ApplicationRecord
           end
 
           Filter.new(dossiers)
-            .where_equals('champs.type_de_champ_id', fields.pluck('column'))
+            .where_equals(:champ, :type_de_champ_id, fields.pluck('column'))
         end
       end
   end
@@ -191,8 +191,8 @@ class ProcedurePresentation < ApplicationRecord
       @dossiers.where(q, *(values.map { |value| "%#{value}%" }))
     end
 
-    def where_equals(table_column, values)
-      @dossiers.where("#{table_column} IN (?)", values)
+    def where_equals(table, column, values)
+      @dossiers.where(table.to_s.pluralize => { column => values })
     end
   end
 
