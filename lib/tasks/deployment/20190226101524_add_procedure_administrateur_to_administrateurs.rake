@@ -13,6 +13,6 @@ namespace :after_party do
     end
 
     progress.finish
-    AfterParty::TaskRecord.create version: '20190214101524'
+    AfterParty::TaskRecord.create version: '20190226101524'
   end
 end
