@@ -269,7 +269,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def self.sanitized_column(table, column)
-    [(table == 'self' ? 'dossier' : table).pluralize, column]
+    [(table == 'self' ? 'dossier' : table.to_s).pluralize, column]
       .map { |name| ActiveRecord::Base.connection.quote_column_name(name) }
       .join('.')
   end
