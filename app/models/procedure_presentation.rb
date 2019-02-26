@@ -107,7 +107,9 @@ class ProcedurePresentation < ApplicationRecord
       values = filters.pluck('value')
       case table
       when 'self'
-        dates = values.map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+        dates = values
+          .map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+          .compact
         Filter.new(
           dossiers
         ).where_datetime_matches(table_column, dates)
@@ -175,7 +177,7 @@ class ProcedurePresentation < ApplicationRecord
     end
 
     def where_datetime_matches(table_column, dates)
-      dates = dates.compact.flat_map { |d| [d, d + 1.day] }
+      dates = dates.flat_map { |d| [d, d + 1.day] }
       if dates.present?
         q = Array.new(dates.count / 2, "(#{table_column} BETWEEN ? AND ?)").join(' OR ')
         @dossiers.where(q, *dates)
