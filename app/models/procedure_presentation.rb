@@ -103,7 +103,6 @@ class ProcedurePresentation < ApplicationRecord
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
     filters[statut].group_by { |filter| filter.slice('table', 'column') } .map do |field, filters|
       table, column = field.values_at('table', 'column')
-      table_column = self.class.sanitized_column(table, column)
       values = filters.pluck('value')
       case table
       when 'self'
@@ -119,7 +118,7 @@ class ProcedurePresentation < ApplicationRecord
           dossiers
             .includes(relation)
             .where("champs.type_de_champ_id = ?", column.to_i)
-        ).where_ilike('champs.value', values)
+        ).where_ilike(:champ, :value, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values.map { |v| v.to_date rescue nil }
@@ -130,13 +129,13 @@ class ProcedurePresentation < ApplicationRecord
           Filter.new(
             dossiers
               .includes(table)
-          ).where_ilike(table_column, values)
+          ).where_ilike(table, column, values)
         end
       when 'user', 'individual'
         Filter.new(
           dossiers
             .includes(table)
-        ).where_ilike(table_column, values)
+        ).where_ilike(table, column, values)
       end.pluck(:id)
     end.reduce(:&)
   end
@@ -185,7 +184,8 @@ class ProcedurePresentation < ApplicationRecord
       end
     end
 
-    def where_ilike(table_column, values)
+    def where_ilike(table, column, values)
+      table_column = ProcedurePresentation.sanitized_column(table, column)
       q = Array.new(values.count, "(#{table_column} ILIKE ?)").join(' OR ')
       @dossiers.where(q, *(values.map { |value| "%#{value}%" }))
     end
