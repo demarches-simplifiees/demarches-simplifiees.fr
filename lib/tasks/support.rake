@@ -25,10 +25,8 @@ namespace :support do
     procedure_id = ENV['PROCEDURE_ID']
     procedure = Procedure.find(procedure_id)
 
-    rake_puts("Changing owner of procedure ##{procedure_id} from ##{procedure.administrateur_id} to ##{new_owner.id}")
-    procedure.administrateurs.delete(procedure.administrateur)
+    rake_puts("Changing owner of procedure ##{procedure_id} from ##{procedure.administrateurs.first.id} to ##{new_owner.id}")
     procedure.administrateurs << new_owner
-    procedure.update(administrateur: new_owner)
   end
 
   desc <<~EOD
@@ -71,10 +69,9 @@ namespace :support do
     end
 
     procedures.each do |procedure|
-      procedure.administrateurs.delete(procedure.administrateur)
+      procedure.administrateurs.delete(old_owner)
       procedure.administrateurs << new_owner
     end
-    procedures.update_all(administrateur_id: new_owner.id)
   end
 
   desc <<~EOD
