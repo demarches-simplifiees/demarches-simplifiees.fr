@@ -260,8 +260,8 @@ module Tasks
     end
 
     def check_same_administrateur
-      if @source_procedure.administrateur != @destination_procedure.administrateur
-        raise "Mismatching administrateurs #{@source_procedure.administrateur&.email} → #{@destination_procedure.administrateur&.email}"
+      if @source_procedure.administrateur_ids.sort != @destination_procedure.administrateur_ids.sort
+        raise "Mismatching administrateurs #{@source_procedure.administrateurs.pluck(:email)} → #{@destination_procedure.administrateurs.pluck(:email)}"
       end
     end
 
