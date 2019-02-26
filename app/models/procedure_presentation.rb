@@ -112,7 +112,7 @@ class ProcedurePresentation < ApplicationRecord
           .compact
         Filter.new(
           dossiers
-        ).where_datetime_matches(table_column, dates)
+        ).where_datetime_matches(column, dates)
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
         Filter.new(
@@ -176,11 +176,11 @@ class ProcedurePresentation < ApplicationRecord
       @dossiers = dossiers
     end
 
-    def where_datetime_matches(table_column, dates)
-      dates = dates.flat_map { |d| [d, d + 1.day] }
+    def where_datetime_matches(column, dates)
       if dates.present?
-        q = Array.new(dates.count / 2, "(#{table_column} BETWEEN ? AND ?)").join(' OR ')
-        @dossiers.where(q, *dates)
+        dates
+          .map { |date| @dossiers.where(column => date..(date + 1.day)) }
+          .reduce(:or)
       else
         []
       end
