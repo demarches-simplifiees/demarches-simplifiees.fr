@@ -197,6 +197,7 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.organisation).to eq(organisation) }
           it { expect(subject.direction).to eq(direction) }
           it { expect(subject.administrateur_id).to eq(admin.id) }
+          it { expect(subject.administrateurs).to eq([admin]) }
           it { expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds) }
           it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
         end
