@@ -94,7 +94,7 @@ class ProcedurePresentation < ApplicationRecord
           .pluck(:id)
     when 'self', 'user', 'individual', 'etablissement'
       return (table == 'self' ? dossiers : dossiers.includes(table))
-          .order("#{sanitized_column(sort)} #{order}")
+          .order("#{sanitized_column(table, column)} #{order}")
           .pluck(:id)
     end
   end
@@ -103,7 +103,7 @@ class ProcedurePresentation < ApplicationRecord
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
     filters[statut].group_by { |filter| filter.slice('table', 'column') } .map do |field, filters|
       table, column = field.values_at('table', 'column')
-      table_column = sanitized_column(field)
+      table_column = sanitized_column(table, column)
       values = filters.pluck('value')
       case table
       when 'self'
@@ -268,9 +268,8 @@ class ProcedurePresentation < ApplicationRecord
     @column_whitelist[table] || []
   end
 
-  def sanitized_column(field)
-    table = field['table']
-    [(table == 'self' ? 'dossier' : table).pluralize, field['column']]
+  def sanitized_column(table, column)
+    [(table == 'self' ? 'dossier' : table).pluralize, column]
       .map { |name| ActiveRecord::Base.connection.quote_column_name(name) }
       .join('.')
   end
