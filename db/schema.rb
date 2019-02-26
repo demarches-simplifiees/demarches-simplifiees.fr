@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_13_144145) do
+ActiveRecord::Schema.define(version: 2019_02_26_105641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -545,6 +545,7 @@ ActiveRecord::Schema.define(version: 2019_02_13_144145) do
     t.bigint "parent_id"
     t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
+    t.index ["procedure_id"], name: "index_types_de_champ_on_procedure_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
