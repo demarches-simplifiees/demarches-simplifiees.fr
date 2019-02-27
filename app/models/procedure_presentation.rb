@@ -160,20 +160,12 @@ class ProcedurePresentation < ApplicationRecord
 
   def check_allowed_displayed_fields
     displayed_fields.each do |field|
-      table = field['table']
-      column = field['column']
-      if !valid_column?(table, column)
-        errors.add(:displayed_fields, "#{table}.#{column} n’est pas une colonne permise")
-      end
+      check_allowed_field(:displayed_fields, field)
     end
   end
 
   def check_allowed_sort_column
-    table = sort['table']
-    column = sort['column']
-    if !valid_column?(table, column, EXTRA_SORT_COLUMNS)
-      errors.add(:sort, "#{table}.#{column} n’est pas une colonne permise")
-    end
+    check_allowed_field(:sort, sort, EXTRA_SORT_COLUMNS)
   end
 
   def check_allowed_sort_order
@@ -186,12 +178,16 @@ class ProcedurePresentation < ApplicationRecord
   def check_allowed_filter_columns
     filters.each do |_, columns|
       columns.each do |column|
-        table = column['table']
-        column = column['column']
-        if !valid_column?(table, column)
-          errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
-        end
+        check_allowed_field(:filters, column)
       end
+    end
+  end
+
+  def check_allowed_field(kind, field, extra_columns = {})
+    table = field['table']
+    column = field['column']
+    if !valid_column?(table, column, extra_columns)
+      errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
     end
   end
 
