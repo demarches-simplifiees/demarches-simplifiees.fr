@@ -112,11 +112,10 @@ class ProcedurePresentation < ApplicationRecord
         dossiers.filter_by_datetimes(column, dates)
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
-        Filter.new(
-          dossiers
-            .includes(relation)
-            .where("champs.type_de_champ_id = ?", column.to_i)
-        ).where_ilike(:champ, :value, values)
+        dossiers
+          .includes(relation)
+          .where("champs.type_de_champ_id = ?", column.to_i)
+          .filter_ilike(:champ, :value, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values.map { |v| v.to_date rescue nil }
@@ -124,16 +123,14 @@ class ProcedurePresentation < ApplicationRecord
             .includes(table)
             .where(table.pluralize => { column => dates })
         else
-          Filter.new(
-            dossiers
-              .includes(table)
-          ).where_ilike(table, column, values)
-        end
-      when 'user', 'individual'
-        Filter.new(
           dossiers
             .includes(table)
-        ).where_ilike(table, column, values)
+            .filter_ilike(table, column, values)
+        end
+      when 'user', 'individual'
+        dossiers
+          .includes(table)
+          .filter_ilike(table, column, values)
       end.pluck(:id)
     end.reduce(:&)
   end
@@ -166,18 +163,6 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   private
-
-  class Filter
-    def initialize(dossiers)
-      @dossiers = dossiers
-    end
-
-    def where_ilike(table, column, values)
-      table_column = ProcedurePresentation.sanitized_column(table, column)
-      q = Array.new(values.count, "(#{table_column} ILIKE ?)").join(' OR ')
-      @dossiers.where(q, *(values.map { |value| "%#{value}%" }))
-    end
-  end
 
   def check_allowed_displayed_fields
     displayed_fields.each do |field|
