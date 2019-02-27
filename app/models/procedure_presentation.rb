@@ -184,8 +184,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def check_allowed_field(kind, field, extra_columns = {})
-    table = field['table']
-    column = field['column']
+    table, column = field.values_at('table', 'column')
     if !valid_column?(table, column, extra_columns)
       errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
     end
