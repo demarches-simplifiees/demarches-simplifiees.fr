@@ -180,7 +180,7 @@ class ProcedurePresentation < ApplicationRecord
           .map { |date| @dossiers.where(column => date..(date + 1.day)) }
           .reduce(:or)
       else
-        []
+        @dossiers.none
       end
     end
 
