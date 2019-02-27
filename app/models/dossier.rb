@@ -1,4 +1,6 @@
 class Dossier < ApplicationRecord
+  include DossierFilteringConcern
+
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',

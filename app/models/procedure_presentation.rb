@@ -109,9 +109,7 @@ class ProcedurePresentation < ApplicationRecord
         dates = values
           .map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
           .compact
-        Filter.new(
-          dossiers
-        ).where_datetime_matches(column, dates)
+        dossiers.filter_by_datetimes(column, dates)
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
         Filter.new(
@@ -172,16 +170,6 @@ class ProcedurePresentation < ApplicationRecord
   class Filter
     def initialize(dossiers)
       @dossiers = dossiers
-    end
-
-    def where_datetime_matches(column, dates)
-      if dates.present?
-        dates
-          .map { |date| @dossiers.where(column => date..(date + 1.day)) }
-          .reduce(:or)
-      else
-        @dossiers.none
-      end
     end
 
     def where_ilike(table, column, values)
