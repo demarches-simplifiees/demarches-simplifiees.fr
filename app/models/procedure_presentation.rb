@@ -139,8 +139,8 @@ class ProcedurePresentation < ApplicationRecord
 
   def eager_load_displayed_fields(dossiers)
     relations_to_include = displayed_fields
-      .reject { |field| field['table'] == 'self' }
       .pluck('table')
+      .reject { |table| table == 'self' }
       .map do |table|
         case table
         when 'type_de_champ'
