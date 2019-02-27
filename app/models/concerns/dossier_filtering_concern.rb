@@ -11,5 +11,11 @@ module DossierFilteringConcern
         none
       end
     }
+
+    scope :filter_ilike, lambda { |table, column, values|
+      table_column = ProcedurePresentation.sanitized_column(table, column)
+      q = Array.new(values.count, "(#{table_column} ILIKE ?)").join(' OR ')
+      where(q, *(values.map { |value| "%#{value}%" }))
+    }
   end
 end
