@@ -138,30 +138,33 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def eager_load_displayed_fields(dossiers)
-    displayed_fields
-      .reject { |field| field['table'] == 'self' }
-      .group_by do |field|
-        case field['table']
-        when 'type_de_champ', 'type_de_champ_private'
-          'type_de_champ_group'
-        else
-          field['table']
-        end
-      end.reduce(dossiers) do |dossiers, (group_key, fields)|
-        if group_key != 'type_de_champ_group'
-          dossiers.includes(fields.first['table'])
-        else
-          if fields.any? { |field| field['table'] == 'type_de_champ' }
-            dossiers = dossiers.includes(:champs).references(:champs)
-          end
+    fields_to_eager_load = displayed_fields.reject { |field| field['table'] == 'self' }
 
-          if fields.any? { |field| field['table'] == 'type_de_champ_private' }
-            dossiers = dossiers.includes(:champs_private).references(:champs_private)
-          end
-
-          dossiers.where(champs: { type_de_champ_id: fields.pluck('column') })
+    relations_to_include = fields_to_eager_load
+      .pluck('table')
+      .map do |table|
+        case table
+        when 'type_de_champ'
+          :champs
+        when 'type_de_champ_private'
+          :champs_private
+        else
+          table
         end
       end
+      .uniq
+
+    champ_fields = fields_to_eager_load.select do |field|
+      ['type_de_champ', 'type_de_champ_private'].include?(field['table'])
+    end
+
+    if champ_fields.present?
+      dossiers
+        .includes(relations_to_include)
+        .where(champs: { type_de_champ_id: champ_fields.pluck('column') })
+    else
+      dossiers.includes(relations_to_include)
+    end
   end
 
   private
