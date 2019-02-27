@@ -163,7 +163,7 @@ class ProcedurePresentation < ApplicationRecord
       table = field['table']
       column = field['column']
       if !valid_column?(table, column)
-        errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
+        errors.add(:displayed_fields, "#{table}.#{column} n’est pas une colonne permise")
       end
     end
   end
