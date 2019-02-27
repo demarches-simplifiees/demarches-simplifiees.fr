@@ -118,7 +118,9 @@ class ProcedurePresentation < ApplicationRecord
           .filter_ilike(:champ, :value, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
-          dates = values.map { |v| v.to_date rescue nil }
+          dates = values
+            .map { |v| v.to_date rescue nil }
+            .compact
           dossiers
             .includes(table)
             .where(table.pluralize => { column => dates })
