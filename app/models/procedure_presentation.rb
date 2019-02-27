@@ -154,17 +154,7 @@ class ProcedurePresentation < ApplicationRecord
       end
       .uniq
 
-    champ_fields = fields_to_eager_load.select do |field|
-      ['type_de_champ', 'type_de_champ_private'].include?(field['table'])
-    end
-
-    if champ_fields.present?
-      dossiers
-        .includes(relations_to_include)
-        .where(champs: { type_de_champ_id: champ_fields.pluck('column') })
-    else
-      dossiers.includes(relations_to_include)
-    end
+    dossiers.includes(relations_to_include)
   end
 
   private
