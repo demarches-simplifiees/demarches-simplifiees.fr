@@ -53,14 +53,30 @@ describe Gestionnaires::AvisController, type: :controller do
     end
 
     describe '#update' do
-      before do
-        patch :update, params: { id: avis_without_answer.id, avis: { answer: 'answer' } }
-        avis_without_answer.reload
-      end
+      describe 'without attachment' do
+        before do
+          patch :update, params: { id: avis_without_answer.id, avis: { answer: 'answer' } }
+          avis_without_answer.reload
+        end
 
-      it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer)) }
-      it { expect(avis_without_answer.answer).to eq('answer') }
-      it { expect(flash.notice).to eq('Votre réponse est enregistrée.') }
+        it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer)) }
+        it { expect(avis_without_answer.answer).to eq('answer') }
+        it { expect(avis_without_answer.piece_justificative_file).to_not be_attached }
+        it { expect(flash.notice).to eq('Votre réponse est enregistrée.') }
+      end
+      describe 'with attachment' do
+        let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+
+        before do
+          post :update, params: { id: avis_without_answer.id, avis: { answer: 'answer', piece_justificative_file: file } }
+          avis_without_answer.reload
+        end
+
+        it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer)) }
+        it { expect(avis_without_answer.answer).to eq('answer') }
+        it { expect(avis_without_answer.piece_justificative_file).to be_attached }
+        it { expect(flash.notice).to eq('Votre réponse est enregistrée.') }
+      end
     end
 
     describe '#create_commentaire' do
