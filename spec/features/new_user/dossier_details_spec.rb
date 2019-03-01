@@ -30,9 +30,13 @@ describe 'Dossier details:' do
       let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: procedure) }
 
       before do
-        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_instruction_at: 2.months.ago, processed_at: Time.zone.now)
+        Timecop.freeze(Time.zone.local(2012, 12, 20))
+
+        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_instruction_at: 60.days.ago, processed_at: Time.zone.now)
         visit dossier_path(dossier)
       end
+
+      after { Timecop.return }
 
       it { expect(page).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 2 mois.") }
     end
