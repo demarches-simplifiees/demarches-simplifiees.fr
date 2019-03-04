@@ -101,8 +101,7 @@ class ProcedurePresentation < ApplicationRecord
 
   def filtered_ids(dossiers, statut)
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
-    filters[statut].group_by { |filter| filter.slice('table', 'column') } .map do |field, filters|
-      table, column = field.values_at('table', 'column')
+    filters[statut].group_by { |filter| filter.values_at('table', 'column') } .map do |(table, column), filters|
       values = filters.pluck('value')
       case table
       when 'self'
