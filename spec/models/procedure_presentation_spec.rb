@@ -632,4 +632,92 @@ describe ProcedurePresentation do
       end
     end
   end
+
+  describe '#eager_load_displayed_fields' do
+    let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:displayed_dossier) { procedure_presentation.eager_load_displayed_fields(procedure.dossiers).first }
+
+    context 'for type de champ' do
+      let(:table) { 'type_de_champ' }
+      let(:column) { procedure.types_de_champ.first.id }
+
+      it 'preloads the champs relation' do
+        # Ideally, we would only preload the champs for the matching column
+
+        expect(displayed_dossier.association(:champs)).to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+
+    context 'for type de champ private' do
+      let(:table) { 'type_de_champ_private' }
+      let(:column) { procedure.types_de_champ_private.first.id }
+
+      it 'preloads the champs relation' do
+        # Ideally, we would only preload the champs for the matching column
+
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+
+    context 'for user' do
+      let(:table) { 'user' }
+      let(:column) { 'email' }
+
+      it 'preloads the user relation' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+
+    context 'for individual' do
+      let(:table) { 'individual' }
+      let(:column) { 'nom' }
+
+      it 'preloads the individual relation' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+
+    context 'for etablissement' do
+      let(:table) { 'etablissement' }
+      let(:column) { 'siret' }
+
+      it 'preloads the etablissement relation' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).to be_loaded
+      end
+    end
+
+    context 'for self' do
+      let(:table) { 'self' }
+      let(:column) { 'created_at' }
+
+      it 'does not preload anything' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+  end
 end
