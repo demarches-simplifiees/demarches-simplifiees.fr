@@ -171,7 +171,7 @@ class ProcedurePresentation < ApplicationRecord
   def check_allowed_sort_column
     table = sort['table']
     column = sort['column']
-    if !valid_sort_column?(table, column)
+    if !valid_column?(table, column, EXTRA_SORT_COLUMNS)
       errors.add(:sort, "#{table}.#{column} n’est pas une colonne permise")
     end
   end
@@ -222,8 +222,9 @@ class ProcedurePresentation < ApplicationRecord
     }
   end
 
-  def valid_column?(table, column)
-    valid_columns_for_table(table).include?(column)
+  def valid_column?(table, column, extra_columns = {})
+    valid_columns_for_table(table).include?(column) ||
+      extra_columns[table]&.include?(column)
   end
 
   def valid_columns_for_table(table)
@@ -243,9 +244,5 @@ class ProcedurePresentation < ApplicationRecord
 
   def dossier_field_service
     @dossier_field_service ||= DossierFieldService.new
-  end
-
-  def valid_sort_column?(table, column)
-    valid_column?(table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
   end
 end
