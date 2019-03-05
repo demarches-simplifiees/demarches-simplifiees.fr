@@ -10,6 +10,10 @@
     - if dossier.etablissement.present?
       = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: dossier.etablissement, profile: profile }
 
+      - if profile == 'usager' && !dossier.read_only?
+        .flex.row-reverse
+          = link_to "Modifier le SIRET", siret_dossier_path(dossier), class: 'button'
+
     - if dossier.individual.present?
       = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
 
