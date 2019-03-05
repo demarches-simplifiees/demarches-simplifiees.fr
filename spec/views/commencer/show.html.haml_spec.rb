@@ -19,7 +19,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
 
     it 'renders sign-in and sign-up links' do
       subject
-      expect(rendered).to have_link('Créer un compte')
+      expect(rendered).to have_link("Créer un compte #{SITE_NAME}")
       expect(rendered).to have_link('J’ai déjà un compte')
     end
   end
