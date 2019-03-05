@@ -29,7 +29,7 @@
           = ff.file_field :piece_justificative_template,
             direct_upload: true
         - else
-          = link_to template.filename.to_s, url_for(template), target: '_blank'
+          = link_to template.filename.to_s, url_for(template), target: '_blank', rel: 'noopener'
           %br
           Modifier :
           = ff.file_field :piece_justificative_template,

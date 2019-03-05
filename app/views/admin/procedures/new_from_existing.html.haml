@@ -23,7 +23,7 @@
             %td{ style: 'width: 750px;' }
               = procedure.libelle
             %td{ style: 'padding-right: 10px; padding-left: 10px; width: 60px;' }
-              = link_to('Consulter', apercu_procedure_path(id: procedure.id), target: "_blank")
+              = link_to('Consulter', apercu_procedure_path(id: procedure.id), target: "_blank", rel: "noopener")
             %td
               = link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
             %td{ style: 'padding-left: 10px;' }

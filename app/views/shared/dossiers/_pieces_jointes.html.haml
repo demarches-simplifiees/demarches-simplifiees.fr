@@ -10,7 +10,7 @@
             %span{ class: highlight_if_unseen_class(demande_seen_at, pj.updated_at) }
               = display_pj_filename(pj)
             ·
-            = link_to "Télécharger", pj.content_url, class: "link", target: :blank
+            = link_to "Télécharger", pj.content_url, class: "link", target: :blank, rel: :noopener
             - if pjs.present?
               %br
               %span.dropdown
@@ -20,7 +20,7 @@
                   %ul.dropdown-items
                     - pjs.each do |pj|
                       %li
-                        = link_to pj.content_url, { target: :blank } do
+                        = link_to pj.content_url, { target: :blank, rel: :noopener } do
                           %span.filename= display_pj_filename(pj)
                           %span
                             ajoutée le #{pj.created_at.strftime('%d/%m/%Y à %H:%M')}

@@ -96,7 +96,7 @@
           Modèle
         </label>
         <template v-if="pieceJustificativeTemplateUrl">
-          <a :href="pieceJustificativeTemplateUrl" target="_blank">
+          <a :href="pieceJustificativeTemplateUrl" rel="noopener" target="_blank">
             {{pieceJustificativeTemplateFilename}}
           </a>
           <br> Modifier :
