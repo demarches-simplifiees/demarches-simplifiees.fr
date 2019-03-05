@@ -17,6 +17,10 @@
     - if dossier.individual.present?
       = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
 
+      - if profile == 'usager' && !dossier.read_only?
+        .flex.row-reverse
+          = link_to "Modifier l'identité", identite_dossier_path(dossier), class: 'button'
+
   .tab-title Formulaire
   - champs = dossier.champs.includes(:type_de_champ)
   - if champs.any?
