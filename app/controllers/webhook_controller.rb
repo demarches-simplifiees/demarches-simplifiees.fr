@@ -33,7 +33,7 @@ class WebhookController < ActionController::Base
   private
 
   def link_to_manager(model, url)
-    "<a target='_blank' href='#{url}'>#{model.model_name.human}##{model.id}</a>"
+    "<a target='_blank' href='#{url}' rel='noopener'>#{model.model_name.human}##{model.id}</a>"
   end
 
   def verify_signature!

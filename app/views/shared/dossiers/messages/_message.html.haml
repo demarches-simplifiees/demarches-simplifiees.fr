@@ -12,11 +12,11 @@
 
   - if commentaire.piece_justificative
     .attachment-link
-      = link_to commentaire.piece_justificative.content_url, class: "button", target: "_blank", title: "Télécharger" do
+      = link_to commentaire.piece_justificative.content_url, class: "button", target: "_blank", rel: "noopener", title: "Télécharger" do
         %span.icon.attachment
         = commentaire.piece_justificative.original_filename
   - elsif commentaire.file.present?
     .attachment-link
-      = link_to commentaire.file_url, class: "button", target: "_blank", title: "Télécharger" do
+      = link_to commentaire.file_url, class: "button", target: "_blank", rel: "noopener", title: "Télécharger" do
         %span.icon.attachment
         = commentaire.file_identifier

@@ -4,7 +4,7 @@
   - if champ.type_de_champ.piece_justificative_template.attached?
     %p.edit-pj-template.mb-1
       Veuillez télécharger, remplir et joindre
-      = link_to('le modèle suivant', url_for(champ.type_de_champ.piece_justificative_template), target: '_blank')
+      = link_to('le modèle suivant', url_for(champ.type_de_champ.piece_justificative_template), target: '_blank', rel: 'noopener')
 
   - if pj.attached?
     .piece-justificative-actions{ id: "piece_justificative_#{champ.id}" }
