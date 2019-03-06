@@ -5,8 +5,8 @@
     .dropdown-content.fade-in-down
       %ul.dropdown-items
         %li
-          = link_to "Au format .csv", download_dossiers_gestionnaire_procedure_path(format: :csv, procedure_id: procedure.id), target: "_blank"
+          = link_to "Au format .csv", download_dossiers_gestionnaire_procedure_path(format: :csv, procedure_id: procedure.id), target: "_blank", rel: "noopener"
         %li
-          = link_to "Au format .xlsx", download_dossiers_gestionnaire_procedure_path(format: :xlsx, procedure_id: procedure.id, tables: [:etablissements]), target: "_blank"
+          = link_to "Au format .xlsx", download_dossiers_gestionnaire_procedure_path(format: :xlsx, procedure_id: procedure.id, tables: [:etablissements]), target: "_blank", rel: "noopener"
         %li
-          = link_to "Au format .ods", download_dossiers_gestionnaire_procedure_path(format: :ods, procedure_id: procedure.id, tables: [:etablissements]), target: "_blank"
+          = link_to "Au format .ods", download_dossiers_gestionnaire_procedure_path(format: :ods, procedure_id: procedure.id, tables: [:etablissements]), target: "_blank", rel: "noopener"
