@@ -9,12 +9,6 @@ FactoryBot.define do
     end
   end
 
-  trait :with_admin_trusted_device do
-    after(:create) do |admin|
-      admin.gestionnaire.update(features: { "enable_email_login_token" => true })
-    end
-  end
-
   trait :with_api_token do
     after(:create) do |admin|
       admin.renew_api_token
