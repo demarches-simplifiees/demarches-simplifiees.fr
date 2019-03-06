@@ -124,7 +124,7 @@ class Procedure < ApplicationRecord
 
   # This method is needed for transition. Eventually this will be the same as brouillon?.
   def brouillon_avec_lien?
-    Flipflop.publish_draft? && brouillon? && path.present?
+    brouillon? && path.present?
   end
 
   def publiee_ou_archivee?
@@ -472,10 +472,8 @@ class Procedure < ApplicationRecord
   end
 
   def ensure_path_exists
-    if Flipflop.publish_draft?
-      if self.path.nil?
-        self.path = SecureRandom.uuid
-      end
+    if self.path.nil?
+      self.path = SecureRandom.uuid
     end
   end
 end

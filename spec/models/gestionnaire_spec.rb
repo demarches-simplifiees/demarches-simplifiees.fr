@@ -14,14 +14,14 @@ describe Gestionnaire, type: :model do
 
   describe '#visible_procedures' do
     let(:procedure_not_assigned)           { create :procedure, administrateur: admin }
-    let(:procedure_without_link)           { create :procedure, administrateur: admin }
-    let(:procedure_with_link)              { create :procedure, :with_path, administrateur: admin }
+    let(:procedure_with_default_path)      { create :procedure, administrateur: admin }
+    let(:procedure_with_custom_path)       { create :procedure, :with_path, administrateur: admin }
     let(:procedure_archived_manually)      { create :procedure, :archived, administrateur: admin }
     let(:procedure_archived_automatically) { create :procedure, :archived_automatically, administrateur: admin }
 
     before do
-      assign(procedure_without_link)
-      assign(procedure_with_link)
+      assign(procedure_with_default_path)
+      assign(procedure_with_custom_path)
       assign(procedure_archived_manually)
       assign(procedure_archived_automatically)
     end
@@ -30,8 +30,8 @@ describe Gestionnaire, type: :model do
 
     it do
       expect(subject).not_to include(procedure_not_assigned)
-      expect(subject).not_to include(procedure_without_link)
-      expect(subject).to include(procedure_with_link)
+      expect(subject).to include(procedure_with_default_path)
+      expect(subject).to include(procedure_with_custom_path)
       expect(subject).to include(procedure_archived_manually)
       expect(subject).to include(procedure_archived_automatically)
     end
