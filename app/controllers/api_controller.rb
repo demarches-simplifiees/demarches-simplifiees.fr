@@ -3,8 +3,8 @@ class APIController < ApplicationController
 
   protected
 
-  def valid_token_for_procedure?(procedure)
-    procedure.administrateurs.any? do |administrateur|
+  def find_administrateur_for_token(procedure)
+    procedure.administrateurs.find do |administrateur|
       administrateur.valid_api_token?(token)
     end
   end
