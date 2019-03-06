@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import Draggable from 'vuedraggable';
-import { fire, debounce } from '@utils';
+import VueScrollTo from 'vue-scrollto';
 
 import DraggableItem from './DraggableItem';
 import DraggableList from './DraggableList';
 
 Vue.component('Draggable', Draggable);
 Vue.component('DraggableItem', DraggableItem);
+Vue.use(VueScrollTo, { duration: 1500, easing: 'ease' });
 
 addEventListener('DOMContentLoaded', () => {
   const el = document.querySelector('#champs-editor');
@@ -16,100 +17,74 @@ addEventListener('DOMContentLoaded', () => {
 });
 
 function initEditor(el) {
-  const { directUploadsUrl, dragIconUrl } = el.dataset;
+  const { directUploadUrl, dragIconUrl, saveUrl } = el.dataset;
 
   const state = {
     typesDeChamp: JSON.parse(el.dataset.typesDeChamp),
     typesDeChampOptions: JSON.parse(el.dataset.typesDeChampOptions),
-    directUploadsUrl,
+    directUploadUrl,
     dragIconUrl,
+    saveUrl,
     isAnnotation: el.dataset.type === 'annotation',
-    unsavedItems: new Set(),
-    unsavedInvalidItems: new Set(),
-    version: 1
+    prefix: 'procedure',
+    inFlight: 0,
+    flash: new Flash()
   };
+
+  // We add an initial type de champ here if form is empty
+  if (state.typesDeChamp.length === 0) {
+    state.typesDeChamp.push({
+      type_champ: 'text',
+      types_de_champ: []
+    });
+  }
 
   new Vue({
     el,
     data: {
-      state,
-      update: null
+      state
     },
     render(h) {
       return h(DraggableList, {
         props: {
-          state: this.state,
-          update: this.update,
-          updateAll: this.updateAll
+          state: this.state
         }
       });
-    },
-    mounted() {
-      const [update, updateAll] = createUpdateFunctions(
-        this,
-        state.isAnnotation
-      );
-
-      this.update = update;
-      this.updateAll = updateAll;
     }
   });
 }
 
-function createUpdateFunctions(app, isAnnotation) {
-  let isSaving = false;
-  const form = app.$el.closest('form');
-
-  const update = ([id, isValid], refresh = true) => {
-    app.state.unsavedItems.add(id);
-    if (isValid) {
-      app.state.unsavedInvalidItems.delete(id);
+class Flash {
+  constructor(isAnnotation) {
+    this.element = document.querySelector('#flash_messages');
+    this.isAnnotation = isAnnotation;
+  }
+  success() {
+    if (this.isAnnotation) {
+      this.add('Annotations privées enregistrées.');
     } else {
-      app.state.unsavedInvalidItems.add(id);
+      this.add('Formulaire enregistré.');
     }
-    if (refresh) {
-      app.state.version += 1;
-    }
-    updateAll();
-  };
+  }
+  error(message) {
+    this.add(message, true);
+  }
+  clear() {
+    this.element.innerHTML = '';
+  }
+  add(message, isError) {
+    const html = `<div id="flash_message" class="center">
+      <div class="alert alert-fixed ${
+        isError ? 'alert-danger' : 'alert-success'
+      }">
+        ${message}
+      </div>
+    </div>`;
 
-  const updateAll = debounce(() => {
-    if (isSaving) {
-      updateAll();
-    } else if (
-      app.state.typesDeChamp.length > 0 &&
-      app.state.unsavedInvalidItems.size === 0
-    ) {
-      isSaving = true;
-      app.state.unsavedItems.clear();
-      app.state.version += 1;
-      fire(form, 'submit');
-    }
-  }, 500);
+    this.element.innerHTML = html;
 
-  addEventListener('ProcedureUpdated', event => {
-    const { types_de_champ, types_de_champ_private } = event.detail;
-
-    app.state.typesDeChamp = isAnnotation
-      ? types_de_champ_private
-      : types_de_champ;
-    isSaving = false;
-    updateFileInputs();
-  });
-
-  return [update, updateAll];
-}
-
-// This is needed du to the way ActiveStorage javascript integration works.
-// It is built to be used with traditional forms. Another way would be to not use
-// high level ActiveStorage abstractions (and maybe this is what we should do in the future).
-function updateFileInputs() {
-  for (let element of document.querySelectorAll('.direct-upload')) {
-    let hiddenInput = element.nextElementSibling;
-    let fileInput = hiddenInput.nextElementSibling;
-    element.remove();
-    hiddenInput.remove();
-    fileInput.value = '';
-    fileInput.removeAttribute('disabled');
+    setTimeout(() => {
+      this.clear();
+    }, 6000);
   }
 }

@@ -40,6 +40,12 @@ module TagsSubstitutionConcern
       description: '',
       target: :id,
       available_for_states: Dossier::SOUMIS
+    },
+    {
+      libelle: 'nom du service',
+      description: 'Le nom du service instructeur qui traite le dossier',
+      lambda: -> (d) { d.procedure.organisation_name || '' },
+      available_for_states: Dossier::SOUMIS
     }
   ]
 
@@ -167,13 +173,11 @@ module TagsSubstitutionConcern
   end
 
   def types_de_champ_tags(types_de_champ, available_for_states)
-    types_de_champ.map do |tdc|
-      {
-        libelle: tdc.libelle,
-        description: tdc.description,
-        available_for_states: available_for_states
-      }
+    tags = types_de_champ.flat_map(&:tags_for_template)
+    tags.each do |tag|
+      tag[:available_for_states] = available_for_states
     end
+    tags
   end
 
   def replace_tags(text, dossier)
@@ -181,10 +185,9 @@ module TagsSubstitutionConcern
       return ''
     end
 
-    text = replace_type_de_champ_tags(text, filter_tags(champ_public_tags), dossier.champs)
-    text = replace_type_de_champ_tags(text, filter_tags(champ_private_tags), dossier.champs_private)
-
     tags_and_datas = [
+      [champ_public_tags, dossier.champs],
+      [champ_private_tags, dossier.champs_private],
       [dossier_tags, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],
       [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
@@ -195,37 +198,28 @@ module TagsSubstitutionConcern
       .inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
   end
 
-  def replace_type_de_champ_tags(text, types_de_champ, dossier_champs)
-    types_de_champ.inject(text) do |acc, tag|
-      champ = dossier_champs
-        .select { |dossier_champ| dossier_champ.libelle == tag[:libelle] }
-        .first
-
-      replace_tag(acc, tag, champ)
-    end
-  end
-
   def replace_tags_with_values_from_data(text, tags, data)
     if data.present?
       tags.inject(text) do |acc, tag|
-        if tag.key?(:target)
-          value = data.send(tag[:target])
-        else
-          value = instance_exec(data, &tag[:lambda])
-        end
-        replace_tag(acc, tag, value)
+        replace_tag(acc, tag, data)
       end
     else
       text
     end
   end
 
-  def replace_tag(text, tag, value)
+  def replace_tag(text, tag, data)
     libelle = Regexp.quote(tag[:libelle])
 
     # allow any kind of space (non-breaking or other) in the tag’s libellé to match any kind of space in the template
     # (the '\\ |' is there because plain ASCII spaces were escaped by preceding Regexp.quote)
     libelle.gsub!(/\\ |[[:blank:]]/, "[[:blank:]]")
+
+    if tag.key?(:target)
+      value = data.send(tag[:target])
+    else
+      value = instance_exec(data, &tag[:lambda])
+    end
 
     text.gsub(/--#{libelle}--/, value.to_s)
   end

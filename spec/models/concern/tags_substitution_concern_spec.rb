@@ -4,12 +4,16 @@ describe TagsSubstitutionConcern, type: :model do
   let(:for_individual) { false }
   let(:state) { Dossier.states.fetch(:accepte) }
 
+  let(:service) { create(:service, nom: 'Service instructeur') }
+
   let(:procedure) do
     create(:procedure,
       libelle: 'Une magnifique démarche',
       types_de_champ: types_de_champ,
       types_de_champ_private: types_de_champ_private,
-      for_individual: for_individual)
+      for_individual: for_individual,
+      service: service,
+      organisation: nil)
   end
 
   let(:template_concern) do
@@ -107,6 +111,53 @@ describe TagsSubstitutionConcern, type: :model do
 
           it { is_expected.to eq('libelle1 libelle2') }
         end
+      end
+    end
+
+    context 'when the procedure has a linked drop down menus type de champ' do
+      let(:types_de_champ) do
+        [
+          create(:type_de_champ_linked_drop_down_list, libelle: 'libelle')
+        ]
+      end
+
+      let(:template) { 'tout : --libelle--, primaire : --libelle/primaire--, secondaire : --libelle/secondaire--' }
+
+      context 'and the champ has no value' do
+        it { is_expected.to eq('tout : , primaire : , secondaire : ') }
+      end
+
+      context 'and the champ has a primary value' do
+        before do
+          c = dossier.champs.detect { |champ| champ.libelle == 'libelle' }
+          c.primary_value = 'primo'
+          c.save
+        end
+        it { is_expected.to eq('tout : primo, primaire : primo, secondaire : ') }
+      end
+
+      context 'and the champ has a primary and secondary value' do
+        before do
+          c = dossier.champs.detect { |champ| champ.libelle == 'libelle' }
+          c.primary_value = 'primo'
+          c.secondary_value = 'secundo'
+          c.save
+        end
+
+        it { is_expected.to eq('tout : primo / secundo, primaire : primo, secondaire : secundo') }
+      end
+    end
+
+    context 'when the user requests the service' do
+      let(:template) { 'Dossier traité par --nom du service--' }
+
+      context 'and there is a service' do
+        it { is_expected.to eq("Dossier traité par #{service.nom}") }
+      end
+
+      context 'and there is no service yet' do
+        let(:service) { nil }
+        it { is_expected.to eq("Dossier traité par ") }
       end
     end
 

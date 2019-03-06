@@ -7,11 +7,10 @@ class Service < ApplicationRecord
   enum type_organisme: {
     administration_centrale: 'administration_centrale',
     association: 'association',
-    commune: 'commune',
-    departement: 'departement',
+    collectivite_territoriale: 'collectivite_territoriale',
     etablissement_enseignement: 'etablissement_enseignement',
-    prefecture: 'prefecture',
-    region: 'region',
+    operateur_d_etat: "operateur_d_etat",
+    service_deconcentre_de_l_etat: 'service_deconcentre_de_l_etat',
     autre: 'autre'
   }
 

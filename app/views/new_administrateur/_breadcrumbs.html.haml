@@ -4,4 +4,4 @@
       - steps.each do |step|
         %li= step
     - if defined?(preview) && preview
-      = link_to "Prévisualiser le formulaire", apercu_procedure_path(@procedure), target: "_blank", class: 'button'
+      = link_to "Prévisualiser le formulaire", apercu_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'button'

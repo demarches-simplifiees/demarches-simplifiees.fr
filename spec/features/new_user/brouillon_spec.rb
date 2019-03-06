@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 feature 'The user' do
   let(:password) { 'secret_password' }
@@ -10,7 +10,6 @@ feature 'The user' do
   # TODO: check
   # the order
   # there are no extraneous input
-  # attached file works
   scenario 'fill a dossier', js: true do
     allow(Champs::RegionChamp).to receive(:regions).and_return(['region1', 'region2']).at_least(:once)
     allow(Champs::DepartementChamp).to receive(:departements).and_return(['dep1', 'dep2']).at_least(:once)
@@ -38,10 +37,10 @@ feature 'The user' do
     select('dep2', from: 'departements')
     check('engagement')
     fill_in('dossier_link', with: '123')
-    # do not know how to make it work...
-    # find('form input[type="file"]').set(Rails.root.join('spec/fixtures/files/white.png'))
+    find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
     click_on 'Enregistrer le brouillon'
+    expect(page).to have_content('Votre brouillon a bien été sauvegardé')
 
     # check data on the dossier
     expect(user_dossier.brouillon?).to be true
@@ -62,8 +61,10 @@ feature 'The user' do
     expect(champ_value_for('departements')).to eq('dep2')
     expect(champ_value_for('engagement')).to eq('on')
     expect(champ_value_for('dossier_link')).to eq('123')
+    expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
 
     ## check data on the gui
+
     expect(page).to have_field('text', with: 'super texte')
     expect(page).to have_field('textarea', with: 'super textarea')
     expect(page).to have_field('date', with: '2012-12-12')
@@ -81,6 +82,43 @@ feature 'The user' do
     expect(page).to have_select('departement', selected: 'dep2')
     expect(page).to have_checked_field('engagement')
     expect(page).to have_field('dossier_link', with: '123')
+    expect(page).to have_text('file.pdf')
+    expect(page).to have_text('analyse antivirus en cours')
+  end
+
+  let(:procedure_with_repetition) do
+    tdc = create(:type_de_champ_repetition, libelle: 'repetition')
+    tdc.types_de_champ << create(:type_de_champ_text, libelle: 'text')
+    create(:procedure, :published, :for_individual, types_de_champ: [tdc])
+  end
+
+  scenario 'fill a dossier with repetition', js: true do
+    log_in(user.email, password, procedure_with_repetition)
+
+    fill_individual
+
+    fill_in('text', with: 'super texte')
+    expect(page).to have_field('text', with: 'super texte')
+
+    click_on 'Ajouter une ligne pour'
+
+    within '.row-1' do
+      fill_in('text', with: 'un autre texte')
+    end
+
+    expect(page).to have_content('Supprimer', count: 2)
+
+    click_on 'Enregistrer le brouillon'
+
+    expect(page).to have_content('Supprimer', count: 2)
+
+    within '.row-1' do
+      click_on 'Supprimer'
+    end
+
+    click_on 'Enregistrer le brouillon'
+
+    expect(page).to have_content('Supprimer', count: 1)
   end
 
   let(:simple_procedure) do
@@ -110,6 +148,48 @@ feature 'The user' do
     expect(user_dossier.reload.en_construction?).to be(true)
     expect(champ_value_for('texte obligatoire')).to eq('super texte')
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
+  end
+
+  let(:procedure_with_pj) do
+    tdcs = [create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative')]
+    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
+  end
+
+  scenario 'adding, replacing and removing attachments', js: true do
+    log_in(user.email, password, procedure_with_pj)
+    fill_individual
+
+    # Add an attachment
+    find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
+    click_on 'Enregistrer le brouillon'
+    expect(page).to have_content('Votre brouillon a bien été sauvegardé')
+    expect(page).to have_text('file.pdf')
+    expect(page).to have_text('analyse antivirus en cours')
+
+    # Mark file as scanned and clean
+    virus_scan = VirusScan.last
+    virus_scan.update(scanned_at: Time.zone.now, status: VirusScan.statuses.fetch(:safe))
+    within '.piece-justificative' do
+      click_on 'rafraichir'
+    end
+    expect(page).to have_link('file.pdf')
+    expect(page).to have_no_content('analyse antivirus en cours')
+
+    # Replace the attachment
+    within '.piece-justificative' do
+      click_on 'Remplacer'
+    end
+    find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
+    click_on 'Enregistrer le brouillon'
+    expect(page).to have_no_text('file.pdf')
+    expect(page).to have_text('RIB.pdf')
+
+    # Remove the attachment
+    within '.piece-justificative' do
+      click_on 'Supprimer'
+    end
+    expect(page).to have_content('La pièce jointe a bien été supprimée')
+    expect(page).to have_no_text('RIB.pdf')
   end
 
   private

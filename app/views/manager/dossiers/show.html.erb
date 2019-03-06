@@ -23,13 +23,16 @@ as well as a link to its edit page.
   <h1 class="main-content__page-title">
     <%= content_for(:title) %>
     <% if dossier.hidden_at %>
-      (SUPPRIMÉ)
+      (Supprimé)
     <% end %>
   </h1>
 
   <div>
     <% if dossier.termine? %>
       <%= link_to 'Repasser en instruction', change_state_to_instruction_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Repasser en instruction ?" } %>
+    <% end %>
+    <% if dossier.hidden_at.nil? %>
+      <%= link_to 'Supprimer le dossier', hide_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous la suppression du dossier ?" } %>
     <% end %>
   <div>
 </header>

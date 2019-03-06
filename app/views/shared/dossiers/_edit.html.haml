@@ -17,7 +17,7 @@
         ) sont obligatoires.
 
       - if notice_url(dossier.procedure).present?
-        = link_to notice_url(dossier.procedure), target: '_blank', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
+        = link_to notice_url(dossier.procedure), target: '_blank', rel: 'noopener', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
           %span.icon.info>
           Guide de la démarche
 
@@ -54,13 +54,13 @@
             - if tpj.lien_demarche.present?
               %p.piece-description
                 Récupérer le formulaire vierge pour mon dossier :
-                = link_to "Télécharger", tpj.lien_demarche, target: :blank
+                = link_to "Télécharger", tpj.lien_demarche, target: :blank, rel: :noopener
 
             - if dossier.was_piece_justificative_uploaded_for_type_id?(tpj.id)
               - pj = dossier.retrieve_last_piece_justificative_by_type(tpj.id)
               %p
                 Pièce jointe déjà importée :
-                = link_to pj.original_filename, pj.content_url, target: :blank
+                = link_to pj.original_filename, pj.content_url, target: :blank, rel: :noopener
 
             = file_field_tag "piece_justificative_#{tpj.id}",
               accept: PieceJustificative.accept_format,
@@ -75,18 +75,18 @@
             name: :save_draft,
             value: true,
             class: 'button send secondary',
-            data: { disable: true }
+            data: { 'disable-with': "Envoi en cours…" }
 
           - if dossier.can_transition_to_en_construction?
             = f.button 'Soumettre le dossier',
               class: 'button send primary',
               disabled: !current_user.owns?(dossier),
-              data: { disable: true }
+              data: { 'disable-with': "Envoi en cours…" }
 
         - else
           = f.button 'Enregistrer les modifications du dossier',
             class: 'button send primary',
-            data: { disable: true }
+            data: { 'disable-with': "Envoi en cours…" }
 
       - if dossier.brouillon? && !current_user.owns?(dossier)
         .send-notice.invite-cannot-submit

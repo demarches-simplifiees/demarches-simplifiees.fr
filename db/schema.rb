@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_10_163655) do
+ActiveRecord::Schema.define(version: 2019_02_26_160356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,6 +219,8 @@ ActiveRecord::Schema.define(version: 2019_01_10_163655) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "automatic_operation", default: false, null: false
+    t.bigint "administration_id"
+    t.index ["administration_id"], name: "index_dossier_operation_logs_on_administration_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["gestionnaire_id"], name: "index_dossier_operation_logs_on_gestionnaire_id"
   end
@@ -518,6 +520,15 @@ ActiveRecord::Schema.define(version: 2019_01_10_163655) do
     t.string "version", null: false
   end
 
+  create_table "trusted_device_tokens", force: :cascade do |t|
+    t.string "token", null: false
+    t.bigint "gestionnaire_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["gestionnaire_id"], name: "index_trusted_device_tokens_on_gestionnaire_id"
+    t.index ["token"], name: "index_trusted_device_tokens_on_token", unique: true
+  end
+
   create_table "types_de_champ", id: :serial, force: :cascade do |t|
     t.string "libelle"
     t.string "type_champ"
@@ -534,6 +545,7 @@ ActiveRecord::Schema.define(version: 2019_01_10_163655) do
     t.bigint "parent_id"
     t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
+    t.index ["procedure_id"], name: "index_types_de_champ_on_procedure_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
@@ -547,6 +559,7 @@ ActiveRecord::Schema.define(version: 2019_01_10_163655) do
     t.integer "order_place"
     t.string "lien_demarche"
     t.boolean "mandatory", default: false
+    t.index ["procedure_id"], name: "index_types_de_piece_justificative_on_procedure_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -597,6 +610,7 @@ ActiveRecord::Schema.define(version: 2019_01_10_163655) do
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
+  add_foreign_key "dossier_operation_logs", "administrations"
   add_foreign_key "dossier_operation_logs", "dossiers"
   add_foreign_key "dossier_operation_logs", "gestionnaires"
   add_foreign_key "dossiers", "users"
@@ -608,6 +622,7 @@ ActiveRecord::Schema.define(version: 2019_01_10_163655) do
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
+  add_foreign_key "trusted_device_tokens", "gestionnaires"
   add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "without_continuation_mails", "procedures"
 end

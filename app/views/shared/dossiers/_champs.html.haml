@@ -1,33 +1,3 @@
 %table.table.vertical.dossier-champs
   %tbody
-    - champs.reject(&:exclude_from_view?).each do |c|
-      %tr
-        - if c.type_champ == TypeDeChamp.type_champs.fetch(:header_section)
-          %th.header-section{ colspan: 3 }
-            = c.libelle
-        - else
-          %th.libelle
-            = "#{c.libelle} :"
-          %td.rich-text
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              - case c.type_champ
-              - when TypeDeChamp.type_champs.fetch(:carte)
-                = render partial: "shared/champs/carte/show", locals: { champ: c }
-              - when TypeDeChamp.type_champs.fetch(:dossier_link)
-                = render partial: "shared/champs/dossier_link/show", locals: { champ: c }
-              - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
-                = render partial: "shared/champs/multiple_drop_down_list/show", locals: { champ: c }
-              - when TypeDeChamp.type_champs.fetch(:piece_justificative)
-                = render partial: "shared/champs/piece_justificative/show", locals: { champ: c }
-              - when TypeDeChamp.type_champs.fetch(:siret)
-                = render partial: "shared/champs/siret/show", locals: { champ: c, profile: profile }
-              - when TypeDeChamp.type_champs.fetch(:textarea)
-                = render partial: "shared/champs/textarea/show", locals: { champ: c }
-              - else
-                = sanitize(c.to_s)
-
-        - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
-          %td.updated-at
-            %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
-              modifié le
-              = c.updated_at.strftime("%d/%m/%Y à %H:%M")
+    = render partial: "shared/dossiers/champ_row", locals: { champs: champs, demande_seen_at: demande_seen_at, profile: profile, repetition: false }

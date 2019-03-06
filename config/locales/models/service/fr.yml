@@ -1,13 +1,12 @@
 fr:
   type_organisme:
-    administration_centrale: 'administration centrale'
-    association: 'association'
-    commune: 'commune'
-    departement: 'département'
-    etablissement_enseignement: 'établissement d’enseignement'
-    prefecture: 'préfecture'
-    region: 'région'
-    autre: 'autre'
+    administration_centrale: 'Administration centrale'
+    association: 'Association'
+    collectivite_territoriale: 'Collectivité territoriale'
+    etablissement_enseignement: 'Établissement d’enseignement'
+    operateur_d_etat: "Opérateur d'État"
+    service_deconcentre_de_l_etat: "Service déconcentré de l'État"
+    autre: 'Autre'
   activerecord:
     attributes:
       service:

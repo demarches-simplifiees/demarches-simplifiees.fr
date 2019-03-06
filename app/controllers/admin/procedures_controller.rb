@@ -67,7 +67,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def create
-    @procedure = Procedure.new(procedure_params)
+    @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
     @path = @procedure.path
     @availability = Procedure.path_availability(current_administrateur, @procedure.path)
 

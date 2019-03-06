@@ -8,7 +8,7 @@ gem 'administrate'
 gem 'after_party'
 gem 'axlsx', '~> 3.0.0.pre' # https://github.com/randym/axlsx/issues/501#issuecomment-373640365
 gem 'bcrypt'
-gem 'bootstrap-sass', '~> 3.3.5'
+gem 'bootstrap-sass', '>= 3.4.1'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 gem 'browser'
 gem 'carrierwave'
@@ -99,6 +99,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'
+  gem 'ruby-debug-ide', require: false
   gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'
 end

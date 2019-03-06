@@ -50,7 +50,7 @@
         .procedure-list-element{ class: ('active' if active == 'Annotations privées') }
           Annotations privées
 
-    %a#onglet-preview{ href: url_for(apercu_procedure_path(@procedure)), target: "_blank" }
+    %a#onglet-preview{ href: url_for(apercu_procedure_path(@procedure)), target: "_blank", rel: "noopener" }
       .procedure-list-element{ class: ('active' if active == 'Prévisualisation') }
         Prévisualisation
 

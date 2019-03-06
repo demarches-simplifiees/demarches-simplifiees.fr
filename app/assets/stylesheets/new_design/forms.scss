@@ -100,15 +100,19 @@
   input[type=date],
   input[type=number],
   input[type=tel],
-  input[type=file],
   textarea,
-  select {
+  select,
+  .piece-justificative {
     display: block;
     margin-bottom: 2 * $default-padding;
 
     &.small-margin {
       margin-bottom: $default-padding / 2;
     }
+  }
+
+  .add-row {
+    margin-bottom: 2 * $default-padding;
   }
 
   input[type=checkbox] {
@@ -245,6 +249,15 @@
 
     .geo-areas {
       margin-bottom: 2 * $default-padding;
+    }
+
+    &.editable-champ-repetition {
+      .row {
+        border-radius: 4px;
+        border: 1px solid $border-grey;
+        padding: $default-padding;
+        margin-bottom: 2 * $default-padding;
+      }
     }
   }
 

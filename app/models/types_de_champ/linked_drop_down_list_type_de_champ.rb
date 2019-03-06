@@ -21,6 +21,34 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     secondary_options
   end
 
+  def tags_for_template
+    tags = super
+    l = libelle
+    tags.push(
+      {
+        libelle: "#{l}/primaire",
+        description: "#{description} (menu primaire)",
+        lambda: -> (champs) {
+          champs
+            .detect { |champ| champ.libelle == l }
+            &.primary_value
+        }
+      }
+    )
+    tags.push(
+      {
+        libelle: "#{l}/secondaire",
+        description: "#{description} (menu secondaire)",
+        lambda: -> (champs) {
+          champs
+            .detect { |champ| champ.libelle == l }
+            &.secondary_value
+        }
+      }
+    )
+    tags
+  end
+
   private
 
   def check_presence_of_primary_options

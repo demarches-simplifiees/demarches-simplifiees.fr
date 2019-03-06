@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
     resources :dossiers, only: [:index, :show] do
       post 'change_state_to_instruction', on: :member
+      post 'hide', on: :member
     end
 
     resources :administrateurs, only: [:index, :show, :new, :create] do
@@ -127,6 +128,7 @@ Rails.application.routes.draw do
     get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
     post ':position/carte', to: 'carte#show', as: :carte
+    post ':position/repetition', to: 'repetition#show', as: :repetition
   end
 
   get 'tour-de-france' => 'root#tour_de_france'
@@ -366,6 +368,8 @@ Rails.application.routes.draw do
         get 'champs'
         get 'annotations'
       end
+
+      resources :types_de_champ, only: [:create, :update, :destroy]
     end
 
     resources :services, except: [:show] do

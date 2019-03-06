@@ -46,7 +46,7 @@
 
     %h1 Boutons
 
-    %p
+    .patron-section
       = link_to ".button", "#", class: "button"
 
       = link_to ".button.primary", "#", class: "button primary"
@@ -62,7 +62,7 @@
       = link_to "#", class: "button icon-only" do
         %span.icon.follow
 
-    %p
+    .patron-section
       %button.button{ disabled: true } .button.disabled
 
       %button.button.primary{ disabled: true } .button.primary.disabled
@@ -71,19 +71,24 @@
 
       %button.button.danger{ disabled: true } .button.danger.disabled
 
-    %p
+    .patron-section
       = link_to ".button.accepted", "#", class: "button accepted"
 
       = link_to ".button.refused", "#", class: "button refused"
 
       = link_to ".button.without-continuation", "#", class: "button without-continuation"
 
-    %p
+    .patron-section
+      = link_to ".button.small", "#", class: "button small"
+
+      = link_to ".button.small.primary", "#", class: "button small primary"
+
+    .patron-section
       = link_to ".button.large", "#", class: "button large"
 
       = link_to ".button.large.primary", "#", class: "button large primary"
 
-    %p
+    .patron-section
       = link_to ".button.primary.expand", "#", class: "button primary expand"
 
     %h1 Labels
@@ -106,17 +111,17 @@
     .card
       .card-title
         Titre de la carte
-      Et voici le contenu de la carte
+      %p Et voici le contenu de la carte
 
     .card.featured
       .card-title
         Titre de la carte mise en avant
-      Et voici le contenu de la carte
+      %p Et voici le contenu de la carte
 
     .card.feedback
       .card-title
         Titre de la carte pour demander un avis
-      Utilisez cette carte pour informer d’une nouveauté produit ou demander l’avis des utilisateurs.
+      %p Utilisez cette carte pour informer d’une nouveauté produit ou demander l’avis des utilisateurs.
 
     %h1 Table
 

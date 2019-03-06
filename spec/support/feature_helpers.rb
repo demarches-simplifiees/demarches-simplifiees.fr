@@ -58,6 +58,10 @@ module FeatureHelpers
     # Procedure contact infos in the footer
     expect(page).to have_content(procedure.service.email)
   end
+
+  def blur
+    page.find('body').click
+  end
 end
 
 RSpec.configure do |config|

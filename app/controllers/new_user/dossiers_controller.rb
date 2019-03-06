@@ -190,7 +190,7 @@ module NewUser
     def ask_deletion
       dossier = current_user.dossiers.includes(:user, procedure: :administrateur).find(params[:id])
 
-      if !dossier.instruction_commencee?
+      if dossier.can_be_deleted_by_user?
         dossier.delete_and_keep_track
         flash.notice = 'Votre dossier a bien été supprimé.'
         redirect_to dossiers_path
@@ -259,7 +259,7 @@ module NewUser
     end
 
     def ensure_dossier_can_be_updated
-      if !dossier.can_be_updated_by_the_user?
+      if !dossier.can_be_updated_by_user?
         flash.alert = 'Votre dossier ne peut plus être modifié'
         redirect_to dossiers_path
       end
@@ -284,7 +284,8 @@ module NewUser
       params.permit(dossier: {
         champs_attributes: [
           :id, :value, :primary_value, :secondary_value, :piece_justificative_file, value: [],
-          etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES
+          etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES,
+          champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
         ]
       })
     end
@@ -305,8 +306,7 @@ module NewUser
       end
 
       if !save_draft?
-        errors += @dossier.champs.select(&:mandatory_and_blank?)
-          .map { |c| "Le champ #{c.libelle.truncate(200)} doit être rempli." }
+        errors += @dossier.check_mandatory_champs
         errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
       end
 

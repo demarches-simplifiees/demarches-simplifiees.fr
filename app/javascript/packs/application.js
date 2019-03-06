@@ -5,22 +5,25 @@ import * as ActiveStorage from 'activestorage';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 
-import '../shared/activestorage/progress';
+import '../shared/activestorage/ujs';
 import '../shared/sentry';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
 import '../shared/remote-input';
 import '../shared/franceconnect';
+import '../shared/toggle-target';
 
-import '../new_design/spinner';
+import '../new_design/carto';
 import '../new_design/dropdown';
 import '../new_design/form-validation';
-import '../new_design/carto';
 import '../new_design/select2';
+import '../new_design/spinner';
+import '../new_design/support';
 
 import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
+import '../new_design/champs/repetition';
 
 import '../new_design/administrateur/champs-editor';
 

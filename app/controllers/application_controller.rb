@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include TrustedDeviceConcern
+
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
   # Prevent CSRF attacks by raising an exception.
@@ -6,6 +8,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, if: -> { !Rails.env.test? }
   before_action :load_navbar_left_pannel_partial_url
   before_action :set_raven_context
+  before_action :redirect_if_untrusted
   before_action :authorize_request_for_profiler
   before_action :reject, if: -> { Flipflop.maintenance_mode? }
 
@@ -149,6 +152,36 @@ class ApplicationController < ActionController::Base
       [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
       flash[:alert] = MAINTENANCE_MESSAGE
       redirect_to root_path
+    end
+  end
+
+  def redirect_if_untrusted
+    if gestionnaire_signed_in? &&
+        sensitive_path &&
+        current_gestionnaire.feature_enabled?(:enable_email_login_token) &&
+        !trusted_device?
+
+      # return at this location
+      # after the device is trusted
+      store_location_for(:user, request.fullpath)
+
+      send_login_token_or_bufferize(current_gestionnaire)
+      redirect_to link_sent_path(email: current_gestionnaire.email)
+    end
+  end
+
+  def sensitive_path
+    path = request.path_info
+
+    if path == '/' ||
+      path == '/users/sign_out' ||
+      path.start_with?('/connexion-par-jeton') ||
+      path.start_with?('/api/') ||
+      path.start_with?('/lien-envoye')
+
+      false
+    else
+      true
     end
   end
 end
