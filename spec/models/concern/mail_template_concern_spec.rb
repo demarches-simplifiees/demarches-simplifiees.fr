@@ -85,6 +85,12 @@ describe MailTemplateConcern do
 
         it { is_expected.to eq("--lien attestation--") }
       end
+
+      describe "in without continuation mail" do
+        let(:mail) { create(:without_continuation_mail, procedure: procedure) }
+
+        it { is_expected.to eq("--lien attestation--") }
+      end
     end
   end
 
