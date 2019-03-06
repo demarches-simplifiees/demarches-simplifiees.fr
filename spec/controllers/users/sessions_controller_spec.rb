@@ -10,12 +10,13 @@ describe Users::SessionsController, type: :controller do
 
   describe '#create' do
     context "when the user is also a gestionnaire and an administrateur" do
-      let!(:administrateur) { create(:administrateur, :with_admin_trusted_device, email: email, password: password) }
+      let!(:administrateur) { create(:administrateur, email: email, password: password) }
       let(:gestionnaire) { administrateur.gestionnaire }
       let(:trusted_device) { true }
       let(:send_password) { password }
 
       before do
+        Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
         allow(controller).to receive(:trusted_device?).and_return(trusted_device)
         allow(GestionnaireMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
       end
