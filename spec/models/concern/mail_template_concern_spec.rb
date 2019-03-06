@@ -5,6 +5,7 @@ describe MailTemplateConcern do
   let(:dossier) { create(:dossier, procedure: procedure) }
   let(:dossier2) { create(:dossier, procedure: procedure) }
   let(:initiated_mail) { create(:initiated_mail, procedure: procedure) }
+  let(:justificatif) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
 
   shared_examples "can replace tokens in template" do
     describe 'with no token to replace' do
@@ -74,10 +75,22 @@ describe MailTemplateConcern do
         mail.body = "--lien attestation--"
       end
 
-      describe "in closed mail" do
+      describe "in closed mail without justificatif" do
         let(:mail) { create(:closed_mail, procedure: procedure) }
 
         it { is_expected.to eq("<a target=\"_blank\" rel=\"noopener\" href=\"http://localhost:3000/dossiers/#{dossier.id}/attestation\">http://localhost:3000/dossiers/#{dossier.id}/attestation</a>") }
+        it { is_expected.to_not include("Télécharger le justificatif") }
+      end
+
+      describe "in closed mail with justificatif" do
+        before do
+          dossier.justificatif_motivation.attach(justificatif)
+        end
+        let(:mail) { create(:closed_mail, procedure: procedure) }
+
+        it { expect(dossier.justificatif_motivation).to be_attached }
+        it { is_expected.to start_with("<a target=\"_blank\" rel=\"noopener\" href=\"http://localhost:3000/dossiers/#{dossier.id}/attestation\">http://localhost:3000/dossiers/#{dossier.id}/attestation</a><br />\n") }
+        it { is_expected.to include("Télécharger le justificatif") }
       end
 
       describe "in refuse mail" do
