@@ -102,12 +102,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_or_reopen!(path)
-    if archivee? && may_reopen?(path)
-      reopen!(path)
-    elsif may_publish?(path)
+  def publish_or_reopen!(administrateur, path)
+    if archivee? && may_reopen?(administrateur, path)
+      reopen!(administrateur, path)
+    elsif may_publish?(administrateur, path)
       reset!
-      publish!(path)
+      publish!(administrateur, path)
     end
   end
 
@@ -340,11 +340,11 @@ class Procedure < ApplicationRecord
   PATH_NOT_AVAILABLE_BROUILLON = :not_available_brouillon
   PATH_CAN_PUBLISH = [PATH_AVAILABLE, PATH_AVAILABLE_PUBLIEE]
 
-  def path_availability(path)
-    Procedure.path_availability(administrateurs, path, id)
+  def path_availability(administrateur, path)
+    Procedure.path_availability(administrateur, path, id)
   end
 
-  def self.path_availability(administrateurs, path, exclude_id = nil)
+  def self.path_availability(administrateur, path, exclude_id = nil)
     if exclude_id.present?
       procedure = where.not(id: exclude_id).find_by(path: path)
     else
@@ -353,7 +353,7 @@ class Procedure < ApplicationRecord
 
     if procedure.blank?
       PATH_AVAILABLE
-    elsif administrateurs.any? { |administrateur| administrateur.owns?(procedure) }
+    elsif administrateur.owns?(procedure)
       if procedure.brouillon?
         PATH_NOT_AVAILABLE_BROUILLON
       else
@@ -402,17 +402,21 @@ class Procedure < ApplicationRecord
     update!(path: path)
   end
 
-  def can_publish?(path)
-    path_availability(path).in?(PATH_CAN_PUBLISH)
+  def can_publish?(administrateur, path)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
   end
 
-  def after_publish(path)
+  def can_reopen?(administrateur, path)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
+  end
+
+  def after_publish(administrateur, path)
     update!(published_at: Time.zone.now)
 
     claim_path_ownership!(path)
   end
 
-  def after_reopen(path)
+  def after_reopen(administrateur, path)
     update!(published_at: Time.zone.now, archived_at: nil)
 
     claim_path_ownership!(path)
