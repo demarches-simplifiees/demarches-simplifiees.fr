@@ -30,7 +30,7 @@
     %p.help-block
       %i.fa.fa-info-circle
       Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
-      = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank")
+      = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
       \.
 
 .form-group
@@ -40,7 +40,7 @@
     %li Texte de loi (loi, décret, circulaire, arrêté,…)
     %li Texte juridique (statuts, délibération, décision du conseil d'administration…)
     %li
-      = link_to("En savoir plus", CADRE_JURIDIQUE_URL, target: "_blank")
+      = link_to("En savoir plus", CADRE_JURIDIQUE_URL, target: "_blank", rel: "noopener")
 
   %p.help-block
     %i.fa.fa-info-circle
@@ -57,7 +57,7 @@
         = f.file_field :deliberation,
           direct_upload: true
       - else
-        %a{ href: url_for(deliberation), target: '_blank' }
+        %a{ href: url_for(deliberation), target: '_blank', rel: 'noopener' }
           = deliberation.filename.to_s
         - if @procedure.persisted?
           = link_to 'supprimer', delete_deliberation_admin_procedure_path(@procedure), method: :delete
@@ -73,7 +73,7 @@
     = f.file_field :notice,
       direct_upload: true
   - else
-    %a{ href: url_for(notice), target: '_blank' }
+    %a{ href: url_for(notice), target: '_blank', rel: 'noopener' }
       = notice.filename.to_s
     - if @procedure.persisted?
       \-

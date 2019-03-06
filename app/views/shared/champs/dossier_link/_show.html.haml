@@ -2,7 +2,7 @@
 - if dossier
   - path = dossier_linked_path(current_gestionnaire || current_user, dossier)
   - if path.present?
-    = link_to("Dossier nº #{dossier.id}", path, target: '_blank')
+    = link_to("Dossier nº #{dossier.id}", path, target: '_blank', rel: 'noopener')
   - else
     Dossier nº #{dossier.id}
   %br

@@ -11,7 +11,7 @@ RSpec.describe StringToHtmlHelper, type: :helper do
     context "with a link" do
       let(:description) { "https://d-s.fr" }
 
-      it { is_expected.to eq("<p><a target=\"_blank\" href=\"https://d-s.fr\">https://d-s.fr</a></p>") }
+      it { is_expected.to eq("<p><a target=\"_blank\" rel=\"noopener\" href=\"https://d-s.fr\">https://d-s.fr</a></p>") }
     end
 
     context "with empty decription" do

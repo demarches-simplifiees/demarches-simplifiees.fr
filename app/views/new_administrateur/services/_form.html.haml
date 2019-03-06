@@ -15,7 +15,7 @@
     %span.mandatory *
   %p
     Pour trouver votre numéro SIRET, utilisez
-    %a{ href: 'https://entreprise.data.gouv.fr/', target: '_blank' }
+    %a{ href: 'https://entreprise.data.gouv.fr/', target: '_blank', rel: 'noopener' }
       entreprise.data.gouv.fr
     ou renseignez-vous auprès de votre service comptable
   = f.number_field :siret, required: true
