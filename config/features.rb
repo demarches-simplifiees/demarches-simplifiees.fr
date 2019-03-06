@@ -14,7 +14,6 @@ Flipflop.configure do
   end
 
   feature :web_hook
-  feature :publish_draft
   feature :enable_email_login_token
   feature :new_champs_editor
 

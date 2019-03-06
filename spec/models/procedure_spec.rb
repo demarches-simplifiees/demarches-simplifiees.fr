@@ -386,7 +386,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure)
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path"])
     end
 
     it 'should not clone piece justificatives but create corresponding champs' do
@@ -479,7 +479,7 @@ describe Procedure do
         expect(subject.published_at).to be_nil
         expect(subject.test_started_at).to be_nil
         expect(subject.aasm_state).to eq "brouillon"
-        expect(subject.path).to be_nil
+        expect(subject.path).not_to be_nil
       end
     end
 
@@ -638,9 +638,11 @@ describe Procedure do
     end
 
     context "without a path" do
-      let(:procedure) { create(:procedure) }
+      let(:procedure) { create(:procedure, :archived) }
 
-      it { is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11.csv") }
+      it do
+        is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11.csv")
+      end
     end
   end
 

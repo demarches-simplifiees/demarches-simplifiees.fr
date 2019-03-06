@@ -303,10 +303,6 @@ describe Admin::ProceduresController, type: :controller do
         let!(:dossiers_count) { procedure.dossiers.count }
 
         describe 'dossiers are dropped' do
-          before do
-            Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
-          end
-
           subject { update_procedure }
 
           it {
@@ -378,7 +374,7 @@ describe Admin::ProceduresController, type: :controller do
 
         it 'does not publish the given procedure' do
           expect(procedure.publiee?).to be_falsey
-          expect(procedure.path).to be_nil
+          expect(procedure.path).not_to match(path)
           expect(response.status).to eq 200
         end
 
@@ -394,7 +390,7 @@ describe Admin::ProceduresController, type: :controller do
 
         it 'does not publish the given procedure' do
           expect(procedure.publiee?).to be_falsey
-          expect(procedure.path).to be_nil
+          expect(procedure.path).not_to match(path)
           expect(response).to redirect_to :admin_procedures
           expect(flash[:alert]).to have_content 'Lien de la démarche invalide'
         end
