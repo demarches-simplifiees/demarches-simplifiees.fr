@@ -93,42 +93,6 @@ describe StatsController, type: :controller do
     end
   end
 
-  describe "#procedures_count_per_administrateur" do
-    let!(:administrateur_1) { create(:administrateur) }
-    let!(:administrateur_2) { create(:administrateur) }
-    let!(:administrateur_3) { create(:administrateur) }
-    let!(:administrateur_4) { create(:administrateur) }
-    let!(:administrateur_5) { create(:administrateur) }
-
-    before do
-      3.times do
-        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_1)
-      end
-
-      2.times do
-        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_2)
-      end
-
-      8.times do
-        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_3)
-      end
-
-      create(:procedure, published_at: Time.zone.now, administrateur: administrateur_4)
-    end
-
-    let(:association) { Procedure.all }
-
-    subject { StatsController.new.send(:procedures_count_per_administrateur, association) }
-
-    it do
-      is_expected.to eq({
-        'Une démarche' => 1,
-        'Entre deux et cinq démarches' => 2,
-        'Plus de cinq démarches' => 1
-      })
-    end
-  end
-
   describe "#dossier_instruction_mean_time" do
     # Month-2: mean 3 days
     #  procedure_1: mean 2 days
