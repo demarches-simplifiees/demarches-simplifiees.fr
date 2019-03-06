@@ -44,7 +44,7 @@ class Admin::ProceduresController < AdminController
 
   def edit
     @path = @procedure.path || @procedure.default_path
-    @availability = @procedure.path_availability(@path)
+    @availability = @procedure.path_availability(current_administrateur, @path)
   end
 
   def destroy
@@ -69,7 +69,7 @@ class Admin::ProceduresController < AdminController
   def create
     @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
     @path = @procedure.path
-    @availability = Procedure.path_availability([current_administrateur], @procedure.path)
+    @availability = Procedure.path_availability(current_administrateur, @procedure.path)
 
     if !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
@@ -96,7 +96,7 @@ class Admin::ProceduresController < AdminController
       flash.now.alert = @procedure.errors.full_messages
       @path = procedure_params[:path]
       if @path.present?
-        @availability = @procedure.path_availability(@path)
+        @availability = @procedure.path_availability(current_administrateur, @path)
       end
       render 'edit'
     elsif @procedure.brouillon?
@@ -121,7 +121,7 @@ class Admin::ProceduresController < AdminController
       procedure.path = nil
     end
 
-    if procedure.publish_or_reopen!(path)
+    if procedure.publish_or_reopen!(current_administrateur, path)
       flash.notice = "Démarche publiée"
       redirect_to admin_procedures_path
     else
@@ -233,9 +233,9 @@ class Admin::ProceduresController < AdminController
 
     if procedure_id.present?
       procedure = current_administrateur.procedures.find(procedure_id)
-      @availability = procedure.path_availability(path)
+      @availability = procedure.path_availability(current_administrateur, path)
     else
-      @availability = Procedure.path_availability([current_administrateur], path)
+      @availability = Procedure.path_availability(current_administrateur, path)
     end
   end
 

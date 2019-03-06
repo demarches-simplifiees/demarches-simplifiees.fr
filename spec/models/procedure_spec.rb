@@ -493,7 +493,7 @@ describe Procedure do
 
     before do
       Timecop.freeze(now)
-      procedure.publish!("example-path")
+      procedure.publish!(procedure.administrateurs.first, "example-path")
     end
     after { Timecop.return }
 

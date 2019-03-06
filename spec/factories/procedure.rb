@@ -37,7 +37,7 @@ FactoryBot.define do
       after(:build) do |procedure, _evaluator|
         procedure.for_individual = true
         procedure.types_de_champ << create(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true)
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
       end
     end
 
@@ -135,13 +135,13 @@ FactoryBot.define do
 
     trait :published do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
       end
     end
 
     trait :archived do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
         procedure.archive!
       end
     end
@@ -150,14 +150,14 @@ FactoryBot.define do
       # For now the behavior is the same than :archived
       # (it may be different in the future though)
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
         procedure.archive!
       end
     end
 
     trait :hidden do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
         procedure.hide!
       end
     end
