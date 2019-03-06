@@ -13,15 +13,15 @@ API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://ppr.api.i-ta
 FOG_BASE_URL = "https://static.demarches-simplifiees.fr"
 
 # External services URLs
-DOC_URL = "https://doc.demarches-simplifiees.fr"
-ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-administrateur"].join("/")
-INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-accompagnateur"].join("/")
-CADRE_JURIDIQUE_URL = [ADMINISTRATEUR_TUTORIAL_URL, "cadre-juridique"].join("#")
-WEBINAIRE_URL = [DOC_URL, "pour-aller-plus-loin", "webinaires"].join("/")
-LISTE_DES_DEMARCHES_URL = [DOC_URL, "listes-des-demarches"].join("/")
-CGU_URL = [DOC_URL, "cgu"].join("/")
-MENTIONS_LEGALES_URL = [CGU_URL, "4-mentions-legales"].join("#")
-API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "api"].join("/")
-WEBHOOK_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
+FR_DOC_URL = "https://doc.demarches-simplifiees.fr"
+DOC_URL = "https://doc.projet.gov.pf/display/DEM"
+ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "Dématérialiser+un+premier+formulaire"].join("/")
+INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "Tutoriels"].join("/")
+CADRE_JURIDIQUE_URL = [ADMINISTRATEUR_TUTORIAL_URL, "cadre-juridique"].join("#") # TODO version polynésie
+LISTE_DES_DEMARCHES_URL = [DOC_URL, "Liste+des+démarches"].join("/")
+CGU_URL = [DOC_URL, "CGU"].join("/")
+MENTIONS_LEGALES_URL = [CGU_URL, "mentions-legales"].join("#")
+API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "api"].join("/")
+WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 FAQ_URL = "https://faq.demarches-simplifiees.fr"
 MATOMO_IFRAME_URL = "https://stats.data.gouv.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli"

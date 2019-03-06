@@ -1,6 +1,6 @@
 fr:
   dynamics:
-    page_title: #{SITE_NAME}
+    page_title: Mes-Démarches
     users:
       connexion_title: Connexion
       mes_dossiers: 'Mes dossiers'

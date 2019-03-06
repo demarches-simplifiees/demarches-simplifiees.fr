@@ -1,14 +1,7 @@
 require 'prawn/measurement_extensions'
 
-prawn_document(margin: [50, 100, 20, 100], page_size: "A4",page_layout: :portrait) do |pdf|
-  pdf.font_families.update( 'OpenSans' => {
-    normal: './lib/prawn/fonts/OpenSans-Regular.ttf',
-    italic: './lib/prawn/fonts/OpenSans-Italic.ttf',
-    bold: './lib/prawn/fonts/OpenSans-Bold.ttf',
-    bold_italic: './lib/prawn/fonts/OpenSans-BoldItalic.ttf'
-  })
-
-  pdf.font 'OpenSans'
+prawn_document(margin: [50, 100, 20, 100]) do |pdf|
+  pdf.font 'Times-Roman'
 
   grey = '555555'
   black = '000000'
@@ -28,7 +21,7 @@ prawn_document(margin: [50, 100, 20, 100], page_size: "A4",page_layout: :portrai
     pdf.pad_top(40) { pdf.text @title, size: 20, inline_format: true }
 
     pdf.fill_color grey
-    pdf.pad_top(30) { pdf.text @body, size: 12, inline_format: true }
+    pdf.pad_top(30) { pdf.text @body, size: 12, character_spacing: -0.2, align: :justify, inline_format: true }
 
     if @signature.present?
       pdf.pad_top(40) do

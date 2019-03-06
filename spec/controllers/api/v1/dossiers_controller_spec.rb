@@ -75,8 +75,8 @@ describe API::V1::DossiersController do
         describe 'dossier' do
           subject { super().first }
           it { expect(subject[:id]).to eq(dossier.id) }
-          it { expect(subject[:updated_at]).to eq("2008-09-01T08:05:00.000Z") }
-          it { expect(subject[:initiated_at]).to eq("2008-09-01T08:06:00.000Z") }
+          it { expect(subject[:updated_at]).to eq("2008-09-01T20:05:00.000Z") }
+          it { expect(subject[:initiated_at]).to eq("2008-09-01T20:06:00.000Z") }
           it { expect(subject[:state]).to eq("initiated") }
           it { expect(subject.keys.size).to eq(4) }
         end
@@ -148,8 +148,8 @@ describe API::V1::DossiersController do
 
         it { expect(subject[:id]).to eq(dossier.id) }
         it { expect(subject[:state]).to eq('initiated') }
-        it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
-        it { expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z') }
+        it { expect(subject[:created_at]).to eq('2008-09-01T20:05:00.000Z') }
+        it { expect(subject[:updated_at]).to eq('2008-09-01T20:05:00.000Z') }
         it { expect(subject[:archived]).to eq(dossier.archived) }
 
         it { expect(subject.keys).to match_array(field_list) }
@@ -297,7 +297,7 @@ describe API::V1::DossiersController do
           it { expect(subject.size).to eq 2 }
 
           it { expect(subject.first[:body]).to eq 'plop' }
-          it { expect(subject.first[:created_at]).to eq '2016-03-14T13:00:00.000Z' }
+          it { expect(subject.first[:created_at]).to eq '2016-03-15T00:00:00.000Z' } # GMT = PF Time + 10
           it { expect(subject.first[:email]).to eq 'plop@plip.com' }
         end
 

@@ -3,7 +3,7 @@
 .commencer.form
   - if !user_signed_in?
     %h1 Commencer la démarche
-    = link_to 'Créer un compte demarches-simplifiees.fr', commencer_sign_up_path(path: @procedure.path), class: ['button large expand primary']
+    = link_to "Créer un compte #{SITE_NAME}", commencer_sign_up_path(path: @procedure.path), class: ['button large expand primary']
     = link_to 'J’ai déjà un compte', commencer_sign_in_path(path: @procedure.path), class: ['button large expand']
 
   - else

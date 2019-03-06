@@ -65,10 +65,7 @@ services:
       - DB_PASSWORD
       - MAILJET_API_KEY
       - MAILJET_SECRET_KEY
-      - CLAMD_TCP_HOST=clamav
-      - CLAMD_TCP_PORT=3310
-    volumes:
-      - md-data-files:/app/storage
+    # volumes:
       #----- to set the timezone to the same as the host
       # - /etc/localtime:/etc/localtime:ro
     networks:
@@ -76,14 +73,11 @@ services:
 
   clamav:
     image: tiredofit/clamav
-    container_name: clamav-${ENV:-dev}
     ports:
       - 3310:3310
     volumes:
       - clamav-db:/data
       - clamav-logs:/var/log/clamav
-    networks:
-      - md-network
 volumes:
   md-data-files:
     driver: local
@@ -107,7 +101,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: $ROOT/clamav/log
+      device: $ROOT/clamav/logs
       o: bind
 
 

@@ -78,7 +78,7 @@ Rails.application.configure do
       authentication: :cram_md5
     }
   else
-    config.action_mailer.delivery_method = :mailjet
+    config.action_mailer.delivery_method = :mailjet_api
   end
 
   # Configure default root URL for generating URLs to routes
@@ -87,7 +87,7 @@ Rails.application.configure do
     host: ENV['APP_HOST']
   }
   # Configure default root URL for email assets
-  config.action_mailer.asset_host = "https://" + ENV['APP_HOST']
+  config.action_mailer.asset_host = "http://" + ENV['APP_HOST']
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

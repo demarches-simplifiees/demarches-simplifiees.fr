@@ -311,8 +311,9 @@
         margin-left: $default-spacer;
       }
 
-      .button.danger {
-        margin-right: auto;
+      // If there are more than one button, align the "Send" button to the right
+      .button:not(:first-of-type).send {
+        margin-left: auto;
       }
     }
 
@@ -321,8 +322,7 @@
       flex-direction: column-reverse;
       align-items: center;
 
-      .button,
-      .button.danger {
+      .button {
         width: 100%;
         max-width: 350px;
         line-height: 30px;
