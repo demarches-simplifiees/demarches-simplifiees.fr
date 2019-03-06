@@ -204,7 +204,7 @@ class StatsController < ApplicationController
 
   def max_date
     if administration_signed_in?
-      Time.zone.now.to_date
+      Time.zone.now
     else
       Time.zone.now.beginning_of_month - 1.second
     end
