@@ -8,13 +8,13 @@ class TypesDeChamp::TypeDeChampBase
   end
 
   def tags_for_template
-    l = libelle
+    tdc = @type_de_champ
     [
       {
-        libelle: l,
+        libelle: libelle,
         description: description,
         lambda: -> (champs) {
-          champs.detect { |champ| champ.libelle == l }
+          champs.detect { |champ| champ.type_de_champ == tdc }
         }
       }
     ]

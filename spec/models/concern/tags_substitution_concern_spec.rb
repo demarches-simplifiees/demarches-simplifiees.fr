@@ -115,12 +115,10 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when the procedure has a linked drop down menus type de champ' do
-      let(:types_de_champ) do
-        [
-          create(:type_de_champ_linked_drop_down_list, libelle: 'libelle')
-        ]
+      let(:type_de_champ) do
+        create(:type_de_champ_linked_drop_down_list, libelle: 'libelle')
       end
-
+      let(:types_de_champ) { [type_de_champ] }
       let(:template) { 'tout : --libelle--, primaire : --libelle/primaire--, secondaire : --libelle/secondaire--' }
 
       context 'and the champ has no value' do
@@ -129,22 +127,31 @@ describe TagsSubstitutionConcern, type: :model do
 
       context 'and the champ has a primary value' do
         before do
-          c = dossier.champs.detect { |champ| champ.libelle == 'libelle' }
-          c.primary_value = 'primo'
-          c.save
+          dossier.champs.find_by(type_de_champ: type_de_champ).update(primary_value: 'primo')
+          dossier.reload
         end
+
         it { is_expected.to eq('tout : primo, primaire : primo, secondaire : ') }
-      end
 
-      context 'and the champ has a primary and secondary value' do
-        before do
-          c = dossier.champs.detect { |champ| champ.libelle == 'libelle' }
-          c.primary_value = 'primo'
-          c.secondary_value = 'secundo'
-          c.save
+        context 'and the champ has a secondary value' do
+          before do
+            dossier.champs.find_by(type_de_champ: type_de_champ).update(secondary_value: 'secundo')
+            dossier.reload
+          end
+
+          it { is_expected.to eq('tout : primo / secundo, primaire : primo, secondaire : secundo') }
+
+          context 'and the same libelle is used by a header' do
+            let(:types_de_champ) do
+              [
+                type_de_champ,
+                create(:type_de_champ_header_section, libelle: 'libelle')
+              ]
+            end
+
+            it { is_expected.to eq('tout : primo / secundo, primaire : primo, secondaire : secundo') }
+          end
         end
-
-        it { is_expected.to eq('tout : primo / secundo, primaire : primo, secondaire : secundo') }
       end
     end
 
