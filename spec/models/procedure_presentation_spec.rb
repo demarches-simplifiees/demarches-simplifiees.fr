@@ -86,7 +86,7 @@ describe ProcedurePresentation do
 
       subject { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure)) }
 
-      it { expect(subject.fields).to eq(expected) }
+      it { expect(subject.fields).to match_array(expected) }
     end
 
     context 'when the procedure is for individuals' do
