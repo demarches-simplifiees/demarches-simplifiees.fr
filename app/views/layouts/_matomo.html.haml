@@ -23,7 +23,7 @@
     addEventListener('turbolinks:load', function(event) {
       if (previousPageUrl) {
         _paq.push(['setReferrerUrl', previousPageUrl]);
-        _paq.push(['setCustomUrl', '/' + window.location.href]);
+        _paq.push(['setCustomUrl', window.location.href]);
         _paq.push(['setDocumentTitle', document.title]);
         if (event.data && event.data.timing) {
           _paq.push(['setGenerationTimeMs', event.data.timing.visitEnd - event.data.timing.visitStart]);
