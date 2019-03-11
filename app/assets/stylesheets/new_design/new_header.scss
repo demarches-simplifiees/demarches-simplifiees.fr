@@ -173,6 +173,8 @@ $landing-breakpoint: 1040px;
 .header-menu-button {
   border: none;
   padding: 0;
+  line-height: 14px;
+  vertical-align: middle;
 
   &:hover {
     background: none;
