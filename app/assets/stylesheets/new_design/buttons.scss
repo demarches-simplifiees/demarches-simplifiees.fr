@@ -62,7 +62,7 @@
       background-color: $medium-red;
 
       > .icon {
-        filter: brightness(100);
+        filter: contrast(0) brightness(100);
       }
     }
   }
