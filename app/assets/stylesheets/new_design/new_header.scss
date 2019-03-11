@@ -129,7 +129,8 @@ $landing-breakpoint: 1040px;
     padding: 9px;
     padding-right: 42px;
     float: right;
-    width: 300px;
+    max-width: 300px;
+    min-width: 90px;
     margin: 0;
   }
 
