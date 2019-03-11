@@ -15,7 +15,7 @@
             %span.icon.printer
           %ul.print-menu.dropdown-content
             %li
-              = link_to "Tout le dossier", print_gestionnaire_dossier_path(dossier.procedure, dossier), target: "_blank", class: "menu-item menu-link"
+              = link_to "Tout le dossier", print_gestionnaire_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
             %li
               = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
 

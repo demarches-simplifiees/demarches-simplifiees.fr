@@ -35,7 +35,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     received_mail_template: MailTemplateField,
     closed_mail_template: MailTemplateField,
     refused_mail_template: MailTemplateField,
-    without_continuation_mail_template: MailTemplateField
+    without_continuation_mail_template: MailTemplateField,
+    attestation_template: AttestationTemplateField
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -81,7 +82,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :received_mail_template,
     :closed_mail_template,
     :refused_mail_template,
-    :without_continuation_mail_template
+    :without_continuation_mail_template,
+    :attestation_template
   ].freeze
 
   # FORM_ATTRIBUTES

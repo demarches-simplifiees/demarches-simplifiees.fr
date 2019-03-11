@@ -40,25 +40,17 @@ class TypeDeChamp < ApplicationRecord
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj
   delegate :tags_for_template, to: :dynamic_type
 
-  # TODO simplify after migrating `options` column to (non YAML encoded) JSON
-  class MaybeYaml
-    def load(options)
-      case options
-      when String
-        YAML.safe_load(options, [ActiveSupport::HashWithIndifferentAccess])
-      when Hash
-        options.with_indifferent_access
-      else
-        options
-      end
+  class WithIndifferentAccess
+    def self.load(options)
+      options&.with_indifferent_access
     end
 
-    def dump(options)
+    def self.dump(options)
       options
     end
   end
 
-  serialize :options, MaybeYaml.new
+  serialize :options, WithIndifferentAccess
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id

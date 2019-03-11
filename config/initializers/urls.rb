@@ -6,6 +6,7 @@ API_GEO_URL = ENV.fetch("API_GEO_URL", "https://geo.api.gouv.fr")
 API_GEO_SANDBOX_URL = ENV.fetch("API_GEO_SANDBOX_URL", "https://sandbox.geo.api.gouv.fr")
 HELPSCOUT_API_URL = ENV.fetch("HELPSCOUT_API_URL", "https://api.helpscout.net/v2")
 PIPEDRIVE_API_URL = ENV.fetch("PIPEDRIVE_API_URL", "https://api.pipedrive.com/v1")
+SENDINBLUE_API_URL = ENV.fetch("SENDINBLUE_API_URL", "https://in-automate.sendinblue.com/api/v2")
 
 # Internal URLs
 FOG_BASE_URL = "https://static.demarches-simplifiees.fr"

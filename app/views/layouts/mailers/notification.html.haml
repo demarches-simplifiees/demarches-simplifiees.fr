@@ -2,6 +2,6 @@
   %strong
     Merci de ne pas répondre à cet email. Pour vous adresser à votre administration, passez directement par votre
     = succeed '.' do
-      = link_to 'messagerie', messagerie_dossier_url(@dossier), target: '_blank'
+      = link_to 'messagerie', messagerie_dossier_url(@dossier), target: '_blank', rel: 'noopener'
 
 = render template: 'layouts/mailers/layout'

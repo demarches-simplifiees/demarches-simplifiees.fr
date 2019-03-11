@@ -50,10 +50,12 @@ class ProcedurePresentation < ApplicationRecord
 
     fields.concat procedure.types_de_champ
       .where.not(type_champ: explanatory_types_de_champ)
+      .order(:id)
       .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s) }
 
     fields.concat procedure.types_de_champ_private
       .where.not(type_champ: explanatory_types_de_champ)
+      .order(:id)
       .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s) }
 
     fields
