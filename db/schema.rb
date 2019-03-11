@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_26_105641) do
+ActiveRecord::Schema.define(version: 2019_03_11_140926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -536,7 +536,6 @@ ActiveRecord::Schema.define(version: 2019_02_26_105641) do
     t.integer "procedure_id"
     t.text "description"
     t.boolean "mandatory", default: false
-    t.string "type"
     t.boolean "private", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -559,6 +558,7 @@ ActiveRecord::Schema.define(version: 2019_02_26_105641) do
     t.integer "order_place"
     t.string "lien_demarche"
     t.boolean "mandatory", default: false
+    t.index ["procedure_id"], name: "index_types_de_piece_justificative_on_procedure_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
