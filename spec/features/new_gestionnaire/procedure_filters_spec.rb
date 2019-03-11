@@ -96,20 +96,20 @@ feature "procedure filters" do
     remove_filter(champ.value)
 
     within ".dossiers-table" do
-      expect(page).not_to have_link(new_unfollow_dossier.id)
+      expect(page).not_to have_link(new_unfollow_dossier.id, exact: true)
       expect(page).not_to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).to have_link(new_unfollow_dossier_2.id)
+      expect(page).to have_link(new_unfollow_dossier_2.id, exact: true)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
 
     remove_filter(champ_2.value)
 
     within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id)
+      expect(page).to have_link(new_unfollow_dossier.id, exact: true)
       expect(page).to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).to have_link(new_unfollow_dossier_2.id)
+      expect(page).to have_link(new_unfollow_dossier_2.id, exact: true)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
   end
