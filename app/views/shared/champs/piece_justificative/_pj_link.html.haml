@@ -2,7 +2,7 @@
 
 .pj-link
   - if champ.virus_scan.blank? || champ.virus_scan.safe?
-    = link_to url_for(pj), target: '_blank', title: "Télécharger la pièce jointe" do
+    = link_to url_for(pj), target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe" do
       %span.icon.attachment
       = pj.filename.to_s
     - if champ.virus_scan.blank?

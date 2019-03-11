@@ -1,0 +1,33 @@
+- if field.data
+  %strong Activée
+  %p
+    = field.data.activated
+
+  %strong Logo
+  %p
+  - if field.data.logo.present?
+    = image_tag field.data.logo.url
+  - else
+    Aucun
+
+  %strong Titre
+  %pre{ style: "white-space: pre-wrap;" }
+    = field.data.title
+
+  %strong Corps
+  %pre{ style: "white-space: pre-wrap;" }
+    = field.data.body
+
+  %strong Signature
+  %p
+    - if field.data.signature.present?
+      = image_tag field.data.signature.url
+    - else
+      Aucun
+
+  %strong Pied de page
+  %pre{ style: "white-space: pre-wrap;" }
+    = field.data.footer
+
+- else
+  Aucun modèle d'attestation

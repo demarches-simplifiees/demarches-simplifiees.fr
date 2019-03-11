@@ -65,7 +65,7 @@
 
         - if dossier.attestation.present?
           .action
-            = link_to attestation_dossier_path(dossier), target: '_blank', class: 'button primary' do
+            = link_to attestation_dossier_path(dossier), target: '_blank', rel: 'noopener', class: 'button primary' do
               %span.icon.download
               Télécharger l’attestation
 
