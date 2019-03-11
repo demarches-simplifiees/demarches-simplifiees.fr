@@ -321,8 +321,19 @@ describe TagsSubstitutionConcern, type: :model do
   describe 'tags' do
     subject { template_concern.tags }
 
-    let(:types_de_champ) { [create(:type_de_champ, libelle: 'public')] }
+    let(:types_de_champ) do
+      [
+        create(:type_de_champ, libelle: 'public'),
+        create(:type_de_champ_header_section, libelle: 'entête de section'),
+        create(:type_de_champ_explication, libelle: 'explication')
+      ]
+    end
     let(:types_de_champ_private) { [create(:type_de_champ, :private, libelle: 'privé')] }
+
+    context 'do not generate tags for champs that cannot have usager content' do
+      it { is_expected.not_to include(include({ libelle: 'entête de section' })) }
+      it { is_expected.not_to include(include({ libelle: 'explication' })) }
+    end
 
     context 'when generating a document for a dossier terminé' do
       it { is_expected.to include(include({ libelle: 'motivation' })) }
