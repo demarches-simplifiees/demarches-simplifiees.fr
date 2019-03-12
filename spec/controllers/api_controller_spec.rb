@@ -5,7 +5,7 @@ describe APIController, type: :controller do
     let(:procedure) { create(:procedure) }
     let(:admin) { procedure.administrateurs.first }
 
-    subject { controller.send(:'valid_token_for_procedure?', procedure) }
+    subject { !!controller.send(:find_administrateur_for_token, procedure) }
 
     context 'when the admin has not any token' do
       context 'and the token is not given' do
