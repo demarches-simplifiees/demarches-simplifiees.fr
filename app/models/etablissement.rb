@@ -9,8 +9,6 @@ class Etablissement < ApplicationRecord
   validates :siret, presence: true
   validates :dossier_id, uniqueness: { allow_nil: true }
 
-  validate :validate_signature
-
   def search_terms
     [
       entreprise_siren,
@@ -52,16 +50,6 @@ class Etablissement < ApplicationRecord
     ].reject(&:blank?).join(', ').squeeze(' ')
   end
 
-  def verify
-    SignatureService.verify(signature, message_for_signature)
-  end
-
-  def sign
-    SignatureService.sign(message_for_signature)
-  end
-
-  attr_accessor :signature
-
   def association?
     association_rna.present?
   end
@@ -82,19 +70,5 @@ class Etablissement < ApplicationRecord
       prenom: entreprise_prenom,
       inline_adresse: inline_adresse
     )
-  end
-
-  private
-
-  def validate_signature
-    if champ && !verify
-      errors.add(:base, 'Numéro SIRET introuvable.')
-    end
-  end
-
-  def message_for_signature
-    JSON.pretty_generate(as_json(include: {
-      exercices: { only: [:ca, :date_fin_exercice, :date_fin_exercice_timestamp] }
-    }).delete_if { |_k, v| v.blank? })
   end
 end

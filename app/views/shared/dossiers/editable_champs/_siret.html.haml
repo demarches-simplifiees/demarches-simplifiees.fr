@@ -7,5 +7,3 @@
 %div{ class: "siret-info-#{form.index}" }
   - if champ.etablissement.present?
     = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: champ.etablissement }
-    = form.fields_for :etablissement do |form|
-      = render partial: 'shared/dossiers/editable_champs/etablissement', locals: { form: form, signature: champ.etablissement.sign }
