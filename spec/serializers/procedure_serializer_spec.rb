@@ -21,7 +21,7 @@ describe ProcedureSerializer do
       p
     end
 
-    let(:procedure) { original_procedure.clone(original_procedure.administrateur, false) }
+    let(:procedure) { original_procedure.clone(original_procedure.administrateurs.first, false) }
 
     let(:type_pj) { original_procedure.types_de_piece_justificative.first }
     let(:migrated_type_champ) { procedure.types_de_champ.find_by(libelle: type_pj.libelle) }

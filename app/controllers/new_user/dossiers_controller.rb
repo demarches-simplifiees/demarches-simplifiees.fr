@@ -186,7 +186,7 @@ module NewUser
     end
 
     def ask_deletion
-      dossier = current_user.dossiers.includes(:user, procedure: :administrateur).find(params[:id])
+      dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
 
       if dossier.can_be_deleted_by_user?
         dossier.delete_and_keep_track

@@ -1,6 +1,8 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
+  self.ignored_columns = [:administrateur_id]
+
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
@@ -12,7 +14,6 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
 
-  belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
   belongs_to :service
 
@@ -48,7 +49,7 @@ class Procedure < ApplicationRecord
 
   scope :for_api, -> {
     includes(
-      :administrateur,
+      :administrateurs,
       :types_de_champ_private,
       :types_de_champ,
       :types_de_piece_justificative,
@@ -101,12 +102,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_or_reopen!(path)
-    if archivee? && may_reopen?(path)
-      reopen!(path)
-    elsif may_publish?(path)
+  def publish_or_reopen!(administrateur, path)
+    if archivee? && may_reopen?(administrateur, path)
+      reopen!(administrateur, path)
+    elsif may_publish?(administrateur, path)
       reset!
-      publish!(path)
+      publish!(administrateur, path)
     end
   end
 
@@ -220,7 +221,6 @@ class Procedure < ApplicationRecord
       procedure.administrateurs = administrateurs
     end
 
-    procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
     procedure.received_mail = received_mail&.dup
     procedure.closed_mail = closed_mail&.dup
@@ -340,7 +340,7 @@ class Procedure < ApplicationRecord
   PATH_NOT_AVAILABLE_BROUILLON = :not_available_brouillon
   PATH_CAN_PUBLISH = [PATH_AVAILABLE, PATH_AVAILABLE_PUBLIEE]
 
-  def path_availability(path)
+  def path_availability(administrateur, path)
     Procedure.path_availability(administrateur, path, id)
   end
 
@@ -391,7 +391,9 @@ class Procedure < ApplicationRecord
   private
 
   def claim_path_ownership!(path)
-    procedure = Procedure.where(administrateur: administrateur).find_by(path: path)
+    procedure = Procedure.joins(:administrateurs)
+      .where(administrateurs: { id: administrateur_ids })
+      .find_by(path: path)
 
     if procedure&.publiee? && procedure != self
       procedure.archive!
@@ -400,17 +402,21 @@ class Procedure < ApplicationRecord
     update!(path: path)
   end
 
-  def can_publish?(path)
-    path_availability(path).in?(PATH_CAN_PUBLISH)
+  def can_publish?(administrateur, path)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
   end
 
-  def after_publish(path)
+  def can_reopen?(administrateur, path)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
+  end
+
+  def after_publish(administrateur, path)
     update!(published_at: Time.zone.now)
 
     claim_path_ownership!(path)
   end
 
-  def after_reopen(path)
+  def after_reopen(administrateur, path)
     update!(published_at: Time.zone.now, archived_at: nil)
 
     claim_path_ownership!(path)

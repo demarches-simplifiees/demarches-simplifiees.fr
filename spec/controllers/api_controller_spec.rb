@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe APIController, type: :controller do
-  describe 'valid_token_for_administrateur?' do
-    let!(:admin) { create(:administrateur) }
+  describe 'valid_token_for_procedure?' do
+    let(:procedure) { create(:procedure) }
+    let(:admin) { procedure.administrateurs.first }
 
-    subject { controller.send(:'valid_token_for_administrateur?', admin) }
+    subject { controller.send(:'valid_token_for_procedure?', procedure) }
 
     context 'when the admin has not any token' do
       context 'and the token is not given' do

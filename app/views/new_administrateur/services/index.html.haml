@@ -9,7 +9,7 @@
   = form_for @procedure,  url: { controller: "new_administrateur/services", action: :add_to_procedure } , html: { class: 'form' } do |f|
     = f.label :service_id, "La démarche #{@procedure.libelle} est affectée au service"
     = f.select :service_id,
-      current_administrateur.services.map { |s| [ s.nom, s.id ] },
+      @services.map { |s| [ s.nom, s.id ] },
       { prompt: 'choisir un service', selected: @procedure.service&.id },
       required: true
 

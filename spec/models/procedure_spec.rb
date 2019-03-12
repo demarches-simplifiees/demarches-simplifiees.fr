@@ -344,7 +344,7 @@ describe Procedure do
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail) { create(:received_mail) }
     let(:from_library) { false }
-    let(:administrateur) { procedure.administrateur }
+    let(:administrateur) { procedure.administrateurs.first }
 
     before do
       @logo = File.open('spec/fixtures/files/white.png')
@@ -419,7 +419,6 @@ describe Procedure do
       end
 
       it 'should have one administrateur' do
-        expect(subject.administrateur).to eq(administrateur)
         expect(subject.administrateurs).to eq([administrateur])
       end
     end
@@ -444,7 +443,6 @@ describe Procedure do
       end
 
       it 'should have one administrateur' do
-        expect(subject.administrateur).to eq(administrateur)
         expect(subject.administrateurs).to eq([administrateur])
       end
     end
@@ -495,14 +493,14 @@ describe Procedure do
 
     before do
       Timecop.freeze(now)
-      procedure.publish!("example-path")
+      procedure.publish!(procedure.administrateurs.first, "example-path")
     end
     after { Timecop.return }
 
     it { expect(procedure.archived_at).to eq(nil) }
     it { expect(procedure.published_at).to eq(now) }
     it { expect(Procedure.find_by(path: "example-path")).to eq(procedure) }
-    it { expect(Procedure.find_by(path: "example-path").administrateur).to eq(procedure.administrateur) }
+    it { expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs) }
   end
 
   describe "#brouillon?" do

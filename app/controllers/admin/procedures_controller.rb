@@ -44,7 +44,7 @@ class Admin::ProceduresController < AdminController
 
   def edit
     @path = @procedure.path || @procedure.default_path
-    @availability = @procedure.path_availability(@path)
+    @availability = @procedure.path_availability(current_administrateur, @path)
   end
 
   def destroy
@@ -96,7 +96,7 @@ class Admin::ProceduresController < AdminController
       flash.now.alert = @procedure.errors.full_messages
       @path = procedure_params[:path]
       if @path.present?
-        @availability = @procedure.path_availability(@path)
+        @availability = @procedure.path_availability(current_administrateur, @path)
       end
       render 'edit'
     elsif @procedure.brouillon?
@@ -121,7 +121,7 @@ class Admin::ProceduresController < AdminController
       procedure.path = nil
     end
 
-    if procedure.publish_or_reopen!(path)
+    if procedure.publish_or_reopen!(current_administrateur, path)
       flash.notice = "Démarche publiée"
       redirect_to admin_procedures_path
     else
@@ -195,7 +195,7 @@ class Admin::ProceduresController < AdminController
       .pluck('procedures.id')
 
     @grouped_procedures = Procedure
-      .includes(:administrateur, :service)
+      .includes(:administrateurs, :service)
       .where(id: significant_procedure_ids)
       .group_by(&:organisation_name)
       .sort_by { |_, procedures| procedures.first.created_at }
@@ -217,11 +217,10 @@ class Admin::ProceduresController < AdminController
     json_path_list = Procedure
       .find_with_path(params[:request])
       .order(:id)
-      .pluck(:path, :administrateur_id)
-      .map do |path, administrateur_id|
+      .map do |procedure|
         {
-          label: path,
-          mine: administrateur_id == current_administrateur.id
+          label: procedure.path,
+          mine: current_administrateur.owns?(procedure)
         }
       end.to_json
 
@@ -234,7 +233,7 @@ class Admin::ProceduresController < AdminController
 
     if procedure_id.present?
       procedure = current_administrateur.procedures.find(procedure_id)
-      @availability = procedure.path_availability(path)
+      @availability = procedure.path_availability(current_administrateur, path)
     else
       @availability = Procedure.path_availability(current_administrateur, path)
     end
@@ -273,7 +272,7 @@ class Admin::ProceduresController < AdminController
     if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
-      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, :path).merge(administrateur_id: current_administrateur.id)
+      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, :path)
     end
   end
 end
