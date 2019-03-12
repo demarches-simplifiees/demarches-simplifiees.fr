@@ -151,9 +151,7 @@ describe ApplicationController, type: :controller do
     let(:current_gestionnaire) { create(:gestionnaire) }
 
     before do
-      allow(current_gestionnaire).to receive(:feature_enabled?).and_return(feature_enabled)
       allow(@controller).to receive(:current_gestionnaire).and_return(current_gestionnaire)
-
       allow(@controller).to receive(:redirect_to)
       allow(@controller).to receive(:trusted_device?).and_return(trusted_device)
       allow(@controller).to receive(:gestionnaire_signed_in?).and_return(gestionnaire_signed_in)
@@ -171,7 +169,9 @@ describe ApplicationController, type: :controller do
         let(:gestionnaire_signed_in) { true }
 
         context 'when the feature is activated' do
-          let(:feature_enabled) { true }
+          before do
+            Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
+          end
 
           context 'when the device is trusted' do
             let(:trusted_device) { true }
@@ -183,7 +183,9 @@ describe ApplicationController, type: :controller do
         end
 
         context 'when the feature is activated' do
-          let(:feature_enabled) { true }
+          before do
+            Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
+          end
 
           context 'when the device is not trusted' do
             let(:trusted_device) { false }
