@@ -14,7 +14,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     path: ProcedureLinkField,
     dossiers: Field::HasMany,
     gestionnaires: Field::HasMany,
-    administrateur: Field::BelongsTo,
+    administrateurs: Field::HasMany,
     id: Field::Number.with_options(searchable: true),
     libelle: Field::String,
     description: Field::String,
@@ -58,7 +58,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :path,
-    :administrateur,
+    :administrateurs,
     :libelle,
     :description,
     :lien_site_web,

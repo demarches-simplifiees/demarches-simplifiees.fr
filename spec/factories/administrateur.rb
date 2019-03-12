@@ -23,7 +23,8 @@ FactoryBot.define do
 
   trait :with_procedure do
     after(:create) do |admin|
-      admin.procedures << create(:simple_procedure, administrateur: admin)
+      create(:simple_procedure, administrateur: admin)
+      admin.reload
     end
   end
 end

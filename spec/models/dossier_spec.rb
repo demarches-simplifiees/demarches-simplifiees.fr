@@ -652,7 +652,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_construction) }
       it 'notifies the procedure administrateur' do
         expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateur.email)
+        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateurs.first.email)
       end
     end
 

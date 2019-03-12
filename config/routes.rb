@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       post 'whitelist', on: :member
       post 'draft', on: :member
       post 'hide', on: :member
+      post 'add_administrateur', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do

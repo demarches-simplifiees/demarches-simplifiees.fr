@@ -24,5 +24,17 @@ module Manager
       flash[:notice] = "La démarche a bien été supprimée, en cas d'erreur contactez un développeur."
       redirect_to manager_procedures_path
     end
+
+    def add_administrateur
+      procedure = Procedure.find(params[:id])
+      administrateur = Administrateur.find_by(email: params[:email])
+      if administrateur
+        procedure.administrateurs << administrateur
+        flash[:notice] = "L'administrateur \"#{params[:email]}\" est ajouté à la démarche."
+      else
+        flash[:alert] = "L'administrateur \"#{params[:email]}\" est introuvable."
+      end
+      redirect_to manager_procedure_path(procedure)
+    end
   end
 end

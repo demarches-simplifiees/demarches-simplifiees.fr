@@ -41,7 +41,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
   describe 'procedure is published' do
     before do
-      procedure.publish!('fake_path')
+      procedure.publish!(procedure.administrateurs.first, 'fake_path')
       procedure.reload
       render
     end
@@ -59,7 +59,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
   describe 'procedure is archived' do
     before do
-      procedure.publish!('fake_path')
+      procedure.publish!(procedure.administrateurs.first, 'fake_path')
       procedure.archive!
       procedure.reload
       render

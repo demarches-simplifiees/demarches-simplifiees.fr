@@ -109,7 +109,7 @@ class AdministrateurUsageStatisticsService
   end
 
   def nb_demarches_by_administrateur_id_and_state
-    @nb_demarches_by_administrateur_id_and_state ||= with_default(0, Procedure.group(:administrateur_id, :aasm_state).count)
+    @nb_demarches_by_administrateur_id_and_state ||= with_default(0, Procedure.joins(:administrateurs).group('administrateurs.id', :aasm_state).count)
   end
 
   def nb_services_by_administrateur_id
@@ -128,9 +128,9 @@ class AdministrateurUsageStatisticsService
     result = {}
 
     Dossier
-      .joins(:procedure)
+      .joins(procedure: [:administrateurs])
       .group(
-        :administrateur_id,
+        'administrateurs.id',
         :procedure_id,
         <<~EOSQL
           CASE

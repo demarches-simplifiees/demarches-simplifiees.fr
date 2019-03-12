@@ -815,7 +815,7 @@ describe NewUser::DossiersController, type: :controller do
       let(:dossier) { create(:dossier, :en_construction, user: user, autorisation_donnees: true) }
 
       it "notifies the user and the admin of the deletion" do
-        expect(DossierMailer).to receive(:notify_deletion_to_administration).with(kind_of(DeletedDossier), dossier.procedure.administrateur.email).and_return(double(deliver_later: nil))
+        expect(DossierMailer).to receive(:notify_deletion_to_administration).with(kind_of(DeletedDossier), dossier.procedure.administrateurs.first.email).and_return(double(deliver_later: nil))
         expect(DossierMailer).to receive(:notify_deletion_to_user).with(kind_of(DeletedDossier), dossier.user.email).and_return(double(deliver_later: nil))
         subject
       end

@@ -59,7 +59,7 @@ describe DossierSerializer do
     end
 
     let(:procedure) do
-      p = original_procedure.clone(original_procedure.administrateur, false)
+      p = original_procedure.clone(original_procedure.administrateurs.first, false)
       p.save
       p
     end
