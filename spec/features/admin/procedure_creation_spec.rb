@@ -8,7 +8,6 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   let(:test_strategy) { Flipflop::FeatureSet.current.test! }
 
   before do
-    test_strategy.switch!(:publish_draft, true)
     test_strategy.switch!(:new_champs_editor, true)
     login_as administrateur, scope: :administrateur
     visit root_path
@@ -45,29 +44,6 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
         expect(page).to have_text('Libelle doit être rempli')
         fill_in_dummy_procedure_details
-        click_on 'save-procedure'
-
-        expect(page).to have_current_path(champs_procedure_path(Procedure.last))
-      end
-    end
-
-    context "when publish_draft disabled" do
-      before do
-        test_strategy.switch!(:publish_draft, false)
-      end
-
-      scenario 'Finding save button for new procedure, libelle, description and cadre_juridique required' do
-        expect(page).to have_selector('#new-procedure')
-        find('#new-procedure').click
-        click_on 'from-scratch'
-
-        expect(page).to have_current_path(new_admin_procedure_path)
-        fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
-        fill_in 'procedure_duree_conservation_dossiers_hors_ds', with: '6'
-        click_on 'save-procedure'
-
-        expect(page).to have_text('Libelle doit être rempli')
-        fill_in_dummy_procedure_details(fill_path: false)
         click_on 'save-procedure'
 
         expect(page).to have_current_path(champs_procedure_path(Procedure.last))

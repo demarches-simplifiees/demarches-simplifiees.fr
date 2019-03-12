@@ -7,7 +7,6 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
-    Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
     login_as administrateur, scope: :administrateur
     visit new_from_existing_admin_procedures_path
   end
