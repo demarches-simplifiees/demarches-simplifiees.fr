@@ -104,45 +104,6 @@
     .clearfix
 
   - if administration_signed_in?
-    %h2.new-h2 Avis
-
-    .stat-cards
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Taux d'utilisation des avis
-        = line_chart @avis_usage, ytitle: 'dossiers avec avis / total dossiers', xtitle: 'semaines'
-
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Temps de réponse moyen par avis
-        = line_chart @avis_average_answer_time, ytitle: 'jours', xtitle: 'semaines'
-
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Pourcentage d'avis rempli
-        = line_chart @avis_answer_percentages, ytitle: 'avis avec réponse / total avis', xtitle: 'semaines'
-
-      .clearfix
-
-    %h2.new-h2 Encart motivation
-
-    .stat-cards
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Taux d'utilisation des motivations (par dossier)
-        = column_chart @motivation_usage_dossier, ytitle: 'dossiers avec motivation / total dossiers', xtitle: 'semaines'
-
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Taux d'utilisation des motivations (par démarche)
-        = column_chart @motivation_usage_procedure, ytitle: 'démarches avec motivation / total démarches', xtitle: 'semaines'
-
-      .clearfix
-
-    %h2.new-h2 Utilisation de la bibliothèque
-
-    .stat-cards
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Taux d'utilisation de la bibliothèque
-        = column_chart @cloned_from_library_procedures_ratio, ytitle: 'démarches clonées / total démarches', xtitle: 'semaines'
-
-      .clearfix
-
     %h2.new-h2 Téléchargement
 
     = link_to "Télécharger les statistiques (CSV)", stats_download_path(format: :csv), class: 'button secondary'
