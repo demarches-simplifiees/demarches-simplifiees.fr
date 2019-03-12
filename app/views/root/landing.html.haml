@@ -43,7 +43,7 @@
         %ul.numbers
           %li.number
             .number-value
-              = number_with_delimiter(Procedure.includes(:administrateur).publiees_ou_archivees.map(&:administrateur).uniq.count, :locale => :fr)
+              = number_with_delimiter(Procedure.includes(:administrateurs).publiees_ou_archivees.flat_map(&:administrateurs).uniq.count, :locale => :fr)
             .number-label<
               administrations
               %br<>

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       post 'whitelist', on: :member
       post 'draft', on: :member
       post 'hide', on: :member
+      post 'add_administrateur', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
@@ -312,7 +313,7 @@ Rails.application.routes.draw do
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
-        get 'remove_filter/:statut/:table/:column' => 'procedures#remove_filter', as: 'remove_filter'
+        get 'remove_filter/:statut/:table/:column/:value' => 'procedures#remove_filter', as: 'remove_filter'
         get 'download_dossiers'
 
         resources :dossiers, only: [:show], param: :dossier_id do

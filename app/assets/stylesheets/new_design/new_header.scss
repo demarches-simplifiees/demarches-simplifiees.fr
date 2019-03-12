@@ -23,13 +23,23 @@ $landing-breakpoint: 1040px;
 
 .header-logo {
   display: inline-block;
-  margin-right: 4 * $default-spacer;
 
-  img {
-    height: 34px;
+  .header-logo-wide {
+    margin-right: 4 * $default-spacer;
+  }
 
-    @media (max-width: $landing-breakpoint) {
-      height: 18px;
+  .header-logo-narrow {
+    display: none;
+  }
+
+  @media (max-width: $landing-breakpoint) {
+    .header-logo-wide {
+      display: none;
+    }
+
+    .header-logo-narrow {
+      display: inline;
+      margin-right: 0;
     }
   }
 }
@@ -129,7 +139,8 @@ $landing-breakpoint: 1040px;
     padding: 9px;
     padding-right: 42px;
     float: right;
-    width: 300px;
+    max-width: 300px;
+    min-width: 90px;
     margin: 0;
   }
 

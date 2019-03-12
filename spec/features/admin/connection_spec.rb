@@ -5,9 +5,10 @@ feature 'Administrator connection' do
 
   let(:email) { 'admin1@admin.com' }
   let(:password) { 'mon chien aime les bananes' }
-  let!(:admin) { create(:administrateur, :with_admin_trusted_device, :with_procedure, email: email, password: password) }
+  let!(:admin) { create(:administrateur, :with_procedure, email: email, password: password) }
 
   before do
+    Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
     visit new_administrateur_session_path
   end
 

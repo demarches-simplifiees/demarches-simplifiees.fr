@@ -87,7 +87,7 @@ module NewGestionnaire
 
       @dossiers = @dossiers.where(id: filtered_sorted_paginated_ids)
 
-      eager_load_displayed_fields
+      @dossiers = procedure_presentation.eager_load_displayed_fields(@dossiers)
 
       @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
 
@@ -102,17 +102,13 @@ module NewGestionnaire
       end
 
       fields = values.map do |value|
-        table, column = value.split("/")
-
-        procedure_presentation.fields.find do |field|
-          field['table'] == table && field['column'] == column
-        end
+        find_field(*value.split('/'))
       end
 
       procedure_presentation.update(displayed_fields: fields)
 
       current_sort = procedure_presentation.sort
-      if !values.include?("#{current_sort['table']}/#{current_sort['column']}")
+      if !values.include?(field_id(current_sort))
         procedure_presentation.update(sort: Procedure.default_sort)
       end
 
@@ -145,7 +141,7 @@ module NewGestionnaire
       if params[:value].present?
         filters = procedure_presentation.filters
         table, column = params[:field].split('/')
-        label = procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }['label']
+        label = find_field(table, column)['label']
 
         filters[statut] << {
           'label' => label,
@@ -162,11 +158,9 @@ module NewGestionnaire
 
     def remove_filter
       filters = procedure_presentation.filters
-      filter_to_remove = current_filters.find do |filter|
-        filter['table'] == params[:table] && filter['column'] == params[:column]
-      end
 
-      filters[statut] = filters[statut] - [filter_to_remove]
+      to_remove = params.values_at(:table, :column, :value)
+      filters[statut].reject! { |filter| filter.values_at('table', 'column', 'value') == to_remove }
 
       procedure_presentation.update(filters: filters)
 
@@ -193,6 +187,14 @@ module NewGestionnaire
     end
 
     private
+
+    def find_field(table, column)
+      procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }
+    end
+
+    def field_id(field)
+      field.values_at('table', 'column').join('/')
+    end
 
     def statut
       @statut ||= (params[:statut].presence || 'a-suivre')
@@ -228,9 +230,7 @@ module NewGestionnaire
     end
 
     def displayed_fields_values
-      procedure_presentation.displayed_fields.map do |field|
-        "#{field['table']}/#{field['column']}"
-      end
+      procedure_presentation.displayed_fields.map { |field| field_id(field) }
     end
 
     def current_filters
@@ -238,44 +238,7 @@ module NewGestionnaire
     end
 
     def available_fields_to_filters
-      current_filters_fields_ids = current_filters.map do |field|
-        "#{field['table']}/#{field['column']}"
-      end
-
-      procedure_presentation.fields_for_select.reject do |field|
-        current_filters_fields_ids.include?(field[1])
-      end
-    end
-
-    def eager_load_displayed_fields
-      procedure_presentation.displayed_fields
-        .reject { |field| field['table'] == 'self' }
-        .group_by do |field|
-          if ['type_de_champ', 'type_de_champ_private'].include?(field['table'])
-            'type_de_champ_group'
-          else
-            field['table']
-          end
-        end.each do |group_key, fields|
-          case group_key
-          when 'type_de_champ_group'
-            if fields.any? { |field| field['table'] == 'type_de_champ' }
-              @dossiers = @dossiers.includes(:champs).references(:champs)
-            end
-
-            if fields.any? { |field| field['table'] == 'type_de_champ_private' }
-              @dossiers = @dossiers.includes(:champs_private).references(:champs_private)
-            end
-
-            where_conditions = fields.map do |field|
-              "champs.type_de_champ_id = #{field['column']}"
-            end.join(" OR ")
-
-            @dossiers = @dossiers.where(where_conditions)
-          else
-            @dossiers = @dossiers.includes(fields.first['table'])
-          end
-        end
+      procedure_presentation.fields_for_select
     end
 
     def kaminarize(current_page, total)

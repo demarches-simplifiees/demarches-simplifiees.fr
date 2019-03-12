@@ -33,15 +33,15 @@ describe 'admin/procedures/show.html.haml', type: :view do
         it { expect(rendered).not_to have_css('a#reopen-procedure') }
       end
 
-      describe 'procedure link is not present' do
-        it { expect(rendered).to have_content('Cette démarche n’a pas encore de lien, et n’est pas accessible par le public.') }
+      describe 'procedure path is not customized' do
+        it { expect(rendered).to have_content('Cette démarche est actuellement en test') }
       end
     end
   end
 
   describe 'procedure is published' do
     before do
-      procedure.publish!('fake_path')
+      procedure.publish!(procedure.administrateurs.first, 'fake_path')
       procedure.reload
       render
     end
@@ -59,7 +59,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
   describe 'procedure is archived' do
     before do
-      procedure.publish!('fake_path')
+      procedure.publish!(procedure.administrateurs.first, 'fake_path')
       procedure.archive!
       procedure.reload
       render
