@@ -14,7 +14,6 @@ feature 'Administrateurs can edit procedures', js: true do
   end
 
   before do
-    Flipflop::FeatureSet.current.test!.switch!(:publish_draft, true)
     login_as administrateur, scope: :administrateur
   end
 

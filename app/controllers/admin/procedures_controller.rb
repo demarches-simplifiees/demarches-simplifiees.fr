@@ -99,7 +99,7 @@ class Admin::ProceduresController < AdminController
         @availability = @procedure.path_availability(@path)
       end
       render 'edit'
-    elsif Flipflop.publish_draft? && @procedure.brouillon?
+    elsif @procedure.brouillon?
       reset_procedure
       flash.notice = 'Démarche modifiée. Tous les dossiers de cette démarche ont été supprimés.'
       redirect_to edit_admin_procedure_path(id: @procedure.id)
@@ -273,10 +273,7 @@ class Admin::ProceduresController < AdminController
     if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
-      if Flipflop.publish_draft?
-        editable_params << :path
-      end
-      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday).merge(administrateur_id: current_administrateur.id)
+      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, :path).merge(administrateur_id: current_administrateur.id)
     end
   end
 end
