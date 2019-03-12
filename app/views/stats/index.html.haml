@@ -84,15 +84,6 @@
         .chart.cumulative-dossiers-chart.hidden
           = area_chart @dossiers_cumulative
 
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title
-        Nombre d'administrations ayant dématérialisé N démarches
-
-      .chart-container
-        .chart
-          = pie_chart @procedures_count_per_administrateur,
-            colors: ["rgba(191, 220, 249, 1)", "rgba(113, 176, 239, 1)", "rgba(61, 149, 236, 1)"]
-
     - if administration_signed_in?
       .stat-card.stat-card-half.pull-left
         %span.stat-card-title Temps de traitement moyen d'un dossier

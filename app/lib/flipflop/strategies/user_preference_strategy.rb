@@ -9,18 +9,23 @@ module Flipflop::Strategies
     end
 
     def enabled?(feature)
-      # Can only check features if we have the user's session.
-      if request?
-        find_current_administrateur&.feature_enabled?(feature)
-      end
+      find_current_administrateur&.feature_enabled?(feature) ||
+      find_current_gestionnaire&.feature_enabled?(feature)
     end
 
     private
 
     def find_current_administrateur
-      if request.session["warden.user.administrateur.key"]
-        administrateur_id = request.session["warden.user.administrateur.key"][0][0]
+      administrateur_id = Current.administrateur&.id
+      if administrateur_id
         Administrateur.find_by(id: administrateur_id)
+      end
+    end
+
+    def find_current_gestionnaire
+      gestionnaire_id = Current.gestionnaire&.id
+      if gestionnaire_id
+        Gestionnaire.find_by(id: gestionnaire_id)
       end
     end
   end

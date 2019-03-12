@@ -38,7 +38,10 @@ class API::V1::DossiersController < APIController
   def fetch_procedure_and_check_token
     @procedure = Procedure.for_api.find(params[:procedure_id])
 
-    if !valid_token_for_administrateur?(@procedure.administrateur)
+    administrateur = find_administrateur_for_token(@procedure)
+    if administrateur
+      Current.administrateur = administrateur
+    else
       render json: {}, status: :unauthorized
     end
 

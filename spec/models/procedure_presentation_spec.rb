@@ -377,25 +377,28 @@ describe ProcedurePresentation do
 
     context 'for self table' do
       context 'for created_at column' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
+
         let!(:kept_dossier) { create(:dossier, procedure: procedure, created_at: Time.zone.local(2018, 9, 18, 14, 28)) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, created_at: Time.zone.local(2018, 9, 17, 23, 59)) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
       context 'for en_construction_at column' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' }] }
+
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
       context 'for updated_at column' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '18/9/2018' }] }
+
         let(:kept_dossier) { create(:dossier, procedure: procedure) }
         let(:discarded_dossier) { create(:dossier, procedure: procedure) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '18/9/2018' }] }
 
         before do
           kept_dossier.touch(time: Time.zone.local(2018, 9, 18, 14, 28))
@@ -406,9 +409,10 @@ describe ProcedurePresentation do
       end
 
       context 'ignore time of day' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018 19:30' }] }
+
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17, 15, 56)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 18, 5, 42)) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018 19:30' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
@@ -416,6 +420,7 @@ describe ProcedurePresentation do
       context 'for a malformed date' do
         context 'when its a string' do
           let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => 'malformed date' }] }
+
           it { is_expected.to match([]) }
         end
 
@@ -425,13 +430,31 @@ describe ProcedurePresentation do
           it { is_expected.to match([]) }
         end
       end
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' },
+            { 'table' => 'self', 'column' => 'en_construction_at', 'value' => '19/10/2018' }
+          ]
+        end
+
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
+        let!(:other_kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 19)) }
+        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for type_de_champ table' do
+      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' }] }
+
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
       let(:type_de_champ) { procedure.types_de_champ.first }
-      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' }] }
 
       before do
         type_de_champ.champ.create(dossier: kept_dossier, value: 'keep me')
@@ -439,13 +462,33 @@ describe ProcedurePresentation do
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' },
+            { 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'and' }
+          ]
+        end
+
+        let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          type_de_champ.champ.create(dossier: other_kept_dossier, value: 'and me too')
+        end
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for type_de_champ_private table' do
+      let(:filter) { [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' }] }
+
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
       let(:type_de_champ_private) { procedure.types_de_champ_private.first }
-      let(:filter) { [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' }] }
 
       before do
         type_de_champ_private.champ.create(dossier: kept_dossier, value: 'keep me')
@@ -453,34 +496,101 @@ describe ProcedurePresentation do
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' },
+            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'and' }
+          ]
+        end
+
+        let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          type_de_champ_private.champ.create(dossier: other_kept_dossier, value: 'and me too')
+        end
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for etablissement table' do
       context 'for entreprise_date_creation column' do
-        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2018, 6, 21))) }
-        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
         let(:filter) { [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }] }
 
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2018, 6, 21))) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
+
         it { is_expected.to contain_exactly(kept_dossier.id) }
+
+        context 'with multiple search values' do
+          let(:filter) do
+            [
+              { 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2016' },
+              { 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }
+            ]
+          end
+
+          let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2016, 6, 21))) }
+
+          it 'returns every dossier that matches any of the search criteria for a given column' do
+            is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+          end
+        end
       end
 
       context 'for code_postal column' do
         # All columns except entreprise_date_creation work exacly the same, just testing one
 
-        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75017')) }
-        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '25000')) }
         let(:filter) { [{ 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' }] }
 
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75017')) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '25000')) }
+
         it { is_expected.to contain_exactly(kept_dossier.id) }
+
+        context 'with multiple search values' do
+          let(:filter) do
+            [
+              { 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' },
+              { 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '88100' }
+            ]
+          end
+
+          let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '88100')) }
+
+          it 'returns every dossier that matches any of the search criteria for a given column' do
+            is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+          end
+        end
       end
     end
 
     context 'for user table' do
-      let!(:kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@keepmail.com')) }
-      let!(:discarded_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@discard.com')) }
       let(:filter) { [{ 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' }] }
 
+      let!(:kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@keepmail.com')) }
+      let!(:discarded_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@discard.com')) }
+
       it { is_expected.to contain_exactly(kept_dossier.id) }
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' },
+            { 'table' => 'user', 'column' => 'email', 'value' => 'beta.gouv.fr' }
+          ]
+        end
+
+        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'bazinga@beta.gouv.fr')) }
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
     end
 
     context 'for individual table' do
@@ -504,6 +614,109 @@ describe ProcedurePresentation do
         let(:filter) { [{ 'table' => 'individual', 'column' => 'nom', 'value' => 'Baker' }] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'individual', 'column' => 'prenom', 'value' => 'Josephine' },
+            { 'table' => 'individual', 'column' => 'prenom', 'value' => 'Romuald' }
+          ]
+        end
+
+        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'M', prenom: 'Romuald', nom: 'Pistis')) }
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
+    end
+  end
+
+  describe '#eager_load_displayed_fields' do
+    let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:displayed_dossier) { procedure_presentation.eager_load_displayed_fields(procedure.dossiers).first }
+
+    context 'for type de champ' do
+      let(:table) { 'type_de_champ' }
+      let(:column) { procedure.types_de_champ.first.id }
+
+      it 'preloads the champs relation' do
+        # Ideally, we would only preload the champs for the matching column
+
+        expect(displayed_dossier.association(:champs)).to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+
+    context 'for type de champ private' do
+      let(:table) { 'type_de_champ_private' }
+      let(:column) { procedure.types_de_champ_private.first.id }
+
+      it 'preloads the champs relation' do
+        # Ideally, we would only preload the champs for the matching column
+
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+
+    context 'for user' do
+      let(:table) { 'user' }
+      let(:column) { 'email' }
+
+      it 'preloads the user relation' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+
+    context 'for individual' do
+      let(:table) { 'individual' }
+      let(:column) { 'nom' }
+
+      it 'preloads the individual relation' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+      end
+    end
+
+    context 'for etablissement' do
+      let(:table) { 'etablissement' }
+      let(:column) { 'siret' }
+
+      it 'preloads the etablissement relation' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).to be_loaded
+      end
+    end
+
+    context 'for self' do
+      let(:table) { 'self' }
+      let(:column) { 'created_at' }
+
+      it 'does not preload anything' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
       end
     end
   end
