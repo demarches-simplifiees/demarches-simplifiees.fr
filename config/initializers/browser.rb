@@ -1,4 +1,4 @@
-# See .babelrc
+# See .browserslistrc
 Browser.modern_rules.clear
 Browser.modern_rules << -> b { b.chrome? && b.version.to_i >= 50 }
 Browser.modern_rules << -> b { b.ie? && b.version.to_i >= 11 && !b.compatibility_view? }

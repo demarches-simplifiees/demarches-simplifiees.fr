@@ -4,6 +4,7 @@ import Rails from 'rails-ujs';
 import * as ActiveStorage from 'activestorage';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
+import ReactUJS from '../shared/react-ujs';
 
 import '../shared/activestorage/ujs';
 import '../shared/rails-ujs-fix';
@@ -22,8 +23,6 @@ import '../new_design/support';
 import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/repetition';
-
-import '../new_design/administrateur/champs-editor';
 
 import { toggleCondidentielExplanation } from '../new_design/avis';
 import { scrollMessagerie } from '../new_design/messagerie';
@@ -47,6 +46,7 @@ Chartkick.addAdapter(Highcharts);
 Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
+
 
 // Expose globals
 window.DS = window.DS || DS;

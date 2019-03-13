@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2017,
     sourceType: 'module'
@@ -8,18 +9,24 @@ module.exports = {
     'process': true,
     'gon': true
   },
-  plugins: ['prettier'],
-  extends: ['eslint:recommended', 'prettier'],
+  plugins: ['prettier', 'react-hooks'],
+  extends: ['eslint:recommended', 'prettier', 'plugin:react/recommended'],
   env: {
     es6: true,
     browser: true
   },
   rules: {
-    'prettier/prettier': 'error'
+    'prettier/prettier': 'error',
+    'react-hooks/rules-of-hooks': 'error'
+  },
+  settings: {
+    react: {
+      version: 'detect'
+    }
   },
   overrides: [
     {
-      files: ['config/webpack/**/*.js'],
+      files: ['config/webpack/**/*.js', 'babel.config.js', 'postcss.config.js'],
       env: {
         node: true
       }
