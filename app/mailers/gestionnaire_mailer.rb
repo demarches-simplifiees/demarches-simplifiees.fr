@@ -43,4 +43,11 @@ class GestionnaireMailer < ApplicationMailer
 
     mail(to: gestionnaire.email, subject: subject)
   end
+
+  def send_notifications(gestionnaire, data)
+    @data = data
+    subject = "Vous avez du nouveau sur vos démarches"
+
+    mail(to: gestionnaire.email, subject: subject)
+  end
 end
