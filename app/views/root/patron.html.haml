@@ -105,8 +105,18 @@
       .button.dropdown-button .button.dropdown-button
       .dropdown-content.fade-in-down
         %ul.dropdown-items
-          %li .dropdown-content ul.dropdown-items li
-          %li .dropdown-content ul.dropdown-items li
+          %li
+            %a{ href: '#' }
+              %span.icon.mail
+              .dropdown-description
+                %h4 Action
+                %p Explanation
+          %li
+            %a{ href: '#' }
+              %span.icon.edit
+              .dropdown-description
+                %h4 Other action
+                %p Explanation
 
     .dropdown
       .button.dropdown-button .button.dropdown-button (left)
