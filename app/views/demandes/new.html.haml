@@ -70,7 +70,7 @@
     = text_field_tag :address, nil, required: true
 
     = label_tag :nb_of_procedures do
-      Combien de démarches souhaitez-vous dématerialiser ?
+      Combien de démarches souhaitez-vous dématérialiser ?
       %span.mandatory *
       = select_tag :nb_of_procedures,
         options_for_select(nb_of_procedures_options),
@@ -78,7 +78,7 @@
         required: true
 
     = label_tag :deadline do
-      À quelle échance voudriez-vous dématerialiser ?
+      À quelle échéance voudriez-vous dématérialiser ?
       %span.mandatory *
       = select_tag :deadline,
         options_for_select(deadline_options),
