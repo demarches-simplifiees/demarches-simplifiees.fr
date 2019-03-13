@@ -90,6 +90,7 @@ group :development do
   gem 'rubocop', require: false
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
+  gem 'web-console'
   gem 'xray-rails'
 end
 
