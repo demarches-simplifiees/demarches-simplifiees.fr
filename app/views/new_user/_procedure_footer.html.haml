@@ -27,7 +27,7 @@
             %a{ href: "tel:#{service.telephone}" }= service.telephone
 
           %p
-            Horaires : #{ service.horaires.sub(/\S/, &:downcase) }
+            Horaires : #{formatted_horaires(service.horaires)}
 
         - politiques = politiques_conservation_de_donnees(procedure)
         - if politiques.present?
