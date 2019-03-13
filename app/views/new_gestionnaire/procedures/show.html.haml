@@ -9,6 +9,8 @@
 
       .procedure-header
         %h1= procedure_libelle @procedure
+        = link_to 'configurez vos notifications', email_notifications_gestionnaire_procedure_path(@procedure), class: 'notifications'
+
 
         %ul.tabs
           = tab_item('à suivre',

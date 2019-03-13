@@ -315,6 +315,8 @@ Rails.application.routes.draw do
         post 'add_filter'
         get 'remove_filter/:statut/:table/:column/:value' => 'procedures#remove_filter', as: 'remove_filter'
         get 'download_dossiers'
+        get 'email_notifications'
+        patch 'update_email_notifications'
 
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
