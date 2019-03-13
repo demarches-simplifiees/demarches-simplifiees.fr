@@ -54,7 +54,7 @@ feature 'The gestionnaire part' do
 
     click_on 'En instruction'
 
-    within('.dropdown-items') do
+    within('.state-button') do
       click_on 'Accepter'
     end
 
