@@ -209,6 +209,25 @@ class Gestionnaire < ApplicationRecord
     trusted_device_token&.token_young?
   end
 
+  def email_notification_data
+    procedures_with_email_notifications
+      .reduce([]) do |acc, procedure|
+
+      h = {
+        nb_en_construction: procedure.dossiers.en_construction.count,
+        nb_notification: notifications_per_procedure(procedure).count
+      }
+
+      if h[:nb_en_construction] > 0 || h[:nb_notification] > 0
+        h[:procedure_id] = procedure.id
+        h[:procedure_libelle] = procedure.libelle
+        acc << h
+      end
+
+      acc
+    end
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)
