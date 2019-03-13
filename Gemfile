@@ -49,6 +49,7 @@ gem 'rack-mini-profiler'
 gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
+gem 'react-rails'
 gem 'rest-client'
 gem 'rgeo-geojson'
 gem 'sanitize-url'
@@ -63,7 +64,7 @@ gem 'spreadsheet_architect'
 gem 'turbolinks' # Turbolinks makes following links in your web application faster
 gem 'typhoeus'
 gem 'warden'
-gem 'webpacker', '>= 4.0.x'
+gem 'webpacker'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 group :test do
