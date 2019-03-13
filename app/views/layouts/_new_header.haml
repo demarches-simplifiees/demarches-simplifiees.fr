@@ -6,9 +6,7 @@
   .header-inner-content
 
     .flex.align-center
-      = link_to root_path_for_profile(nav_bar_profile), class: "header-logo" do
-        = image_tag "header/logo-ds.svg", alt: "demarches-simplifiees.fr", class: "header-logo-wide"
-        = image_tag "header/logo-ds-narrow.svg", alt: "demarches-simplifiees.fr", class: "header-logo-narrow"
+      = link_to '', root_path_for_profile(nav_bar_profile), class: "header-logo", title: "Revenir à l’accueil"
 
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         - current_url = request.path_info
