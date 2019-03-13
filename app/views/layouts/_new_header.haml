@@ -1,5 +1,6 @@
-/ We can't use &. because the controller may not implement #nav_bar_profile
+-# We can't use &. because the controller may not implement #nav_bar_profile
 - nav_bar_profile = controller.try(:nav_bar_profile)
+- dossier = controller.try(:dossier_for_help)
 
 .new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
@@ -95,4 +96,7 @@
 
       %li
         .header-help
-          = link_to 'Aide', FAQ_URL, class: "button primary", target: "_blank", rel: "noopener"
+          - if nav_bar_profile == :user && dossier.present?
+            = render partial: 'new_user/dossier_help_dropdown', locals: { dossier: dossier }
+          - else
+            = link_to 'Aide', FAQ_URL, class: "button primary"

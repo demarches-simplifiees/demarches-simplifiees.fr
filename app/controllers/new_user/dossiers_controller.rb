@@ -240,6 +240,11 @@ module NewUser
       flash.notice = 'La pièce jointe a bien été supprimée.'
     end
 
+    def dossier_for_help
+      dossier_id = params[:id] || params[:dossier_id]
+      @dossier || (dossier_id.present? && Dossier.find_by(id: dossier_id.to_i))
+    end
+
     private
 
     def store_user_location!
