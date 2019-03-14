@@ -13,6 +13,7 @@
     @extend .container;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
     @media (min-width: $two-columns-breakpoint) {
       flex-direction: row;
@@ -25,9 +26,11 @@
     padding: $two-columns-padding 0 $two-columns-padding 0;
     width: 100%;
     max-width: 500px;
+    margin: 0 auto;
 
     @media (min-width: $two-columns-breakpoint) {
       width: 45%;
+      margin: 0;
     }
   }
 }
