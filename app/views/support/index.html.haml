@@ -70,7 +70,12 @@
         = text_area_tag :text, params[:text], rows: 6, required: true
 
       .contact-champ
-        = label_tag :text, 'Pièce jointe'
+        = label_tag :text do
+          Pièce jointe
+          .notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
+            Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
+          .notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AUTRE } }
+            Une capture d’écran peut nous aider à identifier plus facilement le problème.
         = file_field_tag :file
 
       = hidden_field_tag :tags, @tags&.join(',')
