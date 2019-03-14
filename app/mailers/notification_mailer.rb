@@ -39,8 +39,9 @@ class NotificationMailer < ApplicationMailer
     @dossier = dossier
 
     if dossier.procedure.logo?
-      @logo_filename = dossier.procedure.logo.filename
-      attachments.inline[@logo_filename] = dossier.procedure.logo.read
+      logo_filename = dossier.procedure.logo.filename
+      attachments.inline[logo_filename] = dossier.procedure.logo.read
+      @logo_url = attachments[logo_filename].url
     end
 
     mail(subject: subject, to: email) do |format|
