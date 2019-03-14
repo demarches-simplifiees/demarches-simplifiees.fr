@@ -17,26 +17,17 @@
     @media (min-width: $two-columns-breakpoint) {
       flex-direction: row;
       align-items: stretch;
-      justify-content: center;
+      justify-content: space-between;
     }
   }
 
   .column {
-    padding: $two-columns-padding 0 0;
+    padding: $two-columns-padding 0 $two-columns-padding 0;
     width: 100%;
     max-width: 500px;
 
     @media (min-width: $two-columns-breakpoint) {
-      padding: $two-columns-padding;
-      width: 50%;
-
-      &:first-child {
-        padding-left: 0;
-      }
-
-      &:last-child {
-        padding-right: 0;
-      }
+      width: 45%;
     }
   }
 }
