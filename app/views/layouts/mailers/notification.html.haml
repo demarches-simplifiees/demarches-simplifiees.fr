@@ -1,3 +1,10 @@
+- if @logo_filename.present?
+  - content_for :procedure_logo do
+    %table{ width: "100%", border: "0", cellspacing: "0", cellpadding: "0" }
+      %tr
+        %td{ align: "center" }
+          = image_tag attachments[@logo_filename].url, style: "height: 150px;"
+
 - content_for :footer do
   %strong
     Merci de ne pas répondre à cet email. Pour vous adresser à votre administration, passez directement par votre
