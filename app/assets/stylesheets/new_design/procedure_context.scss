@@ -27,9 +27,11 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
   .procedure-title {
     font-size: 30px;
     margin: 20px 0 0;
+    text-align: center;
 
     @media (min-width: $procedure-context-breakpoint) {
       margin: 50px 0 32px;
+      text-align: left;
     }
   }
 
