@@ -22,7 +22,7 @@
           %span.mandatory *
         = select_tag :type, options_for_select(@options, params[:type]), include_blank: "Choisir un problème", required: true
 
-      .support.card.featured.hidden{ data: { 'contact-type-only': 'info demarche' } }
+      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INFO } }
         .card-title
           👉 Notre réponse
         .card-content
@@ -32,7 +32,7 @@
             %a{ href: 'https://faq.demarches-simplifiees.fr/article/12-contacter-le-service-en-charge-de-ma-demarche' }
               En savoir plus
 
-      .support.card.featured.hidden{ data: { 'contact-type-only': 'usager perdu' } }
+      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_PERDU } }
         .card-title
           👉 Notre réponse
         .card-content
@@ -43,7 +43,7 @@
             %a{ href: 'https://doc.demarches-simplifiees.fr/listes-des-demarches' }
               https://doc.demarches-simplifiees.fr/listes-des-demarches
 
-      .support.card.featured.hidden{ data: { 'contact-type-only': 'info instruction' } }
+      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INSTRUCTION } }
         .card-title
           👉 Notre réponse
         %p Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie.
