@@ -4,8 +4,9 @@ module NewAdministrateur
 
     def preview
       @procedure = procedure
-      mail_template = find_mail_template_by_slug(params[:id])
       @dossier = Dossier.new(id: 0)
+      mail_template = find_mail_template_by_slug(params[:id])
+      @logo_url = procedure.logo.url
 
       render(html: sanitize(mail_template.body), layout: 'mailers/notification')
     end
