@@ -26,7 +26,7 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
 
   .procedure-title {
     font-size: 30px;
-    margin: 20px 0 0;
+    margin: 0 0 20px 0;
     text-align: center;
 
     @media (min-width: $procedure-context-breakpoint) {
@@ -38,7 +38,7 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
   .procedure-description {
     font-size: 16px;
 
-    p {
+    p:not(:last-of-type) {
       margin-bottom: 2 * $default-spacer;
     }
 
@@ -54,7 +54,7 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
     img {
       max-height: 50px;
       max-width: 100%;
-      margin: 0 10px;
+      margin: 0 10px 20px 10px;
 
       @media (min-width: $procedure-context-breakpoint) {
         max-height: 130px;

@@ -23,14 +23,23 @@
   }
 
   .column {
-    padding: $two-columns-padding 0 $two-columns-padding 0;
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
+    padding: ($default-padding * 2) 0 0 0;
+
+    &:last-of-type {
+      padding-bottom: $default-padding * 2;
+    }
 
     @media (min-width: $two-columns-breakpoint) {
       width: 45%;
       margin: 0;
+      padding: $two-columns-padding 0 $two-columns-padding 0;
+
+      &:last-of-type {
+        padding-bottom: $two-columns-padding;
+      }
     }
   }
 }
