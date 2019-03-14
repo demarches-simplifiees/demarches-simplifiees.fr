@@ -2,17 +2,9 @@ import { show, hide, delegate } from '@utils';
 
 delegate('change', '#contact-form #type', event => {
   const type = event.target.value;
-  const answer = document.querySelector(`[data-answer="${type}"]`);
-  const card = document.querySelector('.support.card');
+  const visibleElements = `[data-contact-type-only="${type}"]`;
+  const hiddenElements = `[data-contact-type-only]:not([data-contact-type-only="${type}"])`;
 
-  for (let element of document.querySelectorAll('.card-content')) {
-    hide(element);
-  }
-
-  if (answer) {
-    show(card);
-    show(answer);
-  } else {
-    hide(card);
-  }
+  document.querySelectorAll(visibleElements).forEach(show);
+  document.querySelectorAll(hiddenElements).forEach(hide);
 });

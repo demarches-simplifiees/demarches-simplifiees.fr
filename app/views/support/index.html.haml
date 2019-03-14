@@ -22,17 +22,20 @@
           %span.mandatory *
         = select_tag :type, options_for_select(@options, params[:type]), include_blank: "Choisir un problème", required: true
 
-      .support.card.featured.hidden
+      .support.card.featured.hidden{ data: { 'contact-type-only': 'info demarche' } }
         .card-title
           👉 Notre réponse
-        .card-content.hidden{ data: { answer: "info demarche" } }
+        .card-content
           %p Avez-vous bien vérifié que tous les champs obligatoires (*) sont bien remplis ?
           %p Si vous avez des questions sur les informations à saisir, contactez les services en charge de la démarche.
           %p
             %a{ href: 'https://faq.demarches-simplifiees.fr/article/12-contacter-le-service-en-charge-de-ma-demarche' }
               En savoir plus
 
-        .card-content.hidden{ data: { answer: "usager perdu" } }
+      .support.card.featured.hidden{ data: { 'contact-type-only': 'usager perdu' } }
+        .card-title
+          👉 Notre réponse
+        .card-content
           %p Nous vous invitons à contacter l’administration en charge de votre démarche pour qu’elle vous indique le lien à suivre. Celui-ci devrait ressembler à cela : https://www.demarches-simplifiees.fr/commencer/NOM_DE_LA_DEMARCHE .
           %br
           %p Vous pouvez aussi consulter ici la liste de nos démarches les plus frequentes (permis, detr etc) :
@@ -40,13 +43,15 @@
             %a{ href: 'https://doc.demarches-simplifiees.fr/listes-des-demarches' }
               https://doc.demarches-simplifiees.fr/listes-des-demarches
 
-        .card-content.hidden{ data: { answer: "info instruction" } }
-          %p Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie
-          %p
-            %a{ href: 'https://faq.demarches-simplifiees.fr/article/11-je-veux-savoir-ou-en-est-linstruction-de-ma-demarche' }
-              En savoir plus
-          %br
-          %p Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l'instruction de votre dossier.
+      .support.card.featured.hidden{ data: { 'contact-type-only': 'info instruction' } }
+        .card-title
+          👉 Notre réponse
+        %p Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie.
+        %p
+          %a{ href: 'https://faq.demarches-simplifiees.fr/article/11-je-veux-savoir-ou-en-est-linstruction-de-ma-demarche' }
+            En savoir plus
+        %br
+        %p Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l'instruction de votre dossier.
 
       .contact-champ
         = label_tag :dossier_id, 'Numéro du dossier concerné'
