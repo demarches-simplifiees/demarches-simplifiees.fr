@@ -38,6 +38,11 @@ class NotificationMailer < ApplicationMailer
 
     @dossier = dossier
 
+    if dossier.procedure.logo?
+      @logo_filename = dossier.procedure.logo.filename
+      attachments.inline[@logo_filename] = dossier.procedure.logo.read
+    end
+
     mail(subject: subject, to: email) do |format|
       # rubocop:disable Rails/OutputSafety
       format.html { render(html: body.html_safe, layout: 'mailers/notification') }
