@@ -7,10 +7,8 @@
       .hero-wrapper
         .hero-text
           %p.hero-tagline
-            %em.hero-tagline-em Dématérialisez
-            vos démarches administratives et
-            %em.hero-tagline-em simplifiez
-            la vie de vos usagers
+            %em.hero-tagline-em Dématérialisez et simplifiez
+            vos démarches administratives
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: "" }
@@ -20,9 +18,9 @@
       .role-panel-wrapper.role-administrations-panel
         .role-panel-70
           %h1.role-panel-title Est-ce fait pour mon administration ?
-          %p.role-panel-explanation Découvrez notre outil avec notre Webinaire en ligne ou lisez notre documentation
+          %p.role-panel-explanation Découvrez notre outil et posez nous vos questions lors de notre démonstration en ligne ou lisez notre documentation
 
-          = link_to "Inscription à notre webinaire de présentation",
+          = link_to "Participer à notre démonstration en ligne",
             "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr",
             rel: "noopener noreferrer",
             target: "_blank",
@@ -45,9 +43,11 @@
 
       .role-panel-70
         %h1.role-panel-title Votre administration est prête pour dématérialiser
-        %p.role-panel-explanation Créez un premier formulaire "de test" en quelques minutes. Instruisez les demandes des usagers sur notre plateforme
+        %p.role-panel-explanation Créez un premier formulaire de test en quelques minutes
 
-        = link_to "Créez une démarche de test maintenant",
+
+
+        = link_to "Créez une démarche de test",
             new_demande_path,
             class: "role-panel-button-primary",
             rel: "noopener noreferrer"
