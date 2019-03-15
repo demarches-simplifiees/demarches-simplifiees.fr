@@ -3,12 +3,20 @@
 - content_for :footer do
   = render partial: "root/footer"
 
-.container.demande
-  %h1 Demande de compte administrateur pour créer une 1er démarche de test
 
+
+.container.demande
+
+  %b
+    Étape 1 : demandez un compte administrateur
+  >> Étape 2 : recevez une confirmation par email >> Étape 3 : créez une démarche de test
+  %br
+  %br
+  %h1 Demande de compte administrateur pour créer une 1ère démarche de test
   .card.featured
     .card-title
       Vous souhaitez seulement compléter une démarche sur notre site ?
+
     %p
       Vous n'avez pas besoin de compte administrateur !
     %p
@@ -52,7 +60,8 @@
         Vous utilisez un email orange, wanadoo, free, gmail etc. ? Merci de nous
         %a{ href: contact_admin_path, target:'_blank', rel: 'noopener' }
           contacter préalablement.
-    = email_field_tag :email, nil, placeholder: 'jean.martin@developpement-durable.gouv.fr', required: true, pattern:'^.+@((?!hotmail)(?!gmail)(?!orange)(?!free)(?!wanadoo).)+\..+$'
+
+    = email_field_tag :email, nil, placeholder: 'jean.martin@developpement-durable.gouv.fr', required: true, pattern:'^.+@((?!hotmail)(?!gmail)(?!orange)(?!free)(?!wanadoo).)+\..+$',title:'Saisir un email valide et ne se finissant pas par Orange, Wanadoo, Free, etc.'
 
     = label_tag :phone do
       Quel est votre numéro de téléphone (ligne directe) ?
@@ -90,4 +99,4 @@
       %span.mandatory *
     = number_field_tag :nb_of_dossiers, nil, required: true
 
-    = submit_tag 'Demander un compte administrateur pour créer une 1er démarche de test', class: 'button primary expand large',  data: { disable: true  }
+    = submit_tag 'Demander un compte administrateur pour créer une 1ère démarche de test', class: 'button primary expand large',  data: { disable: true  }
