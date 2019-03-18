@@ -22,7 +22,8 @@
       = stylesheet_link_tag :xray
 
     = render partial: "layouts/matomo"
-    = render partial: "layouts/sendinblue"
+    - if administrateur_signed_in?
+      = render partial: "layouts/sendinblue"
 
 
     :javascript
