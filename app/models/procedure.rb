@@ -467,7 +467,6 @@ class Procedure < ApplicationRecord
 
   def percentile_time(start_attribute, end_attribute, p)
     times = dossiers
-      .state_termine
       .where(end_attribute => 1.month.ago..Time.zone.now)
       .pluck(start_attribute, end_attribute)
       .map { |(start_date, end_date)| end_date - start_date }
