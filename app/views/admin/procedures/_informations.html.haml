@@ -23,16 +23,6 @@
   %h4 Où les usagers trouveront-ils le lien vers la démarche ?
   = f.text_field :lien_site_web, class: 'form-control', placeholder: 'https://exemple.gouv.fr/ma_demarche'
 
-- if  Flipflop.web_hook?
-  .form-group
-    %h4 Lien de rappel HTTP (webhook)
-    = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
-    %p.help-block
-      %i.fa.fa-info-circle
-      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
-      = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
-      \.
-
 .form-group
   %h4 Cadre juridique *
   %p Texte qui justifie le droit de collecter les données demandées dans votre démarche auprès des usagers, par exemple :
@@ -131,9 +121,19 @@
   .col-md-6
     %h4 Options avancées
 
-    %label{ for: :auto_archive_on } Archivage automatique le
+    - if  Flipflop.web_hook?
+      %label{ for: :web_hook_url } Lien de rappel HTTP (webhook)
+      = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
+      %p.help-block
+        %i.fa.fa-info-circle
+        Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
+        = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
+        \.
+
+    %label{ for: :auto_archive_on } Clôture automatique le
     = f.date_field :auto_archive_on, id: 'auto_archive_on', value: @procedure.auto_archive_on
-    (à 00h00)
+    (à 00h01)
     %p.help-block
       %i.fa.fa-info-circle
-      L'archivage automatique de la démarche entrainera le passage en instruction de tous les dossiers en construction.
+      La clôture automatique suspend la publication de la démarche et entraîne le passage de tous les dossiers "en construction"
+      (c'est à dire ceux qui ont été déposés), au statut "en instruction", ce qui ne permet plus aux usagers de les modifier.
