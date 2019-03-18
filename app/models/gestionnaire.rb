@@ -11,6 +11,10 @@ class Gestionnaire < ApplicationRecord
 
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
+
+  has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo'
+  has_many :procedures_with_email_notifications, through: :assign_to_with_email_notifications, source: :procedure
+
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
   has_many :follows
   has_many :followed_dossiers, through: :follows, source: :dossier
