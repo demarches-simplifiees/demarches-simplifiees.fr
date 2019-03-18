@@ -186,6 +186,18 @@ module NewGestionnaire
       end
     end
 
+    def email_notifications
+      @procedure = procedure
+      @assign_to = assign_to
+    end
+
+    def update_email_notifications
+      assign_to.update!(email_notifications_enabled: params[:assign_to][:email_notifications_enabled])
+
+      flash.notice = 'Vos notifications sont enregistrées.'
+      redirect_to gestionnaire_procedure_path(procedure)
+    end
+
     private
 
     def find_field(table, column)
@@ -194,6 +206,10 @@ module NewGestionnaire
 
     def field_id(field)
       field.values_at('table', 'column').join('/')
+    end
+
+    def assign_to
+      current_gestionnaire.assign_to.find_by(procedure: procedure)
     end
 
     def statut
