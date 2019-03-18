@@ -11,6 +11,10 @@ class Gestionnaire < ApplicationRecord
 
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
+
+  has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo'
+  has_many :procedures_with_email_notifications, through: :assign_to_with_email_notifications, source: :procedure
+
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
   has_many :follows
   has_many :followed_dossiers, through: :follows, source: :dossier
@@ -203,6 +207,25 @@ class Gestionnaire < ApplicationRecord
   def young_login_token?
     trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
     trusted_device_token&.token_young?
+  end
+
+  def email_notification_data
+    procedures_with_email_notifications
+      .reduce([]) do |acc, procedure|
+
+      h = {
+        nb_en_construction: procedure.dossiers.en_construction.count,
+        nb_notification: notifications_per_procedure(procedure).count
+      }
+
+      if h[:nb_en_construction] > 0 || h[:nb_notification] > 0
+        h[:procedure_id] = procedure.id
+        h[:procedure_libelle] = procedure.libelle
+        acc << h
+      end
+
+      acc
+    end
   end
 
   private

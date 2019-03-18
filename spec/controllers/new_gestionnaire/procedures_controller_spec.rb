@@ -336,4 +336,25 @@ describe NewGestionnaire::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe '#update_email_notifications' do
+    let(:gestionnaire) { create(:gestionnaire) }
+    let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+
+    context "when logged in" do
+      before { sign_in(gestionnaire) }
+
+      it { expect(gestionnaire.procedures_with_email_notifications).to be_empty }
+
+      context 'when the gestionnaire update its preferences' do
+        let(:assign_to) { gestionnaire.assign_to.find_by(procedure: procedure) }
+
+        before do
+          patch :update_email_notifications, params: { procedure_id: procedure.id, assign_to: { id: assign_to.id, email_notifications_enabled: true } }
+        end
+
+        it { expect(gestionnaire.procedures_with_email_notifications).to eq([procedure]) }
+      end
+    end
+  end
 end

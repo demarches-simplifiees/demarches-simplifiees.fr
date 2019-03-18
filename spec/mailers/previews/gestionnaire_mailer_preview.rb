@@ -19,6 +19,24 @@ class GestionnaireMailerPreview < ActionMailer::Preview
     GestionnaireMailer.user_to_gestionnaire(gestionnaire.email)
   end
 
+  def send_notifications
+    data = [
+      {
+        procedure_libelle: 'une superbe démarche',
+        procedure_id: 213,
+        nb_en_construction: 2,
+        nb_notification: 2
+      },
+      {
+        procedure_libelle: 'une démarche incroyable',
+        procedure_id: 213,
+        nb_en_construction: 1,
+        nb_notification: 1
+      }
+    ]
+    GestionnaireMailer.send_notifications(gestionnaire, data)
+  end
+
   private
 
   def gestionnaire
@@ -30,6 +48,10 @@ class GestionnaireMailerPreview < ActionMailer::Preview
   end
 
   def procedure
-    Procedure.new(id: 15)
+    Procedure.new(id: 15, libelle: 'libelle')
+  end
+
+  def dossier
+    Dossier.new(id: 15, procedure: procedure)
   end
 end
