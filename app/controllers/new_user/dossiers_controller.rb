@@ -282,7 +282,6 @@ module NewUser
       params.permit(dossier: {
         champs_attributes: [
           :id, :value, :primary_value, :secondary_value, :piece_justificative_file, value: [],
-          etablissement_attributes: Champs::SiretChamp::ETABLISSEMENT_ATTRIBUTES,
           champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
         ]
       })

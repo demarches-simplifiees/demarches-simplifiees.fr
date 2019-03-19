@@ -7,17 +7,24 @@ class Champs::SiretController < ApplicationController
     find_etablisement
 
     if @siret.empty?
-      @etablissement&.mark_for_destruction
+      @champ&.update!(value: '')
+      @etablissement&.destroy
     elsif @siret.present? && @siret.length == 14
       etablissement = find_etablisement_with_siret
       if etablissement.present?
         @etablissement = etablissement
+        if @champ.present?
+          etablissement.champ = @champ
+          etablissement.save!
+        end
       else
-        @etablissement&.mark_for_destruction
+        @champ&.update!(value: '')
+        @etablissement&.destroy
         @siret = :not_found
       end
     else
-      @etablissement&.mark_for_destruction
+      @champ&.update!(value: '')
+      @etablissement&.destroy
       @siret = :invalid
     end
   end
@@ -36,10 +43,10 @@ class Champs::SiretController < ApplicationController
 
   def find_etablisement
     if params[:champ_id].present?
-      champ = Champ.find_by(dossier_id: logged_user.dossiers, id: params[:champ_id])
-      @etablissement = champ&.etablissement
+      @champ = Champ.find_by(dossier_id: logged_user.dossiers, id: params[:champ_id])
+      @etablissement = @champ&.etablissement
     end
-    @procedure_id = champ&.dossier&.procedure_id || 'aperçu'
+    @procedure_id = @champ&.dossier&.procedure_id || 'aperçu'
   end
 
   def find_etablisement_with_siret
