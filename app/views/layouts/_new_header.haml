@@ -23,12 +23,6 @@
                 - avis_counter = current_gestionnaire.avis.without_answer.count
                 - if avis_counter > 0
                   %span.badge.warning= avis_counter
-          %li
-            .tab-link.contact-link
-              Aide
-              .contact-details
-                Besoin d’aide technique ? Contactez-nous
-                = contact_link("par email")
 
       - if nav_bar_profile == :user
         %ul.header-tabs
@@ -98,5 +92,7 @@
         .header-help
           - if nav_bar_profile == :user && dossier.present?
             = render partial: 'new_user/dossier_help_dropdown', locals: { dossier: dossier }
+          - elsif nav_bar_profile == :gestionnaire
+            = render partial: 'new_gestionnaire/help_dropdown'
           - else
             = link_to 'Aide', FAQ_URL, class: "button primary"

@@ -66,10 +66,10 @@ feature 'Getting help:' do
       login_as gestionnaire, scope: :gestionnaire
     end
 
-    scenario 'a Help button is visible on signed-in pages' do
+    scenario 'a Help menu is visible on signed-in pages' do
       visit gestionnaire_procedures_path
       within('.new-header') do
-        expect(page).to have_help_button
+        expect(page).to have_help_menu
       end
     end
   end
