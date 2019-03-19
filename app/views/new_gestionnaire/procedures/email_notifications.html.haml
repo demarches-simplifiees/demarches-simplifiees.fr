@@ -1,0 +1,24 @@
+- content_for(:title, "Notifications pour #{@procedure.libelle}")
+
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to(@procedure.libelle, procedure_path(@procedure)),
+                    'Notifications'] }
+
+.container
+  %h1 Notifications par email
+
+  = form_for @assign_to, url: update_email_notifications_gestionnaire_procedure_path(@procedure), html: { class: 'form' } do |form|
+    = form.label :email_notification, "Recevoir une fois par jour, du lundi au samedi vers 10 h, un email de notification me signalant le dépôt de nouveaux dossiers ou des changements sur mes dossiers en cours"
+
+    .radios
+      %label
+        = form.radio_button :email_notifications_enabled, true
+        Oui
+
+      %label
+        = form.radio_button :email_notifications_enabled, false
+        Non
+
+    .send-wrapper
+      = link_to "Revenir à la procédure", gestionnaire_procedure_path(@procedure), class: 'button mr-1'
+      = form.submit "Enregistrer", class: "button primary"

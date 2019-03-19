@@ -68,6 +68,7 @@ En local, un utilisateur de test est créé automatiquement, avec les identifian
     FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
     Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
     WarnExpiringDossiersJob.set(cron: "0 0 1 * *").perform_later
+    GestionnaireEmailNotificationJob.set(cron: "0 10 * * 1,2,3,4,5,6").perform_later
 
 ### Voir les emails envoyés en local
 
