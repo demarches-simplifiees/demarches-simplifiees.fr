@@ -413,6 +413,53 @@ describe Gestionnaire, type: :model do
     end
   end
 
+  describe '#email_notification_data' do
+    let(:gestionnaire) { create(:gestionnaire) }
+    let(:procedure_to_assign) { create(:procedure) }
+
+    before do
+      create(:assign_to, gestionnaire: gestionnaire, procedure: procedure_to_assign, email_notifications_enabled: true)
+    end
+
+    context 'when a dossier in construction exists' do
+      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+
+      it do
+        expect(gestionnaire.email_notification_data).to eq([
+          {
+            nb_en_construction: 1,
+            nb_notification: 0,
+            procedure_id: procedure_to_assign.id,
+            procedure_libelle: procedure_to_assign.libelle
+          }
+        ])
+      end
+    end
+
+    context 'when a notification exists' do
+      before do
+        allow(gestionnaire).to receive(:notifications_per_procedure)
+          .with(procedure_to_assign)
+          .and_return([1, 2, 3])
+      end
+
+      it do
+        expect(gestionnaire.email_notification_data).to eq([
+          {
+            nb_en_construction: 0,
+            nb_notification: 3,
+            procedure_id: procedure_to_assign.id,
+            procedure_libelle: procedure_to_assign.libelle
+          }
+        ])
+      end
+    end
+
+    context 'otherwise' do
+      it { expect(gestionnaire.email_notification_data).to eq([]) }
+    end
+  end
+
   private
 
   def assign(procedure_to_assign)

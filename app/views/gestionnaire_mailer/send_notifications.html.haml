@@ -1,0 +1,20 @@
+- content_for(:title, 'Du nouveau sur vos démarches')
+
+%p
+  Bonjour,
+
+%p
+  Vous avez du nouveau sur demarches-simplifiees.fr.
+
+%ul
+  - @data.each do |datum|
+    %li
+      = link_to(datum[:procedure_libelle], procedure_url(datum[:procedure_id]))
+      - if datum[:nb_en_construction] > 0
+        %br
+        #{datum[:nb_en_construction]} #{'dossier'.pluralize(datum[:nb_en_construction])} en construction
+      - if datum[:nb_notification] > 0
+        %br
+        #{datum[:nb_notification]} #{'notification'.pluralize(datum[:nb_notification])}
+
+= render partial: "layouts/mailers/signature"

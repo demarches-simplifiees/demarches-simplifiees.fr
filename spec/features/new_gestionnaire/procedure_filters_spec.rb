@@ -115,7 +115,7 @@ feature "procedure filters" do
   end
 
   def remove_filter(filter_value)
-    find(:xpath, "(//span[contains(@class, 'filter')]/a[contains(@href, '#{URI.encode(filter_value)}')])[1]").click
+    find(:xpath, "(//span[contains(@class, 'filter')]/a[contains(@href, '#{CGI.escape(filter_value)}')])[1]").click
   end
 
   def add_filter(column_name, filter_value)
