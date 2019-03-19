@@ -9,9 +9,3 @@
 - else
   - if siret.present? && siret == etablissement&.siret
     = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: etablissement }
-    = fields_for attribute, etablissement do |form|
-      = render partial: 'shared/dossiers/editable_champs/etablissement', locals: { form: form, signature: etablissement.sign }
-
-  - elsif etablissement.present?
-    = fields_for attribute, etablissement do |form|
-      = form.hidden_field :_destroy

@@ -37,24 +37,4 @@ describe Etablissement do
       end
     end
   end
-
-  describe '#verify' do
-    let(:etablissement) { create(:etablissement) }
-    let(:etablissement2) { create(:etablissement) }
-
-    it 'should verify signed etablissement' do
-      etablissement.signature = etablissement.sign
-      expect(etablissement.verify).to eq(true)
-    end
-
-    it 'should reject etablissement with other etablissement signature' do
-      etablissement.signature = etablissement2.sign
-      expect(etablissement.verify).to eq(false)
-    end
-
-    it 'should reject etablissement with wrong signature' do
-      etablissement.signature = "fd7687fdsgdf6gd7f8g"
-      expect(etablissement.verify).to eq(false)
-    end
-  end
 end
