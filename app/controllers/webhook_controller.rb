@@ -2,7 +2,7 @@ class WebhookController < ActionController::Base
   before_action :verify_signature!, only: :helpscout
 
   def helpscout
-    email = params[:customer][:email]
+    email = params[:customer][:email].downcase
     user = User.find_by(email: email)
     gestionnaire = Gestionnaire.find_by(email: email)
     administrateur = Administrateur.find_by(email: email)
