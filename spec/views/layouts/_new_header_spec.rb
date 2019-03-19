@@ -28,9 +28,8 @@ describe 'layouts/_new_header.html.haml', type: :view do
 
       it { is_expected.to have_css("a.header-logo[href=\"#{gestionnaire_procedures_path}\"]") }
 
-      it "displays the contact infos" do
-        expect(rendered).to have_text("Contact")
-        expect(rendered).to have_link("par email", href: contact_url)
+      it 'displays the Help dropdown menu' do
+        expect(rendered).to have_css(".help-dropdown")
       end
     end
   end
