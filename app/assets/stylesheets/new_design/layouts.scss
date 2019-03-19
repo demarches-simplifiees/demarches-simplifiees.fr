@@ -13,29 +13,32 @@
     @extend .container;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
     @media (min-width: $two-columns-breakpoint) {
       flex-direction: row;
       align-items: stretch;
-      justify-content: center;
+      justify-content: space-between;
     }
   }
 
   .column {
-    padding: $two-columns-padding 0 0;
     width: 100%;
     max-width: 500px;
+    margin: 0 auto;
+    padding: ($default-padding * 2) 0 0 0;
+
+    &:last-of-type {
+      padding-bottom: $default-padding * 2;
+    }
 
     @media (min-width: $two-columns-breakpoint) {
-      padding: $two-columns-padding;
-      width: 50%;
+      width: 45%;
+      margin: 0;
+      padding: $two-columns-padding 0 $two-columns-padding 0;
 
-      &:first-child {
-        padding-left: 0;
-      }
-
-      &:last-child {
-        padding-right: 0;
+      &:last-of-type {
+        padding-bottom: $two-columns-padding;
       }
     }
   }
