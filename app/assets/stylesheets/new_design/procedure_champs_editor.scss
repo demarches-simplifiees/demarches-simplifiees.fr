@@ -1,15 +1,8 @@
 @import "colors";
 @import "constants";
 
-#champs-editor {
-  .spinner {
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 80px;
-  }
-}
-
-.draggable-item {
+.type-de-champ {
+  background-color: $white;
   border: 1px solid $border-grey;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -18,24 +11,11 @@
   .handle {
     cursor: ns-resize;
     margin-right: 10px;
-    margin-top: 8px;
   }
 
-  .error-message {
-    text-align: center;
-    flex-grow: 1;
-    font-size: 14px;
-    color: $light-grey;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-around;
-
-    .content {
-      background-color: $medium-red;
-      border-radius: 8px;
-      padding: 4px 10px;
-    }
+  .move {
+    margin-right: 10px;
+    margin-bottom: 5px;
   }
 
   &.type-header-section {
@@ -43,12 +23,6 @@
 
     label {
       color: $light-grey;
-    }
-  }
-
-  &:not(.type-header-section) {
-    input.error {
-      border: 1px solid $medium-red;
     }
   }
 
@@ -67,7 +41,7 @@
     }
 
     &.shift-left {
-      margin-left: 35px;
+      margin-left: 55px;
     }
 
     &.head {
@@ -112,21 +86,23 @@
   }
 }
 
-.footer {
-  margin-bottom: 70px;
-}
+.champs-editor {
+  .footer {
+    margin-bottom: 40px;
+  }
 
-.buttons {
-  display: flex;
-  justify-content: space-between;
-  margin: 0px;
-  position: fixed;
-  bottom: 0px;
-  background-color: $white;
-  max-width: $page-width;
-  width: 100%;
-  border: 1px solid $border-grey;
-  padding: 10px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px;
+    position: fixed;
+    bottom: 0px;
+    background-color: $white;
+    max-width: $page-width;
+    width: 100%;
+    border: 1px solid $border-grey;
+    padding: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
 }
