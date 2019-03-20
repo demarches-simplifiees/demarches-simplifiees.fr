@@ -1,0 +1,51 @@
+@import "colors";
+@import "constants";
+
+.help-dropdown {
+  .dropdown-content {
+    width: 340px;
+  }
+
+  .dropdown-description {
+    font-size: 14px;
+  }
+}
+
+h4.help-dropdown-title {
+  font-size: 16px;
+  color: $blue;
+}
+
+.dropdown-items li.help-dropdown-service {
+  cursor: default;
+
+  &:hover {
+    background: inherit;
+  }
+
+  a {
+    display: inline;
+    color: $blue;
+  }
+}
+
+.help-dropdown-service-action {
+  margin-top: $default-padding;
+  margin-bottom: $default-spacer;
+}
+
+.help-dropdown-service-item {
+  margin-top: $default-spacer;
+  line-height: 18px;
+
+  .icon {
+    vertical-align: middle;
+    margin-right: 5px;
+
+    &.clock {
+      filter: contrast(0) brightness(120%);
+      vertical-align: -4px;
+    }
+  }
+}
+

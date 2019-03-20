@@ -3,7 +3,8 @@
 @import "constants";
 @import "mixins";
 
-$landing-breakpoint: 1040px;
+$header-landing-breakpoint: 1040px;
+$header-mobile-breakpoint: 550px;
 
 // FIXME: Rename when the header is generalized
 .new-header {
@@ -23,24 +24,28 @@ $landing-breakpoint: 1040px;
 
 .header-logo {
   display: inline-block;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 
-  .header-logo-wide {
-    margin-right: 4 * $default-spacer;
+  // Logo large
+  background-image: url("/assets/header/logo-ds-wide.svg");
+  width: 360px;
+  margin-right: 4 * $default-spacer;
+
+  // Logo normal
+  @media (max-width: $header-landing-breakpoint) {
+    background-image: url("/assets/header/logo-ds.svg");
+    width: 132px;
+    margin-right: $default-spacer;
   }
 
-  .header-logo-narrow {
-    display: none;
-  }
-
-  @media (max-width: $landing-breakpoint) {
-    .header-logo-wide {
-      display: none;
-    }
-
-    .header-logo-narrow {
-      display: inline;
-      margin-right: 0;
-    }
+  // Logo narrow
+  @media (max-width: $header-mobile-breakpoint) {
+    background-image: url("/assets/header/logo-ds-narrow.svg");
+    width: 32px;
+    margin-right: 0;
   }
 }
 
@@ -173,6 +178,8 @@ $landing-breakpoint: 1040px;
 .header-menu-button {
   border: none;
   padding: 0;
+  line-height: 14px;
+  vertical-align: middle;
 
   &:hover {
     background: none;
