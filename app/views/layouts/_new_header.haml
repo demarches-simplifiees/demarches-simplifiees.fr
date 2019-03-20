@@ -1,13 +1,12 @@
-/ We can't use &. because the controller may not implement #nav_bar_profile
+-# We can't use &. because the controller may not implement #nav_bar_profile
 - nav_bar_profile = controller.try(:nav_bar_profile)
+- dossier = controller.try(:dossier_for_help)
 
 .new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
 
     .flex.align-center
-      = link_to root_path_for_profile(nav_bar_profile), class: "header-logo" do
-        = image_tag "header/logo-ds.svg", alt: "demarches-simplifiees.fr", class: "header-logo-wide"
-        = image_tag "header/logo-ds-narrow.svg", alt: "demarches-simplifiees.fr", class: "header-logo-narrow"
+      = link_to '', root_path_for_profile(nav_bar_profile), class: "header-logo", title: "Revenir à l’accueil"
 
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         - current_url = request.path_info
@@ -22,12 +21,6 @@
                 - avis_counter = current_gestionnaire.avis.without_answer.count
                 - if avis_counter > 0
                   %span.badge.warning= avis_counter
-          %li
-            .tab-link.contact-link
-              Aide
-              .contact-details
-                Besoin d’aide technique ? Contactez-nous
-                = contact_link("par email")
 
       - if nav_bar_profile == :user
         %ul.header-tabs
@@ -92,3 +85,12 @@
             Vous avez déjà un compte ?
         %li
           = link_to "Connexion", new_user_session_path, class: "button secondary"
+
+      %li
+        .header-help
+          - if nav_bar_profile == :user && dossier.present?
+            = render partial: 'new_user/dossier_help_dropdown', locals: { dossier: dossier }
+          - elsif nav_bar_profile == :gestionnaire
+            = render partial: 'new_gestionnaire/help_dropdown'
+          - else
+            = link_to 'Aide', FAQ_URL, class: "button primary"
