@@ -1,7 +1,7 @@
 module NewAdministrateur
   class TypesDeChampController < AdministrateurController
-    before_action :retrieve_procedure, only: [:create, :update, :destroy]
-    before_action :procedure_locked?, only: [:create, :update, :destroy]
+    before_action :retrieve_procedure, only: [:create, :update, :move, :destroy]
+    before_action :procedure_locked?, only: [:create, :update, :move, :destroy]
 
     def create
       type_de_champ = TypeDeChamp.new(type_de_champ_create_params)
@@ -23,6 +23,15 @@ module NewAdministrateur
       else
         render json: { errors: type_de_champ.errors.full_messages }, status: :unprocessable_entity
       end
+    end
+
+    def move
+      type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
+      new_index = params[:order_place].to_i
+
+      @procedure.move_type_de_champ(type_de_champ, new_index)
+
+      head :no_content
     end
 
     def destroy
