@@ -21,6 +21,7 @@
     "ramda": "^0.25.0",
     "react_ujs": "^2.4.4",
     "react-dom": "^16.8.4",
+    "react-scroll-to-component": "^1.0.2",
     "react-sortable-hoc": "^1.7.1",
     "react": "^16.8.4",
     "select2": "^4.0.6-rc.1",
