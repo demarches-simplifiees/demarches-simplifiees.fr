@@ -4,7 +4,9 @@ import Rails from 'rails-ujs';
 import * as ActiveStorage from 'activestorage';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
+
 import ReactUJS from '../shared/react-ujs';
+import reactComponents from '../shared/react-components';
 
 import '../shared/activestorage/ujs';
 import '../shared/rails-ujs-fix';
@@ -47,6 +49,8 @@ Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
 
+const loader = new ReactUJS(reactComponents);
+loader.start();
 
 // Expose globals
 window.DS = window.DS || DS;
