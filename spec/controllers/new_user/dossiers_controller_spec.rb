@@ -952,4 +952,30 @@ describe NewUser::DossiersController, type: :controller do
       end
     end
   end
+
+  describe "#dossier_for_help" do
+    before do
+      sign_in(user)
+      controller.params[:dossier_id] = dossier_id.to_s
+    end
+
+    subject { controller.dossier_for_help }
+
+    context 'when the id matches an existing dossier' do
+      let(:dossier) { create(:dossier) }
+      let(:dossier_id) { dossier.id }
+
+      it { is_expected.to eq dossier }
+    end
+
+    context 'when the id doesn’t match an existing dossier' do
+      let(:dossier_id) { 9999999 }
+      it { is_expected.to be nil }
+    end
+
+    context 'when the id is empty' do
+      let(:dossier_id) { nil }
+      it { is_expected.to be_falsy }
+    end
+  end
 end
