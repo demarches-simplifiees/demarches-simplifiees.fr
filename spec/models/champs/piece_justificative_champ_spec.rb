@@ -13,7 +13,7 @@ describe Champs::PieceJustificativeChamp do
 
     context 'when file is not scanned' do
       let(:status) { 'pending' }
-      it { is_expected.to be_nil }
+      it { is_expected.to include("/rails/active_storage/blobs/") }
     end
 
     context 'when file is infected' do
