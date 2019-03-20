@@ -1,0 +1,20 @@
+.dropdown.help-dropdown
+  .button.primary.dropdown-button Aide
+  .dropdown-content.fade-in-down
+    %ul.dropdown-items
+
+      -# Use the help website
+      %li
+        = link_to FAQ_URL, target: "_blank", rel: "noopener" do
+          %span.icon.help
+          .dropdown-description
+            %h4.help-dropdown-title Un problème avec le site ?
+            %p Trouvez votre réponse dans l’aide en ligne.
+
+      -# Technical contact
+      %li
+        = mail_to CONTACT_EMAIL do
+          %span.icon.mail
+          .dropdown-description
+            %h4.help-dropdown-title Contact technique
+            %p Envoyez nous un message à #{CONTACT_EMAIL}.

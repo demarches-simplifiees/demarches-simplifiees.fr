@@ -15,7 +15,7 @@
         %li.footer-column
           %h3.footer-header Poser une question sur votre dossier :
           %p
-            - if dossier.present? && !dossier.brouillon?
+            - if dossier.present? && dossier.messagerie_available?
               Directement
               = link_to "par la messagerie", messagerie_dossier_path(dossier)
             - else
@@ -27,7 +27,7 @@
             %a{ href: "tel:#{service.telephone}" }= service.telephone
 
           %p
-            Horaires : #{ service.horaires.sub(/\S/, &:downcase) }
+            Horaires : #{formatted_horaires(service.horaires)}
 
         - politiques = politiques_conservation_de_donnees(procedure)
         - if politiques.present?

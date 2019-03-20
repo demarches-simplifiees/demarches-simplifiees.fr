@@ -23,6 +23,10 @@
     %span.icon.search
     %span.icon.sign-out
     %span.icon.info
+    %span.icon.delete
+    %span.icon.help
+    %span.icon.phone
+    %span.icon.clock
     %span.icon.download
     %span.icon.frown
     %span.icon.meh
@@ -90,6 +94,39 @@
 
     .patron-section
       = link_to ".button.primary.expand", "#", class: "button primary expand"
+
+    %h1 Dropdown
+
+    .dropdown
+      .button.primary.dropdown-button .button.primary.dropdown-button
+      .dropdown-content.fade-in-down
+        %ul.dropdown-items
+          %li .dropdown-content ul.dropdown-items li
+          %li .dropdown-content ul.dropdown-items li
+
+    .dropdown
+      .button.dropdown-button .button.dropdown-button
+      .dropdown-content.fade-in-down
+        %ul.dropdown-items
+          %li
+            %a{ href: '#' }
+              %span.icon.mail
+              .dropdown-description
+                %h4 Action
+                %p Explanation
+          %li
+            %a{ href: '#' }
+              %span.icon.edit
+              .dropdown-description
+                %h4 Other action
+                %p Explanation
+
+    .dropdown
+      .button.dropdown-button .button.dropdown-button (left)
+      .dropdown-content.fade-in-down.left-aligned
+        %ul.dropdown-items
+          %li .dropdown-content.left-aligned ul.dropdown-items li
+          %li .dropdown-content.left-aligned ul.dropdown-items li
 
     %h1 Labels
 
