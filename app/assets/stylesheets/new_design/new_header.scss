@@ -30,20 +30,20 @@ $header-mobile-breakpoint: 550px;
   background-repeat: no-repeat;
 
   // Logo large
-  background-image: url("/assets/header/logo-ds-wide.svg");
+  background-image: image-url("header/logo-ds-wide.svg");
   width: 360px;
   margin-right: 4 * $default-spacer;
 
   // Logo normal
   @media (max-width: $header-landing-breakpoint) {
-    background-image: url("/assets/header/logo-ds.svg");
+    background-image: image-url("header/logo-ds.svg");
     width: 132px;
     margin-right: $default-spacer;
   }
 
   // Logo narrow
   @media (max-width: $header-mobile-breakpoint) {
-    background-image: url("/assets/header/logo-ds-narrow.svg");
+    background-image: image-url("header/logo-ds-narrow.svg");
     width: 32px;
     margin-right: 0;
   }
