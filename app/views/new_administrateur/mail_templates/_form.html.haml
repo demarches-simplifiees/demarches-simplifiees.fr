@@ -1,0 +1,17 @@
+= form_for mail_template,
+  url: admin_procedure_mail_template_path(@procedure, @mail_template.class.const_get(:SLUG)),
+  html: { class: 'form' } do |f|
+
+  = f.label :subject do
+    Objet de l'email
+    %span.mandatory *
+  = f.text_field :subject, required: true
+
+  = f.label :body do
+    Corps de l'email
+    %span.mandatory *
+  = f.text_area :body, required: true
+
+  .send-wrapper
+    = f.submit "Enregistrer", class: 'button primary send'
+    = link_to "Prévisualiser", preview_procedure_mail_template_path(@procedure, @mail_template.class.const_get(:SLUG)), class: 'button secondary ml-1', target: "_blank"

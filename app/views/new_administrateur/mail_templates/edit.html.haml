@@ -1,0 +1,28 @@
+- if params[:id] == 'closed_mail'
+  = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
+
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    link_to("Emails", admin_procedure_mail_templates_path(@procedure)),
+                    @mail_template.class.const_get(:DISPLAYED_NAME)] }
+
+.container
+  %h1= @mail_template.class.const_get(:DISPLAYED_NAME)
+
+  = render partial: 'form',
+    locals: { mail_template: @mail_template }
+
+  %table.table
+    %tr
+      %th.col-md-3
+        Balise
+      %th
+        Description
+    - @mail_template.tags.each do |tag|
+      %tr
+        %td
+          %code{ style: "white-space: pre-wrap;" }
+            = "--#{tag[:libelle]}--"
+        %td
+          = tag[:description]
