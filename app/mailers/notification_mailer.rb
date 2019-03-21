@@ -36,13 +36,14 @@ class NotificationMailer < ApplicationMailer
 
     create_commentaire_for_notification(dossier, subject, body)
 
-    @dossier = dossier
-
     if dossier.procedure.logo?
       logo_filename = dossier.procedure.logo.filename
       attachments.inline[logo_filename] = dossier.procedure.logo.read
       @logo_url = attachments[logo_filename].url
     end
+
+    @dossier = dossier
+    @service = dossier.procedure.service
 
     mail(subject: subject, to: email) do |format|
       # rubocop:disable Rails/OutputSafety
