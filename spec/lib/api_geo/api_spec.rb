@@ -18,8 +18,14 @@ describe ApiGeo::API do
     let(:pays) {
       JSON.parse(File.open('app/lib/api_geo/pays.json').read, symbolize_names: true)
     }
-
     it { is_expected.to eq pays }
+  end
+
+  describe '.pays : first elts must be PF, France' do
+    subject { described_class.pays[0..1] }
+    let(:first) { [ "POLYNESIE FRANCAISE", "FRANCE" ] }
+
+    it { is_expected.to eq first }
   end
 
   describe '.search_rpg', vcr: { cassette_name: 'api_geo_search_rpg' } do
