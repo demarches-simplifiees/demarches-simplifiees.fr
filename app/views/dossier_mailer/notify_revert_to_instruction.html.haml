@@ -1,0 +1,16 @@
+%p
+  Bonjour,
+
+%p
+  Votre dossier va être réexaminé, la précédente décision sur ce dossier est caduque.
+  Vous pouvez retrouver le dossier que vous avez créé pour la démarche
+  %strong= @dossier.procedure.libelle
+  à l'adresse suivante :
+  = link_to dossier_url(@dossier), dossier_url(@dossier), target: '_blank', rel: 'noopener'
+- if @dossier.procedure.service.present?
+  %p
+    Pour obtenir le détail de cette modification de la décision, vous pouvez contacter par
+    email:
+    = mail_to @dossier.procedure.service.email, @dossier.procedure.service.email
+
+= render partial: "layouts/mailers/signature"
