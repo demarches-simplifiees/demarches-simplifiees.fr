@@ -1,0 +1,14 @@
+.dropdown.help-dropdown
+  .button.primary.dropdown-button Aide
+  .dropdown-content.fade-in-down
+    %ul.dropdown-items
+      - title = dossier.brouillon? ? "Besoin d’aide pour remplir votre dossier ?" : "Une question sur votre dossier ?"
+
+      - if dossier.messagerie_available?
+        = render partial: 'shared/help/dropdown_items/messagerie_item',
+          locals: { dossier: dossier, title: title }
+      - elsif dossier.procedure.service.present?
+        = render partial: 'shared/help/dropdown_items/service_item',
+          locals: { service: dossier.procedure.service, title: title }
+
+      = render partial: 'shared/help/dropdown_items/faq_item'
