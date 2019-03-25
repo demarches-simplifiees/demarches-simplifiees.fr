@@ -363,8 +363,16 @@ describe NewGestionnaire::DossiersController, type: :controller do
       create(:type_de_champ_datetime, :private, libelle: 'libelle').champ.create
     end
 
+    let(:champ_repetition) do
+      tdc = create(:type_de_champ_repetition, :private, libelle: 'libelle')
+      tdc.types_de_champ << create(:type_de_champ_text, libelle: 'libelle')
+      champ = tdc.champ.create
+      champ.add_row
+      champ
+    end
+
     let(:dossier) do
-      create(:dossier, :en_construction, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime])
+      create(:dossier, :en_construction, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime, champ_repetition])
     end
 
     before do
@@ -389,6 +397,13 @@ describe NewGestionnaire::DossiersController, type: :controller do
               id: champ_linked_drop_down_list.id,
               primary_value: 'primary',
               secondary_value: 'secondary'
+            },
+            '3': {
+              id: champ_repetition.id,
+              champs_attributes: {
+                id: champ_repetition.champs.first.id,
+                value: 'text'
+              }
             }
           }
         }
@@ -397,12 +412,14 @@ describe NewGestionnaire::DossiersController, type: :controller do
       champ_multiple_drop_down_list.reload
       champ_linked_drop_down_list.reload
       champ_datetime.reload
+      champ_repetition.reload
     end
 
     it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
     it { expect(champ_linked_drop_down_list.primary_value).to eq('primary') }
     it { expect(champ_linked_drop_down_list.secondary_value).to eq('secondary') }
     it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
+    it { expect(champ_repetition.champs.first.value).to eq('text') }
     it { expect(response).to redirect_to(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) }
   end
 
