@@ -88,9 +88,11 @@
 
       %li
         .header-help
-          - if nav_bar_profile == :user && dossier.present?
-            = render partial: 'users/dossier_help_dropdown', locals: { dossier: dossier }
+          - if  dossier.present? && nav_bar_profile == :user
+            = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+
           - elsif nav_bar_profile == :gestionnaire
-            = render partial: 'gestionnaires/help_dropdown'
+            = render partial: 'shared/help/help_dropdown_gestionnaire'
+
           - else
-            = link_to 'Aide', FAQ_URL, class: "button primary"
+            = render partial: 'shared/help/help_button'
