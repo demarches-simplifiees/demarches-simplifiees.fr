@@ -55,4 +55,11 @@ class DossierMailer < ApplicationMailer
 
     mail(to: dossier.user.email, subject: @subject)
   end
+
+  def notify_revert_to_instruction(dossier)
+    @dossier = dossier
+    @subject = "Votre dossier n° #{@dossier.id} est en train d'être réexaminé"
+
+    mail(to: dossier.user.email, subject: @subject)
+  end
 end
