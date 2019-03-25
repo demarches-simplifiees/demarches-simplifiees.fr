@@ -1,0 +1,40 @@
+%footer.procedure-footer
+  .container
+    - service = procedure.service
+    - if service.present?
+      %ul.footer-row.footer-columns
+        %li.footer-column
+          %h3.footer-header Cette démarche est gérée par :
+          %p
+            = service.nom
+            %br
+            = service.organisme
+            %br
+            = string_to_html(service.adresse)
+
+        %li.footer-column
+          %h3.footer-header Poser une question sur votre dossier :
+          %p
+            - if dossier.present? && dossier.messagerie_available?
+              Directement
+              = link_to "par la messagerie", messagerie_dossier_path(dossier)
+            - else
+              Par email :
+              = link_to service.email, "mailto:#{service.email}"
+
+          %p
+            Par téléphone :
+            %a{ href: "tel:#{service.telephone}" }= service.telephone
+
+          %p
+            Horaires : #{formatted_horaires(service.horaires)}
+
+        - politiques = politiques_conservation_de_donnees(procedure)
+        - if politiques.present?
+          %li.footer-column
+            %h3.footer-header Conservation des données :
+            - politiques.each do |politique|
+              %p= politique
+
+    .footer-row.footer-bottom-line
+      = render partial: 'users/general_footer_row', locals: { dossier: dossier }
