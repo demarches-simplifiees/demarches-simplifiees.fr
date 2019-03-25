@@ -1,0 +1,33 @@
+- content_for(:title, "Démarches")
+
+- content_for :footer do
+  = render partial: "users/dossiers/index_footer"
+
+#demarches-index
+  .container
+    %h1.page-title Démarches
+
+    - if @previous_demarches_still_active.present?
+      %h2.list-header SUR LESQUELLES VOUS AVEZ DÉJÀ DÉPOSÉ UN DOSSIER
+      %ul.demarche-links
+        - @previous_demarches_still_active.each do |demarche|
+          %li
+            = link_to(commencer_url(path: demarche.path), class: "demarche-link") do
+              = demarche.libelle
+              %br
+              .service-name
+                = demarche&.service&.nom
+
+    - if @popular_demarches.present?
+      %h2.list-header LES PLUS POPULAIRES
+      %ul.demarche-links
+        - @popular_demarches.each do |demarche|
+          %li
+            = link_to(commencer_url(path: demarche.path), class: "demarche-link") do
+              = demarche.libelle
+              %br
+              .service-name
+                = demarche&.service&.nom
+
+    %h2.list-header TOUTES LES DÉMARCHES
+    = link_to("Voir l'intégralité des démarches disponibles", LISTE_DES_DEMARCHES_URL, class: "button")
