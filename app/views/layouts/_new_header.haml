@@ -89,7 +89,7 @@
       %li
         .header-help
           - if nav_bar_profile == :user && dossier.present?
-            = render partial: 'new_user/dossier_help_dropdown', locals: { dossier: dossier }
+            = render partial: 'users/dossier_help_dropdown', locals: { dossier: dossier }
           - elsif nav_bar_profile == :gestionnaire
             = render partial: 'new_gestionnaire/help_dropdown'
           - else
