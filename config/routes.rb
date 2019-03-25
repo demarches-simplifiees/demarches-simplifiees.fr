@@ -264,7 +264,7 @@ Rails.application.routes.draw do
   # User
   #
 
-  scope module: 'new_user' do
+  scope module: 'users' do
     namespace :commencer do
       get '/test/:path', action: 'commencer_test', as: :test
       get '/:path', action: 'commencer'

@@ -15,8 +15,8 @@
 
 - content_for :footer do
   - if procedure
-    = render partial: 'new_user/procedure_footer', locals: { procedure: procedure, dossier: @dossier }
+    = render partial: 'users/procedure_footer', locals: { procedure: procedure, dossier: @dossier }
   - else
-    = render partial: 'new_user/dossiers/index_footer'
+    = render partial: 'users/dossiers/index_footer'
 
 = render template: 'layouts/application'

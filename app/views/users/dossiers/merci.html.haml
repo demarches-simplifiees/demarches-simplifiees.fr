@@ -1,0 +1,23 @@
+- content_for(:title, "Dossier bien envoyé (#{@dossier.procedure.libelle})")
+
+- content_for :footer do
+  = render partial: "users/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
+
+.merci
+  .container
+    = image_tag('user/envoi-dossier.svg')
+    %h1 Merci !
+    %p.send
+      Votre dossier sur la démarche
+      %b= @dossier.procedure.libelle
+      a bien été envoyé.
+    %p
+      Vous avez désormais accès à votre
+      %b dossier en ligne.
+    %p
+      Vous pouvez
+      %b le modifier
+      et
+      %b échanger avec un instructeur.
+
+    = link_to 'Accéder à votre dossier', dossier_path(@dossier), class: 'button large primary'
