@@ -164,7 +164,8 @@ module NewGestionnaire
 
     def champs_private_params
       params.require(:dossier).permit(champs_private_attributes: [
-        :id, :primary_value, :secondary_value, :piece_justificative_file, :value, value: []
+        :id, :primary_value, :secondary_value, :piece_justificative_file, :value, value: [],
+        champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
       ])
     end
 
