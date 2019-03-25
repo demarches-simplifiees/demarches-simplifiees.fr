@@ -1,0 +1,14 @@
+:javascript
+  (function() {
+    window.sib = { equeue: [], client_key: "#{Rails.application.secrets.sendinblue[:client_key]}" };
+    /* OPTIONAL: email for identify request*/
+    window.sib.email_id = '#{current_administrateur.email}';
+    window.sendinblue = {}; for (var j = ['track', 'identify', 'trackLink', 'page'], i = 0; i < j.length; i++) { (function(k) { window.sendinblue[k] = function() { var arg = Array.prototype.slice.call(arguments); (window.sib[k] || function() { var t = {}; t[k] = arg; window.sib.equeue.push(t);})(arg[0], arg[1], arg[2]);};})(j[i]);}var n = document.createElement("script"),i = document.getElementsByTagName("script")[0]; n.type = "text/javascript", n.id = "sendinblue-js", n.async = !0, n.src = "https://sibautomation.com/sa.js?key=" + window.sib.client_key, i.parentNode.insertBefore(n, i), window.sendinblue.page();
+  })();
+
+  sendinblue.identify('#{current_administrateur.email}', {
+  'DS_SIGN_IN_COUNT' : '#{current_administrateur.sign_in_count}',
+  'DS_CREATED_AT' : '#{current_administrateur.created_at}',
+  'DS_ACTIVE' : '#{current_administrateur.active}',
+  'DS_ID' : '#{current_administrateur.id}'
+  });
