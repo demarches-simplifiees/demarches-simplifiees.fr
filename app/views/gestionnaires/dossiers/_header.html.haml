@@ -1,0 +1,52 @@
+.sub-header
+  .container
+    .flex.justify-between
+      %ul.breadcrumbs
+        %li
+          = link_to gestionnaire_procedure_path(dossier.procedure), title: dossier.procedure.libelle do
+            - if dossier.procedure.brouillon?
+              %span.badge démarche en test
+            = dossier.procedure.libelle.truncate_words(10)
+        %li
+          = "Dossier nº #{dossier.id}"
+      .mixed-buttons-bar
+        %span.dropdown.print-menu-opener
+          %button.button.dropdown-button.icon-only
+            %span.icon.printer
+          %ul.print-menu.dropdown-content
+            %li
+              = link_to "Tout le dossier", print_gestionnaire_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+            %li
+              = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
+
+        = render partial: "gestionnaires/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
+        %span.state-button
+          = render partial: "state_button", locals: { dossier: dossier }
+
+    %ul.tabs
+      - notifications_summary = current_gestionnaire.notifications_for_dossier(dossier)
+
+      = dynamic_tab_item('Demande',
+        gestionnaire_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:demande])
+
+      = dynamic_tab_item('Annotations privées',
+        annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:annotations_privees])
+
+      = dynamic_tab_item('Avis externes',
+        avis_gestionnaire_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:avis])
+
+      = dynamic_tab_item('Messagerie',
+        messagerie_gestionnaire_dossier_path(dossier.procedure, dossier),
+        notification: notifications_summary[:messagerie])
+
+      = dynamic_tab_item('Personnes impliquées',
+        personnes_impliquees_gestionnaire_dossier_path(dossier.procedure, dossier))
+
+.container
+  .print-header
+    = dossier.procedure.libelle.truncate_words(10)
+    >
+    = "Dossier nº #{dossier.id} (#{dossier_display_state(dossier, lower: true)})"
