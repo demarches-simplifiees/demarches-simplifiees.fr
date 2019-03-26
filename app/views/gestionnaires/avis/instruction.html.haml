@@ -1,0 +1,32 @@
+- content_for(:title, "Avis · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
+
+= render partial: 'header', locals: { avis: @avis, dossier: @dossier }
+
+.container
+  %section.give-avis
+    %h1.tab-title Donner votre avis
+    %h2.claimant
+      Demandeur :
+      %span.email= @avis.claimant.email
+      %span.date Demande d'avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
+    %p.introduction= @avis.introduction
+
+    = form_for @avis, url: gestionnaire_avis_path(@avis), html: { class: 'form' } do |f|
+      = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
+      .flex.justify-between.align-baseline
+        %p.confidentiel.flex
+          - if @avis.confidentiel?
+            %span.icon.lock
+            %span
+              Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
+          - else
+            %span
+              Cet avis est partagé avec les autres experts
+        .send-wrapper
+          = f.submit 'Envoyer votre avis', class: 'button send'
+
+  - if !@dossier.termine?
+    = render partial: "gestionnaires/shared/avis/form", locals: { url: avis_gestionnaire_avis_path(@avis), must_be_confidentiel: @avis.confidentiel?, avis: @new_avis }
+
+  - if @dossier.avis_for(current_gestionnaire).present?
+    = render partial: 'gestionnaires/shared/avis/list', locals: { avis: @dossier.avis_for(current_gestionnaire), avis_seen_at: nil }

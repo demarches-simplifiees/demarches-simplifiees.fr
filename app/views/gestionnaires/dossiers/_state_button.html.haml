@@ -1,0 +1,70 @@
+- if dossier.en_construction? || dossier.en_instruction?
+  %span.dropdown
+    %button.button.primary.dropdown-button
+      = dossier_display_state dossier
+    .dropdown-content.fade-in-down
+      %ul.dropdown-items
+        - if dossier.en_construction?
+          %li.selected
+            %span.icon.edit
+            .dropdown-description
+              %h4 En construction
+              Vous permettez à l'usager de modifier ses réponses au formulaire
+          %li
+            = link_to passer_en_instruction_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, data: { remote: true, confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
+              %span.icon.in-progress
+              .dropdown-description
+                %h4 Passer en instruction
+                L'usager ne pourra plus modifier le formulaire
+
+        - if dossier.en_instruction?
+          %li
+            = link_to repasser_en_construction_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Confirmer vous le passage en construction de ce dossier ?" } do
+              %span.icon.edit
+              .dropdown-description
+                %h4 Repasser en construction
+                Vous permettrez à l'usager de modifier ses réponses au formulaire
+          %li.selected
+            %span.icon.in-progress
+            .dropdown-description
+              %h4 En instruction
+              L'usager ne peut modifier son dossier pendant l'instruction
+          %li
+            %a{ href: '#', onclick: "DS.showMotivation(event, 'accept');" }
+              %span.icon.accept
+              .dropdown-description
+                %h4 Accepter
+                L'usager sera notifié que son dossier a été accepté
+          %li
+            %a{ href: '#', onclick: "DS.showMotivation(event, 'without-continuation');" }
+              %span.icon.without-continuation
+              .dropdown-description
+                %h4 Classer sans suite
+                L'usager sera notifié que son dossier a été classé sans suite
+          %li
+            %a{ href: '#', onclick: "DS.showMotivation(event, 'refuse');" }
+              %span.icon.refuse
+              .dropdown-description
+                %h4 Refuser
+                L'usager sera notifié que son dossier a été refusé
+      = render partial: 'gestionnaires/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Accepter le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)', popup_class: 'accept', process_action: 'accepter', title: 'Accepter', confirm: "Confirmez-vous l'acceptation ce dossier ?" }
+      = render partial: 'gestionnaires/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Classer le dossier sans suite', placeholder: 'Expliquez au demandeur pourquoi ce dossier est classé sans suite (obligatoire)', popup_class: 'without-continuation', process_action: 'classer_sans_suite', title: 'Classer sans suite', confirm: 'Confirmez-vous le classement sans suite de ce dossier ?' }
+      = render partial: 'gestionnaires/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Refuser le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)', popup_class: 'refuse', process_action: 'refuser', title: 'Refuser', confirm: 'Confirmez-vous le refus de ce dossier ?' }
+
+- else
+  - if dossier.motivation.present? || dossier.attestation.present?
+    %span.dropdown
+      %button.button.dropdown-button{ class: button_or_label_class(dossier) }
+        = dossier_display_state(dossier, lower: true)
+      .dropdown-content.fade-in-down.terminated
+        - if dossier.motivation.present?
+          %h4 Motivation
+          %p.dossier-motivation= dossier.motivation
+
+        - if dossier.attestation.present?
+          %h4 Attestation
+          %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
+          = link_to "Voir l'attestation", attestation_gestionnaire_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', class: 'button'
+  - else
+    %span.label{ class: button_or_label_class(dossier) }
+      = dossier_display_state(dossier, lower: true)
