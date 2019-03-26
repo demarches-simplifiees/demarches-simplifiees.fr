@@ -221,6 +221,21 @@
       background: $light-grey;
     }
 
+    &.danger {
+      &:hover {
+        background-color: $medium-red;
+
+        &,
+        a {
+          color: $white;
+        }
+
+        .icon {
+          filter: contrast(0) brightness(100);
+        }
+      }
+    }
+
     &:last-child {
       border-bottom: none;
     }

@@ -1,0 +1,15 @@
+- has_delete_action = dossier.can_be_deleted_by_user?
+- has_actions = has_delete_action
+
+- if has_actions
+  %span.dropdown.user-dossier-actions
+    %button.button.dropdown-button
+      Actions
+    .dropdown-content.fade-in-down
+      %ul.dropdown-items
+        - if has_delete_action
+          %li.danger
+            = link_to ask_deletion_dossier_path(dossier), method: :post, data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
+              %span.icon.delete
+              .dropdown-description
+                Supprimer le dossier

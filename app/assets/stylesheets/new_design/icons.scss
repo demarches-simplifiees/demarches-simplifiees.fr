@@ -31,6 +31,10 @@
     background-image: image-url("icons/folder.svg");
   }
 
+  &.new-folder {
+    background-image: image-url("icons/new-folder.svg");
+  }
+
   &.accept {
     background-image: image-url("icons/accept.svg");
   }

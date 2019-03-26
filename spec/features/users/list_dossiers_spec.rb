@@ -71,11 +71,15 @@ describe 'user access to the list of their dossiers' do
 
     context 'when user clicks on delete button', js: true do
       scenario 'the dossier is deleted' do
-        page.accept_alert('Confirmer la suppression ?') do
-          find(:xpath, "//a[@href='#{ask_deletion_dossier_path(dossier_brouillon)}']").click
+        within(:css, "tr[data-dossier-id=\"#{dossier_brouillon.id}\"]") do
+          click_on 'Actions'
+          page.accept_alert('Confirmer la suppression ?') do
+            click_on 'Supprimer le dossier'
+          end
         end
 
         expect(page).to have_content('Votre dossier a bien été supprimé.')
+        expect(page).not_to have_content(dossier_brouillon.procedure.libelle)
       end
     end
   end
