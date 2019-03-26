@@ -18,18 +18,10 @@
     = stylesheet_link_tag 'new_design/new_application', media: 'all', 'data-turbolinks-track': 'reload'
     = stylesheet_link_tag 'new_design/print', media: 'print', 'data-turbolinks-track': 'reload'
 
+    = Gon::Base.render_data(camel_case: true, init: true)
+
     - if Rails.env.development?
       = stylesheet_link_tag :xray
-
-    = render partial: "layouts/matomo"
-    - if administrateur_signed_in?
-      = render partial: "layouts/sendinblue"
-
-
-    :javascript
-      DATA = [{
-        sentry: #{raw(sentry_config)}
-      }];
 
   %body{ class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper
@@ -50,3 +42,7 @@
         = javascript_include_tag :xray
 
       = yield :charts_js
+
+    = javascript_pack_tag 'track', async: true
+    - if administrateur_signed_in?
+      = javascript_pack_tag 'sendinblue', async: true
