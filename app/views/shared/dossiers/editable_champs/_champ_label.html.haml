@@ -1,4 +1,4 @@
-= form.label champ.main_value_name do
+= form.label champ.main_value_name, { class: champ.repetition? ? 'header-section' : '' } do
   #{champ.libelle}
   - if champ.mandatory?
     %span.mandatory *

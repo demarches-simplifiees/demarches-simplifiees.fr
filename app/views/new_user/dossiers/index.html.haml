@@ -5,8 +5,6 @@
 
 .dossiers-headers.sub-header
   .container
-    = link_to "Commencer une nouvelle démarche", demarches_url, class: "button secondary new-demarche"
-
     - if @dossiers_invites.count == 0
       %h1.page-title Mes dossiers
 
@@ -51,7 +49,7 @@
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
                   = dossier.updated_at.strftime("%d/%m/%Y")
               %td.action-col.delete-col
-                - if dossier.brouillon?
+                - if dossier.can_be_deleted_by_user?
                   = link_to(ask_deletion_dossier_path(dossier), method: :post, class: 'button danger', data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraine l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" }) do
                     %span.icon.delete
                     Supprimer
@@ -71,5 +69,7 @@
   - else
     .blank-tab
       %h2.empty-text Aucun dossier.
-      %p.empty-text-details Vous n’avez pas encore commencé de démarche.
-      = link_to "Commencer une nouvelle démarche", demarches_url, class: "button primary"
+      %p.empty-text-details
+        Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
+        %br
+        Celui ci doit ressembler à #{SITE}/commencer/xxx.

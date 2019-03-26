@@ -4,12 +4,21 @@
       %tr
         %td.cell-label Libelle
         %td.cell-label Type de champ
+        %td.cell-label Rempli
     %tbody
       - field.data.order(:order_place).each do |f|
         %tr
           %td.cell-data
             = f.libelle
+            - if f.mandatory?
+              %span.mandatory{ style: 'color: #A10005;' } *
           %td.cell-data
             = I18n.t("activerecord.attributes.type_de_champ.type_champs.#{f.type_champ}")
+
+          %td.cell-data
+            - if f.blank?
+              vide
+            - else
+              rempli
 - else
   Aucun

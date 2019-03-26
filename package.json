@@ -19,7 +19,8 @@
     "vue": "^2.5.21",
     "vue-loader": "^15.5.1",
     "vue-template-compiler": "^2.5.21",
-    "vuedraggable": "^2.16.0"
+    "vuedraggable": "^2.16.0",
+    "vue-scrollto": "^2.13.0"
   },
   "devDependencies": {
     "eclint": "^2.8.0",

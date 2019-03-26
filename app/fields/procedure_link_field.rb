@@ -1,6 +1,6 @@
 require "administrate/field/base"
 
-class ProcedureLinkField < Administrate::Field::Base
+class ProcedureLinkField < Administrate::Field::String
   def name
     "Lien démarche"
   end

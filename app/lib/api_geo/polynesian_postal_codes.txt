@@ -1,0 +1,257 @@
+Commune ou section	Commune	Code postal	Population	Bureau de poste	Iles	Ile	Archipel	Commune Associée	Commune - Ile - Code Postal	Code Postal - Commune - Ile
+ARUE	Arue	98701	9537	ARUE	TAHITI	Tahiti	Iles Du Vent		Arue - Tahiti - 98701	98701 - Arue - Tahiti
+TETIAROA	Tetiaroa	98701			TETIAROA	Tetiaroa	Iles Du Vent	Arue	Tetiaroa - 98701	98701 - Tetiaroa
+Faaa (B.P. & P.R.)	Faaa (B.P. & P.R.)	98702	29687	FAA'A CENTRE	TAHITI	Tahiti	Iles Du Vent		Faaa (B.P. & P.R.) - Tahiti - 98702	98702 - Faaa (B.P. & P.R.) - Tahiti
+PUNAAUIA CENTRE	Punaauia Centre	98703	27613	PUNAAUIA CENTRE	TAHITI	Tahiti	Iles Du Vent		Punaauia Centre - Tahiti - 98703	98703 - Punaauia Centre - Tahiti
+Faaa (domicile)	Faaa (Domicile)	98704	29687	FAA'A CENTRE	TAHITI	Tahiti	Iles Du Vent		Faaa (Domicile) - Tahiti - 98704	98704 - Faaa (Domicile) - Tahiti
+HITIAA O TE RA	Hitiaa O Te Ra	98705		HITIAA O TE RA	TAHITI	Tahiti	Iles Du Vent		Hitiaa O Te Ra - Tahiti - 98705	98705 - Hitiaa O Te Ra - Tahiti
+MAHAENA	Mahaena	98706		HITIAA O TE RA	TAHITI	Tahiti	Iles Du Vent		Mahaena - Tahiti - 98706	98706 - Mahaena - Tahiti
+PAPENOO	Papenoo	98707		HITIAA O TE RA	TAHITI	Tahiti	Iles Du Vent		Papenoo - Tahiti - 98707	98707 - Papenoo - Tahiti
+TIAREI	Tiarei	98708		HITIAA O TE RA	TAHITI	Tahiti	Iles Du Vent		Tiarei - Tahiti - 98708	98708 - Tiarei - Tahiti
+MAHINA	Mahina	98709	14351	MAHINA	TAHITI	Tahiti	Iles Du Vent		Mahina - Tahiti - 98709	98709 - Mahina - Tahiti
+OROFARA (Village)	Orofara (Village)	98710		MAHINA	TAHITI	Tahiti	Iles Du Vent		Orofara (Village) - Tahiti - 98710	98710 - Orofara (Village) - Tahiti
+PAEA	Paea	98711	12541	PAEA	TAHITI	Tahiti	Iles Du Vent		Paea - Tahiti - 98711	98711 - Paea - Tahiti
+PAPARA	Papara	98712	11143	PAPARA	TAHITI	Tahiti	Iles Du Vent		Papara - Tahiti - 98712	98712 - Papara - Tahiti
+PAPEETE (B.P. & P.R.)	Papeete (B.P. & P.R.)	98713	25769	PAPEETE-R.P	TAHITI	Tahiti	Iles Du Vent		Papeete (B.P. & P.R.) - Tahiti - 98713	98713 - Papeete (B.P. & P.R.) - Tahiti
+PAPEETE (domicile)	Papeete (Domicile)	98714	25769	PAPEETE RP	TAHITI	Tahiti	Iles Du Vent		Papeete (Domicile) - Tahiti - 98714	98714 - Papeete (Domicile) - Tahiti
+PAPEETE-C.T.C. (B.P. & P.R.)	Papeete-C.T.C. (B.P. & P.R.)	98715	25769	PAPEETE-C.T.C.	TAHITI	Tahiti	Iles Du Vent		Papeete-C.T.C. (B.P. & P.R.) - Tahiti - 98715	98715 - Papeete-C.T.C. (B.P. & P.R.) - Tahiti
+PIRAE	Pirae	98716	14129	PIRAE	TAHITI	Tahiti	Iles Du Vent		Pirae - Tahiti - 98716	98716 - Pirae - Tahiti
+PUNAAUIA (B.P.13000&'I30000)	Punaauia (B.P.13000&'I30000)	98717	27613	MOANA NUI	TAHITI	Tahiti	Iles Du Vent		Punaauia (B.P.13000&'I30000) - Tahiti - 98717	98717 - Punaauia (B.P.13000&'I30000) - Tahiti
+PUNAAUIA (B.P. 380000 ss)	Punaauia (B.P. 380000 Ss)	98718	27613	TAMANU	TAHITI	Tahiti	Iles Du Vent		Punaauia (B.P. 380000 Ss) - Tahiti - 98718	98718 - Punaauia (B.P. 380000 Ss) - Tahiti
+AFAAHITI	Afaahiti	98719			TAHITI	Tahiti	Iles Du Vent	Afaahiti	Afaahiti - Tahiti - 98719	98719 - Afaahiti - Tahiti
+TARAVAO	Taravao	98719			TAHITI	Tahiti	Iles Du Vent		Taravao - Tahiti - 98719	98719 - Taravao - Tahiti
+FAAONE	Faaone	98720			TAHITI	Tahiti	Iles Du Vent	Faaone	Faaone - Tahiti - 98720	98720 - Faaone - Tahiti
+PUEU	Pueu	98721			TAHITI	Tahiti	Iles Du Vent	Pueu	Pueu - Tahiti - 98721	98721 - Pueu - Tahiti
+MEHETIA	Mehetia	98722			MEHETIA	Mehetia	Iles Du Vent	Tautira	Mehetia - 98722	98722 - Mehetia
+TAUTIRA	Tautira	98722			TAHITI	Tahiti	Iles Du Vent	Tautira	Tautira - Tahiti - 98722	98722 - Tautira - Tahiti
+TEAHUPOO	Teahupoo	98723		TARAVAO	TAHITI	Tahiti	Iles Du Vent		Teahupoo - Tahiti - 98723	98723 - Teahupoo - Tahiti
+TOAHOTU	Toahotu	98724			TAHITI	Tahiti	Iles Du Vent	Toahotu	Toahotu - Tahiti - 98724	98724 - Toahotu - Tahiti
+VAIRAO	Vairao	98725		TARAVAO	TAHITI	Tahiti	Iles Du Vent		Vairao - Tahiti - 98725	98725 - Vairao - Tahiti
+MATAIEA	Mataiea	98726			TAHITI	Tahiti	Iles Du Vent	Mataiea	Mataiea - Tahiti - 98726	98726 - Mataiea - Tahiti
+PAPEARI	Papeari	98727			TAHITI	Tahiti	Iles Du Vent	Papeari	Papeari - Tahiti - 98727	98727 - Papeari - Tahiti
+MOOREA-MAIAO/AFAREAITU	Afareaitu	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Afareaitu - Moorea - 98728	98728 - Afareaitu - Moorea
+HAUMI	Haumi	98728		MAHAREPA	MOOREA	Moorea			Haumi - Moorea - 98728	98728 - Haumi - Moorea
+MAATEA	Maatea	98728		MAHAREPA	MOOREA	Moorea			Maatea - Moorea - 98728	98728 - Maatea - Moorea
+MAHAREPA	Maharepa	98728			MOOREA	Moorea	Iles Du Vent		Maharepa - Moorea - 98728	98728 - Maharepa - Moorea
+MOOREA-MAIAO/PAOPAO	Paopao	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Paopao - Moorea - 98728	98728 - Paopao - Moorea
+MOOREA-MAIAO/TEAVARO	Teavaro	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Teavaro - Moorea - 98728	98728 - Teavaro - Moorea
+TEMAE	Temae	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Temae - Moorea - 98728	98728 - Temae - Moorea
+TIAIA	Tiaia	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Tiaia - Moorea - 98728	98728 - Tiaia - Moorea
+VAIARE	Vaiare	98728		MAHAREPA	MOOREA	Moorea	Iles Du Vent		Vaiare - Moorea - 98728	98728 - Vaiare - Moorea
+ATIHA	Atiha	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Atiha - Moorea - 98729	98729 - Atiha - Moorea
+MOOREA-MAIAO/HAAPITI	Haapiti	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Haapiti - Moorea - 98729	98729 - Haapiti - Moorea
+HAURU	Hauru	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Hauru - Moorea - 98729	98729 - Hauru - Moorea
+MOOREA-MAIAO/PAPETOAI	Papetoai	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Papetoai - Moorea - 98729	98729 - Papetoai - Moorea
+TIAHURA	Tiahura	98729		PAPETOAI	MOOREA	Moorea	Iles Du Vent		Tiahura - Moorea - 98729	98729 - Tiahura - Moorea
+BORA-BORA/ANAU	Anau	98730		VAITAPE	BORA-BORA	Bora-Bora	îles Sous Le Vent		Anau - Bora-Bora - 98730	98730 - Anau - Bora-Bora
+BORA-BORA/FAANUI	Faanui	98730		VAITAPE	BORA-BORA	Bora-Bora	îles Sous Le Vent		Faanui - Bora-Bora - 98730	98730 - Faanui - Bora-Bora
+BORA-BORA/NUNUE	Nunue	98730		VAITAPE	BORA-BORA	Bora-Bora	îles Sous Le Vent		Nunue - Bora-Bora - 98730	98730 - Nunue - Bora-Bora
+TUPAI	Tupai	98730			TUPAI	Tupai	îles Sous Le Vent	Nunue	Tupai - 98730	98730 - Tupai
+BORA-BORA/VAITAPE	Vaitape	98730		VAITAPE	BORA-BORA	Bora-Bora	îles Sous Le Vent		Vaitape - Bora-Bora - 98730	98730 - Vaitape - Bora-Bora
+HUAHINE/FAIE	Faie	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Faie - Huahine - 98731	98731 - Faie - Huahine
+HUAHINE/FARE	Fare	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Fare - Huahine - 98731	98731 - Fare - Huahine
+HUAHINE/FITII	Fitii	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Fitii - Huahine - 98731	98731 - Fitii - Huahine
+HUAHINE/HAAPU	Haapu	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Haapu - Huahine - 98731	98731 - Haapu - Huahine
+HUAHINE/MAEVA	Maeva	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Maeva - Huahine - 98731	98731 - Maeva - Huahine
+HUAHINE/MAROE	Maroe	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Maroe - Huahine - 98731	98731 - Maroe - Huahine
+HUAHINE/PAREA	Parea	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Parea - Huahine - 98731	98731 - Parea - Huahine
+HUAHINE/TEFARERII	Tefarerii	98731		FARE	HUAHINE	Huahine	îles Sous Le Vent		Tefarerii - Huahine - 98731	98731 - Tefarerii - Huahine
+MANUAE (SCILLY)	Manuae (Scilly)	98732			MANUAE (SCILLY)	Manuae (Scilly)	îles Sous Le Vent	Maupiti	Manuae (Scilly) - 98732	98732 - Manuae (Scilly)
+MAUPIHAA (MOPELIA)	Maupihaa (Mopelia)	98732			MAUPIHAA (MOPELIA)	Maupihaa (Mopelia)	îles Sous Le Vent	Maupiti	Maupihaa (Mopelia) - 98732	98732 - Maupihaa (Mopelia)
+MAUPITI	Maupiti	98732			MAUPITI	Maupiti	îles Sous Le Vent	Maupiti	Maupiti - 98732	98732 - Maupiti
+MOTU ONE (BELLINGHAUSEN)	Motu One (Bellinghausen)	98732			MOTU ONE (BELLINGHAUSEN)	Motu One (Bellinghausen)	îles Sous Le Vent	Maupiti	Motu One (Bellinghausen) - 98732	98732 - Motu One (Bellinghausen)
+TAHAA/HIPU	Hipu	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Hipu - Tahaa - 98733	98733 - Hipu - Tahaa
+TAHAA/IRIPAU	Iripau	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Iripau - Tahaa - 98733	98733 - Iripau - Tahaa
+TAHAA/PATIO	Patio	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Patio - Tahaa - 98733	98733 - Patio - Tahaa
+TAHAA/RUUTIA	Ruutia	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Ruutia - Tahaa - 98733	98733 - Ruutia - Tahaa
+TAHAA/TAPUAMU	Tapuamu	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Tapuamu - Tahaa - 98733	98733 - Tapuamu - Tahaa
+TAHAA/TIVA	Tiva	98733		PATIO	TAHAA	Tahaa	îles Sous Le Vent		Tiva - Tahaa - 98733	98733 - Tiva - Tahaa
+TAHAA/FAAAHA	Faaaha	98734		HAAMENE	TAHAA	Tahaa	îles Sous Le Vent		Faaaha - Tahaa - 98734	98734 - Faaaha - Tahaa
+TAHAA/HAAMENE	Haamene	98734		HAAMENE	TAHAA	Tahaa	îles Sous Le Vent		Haamene - Tahaa - 98734	98734 - Haamene - Tahaa
+TAHAA/NIUA	Niua	98734		HAAMENE	TAHAA	Tahaa	îles Sous Le Vent		Niua - Tahaa - 98734	98734 - Niua - Tahaa
+TAHAA/VAITOARE	Vaitoare	98734		HAAMENE	TAHAA	Tahaa	îles Sous Le Vent		Vaitoare - Tahaa - 98734	98734 - Vaitoare - Tahaa
+FETUNA	Fetuna	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent	Fetuna	Fetuna - Raiatea - 98735	98735 - Fetuna - Raiatea
+TAPUTAPUATEA/OPOA	Opoa	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Opoa - Raiatea - 98735	98735 - Opoa - Raiatea
+TAPUTAPUATEA/PUOHINE	Puohine	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Puohine - Raiatea - 98735	98735 - Puohine - Raiatea
+TAPUTAPUATEA	Taputapuatea	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Taputapuatea - Raiatea - 98735	98735 - Taputapuatea - Raiatea
+TU MARAAA/TEHURUI	Tehurui	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Tehurui - Raiatea - 98735	98735 - Tehurui - Raiatea
+TUMARAAA/TEVAITOA	Tevaitoa	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Tevaitoa - Raiatea - 98735	98735 - Tevaitoa - Raiatea
+TUMARAA	Tumaraa	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Tumaraa - Raiatea - 98735	98735 - Tumaraa - Raiatea
+UTUROA	Uturoa	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Uturoa - Raiatea - 98735	98735 - Uturoa - Raiatea
+TUMARAAA/VAIAAU	Vaiaau	98735		UTUROA	RAIATEA	Raiatea	îles Sous Le Vent		Vaiaau - Raiatea - 98735	98735 - Vaiaau - Raiatea
+TAPUTAPUATEA/AVERA	Avera	98736		AVERA	RAIATEA	Raiatea	îles Sous Le Vent		Avera - Raiatea - 98736	98736 - Avera - Raiatea
+FATU-HIVA	Fatu-Hiva	98740			Fatu-Hiva	Fatu-Hiva	Marquises	Fatu-Hiva	Fatu-Hiva - 98740	98740 - Fatu-Hiva
+FATU-HIVA/HANAVE	Hanave	98740			Fatu-Hiva	Fatu-Hiva	Marquises	Fatu-Hiva	Hanave - Fatu-Hiva - 98740	98740 - Hanave - Fatu-Hiva
+FATU-HIVA/OMOA	Omoa	98740		OMOA	FATU-HIVA	Fatu-Hiva	Marquises		Omoa - Fatu-Hiva - 98740	98740 - Omoa - Fatu-Hiva
+HIVA-OA/ATUONA	Atuona	98741		ATUONA	HIVA-OA	Hiva-Oa	Marquises		Atuona - Hiva-Oa - 98741	98741 - Atuona - Hiva-Oa
+HIVA-OA/EIAONE	Eiaone	98741		ATUONA	HIVA-OA	Hiva-Oa	Marquises		Eiaone - Hiva-Oa - 98741	98741 - Eiaone - Hiva-Oa
+HIVA-OA/HANAIAPA	Hanaiapa	98741		ATUONA	HIVA-OA	Hiva-Oa	Marquises		Hanaiapa - Hiva-Oa - 98741	98741 - Hanaiapa - Hiva-Oa
+HIVA-OA/HANAPAOA	Hanapaoa	98741		ATUONA	HIVA-OA	Hiva-Oa	Marquises		Hanapaoa - Hiva-Oa - 98741	98741 - Hanapaoa - Hiva-Oa
+HIVA-OA	Hiva-Oa	98741		ATUONA	HIVA-OA	Hiva-Oa	Marquises		Hiva-Oa - 98741	98741 - Hiva-Oa
+HIVA-OA/MOTU UA	Motu Ua	98741		ATUONA	HIVA-OA	Hiva-Oa	Marquises		Motu Ua - Hiva-Oa - 98741	98741 - Motu Ua - Hiva-Oa
+HIVA-OA/NAHOE	Nahoe	98741		ATUONA	HIVA-OA	Hiva-Oa	Marquises		Nahoe - Hiva-Oa - 98741	98741 - Nahoe - Hiva-Oa
+HIVA-OA/PAUMAU	Paumau	98741		ATUONA	HIVA-OA	Hiva-Oa	Marquises		Paumau - Hiva-Oa - 98741	98741 - Paumau - Hiva-Oa
+NUKU-HIVA/AAKAPA	Aakapa	98742			NUKU-HIVA	Nuku-Hiva	Marquises	Taiohae	Aakapa - Nuku-Hiva - 98742	98742 - Aakapa - Nuku-Hiva
+MOTU ONE (MARQUISES)	Motu One (Marquises)	98742			MOTU ONE (MARQUISES)	Motu One (Marquises)	Marquises	Taiohae	Motu One (Marquises) - 98742	98742 - Motu One (Marquises)
+NUKU-HIVA/NUKUATAHA	Nukuataha	98742		TAIOHAE	NUKU-HIVA	Nuku-Hiva	Marquises		Nukuataha - Nuku-Hiva - 98742	98742 - Nukuataha - Nuku-Hiva
+NUKU-HIVA	Nuku-Hiva	98742			NUKU-HIVA	Nuku-Hiva	Marquises	Taiohae	Nuku-Hiva - 98742	98742 - Nuku-Hiva
+NUKU-HIVA/TAIOHAE	Taiohae	98742		TAIOHAE	NUKU-HIVA	Nuku-Hiva	Marquises		Taiohae - Nuku-Hiva - 98742	98742 - Taiohae - Nuku-Hiva
+NUKU-HIVA/TAIPIVAI	Taipivai	98742		TAIOHAE	NUKU-HIVA	Nuku-Hiva	Marquises		Taipivai - Nuku-Hiva - 98742	98742 - Taipivai - Nuku-Hiva
+NUKU-HIVA/TERRE DESERTE	Terre Deserte	98742		TAIOHAE	NUKU-HIVA	Nuku-Hiva	Marquises		Terre Deserte - Nuku-Hiva - 98742	98742 - Terre Deserte - Nuku-Hiva
+TAHUATA	Tahuata	98743			TAHUATA	Tahuata	Marquises	Tahuata	Tahuata - 98743	98743 - Tahuata
+TAHUATA/VAITAHU	Vaitahu	98743		VAITAHU	TAHUATA	Tahuata	Marquises		Vaitahu - Tahuata - 98743	98743 - Vaitahu - Tahuata
+UA-HUKA/HANAVAVE	Hanavave	98744		VAIPAEE	UA-HUKA	Ua-Huka	Marquises		Hanavave - Ua-Huka - 98744	98744 - Hanavave - Ua-Huka
+UA-HUKA	Ua-Huka	98744			UA-HUKA	Ua-Huka	Marquises	Ua Huka	Ua-Huka - 98744	98744 - Ua-Huka
+UA-POU/HAKAHAU	Hakahau	98745		HAKAHAU	UA-POU	Ua-Pou	Marquises		Hakahau - Ua-Pou - 98745	98745 - Hakahau - Ua-Pou
+UA-POU/HAKAHETAU	Hakahetau	98745		HAKAHAU	UA-POU	Ua-Pou	Marquises		Hakahetau - Ua-Pou - 98745	98745 - Hakahetau - Ua-Pou
+UA-POU/HAKATAO	Hakatao	98745		HAKAHAU	UA-POU	Ua-Pou	Marquises		Hakatao - Ua-Pou - 98745	98745 - Hakatao - Ua-Pou
+UA-POU/HOHOI	Hohoi	98745		HAKAHAU	UA-POU	Ua-Pou	Marquises		Hohoi - Ua-Pou - 98745	98745 - Hohoi - Ua-Pou
+UA-POU/HAAKUTI	Haakuti	98746		HAKAMAI	UA-POU	Ua-Pou	Marquises		Haakuti - Ua-Pou - 98746	98746 - Haakuti - Ua-Pou
+UA-POU/HAKAMAII	Hakamaii	98746		HAKAMAI	UA-POU	Ua-Pou	Marquises		Hakamaii - Ua-Pou - 98746	98746 - Hakamaii - Ua-Pou
+UA HUKA/HANE	Hane	98747		VAIPAEE	UA HUKA	Ua Huka	Marquises		Hane - Ua Huka - 98747	98747 - Hane - Ua Huka
+NUKU HIVA/HATIHEU	Hatiheu	98748		HATIHEU	NUKU HIVA	Nuku Hiva	Marquises		Hatiheu - Nuku Hiva - 98748	98748 - Hatiheu - Nuku Hiva
+HIVA-OA/PUAMAU	Puamau	98749		PUAMAU	HIVA-OA	Hiva-Oa	Marquises		Puamau - Hiva-Oa - 98749	98749 - Puamau - Hiva-Oa
+RAIVAVAE/ANATONU	Anatonu	98750		RAIRUA	RAIVAVAE	Raivavae	Australes		Anatonu - Raivavae - 98750	98750 - Anatonu - Raivavae
+RAIVAVAE/MAHANATOA	Mahanatoa	98750		RAIRUA	RAIVAVAE	Raivavae	Australes		Mahanatoa - Raivavae - 98750	98750 - Mahanatoa - Raivavae
+RAIVAVAE/RAIRUA	Rairua	98750		RAIRUA	RAIVAVAE	Raivavae	Australes		Rairua - Raivavae - 98750	98750 - Rairua - Raivavae
+RAIVAVAE/VAIURU	Vaiuru	98750		RAIRUA	RAIVAVAE	Raivavae	Australes		Vaiuru - Raivavae - 98750	98750 - Vaiuru - Raivavae
+RAPA/AHUREI	Ahurei	98751		AHUREI	RAPA	Rapa	Australes		Ahurei - Rapa - 98751	98751 - Ahurei - Rapa
+RIMATARA/AMARU	Amaru	98752		AMARU	RIMATARA	Rimatara	Australes		Amaru - Rimatara - 98752	98752 - Amaru - Rimatara
+RIMATARA/ANAPOTO	Anapoto	98752		AMARU	RIMATARA	Rimatara	Australes		Anapoto - Rimatara - 98752	98752 - Anapoto - Rimatara
+MARIA (AUSTRALES)	Maria (Australes)	98752			MARIA (AUSTRALES)	Maria (Australes)	Australes	Amaru	Maria (Australes) - 98752	98752 - Maria (Australes)
+RURUTU/MUTUAURA	Mutuaura	98752		AMARU	RIMATARA	Rimatara	Australes		Mutuaura - Rimatara - 98752	98752 - Mutuaura - Rimatara
+RIMATARA	Rimatara	98752		AMARU	RIMATARA	Rimatara	Australes		Rimatara - 98752	98752 - Rimatara
+RIMATARA/UTUAURA	Utuaura	98752		AMARU	RIMATARA	Rimatara	Australes		Utuaura - Rimatara - 98752	98752 - Utuaura - Rimatara
+RURUTU/AVERA	Avera	98753		MOERAI	RURUTU	Rurutu	Australes		Avera - Rurutu - 98753	98753 - Avera - Rurutu
+RURUTU/HAUTI	Hauti	98753		MOERAI	RURUTU	Rurutu	Australes		Hauti - Rurutu - 98753	98753 - Hauti - Rurutu
+RURUTU/MOERAI	Moerai	98753		MOERAI	RURUTU	Rurutu	Australes		Moerai - Rurutu - 98753	98753 - Moerai - Rurutu
+RURUTU	Rurutu	98753		MOERAI	RURUTU	Rurutu	Australes		Rurutu - 98753	98753 - Rurutu
+TUBUAI/MAHU	Mahu	98754		MATAURA	TUBUAI	Tubuai	Australes		Mahu - Tubuai - 98754	98754 - Mahu - Tubuai
+TUBUAI/MATAURA	Mataura	98754		MATAURA	TUBUAI	Tubuai	Australes		Mataura - Tubuai - 98754	98754 - Mataura - Tubuai
+TUBUAI/TAAHUAIA	Taahuaia	98754		MATAURA	TUBUAI	Tubuai	Australes		Taahuaia - Tubuai - 98754	98754 - Taahuaia - Tubuai
+TUBUAI	Tubuai	98754		MATAURA	TUBUAI	Tubuai	Australes		Tubuai - 98754	98754 - Tubuai
+GAMBIER/AKAMARU	Akamaru	98755		RIKITEA	AKAMARU	Akamaru	Tuamotu-Gambiers		Akamaru - 98755	98755 - Akamaru
+GAMBIER/ANGAKAUITAI	Angakauitai	98755		RIKITEA	ANGAKAUITAI	Angakauitai	Tuamotu-Gambiers		Angakauitai - 98755	98755 - Angakauitai
+GAMBIER/AUKENA	Aukena	98755		RIKITEA	AUKENA	Aukena	Tuamotu-Gambiers		Aukena - 98755	98755 - Aukena
+GAMBIER	Gambier	98755		RIKITEA	AKAMARU	Akamaru	Tuamotu-Gambiers		Gambier - Akamaru - 98755	98755 - Gambier - Akamaru
+GAMBIER/KAMAKA	Kamaka	98755		RIKITEA	KAMAKA	Kamaka	Tuamotu-Gambiers		Kamaka - 98755	98755 - Kamaka
+GAMBIER/MAKAROA	Makaroa	98755		RIKITEA	MAKAROA	Makaroa	Tuamotu-Gambiers		Makaroa - 98755	98755 - Makaroa
+GAMBIER/MANGAREVA	Mangareva	98755		RIKITEA	MANGAREVA	Mangareva	Tuamotu-Gambiers		Mangareva - 98755	98755 - Mangareva
+GAMBIER/MANIUI	Maniui	98755		RIKITEA	MANIUI	Maniui	Tuamotu-Gambiers		Maniui - 98755	98755 - Maniui
+GAMBIER/TARAVAI	Taravai	98755		RIKITEA	TARAVAI	Taravai	Tuamotu-Gambiers		Taravai - 98755	98755 - Taravai
+ANAA	Anaa	98760		TUUHORA	ANAA	Anaa	Tuamotu-Gambiers		Anaa - 98760	98760 - Anaa
+ARUTUA	Arutua	98761		RAUUNI	ARUTUA	Arutua	Tuamotu-Gambiers		Arutua - 98761	98761 - Arutua
+APATAKI	Apataki	98762			APATAKI	Apataki	Tuamotu-Gambiers	Apataki	Apataki - 98762	98762 - Apataki
+APATAKI/NIUTAHI	Niutahi	98762		NIUTAHI	APATAKI	Apataki	Tuamotu-Gambiers		Niutahi - Apataki - 98762	98762 - Niutahi - Apataki
+FAKARAVA	Fakarava	98763		ROTOAVA	FAKARAVA	Fakarava	Tuamotu-Gambiers		Fakarava - 98763	98763 - Fakarava
+FAKARAVA/PAPARARA	Paparara	98763		ROTOAVA	FAKARAVA	Fakarava	Tuamotu-Gambiers		Paparara - Fakarava - 98763	98763 - Paparara - Fakarava
+FAKARAVA/ROTOAVA	Rotoava	98763		ROTOAVA	FAKARAVA	Fakarava	Tuamotu-Gambiers		Rotoava - Fakarava - 98763	98763 - Rotoava - Fakarava
+TOAU	Toau	98763			TOAU	Toau	Tuamotu-Gambiers	Fakarava	Toau - 98763	98763 - Toau
+ARATIKA	Aratika	98764			ARATIKA	Aratika	Tuamotu-Gambiers	Fakarava	Aratika - 98764	98764 - Aratika
+ARATIKA/PAPARARA	Paparara	98764			ARATIKA	Aratika	Tuamotu-Gambiers		Paparara - Aratika - 98764	98764 - Paparara - Aratika
+FANGATAU	Fangatau	98765		TEANA	FANGATAU	Fangatau	Tuamotu-Gambiers		Fangatau - 98765	98765 - Fangatau
+FANGATAU/TEANA	Teana	98765		TEANA	FANGATAU	Fangatau	Tuamotu-Gambiers		Teana - Fangatau - 98765	98765 - Teana - Fangatau
+FAKAHINA	Fakahina	98766			FAKAHINA	Fakahina	Tuamotu-Gambiers	Fakahina	Fakahina - 98766	98766 - Fakahina
+HAO	Hao	98767		OTEPA	HAO	Hao	Tuamotu-Gambiers		Hao - 98767	98767 - Hao
+HAO/OTEPA	Otepa	98767		OTEPA	HAO	Hao	Tuamotu-Gambiers		Otepa - Hao - 98767	98767 - Otepa - Hao
+HIKUERU	Hikueru	98768		TUPAPATI	HIKUERU	Hikueru	Tuamotu-Gambiers		Hikueru - 98768	98768 - Hikueru
+HIKUERU/TUPAPATI	Tupapati	98768		TUPAPATI	HIKUERU	Hikueru	Tuamotu-Gambiers		Tupapati - Hikueru - 98768	98768 - Tupapati - Hikueru
+MAKEMO	Makemo	98769		POUHEVA	MAKEMO	Makemo	Tuamotu-Gambiers		Makemo - 98769	98769 - Makemo
+MAKEMO/POUHEVA	Pouheva	98769		POUHEVA	MAKEMO	Makemo	Tuamotu-Gambiers		Pouheva - Makemo - 98769	98769 - Pouheva - Makemo
+MANIHI/AHE	Ahe	98770		TENOKU PARA	AHE	Ahe	Tuamotu-Gambiers		Ahe - 98770	98770 - Ahe
+MANIHI	Manihi	98771		TURIPAOA	MANIHI	Manihi	Tuamotu-Gambiers		Manihi - 98771	98771 - Manihi
+NAPUKA	Napuka	98772		TEPUKAMARUIA	NAPUKA	Napuka	Tuamotu-Gambiers		Napuka - 98772	98772 - Napuka
+NUKUTAVAKE	Nukutavake	98773		TAVAVA	NUKUTAVAKE	Nukutavake	Tuamotu-Gambiers		Nukutavake - 98773	98773 - Nukutavake
+PUKAPUKA	Pukapuka	98774		TEONEMAHINA	PUKAPUKA	Pukapuka	Tuamotu-Gambiers	Pukapuka	Pukapuka - 98774	98774 - Pukapuka
+RANGIROA/AVATORU	Avatoru	98775		AVATORU	RANGIROA	Rangiroa	Tuamotu-Gambiers		Avatoru - Rangiroa - 98775	98775 - Avatoru - Rangiroa
+RANGIROA/TIPUTA	Tiputa	98776		TIPUTA	RANGIROA	Rangiroa	Tuamotu-Gambiers		Tiputa - Rangiroa - 98776	98776 - Tiputa - Rangiroa
+MATAIVA	Mataiva	98777		PAHUA	MATAIVA	Mataiva	Tuamotu-Gambiers		Mataiva - 98777	98777 - Mataiva
+MATAIVA/PAHUA	Pahua	98777		PAHUA	MATAIVA	Mataiva	Tuamotu-Gambiers		Pahua - Mataiva - 98777	98777 - Pahua - Mataiva
+TIKEHAU	Tikehau	98778		TUHERAHERA	TIKEHAU	Tikehau	Tuamotu-Gambiers		Tikehau - 98778	98778 - Tikehau
+TIKEHAU/TUHERAHERA	Tuherahera	98778		TUHERAHERA	TIKEHAU	Tikehau	Tuamotu-Gambiers		Tuherahera - Tikehau - 98778	98778 - Tuherahera - Tikehau
+REAO	Reao	98779		TAPUARAVA	REAO	Reao	Tuamotu-Gambiers		Reao - 98779	98779 - Reao
+REAO/TAPUARAVA	Tapuarava	98779		TAPUARAVA	REAO	Reao	Tuamotu-Gambiers		Tapuarava - Reao - 98779	98779 - Tapuarava - Reao
+PUKARUA/MARAUTAGAROA	Marautagaroa	98780		MARAUTAGAROA	PUKARUA	Pukarua	Tuamotu-Gambiers		Marautagaroa - Pukarua - 98780	98780 - Marautagaroa - Pukarua
+PUKARUA	Pukarua	98780		MARAUTAGAROA	PUKARUA	Pukarua	Tuamotu-Gambiers		Pukarua - 98780	98780 - Pukarua
+TAKAROA	Takaroa	98781		TEAVAROA	TAKAROA	Takaroa	Tuamotu-Gambiers		Takaroa - 98781	98781 - Takaroa
+TAKAPOTO/FAKATOPATERE	Fakatopatere	98782		FAKATOPATERE	TAKAPOTO	Takapoto	Tuamotu-Gambiers		Fakatopatere - Takapoto - 98782	98782 - Fakatopatere - Takapoto
+TAKAPOTO	Takapoto	98782		FAKATOPATERE	TAKAPOTO	Takapoto	Tuamotu-Gambiers		Takapoto - 98782	98782 - Takapoto
+TATAKOTO	Tatakoto	98783		TUMUKURU	TATAKOTO	Tatakoto	Tuamotu-Gambiers		Tatakoto - 98783	98783 - Tatakoto
+TATAKOTO/TUMUKURU	Tumukuru	98783		TUMUKURU	TATAKOTO	Tatakoto	Tuamotu-Gambiers		Tumukuru - Tatakoto - 98783	98783 - Tumukuru - Tatakoto
+TUREIA/FAKAMARU	Fakamaru	98784		FAKAMARU	TUREIA	Tureia	Tuamotu-Gambiers		Fakamaru - Tureia - 98784	98784 - Fakamaru - Tureia
+TUREIA	Tureia	98784		FAKAMARU	TUREIA	Tureia	Tuamotu-Gambiers		Tureia - 98784	98784 - Tureia
+KAUKURA	Kaukura	98785		RAITAHITI	KAUKURA	Kaukura	Tuamotu-Gambiers		Kaukura - 98785	98785 - Kaukura
+KAUKURA/RAITAHITI	Raitahiti	98785		RAITAHITI	KAUKURA	Kaukura	Tuamotu-Gambiers		Raitahiti - Kaukura - 98785	98785 - Raitahiti - Kaukura
+ANAA/FAAITE	Faaite	98786		HITIANAU	FAAITE	Faaite	Tuamotu-Gambiers		Faaite - 98786	98786 - Faaite
+KAUEHI	Kauehi	98787		TEARAVERO	KAUEHI	Kauehi	Tuamotu-Gambiers		Kauehi - 98787	98787 - Kauehi
+NUKUTAVAKE	Nukutavake	98788		TEMANUFAARA	VAHITAHI	Vahitahi	Tuamotu-Gambiers		Nukutavake - Vahitahi - 98788	98788 - Nukutavake - Vahitahi
+VAHITAHI	Vahitahi	98788		TEMANUFAARA	VAHITAHI	Vahitahi	Tuamotu-Gambiers		Vahitahi - 98788	98788 - Vahitahi
+MAKEMO/KATIU	Katiu	98789		HITIANAU	KATIU	Katiu	Tuamotu-Gambiers		Katiu - 98789	98789 - Katiu
+MAKEMO	Makemo	98789		HITIANAU	KATIU	Katiu	Tuamotu-Gambiers		Makemo - Katiu - 98789	98789 - Makemo - Katiu
+HAO/AHUNUI	Ahunui	98790		PAPEETE-CTC	AHUNUI	Ahunui	Tuamotu-Gambiers		Ahunui - 98790	98790 - Ahunui
+AMANU	Amanu	98790			AMANU	Amanu	Tuamotu-Gambiers	Amanu	Amanu - 98790	98790 - Amanu
+ANUANURARO	Anuanuraro	98790			ANUANURARO	Anuanuraro	Tuamotu-Gambiers	Hereheretue	Anuanuraro - 98790	98790 - Anuanuraro
+ANUANURUNGA	Anuanurunga	98790			ANUANURUNGA	Anuanurunga	Tuamotu-Gambiers	Hereheretue	Anuanurunga - 98790	98790 - Anuanurunga
+ARATIKA	Aratika	98790			ARATIKA	Aratika	Tuamotu-Gambiers	Kauehi	Aratika - 98790	98790 - Aratika
+FAAITE	Faaite	98790			FAAITE	Faaite	Tuamotu-Gambiers	Faaite	Faaite - 98790	98790 - Faaite
+HARAIKI	Haraiki	98790			HARAIKI	Haraiki	Tuamotu-Gambiers	Makemo	Haraiki - 98790	98790 - Haraiki
+HEREHERETUE	Hereheretue	98790			HEREHERETUE	Hereheretue	Tuamotu-Gambiers	Hereheretue	Hereheretue - 98790	98790 - Hereheretue
+HIKITAKE	Hikitake	98790		PAPEETE-CTC	AMANU	Amanu	Tuamotu-Gambiers		Hikitake - Amanu - 98790	98790 - Hikitake - Amanu
+HIKUERU	Hikueru	98790		PAPEETE-CTC	TEKOKOTA	Tekokota	Tuamotu-Gambiers		Hikueru - Tekokota - 98790	98790 - Hikueru - Tekokota
+HITI	Hiti	98790			HITI	Hiti	Tuamotu-Gambiers	Katiu	Hiti - 98790	98790 - Hiti
+KAUEHI	Kauehi	98790			KAUEHI	Kauehi	Tuamotu-Gambiers	Kauehi	Kauehi - 98790	98790 - Kauehi
+MAHETIKA	Mahetika	98790		PAPEETE-CTC	MAROKAU	Marokau	Tuamotu-Gambiers		Mahetika - Marokau - 98790	98790 - Mahetika - Marokau
+RANGIROA/MAKATEA	Makatea	98790		PAPEETE-CTC	MAKATEA	Makatea	Tuamotu-Gambiers		Makatea - 98790	98790 - Makatea
+MAKEMO	Makemo	98790			MAKEMO	Makemo	Tuamotu-Gambiers	Makemo	Makemo - 98790	98790 - Makemo
+HAO/MANUHANGI	Manuhangi	98790		PAPEETE-CTC	MANUHANGI	Manuhangi	Tuamotu-Gambiers		Manuhangi - 98790	98790 - Manuhangi
+HIKUERU/MAROKAU	Marokau	98790		PAPEETE-CTC	MAROKAU	Marokau	Tuamotu-Gambiers		Marokau - 98790	98790 - Marokau
+MARUTEA NORD	Marutea Nord	98790			MARUTEA NORD	Marutea Nord	Tuamotu-Gambiers	Makemo	Marutea Nord - 98790	98790 - Marutea Nord
+MARUTEA NORD	Marutea Nord	98790		PAPEETE-CTC	MARUTEA NORD	Marutea Nord	Tuamotu-Gambiers		Marutea Nord - 98790	98790 - Marutea Nord
+MOTUTAPU	Motutapu	98790			MOTUTAPU	Motutapu	Tuamotu-Gambiers		Motutapu - 98790	98790 - Motutapu
+ANAA/MOTUTUNGA	Motutunga	98790		PAPEETE-CTC	MOTUTUNGA	Motutunga	Tuamotu-Gambiers		Motutunga - 98790	98790 - Motutunga
+HAO/NENGONENGO	Nengonengo	98790		PAPEETE-CTC	NENGONENGO	Nengonengo	Tuamotu-Gambiers		Nengonengo - 98790	98790 - Nengonengo
+FAKARAVA/NIAU	Niau	98790		PAPEETE-CTC	NIAU	Niau	Tuamotu-Gambiers		Niau - 98790	98790 - Niau
+NIHIRU	Nihiru	98790			NIHIRU	Nihiru	Tuamotu-Gambiers	Taenga	Nihiru - 98790	98790 - Nihiru
+NUKUTEPIPI	Nukutepipi	98790		PAPEETE-CTC	NUKUTEPIPI	Nukutepipi	Tuamotu-Gambiers		Nukutepipi - 98790	98790 - Nukutepipi
+HAO/PARAOA	Paraoa	98790		PAPEETE-CTC	PARAOA	Paraoa	Tuamotu-Gambiers		Paraoa - 98790	98790 - Paraoa
+FAKARAVA/RARAKA	Raraka	98790		PAPEETE-CTC	RARAKA	Raraka	Tuamotu-Gambiers		Raraka - 98790	98790 - Raraka
+MAKEMO/RAROIA	Raroia	98790		PAPEETE-CTC	Raroia	Raroia	Tuamotu-Gambiers		Raroia - 98790	98790 - Raroia
+RAVAHERE	Ravahere	98790		PAPEETE-CTC	RAVAHERE	Ravahere	Tuamotu-Gambiers		Ravahere - 98790	98790 - Ravahere
+REITORU	Reitoru	98790		PAPEETE-CTC	REITORU	Reitoru	Tuamotu-Gambiers		Reitoru - 98790	98790 - Reitoru
+REKAREKA	Rekareka	98790		PAPEETE-CTC	REKAREKA	Rekareka	Tuamotu-Gambiers		Rekareka - 98790	98790 - Rekareka
+TAENGA	Taenga	98790			TAENGA	Taenga	Tuamotu-Gambiers	Taenga	Taenga - 98790	98790 - Taenga
+ANAA/TAHANEA	Tahanea	98790		PAPEETE-CTC	TAHANEA	Tahanea	Tuamotu-Gambiers		Tahanea - 98790	98790 - Tahanea
+FAKARAVA/TAIARO	Taiaro	98790		PAPEETE-CTC	TAIARO	Taiaro	Tuamotu-Gambiers		Taiaro - 98790	98790 - Taiaro
+TAKUME	Takume	98790		OHOMO	TAKUME	Takume	Tuamotu-Gambiers		Takume - 98790	98790 - Takume
+TAUERE	Tauere	98790		PAPEETE-CTC	TAUERE	Tauere	Tuamotu-Gambiers		Tauere - 98790	98790 - Tauere
+TEKOKOTA	Tekokota	98790			TEKOKOTA	Tekokota	Tuamotu-Gambiers	Hikueru	Tekokota - 98790	98790 - Tekokota
+TEPOTO SUD	Tepoto Sud	98790		PAPEETE-CTC	TEPOTO SUD	Tepoto Sud	Tuamotu-Gambiers		Tepoto Sud - 98790	98790 - Tepoto Sud
+TAKAROA/TIKEI	Tikei	98790		PAPEETE-CTC	TIKEI	Tikei	Tuamotu-Gambiers		Tikei - 98790	98790 - Tikei
+TUANAKE	Tuanake	98790		PAPEETE-CTC	TUANAKE	Tuanake	Tuamotu-Gambiers		Tuanake - 98790	98790 - Tuanake
+VAITEPAUA	Vaitepaua	98790			MAKATEA	Makatea	Tuamotu-Gambiers		Vaitepaua - Makatea - 98790	98790 - Vaitepaua - Makatea
+AKIAKI	Akiaki	98791			AKIAKI	Akiaki	Tuamotu-Gambiers	Vahitahi	Akiaki - 98791	98791 - Akiaki
+FANGATAUFA	Fangataufa	98791			FANGATAUFA	Fangataufa	Tuamotu-Gambiers	Tureia	Fangataufa - 98791	98791 - Fangataufa
+MURUROA	Mururoa	98791			MURUROA	Mururoa	Tuamotu-Gambiers	Tureia	Mururoa - 98791	98791 - Mururoa
+NUKUTAVAKE	Nukutavake	98791			NUKUTAVAKE	Nukutavake	Tuamotu-Gambiers	Nukutavake	Nukutavake - 98791	98791 - Nukutavake
+PINAKI	Pinaki	98791		PAPEETE-CTC	PINAKI	Pinaki	Tuamotu-Gambiers		Pinaki - 98791	98791 - Pinaki
+TAENGA	Taenga	98791		HENUAPAREA	TAENGA	Taenga	Tuamotu-Gambiers		Taenga - 98791	98791 - Taenga
+TEMATANGI	Tematangi	98791			TEMATANGI	Tematangi	Tuamotu-Gambiers	Tureia	Tematangi - 98791	98791 - Tematangi
+NAPUKA/TEPOTO NORD	Tepoto Nord	98791		PAPEETE-CTC	TEPOTO NORD	Tepoto Nord	Tuamotu-Gambiers		Tepoto Nord - 98791	98791 - Tepoto Nord
+VAHITAHI	Vahitahi	98791			VAHITAHI	Vahitahi	Tuamotu-Gambiers	Vahitahi	Vahitahi - 98791	98791 - Vahitahi
+NUKUTAVAKE/VAIRAATEA	Vairaatea	98791		PAPEETE-CTC	VAIRAATEA	Vairaatea	Tuamotu-Gambiers		Vairaatea - 98791	98791 - Vairaatea
+VANAVANA	Vanavana	98791		PAPEETE-CTC	VANAVANA	Vanavana	Tuamotu-Gambiers		Vanavana - 98791	98791 - Vanavana
+MARIA	Maria	98792			MARIA (GAMBIER)	Maria (Gambier)	Tuamotu-Gambiers	Gambier	Maria - Maria (Gambier) - 98792	98792 - Maria - Maria (Gambier)
+MATUREI VAVAO	Maturei Vavao	98792			MATUREI VAVAO	Maturei Vavao	Tuamotu-Gambiers	Gambier	Maturei Vavao - 98792	98792 - Maturei Vavao
+GAMBIER/MORANE	Morane	98792		PAPEETE-CTC	MORANE	Morane	Tuamotu-Gambiers		Morane - 98792	98792 - Morane
+GAMBIER/MOTUREIVAVAO	Motureivavao	98792		PAPEETE-CTC	MOTUREIVAVAO	Motureivavao	Tuamotu-Gambiers		Motureivavao - 98792	98792 - Motureivavao
+GAMBIER/TEMOE	Temoe	98792		PAPEETE-CTC	TEMOE	Temoe	Tuamotu-Gambiers		Temoe - 98792	98792 - Temoe
+GAMBIER/TENARARO	Tenararo	98792		PAPEETE-CTC	TENARARO	Tenararo	Tuamotu-Gambiers		Tenararo - 98792	98792 - Tenararo
+GAMBIER/TENARUNGA	Tenarunga	98792		PAPEETE-CTC	TENARUNGA	Tenarunga	Tuamotu-Gambiers		Tenarunga - 98792	98792 - Tenarunga
+GAMBIER/VAHANGA	Vahanga	98792		PAPEETE-CTC	VAHANGA	Vahanga	Tuamotu-Gambiers		Vahanga - 98792	98792 - Vahanga
+GAMBIER/MARUTEA SUD	Marutea Sud	98793		PAPEETE-CTC	Marutea Sud	Marutea Sud	Tuamotu-Gambiers		Marutea Sud - 98793	98793 - Marutea Sud
+MAROTIRI	Marotiri	98794			MAROTIRI	Marotiri	Australes	Rapa	Marotiri - 98794	98794 - Marotiri
+EIAO	Eiao	98796			EIAO	Eiao	Marquises	Taiohae	Eiao - 98796	98796 - Eiao
+FATU HUKU	Fatu Huku	98796			FATU HUKU	Fatu Huku	Marquises	Puamau	Fatu Huku - 98796	98796 - Fatu Huku
+HATU ITI	Hatu Iti	98796			HATU ITI	Hatu Iti	Marquises	Taiohae	Hatu Iti - 98796	98796 - Hatu Iti
+HATUTAA	Hatutaa	98796			HATUTAA	Hatutaa	Marquises	Taiohae	Hatutaa - 98796	98796 - Hatutaa
+MOHOTANI	Mohotani	98796		PAPEETE-CTC	MOHOTANI	Mohotani	Marquises		Mohotani - 98796	98796 - Mohotani

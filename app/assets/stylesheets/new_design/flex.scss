@@ -28,4 +28,16 @@
   &.wrap {
     flex-wrap: wrap;
   }
+
+  &.column {
+    flex-direction: column;
+  }
+
+  &.row-reverse {
+    flex-direction: row-reverse;
+  }
+}
+
+.flex-grow {
+  flex-grow: 1;
 }

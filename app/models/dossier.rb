@@ -120,11 +120,11 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs
-    procedure.types_de_champ.each do |type_de_champ|
-      champs << type_de_champ.champ.build
+    procedure.build_champs.each do |champ|
+      champs << champ
     end
-    procedure.types_de_champ_private.each do |type_de_champ|
-      champs_private << type_de_champ.champ.build
+    procedure.build_champs_private.each do |champ|
+      champs_private << champ
     end
   end
 
@@ -160,7 +160,11 @@ class Dossier < ApplicationRecord
     !procedure.archivee? && brouillon?
   end
 
-  def can_be_updated_by_the_user?
+  def can_be_updated_by_user?
+    brouillon? || en_construction?
+  end
+
+  def can_be_deleted_by_user?
     brouillon? || en_construction?
   end
 
@@ -180,7 +184,7 @@ class Dossier < ApplicationRecord
         "Dossier en brouillon répondant à la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
-        procedure.organisation
+        procedure.organisation_name
       ]
     else
       parts = [
@@ -189,7 +193,7 @@ class Dossier < ApplicationRecord
         " sur la démarche ",
         procedure.libelle,
         " gérée par l'organisme ",
-        procedure.organisation
+        procedure.organisation_name
       ]
     end
 
@@ -254,9 +258,8 @@ class Dossier < ApplicationRecord
   end
 
   def delete_and_keep_track
-    now = Time.zone.now
-    deleted_dossier = DeletedDossier.create!(dossier_id: id, procedure: procedure, state: state, deleted_at: now)
-    update(hidden_at: now)
+    deleted_dossier = DeletedDossier.create_from_dossier(self)
+    update(hidden_at: deleted_dossier.deleted_at)
 
     if en_construction?
       administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : [procedure.administrateur.email]
@@ -314,6 +317,13 @@ class Dossier < ApplicationRecord
     log_dossier_operation(nil, :accepter, automatic_operation: true)
   end
 
+  def hide!(administration)
+    update(hidden_at: Time.zone.now)
+
+    log_administration_dossier_operation(administration, :supprimer)
+    DeletedDossier.create_from_dossier(self)
+  end
+
   def refuser!(gestionnaire, motivation)
     self.motivation = motivation
     self.en_instruction_at ||= Time.zone.now
@@ -334,6 +344,14 @@ class Dossier < ApplicationRecord
     log_dossier_operation(gestionnaire, :classer_sans_suite)
   end
 
+  def check_mandatory_champs
+    (champs + champs.select(&:repetition?).flat_map(&:champs))
+      .select(&:mandatory_and_blank?)
+      .map do |champ|
+        "Le champ #{champ.libelle.truncate(200)} doit être rempli."
+      end
+  end
+
   private
 
   def log_dossier_operation(gestionnaire, operation, automatic_operation: false)
@@ -341,6 +359,13 @@ class Dossier < ApplicationRecord
       gestionnaire: gestionnaire,
       operation: DossierOperationLog.operations.fetch(operation),
       automatic_operation: automatic_operation
+    )
+  end
+
+  def log_administration_dossier_operation(administration, operation)
+    dossier_operation_logs.create(
+      administration: administration,
+      operation: DossierOperationLog.operations.fetch(operation)
     )
   end
 

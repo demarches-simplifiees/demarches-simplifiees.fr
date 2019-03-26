@@ -12,6 +12,10 @@ FactoryBot.define do
     duree_conservation_dossiers_hors_ds { 6 }
     ask_birthday { false }
 
+    after(:build) do |procedure|
+      procedure.administrateurs = [procedure.administrateur]
+    end
+
     factory :procedure_with_dossiers do
       transient do
         dossiers_count { 1 }

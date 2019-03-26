@@ -1,29 +1,28 @@
-addEventListener('turbolinks:load', () => {
-  const primaries = document.querySelectorAll('select[data-secondary-options]');
+import { delegate } from '@utils';
 
-  for (let primary of primaries) {
-    let secondary = document.querySelector(
-      `select[data-secondary-id="${primary.dataset.primaryId}"]`
-    );
-    let secondaryOptions = JSON.parse(primary.dataset.secondaryOptions);
+const PRIMARY_SELECTOR = 'select[data-secondary-options]';
+const SECONDARY_SELECTOR = 'select[data-secondary]';
+const CHAMP_SELECTOR = '.editable-champ';
 
-    primary.addEventListener('change', e => {
-      let option, options, element;
+delegate('change', PRIMARY_SELECTOR, evt => {
+  const primary = evt.target;
+  const secondary = primary
+    .closest(CHAMP_SELECTOR)
+    .querySelector(SECONDARY_SELECTOR);
+  const options = JSON.parse(primary.dataset.secondaryOptions);
 
-      while ((option = secondary.firstChild)) {
-        secondary.removeChild(option);
-      }
-
-      options = secondaryOptions[e.target.value];
-
-      for (let option of options) {
-        element = document.createElement('option');
-        element.textContent = option;
-        element.value = option;
-        secondary.appendChild(element);
-      }
-
-      secondary.selectedIndex = 0;
-    });
-  }
+  selectOptions(secondary, options[primary.value]);
 });
+
+function selectOptions(selectElement, options) {
+  selectElement.innerHTML = '';
+
+  for (let option of options) {
+    let element = document.createElement('option');
+    element.textContent = option;
+    element.value = option;
+    selectElement.appendChild(element);
+  }
+
+  selectElement.selectedIndex = 0;
+}

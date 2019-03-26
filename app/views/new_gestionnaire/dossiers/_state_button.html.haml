@@ -64,7 +64,7 @@
         - if dossier.attestation.present?
           %h4 Attestation
           %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
-          = link_to "Voir l'attestation", attestation_gestionnaire_dossier_path(dossier.procedure, dossier), target: '_blank', class: 'button'
+          = link_to "Voir l'attestation", attestation_gestionnaire_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', class: 'button'
   - else
     %span.label{ class: button_or_label_class(dossier) }
       = dossier_display_state(dossier, lower: true)

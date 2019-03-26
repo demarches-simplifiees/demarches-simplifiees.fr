@@ -236,14 +236,15 @@ describe Dossier do
   end
 
   describe "#text_summary" do
-    let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme") }
+    let(:service) { create(:service, nom: 'nom du service') }
+    let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme", service: service) }
 
     context 'when the dossier has been en_construction' do
       let(:dossier) { create :dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: "31/12/2010".to_date }
 
       subject { dossier.text_summary }
 
-      it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la démarche Démarche gérée par l'organisme Organisme") }
+      it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la démarche Démarche gérée par l'organisme nom du service") }
     end
 
     context 'when the dossier has not been en_construction' do
@@ -251,7 +252,7 @@ describe Dossier do
 
       subject { dossier.text_summary }
 
-      it { is_expected.to eq("Dossier en brouillon répondant à la démarche Démarche gérée par l'organisme Organisme") }
+      it { is_expected.to eq("Dossier en brouillon répondant à la démarche Démarche gérée par l'organisme nom du service") }
     end
   end
 
@@ -831,5 +832,81 @@ describe Dossier do
 
     it { expect(dossier.followers_gestionnaires).not_to include(gestionnaire) }
     it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'passer_en_instruction', true]]) }
+  end
+
+  describe "#check_mandatory_champs" do
+    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    let(:dossier) { create(:dossier, :with_all_champs, procedure: procedure) }
+
+    it 'no mandatory champs' do
+      expect(dossier.check_mandatory_champs).to be_empty
+    end
+
+    context "with mandatory champs" do
+      let(:procedure) { create(:procedure, :with_type_de_champ_mandatory) }
+      let(:champ_with_error) { dossier.champs.first }
+
+      before do
+        champ_with_error.value = nil
+        champ_with_error.save
+      end
+
+      it 'should have errors' do
+        errors = dossier.check_mandatory_champs
+        expect(errors).not_to be_empty
+        expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+      end
+    end
+
+    context "with champ repetition" do
+      let(:procedure) { create(:procedure) }
+      let(:type_de_champ_repetition) { create(:type_de_champ_repetition, mandatory: true) }
+
+      before do
+        procedure.types_de_champ << type_de_champ_repetition
+        type_de_champ_repetition.types_de_champ << create(:type_de_champ_text, mandatory: true)
+      end
+
+      context "when no champs" do
+        let(:champ_with_error) { dossier.champs.first }
+
+        it 'should have errors' do
+          errors = dossier.check_mandatory_champs
+          expect(errors).not_to be_empty
+          expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+        end
+      end
+
+      context "when mandatory champ inside repetition" do
+        let(:champ_with_error) { dossier.champs.first.champs.first }
+
+        before do
+          dossier.champs.first.add_row
+        end
+
+        it 'should have errors' do
+          errors = dossier.check_mandatory_champs
+          expect(errors).not_to be_empty
+          expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+        end
+      end
+    end
+  end
+
+  describe '#hide!' do
+    let(:dossier) { create(:dossier) }
+    let(:administration) { create(:administration) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
+
+    before do
+      Timecop.freeze
+      dossier.hide!(administration)
+    end
+
+    after { Timecop.return }
+
+    it { expect(dossier.hidden_at).to eq(Time.zone.now) }
+    it { expect(last_operation.operation).to eq('supprimer') }
+    it { expect(last_operation.administration).to eq(administration) }
   end
 end

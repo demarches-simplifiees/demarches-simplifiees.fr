@@ -798,13 +798,13 @@ describe NewUser::DossiersController, type: :controller do
     subject { post :ask_deletion, params: { id: dossier.id } }
 
     shared_examples_for "the dossier can not be deleted" do
-      it do
+      it "doesn’t notify the deletion" do
         expect(DossierMailer).not_to receive(:notify_deletion_to_administration)
         expect(DossierMailer).not_to receive(:notify_deletion_to_user)
         subject
       end
 
-      it do
+      it "doesn’t delete the dossier" do
         subject
         expect(Dossier.find_by(id: dossier.id)).not_to eq(nil)
         expect(dossier.procedure.deleted_dossiers.count).to eq(0)
@@ -814,13 +814,13 @@ describe NewUser::DossiersController, type: :controller do
     context 'when dossier is owned by signed in user' do
       let(:dossier) { create(:dossier, :en_construction, user: user, autorisation_donnees: true) }
 
-      it do
+      it "notifies the user and the admin of the deletion" do
         expect(DossierMailer).to receive(:notify_deletion_to_administration).with(kind_of(DeletedDossier), dossier.procedure.administrateur.email).and_return(double(deliver_later: nil))
         expect(DossierMailer).to receive(:notify_deletion_to_user).with(kind_of(DeletedDossier), dossier.user.email).and_return(double(deliver_later: nil))
         subject
       end
 
-      it do
+      it "deletes the dossier" do
         procedure = dossier.procedure
         dossier_id = dossier.id
         subject

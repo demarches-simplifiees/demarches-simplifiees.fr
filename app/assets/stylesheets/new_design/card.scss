@@ -33,4 +33,8 @@
       margin-bottom: $default-spacer;
     }
   }
+
+  p:not(:last-of-type) {
+    margin-bottom: $default-spacer;
+  }
 }

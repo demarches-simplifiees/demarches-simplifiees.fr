@@ -10,7 +10,7 @@ class Champ < ApplicationRecord
   has_many :geo_areas, dependent: :destroy
   belongs_to :etablissement, dependent: :destroy
 
-  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, to: :type_de_champ
+  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, :repetition?, to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
@@ -23,15 +23,15 @@ class Champ < ApplicationRecord
   end
 
   def mandatory_and_blank?
-    if mandatory?
-      case type_de_champ.type_champ
-      when TypeDeChamp.type_champs.fetch(:carte)
-        value.blank? || value == '[]'
-      else
-        value.blank?
-      end
+    mandatory? && blank?
+  end
+
+  def blank?
+    case type_de_champ.type_champ
+    when TypeDeChamp.type_champs.fetch(:carte)
+      value.blank? || value == '[]'
     else
-      false
+      value.blank?
     end
   end
 

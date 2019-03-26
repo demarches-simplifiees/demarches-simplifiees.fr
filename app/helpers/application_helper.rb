@@ -31,6 +31,13 @@ module ApplicationHelper
     # rubocop:enable Rails/OutputSafety
   end
 
+  def append_to_element(selector, partial:, locals: {})
+    html = escape_javascript(render partial: partial, locals: locals)
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{selector}').insertAdjacentHTML('beforeend', \"#{html}\");")
+    # rubocop:enable Rails/OutputSafety
+  end
+
   def render_flash(timeout: false, sticky: false, fixed: false)
     if flash.any?
       html = render_to_element('#flash_messages', partial: 'layouts/flash_messages', locals: { sticky: sticky, fixed: fixed }, outer: true)

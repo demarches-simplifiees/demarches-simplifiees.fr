@@ -6,9 +6,25 @@
 .container.demande
   %h1 Demande de compte administrateur
 
+  .card
+    .card-title
+      Vous souhaitez seulement compléter une démarche sur notre site ?
+    %p
+      Vous n'avez pas besoin de compte administrateur !
+    %p
+      Cliquez plutôt sur le
+      %strong lien direct
+      vers votre démarche que doit vous communiquer l'administration – par exemple <strong>https://#{SITE}/commencer/NOM_DE_LA_DEMARCHE</strong>.
+    %p
+      Vous pouvez aussi consulter la
+      = succeed '.' do
+        = link_to "liste des démarches disponibles", LISTE_DES_DEMARCHES_URL
+
   %p.intro Attention, la création de compte administrateur est réservée <b>uniquement aux organismes publics</b>. Elle ne concerne ni les particuliers, ni les entreprises, ni les associations (sauf celles reconnues d'utilité publique), ni les personnes souhaitant remplir un dossier ou faire une démarche en ligne. Ce compte vous permettra de créer des démarches sur #{SITE_NAME}, vous pourrez ensuite les diffuser en ligne auprès de vos usagers.
   %p.intro Pour obtenir un compte administrateur sur #{SITE_NAME}, veuillez remplir le formulaire ci-dessous et un membre de notre équipe vous contactera dès que possible.
   %p.intro Tous les champs sont obligatoires.
+  %p.intro <b>Si vous souhaitez seulement compléter une démarche sur notre site, vous n'avez pas besoin de compte administrateur!</b>
+
 
   %hr
 
@@ -34,7 +50,7 @@
       %span.mandatory *
       %p.intro{ :style => "font-weight: normal" }
         Vous utilisez un email orange, wanadoo, free, gmail etc. ? Merci de nous
-        %a{ href: contact_admin_path, target:'_blank' }
+        %a{ href: contact_admin_path, target:'_blank', rel: 'noopener' }
           contacter préalablement.
     = email_field_tag :email, nil, placeholder: 'jean.martin@developpement-durable.gouv.fr', required: true
 

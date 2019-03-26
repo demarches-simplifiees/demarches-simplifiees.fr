@@ -141,6 +141,11 @@ shared_examples 'type_de_champ_spec' do
       type_de_champ.types_de_champ << type_de_champ_text
       expect(type_de_champ.types_de_champ.size).to eq(2)
       expect(type_de_champ_text.parent).to eq(type_de_champ)
+
+      admin = create(:administrateur)
+      cloned_procedure = procedure.clone(admin, false)
+
+      expect(cloned_procedure.types_de_champ.first.types_de_champ).not_to be_empty
     end
   end
 end

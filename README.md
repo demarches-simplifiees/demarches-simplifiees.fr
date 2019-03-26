@@ -20,6 +20,7 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 
 #### Développement
 
+- rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
 - Yarn : voir https://yarnpkg.com/en/docs/install
 - Overmind :
   * Mac : `brew install overmind`
@@ -52,7 +53,11 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 
     overmind start
 
-L'application tourne à l'adresse `http://localhost:3000`. Un utilisateur de test est disponible, avec les identifiants `test@exemple.fr`/`testpassword`.
+L'application tourne à l'adresse `http://localhost:3000`. 
+
+### Utilisateurs de test
+
+En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/tps/blob/dev/db/seeds.rb))
 
 ### Programmation des jobs
 
@@ -74,6 +79,8 @@ Pour mettre à jour votre environnement de développement, installer les nouvell
     bin/update
 
 ### Exécution des tests (RSpec)
+
+Les tests ont besoin de leur propre base de données et certains d'entre eux utilisent Selenium pour s'exécuter dans un navigateur. N'oubliez pas de créer la base de test et d'installer chrome et chromedriver pour exécuter tous les tests.
 
 Pour exécuter les tests de l'application, plusieurs possibilités :
 

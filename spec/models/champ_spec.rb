@@ -176,6 +176,27 @@ describe Champ do
         it { is_expected.to eq([value]) }
       end
 
+      context 'for nationalités champ' do
+        let(:type_de_champ) { build(:type_de_champ_nationalites) }
+        let(:value) { "Française" }
+
+        it { is_expected.to eq([value]) }
+      end
+
+      context 'for commune de polynésie champ' do
+        let(:type_de_champ) { build(:type_de_champ_commune_de_polynesie) }
+        let(:value) { "Arue - Tahiti - 98701" }
+
+        it { is_expected.to eq([value]) }
+      end
+
+      context 'for code postal de polynésie champ' do
+        let(:type_de_champ) { build(:type_de_champ_code_postal_de_polynesie) }
+        let(:value) { "98701 - Arue - Tahiti" }
+
+        it { is_expected.to eq([value]) }
+      end
+
       context 'for dossier link champ' do
         let(:type_de_champ) { build(:type_de_champ_dossier_link) }
         let(:value) { "9103132886" }
@@ -261,6 +282,13 @@ describe Champ do
       context 'for pays champ' do
         let(:type_de_champ) { build(:type_de_champ_pays) }
         let(:value) { "FRANCE" }
+
+        it { is_expected.to eq([value]) }
+      end
+
+      context 'for nationalites champ' do
+        let(:type_de_champ) { build(:type_de_champ_nationalites) }
+        let(:value) { "Française" }
 
         it { is_expected.to eq([value]) }
       end
@@ -425,6 +453,10 @@ describe Champ do
       expect(champ.rows.size).to eq(1)
 
       expect(champ.champs.first.dossier).to eq(dossier)
+
+      # Make champs ordered
+      champ_integer_number.type_de_champ.update(order_place: 0)
+      champ_text.type_de_champ.update(order_place: 1)
 
       champ.champs << champ_integer_number
       row = champ.reload.rows.first

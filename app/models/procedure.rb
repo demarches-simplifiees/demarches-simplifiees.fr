@@ -138,10 +138,15 @@ class Procedure < ApplicationRecord
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
-    champs = types_de_champ.map { |tdc| tdc.champ.build }
-    champs_private = types_de_champ_private.map { |tdc| tdc.champ.build }
+    Dossier.new(procedure: self, champs: build_champs, champs_private: build_champs_private)
+  end
 
-    Dossier.new(procedure: self, champs: champs, champs_private: champs_private)
+  def build_champs
+    types_de_champ.map(&:build_champ)
+  end
+
+  def build_champs_private
+    types_de_champ_private.map(&:build_champ)
   end
 
   def default_path
@@ -184,14 +189,14 @@ class Procedure < ApplicationRecord
   end
 
   def clone(admin, from_library)
-    is_different_admin = self.administrateur_id != admin.id
+    is_different_admin = !admin.owns?(self)
 
     populate_champ_stable_ids
     procedure = self.deep_clone(include:
       {
         attestation_template: nil,
-        types_de_champ: :drop_down_list,
-        types_de_champ_private: :drop_down_list
+        types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
+        types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
       })
     procedure.path = nil
     procedure.aasm_state = :brouillon
@@ -207,6 +212,12 @@ class Procedure < ApplicationRecord
     procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
     if is_different_admin || from_library
       procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+    end
+
+    if is_different_admin
+      procedure.administrateurs = [admin]
+    else
+      procedure.administrateurs = administrateurs
     end
 
     procedure.administrateur = admin
@@ -451,7 +462,7 @@ class Procedure < ApplicationRecord
   def percentile_time(start_attribute, end_attribute, p)
     times = dossiers
       .state_termine
-      .where(end_attribute => 1.month.ago..DateTime.current)
+      .where(end_attribute => 1.month.ago..Time.zone.now)
       .pluck(start_attribute, end_attribute)
       .map { |(start_date, end_date)| end_date - start_date }
 
