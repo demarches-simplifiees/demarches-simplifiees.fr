@@ -224,6 +224,10 @@ GEM
     formatador (0.2.5)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    gon (6.2.1)
+      actionpack (>= 3.0)
+      multi_json
+      request_store (>= 1.0)
     groupdate (4.1.1)
       activesupport (>= 4.2)
     guard (2.15.0)
@@ -686,6 +690,7 @@ DEPENDENCIES
   flipflop
   fog-openstack
   font-awesome-rails
+  gon
   groupdate
   guard
   guard-livereload

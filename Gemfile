@@ -28,6 +28,7 @@ gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded
 gem 'flipflop'
 gem 'fog-openstack'
 gem 'font-awesome-rails'
+gem 'gon'
 gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
