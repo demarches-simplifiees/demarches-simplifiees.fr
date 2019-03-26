@@ -307,7 +307,7 @@ Rails.application.routes.draw do
   # Gestionnaire
   #
 
-  scope module: 'new_gestionnaire', as: 'gestionnaire' do
+  scope module: 'gestionnaires', as: 'gestionnaire' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         patch 'update_displayed_fields'
