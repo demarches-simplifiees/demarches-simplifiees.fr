@@ -189,6 +189,16 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def clone_attachments(original, kopy)
+    if original.is_a?(TypeDeChamp) && original.piece_justificative_template.attached?
+      kopy.piece_justificative_template.attach({
+        io: StringIO.new(original.piece_justificative_template.download),
+        filename: original.piece_justificative_template.blob.filename,
+        content_type: original.piece_justificative_template.blob.content_type
+      })
+    end
+  end
+
   def clone(admin, from_library)
     is_different_admin = !admin.owns?(self)
 
@@ -198,7 +208,7 @@ class Procedure < ApplicationRecord
         attestation_template: nil,
         types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
         types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
-      })
+      }, &method(:clone_attachments))
     procedure.path = nil
     procedure.aasm_state = :brouillon
     procedure.test_started_at = nil

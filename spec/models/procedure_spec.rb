@@ -485,6 +485,10 @@ describe Procedure do
       expect(subject.types_de_champ.first.id).not_to eq(procedure.types_de_champ.first.id)
       expect(subject.types_de_champ.first.stable_id).to eq(procedure.types_de_champ.first.id)
     end
+
+    it 'should duplicate piece_justificative_template on a type_de_champ' do
+      expect(subject.types_de_champ.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be true
+    end
   end
 
   describe '#publish!' do
