@@ -54,6 +54,8 @@ describe ProcedureExportService do
           :linked_drop_down_list,
           :pays,
           :nationalites,
+          :commune_de_polynesie,
+          :code_postal_de_polynesie,
           :regions,
           :departements,
           :engagement,

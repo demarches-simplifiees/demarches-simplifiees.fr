@@ -119,6 +119,16 @@ FactoryBot.define do
     value { 'Française' }
   end
 
+  factory :champ_commune_de_polynesie, class: 'Champs::CommuneDePolynesieChamp' do
+    type_de_champ { create(:type_de_champ_commune_de_polynesie) }
+    value { 'Arue - Tahiti - 98701' }
+  end
+
+  factory :champ_code_postal_de_polynesie, class: 'Champs::CodePostalDePolynesieChamp' do
+    type_de_champ { create(:type_de_champ_code_postal_de_polynesie) }
+    value { '98701 - Arue - Tahiti' }
+  end
+
   factory :champ_regions, class: 'Champs::RegionChamp' do
     type_de_champ { create(:type_de_champ_regions) }
     value { '' }

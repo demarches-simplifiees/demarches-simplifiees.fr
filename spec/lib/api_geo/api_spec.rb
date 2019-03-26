@@ -22,6 +22,11 @@ describe ApiGeo::API do
     it { is_expected.to eq nationalites }
   end
 
+  describe '.polynesian_cities', vcr: { cassette_name: 'api_geo_polynesian_cities' } do
+    subject { described_class.polynesian_cities }
+    it { expect(subject.size).to eq(256) }
+  end
+
   describe '.pays' do
     subject { described_class.pays }
     let(:pays) {

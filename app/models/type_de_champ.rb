@@ -21,6 +21,8 @@ class TypeDeChamp < ApplicationRecord
     linked_drop_down_list: 'linked_drop_down_list',
     pays: 'pays',
     nationalites: 'nationalites',
+    commune_de_polynesie: 'commune_de_polynesie',
+    code_postal_de_polynesie: 'code_postal_de_polynesie',
     regions: 'regions',
     departements: 'departements',
     engagement: 'engagement',
