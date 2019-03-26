@@ -137,6 +137,8 @@
   position: relative;
 
   .dropdown-button {
+    white-space: nowrap;
+
     &::after {
       content: "▾";
       margin-left: $default-spacer;
