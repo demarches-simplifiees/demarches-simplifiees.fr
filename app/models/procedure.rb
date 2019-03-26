@@ -204,7 +204,7 @@ class Procedure < ApplicationRecord
     procedure.archived_at = nil
     procedure.published_at = nil
     procedure.logo_secure_token = nil
-    procedure.remote_logo_url = self.logo_url
+    procedure.remote_logo_url = self.absolute_logo_url
     procedure.lien_notice = nil
 
     [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
@@ -239,6 +239,18 @@ class Procedure < ApplicationRecord
     admin.gestionnaire.assign_to_procedure(procedure)
 
     procedure
+  end
+
+  def absolute_logo_url
+    if logo.blank?
+      self.logo_url
+    else
+      if Flipflop.remote_storage?
+        RemoteDownloader.new(logo.filename).url
+      else
+        LocalDownloader.new(logo.path, 'logo').url
+      end
+    end
   end
 
   def whitelisted?
