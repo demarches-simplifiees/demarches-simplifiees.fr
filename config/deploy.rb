@@ -26,7 +26,7 @@ shared_dirs = [
 
 set :domain, ENV.fetch('domain')
 set :deploy_to, deploy_to
-set :repository, 'https://github.com/betagouv/tps.git'
+set :repository, 'https://github.com/betagouv/demarches-simplifiees.fr.git'
 set :branch, ENV.fetch('branch')
 set :forward_agent, true
 set :user, 'ds'
