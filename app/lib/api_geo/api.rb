@@ -16,6 +16,10 @@ class ApiGeo::API
     parse(File.open('app/lib/api_geo/pays.json').read)
   end
 
+  def self.nationalites
+    parse(File.open('app/lib/api_geo/nationalites.json').read)
+  end
+
   def self.search_rpg(geojson)
     url = [API_GEO_SANDBOX_URL, "rpg", "parcelles", "search"].join("/")
     call(url, geojson, :post)

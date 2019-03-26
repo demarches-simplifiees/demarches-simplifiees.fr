@@ -53,6 +53,7 @@ describe ProcedureExportService do
           :multiple_drop_down_list,
           :linked_drop_down_list,
           :pays,
+          :nationalites,
           :regions,
           :departements,
           :engagement,
@@ -130,9 +131,16 @@ describe ProcedureExportService do
         }
 
         it 'should have values' do
-          expect(data.first[0..14]).to eq(dossier_data)
-          expect(data.first[15..38]).to eq(champs_data)
-          expect(data.first[39..62]).to eq(etablissement_data)
+          dossier_end = dossier_data.length
+          data_end = dossier_end + champs_data.length
+          etab_end = data_end + etablissement_data.length
+          expect(data.first[0...dossier_end]).to eq(dossier_data)
+          data.first[dossier_end...data_end].map.with_index { |d, i|
+            puts d.to_s + '=' + champs_data[i]&.to_s if (d)
+            expect(d).to eq(champs_data[i])
+          }
+          expect(data.first[dossier_end...data_end]).to eq(champs_data)
+          expect(data.first[data_end...etab_end]).to eq(etablissement_data)
 
           expect(data).to eq([
             dossier_data + champs_data + etablissement_data
@@ -176,9 +184,12 @@ describe ProcedureExportService do
           }
 
           it 'should have values' do
-            expect(data.first[0..14]).to eq(dossier_data)
-            expect(data.first[15..38]).to eq(champs_data)
-            expect(data.first[39..62]).to eq(etablissement_data)
+            dossier_end = dossier_data.length
+            data_end = dossier_end + champs_data.length
+            etab_end = data_end + etablissement_data.length
+            expect(data.first[0...dossier_end]).to eq(dossier_data)
+            expect(data.first[dossier_end...data_end]).to eq(champs_data)
+            expect(data.first[data_end...etab_end]).to eq(etablissement_data)
 
             expect(data).to eq([
               dossier_data + champs_data + etablissement_data

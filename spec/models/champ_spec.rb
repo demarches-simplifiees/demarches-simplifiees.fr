@@ -176,6 +176,13 @@ describe Champ do
         it { is_expected.to eq([value]) }
       end
 
+      context 'for nationalités champ' do
+        let(:type_de_champ) { build(:type_de_champ_nationalites) }
+        let(:value) { "Française" }
+
+        it { is_expected.to eq([value]) }
+      end
+
       context 'for dossier link champ' do
         let(:type_de_champ) { build(:type_de_champ_dossier_link) }
         let(:value) { "9103132886" }
@@ -261,6 +268,13 @@ describe Champ do
       context 'for pays champ' do
         let(:type_de_champ) { build(:type_de_champ_pays) }
         let(:value) { "FRANCE" }
+
+        it { is_expected.to eq([value]) }
+      end
+
+      context 'for nationalites champ' do
+        let(:type_de_champ) { build(:type_de_champ_nationalites) }
+        let(:value) { "Française" }
 
         it { is_expected.to eq([value]) }
       end

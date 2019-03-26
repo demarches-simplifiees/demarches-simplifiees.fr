@@ -13,6 +13,15 @@ describe ApiGeo::API do
     it { expect(subject.size).to eq 101 }
   end
 
+  describe '.nationalites', vcr: { cassette_name: 'api_geo_nationalites' } do
+    subject { described_class.nationalites }
+    let(:nationalites) {
+      JSON.parse(File.open('app/lib/api_geo/nationalites.json').read, symbolize_names: true)
+    }
+
+    it { is_expected.to eq nationalites }
+  end
+
   describe '.pays' do
     subject { described_class.pays }
     let(:pays) {
@@ -22,8 +31,8 @@ describe ApiGeo::API do
   end
 
   describe '.pays : first elts must be PF, France' do
-    subject { described_class.pays[0..1] }
-    let(:first) { [ "POLYNESIE FRANCAISE", "FRANCE" ] }
+    subject { described_class.pays[0..1].pluck(:nom) }
+    let(:first) { ["POLYNESIE FRANCAISE", "FRANCE"] }
 
     it { is_expected.to eq first }
   end

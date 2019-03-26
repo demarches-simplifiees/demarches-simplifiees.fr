@@ -20,6 +20,7 @@ class TypeDeChamp < ApplicationRecord
     multiple_drop_down_list: 'multiple_drop_down_list',
     linked_drop_down_list: 'linked_drop_down_list',
     pays: 'pays',
+    nationalites: 'nationalites',
     regions: 'regions',
     departements: 'departements',
     engagement: 'engagement',

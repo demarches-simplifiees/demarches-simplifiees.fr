@@ -114,6 +114,11 @@ FactoryBot.define do
     value { 'France' }
   end
 
+  factory :champ_nationalites, class: 'Champs::NationaliteChamp' do
+    type_de_champ { create(:type_de_champ_nationalites) }
+    value { 'Française' }
+  end
+
   factory :champ_regions, class: 'Champs::RegionChamp' do
     type_de_champ { create(:type_de_champ_regions) }
     value { '' }
