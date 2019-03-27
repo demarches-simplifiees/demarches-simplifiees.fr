@@ -35,8 +35,19 @@ class PieceJustificativeToChampPieceJointeMigrationService
       champs_pj.each do |champ|
         type_pj_id = champ.type_de_champ.old_pj&.fetch('stable_id', nil)
         pj = dossier.retrieve_last_piece_justificative_by_type(type_pj_id)
+
         if pj.present?
+          champ.update(
+            updated_at: pj.updated_at,
+            created_at: pj.created_at
+          )
+
           convert_pj_to_champ!(pj, champ)
+        else
+          champ.update(
+            updated_at: dossier.updated_at,
+            created_at: dossier.created_at
+          )
         end
       end
     end
