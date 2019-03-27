@@ -46,6 +46,58 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
       end
     end
 
+    context 'no notifications are sent to instructeurs' do
+      context 'when there is a PJ' do
+        let(:pjs) { make_pjs }
+
+        before do
+          # Reload PJ because the resolution of in-database timestamps is
+          # different from the resolution of in-memory timestamps, causing the
+          # tests to fail on fractional time differences.
+          pjs.last.reload
+
+          expect_storage_service_to_convert_object
+          Timecop.travel(1.hour) { service.convert_procedure_pjs_to_champ_pjs(procedure) }
+
+          # Reload the dossier to see the newly created champs
+          dossier.reload
+        end
+
+        it 'the champ has the same created_at as the PJ' do
+          expect(dossier.champs.last.created_at).to eq(pjs.last.created_at)
+        end
+
+        it 'the champ has the same updated_at as the PJ' do
+          expect(dossier.champs.last.updated_at).to eq(pjs.last.updated_at)
+        end
+      end
+
+      context 'when there is no PJ' do
+        let!(:expected_updated_at) do
+          # Reload dossier because the resolution of in-database timestamps is
+          # different from the resolution of in-memory timestamps, causing the
+          # tests to fail on fractional time differences.
+          dossier.reload
+          dossier.updated_at
+        end
+
+        before do
+          Timecop.travel(1.hour) { service.convert_procedure_pjs_to_champ_pjs(procedure) }
+
+          # Reload the dossier to see the newly created champs
+          dossier.reload
+        end
+
+        it 'the champ has the same created_at as the dossier' do
+          expect(dossier.champs.last.created_at).to eq(dossier.created_at)
+        end
+
+        it 'the champ has the same updated_at as the dossier' do
+          expect(dossier.champs.last.updated_at).to eq(expected_updated_at)
+        end
+      end
+    end
+
     context 'for the dossier' do
       let(:pjs) { make_pjs }
 
