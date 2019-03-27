@@ -454,13 +454,10 @@ class Procedure < ApplicationRecord
   def clone_attachment(cloned_procedure, attachment_symbol)
     attachment = send(attachment_symbol)
     if attachment.attached?
-      response = Typhoeus.get(attachment.service_url, timeout: 5)
-      if response.success?
-        cloned_procedure.send(attachment_symbol).attach(
-          io: StringIO.new(response.body),
-          filename: attachment.filename
-        )
-      end
+      cloned_procedure.send(attachment_symbol).attach(
+        io: StringIO.new(attachment.download),
+        filename: attachment.filename
+      )
     end
   end
 
