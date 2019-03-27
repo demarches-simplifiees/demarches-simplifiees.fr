@@ -53,11 +53,11 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 
     overmind start
 
-L'application tourne à l'adresse `http://localhost:3000`. 
+L'application tourne à l'adresse `http://localhost:3000`.
 
 ### Utilisateurs de test
 
-En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/tps/blob/dev/db/seeds.rb))
+En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/demarches-simplifiees.fr/blob/dev/db/seeds.rb))
 
 ### Programmation des jobs
 

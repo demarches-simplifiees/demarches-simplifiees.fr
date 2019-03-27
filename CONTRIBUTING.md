@@ -12,13 +12,13 @@ Voici la marche à suivre recommandée pour effectuer une modification.
 
 La première étape est généralement de discuter de l’amélioration que vous proposez (s’il ne s’agit pas d’un changement trivial, comme la correction d’une coquille).
 
-Pour cela, [créez une nouvelle issue](https://github.com/betagouv/tps/issues/new) concernant votre proposition. Autant que possible, indiquez clairement votre besoin, votre cas d’usage – et éventuellement comment vous pensez déjà le résoudre.
+Pour cela, [créez une nouvelle issue](https://github.com/betagouv/demarches-simplifiees.fr/issues/new) concernant votre proposition. Autant que possible, indiquez clairement votre besoin, votre cas d’usage – et éventuellement comment vous pensez déjà le résoudre.
 
 Nous pouvons alors discuter, pour vérifier que le besoin exprimé correspond à l’usage de demarches-simplifiees.fr, proposer éventuellement des alternatives, et se mettre d’accord sur une implémentation technique pertinente.
 
 ## 2. Proposer du code
 
-Une fois que la discussion est établie, et que les éléments techniques sont dégrossis, vous pouvez proposer des changements au code. Pour cela, effectuez vos modifications en local, et [ouvrez une Pull Request](https://github.com/betagouv/tps/issues/new) avec les changements que vous souhaitez apporter.
+Une fois que la discussion est établie, et que les éléments techniques sont dégrossis, vous pouvez proposer des changements au code. Pour cela, effectuez vos modifications en local, et [ouvrez une Pull Request](https://github.com/betagouv/demarches-simplifiees.fr/issues/new) avec les changements que vous souhaitez apporter.
 
 Quelques conseils : pensez à bien décrire l’objectif et l’implémentation de votre PR au moment de la créer. Et si vos changements sont importants, découpez-les en plusieurs petites PRs successives, qui seront plus faciles à relire. N’oubliez pas d’ajouter des tests automatisés pour vous assurer que vos changements fonctionnent bien.
 
