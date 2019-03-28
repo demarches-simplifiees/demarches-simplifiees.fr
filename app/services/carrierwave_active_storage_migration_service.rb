@@ -17,6 +17,11 @@ class CarrierwaveActiveStorageMigrationService
   def active_storage_openstack_client!
     service = ActiveStorage::Blob.service
 
+    if defined?(ActiveStorage::Service::DsProxyService) &&
+        service.is_a?(ActiveStorage::Service::DsProxyService)
+      service = service.wrapped
+    end
+
     if !defined?(ActiveStorage::Service::OpenStackService) ||
         !service.is_a?(ActiveStorage::Service::OpenStackService)
       raise StandardError, 'ActiveStorage must be backed by OpenStack'
