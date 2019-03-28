@@ -1,6 +1,16 @@
 #switch-menu {
   position: fixed;
-  left: 10px;
   bottom: 10px;
-  z-index: 300;
+  color: #FFFFFF;
+  list-style: none;
+  text-decoration: none;
+  padding-left: 20px;
+}
+
+#switch-menu a,
+#switch-menu a:link,
+#switch-menu a:visited,
+#switch-menu a:hover {
+  text-decoration: none;
+  color: #FFFFFF;
 }
