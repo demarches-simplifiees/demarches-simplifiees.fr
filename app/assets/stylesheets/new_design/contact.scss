@@ -8,4 +8,8 @@ $contact-padding: $default-space * 2;
   .description {
     padding-bottom: $contact-padding;
   }
+
+  .hidden {
+    display: none;
+  }
 }

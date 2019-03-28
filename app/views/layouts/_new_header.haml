@@ -1,6 +1,7 @@
 -# We can't use &. because the controller may not implement #nav_bar_profile
-- nav_bar_profile = controller.try(:nav_bar_profile)
+- nav_bar_profile = controller.try(:nav_bar_profile) || :guest
 - dossier = controller.try(:dossier_for_help)
+- procedure = controller.try(:procedure_for_help)
 
 .new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
@@ -46,39 +47,8 @@
 
       - if gestionnaire_signed_in? || user_signed_in?
         %li
-          %span.dropdown.header-menu-opener
-            %button.button.dropdown-button.header-menu-button
-              = image_tag "icons/account-circle.svg", title: "Mon compte"
-            %ul.header-menu.dropdown-content
-              %li
-                .menu-item{ title: current_email }
-                  = current_email
-              - if administration_signed_in?
-                %li
-                  = link_to manager_root_path, class: "menu-item menu-link" do
-                    = image_tag "icons/super-admin.svg"
-                    Passer en super-admin
-              - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
-                - if user_signed_in? && nav_bar_profile != :user
-                  %li
-                    = link_to dossiers_path, class: "menu-item menu-link" do
-                      = image_tag "icons/switch-profile.svg"
-                      Passer en usager
-                - if gestionnaire_signed_in? && nav_bar_profile != :gestionnaire
-                  %li
-                    = link_to gestionnaire_procedures_path, class: "menu-item menu-link" do
-                      = image_tag "icons/switch-profile.svg"
-                      Passer en instructeur
-                - if administrateur_signed_in? && nav_bar_profile != :administrateur
-                  %li
-                    = link_to admin_procedures_path, class: "menu-item menu-link" do
-                      = image_tag "icons/switch-profile.svg"
-                      Passer en administrateur
+          = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
 
-              %li
-                = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
-                  = image_tag "icons/sign-out.svg"
-                  Se déconnecter
       - elsif request.path != new_user_session_path
         - if request.path == new_user_registration_path
           %li
@@ -88,9 +58,14 @@
 
       %li
         .header-help
-          - if nav_bar_profile == :user && dossier.present?
-            = render partial: 'users/dossier_help_dropdown', locals: { dossier: dossier }
+          - if dossier.present? && nav_bar_profile == :user
+            = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+
+          - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+            = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
+
           - elsif nav_bar_profile == :gestionnaire
-            = render partial: 'gestionnaires/help_dropdown'
+            = render partial: 'shared/help/help_dropdown_gestionnaire'
+
           - else
-            = link_to 'Aide', FAQ_URL, class: "button primary"
+            = render partial: 'shared/help/help_button'

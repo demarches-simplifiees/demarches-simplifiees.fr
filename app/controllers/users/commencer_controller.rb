@@ -34,11 +34,15 @@ module Users
       redirect_to new_user_registration_path
     end
 
+    def procedure_for_help
+      Procedure.publiees.find_by(path: params[:path]) || Procedure.brouillons.find_by(path: params[:path])
+    end
+
     private
 
     def store_user_location!
       procedure = Procedure.find_by(path: params[:path])
-      store_location_for(:user, commencer_path(path: procedure.path))
+      store_location_for(:user, helpers.procedure_lien(procedure))
     end
   end
 end

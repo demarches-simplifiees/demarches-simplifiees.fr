@@ -89,4 +89,36 @@ describe PiecesJustificativesService do
       it { expect(errors).to match([]) }
     end
   end
+
+  describe 'types_pj_as_types_de_champ' do
+    subject { PiecesJustificativesService.types_pj_as_types_de_champ(procedure) }
+
+    it 'generates one header champ, plus one champ per PJ' do
+      expect(subject.pluck(:libelle)).to contain_exactly("Pièces jointes", "not mandatory")
+    end
+
+    it 'remembers the id of the PJ that got converted into a champ' do
+      expect(subject.map(&:old_pj)).to include({ 'stable_id' => tpj_not_mandatory.id })
+    end
+
+    context 'without pre-existing champs' do
+      it 'generates a sequence of order_places incrementing from zero' do
+        expect(subject.pluck(:order_place)).to contain_exactly(0, 1)
+      end
+    end
+
+    context 'with pre-existing champs' do
+      let(:procedure) do
+        create(
+          :procedure,
+          types_de_piece_justificative: tpjs,
+          types_de_champ: [build(:type_de_champ, order_place: 0)]
+        )
+      end
+
+      it 'generates a sequence of incrementing order_places that continues where the last type de champ left off' do
+        expect(subject.pluck(:order_place)).to contain_exactly(1, 2)
+      end
+    end
+  end
 end
