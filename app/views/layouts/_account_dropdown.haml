@@ -1,0 +1,33 @@
+%span.dropdown.header-menu-opener
+  %button.button.dropdown-button.header-menu-button
+    = image_tag "icons/account-circle.svg", title: "Mon compte"
+  %ul.header-menu.dropdown-content
+    %li
+      .menu-item{ title: current_email }
+        = current_email
+    - if administration_signed_in?
+      %li
+        = link_to manager_root_path, class: "menu-item menu-link" do
+          = image_tag "icons/super-admin.svg"
+          Passer en super-admin
+    - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
+      - if user_signed_in? && nav_bar_profile != :user
+        %li
+          = link_to dossiers_path, class: "menu-item menu-link" do
+            = image_tag "icons/switch-profile.svg"
+            Passer en usager
+      - if gestionnaire_signed_in? && nav_bar_profile != :gestionnaire
+        %li
+          = link_to gestionnaire_procedures_path, class: "menu-item menu-link" do
+            = image_tag "icons/switch-profile.svg"
+            Passer en instructeur
+      - if administrateur_signed_in? && nav_bar_profile != :administrateur
+        %li
+          = link_to admin_procedures_path, class: "menu-item menu-link" do
+            = image_tag "icons/switch-profile.svg"
+            Passer en administrateur
+
+    %li
+      = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
+        = image_tag "icons/sign-out.svg"
+        Se déconnecter
