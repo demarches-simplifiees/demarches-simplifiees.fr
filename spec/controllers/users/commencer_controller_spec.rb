@@ -18,7 +18,7 @@ describe Users::CommencerController, type: :controller do
       end
     end
 
-    context 'when the path is for a non-published procedure' do
+    context 'when the path is for a draft procedure' do
       let(:path) { draft_procedure.path }
 
       it 'redirects with an error message' do
@@ -66,24 +66,50 @@ describe Users::CommencerController, type: :controller do
   end
 
   describe '#sign_in' do
-    subject { get :sign_in, params: { path: published_procedure.path } }
+    context 'for a published procedure' do
+      subject { get :sign_in, params: { path: published_procedure.path } }
 
-    it 'set the path to return after sign-in to the dossier creation path' do
-      subject
-      expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
+      it 'set the path to return after sign-in to the procedure start page' do
+        subject
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
+      end
+
+      it { expect(subject).to redirect_to(new_user_session_path) }
     end
 
-    it { expect(subject).to redirect_to(new_user_session_path) }
+    context 'for a draft procedure' do
+      subject { get :sign_in, params: { path: draft_procedure.path } }
+
+      it 'set the path to return after sign-in to the draft procedure start page' do
+        subject
+        expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
+      end
+
+      it { expect(subject).to redirect_to(new_user_session_path) }
+    end
   end
 
   describe '#sign_up' do
-    subject { get :sign_up, params: { path: published_procedure.path } }
+    context 'for a published procedure' do
+      subject { get :sign_up, params: { path: published_procedure.path } }
 
-    it 'set the path to return after sign-up to the dossier creation path' do
-      subject
-      expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
+      it 'set the path to return after sign-up to the procedure start page' do
+        subject
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
+      end
+
+      it { expect(subject).to redirect_to(new_user_registration_path) }
     end
 
-    it { expect(subject).to redirect_to(new_user_registration_path) }
+    context 'for a draft procedure' do
+      subject { get :sign_up, params: { path: draft_procedure.path } }
+
+      it 'set the path to return after sign-up to the draft procedure start page' do
+        subject
+        expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
+      end
+
+      it { expect(subject).to redirect_to(new_user_registration_path) }
+    end
   end
 end
