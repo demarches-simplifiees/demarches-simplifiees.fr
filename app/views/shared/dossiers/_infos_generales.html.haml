@@ -4,11 +4,8 @@
       %th.libelle Déposé le :
       %td= l(dossier.en_construction_at, format: '%d %B %Y')
   - if dossier.justificatif_motivation.attached?
-    - justificatif = dossier.justificatif_motivation
     %tr
       %th.libelle Justificatif :
       %td
         .action
-          = link_to url_for(justificatif), target: '_blank', class: 'button primary' do
-            %span.icon.download
-            Télécharger le justificatif
+          = render partial: 'shared/piece_jointe/pj_link', locals: { object: dossier, pj: dossier.justificatif_motivation }
