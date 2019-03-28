@@ -1,6 +1,6 @@
 - if dossier.present?
   - justificatif = dossier.justificatif_motivation
-  - if dossier.justificatif_motivation.attached?
+  - if dossier.justificatif_motivation.attached? and dossier.virus_scan.safe?
     .action
       = link_to (justificatif), target: '_blank', class: 'button primary' do
         %span.icon.download
