@@ -134,7 +134,7 @@ module Gestionnaires
     end
 
     def avis_params
-      params.require(:avis).permit(:answer)
+      params.require(:avis).permit(:answer, :piece_justificative_file)
     end
 
     def commentaire_params
