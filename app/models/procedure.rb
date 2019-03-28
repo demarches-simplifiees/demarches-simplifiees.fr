@@ -193,16 +193,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def clone_attachments(original, kopy)
-    if original.is_a?(TypeDeChamp) && original.piece_justificative_template.attached?
-      kopy.piece_justificative_template.attach({
-        io: StringIO.new(original.piece_justificative_template.download),
-        filename: original.piece_justificative_template.blob.filename,
-        content_type: original.piece_justificative_template.blob.content_type
-      })
-    end
-  end
-
   def clone(admin, from_library)
     is_different_admin = !admin.owns?(self)
 
@@ -221,8 +211,6 @@ class Procedure < ApplicationRecord
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.logo_url
     procedure.lien_notice = nil
-
-    [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
 
     procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
     if is_different_admin || from_library
@@ -253,6 +241,26 @@ class Procedure < ApplicationRecord
     admin.gestionnaire.assign_to_procedure(procedure)
 
     procedure
+  end
+
+  def clone_attachments(original, kopy)
+    if original.is_a?(TypeDeChamp)
+      clone_attachment(:piece_justificative_template, original, kopy)
+    elsif original.is_a?(Procedure)
+      clone_attachment(:notice, original, kopy)
+      clone_attachment(:deliberation, original, kopy)
+    end
+  end
+
+  def clone_attachment(attribute, original, kopy)
+    original_attachment = original.send(attribute)
+    if original_attachment.attached?
+      kopy.send(attribute).attach({
+        io: StringIO.new(original_attachment.download),
+        filename: original_attachment.blob.filename,
+        content_type: original_attachment.blob.content_type
+      })
+    end
   end
 
   def whitelisted?
@@ -453,16 +461,6 @@ class Procedure < ApplicationRecord
   def update_juridique_required
     self.juridique_required ||= (cadre_juridique.present? || deliberation.attached?)
     true
-  end
-
-  def clone_attachment(cloned_procedure, attachment_symbol)
-    attachment = send(attachment_symbol)
-    if attachment.attached?
-      cloned_procedure.send(attachment_symbol).attach(
-        io: StringIO.new(attachment.download),
-        filename: attachment.filename
-      )
-    end
   end
 
   def check_juridique
