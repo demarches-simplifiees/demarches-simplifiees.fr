@@ -858,6 +858,33 @@ describe Dossier do
       end
     end
 
+    context "with mandatory SIRET champ" do
+      let(:type_de_champ) { create(:type_de_champ_siret, mandatory: true) }
+      let(:champ_siret) { create(:champ_siret, type_de_champ: type_de_champ) }
+
+      before do
+        dossier.champs << champ_siret
+      end
+
+      it 'should not have errors' do
+        errors = dossier.check_mandatory_champs
+        expect(errors).to be_empty
+      end
+
+      context "and invalid SIRET" do
+        before do
+          champ_siret.update(value: "1234")
+          dossier.reload
+        end
+
+        it 'should have errors' do
+          errors = dossier.check_mandatory_champs
+          expect(errors).not_to be_empty
+          expect(errors.first).to eq("Le champ #{champ_siret.libelle} doit être rempli.")
+        end
+      end
+    end
+
     context "with champ repetition" do
       let(:procedure) { create(:procedure) }
       let(:type_de_champ_repetition) { create(:type_de_champ_repetition, mandatory: true) }
