@@ -1,6 +1,7 @@
 -# We can't use &. because the controller may not implement #nav_bar_profile
-- nav_bar_profile = controller.try(:nav_bar_profile)
+- nav_bar_profile = controller.try(:nav_bar_profile) || :guest
 - dossier = controller.try(:dossier_for_help)
+- procedure = controller.try(:procedure_for_help)
 
 .new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
@@ -88,8 +89,11 @@
 
       %li
         .header-help
-          - if  dossier.present? && nav_bar_profile == :user
+          - if dossier.present? && nav_bar_profile == :user
             = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+
+          - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+            = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
 
           - elsif nav_bar_profile == :gestionnaire
             = render partial: 'shared/help/help_dropdown_gestionnaire'
