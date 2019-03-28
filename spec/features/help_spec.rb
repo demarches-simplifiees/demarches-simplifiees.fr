@@ -8,6 +8,24 @@ feature 'Getting help:' do
     end
   end
 
+  context 'on pages related to a procedure' do
+    let(:procedure) { create(:procedure, :published, :with_service) }
+
+    scenario 'a Help menu provides administration contacts and a link to the FAQ' do
+      visit commencer_path(path: procedure.path)
+
+      within('.new-header') do
+        expect(page).to have_help_menu
+      end
+
+      within('.help-dropdown') do
+        expect(page).to have_content(procedure.service.email)
+        expect(page).to have_content(procedure.service.telephone)
+        expect(page).to have_link(nil, href: FAQ_URL)
+      end
+    end
+  end
+
   context 'as a signed-in user' do
     let(:user) { create(:user) }
     let(:procedure) { create(:procedure, :with_service) }
