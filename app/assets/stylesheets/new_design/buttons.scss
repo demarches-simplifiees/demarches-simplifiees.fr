@@ -137,6 +137,8 @@
   position: relative;
 
   .dropdown-button {
+    white-space: nowrap;
+
     &::after {
       content: "▾";
       margin-left: $default-spacer;
@@ -199,7 +201,7 @@
 .dropdown-items {
   li {
     display: flex;
-    padding: 2 * $default-spacer;
+    padding: $default-padding;
     color: $grey;
     border-bottom: 1px solid $border-grey;
     font-size: 12px;
@@ -219,13 +221,35 @@
       background: $light-grey;
     }
 
+    &.danger {
+      &:hover {
+        background-color: $medium-red;
+
+        &,
+        a {
+          color: $white;
+        }
+
+        .icon {
+          filter: contrast(0) brightness(100);
+        }
+      }
+    }
+
     &:last-child {
       border-bottom: none;
     }
 
     a {
-      display: flex;
       color: $grey;
+    }
+
+    // Make child links fill the whole clickable area
+    > a {
+      display: flex;
+      flex-grow: 1;
+      margin: -$default-padding;
+      padding: $default-padding;
     }
 
     .icon {
