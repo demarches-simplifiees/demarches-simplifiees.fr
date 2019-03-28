@@ -489,6 +489,22 @@ describe Procedure do
     it 'should duplicate piece_justificative_template on a type_de_champ' do
       expect(subject.types_de_champ.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be true
     end
+
+    context 'with a notice attached' do
+      let(:procedure) { create(:procedure, :with_notice, received_mail: received_mail, service: service) }
+
+      it 'should duplicate notice' do
+        expect(subject.notice.attached?).to be true
+      end
+    end
+
+    context 'with a deliberation attached' do
+      let(:procedure) { create(:procedure, :with_deliberation, received_mail: received_mail, service: service) }
+
+      it 'should duplicate deliberation' do
+        expect(subject.deliberation.attached?).to be true
+      end
+    end
   end
 
   describe '#publish!' do
