@@ -37,12 +37,12 @@ class PieceJustificativeToChampPieceJointeMigrationService
         pj = dossier.retrieve_last_piece_justificative_by_type(type_pj_id)
 
         if pj.present?
+          convert_pj_to_champ!(pj, champ)
+
           champ.update(
             updated_at: pj.updated_at,
             created_at: pj.created_at
           )
-
-          convert_pj_to_champ!(pj, champ)
         else
           champ.update(
             updated_at: dossier.updated_at,
