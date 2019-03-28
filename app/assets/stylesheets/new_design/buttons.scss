@@ -201,7 +201,7 @@
 .dropdown-items {
   li {
     display: flex;
-    padding: 2 * $default-spacer;
+    padding: $default-padding;
     color: $grey;
     border-bottom: 1px solid $border-grey;
     font-size: 12px;
@@ -226,8 +226,15 @@
     }
 
     a {
-      display: flex;
       color: $grey;
+    }
+
+    // Make child links fill the whole clickable area
+    > a {
+      display: flex;
+      flex-grow: 1;
+      margin: -$default-padding;
+      padding: $default-padding;
     }
 
     .icon {
