@@ -42,7 +42,7 @@ module Users
 
     def store_user_location!
       procedure = Procedure.find_by(path: params[:path])
-      store_location_for(:user, commencer_path(path: procedure.path))
+      store_location_for(:user, helpers.procedure_lien(procedure))
     end
   end
 end
