@@ -1,30 +1,34 @@
-- if current_administrateur.procedures.brouillons.count == 0
-  %h4{ style: 'padding: 20px; margin: 20px !important;' }
-    Bienvenue, vous allez pouvoir créer une première démarche de test. Celle-ci sera visible uniquement par vous et ne sera publiée nulle part, alors pas de crainte à avoir.
+.container
+  - if current_administrateur.procedures.brouillons.count == 0
+    .card.feedback
+      .card-title
+        Bienvenue,
+      vous allez pouvoir créer une première démarche de test.
+      Celle-ci sera visible uniquement par vous et ne sera publiée nulle part, alors pas de crainte à avoir.
 
-.row{ style: 'padding: 20px; margin: 20px !important;' }
-  %a#from-scratch{ href: new_admin_procedure_path, class: 'btn-lg btn-primary' }
-    Créer une nouvelle démarche de zéro
+  .form
+    .send-wrapper
+      %a#from-scratch.button.primary{ href: new_admin_procedure_path }
+        Créer une nouvelle démarche de zéro
 
-.row.white-back
-  %h3
-    Créer une nouvelle démarche à partir d'une démarche existante
+    .card
+      %h2.header-section
+        Créer une nouvelle démarche à partir d'une démarche existante
 
-  .section.section-label
-    Pour rechercher dans cette liste, utilisez la fonction "Recherche" de votre navigateur (CTRL+F ou command+F)
-    %br
-    %br
-    - @grouped_procedures.each do |_, procedures|
-      %b
-        = procedures.first.organisation_name
-      %table{ style: 'margin-bottom: 40px;' }
-        - procedures.sort_by(&:id).each do |procedure|
-          %tr{ style: 'height: 36px;' }
-            %td{ style: 'width: 750px;' }
-              = procedure.libelle
-            %td{ style: 'padding-right: 10px; padding-left: 10px; width: 60px;' }
-              = link_to('Consulter', apercu_procedure_path(id: procedure.id), target: "_blank", rel: "noopener")
-            %td
-              = link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'btn-sm btn-primary clone-btn')
-            %td{ style: 'padding-left: 10px;' }
-              = link_to('Contacter', "mailto:#{procedure.administrateurs.pluck(:email) * ","}")
+      %label
+        .notice
+          Pour rechercher dans cette liste, utilisez la fonction "Recherche" de votre navigateur (CTRL+F ou command+F)
+
+      %table.table.vertical.procedure-library-list
+        - @grouped_procedures.each do |_, procedures|
+          %tr
+            %th
+              = procedures.first.organisation_name
+          - procedures.sort_by(&:id).each do |procedure|
+            %tr
+              %td
+                = procedure.libelle
+              %td.flex
+                = link_to('Consulter', apercu_procedure_path(id: procedure.id), target: "_blank", rel: "noopener", class: 'button small')
+                = link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'button small primary')
+                = link_to('Contacter', "mailto:#{procedure.administrateurs.pluck(:email) * ","}", class: 'button small')

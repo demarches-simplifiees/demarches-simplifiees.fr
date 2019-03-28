@@ -199,6 +199,7 @@ class Admin::ProceduresController < AdminController
       .where(id: significant_procedure_ids)
       .group_by(&:organisation_name)
       .sort_by { |_, procedures| procedures.first.created_at }
+    render layout: 'application'
   end
 
   def active_class
