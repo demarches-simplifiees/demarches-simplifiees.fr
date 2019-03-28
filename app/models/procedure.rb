@@ -123,6 +123,10 @@ class Procedure < ApplicationRecord
     publiee_ou_archivee?
   end
 
+  def accepts_new_dossiers?
+    !archivee?
+  end
+
   # This method is needed for transition. Eventually this will be the same as brouillon?.
   def brouillon_avec_lien?
     brouillon? && path.present?
