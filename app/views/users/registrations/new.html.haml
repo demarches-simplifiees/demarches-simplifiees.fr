@@ -1,3 +1,5 @@
+= content_for(:page_id, 'auth')
+
 .auth-form
   = devise_error_messages!
   = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
