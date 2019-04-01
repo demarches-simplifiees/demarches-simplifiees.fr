@@ -13,9 +13,9 @@ class Champs::SiretController < ApplicationController
       etablissement = find_etablisement_with_siret
       if etablissement.present?
         @etablissement = etablissement
-        if @champ.present?
-          etablissement.champ = @champ
-          etablissement.save!
+
+        if !@champ.nil?
+          @champ.update!(value: etablissement.siret, etablissement: etablissement)
         end
       else
         @champ&.update!(value: '')
