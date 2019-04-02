@@ -15,14 +15,7 @@
     = javascript_pack_tag    'application-old', defer: true, 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
     = csrf_meta_tags
-
-    = render partial: "layouts/matomo"
-    = render partial: "layouts/sendinblue"
-
-    :javascript
-      DATA = [{
-        sentry: #{raw(sentry_config)}
-      }];
+    = Gon::Base.render_data(camel_case: true, init: true)
 
   %body{ class: browser.platform.ios? ? 'ios' : nil }
     = render partial: 'layouts/outdated_browser_banner'
@@ -49,3 +42,6 @@
         %i.fa.fa-times{ style: 'position: fixed; top: 10; right: 30; color: white;' }
 
     = render partial: 'layouts/footer', locals: { main_container_size: main_container_size }
+    = javascript_pack_tag 'track', async: true
+    - if administrateur_signed_in?
+      = javascript_pack_tag 'sendinblue', async: true
