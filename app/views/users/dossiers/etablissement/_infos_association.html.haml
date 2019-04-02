@@ -13,12 +13,12 @@
 
   %li
     Date de création :
-    = try_format_date(etablissement.association_date_creation)
+    = etablissement.association_date_creation&.strftime('%d/%m/%Y')
 
   %li
     Date de déclaration :
-    = try_format_date(etablissement.association_date_declaration)
+    = etablissement.association_date_declaration&.strftime('%d/%m/%Y')
 
   %li
     Date de publication :
-    = try_format_date(etablissement.association_date_publication)
+    = etablissement.association_date_publication&.strftime('%d/%m/%Y')
