@@ -6,7 +6,7 @@ describe Champs::SiretController, type: :controller do
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:champ) { create(:champ_siret, dossier: dossier) }
+    let(:champ) { create(:champ_siret, dossier: dossier, value: nil, etablissement: nil) }
     let(:params) do
       {
         champ_id: champ.id,
