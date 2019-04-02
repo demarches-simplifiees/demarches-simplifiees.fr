@@ -21,6 +21,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
       subject
       expect(rendered).to have_link('Créer un compte')
       expect(rendered).to have_link('J’ai déjà un compte')
+      expect(rendered).to have_link('S’identifier avec FranceConnect')
     end
   end
 
