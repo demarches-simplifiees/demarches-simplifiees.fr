@@ -1,0 +1,28 @@
+@import "colors";
+
+.france-connect-login {
+  text-align: center;
+}
+
+.france-connect-login-button {
+  display: inline-block;
+  height: 52px;
+  width: 186px;
+  margin: auto;
+  margin-bottom: 8px;
+  background-image: image-url("login-with-fc.svg"), image-url("login-with-fc-hover.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+  font-size: 0;
+
+  &:hover {
+    background-image: image-url("login-with-fc-hover.svg");
+  }
+}
+
+.france-connect-login-separator {
+  margin: 24px 0;
+  font-size: 14px;
+  color: $grey;
+}
