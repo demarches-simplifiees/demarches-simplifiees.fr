@@ -22,7 +22,7 @@
       %td= etablissement.naf
     %tr
       %th.libelle Date de création :
-      %td= try_format_date(etablissement.entreprise.date_creation)
+      %td= etablissement.entreprise.date_creation&.strftime("%d/%m/%Y")
     %tr
       %th.libelle Effectif de l'organisation :
       %td= effectif(etablissement)
@@ -64,10 +64,10 @@
         %td= etablissement.association_objet
       %tr
         %th.libelle Date de création :
-        %td= try_format_date(etablissement.association_date_creation)
+        %td= etablissement.association_date_creation&.strftime("%d/%m/%Y")
       %tr
         %th.libelle Date de publication :
-        %td= try_format_date(etablissement.association_date_publication)
+        %td= etablissement.association_date_publication&.strftime("%d/%m/%Y")
       %tr
         %th.libelle Date de déclaration :
-        %td= try_format_date(etablissement.association_date_declaration)
+        %td= etablissement.association_date_declaration&.strftime("%d/%m/%Y")
