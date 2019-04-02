@@ -228,20 +228,17 @@ describe StatsController, type: :controller do
 
     it 'returns weekly ratios between a given feedback and all feedback' do
       happy_data = stats.find { |g| g[:name] == 'Satisfaits' }[:data]
-      expect(happy_data.values[0]).to eq 0
-      expect(happy_data.values[1]).to eq 0
-      expect(happy_data.values[2]).to eq 0
-      expect(happy_data.values[3]).to eq 25.0
-      expect(happy_data.values[4]).to eq 50.0
-      expect(happy_data.values[5]).to eq 75.0
+
+      expect(happy_data.values[-4]).to eq 0
+      expect(happy_data.values[-3]).to eq 25.0
+      expect(happy_data.values[-2]).to eq 50.0
+      expect(happy_data.values[-1]).to eq 75.0
 
       unhappy_data = stats.find { |g| g[:name] == 'Mécontents' }[:data]
-      expect(unhappy_data.values[0]).to eq 0
-      expect(unhappy_data.values[1]).to eq 0
-      expect(unhappy_data.values[2]).to eq 0
-      expect(unhappy_data.values[3]).to eq 75.0
-      expect(unhappy_data.values[4]).to eq 50.0
-      expect(unhappy_data.values[5]).to eq 25.0
+      expect(unhappy_data.values[-4]).to eq 0
+      expect(unhappy_data.values[-3]).to eq 75.0
+      expect(unhappy_data.values[-2]).to eq 50.0
+      expect(unhappy_data.values[-1]).to eq 25.0
     end
 
     it 'excludes values still in the current week' do
