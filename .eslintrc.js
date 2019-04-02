@@ -5,7 +5,8 @@ module.exports = {
     sourceType: 'module'
   },
   globals: {
-    'process': true
+    'process': true,
+    'gon': true
   },
   plugins: ['prettier'],
   extends: ['eslint:recommended', 'prettier'],
