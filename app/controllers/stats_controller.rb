@@ -132,7 +132,7 @@ class StatsController < ApplicationController
       Feedback.ratings.fetch(:happy)   => "Satisfaits"
     }
 
-    number_of_weeks = 6
+    number_of_weeks = 12
     totals = Feedback
       .group_by_week(:created_at, last: number_of_weeks, current: false)
       .count
