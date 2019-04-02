@@ -119,20 +119,4 @@ module ApplicationHelper
       {}
     end
   end
-
-  def try_format_date(date)
-    begin
-      date.is_a?(String) ? Date.parse(date).strftime("%d %B %Y") : date.strftime("%d %B %Y")
-    rescue
-      date
-    end
-  end
-
-  def try_format_datetime(datetime)
-    begin
-      datetime.is_a?(String) ? Time.zone.parse(datetime).strftime("%d %B %Y %R") : datetime.strftime("%d %B %Y %R")
-    rescue
-      datetime
-    end
-  end
 end
