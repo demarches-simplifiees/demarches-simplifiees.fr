@@ -2,11 +2,23 @@
   %span.dropdown
     %button.button.dropdown-button
       Télécharger tous les dossiers
-    .dropdown-content.fade-in-down
+    - old_format_limit_date = Date.parse("Oct 31 2019")
+    - export_v1_enabled = old_format_limit_date > Time.zone.today
+    - export_v2_enabled = Flipflop.procedure_export_v2_enabled? || !export_v1_enabled
+    - old_format_message = export_v1_enabled && export_v2_enabled ? "(ancien format, jusqu‘au #{old_format_limit_date.strftime('%d/%m/%Y')})" : ''
+    .dropdown-content.fade-in-down{ style: export_v1_enabled && export_v2_enabled ? 'width: 330px' : '' }
       %ul.dropdown-items
-        %li
-          = link_to "Au format .csv", download_dossiers_gestionnaire_procedure_path(format: :csv, procedure_id: procedure.id), target: "_blank", rel: "noopener"
-        %li
-          = link_to "Au format .xlsx", download_dossiers_gestionnaire_procedure_path(format: :xlsx, procedure_id: procedure.id, tables: [:etablissements]), target: "_blank", rel: "noopener"
-        %li
-          = link_to "Au format .ods", download_dossiers_gestionnaire_procedure_path(format: :ods, procedure_id: procedure.id, tables: [:etablissements]), target: "_blank", rel: "noopener"
+        - if export_v2_enabled
+          %li
+            = link_to "Au format .xlsx", procedure_dossiers_download_path(procedure, format: :xlsx, version: 'v2'), target: "_blank", rel: "noopener"
+          %li
+            = link_to "Au format .ods", procedure_dossiers_download_path(procedure, format: :ods, version: 'v2'), target: "_blank", rel: "noopener"
+          %li
+            = link_to "Au format .csv", procedure_dossiers_download_path(procedure, format: :csv, version: 'v2'), target: "_blank", rel: "noopener"
+        - if export_v1_enabled
+          %li
+            = link_to "Au format .xlsx #{old_format_message}", procedure_dossiers_download_path(procedure, format: :xlsx, version: 'v1'), target: "_blank", rel: "noopener"
+          %li
+            = link_to "Au format .ods #{old_format_message}", procedure_dossiers_download_path(procedure, format: :ods, version: 'v1'), target: "_blank", rel: "noopener"
+          %li
+            = link_to "Au format .csv #{old_format_message}", procedure_dossiers_download_path(procedure, format: :csv, version: 'v1'), target: "_blank", rel: "noopener"

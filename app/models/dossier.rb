@@ -59,7 +59,7 @@ class Dossier < ApplicationRecord
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:etablissement, :user, :individual, :followers_gestionnaires, champs: { etablissement: [], type_de_champ: :drop_down_list }, champs_private: { etablissement: [], type_de_champ: :drop_down_list }).order(en_construction_at: 'asc') }
+  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:etablissement, :user, :individual, :followers_gestionnaires, :avis, champs: { etablissement: [:champ], type_de_champ: :drop_down_list }, champs_private: { etablissement: [:champ], type_de_champ: :drop_down_list }).order(en_construction_at: 'asc') }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
@@ -378,6 +378,37 @@ class Dossier < ApplicationRecord
 
   def demander_un_avis!(avis)
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
+  end
+
+  def spreadsheet_columns
+    [
+      ['ID', id.to_s],
+      ['Email', user.email],
+      ['Civilité', individual&.gender],
+      ['Nom', individual&.nom],
+      ['Prénom', individual&.prenom],
+      ['Date de naissance', individual&.birthdate],
+      ['Archivé', :archived],
+      ['État du dossier', I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])],
+      ['Dernière mise à jour le', :updated_at],
+      ['Passé en construction le', :en_instruction_at],
+      ['Passé en instruction le', :en_construction_at],
+      ['Traité le', :processed_at],
+      ['Motivation de la décision', :motivation],
+      ['Instructeurs', followers_gestionnaires.map(&:email).join(' ')]
+    ] + champs_for_export + annotations_for_export
+  end
+
+  def champs_for_export
+    champs.reject(&:exclude_from_export?).map do |champ|
+      [champ.libelle, champ.for_export]
+    end
+  end
+
+  def annotations_for_export
+    champs_private.reject(&:exclude_from_export?).map do |champ|
+      [champ.libelle, champ.for_export]
+    end
   end
 
   private
