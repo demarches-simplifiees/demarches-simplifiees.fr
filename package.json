@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@rails/webpacker": "4.0.0-pre.3",
-    "@sentry/browser": "^4.0.4",
+    "@sentry/browser": "^4.6.5",
     "@turf/area": "^6.0.1",
     "activestorage": "^5.2.2-rc1",
     "autocomplete.js": "^0.31.0",
