@@ -15,28 +15,6 @@
     margin-bottom: 0;
   }
 
-  .separation {
-    font-size: 14px;
-    color: $grey;
-    margin: 24px 0;
-  }
-
-  .login-with-fc {
-    display: inline-block;
-    height: 52px;
-    width: 186px;
-    margin: auto;
-    margin-bottom: 8px;
-    background-image: image-url("login-with-fc.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    cursor: pointer;
-
-    &:hover {
-      background-image: image-url("login-with-fc-hover.svg");
-    }
-  }
-
   hr {
     margin-top: 30px;
     margin-bottom: 30px;
