@@ -76,8 +76,9 @@ const TypeDeChamp = sortableElement(
         >
           <div className="flex column justify-start">
             <MoveButton
-              isVisible={!isFirstItem}
+              isEnabled={!isFirstItem}
               icon="arrow-up"
+              title="Déplacer le champ vers le haut"
               onClick={() =>
                 dispatch({
                   type: 'moveTypeDeChampUp',
@@ -86,8 +87,9 @@ const TypeDeChamp = sortableElement(
               }
             />
             <MoveButton
-              isVisible={!isLastItem}
+              isEnabled={!isLastItem}
               icon="arrow-down"
+              title="Déplacer le champ vers le bas"
               onClick={() =>
                 dispatch({
                   type: 'moveTypeDeChampDown',
@@ -162,9 +164,10 @@ TypeDeChamp.propTypes = {
 };
 
 const DragHandle = sortableHandle(() => (
-  <div className="handle button small icon-only">
-    <FontAwesomeIcon icon="arrows-alt-v" size="lg" />
-  </div>
+  <div
+    className="handle small icon-only icon move-handle"
+    title="Déplacer le champ vers le haut ou vers le bas"
+  />
 ));
 
 function createUpdateHandler(dispatch, typeDeChamp, field, index, prefix) {

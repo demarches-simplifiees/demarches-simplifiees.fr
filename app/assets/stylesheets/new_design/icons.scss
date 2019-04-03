@@ -131,4 +131,8 @@
   &.delete {
     background-image: image-url("icons/trash.svg");
   }
+
+  &.move-handle {
+    background-image: image-url("icons/move-handle.svg");
+  }
 }
