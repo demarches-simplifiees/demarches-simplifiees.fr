@@ -296,7 +296,13 @@ class Procedure < ApplicationRecord
   end
 
   def export(options = {})
-    ProcedureExportService.new(self, **options.to_h.symbolize_keys)
+    version = options.delete(:version)
+    if version == 'v2'
+      options.delete(:tables)
+      ProcedureExportV2Service.new(self, **options.to_h.symbolize_keys)
+    else
+      ProcedureExportService.new(self, **options.to_h.symbolize_keys)
+    end
   end
 
   def to_csv(options = {})

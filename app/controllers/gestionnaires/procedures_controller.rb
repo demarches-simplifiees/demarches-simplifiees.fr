@@ -168,7 +168,7 @@ module Gestionnaires
     end
 
     def download_dossiers
-      options = params.permit(:limit, :since, tables: [])
+      options = params.permit(:version, :limit, :since, tables: [])
 
       respond_to do |format|
         format.csv do
