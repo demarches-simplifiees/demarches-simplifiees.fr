@@ -3,6 +3,19 @@
 @import "placeholders";
 @import "mixins";
 
+#auth {
+  // On small screens, hide the procedure description text on auth pages.
+  // It avoids pushing the sign-in/sign-up form out of the viewport.
+  //
+  // The procedure description can still be read from the /commencer
+  // pages.
+  @media (max-width: $two-columns-breakpoint) {
+    .procedure-description {
+      display: none;
+    }
+  }
+}
+
 .auth-form {
   .auth-options {
     display: flex;
@@ -13,28 +26,6 @@
   .remember-me {
     display: inline-block;
     margin-bottom: 0;
-  }
-
-  .separation {
-    font-size: 14px;
-    color: $grey;
-    margin: 24px 0;
-  }
-
-  .login-with-fc {
-    display: inline-block;
-    height: 52px;
-    width: 186px;
-    margin: auto;
-    margin-bottom: 8px;
-    background-image: image-url("login-with-fc.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    cursor: pointer;
-
-    &:hover {
-      background-image: image-url("login-with-fc-hover.svg");
-    }
   }
 
   hr {

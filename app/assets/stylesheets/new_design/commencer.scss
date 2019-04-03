@@ -1,8 +1,10 @@
 @import "constants";
 
 .commencer {
-  .button:first-of-type {
-    margin-top: 4 * $default-spacer;
+  @media (min-width: $two-columns-breakpoint) {
+    .button:first-of-type {
+      margin-top: 4 * $default-spacer;
+    }
   }
 
   .button {

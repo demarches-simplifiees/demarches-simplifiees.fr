@@ -112,4 +112,28 @@ describe Users::CommencerController, type: :controller do
       it { expect(subject).to redirect_to(new_user_registration_path) }
     end
   end
+
+  describe '#france_connect' do
+    context 'for a published procedure' do
+      subject { get :france_connect, params: { path: published_procedure.path } }
+
+      it 'set the path to return after sign-up to the procedure start page' do
+        subject
+        expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
+      end
+
+      it { expect(subject).to redirect_to(france_connect_particulier_path) }
+    end
+
+    context 'for a draft procedure' do
+      subject { get :france_connect, params: { path: draft_procedure.path } }
+
+      it 'set the path to return after sign-up to the draft procedure start page' do
+        subject
+        expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
+      end
+
+      it { expect(subject).to redirect_to(france_connect_particulier_path) }
+    end
+  end
 end
