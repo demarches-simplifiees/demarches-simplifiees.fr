@@ -3,6 +3,19 @@
 @import "placeholders";
 @import "mixins";
 
+#auth {
+  // On small screens, hide the procedure description text on auth pages.
+  // It avoids pushing the sign-in/sign-up form out of the viewport.
+  //
+  // The procedure description can still be read from the /commencer
+  // pages.
+  @media (max-width: $two-columns-breakpoint) {
+    .procedure-description {
+      display: none;
+    }
+  }
+}
+
 .auth-form {
   .auth-options {
     display: flex;

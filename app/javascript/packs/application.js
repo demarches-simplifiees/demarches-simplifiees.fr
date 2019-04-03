@@ -18,6 +18,7 @@ import '../shared/toggle-target';
 
 import '../new_design/dropdown';
 import '../new_design/form-validation';
+import '../new_design/procedure-context';
 import '../new_design/select2';
 import '../new_design/spinner';
 import '../new_design/support';
