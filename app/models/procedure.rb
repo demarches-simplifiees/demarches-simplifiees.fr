@@ -410,7 +410,47 @@ class Procedure < ApplicationRecord
     result
   end
 
+  def move_type_de_champ(type_de_champ, new_index)
+    types_de_champ, collection_attribute_name = if type_de_champ.parent&.repetition?
+      if type_de_champ.parent.private?
+        [type_de_champ.parent.types_de_champ, :types_de_champ_private_attributes]
+      else
+        [type_de_champ.parent.types_de_champ, :types_de_champ_attributes]
+      end
+    elsif type_de_champ.private?
+      [self.types_de_champ_private, :types_de_champ_private_attributes]
+    else
+      [self.types_de_champ, :types_de_champ_attributes]
+    end
+
+    attributes = move_type_de_champ_attributes(types_de_champ.to_a, type_de_champ, new_index)
+
+    if type_de_champ.parent&.repetition?
+      attributes = [
+        {
+          id: type_de_champ.parent.id,
+          libelle: type_de_champ.parent.libelle,
+          types_de_champ_attributes: attributes
+        }
+      ]
+    end
+
+    update!(collection_attribute_name => attributes)
+  end
+
   private
+
+  def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
+    old_index = types_de_champ.index(type_de_champ)
+    types_de_champ.insert(new_index, types_de_champ.delete_at(old_index))
+      .map.with_index do |type_de_champ, index|
+        {
+          id: type_de_champ.id,
+          libelle: type_de_champ.libelle,
+          order_place: index
+        }
+      end
+  end
 
   def claim_path_ownership!(path)
     procedure = Procedure.joins(:administrateurs)

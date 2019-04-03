@@ -819,4 +819,80 @@ describe Procedure do
       it { expect(procedure.usual_instruction_time).to be_nil }
     end
   end
+
+  describe '#move_type_de_champ' do
+    let(:procedure) { create(:procedure) }
+
+    context 'type_de_champ' do
+      let(:type_de_champ) { create(:type_de_champ_text, order_place: 0, procedure: procedure) }
+      let!(:type_de_champ1) { create(:type_de_champ_text, order_place: 1, procedure: procedure) }
+      let!(:type_de_champ2) { create(:type_de_champ_text, order_place: 2, procedure: procedure) }
+
+      it 'move down' do
+        procedure.move_type_de_champ(type_de_champ, 2)
+
+        type_de_champ.reload
+        procedure.reload
+
+        expect(procedure.types_de_champ.index(type_de_champ)).to eq(2)
+        expect(type_de_champ.order_place).to eq(2)
+      end
+
+      context 'repetition' do
+        let!(:type_de_champ_repetition) do
+          create(:type_de_champ_repetition, types_de_champ: [
+            type_de_champ,
+            type_de_champ1,
+            type_de_champ2
+          ], procedure: procedure)
+        end
+
+        it 'move down' do
+          procedure.move_type_de_champ(type_de_champ, 2)
+
+          type_de_champ.reload
+          procedure.reload
+
+          expect(type_de_champ.parent.types_de_champ.index(type_de_champ)).to eq(2)
+          expect(type_de_champ.order_place).to eq(2)
+        end
+
+        context 'private' do
+          let!(:type_de_champ_repetition) do
+            create(:type_de_champ_repetition, types_de_champ: [
+              type_de_champ,
+              type_de_champ1,
+              type_de_champ2
+            ], private: true, procedure: procedure)
+          end
+
+          it 'move down' do
+            procedure.move_type_de_champ(type_de_champ, 2)
+
+            type_de_champ.reload
+            procedure.reload
+
+            expect(type_de_champ.parent.types_de_champ.index(type_de_champ)).to eq(2)
+            expect(type_de_champ.order_place).to eq(2)
+          end
+        end
+      end
+    end
+
+    context 'private' do
+      let(:type_de_champ) { create(:type_de_champ_text, order_place: 0, private: true, procedure: procedure) }
+      let!(:type_de_champ1) { create(:type_de_champ_text, order_place: 1, private: true, procedure: procedure) }
+      let!(:type_de_champ2) { create(:type_de_champ_text, order_place: 2, private: true, procedure: procedure) }
+
+      it 'move down' do
+        procedure.move_type_de_champ(type_de_champ, 2)
+
+        type_de_champ.reload
+        procedure.reload
+
+        expect(procedure.types_de_champ_private.index(type_de_champ)).to eq(2)
+        expect(type_de_champ.order_place).to eq(2)
+      end
+    end
+  end
 end

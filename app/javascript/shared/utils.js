@@ -51,6 +51,10 @@ export function on(selector, eventName, fn) {
   );
 }
 
+export function to(promise) {
+  return promise.then(result => [result]).catch(error => [null, error]);
+}
+
 function offset(element) {
   const rect = element.getBoundingClientRect();
   return {
