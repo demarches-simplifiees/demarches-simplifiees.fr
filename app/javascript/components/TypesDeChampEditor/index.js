@@ -5,6 +5,7 @@ import {
   faArrowDown,
   faArrowsAltV,
   faArrowUp,
+  faPlus,
   faTrash
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,32 +13,26 @@ import Flash from './Flash';
 import OperationsQueue from './OperationsQueue';
 import TypeDeChamps from './components/TypeDeChamps';
 
-library.add(faArrowDown, faArrowsAltV, faArrowUp, faTrash);
+library.add(faArrowDown, faArrowsAltV, faArrowUp, faPlus, faTrash);
 
 class TypesDeChampEditor extends Component {
-  constructor({
-    baseUrl,
-    typeDeChampsTypes,
-    directUploadUrl,
-    isAnnotation,
-    typeDeChamps
-  }) {
-    super({ typeDeChamps });
+  constructor(props) {
+    super(props);
     const defaultTypeDeChampAttributes = {
       type_champ: 'text',
       types_de_champ: [],
-      private: isAnnotation,
-      libelle: `${isAnnotation ? 'Nouvelle annotation' : 'Nouveau champ'} ${
-        typeDeChampsTypes[0][0]
-      }`
+      private: props.isAnnotation,
+      libelle: `${
+        props.isAnnotation ? 'Nouvelle annotation' : 'Nouveau champ'
+      } ${props.typeDeChampsTypes[0][0]}`
     };
     this.state = {
-      flash: new Flash(isAnnotation),
-      queue: new OperationsQueue(baseUrl),
+      flash: new Flash(props.isAnnotation),
+      queue: new OperationsQueue(props.baseUrl),
       defaultTypeDeChampAttributes,
-      typeDeChampsTypes,
-      directUploadUrl,
-      isAnnotation
+      typeDeChampsTypes: props.typeDeChampsTypes,
+      directUploadUrl: props.directUploadUrl,
+      isAnnotation: props.isAnnotation
     };
   }
 
