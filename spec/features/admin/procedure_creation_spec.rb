@@ -76,15 +76,15 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         page.refresh
         expect(page).to have_current_path(champs_procedure_path(Procedure.last))
 
-        expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
-        fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
+        expect(page).to have_selector('#champ-0-libelle')
+        fill_in 'champ-0-libelle', with: 'libelle de champ'
         blur
         expect(page).to have_content('Formulaire enregistré')
 
         within '.buttons' do
           click_on 'Ajouter un champ'
         end
-        expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
+        expect(page).to have_selector('#champ-1-libelle')
 
         click_on Procedure.last.libelle
         click_on 'onglet-pieces'
@@ -105,7 +105,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       scenario 'After adding champ and file, make publication' do
         page.refresh
 
-        fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libelle de champ'
+        fill_in 'champ-0-libelle', with: 'libelle de champ'
         blur
         expect(page).to have_content('Formulaire enregistré')
 

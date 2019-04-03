@@ -1,7 +1,7 @@
 module NewAdministrateur
   class TypesDeChampController < AdministrateurController
-    before_action :retrieve_procedure, only: [:create, :update, :destroy]
-    before_action :procedure_locked?, only: [:create, :update, :destroy]
+    before_action :retrieve_procedure, only: [:create, :update, :move, :destroy]
+    before_action :procedure_locked?, only: [:create, :update, :move, :destroy]
 
     def create
       type_de_champ = TypeDeChamp.new(type_de_champ_create_params)
@@ -25,6 +25,15 @@ module NewAdministrateur
       end
     end
 
+    def move
+      type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
+      new_index = params[:order_place].to_i
+
+      @procedure.move_type_de_champ(type_de_champ, new_index)
+
+      head :no_content
+    end
+
     def destroy
       type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
 
@@ -39,38 +48,54 @@ module NewAdministrateur
     def serialize_type_de_champ(type_de_champ)
       {
         type_de_champ: type_de_champ.as_json(
-          except: [:created_at, :updated_at, :stable_id, :type, :parent_id, :procedure_id, :private],
-          methods: [:piece_justificative_template_filename, :piece_justificative_template_url, :drop_down_list_value]
+          except: [
+            :created_at,
+            :options,
+            :order_place,
+            :parent_id,
+            :private,
+            :procedure_id,
+            :stable_id,
+            :type,
+            :updated_at
+          ],
+          methods: [
+            :cadastres,
+            :drop_down_list_value,
+            :parcelles_agricoles,
+            :piece_justificative_template_filename,
+            :piece_justificative_template_url,
+            :quartiers_prioritaires
+          ]
         )
       }
     end
 
     def type_de_champ_create_params
-      params.required(:type_de_champ).permit(:libelle,
+      params.required(:type_de_champ).permit(:cadastres,
         :description,
-        :order_place,
-        :type_champ,
-        :private,
-        :parent_id,
+        :drop_down_list_value,
+        :libelle,
         :mandatory,
-        :piece_justificative_template,
-        :quartiers_prioritaires,
-        :cadastres,
+        :order_place,
         :parcelles_agricoles,
-        :drop_down_list_value).merge(procedure: @procedure)
+        :parent_id,
+        :piece_justificative_template,
+        :private,
+        :quartiers_prioritaires,
+        :type_champ).merge(procedure: @procedure)
     end
 
     def type_de_champ_update_params
-      params.required(:type_de_champ).permit(:libelle,
+      params.required(:type_de_champ).permit(:cadastres,
         :description,
-        :order_place,
-        :type_champ,
+        :drop_down_list_value,
+        :libelle,
         :mandatory,
+        :parcelles_agricoles,
         :piece_justificative_template,
         :quartiers_prioritaires,
-        :cadastres,
-        :parcelles_agricoles,
-        :drop_down_list_value)
+        :type_champ)
     end
   end
 end

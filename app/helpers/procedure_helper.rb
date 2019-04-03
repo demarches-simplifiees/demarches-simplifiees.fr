@@ -36,23 +36,21 @@ module ProcedureHelper
 
   def types_de_champ_data(procedure)
     {
-      type: "champ",
-      types_de_champ_options: types_de_champ_options.to_json,
-      types_de_champ: types_de_champ_as_json(procedure.types_de_champ).to_json,
-      save_url: procedure_types_de_champ_path(procedure),
-      direct_upload_url: rails_direct_uploads_url,
-      drag_icon_url: image_url("icons/drag.svg")
+      isAnnotation: false,
+      typeDeChampsTypes: types_de_champ_types,
+      typeDeChamps: types_de_champ_as_json(procedure.types_de_champ),
+      baseUrl: procedure_types_de_champ_path(procedure),
+      directUploadUrl: rails_direct_uploads_url
     }
   end
 
   def types_de_champ_private_data(procedure)
     {
-      type: "annotation",
-      types_de_champ_options: types_de_champ_options.to_json,
-      types_de_champ: types_de_champ_as_json(procedure.types_de_champ_private).to_json,
-      save_url: procedure_types_de_champ_path(procedure),
-      direct_upload_url: rails_direct_uploads_url,
-      drag_icon_url: image_url("icons/drag.svg")
+      isAnnotation: true,
+      typeDeChampsTypes: types_de_champ_types,
+      typeDeChamps: types_de_champ_as_json(procedure.types_de_champ_private),
+      baseUrl: procedure_types_de_champ_path(procedure),
+      directUploadUrl: rails_direct_uploads_url
     }
   end
 
@@ -63,20 +61,37 @@ module ProcedureHelper
     TypeDeChamp.type_champs.fetch(:repetition)      => :champ_repetition?
   }
 
-  def types_de_champ_options
-    types_de_champ = TypeDeChamp.type_de_champs_list_fr
+  def types_de_champ_types
+    types_de_champ_types = TypeDeChamp.type_de_champs_list_fr
 
-    types_de_champ.select! do |tdc|
+    types_de_champ_types.select! do |tdc|
       toggle = TOGGLES[tdc.last]
       toggle.blank? || Flipflop.send(toggle)
     end
 
-    types_de_champ
+    types_de_champ_types
   end
 
   TYPES_DE_CHAMP_BASE = {
-    except: [:created_at, :updated_at, :stable_id, :type, :parent_id, :procedure_id, :private],
-    methods: [:piece_justificative_template_filename, :piece_justificative_template_url, :drop_down_list_value]
+    except: [
+      :created_at,
+      :options,
+      :order_place,
+      :parent_id,
+      :private,
+      :procedure_id,
+      :stable_id,
+      :type,
+      :updated_at
+    ],
+    methods: [
+      :cadastres,
+      :drop_down_list_value,
+      :parcelles_agricoles,
+      :piece_justificative_template_filename,
+      :piece_justificative_template_url,
+      :quartiers_prioritaires
+    ]
   }
   TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE
     .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
