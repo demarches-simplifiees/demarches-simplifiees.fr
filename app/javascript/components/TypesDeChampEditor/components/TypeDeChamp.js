@@ -76,7 +76,7 @@ const TypeDeChamp = sortableElement(
         >
           <div className="flex column justify-start">
             <MoveButton
-              isVisible={!isFirstItem}
+              isEnabled={!isFirstItem}
               icon="arrow-up"
               onClick={() =>
                 dispatch({
@@ -86,7 +86,7 @@ const TypeDeChamp = sortableElement(
               }
             />
             <MoveButton
-              isVisible={!isLastItem}
+              isEnabled={!isLastItem}
               icon="arrow-down"
               onClick={() =>
                 dispatch({
