@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function TypeDeChampDropDownOptions({ isVisible, value, handler }) {
+function TypeDeChampDropDownOptions({ isVisible, handler }) {
   if (isVisible) {
     return (
       <div className="cell">
@@ -9,7 +9,7 @@ function TypeDeChampDropDownOptions({ isVisible, value, handler }) {
         <textarea
           id={handler.id}
           name={handler.name}
-          value={value}
+          value={handler.value}
           onChange={handler.onChange}
           rows={3}
           cols={40}
