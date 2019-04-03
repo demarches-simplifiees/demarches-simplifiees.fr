@@ -7,6 +7,4 @@
   %h1 Configuration des annotations privées
   %br
 
-  = form_for @procedure, remote: true, html: { class: 'form' } do |form|
-    #champs-editor{ data: types_de_champ_private_data(@procedure) }
-      .spinner
+  = react_component("TypesDeChampEditor", types_de_champ_private_data(@procedure))
