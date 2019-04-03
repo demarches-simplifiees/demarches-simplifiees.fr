@@ -14,8 +14,20 @@
   }
 
   .move {
+    height: 44px;
+    border-radius: 25px;
     margin-right: 10px;
-    margin-bottom: 5px;
+
+    &:first-of-type {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      margin-bottom: -1px;
+    }
+
+    &:last-of-type {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
   }
 
   &.type-header-section {
