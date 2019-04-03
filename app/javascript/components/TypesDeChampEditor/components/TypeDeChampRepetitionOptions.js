@@ -1,5 +1,6 @@
 import React, { useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { SortableContainer, addChampLabel } from '../utils';
 import TypeDeChamp from './TypeDeChamp';
@@ -46,6 +47,8 @@ function TypeDeChampRepetitionOptions({
             })
           }
         >
+          <FontAwesomeIcon icon="plus" size="sm" />
+          &nbsp;&nbsp;
           {addChampLabel(state.isAnnotation)}
         </button>
       </div>
