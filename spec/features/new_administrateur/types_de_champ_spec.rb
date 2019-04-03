@@ -133,4 +133,16 @@ feature 'As an administrateur I can edit types de champ', js: true do
       expect(page).not_to have_content('Cadastres')
     end
   end
+
+  it "Add dropdown champ" do
+    select('Menu déroulant', from: 'champ-0-type_champ')
+    fill_in 'champ-0-libelle', with: 'libellé de champ menu déroulant'
+    blur
+    fill_in 'champ-0-drop_down_list_value', with: 'Un menu'
+    expect(page).to have_content('Formulaire enregistré')
+
+    page.refresh
+
+    expect(page).to have_content('Un menu')
+  end
 end
