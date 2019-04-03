@@ -372,7 +372,11 @@ Rails.application.routes.draw do
         get 'annotations'
       end
 
-      resources :types_de_champ, only: [:create, :update, :destroy]
+      resources :types_de_champ, only: [:create, :update, :destroy] do
+        member do
+          patch :move
+        end
+      end
     end
 
     resources :services, except: [:show] do

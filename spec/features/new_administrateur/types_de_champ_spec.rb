@@ -16,8 +16,8 @@ feature 'As an administrateur I can edit types de champ', js: true do
     within '.buttons' do
       click_on 'Ajouter un champ'
     end
-    expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
-    fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
+    expect(page).to have_selector('#champ-0-libelle')
+    fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
     expect(page).to have_content('Formulaire enregistré')
 
@@ -35,24 +35,24 @@ feature 'As an administrateur I can edit types de champ', js: true do
       click_on 'Ajouter un champ'
       click_on 'Ajouter un champ'
     end
-    expect(page).not_to have_content('Formulaire enregistré')
+    page.refresh
 
-    fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ 0'
-    fill_in 'procedure_types_de_champ_attributes_1_libelle', with: 'libellé de champ 1'
+    fill_in 'champ-0-libelle', with: 'libellé de champ 0'
+    fill_in 'champ-1-libelle', with: 'libellé de champ 1'
     blur
     expect(page).to have_content('Formulaire enregistré')
 
-    expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
-    expect(page).to have_selector('#procedure_types_de_champ_attributes_1_libelle')
-    expect(page).to have_selector('#procedure_types_de_champ_attributes_2_libelle')
-    expect(page).to have_selector('#procedure_types_de_champ_attributes_3_libelle')
+    expect(page).to have_selector('#champ-0-libelle')
+    expect(page).to have_selector('#champ-1-libelle')
+    expect(page).to have_selector('#champ-2-libelle')
+    expect(page).to have_selector('#champ-3-libelle')
 
-    within '.draggable-item-2' do
+    within '.type-de-champ[data-index="2"]' do
       click_on 'Supprimer'
     end
 
-    expect(page).not_to have_selector('#procedure_types_de_champ_attributes_3_libelle')
-    fill_in 'procedure_types_de_champ_attributes_2_libelle', with: 'libellé de champ 2'
+    expect(page).not_to have_selector('#champ-3-libelle')
+    fill_in 'champ-2-libelle', with: 'libellé de champ 2'
     blur
     expect(page).to have_content('Formulaire enregistré')
 
@@ -64,44 +64,45 @@ feature 'As an administrateur I can edit types de champ', js: true do
   end
 
   it "Remove champs" do
-    fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
+    fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
     expect(page).to have_content('Formulaire enregistré')
     page.refresh
 
     click_on 'Supprimer'
     expect(page).to have_content('Formulaire enregistré')
-    expect(page).not_to have_content('Supprimer')
+    expect(page).to have_content('Supprimer', count: 1)
     page.refresh
 
     expect(page).to have_content('Supprimer', count: 1)
   end
 
   it "Only add valid champs" do
-    expect(page).to have_selector('#procedure_types_de_champ_attributes_0_description')
-    fill_in 'procedure_types_de_champ_attributes_0_description', with: 'déscription du champ'
+    expect(page).to have_selector('#champ-0-description')
+    fill_in 'champ-0-libelle', with: ''
+    fill_in 'champ-0-description', with: 'déscription du champ'
     blur
     expect(page).not_to have_content('Formulaire enregistré')
 
-    fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
+    fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
     expect(page).to have_content('Formulaire enregistré')
   end
 
   it "Add repetition champ" do
-    expect(page).to have_selector('#procedure_types_de_champ_attributes_0_libelle')
-    select('Bloc répétable', from: 'procedure_types_de_champ_attributes_0_type_champ')
-    fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ'
+    expect(page).to have_selector('#champ-0-libelle')
+    select('Bloc répétable', from: 'champ-0-type_champ')
+    fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
 
     expect(page).to have_content('Formulaire enregistré')
     page.refresh
 
-    within '.flex-grow' do
+    within '.type-de-champ .repetition' do
       click_on 'Ajouter un champ'
     end
 
-    fill_in 'procedure_types_de_champ_attributes_0_types_de_champ_attributes_0_libelle', with: 'libellé de champ 1'
+    fill_in 'repetition-0-champ-0-libelle', with: 'libellé de champ 1'
     blur
 
     expect(page).to have_content('Formulaire enregistré')
@@ -111,16 +112,16 @@ feature 'As an administrateur I can edit types de champ', js: true do
       click_on 'Ajouter un champ'
     end
 
-    select('Bloc répétable', from: 'procedure_types_de_champ_attributes_1_type_champ')
-    fill_in 'procedure_types_de_champ_attributes_1_libelle', with: 'libellé de champ 2'
+    select('Bloc répétable', from: 'champ-0-type_champ')
+    fill_in 'champ-0-libelle', with: 'libellé de champ 2'
     blur
 
     expect(page).to have_content('Supprimer', count: 3)
   end
 
   it "Add carte champ" do
-    select('Carte', from: 'procedure_types_de_champ_attributes_0_type_champ')
-    fill_in 'procedure_types_de_champ_attributes_0_libelle', with: 'libellé de champ carte'
+    select('Carte', from: 'champ-0-type_champ')
+    fill_in 'champ-0-libelle', with: 'libellé de champ carte'
     blur
     check 'Quartiers prioritaires'
     expect(page).to have_content('Formulaire enregistré')
