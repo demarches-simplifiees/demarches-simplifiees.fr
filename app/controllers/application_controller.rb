@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
 
   before_action :staging_authenticate
   before_action :set_active_storage_host
+  before_action :setup_tracking
 
   def staging_authenticate
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
@@ -87,6 +88,15 @@ class ApplicationController < ActionController::Base
 
   def set_active_storage_host
     ActiveStorage::Current.host = request.base_url
+  end
+
+  def setup_tracking
+    gon.matomo = matomo_config
+    gon.sentry = sentry_config
+
+    if administrateur_signed_in?
+      gon.sendinblue = sendinblue_config
+    end
   end
 
   def logged_users
@@ -189,5 +199,51 @@ class ApplicationController < ActionController::Base
     else
       true
     end
+  end
+
+  def sentry_config
+    sentry = Rails.application.secrets.sentry
+
+    {
+      key: sentry[:client_key],
+      enabled: sentry[:enabled],
+      user: {
+        id: current_user&.id,
+        email: current_email
+      }
+    }
+  end
+
+  def matomo_config
+    matomo = Rails.application.secrets.matomo
+
+    {
+      key: matomo[:client_key],
+      enabled: matomo[:enabled]
+    }
+  end
+
+  def sendinblue_config
+    sendinblue = Rails.application.secrets.sendinblue
+
+    {
+      key: sendinblue[:client_key],
+      enabled: sendinblue[:enabled],
+      administrateur: {
+        email: current_administrateur&.email,
+        payload: {
+          DS_SIGN_IN_COUNT: current_administrateur&.sign_in_count,
+          DS_CREATED_AT: current_administrateur&.created_at,
+          DS_ACTIVE: current_administrateur&.active,
+          DS_ID: current_administrateur&.id
+        }
+      }
+    }
+  end
+
+  def current_email
+    current_user&.email ||
+      current_gestionnaire&.email ||
+      current_administrateur&.email
   end
 end

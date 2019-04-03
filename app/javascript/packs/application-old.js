@@ -5,7 +5,6 @@ import * as ActiveStorage from 'activestorage';
 import jQuery from 'jquery';
 
 import '../shared/activestorage/ujs';
-import '../shared/sentry';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';

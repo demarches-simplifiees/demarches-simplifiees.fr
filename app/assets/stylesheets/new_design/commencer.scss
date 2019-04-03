@@ -8,4 +8,10 @@
   .button {
     margin-bottom: 2 * $default-spacer;
   }
+
+  @media (max-width: 450px) {
+    .optional-on-small-screens {
+      display: none;
+    }
+  }
 }
