@@ -162,8 +162,7 @@ TypeDeChamp.propTypes = {
 };
 
 const DragHandle = sortableHandle(() => (
-  <div className="handle button small icon-only">
-    <FontAwesomeIcon icon="arrows-alt-v" size="lg" />
+  <div className="handle small icon-only icon move-handle">
   </div>
 ));
 
