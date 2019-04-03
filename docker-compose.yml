@@ -42,13 +42,11 @@ services:
       - API_ISPF_PASSWORD
       - GITHUB_CLIENT_ID
       - GITHUB_CLIENT_SECRET
-      - CLAMD_TCP_HOST=clamav
+      - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
     volumes:
       - md-data-files:/app/storage
       - md-temp-files:/app/tmp
-      #----- to set the timezone to the same as the host
-      # - /etc/localtime:/etc/localtime:ro
     networks:
       - md-network
 
@@ -65,12 +63,11 @@ services:
       - DB_PASSWORD
       - MAILJET_API_KEY
       - MAILJET_SECRET_KEY
-      - CLAMD_TCP_HOST=clamav
+      - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
     volumes:
       - md-data-files:/app/storage
-      #----- to set the timezone to the same as the host
-      # - /etc/localtime:/etc/localtime:ro
+      - md-systmp:/tmp
     networks:
       - md-network
 
@@ -82,6 +79,7 @@ services:
     volumes:
       - clamav-db:/data
       - clamav-logs:/var/log/clamav
+      - md-systmp:/tmp
     networks:
       - md-network
 volumes:
@@ -96,6 +94,12 @@ volumes:
     driver_opts:
       type: none
       device: $ROOT/tmp
+      o: bind
+  #----- to share file between worker and clamav
+  md-systmp:
+    driver_opts:
+      type: none
+      device: /tmp
       o: bind
   clamav-db:
     driver: local
