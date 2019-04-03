@@ -175,6 +175,7 @@ class ApplicationController < ActionController::Base
     if gestionnaire_signed_in? &&
         sensitive_path &&
         Flipflop.enable_email_login_token? &&
+        !IPService.ip_trusted?(request.headers['X-Forwarded-For']) &&
         !trusted_device?
 
       # return at this location
