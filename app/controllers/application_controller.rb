@@ -118,16 +118,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_raven_context
-    user = logged_user
-
-    context = {
-      ip_address: request.ip,
-      id: user&.id,
-      email: user&.email,
-      roles: logged_user_roles
-    }.compact
-
-    Raven.user_context(context)
+    Raven.user_context(sentry_user)
   end
 
   def append_info_to_payload(payload)
@@ -202,16 +193,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def sentry_user
+    user = logged_user
+    { id: user&.id, role: user&.class&.name || 'Guest' }.compact
+  end
+
   def sentry_config
     sentry = Rails.application.secrets.sentry
 
     {
       key: sentry[:client_key],
       enabled: sentry[:enabled],
-      user: {
-        id: current_user&.id,
-        email: current_email
-      }
+      environment: sentry[:environment],
+      user: sentry_user
     }
   end
 
