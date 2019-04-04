@@ -92,6 +92,18 @@
         margin-left: 0;
       }
     }
+
+    &.vertical {
+      label {
+        display: block;
+        margin-left: 0;
+        margin-bottom: 0;
+      }
+
+      input[type=radio] {
+        margin-bottom: 16px;
+      }
+    }
   }
 
   input[type=text]:not([data-address='true']),
