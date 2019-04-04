@@ -60,6 +60,12 @@ module ApplicationHelper
     # rubocop:enable Rails/OutputSafety
   end
 
+  def show_element(selector)
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{selector}').classList.remove('hidden');")
+    # rubocop:enable Rails/OutputSafety
+  end
+
   def disable_element(selector)
     # rubocop:disable Rails/OutputSafety
     raw("document.querySelector('#{selector}').disabled = true;")
