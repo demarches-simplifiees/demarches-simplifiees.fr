@@ -62,7 +62,7 @@ En local, un utilisateur de test est créé automatiquement, avec les identifian
 ### Programmation des jobs
 
     AutoArchiveProcedureJob.set(cron: "* * * * *").perform_later
-    WeeklyOverviewJob.set(cron: "0 8 * * 0").perform_later
+    WeeklyOverviewJob.set(cron: "0 7 * * 1").perform_later
     AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(procedure_declaratoire_id, Dossier.states.fetch(:en_instruction))
     SendinblueUpdateAdministrateursJob.set(cron: "0 10 * * *").perform_later
     FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
