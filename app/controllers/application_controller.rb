@@ -195,7 +195,7 @@ class ApplicationController < ActionController::Base
 
   def sentry_user
     user = logged_user
-    { id: user&.id, role: user&.class&.name || 'Guest' }.compact
+    { id: user ? "#{user.class.name}##{user.id}" : 'Guest' }
   end
 
   def sentry_config
@@ -205,6 +205,7 @@ class ApplicationController < ActionController::Base
       key: sentry[:client_key],
       enabled: sentry[:enabled],
       environment: sentry[:environment],
+      browser: { modern: browser.modern? },
       user: sentry_user
     }
   end
