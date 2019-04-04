@@ -6,9 +6,7 @@ const { key, enabled, user, environment } = gon.sentry || {};
 if (enabled && key) {
   Sentry.init({ dsn: key, environment });
 
-  if (user.email) {
-    Sentry.configureScope(scope => {
-      scope.setUser(user);
-    });
-  }
+  Sentry.configureScope(scope => {
+    scope.setUser(user);
+  });
 }
