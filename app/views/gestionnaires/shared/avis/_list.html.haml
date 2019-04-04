@@ -29,4 +29,5 @@
                 - else
                   %span.waiting En attente de réponse
               = render partial: 'shared/piece_jointe/pj_link', locals: { object: avis, pj: avis.piece_justificative_file }
-              %p= avis.answer
+              .answer-body
+                = simple_format(avis.answer)
