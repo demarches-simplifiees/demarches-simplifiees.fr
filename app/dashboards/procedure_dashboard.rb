@@ -14,7 +14,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     path: ProcedureLinkField,
     dossiers: Field::HasMany,
     gestionnaires: Field::HasMany,
-    administrateur: Field::BelongsTo,
+    administrateurs: Field::HasMany,
     id: Field::Number.with_options(searchable: true),
     libelle: Field::String,
     description: Field::String,
@@ -35,7 +35,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     received_mail_template: MailTemplateField,
     closed_mail_template: MailTemplateField,
     refused_mail_template: MailTemplateField,
-    without_continuation_mail_template: MailTemplateField
+    without_continuation_mail_template: MailTemplateField,
+    attestation_template: AttestationTemplateField
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -57,7 +58,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :path,
-    :administrateur,
+    :administrateurs,
     :libelle,
     :description,
     :lien_site_web,
@@ -81,7 +82,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :received_mail_template,
     :closed_mail_template,
     :refused_mail_template,
-    :without_continuation_mail_template
+    :without_continuation_mail_template,
+    :attestation_template
   ].freeze
 
   # FORM_ATTRIBUTES

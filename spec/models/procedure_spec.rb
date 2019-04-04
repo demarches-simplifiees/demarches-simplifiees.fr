@@ -344,7 +344,7 @@ describe Procedure do
     let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail) { create(:received_mail) }
     let(:from_library) { false }
-    let(:administrateur) { procedure.administrateur }
+    let(:administrateur) { procedure.administrateurs.first }
 
     before do
       @logo = File.open('spec/fixtures/files/white.png')
@@ -386,7 +386,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure)
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path"])
     end
 
     it 'should not clone piece justificatives but create corresponding champs' do
@@ -419,7 +419,6 @@ describe Procedure do
       end
 
       it 'should have one administrateur' do
-        expect(subject.administrateur).to eq(administrateur)
         expect(subject.administrateurs).to eq([administrateur])
       end
     end
@@ -444,7 +443,6 @@ describe Procedure do
       end
 
       it 'should have one administrateur' do
-        expect(subject.administrateur).to eq(administrateur)
         expect(subject.administrateurs).to eq([administrateur])
       end
     end
@@ -479,13 +477,33 @@ describe Procedure do
         expect(subject.published_at).to be_nil
         expect(subject.test_started_at).to be_nil
         expect(subject.aasm_state).to eq "brouillon"
-        expect(subject.path).to be_nil
+        expect(subject.path).not_to be_nil
       end
     end
 
     it 'should keep types_de_champ ids stable' do
       expect(subject.types_de_champ.first.id).not_to eq(procedure.types_de_champ.first.id)
       expect(subject.types_de_champ.first.stable_id).to eq(procedure.types_de_champ.first.id)
+    end
+
+    it 'should duplicate piece_justificative_template on a type_de_champ' do
+      expect(subject.types_de_champ.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be true
+    end
+
+    context 'with a notice attached' do
+      let(:procedure) { create(:procedure, :with_notice, received_mail: received_mail, service: service) }
+
+      it 'should duplicate notice' do
+        expect(subject.notice.attached?).to be true
+      end
+    end
+
+    context 'with a deliberation attached' do
+      let(:procedure) { create(:procedure, :with_deliberation, received_mail: received_mail, service: service) }
+
+      it 'should duplicate deliberation' do
+        expect(subject.deliberation.attached?).to be true
+      end
     end
   end
 
@@ -495,14 +513,14 @@ describe Procedure do
 
     before do
       Timecop.freeze(now)
-      procedure.publish!("example-path")
+      procedure.publish!(procedure.administrateurs.first, "example-path")
     end
     after { Timecop.return }
 
     it { expect(procedure.archived_at).to eq(nil) }
     it { expect(procedure.published_at).to eq(now) }
     it { expect(Procedure.find_by(path: "example-path")).to eq(procedure) }
-    it { expect(Procedure.find_by(path: "example-path").administrateur).to eq(procedure.administrateur) }
+    it { expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs) }
   end
 
   describe "#brouillon?" do
@@ -638,9 +656,11 @@ describe Procedure do
     end
 
     context "without a path" do
-      let(:procedure) { create(:procedure) }
+      let(:procedure) { create(:procedure, :archived) }
 
-      it { is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11.csv") }
+      it do
+        is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11.csv")
+      end
     end
   end
 
@@ -707,6 +727,48 @@ describe Procedure do
     end
   end
 
+  describe '#usual_verification_time' do
+    let(:procedure) { create(:procedure) }
+
+    def create_dossier(construction_date:, instruction_date:)
+      dossier = create(:dossier, :en_instruction, procedure: procedure)
+      dossier.update!(en_construction_at: construction_date, en_instruction_at: instruction_date)
+    end
+
+    before do
+      delays.each do |delay|
+        create_dossier(construction_date: 1.week.ago - delay, instruction_date: 1.week.ago)
+      end
+    end
+
+    context 'when there are several dossiers in the time frame' do
+      let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
+
+      it 'returns a time representative of the dossier verification delay' do
+        expect(procedure.usual_verification_time).to be_between(3.days, 4.days)
+      end
+    end
+
+    context 'when there are very old dossiers' do
+      let(:delays) { [2.days, 2.days] }
+      let!(:old_dossier) { create_dossier(construction_date: 3.months.ago, instruction_date: 2.months.ago) }
+
+      it 'ignores dossiers older than 1 month' do
+        expect(procedure.usual_verification_time).to be_within(10.seconds).of(2.days)
+      end
+    end
+
+    context 'when there is only one dossier in the time frame' do
+      let(:delays) { [1.day] }
+      it { expect(procedure.usual_verification_time).to be_within(10.seconds).of(1.day) }
+    end
+
+    context 'where there are no dossiers' do
+      let(:delays) { [] }
+      it { expect(procedure.usual_verification_time).to be_nil }
+    end
+  end
+
   describe '#usual_instruction_time' do
     let(:procedure) { create(:procedure) }
 
@@ -716,13 +778,13 @@ describe Procedure do
     end
 
     before do
-      processed_delays.each do |delay|
+      delays.each do |delay|
         create_dossier(instruction_date: 1.week.ago - delay, processed_date: 1.week.ago)
       end
     end
 
     context 'when there are several processed dossiers' do
-      let(:processed_delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
+      let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
 
       it 'returns a time representative of the dossier instruction delay' do
         expect(procedure.usual_instruction_time).to be_between(3.days, 4.days)
@@ -730,7 +792,7 @@ describe Procedure do
     end
 
     context 'when there are very old dossiers' do
-      let(:processed_delays) { [2.days, 2.days] }
+      let(:delays) { [2.days, 2.days] }
       let!(:old_dossier) { create_dossier(instruction_date: 3.months.ago, processed_date: 2.months.ago) }
 
       it 'ignores dossiers older than 1 month' do
@@ -738,14 +800,99 @@ describe Procedure do
       end
     end
 
+    context 'when there is a dossier with bad data' do
+      let(:delays) { [2.days, 2.days] }
+      let!(:bad_dossier) { create_dossier(instruction_date: nil, processed_date: 10.days.ago) }
+
+      it 'ignores bad dossiers' do
+        expect(procedure.usual_instruction_time).to be_within(10.seconds).of(2.days)
+      end
+    end
+
     context 'when there is only one processed dossier' do
-      let(:processed_delays) { [1.day] }
+      let(:delays) { [1.day] }
       it { expect(procedure.usual_instruction_time).to be_within(10.seconds).of(1.day) }
     end
 
     context 'where there is no processed dossier' do
-      let(:processed_delays) { [] }
+      let(:delays) { [] }
       it { expect(procedure.usual_instruction_time).to be_nil }
+    end
+  end
+
+  describe '#move_type_de_champ' do
+    let(:procedure) { create(:procedure) }
+
+    context 'type_de_champ' do
+      let(:type_de_champ) { create(:type_de_champ_text, order_place: 0, procedure: procedure) }
+      let!(:type_de_champ1) { create(:type_de_champ_text, order_place: 1, procedure: procedure) }
+      let!(:type_de_champ2) { create(:type_de_champ_text, order_place: 2, procedure: procedure) }
+
+      it 'move down' do
+        procedure.move_type_de_champ(type_de_champ, 2)
+
+        type_de_champ.reload
+        procedure.reload
+
+        expect(procedure.types_de_champ.index(type_de_champ)).to eq(2)
+        expect(type_de_champ.order_place).to eq(2)
+      end
+
+      context 'repetition' do
+        let!(:type_de_champ_repetition) do
+          create(:type_de_champ_repetition, types_de_champ: [
+            type_de_champ,
+            type_de_champ1,
+            type_de_champ2
+          ], procedure: procedure)
+        end
+
+        it 'move down' do
+          procedure.move_type_de_champ(type_de_champ, 2)
+
+          type_de_champ.reload
+          procedure.reload
+
+          expect(type_de_champ.parent.types_de_champ.index(type_de_champ)).to eq(2)
+          expect(type_de_champ.order_place).to eq(2)
+        end
+
+        context 'private' do
+          let!(:type_de_champ_repetition) do
+            create(:type_de_champ_repetition, types_de_champ: [
+              type_de_champ,
+              type_de_champ1,
+              type_de_champ2
+            ], private: true, procedure: procedure)
+          end
+
+          it 'move down' do
+            procedure.move_type_de_champ(type_de_champ, 2)
+
+            type_de_champ.reload
+            procedure.reload
+
+            expect(type_de_champ.parent.types_de_champ.index(type_de_champ)).to eq(2)
+            expect(type_de_champ.order_place).to eq(2)
+          end
+        end
+      end
+    end
+
+    context 'private' do
+      let(:type_de_champ) { create(:type_de_champ_text, order_place: 0, private: true, procedure: procedure) }
+      let!(:type_de_champ1) { create(:type_de_champ_text, order_place: 1, private: true, procedure: procedure) }
+      let!(:type_de_champ2) { create(:type_de_champ_text, order_place: 2, private: true, procedure: procedure) }
+
+      it 'move down' do
+        procedure.move_type_de_champ(type_de_champ, 2)
+
+        type_de_champ.reload
+        procedure.reload
+
+        expect(procedure.types_de_champ_private.index(type_de_champ)).to eq(2)
+        expect(type_de_champ.order_place).to eq(2)
+      end
     end
   end
 end

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       post 'whitelist', on: :member
       post 'draft', on: :member
       post 'hide', on: :member
+      post 'add_administrateur', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
@@ -263,12 +264,13 @@ Rails.application.routes.draw do
   # User
   #
 
-  scope module: 'new_user' do
+  scope module: 'users' do
     namespace :commencer do
       get '/test/:path', action: 'commencer_test', as: :test
       get '/:path', action: 'commencer'
       get '/:path/sign_in', action: 'sign_in', as: :sign_in
       get '/:path/sign_up', action: 'sign_up', as: :sign_up
+      get '/:path/france_connect', action: 'france_connect', as: :france_connect
     end
 
     resources :dossiers, only: [:index, :show, :new] do
@@ -306,14 +308,16 @@ Rails.application.routes.draw do
   # Gestionnaire
   #
 
-  scope module: 'new_gestionnaire', as: 'gestionnaire' do
+  scope module: 'gestionnaires', as: 'gestionnaire' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
-        get 'remove_filter/:statut/:table/:column' => 'procedures#remove_filter', as: 'remove_filter'
+        get 'remove_filter' => 'procedures#remove_filter', as: 'remove_filter'
         get 'download_dossiers'
+        get 'email_notifications'
+        patch 'update_email_notifications'
 
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
@@ -369,7 +373,11 @@ Rails.application.routes.draw do
         get 'annotations'
       end
 
-      resources :types_de_champ, only: [:create, :update, :destroy]
+      resources :types_de_champ, only: [:create, :update, :destroy] do
+        member do
+          patch :move
+        end
+      end
     end
 
     resources :services, except: [:show] do

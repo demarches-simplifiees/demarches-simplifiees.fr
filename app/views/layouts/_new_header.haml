@@ -1,12 +1,13 @@
-/ We can't use &. because the controller may not implement #nav_bar_profile
-- nav_bar_profile = controller.try(:nav_bar_profile)
+-# We can't use &. because the controller may not implement #nav_bar_profile
+- nav_bar_profile = controller.try(:nav_bar_profile) || :guest
+- dossier = controller.try(:dossier_for_help)
+- procedure = controller.try(:procedure_for_help)
 
 .new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
 
     .flex.align-center
-      = link_to root_path_for_profile(nav_bar_profile), class: "header-logo" do
-        %img{ src: image_url("header/logo-md.svg"), alt: "#{SITE}" }
+      = link_to '', root_path_for_profile(nav_bar_profile), class: "header-logo", title: "Revenir à l’accueil"
 
       - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
         - current_url = request.path_info
@@ -21,12 +22,6 @@
                 - avis_counter = current_gestionnaire.avis.without_answer.count
                 - if avis_counter > 0
                   %span.badge.warning= avis_counter
-          %li
-            .tab-link.contact-link
-              Aide
-              .contact-details
-                Besoin d’aide technique ? Contactez-nous
-                = contact_link("par email")
 
       - if nav_bar_profile == :user
         %ul.header-tabs
@@ -52,42 +47,25 @@
 
       - if gestionnaire_signed_in? || user_signed_in?
         %li
-          %span.dropdown.header-menu-opener
-            %button.button.dropdown-button.header-menu-button
-              = image_tag "icons/account-circle.svg", title: "Mon compte"
-            %ul.header-menu.dropdown-content
-              %li
-                .menu-item{ title: current_email }
-                  = current_email
-              - if administration_signed_in?
-                %li
-                  = link_to manager_root_path, class: "menu-item menu-link" do
-                    = image_tag "icons/super-admin.svg"
-                    Passer en super-admin
-              - if SwitchDeviseProfileService.new(warden).multiple_devise_profile_connect?
-                - if user_signed_in? && nav_bar_profile != :user
-                  %li
-                    = link_to dossiers_path, class: "menu-item menu-link" do
-                      = image_tag "icons/switch-profile.svg"
-                      Passer en usager
-                - if gestionnaire_signed_in? && nav_bar_profile != :gestionnaire
-                  %li
-                    = link_to gestionnaire_procedures_path, class: "menu-item menu-link" do
-                      = image_tag "icons/switch-profile.svg"
-                      Passer en instructeur
-                - if administrateur_signed_in? && nav_bar_profile != :administrateur
-                  %li
-                    = link_to admin_procedures_path, class: "menu-item menu-link" do
-                      = image_tag "icons/switch-profile.svg"
-                      Passer en administrateur
+          = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
 
-              %li
-                = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
-                  = image_tag "icons/sign-out.svg"
-                  Se déconnecter
       - elsif request.path != new_user_session_path
         - if request.path == new_user_registration_path
           %li.header-text
             Vous avez déjà un compte ?
         %li
-          = link_to "Connexion", new_user_session_path, class: "button navbar"
+          = link_to "Connexion", new_user_session_path, class: "button secondary"
+
+      %li
+        .header-help
+          - if dossier.present? && nav_bar_profile == :user
+            = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+
+          - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+            = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
+
+          - elsif nav_bar_profile == :gestionnaire
+            = render partial: 'shared/help/help_dropdown_gestionnaire'
+
+          - else
+            = render partial: 'shared/help/help_button'

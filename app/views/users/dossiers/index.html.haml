@@ -1,0 +1,72 @@
+- content_for(:title, "Dossiers")
+
+- content_for :footer do
+  = render partial: "users/dossiers/index_footer"
+
+.dossiers-headers.sub-header
+  .container
+    - if @dossiers_invites.count == 0
+      %h1.page-title Mes dossiers
+
+    - else
+      %h1.page-title Dossiers
+      %ul.tabs
+        = tab_item('mes dossiers',
+          dossiers_path(current_tab: 'mes-dossiers'),
+          active: @current_tab == 'mes-dossiers')
+
+        = tab_item('dossiers invités',
+          dossiers_path(current_tab: 'dossiers-invites'),
+          active: @current_tab == 'dossiers-invites')
+
+.container
+  - if @dossiers.present?
+    %table.table.dossiers-table.hoverable
+      %thead
+        %tr
+          %th.notification-col
+          %th.number-col Nº dossier
+          %th Démarche
+          %th.status-col Statut
+          %th.updated-at-col Mis à jour
+          %th
+        %tbody
+          - @dossiers.each do |dossier|
+            %tr{ data: { 'dossier-id': dossier.id } }
+              %td.folder-col
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                  %span.icon.folder
+              %td.number-col
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                  = dossier.id
+              %td
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                  = procedure_libelle(dossier.procedure)
+              %td.status-col
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                  = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+              %td.updated-at-col
+                = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                  = dossier.updated_at.strftime("%d/%m/%Y")
+              %td.action-col.action-col
+                = render partial: 'dossier_actions', locals: { dossier: dossier }
+    = paginate(@dossiers)
+
+    - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago
+      #user-satisfaction
+        %h3 Que pensez-vous de la facilité d'utilisation de ce service ?
+        .icons
+          = link_to feedback_path(rating: Feedback.ratings.fetch(:unhappy)), data: { remote: true, method: :post } do
+            %span.icon.frown
+          = link_to feedback_path(rating: Feedback.ratings.fetch(:neutral)), data: { remote: true, method: :post } do
+            %span.icon.meh
+          = link_to feedback_path(rating: Feedback.ratings.fetch(:happy)), data: { remote: true, method: :post } do
+            %span.icon.smile
+
+  - else
+    .blank-tab
+      %h2.empty-text Aucun dossier.
+      %p.empty-text-details
+        Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
+        %br
+        Celui ci doit ressembler à #{SITE}/commencer/xxx.

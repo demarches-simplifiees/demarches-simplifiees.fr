@@ -26,7 +26,7 @@
         %td
           = link_to('Cloner', admin_procedure_clone_path(procedure.id), data: { method: :put }, class: 'btn-sm btn-primary clone-btn')
           - if !procedure.publiee_ou_archivee?
-            = link_to('X', url_for(controller: 'admin/procedures', action: :destroy, id: procedure.id), data: { method: :delete }, class: 'btn-sm btn-danger')
+            = link_to('X', url_for(controller: 'admin/procedures', action: :destroy, id: procedure.id), data: { method: :delete, confirm: "Confirmez-vous la suppression de la démarche ?" }, class: 'btn-sm btn-danger')
 
   = smart_listing.paginate
   = smart_listing.pagination_per_page_links

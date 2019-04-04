@@ -3,10 +3,7 @@
     %li{ class: @draft_class }
       %a{ :href => "#{url_for :admin_procedures_draft}" }
         %h5.text-primary
-          - if Flipflop.publish_draft?
-            En test
-          - else
-            Brouillons
+          En test
 
     %li{ class: @active_class }
       %a{ :href => "#{url_for :admin_procedures}" }

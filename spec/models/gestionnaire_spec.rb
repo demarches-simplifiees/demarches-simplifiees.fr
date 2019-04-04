@@ -14,14 +14,14 @@ describe Gestionnaire, type: :model do
 
   describe '#visible_procedures' do
     let(:procedure_not_assigned)           { create :procedure, administrateur: admin }
-    let(:procedure_without_link)           { create :procedure, administrateur: admin }
-    let(:procedure_with_link)              { create :procedure, :with_path, administrateur: admin }
+    let(:procedure_with_default_path)      { create :procedure, administrateur: admin }
+    let(:procedure_with_custom_path)       { create :procedure, :with_path, administrateur: admin }
     let(:procedure_archived_manually)      { create :procedure, :archived, administrateur: admin }
     let(:procedure_archived_automatically) { create :procedure, :archived_automatically, administrateur: admin }
 
     before do
-      assign(procedure_without_link)
-      assign(procedure_with_link)
+      assign(procedure_with_default_path)
+      assign(procedure_with_custom_path)
       assign(procedure_archived_manually)
       assign(procedure_archived_automatically)
     end
@@ -30,8 +30,8 @@ describe Gestionnaire, type: :model do
 
     it do
       expect(subject).not_to include(procedure_not_assigned)
-      expect(subject).not_to include(procedure_without_link)
-      expect(subject).to include(procedure_with_link)
+      expect(subject).to include(procedure_with_default_path)
+      expect(subject).to include(procedure_with_custom_path)
       expect(subject).to include(procedure_archived_manually)
       expect(subject).to include(procedure_archived_automatically)
     end
@@ -410,6 +410,53 @@ describe Gestionnaire, type: :model do
 
     context 'when there are no token' do
       it { expect(gestionnaire.young_login_token?).to be_falsey }
+    end
+  end
+
+  describe '#email_notification_data' do
+    let(:gestionnaire) { create(:gestionnaire) }
+    let(:procedure_to_assign) { create(:procedure) }
+
+    before do
+      create(:assign_to, gestionnaire: gestionnaire, procedure: procedure_to_assign, email_notifications_enabled: true)
+    end
+
+    context 'when a dossier in construction exists' do
+      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+
+      it do
+        expect(gestionnaire.email_notification_data).to eq([
+          {
+            nb_en_construction: 1,
+            nb_notification: 0,
+            procedure_id: procedure_to_assign.id,
+            procedure_libelle: procedure_to_assign.libelle
+          }
+        ])
+      end
+    end
+
+    context 'when a notification exists' do
+      before do
+        allow(gestionnaire).to receive(:notifications_per_procedure)
+          .with(procedure_to_assign)
+          .and_return([1, 2, 3])
+      end
+
+      it do
+        expect(gestionnaire.email_notification_data).to eq([
+          {
+            nb_en_construction: 0,
+            nb_notification: 3,
+            procedure_id: procedure_to_assign.id,
+            procedure_libelle: procedure_to_assign.libelle
+          }
+        ])
+      end
+    end
+
+    context 'otherwise' do
+      it { expect(gestionnaire.email_notification_data).to eq([]) }
     end
   end
 

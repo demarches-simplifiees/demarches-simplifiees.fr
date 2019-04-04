@@ -43,7 +43,7 @@
         %ul.numbers
           %li.number
             .number-value
-              = number_with_delimiter(Procedure.includes(:administrateur).publiees_ou_archivees.map(&:administrateur).uniq.count, :locale => :fr)
+              = number_with_delimiter(Procedure.includes(:administrateurs).publiees_ou_archivees.flat_map(&:administrateurs).uniq.count, :locale => :fr)
             .number-label<
               administrations
               %br<>
@@ -80,8 +80,8 @@
     .container
       .cta-panel-wrapper
         %div
-          %h1.cta-panel-title Vous êtes une administration ?
-          %p.cta-panel-explanation Vous souhaitez dématerialiser une démarche administrative ?
+          %h1.cta-panel-title Administration : vous voulez dématerialiser ?
+          %p.cta-panel-explanation Proposez à vos usagers de remplir leurs dossiers en ligne
         %div
           = link_to "Découvrez notre outil",
             administration_path,

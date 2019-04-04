@@ -53,20 +53,22 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 
     overmind start
 
-L'application tourne à l'adresse `http://localhost:3000`. 
+L'application tourne à l'adresse `http://localhost:3000`.
 
 ### Utilisateurs de test
 
-En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/tps/blob/dev/db/seeds.rb))
+En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/demarches-simplifiees.fr/blob/dev/db/seeds.rb))
 
 ### Programmation des jobs
 
     AutoArchiveProcedureJob.set(cron: "* * * * *").perform_later
     WeeklyOverviewJob.set(cron: "0 8 * * 0").perform_later
     AutoReceiveDossiersForProcedureJob.set(cron: "* * * * *").perform_later(procedure_declaratoire_id, Dossier.states.fetch(:en_instruction))
+    SendinblueUpdateAdministrateursJob.set(cron: "0 10 * * *").perform_later
     FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
     Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
     WarnExpiringDossiersJob.set(cron: "0 0 1 * *").perform_later
+    GestionnaireEmailNotificationJob.set(cron: "0 10 * * 1,2,3,4,5,6").perform_later
 
 ### Voir les emails envoyés en local
 

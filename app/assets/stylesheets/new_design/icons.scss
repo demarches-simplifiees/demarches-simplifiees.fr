@@ -5,6 +5,12 @@
   background-size: 24px 24px;
   vertical-align: bottom;
 
+  &.small {
+    width: 16px;
+    height: 16px;
+    background-size: 16px 16px;
+  }
+
   &.follow {
     background-image: image-url("icons/follow-folder.svg");
   }
@@ -23,6 +29,10 @@
 
   &.folder {
     background-image: image-url("icons/folder.svg");
+  }
+
+  &.new-folder {
+    background-image: image-url("icons/new-folder.svg");
   }
 
   &.accept {
@@ -94,6 +104,18 @@
     object-fit: contain;
   }
 
+  &.help {
+    background-image: image-url("icons/help.svg");
+  }
+
+  &.phone {
+    background-image: image-url("icons/phone.svg");
+  }
+
+  &.clock {
+    background-image: image-url("icons/clock.svg");
+  }
+
   &.smile {
     background-image: image-url("icons/smile-regular.svg");
   }
@@ -108,5 +130,9 @@
 
   &.delete {
     background-image: image-url("icons/trash.svg");
+  }
+
+  &.move-handle {
+    background-image: image-url("icons/move-handle.svg");
   }
 }

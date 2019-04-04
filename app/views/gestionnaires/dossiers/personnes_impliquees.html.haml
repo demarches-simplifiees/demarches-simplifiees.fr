@@ -1,0 +1,12 @@
+- content_for(:title, "Personnes impliquées · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
+
+= render partial: "header", locals: { dossier: @dossier }
+
+.personnes-impliquees.container
+  = render partial: 'gestionnaires/dossiers/envoyer_dossier_block', locals: { dossier: @dossier, potential_recipients: @potential_recipients }
+
+  = render partial: 'gestionnaires/dossiers/personnes_impliquees_block', locals: { emails_collection: @following_instructeurs_emails, title: "Instructeurs qui suivent le dossier", blank: "Aucun instructeur ne suit ce dossier" }
+
+  = render partial: 'gestionnaires/dossiers/personnes_impliquees_block', locals: { emails_collection: @avis_emails, title: "Personnes à qui un avis a été demandé", blank: "Aucun avis n'a été demandé" }
+
+  = render partial: 'gestionnaires/dossiers/personnes_impliquees_block', locals: { emails_collection: @invites_emails, title: "Personnes invitées à consulter ce dossier", blank: "Aucune personne n'a été invitée à consulter ce dossier" }

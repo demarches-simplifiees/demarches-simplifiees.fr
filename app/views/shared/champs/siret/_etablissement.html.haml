@@ -4,14 +4,8 @@
 
 - when :not_found
   Nous n’avons pas trouvé d’établissement correspondant à ce numéro TAHITI.
-  = link_to('Plus d’informations', "https://doc.projet.gov.pf/display/DEM/Numero+TAHITI", target: '_blank')
+  = link_to('Plus d’informations', "https://doc.projet.gov.pf/display/DEM/Numero+TAHITI", target: '_blank', rel: 'noopener')
 
 - else
   - if siret.present? && siret == etablissement&.siret
     = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: etablissement }
-    = fields_for attribute, etablissement do |form|
-      = render partial: 'shared/dossiers/editable_champs/etablissement', locals: { form: form, signature: etablissement.sign }
-
-  - elsif etablissement.present?
-    = fields_for attribute, etablissement do |form|
-      = form.hidden_field :_destroy

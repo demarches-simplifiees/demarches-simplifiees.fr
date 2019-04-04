@@ -1,4 +1,6 @@
 class Dossier < ApplicationRecord
+  include DossierFilteringConcern
+
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
@@ -168,6 +170,10 @@ class Dossier < ApplicationRecord
     brouillon? || en_construction?
   end
 
+  def messagerie_available?
+    !brouillon? && !archived
+  end
+
   def retention_end_date
     if instruction_commencee?
       en_instruction_at + procedure.duree_conservation_dossiers_dans_ds.months
@@ -262,7 +268,7 @@ class Dossier < ApplicationRecord
     update(hidden_at: deleted_dossier.deleted_at)
 
     if en_construction?
-      administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : [procedure.administrateur.email]
+      administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : procedure.administrateurs.pluck(:email)
       administration_emails.each do |email|
         DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
       end

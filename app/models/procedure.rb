@@ -1,6 +1,8 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
+  self.ignored_columns = [:administrateur_id]
+
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
@@ -12,7 +14,6 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
 
-  belongs_to :administrateur
   belongs_to :parent_procedure, class_name: 'Procedure'
   belongs_to :service
 
@@ -48,7 +49,7 @@ class Procedure < ApplicationRecord
 
   scope :for_api, -> {
     includes(
-      :administrateur,
+      :administrateurs,
       :types_de_champ_private,
       :types_de_champ,
       :types_de_piece_justificative,
@@ -101,12 +102,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_or_reopen!(path)
-    if archivee? && may_reopen?(path)
-      reopen!(path)
-    elsif may_publish?(path)
+  def publish_or_reopen!(administrateur, path)
+    if archivee? && may_reopen?(administrateur, path)
+      reopen!(administrateur, path)
+    elsif may_publish?(administrateur, path)
       reset!
-      publish!(path)
+      publish!(administrateur, path)
     end
   end
 
@@ -122,9 +123,13 @@ class Procedure < ApplicationRecord
     publiee_ou_archivee?
   end
 
+  def accepts_new_dossiers?
+    !archivee?
+  end
+
   # This method is needed for transition. Eventually this will be the same as brouillon?.
   def brouillon_avec_lien?
-    Flipflop.publish_draft? && brouillon? && path.present?
+    brouillon? && path.present?
   end
 
   def publiee_ou_archivee?
@@ -197,7 +202,7 @@ class Procedure < ApplicationRecord
         attestation_template: nil,
         types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
         types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
-      })
+      }, &method(:clone_attachments))
     procedure.path = nil
     procedure.aasm_state = :brouillon
     procedure.test_started_at = nil
@@ -206,8 +211,6 @@ class Procedure < ApplicationRecord
     procedure.logo_secure_token = nil
     procedure.remote_logo_url = self.absolute_logo_url
     procedure.lien_notice = nil
-
-    [:notice, :deliberation].each { |attachment| clone_attachment(procedure, attachment) }
 
     procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
     if is_different_admin || from_library
@@ -220,7 +223,6 @@ class Procedure < ApplicationRecord
       procedure.administrateurs = administrateurs
     end
 
-    procedure.administrateur = admin
     procedure.initiated_mail = initiated_mail&.dup
     procedure.received_mail = received_mail&.dup
     procedure.closed_mail = closed_mail&.dup
@@ -250,6 +252,26 @@ class Procedure < ApplicationRecord
       else
         LocalDownloader.new(logo.path, 'logo').url
       end
+    end
+  end
+
+  def clone_attachments(original, kopy)
+    if original.is_a?(TypeDeChamp)
+      clone_attachment(:piece_justificative_template, original, kopy)
+    elsif original.is_a?(Procedure)
+      clone_attachment(:notice, original, kopy)
+      clone_attachment(:deliberation, original, kopy)
+    end
+  end
+
+  def clone_attachment(attribute, original, kopy)
+    original_attachment = original.send(attribute)
+    if original_attachment.attached?
+      kopy.send(attribute).attach({
+        io: StringIO.new(original_attachment.download),
+        filename: original_attachment.blob.filename,
+        content_type: original_attachment.blob.content_type
+      })
     end
   end
 
@@ -352,7 +374,7 @@ class Procedure < ApplicationRecord
   PATH_NOT_AVAILABLE_BROUILLON = :not_available_brouillon
   PATH_CAN_PUBLISH = [PATH_AVAILABLE, PATH_AVAILABLE_PUBLIEE]
 
-  def path_availability(path)
+  def path_availability(administrateur, path)
     Procedure.path_availability(administrateur, path, id)
   end
 
@@ -400,10 +422,52 @@ class Procedure < ApplicationRecord
     result
   end
 
+  def move_type_de_champ(type_de_champ, new_index)
+    types_de_champ, collection_attribute_name = if type_de_champ.parent&.repetition?
+      if type_de_champ.parent.private?
+        [type_de_champ.parent.types_de_champ, :types_de_champ_private_attributes]
+      else
+        [type_de_champ.parent.types_de_champ, :types_de_champ_attributes]
+      end
+    elsif type_de_champ.private?
+      [self.types_de_champ_private, :types_de_champ_private_attributes]
+    else
+      [self.types_de_champ, :types_de_champ_attributes]
+    end
+
+    attributes = move_type_de_champ_attributes(types_de_champ.to_a, type_de_champ, new_index)
+
+    if type_de_champ.parent&.repetition?
+      attributes = [
+        {
+          id: type_de_champ.parent.id,
+          libelle: type_de_champ.parent.libelle,
+          types_de_champ_attributes: attributes
+        }
+      ]
+    end
+
+    update!(collection_attribute_name => attributes)
+  end
+
   private
 
+  def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
+    old_index = types_de_champ.index(type_de_champ)
+    types_de_champ.insert(new_index, types_de_champ.delete_at(old_index))
+      .map.with_index do |type_de_champ, index|
+        {
+          id: type_de_champ.id,
+          libelle: type_de_champ.libelle,
+          order_place: index
+        }
+      end
+  end
+
   def claim_path_ownership!(path)
-    procedure = Procedure.where(administrateur: administrateur).find_by(path: path)
+    procedure = Procedure.joins(:administrateurs)
+      .where(administrateurs: { id: administrateur_ids })
+      .find_by(path: path)
 
     if procedure&.publiee? && procedure != self
       procedure.archive!
@@ -412,17 +476,21 @@ class Procedure < ApplicationRecord
     update!(path: path)
   end
 
-  def can_publish?(path)
-    path_availability(path).in?(PATH_CAN_PUBLISH)
+  def can_publish?(administrateur, path)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
   end
 
-  def after_publish(path)
+  def can_reopen?(administrateur, path)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
+  end
+
+  def after_publish(administrateur, path)
     update!(published_at: Time.zone.now)
 
     claim_path_ownership!(path)
   end
 
-  def after_reopen(path)
+  def after_reopen(administrateur, path)
     update!(published_at: Time.zone.now, archived_at: nil)
 
     claim_path_ownership!(path)
@@ -447,19 +515,6 @@ class Procedure < ApplicationRecord
     true
   end
 
-  def clone_attachment(cloned_procedure, attachment_symbol)
-    attachment = send(attachment_symbol)
-    if attachment.attached?
-      response = Typhoeus.get(attachment.service_url, timeout: 5)
-      if response.success?
-        cloned_procedure.send(attachment_symbol).attach(
-          io: StringIO.new(response.body),
-          filename: attachment.filename
-        )
-      end
-    end
-  end
-
   def check_juridique
     if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
       errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
@@ -473,7 +528,7 @@ class Procedure < ApplicationRecord
 
   def percentile_time(start_attribute, end_attribute, p)
     times = dossiers
-      .state_termine
+      .where.not(start_attribute => nil, end_attribute => nil)
       .where(end_attribute => 1.month.ago..Time.zone.now)
       .pluck(start_attribute, end_attribute)
       .map { |(start_date, end_date)| end_date - start_date }
@@ -484,10 +539,8 @@ class Procedure < ApplicationRecord
   end
 
   def ensure_path_exists
-    if Flipflop.publish_draft?
-      if self.path.nil?
-        self.path = SecureRandom.uuid
-      end
+    if self.path.nil?
+      self.path = SecureRandom.uuid
     end
   end
 end

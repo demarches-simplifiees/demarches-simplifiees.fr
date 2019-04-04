@@ -7,15 +7,15 @@ class Administrateur < ApplicationRecord
     :recoverable, :rememberable, :trackable, :validatable
 
   has_and_belongs_to_many :gestionnaires
-  has_many :procedures
   has_many :administrateurs_procedures
-  has_many :admin_procedures, through: :administrateurs_procedures, source: :procedure
+  has_many :procedures, through: :administrateurs_procedures
   has_many :services
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
   before_validation -> { sanitize_email(:email) }
 
   scope :inactive, -> { where(active: false) }
+  scope :with_publiees_ou_archivees, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :archivee] }) }
 
   validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
 
@@ -117,7 +117,7 @@ class Administrateur < ApplicationRecord
   end
 
   def owns?(procedure)
-    id == procedure.administrateur_id
+    procedure.administrateurs.include?(self)
   end
 
   def gestionnaire

@@ -23,8 +23,6 @@ class StatsController < ApplicationController
     @dossiers_cumulative = cumulative_hash(dossiers, :en_construction_at)
     @dossiers_in_the_last_4_months = last_four_months_hash(dossiers, :en_construction_at)
 
-    @procedures_count_per_administrateur = procedures_count_per_administrateur(procedures)
-
     if administration_signed_in?
       @dossier_instruction_mean_time = Rails.cache.fetch("dossier_instruction_mean_time", expires_in: 1.day) do
         dossier_instruction_mean_time(dossiers)
@@ -134,7 +132,7 @@ class StatsController < ApplicationController
       Feedback.ratings.fetch(:happy)   => "Satisfaits"
     }
 
-    number_of_weeks = 6
+    number_of_weeks = 12
     totals = Feedback
       .group_by_week(:created_at, last: number_of_weeks, current: false)
       .count
@@ -164,7 +162,9 @@ class StatsController < ApplicationController
   end
 
   def contact_percentage
-    from = Date.new(2018, 1)
+    number_of_months = 13
+
+    from = Date.today.prev_month(number_of_months)
     to = Date.today.prev_month
 
     adapter = Helpscout::UserConversationsAdapter.new(from, to)
@@ -232,15 +232,6 @@ class StatsController < ApplicationController
       .sort_by { |a| a[0] }
       .map { |x, y| { x => (sum += y) } }
       .reduce({}, :merge)
-  end
-
-  def procedures_count_per_administrateur(procedures)
-    count_per_administrateur = procedures.group(:administrateur_id).count.values
-    {
-      'Une démarche' => count_per_administrateur.select { |count| count == 1 }.count,
-      'Entre deux et cinq démarches' => count_per_administrateur.select { |count| count.in?(2..5) }.count,
-      'Plus de cinq démarches' => count_per_administrateur.select { |count| count > 5 }.count
-    }
   end
 
   def mean(collection)

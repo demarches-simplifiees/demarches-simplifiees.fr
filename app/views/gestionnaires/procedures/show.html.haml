@@ -1,0 +1,125 @@
+- content_for(:title, "#{@procedure.libelle}")
+
+#procedure-show
+  .sub-header
+    .container.flex
+
+      .procedure-logo{ style: @procedure.logo.present? ? "background-image: url(#{@procedure.logo.url})" : nil,
+        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
+
+      .procedure-header
+        %h1= procedure_libelle @procedure
+        = link_to 'configurez vos notifications', email_notifications_gestionnaire_procedure_path(@procedure), class: 'notifications'
+
+
+        %ul.tabs
+          = tab_item('à suivre',
+            gestionnaire_procedure_path(@procedure, statut: 'a-suivre'),
+            active: @statut == 'a-suivre',
+            badge: @a_suivre_dossiers.count)
+
+          = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
+            gestionnaire_procedure_path(@procedure, statut: 'suivis'),
+            active: @statut == 'suivis',
+            badge: @followed_dossiers.count,
+            notification: current_gestionnaire.notifications_for_procedure(@procedure).present?)
+
+          = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
+            gestionnaire_procedure_path(@procedure, statut: 'traites'),
+            active: @statut == 'traites',
+            badge: @termines_dossiers.count,
+            notification: current_gestionnaire.notifications_for_procedure(@procedure, :termine).present?)
+
+          = tab_item('tous les dossiers',
+            gestionnaire_procedure_path(@procedure, statut: 'tous'),
+            active: @statut == 'tous',
+            badge: @all_state_dossiers.count)
+
+          = tab_item(t('pluralize.archived', count: @archived_dossiers.count),
+            gestionnaire_procedure_path(@procedure, statut: 'archives'),
+            active: @statut == 'archives',
+            badge: @archived_dossiers.count)
+
+      .procedure-actions
+        = render partial: "download_dossiers", locals: { procedure: @procedure }
+
+  .container
+    - if @dossiers.present? || @current_filters.count > 0
+      %span.dropdown
+        %button.button.dropdown-button
+          Filtrer
+        .dropdown-content.left-aligned.fade-in-down
+          = form_tag add_filter_gestionnaire_procedure_path(@procedure), method: :post, class: 'dropdown-form large' do
+            = label_tag :field,  "Colonne"
+            = select_tag :field, options_for_select(@available_fields_to_filters)
+            %br
+            = label_tag :value, "Valeur"
+            = text_field_tag :value
+            = hidden_field_tag :statut, @statut
+            %br
+            = submit_tag "Ajouter le filtre", class: 'button'
+
+      - @current_filters.group_by { |filter| filter['table'] }.each_with_index do |(table, filters), i|
+        - if i > 0
+          et
+        - filters.each_with_index do |filter, i|
+          - if i > 0
+            ou
+          %span.filter
+            = link_to remove_filter_gestionnaire_procedure_path(@procedure, { statut: @statut, table: filter['table'], column: filter['column'], value: filter['value'] }) do
+              %img.close-icon{ src: image_url("close.svg") }
+            = "#{filter['label'].truncate(50)} : #{filter['value']}"
+      %table.table.dossiers-table.hoverable
+        %thead
+          %tr
+            - if @statut == 'suivis' || @statut == 'tous'
+              = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col" }
+            - else
+              %th.notification-col
+
+            = render partial: "header_field", locals: { field: { "label" => "Nº dossier", "table" => "self", "column" => "id" }, classname: "number-col" }
+
+            - @procedure_presentation.displayed_fields.each do |field|
+              = render partial: "header_field", locals: { field: field, classname: "" }
+
+            = render partial: "header_field", locals: { field: { "label" => "Statut", "table" => "self", "column" => "state" },  classname: "status-col" }
+
+            %th.action-col.follow-col
+              %span.dropdown
+                %button.button.dropdown-button
+                  Personnaliser
+                .dropdown-content.fade-in-down
+                  = form_tag update_displayed_fields_gestionnaire_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
+                    = select_tag :values,
+                      options_for_select(@procedure_presentation.fields_for_select,
+                        selected: @displayed_fields_values),
+                      multiple: true,
+                      class: 'select2-limited'
+                    = submit_tag "Enregistrer", class: 'button'
+
+        %tbody
+          - @dossiers.each do |dossier|
+            %tr
+              %td.folder-col
+                = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
+                  %span.icon.folder
+                    - if current_gestionnaire.notifications_for_procedure(@procedure, :not_archived).include?(dossier.id)
+                      %span.notifications{ 'aria-label': 'notifications' }
+
+              %td.number-col
+                = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
+                  = dossier.id
+
+              - @procedure_presentation.displayed_field_values(dossier).each do |value|
+                %td
+                  / FIXME: value should automatically fallback to `""` instead of nil
+                  / #get_value should call to_s on the champ
+                  = link_to(value || "", gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link')
+
+              %td.status-col
+                = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
+                  = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+              %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
+      = paginate @dossiers
+    - else
+      %h2.empty-text Aucun dossier

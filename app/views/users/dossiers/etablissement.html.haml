@@ -1,0 +1,27 @@
+- content_for(:title, "Informations sur l’établissement")
+
+- content_for :footer do
+  = render partial: "users/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
+
+.etablissement
+  .container
+    %h1 Informations sur l’établissement
+
+    %p
+      Nous avons récupéré auprès de l'ISPF les informations suivantes concernant votre établissement.
+
+    %p
+      Ces informations seront jointes à votre dossier.
+
+    .etablissement-infos.card.featured
+      - etablissement = @dossier.etablissement
+      %h2.card-title= raison_sociale_or_name(etablissement)
+
+      = render partial: 'users/dossiers/etablissement/infos_entreprise', locals: { etablissement: etablissement }
+
+      - if etablissement.association?
+        = render partial: 'users/dossiers/etablissement/infos_association', locals: { etablissement: etablissement }
+
+    .actions
+      = link_to 'Utiliser un autre numéro TAHITI', siret_dossier_path(@dossier), class: 'button'
+      = link_to 'Continuer avec ces informations', brouillon_dossier_path(@dossier), class: 'button primary'

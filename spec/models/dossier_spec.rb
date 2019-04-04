@@ -652,7 +652,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_construction) }
       it 'notifies the procedure administrateur' do
         expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateur.email)
+        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateurs.first.email)
       end
     end
 
@@ -855,6 +855,33 @@ describe Dossier do
         errors = dossier.check_mandatory_champs
         expect(errors).not_to be_empty
         expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+      end
+    end
+
+    context "with mandatory SIRET champ" do
+      let(:type_de_champ) { create(:type_de_champ_siret, mandatory: true) }
+      let(:champ_siret) { create(:champ_siret, type_de_champ: type_de_champ) }
+
+      before do
+        dossier.champs << champ_siret
+      end
+
+      it 'should not have errors' do
+        errors = dossier.check_mandatory_champs
+        expect(errors).to be_empty
+      end
+
+      context "and invalid SIRET" do
+        before do
+          champ_siret.update(value: "1234")
+          dossier.reload
+        end
+
+        it 'should have errors' do
+          errors = dossier.check_mandatory_champs
+          expect(errors).not_to be_empty
+          expect(errors.first).to eq("Le champ #{champ_siret.libelle} doit être rempli.")
+        end
       end
     end
 

@@ -50,10 +50,12 @@ class ProcedurePresentation < ApplicationRecord
 
     fields.concat procedure.types_de_champ
       .where.not(type_champ: explanatory_types_de_champ)
+      .order(:id)
       .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s) }
 
     fields.concat procedure.types_de_champ_private
       .where.not(type_champ: explanatory_types_de_champ)
+      .order(:id)
       .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s) }
 
     fields
@@ -72,9 +74,7 @@ class ProcedurePresentation < ApplicationRecord
 
   def sorted_ids(dossiers, gestionnaire)
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
-    table = sort['table']
-    column = sanitized_column(sort)
-    order = sort['order']
+    table, column, order = sort.values_at('table', 'column', 'order')
 
     case table
     when 'notifications'
@@ -86,80 +86,85 @@ class ProcedurePresentation < ApplicationRecord
         return (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
             dossiers_id_with_notification
       end
-    when 'self'
-      return dossiers
-          .order("#{column} #{order}")
-          .pluck(:id)
     when 'type_de_champ', 'type_de_champ_private'
       return dossiers
           .includes(table == 'type_de_champ' ? :champs : :champs_private)
-          .where("champs.type_de_champ_id = #{sort['column'].to_i}")
+          .where("champs.type_de_champ_id = #{column.to_i}")
           .order("champs.value #{order}")
           .pluck(:id)
-    when 'user', 'individual', 'etablissement'
-      return dossiers
-          .includes(table)
-          .order("#{column} #{order}")
+    when 'self', 'user', 'individual', 'etablissement'
+      return (table == 'self' ? dossiers : dossiers.includes(table))
+          .order("#{self.class.sanitized_column(table, column)} #{order}")
           .pluck(:id)
     end
   end
 
   def filtered_ids(dossiers, statut)
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
-    filters[statut].map do |filter|
-      table = filter['table']
-      column = sanitized_column(filter)
+    filters[statut].group_by { |filter| filter.values_at('table', 'column') } .map do |(table, column), filters|
+      values = filters.pluck('value')
       case table
       when 'self'
-        date = Time.zone.parse(filter['value']).beginning_of_day rescue nil
-        if date.present?
-          dossiers.where("#{column} BETWEEN ? AND ?", date, date + 1.day)
-        else
-          []
-        end
+        dates = values
+          .map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+          .compact
+        dossiers.filter_by_datetimes(column, dates)
       when 'type_de_champ', 'type_de_champ_private'
         relation = table == 'type_de_champ' ? :champs : :champs_private
         dossiers
           .includes(relation)
-          .where("champs.type_de_champ_id = ?", filter['column'].to_i)
-          .where("champs.value ILIKE ?", "%#{filter['value']}%")
+          .where("champs.type_de_champ_id = ?", column.to_i)
+          .filter_ilike(:champ, :value, values)
       when 'etablissement'
-        if filter['column'] == 'entreprise_date_creation'
-          date = filter['value'].to_date rescue nil
+        if column == 'entreprise_date_creation'
+          dates = values
+            .map { |v| v.to_date rescue nil }
+            .compact
           dossiers
             .includes(table)
-            .where("#{column} = ?", date)
+            .where(table.pluralize => { column => dates })
         else
           dossiers
             .includes(table)
-            .where("#{column} ILIKE ?", "%#{filter['value']}%")
+            .filter_ilike(table, column, values)
         end
       when 'user', 'individual'
         dossiers
           .includes(table)
-          .where("#{column} ILIKE ?", "%#{filter['value']}%")
+          .filter_ilike(table, column, values)
       end.pluck(:id)
     end.reduce(:&)
+  end
+
+  def eager_load_displayed_fields(dossiers)
+    relations_to_include = displayed_fields
+      .pluck('table')
+      .reject { |table| table == 'self' }
+      .map do |table|
+        case table
+        when 'type_de_champ'
+          :champs
+        when 'type_de_champ_private'
+          :champs_private
+        else
+          table
+        end
+      end
+      .uniq
+
+    dossiers.includes(relations_to_include)
   end
 
   private
 
   def check_allowed_displayed_fields
     displayed_fields.each do |field|
-      table = field['table']
-      column = field['column']
-      if !valid_column?(table, column)
-        errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
-      end
+      check_allowed_field(:displayed_fields, field)
     end
   end
 
   def check_allowed_sort_column
-    table = sort['table']
-    column = sort['column']
-    if !valid_sort_column?(table, column)
-      errors.add(:sort, "#{table}.#{column} n’est pas une colonne permise")
-    end
+    check_allowed_field(:sort, sort, EXTRA_SORT_COLUMNS)
   end
 
   def check_allowed_sort_order
@@ -172,12 +177,15 @@ class ProcedurePresentation < ApplicationRecord
   def check_allowed_filter_columns
     filters.each do |_, columns|
       columns.each do |column|
-        table = column['table']
-        column = column['column']
-        if !valid_column?(table, column)
-          errors.add(:filters, "#{table}.#{column} n’est pas une colonne permise")
-        end
+        check_allowed_field(:filters, column)
       end
+    end
+  end
+
+  def check_allowed_field(kind, field, extra_columns = {})
+    table, column = field.values_at('table', 'column')
+    if !valid_column?(table, column, extra_columns)
+      errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
     end
   end
 
@@ -208,32 +216,27 @@ class ProcedurePresentation < ApplicationRecord
     }
   end
 
-  def valid_column?(table, column)
-    valid_columns_for_table(table).include?(column)
+  def valid_column?(table, column, extra_columns = {})
+    valid_columns_for_table(table).include?(column) ||
+      extra_columns[table]&.include?(column)
   end
 
   def valid_columns_for_table(table)
     @column_whitelist ||= fields
       .group_by { |field| field['table'] }
-      .map { |table, fields| [table, Set.new(fields.map { |field| field['column'] })] }
+      .map { |table, fields| [table, Set.new(fields.pluck('column'))] }
       .to_h
 
     @column_whitelist[table] || []
   end
 
-  def sanitized_column(field)
-    table = field['table']
-    table = ActiveRecord::Base.connection.quote_column_name((table == 'self' ? 'dossier' : table).pluralize)
-    column = ActiveRecord::Base.connection.quote_column_name(field['column'])
-
-    table + '.' + column
+  def self.sanitized_column(table, column)
+    [(table == 'self' ? 'dossier' : table.to_s).pluralize, column]
+      .map { |name| ActiveRecord::Base.connection.quote_column_name(name) }
+      .join('.')
   end
 
   def dossier_field_service
     @dossier_field_service ||= DossierFieldService.new
-  end
-
-  def valid_sort_column?(table, column)
-    valid_column?(table, column) || EXTRA_SORT_COLUMNS[table]&.include?(column)
   end
 end
