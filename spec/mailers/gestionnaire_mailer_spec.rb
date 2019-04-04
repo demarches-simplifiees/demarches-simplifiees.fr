@@ -35,5 +35,15 @@ RSpec.describe GestionnaireMailer, type: :mailer do
     subject { described_class.last_week_overview(gestionnaire) }
 
     it { expect(subject.body).to include('Votre activité hebdomadaire') }
+
+    context 'when the gestionnaire has no active procedures' do
+      let(:procedure) { nil }
+      let(:last_week_overview) { nil }
+
+      it 'doesn’t send the email' do
+        expect(subject.message).to be_kind_of(ActionMailer::Base::NullMail)
+        expect(subject.body).to be_blank
+      end
+    end
   end
 end
