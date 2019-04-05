@@ -94,6 +94,18 @@ jobs:
       - run:
           name: Run linters
           command: bundle exec rake lint
+  publish:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          tmp=${CIRCLE_BRANCH##*/}
+          TAG=${tmp%%_*}
+          echo $TAG, $tmp
+          docker build -t $IMAGE:$TAG .
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker push $IMAGE:$TAG
 
 workflows:
   version: 2
@@ -106,3 +118,7 @@ workflows:
       - lint:
           requires:
             - build
+      - publish:
+          requires:
+            - lint
+
