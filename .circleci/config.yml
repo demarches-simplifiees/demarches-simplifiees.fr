@@ -101,8 +101,8 @@ jobs:
       - setup_remote_docker
       - run: |
           tmp=${CIRCLE_BRANCH##*/}
-          TAG=${tmp%%_*}
-          echo $TAG, $tmp
+          TAG=cci_${tmp%%_*}
+          # echo $TAG
           docker build -t $IMAGE:$TAG .
           docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker push $IMAGE:$TAG
@@ -121,4 +121,5 @@ workflows:
       - publish:
           requires:
             - lint
+            - test
 
