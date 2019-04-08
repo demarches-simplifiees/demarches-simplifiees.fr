@@ -30,7 +30,7 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 
 - Chrome
 - chromedriver :
-  * Mac : `brew install chromedriver`
+  * Mac : `brew cask install chromedriver`
   * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
 
 ### Création des rôles de la base de données
