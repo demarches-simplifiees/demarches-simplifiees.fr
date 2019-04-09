@@ -53,7 +53,7 @@ module ApplicationHelper
     script = "(function() {";
     script << "var el = document.querySelector('#{selector}');"
     method = (inner ? "el.innerHTML = ''" : "el.parentNode.removeChild(el)")
-    script << "setTimeout(function() { #{method}; }, #{timeout});";
+    script << "if (el) { setTimeout(function() { #{method}; }, #{timeout}); }";
     script << "})();"
     # rubocop:disable Rails/OutputSafety
     raw(script);
