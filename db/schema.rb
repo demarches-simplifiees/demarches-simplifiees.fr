@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_26_160356) do
+ActiveRecord::Schema.define(version: 2019_03_27_102357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 2019_02_26_160356) do
     t.integer "procedure_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean "email_notifications_enabled", default: false, null: false
     t.index ["gestionnaire_id", "procedure_id"], name: "index_assign_tos_on_gestionnaire_id_and_procedure_id", unique: true
     t.index ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id"
     t.index ["procedure_id"], name: "index_assign_tos_on_procedure_id"
@@ -477,6 +478,7 @@ ActiveRecord::Schema.define(version: 2019_02_26_160356) do
     t.boolean "juridique_required", default: true
     t.boolean "durees_conservation_required", default: true
     t.string "path"
+    t.boolean "expects_multiple_submissions", default: false, null: false
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
@@ -536,7 +538,6 @@ ActiveRecord::Schema.define(version: 2019_02_26_160356) do
     t.integer "procedure_id"
     t.text "description"
     t.boolean "mandatory", default: false
-    t.string "type"
     t.boolean "private", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"

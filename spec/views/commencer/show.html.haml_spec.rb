@@ -21,6 +21,8 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
       subject
       expect(rendered).to have_link("Créer un compte #{SITE_NAME}")
       expect(rendered).to have_link('J’ai déjà un compte')
+      # France Connect not available in french Polynesia
+      expect(rendered).not_to have_link('S’identifier avec FranceConnect')
     end
   end
 

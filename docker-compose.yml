@@ -7,8 +7,15 @@ version: '3.3'
 #    - a running Postgress instance
 #    - environment variables defined via .env file
 #
+# This configuration file defines 4 machines
+#   - app: Main rails application (frontend)
+#   - worker: responsible of running jobs like sending mails, virus analysis
+#   - clamav: antivirus used to verify documents attached to forms
+#   - itaiete: Server which synchronizes with ISPF server every night and provides access to numéro Tahiti
+# Variables
 # IMAGE : name of the docker image to run (sipf/mes-demarches)
 # TAG : Tag of the image to run (eg master or devpf or b38)
+# ITAIETE_TAG: tag of the itaieate image to run.
 #
 # APP_HOST: host:port pointing to the application to allows creation of absolute links
 #
@@ -23,7 +30,7 @@ version: '3.3'
 # NETWORK_SLOT: Optional, default to 0, Number between 0 and 255 allowing to run multiple env (dev, staging)
 #
 # MAILJET_API_KEY:
-# MAILJET_SECRET_KEY: MAILJET configuration
+# MAILJET_SECRET_KEY: MAILJET configuration to use to send mails
 #
 #-------------------------------------------------------------
 services:
@@ -40,6 +47,7 @@ services:
       - DB_PASSWORD
       - API_ISPF_USER
       - API_ISPF_PASSWORD
+      - API_ENTREPRISE_PF_URL=http://itaiete-${ENV:-dev}:8080/api/v2
       - GITHUB_CLIENT_ID
       - GITHUB_CLIENT_SECRET
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
@@ -82,6 +90,31 @@ services:
       - md-systmp:/tmp
     networks:
       - md-network
+
+#------------------- ITAIETE --------------------------
+  itaiete:
+    image: registry.gov.pf/revatua/i-taiete2:${TAG_ITAIETE:-md}
+    container_name: itaiete-${ENV:-dev}
+    expose:
+      - 8080
+    environment:
+      - 'SPRING_APPLICATION_JSON={
+          "spring": {
+            "datasource": {
+              "url":"jdbc:postgresql://${DB_HOST}:5432/${DB_ITAIETE}",
+              "username":"${DB_USERNAME}",
+              "password":"${DB_PASSWORD}"
+            }
+          },
+          "server": {
+            "ssl" : {
+              "enabled": "false"
+            }
+          }
+        }'
+    networks:
+      - md-network
+
 volumes:
   md-data-files:
     driver: local

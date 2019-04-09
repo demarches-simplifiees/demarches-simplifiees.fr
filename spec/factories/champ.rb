@@ -175,10 +175,6 @@ FactoryBot.define do
     association :type_de_champ, factory: [:type_de_champ_siret]
     association :etablissement, factory: [:etablissement]
     value { '44011762001530' }
-
-    after(:build) do |champ, _evaluator|
-      champ.etablissement.signature = champ.etablissement.sign
-    end
   end
 
   factory :champ_repetition, class: 'Champs::RepetitionChamp' do

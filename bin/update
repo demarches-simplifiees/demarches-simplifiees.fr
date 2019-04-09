@@ -21,6 +21,9 @@ chdir APP_ROOT do
   puts "\n== Updating database =="
   system! 'bin/rails db:migrate'
 
+  puts "\n== Running after_party tasks =="
+  system! 'bin/rails after_party:run'
+
   puts "\n== Removing old logs =="
   system! 'bin/rails log:clear'
 

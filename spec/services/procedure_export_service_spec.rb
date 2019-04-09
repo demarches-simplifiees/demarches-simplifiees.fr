@@ -137,10 +137,10 @@ describe ProcedureExportService do
           data_end = dossier_end + champs_data.length
           etab_end = data_end + etablissement_data.length
           expect(data.first[0...dossier_end]).to eq(dossier_data)
-          data.first[dossier_end...data_end].map.with_index { |d, i|
-            puts d.to_s + '=' + champs_data[i]&.to_s if (d)
-            expect(d).to eq(champs_data[i])
-          }
+          # data.first[dossier_end...data_end].map.with_index { |d, i|
+          # puts d.to_s + '=' + champs_data[i]&.to_s if (d)
+          # expect(d).to eq(champs_data[i])
+          # }
           expect(data.first[dossier_end...data_end]).to eq(champs_data)
           expect(data.first[data_end...etab_end]).to eq(etablissement_data)
 

@@ -2,82 +2,6 @@ require Rails.root.join("lib", "tasks", "task_helper")
 
 namespace :support do
   desc <<~EOD
-    Give procedure #PROCEDURE_ID a new owner.
-    The new owner can be specified with NEW_OWNER_ID or NEW_OWNER_EMAIL.
-  EOD
-  task transfer_procedure_ownership: :environment do
-    new_owner_id = ENV['NEW_OWNER_ID']
-    new_owner_email = ENV['NEW_OWNER_EMAIL']
-
-    new_owner = nil
-    if new_owner_id.present?
-      rake_puts("Looking for new owner by id\n")
-      new_owner = Administrateur.find(new_owner_id)
-    elsif new_owner_email.present?
-      rake_puts("Looking for new owner by email\n")
-      new_owner = Administrateur.find_by('LOWER(email) = LOWER(?)', new_owner_email)
-    end
-
-    if new_owner.blank?
-      fail "Must specify a new owner"
-    end
-
-    procedure_id = ENV['PROCEDURE_ID']
-    procedure = Procedure.find(procedure_id)
-
-    rake_puts("Changing owner of procedure ##{procedure_id} from ##{procedure.administrateur_id} to ##{new_owner.id}")
-    procedure.administrateurs.delete(procedure.administrateur)
-    procedure.administrateurs << new_owner
-    procedure.update(administrateur: new_owner)
-  end
-
-  desc <<~EOD
-    Give all procedures owned by OLD_OWNER_ID or OLD_OWNER_EMAIL a new owner.
-    The new owner can be specified with NEW_OWNER_ID or NEW_OWNER_EMAIL.
-  EOD
-  task transfer_all_procedures_ownership: :environment do
-    old_owner_id = ENV['OLD_OWNER_ID']
-    old_owner_email = ENV['OLD_OWNER_EMAIL']
-    new_owner_id = ENV['NEW_OWNER_ID']
-    new_owner_email = ENV['NEW_OWNER_EMAIL']
-
-    old_owner = nil
-
-    if old_owner_id.present?
-      rake_puts("Looking for old owner by id\n")
-      old_owner = Administrateur.find(old_owner_id)
-    elsif old_owner_email.present?
-      rake_puts("Looking for old owner by email\n")
-      old_owner = Administrateur.find_by('LOWER(email) = LOWER(?)', old_owner_email)
-    end
-
-    if old_owner.blank?
-      fail "Must specify an old owner"
-    end
-
-    procedures = old_owner.procedures
-
-    new_owner = nil
-    if new_owner_id.present?
-      rake_puts("Looking for new owner by id\n")
-      new_owner = Administrateur.find(new_owner_id)
-    elsif new_owner_email.present?
-      rake_puts("Looking for new owner by email\n")
-      new_owner = Administrateur.find_by('LOWER(email) = LOWER(?)', new_owner_email)
-    end
-
-    if new_owner.blank?
-      fail "Must specify a new owner"
-    end
-
-    procedures.each do |procedure|
-      procedure.administrateurs.delete(procedure.administrateur)
-      procedure.administrateurs << new_owner
-    end
-    procedures.update_all(administrateur_id: new_owner.id)
-  end
-
-  desc <<~EOD
     Delete the user account for a given USER_EMAIL.
     Only works if the user has no dossier where the instruction has started.
   EOD
@@ -135,29 +59,5 @@ namespace :support do
     end
 
     user.update(email: new_email)
-  end
-
-  desc <<~EOD
-    Activate feature publish draft
-  EOD
-  task activate_publish_draft: :environment do
-    start_with = ENV['START_WITH']
-
-    administrateurs = Administrateur.where("email like ?", "#{start_with}%")
-
-    rake_puts("Activating publish draft for #{administrateurs.count} administrateurs...")
-
-    administrateurs.each do |a|
-      rake_puts("Activating publish draft for #{a.email}")
-      a.features["publish_draft"] = true
-      a.save
-
-      a.procedures.brouillon.each do |p|
-        if p.path.nil?
-          p.path = SecureRandom.uuid
-          p.save
-        end
-      end
-    end
   end
 end

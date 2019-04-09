@@ -13,6 +13,9 @@
         Nombre de dossier : #{procedure.dossiers.count}
         %br
           Admin :
-          = link_to "#{procedure.administrateur.email}", "mailto:#{procedure.administrateur.email}"
+          %ul
+            - procedure.administrateurs.each do |administrateur|
+              %li
+                = link_to "#{administrateur.email}", "mailto:#{administrateur.email}"
 - else
   Il n'y a aucune démarche douteuse aujourd'hui

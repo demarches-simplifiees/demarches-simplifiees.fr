@@ -58,8 +58,15 @@ as well as a link to its edit page.
       ) %>
       </dt>
 
-      <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
-          ><%= render_field attribute, page: page %></dd>
+      <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
+        <%= render_field attribute, page: page %>
+        <% if attribute.name == 'administrateurs' %>
+          <%= form_tag(add_administrateur_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
+            <%= email_field_tag(:email, '', placeholder: 'Email', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
+            <button>Ajouter un administrateur</button>
+          <% end %>
+        <% end %>
+      </dd>
     <% end %>
   </dl>
 </section>

@@ -1,0 +1,9 @@
+.dropdown.help-dropdown
+  .button.dropdown-button Aide
+  .dropdown-content.fade-in-down
+    %ul.dropdown-items
+      - if procedure.service.present?
+        = render partial: 'shared/help/dropdown_items/service_item',
+          locals: { service: procedure.service, title: "Une question sur cette démarche ?" }
+
+      = render partial: 'shared/help/dropdown_items/faq_item'

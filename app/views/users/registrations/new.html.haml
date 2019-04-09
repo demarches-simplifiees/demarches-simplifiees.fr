@@ -1,3 +1,5 @@
+= content_for(:page_id, 'auth')
+
 .auth-form
   = devise_error_messages!
   = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
@@ -11,15 +13,4 @@
 
     = f.submit "Créer un compte", class: "button large primary expand"
 
--#
-  .separation.center
-    ou
-
--#
-  .center
-    = image_tag "login-with-fc-hover.svg", style: "display: none"
-    = link_to "", france_connect_particulier_path, class: "login-with-fc"
-
--#
-  .center
-    = link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/", target: "_blank", class: "link"
+  -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }

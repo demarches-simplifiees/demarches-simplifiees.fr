@@ -13,10 +13,7 @@
       .procedure-list-element{ class: @draft_class }
         .badge.counter-draft
           = current_administrateur.procedures.brouillons.count
-        - if Flipflop.publish_draft?
-          En test
-        - else
-          Brouillons
+        En test
         .badge.progress-bar-default
 
     %a#active-procedures{ :href => "#{url_for :admin_procedures}" }
@@ -33,6 +30,7 @@
 
 
   .split-hr-left
+  = render partial: 'layouts/switch_devise_profile_module'
 
 
 #infos-block

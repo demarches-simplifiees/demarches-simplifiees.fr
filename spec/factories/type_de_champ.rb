@@ -95,6 +95,10 @@ FactoryBot.define do
     end
     factory :type_de_champ_piece_justificative do
       type_champ { TypeDeChamp.type_champs.fetch(:piece_justificative) }
+
+      after(:create) do |tc, _evaluator|
+        tc.piece_justificative_template.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+      end
     end
     factory :type_de_champ_siret do
       type_champ { TypeDeChamp.type_champs.fetch(:siret) }

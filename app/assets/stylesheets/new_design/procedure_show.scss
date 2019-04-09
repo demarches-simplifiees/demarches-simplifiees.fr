@@ -6,7 +6,12 @@
   h1 {
     color: $black;
     font-size: 22px;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: 1 * $default-padding;
+  }
+
+  a.notifications {
+    display: inline-block;
+    margin-bottom: 1 * $default-padding;
   }
 
   .dossiers-table {

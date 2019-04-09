@@ -1,0 +1,39 @@
+- avis_statut = (@statut == Gestionnaires::AvisController::A_DONNER_STATUS) ? 'à donner' : 'rendus'
+- content_for(:title, "Avis #{avis_statut}")
+
+.sub-header
+  .container.flex
+    .width-100
+      %h1.tab-title Avis
+      %ul.tabs
+        = tab_item('avis à donner',
+          gestionnaire_avis_index_path(statut: Gestionnaires::AvisController::A_DONNER_STATUS),
+          active: @statut == Gestionnaires::AvisController::A_DONNER_STATUS,
+          badge: @avis_a_donner.count,
+          notification: @avis_a_donner.any?)
+
+        = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
+          gestionnaire_avis_index_path(statut: Gestionnaires::AvisController::DONNES_STATUS),
+          active: @statut == Gestionnaires::AvisController::DONNES_STATUS,
+          badge: @avis_donnes.count)
+
+.container
+  - if @avis.present?
+    %table.table.dossiers-table.hoverable
+      %thead
+        %tr
+          %th.number-col Nº dossier
+          %th Demandeur
+          %th Démarche
+      %tbody
+        - @avis.each do |avis|
+          %tr
+            %td.number-col
+              = link_to(gestionnaire_avis_path(avis), class: 'cell-link') do
+                %span.icon.folder
+                #{avis.dossier.id}
+            %td= link_to(avis.dossier.user.email, gestionnaire_avis_path(avis), class: 'cell-link')
+            %td= link_to(avis.dossier.procedure.libelle, gestionnaire_avis_path(avis), class: 'cell-link')
+    = paginate(@avis)
+  - else
+    %h2.empty-text Aucun avis

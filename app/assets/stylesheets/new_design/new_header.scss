@@ -3,7 +3,8 @@
 @import "constants";
 @import "mixins";
 
-$landing-breakpoint: 1040px;
+$header-landing-breakpoint: 1040px;
+$header-mobile-breakpoint: 550px;
 
 // FIXME: Rename when the header is generalized
 .new-header {
@@ -22,17 +23,31 @@ $landing-breakpoint: 1040px;
 }
 
 .header-logo {
-  display: inline;
-  // margin-right: 4 * $default-spacer;
+  display: inline-block;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 
-  img {
-    width: 100%;
-    height: 34px;
+  // Logo large
+  background-image: image-url("header/logo-md-wide.svg");
+  width: 360px;
+  margin-right: 4 * $default-spacer;
 
-    // @media (max-width: $landing-breakpoint) {
-    // height: 18px;
-    // }
+  // Logo normal
+  @media (max-width: $header-landing-breakpoint) {
+    background-image: image-url("header/logo-md.svg");
+    width: 132px;
+    margin-right: $default-spacer;
   }
+
+  // Logo narrow
+  @media (max-width: $header-mobile-breakpoint) {
+    background-image: image-url("header/logo-md-narrow.svg");
+    width: 32px;
+    margin-right: 0;
+  }
+
 }
 
 .header-tabs {
@@ -133,7 +148,8 @@ $landing-breakpoint: 1040px;
     padding: 9px;
     padding-right: 42px;
     float: right;
-    width: 300px;
+    max-width: 300px;
+    min-width: 90px;
     margin: 0;
   }
 
@@ -166,6 +182,8 @@ $landing-breakpoint: 1040px;
 .header-menu-button {
   border: none;
   padding: 0;
+  line-height: 14px;
+  vertical-align: middle;
 
   &:hover {
     background: none;

@@ -7,13 +7,20 @@ FactoryBot.define do
     direction { "direction DINSIC" }
     cadre_juridique { "un cadre juridique important" }
     published_at { nil }
-    administrateur { create(:administrateur) }
     duree_conservation_dossiers_dans_ds { 3 }
     duree_conservation_dossiers_hors_ds { 6 }
     ask_birthday { false }
 
-    after(:build) do |procedure|
-      procedure.administrateurs = [procedure.administrateur]
+    transient do
+      administrateur {}
+    end
+
+    after(:build) do |procedure, evaluator|
+      if evaluator.administrateur
+        procedure.administrateurs = [evaluator.administrateur]
+      elsif procedure.administrateurs.empty?
+        procedure.administrateurs = [create(:administrateur)]
+      end
     end
 
     factory :procedure_with_dossiers do
@@ -30,7 +37,7 @@ FactoryBot.define do
       after(:build) do |procedure, _evaluator|
         procedure.for_individual = true
         procedure.types_de_champ << create(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true)
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
       end
     end
 
@@ -128,13 +135,13 @@ FactoryBot.define do
 
     trait :published do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
       end
     end
 
     trait :archived do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
         procedure.archive!
       end
     end
@@ -143,14 +150,14 @@ FactoryBot.define do
       # For now the behavior is the same than :archived
       # (it may be different in the future though)
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
         procedure.archive!
       end
     end
 
     trait :hidden do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
         procedure.hide!
       end
     end

@@ -28,6 +28,7 @@ gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded
 gem 'flipflop'
 gem 'fog-openstack'
 gem 'font-awesome-rails'
+gem 'gon'
 gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
@@ -48,6 +49,7 @@ gem 'rack-mini-profiler'
 gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
+gem 'react-rails'
 gem 'rest-client'
 gem 'rgeo-geojson'
 gem 'sanitize-url'
@@ -62,7 +64,7 @@ gem 'spreadsheet_architect'
 gem 'turbolinks' # Turbolinks makes following links in your web application faster
 gem 'typhoeus'
 gem 'warden'
-gem 'webpacker', '>= 4.0.x'
+gem 'webpacker'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 group :test do
@@ -90,6 +92,7 @@ group :development do
   gem 'rubocop', require: false
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
+  gem 'web-console'
   gem 'xray-rails'
 end
 

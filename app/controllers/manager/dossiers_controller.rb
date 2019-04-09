@@ -26,6 +26,7 @@ module Manager
       dossier.attestation&.destroy
       logger.info("Le dossier #{dossier.id} est repassé en instruction par #{current_administration.email}")
       flash[:notice] = "Le dossier #{dossier.id} est repassé en instruction"
+      DossierMailer.notify_revert_to_instruction(dossier).deliver_later
       redirect_to manager_dossier_path(dossier)
     end
 

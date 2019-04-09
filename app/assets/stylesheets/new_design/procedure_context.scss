@@ -2,6 +2,7 @@
 @import "constants";
 
 $procedure-context-breakpoint: $two-columns-breakpoint;
+$procedure-description-line-height: 22px;
 
 .procedure-preview {
   font-size: 24px;
@@ -25,38 +26,82 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
   }
 
   .procedure-title {
-    font-size: 30px;
-    margin: 20px 0 0;
+    font-size: 26px;
+    margin: 0 0 20px 0;
+    text-align: center;
 
     @media (min-width: $procedure-context-breakpoint) {
       margin: 50px 0 32px;
+      font-size: 30px;
+      text-align: left;
     }
   }
 
   .procedure-description {
     font-size: 16px;
 
-    p {
-      margin-bottom: 2 * $default-spacer;
+    p:not(:last-of-type) {
+      // Space the paragraphs by exactly one line height,
+      // so that the text always is truncated in the middle of a line,
+      // regarless of the number of paragraphs.
+      margin-bottom: 3 * $default-spacer;
     }
+  }
 
-    @media (max-width: $procedure-context-breakpoint) {
-      display: none; // TO FIX : make this description available for small devices
+  .read-more-button {
+    display: none;
+  }
+
+  @media (max-width: $procedure-context-breakpoint) {
+    // Truncate description and display the "Read more" UI if the text is too long
+    .procedure-description-body.read-more-collapsed {
+      // Setting the description at 25% of the viewport height:
+      // - displays more text on screens having more vertical space (like small tablets);
+      // - is enough for the action buttons to be visible on the bottom (even on mobiles).
+      max-height: 25vh;
+
+      // If the text exceeds the max-height,
+      // truncate it and displays the "Read more" button.
+      &.read-more-enabled {
+        overflow: hidden;
+        border-bottom: 1px solid $border-grey;
+
+        + .read-more-button {
+          display: block;
+          position: relative;
+          margin-left: auto;
+          margin-right: auto;
+          top: -19px;
+          margin-bottom: -19px;
+        }
+      }
     }
   }
 
   .procedure-logos {
     display: flex;
     justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+
+    > :not(:last-child) {
+      margin-right: $default-padding;
+    }
 
     img {
-      max-height: 50px;
       max-width: 100%;
-      margin: 0 10px;
+      max-height: 50px;
+
+      // Fix Chrome flexbox issue
+      // See https://github.com/philipwalton/flexbugs/issues/225
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      object-fit: contain;
 
       @media (min-width: $procedure-context-breakpoint) {
-        max-height: 130px;
         max-width: 500px;
+        max-height: 130px;
       }
     }
   }

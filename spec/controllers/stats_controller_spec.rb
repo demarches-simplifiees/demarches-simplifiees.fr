@@ -93,42 +93,6 @@ describe StatsController, type: :controller do
     end
   end
 
-  describe "#procedures_count_per_administrateur" do
-    let!(:administrateur_1) { create(:administrateur) }
-    let!(:administrateur_2) { create(:administrateur) }
-    let!(:administrateur_3) { create(:administrateur) }
-    let!(:administrateur_4) { create(:administrateur) }
-    let!(:administrateur_5) { create(:administrateur) }
-
-    before do
-      3.times do
-        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_1)
-      end
-
-      2.times do
-        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_2)
-      end
-
-      8.times do
-        create(:procedure, published_at: Time.zone.now, administrateur: administrateur_3)
-      end
-
-      create(:procedure, published_at: Time.zone.now, administrateur: administrateur_4)
-    end
-
-    let(:association) { Procedure.all }
-
-    subject { StatsController.new.send(:procedures_count_per_administrateur, association) }
-
-    it do
-      is_expected.to eq({
-        'Une démarche' => 1,
-        'Entre deux et cinq démarches' => 2,
-        'Plus de cinq démarches' => 1
-      })
-    end
-  end
-
   describe "#dossier_instruction_mean_time" do
     # Month-2: mean 3 days
     #  procedure_1: mean 2 days
@@ -264,20 +228,17 @@ describe StatsController, type: :controller do
 
     it 'returns weekly ratios between a given feedback and all feedback' do
       happy_data = stats.find { |g| g[:name] == 'Satisfaits' }[:data]
-      expect(happy_data.values[0]).to eq 0
-      expect(happy_data.values[1]).to eq 0
-      expect(happy_data.values[2]).to eq 0
-      expect(happy_data.values[3]).to eq 25.0
-      expect(happy_data.values[4]).to eq 50.0
-      expect(happy_data.values[5]).to eq 75.0
+
+      expect(happy_data.values[-4]).to eq 0
+      expect(happy_data.values[-3]).to eq 25.0
+      expect(happy_data.values[-2]).to eq 50.0
+      expect(happy_data.values[-1]).to eq 75.0
 
       unhappy_data = stats.find { |g| g[:name] == 'Mécontents' }[:data]
-      expect(unhappy_data.values[0]).to eq 0
-      expect(unhappy_data.values[1]).to eq 0
-      expect(unhappy_data.values[2]).to eq 0
-      expect(unhappy_data.values[3]).to eq 75.0
-      expect(unhappy_data.values[4]).to eq 50.0
-      expect(unhappy_data.values[5]).to eq 25.0
+      expect(unhappy_data.values[-4]).to eq 0
+      expect(unhappy_data.values[-3]).to eq 75.0
+      expect(unhappy_data.values[-2]).to eq 50.0
+      expect(unhappy_data.values[-1]).to eq 25.0
     end
 
     it 'excludes values still in the current week' do
@@ -297,95 +258,5 @@ describe StatsController, type: :controller do
     subject { StatsController.new.send(:avis_usage) }
 
     it { expect(subject).to match([[3.weeks.ago.to_i, 0], [2.weeks.ago.to_i, 0], [1.week.ago.to_i, 33.33]]) }
-  end
-
-  describe "#avis_average_answer_time" do
-    before do
-      Timecop.freeze(Time.zone.local(2016, 10, 2))
-
-      # 1 week ago
-      create(:avis, answer: "voila ma réponse", created_at: 1.week.ago + 1.day, updated_at: 1.week.ago + 2.days) # 1 day
-      create(:avis, created_at: 1.week.ago + 2.days)
-
-      # 2 weeks ago
-      create(:avis, answer: "voila ma réponse", created_at: 2.weeks.ago + 1.day, updated_at: 2.weeks.ago + 2.days) # 1 day
-      create(:avis, answer: "voila ma réponse2", created_at: 2.weeks.ago + 3.days, updated_at: 1.week.ago + 6.days) # 10 days
-      create(:avis, answer: "voila ma réponse2", created_at: 2.weeks.ago + 2.days, updated_at: 1.week.ago + 6.days) # 11 days
-      create(:avis, created_at: 2.weeks.ago + 1.day, updated_at: 2.weeks.ago + 2.days)
-
-      # 3 weeks ago
-      create(:avis, answer: "voila ma réponse2", created_at: 3.weeks.ago + 1.day, updated_at: 3.weeks.ago + 2.days) # 1 day
-      create(:avis, answer: "voila ma réponse2", created_at: 3.weeks.ago + 1.day, updated_at: 1.week.ago + 5.days) # 18 day
-    end
-
-    after { Timecop.return }
-
-    subject { StatsController.new.send(:avis_average_answer_time) }
-
-    it { expect(subject.count).to eq(3) }
-    it { is_expected.to include [1.week.ago.to_i, 1.0] }
-    it { is_expected.to include [2.weeks.ago.to_i, 7.33] }
-    it { is_expected.to include [3.weeks.ago.to_i, 9.5] }
-  end
-
-  describe '#avis_answer_percentages' do
-    let!(:avis) { create(:avis, created_at: 2.days.ago) }
-    let!(:avis2) { create(:avis, answer: 'answer', created_at: 2.days.ago) }
-    let!(:avis3) { create(:avis, answer: 'answer', created_at: 2.days.ago) }
-
-    subject { StatsController.new.send(:avis_answer_percentages) }
-
-    before { Timecop.freeze(Time.zone.now) }
-    after { Timecop.return }
-
-    it { is_expected.to match [[3.weeks.ago.to_i, 0], [2.weeks.ago.to_i, 0], [1.week.ago.to_i, 66.67]] }
-  end
-
-  describe '#motivation_usage_dossier' do
-    let!(:dossier) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation") }
-    let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
-    let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
-
-    before { Timecop.freeze(Time.zone.now) }
-    after { Timecop.return }
-
-    subject { StatsController.new.send(:motivation_usage_dossier) }
-
-    it { expect(subject).to match([[I18n.l(3.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
-  end
-
-  describe '#motivation_usage_procedure' do
-    let!(:dossier) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation") }
-    let!(:dossier1) { create(:dossier, processed_at: 1.week.ago, motivation: "Motivation", procedure: dossier.procedure) }
-    let!(:dossier2) { create(:dossier, processed_at: 1.week.ago) }
-    let!(:dossier3) { create(:dossier, processed_at: 1.week.ago) }
-
-    before { Timecop.freeze(Time.zone.now) }
-    after { Timecop.return }
-
-    subject { StatsController.new.send(:motivation_usage_procedure) }
-
-    it { expect(subject).to match([[I18n.l(3.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(2.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0], [I18n.l(1.week.ago.end_of_week, format: '%d/%m/%Y'), 33.33]]) }
-  end
-
-  describe "#cloned_from_library_procedures_ratio" do
-    let!(:procedure1) { create(:procedure, created_at: 3.weeks.ago) }
-    let!(:procedure2) { create(:procedure, created_at: 2.weeks.ago) }
-    let!(:procedure3) { create(:procedure, created_at: 2.weeks.ago, cloned_from_library: true) }
-
-    before { Timecop.freeze(Time.zone.now) }
-    after { Timecop.return }
-
-    subject { StatsController.new.send(:cloned_from_library_procedures_ratio) }
-
-    let(:result) do
-      [
-        [I18n.l(3.weeks.ago.end_of_week, format: '%d/%m/%Y'), 0],
-        [I18n.l(2.weeks.ago.end_of_week, format: '%d/%m/%Y'), 50.0],
-        [I18n.l(1.week.ago.end_of_week,  format: '%d/%m/%Y'), 0]
-      ]
-    end
-
-    it { expect(subject).to match(result) }
   end
 end

@@ -1,0 +1,10 @@
+- content_for(:title, "Modification du brouillon nº #{@dossier.id} (#{@dossier.procedure.libelle})")
+
+- content_for :footer do
+  = render partial: "users/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
+
+.dossier-header.sub-header
+  .container
+    = render partial: "shared/dossiers/header", locals: { dossier: @dossier, apercu: false }
+
+= render partial: "shared/dossiers/edit", locals: { dossier: @dossier, apercu: false }

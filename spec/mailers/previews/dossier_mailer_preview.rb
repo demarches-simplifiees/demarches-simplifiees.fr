@@ -16,6 +16,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_deletion_to_administration(deleted_dossier, "admin@ds.fr")
   end
 
+  def notify_revert_to_instruction
+    DossierMailer.notify_revert_to_instruction(dossier)
+  end
+
   private
 
   def deleted_dossier

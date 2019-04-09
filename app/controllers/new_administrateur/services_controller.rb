@@ -81,11 +81,17 @@ module NewAdministrateur
     end
 
     def services
-      current_administrateur.services
+      service_ids = current_administrateur.service_ids
+      service_ids << maybe_procedure&.service_id
+      Service.where(id: service_ids.compact.uniq)
     end
 
     def procedure_params
       params.require(:procedure).permit(:id, :service_id)
+    end
+
+    def maybe_procedure
+      current_administrateur.procedures.find_by(id: params[:procedure_id])
     end
 
     def procedure

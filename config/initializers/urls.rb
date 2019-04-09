@@ -6,6 +6,7 @@ API_GEO_URL = ENV.fetch("API_GEO_URL", "https://geo.api.gouv.fr")
 API_GEO_SANDBOX_URL = ENV.fetch("API_GEO_SANDBOX_URL", "https://sandbox.geo.api.gouv.fr")
 HELPSCOUT_API_URL = ENV.fetch("HELPSCOUT_API_URL", "https://api.helpscout.net/v2")
 PIPEDRIVE_API_URL = ENV.fetch("PIPEDRIVE_API_URL", "https://api.pipedrive.com/v1")
+SENDINBLUE_API_URL = ENV.fetch("SENDINBLUE_API_URL", "https://in-automate.sendinblue.com/api/v2")
 
 API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://ppr.api.i-taiete2.gov.pf/api/v2")
 
@@ -23,6 +24,6 @@ CGU_URL = [DOC_URL, "CGU"].join("/")
 MENTIONS_LEGALES_URL = [CGU_URL, "mentions-legales"].join("#")
 API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
-FAQ_URL = [DOC_URL, "pages/viewpage.action?pageId=19764339"].join("/")
+FAQ_URL = [DOC_URL, "Questions+fréquentes"].join("/")
 STATUS_PAGE_URL = "https://status.demarches-simplifiees.fr"
 MATOMO_IFRAME_URL = "https://stats.data.gouv.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli"

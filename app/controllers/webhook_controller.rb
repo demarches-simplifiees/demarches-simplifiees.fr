@@ -2,7 +2,7 @@ class WebhookController < ActionController::Base
   before_action :verify_signature!, only: :helpscout
 
   def helpscout
-    email = params[:customer][:email]
+    email = params[:customer][:email].downcase
     user = User.find_by(email: email)
     gestionnaire = Gestionnaire.find_by(email: email)
     administrateur = Administrateur.find_by(email: email)
@@ -33,7 +33,7 @@ class WebhookController < ActionController::Base
   private
 
   def link_to_manager(model, url)
-    "<a target='_blank' href='#{url}'>#{model.model_name.human}##{model.id}</a>"
+    "<a target='_blank' href='#{url}' rel='noopener'>#{model.model_name.human}##{model.id}</a>"
   end
 
   def verify_signature!

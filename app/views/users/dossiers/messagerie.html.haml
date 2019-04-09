@@ -1,0 +1,13 @@
+- content_for(:title, "Messagerie · Dossier nº #{@dossier.id} (#{@dossier.procedure.libelle})")
+
+- content_for :footer do
+  = render partial: "users/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
+
+#dossier-show
+  = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
+
+  .container
+    %p.messagerie-explanation
+      La messagerie vous permet de contacter l’instructeur en charge de votre dossier.
+
+  = render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, connected_user: current_user, messagerie_seen_at: nil, new_commentaire: @commentaire, form_url: commentaire_dossier_path(@dossier) }

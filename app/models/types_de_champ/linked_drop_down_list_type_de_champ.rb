@@ -23,25 +23,25 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
 
   def tags_for_template
     tags = super
-    l = libelle
+    tdc = @type_de_champ
     tags.push(
       {
-        libelle: "#{l}/primaire",
+        libelle: "#{libelle}/primaire",
         description: "#{description} (menu primaire)",
         lambda: -> (champs) {
           champs
-            .detect { |champ| champ.libelle == l }
+            .detect { |champ| champ.type_de_champ == tdc }
             &.primary_value
         }
       }
     )
     tags.push(
       {
-        libelle: "#{l}/secondaire",
+        libelle: "#{libelle}/secondaire",
         description: "#{description} (menu secondaire)",
         lambda: -> (champs) {
           champs
-            .detect { |champ| champ.libelle == l }
+            .detect { |champ| champ.type_de_champ == tdc }
             &.secondary_value
         }
       }

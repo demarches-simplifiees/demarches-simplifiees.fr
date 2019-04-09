@@ -43,12 +43,12 @@
   = f.label :horaires do
     Horaires
     %span.mandatory *
-  = f.text_area :horaires, placeholder: "Du lundi au vendredi de 9 h 30 à 17 h 30\nLe samedi de 9 h 30 à 12 h", required: true
+  = f.text_area :horaires, placeholder: "Du lundi au vendredi de 9 h 30 à 17 h 30. Le samedi de 9 h 30 à 12 h.", required: true
 
   = f.label :adresse do
     Adresse
     %span.mandatory *
-  = f.text_area :adresse, placeholder: "20 avenue de Ségur\n75007 Paris", required: true
+  = f.text_area :adresse, placeholder: "20 avenue de Ségur, 75007 Paris", required: true
 
   - if procedure_id.present?
     = hidden_field_tag :procedure_id, procedure_id

@@ -5,8 +5,10 @@ import * as ActiveStorage from 'activestorage';
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 
+import ReactUJS from '../shared/react-ujs';
+import reactComponents from '../shared/react-components';
+
 import '../shared/activestorage/ujs';
-import '../shared/sentry';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';
@@ -14,9 +16,9 @@ import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
 
-import '../new_design/carto';
 import '../new_design/dropdown';
 import '../new_design/form-validation';
+import '../new_design/procedure-context';
 import '../new_design/select2';
 import '../new_design/spinner';
 import '../new_design/support';
@@ -24,8 +26,6 @@ import '../new_design/support';
 import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/repetition';
-
-import '../new_design/administrateur/champs-editor';
 
 import { toggleCondidentielExplanation } from '../new_design/avis';
 import { scrollMessagerie } from '../new_design/messagerie';
@@ -49,6 +49,9 @@ Chartkick.addAdapter(Highcharts);
 Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
+
+const loader = new ReactUJS(reactComponents);
+loader.start();
 
 // Expose globals
 window.DS = window.DS || DS;
