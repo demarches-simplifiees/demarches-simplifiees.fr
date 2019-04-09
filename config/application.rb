@@ -31,7 +31,8 @@ module TPS
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.precompile += ['.woff']
 
-    URL = 'http://' + ENV.fetch('APP_HOST', 'localhost:3000')
+    protocol = Rails.env.production? ? 'https' : 'http'
+    URL = protocol + '://' + ENV.fetch('APP_HOST', 'localhost:3000')
 
     config.active_job.queue_adapter = :delayed_job
 
