@@ -355,7 +355,7 @@ class Procedure < ApplicationRecord
   def closed_mail_template_attestation_inconsistency_state
     # As an optimization, don’t check the predefined templates (they are presumed correct)
     if closed_mail.present?
-      tag_present = closed_mail.body.include?("--lien attestation--")
+      tag_present = closed_mail.body.to_s.include?("--lien attestation--")
       if attestation_template&.activated? && !tag_present
         :missing_tag
       elsif !attestation_template&.activated? && tag_present
