@@ -3,3 +3,5 @@
 // required by the browsers we support will be included.
 import '@babel/polyfill';
 import 'dom4';
+import './polyfills/insertAdjacentElement';
+import './polyfills/dataset';
