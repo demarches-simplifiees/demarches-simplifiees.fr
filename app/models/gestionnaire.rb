@@ -31,7 +31,18 @@ class Gestionnaire < ApplicationRecord
       return
     end
 
-    followed_dossiers << dossier
+    begin
+      followed_dossiers << dossier
+    rescue ActiveRecord::RecordNotUnique
+      # Altough we checked before the insertion that the gestionnaire wasn't
+      # already following this dossier, this was done at the Rails level:
+      # at the database level, the dossier was already followed, and a
+      # "invalid constraint" exception is raised.
+      #
+      # We can ignore this safely, as it means the goal is already reached:
+      # the gestionnaire follows the dossier.
+      return
+    end
   end
 
   def unfollow(dossier)
