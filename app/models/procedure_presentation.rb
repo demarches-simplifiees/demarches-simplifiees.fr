@@ -18,7 +18,7 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('Créé le', 'self', 'created_at'),
       field_hash('En construction le', 'self', 'en_construction_at'),
       field_hash('Mis à jour le', 'self', 'updated_at'),
-      field_hash('Demandeur', 'user', 'email')
+      field_hash('Demandeur', 'user', 'email'),
     ]
 
     if procedure.for_individual
@@ -114,7 +114,7 @@ class ProcedurePresentation < ApplicationRecord
         dossiers
           .includes(relation)
           .where("champs.type_de_champ_id = ?", column.to_i)
-          .filter_ilike(:champ, :value, values)
+          .filter_ilike(relation, :value, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values
@@ -230,8 +230,14 @@ class ProcedurePresentation < ApplicationRecord
     @column_whitelist[table] || []
   end
 
-  def self.sanitized_column(table, column)
-    [(table == 'self' ? 'dossier' : table.to_s).pluralize, column]
+  def self.sanitized_column(association, column)
+    table = if association == 'self'
+      Dossier.table_name
+    else
+      Dossier.reflect_on_association(association).klass.table_name
+    end
+
+    [table, column]
       .map { |name| ActiveRecord::Base.connection.quote_column_name(name) }
       .join('.')
   end
