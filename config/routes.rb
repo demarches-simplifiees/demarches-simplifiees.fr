@@ -173,7 +173,7 @@ Rails.application.routes.draw do
         delete :delete_notice
       end
 
-      resources :mail_templates, only: [:index, :edit, :update]
+      resources :mail_templates, only: [:index]
 
       put 'archive' => 'procedures#archive', as: :archive
       put 'publish' => 'procedures#publish', as: :publish

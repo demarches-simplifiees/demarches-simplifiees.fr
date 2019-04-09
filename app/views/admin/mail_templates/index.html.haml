@@ -11,4 +11,4 @@
           %td
             = mail_template.class.const_get(:DISPLAYED_NAME)
           %td.text-right
-            = link_to "Personnaliser l'e-mail", edit_admin_procedure_mail_template_path(@procedure, mail_template.class.const_get(:SLUG))
+            = link_to "Personnaliser l'e-mail", edit_procedure_mail_template_path(@procedure, mail_template.class.const_get(:SLUG))
