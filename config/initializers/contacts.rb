@@ -1,7 +1,7 @@
 if !defined?(CONTACT_EMAIL)
-  CONTACT_EMAIL = "clautier@idt.pf" # "contact@#{SITE}"
-  EQUIPE_EMAIL = "equipe@#{SITE}"
-  TECH_EMAIL = "tech@#{SITE}"
+  CONTACT_EMAIL = "mes-demarches@modernisation.gov.pf" # "mes-demarches@modernisation.gov.pf"
+  EQUIPE_EMAIL = "rgpd-mes-demarches@modernisation.gov.pf"
+  TECH_EMAIL = CONTACT_EMAIL
 
   CONTACT_PHONE = "40 47 24 75"
 
