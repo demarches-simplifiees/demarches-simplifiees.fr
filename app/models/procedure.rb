@@ -410,6 +410,18 @@ class Procedure < ApplicationRecord
     result
   end
 
+  def types_de_champ_and_childs
+    all_types_de_champ = []
+    types_de_champ.each do |tdc|
+      all_types_de_champ << tdc
+      if tdc.repetition?
+        order_types_de_champ = tdc.types_de_champ.sort_by { |h| h[:stable_id] }
+        order_types_de_champ.map { |tdc_item| all_types_de_champ << tdc_item }
+      end
+    end
+    all_types_de_champ
+  end
+
   def move_type_de_champ(type_de_champ, new_index)
     types_de_champ, collection_attribute_name = if type_de_champ.parent&.repetition?
       if type_de_champ.parent.private?

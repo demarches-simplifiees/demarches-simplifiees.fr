@@ -358,6 +358,15 @@ class Dossier < ApplicationRecord
       end
   end
 
+  def champs_and_childs
+    all_champ = []
+    champs.each do |c|
+      all_champ << c
+      c.champs.map { |c_item| all_champ << c_item } if c.type_de_champ.repetition?
+    end
+    all_champ
+  end
+
   private
 
   def log_dossier_operation(gestionnaire, operation, automatic_operation: false)

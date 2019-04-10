@@ -165,7 +165,7 @@ module TagsSubstitutionConcern
   end
 
   def champ_public_tags
-    types_de_champ_tags(procedure.types_de_champ, Dossier::SOUMIS)
+    types_de_champ_tags(procedure.types_de_champ_and_childs, Dossier::SOUMIS)
   end
 
   def champ_private_tags
@@ -186,7 +186,7 @@ module TagsSubstitutionConcern
     end
 
     tags_and_datas = [
-      [champ_public_tags, dossier.champs],
+      [champ_public_tags, dossier.champs_and_childs],
       [champ_private_tags, dossier.champs_private],
       [dossier_tags, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],
