@@ -22,7 +22,7 @@
 
   %li
     Date de création :
-    = etablissement.entreprise.date_creation&.strftime('%d/%m/%Y')
+    = try_format_date(etablissement.entreprise.date_creation)
 
   %li
     Effectif organisation :
