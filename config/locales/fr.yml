@@ -249,7 +249,7 @@ fr:
       - vendredi
       - samedi
     formats:
-      default: "%d/%m/%Y"
+      default: "%d %B %Y"
       short: "%e %b"
       long: "%e %B %Y"
   datetime:
@@ -290,6 +290,9 @@ fr:
       x_seconds:
         one: 1 seconde
         other: "%{count} secondes"
+  time:
+    formats:
+      default: "%d %B %Y %R"
   pluralize:
     case:
       zero: dossier
