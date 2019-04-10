@@ -112,4 +112,20 @@ module ApplicationHelper
       root_path
     end
   end
+
+  def try_format_date(date)
+    begin
+      date.is_a?(String) ? l(Date.parse(date), format: '%d %B %Y') : l(date, format: '%d %B %Y')
+    rescue
+      date
+    end
+  end
+
+  def try_format_datetime(datetime)
+    begin
+      datetime.is_a?(String) ? l(Time.zone.parse(datetime), format: '%d %B %Y %R') : l(datetime, format: '%d %B %Y %R')
+    rescue
+      datetime
+    end
+  end
 end
