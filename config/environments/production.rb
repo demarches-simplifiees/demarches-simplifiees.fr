@@ -45,7 +45,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = false
+  config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -83,11 +83,11 @@ Rails.application.configure do
 
   # Configure default root URL for generating URLs to routes
   config.action_mailer.default_url_options = {
-    protocol: :http,
+    protocol: :https,
     host: ENV['APP_HOST']
   }
   # Configure default root URL for email assets
-  config.action_mailer.asset_host = "http://" + ENV['APP_HOST']
+  config.action_mailer.asset_host = "https://" + ENV['APP_HOST']
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -105,7 +105,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   Rails.application.routes.default_url_options = {
-    protocol: :http,
+    protocol: :https,
     host: ENV['APP_HOST']
   }
 
