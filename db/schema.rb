@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_102357) do
+ActiveRecord::Schema.define(version: 2019_03_27_102360) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_102357) do
     t.datetime "updated_at", null: false
     t.boolean "automatic_operation", default: false, null: false
     t.bigint "administration_id"
+    t.jsonb "payload"
     t.index ["administration_id"], name: "index_dossier_operation_logs_on_administration_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["gestionnaire_id"], name: "index_dossier_operation_logs_on_gestionnaire_id"

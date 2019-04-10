@@ -31,11 +31,13 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
     context "with some dossiers" do
       context "en_construction" do
         let(:state) { Dossier.states.fetch(:en_instruction) }
+        let(:last_operation) { nouveau_dossier1.dossier_operation_logs.last }
 
         it {
           expect(nouveau_dossier1.en_instruction?).to be true
           expect(nouveau_dossier1.en_instruction_at).to eq(date)
-          expect(nouveau_dossier1.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'passer_en_instruction', true]])
+          expect(last_operation.operation).to eq('passer_en_instruction')
+          expect(last_operation.automatic_operation?).to be_truthy
 
           expect(nouveau_dossier2.en_instruction?).to be true
           expect(nouveau_dossier2.en_instruction_at).to eq(date)
@@ -50,13 +52,15 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
 
       context "accepte" do
         let(:state) { Dossier.states.fetch(:accepte) }
+        let(:last_operation) { nouveau_dossier1.dossier_operation_logs.last }
 
         it {
           expect(nouveau_dossier1.accepte?).to be true
           expect(nouveau_dossier1.en_instruction_at).to eq(date)
           expect(nouveau_dossier1.processed_at).to eq(date)
           expect(nouveau_dossier1.attestation).to be_present
-          expect(nouveau_dossier1.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'accepter', true]])
+          expect(last_operation.operation).to eq('accepter')
+          expect(last_operation.automatic_operation?).to be_truthy
 
           expect(nouveau_dossier2.accepte?).to be true
           expect(nouveau_dossier2.en_instruction_at).to eq(date)
