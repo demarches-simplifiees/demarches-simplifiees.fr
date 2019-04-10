@@ -113,4 +113,10 @@ describe MailTemplateConcern do
       expect(initiated_mail.body_for_dossier(dossier2)).to eq("n #{dossier2.id}")
     end
   end
+
+  describe '#update_rich_body' do
+    before { initiated_mail.update(body: "Voici le corps du mail") }
+
+    it { expect(initiated_mail.rich_body.to_plain_text).to eq(initiated_mail.body) }
+  end
 end
