@@ -346,14 +346,6 @@ class Procedure < ApplicationRecord
     percentile_time(:en_construction_at, :processed_at, 90)
   end
 
-  def usual_verification_time
-    percentile_time(:en_construction_at, :en_instruction_at, 90)
-  end
-
-  def usual_instruction_time
-    percentile_time(:en_instruction_at, :processed_at, 90)
-  end
-
   PATH_AVAILABLE = :available
   PATH_AVAILABLE_PUBLIEE = :available_publiee
   PATH_NOT_AVAILABLE = :not_available
