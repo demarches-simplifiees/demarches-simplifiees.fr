@@ -359,12 +359,9 @@ class Dossier < ApplicationRecord
   end
 
   def champs_and_childs
-    all_champ = []
-    champs.each do |c|
-      all_champ << c
-      c.champs.map { |c_item| all_champ << c_item } if c.type_de_champ.repetition?
-    end
-    all_champ
+    champs.map do |c|
+      [c, (c.champs.to_a if c.type_de_champ.repetition?)]
+    end.flatten.compact
   end
 
   private
