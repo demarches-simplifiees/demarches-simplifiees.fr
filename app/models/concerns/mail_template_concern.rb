@@ -11,8 +11,13 @@ module MailTemplateConcern
     replace_tags(body, dossier)
   end
 
+  def update_rich_body
+    self.rich_body = self.body
+  end
+
   included do
     has_rich_text :rich_body
+    before_save :update_rich_body
   end
 
   module ClassMethods
