@@ -61,6 +61,7 @@ describe ProcedurePresentation do
           { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at' },
           { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
+          { "label" => 'Email instructeur', "table" => 'followers_gestionnaires', "column" => 'email' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
           { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique' },
           { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial' },
@@ -194,6 +195,17 @@ describe ProcedurePresentation do
       let!(:dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75008')) }
 
       it { is_expected.to eq('75008') }
+    end
+
+    context 'for followers_gestionnaires table' do
+      let(:table) { 'followers_gestionnaires' }
+      let(:column) { 'email' }
+
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let!(:follow1) { create(:follow, dossier: dossier, gestionnaire: create(:gestionnaire, email: 'user1@host')) }
+      let!(:follow2) { create(:follow, dossier: dossier, gestionnaire: create(:gestionnaire, email: 'user2@host')) }
+
+      it { is_expected.to eq('user1@host, user2@host') }
     end
 
     context 'for type_de_champ table' do
@@ -631,6 +643,39 @@ describe ProcedurePresentation do
         end
       end
     end
+
+    context 'for followers_gestionnaires table' do
+      let(:filter) { [{ 'table' => 'followers_gestionnaires', 'column' => 'email', 'value' => 'keepmail' }] }
+
+      let!(:kept_dossier) { create(:dossier, procedure: procedure) }
+      let!(:discarded_dossier) { create(:dossier, procedure: procedure) }
+
+      before do
+        create(:follow, dossier: kept_dossier, gestionnaire: create(:gestionnaire, email: 'me@keepmail.com'))
+        create(:follow, dossier: discarded_dossier, gestionnaire: create(:gestionnaire, email: 'me@discard.com'))
+      end
+
+      it { is_expected.to contain_exactly(kept_dossier.id) }
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'followers_gestionnaires', 'column' => 'email', 'value' => 'keepmail' },
+            { 'table' => 'followers_gestionnaires', 'column' => 'email', 'value' => 'beta.gouv.fr' }
+          ]
+        end
+
+        let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          create(:follow, dossier: other_kept_dossier, gestionnaire: create(:gestionnaire, email: 'bazinga@beta.gouv.fr'))
+        end
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
+    end
   end
 
   describe '#eager_load_displayed_fields' do
@@ -650,6 +695,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
       end
     end
 
@@ -665,6 +711,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
       end
     end
 
@@ -678,6 +725,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
       end
     end
 
@@ -691,6 +739,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
       end
     end
 
@@ -704,6 +753,21 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).to be_loaded
+        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
+      end
+    end
+
+    context 'for followers_gestionnaires' do
+      let(:table) { 'followers_gestionnaires' }
+      let(:column) { 'email' }
+
+      it 'preloads the followers_gestionnaires relation' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_gestionnaires)).to be_loaded
       end
     end
 
@@ -717,6 +781,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
       end
     end
   end
