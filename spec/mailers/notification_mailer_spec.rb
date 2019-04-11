@@ -13,7 +13,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
 
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, user: user) }
+  let(:dossier) { create(:dossier, :with_service, user: user) }
 
   describe '.send_notification' do
     let(:email_template) { instance_double('email_template', subject_for_dossier: 'subject', body_for_dossier: 'body') }

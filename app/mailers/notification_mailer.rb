@@ -6,6 +6,8 @@
 # The subject and body of a Notification can be customized by each demarche.
 #
 class NotificationMailer < ApplicationMailer
+  helper ServiceHelper
+
   def send_dossier_received(dossier)
     send_notification(dossier, dossier.procedure.received_mail_template)
   end
