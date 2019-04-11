@@ -19,7 +19,7 @@ FactoryBot.define do
     end
 
     trait :with_service do
-      after(:build) do |dossier, _evaluator|
+      after(:create) do |dossier, _evaluator|
         dossier.procedure.service = create(:service)
       end
     end
