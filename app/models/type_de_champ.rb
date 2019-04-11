@@ -52,6 +52,7 @@ class TypeDeChamp < ApplicationRecord
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
   before_save :setup_procedure
+  before_validation :set_default_drop_down_list
 
   attr_reader :dynamic_type
 
@@ -140,6 +141,14 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
+  def drop_down_list?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:drop_down_list),
+      TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
+      TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+    ])
+  end
+
   def exclude_from_view?
     type_champ == TypeDeChamp.type_champs.fetch(:explication)
   end
@@ -177,6 +186,12 @@ class TypeDeChamp < ApplicationRecord
   end
 
   private
+
+  def set_default_drop_down_list
+    if drop_down_list? && !drop_down_list
+      self.drop_down_list_attributes = { value: '' }
+    end
+  end
 
   def setup_procedure
     types_de_champ.each do |type_de_champ|
