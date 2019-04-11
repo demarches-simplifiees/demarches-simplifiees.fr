@@ -15,6 +15,7 @@
     .text-right
       = link_to "Annuler", admin_procedure_mail_templates_path(@procedure), class: "btn btn-default"
       = f.button :submit, 'Mettre à jour', class: "btn-success"
+      = link_to "Prévisualiser", preview_procedure_mail_template_path(@procedure, @mail_template.class.const_get(:SLUG)), class: "btn btn-primary", target: "_blank"
 
   .row
     .col-md-12

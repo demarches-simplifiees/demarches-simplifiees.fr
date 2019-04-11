@@ -4,7 +4,8 @@ class NotificationMailerPreview < ActionMailer::Preview
   end
 
   def send_initiated_notification
-    NotificationMailer.send_initiated_notification(Dossier.last)
+    p = Procedure.where(id: Mails::InitiatedMail.where("body like ?", "%<img%").pluck(:procedure_id).uniq).order("RANDOM()").first
+    NotificationMailer.send_initiated_notification(p.dossiers.last)
   end
 
   def send_closed_notification
