@@ -39,9 +39,14 @@ class NotificationMailer < ApplicationMailer
     create_commentaire_for_notification(dossier, subject, body)
 
     if dossier.procedure.logo?
-      logo_filename = dossier.procedure.logo.filename
-      attachments.inline[logo_filename] = dossier.procedure.logo.read
-      @logo_url = attachments[logo_filename].url
+      begin
+        logo_filename = dossier.procedure.logo.filename
+        attachments.inline[logo_filename] = dossier.procedure.logo.read
+        @logo_url = attachments[logo_filename].url
+      rescue StandardError => e
+        # A problem occured when reading logo, maybe the logo is missing and we should clean the procedure to remove logo reference ?
+        Raven.capture_exception(e)
+      end
     end
 
     @dossier = dossier
