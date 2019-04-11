@@ -378,6 +378,10 @@ Rails.application.routes.draw do
           patch :move
         end
       end
+
+      resources :mail_templates, only: [] do
+        get 'preview', on: :member
+      end
     end
 
     resources :services, except: [:show] do
