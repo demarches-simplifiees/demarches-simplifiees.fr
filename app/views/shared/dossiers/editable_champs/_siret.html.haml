@@ -3,8 +3,8 @@
   class: 'small-margin',
   data: { remote: true, debounce: true, url: champs_siret_path(form.index), params: { champ_id: champ&.id }.to_query, spinner: true },
   required: champ.mandatory?,
-  pattern: "[0-9]{14}",
-  title: "Le numéro de SIRET doit comporter exactement 14 chiffres"
+  pattern: "[A-Z0-9][0-9]{5}",
+  title: "Le numéro TAHITI doit comporter exactement 6 caractères"
 .spinner.right-spinner.hidden
 %div{ class: "siret-info-#{form.index}" }
   - if champ.etablissement.present?

@@ -10,15 +10,15 @@
     %span.mandatory *
   = f.text_field :organisme, placeholder: "mairie de Mours, préfecture de l'Oise, ministère de la Culture", required: true
 
-  = f.label :siret do
+  -# = f.label :siret do
     Numéro TAHITI
     %span.mandatory *
-  %p
+  -# %p
     Pour trouver votre numéro TAHITI, utilisez
     %a{ href: 'http://www.ispf.pf/bases/repertoires/Entreprises/Recherche.aspx', target: '_blank', rel: 'noopener' }
       www.ispf.pf
     ou renseignez-vous auprès de votre service comptable
-  = f.number_field :siret, required: true
+  -# = f.text_field :siret, required: true
 
   = f.label :type_organisme do
     Type d’organisme
@@ -33,22 +33,22 @@
   = f.label :email do
     Adresse email
     %span.mandatory *
-  = f.email_field :email, placeholder: 'contact@mon-service.fr', required: true
+  = f.email_field :email, placeholder: 'secretariat@mon-service.gov.pf', required: true
 
   = f.label :telephone do
     Numéro de téléphone
     %span.mandatory *
-  = f.telephone_field :telephone, placeholder: '04 12 24 42 37', required: true
+  = f.telephone_field :telephone, placeholder: '40 54 43 54', required: true
 
   = f.label :horaires do
     Horaires
     %span.mandatory *
-  = f.text_area :horaires, placeholder: "Du lundi au vendredi de 9 h 30 à 17 h 30. Le samedi de 9 h 30 à 12 h.", required: true
+  = f.text_area :horaires, placeholder: "Du lundi au jeudi de 7h30 à 15h30. Le vendredi de 7h30 à 14h30.", required: true
 
   = f.label :adresse do
     Adresse
     %span.mandatory *
-  = f.text_area :adresse, placeholder: "20 avenue de Ségur, 75007 Paris", required: true
+  = f.text_area :adresse, placeholder: "Immeuble Toriki 1er et 2ème étage, rue Dumont d’Urville, Papeete", required: true
 
   - if procedure_id.present?
     = hidden_field_tag :procedure_id, procedure_id
