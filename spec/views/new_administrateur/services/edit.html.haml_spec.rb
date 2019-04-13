@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'new_administrateur/services/edit.html.haml', type: :view do
-
   # FIXME: delete this when support for pj champ is generalized
   before { allow(view).to receive(:current_administrateur).and_return(create(:administrateur)) }
 
