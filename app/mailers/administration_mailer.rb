@@ -38,6 +38,12 @@ class AdministrationMailer < ApplicationMailer
       subject: subject)
   end
 
+  def procedure_published(procedure)
+    @procedure = procedure
+    subject = 'Une nouvelle démarche est publiée'
+    mail(to: EQUIPE_EMAIL, subject: subject)
+  end
+
   def dossier_expiration_summary(expiring_dossiers, expired_dossiers)
     subject =
       if expired_dossiers.present? && expiring_dossiers.present?

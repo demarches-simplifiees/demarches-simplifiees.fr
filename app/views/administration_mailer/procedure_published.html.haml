@@ -1,0 +1,46 @@
+- content_for(:title, @procedure.libelle)
+
+%p
+  Une nouvelle procédure a été publiée sur #{SITE_NAME}.
+
+%ul
+  %li
+    Libellé :
+    = @procedure.libelle
+
+  %li
+    Créateur(s) :
+    %ul
+      - @procedure.administrateurs.each do |administrateur|
+        %li
+          = link_to "#{administrateur.email}", "mailto:#{administrateur.email}"
+
+  %li
+    Commencer la démarche :
+    = link_to commencer_url(@procedure), commencer_url(@procedure)
+
+%p
+  Liste des champs
+%table{ style: 'width: 80%;', align: 'center' }
+  %thead
+    %tr
+      %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
+        Champ
+      %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
+        Description
+  %tbody
+    - @procedure.types_de_champ.each do |champ|
+      %tr
+        %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+          = champ.libelle
+        %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+          = champ.description
+      - if champ.types_de_champ.present? # only one level of recusion
+        - champ.types_de_champ.each do |subchamp|
+          %tr
+            %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+              = subchamp.libelle
+            %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+              = subchamp.description
+
+= render partial: "layouts/mailers/signature"
