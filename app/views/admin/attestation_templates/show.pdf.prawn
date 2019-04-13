@@ -1,16 +1,19 @@
 require 'prawn/measurement_extensions'
+require 'prawn/qrcode'
 
 prawn_document(margin: [50, 100, 20, 100]) do |pdf|
   pdf.font_families.update( 'liberation serif' => { normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' )})
   pdf.font 'liberation serif'
 
   grey = '555555'
+  red = 'C52F24'
   black = '000000'
   max_logo_width = 200.mm
   max_logo_height = 50.mm
   max_signature_size = 50.mm
 
   pdf.bounding_box([0, pdf.cursor], width: 400, height: 650) do
+
     if @logo.present?
       pdf.image StringIO.new(@logo.read), fit: [max_logo_width , max_logo_height], position: :center
     end
@@ -24,16 +27,27 @@ prawn_document(margin: [50, 100, 20, 100]) do |pdf|
     pdf.fill_color grey
     pdf.pad_top(30) { pdf.text @body, size: 12, character_spacing: -0.2, align: :justify, inline_format: true }
 
+    cpos = pdf.cursor - 40
     if @signature.present?
       pdf.pad_top(40) do
         pdf.image StringIO.new(@signature.read), fit: [max_signature_size , max_signature_size], position: :right
       end
     end
+
   end
 
   pdf.repeat(:all) do
-    pdf.move_cursor_to 20
+    size = 100
+    margin = 2
     pdf.fill_color grey
+    if @dossier.present?
+      pdf.move_cursor_to size+30
+      pdf.text @dossier, size: 8, align: :center
+      pdf.print_qr_code(@dossier, level: :q, extent: size, margin: margin, align: :center)
+    end
+    pdf.move_cursor_to 20
     pdf.text @footer, align: :center, size: 8
+
+        # pdf.move_down 5
   end
 end
