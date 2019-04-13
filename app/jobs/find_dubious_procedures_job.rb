@@ -5,7 +5,8 @@ class FindDubiousProceduresJob < ApplicationJob
     'NIR', 'NIRPP', 'race', 'religion',
     'carte bancaire', 'carte bleue', 'sécurité sociale',
     'agdref', 'handicap', 'syndicat', 'syndical',
-    'parti politique', 'opinion politique', 'bord politique', 'courant politique'
+    'parti politique', 'opinion politique', 'bord politique', 'courant politique',
+    'CPS', 'DN', 'casier judiciaire', "transfert d'autorité parentale", 'parents? biologiques?'
   ]
 
   def perform(*args)
