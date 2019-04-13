@@ -24,7 +24,7 @@ module ProcedureHelper
     logo = procedure.logo
 
     if logo.blank?
-      ActionController::Base.helpers.image_url("marianne.svg")
+      ActionController::Base.helpers.image_path("marianne.svg")
     else
       if Flipflop.remote_storage?
         RemoteDownloader.new(logo.filename).url

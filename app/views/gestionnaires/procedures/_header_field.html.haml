@@ -3,6 +3,6 @@
     = field['label']
     - if @procedure_presentation.sort['table'] == field['table'] && @procedure_presentation.sort['column'] == field['column']
       - if @procedure_presentation.sort['order'] == 'asc'
-        %img.caret-icon{ src: image_url("table/up_caret.svg") }
+        %img.caret-icon{ src: image_path("table/up_caret.svg") }
       - else
-        %img.caret-icon{ src: image_url("table/down_caret.svg") }
+        %img.caret-icon{ src: image_path("table/down_caret.svg") }
