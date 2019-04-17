@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post 'draft', on: :member
       post 'hide', on: :member
       post 'add_administrateur', on: :member
+      post 'change_piece_justificative_template', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
