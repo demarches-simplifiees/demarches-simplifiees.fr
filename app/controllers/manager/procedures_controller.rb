@@ -33,10 +33,27 @@ module Manager
       redirect_to manager_procedure_path(procedure)
     end
 
+    def change_piece_justificative_template
+      if type_de_champ.update(type_de_champ_params)
+        flash[:notice] = "Le modèle est mis à jour."
+      else
+        flash[:alert] = type_de_champ.errors.full_messages.join(', ')
+      end
+      redirect_to manager_procedure_path(procedure)
+    end
+
     private
 
     def procedure
       Procedure.find(params[:id])
+    end
+
+    def type_de_champ
+      TypeDeChamp.find(params[:type_de_champ][:id])
+    end
+
+    def type_de_champ_params
+      params.require(:type_de_champ).permit(:piece_justificative_template)
     end
   end
 end
