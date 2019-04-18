@@ -202,9 +202,7 @@ $users-breakpoint: 950px;
   justify-content: space-between;
   width: 100%;
 
-  &:first-of-type {
-    margin-bottom: 45px;
-  }
+  margin-bottom: 45px;
 
   @media (max-width: $users-breakpoint) {
     justify-content: space-around;
