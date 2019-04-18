@@ -47,6 +47,10 @@ class DossierOperationLog < ApplicationRecord
     end
   end
 
+  def self.documents
+    as_json(only: [:operation], methods: [:author, :subject, :operation_date])
+  end
+
   private
 
   def set_operation_date
