@@ -31,7 +31,18 @@ class Gestionnaire < ApplicationRecord
       return
     end
 
-    followed_dossiers << dossier
+    begin
+      followed_dossiers << dossier
+    rescue ActiveRecord::RecordNotUnique
+      # Altough we checked before the insertion that the gestionnaire wasn't
+      # already following this dossier, this was done at the Rails level:
+      # at the database level, the dossier was already followed, and a
+      # "invalid constraint" exception is raised.
+      #
+      # We can ignore this safely, as it means the goal is already reached:
+      # the gestionnaire follows the dossier.
+      return
+    end
   end
 
   def unfollow(dossier)
@@ -116,6 +127,8 @@ class Gestionnaire < ApplicationRecord
       procedure.dossiers.termine
     when :not_archived
       procedure.dossiers.not_archived
+    when :all
+      procedure.dossiers
     else
       procedure.dossiers.en_cours
     end
@@ -215,7 +228,7 @@ class Gestionnaire < ApplicationRecord
 
       h = {
         nb_en_construction: procedure.dossiers.en_construction.count,
-        nb_notification: notifications_per_procedure(procedure).count
+        nb_notification: notifications_for_procedure(procedure, :all).count
       }
 
       if h[:nb_en_construction] > 0 || h[:nb_notification] > 0
