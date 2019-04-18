@@ -49,7 +49,7 @@ describe NotificationService do
 
       context 'when there is a notification on this procedure' do
         before do
-          allow_any_instance_of(Gestionnaire).to receive(:notifications_per_procedure)
+          allow_any_instance_of(Gestionnaire).to receive(:notifications_for_procedure)
             .and_return([12])
         end
 
