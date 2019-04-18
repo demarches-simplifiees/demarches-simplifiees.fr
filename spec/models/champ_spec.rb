@@ -406,6 +406,7 @@ describe Champ do
     let(:champ_text) { create(:champ_text, row: 0) }
     let(:champ_integer_number) { create(:champ_integer_number, row: 0) }
     let(:champ_text_attrs) { attributes_for(:champ_text, row: 1) }
+    let(:champ_text_row_1) { create(:champ_text, row: 1, parent: champ) }
 
     it "associates nested champs to the parent dossier" do
       expect(champ.rows.size).to eq(0)
@@ -441,6 +442,8 @@ describe Champ do
       expect(row.second).to eq(champ_text)
 
       expect(champ.rows.size).to eq(2)
+
+      expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)
     end
   end
 end
