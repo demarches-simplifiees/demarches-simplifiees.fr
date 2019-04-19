@@ -37,6 +37,7 @@ services:
   app:
     image: ${IMAGE}:${TAG:-latest}
     container_name: app-${ENV:-dev}
+    restart: always
     ports:
       - ${PORT}:3000
     environment:
@@ -63,6 +64,7 @@ services:
     entrypoint: ["bundle", "exec"]
     command: rails jobs:work
     container_name: worker-${ENV:-dev}
+    restart: always
     environment:
       - APP_HOST
       - DB_DATABASE
@@ -82,6 +84,7 @@ services:
   clamav:
     image: tiredofit/clamav
     container_name: clamav-${ENV:-dev}
+    restart: always
     ports:
       - 3310:3310
     volumes:
@@ -95,6 +98,7 @@ services:
   itaiete:
     image: registry.gov.pf/revatua/i-taiete2:${TAG_ITAIETE:-md}
     container_name: itaiete-${ENV:-dev}
+    restart: always
     expose:
       - 8080
     environment:
