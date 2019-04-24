@@ -62,7 +62,7 @@ module TagsSubstitutionConcern
       lambda: -> (d) {
         links = [external_link(attestation_dossier_url(d))]
         if d.justificatif_motivation.attached?
-          links.push external_link_with_body("Télécharger le justificatif", url_for_justificatif_motivation(d))
+          links.push external_link_with_body("Télécharger l'attestation", url_for_justificatif_motivation(d))
         end
         links.join "<br />\n"
       },
