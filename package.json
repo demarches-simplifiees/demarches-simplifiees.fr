@@ -23,6 +23,7 @@
     "ramda": "=0.24.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-intersection-observer": "^8.23.0",
     "react-scroll-to-component": "^1.0.2",
     "react-sortable-hoc": "^1.7.1",
     "react_ujs": "^2.5.0",

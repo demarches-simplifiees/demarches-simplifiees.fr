@@ -1,4 +1,4 @@
-import React, { useReducer, useRef } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -11,11 +11,7 @@ function TypeDeChampRepetitionOptions({
   state: parentState,
   typeDeChamp
 }) {
-  const lastTypeDeChampRef = useRef(null);
-  const [state, dispatch] = useReducer(typeDeChampsReducer, {
-    ...parentState,
-    lastTypeDeChampRef
-  });
+  const [state, dispatch] = useReducer(typeDeChampsReducer, parentState);
 
   if (isVisible) {
     return (

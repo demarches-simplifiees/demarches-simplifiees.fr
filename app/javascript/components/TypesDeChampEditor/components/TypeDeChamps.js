@@ -1,4 +1,4 @@
-import React, { useReducer, useRef } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -7,10 +7,8 @@ import TypeDeChamp from './TypeDeChamp';
 import typeDeChampsReducer from '../typeDeChampsReducer';
 
 function TypeDeChamps({ state: rootState, typeDeChamps }) {
-  const lastTypeDeChampRef = useRef(null);
   const [state, dispatch] = useReducer(typeDeChampsReducer, {
     ...rootState,
-    lastTypeDeChampRef,
     typeDeChamps
   });
 
