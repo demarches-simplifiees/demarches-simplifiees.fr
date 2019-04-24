@@ -37,30 +37,52 @@ export default function typeDeChampsReducer(state, { type, params, done }) {
   }
 }
 
-function addNewTypeDeChamp(state, typeDeChamps, done) {
+function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
   const typeDeChamp = {
     ...state.defaultTypeDeChampAttributes,
     order_place: typeDeChamps.length
   };
 
   createTypeDeChampOperation(typeDeChamp, state.queue)
-    .then(() => {
+    .then(async () => {
+      if (insertAfter) {
+        // Move the champ to the correct position server-side
+        await moveTypeDeChampOperation(
+          typeDeChamp,
+          insertAfter.index,
+          state.queue
+        );
+      }
       state.flash.success();
       done();
-      if (state.lastTypeDeChampRef) {
-        scrollToComponent(state.lastTypeDeChampRef.current);
+      if (insertAfter) {
+        scrollToComponent(insertAfter.target.nextElementSibling);
       }
     })
     .catch(message => state.flash.error(message));
 
+  let newTypeDeChamps = [...typeDeChamps, typeDeChamp];
+  if (insertAfter) {
+    // Move the champ to the correct position client-side
+    newTypeDeChamps = arrayMove(
+      newTypeDeChamps,
+      typeDeChamps.length,
+      insertAfter.index
+    );
+  }
+
   return {
     ...state,
-    typeDeChamps: [...typeDeChamps, typeDeChamp]
+    typeDeChamps: newTypeDeChamps
   };
 }
 
+function addNewTypeDeChamp(state, typeDeChamps, done) {
+  return addTypeDeChamp(state, typeDeChamps, findItemToInsertAfter(), done);
+}
+
 function addNewRepetitionTypeDeChamp(state, typeDeChamps, typeDeChamp, done) {
-  return addNewTypeDeChamp(
+  return addTypeDeChamp(
     {
       ...state,
       defaultTypeDeChampAttributes: {
@@ -69,6 +91,7 @@ function addNewRepetitionTypeDeChamp(state, typeDeChamps, typeDeChamp, done) {
       }
     },
     typeDeChamps,
+    null,
     done
   );
 }
@@ -181,4 +204,24 @@ function getUpdateHandler(typeDeChamp, { queue, flash }) {
     updateHandlers.set(typeDeChamp, handler);
   }
   return handler;
+}
+
+function findItemToInsertAfter() {
+  const target = getFirstTarget();
+
+  return {
+    target,
+    index: parseInt(target.dataset.index) + 1
+  };
+}
+
+function getFirstTarget() {
+  const [target] = document.querySelectorAll('[data-in-view]');
+  if (target) {
+    const parentTarget = target.closest('[data-repetition]');
+    if (parentTarget) {
+      return parentTarget;
+    }
+    return target;
+  }
 }
