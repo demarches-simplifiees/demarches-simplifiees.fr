@@ -7,5 +7,6 @@ const resolve = {
   }
 };
 
+environment.splitChunks();
 environment.config.merge({ resolve });
 module.exports = environment;
