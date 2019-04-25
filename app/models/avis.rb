@@ -37,27 +37,6 @@ class Avis < ApplicationRecord
     Avis.find_by(id: avis_id)&.email == email
   end
 
-  # FIXME remove this after migrating virus_scan to blob metadata
-  def virus_scan
-    VirusScan.find_by(blob_key: piece_justificative_file.blob.key)
-  end
-
-  def virus_scan_safe?
-    virus_scan&.safe? || piece_justificative_file.virus_scanner.safe?
-  end
-
-  def virus_scan_infected?
-    virus_scan&.infected? || piece_justificative_file.virus_scanner.infected?
-  end
-
-  def virus_scan_pending?
-    virus_scan&.pending? || piece_justificative_file.virus_scanner.pending?
-  end
-
-  def virus_scan_no_scan?
-    virus_scan.blank? && !piece_justificative_file.virus_scanner.analyzed?
-  end
-
   private
 
   def notify_gestionnaire
