@@ -1,5 +1,6 @@
 = form.select :value,
-  Champs::NationaliteChamp.nationalites,
+  Champs::NationaliteChamp.options,
+  disabled: Champs::NationaliteChamp.disabled_options,
   include_blank: true,
   required: champ.mandatory?
 

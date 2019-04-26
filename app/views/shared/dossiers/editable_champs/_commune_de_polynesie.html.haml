@@ -1,5 +1,5 @@
 = form.select :value,
-  Champs::CommuneDePolynesieChamp.communes_de_polynesie,
+  Champs::CommuneDePolynesieChamp.options,
+  disabled: Champs::CommuneDePolynesieChamp.disabled_options,
   include_blank: true,
   required: champ.mandatory?
-
