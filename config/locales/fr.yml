@@ -182,12 +182,13 @@ fr:
       dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
       invalid_siret: "Le siret est incorrect"
       procedure_not_found: "La démarche n'existe pas"
-      siret_unknown: 'Désolé, le service de récupération des informations des entreprises est temporairement indisponible. Veuillez réessayer dans une heure.'
-      etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro TAHITI'
+      siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro'
+      etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
       extension_white_list_error: "Le format de fichier de la pièce jointe n'est pas valide."
       procedure_archived: "Cette démarche en ligne a été fermée, il n'est plus possible de déposer de dossier."
+      procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
       cadastres_empty:
         one: "Aucune parcelle cadastrale sur la zone séléctionnée"
         other: "Aucune parcelle cadastrale sur les zones séléctionnées"

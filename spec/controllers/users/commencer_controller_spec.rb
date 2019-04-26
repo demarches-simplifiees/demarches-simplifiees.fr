@@ -87,6 +87,14 @@ describe Users::CommencerController, type: :controller do
 
       it { expect(subject).to redirect_to(new_user_session_path) }
     end
+
+    context 'when the path doesn’t exist' do
+      subject { get :sign_in, params: { path: 'hello' } }
+
+      it 'redirects with an error message' do
+        expect(subject).to redirect_to(root_path)
+      end
+    end
   end
 
   describe '#sign_up' do
@@ -111,6 +119,14 @@ describe Users::CommencerController, type: :controller do
 
       it { expect(subject).to redirect_to(new_user_registration_path) }
     end
+
+    context 'when the path doesn’t exist' do
+      subject { get :sign_up, params: { path: 'hello' } }
+
+      it 'redirects with an error message' do
+        expect(subject).to redirect_to(root_path)
+      end
+    end
   end
 
   describe '#france_connect' do
@@ -134,6 +150,14 @@ describe Users::CommencerController, type: :controller do
       end
 
       it { expect(subject).to redirect_to(france_connect_particulier_path) }
+    end
+
+    context 'when the path doesn’t exist' do
+      subject { get :france_connect, params: { path: 'hello' } }
+
+      it 'redirects with an error message' do
+        expect(subject).to redirect_to(root_path)
+      end
     end
   end
 end

@@ -5,6 +5,7 @@
         %td.cell-label Libelle
         %td.cell-label Type de champ
         %td.cell-label Rempli
+        %td.cell-label Modifier le modèle
     %tbody
       - field.data.order(:order_place).each do |f|
         %tr
@@ -20,5 +21,14 @@
               vide
             - else
               rempli
+
+          %td.cell-data
+            - if f.type_champ == 'piece_justificative'
+              = form_for f,
+                url: change_piece_justificative_template_manager_procedure_path,
+                method: :post  do |form|
+                = form.hidden_field :id
+                = form.file_field :piece_justificative_template
+                = form.submit 'modifier'
 - else
   Aucun

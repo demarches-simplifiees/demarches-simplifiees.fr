@@ -279,7 +279,7 @@ describe Gestionnaire, type: :model do
     end
   end
 
-  describe '#notification_for_procedure' do
+  describe '#notifications_for_procedure' do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let(:gestionnaire) { dossier.follows.first.gestionnaire }
     let(:procedure) { dossier.procedure }
@@ -438,8 +438,8 @@ describe Gestionnaire, type: :model do
 
     context 'when a notification exists' do
       before do
-        allow(gestionnaire).to receive(:notifications_per_procedure)
-          .with(procedure_to_assign)
+        allow(gestionnaire).to receive(:notifications_for_procedure)
+          .with(procedure_to_assign, :all)
           .and_return([1, 2, 3])
       end
 

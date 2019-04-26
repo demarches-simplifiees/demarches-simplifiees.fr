@@ -34,7 +34,7 @@ describe ApplicationController, type: :controller do
     context 'when no one is logged in' do
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', roles: 'Guest' })
+          .with({ id: 'Guest' })
       end
 
       it do
@@ -53,7 +53,7 @@ describe ApplicationController, type: :controller do
 
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, roles: 'User' })
+          .with({ id: "User##{current_user.id}" })
       end
 
       it do
@@ -77,7 +77,7 @@ describe ApplicationController, type: :controller do
 
       it do
         expect(Raven).to have_received(:user_context)
-          .with({ ip_address: '0.0.0.0', email: current_user.email, id: current_user.id, roles: 'User, Gestionnaire, Administrateur, Administration' })
+          .with({ id: "User##{current_user.id}" })
       end
 
       it do

@@ -754,13 +754,13 @@ describe Procedure do
       let!(:old_dossier) { create_dossier(construction_date: 3.months.ago, instruction_date: 2.months.ago) }
 
       it 'ignores dossiers older than 1 month' do
-        expect(procedure.usual_verification_time).to be_within(10.seconds).of(2.days)
+        expect(procedure.usual_verification_time).to be_within(1.hour).of(2.days)
       end
     end
 
     context 'when there is only one dossier in the time frame' do
       let(:delays) { [1.day] }
-      it { expect(procedure.usual_verification_time).to be_within(10.seconds).of(1.day) }
+      it { expect(procedure.usual_verification_time).to be_within(1.hour).of(1.day) }
     end
 
     context 'where there are no dossiers' do
@@ -796,7 +796,7 @@ describe Procedure do
       let!(:old_dossier) { create_dossier(instruction_date: 3.months.ago, processed_date: 2.months.ago) }
 
       it 'ignores dossiers older than 1 month' do
-        expect(procedure.usual_instruction_time).to be_within(10.seconds).of(2.days)
+        expect(procedure.usual_instruction_time).to be_within(1.hour).of(2.days)
       end
     end
 
@@ -805,13 +805,13 @@ describe Procedure do
       let!(:bad_dossier) { create_dossier(instruction_date: nil, processed_date: 10.days.ago) }
 
       it 'ignores bad dossiers' do
-        expect(procedure.usual_instruction_time).to be_within(10.seconds).of(2.days)
+        expect(procedure.usual_instruction_time).to be_within(1.hour).of(2.days)
       end
     end
 
     context 'when there is only one processed dossier' do
       let(:delays) { [1.day] }
-      it { expect(procedure.usual_instruction_time).to be_within(10.seconds).of(1.day) }
+      it { expect(procedure.usual_instruction_time).to be_within(1.hour).of(1.day) }
     end
 
     context 'where there is no processed dossier' do

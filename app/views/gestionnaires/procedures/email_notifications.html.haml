@@ -8,7 +8,16 @@
   %h1 Notifications par email
 
   = form_for @assign_to, url: update_email_notifications_gestionnaire_procedure_path(@procedure), html: { class: 'form' } do |form|
-    = form.label :email_notification, "Recevoir une fois par jour, du lundi au samedi vers 10 h, un email de notification me signalant le dépôt de nouveaux dossiers ou des changements sur mes dossiers en cours"
+    .explication
+      Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
+
+    = form.label :email_notification do
+      Recevoir une notification quotidienne
+
+      %span.notice
+        Cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis.
+      %span.notice
+        Il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
 
     .radios
       %label
@@ -17,6 +26,21 @@
 
       %label
         = form.radio_button :email_notifications_enabled, false
+        Non
+
+    = form.label nil do
+      Recevoir un récapitulatif hebdomadaire
+      %span.notice
+        Cet email récapitule l’activité de la semaine sur l’ensemble de vos démarches.
+      %span.notice
+        Il est envoyé chaque semaine le lundi matin, et n’est pas désactivable.
+
+    .radios
+      %label
+        = radio_button_tag "not_implemented", "Oui", true, disabled: true
+        Oui
+      %label
+        = radio_button_tag "not_implemented", "Non", false, disabled: true
         Non
 
     .send-wrapper
