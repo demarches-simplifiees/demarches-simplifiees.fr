@@ -6,7 +6,8 @@ class FindDubiousProceduresJob < ApplicationJob
     'carte bancaire', 'carte bleue', 'sécurité sociale',
     'agdref', 'handicap', 'syndicat', 'syndical',
     'parti politique', 'opinion politique', 'bord politique', 'courant politique',
-    'CPS', 'DN', 'casier judiciaire', "transfert d'autorité parentale", 'parents? biologiques?'
+    'CPS', 'DN', 'casier judiciaire', "transfert d'autorité parentale", 'parents? biologiques?',
+    'régime de protection', 'revenu', 'salaire', 'cotorep'
   ]
 
   def perform(*args)
