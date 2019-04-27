@@ -32,6 +32,7 @@ version: '3.3'
 # MAILJET_API_KEY:
 # MAILJET_SECRET_KEY: MAILJET configuration to use to send mails
 #
+# SENTRY variables to logs exception on the SEntry platform
 #-------------------------------------------------------------
 services:
   app:
@@ -53,9 +54,13 @@ services:
       - GITHUB_CLIENT_SECRET
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
+      - SENTRY_ENABLED
+      - SENTRY_DSN_RAILS
+      - SENTRY_DSN_JS
+      - SENTRY_CURRENT_ENV
     volumes:
       - md-data-files:/app/storage
-      - md-temp-files:/app/tmp
+      - md-tmp:/app/tmp
     networks:
       - md-network
 
@@ -75,9 +80,14 @@ services:
       - MAILJET_SECRET_KEY
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
+      - SENTRY_ENABLED
+      - SENTRY_DSN_RAILS
+      - SENTRY_DSN_JS
+      - SENTRY_CURRENT_ENV
     volumes:
       - md-data-files:/app/storage
       - md-systmp:/tmp
+      - md-tmp:/app/tmp
     networks:
       - md-network
 
@@ -91,6 +101,7 @@ services:
       - clamav-db:/data
       - clamav-logs:/var/log/clamav
       - md-systmp:/tmp
+      - md-tmp:/app/tmp
     networks:
       - md-network
 
@@ -126,7 +137,7 @@ volumes:
       type: none
       device: $ROOT/data
       o: bind
-  md-temp-files:
+  md-tmp:
     driver: local
     driver_opts:
       type: none
