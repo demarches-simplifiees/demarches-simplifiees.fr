@@ -168,6 +168,10 @@ describe Procedure do
       it { is_expected.to allow_value('URRSAF').for(:organisation) }
     end
 
+    context 'administrateurs' do
+      it { is_expected.not_to allow_value([]).for(:administrateurs) }
+    end
+
     context 'juridique' do
       it { is_expected.not_to allow_value(nil).for(:cadre_juridique) }
       it { is_expected.to allow_value('text').for(:cadre_juridique) }
