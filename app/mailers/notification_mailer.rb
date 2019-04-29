@@ -17,15 +17,15 @@ class NotificationMailer < ApplicationMailer
   end
 
   def send_closed_notification(dossier)
-    send_final_notification(dossier, dossier.procedure.closed_mail_template)
+    send_notification(dossier, dossier.procedure.closed_mail_template)
   end
 
   def send_refused_notification(dossier)
-    send_final_notification(dossier, dossier.procedure.refused_mail_template)
+    send_notification(dossier, dossier.procedure.refused_mail_template)
   end
 
   def send_without_continuation_notification(dossier)
-    send_final_notification(dossier, dossier.procedure.without_continuation_mail_template)
+    send_notification(dossier, dossier.procedure.without_continuation_mail_template)
   end
 
   private
