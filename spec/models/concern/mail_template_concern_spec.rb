@@ -78,7 +78,7 @@ describe MailTemplateConcern do
       describe "in closed mail without justificatif" do
         let(:mail) { create(:closed_mail, procedure: procedure) }
         it { is_expected.to eq("<a target=\"_blank\" rel=\"noopener\" href=\"http://localhost:3000/dossiers/#{dossier.id}/attestation\">http://localhost:3000/dossiers/#{dossier.id}/attestation</a>") }
-        it { is_expected.to_not include("Télécharger l&#39;attestation") }
+        it { is_expected.to include("Télécharger l&#39;attestation") }
       end
 
       describe "in closed mail with justificatif" do
@@ -90,6 +90,7 @@ describe MailTemplateConcern do
         it { expect(dossier.justificatif_motivation).to be_attached }
         it { is_expected.to start_with("<a target=\"_blank\" rel=\"noopener\" href=\"http://localhost:3000/dossiers/#{dossier.id}/attestation\">http://localhost:3000/dossiers/#{dossier.id}/attestation</a><br />\n") }
         it { is_expected.to include("Télécharger l&#39;attestation") }
+        it { is_expected.to include("Télécharger le justificatif") }
       end
 
       describe "in refuse mail" do

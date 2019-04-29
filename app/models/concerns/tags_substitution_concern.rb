@@ -60,9 +60,9 @@ module TagsSubstitutionConcern
       libelle: 'lien attestation',
       description: '',
       lambda: -> (d) {
-        links = [external_link(attestation_dossier_url(d))]
+        links = [external_link("Télécharger l'attestation", attestation_dossier_url(d))]
         if d.justificatif_motivation.attached?
-          links.push external_link_with_body("Télécharger l'attestation", url_for_justificatif_motivation(d))
+          links.push external_link("Télécharger le justificatif", url_for_justificatif_motivation(d))
         end
         links.join "<br />\n"
       },
@@ -144,12 +144,8 @@ module TagsSubstitutionConcern
     end
   end
 
-  def external_link(url)
-    link_to(url, url, target: '_blank', rel: 'noopener')
-  end
-
-  def external_link_with_body(body, url)
-    link_to(body, url, target: '_blank', rel: 'noopener')
+  def external_link(url, title = nil)
+    link_to(title || url, url, target: '_blank', rel: 'noopener')
   end
 
   def url_for_justificatif_motivation(dossier)
