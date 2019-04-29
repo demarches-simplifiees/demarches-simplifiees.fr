@@ -1,8 +1,6 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = [:administrateur_id]
-
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
