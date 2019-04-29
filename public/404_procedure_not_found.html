@@ -3,6 +3,7 @@
 <head>
   <title>The page you were looking for doesn't exist (404)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
   <style>
   body {
     background-color: #EFEFEF;
@@ -14,7 +15,7 @@
 
   div.dialog {
     width: 95%;
-    max-width: 33em;
+    max-width: 40em;
     margin: 4em auto 0;
   }
 
@@ -23,12 +24,21 @@
     border-right-color: #999;
     border-left-color: #999;
     border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
+    border-top: #E11619 solid 4px;
     border-top-left-radius: 9px;
     border-top-right-radius: 9px;
     background-color: white;
     padding: 7px 12% 0;
     box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+  }
+
+  div.dialog > img {
+    background-color: #E11619;
+    margin: 0;
+    padding: 0;
+    width: 90%;
+    margin: 10px;
+    padding: 10px 0px 10px 10px;
   }
 
   h3 {
@@ -56,6 +66,7 @@
 <body>
   <!-- This file lives in public/404.html -->
   <div class="dialog">
+    <img src="logo-md-wide.svg" alt="mes-demarches">
     <div>
       <h3>Cette démarche n'existe pas.</h3>
       <p>Merci de vérifier le lien que vous avez suivi et/ou de contacter votre administrateur.</p>
