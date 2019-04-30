@@ -17,7 +17,7 @@ describe ApiEntreprise::RNAAdapter do
   context 'when siret is not valid' do
     let(:siret) { '234567' }
     let(:body) { '' }
-    let(:status) { '404' }
+    let(:status) { 404 }
 
     it { is_expected.to eq({}) }
   end
