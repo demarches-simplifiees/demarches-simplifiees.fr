@@ -1,4 +1,6 @@
 describe 'users/dossiers/show/_status_overview.html.haml', type: :view do
+  before { allow(dossier.procedure).to receive(:usual_traitement_time).and_return(1.day) }
+
   subject! { render 'users/dossiers/show/status_overview.html.haml', dossier: dossier }
 
   matcher :have_timeline_item do |selector|
@@ -46,6 +48,7 @@ describe 'users/dossiers/show/_status_overview.html.haml', type: :view do
     end
 
     it { is_expected.to have_selector('.status-explanation .en-construction') }
+    it { is_expected.to have_text('Habituellement, les dossiers de cette démarche sont traités dans un délai de 1 jour') }
   end
 
   context 'when en instruction' do
@@ -59,6 +62,7 @@ describe 'users/dossiers/show/_status_overview.html.haml', type: :view do
     end
 
     it { is_expected.to have_selector('.status-explanation .en-instruction') }
+    it { is_expected.to have_text('Habituellement, les dossiers de cette démarche sont traités dans un délai de 1 jour') }
   end
 
   context 'when accepté' do

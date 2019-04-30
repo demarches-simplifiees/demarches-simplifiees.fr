@@ -1,6 +1,4 @@
-- procedure_id_for_which_we_hide_the_time_means = 6547
-- procedure_path_for_which_we_hide_the_time_means = 'deposer-une-offre-de-stage'
-- show_time_means = dossier.procedure.id != procedure_id_for_which_we_hide_the_time_means && dossier.procedure.path != procedure_path_for_which_we_hide_the_time_means
+
 
 .status-overview
   - if !dossier.termine?
@@ -24,17 +22,11 @@
     - elsif dossier.en_construction?
       .en-construction
         %p Un instructeur de l’administration est en train de vérifier que votre dossier est bien complet. Si des modifications sont nécessaires, vous recevrez un message avec les modifications à effectuer.
-
         %p
           Sinon,
           = succeed '.' do
             %strong votre dossier passera directement en instruction
-
-        / FIXME: remove the custom procedure switch at some point
-        - if dossier.procedure.usual_verification_time && show_time_means
-          - cache(dossier.procedure, expires_in: 1.week) do
-            %p
-              Habituellement, les dossiers de cette démarche sont vérifiés dans un délai de #{distance_of_time_in_words(dossier.procedure.usual_verification_time)}.
+        = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
 
     - elsif dossier.en_instruction?
       .en-instruction
@@ -44,12 +36,7 @@
           %strong
             vous recevrez un email
           avec le résultat.
-
-        / FIXME: remove the custom procedure switch at some point
-        - if dossier.procedure.usual_instruction_time && show_time_means
-          - cache(dossier.procedure, expires_in: 1.week) do
-            %p
-              Habituellement, les dossiers de cette démarche sont traités dans un délai de #{distance_of_time_in_words(dossier.procedure.usual_instruction_time)}.
+        = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
 
     - elsif dossier.accepte?
       .accepte
