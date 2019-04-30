@@ -31,7 +31,7 @@ describe Admin::MailTemplatesController, type: :controller do
         }
     end
 
-    it { expect(response).to redirect_to admin_procedure_mail_templates_path(procedure) }
+    it { expect(response).to redirect_to edit_admin_procedure_mail_template_path(procedure, initiated_mail.class.const_get(:SLUG)) }
 
     context 'the mail template' do
       subject { procedure.reload; procedure.initiated_mail_template }

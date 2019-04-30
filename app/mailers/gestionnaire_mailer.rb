@@ -21,11 +21,13 @@ class GestionnaireMailer < ApplicationMailer
 
   def last_week_overview(gestionnaire)
     email = gestionnaire.email
-    @overview = gestionnaire.last_week_overview
-    headers['X-mailjet-campaign'] = 'last_week_overview'
     @subject = 'Votre activité hebdomadaire'
+    @overview = gestionnaire.last_week_overview
 
-    mail(to: email, subject: @subject)
+    if @overview.present?
+      headers['X-mailjet-campaign'] = 'last_week_overview'
+      mail(to: email, subject: @subject)
+    end
   end
 
   def send_dossier(sender, dossier, recipient)

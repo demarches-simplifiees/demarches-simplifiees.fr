@@ -26,7 +26,7 @@ storage/
 yarn-debug.log*
 .yarn-integrity
 /.vscode
-/.idea/
+/.idea
 /public/packs
 /public/packs-test
 /node_modules

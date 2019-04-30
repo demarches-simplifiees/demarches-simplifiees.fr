@@ -19,7 +19,9 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
       let(:forbidden_tdcs) do
         [
           create(:type_de_champ, libelle: 'num de securite sociale, stp'),
-          create(:type_de_champ, libelle: "t'aurais une carte bancaire ?")
+          create(:type_de_champ, libelle: "t'aurais une carte bancaire ?"),
+          create(:type_de_champ, libelle: 'Parents biologiques'),
+          create(:type_de_champ, libelle: 'Salaire de base')
         ]
       end
 

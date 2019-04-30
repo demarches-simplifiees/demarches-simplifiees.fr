@@ -53,10 +53,16 @@ module ApplicationHelper
     script = "(function() {";
     script << "var el = document.querySelector('#{selector}');"
     method = (inner ? "el.innerHTML = ''" : "el.parentNode.removeChild(el)")
-    script << "setTimeout(function() { #{method}; }, #{timeout});";
+    script << "if (el) { setTimeout(function() { #{method}; }, #{timeout}); }";
     script << "})();"
     # rubocop:disable Rails/OutputSafety
     raw(script);
+    # rubocop:enable Rails/OutputSafety
+  end
+
+  def show_element(selector)
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{selector}').classList.remove('hidden');")
     # rubocop:enable Rails/OutputSafety
   end
 

@@ -26,7 +26,19 @@ class AdministrationMailerPreview < ActionMailer::Preview
     AdministrationMailer.dossier_expiration_summary(expiring_dossiers, expired_dossiers)
   end
 
+  def procedure_published
+    AdministrationMailer.procedure_published(published_procedure)
+  end
+
   private
+
+  def published_procedure
+    Procedure.new(id: 10, libelle: "Démarche des marches", administrateurs: [administrateur],
+    types_de_champ: [
+      TypeDeChamp.new(libelle: 'iban', description: 'Compte à créditer'),
+      TypeDeChamp.new(libelle: 'numéro de carte bleu', description: 'Carte bleue à débiter')
+    ])
+  end
 
   def procedure_1
     Procedure.new(id: 10, libelle: "Démarche des marches", administrateur: administrateur)

@@ -122,6 +122,7 @@ class Admin::ProceduresController < AdminController
     end
 
     if procedure.publish_or_reopen!(current_administrateur, path)
+      AdministrationMailer.procedure_published(procedure).deliver_later
       flash.notice = "Démarche publiée"
       redirect_to admin_procedures_path
     else

@@ -105,6 +105,10 @@
       margin-top: $default-padding;
     }
 
+    .answer-body p:not(:last-of-type) {
+      margin-bottom: $default-padding;
+    }
+
     .avis-icon {
       margin-right: $default-spacer;
     }

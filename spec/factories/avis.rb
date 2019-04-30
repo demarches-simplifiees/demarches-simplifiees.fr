@@ -19,5 +19,9 @@ FactoryBot.define do
         avis.claimant = create :gestionnaire
       end
     end
+
+    trait :with_answer do
+      answer { "Mon avis se décompose en deux points :\n- La demande semble pertinente\n- Le demandeur remplit les conditions." }
+    end
   end
 end

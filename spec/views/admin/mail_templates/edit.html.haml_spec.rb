@@ -10,6 +10,7 @@ describe 'admin/mail_templates/edit.html.haml', type: :view do
     allow(view).to receive(:admin_procedure_mail_templates_path).and_return("/toto")
 
     assign(:mail_template, mail_template)
+    assign(:procedure, procedure)
   end
 
   context "Champs are listed in the page" do

@@ -1,5 +1,6 @@
 = form.select :value,
-  Champs::CodePostalDePolynesieChamp.codes_postaux_de_polynesie,
+  Champs::CodePostalDePolynesieChamp.options,
+  disabled: Champs::CodePostalDePolynesieChamp.disabled_options,
   include_blank: true,
   required: champ.mandatory?
 
