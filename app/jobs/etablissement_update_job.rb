@@ -2,7 +2,11 @@ class EtablissementUpdateJob < ApplicationJob
   queue_as :default
 
   def perform(dossier, siret)
-    etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, dossier.procedure_id)
+    begin
+      etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, dossier.procedure_id)
+    rescue
+      return
+    end
 
     if etablissement_attributes.present?
       if dossier.etablissement.present?

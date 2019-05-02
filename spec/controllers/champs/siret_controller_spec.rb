@@ -55,6 +55,26 @@ describe Champs::SiretController, type: :controller do
         end
       end
 
+      context 'when the API is unavailable' do
+        let(:siret) { '82161143100015' }
+
+        before do
+          allow(controller).to receive(:find_etablissement_with_siret).and_raise(RestClient::RequestFailed)
+        end
+
+        subject! { get :show, params: params, format: 'js' }
+
+        it 'clears the etablissement and SIRET on the model' do
+          champ.reload
+          expect(champ.etablissement).to be_nil
+          expect(champ.value).to be_empty
+        end
+
+        it 'displays a “API is unavailable” error message' do
+          expect(response.body).to include(I18n.t('errors.messages.siret_network_error'))
+        end
+      end
+
       context 'when the SIRET is valid but unknown' do
         let(:siret) { '00000000000000' }
 

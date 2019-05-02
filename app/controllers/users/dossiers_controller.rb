@@ -91,7 +91,11 @@ module Users
       end
 
       sanitized_siret = siret_model.siret
-      etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
+      begin
+        etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
+      rescue RestClient::RequestFailed
+        return render_siret_error(t('errors.messages.siret_network_error'))
+      end
       if etablissement_attributes.blank?
         return render_siret_error(t('errors.messages.siret_unknown'))
       end
