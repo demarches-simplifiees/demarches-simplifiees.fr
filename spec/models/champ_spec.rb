@@ -383,20 +383,19 @@ describe Champ do
       let(:type_de_champ) { create(:type_de_champ_piece_justificative) }
 
       context 'and there is a blob' do
-        before { champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain") }
+        before do
+          champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+          champ.save
+        end
 
-        it { expect { champ.save }.to change(VirusScan, :count).by(1) }
+        it { expect(champ.piece_justificative_file.virus_scanner.analyzed?).to be_truthy }
       end
 
       context 'and there is no blob' do
-        it { expect { champ.save }.to_not change(VirusScan, :count) }
+        before { champ.save }
+
+        it { expect(champ.piece_justificative_file.virus_scanner).to be_nil }
       end
-    end
-
-    context 'when type_champ is not type_de_champ_piece_justificative' do
-      let(:type_de_champ) { create(:type_de_champ_textarea) }
-
-      it { expect { champ.save }.to_not change(VirusScan, :count) }
     end
   end
 
