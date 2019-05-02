@@ -4,4 +4,4 @@
   partial: 'shared/champs/carte/geo_areas',
   locals: { champ: @champ, error: @error }) %>
 
-DS.drawMapData("<%= @selector %>", <%= geo_data(@champ) %>);
+<%= fire_event('carte:update', { selector: @selector, data: @champ.to_render_data }.to_json) %>
