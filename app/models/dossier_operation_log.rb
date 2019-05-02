@@ -5,7 +5,8 @@ class DossierOperationLog < ApplicationRecord
     accepter: 'accepter',
     refuser: 'refuser',
     classer_sans_suite: 'classer_sans_suite',
-    supprimer: 'supprimer'
+    supprimer: 'supprimer',
+    modifier_annotation: 'modifier_annotation',
   }
 
   belongs_to :dossier
@@ -59,6 +60,8 @@ class DossierOperationLog < ApplicationRecord
       case subject
       when Dossier
         DossierSerializer.new(subject).as_json
+      when Champ
+        ChampSerializer.new(subject).as_json
       end
     end
   end
