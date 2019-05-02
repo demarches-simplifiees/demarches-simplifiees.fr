@@ -182,7 +182,8 @@ fr:
       dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
       invalid_siret: "Le siret est incorrect"
       procedure_not_found: "La démarche n'existe pas"
-      siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro SIRET'
+      siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro SIRET.'
+      siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
       etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
