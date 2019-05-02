@@ -16,9 +16,18 @@ class DossierOperationLog < ApplicationRecord
   def self.create_and_serialize(params)
     dossier = params.fetch(:dossier)
 
+    duree_conservation_dossiers = dossier.procedure.duree_conservation_dossiers_dans_ds
+    keep_until = if duree_conservation_dossiers.present?
+      if dossier.en_instruction_at
+        dossier.en_instruction_at + duree_conservation_dossiers.months
+      else
+        dossier.created_at + duree_conservation_dossiers.months
+      end
+    end
+
     operation_log = new(operation: params.fetch(:operation),
       dossier_id: dossier.id,
-      keep_until: dossier.procedure.keep_until,
+      keep_until: keep_until,
       executed_at: Time.zone.now,
       automatic_operation: !!params[:automatic_operation])
 
