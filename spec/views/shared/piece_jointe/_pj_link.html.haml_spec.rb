@@ -1,19 +1,17 @@
 require 'rails_helper'
 
-describe 'shared/champs/piece_justificative/_pj_link.html.haml', type: :view do
-  let(:champ) { create(:champ, :piece_justificative, :with_piece_justificative_file) }
-  let(:virus_scan) { nil }
+describe 'shared/piece_jointe/_pj_link.html.haml', type: :view do
+  let(:champ) { create(:champ_piece_justificative) }
+  let(:virus_scan_result) { nil }
 
   before do
-    if virus_scan
-      champ.update(virus_scan: virus_scan)
-    end
+    champ.piece_justificative_file.blob.update(metadata: champ.piece_justificative_file.blob.metadata.merge(virus_scan_result: virus_scan_result))
   end
 
-  subject { render 'shared/champs/piece_justificative/pj_link', champ: champ, user_can_upload: false }
+  subject { render 'shared/piece_jointe/pj_link', object: champ, pj: champ.piece_justificative_file, user_can_upload: false }
 
   context 'when there is no anti-virus scan' do
-    let(:virus_scan) { nil }
+    let(:virus_scan_result) { nil }
 
     it 'allows to download the file' do
       expect(subject).to have_link(champ.piece_justificative_file.filename.to_s)
@@ -22,7 +20,7 @@ describe 'shared/champs/piece_justificative/_pj_link.html.haml', type: :view do
   end
 
   context 'when the anti-virus scan is pending' do
-    let(:virus_scan) { create(:virus_scan, :pending) }
+    let(:virus_scan_result) { ActiveStorage::VirusScanner::PENDING }
 
     it 'displays the filename, but doesn’t allow to download the file' do
       expect(subject).to have_text(champ.piece_justificative_file.filename.to_s)
@@ -32,7 +30,7 @@ describe 'shared/champs/piece_justificative/_pj_link.html.haml', type: :view do
   end
 
   context 'when the file is scanned and safe' do
-    let(:virus_scan) { create(:virus_scan, :safe) }
+    let(:virus_scan_result) { ActiveStorage::VirusScanner::SAFE }
 
     it 'allows to download the file' do
       expect(subject).to have_link(champ.piece_justificative_file.filename.to_s)
@@ -40,7 +38,7 @@ describe 'shared/champs/piece_justificative/_pj_link.html.haml', type: :view do
   end
 
   context 'when the file is scanned and infected' do
-    let(:virus_scan) { create(:virus_scan, :infected) }
+    let(:virus_scan_result) { ActiveStorage::VirusScanner::INFECTED }
 
     it 'displays the filename, but doesn’t allow to download the file' do
       expect(subject).to have_text(champ.piece_justificative_file.filename.to_s)
