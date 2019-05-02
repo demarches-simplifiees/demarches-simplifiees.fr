@@ -371,6 +371,11 @@ class Dossier < ApplicationRecord
       log_dossier_operation(gestionnaire, :modifier_annotation, champ)
     end
   end
+
+  def demander_un_avis!(avis)
+    log_dossier_operation(avis.claimant, :demander_un_avis, avis)
+  end
+
   private
 
   def log_dossier_operation(author, operation, subject = nil)

@@ -7,6 +7,7 @@ class DossierOperationLog < ApplicationRecord
     classer_sans_suite: 'classer_sans_suite',
     supprimer: 'supprimer',
     modifier_annotation: 'modifier_annotation',
+    demander_un_avis: 'demander_un_avis'
   }
 
   belongs_to :dossier
@@ -62,6 +63,8 @@ class DossierOperationLog < ApplicationRecord
         DossierSerializer.new(subject).as_json
       when Champ
         ChampSerializer.new(subject).as_json
+      when Avis
+        AvisSerializer.new(subject).as_json
       end
     end
   end
