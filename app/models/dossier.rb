@@ -288,7 +288,7 @@ class Dossier < ApplicationRecord
   def passer_automatiquement_en_instruction!
     en_instruction!
 
-    log_dossier_operation(nil, :passer_en_instruction, automatic_operation: true)
+    log_automatic_dossier_operation(:passer_en_instruction)
   end
 
   def repasser_en_construction!(gestionnaire)
@@ -311,7 +311,7 @@ class Dossier < ApplicationRecord
     end
 
     NotificationMailer.send_closed_notification(self).deliver_later
-    log_dossier_operation(gestionnaire, :accepter)
+    log_dossier_operation(gestionnaire, :accepter, self)
   end
 
   def accepter_automatiquement!
@@ -324,14 +324,14 @@ class Dossier < ApplicationRecord
     end
 
     NotificationMailer.send_closed_notification(self).deliver_later
-    log_dossier_operation(nil, :accepter, automatic_operation: true)
+    log_automatic_dossier_operation(:accepter, self)
   end
 
   def hide!(administration)
     update(hidden_at: Time.zone.now)
 
-    log_administration_dossier_operation(administration, :supprimer)
     DeletedDossier.create_from_dossier(self)
+    log_dossier_operation(administration, :supprimer, self)
   end
 
   def refuser!(gestionnaire, motivation, justificatif = nil)
@@ -343,7 +343,7 @@ class Dossier < ApplicationRecord
     refuse!
 
     NotificationMailer.send_refused_notification(self).deliver_later
-    log_dossier_operation(gestionnaire, :refuser)
+    log_dossier_operation(gestionnaire, :refuser, self)
   end
 
   def classer_sans_suite!(gestionnaire, motivation, justificatif = nil)
@@ -355,7 +355,7 @@ class Dossier < ApplicationRecord
     sans_suite!
 
     NotificationMailer.send_without_continuation_notification(self).deliver_later
-    log_dossier_operation(gestionnaire, :classer_sans_suite)
+    log_dossier_operation(gestionnaire, :classer_sans_suite, self)
   end
 
   def check_mandatory_champs
@@ -368,18 +368,21 @@ class Dossier < ApplicationRecord
 
   private
 
-  def log_dossier_operation(gestionnaire, operation, automatic_operation: false)
-    dossier_operation_logs.create(
-      gestionnaire: gestionnaire,
+  def log_dossier_operation(author, operation, subject = nil)
+    DossierOperationLog.create_and_serialize(
+      dossier: self,
       operation: DossierOperationLog.operations.fetch(operation),
-      automatic_operation: automatic_operation
+      author: author,
+      subject: subject
     )
   end
 
-  def log_administration_dossier_operation(administration, operation)
-    dossier_operation_logs.create(
-      administration: administration,
-      operation: DossierOperationLog.operations.fetch(operation)
+  def log_automatic_dossier_operation(operation, subject = nil)
+    DossierOperationLog.create_and_serialize(
+      dossier: self,
+      operation: DossierOperationLog.operations.fetch(operation),
+      automatic_operation: true,
+      subject: subject
     )
   end
 

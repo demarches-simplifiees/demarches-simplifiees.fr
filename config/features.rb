@@ -17,6 +17,8 @@ Flipflop.configure do
   feature :enable_email_login_token
   feature :new_champs_editor
 
+  feature :operation_log_serialize_subject
+
   group :production do
     feature :remote_storage,
       default: ENV['FOG_ENABLED'] == 'enabled'
