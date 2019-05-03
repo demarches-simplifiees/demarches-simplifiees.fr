@@ -45,6 +45,9 @@ Rails.application.configure do
     protocol: :http
   }
 
+  # Use Content-Security-Policy-Report-Only instead of Content-Security-Policy
+  config.content_security_policy_report_only = true
+
   config.active_job.queue_adapter = :test
   config.active_storage.service = :test
 
