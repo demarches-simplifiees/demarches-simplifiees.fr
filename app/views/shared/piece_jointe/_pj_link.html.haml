@@ -1,19 +1,19 @@
 - if pj.attached?
   .pj-link
-    - if object.virus_scan.blank? || object.virus_scan.safe?
-      = link_to url_for(pj), target: '_blank', title: "Télécharger la pièce jointe" do
+    - if object.virus_scan_safe? || object.virus_scan_no_scan?
+      = link_to url_for(pj), target: '_blank', rel: 'noopener',  title: "Télécharger la pièce jointe" do
         %span.icon.attachment
         = pj.filename.to_s
-      - if object.virus_scan.blank?
+      - if object.virus_scan_no_scan?
         (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
 
     - else
       = pj.filename.to_s
-      - if object.virus_scan.pending?
+      - if object.virus_scan_pending?
         (analyse antivirus en cours
         = link_to "rafraichir", request.path
         )
-      - elsif object.virus_scan.infected?
+      - elsif object.virus_scan_infected?
         - if user_can_upload
           (virus détecté, merci d’envoyer un autre fichier)
         - else

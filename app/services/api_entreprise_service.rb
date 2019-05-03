@@ -1,4 +1,11 @@
 class ApiEntrepriseService
+  # Retrieve all informations we can get about a SIRET.
+  #
+  # Returns nil if the SIRET is unknown; and nested params
+  # suitable for being saved into a Etablissement object otherwise.
+  #
+  # Raises a RestClient::RequestFailed exception on transcient errors
+  # (timeout, 5XX HTTP error code, etc.)
   def self.get_etablissement_params_for_siret(siret, procedure_id)
     etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
     entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params

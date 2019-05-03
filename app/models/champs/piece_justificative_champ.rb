@@ -1,6 +1,4 @@
 class Champs::PieceJustificativeChamp < Champ
-  after_commit :create_virus_scan
-
   PIECE_JUSTIFICATIVE_FILE_MAX_SIZE = 200.megabytes
 
   PIECE_JUSTIFICATIVE_FILE_ACCEPTED_FORMATS = [
@@ -48,20 +46,26 @@ class Champs::PieceJustificativeChamp < Champ
     errors
   end
 
-  def for_api
-    if piece_justificative_file.attached? && (virus_scan&.safe? || virus_scan&.pending?)
-      Rails.application.routes.url_helpers.url_for(piece_justificative_file)
-    end
+  # FIXME remove this after migrating virus_scan to blob metadata
+  def virus_scan_safe?
+    virus_scan&.safe? || piece_justificative_file.virus_scanner.safe?
   end
 
-  private
+  def virus_scan_infected?
+    virus_scan&.infected? || piece_justificative_file.virus_scanner.infected?
+  end
 
-  def create_virus_scan
-    if self.piece_justificative_file&.attachment&.blob.present?
-      VirusScan.where(champ: self).where.not(blob_key: self.piece_justificative_file.blob.key).delete_all
-      VirusScan.find_or_create_by!(champ: self, blob_key: self.piece_justificative_file.blob.key) do |virus_scan|
-        virus_scan.status = VirusScan.statuses.fetch(:pending)
-      end
+  def virus_scan_pending?
+    virus_scan&.pending? || piece_justificative_file.virus_scanner.pending?
+  end
+
+  def virus_scan_no_scan?
+    virus_scan.blank? && !piece_justificative_file.virus_scanner.analyzed?
+  end
+
+  def for_api
+    if piece_justificative_file.attached? && (virus_scan_safe? || virus_scan_pending?)
+      Rails.application.routes.url_helpers.url_for(piece_justificative_file)
     end
   end
 end
