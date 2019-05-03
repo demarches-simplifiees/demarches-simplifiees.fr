@@ -15,7 +15,7 @@
     "debounce": "^1.2.0",
     "dom4": "^2.1.4",
     "highcharts": "^6.1.2",
-    "jquery": "^3.4.0",
+    "jquery": "^3.4.1",
     "leaflet": "^1.4.0",
     "leaflet-freedraw": "^2.10.0",
     "prop-types": "^15.7.2",
