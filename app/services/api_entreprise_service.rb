@@ -11,14 +11,19 @@ class ApiEntrepriseService
     entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
 
     if etablissement_params.present? && entreprise_params.present?
-      association_params = ApiEntreprise::RNAAdapter.new(siret, procedure_id).to_params
-      exercices_params = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id).to_params
+      begin
+        association_params = ApiEntreprise::RNAAdapter.new(siret, procedure_id).to_params
+        etablissement_params.merge!(association_params)
+      rescue RestClient::RequestFailed
+      end
 
-      etablissement_params.merge(
-        entreprise_params,
-        association_params,
-        exercices_params
-      )
+      begin
+        exercices_params = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id).to_params
+        etablissement_params.merge!(exercices_params)
+      rescue RestClient::RequestFailed
+      end
+
+      etablissement_params.merge(entreprise_params)
     end
   end
 end
