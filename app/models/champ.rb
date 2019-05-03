@@ -4,7 +4,6 @@ class Champ < ApplicationRecord
   belongs_to :parent, class_name: 'Champ'
   has_many :commentaires
   has_one_attached :piece_justificative_file
-  has_one :virus_scan
 
   # We declare champ specific relationships (Champs::CarteChamp and Champs::SiretChamp)
   # here because otherwise we can't easily use includes in our queries.
