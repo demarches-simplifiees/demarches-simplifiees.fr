@@ -9,7 +9,7 @@
   - if pj.attached?
     .piece-justificative-actions{ id: "piece_justificative_#{champ.id}" }
       .piece-justificative-action
-        = render partial: "shared/piece_jointe/pj_link", locals: { object: champ, pj: champ.piece_justificative_file, user_can_upload: true }
+        = render partial: "shared/piece_jointe/pj_link", locals: { pj: pj, user_can_upload: true }
       .piece-justificative-action
         - if champ.private?
           = link_to 'Supprimer', gestionnaire_champ_purge_champ_piece_justificative_path(procedure_id: champ.dossier.procedure_id, dossier_id: champ.dossier_id, champ_id: champ.id), remote: true, method: :delete, class: 'button small danger'
