@@ -1,7 +1,6 @@
 module NewAdministrateur
   class ProcedureAdministrateursController < AdministrateurController
     before_action :retrieve_procedure
-    before_action :procedure_locked?
 
     def index
     end
@@ -33,7 +32,7 @@ module NewAdministrateur
 
       # Prevent self-removal (Also enforced in the UI)
       if administrateur == current_administrateur
-        flash.error = "Vous ne pouvez pas vous retirez vous-même d’une procédure."
+        flash.error = "Vous ne pouvez pas vous retirer vous-même d’une démarche."
       end
 
       # Actually remove the admin
