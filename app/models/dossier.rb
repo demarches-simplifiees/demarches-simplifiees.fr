@@ -1,6 +1,5 @@
 class Dossier < ApplicationRecord
   include DossierFilteringConcern
-  include VirusScanConcern
 
   enum state: {
     brouillon:       'brouillon',
@@ -98,9 +97,6 @@ class Dossier < ApplicationRecord
   after_save :send_dossier_received
   after_save :send_web_hook
   after_create :send_draft_notification_email
-
-  after_commit :create_dossier_virus_scan
-  after_initialize { add_virus_scan_on(self.justificatif_motivation) }
 
   validates :user, presence: true
 
@@ -416,9 +412,5 @@ class Dossier < ApplicationRecord
         self
       )
     end
-  end
-
-  def create_dossier_virus_scan
-    create_virus_scan(self.justificatif_motivation)
   end
 end
