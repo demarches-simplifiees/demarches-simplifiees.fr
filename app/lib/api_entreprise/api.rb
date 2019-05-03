@@ -34,13 +34,21 @@ class ApiEntreprise::API
 
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
-    else
+    elsif response.code == 404 || response.code == 422
       raise RestClient::ResourceNotFound
+    else
+      raise RestClient::RequestFailed
     end
   end
 
   def self.url(resource_name, siret_or_siren)
-    [API_ENTREPRISE_URL, resource_name, siret_or_siren].join("/")
+    base_url = [API_ENTREPRISE_URL, resource_name, siret_or_siren].join("/")
+
+    if Flipflop.insee_api_v3?
+      base_url += "?with_insee_v3=true"
+    end
+
+    base_url
   end
 
   def self.params(siret_or_siren, procedure_id)

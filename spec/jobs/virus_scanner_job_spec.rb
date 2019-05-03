@@ -1,12 +1,11 @@
-RSpec.describe AntiVirusJob, type: :job do
+RSpec.describe VirusScannerJob, type: :job do
   let(:champ) do
     champ = create(:champ, :piece_justificative)
     champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
     champ
   end
-  let(:virus_scan) { create(:virus_scan, status: VirusScan.statuses.fetch(:pending), champ: champ, blob_key: champ.piece_justificative_file.blob.key) }
 
-  subject { AntiVirusJob.new.perform(virus_scan) }
+  subject { VirusScannerJob.new.perform(champ.piece_justificative_file.blob) }
 
   context "when no virus is found" do
     let(:virus_found?) { true }
@@ -16,7 +15,7 @@ RSpec.describe AntiVirusJob, type: :job do
       subject
     end
 
-    it { expect(virus_scan.reload.status).to eq(VirusScan.statuses.fetch(:safe)) }
+    it { expect(champ.piece_justificative_file.virus_scanner.safe?).to be_truthy }
   end
 
   context "when a virus is found" do
@@ -27,6 +26,6 @@ RSpec.describe AntiVirusJob, type: :job do
       subject
     end
 
-    it { expect(virus_scan.reload.status).to eq(VirusScan.statuses.fetch(:infected)) }
+    it { expect(champ.piece_justificative_file.virus_scanner.infected?).to be_truthy }
   end
 end
