@@ -19,7 +19,7 @@
     = stylesheet_link_tag 'new_design/new_application', media: 'all', 'data-turbolinks-track': 'reload'
     = stylesheet_link_tag 'new_design/print', media: 'print', 'data-turbolinks-track': 'reload'
 
-    = Gon::Base.render_data(camel_case: true, init: true)
+    = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
     - if Rails.env.development?
       = stylesheet_link_tag :xray
