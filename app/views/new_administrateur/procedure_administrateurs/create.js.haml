@@ -3,4 +3,9 @@
   = append_to_element("#procedure-#{@procedure.id}-administrateurs",
     partial: 'administrateur',
     locals: { administrateur: @administrateur })
-  document.getElementById('procedure-#{@procedure.id}-new_administrateur').reset()
+
+  let form = document.getElementById('procedure-#{@procedure.id}-new_administrateur');
+  form.reset();
+  let inputs = form.querySelectorAll('input, textarea');
+  inputs.forEach(blur)
+  inputs.forEach(input => { input.classList.remove('touched') })
