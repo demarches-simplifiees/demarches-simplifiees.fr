@@ -1,0 +1,6 @@
+= render_flash(sticky: true)
+- if @administrateur
+  = append_to_element("#procedure-#{@procedure.id}-administrateurs",
+    partial: 'administrateur',
+    locals: { administrateur: @administrateur })
+  document.getElementById('procedure-#{@procedure.id}-new_administrateur').reset()
