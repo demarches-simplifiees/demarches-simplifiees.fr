@@ -65,6 +65,12 @@ Rails.application.routes.draw do
   get "/ping" => "ping#index", :constraints => { :ip => /127.0.0.1/ }
 
   #
+  # password test
+  #
+  get '/password' => 'password#test'
+  post '/password' => 'password#create'
+  get '/password/test_password_strength' => 'password#test_password_strength'
+  #
   # Authentication
   #
 
