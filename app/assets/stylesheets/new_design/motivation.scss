@@ -43,4 +43,12 @@
       padding-left: $default-spacer * 1.5;
     }
   }
+
+  .optional-justificatif {
+    margin-bottom: 16px;
+  }
+
+  input[data-direct-upload-url] {
+    width: 100%;
+  }
 }

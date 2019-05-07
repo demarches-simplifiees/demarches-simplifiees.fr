@@ -59,7 +59,13 @@ module TagsSubstitutionConcern
     {
       libelle: 'lien attestation',
       description: '',
-      lambda: -> (d) { external_link(attestation_dossier_url(d)) },
+      lambda: -> (d) {
+        links = [external_link(attestation_dossier_url(d))]
+        if d.justificatif_motivation.attached?
+          links.push external_link("Télécharger le justificatif", url_for_justificatif_motivation(d))
+        end
+        links.join "<br />\n"
+      },
       available_for_states: [Dossier.states.fetch(:accepte)]
     }
   ]
@@ -138,8 +144,14 @@ module TagsSubstitutionConcern
     end
   end
 
-  def external_link(url)
-    link_to(url, url, target: '_blank', rel: 'noopener')
+  def external_link(url, title = nil)
+    link_to(title || url, url, target: '_blank', rel: 'noopener')
+  end
+
+  def url_for_justificatif_motivation(dossier)
+    if dossier.justificatif_motivation.attached?
+      Rails.application.routes.url_helpers.url_for(dossier.justificatif_motivation)
+    end
   end
 
   def dossier_tags
