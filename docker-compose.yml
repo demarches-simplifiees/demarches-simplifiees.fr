@@ -33,6 +33,7 @@ version: '3.3'
 # MAILJET_SECRET_KEY: MAILJET configuration to use to send mails
 #
 # SENTRY variables to logs exception on the SEntry platform
+# HELPSCOUT variable to be able to receive administrator requests & help requests
 #-------------------------------------------------------------
 services:
   app:
@@ -58,6 +59,10 @@ services:
       - SENTRY_DSN_RAILS
       - SENTRY_DSN_JS
       - SENTRY_CURRENT_ENV
+      - HELPSCOUT_MAILBOX_ID
+      - HELPSCOUT_CLIENT_ID
+      - HELPSCOUT_CLIENT_SECRET
+      - HELPSCOUT_WEBHOOK_SECRET
     volumes:
       - md-data-files:/app/storage
       - md-tmp:/app/tmp
