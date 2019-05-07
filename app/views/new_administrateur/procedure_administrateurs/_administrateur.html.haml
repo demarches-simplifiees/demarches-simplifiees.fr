@@ -1,0 +1,13 @@
+%tr{ id: "procedure-#{@procedure.id}-administrateur-#{administrateur.id}" }
+  %td= administrateur.email
+  %td= administrateur.created_at.strftime('%d/%m/%Y %H:%M')
+  %td= administrateur.registration_state
+  %td
+    - if administrateur == current_administrateur
+      C’est vous !
+    - else
+      = link_to 'Retirer',
+        [@procedure, administrateur],
+        method: :delete,
+        'data-confirm': "Retirer « #{administrateur.email} » des administrateurs de « #{@procedure.libelle} » ?",
+        remote: true
