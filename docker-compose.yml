@@ -61,6 +61,8 @@ services:
     volumes:
       - md-data-files:/app/storage
       - md-tmp:/app/tmp
+      - md-logo-uploads:/app/public/uploads
+      - md-logo-downloads:/app/public/downloads
     networks:
       - md-network
 
@@ -136,6 +138,18 @@ volumes:
     driver_opts:
       type: none
       device: $ROOT/data
+      o: bind
+  md-logo-uploads:
+    driver: local
+    driver_opts:
+      type: none
+      device: $ROOT/logos/uploads
+      o: bind
+  md-logo-downloads:
+    driver: local
+    driver_opts:
+      type: none
+      device: $ROOT/logos/downloads
       o: bind
   md-tmp:
     driver: local
