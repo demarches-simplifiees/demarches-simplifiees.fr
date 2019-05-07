@@ -1,0 +1,11 @@
+%table.table.vertical.dossier-champs
+  %tbody
+    %tr
+      %th.libelle Déposé le :
+      %td= l(dossier.en_construction_at, format: '%d %B %Y')
+  - if dossier.justificatif_motivation.attached?
+    %tr
+      %th.libelle Justificatif :
+      %td
+        .action
+          = render partial: 'shared/piece_jointe/pj_link', locals: { object: dossier, pj: dossier.justificatif_motivation }

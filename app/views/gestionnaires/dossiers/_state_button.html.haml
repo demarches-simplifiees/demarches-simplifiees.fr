@@ -60,6 +60,7 @@
         - if dossier.motivation.present?
           %h4 Motivation
           %p.dossier-motivation= dossier.motivation
+          = render partial: 'new_user/dossiers/show/download_justificatif', locals: { dossier: dossier }
 
         - if dossier.attestation.present?
           %h4 Attestation
