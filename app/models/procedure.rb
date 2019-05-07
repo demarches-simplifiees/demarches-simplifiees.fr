@@ -1,6 +1,8 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
+  self.ignored_columns = [:administrateur_id]
+
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
@@ -17,7 +19,7 @@ class Procedure < ApplicationRecord
 
   has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
-  has_many :administrateurs, through: :administrateurs_procedures
+  has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :gestionnaires, through: :assign_to
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
@@ -57,6 +59,7 @@ class Procedure < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+  validates :administrateurs, presence: true
   validate :check_juridique
   validates :path, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: :aasm_state, case_sensitive: false }, presence: true, allow_blank: false, allow_nil: true
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style

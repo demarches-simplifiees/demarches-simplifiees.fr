@@ -50,11 +50,14 @@
           %h3 Motif de l’acceptation
           %blockquote= dossier.motivation
 
+        = render partial: 'new_user/dossiers/show/download_justificatif', locals: { dossier: dossier }
+
         - if dossier.attestation.present?
           .action
             = link_to attestation_dossier_path(dossier), target: '_blank', rel: 'noopener', class: 'button primary' do
               %span.icon.download
               Télécharger l’attestation
+
 
     - elsif dossier.refuse?
       .refuse
@@ -68,6 +71,7 @@
           %h3 Motif du refus
           %blockquote= dossier.motivation
 
+        = render partial: 'new_user/dossiers/show/download_justificatif', locals: { dossier: @dossier }
         .action
           = link_to 'Envoyer un message à l’administration', messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button'
 
@@ -78,6 +82,8 @@
           Votre dossier a été classé
           = succeed '.' do
             %strong sans suite
+
+        = render partial: 'new_user/dossiers/show/download_justificatif', locals: { dossier: @dossier }
 
         - if dossier.motivation.present?
           %h3 Motif du classement sans suite

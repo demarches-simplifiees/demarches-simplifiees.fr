@@ -109,5 +109,7 @@ Rails.application.configure do
     host: ENV['APP_HOST']
   }
 
+  config.content_security_policy_report_only = true
+
   config.lograge.enabled = ENV['LOGRAGE_ENABLED'] == 'enabled'
 end
