@@ -19,7 +19,7 @@ class Procedure < ApplicationRecord
 
   has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
-  has_many :administrateurs, through: :administrateurs_procedures
+  has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :gestionnaires, through: :assign_to
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
@@ -59,6 +59,7 @@ class Procedure < ApplicationRecord
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
+  validates :administrateurs, presence: true
   validate :check_juridique
   validates :path, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: :aasm_state, case_sensitive: false }, presence: true, allow_blank: false, allow_nil: true
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
@@ -346,14 +347,6 @@ class Procedure < ApplicationRecord
 
   def usual_traitement_time
     percentile_time(:en_construction_at, :processed_at, 90)
-  end
-
-  def usual_verification_time
-    percentile_time(:en_construction_at, :en_instruction_at, 90)
-  end
-
-  def usual_instruction_time
-    percentile_time(:en_instruction_at, :processed_at, 90)
   end
 
   PATH_AVAILABLE = :available

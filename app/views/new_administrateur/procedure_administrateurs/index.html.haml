@@ -1,0 +1,26 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Administrateurs'], preview: false }
+
+.container
+  %h1 Administrateurs de « #{@procedure.libelle} »
+  %table.table
+    %thead
+      %th= 'Adresse email'
+      %th= 'Enregistré le'
+      %th= 'État'
+    %tbody{ id: "procedure-#{@procedure.id}-administrateurs" }
+      = render partial: 'administrateur', collection: @procedure.administrateurs.order(:email)
+    %tfoot
+      %tr
+        %th{ colspan: 4 }
+          = form_for @procedure.administrateurs.new,
+            url: { controller: 'procedure_administrateurs' },
+            html: { class: 'form', id:  "procedure-#{@procedure.id}-new_administrateur" } ,
+            remote: true do |f|
+            = f.label :email do
+              Ajouter un administrateur
+              %span.notice= "Renseignez l’email d’un administrateur déjà enregistré sur demarches-simplifiees.fr pour lui permettre de modifier « #{@procedure.libelle} »."
+            = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true
+            = f.submit 'Ajouter comme administrateur', class: 'button primary send'

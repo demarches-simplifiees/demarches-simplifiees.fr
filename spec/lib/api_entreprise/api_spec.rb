@@ -2,21 +2,35 @@ require 'spec_helper'
 
 describe ApiEntreprise::API do
   let(:procedure_id) { 12 }
+
   describe '.entreprise' do
     subject { described_class.entreprise(siren, procedure_id) }
+
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
         .to_return(status: status, body: body)
     end
+
+    context 'when the service is unavailable' do
+      let(:siren) { '111111111' }
+      let(:status) { 502 }
+      let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_unavailable.json') }
+
+      it 'raises RestClient::RequestFailed' do
+        expect { subject }.to raise_error(RestClient::RequestFailed)
+      end
+    end
+
     context 'when siren does not exist' do
       let(:siren) { '111111111' }
       let(:status) { 404 }
-      let(:body) { '' }
+      let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_not_found.json') }
 
       it 'raises RestClient::ResourceNotFound' do
         expect { subject }.to raise_error(RestClient::ResourceNotFound)
       end
     end
+
     context 'when siret exist' do
       let(:siren) { '418166096' }
       let(:status) { 200 }

@@ -11,7 +11,7 @@ describe ApiEntreprise::EntrepriseAdapter do
       .to_return(body: body, status: status)
   end
 
-  context "when SIRET is OK" do
+  context "when the SIRET is valid" do
     let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises.json') }
     let(:status) { 200 }
 
@@ -70,12 +70,21 @@ describe ApiEntreprise::EntrepriseAdapter do
     end
   end
 
-  context "when SIRET is KO" do
+  context "when the SIRET is unknown" do
     let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_not_found.json') }
-    let(:status) { 206 }
+    let(:status) { 404 }
 
     it '#to_params class est une Hash ?' do
       expect(subject).to eq({})
+    end
+  end
+
+  context "when the service is unavailable" do
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_unavailable.json') }
+    let(:status) { 502 }
+
+    it 'raises an exception' do
+      expect { subject }.to raise_error(RestClient::RequestFailed)
     end
   end
 end

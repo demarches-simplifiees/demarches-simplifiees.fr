@@ -168,6 +168,10 @@ describe Procedure do
       it { is_expected.to allow_value('URRSAF').for(:organisation) }
     end
 
+    context 'administrateurs' do
+      it { is_expected.not_to allow_value([]).for(:administrateurs) }
+    end
+
     context 'juridique' do
       it { is_expected.not_to allow_value(nil).for(:cadre_juridique) }
       it { is_expected.to allow_value('text').for(:cadre_juridique) }
@@ -727,59 +731,17 @@ describe Procedure do
     end
   end
 
-  describe '#usual_verification_time' do
+  describe '#usual_traitement_time' do
     let(:procedure) { create(:procedure) }
 
-    def create_dossier(construction_date:, instruction_date:)
-      dossier = create(:dossier, :en_instruction, procedure: procedure)
-      dossier.update!(en_construction_at: construction_date, en_instruction_at: instruction_date)
-    end
-
-    before do
-      delays.each do |delay|
-        create_dossier(construction_date: 1.week.ago - delay, instruction_date: 1.week.ago)
-      end
-    end
-
-    context 'when there are several dossiers in the time frame' do
-      let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
-
-      it 'returns a time representative of the dossier verification delay' do
-        expect(procedure.usual_verification_time).to be_between(3.days, 4.days)
-      end
-    end
-
-    context 'when there are very old dossiers' do
-      let(:delays) { [2.days, 2.days] }
-      let!(:old_dossier) { create_dossier(construction_date: 3.months.ago, instruction_date: 2.months.ago) }
-
-      it 'ignores dossiers older than 1 month' do
-        expect(procedure.usual_verification_time).to be_within(1.hour).of(2.days)
-      end
-    end
-
-    context 'when there is only one dossier in the time frame' do
-      let(:delays) { [1.day] }
-      it { expect(procedure.usual_verification_time).to be_within(1.hour).of(1.day) }
-    end
-
-    context 'where there are no dossiers' do
-      let(:delays) { [] }
-      it { expect(procedure.usual_verification_time).to be_nil }
-    end
-  end
-
-  describe '#usual_instruction_time' do
-    let(:procedure) { create(:procedure) }
-
-    def create_dossier(instruction_date:, processed_date:)
+    def create_dossier(construction_date:, instruction_date:, processed_date:)
       dossier = create(:dossier, :accepte, procedure: procedure)
-      dossier.update!(en_instruction_at: instruction_date, processed_at: processed_date)
+      dossier.update!(en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
     end
 
     before do
       delays.each do |delay|
-        create_dossier(instruction_date: 1.week.ago - delay, processed_date: 1.week.ago)
+        create_dossier(construction_date: 1.week.ago - delay, instruction_date: 1.week.ago - delay + 12.hours, processed_date: 1.week.ago)
       end
     end
 
@@ -787,36 +749,36 @@ describe Procedure do
       let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
 
       it 'returns a time representative of the dossier instruction delay' do
-        expect(procedure.usual_instruction_time).to be_between(3.days, 4.days)
+        expect(procedure.usual_traitement_time).to be_between(3.days, 4.days)
       end
     end
 
     context 'when there are very old dossiers' do
       let(:delays) { [2.days, 2.days] }
-      let!(:old_dossier) { create_dossier(instruction_date: 3.months.ago, processed_date: 2.months.ago) }
+      let!(:old_dossier) { create_dossier(construction_date: 3.months.ago, instruction_date: 2.months.ago, processed_date: 2.months.ago) }
 
       it 'ignores dossiers older than 1 month' do
-        expect(procedure.usual_instruction_time).to be_within(1.hour).of(2.days)
+        expect(procedure.usual_traitement_time).to be_within(1.hour).of(2.days)
       end
     end
 
     context 'when there is a dossier with bad data' do
       let(:delays) { [2.days, 2.days] }
-      let!(:bad_dossier) { create_dossier(instruction_date: nil, processed_date: 10.days.ago) }
+      let!(:bad_dossier) { create_dossier(construction_date: nil, instruction_date: nil, processed_date: 10.days.ago) }
 
       it 'ignores bad dossiers' do
-        expect(procedure.usual_instruction_time).to be_within(1.hour).of(2.days)
+        expect(procedure.usual_traitement_time).to be_within(1.hour).of(2.days)
       end
     end
 
     context 'when there is only one processed dossier' do
       let(:delays) { [1.day] }
-      it { expect(procedure.usual_instruction_time).to be_within(1.hour).of(1.day) }
+      it { expect(procedure.usual_traitement_time).to be_within(1.hour).of(1.day) }
     end
 
     context 'where there is no processed dossier' do
       let(:delays) { [] }
-      it { expect(procedure.usual_instruction_time).to be_nil }
+      it { expect(procedure.usual_traitement_time).to be_nil }
     end
   end
 

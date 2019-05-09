@@ -10,8 +10,12 @@ addEventListener(INITIALIZE_EVENT, ({ target, detail: { id, file } }) => {
   ProgressBar.init(target, id, file);
 });
 
-addEventListener(START_EVENT, ({ detail: { id } }) => {
+addEventListener(START_EVENT, ({ target, detail: { id } }) => {
   ProgressBar.start(id);
+  const button = target.form.querySelector('button.primary');
+  if (button) {
+    delete button.dataset.confirm;
+  }
 });
 
 addEventListener(PROGRESS_EVENT, ({ detail: { id, progress } }) => {

@@ -20,6 +20,8 @@ class Dossier < ApplicationRecord
   has_one :attestation, dependent: :destroy
 
   has_many :pieces_justificatives, dependent: :destroy
+  has_one_attached :justificatif_motivation
+
   has_many :champs, -> { root.public_only.ordered }, dependent: :destroy
   has_many :champs_private, -> { root.private_only.ordered }, class_name: 'Champ', dependent: :destroy
   has_many :commentaires, dependent: :destroy
@@ -296,10 +298,12 @@ class Dossier < ApplicationRecord
     log_dossier_operation(gestionnaire, :repasser_en_construction)
   end
 
-  def accepter!(gestionnaire, motivation)
+  def accepter!(gestionnaire, motivation, justificatif = nil)
     self.motivation = motivation
     self.en_instruction_at ||= Time.zone.now
-
+    if justificatif
+      self.justificatif_motivation.attach(justificatif)
+    end
     accepte!
 
     if attestation.nil?
@@ -330,20 +334,24 @@ class Dossier < ApplicationRecord
     DeletedDossier.create_from_dossier(self)
   end
 
-  def refuser!(gestionnaire, motivation)
+  def refuser!(gestionnaire, motivation, justificatif = nil)
     self.motivation = motivation
     self.en_instruction_at ||= Time.zone.now
-
+    if justificatif
+      self.justificatif_motivation.attach(justificatif)
+    end
     refuse!
 
     NotificationMailer.send_refused_notification(self).deliver_later
     log_dossier_operation(gestionnaire, :refuser)
   end
 
-  def classer_sans_suite!(gestionnaire, motivation)
+  def classer_sans_suite!(gestionnaire, motivation, justificatif = nil)
     self.motivation = motivation
     self.en_instruction_at ||= Time.zone.now
-
+    if justificatif
+      self.justificatif_motivation.attach(justificatif)
+    end
     sans_suite!
 
     NotificationMailer.send_without_continuation_notification(self).deliver_later
