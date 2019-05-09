@@ -13,11 +13,11 @@ class CommentaireFileUploader < BaseUploader
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
-  def extension_white_list
+  def extension_whitelist
     ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'ods', 'odp', 'jpg', 'jpeg', 'png', 'zip', 'txt']
   end
 
   def accept_extension_list
-    extension_white_list.map { |e| ".#{e}" }.join(",")
+    extension_whitelist.map { |e| ".#{e}" }.join(",")
   end
 end
