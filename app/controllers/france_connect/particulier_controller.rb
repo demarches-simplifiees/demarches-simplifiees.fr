@@ -30,7 +30,7 @@ class FranceConnect::ParticulierController < ApplicationController
   private
 
   def redirect_to_login_if_fc_aborted
-    if params[:code].empty?
+    if params[:code].blank?
       redirect_to new_user_session_path
     end
   end
