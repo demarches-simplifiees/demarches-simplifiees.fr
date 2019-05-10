@@ -43,7 +43,7 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
   # noinspection RubyLiteralArrayInspection
   NOM_VOIES = [
     'avenue', 'av', 'angle', 'rue', 'boulevard', 'chemin', 'ave', 'bvd', 'cours', 'place', 'allée', 'route', 'immeuble',
-    'lot', 'passage', 'servitude', 'blvd', 'pointe', 'pont', 'av.', 'bd', 'blv', 'ecole', 'école'
+    'lot', 'passage', 'servitude', 'blvd', 'pointe', 'pont', 'av.', 'bd', 'blv', 'ecole', 'école', 'église'
   ]
   NOM_VOIES_RE = NOM_VOIES.join('|')
 
