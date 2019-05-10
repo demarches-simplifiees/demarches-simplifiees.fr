@@ -45,7 +45,7 @@ describe Champs::CarteController, type: :controller do
           expect(assigns(:error)).to eq(nil)
           expect(champ.reload.value).to eq(nil)
           expect(champ.reload.geo_areas).to eq([])
-          expect(response.body).to include("DS.drawMapData(\".carte-1\", {\"position\":{\"lon\":\"2.428462\",\"lat\":\"46.538192\",\"zoom\":\"13\"},\"selection\":null,\"quartiersPrioritaires\":[],\"cadastres\":[],\"parcellesAgricoles\":[]});")
+          expect(response.body).to include("DS.fire('carte:update', {\"selector\":\".carte-1\",\"data\":{\"position\":{\"lon\":\"2.428462\",\"lat\":\"46.538192\",\"zoom\":\"13\"},\"selection\":null,\"quartiersPrioritaires\":[],\"cadastres\":[],\"parcellesAgricoles\":[]}});")
         }
       end
 

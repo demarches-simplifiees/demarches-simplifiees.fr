@@ -10,7 +10,7 @@ describe ChampSerializer do
 
       before do
         champ.piece_justificative_file.attach({ filename: __FILE__, io: File.open(__FILE__) })
-        champ.reload.virus_scan.safe!
+        champ.piece_justificative_file.virus_scanner.analyze_later
       end
       after { champ.piece_justificative_file.purge }
 

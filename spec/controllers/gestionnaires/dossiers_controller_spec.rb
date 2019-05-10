@@ -7,6 +7,7 @@ describe Gestionnaires::DossiersController, type: :controller do
   let(:gestionnaires) { [gestionnaire] }
   let(:procedure) { create(:procedure, :published, gestionnaires: gestionnaires) }
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+  let(:fake_justificatif) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
 
   before { sign_in(gestionnaire) }
 
@@ -141,24 +142,39 @@ describe Gestionnaires::DossiersController, type: :controller do
         sign_in gestionnaire
       end
 
-      subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
+      context 'simple refusal' do
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
 
-      it 'change state to refuse' do
-        subject
+        it 'change state to refuse' do
+          subject
 
-        dossier.reload
-        expect(dossier.state).to eq(Dossier.states.fetch(:refuse))
+          dossier.reload
+          expect(dossier.state).to eq(Dossier.states.fetch(:refuse))
+          expect(dossier.justificatif_motivation).to_not be_attached
+        end
+
+        it 'Notification email is sent' do
+          expect(NotificationMailer).to receive(:send_refused_notification)
+            .with(dossier).and_return(NotificationMailer)
+          expect(NotificationMailer).to receive(:deliver_later)
+
+          subject
+        end
       end
 
-      it 'Notification email is sent' do
-        expect(NotificationMailer).to receive(:send_refused_notification)
-          .with(dossier).and_return(NotificationMailer)
-        expect(NotificationMailer).to receive(:deliver_later)
+      context 'refusal with a justificatif' do
+        subject { post :terminer, params: { process_action: "refuser", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
 
-        subject
+        it 'attachs a justificatif' do
+          subject
+
+          dossier.reload
+          expect(dossier.state).to eq(Dossier.states.fetch(:refuse))
+          expect(dossier.justificatif_motivation).to be_attached
+        end
+
+        it { expect(subject.body).to include('.state-button') }
       end
-
-      it { expect(subject.body).to include('.state-button') }
     end
 
     context "with classer_sans_suite" do
@@ -166,25 +182,41 @@ describe Gestionnaires::DossiersController, type: :controller do
         dossier.en_instruction!
         sign_in gestionnaire
       end
+      context 'without attachment' do
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
 
-      subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
+        it 'change state to sans_suite' do
+          subject
 
-      it 'change state to sans_suite' do
-        subject
+          dossier.reload
+          expect(dossier.state).to eq(Dossier.states.fetch(:sans_suite))
+          expect(dossier.justificatif_motivation).to_not be_attached
+        end
 
-        dossier.reload
-        expect(dossier.state).to eq(Dossier.states.fetch(:sans_suite))
+        it 'Notification email is sent' do
+          expect(NotificationMailer).to receive(:send_without_continuation_notification)
+            .with(dossier).and_return(NotificationMailer)
+          expect(NotificationMailer).to receive(:deliver_later)
+
+          subject
+        end
+
+        it { expect(subject.body).to include('.state-button') }
       end
 
-      it 'Notification email is sent' do
-        expect(NotificationMailer).to receive(:send_without_continuation_notification)
-          .with(dossier).and_return(NotificationMailer)
-        expect(NotificationMailer).to receive(:deliver_later)
+      context 'with attachment' do
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
 
-        subject
+        it 'change state to sans_suite' do
+          subject
+
+          dossier.reload
+          expect(dossier.state).to eq(Dossier.states.fetch(:sans_suite))
+          expect(dossier.justificatif_motivation).to be_attached
+        end
+
+        it { expect(subject.body).to include('.state-button') }
       end
-
-      it { expect(subject.body).to include('.state-button') }
     end
 
     context "with accepter" do
@@ -206,6 +238,7 @@ describe Gestionnaires::DossiersController, type: :controller do
 
         dossier.reload
         expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
+        expect(dossier.justificatif_motivation).to_not be_attached
       end
 
       context 'when the dossier does not have any attestation' do
@@ -260,6 +293,20 @@ describe Gestionnaires::DossiersController, type: :controller do
         after { Timecop.return }
 
         it { subject }
+      end
+
+      context 'with an attachment' do
+        subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
+
+        it 'change state to accepte' do
+          subject
+
+          dossier.reload
+          expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
+          expect(dossier.justificatif_motivation).to be_attached
+        end
+
+        it { expect(subject.body).to include('.state-button') }
       end
     end
   end
