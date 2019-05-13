@@ -22,17 +22,6 @@ class Helpscout::API
     })
   end
 
-  def add_custom_fields(conversation_id, dossier_id, browser)
-    body = {
-      'Dossier ID': dossier_id,
-      'Browser': browser
-    }.compact.map do |key, value|
-      { id: custom_fields[key], value: value }
-    end
-
-    call_api(:put, "#{CONVERSATIONS}/#{conversation_id}/#{FIELDS}", { fields: body })
-  end
-
   def create_conversation(email, subject, text, file)
     body = {
       subject: subject,

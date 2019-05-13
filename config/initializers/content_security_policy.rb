@@ -1,18 +1,11 @@
 Rails.application.config.content_security_policy do |policy|
   # En cas de non respect d'une des règles, faire un POST sur cette URL
-  policy.report_uri "https://e30e0ed9c14194254481124271b34a72.report-uri.com/r/d/csp/reportOnly"
+  policy.report_uri "https://demarches-simplifiees.report-uri.com/r/d/csp/reportOnly"
   # Whitelist image
-  policy.img_src :self, "https://*.openstreetmap.org"
-  # Whitelist JS: nous, sendinblue et matomo, et… miniprofiler :(
-  if Rails.env.development?
-    # https://github.com/MiniProfiler/rack-mini-profiler/issues/327
-    policy.script_src :self, "https://sibautomation.com", "//stats.data.gouv.fr", :unsafe_eval, :unsafe_inline
-  else
-    policy.script_src :self, "https://sibautomation.com", "//stats.data.gouv.fr"
-  end
-  # Génération d'un nonce pour les balises script inline qu'on maitrise (Gon)
-  Rails.application.config.content_security_policy_nonce_generator = -> _request { SecureRandom.base64(16) }
-
+  policy.img_src :self, "*.openstreetmap.org", "static.demarches-simplifiees.fr", "*.cloud.ovh.net", "stats.data.gouv.fr"
+  # Whitelist JS: nous, sendinblue et matomo
+  # miniprofiler et nous avons quelques boutons inline :(
+  policy.script_src :self, "*.sibautomation.com", "stats.data.gouv.fr", "*.sendinblue.com", :unsafe_eval, :unsafe_inline
   # Pour les CSS, on a beaucoup de style inline et quelques balises <style>
   # c'est trop compliqué pour être rectifié immédiatement (et sans valeur ajoutée:
   # c'est hardcodé dans les vues, donc pas injectable).
