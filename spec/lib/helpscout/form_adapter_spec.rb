@@ -62,8 +62,6 @@ describe Helpscout::FormAdapter do
           .with(email, subject, text, nil)
         expect(api).to have_received(:add_tags)
           .with(conversation_id, tags)
-        expect(api).to have_received(:add_custom_fields)
-          .with(conversation_id, nil, nil)
       end
     end
 
@@ -102,8 +100,6 @@ describe Helpscout::FormAdapter do
           .with(email, subject, text, nil)
         expect(api).to have_received(:add_phone_number)
           .with(email, phone)
-        expect(api).to have_received(:add_custom_fields)
-          .with(conversation_id, nil, nil)
       end
     end
   end
