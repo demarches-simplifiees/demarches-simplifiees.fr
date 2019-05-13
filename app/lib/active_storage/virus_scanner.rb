@@ -35,12 +35,16 @@ class ActiveStorage::VirusScanner
   end
 
   def metadata
-    download_blob_to_tempfile do |file|
-      if ClamavService.safe_file?(file.path)
-        { virus_scan_result: SAFE, scanned_at: Time.zone.now }
-      else
-        { virus_scan_result: INFECTED, scanned_at: Time.zone.now }
+    begin
+      download_blob_to_tempfile do |file|
+        if ClamavService.safe_file?(file.path)
+          { virus_scan_result: SAFE, scanned_at: Time.zone.now }
+        else
+          { virus_scan_result: INFECTED, scanned_at: Time.zone.now }
+        end
       end
+    rescue StandardError => e
+      Raven.capture_exception(e)
     end
   end
 end
