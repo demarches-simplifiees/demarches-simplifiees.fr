@@ -27,6 +27,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     let!(:dossier7) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:refuse), archived: false) }
     let!(:dossier8) { create(:dossier, procedure: procedure_hier, state: Dossier.states.fetch(:sans_suite), archived: false) }
     let!(:dossier9) { create(:dossier, procedure: procedure_aujourdhui, state: Dossier.states.fetch(:en_construction), archived: false) }
+    let(:last_operation) { dossier2.dossier_operation_logs.last }
 
     before do
       subject
@@ -40,7 +41,8 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     it {
       expect(dossier1.state).to eq Dossier.states.fetch(:brouillon)
       expect(dossier2.state).to eq Dossier.states.fetch(:en_instruction)
-      expect(dossier2.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'passer_en_instruction', true]])
+      expect(last_operation.operation).to eq('passer_en_instruction')
+      expect(last_operation.automatic_operation?).to be_truthy
       expect(dossier3.state).to eq Dossier.states.fetch(:en_instruction)
       expect(dossier4.state).to eq Dossier.states.fetch(:en_instruction)
       expect(dossier5.state).to eq Dossier.states.fetch(:en_instruction)

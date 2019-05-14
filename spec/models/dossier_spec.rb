@@ -764,6 +764,8 @@ describe Dossier do
 
   describe '#accepter!' do
     let(:dossier) { create(:dossier) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
+    let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let!(:gestionnaire) { create(:gestionnaire) }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
@@ -783,13 +785,18 @@ describe Dossier do
     it { expect(dossier.en_instruction_at).to eq(now) }
     it { expect(dossier.processed_at).to eq(now) }
     it { expect(dossier.state).to eq('accepte') }
-    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[gestionnaire.id, 'accepter', false]]) }
+    it { expect(last_operation.operation).to eq('accepter') }
+    it { expect(last_operation.automatic_operation?).to be_falsey }
+    it { expect(operation_serialized['operation']).to eq('accepter') }
+    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
+    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
     it { expect(NotificationMailer).to have_received(:send_closed_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
   end
 
   describe '#accepter_automatiquement!' do
     let(:dossier) { create(:dossier) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
 
@@ -808,30 +815,43 @@ describe Dossier do
     it { expect(dossier.en_instruction_at).to eq(now) }
     it { expect(dossier.processed_at).to eq(now) }
     it { expect(dossier.state).to eq('accepte') }
-    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'accepter', true]]) }
+    it { expect(last_operation.operation).to eq('accepter') }
+    it { expect(last_operation.automatic_operation?).to be_truthy }
     it { expect(NotificationMailer).to have_received(:send_closed_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
   end
 
   describe '#passer_en_instruction!' do
     let(:dossier) { create(:dossier) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
+    let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:gestionnaire) { create(:gestionnaire) }
 
     before { dossier.passer_en_instruction!(gestionnaire) }
 
     it { expect(dossier.state).to eq('en_instruction') }
     it { expect(dossier.followers_gestionnaires).to include(gestionnaire) }
-    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation)).to match([[gestionnaire.id, 'passer_en_instruction']]) }
+    it { expect(last_operation.operation).to eq('passer_en_instruction') }
+    it { expect(last_operation.automatic_operation?).to be_falsey }
+    it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
+    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
+    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
   end
 
   describe '#passer_automatiquement_en_instruction!' do
     let(:dossier) { create(:dossier) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
+    let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:gestionnaire) { create(:gestionnaire) }
 
     before { dossier.passer_automatiquement_en_instruction! }
 
     it { expect(dossier.followers_gestionnaires).not_to include(gestionnaire) }
-    it { expect(dossier.dossier_operation_logs.pluck(:gestionnaire_id, :operation, :automatic_operation)).to match([[nil, 'passer_en_instruction', true]]) }
+    it { expect(last_operation.operation).to eq('passer_en_instruction') }
+    it { expect(last_operation.automatic_operation?).to be_truthy }
+    it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
+    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
+    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
   end
 
   describe "#check_mandatory_champs" do
@@ -934,6 +954,6 @@ describe Dossier do
 
     it { expect(dossier.hidden_at).to eq(Time.zone.now) }
     it { expect(last_operation.operation).to eq('supprimer') }
-    it { expect(last_operation.administration).to eq(administration) }
+    it { expect(last_operation.automatic_operation?).to be_falsey }
   end
 end
