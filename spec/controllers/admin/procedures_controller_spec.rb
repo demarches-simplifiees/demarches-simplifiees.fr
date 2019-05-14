@@ -186,7 +186,6 @@ describe Admin::ProceduresController, type: :controller do
 
       context 'when procedure is correctly save' do
         before do
-          Flipflop::FeatureSet.current.test!.switch!(:new_champs_editor, true)
           post :create, params: { procedure: procedure_params }
         end
 
