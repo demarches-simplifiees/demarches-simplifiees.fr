@@ -15,13 +15,14 @@ FOG_BASE_URL = "https://static.demarches-simplifiees.fr"
 DOC_URL = "https://doc.demarches-simplifiees.fr"
 ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-administrateur"].join("/")
 INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-accompagnateur"].join("/")
-CADRE_JURIDIQUE_URL = [ADMINISTRATEUR_TUTORIAL_URL, "cadre-juridique"].join("#")
-WEBINAIRE_URL = [DOC_URL, "pour-aller-plus-loin", "webinaires"].join("/")
+CADRE_JURIDIQUE_URL = [DOC_URL, "tutoriels/video-le-cadre-juridique"].join("/")
+WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
 LISTE_DES_DEMARCHES_URL = [DOC_URL, "listes-des-demarches"].join("/")
 CGU_URL = [DOC_URL, "cgu"].join("/")
 MENTIONS_LEGALES_URL = [CGU_URL, "4-mentions-legales"].join("#")
 API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 FAQ_URL = "https://faq.demarches-simplifiees.fr"
+FAQ_ADMIN_URL = "https://faq.demarches-simplifiees.fr/collection/1-administrateur"
 STATUS_PAGE_URL = "https://status.demarches-simplifiees.fr"
 MATOMO_IFRAME_URL = "https://stats.data.gouv.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli"
