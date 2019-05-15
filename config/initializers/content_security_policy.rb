@@ -3,7 +3,7 @@ Rails.application.config.content_security_policy do |policy|
   if Rails.env.production?
     policy.report_uri "https://demarchessimplifieestest.report-uri.com/r/d/csp/reportOnly"
   else
-    policy.report_uri "http://localhost:3000/csp/" # ne pas notifier report-uri en dev/test
+    policy.report_uri "http://#{ENV['APP_HOST']}/csp/" # ne pas notifier report-uri en dev/test
   end
   # Whitelist image
   policy.img_src :self, "*.openstreetmap.org", "static.demarches-simplifiees.fr", "*.cloud.ovh.net", "stats.data.gouv.fr"
