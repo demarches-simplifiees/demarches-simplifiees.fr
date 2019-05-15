@@ -1,7 +1,16 @@
 - if dossier.present?
   - justificatif = dossier.justificatif_motivation
-  - if dossier.justificatif_motivation.attached? and dossier.justificatif_motivation.virus_scanner.safe?
-    .action
-      = link_to (justificatif), target: '_blank', class: 'button primary' do
-        %span.icon.download
-        Télécharger le justificatif
+  - if justificatif.attached?
+    - if justificatif.virus_scanner.safe?
+      .action
+        = link_to (justificatif), target: '_blank', class: 'button primary' do
+          %span.icon.download
+          Télécharger le justificatif
+    - else
+      %p
+        Un justificatif a été joint.
+        - if justificatif.virus_scanner.pending?
+          L'analyse antivirus de ce document est en cours.
+          = link_to "rafraichir", request.path
+        - if justificatif.virus_scanner.infected?
+          Il semble contenir un virus : merci de contacter l'administration pour lui demander un autre justificatif.
