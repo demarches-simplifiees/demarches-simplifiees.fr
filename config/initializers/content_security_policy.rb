@@ -1,6 +1,10 @@
 Rails.application.config.content_security_policy do |policy|
   # En cas de non respect d'une des règles, faire un POST sur cette URL
-  policy.report_uri "https://demarches-simplifiees.report-uri.com/r/d/csp/reportOnly"
+  if Rails.env.production?
+    policy.report_uri "https://demarchessimplifieestest.report-uri.com/r/d/csp/reportOnly"
+  else
+    policy.report_uri "http://localhost:3000/csp/" # ne pas notifier report-uri en dev/test
+  end
   # Whitelist image
   policy.img_src :self, "*.openstreetmap.org", "static.demarches-simplifiees.fr", "*.cloud.ovh.net", "stats.data.gouv.fr"
   # Whitelist JS: nous, sendinblue et matomo
