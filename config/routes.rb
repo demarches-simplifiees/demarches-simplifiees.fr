@@ -189,18 +189,6 @@ Rails.application.routes.draw do
         delete :delete_notice
       end
 
-      resources :types_de_champ, only: [:destroy]
-      resource :types_de_champ, only: [:show, :update] do
-        post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
-        post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
-      end
-
-      resources :types_de_champ_private, only: [:destroy]
-      resource :types_de_champ_private, only: [:show, :update] do
-        post '/:index/move_up' => 'types_de_champ_private#move_up', as: :move_up
-        post '/:index/move_down' => 'types_de_champ_private#move_down', as: :move_down
-      end
-
       resource :pieces_justificatives, only: [:show, :update]
       resources :pieces_justificatives, only: :destroy
       resource :pieces_justificatives, only: [:show, :update] do

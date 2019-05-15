@@ -14,7 +14,7 @@ addEventListener(START_EVENT, ({ target, detail: { id } }) => {
   ProgressBar.start(id);
   const button = target.form.querySelector('button.primary');
   if (button) {
-    delete button.dataset.confirm;
+    button.removeAttribute('data-confirm');
   }
 });
 

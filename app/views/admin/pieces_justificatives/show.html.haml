@@ -1,10 +1,9 @@
-- champs_editor_path = Flipflop.new_champs_editor? ? champs_procedure_path(@procedure) : admin_procedure_types_de_champ_path(@procedure)
 .row.white-back
   .alert.alert-info
     .form-group
       %p
         Pour vos nouveaux besoins de pièces jointes, nous vous invitons à
-        = link_to(champs_editor_path) do
+        = link_to(champs_procedure_path(@procedure)) do
           rajouter des champs
         \ <em>pièce justificative</em> à votre formulaire.
 
@@ -18,7 +17,7 @@
         %li Support des pièces de grande taille (jusqu’à 200 Mo par pièce)
         %li Pas de limite de soumission simultanée de plusieurs pièces, pour une expérience usager plus confortable
 
-    = link_to(champs_editor_path, class: 'btn btn-success') do
+    = link_to(champs_procedure_path(@procedure), class: 'btn btn-success') do
       Ajouter un champ PJ
 
   - if @procedure.has_old_pjs?
