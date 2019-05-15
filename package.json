@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
-    "@fortawesome/fontawesome-svg-core": "^1.2.17",
-    "@fortawesome/free-solid-svg-icons": "^5.8.1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.18",
+    "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@rails/webpacker": "4.0.2",
-    "@sentry/browser": "^5.1.0",
+    "@sentry/browser": "^5.2.1",
     "@turf/area": "^6.0.1",
     "activestorage": "^5.2.3",
     "autocomplete.js": "^0.36.0",
@@ -15,7 +15,7 @@
     "debounce": "^1.2.0",
     "dom4": "^2.1.4",
     "highcharts": "^6.1.2",
-    "intersection-observer": "^0.6.0",
+    "intersection-observer": "^0.7.0",
     "jquery": "^3.4.1",
     "leaflet": "^1.4.0",
     "leaflet-freedraw": "^2.10.0",
@@ -26,9 +26,9 @@
     "react-dom": "^16.8.6",
     "react-intersection-observer": "^8.23.0",
     "react-scroll-to-component": "^1.0.2",
-    "react-sortable-hoc": "^1.7.1",
+    "react-sortable-hoc": "^1.9.1",
     "react_ujs": "^2.5.0",
-    "select2": "^4.0.6-rc.1",
+    "select2": "^4.0.7",
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {
