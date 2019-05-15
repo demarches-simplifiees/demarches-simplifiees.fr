@@ -6,11 +6,7 @@
         = link_to (justificatif), target: '_blank', class: 'button primary' do
           %span.icon.download
           Télécharger le justificatif
-    - else
+    - elsif justificatif.virus_scanner.pending?
       %p
-        Un justificatif a été joint.
-        - if justificatif.virus_scanner.pending?
-          L'analyse antivirus de ce document est en cours.
-          = link_to "rafraichir", request.path
-        - if justificatif.virus_scanner.infected?
-          Il semble contenir un virus : merci de contacter l'administration pour lui demander un autre justificatif.
+        Un justificatif a été joint. L'analyse antivirus de ce document est en cours.
+        = link_to "rafraichir", request.path
