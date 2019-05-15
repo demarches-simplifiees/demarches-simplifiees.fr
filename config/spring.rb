@@ -1,6 +1,9 @@
+
 Spring.after_fork do
   if ENV['DEBUGGER_STORED_RUBYLIB']
-    starter = ENV['BUNDLER_ORIG_RUBYOPT'][2..-1]
-    load(starter + '.rb')
+    ENV['DEBUGGER_STORED_RUBYLIB'].split(File::PATH_SEPARATOR).each do |path|
+      next unless path =~ /ruby-debug-ide/
+      load path + '/ruby-debug-ide/multiprocess/starter.rb'
+    end
   end
 end
