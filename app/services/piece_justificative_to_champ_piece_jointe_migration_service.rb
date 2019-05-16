@@ -9,6 +9,11 @@ class PieceJustificativeToChampPieceJointeMigrationService
     storage_service.ensure_openstack_copy_possible!(PieceJustificativeUploader)
   end
 
+  def procedures_with_pjs_in_range(ids_range)
+    procedures_with_pj = Procedure.unscope(where: :hidden_at).joins(:types_de_piece_justificative).distinct
+    procedures_with_pj.where(id: ids_range)
+  end
+
   def convert_procedure_pjs_to_champ_pjs(procedure)
     types_de_champ_pj = PiecesJustificativesService.types_pj_as_types_de_champ(procedure)
     populate_champs_pjs!(procedure, types_de_champ_pj)
