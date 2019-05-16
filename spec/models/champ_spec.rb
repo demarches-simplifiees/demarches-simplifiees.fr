@@ -388,7 +388,7 @@ describe Champ do
           champ.save
         end
 
-        it { expect(champ.piece_justificative_file.virus_scanner.analyzed?).to be_truthy }
+        it { expect(champ.piece_justificative_file.virus_scanner.started?).to be_truthy }
       end
 
       context 'and there is no blob' do

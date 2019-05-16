@@ -10,16 +10,6 @@ ActiveStorage::Service.url_expires_in = 1.hour
 # The way analyzable blob interface work is by running the first accepted analyzer.
 # This is not what we want for the virus scan. Using analyzer interface is still beneficial
 # as it takes care of downloading the blob.
-ActiveStorage::Attachment.class_eval do
-  after_create_commit :virus_scan
-
-  private
-
-  def virus_scan
-    ActiveStorage::VirusScanner.new(blob).analyze_later
-  end
-end
-
 ActiveStorage::Attached::One.class_eval do
   def virus_scanner
     if attached?
@@ -27,3 +17,5 @@ ActiveStorage::Attached::One.class_eval do
     end
   end
 end
+
+ActiveSupport.on_load(:active_storage_blob) { include BlobVirusScanner }
