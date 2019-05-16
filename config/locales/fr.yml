@@ -187,7 +187,6 @@ fr:
       etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
-      extension_white_list_error: "Le format de fichier de la pièce jointe n'est pas valide."
       procedure_archived: "Cette démarche en ligne a été fermée, il n'est plus possible de déposer de dossier."
       procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
       cadastres_empty:

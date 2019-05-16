@@ -31,7 +31,7 @@ CarrierWave.configure do |config|
       openstack_username: Rails.application.secrets.fog[:openstack_username],
       openstack_auth_url: Rails.application.secrets.fog[:openstack_auth_url],
       openstack_region: Rails.application.secrets.fog[:openstack_region],
-      openstack_identity_api_version: Rails.application.secrets.fog[:oopenstack_identity_api_version]
+      openstack_identity_api_version: Rails.application.secrets.fog[:openstack_identity_api_version]
     }
   end
 
