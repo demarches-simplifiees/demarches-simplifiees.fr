@@ -59,23 +59,32 @@ describe Gestionnaires::AvisController, type: :controller do
           avis_without_answer.reload
         end
 
-        it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer)) }
-        it { expect(avis_without_answer.answer).to eq('answer') }
-        it { expect(avis_without_answer.piece_justificative_file).to_not be_attached }
-        it { expect(flash.notice).to eq('Votre réponse est enregistrée.') }
+        it 'should be ok' do
+          expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer))
+          expect(avis_without_answer.answer).to eq('answer')
+          expect(avis_without_answer.piece_justificative_file).to_not be_attached
+          expect(flash.notice).to eq('Votre réponse est enregistrée.')
+        end
       end
+
       describe 'with attachment' do
+        include ActiveJob::TestHelper
         let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
 
         before do
-          post :update, params: { id: avis_without_answer.id, avis: { answer: 'answer', piece_justificative_file: file } }
+          expect(ClamavService).to receive(:safe_file?).and_return(true)
+          perform_enqueued_jobs do
+            post :update, params: { id: avis_without_answer.id, avis: { answer: 'answer', piece_justificative_file: file } }
+          end
           avis_without_answer.reload
         end
 
-        it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer)) }
-        it { expect(avis_without_answer.answer).to eq('answer') }
-        it { expect(avis_without_answer.piece_justificative_file).to be_attached }
-        it { expect(flash.notice).to eq('Votre réponse est enregistrée.') }
+        it 'should be ok' do
+          expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer))
+          expect(avis_without_answer.answer).to eq('answer')
+          expect(avis_without_answer.piece_justificative_file).to be_attached
+          expect(flash.notice).to eq('Votre réponse est enregistrée.')
+        end
       end
     end
 
