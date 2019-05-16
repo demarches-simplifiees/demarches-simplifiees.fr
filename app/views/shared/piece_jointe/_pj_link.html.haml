@@ -1,10 +1,10 @@
 - if pj.attached?
   .pj-link
-    - if pj.virus_scanner.safe? || !pj.virus_scanner.analyzed?
+    - if pj.virus_scanner.safe? || !pj.virus_scanner.started?
       = link_to url_for(pj), target: '_blank', rel: 'noopener',  title: "Télécharger la pièce jointe" do
         %span.icon.attachment
         = pj.filename.to_s
-      - if !pj.virus_scanner.analyzed?
+      - if !pj.virus_scanner.started?
         (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
 
     - else
