@@ -18,6 +18,13 @@ Flipflop.configure do
 
   feature :operation_log_serialize_subject
 
+  group :development do
+    feature :mini_profiler_enabled,
+      default: Rails.env.development?
+    feature :xray_enabled,
+      default: Rails.env.development?
+  end
+
   group :production do
     feature :remote_storage,
       default: ENV['FOG_ENABLED'] == 'enabled'
