@@ -25,3 +25,10 @@ fr:
       bill_signature:
         one: Horodatage
         other: Horodatages
+  helpers:
+    label:
+      bill_signature:
+        dossier_operation_logs: opérations
+        digest: empreinte
+        serialized: liasse
+        signature: signature
