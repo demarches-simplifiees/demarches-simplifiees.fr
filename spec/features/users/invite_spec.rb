@@ -27,7 +27,7 @@ feature 'Invitations' do
 
     context 'when inviting someone without an existing account' do
       let(:invite) { create(:invite, dossier: dossier, user: nil) }
-      let(:user_password) { 'l33tus3r' }
+      let(:user_password) { 'démarches-simplifiées' }
 
       scenario 'an invited user can register using the registration link sent in the invitation email' do
         # Click the invitation link

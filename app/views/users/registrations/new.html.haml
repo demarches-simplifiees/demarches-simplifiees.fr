@@ -12,9 +12,9 @@
 
     .explication
       %strong Aide :
-      Une courte phrase peut être un mot de passe très sécurisé.
+      Une courte phrase avec ponctuation peut être un mot de passe très sécurisé.
 
-    = f.password_field :password, autofocus: true,  autocomplete: 'off', placeholder: '8 caractères minimum', data: { remote: true, url: users_password_test_strength_path }
+    = f.password_field :password, autofocus: false, complete: 'off', placeholder: '8 caractères minimum', data: { remote: true, url: users_password_test_strength_path }
 
     #strength-bar.password-strength
       &nbsp;

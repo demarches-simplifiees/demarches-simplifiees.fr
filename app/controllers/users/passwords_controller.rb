@@ -8,9 +8,18 @@ class Users::PasswordsController < Devise::PasswordsController
   # end
 
   # POST /resource/password
-  # def create
-  #   super
-  # end
+  def create
+    # Check the credentials associated to the mail to generate a correct reset link
+    email = params[:user][:email]
+    if Administrateur.find_by(email: email)
+      @devise_mapping = Devise.mappings[:administrateur]
+      params[:administrateur] = params[:user]
+    elsif Gestionnaire.find_by(email: email)
+      @devise_mapping = Devise.mappings[:gestionnaire]
+      params[:gestionnaire] = params[:user]
+    end
+    super
+  end
 
   # GET /resource/password/edit?reset_password_token=abcdef
   # def edit
@@ -19,6 +28,7 @@ class Users::PasswordsController < Devise::PasswordsController
 
   # PUT /resource/password
   # def update
+  #   # params[:user][:password_confirmation] = params[:user][:password]
   #   super
   # end
 
@@ -51,5 +61,16 @@ class Users::PasswordsController < Devise::PasswordsController
         sign_in administrateur
       end
     end
+  end
+
+  def test_strength
+    @score, @words, @length = ZxcvbnService.new(password_params[:password]).complexity
+    @min_length = PASSWORD_MIN_LENGTH
+    @min_complexity = PASSWORD_COMPLEXITY_FOR_USER
+    render 'shared/password/test_strength'
+  end
+
+  def password_params
+    params.require(:user).permit(:reset_password_token, :password)
   end
 end

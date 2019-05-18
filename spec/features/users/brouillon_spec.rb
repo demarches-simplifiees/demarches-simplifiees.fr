@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'The user' do
-  let(:password) { 'secret_password' }
+  let(:password) { 'démarches-simplifiées' }
   let!(:user) { create(:user, password: password) }
 
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }
