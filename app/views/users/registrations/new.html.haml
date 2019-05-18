@@ -9,8 +9,21 @@
     = f.text_field :email, autofocus: true, placeholder: "Votre adresse email"
 
     = f.label :password, "Mot de passe"
-    = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
 
-    = f.submit "Créer un compte", class: "button large primary expand"
+    .explication
+      %strong Aide :
+      Une courte phrase peut être un mot de passe très sécurisé.
+
+    = f.password_field :password, autofocus: true,  autocomplete: 'off', placeholder: '8 caractères minimum', data: { remote: true, url: users_password_test_strength_path }
+
+    #strength-bar.password-strength
+      &nbsp;
+
+    .explication{ style: "display: flex; min-height:6.1em" }
+      %strong Sécurité:&nbsp;
+      #strength-label
+        &nbsp;
+
+    = f.submit "Créer un compte", class: "button large primary expand", id: "submit-password", data: { disable_with: "Envoi..." }
 
   -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }

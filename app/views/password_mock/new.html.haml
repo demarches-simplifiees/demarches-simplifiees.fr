@@ -1,0 +1,6 @@
+- content_for(:title, "Choix du mot de passe")
+
+- content_for :footer do
+  = render partial: "root/footer"
+
+= render 'shared/password/new', object: @credential, controller: 'password_mock', test_password_strength: password_mock_test_strength_path

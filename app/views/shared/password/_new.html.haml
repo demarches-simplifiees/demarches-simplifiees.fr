@@ -1,0 +1,30 @@
+.container.devise-container
+  .one-column-centered
+    - controller_action = defined?(action) ? action : :create
+    = form_for object, url: { controller: controller, action: controller_action }, html: { class: "form" } do |f|
+      %br
+      %h1
+        Choix du mot de passe
+
+      = f.label :email, "Email"
+      = f.text_field :email, disabled: true
+
+      = f.label :password do
+        Mot de passe
+
+      .explication
+        %strong Aide :
+        Une courte phrase avec ponctuation peut être un mot de passe très sécurisé.
+
+      = f.password_field :password, placeholder: 'Mot de passe', data: { remote: true, url: test_password_strength }
+
+      #strength-bar.password-strength
+        &nbsp;
+
+      .explication{ style: "display: flex; min-height:6.1em" }
+        %strong Sécurité:&nbsp;
+        #strength-label
+          &nbsp;
+
+      = f.hidden_field :reset_password_token, value: params[:token]
+      = f.submit 'Continuer', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi..." }

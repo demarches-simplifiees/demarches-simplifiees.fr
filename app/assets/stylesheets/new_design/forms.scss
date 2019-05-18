@@ -308,8 +308,8 @@
   }
 
   .explication {
-    margin-bottom: 2 * $default-padding;
-    padding: $default-padding;
+    margin-bottom: $default-padding;
+    padding: $default-padding / 2;
     background-color: $light-grey;
 
     p:not(:last-child) {
