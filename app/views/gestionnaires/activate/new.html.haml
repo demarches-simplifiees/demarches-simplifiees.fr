@@ -1,7 +1,6 @@
-.container
-  = form_for @gestionnaire, url: { controller: 'gestionnaires/activate', action: :create }, html: { class: "form" } do |f|
-    %br
-    %h1= @gestionnaire.email
-    = f.password_field :password, placeholder: 'Mot de passe'
-    = f.hidden_field :reset_password_token, value: params[:token]
-    = f.submit 'Définir le mot de passe', class: 'button large primary expand'
+- content_for(:title, "Choix du mot de passe")
+
+- content_for :footer do
+  = render partial: "root/footer"
+
+= render 'shared/password/new', object: @gestionnaire, controller: 'gestionnaires/activate', test_password_strength: gestionnaires_password_test_strength_path

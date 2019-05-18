@@ -159,6 +159,36 @@ describe Gestionnaire, type: :model do
     end
   end
 
+  describe '#password_complexity' do
+    let(:email) { 'mail@beta.gouv.fr' }
+    let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées pwd'] }
+    let(:gestionnaire) { build(:gestionnaire, email: email, password: password) }
+    let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_GESTIONNAIRE }
+
+    subject do
+      gestionnaire.save
+      gestionnaire.errors.full_messages
+    end
+
+    context 'when password is too short' do
+      let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
+
+      it { expect(subject).to eq(["Le mot de passe est trop court"]) }
+    end
+
+    context 'when password is too simple' do
+      let(:password) { passwords[min_complexity - 1] }
+
+      it { expect(subject).to eq(["Le mot de passe n'est pas assez complexe"]) }
+    end
+
+    context 'when password is acceptable' do
+      let(:password) { passwords[min_complexity] }
+
+      it { expect(subject).to eq([]) }
+    end
+  end
+
   describe 'last_week_overview' do
     let!(:gestionnaire2) { create(:gestionnaire) }
     subject { gestionnaire2.last_week_overview }
