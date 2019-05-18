@@ -20,11 +20,8 @@ class Administrateur < ApplicationRecord
   validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
 
   def password_complexity
-    if password.present?
-      score = Zxcvbn.test(password, [], ZXCVBN_DICTIONNARIES).score
-      if score < 4
-        errors.add(:password, :not_strength)
-      end
+    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_ADMIN
+      errors.add(:password, :not_strength)
     end
   end
 
