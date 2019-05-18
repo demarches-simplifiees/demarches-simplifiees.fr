@@ -3,27 +3,4 @@
 - content_for :footer do
   = render partial: "root/footer"
 
-.container.devise-container
-  .one-column-centered
-    = form_for @administrateur, url: { controller: 'administrateurs/activate', action: :create }, html: { class: "form" } do |f|
-      %br
-      %h1
-        Choix du mot de passe
-
-      = f.label :email, "Email"
-      = f.text_field :email, disabled: true
-
-      = f.label :password do
-        Mot de passe
-
-      = f.password_field :password, placeholder: 'Mot de passe', data: { remote: true, url: admin_activate_test_password_strength_path }
-
-      #strength-bar.password-strength
-        &nbsp;
-
-      .explication
-        %strong Aide :
-        Une courte phrase peut être un mot de passe très sécurisé.
-
-      = f.hidden_field :reset_password_token, value: params[:token]
-      = f.submit 'Continuer', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi..." }
+= render 'shared/password/new', object: @administrateur, controller: 'administrateurs/activate', test_password_strength: administrateurs_password_test_strength_path
