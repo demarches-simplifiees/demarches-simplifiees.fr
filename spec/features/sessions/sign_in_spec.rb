@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'Signin in:' do
   let!(:user) { create(:user, password: password) }
-  let(:password) { 'testpassword' }
+  let(:password) { 'déMarches-simPlifiées-pwd' }
 
   scenario 'an existing user can sign-in' do
     visit root_path

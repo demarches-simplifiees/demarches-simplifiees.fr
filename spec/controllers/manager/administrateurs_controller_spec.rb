@@ -3,7 +3,7 @@ describe Manager::AdministrateursController, type: :controller do
 
   describe 'POST #create' do
     let(:email) { 'plop@plop.com' }
-    let(:password) { 'password' }
+    let(:password) { 'déMarches-simPlifiées-pwd' }
 
     before do
       sign_in administration

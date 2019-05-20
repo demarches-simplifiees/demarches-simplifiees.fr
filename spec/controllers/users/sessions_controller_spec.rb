@@ -1,6 +1,6 @@
 describe Users::SessionsController, type: :controller do
   let(:email) { 'unique@plop.com' }
-  let(:password) { 'un super mot de passe' }
+  let(:password) { 'déMarches-simPlifiées-pwd' }
   let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
   let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
 
@@ -104,8 +104,8 @@ describe Users::SessionsController, type: :controller do
     end
 
     context "when associated gestionnaire" do
-      let(:user) { create(:user, email: 'unique@plop.com', password: 'password') }
-      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'password') }
+      let(:user) { create(:user, email: 'unique@plop.com', password: 'déMarches-simPlifiées-pwd') }
+      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'déMarches-simPlifiées-pwd') }
 
       it 'signs user out' do
         sign_in user

@@ -7,10 +7,10 @@ describe User, type: :model do
     let!(:invite2) { create(:invite, email: email) }
     let(:user) do
       create(:user,
-             email: email,
-             password: 'démarches-simplifiées pwd',
-             confirmation_token: '123',
-             confirmed_at: nil)
+        email: email,
+        password: 'démarches-simplifiées pwd',
+        confirmation_token: '123',
+        confirmed_at: nil)
     end
 
     it 'when confirming a user, it links the pending invitations to this user' do
