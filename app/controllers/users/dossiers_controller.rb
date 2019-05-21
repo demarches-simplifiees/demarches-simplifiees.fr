@@ -239,7 +239,7 @@ module Users
     def purge_champ_piece_justificative
       @champ = dossier.champs.find(params[:champ_id])
 
-      @champ.piece_justificative_file.purge
+      @champ.piece_justificative_file.purge_later
 
       flash.notice = 'La pièce jointe a bien été supprimée.'
     end
