@@ -1,12 +1,2 @@
-- if dossier.present?
-  - justificatif = dossier.justificatif_motivation
-  - if justificatif.attached?
-    - if justificatif.virus_scanner.safe?
-      .action
-        = link_to (justificatif), target: '_blank', class: 'button primary' do
-          %span.icon.download
-          Télécharger le justificatif
-    - elsif justificatif.virus_scanner.pending?
-      %p
-        Un justificatif a été joint. L'analyse antivirus de ce document est en cours.
-        = link_to "rafraichir", request.path
+- if dossier.present? && dossier.justificatif_motivation.attached?
+  = render partial: "shared/attachment/show", locals: { attachment: dossier.justificatif_motivation.attachment }

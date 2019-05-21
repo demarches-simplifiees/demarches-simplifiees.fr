@@ -1,0 +1,26 @@
+- should_display_link = attachment.virus_scanner.safe? || !attachment.virus_scanner.started?
+- user_can_upload = defined?(user_can_upload) ? user_can_upload : false
+- if should_display_link
+  - attachment_check_url = false
+- else
+  - attachment_check_url = attachment_url(attachment.id, { signed_id: attachment.blob.signed_id, user_can_upload: user_can_upload })
+
+.pj-link{ 'data-attachment-id': attachment.id, 'data-attachment-check-url': attachment_check_url }
+  - if should_display_link
+    = link_to url_for(attachment.blob), target: '_blank', rel: 'noopener',  title: "Télécharger la pièce jointe" do
+      %span.icon.attachment
+      = attachment.filename.to_s
+    - if !attachment.virus_scanner.started?
+      (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
+
+  - else
+    = attachment.filename.to_s
+    - if attachment.virus_scanner.pending?
+      (analyse antivirus en cours
+      = link_to "rafraichir", request.path
+      )
+    - elsif attachment.virus_scanner.infected?
+      - if user_can_upload
+        (virus détecté, merci d’envoyer un autre fichier)
+      - else
+        (virus détecté, le téléchargement de ce fichier est bloqué)

@@ -28,6 +28,7 @@
                     Réponse donnée le #{l(avis.updated_at, format: '%d/%m/%y à %H:%M')}
                 - else
                   %span.waiting En attente de réponse
-              = render partial: 'shared/piece_jointe/pj_link', locals: { pj: avis.piece_justificative_file, user_can_upload: false }
+              - if avis.piece_justificative_file.attached?
+                = render partial: 'shared/attachment/show', locals: { attachment: avis.piece_justificative_file.attachment }
               .answer-body
                 = simple_format(avis.answer)
