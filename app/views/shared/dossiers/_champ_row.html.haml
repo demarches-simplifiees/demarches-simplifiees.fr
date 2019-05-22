@@ -31,9 +31,9 @@
             - when TypeDeChamp.type_champs.fetch(:textarea)
               = render partial: "shared/champs/textarea/show", locals: { champ: c }
             - when TypeDeChamp.type_champs.fetch(:date)
-              = try_format_date(c.to_s)
+              = c.to_s
             - when TypeDeChamp.type_champs.fetch(:datetime)
-              = try_format_datetime(c.to_s)
+              = c.to_s
             - else
               = sanitize(c.to_s)
 
