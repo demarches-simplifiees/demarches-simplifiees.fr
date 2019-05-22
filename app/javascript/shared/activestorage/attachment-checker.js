@@ -1,4 +1,4 @@
-import Rails from 'rails-ujs';
+import { ajax, delegate } from '@utils';
 
 addEventListener('turbolinks:load', () => {
   checker.deactivate();
@@ -12,6 +12,11 @@ addEventListener('turbolinks:load', () => {
 
 addEventListener('attachment:update', ({ detail: { url } }) => {
   checker.add(url);
+});
+
+delegate('click', '[data-attachment-refresh]', event => {
+  event.preventDefault();
+  checker.check();
 });
 
 class AttachmentChecker {
@@ -41,13 +46,19 @@ class AttachmentChecker {
     }
   }
 
+  check() {
+    let urls = this.urls;
+    this.reset();
+    for (let url of urls) {
+      ajax({ url, type: 'get' });
+    }
+  }
+
   activate() {
+    clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
-      for (let url of this.urls) {
-        Rails.ajax({ url, type: 'get' });
-      }
       this.checks++;
-      this.reset();
+      this.check();
     }, this.interval);
   }
 

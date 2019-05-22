@@ -17,7 +17,7 @@
     = attachment.filename.to_s
     - if attachment.virus_scanner.pending?
       (analyse antivirus en cours
-      = link_to "rafraichir", request.path
+      = link_to "rafraichir", request.path, data: { 'attachment-refresh': true }
       )
     - elsif attachment.virus_scanner.infected?
       - if user_can_upload
