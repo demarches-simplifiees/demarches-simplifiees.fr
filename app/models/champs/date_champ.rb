@@ -6,7 +6,7 @@ class Champs::DateChamp < Champ
   end
 
   def to_s
-    value.present? ? Date.parse(value).strftime('%d/%m/%Y') : ""
+    value.present? ? I18n.l(Date.parse(value)) : ""
   end
 
   private
