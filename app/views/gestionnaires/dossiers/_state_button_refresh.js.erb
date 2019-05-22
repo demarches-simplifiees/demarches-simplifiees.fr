@@ -1,2 +1,7 @@
 <%= render_flash %>
 <%= render_to_element('.state-button', partial: "state_button", locals: { dossier: dossier }) %>
+
+<% attachment = dossier.justificatif_motivation.attachment %>
+<% if attachment && attachment.virus_scanner.pending? %>
+  <%= fire_event('attachment:update', { url: attachment_url(attachment.id, { signed_id: attachment.blob.signed_id }) }.to_json ) %>
+<% end %>

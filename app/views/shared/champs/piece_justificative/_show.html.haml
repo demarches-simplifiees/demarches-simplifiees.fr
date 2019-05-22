@@ -1,5 +1,5 @@
 - pj = champ.piece_justificative_file
 - if pj.attached?
-  = render partial: "shared/piece_jointe/pj_link", locals: { pj: pj, user_can_upload: false }
+  = render partial: "shared/attachment/show", locals: { attachment: pj.attachment }
 - else
   Pièce justificative non fournie

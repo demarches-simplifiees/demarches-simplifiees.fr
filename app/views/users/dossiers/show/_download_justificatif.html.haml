@@ -1,0 +1,2 @@
+- if dossier.present? && dossier.justificatif_motivation.attached?
+  = render partial: "shared/attachment/show", locals: { attachment: dossier.justificatif_motivation.attachment }

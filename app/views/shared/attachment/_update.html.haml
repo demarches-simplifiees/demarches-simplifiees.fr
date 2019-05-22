@@ -2,7 +2,7 @@
   - if pj.attached?
     .piece-justificative-actions{ id: "piece_justificative_#{object.id}" }
       .piece-justificative-action
-        = render partial: "shared/piece_jointe/pj_link", locals: { pj: pj, user_can_upload: true }
+        = render partial: "shared/attachment/show", locals: { attachment: pj.attachment, user_can_upload: true }
       .piece-justificative-action
         = button_tag 'Remplacer', type: 'button', class: 'button small', data: { 'toggle-target': "#champs_#{object.id}" }
 

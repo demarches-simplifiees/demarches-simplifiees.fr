@@ -3,7 +3,7 @@ import $ from 'jquery';
 import debounce from 'debounce';
 
 export { debounce };
-export const { fire } = Rails;
+export const { fire, ajax } = Rails;
 
 export function show({ classList }) {
   classList.remove('hidden');
