@@ -133,6 +133,8 @@ Rails.application.routes.draw do
     post ':position/repetition', to: 'repetition#show', as: :repetition
   end
 
+  get 'attachments/:id', to: 'attachments#show', as: :attachment
+
   get 'tour-de-france' => 'root#tour_de_france'
   get "patron" => "root#patron"
   get "accessibilite" => "root#accessibilite"
