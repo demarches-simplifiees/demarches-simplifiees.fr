@@ -158,6 +158,34 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe '#qrcode' do
+    let(:date) { Time.zone.now }
+    before { Timecop.freeze(Time.zone.local(2018, 1, 2, 23, 11, 14)) }
+    after { Timecop.return }
+
+    context 'when a dossier has an attestation' do
+      let(:fake_pdf) { double(read: 'pdf content') }
+      let(:another_user) { create(:user) }
+      let!(:dossier) { create(:dossier, attestation: Attestation.new, user: user) }
+
+      context 'when another user is connected' do
+        before { sign_in(another_user) }
+
+        it 'returns the attestation pdf' do
+          allow_any_instance_of(Attestation).to receive(:pdf).and_return(fake_pdf)
+
+          expect(controller).to receive(:send_data)
+            .with('pdf content', filename: "attestation-#{dossier.id}.pdf", disposition: 'inline', type: 'application/pdf') do
+            controller.head :ok
+          end
+
+          get :qrcode, params: { id: dossier.id, created_at: dossier.encoded_date(:created_at) }
+          expect(response).to have_http_status(:success)
+        end
+      end
+    end
+  end
+
   describe 'update_identite' do
     let(:procedure) { create(:procedure, :for_individual) }
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }

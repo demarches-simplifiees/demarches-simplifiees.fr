@@ -166,7 +166,7 @@
 
   input[type=email],
   input[type=number],
-  input[type=tel], {
+  input[type=tel] {
     max-width: 500px;
   }
 
@@ -351,8 +351,8 @@
         width: 100%;
         max-width: 350px;
         line-height: 30px;
-        margin-left: none;
-        margin-right: none;
+        margin-left: 0;
+        margin-right: 0;
       }
     }
   }

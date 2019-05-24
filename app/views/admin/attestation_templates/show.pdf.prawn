@@ -1,7 +1,15 @@
 require 'prawn/measurement_extensions'
 require 'prawn/qrcode'
 
-prawn_document(margin: [50, 100, 20, 100]) do |pdf|
+info = {
+        :Title => @title,
+        :Subject => "Attestation pour un dossier",
+        :Creator => "#{SITE_NAME}",
+        :Producer => "Prawn",
+        :CreationDate => @created_at
+      }
+
+prawn_document(margin: [50, 100, 20, 100], info: info) do |pdf|
   pdf.font_families.update( 'liberation serif' => { normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' )})
   pdf.font 'liberation serif'
 
@@ -40,14 +48,13 @@ prawn_document(margin: [50, 100, 20, 100]) do |pdf|
     size = 100
     margin = 2
     pdf.fill_color grey
-    if @dossier.present?
+    if @qrcode.present?
       pdf.move_cursor_to size+30
-      pdf.text @dossier, size: 8, align: :center
-      pdf.print_qr_code(@dossier, level: :q, extent: size, margin: margin, align: :center)
+      pdf.print_qr_code(@qrcode, level: :q, extent: size, margin: margin, align: :center)
+      pdf.move_down 3
+      pdf.text "<u><link href='#{@qrcode}'>#{@title}</link></u>",:inline_format => true, size: 9, align: :center, color: "0000FF"
     end
     pdf.move_cursor_to 20
     pdf.text @footer, align: :center, size: 8
-
-        # pdf.move_down 5
   end
 end
