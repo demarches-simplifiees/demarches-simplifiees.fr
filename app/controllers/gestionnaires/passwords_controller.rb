@@ -19,6 +19,7 @@ class Gestionnaires::PasswordsController < Devise::PasswordsController
 
   # PUT /resource/password
   # def update
+  #   # params[:user][:password_confirmation] = params[:user][:password]
   #   super
   # end
 
@@ -51,5 +52,16 @@ class Gestionnaires::PasswordsController < Devise::PasswordsController
         sign_in administrateur
       end
     end
+  end
+
+  def test_strength
+    @score, @words, @length = ZxcvbnService.new(password_params[:password]).complexity
+    @min_length = PASSWORD_MIN_LENGTH
+    @min_complexity = PASSWORD_COMPLEXITY_FOR_GESTIONNAIRE
+    render 'shared/password/test_strength'
+  end
+
+  def password_params
+    params.require(:gestionnaire).permit(:reset_password_token, :password)
   end
 end

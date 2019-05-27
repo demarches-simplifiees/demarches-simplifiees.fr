@@ -1,6 +1,5 @@
 class Avis < ApplicationRecord
   include EmailSanitizableConcern
-  include VirusScanConcern
 
   belongs_to :dossier, touch: true
   belongs_to :gestionnaire
@@ -21,9 +20,6 @@ class Avis < ApplicationRecord
   scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
   scope :by_latest, -> { order(updated_at: :desc) }
   scope :updated_since?, -> (date) { where('avis.updated_at > ?', date) }
-
-  after_commit :create_avis_virus_scan
-  after_initialize { add_virus_scan_on(self.piece_justificative_file) }
 
   # The form allows subtmitting avis requests to several emails at once,
   # hence this virtual attribute.
@@ -53,9 +49,5 @@ class Avis < ApplicationRecord
       self.gestionnaire = gestionnaire
       self.email = nil
     end
-  end
-
-  def create_avis_virus_scan
-    create_virus_scan(self.piece_justificative_file)
   end
 end

@@ -7,25 +7,25 @@ class Champs::SiretController < ApplicationController
     find_etablisement
 
     if @siret.empty?
-      @champ&.update!(value: '')
-      @etablissement&.destroy
-    elsif @siret.present? && (@siret.length == 6 || @siret.length == 14)
-      etablissement = find_etablisement_with_siret
-      if etablissement.present?
-        @etablissement = etablissement
+      return clear_siret_and_etablissement
+    end
 
-        if !@champ.nil?
-          @champ.update!(value: etablissement.siret, etablissement: etablissement)
-        end
-      else
-        @champ&.update!(value: '')
-        @etablissement&.destroy
-        @siret = :not_found
-      end
-    else
-      @champ&.update!(value: '')
-      @etablissement&.destroy
-      @siret = :invalid
+    if @siret.present? && (@siret.length != 6 && @siret.length != 14)
+      return siret_error(:invalid)
+    end
+
+    begin
+      etablissement = find_etablissement_with_siret
+    rescue RestClient::RequestFailed
+      return siret_error(:network_error)
+    end
+    if etablissement.blank?
+      return siret_error(:not_found)
+    end
+
+    @etablissement = etablissement
+    if !@champ.nil?
+      @champ.update!(value: etablissement.siret, etablissement: etablissement)
     end
   end
 
@@ -49,10 +49,20 @@ class Champs::SiretController < ApplicationController
     @procedure_id = @champ&.dossier&.procedure_id || 'aperçu'
   end
 
-  def find_etablisement_with_siret
+  def find_etablissement_with_siret
     etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(@siret, @procedure_id)
     if etablissement_attributes.present?
       Etablissement.new(etablissement_attributes)
     end
+  end
+
+  def clear_siret_and_etablissement
+    @champ&.update!(value: '')
+    @etablissement&.destroy
+  end
+
+  def siret_error(error)
+    clear_siret_and_etablissement
+    @siret = error
   end
 end

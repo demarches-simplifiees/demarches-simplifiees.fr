@@ -2,8 +2,12 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
   private
 
   def get_resource
-    no_tahiti = @siret[0..5]
-    ApiEntreprise::PF_API.entreprise(no_tahiti)
+    if @siret.present?
+      no_tahiti = @siret.to_s[0..5]
+      ApiEntreprise::PF_API.entreprise(no_tahiti)
+    else
+      {}
+    end
   end
 
   def process_params
@@ -43,7 +47,7 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
   # noinspection RubyLiteralArrayInspection
   NOM_VOIES = [
     'avenue', 'av', 'angle', 'rue', 'boulevard', 'chemin', 'ave', 'bvd', 'cours', 'place', 'allée', 'route', 'immeuble',
-    'lot', 'passage', 'servitude', 'blvd', 'pointe', 'pont', 'av.', 'bd', 'blv', 'ecole', 'école'
+    'lot', 'passage', 'servitude', 'blvd', 'pointe', 'pont', 'av.', 'bd', 'blv', 'ecole', 'école', 'église'
   ]
   NOM_VOIES_RE = NOM_VOIES.join('|')
 

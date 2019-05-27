@@ -50,6 +50,7 @@ class Admin::AttestationTemplatesController < AdminController
     # attestation_template
     @logo = activated_attestation_params[:logo] || @procedure.attestation_template&.logo
     @signature = activated_attestation_params[:signature] || @procedure.attestation_template&.signature
+    @qrcode = '--qrcode--'
 
     render 'admin/attestation_templates/show', formats: [:pdf]
   end

@@ -3,20 +3,4 @@
 - content_for :footer do
   = render partial: 'root/footer'
 
-.container.devise-container
-  .one-column-centered
-    = devise_error_messages!
-
-    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: 'form' }) do |f|
-
-      %h1 Changement de mot de passe
-
-      = f.hidden_field :reset_password_token
-
-      = f.label 'Nouveau mot de passe'
-      = f.password_field :password, autofocus: true, autocomplete: 'off'
-
-      = f.label 'Confirmez le nouveau mot de passe'
-      = f.password_field :password_confirmation, autocomplete: 'off'
-
-      = f.submit 'Changer le mot de passe', class: 'button primary'
+= render 'shared/password/edit', test_password_strength: users_password_test_strength_path

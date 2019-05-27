@@ -158,6 +158,34 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
+  describe '#qrcode' do
+    let(:date) { Time.zone.now }
+    before { Timecop.freeze(Time.zone.local(2018, 1, 2, 23, 11, 14)) }
+    after { Timecop.return }
+
+    context 'when a dossier has an attestation' do
+      let(:fake_pdf) { double(read: 'pdf content') }
+      let(:another_user) { create(:user) }
+      let!(:dossier) { create(:dossier, attestation: Attestation.new, user: user) }
+
+      context 'when another user is connected' do
+        before { sign_in(another_user) }
+
+        it 'returns the attestation pdf' do
+          allow_any_instance_of(Attestation).to receive(:pdf).and_return(fake_pdf)
+
+          expect(controller).to receive(:send_data)
+            .with('pdf content', filename: "attestation-#{dossier.id}.pdf", disposition: 'inline', type: 'application/pdf') do
+            controller.head :ok
+          end
+
+          get :qrcode, params: { id: dossier.id, created_at: dossier.encoded_date(:created_at) }
+          expect(response).to have_http_status(:success)
+        end
+      end
+    end
+  end
+
   describe 'update_identite' do
     let(:procedure) { create(:procedure, :for_individual) }
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
@@ -277,6 +305,13 @@ describe Users::DossiersController, type: :controller do
 
     context 'with a valid SIRET' do
       let(:params_siret) { '440 117 620 01530' }
+
+      context 'When API-Entreprise is down' do
+        let(:api_etablissement_status) { 502 }
+        let(:api_body_status) { File.read('spec/fixtures/files/api_entreprise/exercices_unavailable.json') }
+
+        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
+      end
 
       context 'when API-Entreprise doesn’t know this SIRET' do
         let(:api_etablissement_status) { 404 }

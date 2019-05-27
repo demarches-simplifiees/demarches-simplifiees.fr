@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature 'Signing up:' do
   let(:user_email) { generate :user_email }
-  let(:user_password) { 'testpassword' }
+  let(:user_password) { 'démarches-simplifiées pwd' }
 
   scenario 'a new user can sign-up' do
     visit root_path

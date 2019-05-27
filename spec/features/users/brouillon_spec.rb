@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'The user' do
-  let(:password) { 'secret_password' }
+  let(:password) { 'démarches-simplifiées pwd' }
   let!(:user) { create(:user, password: password) }
 
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }
@@ -167,8 +167,8 @@ feature 'The user' do
     expect(page).to have_text('analyse antivirus en cours')
 
     # Mark file as scanned and clean
-    virus_scan = VirusScan.last
-    virus_scan.update(scanned_at: Time.zone.now, status: VirusScan.statuses.fetch(:safe))
+    attachment = ActiveStorage::Attachment.last
+    attachment.blob.update(metadata: attachment.blob.metadata.merge(scanned_at: Time.zone.now, virus_scan_result: ActiveStorage::VirusScanner::SAFE))
     within '.piece-justificative' do
       click_on 'rafraichir'
     end

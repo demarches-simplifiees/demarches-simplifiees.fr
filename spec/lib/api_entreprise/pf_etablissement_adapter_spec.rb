@@ -56,12 +56,12 @@ describe ApiEntreprise::PfEtablissementAdapter do
   end
 
   context 'when siret is not found' do
-    let(:bad_siret) { 11_111_111_111_111 }
+    let(:bad_siret) { 111111 }
     subject { described_class.new(bad_siret, 12).to_params }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{bad_siret}?.*token=/)
-        .to_return(body: 'Fake body', status: 404)
+      stub_request(:get, /https:\/\/ppr.api.i-taiete2.gov.pf\/api\/v2\/etablissementsEntreprise.*#{bad_siret}/)
+        .to_return(body: '[]', status: 200)
     end
 
     it { expect(subject).to eq({}) }

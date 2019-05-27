@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'The gestionnaire part' do
   include ActiveJob::TestHelper
 
-  let(:password) { 'secret_password' }
+  let(:password) { 'déMarches-simPlifiées-pwd' }
   let!(:gestionnaire) { create(:gestionnaire, password: password) }
 
   let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
@@ -237,7 +237,7 @@ feature 'The gestionnaire part' do
 
   def avis_sign_up(avis, email)
     visit sign_up_gestionnaire_avis_path(avis, email)
-    fill_in 'gestionnaire_password', with: 'a good password'
+    fill_in 'gestionnaire_password', with: 'démarches-simplifiées-pwd'
     click_on 'Créer un compte'
     expect(page).to have_current_path(gestionnaire_avis_index_path)
   end

@@ -7,8 +7,8 @@ describe Gestionnaires::PasswordsController, type: :controller do
 
   describe "update" do
     context "unified login" do
-      let(:user) { create(:user, email: 'unique@plop.com', password: 'un super mot de passe') }
-      let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'un super mot de passe') }
+      let(:user) { create(:user, email: 'unique@plop.com', password: 'déMarches-simPlifiées-pwd') }
+      let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
       let(:gestionnaire) { administrateur.gestionnaire }
 
       before do
@@ -21,8 +21,8 @@ describe Gestionnaires::PasswordsController, type: :controller do
         put :update, params: {
           gestionnaire: {
             reset_password_token: @token,
-            password: "supersecret",
-            password_confirmation: "supersecret"
+            password: "déMarches-simPlifiées-pwd",
+            password_confirmation: "déMarches-simPlifiées-pwd"
           }
         }
         expect(subject.current_gestionnaire).to eq(gestionnaire)
@@ -33,8 +33,8 @@ describe Gestionnaires::PasswordsController, type: :controller do
         put :update, params: {
           gestionnaire: {
             reset_password_token: @token,
-            password: "supersecret",
-            password_confirmation: "supersecret"
+            password: "déMarches-simPlifiées-pwd",
+            password_confirmation: "déMarches-simPlifiées-pwd"
           }
         }
         expect(subject.current_administrateur).to eq(administrateur)

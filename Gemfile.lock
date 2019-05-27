@@ -400,6 +400,9 @@ GEM
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
+    prawn-qrcode (0.3.1)
+      prawn (>= 1)
+      rqrcode (>= 0.4.1)
     prawn_rails (0.0.11)
       prawn (>= 0.11.1)
       railties (>= 3.0.0)
@@ -493,6 +496,8 @@ GEM
       activesupport (>= 3.0)
       builder (>= 3.0)
       rubyzip (>= 1.0)
+    rqrcode (0.10.1)
+      chunky_png (~> 1.0)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -722,6 +727,7 @@ DEPENDENCIES
   openstack
   pg
   prawn
+  prawn-qrcode
   prawn_rails
   premailer-rails
   pry-byebug

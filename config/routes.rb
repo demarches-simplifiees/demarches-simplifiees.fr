@@ -65,6 +65,12 @@ Rails.application.routes.draw do
   get "/ping" => "ping#index", :constraints => { :ip => /127.0.0.1/ }
 
   #
+  # password test
+  #
+  get '/password_mock' => 'password_mock#new'
+  post '/password_mock' => 'password_mock#create'
+  get '/password_mock/test_strength' => 'password_mock#test_strength'
+  #
   # Authentication
   #
 
@@ -75,8 +81,9 @@ Rails.application.routes.draw do
     }
 
   devise_for :administrateurs, controllers: {
-    sessions: 'administrateurs/sessions'
-  }, skip: [:password, :registrations]
+    sessions: 'administrateurs/sessions',
+    passwords: 'administrateurs/passwords'
+  }, skip: [:registrations]
 
   devise_for :gestionnaires, controllers: {
     sessions: 'gestionnaires/sessions',
@@ -95,16 +102,19 @@ Rails.application.routes.draw do
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
     get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
+    get '/users/password/test_strength' => 'users/passwords#test_strength'
   end
 
   devise_scope :gestionnaire do
     get '/gestionnaires/sign_in/demo' => redirect("/users/sign_in")
     get '/gestionnaires/edit' => 'gestionnaires/registrations#edit', :as => 'edit_gestionnaires_registration'
     put '/gestionnaires' => 'gestionnaires/registrations#update', :as => 'gestionnaires_registration'
+    get '/gestionnaires/password/test_strength' => 'gestionnaires/passwords#test_strength'
   end
 
   devise_scope :administrateur do
     get '/administrateurs/sign_in/demo' => redirect("/users/sign_in")
+    get '/administrateurs/password/test_strength' => 'administrateurs/passwords#test_strength'
   end
 
   #
@@ -171,7 +181,6 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
-    get 'activate/test_password_strength' => '/administrateurs/activate#test_password_strength'
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
@@ -291,6 +300,7 @@ Rails.application.routes.draw do
         post 'commentaire' => 'dossiers#create_commentaire'
         post 'ask_deletion'
         get 'attestation'
+        get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
 
         resources :champs, only: [] do
           delete 'purge_champ_piece_justificative' => 'dossiers#purge_champ_piece_justificative'
@@ -373,6 +383,8 @@ Rails.application.routes.draw do
         get 'champs'
         get 'annotations'
       end
+
+      resources :administrateurs, controller: 'procedure_administrateurs', only: [:index, :create, :destroy]
 
       resources :types_de_champ, only: [:create, :update, :destroy] do
         member do

@@ -79,6 +79,7 @@ class AttestationTemplate < ApplicationRecord
       body: replace_tags(body, dossier),
       signature: signature,
       footer: footer,
+      qrcode: qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)),
       created_at: Time.zone.now)
 
     attestation_view = action_view.render(file: 'admin/attestation_templates/show',

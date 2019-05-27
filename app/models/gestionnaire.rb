@@ -22,6 +22,14 @@ class Gestionnaire < ApplicationRecord
   has_many :dossiers_from_avis, through: :avis, source: :dossier
   has_many :trusted_device_tokens
 
+  validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
+
+  def password_complexity
+    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_GESTIONNAIRE
+      errors.add(:password, :not_strength)
+    end
+  end
+
   def visible_procedures
     procedures.merge(Procedure.avec_lien.or(Procedure.archivees))
   end

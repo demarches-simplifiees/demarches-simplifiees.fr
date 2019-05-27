@@ -251,7 +251,7 @@ describe Gestionnaires::AvisController, type: :controller do
       let(:dossier) { create(:dossier) }
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
       let(:avis_id) { avis.id }
-      let(:password) { '12345678' }
+      let(:password) { 'déMarches-simPlifiées pwd' }
       let(:created_gestionnaire) { Gestionnaire.find_by(email: invited_email) }
       let(:invitations_email) { true }
 

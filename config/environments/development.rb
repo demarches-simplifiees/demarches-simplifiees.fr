@@ -59,6 +59,9 @@ Rails.application.configure do
     port: 3000
   }
 
+  # Use Content-Security-Policy-Report-Only instead of Content-Security-Policy
+  config.content_security_policy_report_only = true
+
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
