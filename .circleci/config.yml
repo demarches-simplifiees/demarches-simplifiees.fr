@@ -102,10 +102,14 @@ jobs:
       - run: |
           tmp=${CIRCLE_BRANCH##*/}
           TAG=cci_${tmp%%_*}
-          # echo $TAG
+          echo $TAG
           docker build -t $IMAGE:$TAG .
           docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker push $IMAGE:$TAG
+          if [ "$TAG" == "cci_masterpf" ]; then
+            docker tag $IMAGE:$TAG $IMAGE:$TAG-$CIRCLE_BUILD_NUM
+            docker push $IMAGE:$TAG-$CIRCLE_BUILD_NUM
+          fi
 
 workflows:
   version: 2
