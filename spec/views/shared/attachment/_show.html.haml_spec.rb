@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'shared/piece_jointe/_pj_link.html.haml', type: :view do
+describe 'shared/attachment/_show.html.haml', type: :view do
   let(:champ) { create(:champ_piece_justificative) }
   let(:virus_scan_result) { nil }
 
@@ -8,7 +8,7 @@ describe 'shared/piece_jointe/_pj_link.html.haml', type: :view do
     champ.piece_justificative_file.blob.update(metadata: champ.piece_justificative_file.blob.metadata.merge(virus_scan_result: virus_scan_result))
   end
 
-  subject { render 'shared/piece_jointe/pj_link', pj: champ.piece_justificative_file, user_can_upload: false }
+  subject { render 'shared/attachment/show', attachment: champ.piece_justificative_file.attachment }
 
   context 'when there is no anti-virus scan' do
     let(:virus_scan_result) { nil }

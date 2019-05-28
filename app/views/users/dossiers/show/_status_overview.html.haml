@@ -50,7 +50,7 @@
           %h3 Motif de l’acceptation
           %blockquote= dossier.motivation
 
-        = render partial: 'new_user/dossiers/show/download_justificatif', locals: { dossier: dossier }
+        = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
 
         - if dossier.attestation.present?
           .action
@@ -71,7 +71,7 @@
           %h3 Motif du refus
           %blockquote= dossier.motivation
 
-        = render partial: 'new_user/dossiers/show/download_justificatif', locals: { dossier: @dossier }
+        = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
         .action
           = link_to 'Envoyer un message à l’administration', messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button'
 
@@ -83,7 +83,7 @@
           = succeed '.' do
             %strong sans suite
 
-        = render partial: 'new_user/dossiers/show/download_justificatif', locals: { dossier: @dossier }
+        = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
 
         - if dossier.motivation.present?
           %h3 Motif du classement sans suite

@@ -48,5 +48,16 @@ describe Gestionnaires::RechercheController, type: :controller do
         end
       end
     end
+
+    context 'with no query param it does not crash' do
+      subject { get :index, params: {} }
+
+      it { is_expected.to have_http_status(200) }
+
+      it 'returns 0 dossier' do
+        subject
+        expect(assigns(:dossiers).count).to eq(0)
+      end
+    end
   end
 end
