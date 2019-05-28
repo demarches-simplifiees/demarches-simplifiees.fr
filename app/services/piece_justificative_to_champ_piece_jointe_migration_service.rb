@@ -75,12 +75,18 @@ class PieceJustificativeToChampPieceJointeMigrationService
   end
 
   def convert_pj_to_champ!(pj, champ)
-    blob = make_blob(pj)
+    actual_file_exists = pj.content.file.send(:file)
+    if actual_file_exists
+      blob = make_blob(pj)
 
-    # Upload the file before creating the attachment to make sure MIME type
-    # identification doesn’t fail.
-    storage_service.copy_from_carrierwave_to_active_storage!(pj.content.path, blob)
-    attachment = storage_service.make_attachment(champ, 'piece_justificative_file', blob)
+      # Upload the file before creating the attachment to make sure MIME type
+      # identification doesn’t fail.
+      storage_service.copy_from_carrierwave_to_active_storage!(pj.content.path, blob)
+      attachment = storage_service.make_attachment(champ, 'piece_justificative_file', blob)
+
+    else
+      make_empty_blob(pj)
+    end
 
     # By reloading, we force ActiveStorage to look at the attachment again, and see
     # that one exists now. We do this so that, if we need to roll back and destroy the champ,
@@ -111,5 +117,9 @@ class PieceJustificativeToChampPieceJointeMigrationService
 
   def make_blob(pj)
     storage_service.make_blob(pj.content, pj.updated_at.iso8601, filename: pj.original_filename)
+  end
+
+  def make_empty_blob(pj)
+    storage_service.make_empty_blob(pj.content, pj.updated_at.iso8601, filename: pj.original_filename)
   end
 end
