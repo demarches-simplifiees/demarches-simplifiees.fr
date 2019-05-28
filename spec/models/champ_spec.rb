@@ -390,12 +390,6 @@ describe Champ do
 
         it { expect(champ.piece_justificative_file.virus_scanner.started?).to be_truthy }
       end
-
-      context 'and there is no blob' do
-        before { champ.save }
-
-        it { expect(champ.piece_justificative_file.virus_scanner).to be_nil }
-      end
     end
   end
 

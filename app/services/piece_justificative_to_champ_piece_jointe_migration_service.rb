@@ -9,9 +9,18 @@ class PieceJustificativeToChampPieceJointeMigrationService
     storage_service.ensure_openstack_copy_possible!(PieceJustificativeUploader)
   end
 
-  def convert_procedure_pjs_to_champ_pjs(procedure)
+  def procedures_with_pjs_in_range(ids_range)
+    procedures_with_pj = Procedure.unscope(where: :hidden_at).joins(:types_de_piece_justificative).distinct
+    procedures_with_pj.where(id: ids_range)
+  end
+
+  def number_of_champs_to_migrate(procedure)
+    (procedure.types_de_piece_justificative.count + 1) * procedure.dossiers.unscope(where: :hidden_at).count
+  end
+
+  def convert_procedure_pjs_to_champ_pjs(procedure, &progress)
     types_de_champ_pj = PiecesJustificativesService.types_pj_as_types_de_champ(procedure)
-    populate_champs_pjs!(procedure, types_de_champ_pj)
+    populate_champs_pjs!(procedure, types_de_champ_pj, &progress)
 
     # Only destroy the old types PJ once everything has been safely migrated to
     # champs PJs. Destroying the types PJ will cascade and destroy the PJs,
@@ -24,7 +33,7 @@ class PieceJustificativeToChampPieceJointeMigrationService
     @storage_service ||= CarrierwaveActiveStorageMigrationService.new
   end
 
-  def populate_champs_pjs!(procedure, types_de_champ_pj)
+  def populate_champs_pjs!(procedure, types_de_champ_pj, &progress)
     procedure.types_de_champ += types_de_champ_pj
 
     # Unscope to make sure all dossiers are migrated, even the soft-deleted ones
@@ -49,6 +58,8 @@ class PieceJustificativeToChampPieceJointeMigrationService
             created_at: dossier.created_at
           )
         end
+
+        yield if block_given?
       end
     end
   rescue

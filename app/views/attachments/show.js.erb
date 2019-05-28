@@ -1,0 +1,8 @@
+<%= render_to_element(".pj-link[data-attachment-id=\"#{@attachment.id}\"]",
+  partial: 'shared/attachment/show',
+  outer: true,
+  locals: { attachment: @attachment, user_can_upload: @user_can_upload }) %>
+
+<% if @attachment.virus_scanner.pending? %>
+  <%= fire_event('attachment:update', { url: attachment_url(@attachment.id, { signed_id: @attachment.blob.signed_id, user_can_upload: @user_can_upload }) }.to_json ) %>
+<% end %>

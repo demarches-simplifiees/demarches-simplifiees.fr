@@ -75,14 +75,15 @@ class CarrierwaveActiveStorageMigrationService
   # but when the first attachment that references this blob is created.
   def make_blob(uploader, created_at, filename: nil, identify: false)
     content_type = uploader.content_type
+    identified = content_type.present? && !identify
 
     ActiveStorage::Blob.create(
       filename: filename || uploader.filename,
       content_type: uploader.content_type,
-      identified: content_type.present? && !identify,
       byte_size: uploader.size,
       checksum: checksum(uploader),
-      created_at: created_at
+      created_at: created_at,
+      metadata: { identified: identified, virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     )
   end
 
