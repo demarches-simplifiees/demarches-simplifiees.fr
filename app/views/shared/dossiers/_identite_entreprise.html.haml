@@ -12,6 +12,9 @@
         %th.libelle SIRET du siège social:
         %td= etablissement.entreprise.siret_siege_social
     %tr
+      %th.libelle Nom commercial :
+      %td= sanitize(etablissement.entreprise_nom_commercial)
+    %tr
       %th.libelle Forme juridique :
       %td= sanitize(etablissement.entreprise.forme_juridique)
     %tr
