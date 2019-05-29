@@ -60,7 +60,7 @@ class ProgressReport
 
   def format_duration(seconds)
     if seconds.finite?
-      Time.zone.at(seconds).strftime('%H:%M:%S')
+      Time.zone.at(seconds).utc.strftime('%H:%M:%S')
     else
       '--:--:--'
     end
