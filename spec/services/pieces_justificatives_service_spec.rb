@@ -112,11 +112,25 @@ describe PiecesJustificativesService do
         create(
           :procedure,
           types_de_piece_justificative: tpjs,
-          types_de_champ: [build(:type_de_champ, order_place: 0)]
+          types_de_champ: [build(:type_de_champ, order_place: 0), build(:type_de_champ, order_place: 1)]
         )
       end
 
       it 'generates a sequence of incrementing order_places that continues where the last type de champ left off' do
+        expect(subject.pluck(:order_place)).to contain_exactly(2, 3)
+      end
+    end
+
+    context 'with pre-existing champs without an order place' do
+      let(:procedure) do
+        create(
+          :procedure,
+          types_de_piece_justificative: tpjs,
+          types_de_champ: [build(:type_de_champ, order_place: 0), build(:type_de_champ, order_place: nil)]
+        )
+      end
+
+      it 'ignores champs without an order place' do
         expect(subject.pluck(:order_place)).to contain_exactly(1, 2)
       end
     end
