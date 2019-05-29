@@ -64,7 +64,8 @@ class PieceJustificativeToChampPieceJointeMigrationService
         yield if block_given?
       end
     end
-  rescue
+
+  rescue StandardError, SignalException
     # If anything goes wrong, we roll back the migration by destroying the newly created
     # types de champ, champs blobs and attachments.
     types_de_champ_pj.each do |type_champ|
@@ -95,7 +96,7 @@ class PieceJustificativeToChampPieceJointeMigrationService
     # that one exists now. We do this so that, if we need to roll back and destroy the champ,
     # the blob, the attachment and the actual file on OpenStack also get deleted.
     champ.reload
-  rescue
+  rescue StandardError, SignalException
     # Destroy partially attached object that the more general rescue in `populate_champs_pjs!`
     # might not be able to handle.
 
