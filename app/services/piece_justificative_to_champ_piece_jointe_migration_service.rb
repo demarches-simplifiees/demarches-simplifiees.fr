@@ -37,7 +37,7 @@ class PieceJustificativeToChampPieceJointeMigrationService
     procedure.types_de_champ += types_de_champ_pj
 
     # Unscope to make sure all dossiers are migrated, even the soft-deleted ones
-    procedure.dossiers.unscope(where: :hidden_at).find_each do |dossier|
+    procedure.dossiers.unscope(where: :hidden_at).includes(:champs).find_each do |dossier|
       champs_pj = types_de_champ_pj.map(&:build_champ)
       dossier.champs += champs_pj
 
