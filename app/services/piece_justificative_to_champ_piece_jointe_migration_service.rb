@@ -40,9 +40,12 @@ class PieceJustificativeToChampPieceJointeMigrationService
 
     # Unscope to make sure all dossiers are migrated, even the soft-deleted ones
     procedure.dossiers.unscope(where: :hidden_at).includes(:champs).find_each do |dossier|
+      # Add the new pieces justificatives champs to the dossier
       champs_pj = types_de_champ_pj.map(&:build_champ)
       dossier.champs += champs_pj
 
+      # Copy the dossier old pieces jointes to the new champs
+      # (even if the champs already existed, so that we ensure a clean state)
       champs_pj.each do |champ|
         type_pj_id = champ.type_de_champ.old_pj&.fetch('stable_id', nil)
         pj = dossier.retrieve_last_piece_justificative_by_type(type_pj_id)
@@ -68,10 +71,14 @@ class PieceJustificativeToChampPieceJointeMigrationService
   rescue StandardError, SignalException
     # If anything goes wrong, we roll back the migration by destroying the newly created
     # types de champ, champs blobs and attachments.
+    rake_puts "Error received. Rolling back migration of procedure #{procedure.id}…"
+
     types_de_champ_pj.each do |type_champ|
       type_champ.champ.each { |c| c.piece_justificative_file.purge }
       type_champ.destroy
     end
+
+    rake_puts "Migration of procedure #{procedure.id} rolled back."
 
     # Reraise the exception to abort the migration.
     raise
