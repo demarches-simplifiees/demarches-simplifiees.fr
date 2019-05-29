@@ -13,7 +13,7 @@
 
     = form_for @avis, url: gestionnaire_avis_path(@avis), html: { class: 'form' } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
-      = render partial: "shared/attachment/update", locals: { pj: @avis.piece_justificative_file, object: @avis, form: f }
+      = render partial: "shared/attachment/update", locals: { attachment: @avis.piece_justificative_file.attachment, user_can_destroy: true, form: f }
 
       .flex.justify-between.align-baseline
         %p.confidentiel.flex
