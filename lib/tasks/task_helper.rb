@@ -37,6 +37,8 @@ class ProgressReport
     rake_puts
   end
 
+  private
+
   def set_progress(total: nil, count: nil)
     if total.present?
       @total = total
