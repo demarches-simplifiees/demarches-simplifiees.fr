@@ -1,23 +1,35 @@
--# Allowed formats:
+
+-# ------ Allowed formats:
+
 -# 0123456789
 -# 01 23 45 67 89
 -# 01.23.45.67.89
 -# 0123 45.67.89
--# 0033 123-456-789
--# 0035 123-456-789
--# 0033 123-456-789
--# 0033(0)123456789
--# +33-1.23.45.67.89
--# +33 - 123 456 789
--# +33(0) 123 456 789
--# +33 (0)123 45 67 89
--# +33 (0)1 2345-6789
--# +33(0) - 123456789
--# +1(0) - 123456789
--# +2 123456789
--# 012345678
--# 01234567890
+-# 06-12-34-56-78
+-# +33 123 456 789
+-# (+33) 123 45 67 89
+-# (33) 7 2345-6789
+-# DS pattern: "([\\+\\d\\(][\\(\\)\\s\\.\\-\\d]{4,}\\d)"
+
+-# ------ forbidden patterns
+
+-# 1234567890        = 10 digits (fr) but not a valid french prefix
+-# 12345678          = 8 digits (pf) but not a valid polynesian prefix (40|49|87|88|89)
+-# 00 +33 6123456    = 00 prefix not allowed (old convention)
+-# +33 (0)6 123456   = '(0)' not allowed ==> +33 6 123456
+-# 3615              = Ula numbers not accepted
+
+-# ----- for Polynesia
+
+-# Only numbers starting with 40, 49, 87, 88, 89 are allowed
+-# +689 4012 3456       vini home phone
+-# (689) 87.12.34.56    vini mobile
+-# (+689) 49 123-456    manabox number
+-# 4012-3456            vini home phone without international prefix
+-# 89-540-568           vodafone mobile
+-# 88 12 34 56          viti mobile
+
 = form.phone_field :value,
   placeholder: champ.libelle,
   required: champ.mandatory?,
-  pattern: "([\\+\\d\\(][\\(\\)\\s\\.\\-\\d]{4,}\\d)"
+  pattern: "#{PhoneSyntaxCheckerService.regex}"
