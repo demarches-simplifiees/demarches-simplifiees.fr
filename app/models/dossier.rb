@@ -19,18 +19,18 @@ class Dossier < ApplicationRecord
   has_one :individual, dependent: :destroy
   has_one :attestation, dependent: :destroy
 
-  has_many :pieces_justificatives, dependent: :destroy
+  has_many :pieces_justificatives, inverse_of: :dossier, dependent: :destroy
   has_one_attached :justificatif_motivation
 
-  has_many :champs, -> { root.public_only.ordered }, dependent: :destroy
-  has_many :champs_private, -> { root.private_only.ordered }, class_name: 'Champ', dependent: :destroy
-  has_many :commentaires, dependent: :destroy
+  has_many :champs, -> { root.public_only.ordered }, inverse_of: :dossier, dependent: :destroy
+  has_many :champs_private, -> { root.private_only.ordered }, class_name: 'Champ', inverse_of: :dossier, dependent: :destroy
+  has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }
   has_many :previous_follows, -> { inactive }, class_name: 'Follow'
   has_many :followers_gestionnaires, through: :follows, source: :gestionnaire
   has_many :previous_followers_gestionnaires, -> { distinct }, through: :previous_follows, source: :gestionnaire
-  has_many :avis, dependent: :destroy
+  has_many :avis, inverse_of: :dossier, dependent: :destroy
 
   has_many :dossier_operation_logs, dependent: :destroy
 
