@@ -37,6 +37,8 @@ class ProgressReport
     rake_puts
   end
 
+  private
+
   def set_progress(total: nil, count: nil)
     if total.present?
       @total = total
@@ -60,7 +62,7 @@ class ProgressReport
 
   def format_duration(seconds)
     if seconds.finite?
-      Time.zone.at(seconds).strftime('%H:%M:%S')
+      Time.zone.at(seconds).utc.strftime('%H:%M:%S')
     else
       '--:--:--'
     end

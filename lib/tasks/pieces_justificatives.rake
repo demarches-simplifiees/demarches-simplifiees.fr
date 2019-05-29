@@ -1,6 +1,9 @@
 require Rails.root.join("lib", "tasks", "task_helper")
 
 namespace :pieces_justificatives do
+  desc <<~EOD
+    Migrate the PJ to champs for a single PROCEDURE_ID.
+  EOD
   task migrate_procedure_to_champs: :environment do
     procedure_id = ENV['PROCEDURE_ID']
     procedure = Procedure.find(procedure_id)
@@ -17,6 +20,9 @@ namespace :pieces_justificatives do
     progress.finish
   end
 
+  desc <<~EOD
+    Migrate the PJ to champs for several procedures ids, from RANGE_START to RANGE_END.
+  EOD
   task migrate_procedures_range_to_champs: :environment do
     if ENV['RANGE_START'].nil? || ENV['RANGE_END'].nil?
       fail "RANGE_START and RANGE_END must be specified"

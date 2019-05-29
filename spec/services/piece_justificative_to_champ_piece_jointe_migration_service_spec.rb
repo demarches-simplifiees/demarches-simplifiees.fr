@@ -182,6 +182,7 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
 
   context 'cleanup when conversion fails' do
     let(:pjs) { make_pjs }
+    let(:exception) { 'LOL no!' }
 
     let!(:failing_dossier) do
       create(
@@ -197,14 +198,14 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
 
       expect(storage_service).to receive(:copy_from_carrierwave_to_active_storage!)
       expect(storage_service).to receive(:copy_from_carrierwave_to_active_storage!)
-        .and_raise('LOL no!')
+        .and_raise(exception)
 
       expect(storage_service).to receive(:delete_from_active_storage!)
     end
 
     def try_convert(procedure)
       service.convert_procedure_pjs_to_champ_pjs(procedure)
-    rescue => e
+    rescue StandardError, SignalException => e
       e
     end
 
@@ -241,6 +242,18 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
     it 'does not leave stale attachments behind' do
       expect { try_convert(procedure) }
         .not_to change { ActiveStorage::Attachment.count }
+    end
+
+    context 'when receiving a Signal interruption (like Ctrl+C)' do
+      let(:exception) { Interrupt }
+
+      it 'handles the exception as well' do
+        expect { service.convert_procedure_pjs_to_champ_pjs(procedure) }.to raise_error { Interrupt }
+      end
+
+      it 'does not create champs' do
+        expect { try_convert(procedure) }.not_to change { dossier.champs.count }
+      end
     end
   end
 end
