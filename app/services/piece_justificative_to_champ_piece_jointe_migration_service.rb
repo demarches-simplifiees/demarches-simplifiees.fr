@@ -1,3 +1,5 @@
+require Rails.root.join("lib", "tasks", "task_helper")
+
 class PieceJustificativeToChampPieceJointeMigrationService
   def initialize(**params)
     params.each do |key, value|
@@ -86,6 +88,7 @@ class PieceJustificativeToChampPieceJointeMigrationService
 
     else
       make_empty_blob(pj)
+      rake_puts "Notice: attached file for champ #{champ.id} not found. An empty blob has been attached instead."
     end
 
     # By reloading, we force ActiveStorage to look at the attachment again, and see
