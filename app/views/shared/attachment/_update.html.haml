@@ -1,12 +1,22 @@
 .piece-justificative
-  - if pj.attached?
-    .piece-justificative-actions{ id: "piece_justificative_#{object.id}" }
+  - if defined?(template) && template.attached?
+    %p.edit-pj-template.mb-1
+      Veuillez télécharger, remplir et joindre
+      = link_to('le modèle suivant', url_for(template), target: '_blank', rel: 'noopener')
+
+  - attachment_id = attachment ? attachment.id : SecureRandom.uuid
+  - user_can_destroy = defined?(user_can_destroy) ? user_can_destroy : false
+  - if attachment
+    .piece-justificative-actions{ id: "piece_justificative_#{attachment_id}" }
       .piece-justificative-action
-        = render partial: "shared/attachment/show", locals: { attachment: pj.attachment, user_can_upload: true }
+        = render partial: "shared/attachment/show", locals: { attachment: attachment, user_can_upload: true }
+      - if user_can_destroy
+        .piece-justificative-action
+          = link_to 'Supprimer', attachment_url(attachment.id, { signed_id: attachment.blob.signed_id }), remote: true, method: :delete, class: 'button small danger'
       .piece-justificative-action
-        = button_tag 'Remplacer', type: 'button', class: 'button small', data: { 'toggle-target': "#champs_#{object.id}" }
+        = button_tag 'Remplacer', type: 'button', class: 'button small', data: { 'toggle-target': "#piece_justificative_file_#{attachment_id}" }
 
   = form.file_field :piece_justificative_file,
-    id: "champs_#{object.id}",
-    class: "piece-justificative-input #{'hidden' if pj.attached?}",
+    id: "piece_justificative_file_#{attachment_id}",
+    class: "piece-justificative-input #{'hidden' if attachment}",
     direct_upload: true
