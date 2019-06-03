@@ -13,10 +13,13 @@ export function initMap(element, position, editable = false) {
       scrollWheelZoom: false
     }).setView([position.lat, position.lon], editable ? 18 : position.zoom);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    const loadTilesLayer = process.env.RAILS_ENV != 'test';
+    if (loadTilesLayer) {
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+    }
 
     if (editable) {
       const freeDraw = new FreeDraw({
