@@ -75,11 +75,11 @@ feature 'The user' do
     expect(page).to have_field('email', with: 'loulou@yopmail.com')
     expect(page).to have_field('phone', with: '1234567890')
     expect(page).to have_checked_field('Non')
-    expect(page).to have_select('simple_drop_down_list', selected: 'val2')
-    expect(page).to have_select('multiple_drop_down_list', selected: ['val1', 'val3'])
-    expect(page).to have_select('pays', selected: 'AUSTRALIE')
-    expect(page).to have_select('regions', selected: 'region2')
-    expect(page).to have_select('departement', selected: 'dep2')
+    expect(page).to have_selected_value('simple_drop_down_list', selected: 'val2')
+    expect(page).to have_selected_value('multiple_drop_down_list', selected: ['val1', 'val3'])
+    expect(page).to have_selected_value('pays', selected: 'AUSTRALIE')
+    expect(page).to have_selected_value('regions', selected: 'region2')
+    expect(page).to have_selected_value('departement', selected: 'dep2')
     expect(page).to have_checked_field('engagement')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
@@ -229,10 +229,10 @@ feature 'The user' do
   end
 
   def check_date_and_time(date, field)
-    expect(page).to have_select("#{field}_1i", selected: date.strftime('%Y'))
-    expect(page).to have_select("#{field}_2i", selected: I18n.l(date, format: '%B'))
-    expect(page).to have_select("#{field}_3i", selected: date.strftime('%-d'))
-    expect(page).to have_select("#{field}_4i", selected: date.strftime('%H'))
-    expect(page).to have_select("#{field}_5i", selected: date.strftime('%M'))
+    expect(page).to have_selected_value("#{field}_1i", selected: date.strftime('%Y'))
+    expect(page).to have_selected_value("#{field}_2i", selected: I18n.l(date, format: '%B'))
+    expect(page).to have_selected_value("#{field}_3i", selected: date.strftime('%-d'))
+    expect(page).to have_selected_value("#{field}_4i", selected: date.strftime('%H'))
+    expect(page).to have_selected_value("#{field}_5i", selected: date.strftime('%M'))
   end
 end
