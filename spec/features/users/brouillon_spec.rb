@@ -14,7 +14,7 @@ feature 'The user' do
     allow(Champs::RegionChamp).to receive(:regions).and_return(['region1', 'region2']).at_least(:once)
     allow(Champs::DepartementChamp).to receive(:departements).and_return(['dep1', 'dep2']).at_least(:once)
 
-    log_in(user.email, password, procedure)
+    log_in(user, procedure)
 
     fill_individual
 
@@ -93,7 +93,7 @@ feature 'The user' do
   end
 
   scenario 'fill a dossier with repetition', js: true do
-    log_in(user.email, password, procedure_with_repetition)
+    log_in(user, procedure_with_repetition)
 
     fill_individual
 
@@ -127,7 +127,7 @@ feature 'The user' do
   end
 
   scenario 'save an incomplete dossier as draft but cannot not submit it', js: true do
-    log_in(user.email, password, simple_procedure)
+    log_in(user, simple_procedure)
     fill_individual
 
     # Check an incomplete dossier can be saved as a draft, even when mandatory fields are missing
@@ -156,7 +156,7 @@ feature 'The user' do
   end
 
   scenario 'adding, replacing and removing attachments', js: true do
-    log_in(user.email, password, procedure_with_pj)
+    log_in(user, procedure_with_pj)
     fill_individual
 
     # Add an attachment
@@ -194,14 +194,10 @@ feature 'The user' do
 
   private
 
-  def log_in(email, password, procedure)
+  def log_in(user, procedure)
+    login_as user, scope: :user
+
     visit "/commencer/#{procedure.path}"
-    click_on 'J’ai déjà un compte'
-
-    expect(page).to have_current_path(new_user_session_path)
-    sign_in_with(email, password)
-
-    expect(page).to have_current_path("/commencer/#{procedure.path}")
     click_on 'Commencer la démarche'
 
     expect(page).to have_content("Données d'identité")
