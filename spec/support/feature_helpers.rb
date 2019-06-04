@@ -67,6 +67,13 @@ module FeatureHelpers
     $stderr.write 'Spec paused. Press enter to continue:'
     $stdin.gets
   end
+
+  def wait_until
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      sleep(0.1) until (value = yield)
+      value
+    end
+  end
 end
 
 RSpec.configure do |config|
