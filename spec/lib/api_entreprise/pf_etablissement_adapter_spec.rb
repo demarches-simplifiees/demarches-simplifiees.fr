@@ -31,7 +31,7 @@ describe ApiEntreprise::PfEtablissementAdapter do
 
       context 'Concaténation lignes adresse' do
         it 'L\'entreprise contient une adresse sur plusieurs lignes' do
-          expect(subject[:adresse]).to eq("115\r\nrue Dumont d'Urville\r\nquartier Orovini\r\nPapeete")
+          expect(subject[:adresse]).to eq("BP 130, 98713 PAPEETE BP,\n115,\nrue Dumont d'Urville,\nquartier Orovini,\nPapeete")
         end
       end
 
@@ -49,7 +49,7 @@ describe ApiEntreprise::PfEtablissementAdapter do
         end
 
         it 'L\'entreprise contient bien une localite' do
-          expect(subject[:localite]).to eq('PAPEETE BP')
+          expect(subject[:localite]).to eq('Papeete')
         end
       end
     end
