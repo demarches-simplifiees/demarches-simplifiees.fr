@@ -62,6 +62,11 @@ module FeatureHelpers
   def blur
     page.find('body').click
   end
+
+  def pause
+    $stderr.write 'Spec paused. Press enter to continue:'
+    $stdin.gets
+  end
 end
 
 RSpec.configure do |config|
