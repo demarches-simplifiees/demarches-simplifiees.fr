@@ -9,15 +9,16 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
   let(:procedure) { create(:procedure, types_de_piece_justificative: types_pj) }
   let(:types_pj) { [create(:type_de_piece_justificative)] }
 
-  let!(:dossier) do
-    create(
-      :dossier,
-      procedure: procedure,
-      pieces_justificatives: pjs
-    )
-  end
+  let!(:dossier) { make_dossier }
 
   let(:pjs) { [] }
+
+  def make_dossier(hidden: false)
+    create(:dossier,
+      procedure: procedure,
+      pieces_justificatives: pjs,
+      hidden_at: hidden ? Time.zone.now : nil)
+  end
 
   def make_pjs
     types_pj.map do |tpj|
@@ -29,6 +30,22 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
     expect(storage_service).to receive(:make_blob)
     expect(storage_service).to receive(:copy_from_carrierwave_to_active_storage!)
     expect(storage_service).to receive(:make_attachment)
+  end
+
+  describe '.number_of_champs_to_migrate' do
+    let!(:other_dossier) { make_dossier }
+
+    it 'reports the numbers of champs to be migrated' do
+      expect(service.number_of_champs_to_migrate(procedure)).to eq(4)
+    end
+
+    context 'when the procedure has hidden dossiers' do
+      let!(:hidden_dossier) { make_dossier(hidden: true) }
+
+      it 'reports the numbers of champs including those of hidden dossiers' do
+        expect(service.number_of_champs_to_migrate(procedure)).to eq(6)
+      end
+    end
   end
 
   context 'when conversion succeeds' do
@@ -114,19 +131,26 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
           .to change { dossier.pieces_justificatives.count }
           .to(0)
       end
+
+      context 'when the procedure has several dossiers' do
+        let!(:other_dossier) { make_dossier }
+
+        it 'sends progress callback for each migrated champ' do
+          number_of_champs_to_migrate = service.number_of_champs_to_migrate(procedure)
+
+          progress_count = 0
+          service.convert_procedure_pjs_to_champ_pjs(procedure) do
+            progress_count += 1
+          end
+
+          expect(progress_count).to eq(number_of_champs_to_migrate)
+        end
+      end
     end
 
     context 'when the dossier is soft-deleted it still gets converted' do
       let(:pjs) { make_pjs }
-
-      let!(:dossier) do
-        create(
-          :dossier,
-          procedure: procedure,
-          pieces_justificatives: pjs,
-          hidden_at: Time.zone.now
-        )
-      end
+      let!(:dossier) { make_dossier(hidden: true) }
 
       before { expect_storage_service_to_convert_object }
 
@@ -158,6 +182,7 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
 
   context 'cleanup when conversion fails' do
     let(:pjs) { make_pjs }
+    let(:exception) { 'LOL no!' }
 
     let!(:failing_dossier) do
       create(
@@ -173,14 +198,14 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
 
       expect(storage_service).to receive(:copy_from_carrierwave_to_active_storage!)
       expect(storage_service).to receive(:copy_from_carrierwave_to_active_storage!)
-        .and_raise('LOL no!')
+        .and_raise(exception)
 
       expect(storage_service).to receive(:delete_from_active_storage!)
     end
 
     def try_convert(procedure)
       service.convert_procedure_pjs_to_champ_pjs(procedure)
-    rescue => e
+    rescue StandardError, SignalException => e
       e
     end
 
@@ -217,6 +242,18 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
     it 'does not leave stale attachments behind' do
       expect { try_convert(procedure) }
         .not_to change { ActiveStorage::Attachment.count }
+    end
+
+    context 'when receiving a Signal interruption (like Ctrl+C)' do
+      let(:exception) { Interrupt }
+
+      it 'handles the exception as well' do
+        expect { service.convert_procedure_pjs_to_champ_pjs(procedure) }.to raise_error { Interrupt }
+      end
+
+      it 'does not create champs' do
+        expect { try_convert(procedure) }.not_to change { dossier.champs.count }
+      end
     end
   end
 end

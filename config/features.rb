@@ -15,7 +15,15 @@ Flipflop.configure do
 
   feature :web_hook
   feature :enable_email_login_token
-  feature :new_champs_editor
+
+  feature :operation_log_serialize_subject
+
+  group :development do
+    feature :mini_profiler_enabled,
+      default: Rails.env.development?
+    feature :xray_enabled,
+      default: Rails.env.development?
+  end
 
   group :production do
     feature :remote_storage,

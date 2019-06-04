@@ -8,4 +8,4 @@
       %th.libelle Justificatif :
       %td
         .action
-          = render partial: 'shared/piece_jointe/pj_link', locals: { object: dossier, pj: dossier.justificatif_motivation }
+          = render partial: 'shared/attachment/show', locals: { attachment: dossier.justificatif_motivation.attachment }

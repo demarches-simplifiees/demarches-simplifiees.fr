@@ -21,7 +21,7 @@
 
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
-    - if Rails.env.development?
+    - if Flipflop.xray_enabled?
       = stylesheet_link_tag :xray
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
@@ -39,7 +39,7 @@
       - if content_for?(:footer)
         = content_for(:footer)
 
-      - if Rails.env.development?
+      - if Flipflop.xray_enabled?
         = javascript_include_tag :xray
 
       = yield :charts_js

@@ -143,6 +143,9 @@ Rails.application.routes.draw do
     post ':position/repetition', to: 'repetition#show', as: :repetition
   end
 
+  get 'attachments/:id', to: 'attachments#show', as: :attachment
+  delete 'attachments/:id', to: 'attachments#destroy'
+
   get 'tour-de-france' => 'root#tour_de_france'
   get "patron" => "root#patron"
   get "accessibilite" => "root#accessibilite"
@@ -196,18 +199,6 @@ Rails.application.routes.draw do
         delete :delete_logo
         delete :delete_deliberation
         delete :delete_notice
-      end
-
-      resources :types_de_champ, only: [:destroy]
-      resource :types_de_champ, only: [:show, :update] do
-        post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
-        post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
-      end
-
-      resources :types_de_champ_private, only: [:destroy]
-      resource :types_de_champ_private, only: [:show, :update] do
-        post '/:index/move_up' => 'types_de_champ_private#move_up', as: :move_up
-        post '/:index/move_down' => 'types_de_champ_private#move_down', as: :move_down
       end
 
       resource :pieces_justificatives, only: [:show, :update]
@@ -301,10 +292,6 @@ Rails.application.routes.draw do
         post 'ask_deletion'
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
-
-        resources :champs, only: [] do
-          delete 'purge_champ_piece_justificative' => 'dossiers#purge_champ_piece_justificative'
-        end
       end
 
       collection do
@@ -350,10 +337,6 @@ Rails.application.routes.draw do
             post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
             post 'avis' => 'dossiers#create_avis'
             get 'print' => 'dossiers#print'
-
-            resources :champs, only: [] do
-              delete 'purge_champ_piece_justificative' => 'dossiers#purge_champ_piece_justificative'
-            end
           end
         end
       end

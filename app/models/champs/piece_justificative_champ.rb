@@ -40,7 +40,7 @@ class Champs::PieceJustificativeChamp < Champ
     end
 
     if errors.present?
-      piece_justificative_file.purge
+      piece_justificative_file.purge_later
     end
 
     errors

@@ -45,7 +45,7 @@ class API::V1::DossiersController < APIController
       render json: {}, status: :unauthorized
     end
 
-    @dossiers = @procedure.dossiers.state_not_brouillon
+    @dossiers = @procedure.dossiers.state_not_brouillon.order_for_api
 
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found

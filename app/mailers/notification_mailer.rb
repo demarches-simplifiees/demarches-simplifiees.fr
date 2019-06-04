@@ -45,6 +45,7 @@ class NotificationMailer < ApplicationMailer
         @logo_url = attachments[logo_filename].url
       rescue StandardError => e
         # A problem occured when reading logo, maybe the logo is missing and we should clean the procedure to remove logo reference ?
+        Raven.extra_context(procedure_id: dossier.procedure.id)
         Raven.capture_exception(e)
       end
     end

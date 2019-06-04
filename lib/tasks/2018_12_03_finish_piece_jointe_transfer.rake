@@ -44,7 +44,7 @@ namespace :'2018_12_03_finish_piece_jointe_transfer' do
             openstack_username: Rails.application.secrets.fog[:openstack_username],
             openstack_auth_url: Rails.application.secrets.fog[:openstack_auth_url],
             openstack_region: Rails.application.secrets.fog[:openstack_region],
-            openstack_identity_api_version: Rails.application.secrets.fog[:oopenstack_identity_api_version]
+            openstack_identity_api_version: Rails.application.secrets.fog[:openstack_identity_api_version]
           }
           new_pj_storage = Fog::Storage.new(fog_credentials)
           @new_pjs = new_pj_storage.directories.get(ENV['FOG_ACTIVESTORAGE_DIRECTORY'])

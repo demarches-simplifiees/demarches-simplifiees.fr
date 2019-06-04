@@ -26,12 +26,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if existing_user.present?
       if existing_user.confirmed?
         UserMailer.new_account_warning(existing_user).deliver_later
-        flash.notice = t('devise.registrations.signed_up_but_unconfirmed')
-        return redirect_to root_path
       else
         existing_user.resend_confirmation_instructions
-        return redirect_to after_inactive_sign_up_path_for(existing_user)
       end
+      return redirect_to after_inactive_sign_up_path_for(existing_user)
     end
 
     super

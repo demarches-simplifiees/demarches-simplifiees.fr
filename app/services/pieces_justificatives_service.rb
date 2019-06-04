@@ -33,12 +33,8 @@ class PiecesJustificativesService
   end
 
   def self.types_pj_as_types_de_champ(procedure)
-    last_champ = procedure.types_de_champ.last
-    if last_champ.present?
-      order_place = last_champ.order_place + 1
-    else
-      order_place = 0
-    end
+    max_order_place = procedure.types_de_champ.pluck(:order_place).compact.max || -1
+    order_place = max_order_place + 1
 
     types_de_champ = [
       TypeDeChamp.new(
