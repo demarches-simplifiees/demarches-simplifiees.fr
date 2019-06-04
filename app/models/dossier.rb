@@ -51,6 +51,7 @@ class Dossier < ApplicationRecord
   scope :not_archived,  -> { where(archived: false) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
+  scope :order_for_api, -> (order = :asc) { order(en_construction_at: order, created_at: order, id: order) }
 
   scope :all_state,                   -> { not_archived.state_not_brouillon }
   scope :en_construction,             -> { not_archived.state_en_construction }
