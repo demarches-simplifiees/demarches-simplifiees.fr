@@ -40,7 +40,7 @@ end
 
 Capybara.register_driver :headless_chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: ['headless', 'disable-gpu', 'disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
+    chromeOptions: { args: ['headless', 'disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
   )
 
   Capybara::Selenium::Driver.new app,
@@ -165,6 +165,24 @@ RSpec.configure do |config|
         ignored = ignored + options[:except]
       end
       actual.attributes.with_indifferent_access.except(*ignored) == expected.attributes.with_indifferent_access.except(*ignored)
+    end
+  end
+
+  # Asserts that a given select element exists in the page,
+  # and that the option(s) with the given value(s) are selected.
+  #
+  # Usage: expect(page).to have_selected_value('Country', selected: 'Australia')
+  #
+  # For large lists, this is much faster than `have_select(location, selected: value)`,
+  # as it doesn’t check that every other options are not selected.
+  RSpec::Matchers.define(:have_selected_value) do |select_locator, options|
+    match do |page|
+      values = options[:selected].is_a?(String) ? [options[:selected]] : options[:selected]
+
+      select_element = page.first(:select, select_locator)
+      select_element && values.all? do |value|
+        select_element.first(:option, value).selected?
+      end
     end
   end
 end
