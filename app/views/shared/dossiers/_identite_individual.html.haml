@@ -12,4 +12,4 @@
     - if individual.birthdate.present?
       %tr
         %th.libelle Date de naissance :
-        %td= individual.birthdate&.strftime("%d/%m/%Y")
+        %td= try_format_date(individual.birthdate)

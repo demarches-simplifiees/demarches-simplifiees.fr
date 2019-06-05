@@ -20,9 +20,9 @@
         - if procedure.publiee?
           %td.procedure-lien= link_to(procedure_lien(procedure), procedure_lien(procedure))
         - if procedure.publiee_ou_archivee?
-          %td= link_to(procedure.published_at.present? ? procedure.published_at.strftime('%d/%m/%Y %H:%M') : "", admin_procedure_href)
+          %td= link_to(procedure.published_at.present? ? try_format_datetime(procedure.published_at) : "", admin_procedure_href)
         - else
-          %td= link_to(procedure.created_at.strftime('%d/%m/%Y %H:%M'), admin_procedure_href)
+          %td= link_to(try_format_datetime(procedure.created_at), admin_procedure_href)
         %td
           = link_to('Cloner', admin_procedure_clone_path(procedure.id), data: { method: :put }, class: 'btn-sm btn-primary clone-btn')
           - if !procedure.publiee_ou_archivee?

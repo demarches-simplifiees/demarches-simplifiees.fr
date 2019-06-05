@@ -1,6 +1,6 @@
 %tr{ id: "procedure-#{@procedure.id}-administrateur-#{administrateur.id}" }
   %td= administrateur.email
-  %td= administrateur.created_at.strftime('%d/%m/%Y %H:%M')
+  %td= try_format_datetime(administrateur.created_at)
   %td= administrateur.registration_state
   %td
     - if administrateur == current_administrateur
