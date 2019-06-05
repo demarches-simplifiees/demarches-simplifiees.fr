@@ -121,14 +121,15 @@ feature 'As an administrateur I can edit types de champ', js: true do
 
   it "Add carte champ" do
     select('Carte', from: 'champ-0-type_champ')
-    fill_in 'champ-0-libelle', with: 'libellé de champ carte'
-    blur
+    fill_in 'champ-0-libelle', with: 'Libellé de champ carte', fill_options: { clear: :backspace }
     check 'Quartiers prioritaires'
+
+    wait_until { procedure.types_de_champ.first.quartiers_prioritaires == true }
     expect(page).to have_content('Formulaire enregistré')
 
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
     within_window(preview_window) do
-      expect(page).to have_content('libellé de champ carte')
+      expect(page).to have_content('Libellé de champ carte')
       expect(page).to have_content('Quartiers prioritaires')
       expect(page).not_to have_content('Cadastres')
     end
@@ -136,9 +137,10 @@ feature 'As an administrateur I can edit types de champ', js: true do
 
   it "Add dropdown champ" do
     select('Menu déroulant', from: 'champ-0-type_champ')
-    fill_in 'champ-0-libelle', with: 'libellé de champ menu déroulant'
-    blur
-    fill_in 'champ-0-drop_down_list_value', with: 'Un menu'
+    fill_in 'champ-0-libelle', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
+    fill_in 'champ-0-drop_down_list_value', with: 'Un menu', fill_options: { clear: :backspace }
+
+    wait_until { procedure.types_de_champ.first.drop_down_list&.value == 'Un menu' }
     expect(page).to have_content('Formulaire enregistré')
 
     page.refresh

@@ -231,7 +231,9 @@ class ApplicationController < ActionController::Base
           DS_SIGN_IN_COUNT: current_administrateur&.sign_in_count,
           DS_CREATED_AT: current_administrateur&.created_at,
           DS_ACTIVE: current_administrateur&.active,
-          DS_ID: current_administrateur&.id
+          DS_ID: current_administrateur&.id,
+          DS_GESTIONNAIRE_ID: current_gestionnaire&.id,
+          DS_ROLES: logged_user_roles
         }
       }
     }

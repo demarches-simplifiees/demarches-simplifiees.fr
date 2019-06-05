@@ -1,3 +1,7 @@
+# TODO: once we're using Rails 6, use the hooks on attachments creation
+# (rather than on blob creation).
+# This will help to avoid cloberring metadata accidentally (as metadata
+# are more stable on attachment creation than on blob creation).
 module BlobVirusScanner
   extend ActiveSupport::Concern
 

@@ -134,6 +134,7 @@ Rails.application.routes.draw do
   end
 
   get 'attachments/:id', to: 'attachments#show', as: :attachment
+  delete 'attachments/:id', to: 'attachments#destroy'
 
   get 'tour-de-france' => 'root#tour_de_france'
   get "patron" => "root#patron"
@@ -281,10 +282,6 @@ Rails.application.routes.draw do
         post 'commentaire' => 'dossiers#create_commentaire'
         post 'ask_deletion'
         get 'attestation'
-
-        resources :champs, only: [] do
-          delete 'purge_champ_piece_justificative' => 'dossiers#purge_champ_piece_justificative'
-        end
       end
 
       collection do
@@ -330,10 +327,6 @@ Rails.application.routes.draw do
             post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
             post 'avis' => 'dossiers#create_avis'
             get 'print' => 'dossiers#print'
-
-            resources :champs, only: [] do
-              delete 'purge_champ_piece_justificative' => 'dossiers#purge_champ_piece_justificative'
-            end
           end
         end
       end
