@@ -1,5 +1,7 @@
 # Preview all emails at http://localhost:3000/rails/mailers/dossier_mailer
 class DossierMailer < ApplicationMailer
+  include ServiceHelper
+
   layout 'mailers/layout'
 
   def notify_new_draft(dossier)
@@ -11,9 +13,11 @@ class DossierMailer < ApplicationMailer
 
   def notify_new_answer(dossier)
     @dossier = dossier
+    email = dossier.user.email
+    reply_to = email_for_reply_to(dossier.procedure.service)
     subject = "Nouveau message pour votre dossier nº #{dossier.id}"
 
-    mail(to: dossier.user.email, subject: subject) do |format|
+    mail(to: email, subject: subject, reply_to: reply_to) do |format|
       format.html { render layout: 'mailers/notification' }
     end
   end

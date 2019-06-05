@@ -6,6 +6,7 @@
 # The subject and body of a Notification can be customized by each demarche.
 #
 class NotificationMailer < ApplicationMailer
+  include ServiceHelper
   helper ServiceHelper
 
   def send_dossier_received(dossier)
@@ -32,7 +33,7 @@ class NotificationMailer < ApplicationMailer
 
   def send_notification(dossier, mail_template)
     email = dossier.user.email
-
+    reply_to = email_for_reply_to(dossier.procedure.service)
     subject = mail_template.subject_for_dossier(dossier)
     body = mail_template.body_for_dossier(dossier)
 
@@ -53,7 +54,7 @@ class NotificationMailer < ApplicationMailer
     @dossier = dossier
     @service = dossier.procedure.service
 
-    mail(subject: subject, to: email) do |format|
+    mail(to: email, subject: subject, reply_to: reply_to) do |format|
       # rubocop:disable Rails/OutputSafety
       format.html { render(html: body.html_safe, layout: 'mailers/notification') }
       # rubocop:enable Rails/OutputSafety

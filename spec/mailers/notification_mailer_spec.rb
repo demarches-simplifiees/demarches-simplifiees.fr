@@ -13,7 +13,9 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
 
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, :with_service, user: user) }
+  let(:service) { create(:service) }
+  let(:procedure) { create(:simple_procedure, service: service) }
+  let(:dossier) { create(:dossier, user: user, procedure: procedure) }
 
   describe '.send_notification' do
     let(:email_template) { instance_double('email_template', subject_for_dossier: 'subject', body_for_dossier: 'body') }
@@ -32,9 +34,21 @@ RSpec.describe NotificationMailer, type: :mailer do
       klass.send_notification(dossier, email_template)
     end
 
+    it { expect(mail.to).to include(user.email) }
+    it { expect(mail.reply_to).to contain_exactly(dossier.procedure.service.email, CONTACT_EMAIL) }
     it { expect(mail.subject).to eq(email_template.subject_for_dossier) }
     it { expect(mail.body).to include(email_template.body_for_dossier) }
     it { expect(mail.body).to have_link('messagerie') }
+
+    context 'when the procedure service email is invalid' do
+      let(:service) { create(:service, email: 'NE_PAS_REPONDRE') }
+      it { expect(mail.reply_to).to be_empty }
+    end
+
+    context 'when the procedure has no associated service' do
+      let(:service) { nil }
+      it { expect(mail.reply_to).to be_empty }
+    end
 
     it_behaves_like "create a commentaire not notified"
   end

@@ -15,13 +15,27 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_new_answer' do
-    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:procedure) { create(:simple_procedure, service: service) }
+    let(:service) { create(:service) }
 
     subject { described_class.notify_new_answer(dossier) }
 
+    it { expect(subject.to).to include(dossier.user.email) }
+    it { expect(subject.reply_to).to contain_exactly(dossier.procedure.service.email, CONTACT_EMAIL) }
     it { expect(subject.subject).to include("Nouveau message") }
     it { expect(subject.subject).to include(dossier.id.to_s) }
     it { expect(subject.body).to include(messagerie_dossier_url(dossier)) }
+
+    context 'when the procedure service email is invalid' do
+      let(:service) { create(:service, email: 'NE_PAS_REPONDRE') }
+      it { expect(subject.reply_to).to be_empty }
+    end
+
+    context 'when the procedure has no associated service' do
+      let(:service) { nil }
+      it { expect(subject.reply_to).to be_empty }
+    end
   end
 
   describe '.notify_deletion_to_user' do
