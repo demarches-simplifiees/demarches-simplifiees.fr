@@ -17,28 +17,24 @@ describe 'Dossier details:' do
   end
 
   describe "the user can see the mean time they are expected to wait" do
-    context "when the dossier is in construction" do
-      before do
-        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_construction_at: 10.days.ago, en_instruction_at: Time.zone.now)
-        visit dossier_path(dossier)
-      end
+    let(:other_dossier) { create(:dossier, :accepte, :for_individual, procedure: procedure, en_construction_at: 10.days.ago, en_instruction_at: 9.days.ago, processed_at: Time.zone.now) }
 
-      it { expect(page).to have_text("Habituellement, les dossiers de cette démarche sont vérifiés dans un délai de 10 jours.") }
+    context "when the dossier is in construction" do
+      it "displays the estimated wait duration" do
+        other_dossier
+        visit dossier_path(dossier)
+        expect(page).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 10 jours.")
+      end
     end
 
     context "when the dossier is in instruction" do
       let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: procedure) }
 
-      before do
-        Timecop.freeze(Time.zone.local(2012, 12, 20))
-
-        other_dossier = create(:dossier, :accepte, :for_individual, procedure: procedure, en_instruction_at: 60.days.ago, processed_at: Time.zone.now)
+      it "displays the estimated wait duration" do
+        other_dossier
         visit dossier_path(dossier)
+        expect(page).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 10 jours.")
       end
-
-      after { Timecop.return }
-
-      it { expect(page).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 2 mois.") }
     end
   end
 

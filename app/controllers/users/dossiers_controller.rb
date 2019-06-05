@@ -91,7 +91,11 @@ module Users
       end
 
       sanitized_siret = siret_model.siret
-      etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
+      begin
+        etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
+      rescue RestClient::RequestFailed
+        return render_siret_error(t('errors.messages.siret_network_error'))
+      end
       if etablissement_attributes.blank?
         return render_siret_error(t('errors.messages.siret_unknown'))
       end
@@ -235,7 +239,7 @@ module Users
     def purge_champ_piece_justificative
       @champ = dossier.champs.find(params[:champ_id])
 
-      @champ.piece_justificative_file.purge
+      @champ.piece_justificative_file.purge_later
 
       flash.notice = 'La pièce jointe a bien été supprimée.'
     end
@@ -257,7 +261,7 @@ module Users
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.procedure.brouillon?
-        flash.now.notice = "Ce dossier est déposé sur une démarche en test. Il sera supprimé lors de la publication de la démarche."
+        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Il sera supprimé lors de la publication de la démarche et sa soumission n’a pas de valeur juridique."
       end
     end
 

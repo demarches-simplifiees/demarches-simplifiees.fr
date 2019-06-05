@@ -93,16 +93,17 @@ module Gestionnaires
 
     def terminer
       motivation = params[:dossier] && params[:dossier][:motivation]
+      justificatif = params[:dossier] && params[:dossier][:justificatif_motivation]
 
       case params[:process_action]
       when "refuser"
-        dossier.refuser!(current_gestionnaire, motivation)
+        dossier.refuser!(current_gestionnaire, motivation, justificatif)
         flash.notice = "Dossier considéré comme refusé."
       when "classer_sans_suite"
-        dossier.classer_sans_suite!(current_gestionnaire, motivation)
+        dossier.classer_sans_suite!(current_gestionnaire, motivation, justificatif)
         flash.notice = "Dossier considéré comme sans suite."
       when "accepter"
-        dossier.accepter!(current_gestionnaire, motivation)
+        dossier.accepter!(current_gestionnaire, motivation, justificatif)
         flash.notice = "Dossier traité avec succès."
       end
 
@@ -135,14 +136,14 @@ module Gestionnaires
 
     def update_annotations
       dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
-      # FIXME: add attachements validation, cf. Champ#piece_justificative_file_errors
       dossier.update(champs_private_params)
+      dossier.modifier_annotations!(current_gestionnaire)
       redirect_to annotations_privees_gestionnaire_dossier_path(procedure, dossier)
     end
 
     def purge_champ_piece_justificative
       @champ = dossier.champs_private.find(params[:champ_id])
-      @champ.piece_justificative_file.purge
+      @champ.piece_justificative_file.purge_later
 
       flash.notice = 'La pièce jointe a bien été supprimée.'
     end

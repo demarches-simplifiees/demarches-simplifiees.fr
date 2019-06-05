@@ -383,20 +383,13 @@ describe Champ do
       let(:type_de_champ) { create(:type_de_champ_piece_justificative) }
 
       context 'and there is a blob' do
-        before { champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain") }
+        before do
+          champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+          champ.save
+        end
 
-        it { expect { champ.save }.to change(VirusScan, :count).by(1) }
+        it { expect(champ.piece_justificative_file.virus_scanner.started?).to be_truthy }
       end
-
-      context 'and there is no blob' do
-        it { expect { champ.save }.to_not change(VirusScan, :count) }
-      end
-    end
-
-    context 'when type_champ is not type_de_champ_piece_justificative' do
-      let(:type_de_champ) { create(:type_de_champ_textarea) }
-
-      it { expect { champ.save }.to_not change(VirusScan, :count) }
     end
   end
 
@@ -406,6 +399,7 @@ describe Champ do
     let(:champ_text) { create(:champ_text, row: 0) }
     let(:champ_integer_number) { create(:champ_integer_number, row: 0) }
     let(:champ_text_attrs) { attributes_for(:champ_text, row: 1) }
+    let(:champ_text_row_1) { create(:champ_text, row: 1, parent: champ) }
 
     it "associates nested champs to the parent dossier" do
       expect(champ.rows.size).to eq(0)
@@ -441,6 +435,8 @@ describe Champ do
       expect(row.second).to eq(champ_text)
 
       expect(champ.rows.size).to eq(2)
+
+      expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)
     end
   end
 end

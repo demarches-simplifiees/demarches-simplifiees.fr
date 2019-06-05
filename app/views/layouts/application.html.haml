@@ -14,13 +14,14 @@
     = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
 
-    = javascript_pack_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
+    - packs = ['application', 'track', administrateur_signed_in? ? 'sendinblue' : nil].compact
+    = javascript_packs_with_chunks_tag *packs, defer: true, 'data-turbolinks-track': 'reload'
     = stylesheet_link_tag 'new_design/new_application', media: 'all', 'data-turbolinks-track': 'reload'
     = stylesheet_link_tag 'new_design/print', media: 'print', 'data-turbolinks-track': 'reload'
 
-    = Gon::Base.render_data(camel_case: true, init: true)
+    = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
-    - if Rails.env.development?
+    - if Flipflop.xray_enabled?
       = stylesheet_link_tag :xray
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
@@ -38,11 +39,7 @@
       - if content_for?(:footer)
         = content_for(:footer)
 
-      - if Rails.env.development?
+      - if Flipflop.xray_enabled?
         = javascript_include_tag :xray
 
       = yield :charts_js
-
-    = javascript_pack_tag 'track', async: true
-    - if administrateur_signed_in?
-      = javascript_pack_tag 'sendinblue', async: true

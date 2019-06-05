@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_request_for_profiler
-    if administration_signed_in?
+    if Flipflop.mini_profiler_enabled?
       Rack::MiniProfiler.authorize_request
     end
   end

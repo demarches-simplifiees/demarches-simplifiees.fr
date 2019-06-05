@@ -21,19 +21,9 @@ describe ApplicationHelper do
   describe "#try_format_date" do
     subject { try_format_date(date) }
 
-    describe 'try formatting 2019-01-24' do
-      let(:date) { "2019-01-24" }
+    describe 'try formatting a date' do
+      let(:date) { Date.new(2019, 01, 24) }
       it { is_expected.to eq("24 janvier 2019") }
-    end
-
-    describe 'try formatting 24/01/2019' do
-      let(:date) { "24/01/2019" }
-      it { is_expected.to eq("24 janvier 2019") }
-    end
-
-    describe 'try formatting 2019-01-32' do
-      let(:date) { "2019-01-32" }
-      it { is_expected.to eq("2019-01-32") }
     end
 
     describe 'try formatting a blank string' do
@@ -43,7 +33,7 @@ describe ApplicationHelper do
 
     describe 'try formatting a nil string' do
       let(:date) { nil }
-      it { is_expected.to be_nil }
+      it { is_expected.to eq("") }
     end
   end
 
@@ -51,18 +41,8 @@ describe ApplicationHelper do
     subject { try_format_datetime(datetime) }
 
     describe 'try formatting 31/01/2019 11:25' do
-      let(:datetime) { "31/01/2019 11:25" }
+      let(:datetime) { Time.zone.local(2019, 01, 31, 11, 25, 00) }
       it { is_expected.to eq("31 janvier 2019 11:25") }
-    end
-
-    describe 'try formatting 2019-01-31 11:25' do
-      let(:datetime) { "2019-01-31 11:25" }
-      it { is_expected.to eq("31 janvier 2019 11:25") }
-    end
-
-    describe 'try formatting 2019-01-32 11:25' do
-      let(:datetime) { "2019-01-32 11:25" }
-      it { is_expected.to eq("2019-01-32 11:25") }
     end
 
     describe 'try formatting a blank string' do
@@ -72,7 +52,7 @@ describe ApplicationHelper do
 
     describe 'try formatting a nil string' do
       let(:datetime) { nil }
-      it { is_expected.to be_nil }
+      it { is_expected.to eq("") }
     end
   end
 end

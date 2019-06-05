@@ -25,6 +25,12 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     subject { get :callback, params: { code: code } }
 
+    context 'when params are missing' do
+      subject { get :callback }
+
+      it { is_expected.to redirect_to(new_user_session_path) }
+    end
+
     context 'when param code is missing' do
       let(:code) { nil }
 

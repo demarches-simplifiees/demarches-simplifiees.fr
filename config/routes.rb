@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post 'draft', on: :member
       post 'hide', on: :member
       post 'add_administrateur', on: :member
+      post 'change_piece_justificative_template', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
@@ -132,6 +133,8 @@ Rails.application.routes.draw do
     post ':position/repetition', to: 'repetition#show', as: :repetition
   end
 
+  get 'attachments/:id', to: 'attachments#show', as: :attachment
+
   get 'tour-de-france' => 'root#tour_de_france'
   get "patron" => "root#patron"
   get "accessibilite" => "root#accessibilite"
@@ -186,18 +189,6 @@ Rails.application.routes.draw do
         delete :delete_logo
         delete :delete_deliberation
         delete :delete_notice
-      end
-
-      resources :types_de_champ, only: [:destroy]
-      resource :types_de_champ, only: [:show, :update] do
-        post '/:index/move_up' => 'types_de_champ#move_up', as: :move_up
-        post '/:index/move_down' => 'types_de_champ#move_down', as: :move_down
-      end
-
-      resources :types_de_champ_private, only: [:destroy]
-      resource :types_de_champ_private, only: [:show, :update] do
-        post '/:index/move_up' => 'types_de_champ_private#move_up', as: :move_up
-        post '/:index/move_down' => 'types_de_champ_private#move_down', as: :move_down
       end
 
       resource :pieces_justificatives, only: [:show, :update]
@@ -373,10 +364,16 @@ Rails.application.routes.draw do
         get 'annotations'
       end
 
+      resources :administrateurs, controller: 'procedure_administrateurs', only: [:index, :create, :destroy]
+
       resources :types_de_champ, only: [:create, :update, :destroy] do
         member do
           patch :move
         end
+      end
+
+      resources :mail_templates, only: [] do
+        get 'preview', on: :member
       end
     end
 

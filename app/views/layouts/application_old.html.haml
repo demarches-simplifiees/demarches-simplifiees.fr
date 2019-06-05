@@ -12,7 +12,8 @@
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': "reload"
     = stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track': "reload"
-    = javascript_pack_tag    'application-old', defer: true, 'data-turbolinks-track': 'reload'
+    - packs = ['application-old', 'track', administrateur_signed_in? ? 'sendinblue' : nil].compact
+    = javascript_packs_with_chunks_tag *packs, defer: true, 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
     = csrf_meta_tags
     = Gon::Base.render_data(camel_case: true, init: true)
@@ -42,6 +43,3 @@
         %i.fa.fa-times{ style: 'position: fixed; top: 10; right: 30; color: white;' }
 
     = render partial: 'layouts/footer', locals: { main_container_size: main_container_size }
-    = javascript_pack_tag 'track', async: true
-    - if administrateur_signed_in?
-      = javascript_pack_tag 'sendinblue', async: true

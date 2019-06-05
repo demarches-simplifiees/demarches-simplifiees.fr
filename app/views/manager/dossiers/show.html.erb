@@ -34,7 +34,7 @@ as well as a link to its edit page.
     <% if dossier.hidden_at.nil? %>
       <%= link_to 'Supprimer le dossier', hide_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous la suppression du dossier ?" } %>
     <% end %>
-  <div>
+  </div>
 </header>
 
 <section class="main-content__body">

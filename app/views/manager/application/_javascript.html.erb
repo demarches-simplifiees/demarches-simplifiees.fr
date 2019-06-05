@@ -11,7 +11,7 @@ by providing a `content_for(:javascript)` block.
   <%= javascript_include_tag js_path %>  
 <% end %>
 
-<%= javascript_pack_tag 'manager' %>
+<%= javascript_packs_with_chunks_tag 'manager' %>
 
 <%= yield :javascript %>
 
