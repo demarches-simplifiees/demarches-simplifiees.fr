@@ -381,7 +381,7 @@ class Dossier < ApplicationRecord
     datetime = send(field)
     datetime.to_i.to_s(16) + '-' + datetime.nsec.to_s(16)
   end
-  
+
   def modifier_annotations!(gestionnaire)
     champs_private.select(&:value_previously_changed?).each do |champ|
       log_dossier_operation(gestionnaire, :modifier_annotation, champ)
