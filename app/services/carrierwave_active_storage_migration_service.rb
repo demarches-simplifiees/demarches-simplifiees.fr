@@ -75,15 +75,30 @@ class CarrierwaveActiveStorageMigrationService
   # but when the first attachment that references this blob is created.
   def make_blob(uploader, created_at, filename: nil, identify: false)
     content_type = uploader.content_type
+    identified = content_type.present? && !identify
 
     ActiveStorage::Blob.create(
       filename: filename || uploader.filename,
-      content_type: uploader.content_type,
-      identified: content_type.present? && !identify,
+      content_type: content_type,
       byte_size: uploader.size,
       checksum: checksum(uploader),
-      created_at: created_at
+      created_at: created_at,
+      metadata: { identified: identified, virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     )
+  end
+
+  def make_empty_blob(uploader, created_at, filename: nil)
+    content_type = uploader.content_type || 'text/plain'
+
+    blob = ActiveStorage::Blob.build_after_upload(
+      io: StringIO.new('File not found when migrating from CarrierWave.'),
+      filename: filename || uploader.filename,
+      content_type: content_type || 'text/plain',
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+    )
+    blob.created_at = created_at
+    blob.save!
+    blob
   end
 
   def checksum(uploader)

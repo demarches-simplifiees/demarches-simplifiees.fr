@@ -9,6 +9,7 @@ import ReactUJS from '../shared/react-ujs';
 import reactComponents from '../shared/react-components';
 
 import '../shared/activestorage/ujs';
+import '../shared/activestorage/attachment-checker';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
 import '../shared/autocomplete';

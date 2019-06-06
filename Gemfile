@@ -102,7 +102,7 @@ group :development, :test do
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
   gem 'pry-byebug'
   gem 'rspec-rails'
-  gem 'rspec_junit_formatter'
+  gem 'rspec_junit_formatter', require: false
   gem 'ruby-debug-ide', require: false
   gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'

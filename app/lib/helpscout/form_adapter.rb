@@ -41,8 +41,6 @@ class Helpscout::FormAdapter
 
     if conversation_id.present?
       add_tags(conversation_id)
-      add_custom_fields(conversation_id)
-
       true
     else
       false
@@ -53,10 +51,6 @@ class Helpscout::FormAdapter
 
   def add_tags(conversation_id)
     @api.add_tags(conversation_id, params[:tags])
-  end
-
-  def add_custom_fields(conversation_id)
-    @api.add_custom_fields(conversation_id, params[:dossier_id], params[:browser])
   end
 
   def create_conversation

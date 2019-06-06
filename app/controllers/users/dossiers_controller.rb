@@ -6,11 +6,11 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :qrcode]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire, :purge_champ_piece_justificative]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update, :purge_champ_piece_justificative]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :modifier, :update]
     before_action :forbid_invite_submission!, only: [:update_brouillon]
     before_action :forbid_closed_submission!, only: [:update_brouillon]
     before_action :show_demarche_en_test_banner
@@ -22,13 +22,12 @@ module Users
 
       @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
 
-      @dossiers =
-        case @current_tab
-        when 'mes-dossiers'
-          @user_dossiers
-        when 'dossiers-invites'
-          @dossiers_invites
-        end
+      @dossiers = case @current_tab
+      when 'mes-dossiers'
+        @user_dossiers
+      when 'dossiers-invites'
+        @dossiers_invites
+      end
     end
 
     def show
@@ -245,14 +244,6 @@ module Users
       flash.alert = t('errors.messages.procedure_not_found')
 
       redirect_to url_for dossiers_path
-    end
-
-    def purge_champ_piece_justificative
-      @champ = dossier.champs.find(params[:champ_id])
-
-      @champ.piece_justificative_file.purge
-
-      flash.notice = 'La pièce jointe a bien été supprimée.'
     end
 
     def dossier_for_help

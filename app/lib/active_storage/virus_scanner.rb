@@ -23,15 +23,12 @@ class ActiveStorage::VirusScanner
     blob.metadata[:virus_scan_result] == SAFE
   end
 
-  def analyzed?
-    blob.metadata[:virus_scan_result].present?
+  def done?
+    started? && blob.metadata[:virus_scan_result] != PENDING
   end
 
-  def analyze_later
-    if !analyzed?
-      blob.update!(metadata: blob.metadata.merge(virus_scan_result: PENDING))
-      VirusScannerJob.perform_later(blob)
-    end
+  def started?
+    blob.metadata[:virus_scan_result].present?
   end
 
   def metadata

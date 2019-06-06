@@ -29,6 +29,9 @@ module CreateAvisConcern
     if persisted.any?
       sent_emails_addresses = persisted.map(&:email_to_display).join(", ")
       flash.notice = "Une demande d'avis a été envoyée à #{sent_emails_addresses}"
+      persisted.each do |avis|
+        dossier.demander_un_avis!(avis)
+      end
     end
 
     if failed.any?

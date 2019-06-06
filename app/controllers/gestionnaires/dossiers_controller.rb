@@ -136,16 +136,9 @@ module Gestionnaires
 
     def update_annotations
       dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
-      # FIXME: add attachements validation, cf. Champ#piece_justificative_file_errors
       dossier.update(champs_private_params)
+      dossier.modifier_annotations!(current_gestionnaire)
       redirect_to annotations_privees_gestionnaire_dossier_path(procedure, dossier)
-    end
-
-    def purge_champ_piece_justificative
-      @champ = dossier.champs_private.find(params[:champ_id])
-      @champ.piece_justificative_file.purge
-
-      flash.notice = 'La pièce jointe a bien été supprimée.'
     end
 
     def print

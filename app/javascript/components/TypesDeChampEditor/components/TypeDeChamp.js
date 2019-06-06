@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { sortableElement, sortableHandle } from 'react-sortable-hoc';
+import { useInView } from 'react-intersection-observer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import DescriptionInput from './DescriptionInput';
@@ -29,6 +30,10 @@ const TypeDeChamp = sortableElement(
     const canBeMandatory =
       !isHeaderSection && !isExplication && !state.isAnnotation;
 
+    const [ref, inView] = useInView({
+      threshold: [0.6]
+    });
+
     const updateHandlers = createUpdateHandlers(
       dispatch,
       typeDeChamp,
@@ -42,8 +47,10 @@ const TypeDeChamp = sortableElement(
 
     return (
       <div
-        ref={isLastItem ? state.lastTypeDeChampRef : null}
+        ref={ref}
         data-index={index}
+        data-in-view={inView ? true : undefined}
+        data-repetition={isRepetition ? true : undefined}
         className={`type-de-champ form flex column justify-start ${
           isHeaderSection ? 'type-header-section' : ''
         }`}
