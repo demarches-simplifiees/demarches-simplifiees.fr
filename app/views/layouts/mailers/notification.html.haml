@@ -36,7 +36,11 @@
             Par téléphone :
             = link_to @service.telephone, "tel:#{@service.telephone}"
             %br
-            Horaires : #{ formatted_horaires(@service.horaires) }
-
+            Horaires :
+            %br
+            - formatted_horaires(@service.horaires).split(/\r?\n/).each do |h|
+              &nbsp;&nbsp;&nbsp;
+              = h
+              %br
 
 = render template: 'layouts/mailers/notifications_layout'

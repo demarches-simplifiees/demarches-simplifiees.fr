@@ -25,9 +25,13 @@
           %p
             Par téléphone :
             %a{ href: "tel:#{service.telephone}" }= service.telephone
-
           %p
-            Horaires : #{formatted_horaires(service.horaires)}
+            Horaires:
+
+          - formatted_horaires(service.horaires).split(/\r?\n/).each do |h|
+            %p
+              &nbsp;&nbsp;&nbsp;
+              = h
 
         - politiques = politiques_conservation_de_donnees(procedure)
         - if politiques.present?
