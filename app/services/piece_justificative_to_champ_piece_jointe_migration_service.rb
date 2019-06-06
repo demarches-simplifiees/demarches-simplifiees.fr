@@ -40,32 +40,7 @@ class PieceJustificativeToChampPieceJointeMigrationService
 
     # Unscope to make sure all dossiers are migrated, even the soft-deleted ones
     procedure.dossiers.unscope(where: :hidden_at).includes(:champs).find_each do |dossier|
-      # Add the new pieces justificatives champs to the dossier
-      champs_pj = types_de_champ_pj.map(&:build_champ)
-      dossier.champs += champs_pj
-
-      # Copy the dossier old pieces jointes to the new champs
-      # (even if the champs already existed, so that we ensure a clean state)
-      champs_pj.each do |champ|
-        type_pj_id = champ.type_de_champ.old_pj&.fetch('stable_id', nil)
-        pj = dossier.retrieve_last_piece_justificative_by_type(type_pj_id)
-
-        if pj.present?
-          convert_pj_to_champ!(pj, champ)
-
-          champ.update(
-            updated_at: pj.updated_at,
-            created_at: pj.created_at
-          )
-        else
-          champ.update(
-            updated_at: dossier.updated_at,
-            created_at: dossier.created_at
-          )
-        end
-
-        yield if block_given?
-      end
+      migrate_dossier!(dossier, types_de_champ_pj, &progress)
     end
 
   rescue StandardError, SignalException
@@ -82,6 +57,35 @@ class PieceJustificativeToChampPieceJointeMigrationService
 
     # Reraise the exception to abort the migration.
     raise
+  end
+
+  def migrate_dossier!(dossier, types_de_champ_pj)
+    # Add the new pieces justificatives champs to the dossier
+    champs_pj = types_de_champ_pj.map(&:build_champ)
+    dossier.champs += champs_pj
+
+    # Copy the dossier old pieces jointes to the new champs
+    # (even if the champs already existed, so that we ensure a clean state)
+    champs_pj.each do |champ|
+      type_pj_id = champ.type_de_champ.old_pj&.fetch('stable_id', nil)
+      pj = dossier.retrieve_last_piece_justificative_by_type(type_pj_id)
+
+      if pj.present?
+        convert_pj_to_champ!(pj, champ)
+
+        champ.update_columns(
+          updated_at: pj.updated_at,
+          created_at: pj.created_at
+        )
+      else
+        champ.update_columns(
+          updated_at: dossier.updated_at,
+          created_at: dossier.created_at
+        )
+      end
+
+      yield if block_given?
+    end
   end
 
   def convert_pj_to_champ!(pj, champ)
