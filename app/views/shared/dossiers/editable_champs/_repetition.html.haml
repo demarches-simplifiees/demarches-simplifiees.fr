@@ -7,7 +7,7 @@
           = form.hidden_field :_destroy, disabled: true
       .flex.row-reverse
         - if champ.persisted?
-          %button.button.danger.remove-row
+          %button.button.danger.remove-row{ type: :button }
             Supprimer
         - else
           %button.button.danger{ type: :button }

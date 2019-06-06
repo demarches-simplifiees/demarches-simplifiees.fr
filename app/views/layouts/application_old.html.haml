@@ -12,7 +12,7 @@
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': "reload"
     = stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track': "reload"
-    - packs = ['application-old', 'track', administrateur_signed_in? ? 'sendinblue' : nil].compact
+    - packs = ['application-old', 'track', administrateur_signed_in? ? 'track-admin' : nil].compact
     = javascript_packs_with_chunks_tag *packs, defer: true, 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
     = csrf_meta_tags
