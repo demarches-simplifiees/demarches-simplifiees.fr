@@ -94,26 +94,20 @@ class Gestionnaire < ApplicationRecord
       .find_by(gestionnaire: self, dossier: dossier)
 
     if follow.present?
-      # retirer le seen_at.present? une fois la contrainte de presence en base (et les migrations ad hoc)
-      champs_publiques = follow.demande_seen_at.present? &&
-        follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
+      champs_publiques = follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
 
-      pieces_justificatives = follow.demande_seen_at.present? &&
-        follow.dossier.pieces_justificatives.updated_since?(follow.demande_seen_at).any?
+      pieces_justificatives = follow.dossier.pieces_justificatives.updated_since?(follow.demande_seen_at).any?
 
       demande = champs_publiques || pieces_justificatives
 
-      annotations_privees = follow.annotations_privees_seen_at.present? &&
-        follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
+      annotations_privees = follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
 
-      avis_notif = follow.avis_seen_at.present? &&
-        follow.dossier.avis.updated_since?(follow.avis_seen_at).any?
+      avis_notif = follow.dossier.avis.updated_since?(follow.avis_seen_at).any?
 
-      messagerie = follow.messagerie_seen_at.present? &&
-        dossier.commentaires
-          .where.not(email: OLD_CONTACT_EMAIL)
-          .where.not(email: CONTACT_EMAIL)
-          .updated_since?(follow.messagerie_seen_at).any?
+      messagerie = dossier.commentaires
+                    .where.not(email: OLD_CONTACT_EMAIL)
+                    .where.not(email: CONTACT_EMAIL)
+                    .updated_since?(follow.messagerie_seen_at).any?
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie)
     else
