@@ -42,6 +42,29 @@
       p {
         margin-bottom: $default-spacer;
       }
+
+      ul {
+        list-style-type: square;
+        list-style-position: outside;
+        padding-left: 20px;
+      }
+
+      ol {
+        list-style-type: decimal;
+        list-style-position: outside;
+        padding-left: 20px;
+      }
+
+      b {
+        font-weight: 900;
+        color: $black;
+      }
+
+      table {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
 
     &.required {
@@ -251,6 +274,7 @@
     .select2-selection__choice {
       background-color: #FFFFFF;
     }
+
     // scss-lint:enable
   }
 
@@ -315,6 +339,25 @@
     p:not(:last-child) {
       margin-bottom: $default-padding;
     }
+
+    ul {
+      list-style-type: square;
+      list-style-position: outside;
+      padding-left: 20px;
+    }
+
+    ol {
+      list-style-type: decimal;
+      list-style-position: outside;
+      padding-left: 20px;
+    }
+
+    table {
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
   }
 
   .send-wrapper {
@@ -382,7 +425,7 @@
 
   .pj-input {
     input[type=file] {
-      margin: $default-padding 0  (2 * $default-padding);
+      margin: $default-padding 0 (2 * $default-padding);
       padding: 2px;
     }
 
