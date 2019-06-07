@@ -37,6 +37,8 @@ module Gestionnaires
 
     def personnes_impliquees
       @following_instructeurs_emails = dossier.followers_gestionnaires.pluck(:email)
+      previous_followers = dossier.previous_followers_gestionnaires - dossier.followers_gestionnaires
+      @previous_following_instructeurs_emails = previous_followers.pluck(:email)
       @avis_emails = dossier.avis.includes(:gestionnaire).map(&:email_to_display)
       @invites_emails = dossier.invites.map(&:email)
       @potential_recipients = procedure.gestionnaires.reject { |g| g == current_gestionnaire }
