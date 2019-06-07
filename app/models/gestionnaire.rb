@@ -17,7 +17,9 @@ class Gestionnaire < ApplicationRecord
 
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
   has_many :follows, -> { active }
+  has_many :previous_follows, -> { inactive }, class_name: 'Follow'
   has_many :followed_dossiers, through: :follows, source: :dossier
+  has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
   has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
   has_many :trusted_device_tokens
