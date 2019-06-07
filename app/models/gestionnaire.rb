@@ -16,7 +16,7 @@ class Gestionnaire < ApplicationRecord
   has_many :procedures_with_email_notifications, through: :assign_to_with_email_notifications, source: :procedure
 
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
-  has_many :follows
+  has_many :follows, -> { active }
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
@@ -40,7 +40,10 @@ class Gestionnaire < ApplicationRecord
   end
 
   def unfollow(dossier)
-    followed_dossiers.delete(dossier)
+    f = follows.find_by(dossier: dossier)
+    if f.present?
+      f.update(unfollowed_at: Time.zone.now)
+    end
   end
 
   def follow?(dossier)
