@@ -7,6 +7,7 @@ class Follow < ApplicationRecord
   before_create :set_default_date
 
   scope :active, -> { where(unfollowed_at: nil) }
+  scope :inactive, -> { where.not(unfollowed_at: nil) }
 
   private
 
