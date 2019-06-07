@@ -104,9 +104,9 @@ class Gestionnaire < ApplicationRecord
       avis_notif = follow.dossier.avis.updated_since?(follow.avis_seen_at).any?
 
       messagerie = dossier.commentaires
-                    .where.not(email: OLD_CONTACT_EMAIL)
-                    .where.not(email: CONTACT_EMAIL)
-                    .updated_since?(follow.messagerie_seen_at).any?
+        .where.not(email: OLD_CONTACT_EMAIL)
+        .where.not(email: CONTACT_EMAIL)
+        .updated_since?(follow.messagerie_seen_at).any?
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie)
     else
