@@ -27,21 +27,15 @@ class Gestionnaire < ApplicationRecord
   end
 
   def follow(dossier)
-    if follow?(dossier)
-      return
-    end
-
     begin
       followed_dossiers << dossier
+      # If the user tries to follow a dossier she already follows,
+      # we just fail silently: it means the goal is already reached.
     rescue ActiveRecord::RecordNotUnique
-      # Altough we checked before the insertion that the gestionnaire wasn't
-      # already following this dossier, this was done at the Rails level:
-      # at the database level, the dossier was already followed, and a
-      # "invalid constraint" exception is raised.
-      #
-      # We can ignore this safely, as it means the goal is already reached:
-      # the gestionnaire follows the dossier.
-      return
+      # Database uniqueness constraint
+    rescue ActiveRecord::RecordInvalid => e
+      # ActiveRecord validation
+      raise unless e.record.errors.details.dig(:gestionnaire_id, 0, :error) == :taken
     end
   end
 
