@@ -25,5 +25,15 @@ RSpec.describe StringToHtmlHelper, type: :helper do
 
       it { is_expected.to eq('<p>bad</p>') }
     end
+
+    context "with a table" do
+      let(:description) { "Table des enfants\n<table class='table table-striped'><tr><th>Enfant</th></tr><tr><td>Riri</td></tr></table>\net une phrase\n" }
+      it { is_expected.to eq "<p>Table des enfants\n<br></p><table class=\"table table-striped\">\n<tr><th>Enfant</th></tr>\n<tr><td>Riri</td></tr>\n</table>\net une phrase\n<br>" }
+    end
+
+    context "with a list" do
+      let(:description) { "Avec une liste\n<ul><li>Liste d'éléments</li></ul><ol><li>Liste d'éléments</li></ol>\net une phrase\n" }
+      it { is_expected.to eq "<p>Avec une liste\n<br></p><ul><li>Liste d'éléments</li></ul><ol><li>Liste d'éléments</li></ol>\net une phrase\n<br>" }
+    end
   end
 end
