@@ -1,5 +1,5 @@
 module ServiceHelper
   def formatted_horaires(horaires)
-    horaires.sub(/\S/, &:downcase)
+    horaires.gsub(/\S/, &:downcase)
   end
 end
