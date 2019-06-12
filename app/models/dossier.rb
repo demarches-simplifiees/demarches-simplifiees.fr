@@ -26,8 +26,8 @@ class Dossier < ApplicationRecord
   has_many :champs_private, -> { root.private_only.ordered }, class_name: 'Champ', inverse_of: :dossier, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
-  has_many :follows, -> { active }
-  has_many :previous_follows, -> { inactive }, class_name: 'Follow'
+  has_many :follows, -> { active }, inverse_of: :dossier
+  has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :dossier
   has_many :followers_gestionnaires, through: :follows, source: :gestionnaire
   has_many :previous_followers_gestionnaires, -> { distinct }, through: :previous_follows, source: :gestionnaire
   has_many :avis, inverse_of: :dossier, dependent: :destroy

@@ -5,9 +5,9 @@ class Procedure < ApplicationRecord
 
   MAX_DUREE_CONSERVATION = 36
 
-  has_many :types_de_piece_justificative, -> { ordered }, dependent: :destroy
-  has_many :types_de_champ, -> { root.public_only.ordered }, dependent: :destroy
-  has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', dependent: :destroy
+  has_many :types_de_piece_justificative, -> { ordered }, inverse_of: :procedure, dependent: :destroy
+  has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
+  has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
   has_many :dossiers, dependent: :restrict_with_exception
   has_many :deleted_dossiers, dependent: :destroy
 
