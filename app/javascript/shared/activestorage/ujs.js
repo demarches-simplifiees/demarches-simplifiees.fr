@@ -6,11 +6,25 @@ const PROGRESS_EVENT = 'direct-upload:progress';
 const ERROR_EVENT = 'direct-upload:error';
 const END_EVENT = 'direct-upload:end';
 
-addEventListener(INITIALIZE_EVENT, ({ target, detail: { id, file } }) => {
+function addUploadEventListener(type, handler) {
+  addEventListener(type, event => {
+    // Internet Explorer and Edge will sometime replay Javascript events
+    // that were dispatched just before a page navigation (!), but without
+    // the event payload.
+    //
+    // Ignore these replayed events.
+    const isEventValid = event && event.detail && event.detail.id != undefined;
+    if (!isEventValid) return;
+
+    handler(event);
+  });
+}
+
+addUploadEventListener(INITIALIZE_EVENT, ({ target, detail: { id, file } }) => {
   ProgressBar.init(target, id, file);
 });
 
-addEventListener(START_EVENT, ({ target, detail: { id } }) => {
+addUploadEventListener(START_EVENT, ({ target, detail: { id } }) => {
   ProgressBar.start(id);
   const button = target.form.querySelector('button.primary');
   if (button) {
@@ -18,14 +32,14 @@ addEventListener(START_EVENT, ({ target, detail: { id } }) => {
   }
 });
 
-addEventListener(PROGRESS_EVENT, ({ detail: { id, progress } }) => {
+addUploadEventListener(PROGRESS_EVENT, ({ detail: { id, progress } }) => {
   ProgressBar.progress(id, progress);
 });
 
-addEventListener(ERROR_EVENT, ({ detail: { id, error } }) => {
+addUploadEventListener(ERROR_EVENT, ({ detail: { id, error } }) => {
   ProgressBar.error(id, error);
 });
 
-addEventListener(END_EVENT, ({ detail: { id } }) => {
+addUploadEventListener(END_EVENT, ({ detail: { id } }) => {
   ProgressBar.end(id);
 });
