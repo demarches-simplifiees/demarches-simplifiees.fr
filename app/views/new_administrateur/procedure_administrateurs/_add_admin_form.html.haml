@@ -1,0 +1,9 @@
+= form_for procedure.administrateurs.new,
+  url: { controller: 'procedure_administrateurs' },
+  html: { class: 'form', id:  "procedure-#{procedure.id}-new_administrateur" } ,
+  remote: true do |f|
+  = f.label :email do
+    Ajouter un administrateur
+    %span.notice= "Renseignez l’email d’un administrateur déjà enregistré sur demarches-simplifiees.fr pour lui permettre de modifier « #{procedure.libelle} »."
+  = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true
+  = f.submit 'Ajouter comme administrateur', class: 'button primary send'
