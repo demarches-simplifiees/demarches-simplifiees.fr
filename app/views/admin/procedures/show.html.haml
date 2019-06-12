@@ -61,29 +61,33 @@
         - elsif @procedure.brouillon_avec_lien?
           - if @procedure.gestionnaires.present? && @procedure.service.present?
             %p
+              <b>Prenez le temps de lire cette page</b>
+            %p
               Cette démarche est actuellement <strong>en test</strong>,
               pour y accéder vous pouvez utiliser le lien :
               = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank, rel: :noopener
             %p
-              Toute personne ayant la connaissance de ce lien pourra ainsi remplir des dossiers de test sur votre démarche.
+              Toute personne ayant la connaissance de ce lien pourra ainsi remplir des dossiers de test sur votre démarche.<br/>
+              Dans ce mode,
+              %u
+                chaque fois que vous modifiez votre démarche, les dossiers existants sont effacés.
             %br
             %h4 Protection des Données personnelles
             %p
-              À ce moment du processus de création, vous devez informer votre Délégué à la Protection des Données personnelles (DPD).
-              (
-              %a{ href:'https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes', target:'_blank' }
-                https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes
-              )
-              Si votre démarche propose de collecter des données personnelles, vous devez informer votre DPD. Chaque organisme en a un.
+              À ce moment du processus de création, vous devez consulter votre Délégué à la Protection des Données personnelles (DPD ou DPO).
+              Ce dernier pourra vous aider dans la finalisation de votre démarche, et vous inviter à vous interroger
+              sur les données collectées, et sur la pertinence de ces dernières.
             %p
-              Ce dernier pourra vous aider dans la finalisation de votre démarche, et vous inviter à vous interroger sur les données collectées, et sur la pertinence de ses dernières.
-              N'oubliez pas : toutes les démarches qui contiennent des données personnelles doivent être consignées dans un registre des traitements :
-              %a{ href:'https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement', target:'_blank' }
-                https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement
+              Dans tous les cas,
+              %b
+                ne publiez votre démarche qu’après l'avoir consulté
+              en lui envoyant par exemple le lien vers votre démarche en test.
             %p
-              Comment faire :
-              vous pouvez soit lui communiquer par email le lien vers la démarche en test, ou bien le nommer « administrateur ». Dans tous les cas, ne publiez votre démarche qu’après avoir eu son avis.
-
+              Si vous êtes dans un service de l'administration de la <b>Polynésie</b>, envoyez le lien de votre démarche à
+              - subject = "[#{SITE_NAME}] test de '#{@procedure.libelle}'".gsub(/&/,' ')
+              - body = "Bonjour%0AQue pensez-vous de #{sanitize_url(procedure_lien(@procedure))}%0AD'avance merci.".gsub(/&/,' ')
+              %a{ href:"mailto: #{EQUIPE_EMAIL}?subject=#{subject}&body=#{body}" }
+                l'équipe RGPD.
             %br
             %h4 Ce que vous pouvez faire lorsque vous êtes en test
             %p

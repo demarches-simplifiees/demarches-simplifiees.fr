@@ -64,6 +64,7 @@ class Admin::ProceduresController < AdminController
   def new
     @procedure ||= Procedure.new
     @availability = Procedure::PATH_AVAILABLE
+    @terms_of_use_read = {}
   end
 
   def create
@@ -71,7 +72,8 @@ class Admin::ProceduresController < AdminController
     @path = @procedure.path
     @availability = Procedure.path_availability(current_administrateur, @procedure.path)
 
-    if !@procedure.save
+    check_terms_of_use
+    if !@procedure.errors.empty? || !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
       render 'new'
     else
@@ -88,7 +90,8 @@ class Admin::ProceduresController < AdminController
   def update
     @procedure = current_administrateur.procedures.find(params[:id])
 
-    if !@procedure.update(procedure_params)
+    check_terms_of_use
+    if !@procedure.errors.empty? || !@procedure.update(procedure_params)
       flash.now.alert = @procedure.errors.full_messages
       @path = procedure_params[:path]
       if @path.present?
@@ -216,11 +219,11 @@ class Admin::ProceduresController < AdminController
       .find_with_path(params[:request])
       .order(:id)
       .map do |procedure|
-        {
-          label: procedure.path,
-          mine: current_administrateur.owns?(procedure)
-        }
-      end.to_json
+      {
+        label: procedure.path,
+        mine: current_administrateur.owns?(procedure)
+      }
+    end.to_json
 
     render json: json_path_list
   end
@@ -260,6 +263,14 @@ class Admin::ProceduresController < AdminController
   end
 
   private
+
+  def check_terms_of_use
+    terms_of_use = [:rgs_timestamp, :rgs_stamp, :rgpd]
+    if terms_of_use.any? { |k| !params.key?(k) }
+      @procedure.errors.add(:base, :rgpd_rgs_not_checked, message: 'Toutes les cases concernant le RGPD et le RGS doivent être cochées')
+    end
+    @terms_of_use_read = params.slice(*terms_of_use)
+  end
 
   def cloned_from_library?
     params[:from_new_from_existing].present?
