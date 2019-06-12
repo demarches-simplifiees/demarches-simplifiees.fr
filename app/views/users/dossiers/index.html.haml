@@ -47,7 +47,7 @@
                   = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
               %td.updated-at-col
                 = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  = dossier.updated_at.strftime("%d/%m/%Y")
+                  = try_format_date(dossier.updated_at)
               %td.action-col.action-col
                 = render partial: 'dossier_actions', locals: { dossier: dossier }
     = paginate(@dossiers)
