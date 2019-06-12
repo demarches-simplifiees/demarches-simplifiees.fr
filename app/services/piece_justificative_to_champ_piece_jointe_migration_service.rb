@@ -25,9 +25,16 @@ class PieceJustificativeToChampPieceJointeMigrationService
     populate_champs_pjs!(procedure, types_de_champ_pj, &progress)
 
     # Only destroy the old types PJ once everything has been safely migrated to
-    # champs PJs. Destroying the types PJ will cascade and destroy the PJs,
-    # and delete the linked objects from remote storage. This means that no other
-    # cleanup action is required.
+    # champs PJs.
+
+    # First destroy the individual PJ champs on all dossiers.
+    # It will cascade and destroy the PJs, and delete the linked objects from remote storage.
+    procedure.dossiers.unscope(where: :hidden_at).includes(:champs).find_each do |dossier|
+      destroy_pieces_justificatives(dossier)
+    end
+
+    # Now we can destroy the type de champ themselves,
+    # without cascading the timestamp update on all attached dossiers.
     procedure.types_de_piece_justificative.destroy_all
   end
 
@@ -49,8 +56,11 @@ class PieceJustificativeToChampPieceJointeMigrationService
     rake_puts "Error received. Rolling back migration of procedure #{procedure.id}…"
 
     types_de_champ_pj.each do |type_champ|
-      type_champ.champ.each { |c| c.piece_justificative_file.purge }
-      type_champ.destroy
+      # First destroy all the individual champs on dossiers
+      type_champ.champ.each { |c| destroy_champ_pj(c.dossier.reload, c) }
+      # Now we can destroy the type de champ itself,
+      # without cascading the timestamp update on all attached dossiers.
+      type_champ.reload.destroy
     end
 
     rake_puts "Migration of procedure #{procedure.id} rolled back."
@@ -62,7 +72,9 @@ class PieceJustificativeToChampPieceJointeMigrationService
   def migrate_dossier!(dossier, types_de_champ_pj)
     # Add the new pieces justificatives champs to the dossier
     champs_pj = types_de_champ_pj.map(&:build_champ)
-    dossier.champs += champs_pj
+    preserving_updated_at(dossier) do
+      dossier.champs += champs_pj
+    end
 
     # Copy the dossier old pieces jointes to the new champs
     # (even if the champs already existed, so that we ensure a clean state)
@@ -71,7 +83,9 @@ class PieceJustificativeToChampPieceJointeMigrationService
       pj = dossier.retrieve_last_piece_justificative_by_type(type_pj_id)
 
       if pj.present?
-        convert_pj_to_champ!(pj, champ)
+        preserving_updated_at(dossier) do
+          convert_pj_to_champ!(pj, champ)
+        end
 
         champ.update_columns(
           updated_at: pj.updated_at,
@@ -136,5 +150,27 @@ class PieceJustificativeToChampPieceJointeMigrationService
 
   def make_empty_blob(pj)
     storage_service.make_empty_blob(pj.content, pj.updated_at.iso8601, filename: pj.original_filename)
+  end
+
+  def preserving_updated_at(model)
+    original_modification_date = model.updated_at
+    begin
+      yield
+    ensure
+      model.update_column(:updated_at, original_modification_date)
+    end
+  end
+
+  def destroy_pieces_justificatives(dossier)
+    preserving_updated_at(dossier) do
+      dossier.pieces_justificatives.destroy_all
+    end
+  end
+
+  def destroy_champ_pj(dossier, champ)
+    preserving_updated_at(dossier) do
+      champ.piece_justificative_file.purge
+      champ.destroy
+    end
   end
 end

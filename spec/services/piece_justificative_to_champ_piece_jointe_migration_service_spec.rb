@@ -26,6 +26,18 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
     end
   end
 
+  def timestamps(dossier)
+    # Reload dossier because the resolution of in-database timestamps is
+    # different from the resolution of in-memory timestamps, causing the
+    # tests to fail on fractional time differences.
+    dossier.reload
+
+    {
+      created_at: dossier.created_at,
+      updated_at: dossier.updated_at
+    }
+  end
+
   def expect_storage_service_to_convert_object
     expect(storage_service).to receive(:make_blob)
     expect(storage_service).to receive(:copy_from_carrierwave_to_active_storage!)
@@ -64,6 +76,8 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
     end
 
     context 'no notifications are sent to instructeurs' do
+      let!(:initial_dossier_timestamps) { timestamps(dossier) }
+
       context 'when there is a PJ' do
         let(:pjs) { make_pjs }
 
@@ -80,24 +94,18 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
           dossier.reload
         end
 
-        it 'the champ has the same created_at as the PJ' do
+        it 'the champ has the same timestamps as the PJ' do
           expect(dossier.champs.last.created_at).to eq(pjs.last.created_at)
+          expect(dossier.champs.last.updated_at).to eq(pjs.last.updated_at)
         end
 
-        it 'the champ has the same updated_at as the PJ' do
-          expect(dossier.champs.last.updated_at).to eq(pjs.last.updated_at)
+        it 'does not change the dossier timestamps' do
+          expect(dossier.created_at).to eq(initial_dossier_timestamps[:created_at])
+          expect(dossier.updated_at).to eq(initial_dossier_timestamps[:updated_at])
         end
       end
 
       context 'when there is no PJ' do
-        let!(:expected_updated_at) do
-          # Reload dossier because the resolution of in-database timestamps is
-          # different from the resolution of in-memory timestamps, causing the
-          # tests to fail on fractional time differences.
-          dossier.reload
-          dossier.updated_at
-        end
-
         before do
           Timecop.travel(1.hour) { service.convert_procedure_pjs_to_champ_pjs(procedure) }
 
@@ -105,12 +113,14 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
           dossier.reload
         end
 
-        it 'the champ has the same created_at as the dossier' do
-          expect(dossier.champs.last.created_at).to eq(dossier.created_at)
+        it 'the champ has the same timestamps as the dossier' do
+          expect(dossier.champs.last.created_at).to eq(initial_dossier_timestamps[:created_at])
+          expect(dossier.champs.last.updated_at).to eq(initial_dossier_timestamps[:updated_at])
         end
 
-        it 'the champ has the same updated_at as the dossier' do
-          expect(dossier.champs.last.updated_at).to eq(expected_updated_at)
+        it 'does not change the dossier timestamps' do
+          expect(dossier.created_at).to eq(initial_dossier_timestamps[:created_at])
+          expect(dossier.updated_at).to eq(initial_dossier_timestamps[:updated_at])
         end
       end
     end
@@ -192,6 +202,9 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
       )
     end
 
+    let!(:initial_dossier_timestamps) { timestamps(dossier) }
+    let!(:initial_failing_dossier_timestamps) { timestamps(failing_dossier) }
+
     before do
       allow(storage_service).to receive(:checksum).and_return('cafe')
       allow(storage_service).to receive(:fix_content_type)
@@ -204,8 +217,10 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
     end
 
     def try_convert(procedure)
-      service.convert_procedure_pjs_to_champ_pjs(procedure)
+      Timecop.travel(1.hour) { service.convert_procedure_pjs_to_champ_pjs(procedure) }
     rescue StandardError, SignalException => e
+      dossier.reload
+      failing_dossier.reload
       e
     end
 
@@ -232,6 +247,12 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
     it 'does not remove old types de pj' do
       expect { try_convert(procedure) }
         .not_to change { procedure.types_de_piece_justificative.count }
+    end
+
+    it 'does not change the dossiers timestamps' do
+      try_convert(procedure)
+      expect(dossier.updated_at).to eq(initial_dossier_timestamps[:updated_at])
+      expect(failing_dossier.updated_at).to eq(initial_failing_dossier_timestamps[:updated_at])
     end
 
     it 'does not leave stale blobs behind' do
