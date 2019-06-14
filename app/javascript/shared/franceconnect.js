@@ -7,7 +7,7 @@ const document = window.document;
 function init() {
   fconnect.currentHost = 'fcp.integ01.dev-franceconnect.fr';
 
-  if (window.location.hostname == 'www.demarches-simplifiees.fr')
+  if (window.location.hostname == 'www.mes-demarches.gov.pf')
     fconnect.currentHost = 'app.franceconnect.gouv.fr';
 
   var fconnectProfile = document.getElementById('fconnect-profile');
