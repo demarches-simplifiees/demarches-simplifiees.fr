@@ -49,7 +49,7 @@ describe TagsSubstitutionConcern, type: :model do
       context 'and the template use the individual tags' do
         let(:template) { '--civilité-- --nom-- --prénom--' }
 
-        it { is_expected.to eq('Mme nom prenom') }
+        it { is_expected.to eq('Mme NOM Prenom') }
       end
     end
 

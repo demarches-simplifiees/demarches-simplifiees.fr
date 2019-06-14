@@ -178,7 +178,7 @@ describe ProcedurePresentation do
       context 'for nom column' do
         let(:column) { 'nom' }
 
-        it { is_expected.to eq('Martin') }
+        it { is_expected.to eq('MARTIN') }
       end
 
       context 'for gender column' do

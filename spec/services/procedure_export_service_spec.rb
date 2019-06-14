@@ -117,9 +117,9 @@ describe ProcedureExportService do
 
         let(:individual_data) {
           [
-            "M.",
-            "Xavier",
-            "Julien",
+            "Mme.",
+            "Anne-Marie",
+            'JULIEN',
             "1991-11-01"
           ]
         }
