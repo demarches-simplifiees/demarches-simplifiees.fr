@@ -11,6 +11,14 @@ describe Individual do
 
     subject { individual.save }
 
+    context "normalization of nom and prenom" do
+      before do
+        individual.save
+      end
+      it { expect(individual.nom).to eq('JULIEN') }
+      it { expect(individual.prenom).to eq('Anne-Marie') }
+    end
+
     context "with birthdate" do
       before do
         individual.birthdate = birthdate_from_user
