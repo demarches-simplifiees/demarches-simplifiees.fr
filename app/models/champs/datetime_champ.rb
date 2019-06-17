@@ -5,6 +5,10 @@ class Champs::DatetimeChamp < Champ
     # Text search is pretty useless for datetimes so we’re not including these champs
   end
 
+  def to_s
+    value.present? ? I18n.l(Time.zone.parse(value)) : ""
+  end
+
   private
 
   def format_before_save
