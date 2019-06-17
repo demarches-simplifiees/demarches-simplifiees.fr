@@ -1,5 +1,5 @@
 class Champs::RepetitionChamp < Champ
-  has_many :champs, -> { ordered }, foreign_key: :parent_id, dependent: :destroy
+  has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
   accepts_nested_attributes_for :champs, allow_destroy: true
 

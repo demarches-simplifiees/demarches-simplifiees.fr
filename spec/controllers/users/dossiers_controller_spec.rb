@@ -386,9 +386,11 @@ describe Users::DossiersController, type: :controller do
 
   describe '#update_brouillon' do
     before { sign_in(user) }
+
     let!(:dossier) { create(:dossier, user: user) }
     let(:first_champ) { dossier.champs.first }
     let(:value) { 'beautiful value' }
+    let(:now) { Time.zone.parse('01/01/2100') }
     let(:submit_payload) do
       {
         id: dossier.id,
@@ -402,7 +404,11 @@ describe Users::DossiersController, type: :controller do
     end
     let(:payload) { submit_payload }
 
-    subject { patch :update_brouillon, params: payload }
+    subject do
+      Timecop.freeze(now) do
+        patch :update_brouillon, params: payload
+      end
+    end
 
     context 'when the dossier cannot be updated by the user' do
       let!(:dossier) { create(:dossier, :en_instruction, user: user) }
@@ -421,6 +427,7 @@ describe Users::DossiersController, type: :controller do
 
         expect(response).to redirect_to(merci_dossier_path(dossier))
         expect(first_champ.reload.value).to eq('beautiful value')
+        expect(dossier.reload.updated_at.year).to eq(2100)
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
@@ -549,9 +556,15 @@ describe Users::DossiersController, type: :controller do
 
   describe '#update' do
     before { sign_in(user) }
-    let!(:dossier) { create(:dossier, :en_construction, user: user) }
+
+    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_piece_justificative) }
+    let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
     let(:first_champ) { dossier.champs.first }
+    let(:piece_justificative_champ) { dossier.champs.last }
     let(:value) { 'beautiful value' }
+    let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:now) { Time.zone.parse('01/01/2100') }
+
     let(:submit_payload) do
       {
         id: dossier.id,
@@ -565,7 +578,11 @@ describe Users::DossiersController, type: :controller do
     end
     let(:payload) { submit_payload }
 
-    subject { patch :update, params: payload }
+    subject do
+      Timecop.freeze(now) do
+        patch :update, params: payload
+      end
+    end
 
     context 'when the dossier cannot be updated by the user' do
       let!(:dossier) { create(:dossier, :en_instruction, user: user) }
@@ -584,7 +601,27 @@ describe Users::DossiersController, type: :controller do
 
         expect(response).to redirect_to(demande_dossier_path(dossier))
         expect(first_champ.reload.value).to eq('beautiful value')
+        expect(dossier.reload.updated_at.year).to eq(2100)
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
+      end
+
+      context 'when only files champs are modified' do
+        let(:submit_payload) do
+          {
+            id: dossier.id,
+            dossier: {
+              champs_attributes: {
+                id: piece_justificative_champ.id,
+                piece_justificative_file: file
+              }
+            }
+          }
+        end
+
+        it 'updates the dossier modification date' do
+          subject
+          expect(dossier.reload.updated_at.year).to eq(2100)
+        end
       end
     end
 
