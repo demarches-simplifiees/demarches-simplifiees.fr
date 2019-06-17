@@ -2,146 +2,148 @@ require 'rails_helper'
 
 RSpec.describe BillSignature, type: :model do
   describe 'validations' do
+    subject(:bill_signature) { BillSignature.new }
+
     describe 'check_bill_digest' do
       before do
-        subject.dossier_operation_logs = dossier_operation_logs
-        subject.digest = digest
-        subject.valid?
+        bill_signature.dossier_operation_logs = dossier_operation_logs
+        bill_signature.digest = digest
+        bill_signature.valid?
       end
 
-      context 'no operations' do
+      context 'when there are no operations' do
         let(:dossier_operation_logs) { [] }
 
-        context 'correct digest' do
+        context 'when the digest is correct' do
           let(:digest) { Digest::SHA256.hexdigest('{}') }
 
-          it { expect(subject.errors.details[:digest]).to be_empty }
+          it { expect(bill_signature.errors.details[:digest]).to be_empty }
         end
 
-        context 'bad digest' do
+        context 'when the digest is incorrect' do
           let(:digest) { 'baadf00d' }
 
-          it { expect(subject.errors.details[:digest]).to eq [error: :invalid] }
+          it { expect(bill_signature.errors.details[:digest]).to eq [error: :invalid] }
         end
       end
 
-      context 'operations set, good digest' do
+      context 'when the signature has operations' do
         let(:dossier_operation_logs) { [build(:dossier_operation_log, id: '1234', digest: 'abcd')] }
 
-        context 'correct digest' do
+        context 'when the digest is correct' do
           let(:digest) { Digest::SHA256.hexdigest('{"1234":"abcd"}') }
 
-          it { expect(subject.errors.details[:digest]).to be_empty }
+          it { expect(bill_signature.errors.details[:digest]).to be_empty }
         end
 
-        context 'bad digest' do
+        context 'when the digest is incorrect' do
           let(:digest) { 'baadf00d' }
 
-          it { expect(subject.errors.details[:digest]).to eq [error: :invalid] }
+          it { expect(bill_signature.errors.details[:digest]).to eq [error: :invalid] }
         end
       end
     end
 
     describe 'check_serialized_bill_contents' do
       before do
-        subject.dossier_operation_logs = dossier_operation_logs
-        subject.serialized.attach(io: StringIO.new(serialized), filename: 'file') if serialized.present?
-        subject.valid?
+        bill_signature.dossier_operation_logs = dossier_operation_logs
+        bill_signature.serialized.attach(io: StringIO.new(serialized), filename: 'file') if serialized.present?
+        bill_signature.valid?
       end
 
-      context 'no operations' do
+      context 'when there are no operations' do
         let(:dossier_operation_logs) { [] }
         let(:serialized) { '{}' }
 
-        it { expect(subject.errors.details[:serialized]).to be_empty }
+        it { expect(bill_signature.errors.details[:serialized]).to be_empty }
       end
 
-      context 'operations set' do
+      context 'when the signature has operations' do
         let(:dossier_operation_logs) { [build(:dossier_operation_log, id: '1234', digest: 'abcd')] }
         let(:serialized) { '{"1234":"abcd"}' }
 
-        it { expect(subject.errors.details[:serialized]).to be_empty }
+        it { expect(bill_signature.errors.details[:serialized]).to be_empty }
       end
 
-      context 'serialized not set' do
+      context 'when serialized isn’t set' do
         let(:dossier_operation_logs) { [] }
         let(:serialized) { nil }
 
-        it { expect(subject.errors.details[:serialized]).to eq [error: :blank] }
+        it { expect(bill_signature.errors.details[:serialized]).to eq [error: :blank] }
       end
     end
 
     describe 'check_signature_contents' do
       before do
-        subject.signature.attach(io: StringIO.new(signature), filename: 'file') if signature.present?
+        bill_signature.signature.attach(io: StringIO.new(signature), filename: 'file') if signature.present?
         allow(ASN1::Timestamp).to receive(:signature_time).and_return(signature_time)
         allow(ASN1::Timestamp).to receive(:signed_digest).and_return(signed_digest)
-        subject.digest = digest
-        subject.valid?
+        bill_signature.digest = digest
+        bill_signature.valid?
       end
 
-      context 'correct signature' do
+      context 'when the signature is correct' do
         let(:signature) { 'signature' }
         let(:signature_time) { 1.day.ago }
         let(:digest) { 'abcd' }
         let(:signed_digest) { 'abcd' }
 
-        it { expect(subject.errors.details[:signature]).to be_empty }
+        it { expect(bill_signature.errors.details[:signature]).to be_empty }
       end
 
-      context 'signature not set' do
+      context 'when the signature isn’t set' do
         let(:signature) { nil }
         let(:signature_time) { 1.day.ago }
         let(:digest) { 'abcd' }
         let(:signed_digest) { 'abcd' }
 
-        it { expect(subject.errors.details[:signature]).to eq [error: :blank] }
+        it { expect(bill_signature.errors.details[:signature]).to eq [error: :blank] }
       end
 
-      context 'wrong signature time' do
+      context 'when the signature time is in the future' do
         let(:signature) { 'signature' }
         let(:signature_time) { 1.day.from_now }
         let(:digest) { 'abcd' }
         let(:signed_digest) { 'abcd' }
 
-        it { expect(subject.errors.details[:signature]).to eq [error: :invalid_date] }
+        it { expect(bill_signature.errors.details[:signature]).to eq [error: :invalid_date] }
       end
 
-      context 'wrong signature digest' do
+      context 'when the signature doesn’t match the digest' do
         let(:signature) { 'signature' }
         let(:signature_time) { 1.day.ago }
         let(:digest) { 'abcd' }
         let(:signed_digest) { 'dcba' }
 
-        it { expect(subject.errors.details[:signature]).to eq [error: :invalid] }
+        it { expect(bill_signature.errors.details[:signature]).to eq [error: :invalid] }
       end
     end
   end
 
   describe '.build_with_operations' do
-    subject { described_class.build_with_operations(dossier_operation_logs, Date.new(1871, 03, 18)) }
+    subject(:bill_signature) { described_class.build_with_operations(dossier_operation_logs, Date.new(1871, 03, 18)) }
 
-    context 'no operations' do
+    context 'when there are no operations' do
       let(:dossier_operation_logs) { [] }
 
-      it { expect(subject.operations_bill).to eq({}) }
-      it { expect(subject.digest).to eq(Digest::SHA256.hexdigest('{}')) }
-      it { expect(subject.serialized.download).to eq('{}') }
-      it { expect(subject.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
+      it { expect(bill_signature.operations_bill).to eq({}) }
+      it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{}')) }
+      it { expect(bill_signature.serialized.download).to eq('{}') }
+      it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
     end
 
-    context 'one operation' do
+    context 'when there is one operation' do
       let(:dossier_operation_logs) do
         [build(:dossier_operation_log, id: '1234', digest: 'abcd')]
       end
 
-      it { expect(subject.operations_bill).to eq({ '1234' => 'abcd' }) }
-      it { expect(subject.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd"}')) }
-      it { expect(subject.serialized.download).to eq('{"1234":"abcd"}') }
-      it { expect(subject.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
+      it { expect(bill_signature.operations_bill).to eq({ '1234' => 'abcd' }) }
+      it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd"}')) }
+      it { expect(bill_signature.serialized.download).to eq('{"1234":"abcd"}') }
+      it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
     end
 
-    context 'several operations' do
+    context 'when there are several operations' do
       let(:dossier_operation_logs) do
         [
           build(:dossier_operation_log, id: '1234', digest: 'abcd'),
@@ -149,10 +151,10 @@ RSpec.describe BillSignature, type: :model do
         ]
       end
 
-      it { expect(subject.operations_bill).to eq({ '1234' => 'abcd', '5678' => 'dcba' }) }
-      it { expect(subject.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd","5678":"dcba"}')) }
-      it { expect(subject.serialized.download).to eq('{"1234":"abcd","5678":"dcba"}') }
-      it { expect(subject.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
+      it { expect(bill_signature.operations_bill).to eq({ '1234' => 'abcd', '5678' => 'dcba' }) }
+      it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd","5678":"dcba"}')) }
+      it { expect(bill_signature.serialized.download).to eq('{"1234":"abcd","5678":"dcba"}') }
+      it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
     end
   end
 end
