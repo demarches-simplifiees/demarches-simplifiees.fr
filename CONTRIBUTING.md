@@ -45,6 +45,6 @@ demarches-simplifiees.fr est **compliqué à héberger**. Parmi les problématiq
 
 Si vous souhaitez adapter demarches-simplifiees.fr à votre besoin, nous vous recommandons de **proposer vos modifications à la base de code principale** (par exemple en créant une issue) **plutôt que d’héberger une autre instance vous-même**.
 
-Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous n'avons malheureusement pas les moyens de vous accompagner, ni d'assurer de support technique concernant votre installation.
+Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous n'avons malheureusement pas les moyens de vous accompagner, ni d’assurer de support technique concernant votre installation.
 
-Toutefois, le ministère des armées a déployé une instance au sein de leur intranet. Nous proposons aux acteurs qui sont interessés de les mettre en relation avec eux afin de disposer d'un retour d'expérience, et bénéficier de leur retour.
+Toutefois, certains acteurs (le ministère des armées, l’administration autonome en Polynésie française) ont déployé des instances séparées. Nous proposons aux personnes intéressées de les mettre en relation avec ces acteurs existants, afin de disposer d’un retour d’expérience, et de bénéficier de leur retour.
