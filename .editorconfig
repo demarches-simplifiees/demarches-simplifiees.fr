@@ -10,5 +10,5 @@ indent_size = 2
 indent_style = space
 trim_trailing_whitespace = true
 
-[*.{ico,keep,pdf,svg}]
+[*.{ico,keep,pdf,svg,der}]
 insert_final_newline = false

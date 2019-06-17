@@ -12,6 +12,7 @@ class DossierOperationLog < ApplicationRecord
 
   belongs_to :dossier
   has_one_attached :serialized
+  belongs_to :bill_signature, optional: true
 
   def self.create_and_serialize(params)
     dossier = params.fetch(:dossier)
