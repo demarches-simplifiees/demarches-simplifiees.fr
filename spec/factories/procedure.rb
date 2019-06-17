@@ -127,6 +127,14 @@ FactoryBot.define do
       end
     end
 
+    trait :with_piece_justificative do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ_piece_justificative)
+        procedure.types_de_champ << type_de_champ
+      end
+    end
+
+    # Deprecated
     trait :with_two_type_de_piece_justificative do
       after(:build) do |procedure, _evaluator|
         rib = create(:type_de_piece_justificative, :rib, order_place: 1)
