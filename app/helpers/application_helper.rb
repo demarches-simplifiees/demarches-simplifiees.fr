@@ -112,4 +112,12 @@ module ApplicationHelper
       root_path
     end
   end
+
+  def try_format_date(date)
+    date.present? ? I18n.l(date) : ''
+  end
+
+  def try_format_datetime(datetime)
+    datetime.present? ? I18n.l(datetime) : ''
+  end
 end

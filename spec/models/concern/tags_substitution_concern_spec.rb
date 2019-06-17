@@ -238,7 +238,7 @@ describe TagsSubstitutionConcern, type: :model do
               .update(value: '2017-09-13 09:00')
           end
 
-          it { is_expected.to eq('15/04/2017 2017-09-13 09:00') }
+          it { is_expected.to eq('15 avril 2017 13 septembre 2017 09:00') }
         end
       end
     end

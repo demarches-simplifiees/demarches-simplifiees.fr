@@ -34,7 +34,7 @@ class ApiEntreprise::API
 
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
-    elsif response.code == 404 || response.code == 422
+    elsif response.code&.between?(401, 499)
       raise RestClient::ResourceNotFound
     else
       raise RestClient::RequestFailed

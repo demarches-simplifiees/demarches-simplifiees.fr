@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_102360) do
+ActiveRecord::Schema.define(version: 2019_06_16_141702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,6 +145,12 @@ ActiveRecord::Schema.define(version: 2019_03_27_102360) do
     t.index ["gestionnaire_id"], name: "index_avis_on_gestionnaire_id"
   end
 
+  create_table "bill_signatures", force: :cascade do |t|
+    t.string "digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "champs", id: :serial, force: :cascade do |t|
     t.string "value"
     t.integer "type_de_champ_id"
@@ -224,7 +230,9 @@ ActiveRecord::Schema.define(version: 2019_03_27_102360) do
     t.datetime "keep_until"
     t.datetime "executed_at"
     t.text "digest"
+    t.bigint "bill_signature_id"
     t.index ["administration_id"], name: "index_dossier_operation_logs_on_administration_id"
+    t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["gestionnaire_id"], name: "index_dossier_operation_logs_on_gestionnaire_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
@@ -327,14 +335,15 @@ ActiveRecord::Schema.define(version: 2019_03_27_102360) do
   create_table "follows", id: :serial, force: :cascade do |t|
     t.integer "gestionnaire_id", null: false
     t.integer "dossier_id", null: false
-    t.datetime "demande_seen_at"
-    t.datetime "annotations_privees_seen_at"
-    t.datetime "avis_seen_at"
-    t.datetime "messagerie_seen_at"
+    t.datetime "demande_seen_at", null: false
+    t.datetime "annotations_privees_seen_at", null: false
+    t.datetime "avis_seen_at", null: false
+    t.datetime "messagerie_seen_at", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "unfollowed_at"
     t.index ["dossier_id"], name: "index_follows_on_dossier_id"
-    t.index ["gestionnaire_id", "dossier_id"], name: "index_follows_on_gestionnaire_id_and_dossier_id", unique: true
+    t.index ["gestionnaire_id", "dossier_id", "unfollowed_at"], name: "uniqueness_index", unique: true
     t.index ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id"
   end
 
@@ -616,6 +625,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_102360) do
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossier_operation_logs", "administrations"
+  add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_operation_logs", "dossiers"
   add_foreign_key "dossier_operation_logs", "gestionnaires"
   add_foreign_key "dossiers", "users"

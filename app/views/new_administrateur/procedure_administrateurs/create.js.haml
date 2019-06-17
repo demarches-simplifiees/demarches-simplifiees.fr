@@ -3,4 +3,7 @@
   = append_to_element("#procedure-#{@procedure.id}-administrateurs",
     partial: 'administrateur',
     locals: { administrateur: @administrateur })
-  document.getElementById('procedure-#{@procedure.id}-new_administrateur').reset()
+  = render_to_element("#procedure-#{@procedure.id}-new_administrateur",
+    partial: 'add_admin_form',
+    outer: true,
+    locals: { procedure: @procedure })

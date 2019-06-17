@@ -9,7 +9,7 @@ namespace :pieces_justificatives do
     procedure = Procedure.find(procedure_id)
 
     service = PieceJustificativeToChampPieceJointeMigrationService.new
-    service.ensure_correct_storage_configuration!
+    # service.ensure_correct_storage_configuration!
 
     progress = ProgressReport.new(service.number_of_champs_to_migrate(procedure))
 
@@ -30,7 +30,7 @@ namespace :pieces_justificatives do
     procedures_range = ENV['RANGE_START']..ENV['RANGE_END']
 
     service = PieceJustificativeToChampPieceJointeMigrationService.new
-    service.ensure_correct_storage_configuration!
+    # service.ensure_correct_storage_configuration!
     procedures_to_migrate = service.procedures_with_pjs_in_range(procedures_range)
 
     total_number_of_champs_to_migrate = procedures_to_migrate

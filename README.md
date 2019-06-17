@@ -70,6 +70,7 @@ En local, un utilisateur de test est créé automatiquement, avec les identifian
     WarnExpiringDossiersJob.set(cron: "0 0 1 * *").perform_later
     GestionnaireEmailNotificationJob.set(cron: "0 10 * * 1,2,3,4,5,6").perform_later
     PurgeUnattachedBlobsJob.set(cron: "0 0 * * *").perform_later
+    OperationsSignatureJob.set(cron: "0 6 * * *").perform_later
 
 ### Voir les emails envoyés en local
 
