@@ -47,6 +47,4 @@ Si vous souhaitez adapter demarches-simplifiees.fr à votre besoin, nous vous re
 
 Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous n'avons malheureusement pas les moyens de vous accompagner, ni d'assurer de support technique concernant votre installation.
 
-Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous n'avons malheureusement pas les moyens de vous accompagner, ni d'assurer de support technique concernant votre installation.
-
-Totefois, le ministère des armées a déployé une instance au sein de leur intranet. Nous proposons aux acteurs qui sont interessés de les mettre en relation avec eux afin de disposer d'un retour d'expérience, et bénéficier de leur retour.
+Toutefois, le ministère des armées a déployé une instance au sein de leur intranet. Nous proposons aux acteurs qui sont interessés de les mettre en relation avec eux afin de disposer d'un retour d'expérience, et bénéficier de leur retour.
