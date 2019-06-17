@@ -31,7 +31,17 @@ describe ApiEntreprise::API do
       end
     end
 
-    context 'when siret exist' do
+    context 'when siren infos are private' do
+      let(:siren) { '111111111' }
+      let(:status) { 403 }
+      let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_private.json') }
+
+      it 'raises RestClient::ResourceNotFound' do
+        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      end
+    end
+
+    context 'when siren exist' do
       let(:siren) { '418166096' }
       let(:status) { 200 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises.json') }

@@ -16,8 +16,10 @@ class Gestionnaire < ApplicationRecord
   has_many :procedures_with_email_notifications, through: :assign_to_with_email_notifications, source: :procedure
 
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
-  has_many :follows
+  has_many :follows, -> { active }
+  has_many :previous_follows, -> { inactive }, class_name: 'Follow'
   has_many :followed_dossiers, through: :follows, source: :dossier
+  has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
   has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
   has_many :trusted_device_tokens
@@ -27,26 +29,23 @@ class Gestionnaire < ApplicationRecord
   end
 
   def follow(dossier)
-    if follow?(dossier)
-      return
-    end
-
     begin
       followed_dossiers << dossier
+      # If the user tries to follow a dossier she already follows,
+      # we just fail silently: it means the goal is already reached.
     rescue ActiveRecord::RecordNotUnique
-      # Altough we checked before the insertion that the gestionnaire wasn't
-      # already following this dossier, this was done at the Rails level:
-      # at the database level, the dossier was already followed, and a
-      # "invalid constraint" exception is raised.
-      #
-      # We can ignore this safely, as it means the goal is already reached:
-      # the gestionnaire follows the dossier.
-      return
+      # Database uniqueness constraint
+    rescue ActiveRecord::RecordInvalid => e
+      # ActiveRecord validation
+      raise unless e.record.errors.details.dig(:gestionnaire_id, 0, :error) == :taken
     end
   end
 
   def unfollow(dossier)
-    followed_dossiers.delete(dossier)
+    f = follows.find_by(dossier: dossier)
+    if f.present?
+      f.update(unfollowed_at: Time.zone.now)
+    end
   end
 
   def follow?(dossier)
@@ -94,26 +93,20 @@ class Gestionnaire < ApplicationRecord
       .find_by(gestionnaire: self, dossier: dossier)
 
     if follow.present?
-      # retirer le seen_at.present? une fois la contrainte de presence en base (et les migrations ad hoc)
-      champs_publiques = follow.demande_seen_at.present? &&
-        follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
+      champs_publiques = follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
 
-      pieces_justificatives = follow.demande_seen_at.present? &&
-        follow.dossier.pieces_justificatives.updated_since?(follow.demande_seen_at).any?
+      pieces_justificatives = follow.dossier.pieces_justificatives.updated_since?(follow.demande_seen_at).any?
 
       demande = champs_publiques || pieces_justificatives
 
-      annotations_privees = follow.annotations_privees_seen_at.present? &&
-        follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
+      annotations_privees = follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
 
-      avis_notif = follow.avis_seen_at.present? &&
-        follow.dossier.avis.updated_since?(follow.avis_seen_at).any?
+      avis_notif = follow.dossier.avis.updated_since?(follow.avis_seen_at).any?
 
-      messagerie = follow.messagerie_seen_at.present? &&
-        dossier.commentaires
-          .where.not(email: OLD_CONTACT_EMAIL)
-          .where.not(email: CONTACT_EMAIL)
-          .updated_since?(follow.messagerie_seen_at).any?
+      messagerie = dossier.commentaires
+        .where.not(email: OLD_CONTACT_EMAIL)
+        .where.not(email: CONTACT_EMAIL)
+        .updated_since?(follow.messagerie_seen_at).any?
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie)
     else
