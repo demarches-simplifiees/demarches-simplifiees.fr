@@ -1,0 +1,27 @@
+fr:
+  activerecord:
+    attributes:
+      bill_signature:
+        dossier_operation_logs:
+          one: opération
+          other: opérations
+        digest: empreinte
+        serialized: liasse
+        signature: signature
+    errors:
+      models:
+        bill_signature:
+          attributes:
+            digest:
+              invalid: 'ne correspond pas à la liasse'
+            serialized:
+              blank: 'doit être rempli'
+              invalid: 'ne correspond pas aux opérations'
+            signature:
+              blank: 'doit être rempli'
+              invalid: 'ne correspond pas à l’empreinte'
+              invalid_date: 'ne doit pas être dans le futur'
+    models:
+      bill_signature:
+        one: Horodatage
+        other: Horodatages
