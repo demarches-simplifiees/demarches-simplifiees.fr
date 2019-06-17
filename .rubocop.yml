@@ -726,7 +726,7 @@ Rails/HttpStatus:
   Enabled: false
 
 Rails/InverseOf:
-  Enabled: false
+  Enabled: true
 
 Rails/LexicallyScopedActionFilter:
   Enabled: false
