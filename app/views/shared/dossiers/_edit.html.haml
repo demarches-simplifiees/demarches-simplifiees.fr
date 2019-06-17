@@ -11,10 +11,12 @@
   = form_for dossier, form_options do |f|
 
     .prologue
-      .mandatory-explanation
+      %p.mandatory-explanation
         Les champs avec un astérisque (
         %span.mandatory> *
-        ) sont obligatoires. Pour enregistrer les informations saisies, cliquez sur le bouton « enregistrer le brouillon » en bas à gauche du formulaire.
+        ) sont obligatoires.
+      %p.mandatory-explanation
+        Pour enregistrer votre dossier et le reprendre plus tard, cliquez sur le bouton « Enregistrer le brouillon » en bas à gauche du formulaire.
 
       - if notice_url(dossier.procedure).present?
         = link_to notice_url(dossier.procedure), target: '_blank', rel: 'noopener', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
