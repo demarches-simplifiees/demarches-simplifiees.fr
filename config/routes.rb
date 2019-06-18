@@ -37,6 +37,8 @@ Rails.application.routes.draw do
 
     resources :demandes, only: [:index]
 
+    resources :bill_signatures, only: [:index]
+
     resources :services, only: [:index, :show]
 
     post 'demandes/create_administrateur'

@@ -35,7 +35,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :procedure
 
   belongs_to :parent, class_name: 'TypeDeChamp'
-  has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', dependent: :destroy
+  has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj
   delegate :tags_for_template, to: :dynamic_type

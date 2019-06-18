@@ -96,6 +96,7 @@ class ApplicationController < ActionController::Base
 
     if administrateur_signed_in?
       gon.sendinblue = sendinblue_config
+      gon.crisp = crisp_config
     end
   end
 
@@ -235,6 +236,21 @@ class ApplicationController < ActionController::Base
           DS_GESTIONNAIRE_ID: current_gestionnaire&.id,
           DS_ROLES: logged_user_roles
         }
+      }
+    }
+  end
+
+  def crisp_config
+    crisp = Rails.application.secrets.crisp
+
+    {
+      key: crisp[:client_key],
+      enabled: crisp[:enabled],
+      administrateur: {
+        email: current_administrateur&.email,
+        DS_SIGN_IN_COUNT: current_administrateur&.sign_in_count,
+        DS_CREATED_AT: current_administrateur&.created_at,
+        DS_ID: current_administrateur&.id
       }
     }
   end

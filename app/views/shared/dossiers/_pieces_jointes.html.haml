@@ -23,11 +23,11 @@
                         = link_to pj.content_url, { target: :blank, rel: :noopener } do
                           %span.filename= display_pj_filename(pj)
                           %span
-                            ajoutée le #{pj.created_at.strftime('%d/%m/%Y à %H:%M')}
+                            ajoutée le #{try_format_datetime(pj.created_at)}
         - else
           %td Pièce non fournie
         %td.updated-at
           - if pj
             %span{ class: highlight_if_unseen_class(demande_seen_at, pj.updated_at) }
               modifié le
-              = pj.updated_at.strftime("%d/%m/%Y à %H:%M")
+              = try_format_datetime(pj.updated_at)

@@ -43,26 +43,28 @@ services:
     ports:
       - ${PORT}:3000
     environment:
-      - APP_HOST
-      - DB_DATABASE
-      - DB_HOST
-      - DB_USERNAME
-      - DB_PASSWORD
-      - API_ISPF_USER
-      - API_ISPF_PASSWORD
       - API_ENTREPRISE_PF_URL=http://itaiete-${ENV:-dev}:8080/api/v2
-      - GITHUB_CLIENT_ID
-      - GITHUB_CLIENT_SECRET
+      - API_ISPF_PASSWORD
+      - API_ISPF_USER
+      - APP_HOST
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
-      - SENTRY_ENABLED
-      - SENTRY_DSN_RAILS
-      - SENTRY_DSN_JS
-      - SENTRY_CURRENT_ENV
-      - HELPSCOUT_MAILBOX_ID
+      - CRISP_CLIENT_KEY
+      - CRISP_ENABLED
+      - DB_DATABASE
+      - DB_HOST
+      - DB_PASSWORD
+      - DB_USERNAME
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
       - HELPSCOUT_CLIENT_ID
       - HELPSCOUT_CLIENT_SECRET
+      - HELPSCOUT_MAILBOX_ID
       - HELPSCOUT_WEBHOOK_SECRET
+      - SENTRY_CURRENT_ENV
+      - SENTRY_DSN_JS
+      - SENTRY_DSN_RAILS
+      - SENTRY_ENABLED
     volumes:
       - md-data-files:/app/storage
       - md-tmp:/app/tmp

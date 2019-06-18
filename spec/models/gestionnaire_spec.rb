@@ -67,6 +67,7 @@ describe Gestionnaire, type: :model do
       end
 
       it { expect(gestionnaire.follow?(already_followed_dossier)).to be false }
+      it { expect(gestionnaire.previously_followed_dossiers).to include(already_followed_dossier) }
     end
   end
 

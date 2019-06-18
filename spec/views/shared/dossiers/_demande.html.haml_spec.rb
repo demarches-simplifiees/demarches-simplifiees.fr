@@ -38,7 +38,7 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
       expect(rendered).to include(individual.gender)
       expect(rendered).to include(individual.nom)
       expect(rendered).to include(individual.prenom)
-      expect(rendered).to include(individual.birthdate.strftime("%d/%m/%Y"))
+      expect(rendered).to include(I18n.l(individual.birthdate))
     end
   end
 
