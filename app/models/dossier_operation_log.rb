@@ -10,7 +10,7 @@ class DossierOperationLog < ApplicationRecord
     demander_un_avis: 'demander_un_avis'
   }
 
-  belongs_to :dossier
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }
   has_one_attached :serialized
   belongs_to :bill_signature, optional: true
 

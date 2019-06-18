@@ -1,5 +1,5 @@
 class Champ < ApplicationRecord
-  belongs_to :dossier, inverse_of: :champs, touch: true
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }, inverse_of: :champs, touch: true
   belongs_to :type_de_champ, inverse_of: :champ
   belongs_to :parent, class_name: 'Champ'
   has_many :commentaires

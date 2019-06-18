@@ -1,7 +1,7 @@
 class Avis < ApplicationRecord
   include EmailSanitizableConcern
 
-  belongs_to :dossier, inverse_of: :avis, touch: true
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }, inverse_of: :avis, touch: true
   belongs_to :gestionnaire
   belongs_to :claimant, class_name: 'Gestionnaire'
 

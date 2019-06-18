@@ -1,7 +1,7 @@
 class Invite < ApplicationRecord
   include EmailSanitizableConcern
 
-  belongs_to :dossier
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }
   belongs_to :user
 
   before_validation -> { sanitize_email(:email) }

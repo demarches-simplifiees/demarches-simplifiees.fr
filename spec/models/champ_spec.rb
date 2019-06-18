@@ -5,6 +5,15 @@ describe Champ do
 
   it_should_behave_like "champ_spec"
 
+  describe 'belongs_to :dossier' do
+    context 'when the parent dossier is hidden' do
+      let(:dossier) { create(:dossier, :hidden, procedure: nil) }
+      let(:champ) { build(:champ, dossier_id: dossier.id) }
+
+      it { expect(champ.dossier).to eq(dossier) }
+    end
+  end
+
   describe '#public?' do
     let(:type_de_champ) { build(:type_de_champ) }
     let(:champ) { type_de_champ.champ.build }
