@@ -1,5 +1,5 @@
 class Individual < ApplicationRecord
-  belongs_to :dossier
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }
 
   validates :dossier_id, uniqueness: true
   validates :gender, presence: true, allow_nil: false, on: :update

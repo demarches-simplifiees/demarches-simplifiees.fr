@@ -1,5 +1,5 @@
 class Etablissement < ApplicationRecord
-  belongs_to :dossier
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }
 
   has_one :champ, class_name: 'Champs::SiretChamp'
   has_many :exercices, dependent: :destroy

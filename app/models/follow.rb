@@ -1,6 +1,6 @@
 class Follow < ApplicationRecord
   belongs_to :gestionnaire
-  belongs_to :dossier
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }
 
   validates :gestionnaire_id, uniqueness: { scope: [:dossier_id, :unfollowed_at] }
 

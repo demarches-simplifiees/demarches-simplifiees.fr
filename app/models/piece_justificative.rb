@@ -1,5 +1,5 @@
 class PieceJustificative < ApplicationRecord
-  belongs_to :dossier, inverse_of: :pieces_justificatives, touch: true
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }, inverse_of: :pieces_justificatives, touch: true
   belongs_to :type_de_piece_justificative
   has_one :commentaire
 

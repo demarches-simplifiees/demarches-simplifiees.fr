@@ -1,5 +1,5 @@
 class Commentaire < ApplicationRecord
-  belongs_to :dossier, inverse_of: :commentaires, touch: true
+  belongs_to :dossier, -> { unscope(where: :hidden_at) }, inverse_of: :commentaires, touch: true
   belongs_to :piece_justificative
 
   belongs_to :user

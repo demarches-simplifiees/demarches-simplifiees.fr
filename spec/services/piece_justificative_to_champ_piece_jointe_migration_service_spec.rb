@@ -265,6 +265,22 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
         .not_to change { ActiveStorage::Attachment.count }
     end
 
+    context 'when some dossiers to roll back are hidden' do
+      before do
+        dossier.update_column(:hidden_at, Time.zone.now)
+      end
+
+      it 'does not create champs' do
+        expect { try_convert(procedure) }
+          .not_to change { dossier.champs.count }
+      end
+
+      it 'does not change the hidden dossier timestamps' do
+        try_convert(procedure)
+        expect(dossier.updated_at).to eq(initial_dossier_timestamps[:updated_at])
+      end
+    end
+
     context 'when receiving a Signal interruption (like Ctrl+C)' do
       let(:exception) { Interrupt }
 
