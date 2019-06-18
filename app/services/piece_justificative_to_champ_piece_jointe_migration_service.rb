@@ -139,7 +139,14 @@ class PieceJustificativeToChampPieceJointeMigrationService
   def rollback_migration!(types_de_champ_pj)
     types_de_champ_pj.each do |type_champ|
       # First destroy all the individual champs on dossiers
-      type_champ.champ.each { |c| destroy_champ_pj(c.dossier.reload, c) }
+      type_champ.champ.each do |champ|
+        begin
+          destroy_champ_pj(champ.dossier.reload, champ)
+        rescue => e
+          rake_puts e
+          rake_puts "Rolling back of champ #{champ.id} failed. Continuing to roll back…"
+        end
+      end
       # Now we can destroy the type de champ itself,
       # without cascading the timestamp update on all attached dossiers.
       type_champ.reload.destroy
