@@ -276,5 +276,26 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
         expect { try_convert(procedure) }.not_to change { dossier.champs.count }
       end
     end
+
+    context 'when rolling back a dossier fails' do
+      before do
+        allow(service).to receive(:destroy_champ_pj)
+          .with(having_attributes(id: dossier.id), anything)
+          .and_raise(StandardError)
+        allow(service).to receive(:destroy_champ_pj)
+          .with(any_args)
+          .and_call_original
+      end
+
+      it 'continues to roll back the other dossiers' do
+        expect { try_convert(procedure) }
+          .not_to change { failing_dossier.champs.count }
+      end
+
+      it 'does not creates types de champ on the procedure' do
+        expect { try_convert(procedure) }
+          .not_to change { procedure.types_de_champ.count }
+      end
+    end
   end
 end
