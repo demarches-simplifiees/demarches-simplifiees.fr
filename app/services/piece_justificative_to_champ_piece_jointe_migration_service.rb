@@ -54,15 +54,7 @@ class PieceJustificativeToChampPieceJointeMigrationService
     # If anything goes wrong, we roll back the migration by destroying the newly created
     # types de champ, champs blobs and attachments.
     rake_puts "Error received. Rolling back migration of procedure #{procedure.id}…"
-
-    types_de_champ_pj.each do |type_champ|
-      # First destroy all the individual champs on dossiers
-      type_champ.champ.each { |c| destroy_champ_pj(c.dossier.reload, c) }
-      # Now we can destroy the type de champ itself,
-      # without cascading the timestamp update on all attached dossiers.
-      type_champ.reload.destroy
-    end
-
+    rollback_migration!(types_de_champ_pj)
     rake_puts "Migration of procedure #{procedure.id} rolled back."
 
     # Reraise the exception to abort the migration.
@@ -142,6 +134,16 @@ class PieceJustificativeToChampPieceJointeMigrationService
 
     # Reraise the exception to abort the migration.
     raise
+  end
+
+  def rollback_migration!(types_de_champ_pj)
+    types_de_champ_pj.each do |type_champ|
+      # First destroy all the individual champs on dossiers
+      type_champ.champ.each { |c| destroy_champ_pj(c.dossier.reload, c) }
+      # Now we can destroy the type de champ itself,
+      # without cascading the timestamp update on all attached dossiers.
+      type_champ.reload.destroy
+    end
   end
 
   def make_blob(pj)
