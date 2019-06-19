@@ -78,8 +78,9 @@ Rails.application.routes.draw do
     }
 
   devise_for :administrateurs, controllers: {
-    sessions: 'administrateurs/sessions'
-  }, skip: [:password, :registrations]
+    sessions: 'administrateurs/sessions',
+    passwords: 'administrateurs/passwords'
+  }, skip: [:registrations]
 
   devise_for :gestionnaires, controllers: {
     sessions: 'gestionnaires/sessions',
@@ -108,6 +109,7 @@ Rails.application.routes.draw do
 
   devise_scope :administrateur do
     get '/administrateurs/sign_in/demo' => redirect("/users/sign_in")
+    get '/administrateurs/password/test_strength' => 'administrateurs/passwords#test_strength'
   end
 
   #
@@ -176,7 +178,6 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
-    get 'activate/test_password_strength' => '/administrateurs/activate#test_password_strength'
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'

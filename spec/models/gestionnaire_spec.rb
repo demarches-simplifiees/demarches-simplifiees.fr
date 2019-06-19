@@ -146,21 +146,21 @@ describe Gestionnaire, type: :model do
       gestionnaire = create(:gestionnaire)
       user = create(:user, email: gestionnaire.email)
 
-      gestionnaire.update(email: 'whoami@plop.com', password: 'super secret')
+      gestionnaire.update(email: 'whoami@plop.com', password: 'démarches-simplifiées-pwd')
 
       user.reload
       expect(user.email).to eq('whoami@plop.com')
-      expect(user.valid_password?('super secret')).to be(true)
+      expect(user.valid_password?('démarches-simplifiées-pwd')).to be(true)
     end
 
     it 'syncs credentials to associated administrateur' do
       admin = create(:administrateur)
       gestionnaire = admin.gestionnaire
 
-      gestionnaire.update(password: 'super secret')
+      gestionnaire.update(password: 'démarches-simplifiées-pwd')
 
       admin.reload
-      expect(admin.valid_password?('super secret')).to be(true)
+      expect(admin.valid_password?('démarches-simplifiées-pwd')).to be(true)
     end
   end
 

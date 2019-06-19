@@ -3,12 +3,12 @@ require 'spec_helper'
 describe User, type: :model do
   describe '#after_confirmation' do
     let(:email) { 'mail@beta.gouv.fr' }
-    let!(:invite)  { create(:invite, email: email) }
+    let!(:invite) { create(:invite, email: email) }
     let!(:invite2) { create(:invite, email: email) }
     let(:user) do
       create(:user,
         email: email,
-        password: 'a good password',
+        password: 'démarches-simplifiées-pwd',
         confirmation_token: '123',
         confirmed_at: nil)
     end
@@ -106,24 +106,24 @@ describe User, type: :model do
       user = create(:user)
       gestionnaire = create(:gestionnaire, email: user.email)
 
-      user.update(email: 'whoami@plop.com', password: 'super secret')
+      user.update(email: 'whoami@plop.com', password: 'démarches-simplifiées2')
       user.confirm
 
       gestionnaire.reload
       expect(gestionnaire.email).to eq('whoami@plop.com')
-      expect(gestionnaire.valid_password?('super secret')).to be(true)
+      expect(gestionnaire.valid_password?('démarches-simplifiées2')).to be(true)
     end
 
     it 'syncs credentials to associated administrateur' do
       user = create(:user)
       admin = create(:administrateur, email: user.email)
 
-      user.update(email: 'whoami@plop.com', password: 'super secret')
+      user.update(email: 'whoami@plop.com', password: 'démarches-simplifiées2')
       user.confirm
 
       admin.reload
       expect(admin.email).to eq('whoami@plop.com')
-      expect(admin.valid_password?('super secret')).to be(true)
+      expect(admin.valid_password?('démarches-simplifiées2')).to be(true)
     end
   end
 end
