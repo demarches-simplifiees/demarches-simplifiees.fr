@@ -9,19 +9,44 @@ info = {
         :CreationDate => @created_at
       }
 
-prawn_document(margin: [50, 100, 20, 100], info: info) do |pdf|
+
+#----- set page to A4 instead of letter
+page_size = 'A4' # ou 'LETTER'
+case page_size
+when 'A4'
+    page_height = 842
+    page_width = 595
+when 'LETTER'
+    page_height = 1008
+    page_width = 612
+end
+
+#----- margins
+body_width = 400
+top_margin = 50
+bottom_margin = 20
+
+right_margin = (page_width - body_width)/2
+left_margin = right_margin
+
+#----- size of images
+max_logo_width = body_width
+max_logo_height = 50.mm
+max_signature_size = 50.mm
+qrcode_size = 35.mm
+footer_height = @qrcode.present? ? qrcode_size + 40 : 30
+
+prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size, info: info) do |pdf|
   pdf.font_families.update( 'liberation serif' => { normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' )})
   pdf.font 'liberation serif'
 
   grey = '555555'
   red = 'C52F24'
   black = '000000'
-  max_logo_width = 200.mm
-  max_logo_height = 50.mm
-  max_signature_size = 50.mm
 
-  pdf.bounding_box([0, pdf.cursor], width: 400, height: 650) do
+  body_height = pdf.cursor - footer_height
 
+  pdf.bounding_box([0, pdf.cursor], width: body_width, height: body_height) do
     if @logo.present?
       pdf.image StringIO.new(@logo.read), fit: [max_logo_width , max_logo_height], position: :center
     end
@@ -45,12 +70,11 @@ prawn_document(margin: [50, 100, 20, 100], info: info) do |pdf|
   end
 
   pdf.repeat(:all) do
-    size = 100
     margin = 2
     pdf.fill_color grey
     if @qrcode.present?
-      pdf.move_cursor_to size+30
-      pdf.print_qr_code(@qrcode, level: :q, extent: size, margin: margin, align: :center)
+      pdf.move_cursor_to footer_height
+      pdf.print_qr_code(@qrcode, level: :q, extent: qrcode_size, margin: margin, align: :center)
       pdf.move_down 3
       pdf.text "<u><link href='#{@qrcode}'>#{@title}</link></u>",:inline_format => true, size: 9, align: :center, color: "0000FF"
     end
