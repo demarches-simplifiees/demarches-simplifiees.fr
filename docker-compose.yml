@@ -34,6 +34,7 @@ version: '3.3'
 #
 # SENTRY variables to logs exception on the SEntry platform
 # HELPSCOUT variable to be able to receive administrator requests & help requests
+# UNIVERSIGN variable to timstamp service (horodatage)
 #-------------------------------------------------------------
 services:
   app:
@@ -93,6 +94,7 @@ services:
       - SENTRY_DSN_RAILS
       - SENTRY_DSN_JS
       - SENTRY_CURRENT_ENV
+      - UNIVERSIGN_USERPWD
     volumes:
       - md-data-files:/app/storage
       - md-systmp:/tmp
