@@ -80,6 +80,6 @@
       "note": "`column` and `order` come from the model, which is validated to prevent injection attacks. Furthermore, the sql injection attack on `column` would need to survive the `to_i`"
     }
   ],
-  "updated": "2019-07-17 16:03:11 +0200",
+  "updated": "2019-07-02 11:23:21 -1000",
   "brakeman_version": "4.3.1"
 }

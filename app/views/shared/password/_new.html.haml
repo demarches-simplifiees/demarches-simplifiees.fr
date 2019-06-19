@@ -1,0 +1,18 @@
+.container.devise-container
+  .one-column-centered
+    - controller_action = defined?(action) ? action : :create
+    = form_for object, url: { controller: controller, action: controller_action }, html: { class: "form" } do |f|
+      %br
+      %h1
+        Choix du mot de passe
+
+      = f.hidden_field :reset_password_token, value: object.reset_password_token
+      = f.label :email, "Email"
+      = f.text_field :email, disabled: true
+
+      = f.label :password do
+        Mot de passe
+
+      = render partial: 'shared/password/edit_password', locals: { form: f, controller: controller }
+
+      = f.submit 'Continuer', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi..." }
