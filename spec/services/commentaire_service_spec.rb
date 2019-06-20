@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CommentaireService do
   describe '.create' do
-    let(:dossier) { create :dossier }
+    let(:dossier) { create :dossier, :en_construction }
     let(:sender) { dossier.user }
     let(:body) { 'Contenu du message.' }
     let(:file) { nil }
