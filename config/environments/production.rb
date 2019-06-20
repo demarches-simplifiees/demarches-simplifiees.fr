@@ -77,8 +77,15 @@ Rails.application.configure do
       port: '2525',
       authentication: :cram_md5
     }
-  else
+  elsif ENV.fetch('MAILJET_API_KEY', '').present?
     config.action_mailer.delivery_method = :mailjet_api
+  else
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV.fetch("DB_HOST", "localhost"),
+      port: '25',
+      openssl_verify_mode: 'none'
+    }
   end
 
   # Configure default root URL for generating URLs to routes
