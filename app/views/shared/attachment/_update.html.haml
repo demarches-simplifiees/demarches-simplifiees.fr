@@ -5,8 +5,10 @@
       = link_to('le modèle suivant', url_for(template), target: '_blank', rel: 'noopener')
 
   - attachment_id = attachment ? attachment.id : SecureRandom.uuid
+  - persisted = attachment && attachment.persisted?
   - user_can_destroy = defined?(user_can_destroy) ? user_can_destroy : false
-  - if attachment
+
+  - if persisted
     .piece-justificative-actions{ id: "piece_justificative_#{attachment_id}" }
       .piece-justificative-action
         = render partial: "shared/attachment/show", locals: { attachment: attachment, user_can_upload: true }
@@ -18,5 +20,5 @@
 
   = form.file_field :piece_justificative_file,
     id: "piece_justificative_file_#{attachment_id}",
-    class: "piece-justificative-input #{'hidden' if attachment}",
+    class: "piece-justificative-input #{'hidden' if persisted}",
     direct_upload: true
