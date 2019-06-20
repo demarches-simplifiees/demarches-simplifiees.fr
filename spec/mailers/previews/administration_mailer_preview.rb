@@ -41,11 +41,11 @@ class AdministrationMailerPreview < ActionMailer::Preview
   end
 
   def procedure_1
-    Procedure.new(id: 10, libelle: "Démarche des marches", administrateur: administrateur)
+    Procedure.new(id: 10, libelle: "Démarche des marches", administrateurs: [administrateur])
   end
 
   def procedure_2
-    Procedure.new(id: 20, libelle: "Démarche pieds", administrateur: administrateur)
+    Procedure.new(id: 20, libelle: "Démarche pieds", administrateurs: [administrateur])
   end
 
   def administrateur
