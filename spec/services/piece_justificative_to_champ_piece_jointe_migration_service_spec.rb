@@ -265,6 +265,22 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
         .not_to change { ActiveStorage::Attachment.count }
     end
 
+    context 'when some dossiers to roll back are hidden' do
+      before do
+        dossier.update_column(:hidden_at, Time.zone.now)
+      end
+
+      it 'does not create champs' do
+        expect { try_convert(procedure) }
+          .not_to change { dossier.champs.count }
+      end
+
+      it 'does not change the hidden dossier timestamps' do
+        try_convert(procedure)
+        expect(dossier.updated_at).to eq(initial_dossier_timestamps[:updated_at])
+      end
+    end
+
     context 'when receiving a Signal interruption (like Ctrl+C)' do
       let(:exception) { Interrupt }
 
@@ -274,6 +290,27 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
 
       it 'does not create champs' do
         expect { try_convert(procedure) }.not_to change { dossier.champs.count }
+      end
+    end
+
+    context 'when rolling back a dossier fails' do
+      before do
+        allow(service).to receive(:destroy_champ_pj)
+          .with(having_attributes(id: dossier.id), anything)
+          .and_raise(StandardError)
+        allow(service).to receive(:destroy_champ_pj)
+          .with(any_args)
+          .and_call_original
+      end
+
+      it 'continues to roll back the other dossiers' do
+        expect { try_convert(procedure) }
+          .not_to change { failing_dossier.champs.count }
+      end
+
+      it 'does not creates types de champ on the procedure' do
+        expect { try_convert(procedure) }
+          .not_to change { procedure.types_de_champ.count }
       end
     end
   end
