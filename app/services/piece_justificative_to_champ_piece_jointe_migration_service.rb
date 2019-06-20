@@ -141,7 +141,7 @@ class PieceJustificativeToChampPieceJointeMigrationService
       # First destroy all the individual champs on dossiers
       type_champ.champ.each do |champ|
         begin
-          destroy_champ_pj(champ.dossier.reload, champ)
+          destroy_champ_pj(Dossier.unscope(where: :hidden_at).find(champ.dossier_id), champ)
         rescue => e
           rake_puts e
           rake_puts "Rolling back of champ #{champ.id} failed. Continuing to roll back…"
