@@ -1,0 +1,9 @@
+- content_for(:title, "Traces horodatées · Dossier nº #{@dossier.id} (#{@dossier.procedure.libelle})")
+
+- content_for :footer do
+  = render partial: "users/procedure_footer", locals: { procedure: @dossier.procedure, dossier: @dossier }
+
+#dossier-show
+  = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
+
+  = render partial: "shared/dossiers/operations_logs", locals: { dossier: @dossier }

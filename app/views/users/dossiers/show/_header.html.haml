@@ -18,3 +18,5 @@
       = dynamic_tab_item('Résumé', dossier_path(dossier))
       = dynamic_tab_item('Demande', [demande_dossier_path(dossier), modifier_dossier_path(dossier)])
       = dynamic_tab_item('Messagerie', messagerie_dossier_path(dossier))
+      - if Flipflop.operations_logs_ui?
+        = dynamic_tab_item('Traces horodatées', operations_logs_dossier_path(dossier))
