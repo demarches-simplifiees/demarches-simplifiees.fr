@@ -15,7 +15,7 @@ class ASN1::Timestamp
 
   def self.signature_time(asn1timestamp)
     tstInfo = timestampInfo(asn1timestamp)
-    tstInfo.value[4].value
+    tstInfo.value[4].value.in_time_zone
   end
 
   def self.signed_digest(asn1timestamp)
