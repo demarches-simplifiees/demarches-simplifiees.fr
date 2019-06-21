@@ -1,0 +1,13 @@
+fr:
+  activerecord:
+    models:
+      dossier_operation_log:
+        operations:
+          passer_en_instruction: Passé en instruction
+          repasser_en_construction: Repassé en construction
+          accepter: Accepté
+          refuser: Refusé
+          classer_sans_suite: Classé sans suite
+          supprimer: Supprimé
+          modifier_annotation: Annotation modifiée
+          demander_un_avis: Avis demandé

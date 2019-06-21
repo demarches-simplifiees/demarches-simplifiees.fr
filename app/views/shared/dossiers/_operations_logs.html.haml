@@ -1,1 +1,34 @@
--#content goes here
+.container
+  - dossier.dossier_operation_logs.order(executed_at: :desc).each do |operation_log|
+    .card
+      .card-title
+        = t("activerecord.models.dossier_operation_log.operations.#{operation_log.operation}")
+        = " – #{try_format_datetime(operation_log.executed_at)}"
+      %p.form
+        %label
+          Trace de l’opération
+          = operation_download_button(operation_log.serialized)
+          = operation_checked_notice("Empreinte SHA256 : #{operation_log.digest}",
+                                      Digest::SHA256.hexdigest(operation_log.serialized.download),
+                                      operation_log.digest)
+
+        %label
+          Liasse des opérations du jour
+          = operation_download_button(operation_log.bill_signature.serialized)
+          - bill = operation_log.bill_signature.serialized.download
+          = operation_checked_notice('Contient l’empreinte de la trace de l’opération',
+                                      JSON.parse(bill)[operation_log.id.to_s],
+                                      operation_log.digest)
+          = operation_checked_notice("Empreinte SHA256 : #{operation_log.bill_signature.digest}",
+                                      Digest::SHA256.hexdigest(bill),
+                                      operation_log.bill_signature.digest)
+
+        %label
+          Signature horodatée
+          = operation_download_button(operation_log.bill_signature.signature)
+          - signature = operation_log.bill_signature.signature.download
+          %span.notice
+            = "Date de la signature : #{try_format_datetime(ASN1::Timestamp.signature_time(signature))}"
+          = operation_checked_notice("Signe l’empreinte de la liasse des opérations du jour",
+                                      ASN1::Timestamp.signed_digest(signature),
+                                      operation_log.bill_signature.digest)
