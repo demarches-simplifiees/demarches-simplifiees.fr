@@ -160,27 +160,44 @@ describe Users::DossiersController, type: :controller do
 
   describe '#qrcode' do
     let(:date) { Time.zone.now }
-    before { Timecop.freeze(Time.zone.local(2018, 1, 2, 23, 11, 14)) }
+    before {
+      Timecop.freeze(Time.zone.local(2018, 1, 2, 23, 11, 14))
+      sign_in(user)
+    }
     after { Timecop.return }
 
-    context 'when a dossier has an attestation' do
+    context 'when the procedure has an attestation template' do
       let(:fake_pdf) { double(read: 'pdf content') }
       let(:another_user) { create(:user) }
-      let!(:dossier) { create(:dossier, attestation: Attestation.new, user: user) }
+      let!(:dossier) { create(:dossier, :with_attestation, user: user) }
 
       context 'when another user is connected' do
         before { sign_in(another_user) }
+        after { sign_in(user) }
+
+        it 'shows attestation as HTML' do
+          get :qrcode, params: { id: dossier.id, created_at: dossier.encoded_date(:created_at) }
+          expect(response).to render_template(:qrcode)
+        end
+      end
+    end
+
+    context 'when the procedure no longer has an attestation template' do
+      let(:fake_pdf) { double(read: 'pdf content') }
+      let(:another_user) { create(:user) }
+      let!(:dossier) { create(:dossier, :with_attestation, user: user) }
+
+      context 'when another user is connected' do
+        before { sign_in(another_user) }
+        after { sign_in(user) }
 
         it 'returns the attestation pdf' do
-          allow_any_instance_of(Attestation).to receive(:pdf).and_return(fake_pdf)
-
-          expect(controller).to receive(:send_data)
-            .with('pdf content', filename: "attestation-#{dossier.id}.pdf", disposition: 'inline', type: 'application/pdf') do
-            controller.head :ok
-          end
+          attestation_template = dossier.procedure.attestation_template
+          attestation_template.activated = false
+          attestation_template.save
 
           get :qrcode, params: { id: dossier.id, created_at: dossier.encoded_date(:created_at) }
-          expect(response).to have_http_status(:success)
+          expect(response.headers["Content-Type"]).to eq "application/pdf"
         end
       end
     end

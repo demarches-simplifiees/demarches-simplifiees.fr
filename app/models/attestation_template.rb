@@ -20,9 +20,9 @@ class AttestationTemplate < ApplicationRecord
   def unspecified_champs_for_dossier(dossier)
     all_champs_with_libelle_index = (dossier.champs + dossier.champs_private)
       .reduce({}) do |acc, champ|
-        acc[champ.libelle] = champ
-        acc
-      end
+      acc[champ.libelle] = champ
+      acc
+    end
 
     used_tags.map do |used_tag|
       corresponding_champ = all_champs_with_libelle_index[used_tag]
@@ -45,6 +45,14 @@ class AttestationTemplate < ApplicationRecord
     end
 
     result
+  end
+
+  def build_title(dossier)
+    replace_tags(title, dossier)
+  end
+
+  def build_body(dossier)
+    replace_tags(body, dossier)
   end
 
   private
@@ -83,7 +91,7 @@ class AttestationTemplate < ApplicationRecord
       created_at: Time.zone.now)
 
     attestation_view = action_view.render(file: 'admin/attestation_templates/show',
-      formats: [:pdf])
+                                          formats: [:pdf])
 
     view_to_memory_file(attestation_view)
   end
