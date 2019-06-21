@@ -18,6 +18,8 @@ Flipflop.configure do
 
   feature :operation_log_serialize_subject
 
+  feature :operations_logs_ui
+
   group :development do
     feature :mini_profiler_enabled,
       default: Rails.env.development?

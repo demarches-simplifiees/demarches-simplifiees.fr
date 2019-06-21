@@ -45,6 +45,9 @@
       = dynamic_tab_item('Personnes impliquées',
         personnes_impliquees_gestionnaire_dossier_path(dossier.procedure, dossier))
 
+      - if Flipflop.operations_logs_ui?
+        = dynamic_tab_item('Traces horodatées', operations_logs_gestionnaire_dossier_path(dossier.procedure, dossier))
+
 .container
   .print-header
     = dossier.procedure.libelle.truncate_words(10)

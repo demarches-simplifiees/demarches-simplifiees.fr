@@ -26,6 +26,10 @@ module Gestionnaires
       @messagerie_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.messagerie_seen_at
     end
 
+    def operations_logs
+      @dossier = dossier
+    end
+
     def annotations_privees
       @annotations_privees_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.annotations_privees_seen_at
     end
