@@ -7,22 +7,21 @@ describe Individual do
   it { is_expected.to belong_to(:dossier) }
 
   describe "#save" do
-    let(:individual) { build(:individual) }
-
-    subject { individual.save }
+    let(:individual) { build(:individual, prenom: 'adÉlaÏde') }
 
     context "normalization of nom and prenom" do
       before do
         individual.save
       end
+
       it { expect(individual.nom).to eq('JULIEN') }
-      it { expect(individual.prenom).to eq('Anne-Marie') }
+      it { expect(individual.prenom).to eq('Adélaïde') }
     end
 
     context "with birthdate" do
       before do
         individual.birthdate = birthdate_from_user
-        subject
+        individual.save
       end
 
       context "and the format is dd/mm/yyy " do
