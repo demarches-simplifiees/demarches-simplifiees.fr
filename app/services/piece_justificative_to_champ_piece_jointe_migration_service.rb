@@ -85,8 +85,10 @@ class PieceJustificativeToChampPieceJointeMigrationService
         )
       else
         champ.update_columns(
-          updated_at: dossier.updated_at,
-          created_at: dossier.created_at
+          created_at: dossier.created_at,
+          # Set an updated_at date that won't cause notifications to appear
+          # on gestionnaires' dashboard.
+          updated_at: dossier.created_at
         )
       end
 
