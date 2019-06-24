@@ -24,7 +24,8 @@ describe API::V1::DossiersController do
   end
 
   describe 'GET index' do
-    let(:retour) { get :index, params: { token: token, procedure_id: procedure_id } }
+    let(:order) { nil }
+    let(:retour) { get :index, params: { token: token, procedure_id: procedure_id, order: order }.compact }
 
     subject { retour }
 
@@ -79,6 +80,23 @@ describe API::V1::DossiersController do
           it { expect(subject[:initiated_at]).to eq("2008-09-01T20:06:00.000Z") }
           it { expect(subject[:state]).to eq("initiated") }
           it { expect(subject.keys.size).to eq(4) }
+        end
+
+        describe 'order' do
+          let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
+          let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
+
+          context 'asc' do
+            let(:order) { 'asc' }
+
+            it { expect(subject.map { |dossier| dossier[:id] }).to eq([dossier.id, dossier1.id, dossier2.id]) }
+          end
+
+          context 'desc' do
+            let(:order) { 'desc' }
+
+            it { expect(subject.map { |dossier| dossier[:id] }).to eq([dossier2.id, dossier1.id, dossier.id]) }
+          end
         end
       end
 
