@@ -113,9 +113,9 @@ describe PieceJustificativeToChampPieceJointeMigrationService do
           dossier.reload
         end
 
-        it 'the champ has the same timestamps as the dossier' do
+        it 'the champ doesn’t trigger a notification' do
           expect(dossier.champs.last.created_at).to eq(initial_dossier_timestamps[:created_at])
-          expect(dossier.champs.last.updated_at).to eq(initial_dossier_timestamps[:updated_at])
+          expect(dossier.champs.last.updated_at).to eq(initial_dossier_timestamps[:created_at])
         end
 
         it 'does not change the dossier timestamps' do
