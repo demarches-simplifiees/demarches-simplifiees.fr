@@ -24,6 +24,7 @@ class AdministrateurUsageStatisticsService
   def administrateur_stats(administrateur)
     nb_dossiers_by_procedure_id = nb_dossiers_by_procedure_id(administrateur.id)
     nb_dossiers_by_synthetic_state = nb_dossiers_by_synthetic_state(administrateur.id)
+    nb_dossiers_roi = nb_dossiers_by_procedure_id.reject { |procedure_id, _count| is_brouillon(procedure_id) }.map { |_procedure_id, count| count }.sum
 
     result = {
       ds_sign_in_count: administrateur.sign_in_count,
@@ -58,9 +59,8 @@ class AdministrateurUsageStatisticsService
         .max || 0,
       nb_dossiers_traite: nb_dossiers_by_synthetic_state['termine'],
       nb_dossiers_dossier_en_instruction: nb_dossiers_by_synthetic_state['en_instruction'],
-      admin_roi_low: nb_dossiers * 7.04,
-      admin_roi_high: nb_dossiers * 17.25
-
+      admin_roi_low: nb_dossiers_roi * 7.04,
+      admin_roi_high: nb_dossiers_roi * 17.25
     }
 
     if administrateur.current_sign_in_at.present?
