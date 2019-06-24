@@ -2,6 +2,7 @@ class API::V1::DossiersController < APIController
   before_action :fetch_procedure_and_check_token
 
   DEFAULT_PAGE_SIZE = 100
+  ORDER_DIRECTIONS = { 'asc' => :asc, 'desc' => :desc }
 
   def index
     dossiers = @dossiers.page(params[:page]).per(per_page)
@@ -45,7 +46,8 @@ class API::V1::DossiersController < APIController
       render json: {}, status: :unauthorized
     end
 
-    @dossiers = @procedure.dossiers.state_not_brouillon.order_for_api
+    order = ORDER_DIRECTIONS.fetch(params[:order], :asc)
+    @dossiers = @procedure.dossiers.state_not_brouillon.order_for_api(order)
 
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found

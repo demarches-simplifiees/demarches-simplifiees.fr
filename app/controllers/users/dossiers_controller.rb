@@ -22,12 +22,13 @@ module Users
 
       @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
 
-      @dossiers = case @current_tab
-      when 'mes-dossiers'
-        @user_dossiers
-      when 'dossiers-invites'
-        @dossiers_invites
-      end
+      @dossiers =
+        case @current_tab
+        when 'mes-dossiers'
+          @user_dossiers
+        when 'dossiers-invites'
+          @dossiers_invites
+        end
     end
 
     def show
@@ -53,7 +54,13 @@ module Users
 
     def qrcode
       if dossier.match_encoded_date?(:created_at, params[:created_at])
-        send_data(dossier.attestation.pdf.read, filename: "attestation-#{dossier.id}.pdf", disposition: 'inline', type: 'application/pdf')
+        attestation_template = dossier.procedure.attestation_template
+        @dossier = dossier
+        if attestation_template&.activated
+          render 'qrcode'
+        else
+          send_data(dossier.attestation.pdf.read, filename: "attestation-#{dossier.id}.pdf", disposition: 'inline', type: 'application/pdf')
+        end
       else
         forbidden!
       end
