@@ -57,7 +57,10 @@ class AdministrateurUsageStatisticsService
         .map { |_procedure_id, count| count }
         .max || 0,
       nb_dossiers_traite: nb_dossiers_by_synthetic_state['termine'],
-      nb_dossiers_dossier_en_instruction: nb_dossiers_by_synthetic_state['en_instruction']
+      nb_dossiers_dossier_en_instruction: nb_dossiers_by_synthetic_state['en_instruction'],
+      admin_roi_low: nb_dossiers * 7.04,
+      admin_roi_high: nb_dossiers * 17.25
+
     }
 
     if administrateur.current_sign_in_at.present?
