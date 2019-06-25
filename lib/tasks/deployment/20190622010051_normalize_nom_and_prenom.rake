@@ -3,7 +3,7 @@ namespace :after_party do
   task normalize_nom_and_prenom: :environment do
     puts "Running deploy task 'normalize_nom_and_prenom'"
 
-    Individual.all.find_each { |individual| sanitize_names(individual) }
+    Individual.find_each { |individual| sanitize_names(individual) }
 
     # Update task as completed.  If you remove the line below, the task will
     # run with every deploy (or every time you call after_party:run).
@@ -12,8 +12,12 @@ namespace :after_party do
 
   def sanitize_names(individual)
     begin
-      individual.update_column(:nom, individual.nom.gsub(/[[:space:]]/, ' ').strip.upcase)
-      individual.update_column(:prenom, individual.prenom.gsub(/[[:space:]]/, ' ').strip.gsub(/(?<=[^[:alnum:]]|^)(.)([[:alnum:]]+)/) { "#{$1.capitalize}#{$2.downcase}" })
+      if individual.nom
+        individual.update_column(:nom, individual.nom.gsub(/[[:space:]]+/, ' ').strip.upcase)
+      end
+      if individual.prenom
+        individual.update_column(:prenom, individual.prenom.gsub(/[[:space:]]+/, ' ').strip.gsub(/(?<=[^[:alnum:]]|^)(.)([[:alnum:]]+)/) { "#{$1.capitalize}#{$2.downcase}" })
+      end
     rescue
     end
   end

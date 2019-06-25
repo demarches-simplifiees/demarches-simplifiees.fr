@@ -6,17 +6,41 @@ describe Individual do
   it { is_expected.to have_db_column(:prenom) }
   it { is_expected.to belong_to(:dossier) }
 
+  describe "prenom normalisation" do
+    test_data = {
+      ' ADÉLAIDE  ' => 'Adélaide',
+      'ANNE GAELLE' => 'Anne Gaelle',
+      'ANNE-GAELLE' => 'Anne-Gaelle',
+      'franÇois-jean' => "François-Jean",
+      'gilbert' => "Gilbert",
+      'arthur, gilbert andré , roger' => 'Arthur, Gilbert André , Roger'
+    }
+    test_data.each do |input, expected|
+      it "normalisation of #{input}" do
+        individual = create(:individual, prenom: input)
+        expect(individual.prenom).to eq(expected)
+      end
+    end
+  end
+
+  describe "nom normalisation" do
+    test_data = {
+      'lefèvre' => 'LEFÈVRE',
+      'de la tourandière' => 'DE LA TOURANDIÈRE',
+      'Lalumière-Dufour' => 'LALUMIÈRE-DUFOUR',
+      "D'Ornano" => "D'ORNANO",
+      ' noël ' => "NOËL"
+    }
+    test_data.each do |input, expected|
+      it "normalisation of #{input}" do
+        individual = create(:individual, nom: input)
+        expect(individual.nom).to eq(expected)
+      end
+    end
+  end
+
   describe "#save" do
     let(:individual) { build(:individual, prenom: 'adÉlaÏde') }
-
-    context "normalization of nom and prenom" do
-      before do
-        individual.save
-      end
-
-      it { expect(individual.nom).to eq('JULIEN') }
-      it { expect(individual.prenom).to eq('Adélaïde') }
-    end
 
     context "with birthdate" do
       before do
