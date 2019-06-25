@@ -185,21 +185,19 @@ module Instructeurs
     end
 
     def download_dossiers
-      options = params.permit(:version, :limit, :since, tables: [])
-
       dossiers = current_instructeur.dossiers.for_procedure(procedure)
 
       respond_to do |format|
         format.csv do
-          send_data(procedure.to_csv(dossiers, options),
+          send_data(procedure.to_csv(dossiers),
             filename: procedure.export_filename(:csv))
         end
         format.xlsx do
-          send_data(procedure.to_xlsx(dossiers, options),
+          send_data(procedure.to_xlsx(dossiers),
             filename: procedure.export_filename(:xlsx))
         end
         format.ods do
-          send_data(procedure.to_ods(dossiers, options),
+          send_data(procedure.to_ods(dossiers),
             filename: procedure.export_filename(:ods))
         end
       end

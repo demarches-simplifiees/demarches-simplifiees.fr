@@ -193,7 +193,7 @@ class Procedure < ApplicationRecord
   end
 
   def prepare_export_download(format)
-    service = ProcedureExportV2Service.new(self, self.dossiers)
+    service = ProcedureExportService.new(self, self.dossiers)
     filename = export_filename(format)
 
     case format.to_sym
@@ -440,26 +440,20 @@ class Procedure < ApplicationRecord
     "dossiers_#{procedure_identifier}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}.#{format}"
   end
 
-  def export(dossiers, options = {})
-    version = options.delete(:version)
-    if version == 'v2'
-      options.delete(:tables)
-      ProcedureExportV2Service.new(self, dossiers)
-    else
-      ProcedureExportService.new(self, dossiers, **options.to_h.symbolize_keys)
-    end
+  def export(dossiers)
+    ProcedureExportService.new(self, dossiers)
   end
 
-  def to_csv(dossiers, options = {})
-    export(dossiers, options).to_csv
+  def to_csv(dossiers)
+    export(dossiers).to_csv
   end
 
-  def to_xlsx(dossiers, options = {})
-    export(dossiers, options).to_xlsx
+  def to_xlsx(dossiers)
+    export(dossiers).to_xlsx
   end
 
-  def to_ods(dossiers, options = {})
-    export(dossiers, options).to_ods
+  def to_ods(dossiers)
+    export(dossiers).to_ods
   end
 
   def procedure_overview(start_date)
