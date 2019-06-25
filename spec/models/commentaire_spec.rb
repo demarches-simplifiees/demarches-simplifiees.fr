@@ -7,8 +7,6 @@ describe Commentaire do
   it { is_expected.to have_db_column(:updated_at) }
   it { is_expected.to belong_to(:dossier) }
 
-  it { is_expected.to belong_to(:piece_justificative) }
-
   describe "#notify" do
     let(:procedure) { create(:procedure) }
     let(:gestionnaire) { create(:gestionnaire) }
