@@ -61,7 +61,7 @@
 
 .messagerie
   %ul.messages-list
-    - @dossier.commentaires.each do |commentaire|
+    - @dossier.commentaires.with_attached_piece_jointe.each do |commentaire|
       %li
         = render partial: "shared/dossiers/messages/message", locals: { commentaire: commentaire, connected_user: current_gestionnaire, messagerie_seen_at: nil }
 

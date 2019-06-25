@@ -1,24 +1,21 @@
 require 'spec_helper'
 
 describe CommentaireService do
+  include ActiveJob::TestHelper
+
   describe '.create' do
     let(:dossier) { create :dossier, :en_construction }
     let(:sender) { dossier.user }
     let(:body) { 'Contenu du message.' }
     let(:file) { nil }
-    let(:scan_result) { true }
 
-    subject(:commentaire) { CommentaireService.build(sender, dossier, { body: body, file: file }) }
-
-    before do
-      allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
-    end
+    subject(:commentaire) { CommentaireService.build(sender, dossier, { body: body, piece_jointe: file }) }
 
     it 'creates a new valid commentaire' do
       expect(commentaire.email).to eq sender.email
       expect(commentaire.dossier).to eq dossier
       expect(commentaire.body).to eq 'Contenu du message.'
-      expect(commentaire.file).to be_blank
+      expect(commentaire.piece_jointe.attached?).to be_falsey
       expect(commentaire).to be_valid
     end
 
@@ -34,14 +31,15 @@ describe CommentaireService do
     context 'when it has a file' do
       let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
 
-      it 'saves the attached file' do
-        expect(commentaire.file).to be_present
-        expect(commentaire).to be_valid
+      before do
+        expect(ClamavService).to receive(:safe_file?).and_return(true)
       end
 
-      context 'and a virus' do
-        let(:scan_result) { false }
-        it { expect(commentaire).not_to be_valid }
+      it 'saves the attached file' do
+        perform_enqueued_jobs do
+          commentaire.save
+          expect(commentaire.piece_jointe.attached?).to be_truthy
+        end
       end
     end
   end
