@@ -103,10 +103,12 @@ class Users::SessionsController < Sessions::SessionsController
     resource = klass.find_for_database_authentication(email: params[:user][:email])
 
     if resource.present?
-      if resource.valid_password?(params[:user][:password])
-        resource.remember_me = remember_me
-        sign_in resource
-        resource.force_sync_credentials
+      if resource.access_locked?
+        if resource.valid_password?(params[:user][:password])
+          resource.remember_me = remember_me
+          sign_in resource
+          resource.force_sync_credentials
+        end
       end
     end
   end
