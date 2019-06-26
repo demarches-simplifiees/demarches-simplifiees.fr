@@ -12,6 +12,9 @@ FactoryBot.define do
     factory :type_de_champ_text do
       type_champ { TypeDeChamp.type_champs.fetch(:text) }
     end
+    factory :type_de_champ_auto_completion do
+      type_champ { TypeDeChamp.type_champs.fetch(:auto_completion) }
+    end
     factory :type_de_champ_textarea do
       type_champ { TypeDeChamp.type_champs.fetch(:textarea) }
     end

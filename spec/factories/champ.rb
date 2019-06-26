@@ -34,6 +34,11 @@ FactoryBot.define do
     value { 'text' }
   end
 
+  factory :champ_auto_completion, class: 'Champs::AutoCompletionChamp' do
+    type_de_champ { create(:type_de_champ_auto_completion) }
+    value { '' }
+  end
+
   factory :champ_textarea, class: 'Champs::TextareaChamp' do
     type_de_champ { create(:type_de_champ_textarea) }
     value { 'textarea' }

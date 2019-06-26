@@ -1,5 +1,11 @@
 - if champ.drop_down_list && champ.drop_down_list.options.any?
-  = form.select :value,
-    champ.drop_down_list.options,
-    disabled: champ.drop_down_list.disabled_options,
-    required: champ.mandatory?
+  - options = champ.drop_down_list.options
+  - if champ.drop_down_list.allows_other_value?
+    = form.text_field :value, placeholder: champ.libelle, required: champ.mandatory?, list: champ.object_id
+    %datalist{ id: champ.object_id }
+      = options_for_select options, disabled: champ.drop_down_list.disabled_options
+  - else
+    = form.select :value,
+      options,
+      disabled: champ.drop_down_list.disabled_options,
+      required: champ.mandatory?
