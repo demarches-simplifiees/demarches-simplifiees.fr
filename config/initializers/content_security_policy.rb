@@ -13,7 +13,8 @@ Rails.application.config.content_security_policy do |policy|
   # Pour les CSS, on a beaucoup de style inline et quelques balises <style>
   # c'est trop compliqué pour être rectifié immédiatement (et sans valeur ajoutée:
   # c'est hardcodé dans les vues, donc pas injectable).
-  policy.style_src :self, :unsafe_inline
+  policy.style_src :self, :unsafe_inline, "*.crisp.chat", "crisp.chat"
+  policy.connect_src "wss://*.crisp.chat"
   # Pour tout le reste, par défaut on accepte uniquement ce qui vient de chez nous
   # et dans la notification on inclue la source de l'erreur
   policy.default_src :self, :data, :report_sample, "fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "sentry.io", "static.demarches-simplifiees.fr", "*.crisp.chat", "crisp.chat", "*.sibautomation.com", "sibautomation.com", "data"
