@@ -37,6 +37,7 @@ describe ProcedureExportService do
           :individual_nom,
           :individual_birthdate,
 
+          :auto_completion,
           :textarea,
           :date,
           :datetime,

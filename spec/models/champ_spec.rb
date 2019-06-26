@@ -91,6 +91,13 @@ describe Champ do
       it { expect(champ.for_export).to eq('123') }
     end
 
+    context 'when type_de_champ is auto_completion' do
+      let(:type_de_champ) { create(:type_de_champ_auto_completion) }
+      let(:value) { '123' }
+
+      it { expect(champ.for_export).to eq('123') }
+    end
+
     context 'when type_de_champ is textarea' do
       let(:type_de_champ) { create(:type_de_champ_textarea) }
       let(:value) { '<b>gras<b>' }
@@ -366,6 +373,13 @@ describe Champ do
 
       context 'for text champ' do
         let(:type_de_champ) { build(:type_de_champ_text) }
+        let(:value) { "Blah" }
+
+        it { is_expected.to eq([value]) }
+      end
+
+      context 'for auto-completion champ' do
+        let(:type_de_champ) { build(:type_de_champ_auto_completion) }
         let(:value) { "Blah" }
 
         it { is_expected.to eq([value]) }

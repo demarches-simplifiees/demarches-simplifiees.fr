@@ -4,8 +4,13 @@ class DropDownList < ApplicationRecord
   before_validation :clean_value
 
   def options
-    result = value.split(/[\r\n]|[\r]|[\n]|[\n\r]/).reject(&:empty?)
-    result.blank? ? [] : [''] + result
+    result = value.split(/[\r\n]+/).reject(&:empty?)
+    if result.blank?
+      []
+    else
+      result.shift if 'autre'.casecmp(result.first).zero?
+      [''] + result
+    end
   end
 
   def disabled_options
@@ -14,6 +19,10 @@ class DropDownList < ApplicationRecord
 
   def multiple
     type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+  end
+
+  def allows_other_value?
+    value =~ /^autre\s*[\n\r]/i
   end
 
   private

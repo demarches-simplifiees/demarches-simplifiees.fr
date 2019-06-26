@@ -6,6 +6,7 @@ fr:
       type_de_champ:
         type_champs:
           text: 'Texte'
+          auto_completion: 'Assistance à la saisie'
           textarea: 'Zone de texte'
           date: 'Date'
           datetime: 'Date et Heure'
