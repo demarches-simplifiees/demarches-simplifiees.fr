@@ -25,29 +25,6 @@ module ActiveStorage
 
     private
 
-    def object_for(key, &block)
-      blob_url = url(key)
-      if block_given?
-        request = Typhoeus::Request.new(blob_url)
-        request.on_headers do |response|
-          if response.code != 200
-            raise Fog::OpenStack::Storage::NotFound.new
-          end
-        end
-        request.on_body do |chunk|
-          yield chunk
-        end
-        request.run
-      else
-        response = Typhoeus.get(blob_url)
-        if response.success?
-          response
-        else
-          raise Fog::OpenStack::Storage::NotFound.new
-        end
-      end
-    end
-
     def publicize(url)
       search = %r{^https://[^/]+/v1/AUTH_[a-f0-9]{32}}
       replace = 'https://static.demarches-simplifiees.fr'
