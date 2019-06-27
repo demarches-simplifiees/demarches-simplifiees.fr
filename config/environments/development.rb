@@ -59,7 +59,7 @@ Rails.application.configure do
     port: 3000
   }
 
-  # Use Content-Security-Policy-Report-Only instead of Content-Security-Policy
+  # Use Content-Security-Policy-Report-Only headers
   config.content_security_policy_report_only = true
 
   # Raises error for missing translations
