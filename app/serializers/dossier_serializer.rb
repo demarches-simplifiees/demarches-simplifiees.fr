@@ -23,6 +23,7 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :pieces_justificatives
   has_many :types_de_piece_justificative
   has_one :justificatif_motivation
+  has_many :avis
 
   has_many :champs, serializer: ChampSerializer
 
