@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_16_141702) do
+ActiveRecord::Schema.define(version: 2019_06_27_132911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -388,7 +388,7 @@ ActiveRecord::Schema.define(version: 2019_06_16_141702) do
     t.datetime "updated_at"
     t.text "encrypted_login_token"
     t.datetime "login_token_created_at"
-    t.jsonb "features", default: {}, null: false
+    t.jsonb "features", default: {"enable_email_login_token"=>true}, null: false
     t.index ["email"], name: "index_gestionnaires_on_email", unique: true
     t.index ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true
   end
