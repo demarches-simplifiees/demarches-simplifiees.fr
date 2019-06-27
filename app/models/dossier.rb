@@ -79,6 +79,7 @@ class Dossier < ApplicationRecord
         piece_justificative_file_attachment: :blob
       ],
       pieces_justificatives: [],
+      avis: [],
       etablissement: [],
       individual: [],
       user: [])
