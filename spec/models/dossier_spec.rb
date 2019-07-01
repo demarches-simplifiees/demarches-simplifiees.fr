@@ -99,6 +99,14 @@ describe Dossier do
       end
     end
 
+    describe '#types_de_piece_justificative' do
+      subject { dossier.types_de_piece_justificative }
+      it 'returns list of required piece justificative' do
+        expect(subject.size).to eq(2)
+        expect(subject).to include(TypeDePieceJustificative.find(TypeDePieceJustificative.first.id))
+      end
+    end
+
     describe '#retrieve_last_piece_justificative_by_type', vcr: { cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type' } do
       let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
 
@@ -110,6 +118,20 @@ describe Dossier do
 
       it 'returns piece justificative with given type' do
         expect(subject.type).to eq(types_de_pj_dossier.first.id)
+      end
+    end
+
+    describe '#retrieve_all_piece_justificative_by_type' do
+      let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
+
+      subject { dossier.retrieve_all_piece_justificative_by_type types_de_pj_dossier.first }
+
+      before do
+        create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: types_de_pj_dossier.first
+      end
+
+      it 'returns a list of the piece justificative' do
+        expect(subject).not_to be_empty
       end
     end
 
@@ -1007,5 +1029,33 @@ describe Dossier do
     it { expect(DossierMailer).to have_received(:notify_revert_to_instruction).with(dossier) }
 
     after { Timecop.return }
+  end
+
+  describe '#attachments_downloadable?' do
+    let(:dossier) { create(:dossier, user: user) }
+    # subject { dossier.attachments_downloadable? }
+
+    context "no attachments" do
+      it {
+        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([])
+        expect(dossier.attachments_downloadable?).to be false
+      }
+    end
+
+    context "with a small attachment" do
+      it {
+        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([Champ.new])
+        expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(4.megabytes)
+        expect(dossier.attachments_downloadable?).to be true
+      }
+    end
+
+    context "with a too large attachment" do
+      it {
+        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([Champ.new])
+        expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(100.megabytes)
+        expect(dossier.attachments_downloadable?).to be false
+      }
+    end
   end
 end
