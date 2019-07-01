@@ -110,7 +110,7 @@ Rails.application.configure do
   }
 
   # The Content-Security-Policy is NOT in Report-Only mode
-  config.content_security_policy_report_only = false
+  config.content_security_policy_report_only = true
 
   config.lograge.enabled = ENV['LOGRAGE_ENABLED'] == 'enabled'
 end
