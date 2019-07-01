@@ -14,10 +14,6 @@ class Commentaire < ApplicationRecord
 
   after_create :notify
 
-  def self.columns
-    super.reject { |c| c.name == "champ" }
-  end
-
   def email
     if user
       user.email
