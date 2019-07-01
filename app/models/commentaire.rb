@@ -36,6 +36,15 @@ class Commentaire < ApplicationRecord
     end
   end
 
+  def sent_by_system?
+    [CONTACT_EMAIL, OLD_CONTACT_EMAIL].include?(email) &&
+      user.nil? && gestionnaire.nil?
+  end
+
+  def sent_by?(someone)
+    email == someone.email
+  end
+
   def file_url
     if Flipflop.remote_storage?
       RemoteDownloader.new(file.path).url
