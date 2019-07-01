@@ -463,6 +463,9 @@ class Dossier < ApplicationRecord
     champs_private.reject(&:exclude_from_export?).map do |champ|
       [champ.libelle, champ.for_export]
     end
+
+  def attachments_downloadable?
+    !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.poids_total_pieces_justificatives(self) < 50.megabytes
   end
 
   private

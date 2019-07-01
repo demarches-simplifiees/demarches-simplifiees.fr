@@ -524,4 +524,43 @@ describe Gestionnaires::DossiersController, type: :controller do
     it { expect(champ_repetition.champs.first.value).to eq('text') }
     it { expect(response).to redirect_to(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) }
   end
+
+  describe "#telecharger_pjs" do
+    subject do
+      get :telecharger_pjs, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+
+    context 'when zip download is disabled through environment' do
+      before do
+        ENV['DOWNLOAD_AS_ZIP_ENABLED'] = 'disabled'
+        subject
+      end
+      it { expect(response).to have_http_status(:forbidden) }
+    end
+
+    context 'when zip download is enabled through environment' do
+      context 'when zip download is disabled through flipflop' do
+        before do
+          ENV['DOWNLOAD_AS_ZIP_ENABLED'] = 'enabled'
+          Flipflop::FeatureSet.current.test!.switch!(:download_as_zip_enabled, false)
+          subject
+        end
+        it { expect(response).to have_http_status(:forbidden) }
+      end
+
+      context 'when zip download is enabled through flipflop' do
+        before do
+          ENV['DOWNLOAD_AS_ZIP_ENABLED'] = 'enabled'
+          Flipflop::FeatureSet.current.test!.switch!(:download_as_zip_enabled, true)
+          subject
+        end
+
+        it { expect(Flipflop.download_as_zip_enabled).to be true }
+        it { expect(response).to have_http_status(:ok) }
+      end
+    end
+  end
 end

@@ -18,6 +18,8 @@ Flipflop.configure do
 
   feature :procedure_export_v2_enabled
   feature :operation_log_serialize_subject
+  feature :download_as_zip_enabled,
+    default: false
 
   group :development do
     feature :mini_profiler_enabled,

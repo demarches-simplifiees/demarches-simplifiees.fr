@@ -24,7 +24,7 @@ FactoryBot.define do
 
     trait :with_piece_justificative_file do
       after(:create) do |champ, _evaluator|
-        champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+        champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain", byte_size: 4)
       end
     end
   end

@@ -20,6 +20,9 @@ describe PiecesJustificativesService do
   let(:errors) { PiecesJustificativesService.upload!(dossier, user, hash) }
   let(:tpjs) { [tpj_not_mandatory] }
 
+  let(:attachment_list) { PiecesJustificativesService.liste_pieces_justificatives(dossier) }
+  let(:poids_total) { PiecesJustificativesService.poids_total_pieces_justificatives(dossier) }
+
   describe 'self.upload!' do
     context 'when no params are given' do
       it { expect(errors).to eq([]) }
@@ -87,6 +90,13 @@ describe PiecesJustificativesService do
       end
 
       it { expect(errors).to match([]) }
+    end
+  end
+
+  describe '#attachment_list' do
+    context 'when no piece_justificative is present' do
+      it { expect(attachment_list).to be_empty }
+      it { expect(poids_total).to be 0 }
     end
   end
 

@@ -5,6 +5,9 @@ module Gestionnaires
     include CreateAvisConcern
     include DossierHelper
 
+    include ActionController::Streaming
+    include Zipline
+
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
@@ -170,6 +173,22 @@ module Gestionnaires
     def print
       @dossier = dossier
       render layout: "print"
+    end
+
+    def telecharger_pjs
+      return head(:forbidden) if ENV['DOWNLOAD_AS_ZIP_ENABLED'] != 'enabled' || !Flipflop.download_as_zip_enabled? || !dossier.attachments_downloadable?
+
+      pjs = dossier.champs.select { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
+      files = pjs.map do |pj|
+        [
+          # ActiveStorage::DownloadableFile.new("http://blog.keiruaprod.fr/wp-content/uploads/2019/04/vasa-1.jpg"),
+          # "vasa.jpg"
+          ActiveStorage::DownloadableFile.new(pj.piece_justificative_file.service_url),
+          pj.piece_justificative_file.filename.to_s
+        ]
+      end
+
+      zipline(files, "dossier-#{dossier.id}.zip")
     end
 
     private

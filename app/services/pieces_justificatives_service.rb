@@ -70,6 +70,18 @@ class PiecesJustificativesService
     end
   end
 
+  def self.liste_pieces_justificatives(dossier)
+    dossier.champs
+      .select { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
+      .filter { |pj| pj.piece_justificative_file.attached? }
+  end
+
+  def self.poids_total_pieces_justificatives(dossier)
+    liste_pieces_justificatives(dossier)
+      .map { |pj| pj.piece_justificative_file.byte_size }
+      .reduce(0, :+)
+  end
+
   def self.serialize_types_de_champ_as_type_pj(procedure)
     tdcs = procedure.types_de_champ.select { |type_champ| type_champ.old_pj.present? }
     tdcs.map.with_index do |type_champ, order_place|
