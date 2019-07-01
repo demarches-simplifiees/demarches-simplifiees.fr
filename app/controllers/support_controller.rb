@@ -64,7 +64,7 @@ class SupportController < ApplicationController
       file: params[:file],
       body: "[#{params[:subject]}]<br><br>#{params[:text]}"
     }
-    commentaire = CommentaireService.build_with_email(email, dossier, attributes)
+    commentaire = CommentaireService.build(current_user, dossier, attributes)
     commentaire.save!
   end
 
