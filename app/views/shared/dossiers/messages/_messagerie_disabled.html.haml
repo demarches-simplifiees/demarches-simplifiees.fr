@@ -1,0 +1,14 @@
+.card.feedback
+  .card-title
+    La messagerie est désormais désactivée.
+  %p
+    Pour poser une question sur ce dossier, contactez :
+  %p
+    = service.nom
+    %br
+    = service.organisme
+    %br
+    - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
+    = simple_format(horaires)
+  %p
+    = link_to service.email, "mailto:#{service.email}"

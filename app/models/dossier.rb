@@ -177,7 +177,7 @@ class Dossier < ApplicationRecord
   end
 
   def messagerie_available?
-    !brouillon? && !archived
+    !brouillon? && !archived && !procedure.archivee?
   end
 
   def retention_end_date
