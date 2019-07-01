@@ -18,6 +18,14 @@
               = link_to "Tout le dossier", print_gestionnaire_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
             %li
               = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
+        - if Flipflop.download_as_zip_enabled? && dossier.attachments_downloadable?
+          %span.dropdown.print-menu-opener
+            %button.button.dropdown-button.icon-only
+              %span.icon.attachment
+            %ul.print-menu.dropdown-content
+              %li
+                = link_to "Télécharger toutes les pièces jointes", telecharger_pjs_gestionnaire_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+
 
         = render partial: "gestionnaires/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_gestionnaire&.follow?(dossier) }
         %span.state-button

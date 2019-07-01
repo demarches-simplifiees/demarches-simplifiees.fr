@@ -335,6 +335,7 @@ Rails.application.routes.draw do
             post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
             post 'avis' => 'dossiers#create_avis'
             get 'print' => 'dossiers#print'
+            get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
       end

@@ -466,6 +466,10 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def attachments_downloadable?
+    !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < 50.megabytes
+  end
+
   private
 
   def log_dossier_operation(author, operation, subject = nil)
