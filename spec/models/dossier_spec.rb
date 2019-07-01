@@ -987,4 +987,28 @@ describe Dossier do
     it { expect(last_operation.operation).to eq('supprimer') }
     it { expect(last_operation.automatic_operation?).to be_falsey }
   end
+
+  describe '#repasser_en_instruction!' do
+    let(:dossier) { create(:dossier, :refuse, :with_attestation) }
+    let!(:gestionnaire) { create(:gestionnaire) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
+
+    before do
+      Timecop.freeze
+      allow(DossierMailer).to receive(:notify_revert_to_instruction)
+        .and_return(double(deliver_later: true))
+      dossier.repasser_en_instruction!(gestionnaire)
+      dossier.reload
+    end
+
+    it { expect(dossier.state).to eq('en_instruction') }
+    it { expect(dossier.processed_at).to be_nil }
+    it { expect(dossier.motivation).to be_nil }
+    it { expect(dossier.attestation).to be_nil }
+    it { expect(last_operation.operation).to eq('repasser_en_instruction') }
+    it { expect(JSON.parse(last_operation.serialized.download)['author']['email']).to eq(gestionnaire.email) }
+    it { expect(DossierMailer).to have_received(:notify_revert_to_instruction).with(dossier) }
+
+    after { Timecop.return }
+  end
 end

@@ -95,6 +95,7 @@ module Gestionnaires
 
     def repasser_en_instruction
       flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
+      dossier.repasser_en_instruction!(current_gestionnaire)
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
