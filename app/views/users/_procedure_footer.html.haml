@@ -27,7 +27,9 @@
             %a{ href: "tel:#{service.telephone}" }= service.telephone
 
           %p
-            Horaires : #{formatted_horaires(service.horaires)}
+            - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
+            = simple_format(horaires)
+
 
         - politiques = politiques_conservation_de_donnees(procedure)
         - if politiques.present?
