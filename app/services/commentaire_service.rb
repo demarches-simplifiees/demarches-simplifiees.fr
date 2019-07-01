@@ -12,6 +12,9 @@ class CommentaireService
     end
 
     def build_with_email(email, dossier, params)
+      if !dossier.messagerie_available?
+        raise ArgumentError, "Commentaires cannot be added to brouillons or archived Dossiers"
+      end
       attributes = params.merge(email: email, dossier: dossier)
       Commentaire.new(attributes)
     end

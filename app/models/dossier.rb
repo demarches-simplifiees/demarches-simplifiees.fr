@@ -79,6 +79,7 @@ class Dossier < ApplicationRecord
         piece_justificative_file_attachment: :blob
       ],
       pieces_justificatives: [],
+      avis: [],
       etablissement: [],
       individual: [],
       user: [])
@@ -176,7 +177,7 @@ class Dossier < ApplicationRecord
   end
 
   def messagerie_available?
-    !brouillon? && !archived
+    !brouillon? && !archived && !procedure.archivee?
   end
 
   def retention_end_date
