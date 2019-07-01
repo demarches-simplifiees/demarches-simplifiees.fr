@@ -1,8 +1,6 @@
-- case commentaire.email
-- when connected_user.email
-  Vous
-- when OLD_CONTACT_EMAIL
-- when CONTACT_EMAIL
+- if commentaire.sent_by_system?
   Email automatique
+- elsif commentaire.sent_by?(connected_user)
+  Vous
 - else
   = commentaire.redacted_email

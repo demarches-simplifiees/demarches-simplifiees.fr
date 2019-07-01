@@ -7,6 +7,18 @@ describe Commentaire do
   it { is_expected.to have_db_column(:updated_at) }
   it { is_expected.to belong_to(:dossier) }
 
+  describe "#is_sent_by_system?" do
+    subject { commentaire.is_sent_by_system? }
+
+    let(:commentaire) { build :commentaire, email: email }
+
+    context 'with a commentaire created by the DS system' do
+      let(:email) { CONTACT_EMAIL }
+
+      it { is_expected.to be_truthy }
+    end
+  end
+
   describe "#redacted_email" do
     subject { commentaire.redacted_email }
 
