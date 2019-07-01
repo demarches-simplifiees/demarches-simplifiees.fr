@@ -7,6 +7,24 @@ describe Commentaire do
   it { is_expected.to have_db_column(:updated_at) }
   it { is_expected.to belong_to(:dossier) }
 
+  describe "#redacted_email" do
+    subject { commentaire.redacted_email }
+
+    context 'with a commentaire created by a gestionnaire' do
+      let(:commentaire) { build :commentaire, gestionnaire: gestionnaire }
+      let(:gestionnaire) { build :gestionnaire, email: 'some_user@exemple.fr' }
+
+      it { is_expected.to eq 'some_user' }
+    end
+
+    context 'with a commentaire created by a user' do
+      let(:commentaire) { build :commentaire, user: user }
+      let(:user) { build :user, email: 'some_user@exemple.fr' }
+
+      it { is_expected.to eq 'some_user@exemple.fr' }
+    end
+  end
+
   describe "#notify" do
     let(:procedure) { create(:procedure) }
     let(:gestionnaire) { create(:gestionnaire) }

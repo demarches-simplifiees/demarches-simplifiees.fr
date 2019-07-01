@@ -25,12 +25,14 @@ class Commentaire < ApplicationRecord
   end
 
   def header
-    "#{sender}, #{I18n.l(created_at, format: '%d %b %Y %H:%M')}"
+    "#{redacted_email}, #{I18n.l(created_at, format: '%d %b %Y %H:%M')}"
   end
 
-  def sender
-    if email.present?
-      email.split('@').first
+  def redacted_email
+    if gestionnaire.present?
+      gestionnaire.email.split('@').first
+    else
+      email
     end
   end
 
