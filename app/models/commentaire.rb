@@ -7,6 +7,7 @@ class Commentaire < ApplicationRecord
   mount_uploader :file, CommentaireFileUploader
   validates :file, file_size: { maximum: 20.megabytes, message: "La taille du fichier doit être inférieure à 20 Mo" }
   validate :is_virus_free?
+  validate :messagerie_available?, on: :create
   validates :body, presence: { message: "Votre message ne peut être vide" }
 
   default_scope { order(created_at: :asc) }
@@ -76,6 +77,13 @@ class Commentaire < ApplicationRecord
   def is_virus_free?
     if file.present? && file_changed? && !ClamavService.safe_file?(file.path)
       errors.add(:file, "Virus détecté dans le fichier joint, merci de changer de fichier")
+    end
+  end
+
+  def messagerie_available?
+    return if sent_by_system?
+    if dossier.present? && !dossier.messagerie_available?
+      errors.add(:dossier, "Il n’est pas possible d’envoyer un message sur un dossier archivé ou en brouillon")
     end
   end
 end

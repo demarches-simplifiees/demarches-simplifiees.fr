@@ -7,8 +7,32 @@ describe Commentaire do
   it { is_expected.to have_db_column(:updated_at) }
   it { is_expected.to belong_to(:dossier) }
 
-  describe "#is_sent_by_system?" do
-    subject { commentaire.is_sent_by_system? }
+  describe 'messagerie_available validation' do
+    subject { commentaire.valid?(:create) }
+
+    context 'with a commentaire created by the DS system' do
+      let(:commentaire) { build :commentaire, email: CONTACT_EMAIL }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'on an archived dossier' do
+      let(:dossier) { create :dossier, :archived }
+      let(:commentaire) { build :commentaire, dossier: dossier }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'on a dossier en_construction' do
+      let(:dossier) { create :dossier, :en_construction }
+      let(:commentaire) { build :commentaire, dossier: dossier }
+
+      it { is_expected.to be_truthy }
+    end
+  end
+
+  describe "#sent_by_system?" do
+    subject { commentaire.sent_by_system? }
 
     let(:commentaire) { build :commentaire, email: email }
 
@@ -42,7 +66,7 @@ describe Commentaire do
     let(:gestionnaire) { create(:gestionnaire) }
     let(:assign_to) { create(:assign_to, gestionnaire: gestionnaire, procedure: procedure) }
     let(:user) { create(:user) }
-    let(:dossier) { create(:dossier, procedure: procedure, user: user) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure, user: user) }
     let(:commentaire) { Commentaire.new(dossier: dossier, body: "Mon commentaire") }
 
     context "with a commentaire created by a gestionnaire" do
