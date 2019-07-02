@@ -1,5 +1,5 @@
-module NewAdministrateur
-  class ProfilController < AdministrateurController
+module Users
+  class ProfilController < UserController
     def show
     end
 
