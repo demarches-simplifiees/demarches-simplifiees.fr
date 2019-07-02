@@ -794,7 +794,7 @@ describe Dossier do
   end
 
   describe '#accepter!' do
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :en_instruction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let!(:gestionnaire) { create(:gestionnaire) }
@@ -813,7 +813,7 @@ describe Dossier do
     after { Timecop.return }
 
     it { expect(dossier.motivation).to eq('motivation') }
-    it { expect(dossier.en_instruction_at).to eq(now) }
+    it { expect(dossier.en_instruction_at).to eq(dossier.en_instruction_at) }
     it { expect(dossier.processed_at).to eq(now) }
     it { expect(dossier.state).to eq('accepte') }
     it { expect(last_operation.operation).to eq('accepter') }
@@ -826,7 +826,7 @@ describe Dossier do
   end
 
   describe '#accepter_automatiquement!' do
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :en_construction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
@@ -853,7 +853,7 @@ describe Dossier do
   end
 
   describe '#passer_en_instruction!' do
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :en_construction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:gestionnaire) { create(:gestionnaire) }
@@ -870,7 +870,7 @@ describe Dossier do
   end
 
   describe '#passer_automatiquement_en_instruction!' do
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :en_construction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:gestionnaire) { create(:gestionnaire) }
