@@ -37,6 +37,16 @@ class Avis < ApplicationRecord
     Avis.find_by(id: avis_id)&.email == email
   end
 
+  def spreadsheet_columns
+    [
+      ['Dossier ID', dossier_id.to_s],
+      ['Question / Introduction', :introduction],
+      ['Réponse', :answer],
+      ['Créé le', :created_at],
+      ['Répondu le', :updated_at]
+    ]
+  end
+
   private
 
   def notify_gestionnaire
