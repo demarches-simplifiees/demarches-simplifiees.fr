@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe NewAdministrateur::ProfilController, type: :controller do
-  let(:administrateur) { create(:administrateur) }
-
-  before { sign_in(administrateur) }
-
+describe Users::ProfilController, type: :controller do
   describe 'POST #renew_api_token' do
+    let(:administrateur) { create(:administrateur) }
+
+    before { sign_in(administrateur) }
+
     before do
       allow(administrateur).to receive(:renew_api_token)
       allow(controller).to receive(:current_administrateur) { administrateur }
