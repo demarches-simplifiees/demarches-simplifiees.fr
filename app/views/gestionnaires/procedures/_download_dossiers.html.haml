@@ -5,7 +5,7 @@
     - old_format_limit_date = Date.parse("Oct 31 2019")
     - export_v1_enabled = old_format_limit_date > Time.zone.today
     - export_v2_enabled = Flipflop.procedure_export_v2_enabled? || !export_v1_enabled
-    - old_format_message = export_v1_enabled && export_v2_enabled ? "(ancien format, jusqu‘au #{old_format_limit_date.strftime('%d/%m/%Y')})" : ''
+    - old_format_message = export_v1_enabled && export_v2_enabled ? "(ancien format, jusqu’au #{old_format_limit_date.strftime('%d/%m/%Y')})" : ''
     .dropdown-content.fade-in-down{ style: export_v1_enabled && export_v2_enabled ? 'width: 330px' : '' }
       %ul.dropdown-items
         - if export_v2_enabled
