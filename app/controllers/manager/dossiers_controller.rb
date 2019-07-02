@@ -20,16 +20,6 @@ module Manager
     # Custom actions
     #
 
-    def change_state_to_instruction
-      dossier = Dossier.find(params[:id])
-      dossier.update(state: Dossier.states.fetch(:en_instruction), processed_at: nil, motivation: nil)
-      dossier.attestation&.destroy
-      logger.info("Le dossier #{dossier.id} est repassé en instruction par #{current_administration.email}")
-      flash[:notice] = "Le dossier #{dossier.id} est repassé en instruction"
-      DossierMailer.notify_revert_to_instruction(dossier).deliver_later
-      redirect_to manager_dossier_path(dossier)
-    end
-
     def hide
       dossier = Dossier.find(params[:id])
       deleted_dossier = dossier.hide!(current_administration)

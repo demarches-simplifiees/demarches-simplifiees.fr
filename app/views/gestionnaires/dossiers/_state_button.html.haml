@@ -58,14 +58,24 @@
         = dossier_display_state(dossier, lower: true)
       .dropdown-content.fade-in-down.terminated
         - if dossier.motivation.present?
-          %h4 Motivation
+          %h4.title Motivation
           %p.dossier-motivation= dossier.motivation
           = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
 
         - if dossier.attestation.present?
-          %h4 Attestation
+          %h4.title Attestation
           %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
           = link_to "Voir l'attestation", attestation_gestionnaire_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', class: 'button'
+
+
+        - if dossier.refuse? || dossier.sans_suite?
+          %ul.dropdown-items.with-top-border
+            %li
+              = link_to repasser_en_instruction_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?" } do
+                %span.icon.in-progress
+                .dropdown-description
+                  %h4 Repasser en instruction
+                  L’usager sera notifié que son dossier est réexaminé.
   - else
     %span.label{ class: button_or_label_class(dossier) }
       = dossier_display_state(dossier, lower: true)

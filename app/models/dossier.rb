@@ -302,6 +302,14 @@ class Dossier < ApplicationRecord
     log_dossier_operation(gestionnaire, :repasser_en_construction)
   end
 
+  def repasser_en_instruction!(gestionnaire)
+    update(state: Dossier.states.fetch(:en_instruction), processed_at: nil, motivation: nil)
+    attestation&.destroy
+    DossierMailer.notify_revert_to_instruction(self).deliver_later
+
+    log_dossier_operation(gestionnaire, :repasser_en_instruction)
+  end
+
   def accepter!(gestionnaire, motivation, justificatif = nil)
     self.motivation = motivation
     self.en_instruction_at ||= Time.zone.now
