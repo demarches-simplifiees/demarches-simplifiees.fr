@@ -1,7 +1,7 @@
 import '../shared/polyfills';
 import Turbolinks from 'turbolinks';
-import Rails from 'rails-ujs';
-import * as ActiveStorage from 'activestorage';
+import Rails from '@rails/ujs';
+import * as ActiveStorage from '@rails/activestorage';
 import jQuery from 'jquery';
 
 import '../shared/activestorage/ujs';
