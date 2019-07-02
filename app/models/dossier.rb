@@ -411,13 +411,13 @@ class Dossier < ApplicationRecord
   end
 
   def send_dossier_received
-    if saved_change_to_state? && en_instruction?
+    if saved_change_to_state? && en_instruction? && !procedure.declarative_accepte?
       NotificationMailer.send_dossier_received(self).deliver_later
     end
   end
 
   def send_draft_notification_email
-    if brouillon?
+    if brouillon? && !procedure.declarative?
       DossierMailer.notify_new_draft(self).deliver_later
     end
   end

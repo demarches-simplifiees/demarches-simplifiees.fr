@@ -492,6 +492,8 @@ ActiveRecord::Schema.define(version: 2019_06_27_132911) do
     t.boolean "durees_conservation_required", default: true
     t.string "path"
     t.boolean "expects_multiple_submissions", default: false, null: false
+    t.string "declarative_with_state"
+    t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
