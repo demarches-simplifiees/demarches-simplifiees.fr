@@ -576,6 +576,9 @@ GEM
     simple_form (4.1.0)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
+    simple_xlsx_reader (1.0.4)
+      nokogiri
+      rubyzip
     sinatra (2.0.5)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -747,6 +750,7 @@ DEPENDENCIES
   sentry-raven
   shoulda-matchers
   simple_form
+  simple_xlsx_reader
   skylight
   smart_listing
   spreadsheet_architect
