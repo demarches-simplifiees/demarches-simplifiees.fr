@@ -46,6 +46,7 @@ class Procedure < ApplicationRecord
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
   scope :avec_lien,             -> { where.not(path: nil) }
+  scope :declarative,           -> { where.not(declarative_with_state: nil) }
 
   scope :for_api, -> {
     includes(
@@ -55,6 +56,11 @@ class Procedure < ApplicationRecord
       :types_de_piece_justificative,
       :module_api_carto
     )
+  }
+
+  enum declarative_with_state: {
+    en_instruction:  'en_instruction',
+    accepte:         'accepte'
   }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
@@ -139,6 +145,14 @@ class Procedure < ApplicationRecord
 
   def expose_legacy_carto_api?
     module_api_carto&.use_api_carto? && module_api_carto&.migrated?
+  end
+
+  def declarative?
+    declarative_with_state.present?
+  end
+
+  def declarative_accepte?
+    declarative_with_state == Procedure.declarative_with_states.fetch(:accepte)
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -294,7 +308,13 @@ class Procedure < ApplicationRecord
   end
 
   def export(options = {})
-    ProcedureExportService.new(self, **options.to_h.symbolize_keys)
+    version = options.delete(:version)
+    if version == 'v2'
+      options.delete(:tables)
+      ProcedureExportV2Service.new(self, **options.to_h.symbolize_keys)
+    else
+      ProcedureExportService.new(self, **options.to_h.symbolize_keys)
+    end
   end
 
   def to_csv(options = {})
@@ -441,6 +461,19 @@ class Procedure < ApplicationRecord
     end
 
     update!(collection_attribute_name => attributes)
+  end
+
+  def process_dossiers!
+    case declarative_with_state
+    when Procedure.declarative_with_states.fetch(:en_instruction)
+      dossiers
+        .state_en_construction
+        .find_each(&:passer_automatiquement_en_instruction!)
+    when Procedure.declarative_with_states.fetch(:accepte)
+      dossiers
+        .state_en_construction
+        .find_each(&:accepter_automatiquement!)
+    end
   end
 
   private

@@ -1,4 +1,4 @@
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import jQuery from 'jquery';
 import { delegate } from '@utils';
 

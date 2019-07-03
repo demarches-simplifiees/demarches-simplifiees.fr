@@ -15,7 +15,6 @@ Rails.application.routes.draw do
     end
 
     resources :dossiers, only: [:index, :show] do
-      post 'change_state_to_instruction', on: :member
       post 'hide', on: :member
     end
 
@@ -335,6 +334,7 @@ Rails.application.routes.draw do
             post 'commentaire' => 'dossiers#create_commentaire'
             post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
             post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
+            post 'repasser-en-instruction' => 'dossiers#repasser_en_instruction'
             post 'terminer'
             post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
             post 'avis' => 'dossiers#create_avis'
