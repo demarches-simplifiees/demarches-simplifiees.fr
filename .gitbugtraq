@@ -1,0 +1,3 @@
+[bugtraq "jira"]
+ url = https://gestion.projet.gov.pf/browse/DEM-%BUGID%
+ logRegex = DEM-(\\d+)
