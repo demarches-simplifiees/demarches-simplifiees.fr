@@ -736,6 +736,37 @@ describe Dossier do
     end
   end
 
+  describe "#messagerie_available?" do
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
+    subject { dossier.messagerie_available? }
+
+    context "dossier is brouillon" do
+      before { dossier.state = Dossier.states.fetch(:brouillon) }
+
+      it { is_expected.to be false }
+    end
+
+    context "dossier is archived" do
+      before { dossier.archived = true }
+
+      it { is_expected.to be false }
+    end
+
+    context "procedure is archived" do
+      before { procedure.archived_at = Date.today }
+
+      it { is_expected.to be false }
+    end
+
+    context "procedure is not archived, dossier is not archived" do
+      before { dossier.state = Dossier.states.fetch(:en_instruction) }
+
+      it { is_expected.to be true }
+    end
+  end
+
   context "retention date" do
     let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
     let(:uninstructed_dossier) { create(:dossier, :en_construction, procedure: procedure) }
