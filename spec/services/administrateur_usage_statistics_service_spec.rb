@@ -29,7 +29,9 @@ describe AdministrateurUsageStatisticsService do
           nb_dossiers: 0,
           nb_dossiers_max: 0,
           nb_dossiers_traite: 0,
-          nb_dossiers_dossier_en_instruction: 0
+          nb_dossiers_dossier_en_instruction: 0,
+          admin_roi_low: 0,
+          admin_roi_high: 0
         )
       end
     end
@@ -80,7 +82,9 @@ describe AdministrateurUsageStatisticsService do
             nb_dossiers: 0,
             nb_dossiers_max: 0,
             nb_dossiers_traite: 0,
-            nb_dossiers_dossier_en_instruction: 0
+            nb_dossiers_dossier_en_instruction: 0,
+            admin_roi_low: 0,
+            admin_roi_high: 0
           )
         end
       end
@@ -108,7 +112,9 @@ describe AdministrateurUsageStatisticsService do
             nb_dossiers: 21,
             nb_dossiers_max: 21,
             nb_dossiers_traite: 7,
-            nb_dossiers_dossier_en_instruction: 7
+            nb_dossiers_dossier_en_instruction: 7,
+            admin_roi_low: 147.84,
+            admin_roi_high: 362.25
           )
         end
       end
@@ -127,7 +133,9 @@ describe AdministrateurUsageStatisticsService do
             nb_dossiers: 0,
             nb_dossiers_max: 0,
             nb_dossiers_traite: 0,
-            nb_dossiers_dossier_en_instruction: 0
+            nb_dossiers_dossier_en_instruction: 0,
+            admin_roi_low: 0,
+            admin_roi_high: 0
           )
         end
       end
@@ -155,7 +163,9 @@ describe AdministrateurUsageStatisticsService do
             nb_dossiers: 0,
             nb_dossiers_max: 0,
             nb_dossiers_traite: 0,
-            nb_dossiers_dossier_en_instruction: 0
+            nb_dossiers_dossier_en_instruction: 0,
+            admin_roi_low: 0,
+            admin_roi_high: 0
           )
         end
       end
@@ -181,7 +191,9 @@ describe AdministrateurUsageStatisticsService do
             nb_dossiers: 3,
             nb_dossiers_max: 3,
             nb_dossiers_traite: 1,
-            nb_dossiers_dossier_en_instruction: 1
+            nb_dossiers_dossier_en_instruction: 1,
+            admin_roi_low: 21.12,
+            admin_roi_high: 51.75
           )
         end
       end
@@ -209,7 +221,9 @@ describe AdministrateurUsageStatisticsService do
             nb_dossiers: 21,
             nb_dossiers_max: 21,
             nb_dossiers_traite: 7,
-            nb_dossiers_dossier_en_instruction: 7
+            nb_dossiers_dossier_en_instruction: 7,
+            admin_roi_low: 147.84,
+            admin_roi_high: 362.25
           )
         end
       end
