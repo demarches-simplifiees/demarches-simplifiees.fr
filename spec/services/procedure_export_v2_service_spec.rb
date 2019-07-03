@@ -35,7 +35,7 @@ describe ProcedureExportV2Service do
       let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
 
       it 'should have headers' do
-        expect(dossiers_sheet.headers).to eq([
+        headers = [
           "ID",
           "Email",
           "Civilité",
@@ -50,6 +50,7 @@ describe ProcedureExportV2Service do
           "Traité le",
           "Motivation de la décision",
           "Instructeurs",
+          "auto_completion",
           "textarea",
           "date",
           "datetime",
@@ -66,6 +67,9 @@ describe ProcedureExportV2Service do
           "multiple_drop_down_list",
           "linked_drop_down_list",
           "pays",
+          "nationalites",
+          "commune_de_polynesie",
+          "code_postal_de_polynesie",
           "regions",
           "departements",
           "engagement",
@@ -74,7 +78,15 @@ describe ProcedureExportV2Service do
           "siret",
           "carte",
           "text"
-        ])
+        ]
+        #---- in case of failure, provides better explanation (1st elet is not checked,not important)
+        # dossiers_sheet.headers.each_cons(2) do |i, j|
+        #   puts "#{j} is present in export after #{i} but not in test" if !headers.include?(j)
+        # end
+        # headers.each_cons(2) do |i, j|
+        #   puts "#{j} is present in test after #{i} but not present in export" if !dossiers_sheet.headers.include?(j)
+        # end
+        expect(dossiers_sheet.headers).to eq(headers)
       end
 
       it 'should have data' do
