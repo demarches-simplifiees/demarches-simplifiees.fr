@@ -11,6 +11,15 @@ module MailTemplateConcern
     replace_tags(body, dossier)
   end
 
+  def update_rich_body
+    self.rich_body = self.body
+  end
+
+  included do
+    has_rich_text :rich_body
+    before_save :update_rich_body
+  end
+
   module ClassMethods
     def default_for_procedure(procedure)
       template_name = default_template_name_for_procedure(procedure)
