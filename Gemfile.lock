@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/kobaltz/actiontext.git
+  revision: ef59c4ba99d1b7614dd47f5a294eef553224db88
+  branch: archive
+  specs:
+    actiontext (0.1.0)
+      nokogiri
+      rails (>= 5.2.0)
+
+GIT
   remote: https://github.com/fredZen/activestorage-openstack.git
   revision: c71d5107a51701eab9d9267dd0000e6c1cf3e39a
   branch: frederic/fix_upload_signature
@@ -576,6 +585,9 @@ GEM
     simple_form (4.1.0)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
+    simple_xlsx_reader (1.0.4)
+      nokogiri
+      rubyzip
     sinatra (2.0.5)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -666,6 +678,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
+  actiontext!
   active_link_to
   active_model_serializers
   activestorage-openstack!
@@ -747,6 +760,7 @@ DEPENDENCIES
   sentry-raven
   shoulda-matchers
   simple_form
+  simple_xlsx_reader
   skylight
   smart_listing
   spreadsheet_architect

@@ -93,6 +93,13 @@ module Gestionnaires
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
+    def repasser_en_instruction
+      flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
+      dossier.repasser_en_instruction!(current_gestionnaire)
+
+      render partial: 'state_button_refresh', locals: { dossier: dossier }
+    end
+
     def terminer
       motivation = params[:dossier] && params[:dossier][:motivation]
       justificatif = params[:dossier] && params[:dossier][:justificatif_motivation]

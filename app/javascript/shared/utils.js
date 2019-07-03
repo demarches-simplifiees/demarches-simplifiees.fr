@@ -1,4 +1,4 @@
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import $ from 'jquery';
 import debounce from 'debounce';
 

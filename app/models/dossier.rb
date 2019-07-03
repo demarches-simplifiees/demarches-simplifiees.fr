@@ -40,6 +40,54 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_private
 
+  include AASM
+
+  aasm whiny_persistence: true, column: :state, enum: true do
+    state :brouillon, initial: true
+    state :en_construction
+    state :en_instruction
+    state :accepte
+    state :refuse
+    state :sans_suite
+
+    event :passer_en_construction, after: :after_passer_en_construction do
+      transitions from: :brouillon, to: :en_construction
+    end
+
+    event :passer_en_instruction, after: :after_passer_en_instruction do
+      transitions from: :en_construction, to: :en_instruction
+    end
+
+    event :passer_automatiquement_en_instruction, after: :after_passer_automatiquement_en_instruction do
+      transitions from: :en_construction, to: :en_instruction
+    end
+
+    event :repasser_en_construction, after: :after_repasser_en_construction do
+      transitions from: :en_instruction, to: :en_construction
+    end
+
+    event :accepter, after: :after_accepter do
+      transitions from: :en_instruction, to: :accepte
+    end
+
+    event :accepter_automatiquement, after: :after_accepter_automatiquement do
+      transitions from: :en_construction, to: :accepte
+    end
+
+    event :refuser, after: :after_refuser do
+      transitions from: :en_instruction, to: :refuse
+    end
+
+    event :classer_sans_suite, after: :after_classer_sans_suite do
+      transitions from: :en_instruction, to: :sans_suite
+    end
+
+    event :repasser_en_instruction, after: :after_repasser_en_instruction do
+      transitions from: :refuse, to: :en_instruction
+      transitions from: :sans_suite, to: :en_instruction
+    end
+  end
+
   default_scope { where(hidden_at: nil) }
   scope :state_brouillon,                      -> { where(state: states.fetch(:brouillon)) }
   scope :state_not_brouillon,                  -> { where.not(state: states.fetch(:brouillon)) }
@@ -59,7 +107,7 @@ class Dossier < ApplicationRecord
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:etablissement, :user, :individual, :followers_gestionnaires, champs: { etablissement: [], type_de_champ: :drop_down_list }, champs_private: { etablissement: [], type_de_champ: :drop_down_list }).order(en_construction_at: 'asc') }
+  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:etablissement, :user, :individual, :followers_gestionnaires, :avis, champs: { etablissement: [:champ], type_de_champ: :drop_down_list }, champs_private: { etablissement: [:champ], type_de_champ: :drop_down_list }).order(en_construction_at: 'asc') }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
@@ -282,53 +330,83 @@ class Dossier < ApplicationRecord
     DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
   end
 
-  def passer_en_instruction!(gestionnaire)
-    en_instruction!
+  def after_passer_en_instruction(gestionnaire)
     gestionnaire.follow(self)
 
     log_dossier_operation(gestionnaire, :passer_en_instruction)
   end
 
-  def passer_automatiquement_en_instruction!
-    en_instruction!
-
+  def after_passer_automatiquement_en_instruction
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
-  def repasser_en_construction!(gestionnaire)
+  def after_repasser_en_construction(gestionnaire)
     self.en_instruction_at = nil
-    en_construction!
 
+    save!
     log_dossier_operation(gestionnaire, :repasser_en_construction)
   end
 
-  def accepter!(gestionnaire, motivation, justificatif = nil)
+  def after_repasser_en_instruction(gestionnaire)
+    self.processed_at = nil
+    self.motivation = nil
+    attestation&.destroy
+
+    save!
+    DossierMailer.notify_revert_to_instruction(self).deliver_later
+    log_dossier_operation(gestionnaire, :repasser_en_instruction)
+  end
+
+  def after_accepter(gestionnaire, motivation, justificatif = nil)
     self.motivation = motivation
-    self.en_instruction_at ||= Time.zone.now
+
     if justificatif
       self.justificatif_motivation.attach(justificatif)
     end
-    accepte!
 
     if attestation.nil?
-      update(attestation: build_attestation)
+      self.attestation = build_attestation
     end
 
+    save!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_dossier_operation(gestionnaire, :accepter, self)
   end
 
-  def accepter_automatiquement!
+  def after_accepter_automatiquement
     self.en_instruction_at ||= Time.zone.now
 
-    accepte!
-
     if attestation.nil?
-      update(attestation: build_attestation)
+      self.attestation = build_attestation
     end
 
+    save!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
+  end
+
+  def after_refuser(gestionnaire, motivation, justificatif = nil)
+    self.motivation = motivation
+
+    if justificatif
+      self.justificatif_motivation.attach(justificatif)
+    end
+
+    save!
+    NotificationMailer.send_refused_notification(self).deliver_later
+    log_dossier_operation(gestionnaire, :refuser, self)
+  end
+
+  def after_classer_sans_suite(gestionnaire, motivation, justificatif = nil)
+    self.motivation = motivation
+
+    if justificatif
+      self.justificatif_motivation.attach(justificatif)
+    end
+
+    save!
+    NotificationMailer.send_without_continuation_notification(self).deliver_later
+    log_dossier_operation(gestionnaire, :classer_sans_suite, self)
   end
 
   def hide!(administration)
@@ -336,30 +414,6 @@ class Dossier < ApplicationRecord
 
     DeletedDossier.create_from_dossier(self)
     log_dossier_operation(administration, :supprimer, self)
-  end
-
-  def refuser!(gestionnaire, motivation, justificatif = nil)
-    self.motivation = motivation
-    self.en_instruction_at ||= Time.zone.now
-    if justificatif
-      self.justificatif_motivation.attach(justificatif)
-    end
-    refuse!
-
-    NotificationMailer.send_refused_notification(self).deliver_later
-    log_dossier_operation(gestionnaire, :refuser, self)
-  end
-
-  def classer_sans_suite!(gestionnaire, motivation, justificatif = nil)
-    self.motivation = motivation
-    self.en_instruction_at ||= Time.zone.now
-    if justificatif
-      self.justificatif_motivation.attach(justificatif)
-    end
-    sans_suite!
-
-    NotificationMailer.send_without_continuation_notification(self).deliver_later
-    log_dossier_operation(gestionnaire, :classer_sans_suite, self)
   end
 
   def check_mandatory_champs
@@ -378,6 +432,37 @@ class Dossier < ApplicationRecord
 
   def demander_un_avis!(avis)
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
+  end
+
+  def spreadsheet_columns
+    [
+      ['ID', id.to_s],
+      ['Email', user.email],
+      ['Civilité', individual&.gender],
+      ['Nom', individual&.nom],
+      ['Prénom', individual&.prenom],
+      ['Date de naissance', individual&.birthdate],
+      ['Archivé', :archived],
+      ['État du dossier', I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])],
+      ['Dernière mise à jour le', :updated_at],
+      ['Passé en construction le', :en_instruction_at],
+      ['Passé en instruction le', :en_construction_at],
+      ['Traité le', :processed_at],
+      ['Motivation de la décision', :motivation],
+      ['Instructeurs', followers_gestionnaires.map(&:email).join(' ')]
+    ] + champs_for_export + annotations_for_export
+  end
+
+  def champs_for_export
+    champs.reject(&:exclude_from_export?).map do |champ|
+      [champ.libelle, champ.for_export]
+    end
+  end
+
+  def annotations_for_export
+    champs_private.reject(&:exclude_from_export?).map do |champ|
+      [champ.libelle, champ.for_export]
+    end
   end
 
   private
@@ -411,13 +496,13 @@ class Dossier < ApplicationRecord
   end
 
   def send_dossier_received
-    if saved_change_to_state? && en_instruction?
+    if saved_change_to_state? && en_instruction? && !procedure.declarative_accepte?
       NotificationMailer.send_dossier_received(self).deliver_later
     end
   end
 
   def send_draft_notification_email
-    if brouillon?
+    if brouillon? && !procedure.declarative?
       DossierMailer.notify_new_draft(self).deliver_later
     end
   end

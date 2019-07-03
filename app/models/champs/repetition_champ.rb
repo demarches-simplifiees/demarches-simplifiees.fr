@@ -20,4 +20,25 @@ class Champs::RepetitionChamp < Champ
   def search_terms
     # The user cannot enter any information here so it doesn’t make much sense to search
   end
+
+  class Row < Hashie::Dash
+    property :index
+    property :dossier_id
+    property :champs
+
+    def spreadsheet_columns
+      [
+        ['Dossier ID', :dossier_id],
+        ['Ligne', :index]
+      ] + exported_champs
+    end
+
+    private
+
+    def exported_champs
+      champs.reject(&:exclude_from_export?).map do |champ|
+        [champ.libelle, champ.for_export]
+      end
+    end
+  end
 end
