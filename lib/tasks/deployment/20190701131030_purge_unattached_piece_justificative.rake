@@ -16,6 +16,6 @@ namespace :after_party do
 
     # Update task as completed.  If you remove the line below, the task will
     # run with every deploy (or every time you call after_party:run).
-    AfterParty::TaskRecord.create version: '20190521131030'
+    AfterParty::TaskRecord.create version: '20190701131030'
   end
 end

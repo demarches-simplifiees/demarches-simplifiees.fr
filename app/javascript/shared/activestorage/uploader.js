@@ -1,4 +1,4 @@
-import { DirectUpload } from 'activestorage';
+import { DirectUpload } from '@rails/activestorage';
 import ProgressBar from './progress-bar';
 
 /**

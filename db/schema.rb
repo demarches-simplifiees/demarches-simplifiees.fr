@@ -16,6 +16,16 @@ ActiveRecord::Schema.define(version: 2019_06_27_132911) do
   enable_extension "plpgsql"
   enable_extension "unaccent"
 
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -492,6 +502,8 @@ ActiveRecord::Schema.define(version: 2019_06_27_132911) do
     t.boolean "durees_conservation_required", default: true
     t.string "path"
     t.boolean "expects_multiple_submissions", default: false, null: false
+    t.string "declarative_with_state"
+    t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"

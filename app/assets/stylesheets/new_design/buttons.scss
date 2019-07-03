@@ -183,7 +183,7 @@
     color: $black;
     padding: $default-padding;
 
-    h4 {
+    .title {
       font-size: 24px;
     }
 
@@ -265,6 +265,10 @@
     font-size: 14px;
     color: $black;
     margin-bottom: $default-spacer;
+  }
+
+  &.with-top-border {
+    border-top: 1px solid $grey;
   }
 }
 

@@ -16,6 +16,7 @@ Flipflop.configure do
   feature :web_hook
   feature :enable_email_login_token
 
+  feature :procedure_export_v2_enabled
   feature :operation_log_serialize_subject
 
   group :development do

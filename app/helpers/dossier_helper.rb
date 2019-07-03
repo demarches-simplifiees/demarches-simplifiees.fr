@@ -5,7 +5,7 @@ module DossierHelper
     elsif dossier.sans_suite?
       'without-continuation'
     elsif dossier.refuse?
-      'refuse'
+      'refused'
     end
   end
 
