@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
   before_action :redirect_if_untrusted
   before_action :authorize_request_for_profiler
-  before_action :reject, if: -> { Flipflop.maintenance_mode? }
+  before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
 
   before_action :staging_authenticate
   before_action :set_active_storage_host
@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_request_for_profiler
-    if Flipflop.mini_profiler_enabled?
+    if feature_enabled?(:mini_profiler)
       Rack::MiniProfiler.authorize_request
     end
   end
@@ -76,6 +76,10 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def feature_enabled?(feature_name)
+    Flipper.enabled?(feature_name, current_user)
+  end
 
   def authenticate_logged_user!
     if instructeur_signed_in?
@@ -190,7 +194,7 @@ class ApplicationController < ActionController::Base
   def redirect_if_untrusted
     if instructeur_signed_in? &&
         sensitive_path &&
-        !Flipflop.bypass_email_login_token? &&
+        !feature_enabled?(:instructeur_bypass_email_login_token) &&
         !IPService.ip_trusted?(request.headers['X-Forwarded-For']) &&
         !trusted_device?
 
