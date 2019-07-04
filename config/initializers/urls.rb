@@ -29,5 +29,6 @@ API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 FAQ_URL = [DOC_URL, "Questions+fréquentes"].join("/")
 FAQ_ADMIN_URL = "https://faq.demarches-simplifiees.fr/collection/1-administrateur"
+COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, 'pages', 'viewpage.action?pageId=24250654'].join("/")
 STATUS_PAGE_URL = "https://updown.io/cugq"
 MATOMO_IFRAME_URL = "https://stats.data.gouv.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli"

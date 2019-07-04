@@ -265,7 +265,7 @@ class Admin::ProceduresController < AdminController
   private
 
   def check_terms_of_use
-    terms_of_use = [:rgs_timestamp, :rgs_stamp, :rgpd]
+    terms_of_use = [:rgs_stamp, :rgpd]
     if terms_of_use.any? { |k| !params.key?(k) }
       @procedure.errors.add(:base, :rgpd_rgs_not_checked, message: 'Toutes les cases concernant le RGPD et le RGS doivent être cochées')
     end
