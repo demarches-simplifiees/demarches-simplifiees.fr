@@ -176,7 +176,7 @@
         une <b>délégation de l'autorité parentale</b>...<br/>
       %p.help-block
         Si vos formulaires contiennent des données sensibles, vous vous engagez à nous contacter pour trouver des solutions via ce
-        = link_to "formulaire", contact_admin_path
+        = link_to "formulaire.", contact_admin_path
 
     = label_tag 'rgs_stamp' do
       = check_box_tag 'rgs_stamp', '1', @terms_of_use_read ? @terms_of_use_read[:rgs_stamp].present? : @procedure.created_at.present?
@@ -185,23 +185,10 @@
       %i.fa.fa-info-circle
       La plateforme #{SITE_NAME} peut fournir des attestations vérifiables via un QR code et ne fournit pas de cachet ou signature électronique.
       Si votre démarche comporte une décision avec une signature ou un cachet, vous pouvez nous contacter pour évaluer les risques et les solutions via ce
-      = link_to "formulaire", contact_admin_path
-
-    = label_tag 'rgs_timestamp' do
-      = check_box_tag 'rgs_timestamp', '1', @terms_of_use_read ? @terms_of_use_read[:rgs_timestamp].present? : @procedure.created_at.present?
-      j'ai pris connaissance du cadre d'usage pour l'horodatage électronique
+      = link_to "formulaire.", contact_admin_path
     %p.help-block
       %i.fa.fa-info-circle
-      La plateforme #{SITE_NAME} enregistre toutes les traces des échanges avec les usagers et en particulier
-      les dates de dépôt des dossiers, les dates de chaque modification, les dates de tous les échanges avec les usagers.<br/>
-      Elle n'utilise pas de service d'horodatage indépendant qualifié au sens du RGS. (
-      %a{ href: 'https://www.globalsign.fr/fr/blog/horodatage-definition-et-fonctionnement' }
-        https://www.globalsign.fr/fr/blog/horodatage-definition-et-fonctionnement
-      ).<br/>
-      Assurez vous que les dates autour de cette démarche ont un risque juridique faible pour votre organisation
-      et ne nécessitent pas la mise en œuvre d’une fonction d’horodatage électronique.<br>
-      Pour vous aider, pensez à nous contacter via ce
-      = link_to "formulaire", contact_admin_path
-
+      La plateforme dispose depuis le 6 Juin 2019 d'un service d'horodatage permettant de certifier les dates de changement d'état d'un dossier
+      (construction, instruction, ...) et les dates de reception des avis.
 
 

@@ -31,7 +31,6 @@ describe Admin::ProceduresController, type: :controller do
   let(:regulation_params) {
     {
       rgs_stamp: '1',
-      rgs_timestamp: '1',
       rgpd: '1'
     }
   }
