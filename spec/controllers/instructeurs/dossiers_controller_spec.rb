@@ -544,10 +544,6 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     context 'when zip download is disabled through flipflop' do
-      before do
-        Flipflop::FeatureSet.current.test!.switch!(:download_as_zip_enabled, false)
-      end
-
       it 'is forbidden' do
         subject
         expect(response).to have_http_status(:forbidden)

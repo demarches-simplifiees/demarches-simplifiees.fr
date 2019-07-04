@@ -7,7 +7,7 @@
     %li
       = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
 
-- if Flipflop.download_as_zip_enabled? && !PiecesJustificativesService.liste_pieces_justificatives(dossier).empty?
+- if feature_enabled?(:instructeur_download_as_zip) && !PiecesJustificativesService.liste_pieces_justificatives(dossier).empty?
   %span.dropdown.print-menu-opener
     %button.button.dropdown-button.icon-only
       %span.icon.attachment
