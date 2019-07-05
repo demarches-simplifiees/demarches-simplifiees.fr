@@ -3,21 +3,21 @@ module Users
     layout 'procedure_context'
 
     def commencer
-      @procedure = Procedure.publiees.find_by(path: params[:path])
-      return procedure_not_found if @procedure.blank?
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank? || @procedure.brouillon?
 
       render 'commencer/show'
     end
 
     def commencer_test
-      @procedure = Procedure.brouillons.find_by(path: params[:path])
-      return procedure_not_found if @procedure.blank?
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank? || @procedure.publiee?
 
       render 'commencer/show'
     end
 
     def sign_in
-      @procedure = Procedure.find_by(path: params[:path])
+      @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank?
 
       store_user_location!(@procedure)
@@ -25,7 +25,7 @@ module Users
     end
 
     def sign_up
-      @procedure = Procedure.find_by(path: params[:path])
+      @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank?
 
       store_user_location!(@procedure)
@@ -33,7 +33,7 @@ module Users
     end
 
     def france_connect
-      @procedure = Procedure.find_by(path: params[:path])
+      @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank?
 
       store_user_location!(@procedure)
@@ -41,23 +41,25 @@ module Users
     end
 
     def procedure_for_help
-      Procedure.publiees.find_by(path: params[:path]) || Procedure.brouillons.find_by(path: params[:path])
+      retrieve_procedure
     end
 
     private
+
+    def retrieve_procedure
+      Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path])
+    end
 
     def procedure_not_found
       procedure = Procedure.find_by(path: params[:path])
 
       if procedure&.archivee?
         flash.alert = t('errors.messages.procedure_archived')
-      elsif procedure&.publiee?
-        flash.alert = t('errors.messages.procedure_not_draft')
       else
         flash.alert = t('errors.messages.procedure_not_found')
       end
 
-      return redirect_to root_path
+      redirect_to root_path
     end
 
     def store_user_location!(procedure)
