@@ -3,13 +3,13 @@ const { key, enabled } = gon.matomo || {};
 if (enabled) {
   window._paq = window._paq || [];
 
-  const url = '//stats.data.gouv.fr/';
+  const url = 'https://beta.mes-demarches.gov.pf/matomo/';
   const trackerUrl = `${url}piwik.php`;
   const jsUrl = `${url}piwik.js`;
 
   // Configure Matomo analytics
-  window._paq.push(['setCookieDomain', '*.www.demarches-simplifiees.fr']);
-  window._paq.push(['setDomains', ['*.www.demarches-simplifiees.fr']]);
+  window._paq.push(['setCookieDomain', '*.mes-demarches.gov.pf']);
+  window._paq.push(['setDomains', ['*.mes-demarches.gov.pf']]);
   window._paq.push(['setDoNotTrack', true]);
   window._paq.push(['trackPageView']);
   window._paq.push(['enableLinkTracking']);
