@@ -167,8 +167,22 @@ class Procedure < ApplicationRecord
     types_de_champ_private.map(&:build_champ)
   end
 
-  def default_path
-    libelle&.parameterize&.first(50)
+  def path_customized?
+    !path.match?(/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/)
+  end
+
+  def suggested_path(administrateur)
+    if path_customized?
+      return path
+    end
+    slug = libelle&.parameterize&.first(50)
+    suggestion = slug
+    counter = 1
+    while !path_available?(administrateur, suggestion)
+      counter = counter + 1
+      suggestion = "#{slug}-#{counter}"
+    end
+    suggestion
   end
 
   def organisation_name
