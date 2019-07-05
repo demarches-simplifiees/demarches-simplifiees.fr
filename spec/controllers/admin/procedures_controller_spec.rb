@@ -716,63 +716,6 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
-  describe "GET #check_availability" do
-    render_views
-    let(:procedure) { create(:procedure, :with_path, administrateur: admin) }
-    let(:params) {
-      {
-        procedure: {
-          path: path,
-          id: procedure.id
-        }
-      }
-    }
-    let(:path) { generate(:published_path) }
-
-    before do
-      get :check_availability, params: params, format: 'js'
-    end
-
-    context 'self path' do
-      let(:path) { procedure.path }
-
-      it { expect(response.body).to include("innerHTML = ''") }
-    end
-
-    context 'available path' do
-      it { expect(response.body).to include("innerHTML = ''") }
-    end
-
-    context 'my path (brouillon)' do
-      let(:procedure_owned) { create(:procedure, :with_path, administrateur: admin) }
-      let(:path) { procedure_owned.path }
-
-      it {
-        expect(response.body).to include('Une démarche en test existe déjà avec ce lien.')
-      }
-    end
-
-    context 'my path' do
-      let(:procedure_owned) { create(:procedure, :published, administrateur: admin) }
-      let(:path) { procedure_owned.path }
-
-      it {
-        expect(response.body).to include('Ce lien est déjà utilisé par une de vos démarche.')
-        expect(response.body).to include('Si vous voulez l’utiliser, l’ancienne démarche sera archivée')
-      }
-    end
-
-    context 'unavailable path' do
-      let(:procedure_not_owned) { create(:procedure, :with_path, administrateur: create(:administrateur)) }
-      let(:path) { procedure_not_owned.path }
-
-      it {
-        expect(response.body).to include('Ce lien est déjà utilisé par une démarche.')
-        expect(response.body).to include('Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.')
-      }
-    end
-  end
-
   describe 'PATCH #monavis' do
     let!(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_params) {

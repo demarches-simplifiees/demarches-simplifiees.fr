@@ -43,8 +43,6 @@ class Admin::ProceduresController < AdminController
   end
 
   def edit
-    @path = @procedure.path || @procedure.default_path
-    @availability = @procedure.path_availability(current_administrateur, @path)
   end
 
   def destroy
@@ -63,13 +61,10 @@ class Admin::ProceduresController < AdminController
 
   def new
     @procedure ||= Procedure.new(for_individual: true)
-    @availability = Procedure::PATH_AVAILABLE
   end
 
   def create
     @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
-    @path = @procedure.path
-    @availability = Procedure.path_availability(current_administrateur, @procedure.path)
 
     if !@procedure.save
       flash.now.alert = @procedure.errors.full_messages
@@ -87,10 +82,6 @@ class Admin::ProceduresController < AdminController
 
     if !@procedure.update(procedure_params)
       flash.now.alert = @procedure.errors.full_messages
-      @path = procedure_params[:path]
-      if @path.present?
-        @availability = @procedure.path_availability(current_administrateur, @path)
-      end
       render 'edit'
     elsif @procedure.brouillon?
       reset_procedure
@@ -232,18 +223,6 @@ class Admin::ProceduresController < AdminController
       end.to_json
 
     render json: json_path_list
-  end
-
-  def check_availability
-    path = params[:procedure][:path]
-    procedure_id = params[:procedure][:id]
-
-    if procedure_id.present?
-      procedure = current_administrateur.procedures.find(procedure_id)
-      @availability = procedure.path_availability(current_administrateur, path)
-    else
-      @availability = Procedure.path_availability(current_administrateur, path)
-    end
   end
 
   def delete_logo

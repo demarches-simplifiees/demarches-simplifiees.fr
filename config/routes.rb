@@ -160,7 +160,6 @@ Rails.application.routes.draw do
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
     get 'procedures/path_list' => 'procedures#path_list'
-    get 'procedures/available' => 'procedures#check_availability'
 
     resources :procedures do
       collection do
