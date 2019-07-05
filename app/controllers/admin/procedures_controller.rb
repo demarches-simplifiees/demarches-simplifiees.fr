@@ -40,6 +40,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def show
+    @suggested_path = @procedure.suggested_path(current_administrateur)
   end
 
   def edit
