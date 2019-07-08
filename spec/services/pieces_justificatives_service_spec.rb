@@ -84,19 +84,30 @@ describe PiecesJustificativesService do
       before :each do
         # we are messing around piece_justificative
         # because directly doubling carrierwave params seems complicated
-
         piece_justificative_double = double(type_de_piece_justificative: tpj_mandatory)
         expect(dossier).to receive(:pieces_justificatives).and_return([piece_justificative_double])
       end
 
-      it { expect(errors).to match([]) }
+      it {
+        expect(errors).to match([])
+      }
     end
   end
 
   describe '#attachment_list' do
     context 'when no piece_justificative is present' do
-      it { expect(attachment_list).to be_empty }
+      it { expect(attachment_list).to match([]) }
       it { expect(poids_total).to be 0 }
+    end
+
+    context 'when there is a piece_justificative' do
+      let (:pj) { create(:champ, :piece_justificative, :with_piece_justificative_file) }
+      before do
+        dossier.champs = [pj]
+      end
+
+      it { expect(attachment_list).not_to be_empty }
+      it { expect(poids_total).to be pj.piece_justificative_file.byte_size }
     end
   end
 
