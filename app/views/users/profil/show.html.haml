@@ -5,6 +5,19 @@
 #profil-page.container
   %h1 Profil
 
+  .card
+    .card-title Coordonnées
+    %p Votre email est actuellement #{current_user.email}
+    - if current_user.unconfirmed_email.present?
+      %p
+        Un email a été envoyé à #{current_user.unconfirmed_email}.
+        %br
+        Merci de vérifier vos emails et de cliquer sur le lien d'activation pour finaliser la validation de votre nouvelle adresse.
+
+    = form_for @current_user, url: update_email_path, method: :patch, html: { class: 'form' } do |f|
+      = f.email_field :email, value: nil, placeholder: 'Nouvelle adresse email', required: true
+      = f.submit "Changer mon adresse", class: 'button primary'
+
   - if current_administrateur.present?
     .card
       .card-title Jeton d'identification de l'API (token)
