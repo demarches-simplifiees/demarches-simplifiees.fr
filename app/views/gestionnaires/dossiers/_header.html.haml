@@ -18,7 +18,7 @@
               = link_to "Tout le dossier", print_gestionnaire_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
             %li
               = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
-        - if ENV['DOWNLOAD_AS_ZIP_ENABLED'] == 'enabled' && Flipflop.download_as_zip_enabled? && dossier.attachments_downloadable?
+        - if Flipflop.download_as_zip_enabled? && dossier.attachments_downloadable?
           %span.dropdown.print-menu-opener
             %button.button.dropdown-button.icon-only
               %span.icon.attachment

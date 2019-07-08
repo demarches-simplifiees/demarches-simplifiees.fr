@@ -176,7 +176,7 @@ module Gestionnaires
     end
 
     def telecharger_pjs
-      return head(:forbidden) if ENV['DOWNLOAD_AS_ZIP_ENABLED'] != 'enabled' || !Flipflop.download_as_zip_enabled? || !dossier.attachments_downloadable?
+      return head(:forbidden) if !Flipflop.download_as_zip_enabled? || !dossier.attachments_downloadable?
 
       pjs = dossier.champs.select { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
       files = pjs.map do |pj|

@@ -533,34 +533,22 @@ describe Gestionnaires::DossiersController, type: :controller do
       }
     end
 
-    context 'when zip download is disabled through environment' do
+    context 'when zip download is disabled through flipflop' do
       before do
-        ENV['DOWNLOAD_AS_ZIP_ENABLED'] = 'disabled'
+        Flipflop::FeatureSet.current.test!.switch!(:download_as_zip_enabled, false)
         subject
       end
       it { expect(response).to have_http_status(:forbidden) }
     end
 
-    context 'when zip download is enabled through environment' do
-      context 'when zip download is disabled through flipflop' do
-        before do
-          ENV['DOWNLOAD_AS_ZIP_ENABLED'] = 'enabled'
-          Flipflop::FeatureSet.current.test!.switch!(:download_as_zip_enabled, false)
-          subject
-        end
-        it { expect(response).to have_http_status(:forbidden) }
+    context 'when zip download is enabled through flipflop' do
+      before do
+        Flipflop::FeatureSet.current.test!.switch!(:download_as_zip_enabled, true)
+        subject
       end
 
-      context 'when zip download is enabled through flipflop' do
-        before do
-          ENV['DOWNLOAD_AS_ZIP_ENABLED'] = 'enabled'
-          Flipflop::FeatureSet.current.test!.switch!(:download_as_zip_enabled, true)
-          subject
-        end
-
-        it { expect(Flipflop.download_as_zip_enabled).to be true }
-        it { expect(response).to have_http_status(:ok) }
-      end
+      it { expect(Flipflop.download_as_zip_enabled).to be true }
+      it { expect(response).to have_http_status(:ok) }
     end
   end
 end
