@@ -29,4 +29,9 @@ if (enabled) {
       ]
     ]
   ]);
+  window.$crisp.push([
+    'set',
+    'session:event',
+    [[['PAGE_VIEW', { URL: window.location.pathname }]]]
+  ]);
 }
