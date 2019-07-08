@@ -13,7 +13,7 @@ class FranceConnect::ParticulierController < ApplicationController
         fetched_fci.tap(&:save)
 
     if fci.user.nil?
-      user = User.find_or_create_by(email: fci.email_france_connect.downcase) do |new_user|
+      user = User.find_or_create_by!(email: fci.email_france_connect.downcase) do |new_user|
         new_user.password = Devise.friendly_token[0, 20]
         new_user.confirmed_at = Time.zone.now
       end
