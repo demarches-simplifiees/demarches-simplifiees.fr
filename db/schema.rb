@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_27_132911) do
+ActiveRecord::Schema.define(version: 2019_07_04_144304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -474,7 +474,6 @@ ActiveRecord::Schema.define(version: 2019_06_27_132911) do
     t.string "lien_demarche"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "administrateur_id"
     t.boolean "euro_flag", default: false
     t.string "logo"
     t.boolean "cerfa_flag", default: false
