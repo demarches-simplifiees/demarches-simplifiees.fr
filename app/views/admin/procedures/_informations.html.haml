@@ -97,14 +97,25 @@
 - if !@procedure.locked?
   .row
     .col-md-6
-      %h4 Particuliers
+      %h4 À qui s'adresse ma démarche ?
       .checkbox
         %label
-          = f.check_box :for_individual
-          Cette démarche s'adresse à un public qui
-          %b
-            ne possède pas (ou pas encore) de numéro SIRET,
-          qui doivent donc s'identifier en tant que personne physique.
+          = f.radio_button :for_individual, 1, :checked => true
+          %b Ma démarche s'adresse à un particulier
+
+        %p
+          En choisissant cette option, l'usager devra renseigner son nom et prénom avant d'accéder au formulaire
+
+      .checkbox
+        %label
+          = f.radio_button :for_individual, 0, :checked => false
+          %b Ma démarche s'adresse à une personne morale
+
+        %p
+          En choisissant cette option, l'usager devra renseigner son n° SIRET. Grâce à l'API Entreprise, seront alors automatiquement remontées les informations sur la personne morale type raison social ou adresse du siège social.
+
+      %b
+        Si votre démarche s'adresse indifféremment à une personne morale ou un particulier choisissez l'option "particuliers". Vous pourrez utilisez le champ SIRET directement dans le formulaire.
 
       %ul#individual-with-siret
         %li
