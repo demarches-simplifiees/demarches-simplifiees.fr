@@ -9,11 +9,6 @@ module BizDev
       {
         full_name: "Benjamin Doberset",
         pipedrive_id: 4223834
-      },
-    11 =>
-      {
-        full_name: "Rédouane Bouchane",
-        pipedrive_id: 4438645
       }
   }
 
