@@ -42,7 +42,7 @@ fr:
       signed_up_but_inactive: "Vous êtes bien enregistré. Vous ne pouvez cependant pas vous connecter car votre compte n'est pas encore activé."
       signed_up_but_locked: "Vous êtes bien enregistré. Vous ne pouvez cependant pas vous connecter car votre compte est verrouillé."
       signed_up_but_unconfirmed: "Nous vous avons envoyé un email contenant un lien d'activation. Ouvrez ce lien pour activer votre compte."
-      update_needs_confirmation: "Votre compte a bien été mis à jour mais nous devons vérifier votre nouvelle adresse email. Merci de vérifier vos emails et de cliquer sur le lien d’activation pour finaliser la validation de votre nouvelle adresse."
+      update_needs_confirmation: "Vous devez confirmer votre nouvelle adresse email. Vérifiez vos emails, et cliquez sur le lien de confirmation pour confirmer votre changement d’adresse."
       updated: "Votre compte a été modifié avec succès."
     sessions:
       signed_in: "Connecté."
