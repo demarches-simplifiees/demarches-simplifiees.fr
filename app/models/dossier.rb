@@ -1,6 +1,8 @@
 class Dossier < ApplicationRecord
   include DossierFilteringConcern
 
+  self.ignored_columns = [:expects_multiple_submissions]
+
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
