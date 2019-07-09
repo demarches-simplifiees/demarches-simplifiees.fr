@@ -26,11 +26,11 @@
           = link_to admin_procedures_path, class: "menu-item menu-link" do
             = image_tag "icons/switch-profile.svg"
             Passer en administrateur
-      %li
-        = link_to profil_path, class: "menu-item menu-link" do
-          = image_tag "icons/switch-profile.svg"
-          Voir mon profil
 
+    %li
+      = link_to profil_path, class: "menu-item menu-link" do
+        = image_tag "icons/switch-profile.svg"
+        Voir mon profil
     %li
       = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
         = image_tag "icons/sign-out.svg"
