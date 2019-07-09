@@ -105,16 +105,26 @@ describe Gestionnaires::DossiersController, type: :controller do
   end
 
   describe '#passer_en_instruction' do
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
     before do
-      dossier.en_construction!
       sign_in gestionnaire
       post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js'
-      dossier.reload
     end
 
-    it { expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction)) }
-    it { expect(response.body).to include('.state-button') }
+    it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
     it { expect(gestionnaire.follow?(dossier)).to be true }
+    it { expect(response).to have_http_status(:ok) }
+    it { expect(response.body).to include('.state-button') }
+
+    context 'when the dossier has already been put en_instruction' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+      it 'warns about the error, but doesn’t raise' do
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   describe '#repasser_en_construction' do
