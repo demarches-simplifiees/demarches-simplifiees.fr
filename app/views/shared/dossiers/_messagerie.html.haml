@@ -4,7 +4,7 @@
       %li.message{ class: commentaire_is_from_me_class(commentaire, connected_user) }
         = render partial: "shared/dossiers/messages/message", locals: { commentaire: commentaire, connected_user: connected_user, messagerie_seen_at: messagerie_seen_at }
 
-  - if dossier.archived?
-    = render partial: "shared/dossiers/messages/messagerie_disabled", locals: { service: dossier.procedure.service }
-  - else
+  - if dossier.messagerie_available?
     = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url }
+  - else
+    = render partial: "shared/dossiers/messages/messagerie_disabled", locals: { service: dossier.procedure.service }

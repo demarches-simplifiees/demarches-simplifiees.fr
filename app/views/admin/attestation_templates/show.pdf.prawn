@@ -1,17 +1,36 @@
 require 'prawn/measurement_extensions'
 
-prawn_document(margin: [50, 100, 20, 100]) do |pdf|
+#----- A4 page size
+page_size = 'A4'
+page_height = 842
+page_width = 595
+
+#----- margins
+body_width = 400
+top_margin = 50
+bottom_margin = 20
+footer_height = top_margin - bottom_margin
+
+right_margin = (page_width - body_width)/2
+left_margin = right_margin
+
+#----- size of images
+max_logo_width = body_width
+max_logo_height = 50.mm
+max_signature_size = 50.mm
+
+prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size) do |pdf|
   pdf.font_families.update( 'liberation serif' => { normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' )})
   pdf.font 'liberation serif'
 
   grey = '555555'
   black = '333333'
-  max_logo_size = 40.mm
-  max_signature_size = 40.mm
 
-  pdf.bounding_box([0, pdf.cursor], width: 400, height: 650) do
+  body_height = pdf.cursor - footer_height
+
+  pdf.bounding_box([0, pdf.cursor], width: body_width, height: body_height) do
     if @logo.present?
-      pdf.image StringIO.new(@logo.read), fit: [max_logo_size , max_logo_size], position: :center
+      pdf.image StringIO.new(@logo.read), fit: [max_logo_width , max_logo_height], position: :center
     end
 
     pdf.fill_color grey
@@ -31,7 +50,7 @@ prawn_document(margin: [50, 100, 20, 100]) do |pdf|
   end
 
   pdf.repeat(:all) do
-    pdf.move_cursor_to 20
+    pdf.move_cursor_to footer_height - 10
     pdf.fill_color grey
     pdf.text @footer, align: :center, size: 8
   end
