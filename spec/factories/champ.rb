@@ -41,12 +41,12 @@ FactoryBot.define do
 
   factory :champ_date, class: 'Champs::DateChamp' do
     type_de_champ { create(:type_de_champ_date) }
-    value { 1.day.ago.iso8601 }
+    value { '2019-07-10' }
   end
 
   factory :champ_datetime, class: 'Champs::DatetimeChamp' do
     type_de_champ { create(:type_de_champ_datetime) }
-    value { 1.day.ago.iso8601 }
+    value { '15/09/1962 15:35' }
   end
 
   factory :champ_number, class: 'Champs::NumberChamp' do
@@ -96,17 +96,17 @@ FactoryBot.define do
 
   factory :champ_drop_down_list, class: 'Champs::DropDownListChamp' do
     type_de_champ { create(:type_de_champ_drop_down_list) }
-    value { '' }
+    value { 'choix 1' }
   end
 
   factory :champ_multiple_drop_down_list, class: 'Champs::MultipleDropDownListChamp' do
     type_de_champ { create(:type_de_champ_multiple_drop_down_list) }
-    value { '' }
+    value { '["choix 1", "choix 2"]' }
   end
 
   factory :champ_linked_drop_down_list, class: 'Champs::LinkedDropDownListChamp' do
     type_de_champ { create(:type_de_champ_linked_drop_down_list) }
-    value { '{}' }
+    value { '["categorie 1", "choix 1"]' }
   end
 
   factory :champ_pays, class: 'Champs::PaysChamp' do
@@ -116,12 +116,12 @@ FactoryBot.define do
 
   factory :champ_regions, class: 'Champs::RegionChamp' do
     type_de_champ { create(:type_de_champ_regions) }
-    value { '' }
+    value { 'Guadeloupe' }
   end
 
   factory :champ_departements, class: 'Champs::DepartementChamp' do
     type_de_champ { create(:type_de_champ_departements) }
-    value { '' }
+    value { '971 - Guadeloupe' }
   end
 
   factory :champ_engagement, class: 'Champs::EngagementChamp' do
@@ -136,7 +136,7 @@ FactoryBot.define do
 
   factory :champ_explication, class: 'Champs::ExplicationChamp' do
     type_de_champ { create(:type_de_champ_explication) }
-    value { 'une explication' }
+    value { '' }
   end
 
   factory :champ_dossier_link, class: 'Champs::DossierLinkChamp' do
@@ -164,5 +164,15 @@ FactoryBot.define do
 
   factory :champ_repetition, class: 'Champs::RepetitionChamp' do
     type_de_champ { create(:type_de_champ_repetition) }
+
+    after(:build) do |champ_repetition, _evaluator|
+      type_de_champ_text = create(:type_de_champ_text, order_place: 0, parent: champ_repetition.type_de_champ, libelle: 'Nom')
+      type_de_champ_number = create(:type_de_champ_number, order_place: 1, parent: champ_repetition.type_de_champ, libelle: 'Age')
+
+      create(:champ_text, row: 0, type_de_champ: type_de_champ_text, parent: champ_repetition)
+      create(:champ_number, row: 0, type_de_champ: type_de_champ_number, parent: champ_repetition)
+      create(:champ_text, row: 1, type_de_champ: type_de_champ_text, parent: champ_repetition)
+      create(:champ_number, row: 1, type_de_champ: type_de_champ_number, parent: champ_repetition)
+    end
   end
 end

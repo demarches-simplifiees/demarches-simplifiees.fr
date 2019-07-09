@@ -395,7 +395,7 @@ describe Champ do
 
   describe "repetition" do
     let(:dossier) { create(:dossier) }
-    let(:champ) { create(:champ_repetition, dossier: dossier) }
+    let(:champ) { Champs::RepetitionChamp.create(dossier: dossier) }
     let(:champ_text) { create(:champ_text, row: 0) }
     let(:champ_integer_number) { create(:champ_integer_number, row: 0) }
     let(:champ_text_attrs) { attributes_for(:champ_text, row: 1) }
