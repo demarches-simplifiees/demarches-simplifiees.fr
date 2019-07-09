@@ -44,6 +44,7 @@ gem 'openid_connect'
 gem 'openstack'
 gem 'pg'
 gem 'prawn' # PDF Generation
+gem 'prawn-svg'
 gem 'prawn_rails'
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
