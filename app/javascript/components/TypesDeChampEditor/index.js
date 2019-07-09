@@ -22,7 +22,6 @@ class TypesDeChampEditor extends Component {
       type_champ: 'text',
       types_de_champ: [],
       private: props.isAnnotation,
-      drop_down_list_value: '--Premier élément du menu--\n',
       libelle: `${
         props.isAnnotation ? 'Nouvelle annotation' : 'Nouveau champ'
       } ${props.typeDeChampsTypes[0][0]}`
