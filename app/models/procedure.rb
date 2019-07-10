@@ -3,6 +3,8 @@ require Rails.root.join('lib', 'percentile')
 class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
 
+  self.ignored_columns = [:individual_with_siret]
+
   has_many :types_de_piece_justificative, -> { ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
