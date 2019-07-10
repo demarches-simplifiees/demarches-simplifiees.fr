@@ -886,7 +886,7 @@ describe Dossier do
 
   describe "#check_mandatory_champs" do
     let(:procedure) { create(:procedure, :with_type_de_champ) }
-    let(:dossier) { create(:dossier, :with_all_champs, procedure: procedure) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
 
     it 'no mandatory champs' do
       expect(dossier.check_mandatory_champs).to be_empty
@@ -945,7 +945,11 @@ describe Dossier do
       end
 
       context "when no champs" do
-        let(:champ_with_error) { dossier.champs.first }
+        let(:champ_with_error) do
+          repetition_champ = dossier.champs.first
+          text_champ = repetition_champ.rows.first.first
+          text_champ
+        end
 
         it 'should have errors' do
           errors = dossier.check_mandatory_champs
