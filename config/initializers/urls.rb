@@ -28,3 +28,6 @@ FAQ_ADMIN_URL = "https://faq.demarches-simplifiees.fr/collection/1-administrateu
 COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, "article", "59-comment-trouver-ma-demarche"].join("/")
 STATUS_PAGE_URL = "https://status.demarches-simplifiees.fr"
 MATOMO_IFRAME_URL = "https://stats.data.gouv.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli"
+
+# FIXME: This is only used in dev in couple of places and should be removed after PJ migration
+LOCAL_DOWNLOAD_URL = "http://#{ENV.fetch('APP_HOST', 'localhost:3000')}"

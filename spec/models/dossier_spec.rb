@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Dossier do
   include ActiveJob::TestHelper
@@ -31,7 +31,7 @@ describe Dossier do
     let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 170.days.ago, procedure: procedure) }
-    let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.hour + 1.second).ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
 
     context 'with default delay to end of retention' do
@@ -420,7 +420,6 @@ describe Dossier do
 
     it "send an email when the dossier is created for the very first time" do
       dossier = nil
-      ActiveJob::Base.queue_adapter = :test
       expect do
         perform_enqueued_jobs do
           dossier = Dossier.create(procedure: procedure, state: Dossier.states.fetch(:brouillon), user: user)
@@ -887,7 +886,7 @@ describe Dossier do
 
   describe "#check_mandatory_champs" do
     let(:procedure) { create(:procedure, :with_type_de_champ) }
-    let(:dossier) { create(:dossier, :with_all_champs, procedure: procedure) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
 
     it 'no mandatory champs' do
       expect(dossier.check_mandatory_champs).to be_empty
@@ -946,7 +945,11 @@ describe Dossier do
       end
 
       context "when no champs" do
-        let(:champ_with_error) { dossier.champs.first }
+        let(:champ_with_error) do
+          repetition_champ = dossier.champs.first
+          text_champ = repetition_champ.rows.first.first
+          text_champ
+        end
 
         it 'should have errors' do
           errors = dossier.check_mandatory_champs

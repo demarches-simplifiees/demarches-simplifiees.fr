@@ -806,7 +806,7 @@ describe Users::DossiersController, type: :controller do
         id: dossier.id,
         commentaire: {
           body: body,
-          file: file
+          piece_jointe: file
         }
       }
     }
@@ -821,18 +821,6 @@ describe Users::DossiersController, type: :controller do
 
       expect(response).to redirect_to(messagerie_dossier_path(dossier))
       expect(flash.notice).to be_present
-    end
-
-    context "when the commentaire creation fails" do
-      let(:scan_result) { false }
-
-      it "renders the messagerie page with the invalid commentaire" do
-        expect { subject }.not_to change(Commentaire, :count)
-
-        expect(response).to render_template :messagerie
-        expect(flash.alert).to be_present
-        expect(assigns(:commentaire).body).to eq("avant\napres")
-      end
     end
   end
 
