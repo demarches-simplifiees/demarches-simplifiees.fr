@@ -11,7 +11,7 @@
               %h4 En construction
               Vous permettez à l'usager de modifier ses réponses au formulaire
           %li
-            = link_to passer_en_instruction_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, data: { remote: true, confirm: "Confirmer vous le passage en instruction de ce dossier ?" } do
+            = link_to passer_en_instruction_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, data: { remote: true, confirm: "Confirmez-vous le passage en instruction de ce dossier ?" } do
               %span.icon.in-progress
               .dropdown-description
                 %h4 Passer en instruction
@@ -19,7 +19,7 @@
 
         - if dossier.en_instruction?
           %li
-            = link_to repasser_en_construction_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Confirmer vous le passage en construction de ce dossier ?" } do
+            = link_to repasser_en_construction_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Confirmez-vous le passage en construction de ce dossier ?" } do
               %span.icon.edit
               .dropdown-description
                 %h4 Repasser en construction

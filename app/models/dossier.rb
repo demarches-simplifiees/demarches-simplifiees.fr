@@ -1,6 +1,8 @@
 class Dossier < ApplicationRecord
   include DossierFilteringConcern
 
+  self.ignored_columns = [:expects_multiple_submissions]
+
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
@@ -115,7 +117,7 @@ class Dossier < ApplicationRecord
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
   scope :since,                       -> (since) { where('dossiers.en_construction_at >= ?', since) }
   scope :for_api, -> {
-    includes(commentaires: [],
+    includes(commentaires: { piece_jointe_attachment: :blob },
       champs: [
         :geo_areas,
         :etablissement,

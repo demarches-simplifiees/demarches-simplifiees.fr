@@ -21,6 +21,14 @@
     }
   }
 
+  &.warning {
+    border-top: 8px solid $orange;
+
+    .card-title {
+      color: $orange;
+    }
+  }
+
   &.feedback {
     max-width: 600px;
     margin: 30px auto;

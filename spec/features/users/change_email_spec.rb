@@ -19,14 +19,15 @@ feature 'Changing an email' do
       click_button 'Changer mon adresse'
     end
 
-    user.reload
-    expect(user.email).to eq(old_email)
-    expect(user.unconfirmed_email).to eq(new_email)
+    expect(page).to have_content(I18n.t('devise.registrations.update_needs_confirmation'))
+    expect(page).to have_content(old_email)
+    expect(page).to have_content(new_email)
 
     click_confirmation_link_for(new_email)
 
-    user.reload
-    expect(user.email).to eq(new_email)
-    expect(user.unconfirmed_email).to be_nil
+    expect(page).to have_content(I18n.t('devise.confirmations.confirmed'))
+    expect(page).not_to have_content(old_email)
+    expect(page).to have_content(new_email)
+    expect(user.reload.email).to eq(new_email)
   end
 end
