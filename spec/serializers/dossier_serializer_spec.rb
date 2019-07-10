@@ -41,7 +41,7 @@ describe DossierSerializer do
 
         expect(subject[3][:value]).to eq(42)
         expect(subject[4][:value]).to eq(42.1)
-        expect(subject[5][:value]).to eq({ primary: nil, secondary: nil })
+        expect(subject[5][:value]).to eq({ primary: 'categorie 1', secondary: 'choix 1' })
       }
     end
   end
