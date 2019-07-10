@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Dossier do
   include ActiveJob::TestHelper
@@ -420,7 +420,6 @@ describe Dossier do
 
     it "send an email when the dossier is created for the very first time" do
       dossier = nil
-      ActiveJob::Base.queue_adapter = :test
       expect do
         perform_enqueued_jobs do
           dossier = Dossier.create(procedure: procedure, state: Dossier.states.fetch(:brouillon), user: user)
