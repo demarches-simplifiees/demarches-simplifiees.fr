@@ -350,15 +350,15 @@ describe Gestionnaires::DossiersController, type: :controller do
       expect(flash.notice).to be_present
     end
 
-    context "when the commentaire creation fails" do
+    context "when the commentaire created with virus file" do
       let(:scan_result) { false }
 
-      it "renders the messagerie page with the invalid commentaire" do
-        expect { subject }.not_to change(Commentaire, :count)
+      it "creates a commentaire (shows message that file have a virus)" do
+        expect { subject }.to change(Commentaire, :count).by(1)
+        expect(gestionnaire.followed_dossiers).to include(dossier)
 
-        expect(response).to render_template :messagerie
-        expect(flash.alert).to be_present
-        expect(assigns(:commentaire).body).to eq("avant\napres")
+        expect(response).to redirect_to(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier))
+        expect(flash.notice).to be_present
       end
     end
   end
