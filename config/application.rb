@@ -31,8 +31,6 @@ module TPS
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.precompile += ['.woff']
 
-    URL = ENV['APP_HOST'] || "http://localhost:3000/"
-
     config.active_job.queue_adapter = :delayed_job
 
     config.action_view.sanitized_allowed_tags = ActionView::Base.sanitized_allowed_tags + ['u']
