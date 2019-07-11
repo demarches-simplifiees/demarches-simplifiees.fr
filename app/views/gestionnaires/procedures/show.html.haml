@@ -44,6 +44,17 @@
         = render partial: "download_dossiers", locals: { procedure: @procedure }
 
   .container
+    - if @statut == 'a-suivre'
+      %p.explication-onglet Aucun instructeur n'est affecté au suivi de ces dossiers. Soyez le premier !
+    - if @statut == 'suivis'
+      %p.explication-onglet Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu'à pouvoir les accepter, les refuser ou les classer sans suite.
+    - if @statut == 'traites'
+      %p.explication-onglet Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite.
+    - if @statut == 'tous'
+      %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, sans aucun filtre.
+    - if @statut == 'archives'
+      %p.explication-onglet Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
+
     - if @dossiers.present? || @current_filters.count > 0
       %span.dropdown
         %button.button.dropdown-button
