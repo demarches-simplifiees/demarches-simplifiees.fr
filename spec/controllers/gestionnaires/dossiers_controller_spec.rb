@@ -151,6 +151,30 @@ describe Gestionnaires::DossiersController, type: :controller do
     end
   end
 
+  describe '#repasser_en_instruction' do
+    let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
+
+    before do
+      sign_in gestionnaire
+      post :repasser_en_instruction,
+        params: { procedure_id: procedure.id, dossier_id: dossier.id },
+        format: 'js'
+    end
+
+    it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
+    it { expect(response).to have_http_status(:ok) }
+    it { expect(response.body).to include('.state-button') }
+
+    context 'when the dossier has already been put en_instruction' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+      it 'warns about the error, but doesn’t raise' do
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
   describe '#terminer' do
     context "with refuser" do
       before do
