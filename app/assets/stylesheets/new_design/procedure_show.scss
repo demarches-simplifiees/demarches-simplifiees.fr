@@ -45,4 +45,9 @@
     margin-right: 6px;
     display: inline-block;
   }
+
+  p.explication-onglet {
+    margin-bottom: 3 * $default-spacer;
+    text-align: center;
+  }
 }
