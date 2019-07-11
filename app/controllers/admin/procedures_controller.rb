@@ -62,7 +62,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def new
-    @procedure ||= Procedure.new
+    @procedure ||= Procedure.new(for_individual: true)
     @availability = Procedure::PATH_AVAILABLE
   end
 
