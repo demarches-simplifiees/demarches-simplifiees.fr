@@ -334,10 +334,11 @@ describe Admin::ProceduresController, type: :controller do
     let(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure2) { create(:procedure, :published, administrateur: admin) }
     let(:procedure3) { create(:procedure, :published) }
+    let(:lien_site_web) { 'http://some.administration/' }
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :publish, params: { procedure_id: procedure.id, path: path }
+        put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
         procedure.reload
         procedure2.reload
       end
@@ -348,6 +349,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
+          expect(procedure.lien_site_web).to eq(lien_site_web)
           expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
@@ -359,6 +361,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
+          expect(procedure.lien_site_web).to eq(lien_site_web)
           expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
@@ -375,6 +378,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'does not publish the given procedure' do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
+          expect(procedure.lien_site_web).not_to match(lien_site_web)
           expect(response.status).to eq 200
         end
 
@@ -391,6 +395,7 @@ describe Admin::ProceduresController, type: :controller do
         it 'does not publish the given procedure' do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
+          expect(procedure.lien_site_web).not_to match(lien_site_web)
           expect(response).to redirect_to :admin_procedures
           expect(flash[:alert]).to have_content 'Lien de la démarche invalide'
         end

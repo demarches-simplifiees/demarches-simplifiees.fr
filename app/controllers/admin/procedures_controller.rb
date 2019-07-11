@@ -110,6 +110,8 @@ class Admin::ProceduresController < AdminController
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
     procedure.path = path
+    procedure.lien_site_web = params[:lien_site_web]
+
     if !procedure.validate
       flash.alert = 'Lien de la démarche invalide'
       return redirect_to admin_procedures_path
