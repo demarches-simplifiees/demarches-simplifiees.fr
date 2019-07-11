@@ -323,7 +323,6 @@ describe Admin::ProceduresController, type: :controller do
           it { expect(subject.direction).to eq procedure_params[:direction] }
 
           it { expect(subject.for_individual).not_to eq procedure_params[:for_individual] }
-          it { expect(subject.individual_with_siret).not_to eq procedure_params[:individual_with_siret] }
         end
       end
     end
