@@ -319,6 +319,21 @@ describe Gestionnaires::DossiersController, type: :controller do
         it { expect(subject.body).to include('.state-button') }
       end
     end
+
+    context 'when a dossier is already closed' do
+      let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+      before { allow(dossier).to receive(:accepter!) }
+
+      subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
+
+      it 'does not close it again' do
+        subject
+
+        expect(dossier).not_to have_received(:accepter!)
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   describe "#create_commentaire" do
