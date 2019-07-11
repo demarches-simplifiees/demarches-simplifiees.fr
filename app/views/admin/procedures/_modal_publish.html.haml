@@ -39,9 +39,12 @@
                 target: "_blank"
 
           .form-group
-            %h4 Où les usagers trouveront-ils le lien vers cette démarche ?
+            %h4 Où les usagers trouveront-ils le lien vers cette démarche ? *
             %p.center
-              = text_field_tag(:lien_site_web, @procedure.lien_site_web, class: 'form-control', placeholder: 'https://exemple.gouv.fr/ma_demarche')
+              = text_field_tag(:lien_site_web, @procedure.lien_site_web,
+                                required: true,
+                                class: 'form-control',
+                                placeholder: 'https://exemple.gouv.fr/ma_demarche')
 
             #path-messages
               #path_is_mine.text-warning.center.message

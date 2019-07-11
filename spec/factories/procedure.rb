@@ -10,6 +10,7 @@ FactoryBot.define do
     duree_conservation_dossiers_dans_ds { 3 }
     duree_conservation_dossiers_hors_ds { 6 }
     ask_birthday { false }
+    lien_site_web { "https://mon-site.gouv" }
 
     transient do
       administrateur {}
@@ -147,13 +148,13 @@ FactoryBot.define do
 
     trait :published do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
       end
     end
 
     trait :archived do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
         procedure.archive!
       end
     end
@@ -162,14 +163,14 @@ FactoryBot.define do
       # For now the behavior is the same than :archived
       # (it may be different in the future though)
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
         procedure.archive!
       end
     end
 
     trait :hidden do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
         procedure.hide!
       end
     end

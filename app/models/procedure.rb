@@ -107,12 +107,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_or_reopen!(administrateur, path)
-    if archivee? && may_reopen?(administrateur, path)
-      reopen!(administrateur, path)
-    elsif may_publish?(administrateur, path)
+  def publish_or_reopen!(administrateur, path, lien_site_web)
+    if archivee? && may_reopen?(administrateur, path, lien_site_web)
+      reopen!(administrateur, path, lien_site_web)
+    elsif may_publish?(administrateur, path, lien_site_web)
       reset!
-      publish!(administrateur, path)
+      publish!(administrateur, path, lien_site_web)
     end
   end
 
@@ -488,21 +488,17 @@ class Procedure < ApplicationRecord
     update!(path: path)
   end
 
-  def can_publish?(administrateur, path)
-    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
+  def can_publish?(administrateur, path, lien_site_web)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH) && lien_site_web.present?
   end
 
-  def can_reopen?(administrateur, path)
-    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
-  end
-
-  def after_publish(administrateur, path)
+  def after_publish(administrateur, path, lien_site_web)
     update!(published_at: Time.zone.now)
 
     claim_path_ownership!(path)
   end
 
-  def after_reopen(administrateur, path)
+  def after_reopen(administrateur, path, lien_site_web)
     update!(published_at: Time.zone.now, archived_at: nil)
 
     claim_path_ownership!(path)
