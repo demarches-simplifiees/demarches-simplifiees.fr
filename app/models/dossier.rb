@@ -137,12 +137,18 @@ class Dossier < ApplicationRecord
       champs: [
         :geo_areas,
         :etablissement,
-        piece_justificative_file_attachment: :blob
+        piece_justificative_file_attachment: :blob,
+        champs: [
+          piece_justificative_file_attachment: :blob
+        ]
       ],
       champs_private: [
         :geo_areas,
         :etablissement,
-        piece_justificative_file_attachment: :blob
+        piece_justificative_file_attachment: :blob,
+        champs: [
+          piece_justificative_file_attachment: :blob
+        ]
       ],
       justificatif_motivation_attachment: :blob,
       attestation: [],
