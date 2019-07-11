@@ -6,4 +6,6 @@
 - cache(procedure.id, expires_in: 1.day) do
   - if procedure.usual_traitement_time && show_time_means
     %p
-      Habituellement, les dossiers de cette démarche sont traités dans un délai de #{distance_of_time_in_words(procedure.usual_traitement_time)}. Ce délai est le résultat d'un calcul automatique à partir des délais d'instruction précedemment constatés. Le délai réel peut être différent, en fonction du type de démarche : appels à projet avec date de décision fixe par exemple. 
+      Habituellement, les dossiers de cette démarche sont traités dans un délai de #{distance_of_time_in_words(procedure.usual_traitement_time)}.
+    %p
+      Cette estimation est calculée automatiquement à partir des délais d’instruction constatés précédemment. Le délai réel peut être différent, en fonction du type de démarche (par exemple pour un appel à projet avec date de décision fixe).
