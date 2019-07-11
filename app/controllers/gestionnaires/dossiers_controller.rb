@@ -92,8 +92,12 @@ module Gestionnaires
     end
 
     def repasser_en_construction
-      dossier.repasser_en_construction!(current_gestionnaire)
-      flash.notice = 'Dossier repassé en construction.'
+      if dossier.en_construction?
+        flash.notice = 'Le dossier est déjà en construction.'
+      else
+        dossier.repasser_en_construction!(current_gestionnaire)
+        flash.notice = 'Dossier repassé en construction.'
+      end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
