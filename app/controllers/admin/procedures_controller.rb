@@ -62,7 +62,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def new
-    @procedure ||= Procedure.new
+    @procedure ||= Procedure.new(for_individual: true)
     @availability = Procedure::PATH_AVAILABLE
   end
 
@@ -269,7 +269,7 @@ class Admin::ProceduresController < AdminController
     if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
-      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :individual_with_siret, :ask_birthday, :path)
+      params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :ask_birthday, :path)
     end
   end
 end

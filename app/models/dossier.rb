@@ -1,8 +1,6 @@
 class Dossier < ApplicationRecord
   include DossierFilteringConcern
 
-  self.ignored_columns = [:expects_multiple_submissions]
-
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
@@ -227,7 +225,7 @@ class Dossier < ApplicationRecord
   end
 
   def messagerie_available?
-    !brouillon? && !archived && !procedure.archivee?
+    !brouillon? && !archived
   end
 
   def retention_end_date
