@@ -3,6 +3,7 @@ module Gestionnaires
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
     include CreateAvisConcern
+    include DossierHelper
 
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
@@ -91,15 +92,23 @@ module Gestionnaires
     end
 
     def repasser_en_construction
-      dossier.repasser_en_construction!(current_gestionnaire)
-      flash.notice = 'Dossier repassé en construction.'
+      if dossier.en_construction?
+        flash.notice = 'Le dossier est déjà en construction.'
+      else
+        dossier.repasser_en_construction!(current_gestionnaire)
+        flash.notice = 'Dossier repassé en construction.'
+      end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
     def repasser_en_instruction
-      flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
-      dossier.repasser_en_instruction!(current_gestionnaire)
+      if dossier.en_instruction?
+        flash.notice = 'Le dossier est déjà en instruction.'
+      else
+        flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
+        dossier.repasser_en_instruction!(current_gestionnaire)
+      end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
@@ -108,16 +117,20 @@ module Gestionnaires
       motivation = params[:dossier] && params[:dossier][:motivation]
       justificatif = params[:dossier] && params[:dossier][:justificatif_motivation]
 
-      case params[:process_action]
-      when "refuser"
-        dossier.refuser!(current_gestionnaire, motivation, justificatif)
-        flash.notice = "Dossier considéré comme refusé."
-      when "classer_sans_suite"
-        dossier.classer_sans_suite!(current_gestionnaire, motivation, justificatif)
-        flash.notice = "Dossier considéré comme sans suite."
-      when "accepter"
-        dossier.accepter!(current_gestionnaire, motivation, justificatif)
-        flash.notice = "Dossier traité avec succès."
+      if dossier.termine?
+        flash.notice = "Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"
+      else
+        case params[:process_action]
+        when "refuser"
+          dossier.refuser!(current_gestionnaire, motivation, justificatif)
+          flash.notice = "Dossier considéré comme refusé."
+        when "classer_sans_suite"
+          dossier.classer_sans_suite!(current_gestionnaire, motivation, justificatif)
+          flash.notice = "Dossier considéré comme sans suite."
+        when "accepter"
+          dossier.accepter!(current_gestionnaire, motivation, justificatif)
+          flash.notice = "Dossier traité avec succès."
+        end
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }

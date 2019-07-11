@@ -747,22 +747,16 @@ describe Dossier do
       it { is_expected.to be false }
     end
 
+    context "dossier is submitted" do
+      before { dossier.state = Dossier.states.fetch(:en_instruction) }
+
+      it { is_expected.to be true }
+    end
+
     context "dossier is archived" do
       before { dossier.archived = true }
 
       it { is_expected.to be false }
-    end
-
-    context "procedure is archived" do
-      before { procedure.archived_at = Date.today }
-
-      it { is_expected.to be false }
-    end
-
-    context "procedure is not archived, dossier is not archived" do
-      before { dossier.state = Dossier.states.fetch(:en_instruction) }
-
-      it { is_expected.to be true }
     end
   end
 

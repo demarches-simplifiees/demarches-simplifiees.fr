@@ -30,7 +30,7 @@ class ProcedurePresentation < ApplicationRecord
       )
     end
 
-    if !procedure.for_individual || (procedure.for_individual && procedure.individual_with_siret)
+    if !procedure.for_individual
       fields.push(
         field_hash('SIREN', 'etablissement', 'entreprise_siren'),
         field_hash('Forme juridique', 'etablissement', 'entreprise_forme_juridique'),
