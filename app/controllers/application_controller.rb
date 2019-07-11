@@ -250,7 +250,11 @@ class ApplicationController < ActionController::Base
         email: current_administrateur&.email,
         DS_SIGN_IN_COUNT: current_administrateur&.sign_in_count,
         DS_CREATED_AT: current_administrateur&.created_at,
-        DS_ID: current_administrateur&.id
+        DS_ID: current_administrateur&.id,
+        DS_NB_DEMARCHES_BROUILLONS: current_administrateur.procedures.brouillons.count,
+        DS_NB_DEMARCHES_ACTIVES: current_administrateur.procedures.publiees.count,
+        DS_NB_DEMARCHES_ARCHIVES: current_administrateur.procedures.archivees.count
+
       }
     }
   end
