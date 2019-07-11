@@ -183,7 +183,7 @@ module Gestionnaires
         [
           # ActiveStorage::DownloadableFile.new("http://blog.keiruaprod.fr/wp-content/uploads/2019/04/vasa-1.jpg"),
           # "vasa.jpg"
-          ActiveStorage::DownloadableFile.new(pj.piece_justificative_file.service_url),
+          ActiveStorage::DownloadableFile.new(pj.piece_justificative_file),
           pj.piece_justificative_file.filename.to_s
         ]
       end
