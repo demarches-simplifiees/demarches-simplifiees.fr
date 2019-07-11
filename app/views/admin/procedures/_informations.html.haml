@@ -100,7 +100,7 @@
       %h4 À qui s’adresse ma démarche ?
       .checkbox
         %label
-          = f.radio_button :for_individual, 1, :checked => true
+          = f.radio_button :for_individual, true
           %b Ma démarche s’adresse à un particulier
 
         %p
@@ -108,7 +108,7 @@
 
       .checkbox
         %label
-          = f.radio_button :for_individual, 0, :checked => false
+          = f.radio_button :for_individual, false
           %b Ma démarche s’adresse à une personne morale
 
         %p
