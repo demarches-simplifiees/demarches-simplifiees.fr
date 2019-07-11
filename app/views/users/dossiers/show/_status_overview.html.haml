@@ -16,26 +16,23 @@
   .status-explanation
     - if dossier.brouillon?
       .brouillon
-        %p Vous pouvez remplir votre dossier tranquillement : il n’est pas encore visible par l’administration.
-        %p Quand vous aurez terminé, soumettez votre dossier pour qu’il soit examiné.
+        %p Votre dossier n’est pas encore visible par l’administration.
+        %p Vous pouvez "soumettre votre dossier" afin de le transmettre à l'administration. Une fois soumis, vous pourrez toujours modifier votre dossier.
 
     - elsif dossier.en_construction?
       .en-construction
-        %p Un instructeur de l’administration est en train de vérifier que votre dossier est bien complet. Si des modifications sont nécessaires, vous recevrez un message avec les modifications à effectuer.
+        %p  Votre dossier est en construction cela signifie que vous pouvez encore le modifier. Vous pouvez aussi directement échanger avec l'administration via le fil de messagerie.
         %p
-          Sinon,
+          Vous ne pourrez plus modifier,
           = succeed '.' do
-            %strong votre dossier passera directement en instruction
+            %strong votre dossier lorsque l'administration le passera "en instruction".
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
 
     - elsif dossier.en_instruction?
       .en-instruction
-        %p Votre dossier est complet. Il est en cours d’examen par les instructeurs de l’administration.
+        %p Votre dossier est en cours d'instruction par l'administration. Vous ne pouvez plus le modifier.
         %p
-          Dès que l’administration aura statué sur votre dossier,
-          %strong
-            vous recevrez un email
-          avec le résultat.
+
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
 
     - elsif dossier.accepte?
