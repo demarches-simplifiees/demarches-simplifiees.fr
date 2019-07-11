@@ -15,6 +15,7 @@ describe Admin::ProceduresController, type: :controller do
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:duree_conservation_dossiers_hors_ds) { 6 }
   let(:monavis_embed) { nil }
+  let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
   let(:procedure_params) {
     {
@@ -26,7 +27,8 @@ describe Admin::ProceduresController, type: :controller do
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds,
-      monavis_embed: monavis_embed
+      monavis_embed: monavis_embed,
+      lien_site_web: lien_site_web
     }
   }
 
@@ -331,9 +333,10 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PUT #publish' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
-    let(:procedure2) { create(:procedure, :published, administrateur: admin) }
-    let(:procedure3) { create(:procedure, :published) }
+    let(:lien_site_web) { 'http://mon-site.gouv.fr' }
+    let(:procedure) { create(:procedure, administrateur: admin, lien_site_web: nil) }
+    let(:procedure2) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
+    let(:procedure3) { create(:procedure, :published, lien_site_web: lien_site_web) }
     let(:lien_site_web) { 'http://some.administration/' }
 
     context 'when admin is the owner of the procedure' do
@@ -400,6 +403,17 @@ describe Admin::ProceduresController, type: :controller do
           expect(flash[:alert]).to have_content 'Lien de la démarche invalide'
         end
       end
+
+      context 'procedure path is valid but lien_site_web is missing' do
+        let(:path) { 'new_path' }
+        let(:lien_site_web) { nil }
+
+        it 'does not publish the given procedure' do
+          expect(procedure.publiee?).to be_falsey
+          expect(flash[:alert]).to have_content 'Lien de la démarche invalide'
+          expect(response).to redirect_to :admin_procedures
+        end
+      end
     end
 
     context 'when admin is not the owner of the procedure' do
@@ -421,7 +435,7 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PUT #archive' do
-    let(:procedure) { create(:procedure, :published, administrateur: admin) }
+    let(:procedure) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
 
     context 'when admin is the owner of the procedure' do
       before do
@@ -437,7 +451,7 @@ describe Admin::ProceduresController, type: :controller do
 
       context 'when owner want to re-enable procedure' do
         before do
-          put :publish, params: { procedure_id: procedure.id, path: 'fake_path' }
+          put :publish, params: { procedure_id: procedure.id, path: 'fake_path', lien_site_web: lien_site_web }
           procedure.reload
         end
 

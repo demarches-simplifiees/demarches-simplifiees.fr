@@ -107,19 +107,20 @@ class Admin::ProceduresController < AdminController
 
   def publish
     path = params[:path]
+    lien_site_web = params[:lien_site_web]
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
     procedure.path = path
-    procedure.lien_site_web = params[:lien_site_web]
+    procedure.lien_site_web = lien_site_web
 
     if !procedure.validate
-      flash.alert = 'Lien de la démarche invalide'
+      flash.alert = 'Lien de la démarche invalide ou lien vers la démarche manquant'
       return redirect_to admin_procedures_path
     else
       procedure.path = nil
     end
 
-    if procedure.publish_or_reopen!(current_administrateur, path)
+    if procedure.publish_or_reopen!(current_administrateur, path, lien_site_web)
       flash.notice = "Démarche publiée"
       redirect_to admin_procedures_path
     else
