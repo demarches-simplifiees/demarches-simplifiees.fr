@@ -63,7 +63,7 @@ feature 'Invitations' do
       navigate_to_invited_dossier(invite)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
 
-      expect(page).to have_button('Soumettre le dossier', disabled: true)
+      expect(page).to have_button('Déposer le dossier', disabled: true)
       expect(page).to have_selector('.invite-cannot-submit')
     end
   end
