@@ -80,8 +80,12 @@ module Gestionnaires
     end
 
     def passer_en_instruction
-      dossier.passer_en_instruction!(current_gestionnaire)
-      flash.notice = 'Dossier passé en instruction.'
+      if dossier.en_instruction?
+        flash.notice = 'Le dossier est déjà en instruction.'
+      else
+        dossier.passer_en_instruction!(current_gestionnaire)
+        flash.notice = 'Dossier passé en instruction.'
+      end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end

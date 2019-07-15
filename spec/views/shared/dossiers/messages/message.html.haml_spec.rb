@@ -3,7 +3,7 @@ describe 'shared/dossiers/messages/message.html.haml', type: :view do
 
   subject { render 'shared/dossiers/messages/message.html.haml', commentaire: commentaire, messagerie_seen_at: seen_at, connected_user: dossier.user }
 
-  let(:dossier) { create(:dossier) }
+  let(:dossier) { create(:dossier, :en_construction) }
   let(:commentaire) { create(:commentaire, dossier: dossier) }
   let(:seen_at) { commentaire.created_at + 1.hour }
 

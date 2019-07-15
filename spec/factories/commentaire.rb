@@ -4,7 +4,7 @@ FactoryBot.define do
 
     before(:create) do |commentaire, _evaluator|
       if !commentaire.dossier
-        commentaire.dossier = create :dossier
+        commentaire.dossier = create :dossier, :en_construction
       end
     end
   end
