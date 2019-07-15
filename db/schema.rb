@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_04_144304) do
+ActiveRecord::Schema.define(version: 2019_07_11_135457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -481,7 +481,6 @@ ActiveRecord::Schema.define(version: 2019_07_04_144304) do
     t.string "lien_site_web"
     t.string "lien_notice"
     t.boolean "for_individual", default: false
-    t.boolean "individual_with_siret", default: false
     t.date "auto_archive_on"
     t.datetime "published_at"
     t.datetime "hidden_at"
@@ -500,7 +499,6 @@ ActiveRecord::Schema.define(version: 2019_07_04_144304) do
     t.boolean "juridique_required", default: true
     t.boolean "durees_conservation_required", default: true
     t.string "path"
-    t.boolean "expects_multiple_submissions", default: false, null: false
     t.string "declarative_with_state"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
