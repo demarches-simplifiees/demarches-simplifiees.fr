@@ -59,14 +59,20 @@ module TagsSubstitutionConcern
     {
       libelle: 'lien attestation',
       description: '',
-      lambda: -> (d) {
-        links = [external_link(attestation_dossier_url(d))]
-        if d.justificatif_motivation.attached?
-          links.push external_link("Télécharger le justificatif", url_for_justificatif_motivation(d))
-        end
-        links.join "<br />\n"
-      },
+      lambda: -> (d) { external_link(attestation_dossier_url(d)) },
       available_for_states: [Dossier.states.fetch(:accepte)]
+    },
+    {
+      libelle: 'lien document justificatif',
+      description: '',
+      lambda: -> (d) {
+        if d.justificatif_motivation.attached?
+          external_link(url_for_justificatif_motivation(d), "Télécharger le document justificatif")
+        else
+          return "[l'instructeur n'a pas joint de document supplémentaire]"
+        end
+      },
+      available_for_states: Dossier::SOUMIS
     }
   ]
 
