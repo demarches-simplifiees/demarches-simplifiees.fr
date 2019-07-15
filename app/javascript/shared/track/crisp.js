@@ -22,11 +22,22 @@ if (enabled) {
         ['DS_ID', administrateur.email],
         ['DS_SIGN_IN_COUNT', administrateur.DS_SIGN_IN_COUNT],
         [
+          'DS_NB_DEMARCHES_BROUILLONS',
+          administrateur.DS_NB_DEMARCHES_BROUILLONS
+        ],
+        ['DS_NB_DEMARCHES_ACTIVES', administrateur.DS_NB_DEMARCHES_ACTIVES],
+        ['DS_NB_DEMARCHES_ARCHIVES', administrateur.DS_NB_DEMARCHES_ARCHIVES],
+        [
           'URL_MANAGER',
           'https://www.demarches-simplifiees.fr/manager/administrateurs/' +
             administrateur.DS_ID
         ]
       ]
     ]
+  ]);
+  window.$crisp.push([
+    'set',
+    'session:event',
+    [[['PAGE_VIEW', { URL: window.location.pathname }]]]
   ]);
 }
