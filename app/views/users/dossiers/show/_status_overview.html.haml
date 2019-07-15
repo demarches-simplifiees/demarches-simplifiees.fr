@@ -1,5 +1,3 @@
-
-
 .status-overview
   - if !dossier.termine?
     %ul.status-timeline
@@ -17,23 +15,35 @@
     - if dossier.brouillon?
       .brouillon
         %p Votre dossier n’est pas encore visible par l’administration.
-        %p Vous pouvez "soumettre votre dossier" afin de le transmettre à l'administration. Une fois soumis, vous pourrez toujours modifier votre dossier.
+        %p Vous pouvez « Soumettre votre dossier » afin de le transmettre à l’administration. Une fois soumis, vous pourrez toujours modifier votre dossier.
 
     - elsif dossier.en_construction?
       .en-construction
-        %p  Votre dossier est en construction cela signifie que vous pouvez encore le modifier. Vous pouvez aussi directement échanger avec l'administration via le fil de messagerie.
         %p
-          Vous ne pourrez plus modifier,
+          Votre dossier est en construction. Cela signifie que
           = succeed '.' do
-            %strong votre dossier lorsque l'administration le passera "en instruction".
+            %strong vous pouvez encore le modifier
+        %p Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction ».
+
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
+
+        %p
+          %strong Vous avez une question ?
+          Utilisez la messagerie pour
+          = succeed '.' do
+            = link_to 'contacter l’administration directement', messagerie_dossier_url(dossier)
 
     - elsif dossier.en_instruction?
       .en-instruction
-        %p Votre dossier est en cours d'instruction par l'administration. Vous ne pouvez plus le modifier.
-        %p
+        %p Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
 
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
+
+        %p
+          %strong Vous avez une question ?
+          Utilisez la messagerie pour
+          = succeed '.' do
+            = link_to 'contacter l’administration directement', messagerie_dossier_url(dossier)
 
     - elsif dossier.accepte?
       .accepte
