@@ -105,7 +105,7 @@ describe MailTemplateConcern do
       end
     end
 
-    describe '--lien document justificatif--' do
+    shared_examples 'inserting the --lien document justificatif-- tag' do
       let(:procedure) { create(:procedure) }
 
       subject { mail.body_for_dossier(dossier) }
@@ -114,50 +114,32 @@ describe MailTemplateConcern do
         mail.body = "--lien document justificatif--"
       end
 
-      describe "in closed mail" do
-        let(:mail) { create(:closed_mail, procedure: procedure) }
-        describe 'without justificatif' do
-          it { is_expected.to include("[l'instructeur n'a pas joint de document supplémentaire]") }
-        end
-
-        describe 'with justificatif' do
-          before do
-            dossier.justificatif_motivation.attach(justificatif)
-          end
-          it { expect(dossier.justificatif_motivation).to be_attached }
-          it { is_expected.to include("Télécharger le document justificatif") }
-        end
+      describe 'without justificatif' do
+        it { is_expected.to include("[l'instructeur n'a pas joint de document supplémentaire]") }
       end
 
-      describe "in refused mail" do
-        let(:mail) { create(:refused_mail, procedure: procedure) }
-        describe 'without justificatif' do
-          it { is_expected.to include("[l'instructeur n'a pas joint de document supplémentaire]") }
+      describe 'with justificatif' do
+        before do
+          dossier.justificatif_motivation.attach(justificatif)
         end
-
-        describe 'with justificatif' do
-          before do
-            dossier.justificatif_motivation.attach(justificatif)
-          end
-          it { expect(dossier.justificatif_motivation).to be_attached }
-          it { is_expected.to include("Télécharger le document justificatif") }
-        end
+        it { expect(dossier.justificatif_motivation).to be_attached }
+        it { is_expected.to include("Télécharger le document justificatif") }
       end
+    end
 
-      describe "in without continuation mail" do
-        let(:mail) { create(:without_continuation_mail, procedure: procedure) }
-        describe 'without justificatif' do
-          it { is_expected.to include("[l'instructeur n'a pas joint de document supplémentaire]") }
-        end
+    context 'in closed mail' do
+      let(:mail) { create(:closed_mail, procedure: procedure) }
+      it_behaves_like 'inserting the --lien document justificatif-- tag'
+    end
 
-        describe 'with justificatif' do
-          before do
-            dossier.justificatif_motivation.attach(justificatif)
-          end
-          it { expect(dossier.justificatif_motivation).to be_attached }
-          it { is_expected.to include("Télécharger le document justificatif") }
-        end
-      end
+    context 'in refused mail' do
+      let(:mail) { create(:refused_mail, procedure: procedure) }
+      it_behaves_like 'inserting the --lien document justificatif-- tag'
+    end
+
+    context 'in without continuation mail' do
+      let(:mail) { create(:without_continuation_mail, procedure: procedure) }
+      it_behaves_like 'inserting the --lien document justificatif-- tag'
     end
   end
 

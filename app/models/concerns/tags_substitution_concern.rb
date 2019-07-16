@@ -72,7 +72,7 @@ module TagsSubstitutionConcern
           return "[l'instructeur n'a pas joint de document supplémentaire]"
         end
       },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::TERMINE
     }
   ]
 
