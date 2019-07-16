@@ -14,6 +14,7 @@ describe Admin::ProceduresController, type: :controller do
   let(:cadre_juridique) { 'cadre juridique' }
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:duree_conservation_dossiers_hors_ds) { 6 }
+  let(:monavis) { nil }
 
   let(:procedure_params) {
     {
@@ -24,7 +25,8 @@ describe Admin::ProceduresController, type: :controller do
       direction: direction,
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
-      duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds
+      duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds,
+      monavis: monavis
     }
   }
 
@@ -743,6 +745,59 @@ describe Admin::ProceduresController, type: :controller do
         expect(response.body).to include('Ce lien est déjà utilisé par une démarche.')
         expect(response.body).to include('Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.')
       }
+    end
+  end
+
+  describe 'PATCH #monavis' do
+    let!(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
+    let(:procedure_params) {
+      {
+        monavis: monavis
+      }
+    }
+
+    context 'when administrateur is not connected' do
+      before do
+        sign_out admin
+      end
+
+      subject { patch :update_monavis, params: { procedure_id: procedure.id } }
+
+      it { is_expected.to redirect_to new_user_session_path }
+    end
+
+    context 'when administrateur is connected' do
+      def update_monavis
+        patch :update_monavis, params: { procedure_id: procedure.id, procedure: procedure_params }
+        procedure.reload
+      end
+
+      context 'when all attributes are present' do
+        render_views
+        let(:monavis) { 'code html for monavis' }
+
+        before { update_monavis }
+
+        describe 'the monavis field is updated' do
+          subject { procedure }
+
+          it { expect(subject.monavis).to eq(monavis) }
+        end
+
+        it { expect(flash[:notice]).to be_present }
+        it { expect(response.body).to include "MonAvis" }
+      end
+
+      context 'when procedure is published' do
+        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, :published, administrateur: admin) }
+        let(:monavis) { 'code html for monavis' }
+
+        subject { update_monavis }
+
+        describe 'the monavis field is updated' do
+          it { expect(subject.monavis).to eq procedure_params[:monavis] }
+        end
+      end
     end
   end
 end

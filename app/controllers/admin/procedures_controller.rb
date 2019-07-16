@@ -2,7 +2,7 @@ class Admin::ProceduresController < AdminController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
-  before_action :retrieve_procedure, only: [:show, :edit, :delete_logo, :delete_deliberation, :delete_notice]
+  before_action :retrieve_procedure, only: [:show, :edit, :delete_logo, :delete_deliberation, :delete_notice, :monavis, :update_monavis]
 
   def index
     if current_administrateur.procedures.count != 0
@@ -198,6 +198,18 @@ class Admin::ProceduresController < AdminController
     render layout: 'application'
   end
 
+  def monavis
+  end
+
+  def update_monavis
+    if !@procedure.update(procedure_params)
+      flash.now.alert = @procedure.errors.full_messages
+    else
+      flash.notice = 'le champ MonAvis a bien été mis à jour'
+    end
+    render 'monavis'
+  end
+
   def active_class
     @active_class = 'active'
   end
@@ -265,7 +277,7 @@ class Admin::ProceduresController < AdminController
   end
 
   def procedure_params
-    editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on]
+    editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on, :monavis]
     if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
