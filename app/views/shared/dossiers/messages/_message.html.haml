@@ -10,7 +10,10 @@
       = commentaire_date(commentaire)
   .rich-text= sanitize(simple_format(commentaire.body))
 
-  - if commentaire.file.present?
+  - if commentaire.piece_jointe.attached?
+    .attachment-link
+      = render partial: "shared/attachment/show", locals: { attachment: commentaire.piece_jointe.attachment }
+  - elsif commentaire.file.present?
     .attachment-link
       = link_to commentaire.file_url, class: "button", target: "_blank", rel: "noopener", title: "Télécharger" do
         %span.icon.attachment

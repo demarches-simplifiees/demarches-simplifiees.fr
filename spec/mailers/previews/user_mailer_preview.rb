@@ -3,6 +3,10 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.new_account_warning(user)
   end
 
+  def account_already_taken
+    UserMailer.account_already_taken(user, 'dircab@territoires.gouv.fr')
+  end
+
   private
 
   def user

@@ -127,15 +127,6 @@
   .col-md-6
     %h4 Options avancées
 
-    = f.label :expects_multiple_submissions do
-      = f.check_box :expects_multiple_submissions
-      Ajuster pour le dépôt récurrent de dossiers
-    %p.help-block
-      %i.fa.fa-info-circle
-      Si cette démarche est conçue pour qu’une même personne y dépose régulièrement plusieurs
-      dossiers, l’interface est ajustée pour rendre plus facile la création de plusieurs dossiers
-      à la suite.
-
     - if Flipflop.web_hook?
       %label{ for: :web_hook_url } Lien de rappel HTTP (webhook)
       = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'

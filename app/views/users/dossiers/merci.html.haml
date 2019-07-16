@@ -20,4 +20,6 @@
       et
       %b échanger avec un instructeur.
 
-    = link_to 'Accéder à votre dossier', dossier_path(@dossier), class: 'button large primary'
+    .flex.column.align-center
+      = link_to 'Accéder à votre dossier', dossier_path(@dossier), class: 'button large primary'
+      = link_to 'Déposer un autre dossier', procedure_lien(@dossier.procedure)

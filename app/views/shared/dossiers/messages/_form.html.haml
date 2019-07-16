@@ -2,8 +2,8 @@
   = f.text_area :body, rows: 5, placeholder: 'Répondre ici', required: true, class: 'message-textarea'
   .flex.justify-between.wrap
     %div
-      = f.file_field :file, id: :file, accept: commentaire.file.accept_extension_list
-      %label{ for: :file }
+      = f.file_field :piece_jointe, id: 'piece_jointe', direct_upload: true
+      %label{ for: :piece_jointe }
         .notice
           (taille max : 20 Mo)
 

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Users::ProfilController, type: :controller do
+  include ActiveJob::TestHelper
+
   let(:user) { create(:user) }
 
   before { sign_in(user) }
@@ -34,13 +36,17 @@ describe Users::ProfilController, type: :controller do
     end
 
     context 'when the mail is already taken' do
-      let!(:user2) { create(:user) }
+      let(:existing_user) { create(:user) }
 
       before do
-        patch :update_email, params: { user: { email: user2.email } }
+        perform_enqueued_jobs do
+          patch :update_email, params: { user: { email: existing_user.email } }
+        end
         user.reload
       end
 
+      it { expect(user.unconfirmed_email).to be_nil }
+      it { expect(ActionMailer::Base.deliveries.last.to).to eq([existing_user.email]) }
       it { expect(response).to redirect_to(profil_path) }
       it { expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation')) }
     end

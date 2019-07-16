@@ -12,8 +12,9 @@ module Users
     def update_email
       if @current_user.update(update_email_params)
         flash.notice = t('devise.registrations.update_needs_confirmation')
-      # to avoid leaking who has signed in
       elsif @current_user.errors&.details&.dig(:email)&.any? { |e| e[:error] == :taken }
+        UserMailer.account_already_taken(@current_user, requested_email).deliver_later
+        # avoid leaking information about whether an account with this email exists or not
         flash.notice = t('devise.registrations.update_needs_confirmation')
       else
         flash.alert = @current_user.errors.full_messages
@@ -26,6 +27,10 @@ module Users
 
     def update_email_params
       params.require(:user).permit(:email)
+    end
+
+    def requested_email
+      update_email_params[:email]
     end
   end
 end

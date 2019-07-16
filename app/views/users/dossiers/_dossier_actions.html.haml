@@ -1,5 +1,5 @@
 - has_delete_action = dossier.can_be_deleted_by_user?
-- has_new_dossier_action = dossier.procedure.expects_multiple_submissions? && dossier.procedure.accepts_new_dossiers?
+- has_new_dossier_action = dossier.procedure.accepts_new_dossiers?
 
 - has_actions = has_delete_action || has_new_dossier_action
 

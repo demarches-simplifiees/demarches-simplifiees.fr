@@ -52,7 +52,7 @@ class SupportController < ApplicationController
       email: email,
       phone: params[:phone],
       text: params[:text],
-      file: params[:file],
+      file: params[:piece_jointe],
       dossier_id: dossier&.id,
       browser: browser_name,
       tags: tags
@@ -61,7 +61,7 @@ class SupportController < ApplicationController
 
   def create_commentaire
     attributes = {
-      file: params[:file],
+      piece_jointe: params[:piece_jointe],
       body: "[#{params[:subject]}]<br><br>#{params[:text]}"
     }
     commentaire = CommentaireService.build(current_user, dossier, attributes)

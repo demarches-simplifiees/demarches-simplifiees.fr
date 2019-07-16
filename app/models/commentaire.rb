@@ -5,9 +5,10 @@ class Commentaire < ApplicationRecord
   belongs_to :gestionnaire
 
   mount_uploader :file, CommentaireFileUploader
-  validates :file, file_size: { maximum: 20.megabytes, message: "La taille du fichier doit être inférieure à 20 Mo" }
-  validate :is_virus_free?
   validate :messagerie_available?, on: :create
+
+  has_one_attached :piece_jointe
+
   validates :body, presence: { message: "Votre message ne peut être vide" }
 
   default_scope { order(created_at: :asc) }
@@ -47,10 +48,15 @@ class Commentaire < ApplicationRecord
   end
 
   def file_url
-    if Flipflop.remote_storage?
+    if piece_jointe.attached?
+      if piece_jointe.virus_scanner.safe?
+        Rails.application.routes.url_helpers.url_for(piece_jointe)
+      end
+    elsif Flipflop.remote_storage?
       RemoteDownloader.new(file.path).url
-    else
-      file.url
+    elsif file&.url
+      # FIXME: this is horrible but used only in dev and will be removed after migration
+      File.join(LOCAL_DOWNLOAD_URL, file.url)
     end
   end
 
@@ -72,12 +78,6 @@ class Commentaire < ApplicationRecord
 
   def notify_user
     DossierMailer.notify_new_answer(dossier).deliver_later
-  end
-
-  def is_virus_free?
-    if file.present? && file_changed? && !ClamavService.safe_file?(file.path)
-      errors.add(:file, "Virus détecté dans le fichier joint, merci de changer de fichier")
-    end
   end
 
   def messagerie_available?
