@@ -371,7 +371,7 @@ module Users
     end
 
     def commentaire_params
-      params.require(:commentaire).permit(:body, :file)
+      params.require(:commentaire).permit(:body, :piece_jointe)
     end
 
     def passage_en_construction?

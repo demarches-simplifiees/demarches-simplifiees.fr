@@ -137,6 +137,7 @@ describe User, type: :model do
       gestionnaire = create(:gestionnaire, email: user.email)
 
       user.update(email: 'whoami@plop.com', password: 'démarches-simplifiées2')
+      user.confirm
 
       gestionnaire.reload
       expect(gestionnaire.email).to eq('whoami@plop.com')
@@ -148,6 +149,7 @@ describe User, type: :model do
       admin = create(:administrateur, email: user.email)
 
       user.update(email: 'whoami@plop.com', password: 'démarches-simplifiées2')
+      user.confirm
 
       admin.reload
       expect(admin.email).to eq('whoami@plop.com')

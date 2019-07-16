@@ -71,11 +71,30 @@ describe FranceConnect::ParticulierController, type: :controller do
         end
 
         context 'when france_connect_particulier_id does not have an associate user' do
-          it { is_expected.to redirect_to(root_path) }
+          context 'when the email address is not used yet' do
+            it { expect { subject }.to change(User, :count).by(1) }
+            it { is_expected.to redirect_to(root_path) }
+          end
 
-          it do
-            subject
-            expect(User.find_by(email: email)).not_to be_nil
+          context 'when the email address is already used' do
+            let!(:user) { create(:user, email: email, france_connect_information: nil) }
+
+            it 'associates the france_connect infos with the existing user' do
+              expect { subject }.not_to change(User, :count)
+              expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
+              expect(subject).to redirect_to(root_path)
+            end
+          end
+
+          context 'when a differently cased email address is already used' do
+            let(:email) { 'TEST@test.com' }
+            let!(:user) { create(:user, email: email.downcase, france_connect_information: nil) }
+
+            it 'associates the france_connect infos with the existing user' do
+              expect { subject }.not_to change(User, :count)
+              expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
+              expect(subject).to redirect_to(root_path)
+            end
           end
         end
       end

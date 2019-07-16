@@ -10,16 +10,10 @@ info = {
       }
 
 
-#----- set page to A4 instead of letter
-page_size = 'A4' # ou 'LETTER'
-case page_size
-when 'A4'
-    page_height = 842
-    page_width = 595
-when 'LETTER'
-    page_height = 1008
-    page_width = 612
-end
+#----- A4 page size
+page_size = 'A4'
+page_height = 842
+page_width = 595
 
 #----- margins
 body_width = 400
@@ -66,7 +60,6 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
         pdf.image StringIO.new(@signature.read), fit: [max_signature_size , max_signature_size], position: :right
       end
     end
-
   end
 
   pdf.repeat(:all) do

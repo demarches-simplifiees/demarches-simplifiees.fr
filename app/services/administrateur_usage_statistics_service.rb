@@ -59,8 +59,8 @@ class AdministrateurUsageStatisticsService
         .max || 0,
       nb_dossiers_traite: nb_dossiers_by_synthetic_state['termine'],
       nb_dossiers_dossier_en_instruction: nb_dossiers_by_synthetic_state['en_instruction'],
-      admin_roi_low: nb_dossiers_roi * 7.04,
-      admin_roi_high: nb_dossiers_roi * 17.25
+      admin_roi_low: nb_dossiers_roi * 7,
+      admin_roi_high: nb_dossiers_roi * 17
     }
 
     if administrateur.current_sign_in_at.present?

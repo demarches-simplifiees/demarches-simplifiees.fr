@@ -92,7 +92,7 @@ describe Gestionnaires::AvisController, type: :controller do
       let(:file) { nil }
       let(:scan_result) { true }
 
-      subject { post :create_commentaire, params: { id: avis_without_answer.id, commentaire: { body: 'commentaire body', file: file } } }
+      subject { post :create_commentaire, params: { id: avis_without_answer.id, commentaire: { body: 'commentaire body', piece_jointe: file } } }
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
@@ -110,16 +110,10 @@ describe Gestionnaires::AvisController, type: :controller do
 
         it do
           subject
-          expect(Commentaire.last.file.path).to include("piece_justificative_0.pdf")
+          expect(Commentaire.last.piece_jointe.filename).to eq("piece_justificative_0.pdf")
         end
 
         it { expect { subject }.to change(Commentaire, :count).by(1) }
-
-        context "and a virus" do
-          let(:scan_result) { false }
-
-          it { expect { subject }.not_to change(Commentaire, :count) }
-        end
       end
     end
 

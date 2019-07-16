@@ -115,7 +115,7 @@ class Dossier < ApplicationRecord
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
   scope :since,                       -> (since) { where('dossiers.en_construction_at >= ?', since) }
   scope :for_api, -> {
-    includes(commentaires: [],
+    includes(commentaires: { piece_jointe_attachment: :blob },
       champs: [
         :geo_areas,
         :etablissement,
@@ -225,7 +225,7 @@ class Dossier < ApplicationRecord
   end
 
   def messagerie_available?
-    !brouillon? && !archived && !procedure.archivee?
+    !brouillon? && !archived
   end
 
   def retention_end_date
@@ -412,7 +412,8 @@ class Dossier < ApplicationRecord
   def hide!(administration)
     update(hidden_at: Time.zone.now)
 
-    DeletedDossier.create_from_dossier(self)
+    deleted_dossier = DeletedDossier.create_from_dossier(self)
+    DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
     log_dossier_operation(administration, :supprimer, self)
   end
 
@@ -460,8 +461,8 @@ class Dossier < ApplicationRecord
       ['Archivé', :archived],
       ['État du dossier', I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])],
       ['Dernière mise à jour le', :updated_at],
-      ['Passé en construction le', :en_instruction_at],
-      ['Passé en instruction le', :en_construction_at],
+      ['Passé en construction le', :en_construction_at],
+      ['Passé en instruction le', :en_instruction_at],
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
       ['Instructeurs', followers_gestionnaires.map(&:email).join(' ')]

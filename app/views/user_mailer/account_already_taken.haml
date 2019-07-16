@@ -1,0 +1,20 @@
+- content_for(:title, @subject)
+
+%p
+  Bonjour,
+
+%p
+  L’utilisateur « #{@user.email} » a demandé le changement de son adresse vers « #{@requested_email} ».
+
+%p
+  Malheureusement, votre compte « #{@requested_email} » existe déjà. Nous ne pouvons pas fusionner automatiquement vos comptes.
+
+%p
+  %strong Nous ne pouvons donc pas effectuer le changement d’adresse email.
+
+%p
+  Si vous n'êtes pas à l’origine de cette demande, vous pouvez ignorer ce message. Et si vous avez besoin d’assistance, n’hésitez pas à nous contacter à
+  = succeed '.' do
+    = mail_to CONTACT_EMAIL
+
+= render partial: "layouts/mailers/signature"

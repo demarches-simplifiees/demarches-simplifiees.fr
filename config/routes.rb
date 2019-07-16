@@ -301,6 +301,12 @@ Rails.application.routes.draw do
     end
     resource :feedback, only: [:create]
     get 'demarches' => 'demarches#index'
+
+    get 'profil' => 'profil#show'
+    post 'renew-api-token' => 'profil#renew_api_token'
+    # allow refresh 'renew api token' page
+    get 'renew-api-token' => redirect('/profil')
+    patch 'update_email' => 'profil#update_email'
   end
 
   #
@@ -387,11 +393,6 @@ Rails.application.routes.draw do
         patch 'add_to_procedure'
       end
     end
-
-    get 'profil' => 'profil#show'
-    post 'renew-api-token' => 'profil#renew_api_token'
-    # allow refresh 'renew api token' page
-    get 'renew-api-token' => redirect('/profil')
   end
 
   #

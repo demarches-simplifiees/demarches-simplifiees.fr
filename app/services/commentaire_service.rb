@@ -13,6 +13,11 @@ class CommentaireService
 
     def build_with_email(email, dossier, params)
       attributes = params.merge(email: email, dossier: dossier)
+      # For some reason ActiveStorage trows an error in tests if we passe an empty string here.
+      # I suspect it could be resolved in rails 6 by using explicit `attach()`
+      if attributes[:piece_jointe].blank?
+        attributes.delete(:piece_jointe)
+      end
       Commentaire.new(attributes)
     end
   end

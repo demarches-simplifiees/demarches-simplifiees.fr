@@ -92,6 +92,13 @@ describe ProcedureExportV2Service do
       it 'should have data' do
         expect(dossiers_sheet.data.size).to eq(1)
         expect(etablissements_sheet.data.size).to eq(1)
+
+        # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
+        offset = dossier.en_construction_at.utc_offset
+        en_construction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
+        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][10] - offset.seconds)
+        expect(en_construction_at).to eq(dossier.en_construction_at.round)
+        expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
       end
     end
 
@@ -162,15 +169,6 @@ describe ProcedureExportV2Service do
     context 'with repetitions' do
       let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
       let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
-      let(:type_de_champ_text) { create(:type_de_champ_text, order_place: 0, parent: champ_repetition.type_de_champ) }
-      let(:type_de_champ_number) { create(:type_de_champ_number, order_place: 1, parent: champ_repetition.type_de_champ) }
-
-      before do
-        create(:champ_text, row: 0, type_de_champ: type_de_champ_text, parent: champ_repetition)
-        create(:champ_number, row: 0, type_de_champ: type_de_champ_number, parent: champ_repetition)
-        create(:champ_text, row: 1, type_de_champ: type_de_champ_text, parent: champ_repetition)
-        create(:champ_number, row: 1, type_de_champ: type_de_champ_number, parent: champ_repetition)
-      end
 
       it 'should have sheets' do
         expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle])
@@ -180,8 +178,8 @@ describe ProcedureExportV2Service do
         expect(repetition_sheet.headers).to eq([
           "Dossier ID",
           "Ligne",
-          type_de_champ_text.libelle,
-          type_de_champ_number.libelle
+          "Nom",
+          "Age"
         ])
       end
 

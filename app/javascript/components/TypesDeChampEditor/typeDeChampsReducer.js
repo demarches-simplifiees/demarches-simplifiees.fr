@@ -115,6 +115,18 @@ function updateTypeDeChamp(
   { typeDeChamp, field, value },
   done
 ) {
+  if (field == 'type_champ' && !typeDeChamp.drop_down_list_value) {
+    switch (value) {
+      case 'linked_drop_down_list':
+        typeDeChamp.drop_down_list_value =
+          '--Fromage--\nbleu de sassenage\npicodon\n--Dessert--\néclair\ntarte aux pommes\n';
+        break;
+      case 'drop_down_list':
+      case 'multiple_drop_down_list':
+        typeDeChamp.drop_down_list_value = '--Premier élément du menu--\n';
+    }
+  }
+
   typeDeChamp[field] = value;
 
   getUpdateHandler(typeDeChamp, state)(done);

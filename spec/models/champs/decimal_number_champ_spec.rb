@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Champs::DecimalNumberChamp do
-  subject { Champs::DecimalNumberChamp.new(value: value) }
+  subject { build(:champ_decimal_number, value: value).tap(&:valid?) }
 
   describe '#valid?' do
     context 'when the value is integer number' do
@@ -20,6 +20,7 @@ describe Champs::DecimalNumberChamp do
       let(:value) { 'toto' }
 
       it { is_expected.to_not be_valid }
+      it { expect(subject.errors[:value]).to eq(["« #{subject.libelle} » doit être un nombre"]) }
     end
 
     context 'when the value is blank' do

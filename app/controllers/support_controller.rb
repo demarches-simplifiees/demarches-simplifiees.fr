@@ -52,7 +52,7 @@ class SupportController < ApplicationController
       email: email,
       phone: params[:phone],
       text: params[:text],
-      file: params[:file],
+      file: params[:piece_jointe],
       dossier_id: dossier&.id,
       browser: browser_name,
       tags: tags
@@ -61,10 +61,10 @@ class SupportController < ApplicationController
 
   def create_commentaire
     attributes = {
-      file: params[:file],
+      piece_jointe: params[:piece_jointe],
       body: "[#{params[:subject]}]<br><br>#{params[:text]}"
     }
-    commentaire = CommentaireService.build_with_email(email, dossier, attributes)
+    commentaire = CommentaireService.build(current_user, dossier, attributes)
     commentaire.save!
   end
 
@@ -82,7 +82,7 @@ class SupportController < ApplicationController
   end
 
   def direct_message?
-    user_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present? && !dossier.brouillon?
+    user_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present? && dossier.messagerie_available?
   end
 
   def dossier
