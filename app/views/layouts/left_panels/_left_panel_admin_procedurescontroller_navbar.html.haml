@@ -64,6 +64,10 @@
       .procedure-list-element{ class: ('active' if active == 'Attestation') }
         Attestation
 
+    %a#onglet-description{ href: url_for(admin_procedure_monavis_path(@procedure)) }
+      .procedure-list-element{ class: ('active' if active == 'Mon avis') }
+        Mon avis
+
   .split-hr-left
 
 

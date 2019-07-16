@@ -1,0 +1,14 @@
+.form-group
+  %h3 Insérer un lien vers « Mon avis »
+  %p
+    Proposez aux usagers de donner un avis sur votre démarche. Pour ce faire, vous devez précédemment aller sur «
+    %a{ :href => "https://monavis.numerique.gouv.fr" } https://monavis.numerique.gouv.fr
+    », créer un compte, et référencer là démarche que vous venez de publier.
+
+  %p
+    Dès que vous avez effectué le référencement de celle-ci, vous pouvez suivre le guide d’intégration du bouton que vous trouverez à
+    %a{ :href => "https://monavis.numerique.gouv.fr/Aide/Int%C3%A9gration%20du%20bouton%20MonAvis" } l’adresse suivante.
+
+  %p Une fois en possession du code généré sur le site MonAvis, vous pouvez le coller dans le champ ci-dessous :
+
+  = f.text_area :monavis, rows: '6', placeholder: 'Insérer le code généré par MonAvis', class: 'form-control'
