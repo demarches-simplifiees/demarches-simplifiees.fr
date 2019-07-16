@@ -154,10 +154,20 @@ class CarrierwaveActiveStorageMigrationService
     attachment
   end
 
-  def fix_content_type(blob)
+  def fix_content_type(blob, retry_delay: 5)
+    retries ||= 0
     # In OpenStack, ActiveStorage cannot inject the MIME type on the fly during direct
     # download. Instead, the MIME type needs to be stored statically on the file object
     # in OpenStack. This is what this call does.
     blob.service.change_content_type(blob.key, blob.content_type)
+  rescue
+    # When we quickly create a new attachment, and then change its content type,
+    # the Object Storage may not be synchronized yet. It this cas, it will return a
+    # "409 Conflict" error.
+    #
+    # Wait for a while, then try again twice (before giving up).
+    sleep(retry_delay)
+    retry if (retries += 1) < 3
+    raise
   end
 end
