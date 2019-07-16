@@ -22,9 +22,8 @@ module Manager
 
     def hide
       dossier = Dossier.find(params[:id])
-      deleted_dossier = dossier.hide!(current_administration)
+      dossier.hide!(current_administration)
 
-      DossierMailer.notify_deletion_to_user(deleted_dossier, dossier.user.email).deliver_later
       logger.info("Le dossier #{dossier.id} est supprimé par #{current_administration.email}")
       flash[:notice] = "Le dossier #{dossier.id} est supprimé"
 

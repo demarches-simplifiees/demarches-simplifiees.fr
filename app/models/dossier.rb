@@ -412,7 +412,8 @@ class Dossier < ApplicationRecord
   def hide!(administration)
     update(hidden_at: Time.zone.now)
 
-    DeletedDossier.create_from_dossier(self)
+    deleted_dossier = DeletedDossier.create_from_dossier(self)
+    DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
     log_dossier_operation(administration, :supprimer, self)
   end
 
