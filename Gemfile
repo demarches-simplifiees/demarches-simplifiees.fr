@@ -67,6 +67,7 @@ gem 'turbolinks' # Turbolinks makes following links in your web application fast
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'
+gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 group :test do

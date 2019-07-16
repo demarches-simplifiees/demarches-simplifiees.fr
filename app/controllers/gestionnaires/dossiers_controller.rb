@@ -5,6 +5,9 @@ module Gestionnaires
     include CreateAvisConcern
     include DossierHelper
 
+    include ActionController::Streaming
+    include Zipline
+
     after_action :mark_demande_as_read, only: :show
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire]
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
@@ -170,6 +173,14 @@ module Gestionnaires
     def print
       @dossier = dossier
       render layout: "print"
+    end
+
+    def telecharger_pjs
+      return head(:forbidden) if !Flipflop.download_as_zip_enabled? || !dossier.attachments_downloadable?
+
+      files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
+
+      zipline(files, "dossier-#{dossier.id}.zip")
     end
 
     private
