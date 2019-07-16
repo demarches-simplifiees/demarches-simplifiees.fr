@@ -632,13 +632,14 @@ describe Dossier do
   describe "#delete_and_keep_track" do
     let(:dossier) { create(:dossier) }
     let(:deleted_dossier) { DeletedDossier.find_by!(dossier_id: dossier.id) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
 
     before do
       allow(DossierMailer).to receive(:notify_deletion_to_user).and_return(double(deliver_later: nil))
       allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
-    subject! { dossier.delete_and_keep_track }
+    subject! { dossier.delete_and_keep_track(dossier.user) }
 
     it 'hides the dossier' do
       expect(dossier.hidden_at).to be_present
@@ -653,6 +654,11 @@ describe Dossier do
 
     it 'notifies the user' do
       expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
+    end
+
+    it 'records the operation in the log' do
+      expect(last_operation.operation).to eq("supprimer")
+      expect(last_operation.automatic_operation?).to be_falsey
     end
 
     context 'where gestionnaires are following the dossier' do
@@ -988,23 +994,6 @@ describe Dossier do
         end
       end
     end
-  end
-
-  describe '#hide!' do
-    let(:dossier) { create(:dossier) }
-    let(:administration) { create(:administration) }
-    let(:last_operation) { dossier.dossier_operation_logs.last }
-
-    before do
-      Timecop.freeze
-      dossier.hide!(administration)
-    end
-
-    after { Timecop.return }
-
-    it { expect(dossier.hidden_at).to eq(Time.zone.now) }
-    it { expect(last_operation.operation).to eq('supprimer') }
-    it { expect(last_operation.automatic_operation?).to be_falsey }
   end
 
   describe '#repasser_en_instruction!' do
