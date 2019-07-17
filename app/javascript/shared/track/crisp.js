@@ -29,7 +29,7 @@ if (enabled) {
         ['DS_NB_DEMARCHES_ARCHIVES', administrateur.DS_NB_DEMARCHES_ARCHIVES],
         [
           'URL_MANAGER',
-          'https://www.demarches-simplifiees.fr/manager/administrateurs/' +
+          'https://www.mes-demarches.gov.pf/manager/administrateurs/' +
             administrateur.DS_ID
         ]
       ]
