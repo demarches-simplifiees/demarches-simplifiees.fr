@@ -74,8 +74,8 @@ class Procedure < ApplicationRecord
 
   class MonavisValidator < ActiveModel::Validator
     def validate(record)
-      r = Regexp.new('<a href="https://monavis.numerique.gouv.fr/Demarches/\d+\?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=[[:alnum:]]+">\s*<img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc|bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />\s*</a>', Regexp::MULTILINE)
-      if record.monavis.present? && !r.match?(record.monavis)
+      r = Regexp.new('<a href="https://monavis.numerique.gouv.fr/Demarches/\d+.*key=[[:alnum:]]+.*">\s*<img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc|bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />\s*</a>', Regexp::MULTILINE)
+      if record.monavis_embed.present? && !r.match?(record.monavis_embed)
         record.errors[:base] << "Le code fourni ne correspond pas au format des codes Monavis reconnus par la plateforme."
       end
     end
