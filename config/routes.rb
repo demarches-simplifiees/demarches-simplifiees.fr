@@ -206,6 +206,8 @@ Rails.application.routes.draw do
       put 'publish' => 'procedures#publish', as: :publish
       post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
+      get 'monavis' => 'procedures#monavis', as: :monavis
+      patch 'monavis' => 'procedures#update_monavis', as: :update_monavis
 
       resource :instructeurs, only: [:show, :update]
 

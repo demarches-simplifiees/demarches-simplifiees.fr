@@ -1,6 +1,25 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "483ae8c038244eb3ed709e89846335e2c8ff6579260348ec31d3d03d1c94ad64",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/users/dossiers/merci.html.haml",
+      "line": 26,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "current_user.dossiers.includes(:procedure).find(params[:id]).procedure.monavis_embed",
+      "render_path": [{"type":"controller","class":"Users::DossiersController","method":"merci","line":178,"file":"app/controllers/users/dossiers_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "users/dossiers/merci"
+      },
+      "user_input": "current_user.dossiers.includes(:procedure)",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "bd1df30f95135357b646e21a03d95498874faffa32e3804fc643e9b6b957ee14",
@@ -27,7 +46,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/procedure_presentation.rb",
-      "line": 97,
+      "line": 98,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "((\"self\" == \"self\") ? (dossiers) : (dossiers.includes(\"self\"))).order(\"#{self.class.sanitized_column(\"self\", column)} #{order}\")",
       "render_path": null,
@@ -47,7 +66,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/procedure_presentation.rb",
-      "line": 93,
+      "line": 94,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "dossiers.includes(((\"type_de_champ\" == \"type_de_champ\") ? (:champs) : (:champs_private))).where(\"champs.type_de_champ_id = #{column.to_i}\").order(\"champs.value #{order}\")",
       "render_path": null,
@@ -61,6 +80,6 @@
       "note": "`column` and `order` come from the model, which is validated to prevent injection attacks. Furthermore, the sql injection attack on `column` would need to survive the `to_i`"
     }
   ],
-  "updated": "2019-03-04 11:59:49 +0100",
+  "updated": "2019-07-17 16:03:11 +0200",
   "brakeman_version": "4.3.1"
 }
