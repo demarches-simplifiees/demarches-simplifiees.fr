@@ -69,4 +69,31 @@ describe CarrierwaveActiveStorageMigrationService do
       end
     end
   end
+
+  describe '.fix_content_type' do
+    let(:pj) { create(:piece_justificative, :rib, updated_at: Time.zone.local(2019, 01, 01, 12, 00)) }
+    let(:blob) { service.make_empty_blob(pj.content, pj.updated_at.iso8601, filename: pj.original_filename) }
+
+    context 'when the request is ok' do
+      it 'succeeds' do
+        expect(blob.service).to receive(:change_content_type).and_return(true)
+        expect { service.fix_content_type(blob) }.not_to raise_error
+      end
+    end
+
+    context 'when the request fails initially' do
+      it 'retries the request' do
+        expect(blob.service).to receive(:change_content_type).and_raise(StandardError).ordered
+        expect(blob.service).to receive(:change_content_type).and_return(true).ordered
+        expect { service.fix_content_type(blob, retry_delay: 0.01) }.not_to raise_error
+      end
+    end
+
+    context 'when the request fails too many times' do
+      it 'gives up' do
+        expect(blob.service).to receive(:change_content_type).and_raise(StandardError).thrice
+        expect { service.fix_content_type(blob, retry_delay: 0.01) }.to raise_error(StandardError)
+      end
+    end
+  end
 end

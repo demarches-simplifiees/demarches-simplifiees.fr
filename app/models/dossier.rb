@@ -317,7 +317,7 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def delete_and_keep_track
+  def delete_and_keep_track(author)
     deleted_dossier = DeletedDossier.create_from_dossier(self)
     update(hidden_at: deleted_dossier.deleted_at)
 
@@ -328,6 +328,8 @@ class Dossier < ApplicationRecord
       end
     end
     DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
+
+    log_dossier_operation(author, :supprimer, self)
   end
 
   def after_passer_en_instruction(gestionnaire)
@@ -409,14 +411,6 @@ class Dossier < ApplicationRecord
     log_dossier_operation(gestionnaire, :classer_sans_suite, self)
   end
 
-  def hide!(administration)
-    update(hidden_at: Time.zone.now)
-
-    deleted_dossier = DeletedDossier.create_from_dossier(self)
-    DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
-    log_dossier_operation(administration, :supprimer, self)
-  end
-
   def check_mandatory_champs
     (champs + champs.select(&:repetition?).flat_map(&:champs))
       .select(&:mandatory_and_blank?)
@@ -464,6 +458,10 @@ class Dossier < ApplicationRecord
     champs_private.reject(&:exclude_from_export?).map do |champ|
       [champ.libelle, champ.for_export]
     end
+  end
+
+  def attachments_downloadable?
+    !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < 50.megabytes
   end
 
   private
