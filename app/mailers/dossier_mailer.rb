@@ -1,5 +1,7 @@
 # Preview all emails at http://localhost:3000/rails/mailers/dossier_mailer
 class DossierMailer < ApplicationMailer
+  helper ServiceHelper
+
   layout 'mailers/layout'
 
   def notify_new_draft(dossier)
