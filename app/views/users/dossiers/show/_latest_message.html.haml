@@ -4,6 +4,8 @@
     %h3.tab-title Dernier message
 
     .message.inverted-background
-      = render partial: "shared/dossiers/messages/message", locals: { commentaire: latest_message, connected_user: current_user, messagerie_seen_at: nil }
+      = render partial: "shared/dossiers/messages/message", locals: { commentaire: latest_message, connected_user: current_user, messagerie_seen_at: nil, show_reply_button: false }
 
-    = link_to commentaire_answer_action(latest_message, current_user), messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button send'
+    = link_to messagerie_dossier_url(dossier, anchor: 'new_commentaire'), class: 'button send' do
+      %span.icon.reply
+      = commentaire_answer_action(latest_message, current_user)
