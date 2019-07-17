@@ -200,37 +200,37 @@ describe Procedure do
 
     context 'monavis' do
       context 'nil is allowed' do
-        it { is_expected.to allow_value(nil).for(:monavis) }
-        it { is_expected.to allow_value('').for(:monavis) }
+        it { is_expected.to allow_value(nil).for(:monavis_embed) }
+        it { is_expected.to allow_value('').for(:monavis_embed) }
       end
 
       context 'random string is not allowed' do
-        let(:procedure) { build(:procedure, monavis: "plop") }
+        let(:procedure) { build(:procedure, monavis_embed: "plop") }
         it { expect(procedure.valid?).to eq(false) }
       end
 
       context 'random html is not allowed' do
-        let(:procedure) { build(:procedure, monavis: '<img src="http://some.analytics/hello.gif">') }
+        let(:procedure) { build(:procedure, monavis_embed: '<img src="http://some.analytics/hello.gif">') }
         it { expect(procedure.valid?).to eq(false) }
       end
 
       context 'Monavis embed code with white button is allowed' do
         monavis_blanc = <<-MSG
-<a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
-  <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
-</a>
-MSG
-        let(:procedure) { build(:procedure, monavis: monavis_blanc) }
+        <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
+          <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+        </a>
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_blanc) }
         it { expect(procedure.valid?).to eq(true) }
       end
 
       context 'Monavis embed code with blue button is allowed' do
-        monavis_blanc = <<-MSG
-<a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
-  <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
-</a>
-MSG
-        let(:procedure) { build(:procedure, monavis: monavis_blanc) }
+        monavis_bleu = <<-MSG
+        <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
+          <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+        </a>
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_bleu) }
         it { expect(procedure.valid?).to eq(true) }
       end
     end

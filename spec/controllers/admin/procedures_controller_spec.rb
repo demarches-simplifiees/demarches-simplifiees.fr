@@ -14,7 +14,7 @@ describe Admin::ProceduresController, type: :controller do
   let(:cadre_juridique) { 'cadre juridique' }
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:duree_conservation_dossiers_hors_ds) { 6 }
-  let(:monavis) { nil }
+  let(:monavis_embed) { nil }
 
   let(:procedure_params) {
     {
@@ -26,7 +26,7 @@ describe Admin::ProceduresController, type: :controller do
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds,
-      monavis: monavis
+      monavis_embed: monavis_embed
     }
   }
 
@@ -752,7 +752,7 @@ describe Admin::ProceduresController, type: :controller do
     let!(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
     let(:procedure_params) {
       {
-        monavis: monavis
+        monavis_embed: monavis_embed
       }
     }
 
@@ -771,31 +771,51 @@ describe Admin::ProceduresController, type: :controller do
         patch :update_monavis, params: { procedure_id: procedure.id, procedure: procedure_params }
         procedure.reload
       end
+      let(:monavis_embed) {
+        <<-MSG
+        <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
+          <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+        </a>
+        MSG
+      }
 
       context 'when all attributes are present' do
         render_views
-        let(:monavis) { 'code html for monavis' }
 
         before { update_monavis }
 
-        describe 'the monavis field is updated' do
-          subject { procedure }
+        context 'when the embed code is valid' do
+          describe 'the monavis field is updated' do
+            subject { procedure }
 
-          it { expect(subject.monavis).to eq(monavis) }
+            it { expect(subject.monavis_embed).to eq(monavis_embed) }
+          end
+
+          it { expect(flash[:notice]).to be_present }
+          it { expect(response.body).to include "MonAvis" }
         end
 
-        it { expect(flash[:notice]).to be_present }
-        it { expect(response.body).to include "MonAvis" }
+        context 'when the embed code is not valid' do
+          let(:monavis_embed) { 'invalid embed code' }
+
+          describe 'the monavis field is not updated' do
+            subject { procedure }
+
+            it { expect(subject.monavis_embed).to eq(nil) }
+          end
+
+          it { expect(flash[:alert]).to be_present }
+          it { expect(response.body).to include "MonAvis" }
+        end
       end
 
       context 'when procedure is published' do
         let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, :published, administrateur: admin) }
-        let(:monavis) { 'code html for monavis' }
 
         subject { update_monavis }
 
-        describe 'the monavis field is updated' do
-          it { expect(subject.monavis).to eq procedure_params[:monavis] }
+        describe 'the monavis field is not updated' do
+          it { expect(subject.monavis_embed).to eq monavis_embed }
         end
       end
     end
