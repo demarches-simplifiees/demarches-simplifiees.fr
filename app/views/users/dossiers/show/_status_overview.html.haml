@@ -1,5 +1,3 @@
-
-
 .status-overview
   - if !dossier.termine?
     %ul.status-timeline
@@ -16,27 +14,36 @@
   .status-explanation
     - if dossier.brouillon?
       .brouillon
-        %p Vous pouvez remplir votre dossier tranquillement : il n’est pas encore visible par l’administration.
-        %p Quand vous aurez terminé, soumettez votre dossier pour qu’il soit examiné.
+        %p Votre dossier n’est pas encore visible par l’administration.
+        %p Vous pouvez déposer votre dossier afin de le transmettre à l’administration. Une fois soumis, vous pourrez toujours modifier votre dossier.
 
     - elsif dossier.en_construction?
       .en-construction
-        %p Un instructeur de l’administration est en train de vérifier que votre dossier est bien complet. Si des modifications sont nécessaires, vous recevrez un message avec les modifications à effectuer.
         %p
-          Sinon,
+          Votre dossier est en construction. Cela signifie que
           = succeed '.' do
-            %strong votre dossier passera directement en instruction
+            %strong vous pouvez encore le modifier
+          Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction ».
+
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
+
+        %p
+          %strong Vous avez une question ?
+          Utilisez la messagerie pour
+          = succeed '.' do
+            = link_to 'contacter l’administration directement', messagerie_dossier_url(dossier)
 
     - elsif dossier.en_instruction?
       .en-instruction
-        %p Votre dossier est complet. Il est en cours d’examen par les instructeurs de l’administration.
-        %p
-          Dès que l’administration aura statué sur votre dossier,
-          %strong
-            vous recevrez un email
-          avec le résultat.
+        %p Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
+
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
+
+        %p
+          %strong Vous avez une question ?
+          Utilisez la messagerie pour
+          = succeed '.' do
+            = link_to 'contacter l’administration directement', messagerie_dossier_url(dossier)
 
     - elsif dossier.accepte?
       .accepte
