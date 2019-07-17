@@ -91,6 +91,10 @@
     background-image: image-url("icons/mail.svg");
   }
 
+  &.reply {
+    background-image: image-url("icons/reply.svg");
+  }
+
   &.search {
     background-image: image-url("icons/search-blue.svg");
   }
