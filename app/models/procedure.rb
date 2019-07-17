@@ -72,6 +72,15 @@ class Procedure < ApplicationRecord
   validates :duree_conservation_dossiers_dans_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, unless: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, unless: :durees_conservation_required
 
+  class MonavisValidator < ActiveModel::Validator
+    def validate(record)
+      r = Regexp.new('<a href="https://monavis.numerique.gouv.fr/Demarches/\d+\?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=[[:alnum:]]+">\s*<img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc|bleu.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />\s*</a>', Regexp::MULTILINE)
+      if record.monavis.present? && !r.match?(record.monavis)
+        record.errors[:base] << "Le code fourni ne correspond pas au format des codes Monavis reconnus par la plateforme."
+      end
+    end
+  end
+  validates_with MonavisValidator
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
   before_create :ensure_path_exists
