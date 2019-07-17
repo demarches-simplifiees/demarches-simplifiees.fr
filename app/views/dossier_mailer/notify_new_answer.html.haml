@@ -2,10 +2,12 @@
   Bonjour,
 
 %p
-  Un nouveau message est disponible dans votre espace demarches-simplifiees.fr.
+  L’administration en charge de votre dossier vous a
+  %strong envoyé un nouveau message.
 
 %p
-  Pour le consulter, merci de vous rendre sur
-  = link_to messagerie_dossier_url(@dossier), messagerie_dossier_url(@dossier), target: '_blank', rel:'noopener'
+  Pour le consulter et y répondre, cliquez sur le bouton ci-dessous :
+
+= round_button('Lire le message', messagerie_dossier_url(@dossier))
 
 = render partial: "layouts/mailers/signature", locals: { service: @service }
