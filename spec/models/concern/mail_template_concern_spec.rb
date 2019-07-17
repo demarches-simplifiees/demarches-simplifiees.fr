@@ -89,7 +89,7 @@ describe MailTemplateConcern do
 
         it { expect(dossier.justificatif_motivation).to be_attached }
         it { is_expected.to include("<a target=\"_blank\" rel=\"noopener\" href=\"http://localhost:3000/dossiers/#{dossier.id}/attestation\">http://localhost:3000/dossiers/#{dossier.id}/attestation</a>") }
-        it { is_expected.to include("Télécharger le justificatif") }
+        it { is_expected.to_not include("Télécharger le justificatif") }
       end
 
       describe "in refuse mail" do
@@ -103,6 +103,43 @@ describe MailTemplateConcern do
 
         it { is_expected.to eq("--lien attestation--") }
       end
+    end
+
+    shared_examples 'inserting the --lien document justificatif-- tag' do
+      let(:procedure) { create(:procedure) }
+
+      subject { mail.body_for_dossier(dossier) }
+
+      before do
+        mail.body = "--lien document justificatif--"
+      end
+
+      describe 'without justificatif' do
+        it { is_expected.to include("[l'instructeur n'a pas joint de document supplémentaire]") }
+      end
+
+      describe 'with justificatif' do
+        before do
+          dossier.justificatif_motivation.attach(justificatif)
+        end
+        it { expect(dossier.justificatif_motivation).to be_attached }
+        it { is_expected.to include("Télécharger le document justificatif") }
+      end
+    end
+
+    context 'in closed mail' do
+      let(:mail) { create(:closed_mail, procedure: procedure) }
+      it_behaves_like 'inserting the --lien document justificatif-- tag'
+    end
+
+    context 'in refused mail' do
+      let(:mail) { create(:refused_mail, procedure: procedure) }
+      it_behaves_like 'inserting the --lien document justificatif-- tag'
+    end
+
+    context 'in without continuation mail' do
+      let(:mail) { create(:without_continuation_mail, procedure: procedure) }
+      it_behaves_like 'inserting the --lien document justificatif-- tag'
     end
   end
 
