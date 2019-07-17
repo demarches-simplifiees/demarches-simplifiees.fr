@@ -7,6 +7,9 @@
   souhaite que vous participiez à l'élaboration d'un dossier sur demarches-simplifiees.fr.
 
 %p
+  = @invite.message
+
+%p
   Pour le consulter, merci de suivre ce lien :
   - url_for_link = invite_url(@invite)
   = link_to url_for_link, url_for_link
