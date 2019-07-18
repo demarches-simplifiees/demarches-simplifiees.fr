@@ -1,5 +1,7 @@
 %p
   Bonne journée,
-
-%p
-  L'équipe demarches-simplifiees.fr
+  %br
+  - if defined?(service) && service && service.nom.present?
+    = service.nom
+  - else
+    L’équipe demarches-simplifiees.fr
