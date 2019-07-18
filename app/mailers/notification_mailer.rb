@@ -38,20 +38,9 @@ class NotificationMailer < ApplicationMailer
 
     create_commentaire_for_notification(dossier, subject, body)
 
-    if dossier.procedure.logo?
-      begin
-        logo_filename = dossier.procedure.logo.filename
-        attachments.inline[logo_filename] = dossier.procedure.logo.read
-        @logo_url = attachments[logo_filename].url
-      rescue StandardError => e
-        # A problem occured when reading logo, maybe the logo is missing and we should clean the procedure to remove logo reference ?
-        Raven.extra_context(procedure_id: dossier.procedure.id)
-        Raven.capture_exception(e)
-      end
-    end
-
     @dossier = dossier
     @service = dossier.procedure.service
+    @logo_url = attach_logo(dossier.procedure)
 
     mail(subject: subject, to: email) do |format|
       # rubocop:disable Rails/OutputSafety
