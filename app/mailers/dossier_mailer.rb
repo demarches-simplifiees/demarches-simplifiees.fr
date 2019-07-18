@@ -1,16 +1,27 @@
 # Preview all emails at http://localhost:3000/rails/mailers/dossier_mailer
 class DossierMailer < ApplicationMailer
+  helper ServiceHelper
+  helper MailerHelper
+
   layout 'mailers/layout'
 
   def notify_new_draft(dossier)
     @dossier = dossier
+    @service = dossier.procedure.service
+    @logo_url = attach_logo(dossier.procedure)
+
     subject = "Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »"
 
-    mail(to: dossier.user.email, subject: subject)
+    mail(to: dossier.user.email, subject: subject) do |format|
+      format.html { render layout: 'mailers/notification' }
+    end
   end
 
   def notify_new_answer(dossier)
     @dossier = dossier
+    @service = dossier.procedure.service
+    @logo_url = attach_logo(dossier.procedure)
+
     subject = "Nouveau message pour votre dossier nº #{dossier.id} (#{dossier.procedure.libelle})"
 
     mail(to: dossier.user.email, subject: subject) do |format|

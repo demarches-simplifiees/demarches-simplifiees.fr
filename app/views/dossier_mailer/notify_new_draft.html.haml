@@ -2,9 +2,12 @@
   Bonjour,
 
 %p
-  Vous pouvez retrouver et compléter le brouillon que vous avez créé pour la démarche
-  %strong= @dossier.procedure.libelle
-  à l'adresse suivante :
+  Vous avez commencé à remplir un dossier pour la démarche « #{@dossier.procedure.libelle} ».
+
+%p
+  Vous pouvez
+  %strong retrouver et compléter votre dossier
+  à l’adresse suivante :
   = link_to dossier_url(@dossier), dossier_url(@dossier), target: '_blank', rel: 'noopener'
 
 = render partial: "layouts/mailers/signature"
