@@ -449,7 +449,7 @@ describe Dossier do
       end.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
       mail = ActionMailer::Base.deliveries.last
-      expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche \"#{procedure.libelle}\"")
+      expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche « #{procedure.libelle} »")
       expect(mail.html_part.body).to include(dossier_url(dossier))
     end
 
