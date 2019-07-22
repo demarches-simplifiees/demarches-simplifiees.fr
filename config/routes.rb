@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     resources :administrateurs, only: [:index, :show, :new, :create] do
       post 'reinvite', on: :member
       put 'enable_feature', on: :member
+      delete 'delete', on: :member
     end
 
     resources :users, only: [:index, :show] do

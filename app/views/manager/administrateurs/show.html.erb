@@ -33,6 +33,9 @@ as well as a link to its edit page.
   </div>
 
   <div>
+    <% if page.resource.can_be_deleted? %>
+      <%= link_to "supprimer", delete_manager_administrateur_path(page.resource), method: :delete, class: "button", data: { confirm: "Confirmez-vous la suppression de l'administrateur ?" } %>
+    <% end %>
     <% if page.resource.invitation_expired? %>
       <%= link_to "renvoyer l'invitation", reinvite_manager_administrateur_path(page.resource), method: :post, class: "button" %>
     <% end %>
