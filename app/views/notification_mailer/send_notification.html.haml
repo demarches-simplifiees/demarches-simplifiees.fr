@@ -1,7 +1,7 @@
 - content_for :procedure_logo do
   = render 'layouts/mailers/logo', url: @logo_url
 
+= @rendered_template
+
 - content_for :footer do
   = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier
-
-= render template: 'layouts/mailers/notifications_layout'
