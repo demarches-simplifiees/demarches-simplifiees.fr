@@ -13,7 +13,7 @@ class DossierMailer < ApplicationMailer
     subject = "Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »"
 
     mail(to: dossier.user.email, subject: subject) do |format|
-      format.html { render layout: 'mailers/notification' }
+      format.html { render layout: 'mailers/notifications_layout' }
     end
   end
 
@@ -25,7 +25,7 @@ class DossierMailer < ApplicationMailer
     subject = "Nouveau message pour votre dossier nº #{dossier.id} (#{dossier.procedure.libelle})"
 
     mail(to: dossier.user.email, subject: subject) do |format|
-      format.html { render layout: 'mailers/notification' }
+      format.html { render layout: 'mailers/notifications_layout' }
     end
   end
 
