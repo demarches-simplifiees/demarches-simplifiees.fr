@@ -11,7 +11,7 @@
 %p
   Pour le consulter et y répondre, cliquez sur le bouton ci-dessous :
 
-= round_button('Lire le message', messagerie_dossier_url(@dossier))
+= round_button('Lire le message', messagerie_dossier_url(@dossier), :primary)
 
 = render 'layouts/mailers/signature', service: @service
 
