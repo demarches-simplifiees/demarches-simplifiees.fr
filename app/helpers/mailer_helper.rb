@@ -1,4 +1,8 @@
 module MailerHelper
+  def vertical_margin(height)
+    render 'shared/mailer_vertical_margin', height: height
+  end
+
   def round_button(text, url, variant)
     render 'shared/mailer_round_button', text: text, url: url, theme: theme(variant)
   end
