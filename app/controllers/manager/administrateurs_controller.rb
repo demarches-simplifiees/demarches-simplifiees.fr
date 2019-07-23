@@ -33,6 +33,21 @@ module Manager
       head :ok
     end
 
+    def delete
+      administrateur = Administrateur.find(params[:id])
+
+      if !administrateur.can_be_deleted?
+        fail "Impossible de supprimer cet administrateur car il a des dossiers ou des procédures"
+      end
+      administrateur.dossiers.each(&:delete_and_keep_track)
+      administrateur.destroy
+
+      logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_user.id}")
+      flash[:notice] = "L'administrateur #{administrateur.id} est supprimé"
+
+      redirect_to manager_administrateurs_path
+    end
+
     private
 
     def create_administrateur_params
