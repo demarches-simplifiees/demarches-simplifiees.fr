@@ -170,6 +170,7 @@ GEM
     crass (1.0.4)
     css_parser (1.6.0)
       addressable
+    curb (0.9.10)
     daemons (1.3.1)
     database_cleaner (1.7.0)
     datetime_picker_rails (0.0.7)
@@ -386,6 +387,9 @@ GEM
     omniauth-oauth2 (1.6.0)
       oauth2 (~> 1.1)
       omniauth (~> 1.9)
+    omniauth-rails_csrf_protection (0.1.2)
+      actionpack (>= 4.2)
+      omniauth (>= 1.3.1)
     open4 (1.3.4)
     openid_connect (1.1.6)
       activemodel
@@ -676,6 +680,11 @@ GEM
       nokogiri (~> 1.8)
     xray-rails (0.3.1)
       rails (>= 3.1.0)
+    zip_tricks (4.7.4)
+    zipline (1.1.0)
+      curb (>= 0.8.0, < 0.10)
+      rails (>= 3.2.1, < 6.1)
+      zip_tricks (>= 4.2.1, <= 5.0.0)
     zxcvbn-ruby (0.1.2)
 
 PLATFORMS
@@ -736,6 +745,7 @@ DEPENDENCIES
   mailjet
   mina!
   omniauth-github
+  omniauth-rails_csrf_protection (~> 0.1)
   openid_connect
   openstack
   pg
@@ -781,6 +791,7 @@ DEPENDENCIES
   webmock
   webpacker
   xray-rails
+  zipline
   zxcvbn-ruby
 
 BUNDLED WITH

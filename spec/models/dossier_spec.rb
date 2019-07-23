@@ -99,6 +99,14 @@ describe Dossier do
       end
     end
 
+    describe '#types_de_piece_justificative' do
+      subject { dossier.types_de_piece_justificative }
+      it 'returns list of required piece justificative' do
+        expect(subject.size).to eq(2)
+        expect(subject).to include(TypeDePieceJustificative.find(TypeDePieceJustificative.first.id))
+      end
+    end
+
     describe '#retrieve_last_piece_justificative_by_type', vcr: { cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type' } do
       let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
 
@@ -110,6 +118,20 @@ describe Dossier do
 
       it 'returns piece justificative with given type' do
         expect(subject.type).to eq(types_de_pj_dossier.first.id)
+      end
+    end
+
+    describe '#retrieve_all_piece_justificative_by_type' do
+      let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
+
+      subject { dossier.retrieve_all_piece_justificative_by_type types_de_pj_dossier.first }
+
+      before do
+        create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: types_de_pj_dossier.first
+      end
+
+      it 'returns a list of the piece justificative' do
+        expect(subject).not_to be_empty
       end
     end
 
@@ -427,7 +449,7 @@ describe Dossier do
       end.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
       mail = ActionMailer::Base.deliveries.last
-      expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche \"#{procedure.libelle}\"")
+      expect(mail.subject).to eq("Retrouvez votre brouillon pour la démarche « #{procedure.libelle} »")
       expect(mail.html_part.body).to include(dossier_url(dossier))
     end
 
@@ -610,13 +632,14 @@ describe Dossier do
   describe "#delete_and_keep_track" do
     let(:dossier) { create(:dossier) }
     let(:deleted_dossier) { DeletedDossier.find_by!(dossier_id: dossier.id) }
+    let(:last_operation) { dossier.dossier_operation_logs.last }
 
     before do
       allow(DossierMailer).to receive(:notify_deletion_to_user).and_return(double(deliver_later: nil))
       allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
-    subject! { dossier.delete_and_keep_track }
+    subject! { dossier.delete_and_keep_track(dossier.user) }
 
     it 'hides the dossier' do
       expect(dossier.hidden_at).to be_present
@@ -631,6 +654,11 @@ describe Dossier do
 
     it 'notifies the user' do
       expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
+    end
+
+    it 'records the operation in the log' do
+      expect(last_operation.operation).to eq("supprimer")
+      expect(last_operation.automatic_operation?).to be_falsey
     end
 
     context 'where gestionnaires are following the dossier' do
@@ -968,23 +996,6 @@ describe Dossier do
     end
   end
 
-  describe '#hide!' do
-    let(:dossier) { create(:dossier) }
-    let(:administration) { create(:administration) }
-    let(:last_operation) { dossier.dossier_operation_logs.last }
-
-    before do
-      Timecop.freeze
-      dossier.hide!(administration)
-    end
-
-    after { Timecop.return }
-
-    it { expect(dossier.hidden_at).to eq(Time.zone.now) }
-    it { expect(last_operation.operation).to eq('supprimer') }
-    it { expect(last_operation.automatic_operation?).to be_falsey }
-  end
-
   describe '#repasser_en_instruction!' do
     let(:dossier) { create(:dossier, :refuse, :with_attestation) }
     let!(:gestionnaire) { create(:gestionnaire) }
@@ -1007,5 +1018,33 @@ describe Dossier do
     it { expect(DossierMailer).to have_received(:notify_revert_to_instruction).with(dossier) }
 
     after { Timecop.return }
+  end
+
+  describe '#attachments_downloadable?' do
+    let(:dossier) { create(:dossier, user: user) }
+    # subject { dossier.attachments_downloadable? }
+
+    context "no attachments" do
+      it {
+        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([])
+        expect(dossier.attachments_downloadable?).to be false
+      }
+    end
+
+    context "with a small attachment" do
+      it {
+        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([Champ.new])
+        expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(4.megabytes)
+        expect(dossier.attachments_downloadable?).to be true
+      }
+    end
+
+    context "with a too large attachment" do
+      it {
+        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([Champ.new])
+        expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(100.megabytes)
+        expect(dossier.attachments_downloadable?).to be false
+      }
+    end
   end
 end

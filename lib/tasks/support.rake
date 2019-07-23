@@ -2,19 +2,26 @@ require Rails.root.join("lib", "tasks", "task_helper")
 
 namespace :support do
   desc <<~EOD
-    Delete the user account for a given USER_EMAIL.
+    Delete the user account for a given USER_EMAIL on the behalf of ADMIN_EMAIL.
     Only works if the user has no dossier where the instruction has started.
   EOD
   task delete_user_account: :environment do
     user_email = ENV['USER_EMAIL']
-    if user_email.nil?
-      fail "Must specify a USER_EMAIL"
-    end
-    user = User.find_by(email: user_email)
+    fail "Must specify a USER_EMAIL" if user_email.nil?
+
+    administration_email = ENV['ADMIN_EMAIL']
+    fail "Must specify the ADMIN_EMAIL of the operator performing the deletion (yourself)" if administration_email.nil?
+
+    user = User.find_by!(email: user_email)
+    administration = Administration.find_by!(email: administration_email)
+
     if user.dossiers.state_instruction_commencee.any?
       fail "Cannot delete this user because instruction has started for some dossiers"
     end
-    user.dossiers.each(&:delete_and_keep_track)
+
+    user.dossiers.each do |dossier|
+      dossier.delete_and_keep_track(administration)
+    end
     user.destroy
   end
 

@@ -63,7 +63,7 @@
   %ul.messages-list
     - @dossier.commentaires.with_attached_piece_jointe.each do |commentaire|
       %li
-        = render partial: "shared/dossiers/messages/message", locals: { commentaire: commentaire, connected_user: current_gestionnaire, messagerie_seen_at: nil }
+        = render partial: "shared/dossiers/messages/message", locals: { commentaire: commentaire, connected_user: current_gestionnaire, messagerie_seen_at: nil, show_reply_button: false }
 
 %script{ type: "text/javascript" }
   window.print();

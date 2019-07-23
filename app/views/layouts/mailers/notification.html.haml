@@ -6,14 +6,12 @@
           = image_tag @logo_url, height: "150", style: "display:block; max-height: 150px; max-width: 150px;"
 
 - content_for :footer do
-  - if @dossier.present?
-    - messagerie_url = messagerie_dossier_url(@dossier)
-  - else
-    - messagerie_url = "#"
   %strong
-    Merci de ne pas répondre à cet email. Pour vous adresser à votre administration, passez directement par votre
-    = succeed '.' do
-      = link_to 'messagerie', messagerie_url, target: '_blank', rel: 'noopener'
+    Merci de ne pas répondre à cet email.
+    - if @dossier.present? && @dossier.messagerie_available?
+      Pour vous adresser à votre administration, passez directement par la
+      = succeed '.' do
+        = link_to 'messagerie du dossier', messagerie_dossier_url(@dossier), target: '_blank', rel: 'noopener'
 
   - if @service.present?
     %table{ width: "100%", border: "0", cellspacing: "0", cellpadding: "0", style: "cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;" }
@@ -31,7 +29,11 @@
           %p
             %strong Poser une question sur votre dossier :
             %br
-            = link_to 'Par la messagerie', messagerie_url, target: '_blank', rel: 'noopener'
+            - if @dossier.present? && @dossier.messagerie_available?
+              = link_to 'Par la messagerie', messagerie_dossier_url(@dossier), target: '_blank', rel: 'noopener'
+            - else
+              Par email :
+              = link_to @service.email, "mailto:#{@service.email}"
             %br
             Par téléphone :
             = link_to @service.telephone, "tel:#{@service.telephone}"

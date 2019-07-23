@@ -168,12 +168,27 @@
     border: solid 1px $border-grey;
     padding: $default-padding;
 
+    &.small {
+      padding: $default-padding / 2;
+    }
+
     &:disabled {
       background-color: $border-grey;
     }
 
-    &.small {
-      padding: $default-padding / 2;
+    &:focus {
+      border: 1px solid $blue;
+      box-shadow: 0px 0px 2px 1px $blue;
+    }
+
+    // Hide the browser default invalidity indicator until the field is touched
+    &:invalid:not(:focus) {
+      box-shadow: none;
+    }
+
+    &.touched:invalid {
+      border: 1px solid $dark-red;
+      box-shadow: 0px 0px 2px 1px $dark-red;
     }
   }
 
@@ -209,17 +224,6 @@
 
   input[type=date] {
     max-width: 180px;
-  }
-
-  input:invalid,
-  textarea:invalid {
-    box-shadow: none;
-  }
-
-  input.touched:invalid,
-  textarea.touched:invalid {
-    border: 1px solid $dark-red;
-    box-shadow: 0px 0px 5px $dark-red;
   }
 
   select,
