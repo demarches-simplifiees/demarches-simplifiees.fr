@@ -8,8 +8,9 @@ module NewAdministrateur
       @service = procedure.service
 
       mail_template = find_mail_template_by_slug(params[:id])
+      @rendered_template = sanitize(mail_template.body)
 
-      render(html: sanitize(mail_template.body), layout: 'mailers/notification')
+      render(template: 'notification_mailer/send_notification', layout: 'mailers/notifications_layout')
     end
 
     private
