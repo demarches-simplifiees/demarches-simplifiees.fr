@@ -7,7 +7,7 @@ module Mails
     SLUG = "received_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/received_mail"
     DISPLAYED_NAME = 'Accusé de passage en instruction'
-    DEFAULT_SUBJECT = 'Votre dossier nº --numéro du dossier-- va être instruit (--libellé démarche--)'
+    DEFAULT_SUBJECT = 'Votre dossier nº --numéro du dossier-- va être examiné (--libellé démarche--)'
     DOSSIER_STATE = Dossier.states.fetch(:en_instruction)
   end
 end
