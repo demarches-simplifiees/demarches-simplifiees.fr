@@ -10,10 +10,10 @@ describe 'root/_footer.html.haml', type: :view do
     expect(subject).to have_link('Mentions légales', href: MENTIONS_LEGALES_URL)
     expect(subject).to have_link('Documentation', href: DOC_URL)
     expect(subject).to have_css('.footer-logo-netpf')
-    expect(CGU_URL).to include('doc.projet.gov.pf')
-    expect(RGPD_URL).to include('doc.projet.gov.pf')
-    expect(MENTIONS_LEGALES_URL).to include('doc.projet.gov.pf')
-    expect(DOC_URL).to include('doc.projet.gov.pf')
+    expect(CGU_URL).to include('mes-demarches.gitbook.io')
+    expect(RGPD_URL).to include('mes-demarches.gitbook.io')
+    expect(MENTIONS_LEGALES_URL).to include('mes-demarches.gitbook.io')
+    expect(DOC_URL).to include('mes-demarches.gitbook.io')
   end
 
   it 'should not contain french links with no polynesian equivalent' do

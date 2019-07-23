@@ -16,18 +16,18 @@ FOG_BASE_URL = "https://static.demarches-simplifiees.fr"
 
 # External services URLs
 FR_DOC_URL = "https://doc.demarches-simplifiees.fr"
-DOC_URL = "https://doc.projet.gov.pf/display/DEM"
-ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "Dématérialiser+un+premier+formulaire"].join("/")
-INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "Tutoriels"].join("/")
+DOC_URL = "https://mes-demarches.gitbook.io/documentation"
+ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels", "dematerialiser-formulaire"].join("/")
+INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels"].join("/")
 CADRE_JURIDIQUE_URL = [ADMINISTRATEUR_TUTORIAL_URL, "cadre-juridique"].join("#") # TODO version polynésie
 WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
-LISTE_DES_DEMARCHES_URL = [DOC_URL, "Liste+des+démarches"].join("/")
-CGU_URL = [DOC_URL, "CGU"].join("/")
-RGPD_URL = [CGU_URL, "CGU-RGPD"].join("#")
-MENTIONS_LEGALES_URL = [CGU_URL, "CGU-Mentionslégales"].join("#")
+LISTE_DES_DEMARCHES_URL = "https://www.service-public.pf/demarches-simplifiees"
+CGU_URL = [DOC_URL, "cgu"].join("/")
+RGPD_URL = [CGU_URL, "rgpd"].join("#")
+MENTIONS_LEGALES_URL = [CGU_URL, "mentions-legales"].join("#")
 API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
-FAQ_URL = [DOC_URL, "Questions+fréquentes"].join("/")
+FAQ_URL = [DOC_URL, "questions-frequentes"].join("/")
 FAQ_ADMIN_URL = "https://faq.demarches-simplifiees.fr/collection/1-administrateur"
 COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, 'pages', 'viewpage.action?pageId=24250654'].join("/")
 STATUS_PAGE_URL = "https://updown.io/cugq"
