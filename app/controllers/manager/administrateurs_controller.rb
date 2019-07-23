@@ -37,7 +37,7 @@ module Manager
       administrateur = Administrateur.find(params[:id])
 
       if !administrateur.can_be_deleted?
-        fail "Cannot delete this administrateur because it has dossiers or procedures"
+        fail "Impossible de supprimer cet administrateur car il a des dossiers ou des procédures"
       end
       administrateur.dossiers.each(&:delete_and_keep_track)
       administrateur.destroy
