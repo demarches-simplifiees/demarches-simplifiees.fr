@@ -38,7 +38,7 @@ FactoryBot.define do
       after(:build) do |procedure, _evaluator|
         procedure.for_individual = true
         procedure.types_de_champ << create(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true)
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
       end
     end
 
