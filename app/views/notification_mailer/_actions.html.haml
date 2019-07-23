@@ -1,4 +1,4 @@
-= vertical_margin(15)
+= vertical_margin(12)
 
 - actions.each_with_index do |action, index|
   - variant = (index == 0 ? :primary : :secondary)
@@ -10,4 +10,4 @@
   - when MailTemplateConcern::Actions::REPLY
     = round_button('Répondre à ce message', messagerie_dossier_url(@dossier), variant)
 
-= vertical_margin(8)
+= vertical_margin(5)
