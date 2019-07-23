@@ -6,8 +6,10 @@
   = @invite.email_sender
   souhaite que vous participiez à l'élaboration d'un dossier sur demarches-simplifiees.fr.
 
-%p
-  = @invite.message
+- if @invite.message.present?
+  %blockquote
+    %p
+      = @invite.message
 
 %p
   Pour le consulter, merci de suivre ce lien :
