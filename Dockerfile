@@ -8,6 +8,8 @@ RUN apk add --update --virtual build-dependencies \
         build-base \
         gcc \
         git \
+        libcurl \
+        curl-dev \
         postgresql-dev \
         yarn
 ENV INSTALL_PATH /app
