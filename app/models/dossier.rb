@@ -15,6 +15,8 @@ class Dossier < ApplicationRecord
   INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
+  TAILLE_MAX_ZIP = 50.megabytes
+
   has_one :etablissement, dependent: :destroy
   has_one :individual, dependent: :destroy
   has_one :attestation, dependent: :destroy
@@ -461,7 +463,7 @@ class Dossier < ApplicationRecord
   end
 
   def attachments_downloadable?
-    !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < 50.megabytes
+    !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
   private

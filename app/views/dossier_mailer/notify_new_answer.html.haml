@@ -1,3 +1,6 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
 %p
   Bonjour,
 
@@ -10,4 +13,7 @@
 
 = round_button('Lire le message', messagerie_dossier_url(@dossier))
 
-= render partial: "layouts/mailers/signature", locals: { service: @service }
+= render 'layouts/mailers/signature', service: @service
+
+- content_for :footer do
+  = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier
