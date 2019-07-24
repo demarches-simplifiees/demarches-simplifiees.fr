@@ -151,6 +151,9 @@ Rails.application.routes.draw do
   post "webhooks/helpscout", to: "webhook#helpscout"
   match "webhooks/helpscout", to: lambda { |_| [204, {}, nil] }, via: :head
 
+  post "webhooks/helpscout_mailjet", to: "webhook#helpscout_mailjet"
+  match "webhooks/helpscout_mailjet", to: lambda { |_| [204, {}, nil] }, via: :head
+
   #
   # Deprecated UI
   #
