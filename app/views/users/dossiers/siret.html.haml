@@ -6,6 +6,11 @@
 
     %p.mb-1 Merci de remplir le numéro de SIRET de votre entreprise, administration ou association pour commencer la démarche.
 
+    %p.mb-1
+      Pour trouver votre numéro SIRET, utilisez
+      %a{ href: 'https://entreprise.data.gouv.fr/', target: '_blank', rel: 'noopener' }
+        entreprise.data.gouv.fr
+      ou renseignez-vous auprès de votre service comptable
     = f.label :siret, style: "display: none"
     = f.text_field :siret, placeholder: "Numéro SIRET à 14 chiffres", required: true
 
