@@ -49,6 +49,6 @@
     "lint:js": "eslint ./app/javascript ./app/assets/javascripts ./config/webpack"
   },
   "engines": {
-    "node": "6.* || 8.* || >= 10.*"
+    "node": "8.* || >= 10.*"
   }
 }

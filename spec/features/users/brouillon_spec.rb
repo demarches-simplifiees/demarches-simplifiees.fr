@@ -137,14 +137,14 @@ feature 'The user' do
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
 
     # Check an incomplete dossier cannot be submitted when mandatory fields are missing
-    click_on 'Soumettre le dossier'
+    click_on 'Déposer le dossier'
     expect(user_dossier.reload.brouillon?).to be(true)
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
 
     # Check a dossier can be submitted when all mandatory fields are filled
     fill_in('texte obligatoire', with: 'super texte')
 
-    click_on 'Soumettre le dossier'
+    click_on 'Déposer le dossier'
     expect(user_dossier.reload.en_construction?).to be(true)
     expect(champ_value_for('texte obligatoire')).to eq('super texte')
     expect(page).to have_current_path(merci_dossier_path(user_dossier))

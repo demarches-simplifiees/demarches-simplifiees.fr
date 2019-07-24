@@ -80,7 +80,7 @@
             data: { 'disable-with': "Envoi en cours…" }
 
           - if dossier.can_transition_to_en_construction?
-            = f.button 'Soumettre le dossier',
+            = f.button 'Déposer le dossier',
               class: 'button send primary',
               disabled: !current_user.owns?(dossier),
               data: { 'disable-with': "Envoi en cours…" }
@@ -92,6 +92,6 @@
 
       - if dossier.brouillon? && !current_user.owns?(dossier)
         .send-notice.invite-cannot-submit
-          En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le soumettre lui-même.
+          En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le déposer lui-même.
 
       = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }

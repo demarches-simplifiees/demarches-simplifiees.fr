@@ -39,6 +39,7 @@ gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
 gem 'omniauth-github'
+gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem 'openid_connect'
 gem 'openstack'
 gem 'pg'
@@ -67,6 +68,7 @@ gem 'turbolinks' # Turbolinks makes following links in your web application fast
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'
+gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 group :test do
