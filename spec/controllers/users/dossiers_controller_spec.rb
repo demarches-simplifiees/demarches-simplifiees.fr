@@ -476,29 +476,16 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context 'when the pj service returns an error' do
-      before do
-        expect(PiecesJustificativesService).to receive(:upload!).and_return(['nop'])
-
-        subject
-      end
-
-      it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(['nop']) }
-    end
-
     context 'when a mandatory champ is missing' do
       let(:value) { nil }
 
       before do
         first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-        allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
-
         subject
       end
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
+      it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
 
       context 'and the user saves a draft' do
         let(:payload) { submit_payload.merge(save_draft: true) }
@@ -511,7 +498,7 @@ describe Users::DossiersController, type: :controller do
           let!(:dossier) { create(:dossier, :en_construction, user: user) }
 
           it { expect(response).to render_template(:brouillon) }
-          it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
+          it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
         end
       end
     end
@@ -535,8 +522,6 @@ describe Users::DossiersController, type: :controller do
 
         before do
           first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-          allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
-
           subject
         end
 
@@ -644,29 +629,16 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
-    context 'when the pj service returns an error' do
-      before do
-        expect(PiecesJustificativesService).to receive(:upload!).and_return(['nop'])
-
-        subject
-      end
-
-      it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(['nop']) }
-    end
-
     context 'when a mandatory champ is missing' do
       let(:value) { nil }
 
       before do
         first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-        allow(PiecesJustificativesService).to receive(:missing_pj_error_messages).and_return(['pj'])
-
         subject
       end
 
       it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(['Le champ l doit être rempli.', 'pj']) }
+      it { expect(flash.alert).to eq(['Le champ l doit être rempli.']) }
     end
 
     context 'when dossier has no champ' do
