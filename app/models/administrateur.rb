@@ -123,4 +123,8 @@ class Administrateur < ApplicationRecord
   def gestionnaire
     Gestionnaire.find_by(email: email)
   end
+
+  def can_be_deleted?
+    dossiers.state_instruction_commencee.none? && procedures.none?
+  end
 end

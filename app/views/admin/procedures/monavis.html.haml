@@ -1,6 +1,6 @@
 .row.white-back
   #procedure_new.section.section-label
-    = form_for @procedure, url: url_for({ controller: 'admin/procedures', action: :update_monavis, id: @procedure.id }), multipart: true do |f|
+    = form_for @procedure, url: url_for({ controller: 'admin/procedures', action: :update_monavis }), multipart: true do |f|
       = render partial: 'monavis', locals: { f: f }
       .text-right
         = f.button 'Enregistrer', class: 'btn btn-success'

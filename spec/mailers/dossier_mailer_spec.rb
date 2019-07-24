@@ -3,6 +3,12 @@ require "rails_helper"
 RSpec.describe DossierMailer, type: :mailer do
   let(:to_email) { 'gestionnaire@exemple.gouv.fr' }
 
+  shared_examples 'a dossier notification' do
+    it 'includes the contact informations in the footer' do
+      expect(subject.body).to include('ne pas répondre')
+    end
+  end
+
   describe '.notify_new_draft' do
     let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
 
@@ -12,6 +18,8 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.subject).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier_url(dossier)) }
+
+    it_behaves_like 'a dossier notification'
   end
 
   describe '.notify_new_answer' do
@@ -22,6 +30,8 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.subject).to include("Nouveau message") }
     it { expect(subject.subject).to include(dossier.id.to_s) }
     it { expect(subject.body).to include(messagerie_dossier_url(dossier)) }
+
+    it_behaves_like 'a dossier notification'
   end
 
   describe '.notify_deletion_to_user' do
