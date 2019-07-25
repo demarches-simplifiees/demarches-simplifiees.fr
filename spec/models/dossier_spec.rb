@@ -91,22 +91,6 @@ describe Dossier do
       end
     end
 
-    describe '#types_de_piece_justificative' do
-      subject { dossier.types_de_piece_justificative }
-      it 'returns list of required piece justificative' do
-        expect(subject.size).to eq(2)
-        expect(subject).to include(TypeDePieceJustificative.find(TypeDePieceJustificative.first.id))
-      end
-    end
-
-    describe '#types_de_piece_justificative' do
-      subject { dossier.types_de_piece_justificative }
-      it 'returns list of required piece justificative' do
-        expect(subject.size).to eq(2)
-        expect(subject).to include(TypeDePieceJustificative.find(TypeDePieceJustificative.first.id))
-      end
-    end
-
     describe '#build_default_champs' do
       context 'when dossier is linked to a procedure with type_de_champ_public and private' do
         let(:dossier) { create(:dossier, user: user) }
@@ -552,12 +536,6 @@ describe Dossier do
     end
 
     it { is_expected.not_to eq(modif_date) }
-
-    context 'when a piece justificative is modified' do
-      before { dossier.pieces_justificatives << create(:piece_justificative, :contrat) }
-
-      it { is_expected.to eq(modif_date) }
-    end
 
     context 'when a champ is modified' do
       before { dossier.champs.first.update_attribute('value', 'yop') }
