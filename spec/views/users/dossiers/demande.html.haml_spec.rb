@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'users/dossiers/demande.html.haml', type: :view do
-  let(:procedure) { create(:procedure, :published, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private) }
+  let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private) }
   let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
 
   before do
