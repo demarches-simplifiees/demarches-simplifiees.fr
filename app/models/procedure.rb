@@ -220,7 +220,6 @@ class Procedure < ApplicationRecord
     procedure.remote_logo_url = self.logo_url
     procedure.lien_notice = nil
 
-    procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
     if is_different_admin || from_library
       procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
     end
