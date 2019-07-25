@@ -1,9 +1,10 @@
 /# From https://litmus.com/blog/a-guide-to-bulletproof-buttons-in-email-design
-%table{ width: "100%", border: "0", cellspacing:"0", cellpadding:"0" }
+%table{ width: "100%", border: "0", cellspacing:"0", cellpadding:"5" }
   %tr
-    %td
-      %table{ border:"0", cellspacing:"0", cellpadding:"0", style:"margin: auto" }
+    %td{ align: "center" }
+      %table{ border:"0", cellspacing:"0", cellpadding:"0" }
         %tr
-          %td{ align:"center", style:"border-radius: 5px;", bgcolor:"#0069cc" }
-            %a{ href: url, target:"_blank", style:"font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; text-decoration: none; border-radius: 5px; padding: 12px 25px; border: 1px solid #0069cc; display: inline-block;" }
+          %td{ align:"center", style:"border-radius: 5px;", color: theme[:color], bgcolor: theme[:bg_color] }
+            %a{ href: url, target:"_blank", rel: "noopener", style:"font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #{theme[:color]}; text-decoration: none; text-decoration: none; border-radius: 5px; padding: 12px 25px; border: 1px solid #{theme[:border_color]}; display: inline-block; min-width: 250px" }
               = text
+

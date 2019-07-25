@@ -12,6 +12,7 @@ class InvitesController < ApplicationController
       dossier: dossier,
       user: User.find_by(email: email),
       email: email,
+      message: params[:invite_message],
       email_sender: current_user.email
     )
 
