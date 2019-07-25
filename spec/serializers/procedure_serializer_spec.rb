@@ -10,21 +10,16 @@ describe ProcedureSerializer do
   end
 
   context 'when a type PJ was cloned to a type champ PJ' do
-    let(:original_procedure) do
-      p = create(:procedure, :published)
-      p.types_de_piece_justificative.create(
+    let(:original_pj_id) { 3 }
+    let(:cloned_type_de_champ) do
+      tdc = create(:type_de_champ_piece_justificative,
         libelle: "Vidéo de votre demande de subvention",
-        description: "Pour optimiser vos chances, soignez la chorégraphie et privilégiez le chant polyphonique",
-        lien_demarche: "https://www.dance-academy.gouv.fr",
-        order_place: 0
-      )
-      p
+        description: "Pour optimiser vos chances, soignez la chorégraphie et privilégiez le chant polyphonique.\r\nRécupérer le formulaire vierge pour mon dossier : https://www.dance-academy.gouv.fr",
+        order_place: 0)
+      tdc.old_pj = { stable_id: original_pj_id }
+      tdc
     end
-
-    let(:procedure) { original_procedure.clone(original_procedure.administrateurs.first, false) }
-
-    let(:type_pj) { original_procedure.types_de_piece_justificative.first }
-    let(:migrated_type_champ) { procedure.types_de_champ.find_by(libelle: type_pj.libelle) }
+    let(:procedure) { create(:procedure, :published, types_de_champ: [cloned_type_de_champ]) }
 
     subject { ProcedureSerializer.new(procedure).serializable_hash }
 
@@ -32,18 +27,18 @@ describe ProcedureSerializer do
       is_expected.to include(
         types_de_piece_justificative: [
           {
-            "id" => type_pj.id,
-            "libelle" => type_pj.libelle,
-            "description" => type_pj.description,
-            "lien_demarche" => type_pj.lien_demarche,
-            "order_place" => type_pj.order_place
+            "id" => original_pj_id,
+            "libelle" => cloned_type_de_champ.libelle,
+            "description" => 'Pour optimiser vos chances, soignez la chorégraphie et privilégiez le chant polyphonique.',
+            "lien_demarche" => 'https://www.dance-academy.gouv.fr',
+            "order_place" => cloned_type_de_champ.order_place
           }
         ]
       )
     end
 
     it "is not exposed as a type de champ" do
-      expect(subject[:types_de_champ]).not_to include(a_hash_including(libelle: type_pj.libelle))
+      expect(subject[:types_de_champ]).to be_empty
     end
   end
 end
