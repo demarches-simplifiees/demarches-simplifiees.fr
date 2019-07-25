@@ -165,18 +165,6 @@ class Dossier < ApplicationRecord
     self.private_search_terms = champs_private.flat_map(&:search_terms).compact.join(' ')
   end
 
-  def was_piece_justificative_uploaded_for_type_id?(type_id)
-    pieces_justificatives.where(type_de_piece_justificative_id: type_id).count > 0
-  end
-
-  def retrieve_last_piece_justificative_by_type(type)
-    pieces_justificatives.where(type_de_piece_justificative_id: type).last
-  end
-
-  def retrieve_all_piece_justificative_by_type(type)
-    pieces_justificatives.where(type_de_piece_justificative_id: type).order(created_at: :DESC)
-  end
-
   def build_default_champs
     procedure.build_champs.each do |champ|
       champs << champ
