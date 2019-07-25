@@ -51,7 +51,6 @@ class Procedure < ApplicationRecord
       :administrateurs,
       :types_de_champ_private,
       :types_de_champ,
-      :types_de_piece_justificative,
       :module_api_carto
     )
   }

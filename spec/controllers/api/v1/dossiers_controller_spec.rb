@@ -3,7 +3,7 @@ require 'spec_helper'
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :with_two_type_de_piece_justificative, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
+  let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, administrateur: admin) }
   let(:wrong_procedure) { create(:procedure) }
 
   it { expect(described_class).to be < APIController }
@@ -204,49 +204,13 @@ describe API::V1::DossiersController do
           it { expect(subject.keys).to match_array(field_list) }
         end
 
-        describe 'types_de_piece_justificative' do
-          let(:field_list) { [:id, :libelle, :description] }
-          subject { super()[:types_de_piece_justificative] }
-
-          it { expect(subject.length).to eq 2 }
-
-          describe 'first type de piece justificative' do
-            subject { super().first }
-
-            it { expect(subject.key?(:id)).to be_truthy }
-            it { expect(subject[:libelle]).to eq('RIB') }
-            it { expect(subject[:description]).to eq('Releve identité bancaire') }
-          end
-        end
-
-        describe 'piece justificative', vcr: { cassette_name: 'controllers_api_v1_dossiers_controller_piece_justificative' } do
-          before do
-            create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: dossier.procedure.types_de_piece_justificative.first, user: dossier.user
-          end
-
-          let(:field_list) { [:url, :created_at, :type_de_piece_justificative_id] }
-          subject { super()[:pieces_justificatives].first }
-
-          it { expect(subject.key?(:content_url)).to be_truthy }
-          it { expect(subject[:created_at]).not_to be_nil }
-          it { expect(subject[:type_de_piece_justificative_id]).not_to be_nil }
-
-          it { expect(subject.key?(:user)).to be_truthy }
-
-          describe 'user' do
-            subject { super()[:user] }
-
-            it { expect(subject[:email]).not_to be_nil }
-          end
-        end
-
         describe 'champs' do
           let(:field_list) { [:url] }
           subject { super()[:champs] }
 
           it { expect(subject.length).to eq 1 }
 
-          describe 'first champs' do
+          describe 'first champ' do
             subject { super().first }
 
             it { expect(subject.key?(:value)).to be_truthy }

@@ -128,7 +128,6 @@ class Dossier < ApplicationRecord
         :etablissement,
         piece_justificative_file_attachment: :blob
       ],
-      pieces_justificatives: [],
       avis: [],
       etablissement: [],
       individual: [],
