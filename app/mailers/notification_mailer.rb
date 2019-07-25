@@ -9,6 +9,7 @@ class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
 
   helper ServiceHelper
+  helper MailerHelper
 
   layout 'mailers/notifications_layout'
 
@@ -46,6 +47,7 @@ class NotificationMailer < ApplicationMailer
     @service = dossier.procedure.service
     @logo_url = attach_logo(dossier.procedure)
     @rendered_template = sanitize(body)
+    @actions = mail_template.actions_for_dossier(dossier)
 
     mail(subject: subject, to: email, template_name: 'send_notification')
   end

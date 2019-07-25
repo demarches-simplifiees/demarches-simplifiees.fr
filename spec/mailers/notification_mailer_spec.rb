@@ -28,6 +28,11 @@ RSpec.describe NotificationMailer, type: :mailer do
       expect(mail.body).to have_link('messagerie')
     end
 
+    it 'renders the actions' do
+      expect(mail.body).to have_link('Consulter mon dossier', href: dossier_url(dossier))
+      expect(mail.body).to have_link('J’ai une question', href: messagerie_dossier_url(dossier))
+    end
+
     context 'when the template body contains tags' do
       let(:email_template) { create(:received_mail, subject: 'Email subject', body: 'Hello --nom--, your dossier --lien dossier-- was processed.') }
 

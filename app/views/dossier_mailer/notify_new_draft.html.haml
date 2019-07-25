@@ -5,13 +5,16 @@
   Bonjour,
 
 %p
-  Vous avez commencé à remplir un dossier pour la démarche « #{@dossier.procedure.libelle} ».
+  Vous avez commencé à remplir un dossier pour la démarche
+  = succeed '.' do
+    %strong « #{@dossier.procedure.libelle} »
 
 %p
   Vous pouvez
   %strong retrouver et compléter votre dossier
-  à l’adresse suivante :
-  = link_to dossier_url(@dossier), dossier_url(@dossier), target: '_blank', rel: 'noopener'
+  en cliquant sur le bouton ci-dessous:
+
+= round_button('Afficher votre dossier', dossier_url(@dossier), :primary)
 
 = render 'layouts/mailers/signature'
 

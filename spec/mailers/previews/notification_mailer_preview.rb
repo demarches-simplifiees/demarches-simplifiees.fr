@@ -1,11 +1,11 @@
 class NotificationMailerPreview < ActionMailer::Preview
-  def send_dossier_received
-    NotificationMailer.send_dossier_received(Dossier.last)
-  end
-
   def send_initiated_notification
     p = Procedure.where(id: Mails::InitiatedMail.where("body like ?", "%<img%").pluck(:procedure_id).uniq).order("RANDOM()").first
     NotificationMailer.send_initiated_notification(p.dossiers.last)
+  end
+
+  def send_dossier_received
+    NotificationMailer.send_dossier_received(Dossier.last)
   end
 
   def send_closed_notification
@@ -13,7 +13,8 @@ class NotificationMailerPreview < ActionMailer::Preview
   end
 
   def send_refused_notification
-    NotificationMailer.send_refused_notification(Dossier.last)
+    dossier = Dossier.last.tap { |d| d.assign_attributes(motivation: 'Le montant demandé dépasse le plafond autorisé') }
+    NotificationMailer.send_refused_notification(dossier)
   end
 
   def send_without_continuation_notification
