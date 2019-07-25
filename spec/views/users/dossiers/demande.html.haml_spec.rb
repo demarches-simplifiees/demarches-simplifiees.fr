@@ -19,7 +19,6 @@ describe 'users/dossiers/demande.html.haml', type: :view do
     expect(rendered).to have_text('Déposé le')
     expect(rendered).to have_text('Identité')
     expect(rendered).to have_text('Demande')
-    expect(rendered).to have_text('Pièces jointes')
   end
 
   context 'when the dossier is editable' do
