@@ -3,12 +3,22 @@ module MailTemplateConcern
 
   include TagsSubstitutionConcern
 
+  module Actions
+    SHOW         = :show
+    ASK_QUESTION = :ask_question
+    REPLY        = :reply
+  end
+
   def subject_for_dossier(dossier)
     replace_tags(subject, dossier)
   end
 
   def body_for_dossier(dossier)
     replace_tags(body, dossier)
+  end
+
+  def actions_for_dossier(dossier)
+    [MailTemplateConcern::Actions::SHOW, MailTemplateConcern::Actions::ASK_QUESTION]
   end
 
   def update_rich_body
