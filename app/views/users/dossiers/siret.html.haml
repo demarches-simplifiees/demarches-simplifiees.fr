@@ -8,7 +8,12 @@
 
     = f.label :siret, style: "display: none"
     = f.text_field :siret, placeholder: "Numéro SIRET à 14 chiffres", required: true
-
     = f.hidden_field :dossier_id, value: @dossier.id
 
-    = f.submit "Valider", class: "button large primary expand", data: { disable_with: "Récupération des informations…" }
+    %p.mb-4
+      Pour trouver votre numéro SIRET, utilisez
+      %a{ href: 'https://entreprise.data.gouv.fr/', target: '_blank', rel: 'noopener' }
+        entreprise.data.gouv.fr
+      ou renseignez-vous auprès de votre service comptable.
+
+    = f.submit "Valider", class: "button large primary expand mt-1", data: { disable_with: "Récupération des informations…" }
