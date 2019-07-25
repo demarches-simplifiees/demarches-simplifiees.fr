@@ -21,7 +21,6 @@ class Dossier < ApplicationRecord
   has_one :individual, dependent: :destroy
   has_one :attestation, dependent: :destroy
 
-  has_many :pieces_justificatives, inverse_of: :dossier, dependent: :destroy
   has_one_attached :justificatif_motivation
 
   has_many :champs, -> { root.public_only.ordered }, inverse_of: :dossier, dependent: :destroy
@@ -137,7 +136,6 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
-  delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
 
