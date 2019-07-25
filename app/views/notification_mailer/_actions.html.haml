@@ -1,0 +1,13 @@
+= vertical_margin(12)
+
+- actions.each_with_index do |action, index|
+  - variant = (index == 0 ? :primary : :secondary)
+  - case action
+  - when MailTemplateConcern::Actions::SHOW
+    = round_button('Consulter mon dossier', dossier_url(@dossier), variant)
+  - when MailTemplateConcern::Actions::ASK_QUESTION
+    = round_button('J’ai une question', messagerie_dossier_url(@dossier), variant)
+  - when MailTemplateConcern::Actions::REPLY
+    = round_button('Répondre à ce message', messagerie_dossier_url(@dossier), variant)
+
+= vertical_margin(5)

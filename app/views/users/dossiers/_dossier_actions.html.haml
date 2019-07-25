@@ -9,6 +9,20 @@
       Actions
     .dropdown-content.fade-in-down
       %ul.dropdown-items
+        - if !dossier.read_only?
+          - if dossier.brouillon?
+            %li
+              = link_to(url_for_dossier(dossier)) do
+                %span.icon.edit
+                .dropdown-description
+                  Modifier le brouillon
+          - else
+            %li
+              = link_to modifier_dossier_path(dossier) do
+                %span.icon.edit
+                .dropdown-description
+                  Modifier le dossier
+
         - if has_new_dossier_action
           %li
             = link_to procedure_lien(dossier.procedure) do
