@@ -554,7 +554,7 @@ describe Procedure do
 
     before do
       Timecop.freeze(now)
-      procedure.publish!(procedure.administrateurs.first, "example-path")
+      procedure.publish!(procedure.administrateurs.first, "example-path", procedure.lien_site_web)
     end
     after { Timecop.return }
 
