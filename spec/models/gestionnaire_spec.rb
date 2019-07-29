@@ -251,12 +251,6 @@ describe Gestionnaire, type: :model do
       it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
 
-    context 'when there is a modification on a piece jusitificative' do
-      before { dossier.pieces_justificatives << create(:piece_justificative, :contrat) }
-
-      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
-    end
-
     context 'when there is a modification on private champs' do
       before { dossier.champs_private.first.update_attribute('value', 'toto') }
 
@@ -324,12 +318,6 @@ describe Gestionnaire, type: :model do
         it { is_expected.to match([]) }
         it { expect(gestionnaire_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
       end
-    end
-
-    context 'when there is a modification on a piece justificative' do
-      before { dossier.pieces_justificatives << create(:piece_justificative, :contrat) }
-
-      it { is_expected.to match([dossier.id]) }
     end
 
     context 'when there is a modification on public champs on a followed dossier from another procedure' do
