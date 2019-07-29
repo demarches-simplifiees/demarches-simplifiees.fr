@@ -690,19 +690,9 @@ describe Procedure do
 
     subject { procedure.export_filename(:csv) }
 
-    context "with a path" do
-      let(:procedure) { create(:procedure, :published) }
+    let(:procedure) { create(:procedure, :published) }
 
-      it { is_expected.to eq("dossiers_#{procedure.path}_2018-01-02_23-11.csv") }
-    end
-
-    context "without a path" do
-      let(:procedure) { create(:procedure, :archived) }
-
-      it do
-        is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11.csv")
-      end
-    end
+    it { is_expected.to eq("dossiers_#{procedure.path}_2018-01-02_23-11.csv") }
   end
 
   describe '#new_dossier' do
