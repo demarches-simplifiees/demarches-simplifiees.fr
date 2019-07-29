@@ -11,7 +11,8 @@
           = "- Déposé le #{l(dossier.en_construction_at, format: '%d %B %Y')}"
 
     - if current_user.owns?(dossier)
-      = link_to "Modifier mon dossier", modifier_dossier_path(dossier.id), class: 'button accepted edit-form', 'title'=> "Vous pouvez modifier votre dossier tant qu'il n'est passé en instruction"
+      - if dossier.can_be_updated_by_user?
+        = link_to "Modifier mon dossier", modifier_dossier_path(dossier.id), class: 'button accepted edit-form', 'title'=> "Vous pouvez modifier votre dossier tant qu'il n'est passé en instruction"
       = render partial: 'invites/dropdown', locals: { dossier: dossier }
       .clearfix
 
