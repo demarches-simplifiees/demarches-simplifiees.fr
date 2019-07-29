@@ -123,6 +123,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
         within '#publish-modal' do
           expect(page).to have_field('procedure_path')
+          fill_in 'lien_site_web', with: 'http://some.website'
           click_on 'publish'
         end
 
