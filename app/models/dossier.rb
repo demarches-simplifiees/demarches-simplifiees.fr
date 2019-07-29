@@ -1,5 +1,6 @@
 class Dossier < ApplicationRecord
   include DossierFilteringConcern
+  include Devise::Controllers::Helpers
 
   enum state: {
     brouillon:       'brouillon',
@@ -86,6 +87,7 @@ class Dossier < ApplicationRecord
     event :repasser_en_instruction, after: :after_repasser_en_instruction do
       transitions from: :refuse, to: :en_instruction
       transitions from: :sans_suite, to: :en_instruction
+      transitions from: :accepte, to: :en_instruction
     end
   end
 
@@ -226,6 +228,9 @@ class Dossier < ApplicationRecord
 
   def can_transition_to_en_construction?
     !procedure.archivee? && brouillon?
+  end
+
+  def can_retransition_to_en_instruction?
   end
 
   def can_be_updated_by_user?

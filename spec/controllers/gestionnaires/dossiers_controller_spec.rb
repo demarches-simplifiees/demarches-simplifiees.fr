@@ -4,6 +4,8 @@ describe Gestionnaires::DossiersController, type: :controller do
   render_views
 
   let(:gestionnaire) { create(:gestionnaire) }
+  let(:administrateur) { create(:administrateur) }
+  let(:administration) { create(:administration) }
   let(:gestionnaires) { [gestionnaire] }
   let(:procedure) { create(:procedure, :published, gestionnaires: gestionnaires) }
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
@@ -153,9 +155,10 @@ describe Gestionnaires::DossiersController, type: :controller do
 
   describe '#repasser_en_instruction' do
     let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
+    let(:current_user) { gestionnaire }
 
     before do
-      sign_in gestionnaire
+      sign_in current_user
       post :repasser_en_instruction,
         params: { procedure_id: procedure.id, dossier_id: dossier.id },
         format: 'js'
@@ -171,6 +174,29 @@ describe Gestionnaires::DossiersController, type: :controller do
       it 'warns about the error, but doesn’t raise' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when the dossier is accepte' do
+      let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+      it 'it is not possible to go back to en_instruction as gestionnaire' do
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
+        expect(response).to have_http_status(:ok)
+      end
+      context 'as administrateur' do
+        let (:current_user) { administrateur }
+        it 'it is not possible to go back to en_instruction' do
+          expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
+          expect(response).to have_http_status(:ok)
+        end
+      end
+      context 'as superadmin' do
+        let (:current_user) { administration }
+        it 'it is not possible to go back to en_instruction' do
+          expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
+          expect(response).to have_http_status(:ok)
+        end
       end
     end
   end
