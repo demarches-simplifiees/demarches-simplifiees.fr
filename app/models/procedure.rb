@@ -107,12 +107,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_or_reopen!(administrateur, path)
-    if archivee? && may_reopen?(administrateur, path)
-      reopen!(administrateur, path)
-    elsif may_publish?(administrateur, path)
+  def publish_or_reopen!(administrateur, path, lien_site_web)
+    if archivee? && may_reopen?(administrateur, path, lien_site_web)
+      reopen!(administrateur, path, lien_site_web)
+    elsif may_publish?(administrateur, path, lien_site_web)
       reset!
-      publish!(administrateur, path)
+      publish!(administrateur, path, lien_site_web)
     end
   end
 
@@ -216,7 +216,7 @@ class Procedure < ApplicationRecord
         types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
         types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
       }, &method(:clone_attachments))
-    procedure.path = nil
+    procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
     procedure.test_started_at = nil
     procedure.archived_at = nil
@@ -488,33 +488,29 @@ class Procedure < ApplicationRecord
     update!(path: path)
   end
 
-  def can_publish?(administrateur, path)
-    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
+  def can_publish?(administrateur, path, lien_site_web)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH) && lien_site_web.present?
   end
 
-  def can_reopen?(administrateur, path)
-    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
-  end
-
-  def after_publish(administrateur, path)
+  def after_publish(administrateur, path, lien_site_web)
     update!(published_at: Time.zone.now)
 
     claim_path_ownership!(path)
   end
 
-  def after_reopen(administrateur, path)
+  def after_reopen(administrateur, path, lien_site_web)
     update!(published_at: Time.zone.now, archived_at: nil)
 
     claim_path_ownership!(path)
   end
 
   def after_archive
-    update!(archived_at: Time.zone.now, path: nil)
+    update!(archived_at: Time.zone.now, path: SecureRandom.uuid)
   end
 
   def after_hide
     now = Time.zone.now
-    update!(hidden_at: now, path: nil)
+    update!(hidden_at: now, path: SecureRandom.uuid)
     dossiers.update_all(hidden_at: now)
   end
 

@@ -15,6 +15,7 @@ describe Admin::ProceduresController, type: :controller do
   let(:duree_conservation_dossiers_dans_ds) { 3 }
   let(:duree_conservation_dossiers_hors_ds) { 6 }
   let(:monavis_embed) { nil }
+  let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
   let(:procedure_params) {
     {
@@ -26,7 +27,8 @@ describe Admin::ProceduresController, type: :controller do
       cadre_juridique: cadre_juridique,
       duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds,
       duree_conservation_dossiers_hors_ds: duree_conservation_dossiers_hors_ds,
-      monavis_embed: monavis_embed
+      monavis_embed: monavis_embed,
+      lien_site_web: lien_site_web
     }
   }
 
@@ -331,23 +333,26 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PUT #publish' do
-    let(:procedure) { create(:procedure, administrateur: admin) }
-    let(:procedure2) { create(:procedure, :published, administrateur: admin) }
-    let(:procedure3) { create(:procedure, :published) }
+    let(:procedure) { create(:procedure, administrateur: admin, lien_site_web: lien_site_web) }
+    let(:procedure2) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
+    let(:procedure3) { create(:procedure, :published, lien_site_web: lien_site_web) }
+    let(:lien_site_web) { 'http://some.administration/' }
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :publish, params: { procedure_id: procedure.id, path: path }
+        put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
         procedure.reload
         procedure2.reload
       end
 
       context 'procedure path does not exist' do
         let(:path) { 'new_path' }
+        let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
+          expect(procedure.lien_site_web).to eq(lien_site_web)
           expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
@@ -355,26 +360,29 @@ describe Admin::ProceduresController, type: :controller do
 
       context 'procedure path exists and is owned by current administrator' do
         let(:path) { procedure2.path }
+        let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
         it 'publish the given procedure' do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
+          expect(procedure.lien_site_web).to eq(lien_site_web)
           expect(response.status).to eq 302
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
 
         it 'archive previous procedure' do
           expect(procedure2.archivee?).to be_truthy
-          expect(procedure2.path).to be_nil
         end
       end
 
       context 'procedure path exists and is not owned by current administrator' do
         let(:path) { procedure3.path }
+        let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
         it 'does not publish the given procedure' do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
+          expect(procedure.lien_site_web).to match(lien_site_web)
           expect(response.status).to eq 200
         end
 
@@ -387,10 +395,12 @@ describe Admin::ProceduresController, type: :controller do
 
       context 'procedure path is invalid' do
         let(:path) { 'Invalid Procedure Path' }
+        let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
         it 'does not publish the given procedure' do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
+          expect(procedure.lien_site_web).to match(lien_site_web)
           expect(response).to redirect_to :admin_procedures
           expect(flash[:alert]).to have_content 'Lien de la démarche invalide'
         end
@@ -413,10 +423,25 @@ describe Admin::ProceduresController, type: :controller do
         expect(flash[:alert]).to have_content 'Démarche inexistante'
       end
     end
+
+    context 'when the admin does not provide a lien_site_web' do
+      before do
+        put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
+        procedure.reload
+      end
+      context 'procedure path is valid but lien_site_web is missing' do
+        let(:path) { 'new_path2' }
+        let(:lien_site_web) { nil }
+
+        it 'does not publish the given procedure' do
+          expect(procedure.publiee?).to be_falsey
+        end
+      end
+    end
   end
 
   describe 'PUT #archive' do
-    let(:procedure) { create(:procedure, :published, administrateur: admin) }
+    let(:procedure) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
 
     context 'when admin is the owner of the procedure' do
       before do
@@ -432,7 +457,7 @@ describe Admin::ProceduresController, type: :controller do
 
       context 'when owner want to re-enable procedure' do
         before do
-          put :publish, params: { procedure_id: procedure.id, path: 'fake_path' }
+          put :publish, params: { procedure_id: procedure.id, path: 'fake_path', lien_site_web: lien_site_web }
           procedure.reload
         end
 
