@@ -4,7 +4,7 @@ class Administrateur < ApplicationRecord
   include ActiveRecord::SecureToken
 
   devise :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :trackable, :validatable, :lockable
 
   has_and_belongs_to_many :gestionnaires
   has_many :administrateurs_procedures
