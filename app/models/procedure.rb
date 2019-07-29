@@ -216,7 +216,7 @@ class Procedure < ApplicationRecord
         types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
         types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
       }, &method(:clone_attachments))
-    procedure.path = nil
+    procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
     procedure.test_started_at = nil
     procedure.archived_at = nil
@@ -505,12 +505,12 @@ class Procedure < ApplicationRecord
   end
 
   def after_archive
-    update!(archived_at: Time.zone.now, path: nil)
+    update!(archived_at: Time.zone.now, path: SecureRandom.uuid)
   end
 
   def after_hide
     now = Time.zone.now
-    update!(hidden_at: now, path: nil)
+    update!(hidden_at: now, path: SecureRandom.uuid)
     dossiers.update_all(hidden_at: now)
   end
 

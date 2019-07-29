@@ -372,7 +372,6 @@ describe Admin::ProceduresController, type: :controller do
 
         it 'archive previous procedure' do
           expect(procedure2.archivee?).to be_truthy
-          expect(procedure2.path).to be_nil
         end
       end
 
