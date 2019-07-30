@@ -26,8 +26,3 @@
   - if champs.any?
     .card
       = render partial: "shared/dossiers/champs", locals: { champs: champs, demande_seen_at: demande_seen_at, profile: profile }
-
-  - if dossier.types_de_piece_justificative.any?
-    .tab-title Pièces jointes
-    .card
-      = render partial: "shared/dossiers/pieces_jointes", locals: { dossier: dossier, demande_seen_at: demande_seen_at }

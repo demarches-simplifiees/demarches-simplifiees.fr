@@ -16,6 +16,5 @@ describe 'gestionnaires/dossiers/show.html.haml', type: :view do
   it 'renders the dossier infos' do
     expect(rendered).to have_text('Identité')
     expect(rendered).to have_text('Demande')
-    expect(rendered).to have_text('Pièces jointes')
   end
 end

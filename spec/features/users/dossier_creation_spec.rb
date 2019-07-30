@@ -11,7 +11,7 @@ feature 'Creating a new dossier:' do
     end
 
     context 'when the procedure has identification by individual' do
-      let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_type_de_champ, :with_two_type_de_piece_justificative, ask_birthday: ask_birthday) }
+      let(:procedure) { create(:procedure, :published, :for_individual, :with_service, ask_birthday: ask_birthday) }
       let(:ask_birthday) { false }
       let(:expected_birthday) { nil }
 
@@ -63,7 +63,7 @@ feature 'Creating a new dossier:' do
     end
 
     context 'when identifying through SIRET' do
-      let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ, :with_two_type_de_piece_justificative) }
+      let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ) }
       let(:dossier) { procedure.dossiers.last }
 
       before do
