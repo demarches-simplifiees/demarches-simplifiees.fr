@@ -135,17 +135,6 @@ FactoryBot.define do
       end
     end
 
-    # Deprecated
-    trait :with_two_type_de_piece_justificative do
-      after(:build) do |procedure, _evaluator|
-        rib = create(:type_de_piece_justificative, :rib, order_place: 1)
-        msa = create(:type_de_piece_justificative, :msa, order_place: 2)
-
-        procedure.types_de_piece_justificative << rib
-        procedure.types_de_piece_justificative << msa
-      end
-    end
-
     trait :published do
       after(:build) do |procedure, _evaluator|
         procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)

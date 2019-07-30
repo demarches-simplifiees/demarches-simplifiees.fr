@@ -132,7 +132,6 @@ module Users
     end
 
     # FIXME:
-    # - remove PiecesJustificativesService
     # - delegate draft save logic to champ ?
     def update_brouillon
       @dossier = dossier_with_champs
@@ -158,8 +157,6 @@ module Users
       @dossier = dossier_with_champs
     end
 
-    # FIXME:
-    # - remove PiecesJustificativesService
     def update
       @dossier = dossier_with_champs
 
@@ -297,7 +294,7 @@ module Users
     end
 
     def update_dossier_and_compute_errors
-      errors = PiecesJustificativesService.upload!(@dossier, current_user, params)
+      errors = []
 
       if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
         errors += @dossier.errors.full_messages
@@ -305,7 +302,6 @@ module Users
 
       if !save_draft?
         errors += @dossier.check_mandatory_champs
-        errors += PiecesJustificativesService.missing_pj_error_messages(@dossier)
       end
 
       errors

@@ -3,7 +3,6 @@ require Rails.root.join('lib', 'percentile')
 class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
 
-  has_many :types_de_piece_justificative, -> { ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
   has_many :dossiers, dependent: :restrict_with_exception
@@ -31,7 +30,6 @@ class Procedure < ApplicationRecord
 
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
-  accepts_nested_attributes_for :types_de_piece_justificative, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   mount_uploader :logo, ProcedureLogoUploader
 
@@ -51,7 +49,6 @@ class Procedure < ApplicationRecord
       :administrateurs,
       :types_de_champ_private,
       :types_de_champ,
-      :types_de_piece_justificative,
       :module_api_carto
     )
   }
@@ -187,10 +184,6 @@ class Procedure < ApplicationRecord
     switch_list_order(types_de_champ_private, index_of_first_element)
   end
 
-  def switch_types_de_piece_justificative(index_of_first_element)
-    switch_list_order(types_de_piece_justificative, index_of_first_element)
-  end
-
   def switch_list_order(list, index_of_first_element)
     if index_of_first_element < 0 ||
       index_of_first_element == list.count - 1 ||
@@ -225,7 +218,6 @@ class Procedure < ApplicationRecord
     procedure.remote_logo_url = self.logo_url
     procedure.lien_notice = nil
 
-    procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
     if is_different_admin || from_library
       procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
     end
@@ -278,10 +270,6 @@ class Procedure < ApplicationRecord
 
   def whitelisted?
     whitelisted_at.present?
-  end
-
-  def has_old_pjs?
-    types_de_piece_justificative.any?
   end
 
   def total_dossier
