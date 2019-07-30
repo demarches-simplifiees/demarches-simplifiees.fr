@@ -93,6 +93,9 @@ describe ProcedureExportV2Service do
     context 'with etablissement' do
       let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_entreprise, procedure: procedure) }
 
+      let(:dossier_etablissement) { etablissements_sheet.data[1] }
+      let(:champ_etablissement) { etablissements_sheet.data[0] }
+
       it 'should have headers' do
         expect(etablissements_sheet.headers).to eq([
           "Dossier ID",
@@ -132,6 +135,8 @@ describe ProcedureExportV2Service do
 
       it 'should have data' do
         expect(etablissements_sheet.data.size).to eq(2)
+        expect(dossier_etablissement[1]).to eq("Dossier")
+        expect(champ_etablissement[1]).to eq("siret")
       end
     end
 
