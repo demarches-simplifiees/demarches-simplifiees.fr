@@ -15,9 +15,14 @@ class Users::SessionsController < Sessions::SessionsController
   # POST /resource/sign_in
   def create
     remember_me = params[:user][:remember_me] == '1'
-    try_to_authenticate(User, remember_me)
-    try_to_authenticate(Gestionnaire, remember_me)
-    try_to_authenticate(Administrateur, remember_me)
+
+    if resource_locked?(try_to_authenticate(User, remember_me)) ||
+      resource_locked?(try_to_authenticate(Gestionnaire, remember_me)) ||
+      resource_locked?(try_to_authenticate(Administrateur, remember_me))
+      flash.alert = 'Votre compte est verrouillé.'
+      new
+      return render :new, status: 401
+    end
 
     if user_signed_in?
       current_user.update(loged_in_with_france_connect: nil)
@@ -109,5 +114,10 @@ class Users::SessionsController < Sessions::SessionsController
         resource.force_sync_credentials
       end
     end
+    resource
+  end
+
+  def resource_locked?(resource)
+    resource.present? && resource.access_locked?
   end
 end

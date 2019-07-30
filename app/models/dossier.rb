@@ -21,7 +21,6 @@ class Dossier < ApplicationRecord
   has_one :individual, dependent: :destroy
   has_one :attestation, dependent: :destroy
 
-  has_many :pieces_justificatives, inverse_of: :dossier, dependent: :destroy
   has_one_attached :justificatif_motivation
 
   has_many :champs, -> { root.public_only.ordered }, inverse_of: :dossier, dependent: :destroy
@@ -128,7 +127,6 @@ class Dossier < ApplicationRecord
         :etablissement,
         piece_justificative_file_attachment: :blob
       ],
-      pieces_justificatives: [],
       avis: [],
       etablissement: [],
       individual: [],
@@ -138,7 +136,6 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
-  delegate :types_de_piece_justificative, to: :procedure
   delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
 
@@ -163,18 +160,6 @@ class Dossier < ApplicationRecord
       individual&.prenom
     ].compact.join(' ')
     self.private_search_terms = champs_private.flat_map(&:search_terms).compact.join(' ')
-  end
-
-  def was_piece_justificative_uploaded_for_type_id?(type_id)
-    pieces_justificatives.where(type_de_piece_justificative_id: type_id).count > 0
-  end
-
-  def retrieve_last_piece_justificative_by_type(type)
-    pieces_justificatives.where(type_de_piece_justificative_id: type).last
-  end
-
-  def retrieve_all_piece_justificative_by_type(type)
-    pieces_justificatives.where(type_de_piece_justificative_id: type).order(created_at: :DESC)
   end
 
   def build_default_champs
