@@ -193,8 +193,8 @@ describe Gestionnaires::DossiersController, type: :controller do
       end
       context 'as superadmin' do
         let (:current_user) { administration }
-        it 'it is possible to go back to en_instruction' do
-          expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
+        it 'it is not possible to go back to en_instruction' do
+          expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
           expect(response).to have_http_status(:ok)
         end
       end
