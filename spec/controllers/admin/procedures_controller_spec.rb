@@ -248,7 +248,7 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let!(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
+    let!(:procedure) { create(:procedure, :with_type_de_champ, administrateur: admin) }
 
     context 'when administrateur is not connected' do
       before do
@@ -302,7 +302,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when procedure is brouillon' do
-        let(:procedure) { create(:procedure_with_dossiers, :with_path, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
+        let(:procedure) { create(:procedure_with_dossiers, :with_path, :with_type_de_champ, administrateur: admin) }
         let!(:dossiers_count) { procedure.dossiers.count }
 
         describe 'dossiers are dropped' do
@@ -316,7 +316,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when procedure is published' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, :published, administrateur: admin) }
+        let(:procedure) { create(:procedure, :with_type_de_champ, :published, administrateur: admin) }
 
         subject { update_procedure }
 
@@ -774,7 +774,7 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'PATCH #monavis' do
-    let!(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
+    let!(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_params) {
       {
         monavis_embed: monavis_embed
@@ -835,7 +835,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when procedure is published' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, :published, administrateur: admin) }
+        let(:procedure) { create(:procedure, :published, administrateur: admin) }
 
         subject { update_monavis }
 

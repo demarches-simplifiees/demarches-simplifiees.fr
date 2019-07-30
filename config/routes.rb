@@ -193,13 +193,6 @@ Rails.application.routes.draw do
         delete :delete_notice
       end
 
-      resource :pieces_justificatives, only: [:show, :update]
-      resources :pieces_justificatives, only: :destroy
-      resource :pieces_justificatives, only: [:show, :update] do
-        post '/:index/move_up' => 'pieces_justificatives#move_up', as: :move_up
-        post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
-      end
-
       resources :mail_templates, only: [:index, :edit, :update]
 
       put 'archive' => 'procedures#archive', as: :archive

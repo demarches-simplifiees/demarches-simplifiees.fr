@@ -25,7 +25,7 @@ describe API::V1::ProceduresController, type: :controller do
       it { is_expected.to have_http_status(200) }
 
       describe 'body' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, :with_two_type_de_piece_justificative, administrateur: admin) }
+        let(:procedure) { create(:procedure, :with_type_de_champ, administrateur: admin) }
         let(:response) { get :show, params: { id: procedure.id, token: token } }
 
         subject { JSON.parse(response.body, symbolize_names: true)[:procedure] }
@@ -50,19 +50,6 @@ describe API::V1::ProceduresController, type: :controller do
           it { expect(subject[:type_champ]).to eq(champ.type_champ) }
           it { expect(subject[:order_place]).to eq(champ.order_place) }
           it { expect(subject[:description]).to eq(champ.description) }
-        end
-
-        it { is_expected.to have_key(:types_de_piece_justificative) }
-        it { expect(subject[:types_de_piece_justificative]).to be_an(Array) }
-
-        describe 'type_de_piece_jointe' do
-          subject { super()[:types_de_piece_justificative][0] }
-
-          let(:pj) { procedure.types_de_piece_justificative.first }
-
-          it { expect(subject[:id]).to eq(pj.id) }
-          it { expect(subject[:libelle]).to eq(pj.libelle) }
-          it { expect(subject[:description]).to eq(pj.description) }
         end
       end
     end

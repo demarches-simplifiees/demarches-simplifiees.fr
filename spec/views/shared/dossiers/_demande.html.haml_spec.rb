@@ -51,12 +51,4 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
       end
     end
   end
-
-  context 'when the dossier has pièces justificatives' do
-    let(:procedure) { create(:procedure, :published, :with_two_type_de_piece_justificative) }
-
-    it 'renders the pièces justificatives' do
-      expect(rendered).to have_text('Pièces jointes')
-    end
-  end
 end
