@@ -1,7 +1,7 @@
 = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
 .row.white-back
   #procedure_show
-    = render partial: '/admin/procedures/modal_publish'
+    = render 'modal_publish', procedure: @procedure, administrateur: @current_administrateur
     = render partial: '/admin/procedures/modal_transfer'
 
     - if @procedure.brouillon?
@@ -117,7 +117,7 @@
           - if @procedure.missing_steps.include?(:service)
             %p.alert.alert-danger
               Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
-              = link_to 'Cliquez ici.', (current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)))
+              = link_to 'Cliquez ici.', (@current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)))
 
           - if @procedure.missing_steps.include?(:instructeurs)
             %p.alert.alert-danger

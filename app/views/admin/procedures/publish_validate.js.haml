@@ -1,0 +1,4 @@
+= render_to_element("#publish-path-message", partial: 'publish_path_message', outer: true,
+  locals: { procedure: @procedure, administrateur: current_administrateur })
+= render_to_element("#publish-buttons", partial: 'publish_buttons', outer: true,
+  locals: { procedure: @procedure, administrateur: current_administrateur })

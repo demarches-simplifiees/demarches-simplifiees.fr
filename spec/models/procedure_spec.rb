@@ -547,12 +547,12 @@ describe Procedure do
   end
 
   describe '#publish!' do
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, path: 'example-path') }
     let(:now) { Time.zone.now.beginning_of_minute }
 
     before do
       Timecop.freeze(now)
-      procedure.publish!(procedure.administrateurs.first, "example-path", procedure.lien_site_web)
+      procedure.publish!
     end
     after { Timecop.return }
 

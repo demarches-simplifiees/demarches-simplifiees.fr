@@ -1,0 +1,11 @@
+#publish-path-message
+  - procedure.validate(:publication)
+  - errors = procedure.errors
+  -# Ignore the :taken error if the path can be claimed, and instead display the :taken_can_be_claimed error message.
+  - if errors.details[:path]&.pluck(:error)&.include?(:taken) && procedure.path_available?(administrateur, procedure.path)
+    .alert.alert-warning
+      = errors.full_message('Le lien public', errors.generate_message(:path, :taken_can_be_claimed))
+  - elsif errors.messages[:path].present?
+    -# Display the actual errors for :path
+    .alert.alert-danger
+      = errors.full_message('Le lien public', errors.messages[:path].first)

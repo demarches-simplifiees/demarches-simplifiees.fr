@@ -1,63 +1,49 @@
 #publish-modal.modal{ "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
   .modal-dialog.modal-lg{ :role => "document" }
-    = form_tag admin_procedure_publish_path(procedure_id: @procedure.id), method: :put, remote: true do
+    = form_tag admin_procedure_publish_path(procedure_id: procedure.id), method: :put, remote: true do
       .modal-content
         .modal-header
           %button.close{ "aria-label" => "Close", "data-dismiss" => "modal", :type => "button" }
             %span{ "aria-hidden" => "true" } ×
           %h4#myModalLabel.modal-title
-            = procedure_modal_text(@procedure, :title)
+            = procedure_modal_text(procedure, :title)
             %span#publish-modal-title
         .modal-body
-          = procedure_modal_text(@procedure, :body)
-          - if !@procedure.archivee?
-            %b
-              Elle ne pourra plus être modifiée à l’issue de cette publication.
-          %br
-          Afin de faciliter l’accès à la démarche, vous êtes invité à personnaliser l’adresse d'accès si vous le souhaitez.
-          %br
+          .text-info
+            %p
+              = procedure_modal_text(procedure, :body)
+              %b Elle ne pourra plus être modifiée à l’issue de cette publication.
           .form-group
-            %br
-            %h4 Lien de la démarche
-            %p.center
+            %h4 Adresse de la démarche
+            %p Vous pouvez personnaliser le lien public de la démarche pour en faciliter l’accès.
+            %p
               = commencer_url(path: '')
-              = text_field_tag(:path, @suggested_path,
-                                id: 'procedure_path',
-                                placeholder: 'Chemin vers la démarche',
-                                data: { autocomplete: 'path' },
-                                class: 'form-control',
-                                maxlength: 50,
-                                style: 'width: 300px; display: inline;')
-            %br
-              .alert.alert-info
-                Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers demarches-simplifiees.fr. Ne dites pas non plus aux usagers de se rendre sur le site générique demarches-simplifiees.fr, donnez-leur toujours le lien complet.
-                %br
-                %br
-                Prenez quelques minutes pour savoir comment établir une bonne relation avec les usagers de votre démarche :
-                = link_to "Regarder la vidéo de 5 minutes",
-                "https://vimeo.com/334463514",
-                target: "_blank"
-
+              = text_field_tag(:path, procedure.path,
+                              id: 'procedure_path',
+                              placeholder: 'chemin-de-la-démarche',
+                              required: true,
+                              class: 'form-control',
+                              pattern: '^[a-z0-9_-]{3,50}$',
+                              title: "De 3 à 50 caractères; minuscules, chiffres et tiret seulement",
+                              data: { remote: true, debounce: true, url: admin_procedure_publish_validate_path(procedure) },
+                              autocomplete: 'off',
+                              style: 'width: 300px; display: inline;')
+              = render 'publish_path_message', procedure: procedure, administrateur: administrateur
+            .text-info
+              Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers demarches-simplifiees.fr. Ne dites pas non plus aux usagers de se rendre sur le site générique demarches-simplifiees.fr, donnez-leur toujours le lien complet.
           .form-group
-            %h4 Où les usagers trouveront-ils le lien vers cette démarche ? *
+            %h4 Diffusion de la démarche
+            %p Où les utilisateurs trouveront-ils le lien de la démarche ? Typiquement, il s’agit d’une page de votre site web.
             %p.center
-              = text_field_tag(:lien_site_web, @procedure.lien_site_web,
+              = text_field_tag(:lien_site_web, procedure.lien_site_web,
                                 required: true,
                                 class: 'form-control',
+                                autocomplete: 'off',
                                 placeholder: 'https://exemple.gouv.fr/ma_demarche')
-
-            #path-messages
-              #path_is_mine.text-warning.center.message
-                Ce lien est déjà utilisé par une de vos démarche.
-                %br
-                Si vous voulez l’utiliser, l’ancienne démarche sera archivée (plus accessible du public).
-              #path_is_not_mine.text-danger.center.message
-                Ce lien est déjà utilisé par une démarche.
-                %br
-                Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
-              #path_is_invalid.text-danger.center.message
-                Ce lien
-                = t('activerecord.errors.models.procedure.attributes.path.invalid')
+            .text-info
+              Prenez quelques minutes pour savoir comment établir une bonne relation avec les usagers de votre démarche :
+              = link_to "Regarder la vidéo de 5 minutes.",
+              "https://vimeo.com/334463514",
+              target: "_blank"
         .modal-footer
-          = submit_tag procedure_modal_text(@procedure, :submit), class: %w(btn btn btn-success), disabled: :disabled, id: 'publish'
-          = button_tag "Annuler", class: %w(btn btn btn-default), data: { dismiss: :modal }, id: 'cancel'
+          = render 'publish_buttons', procedure: procedure, administrateur: administrateur
