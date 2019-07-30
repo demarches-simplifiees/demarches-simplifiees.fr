@@ -155,8 +155,13 @@ describe ProcedureExportV2Service do
     end
 
     context 'with repetitions' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
-      let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
+      let!(:dossiers) do
+        [
+          create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure),
+          create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure)
+        ]
+      end
+      let(:champ_repetition) { dossiers.first.champs.find { |champ| champ.type_champ == 'repetition' } }
 
       it 'should have sheets' do
         expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle])
@@ -172,7 +177,7 @@ describe ProcedureExportV2Service do
       end
 
       it 'should have data' do
-        expect(repetition_sheet.data.size).to eq(2)
+        expect(repetition_sheet.data.size).to eq(4)
       end
     end
   end
