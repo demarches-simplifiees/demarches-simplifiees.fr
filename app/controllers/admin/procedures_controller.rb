@@ -2,7 +2,7 @@ class Admin::ProceduresController < AdminController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
-  before_action :retrieve_procedure, only: [:show, :edit, :delete_logo, :delete_deliberation, :delete_notice, :monavis, :update_monavis]
+  before_action :retrieve_procedure, only: [:show, :edit, :delete_logo, :delete_deliberation, :delete_notice, :monavis, :update_monavis, :publish_validate, :publish]
 
   def index
     if current_administrateur.procedures.count != 0
@@ -40,7 +40,8 @@ class Admin::ProceduresController < AdminController
   end
 
   def show
-    @suggested_path = @procedure.suggested_path(current_administrateur)
+    @procedure.path = @procedure.suggested_path(current_administrateur)
+    @current_administrateur = current_administrateur
   end
 
   def edit
@@ -94,33 +95,19 @@ class Admin::ProceduresController < AdminController
     end
   end
 
-  def publish
-    path = params[:path]
-    lien_site_web = params[:lien_site_web]
-    procedure = current_administrateur.procedures.find(params[:procedure_id])
+  def publish_validate
+    @procedure.assign_attributes(publish_params)
+  end
 
-    procedure.publish_or_reopen!(current_administrateur, path, lien_site_web)
+  def publish
+    @procedure.assign_attributes(publish_params)
+
+    @procedure.publish_or_reopen!(current_administrateur)
+
     flash.notice = "Démarche publiée"
     redirect_to admin_procedures_path
-  rescue ActiveRecord::RecordInvalid => e
-    errors = e.record.errors
-    if errors.details.key?(:path)
-      path_error = errors.details.dig(:path, 0, :error)
-      case path_error
-      when :invalid
-        @valid = false
-      when :taken
-        @valid = true
-        @mine = false
-      end
-      render '/admin/procedures/publish', formats: 'js'
-    else
-      flash.alert = errors.full_messages
-      return redirect_to admin_procedure_path(procedure)
-    end
-  rescue ActiveRecord::RecordNotFound
-    flash.alert = 'Démarche inexistante'
-    redirect_to admin_procedures_path
+  rescue ActiveRecord::RecordInvalid
+    render 'publish_validate', formats: :js
   end
 
   def transfer
@@ -214,20 +201,6 @@ class Admin::ProceduresController < AdminController
     @draft_class = 'active'
   end
 
-  def path_list
-    json_path_list = Procedure
-      .find_with_path(params[:request])
-      .order(:id)
-      .map do |procedure|
-        {
-          label: procedure.path,
-          mine: current_administrateur.owns?(procedure)
-        }
-      end.to_json
-
-    render json: json_path_list
-  end
-
   def delete_logo
     @procedure.logo.purge_later
     @procedure.logo_active_storage.purge_later
@@ -254,6 +227,10 @@ class Admin::ProceduresController < AdminController
 
   def cloned_from_library?
     params[:from_new_from_existing].present?
+  end
+
+  def publish_params
+    params.permit(:path, :lien_site_web)
   end
 
   def procedure_params

@@ -65,6 +65,7 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validates :lien_site_web, presence: true, if: :publiee?
+  validate :validate_for_publication, on: :publication
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :archived_at, :hidden_at], case_sensitive: false }
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
@@ -107,12 +108,18 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_or_reopen!(administrateur, path, lien_site_web)
+  def publish_or_reopen!(administrateur)
     Procedure.transaction do
       if brouillon?
         reset!
       end
-      publish!(administrateur, path, lien_site_web)
+
+      other_procedure = other_procedure_with_path(path)
+      if other_procedure.present? && administrateur.owns?(other_procedure)
+        other_procedure.archive!
+      end
+
+      publish!
     end
   end
 
@@ -122,6 +129,44 @@ class Procedure < ApplicationRecord
     else
       groupe_instructeurs.each { |gi| gi.dossiers.destroy_all }
     end
+  end
+
+  def validate_for_publication
+    old_attributes = self.slice(:aasm_state, :archived_at)
+    self.aasm_state = :publiee
+    self.archived_at = nil
+
+    is_valid = validate
+
+    self.attributes = old_attributes
+
+    is_valid
+  end
+
+  def suggested_path(administrateur)
+    if path_customized?
+      return path
+    end
+    slug = libelle&.parameterize&.first(50)
+    suggestion = slug
+    counter = 1
+    while !path_available?(administrateur, suggestion)
+      counter = counter + 1
+      suggestion = "#{slug}-#{counter}"
+    end
+    suggestion
+  end
+
+  def other_procedure_with_path(path)
+    Procedure.publiees
+      .where.not(id: self.id)
+      .find_by(path: path)
+  end
+
+  def path_available?(administrateur, path)
+    procedure = other_procedure_with_path(path)
+
+    procedure.blank? || administrateur.owns?(procedure)
   end
 
   def locked?
@@ -169,20 +214,6 @@ class Procedure < ApplicationRecord
 
   def path_customized?
     !path.match?(/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/)
-  end
-
-  def suggested_path(administrateur)
-    if path_customized?
-      return path
-    end
-    slug = libelle&.parameterize&.first(50)
-    suggestion = slug
-    counter = 1
-    while !path_available?(administrateur, suggestion)
-      counter = counter + 1
-      suggestion = "#{slug}-#{counter}"
-    end
-    suggestion
   end
 
   def organisation_name
@@ -377,26 +408,6 @@ class Procedure < ApplicationRecord
     percentile_time(:en_construction_at, :processed_at, 90)
   end
 
-  def path_available?(administrateur, path)
-    procedure = Procedure.publiees
-      .where.not(id: self.id)
-      .find_by(path: path)
-
-    procedure.blank? || administrateur.owns?(procedure)
-  end
-
-  def auto_archive_procedure_with_same_path(administrateur, path)
-    procedure = administrateur.procedures.publiees
-      .where.not(id: self.id)
-      .find_by(path: path)
-
-    procedure&.archive!
-  end
-
-  def self.find_with_path(path)
-    where.not(aasm_state: :archivee).where("path LIKE ?", "%#{path}%")
-  end
-
   def populate_champ_stable_ids
     TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
       type_de_champ.update_column(:stable_id, type_de_champ.id)
@@ -490,12 +501,11 @@ class Procedure < ApplicationRecord
       end
   end
 
-  def before_publish(administrateur, path, lien_site_web)
-    auto_archive_procedure_with_same_path(administrateur, path)
-    update!(path: path, lien_site_web: lien_site_web, archived_at: nil)
+  def before_publish
+    update!(archived_at: nil)
   end
 
-  def after_publish(administrateur, path, lien_site_web)
+  def after_publish
     update!(published_at: Time.zone.now)
   end
 

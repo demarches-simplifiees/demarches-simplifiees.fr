@@ -340,7 +340,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
+        put :publish, format: :js, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
         procedure.reload
         procedure2.reload
       end
@@ -383,8 +383,6 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
           expect(procedure.lien_site_web).to match(lien_site_web)
-          expect(assigns(:valid)).to eq true
-          expect(assigns(:mine)).to eq false
         end
 
         it 'previous procedure remains published' do
@@ -402,7 +400,6 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
           expect(procedure.lien_site_web).to match(lien_site_web)
-          expect(assigns(:valid)).to eq false
         end
       end
     end
@@ -419,8 +416,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       it 'fails' do
-        expect(response).to redirect_to :admin_procedures
-        expect(flash[:alert]).to have_content 'Démarche inexistante'
+        expect(response).to have_http_status(404)
       end
     end
 
@@ -569,54 +565,6 @@ describe Admin::ProceduresController, type: :controller do
         expect(grouped_procedures.length).to eq 2
         expect(grouped_procedures.find { |o, _p| o == 'DDT des Vosges' }.last).to contain_exactly(procedure_with_service_1)
         expect(grouped_procedures.find { |o, _p| o == 'DDT du Loiret'  }.last).to contain_exactly(procedure_with_service_2, procedure_without_service)
-      end
-    end
-  end
-
-  describe 'GET #path_list' do
-    let!(:procedure) { create(:procedure, :published, administrateur: admin) }
-    let(:admin2) { create(:administrateur) }
-    let!(:procedure2) { create(:procedure, :published, administrateur: admin2) }
-    let!(:procedure3) { create(:procedure, :published, administrateur: admin2) }
-
-    subject { get :path_list }
-
-    let(:body) { JSON.parse(response.body) }
-
-    describe 'when no params' do
-      before do
-        subject
-      end
-
-      it { expect(response.status).to eq(200) }
-      it { expect(body.size).to eq(3) }
-      it { expect(body.first['label']).to eq(procedure.path) }
-      it { expect(body.first['mine']).to be_truthy }
-      it { expect(body.second['label']).to eq(procedure2.path) }
-      it { expect(body.second['mine']).to be_falsy }
-    end
-
-    context 'filtered' do
-      before do
-        subject
-      end
-
-      subject { get :path_list, params: { request: URI.encode(procedure2.path) } }
-
-      it { expect(response.status).to eq(200) }
-      it { expect(body.size).to eq(1) }
-      it { expect(body.first['label']).to eq(procedure2.path) }
-      it { expect(body.first['mine']).to be_falsy }
-    end
-
-    context 'when procedure is archived' do
-      let!(:procedure3) { create(:procedure, :archived, administrateur: admin2) }
-      before do
-        subject
-      end
-
-      it 'do not return on the json' do
-        expect(body.size).to eq(2)
       end
     end
   end
