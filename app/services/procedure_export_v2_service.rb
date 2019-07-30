@@ -53,15 +53,17 @@ class ProcedureExportV2Service
       [dossier.champs, dossier.champs_private]
         .flatten
         .select { |champ| champ.is_a?(Champs::RepetitionChamp) }
-    end
+    end.group_by(&:libelle)
   end
 
   def champs_repetables_options
-    champs_repetables.map do |champ|
+    champs_repetables.map do |libelle, champs|
       [
-        champ.libelle,
-        champ.rows.each_with_index.map do |champs, index|
-          Champs::RepetitionChamp::Row.new(index: index + 1, dossier_id: champ.dossier_id.to_s, champs: champs)
+        libelle,
+        champs.flat_map do |champ|
+          champ.rows.each_with_index.map do |champs, index|
+            Champs::RepetitionChamp::Row.new(index: index + 1, dossier_id: champ.dossier_id.to_s, champs: champs)
+          end
         end
       ]
     end
