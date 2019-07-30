@@ -138,7 +138,6 @@ Rails.application.routes.draw do
   get 'attachments/:id', to: 'attachments#show', as: :attachment
   delete 'attachments/:id', to: 'attachments#destroy'
 
-  get 'tour-de-france' => 'root#tour_de_france'
   get "patron" => "root#patron"
   get "accessibilite" => "root#accessibilite"
   get "suivi" => "root#suivi"
