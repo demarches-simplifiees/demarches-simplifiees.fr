@@ -205,6 +205,24 @@ module Instructeurs
       redirect_to instructeur_procedure_path(procedure)
     end
 
+    def stats
+      @procedure = procedure
+      @usual_traitement_time = procedure.usual_traitement_time
+
+      @dossiers_funnel = [
+        ['Démarrés', procedure.dossiers.count],
+        ['Déposés', procedure.dossiers.state_not_brouillon.count],
+        ['Instruction débutée', procedure.dossiers.state_instruction_commencee.count],
+        ['Traités', procedure.dossiers.state_termine.count]
+      ]
+
+      @termines_states = [
+        ['Acceptés', procedure.dossiers.where(state: :accepte).count],
+        ['Refusés', procedure.dossiers.where(state: :refuse).count],
+        ['Classés sans suite', procedure.dossiers.where(state: :sans_suite).count]
+      ]
+    end
+
     private
 
     def find_field(table, column)
