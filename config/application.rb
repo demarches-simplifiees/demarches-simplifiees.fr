@@ -39,5 +39,7 @@ module TPS
       # Make main application helpers available in administrate
       Administrate::ApplicationController.helper(TPS::Application.helpers)
     end
+
+    config.ds_weekly_overview = ENV['APP_NAME'] == 'tps'
   end
 end
