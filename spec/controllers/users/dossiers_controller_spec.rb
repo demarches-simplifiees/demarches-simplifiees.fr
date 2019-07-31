@@ -871,15 +871,23 @@ describe Users::DossiersController, type: :controller do
           end
 
           it { is_expected.to have_http_status(302) }
-          it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
-
           it { expect { subject }.to change(Dossier, :count).by 1 }
+          context 'when procedure is for entreprise' do
+            it { is_expected.to redirect_to siret_dossier_path(id: Dossier.last) }
+          end
+
+          context 'when procedure is for particulier' do
+            let(:procedure) { create(:procedure, :published, :for_individual) }
+            it { is_expected.to redirect_to identite_dossier_path(id: Dossier.last) }
+          end
 
           context 'when procedure is archived' do
             let(:procedure) { create(:procedure, :archived) }
 
             it { is_expected.to redirect_to dossiers_path }
           end
+
+
         end
         context 'when user is not logged' do
           it { is_expected.to have_http_status(302) }
