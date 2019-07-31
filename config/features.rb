@@ -15,7 +15,6 @@ Flipflop.configure do
 
   feature :web_hook
 
-  feature :procedure_export_v2_enabled
   feature :operation_log_serialize_subject
   feature :download_as_zip_enabled
   feature :bypass_email_login_token,
