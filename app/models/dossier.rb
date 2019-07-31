@@ -477,6 +477,14 @@ class Dossier < ApplicationRecord
     !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
+  def update_with_france_connect(fc_information)
+    self.individual = Individual.create(
+      nom: fc_information.given_name,
+      prenom: fc_information.family_name,
+      gender: fc_information.gender == 'female' ? 'Mme' : 'M.'
+    )
+  end
+
   private
 
   def log_dossier_operation(author, operation, subject = nil)
