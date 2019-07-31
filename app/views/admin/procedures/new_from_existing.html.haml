@@ -10,11 +10,6 @@
       %br
       Besoin d'aide ?
       %br
-      > Nous proposons  des ateliers en ligne pour vous aider à créer votre 1er formulaire et répondre à vos questions :
-      = link_to "inscrivez-vous ici",
-        "https://vimeo.com/334463514",
-        target: "_blank"
-      %br
       > Vous pouvez
       = link_to "visionner cette vidéo",
         "https://vimeo.com/261478872",
@@ -30,6 +25,11 @@
       = link_to "prendre un rendez-vous téléphonique avec nous",
         "https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr",
         target: "_blank"
+
+      :javascript
+        document.addEventListener("turbolinks:load", function() {
+          $crisp.push(["do", "trigger:run", ["admin-signup"]]);
+        });
 
 
   .form

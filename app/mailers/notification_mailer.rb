@@ -6,7 +6,12 @@
 # The subject and body of a Notification can be customized by each demarche.
 #
 class NotificationMailer < ApplicationMailer
+  include ActionView::Helpers::SanitizeHelper
+
   helper ServiceHelper
+  helper MailerHelper
+
+  layout 'mailers/notifications_layout'
 
   def send_dossier_received(dossier)
     send_notification(dossier, dossier.procedure.received_mail_template)
@@ -41,12 +46,10 @@ class NotificationMailer < ApplicationMailer
     @dossier = dossier
     @service = dossier.procedure.service
     @logo_url = attach_logo(dossier.procedure)
+    @rendered_template = sanitize(body)
+    @actions = mail_template.actions_for_dossier(dossier)
 
-    mail(subject: subject, to: email) do |format|
-      # rubocop:disable Rails/OutputSafety
-      format.html { render(html: body.html_safe, layout: 'mailers/notification') }
-      # rubocop:enable Rails/OutputSafety
-    end
+    mail(subject: subject, to: email, template_name: 'send_notification')
   end
 
   def create_commentaire_for_notification(dossier, subject, body)

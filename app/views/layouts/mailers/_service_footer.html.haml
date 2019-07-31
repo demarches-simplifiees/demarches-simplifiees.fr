@@ -1,0 +1,34 @@
+%strong
+  Merci de ne pas répondre à cet email.
+  - if dossier.present? && dossier.messagerie_available?
+    Pour vous adresser à votre administration, passez directement par la
+    = succeed '.' do
+      = link_to 'messagerie du dossier', messagerie_dossier_url(dossier), target: '_blank', rel: 'noopener'
+
+- if service.present?
+  %table{ width: "100%", border: "0", cellspacing: "0", cellpadding: "0", style: "cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:left;" }
+    %tr
+      %td{ width: "50%", valign: "top" }
+        %p
+          %strong Cette démarche est gérée par :
+          %br
+          = service.nom
+          %br
+          = service.organisme
+          %br
+          = service.adresse
+      %td{ width: "50%", valign: "top" }
+        %p
+          %strong Poser une question sur votre dossier :
+          %br
+          - if dossier.present? && dossier.messagerie_available?
+            = link_to 'Par la messagerie', messagerie_dossier_url(dossier), target: '_blank', rel: 'noopener'
+          - else
+            Par email :
+            = link_to service.email, "mailto:#{service.email}"
+          %br
+          Par téléphone :
+          = link_to service.telephone, "tel:#{service.telephone}"
+          %br
+          Horaires : #{ formatted_horaires(service.horaires) }
+

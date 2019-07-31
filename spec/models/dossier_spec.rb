@@ -91,50 +91,6 @@ describe Dossier do
       end
     end
 
-    describe '#types_de_piece_justificative' do
-      subject { dossier.types_de_piece_justificative }
-      it 'returns list of required piece justificative' do
-        expect(subject.size).to eq(2)
-        expect(subject).to include(TypeDePieceJustificative.find(TypeDePieceJustificative.first.id))
-      end
-    end
-
-    describe '#types_de_piece_justificative' do
-      subject { dossier.types_de_piece_justificative }
-      it 'returns list of required piece justificative' do
-        expect(subject.size).to eq(2)
-        expect(subject).to include(TypeDePieceJustificative.find(TypeDePieceJustificative.first.id))
-      end
-    end
-
-    describe '#retrieve_last_piece_justificative_by_type', vcr: { cassette_name: 'models_dossier_retrieve_last_piece_justificative_by_type' } do
-      let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
-
-      subject { dossier.retrieve_last_piece_justificative_by_type types_de_pj_dossier.first }
-
-      before do
-        create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: types_de_pj_dossier.first
-      end
-
-      it 'returns piece justificative with given type' do
-        expect(subject.type).to eq(types_de_pj_dossier.first.id)
-      end
-    end
-
-    describe '#retrieve_all_piece_justificative_by_type' do
-      let(:types_de_pj_dossier) { dossier.procedure.types_de_piece_justificative }
-
-      subject { dossier.retrieve_all_piece_justificative_by_type types_de_pj_dossier.first }
-
-      before do
-        create :piece_justificative, :rib, dossier: dossier, type_de_piece_justificative: types_de_pj_dossier.first
-      end
-
-      it 'returns a list of the piece justificative' do
-        expect(subject).not_to be_empty
-      end
-    end
-
     describe '#build_default_champs' do
       context 'when dossier is linked to a procedure with type_de_champ_public and private' do
         let(:dossier) { create(:dossier, user: user) }
@@ -580,12 +536,6 @@ describe Dossier do
     end
 
     it { is_expected.not_to eq(modif_date) }
-
-    context 'when a piece justificative is modified' do
-      before { dossier.pieces_justificatives << create(:piece_justificative, :contrat) }
-
-      it { is_expected.to eq(modif_date) }
-    end
 
     context 'when a champ is modified' do
       before { dossier.champs.first.update_attribute('value', 'yop') }

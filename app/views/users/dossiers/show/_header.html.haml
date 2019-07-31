@@ -13,6 +13,8 @@
     - if current_user.owns?(dossier)
       .header-actions
         = render partial: 'invites/dropdown', locals: { dossier: dossier }
+        - if dossier.can_be_updated_by_user? && !current_page?(modifier_dossier_path(dossier))
+          = link_to "Modifier mon dossier", modifier_dossier_path(dossier), class: 'button accepted edit-form', 'title'=> "Vous pouvez modifier votre dossier tant qu'il n'est passé en instruction"
 
     %ul.tabs
       = dynamic_tab_item('Résumé', dossier_path(dossier))

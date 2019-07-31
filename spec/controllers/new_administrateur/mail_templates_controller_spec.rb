@@ -13,9 +13,17 @@ describe NewAdministrateur::MailTemplatesController, type: :controller do
 
     it { expect(response).to have_http_status(:ok) }
 
-    it { expect(response.body).to have_css("img[src*='#{procedure.logo.filename}']") }
+    it 'displays the procedure logo' do
+      expect(response.body).to have_css("img[src*='#{procedure.logo.filename}']")
+    end
 
-    it { expect(response.body).to include(procedure.service.nom) }
-    it { expect(response.body).to include(procedure.service.telephone) }
+    it 'displays the action buttons' do
+      expect(response.body).to have_link('Consulter mon dossier')
+    end
+
+    it 'displays the service in the footer' do
+      expect(response.body).to include(procedure.service.nom)
+      expect(response.body).to include(procedure.service.telephone)
+    end
   end
 end

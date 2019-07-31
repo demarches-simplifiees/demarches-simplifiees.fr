@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     resources :administrateurs, only: [:index, :show, :new, :create] do
       post 'reinvite', on: :member
       put 'enable_feature', on: :member
+      delete 'delete', on: :member
     end
 
     resources :users, only: [:index, :show] do
@@ -147,7 +148,6 @@ Rails.application.routes.draw do
   get 'attachments/:id', to: 'attachments#show', as: :attachment
   delete 'attachments/:id', to: 'attachments#destroy'
 
-  get 'tour-de-france' => 'root#tour_de_france'
   get "patron" => "root#patron"
   get "accessibilite" => "root#accessibilite"
   get "suivi" => "root#suivi"
@@ -200,13 +200,6 @@ Rails.application.routes.draw do
         delete :delete_logo
         delete :delete_deliberation
         delete :delete_notice
-      end
-
-      resource :pieces_justificatives, only: [:show, :update]
-      resources :pieces_justificatives, only: :destroy
-      resource :pieces_justificatives, only: [:show, :update] do
-        post '/:index/move_up' => 'pieces_justificatives#move_up', as: :move_up
-        post '/:index/move_down' => 'pieces_justificatives#move_down', as: :move_down
       end
 
       resources :mail_templates, only: [:index, :edit, :update]

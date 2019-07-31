@@ -1,0 +1,10 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
+= @rendered_template
+
+- if @actions.present?
+  = render 'notification_mailer/actions', actions: @actions, dossier: @dossier
+
+- content_for :footer do
+  = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier

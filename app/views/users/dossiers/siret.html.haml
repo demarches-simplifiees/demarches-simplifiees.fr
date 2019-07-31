@@ -11,4 +11,9 @@
 
     = f.hidden_field :dossier_id, value: @dossier.id
 
-    = f.submit "Valider", class: "button large primary expand", data: { disable_with: "Récupération des informations…" }
+    %p.mb-4
+      Pour trouver votre numéro TAHITI, utilisez
+      %a{ href: 'http://www.ispf.pf/bases/repertoires/Entreprises/Recherche.aspx', target: '_blank', rel: 'noopener' }
+        www.ispf.pf
+
+    = f.submit "Valider", class: "button large primary expand mt-1", data: { disable_with: "Récupération des informations…" }

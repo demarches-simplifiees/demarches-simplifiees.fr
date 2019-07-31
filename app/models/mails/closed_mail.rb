@@ -12,9 +12,9 @@ module Mails
     def self.default_template_name_for_procedure(procedure)
       attestation_template = procedure.attestation_template
       if attestation_template&.activated?
-        "notification_mailer/closed_mail_with_attestation"
+        "notification_mailer/default_templates/closed_mail_with_attestation"
       else
-        "notification_mailer/closed_mail"
+        "notification_mailer/default_templates/closed_mail"
       end
     end
   end

@@ -3,7 +3,7 @@ class Gestionnaire < ApplicationRecord
   include EmailSanitizableConcern
 
   devise :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :trackable, :validatable, :lockable
 
   has_and_belongs_to_many :administrateurs
 
@@ -101,11 +101,7 @@ class Gestionnaire < ApplicationRecord
       .find_by(gestionnaire: self, dossier: dossier)
 
     if follow.present?
-      champs_publiques = follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
-
-      pieces_justificatives = follow.dossier.pieces_justificatives.updated_since?(follow.demande_seen_at).any?
-
-      demande = champs_publiques || pieces_justificatives
+      demande = follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
 
       annotations_privees = follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
 
@@ -162,10 +158,6 @@ class Gestionnaire < ApplicationRecord
       .joins(:champs)
       .where('champs.updated_at > follows.demande_seen_at')
 
-    updated_pieces_justificatives = dossiers
-      .joins(:pieces_justificatives)
-      .where('pieces_justificatives.updated_at > follows.demande_seen_at')
-
     updated_annotations = dossiers
       .joins(:champs_private)
       .where('champs.updated_at > follows.annotations_privees_seen_at')
@@ -182,7 +174,6 @@ class Gestionnaire < ApplicationRecord
 
     [
       updated_demandes,
-      updated_pieces_justificatives,
       updated_annotations,
       updated_avis,
       updated_messagerie

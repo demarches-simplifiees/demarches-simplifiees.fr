@@ -1,13 +1,20 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
 %p
   Bonjour,
 
 %p
-  L’administration en charge de votre dossier vous a
-  %strong envoyé un nouveau message.
+  Vous avez reçu un
+  %strong nouveau message
+  de la part du service en charge de votre dossier.
 
 %p
-  Pour le consulter et y répondre, cliquez sur le bouton ci-dessous :
+  Pour consulter le message et y répondre, cliquez sur le bouton ci-dessous :
 
-= round_button('Lire le message', messagerie_dossier_url(@dossier))
+= round_button('Lire le message', messagerie_dossier_url(@dossier), :primary)
 
-= render partial: "layouts/mailers/signature", locals: { service: @service }
+= render 'layouts/mailers/signature', service: @service
+
+- content_for :footer do
+  = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier
