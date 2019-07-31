@@ -29,8 +29,6 @@ Flipflop.configure do
   end
 
   group :production do
-    feature :remote_storage,
-      default: ENV['FOG_ENABLED'] == 'enabled'
     feature :insee_api_v3,
       default: true
     feature :weekly_overview,
