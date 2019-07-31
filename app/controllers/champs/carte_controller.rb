@@ -14,15 +14,9 @@ class Champs::CarteController < ApplicationController
     end
 
     @champ = if params[:champ_id].present?
-      Champ
-        .joins(:dossier)
-        .where(dossiers: { user_id: logged_user_ids })
-        .find(params[:champ_id])
+      policy_scope(Champ).find(params[:champ_id])
     else
-      TypeDeChamp
-        .joins(:procedure)
-        .where(procedures: { administrateur_id: logged_user_ids })
-        .find(params[:type_de_champ_id]).champ.build
+      policy_scope(TypeDeChamp).find(params[:type_de_champ_id]).champ.build
     end
 
     geo_areas = []
