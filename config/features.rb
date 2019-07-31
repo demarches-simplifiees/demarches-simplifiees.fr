@@ -9,8 +9,6 @@ Flipflop.configure do
   group :champs do
     feature :champ_integer_number,
       title: "Champ nombre entier"
-    feature :champ_repetition,
-      title: "Bloc répétable"
   end
 
   feature :web_hook
