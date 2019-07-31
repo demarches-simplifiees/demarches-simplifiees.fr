@@ -997,4 +997,16 @@ describe Dossier do
       }
     end
   end
+
+  describe '#update_with_france_connect' do
+    let(:dossier) { create(:dossier, user: user) }
+    let(:user_info) { create(:france_connect_information) }
+
+    it {
+      dossier.update_with_france_connect(user_info)
+      expect(dossier.individual.gender).to eq 'Mme'
+      expect(dossier.individual.nom).to eq user_info.family_name
+      expect(dossier.individual.prenom).to eq user_info.given_name
+    }
+  end
 end

@@ -886,8 +886,6 @@ describe Users::DossiersController, type: :controller do
 
             it { is_expected.to redirect_to dossiers_path }
           end
-
-
         end
         context 'when user is not logged' do
           it { is_expected.to have_http_status(302) }
