@@ -31,8 +31,6 @@ Flipflop.configure do
   group :production do
     feature :insee_api_v3,
       default: true
-    feature :weekly_overview,
-      default: ENV['APP_NAME'] == 'tps'
     feature :pre_maintenance_mode
     feature :maintenance_mode
   end
