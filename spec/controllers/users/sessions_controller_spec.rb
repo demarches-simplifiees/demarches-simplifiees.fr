@@ -17,7 +17,6 @@ describe Users::SessionsController, type: :controller do
       let(:send_password) { password }
 
       before do
-        Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
         allow(controller).to receive(:trusted_device?).and_return(trusted_device)
         allow(InstructeurMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
       end
@@ -28,6 +27,9 @@ describe Users::SessionsController, type: :controller do
       end
 
       context 'when the device is not trusted' do
+        before do
+          Flipflop::FeatureSet.current.test!.switch!(:bypass_email_login_token, false)
+        end
         let(:trusted_device) { false }
 
         it 'redirects to the send_linked_path' do
