@@ -14,12 +14,12 @@ Flipflop.configure do
   end
 
   feature :web_hook
-  feature :enable_email_login_token
 
   feature :procedure_export_v2_enabled
   feature :operation_log_serialize_subject
-  feature :download_as_zip_enabled,
-    default: false
+  feature :download_as_zip_enabled
+  feature :bypass_email_login_token,
+    default: Rails.env.test?
 
   group :development do
     feature :mini_profiler_enabled,

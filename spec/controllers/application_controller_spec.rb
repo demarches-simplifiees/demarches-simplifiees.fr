@@ -166,56 +166,44 @@ describe ApplicationController, type: :controller do
     context 'when the path is sensitive' do
       let(:sensitive_path) { true }
 
+      before do
+        Flipflop::FeatureSet.current.test!.switch!(:bypass_email_login_token, false)
+      end
+
       context 'when the instructeur is signed_in' do
         let(:instructeur_signed_in) { true }
 
-        context 'when the feature is activated' do
-          before do
-            Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
+        context 'when the ip is not trusted' do
+          let(:ip_trusted) { false }
+
+          context 'when the device is trusted' do
+            let(:trusted_device) { true }
+
+            before { subject }
+
+            it { expect(@controller).not_to have_received(:redirect_to) }
           end
 
-          context 'when the ip is  not trusted' do
-            let(:ip_trusted) { false }
+          context 'when the device is not trusted' do
+            let(:trusted_device) { false }
 
-            context 'when the device is trusted' do
-              let(:trusted_device) { true }
+            before { subject }
 
-              before { subject }
-
-              it { expect(@controller).not_to have_received(:redirect_to) }
-            end
+            it { expect(@controller).to have_received(:redirect_to) }
+            it { expect(@controller).to have_received(:send_login_token_or_bufferize) }
+            it { expect(@controller).to have_received(:store_location_for) }
           end
         end
 
-        context 'when the feature is activated' do
-          before do
-            Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
-          end
+        context 'when the ip is trusted' do
+          let(:ip_trusted) { true }
 
-          context 'when the ip is untrusted' do
-            let(:ip_trusted) { false }
+          context 'when the device is not trusted' do
+            let(:trusted_device) { false }
 
-            context 'when the device is not trusted' do
-              let(:trusted_device) { false }
+            before { subject }
 
-              before { subject }
-
-              it { expect(@controller).to have_received(:redirect_to) }
-              it { expect(@controller).to have_received(:send_login_token_or_bufferize) }
-              it { expect(@controller).to have_received(:store_location_for) }
-            end
-          end
-
-          context 'when the ip is trusted' do
-            let(:ip_trusted) { true }
-
-            context 'when the device is not trusted' do
-              let(:trusted_device) { false }
-
-              before { subject }
-
-              it { expect(@controller).not_to have_received(:redirect_to) }
-            end
+            it { expect(@controller).not_to have_received(:redirect_to) }
           end
         end
       end
