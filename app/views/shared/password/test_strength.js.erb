@@ -1,0 +1,3 @@
+<%= render_to_element('#strength-label', partial: 'shared/password/password_strength_label', outer: true) %>
+<%= render_to_element('#strength-bar', partial: 'shared/password/password_strength', outer: true) %>
+<%= raw("document.querySelector('#submit-password').disabled = #{@score < @min_complexity || @length < @min_length};") %>
