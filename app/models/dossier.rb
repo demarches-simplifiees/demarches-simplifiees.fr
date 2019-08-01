@@ -86,6 +86,7 @@ class Dossier < ApplicationRecord
     event :repasser_en_instruction, after: :after_repasser_en_instruction do
       transitions from: :refuse, to: :en_instruction
       transitions from: :sans_suite, to: :en_instruction
+      transitions from: :accepte, to: :en_instruction
     end
   end
 
