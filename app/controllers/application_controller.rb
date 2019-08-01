@@ -45,13 +45,11 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?
 
   def pundit_user
-    if administrateur_signed_in?
-      current_administrateur
-    elsif gestionnaire_signed_in?
-      current_gestionnaire
-    else
-      current_user
-    end
+    {
+      administrateur: current_administrateur,
+      gestionnaire: current_gestionnaire,
+      user: current_user
+    }.compact
   end
 
   protected
