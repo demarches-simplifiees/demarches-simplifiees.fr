@@ -39,6 +39,10 @@ FactoryBot.define do
       archived { false }
     end
 
+    trait :hidden do
+      hidden_at { Time.zone.now }
+    end
+
     trait :with_dossier_link do
       after(:create) do |dossier, _evaluator|
         linked_dossier = create(:dossier)
