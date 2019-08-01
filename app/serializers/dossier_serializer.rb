@@ -58,7 +58,7 @@ class DossierSerializer < ActiveModel::Serializer
   end
 
   def attestation
-    object.attestation.pdf_url
+    object.attestation&.pdf_url
   end
 
   def justificatif_motivation
