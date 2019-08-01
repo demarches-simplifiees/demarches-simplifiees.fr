@@ -235,6 +235,22 @@ describe API::V1::DossiersController do
               it { expect(subject[:type_champ]).to eq('text') }
             end
           end
+
+          describe 'repetition' do
+            let(:procedure) { create(:procedure, administrateur: admin) }
+            let(:champ) { build(:champ_repetition) }
+            let(:dossier) { create(:dossier, :en_construction, champs: [champ], procedure: procedure) }
+
+            subject { super().first[:rows] }
+
+            it 'should have rows' do
+              expect(subject.size).to eq(2)
+              expect(subject[0][:id]).to eq(1)
+              expect(subject[0][:champs].size).to eq(2)
+              expect(subject[0][:champs].map { |c| c[:value] }).to eq(['text', '42'])
+              expect(subject[0][:champs].map { |c| c[:type_de_champ][:type_champ] }).to eq(['text', 'number'])
+            end
+          end
         end
 
         describe 'champs_private' do

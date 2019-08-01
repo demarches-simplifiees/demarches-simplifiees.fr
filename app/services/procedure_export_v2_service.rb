@@ -60,11 +60,7 @@ class ProcedureExportV2Service
     champs_repetables.map do |libelle, champs|
       [
         libelle,
-        champs.flat_map do |champ|
-          champ.rows.each_with_index.map do |champs, index|
-            Champs::RepetitionChamp::Row.new(index: index + 1, dossier_id: champ.dossier_id.to_s, champs: champs)
-          end
-        end
+        champs.flat_map(&:rows_for_export)
       ]
     end
   end
