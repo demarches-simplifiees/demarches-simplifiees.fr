@@ -19,6 +19,10 @@ class Champs::CarteChamp < Champ
     end
   end
 
+  def selection_utilisateur
+    geo_areas.find(&:selection_utilisateur?)
+  end
+
   def cadastres?
     type_de_champ&.cadastres && type_de_champ.cadastres != '0'
   end
@@ -45,6 +49,49 @@ class Champs::CarteChamp < Champ
 
   def geo_json
     @geo_json ||= begin
+      geo_area = selection_utilisateur
+
+      if geo_area
+        geo_area.geometry
+      else
+        geo_json_from_value
+      end
+    end
+  end
+
+  def selection_utilisateur_size
+    if geo_json.present?
+      geo_json['coordinates'].size
+    else
+      0
+    end
+  end
+
+  def to_render_data
+    {
+      position: position,
+      selection: user_geo_area&.geometry,
+      quartiersPrioritaires: quartiers_prioritaires? ? quartiers_prioritaires.as_json(except: :properties) : [],
+      cadastres: cadastres? ? cadastres.as_json(except: :properties) : [],
+      parcellesAgricoles: parcelles_agricoles? ? parcelles_agricoles.as_json(except: :properties) : []
+    }
+  end
+
+  def user_geo_area
+    geo_area = selection_utilisateur
+
+    if geo_area.present?
+      geo_area
+    elsif geo_json_from_value.present?
+      GeoArea.new(
+        geometry: geo_json_from_value,
+        source: GeoArea.sources.fetch(:selection_utilisateur)
+      )
+    end
+  end
+
+  def geo_json_from_value
+    @geo_json_from_value ||= begin
       parsed_value = value.blank? ? nil : JSON.parse(value)
       # We used to store in the value column a json array with coordinates.
       if parsed_value.is_a?(Array)
@@ -62,34 +109,11 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def selection_utilisateur_size
-    if geo_json.present?
-      geo_json['coordinates'].size
-    else
-      0
-    end
-  end
-
-  def to_render_data
-    {
-      position: position,
-      selection: geo_json,
-      quartiersPrioritaires: quartiers_prioritaires? ? quartiers_prioritaires.as_json(except: :properties) : [],
-      cadastres: cadastres? ? cadastres.as_json(except: :properties) : [],
-      parcellesAgricoles: parcelles_agricoles? ? parcelles_agricoles.as_json(except: :properties) : []
-    }
-  end
-
-  def user_geo_area
-    if geo_json.present?
-      GeoArea.new(
-        geometry: geo_json,
-        source: GeoArea.sources.fetch(:selection_utilisateur)
-      )
-    end
-  end
-
   def for_api
-    geo_json&.to_json
+    nil
+  end
+
+  def for_export
+    nil
   end
 end
