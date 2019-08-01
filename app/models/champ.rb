@@ -5,10 +5,11 @@ class Champ < ApplicationRecord
   has_many :commentaires
   has_one_attached :piece_justificative_file
 
-  # We declare champ specific relationships (Champs::CarteChamp and Champs::SiretChamp)
+  # We declare champ specific relationships (Champs::CarteChamp, Champs::SiretChamp and Champs::RepetitionChamp)
   # here because otherwise we can't easily use includes in our queries.
   has_many :geo_areas, dependent: :destroy
   belongs_to :etablissement, dependent: :destroy
+  has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
   delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, :repetition?, to: :type_de_champ
 
