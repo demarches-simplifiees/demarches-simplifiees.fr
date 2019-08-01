@@ -1,8 +1,8 @@
 .radios
   %label
-    = form.radio_button :value, 'M.'
+    = form.radio_button :value, Individual::GENDER_MALE
     Monsieur
 
   %label
-    = form.radio_button :value, 'Mme.'
+    = form.radio_button :value, Individual::GENDER_FEMALE
     Madame
