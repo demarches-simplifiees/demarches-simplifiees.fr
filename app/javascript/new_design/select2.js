@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import 'select2';
 
-addEventListener('turbolinks:load', () => {
+addEventListener('ds:page:update', () => {
   $('select.select2').select2({
     language: 'fr',
     width: '100%'
