@@ -1,58 +1,60 @@
 require "spec_helper"
 
 RSpec.describe NotificationMailer, type: :mailer do
-  shared_examples_for "create a commentaire not notified" do
-    it do
-      expect { subject.deliver_now }.to change { Commentaire.count }.by(1)
-
-      subject.deliver_now
-      commentaire = Commentaire.last
-      expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
-      expect(commentaire.dossier).to eq(dossier)
-    end
-  end
-
   let(:user) { create(:user) }
-  let(:dossier) { create(:dossier, :with_service, :en_construction, user: user) }
-
-  describe '.send_notification' do
-    let(:email_template) { instance_double('email_template', subject_for_dossier: 'subject', body_for_dossier: 'body') }
-
-    subject(:mail) do
-      klass = Class.new(described_class) do
-        # We’re testing the (private) method `NotificationMailer#send_notification`.
-        #
-        # The standard trick to test a private method would be to `send(:send_notification)`, but doesn’t work here,
-        # because ActionMailer does some magic to expose public instance methods as class methods.
-        # So, we use inheritance instead to make the private method public for testing purposes.
-        def send_notification(dossier, template)
-          super
-        end
-      end
-      klass.send_notification(dossier, email_template)
-    end
-
-    it { expect(mail.subject).to eq(email_template.subject_for_dossier) }
-    it { expect(mail.body).to include(email_template.body_for_dossier) }
-    it { expect(mail.body).to have_link('messagerie') }
-
-    it_behaves_like "create a commentaire not notified"
-  end
+  let(:procedure) { create(:simple_procedure) }
+  let(:dossier) { create(:dossier, :en_construction, :for_individual, :with_service, user: user, procedure: procedure) }
 
   describe '.send_dossier_received' do
-    subject(:mail) { described_class.send_dossier_received(dossier) }
-    let(:email_template) { create(:received_mail) }
+    let(:email_template) { create(:received_mail, subject: 'Email subject', body: 'Your dossier was processed. Thanks.') }
 
     before do
       dossier.procedure.received_mail = email_template
     end
 
-    it do
-      expect(mail.subject).to eq(email_template.subject)
-      expect(mail.body).to include(email_template.body)
+    subject(:mail) { described_class.send_dossier_received(dossier) }
+
+    it 'creates a commentaire in the messagerie' do
+      expect { subject.deliver_now }.to change { Commentaire.count }.by(1)
+
+      commentaire = Commentaire.last
+      expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
+      expect(commentaire.dossier).to eq(dossier)
+    end
+
+    it 'renders the template' do
+      expect(mail.subject).to eq('Email subject')
+      expect(mail.body).to include('Your dossier was processed')
       expect(mail.body).to have_link('messagerie')
     end
 
-    it_behaves_like "create a commentaire not notified"
+    it 'renders the actions' do
+      expect(mail.body).to have_link('Consulter mon dossier', href: dossier_url(dossier))
+      expect(mail.body).to have_link('J’ai une question', href: messagerie_dossier_url(dossier))
+    end
+
+    context 'when the template body contains tags' do
+      let(:email_template) { create(:received_mail, subject: 'Email subject', body: 'Hello --nom--, your dossier --lien dossier-- was processed.') }
+
+      it 'replaces value tags with the proper value' do
+        expect(mail.body).to have_content(dossier.individual.nom)
+      end
+
+      it 'replaces link tags with a clickable link' do
+        expect(mail.body).to have_link(dossier_url(dossier))
+      end
+    end
+
+    context 'when the template body contains HTML' do
+      let(:email_template) { create(:received_mail, body: 'Your <b>dossier</b> was processed. <iframe src="#">Foo</iframe>') }
+
+      it 'allows basic formatting tags' do
+        expect(mail.body).to include('<b>dossier</b>')
+      end
+
+      it 'sanitizes sensitive content' do
+        expect(mail.body).not_to include('iframe')
+      end
+    end
   end
 end

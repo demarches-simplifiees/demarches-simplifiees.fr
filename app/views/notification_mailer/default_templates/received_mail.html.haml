@@ -1,0 +1,11 @@
+%p
+  Bonjour,
+
+%p
+  Votre dossier nº --numéro du dossier--
+  a bien été reçu et
+  = succeed '.' do
+    %strong pris en charge
+  Il va maintenant être examiné par le service.
+
+= render partial: "notification_mailer/default_templates/signature"

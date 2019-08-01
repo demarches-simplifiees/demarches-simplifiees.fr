@@ -43,11 +43,6 @@
           Champs
 
     - if !@procedure.locked?
-      %a#onglet-pieces{ href: url_for(admin_procedure_pieces_justificatives_path(@procedure)) }
-        .procedure-list-element{ class: ('active' if active == 'Pieces') }
-          Pièces jointes
-
-    - if !@procedure.locked?
       %a#onglet-private-champs{ href: annotations_procedure_path(@procedure) }
         .procedure-list-element{ class: ('active' if active == 'Annotations privées') }
           Annotations privées

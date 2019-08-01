@@ -4,7 +4,7 @@ describe ApiCarto::CadastreAdapter do
   subject { described_class.new(coordinates).results }
 
   before do
-    stub_request(:post, "https://apicarto.sgmap.fr/cadastre/geometrie")
+    stub_request(:post, "https://sandbox.geo.api.gouv.fr/apicarto/cadastre/geometrie")
       .with(:body => /.*/,
         :headers => { 'Content-Type' => 'application/json' })
       .to_return(status: status, body: body)

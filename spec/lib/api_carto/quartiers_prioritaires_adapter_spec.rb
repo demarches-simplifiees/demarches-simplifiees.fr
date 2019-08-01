@@ -4,7 +4,7 @@ describe ApiCarto::QuartiersPrioritairesAdapter do
   subject { described_class.new(coordinates).results }
 
   before do
-    stub_request(:post, "https://apicarto.sgmap.fr/quartiers-prioritaires/search")
+    stub_request(:post, "https://sandbox.geo.api.gouv.fr/apicarto/quartiers-prioritaires/search")
       .with(:body => /.*/,
         :headers => { 'Content-Type' => 'application/json' })
       .to_return(status: status, body: body)

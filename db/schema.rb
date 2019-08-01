@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_17_132452) do
+ActiveRecord::Schema.define(version: 2019_07_17_151228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,8 +63,12 @@ ActiveRecord::Schema.define(version: 2019_07_17_132452) do
     t.boolean "active", default: false
     t.jsonb "features", default: {}, null: false
     t.string "encrypted_token"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["email"], name: "index_administrateurs_on_email", unique: true
     t.index ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_administrateurs_on_unlock_token", unique: true
   end
 
   create_table "administrateurs_gestionnaires", id: false, force: :cascade do |t|
@@ -100,8 +104,12 @@ ActiveRecord::Schema.define(version: 2019_07_17_132452) do
     t.string "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["email"], name: "index_administrations_on_email", unique: true
     t.index ["reset_password_token"], name: "index_administrations_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_administrations_on_unlock_token", unique: true
   end
 
   create_table "assign_tos", id: :serial, force: :cascade do |t|
@@ -399,8 +407,12 @@ ActiveRecord::Schema.define(version: 2019_07_17_132452) do
     t.text "encrypted_login_token"
     t.datetime "login_token_created_at"
     t.jsonb "features", default: {"enable_email_login_token"=>true}, null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["email"], name: "index_gestionnaires_on_email", unique: true
     t.index ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_gestionnaires_on_unlock_token", unique: true
   end
 
   create_table "individuals", id: :serial, force: :cascade do |t|
@@ -430,6 +442,7 @@ ActiveRecord::Schema.define(version: 2019_07_17_132452) do
     t.integer "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text "message"
   end
 
   create_table "module_api_cartos", id: :serial, force: :cascade do |t|
@@ -604,10 +617,14 @@ ActiveRecord::Schema.define(version: 2019_07_17_132452) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.text "unconfirmed_email"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
   create_table "virus_scans", force: :cascade do |t|

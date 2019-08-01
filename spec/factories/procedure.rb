@@ -10,6 +10,7 @@ FactoryBot.define do
     duree_conservation_dossiers_dans_ds { 3 }
     duree_conservation_dossiers_hors_ds { 6 }
     ask_birthday { false }
+    lien_site_web { "https://mon-site.gouv" }
 
     transient do
       administrateur {}
@@ -37,7 +38,7 @@ FactoryBot.define do
       after(:build) do |procedure, _evaluator|
         procedure.for_individual = true
         procedure.types_de_champ << create(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true)
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
       end
     end
 
@@ -134,26 +135,15 @@ FactoryBot.define do
       end
     end
 
-    # Deprecated
-    trait :with_two_type_de_piece_justificative do
-      after(:build) do |procedure, _evaluator|
-        rib = create(:type_de_piece_justificative, :rib, order_place: 1)
-        msa = create(:type_de_piece_justificative, :msa, order_place: 2)
-
-        procedure.types_de_piece_justificative << rib
-        procedure.types_de_piece_justificative << msa
-      end
-    end
-
     trait :published do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
       end
     end
 
     trait :archived do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
         procedure.archive!
       end
     end
@@ -162,14 +152,14 @@ FactoryBot.define do
       # For now the behavior is the same than :archived
       # (it may be different in the future though)
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
         procedure.archive!
       end
     end
 
     trait :hidden do
       after(:build) do |procedure, _evaluator|
-        procedure.publish!(procedure.administrateurs.first, generate(:published_path))
+        procedure.publish!(procedure.administrateurs.first, generate(:published_path), procedure.lien_site_web)
         procedure.hide!
       end
     end

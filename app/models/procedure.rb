@@ -3,7 +3,6 @@ require Rails.root.join('lib', 'percentile')
 class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
 
-  has_many :types_de_piece_justificative, -> { ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
   has_many :dossiers, dependent: :restrict_with_exception
@@ -31,7 +30,6 @@ class Procedure < ApplicationRecord
 
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
-  accepts_nested_attributes_for :types_de_piece_justificative, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   mount_uploader :logo, ProcedureLogoUploader
 
@@ -51,7 +49,6 @@ class Procedure < ApplicationRecord
       :administrateurs,
       :types_de_champ_private,
       :types_de_champ,
-      :types_de_piece_justificative,
       :module_api_carto
     )
   }
@@ -107,12 +104,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_or_reopen!(administrateur, path)
-    if archivee? && may_reopen?(administrateur, path)
-      reopen!(administrateur, path)
-    elsif may_publish?(administrateur, path)
+  def publish_or_reopen!(administrateur, path, lien_site_web)
+    if archivee? && may_reopen?(administrateur, path, lien_site_web)
+      reopen!(administrateur, path, lien_site_web)
+    elsif may_publish?(administrateur, path, lien_site_web)
       reset!
-      publish!(administrateur, path)
+      publish!(administrateur, path, lien_site_web)
     end
   end
 
@@ -187,10 +184,6 @@ class Procedure < ApplicationRecord
     switch_list_order(types_de_champ_private, index_of_first_element)
   end
 
-  def switch_types_de_piece_justificative(index_of_first_element)
-    switch_list_order(types_de_piece_justificative, index_of_first_element)
-  end
-
   def switch_list_order(list, index_of_first_element)
     if index_of_first_element < 0 ||
       index_of_first_element == list.count - 1 ||
@@ -216,7 +209,7 @@ class Procedure < ApplicationRecord
         types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
         types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
       }, &method(:clone_attachments))
-    procedure.path = nil
+    procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
     procedure.test_started_at = nil
     procedure.archived_at = nil
@@ -225,7 +218,6 @@ class Procedure < ApplicationRecord
     procedure.remote_logo_url = self.absolute_logo_url
     procedure.lien_notice = nil
 
-    procedure.types_de_champ += PiecesJustificativesService.types_pj_as_types_de_champ(self)
     if is_different_admin || from_library
       procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
     end
@@ -290,10 +282,6 @@ class Procedure < ApplicationRecord
 
   def whitelisted?
     whitelisted_at.present?
-  end
-
-  def has_old_pjs?
-    types_de_piece_justificative.any?
   end
 
   def total_dossier
@@ -500,33 +488,29 @@ class Procedure < ApplicationRecord
     update!(path: path)
   end
 
-  def can_publish?(administrateur, path)
-    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
+  def can_publish?(administrateur, path, lien_site_web)
+    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH) && lien_site_web.present?
   end
 
-  def can_reopen?(administrateur, path)
-    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH)
-  end
-
-  def after_publish(administrateur, path)
+  def after_publish(administrateur, path, lien_site_web)
     update!(published_at: Time.zone.now)
 
     claim_path_ownership!(path)
   end
 
-  def after_reopen(administrateur, path)
+  def after_reopen(administrateur, path, lien_site_web)
     update!(published_at: Time.zone.now, archived_at: nil)
 
     claim_path_ownership!(path)
   end
 
   def after_archive
-    update!(archived_at: Time.zone.now, path: nil)
+    update!(archived_at: Time.zone.now, path: SecureRandom.uuid)
   end
 
   def after_hide
     now = Time.zone.now
-    update!(hidden_at: now, path: nil)
+    update!(hidden_at: now, path: SecureRandom.uuid)
     dossiers.update_all(hidden_at: now)
   end
 

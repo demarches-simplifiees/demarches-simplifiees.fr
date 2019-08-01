@@ -381,8 +381,6 @@ describe Procedure do
     let!(:type_de_champ_private_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, order_place: 2) }
-    let!(:piece_justificative_0) { create(:type_de_piece_justificative, procedure: procedure, order_place: 0) }
-    let!(:piece_justificative_1) { create(:type_de_piece_justificative, procedure: procedure, order_place: 1) }
     let(:received_mail) { create(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
@@ -408,7 +406,7 @@ describe Procedure do
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
 
-      expect(subject.types_de_champ.size).to eq(procedure.types_de_champ.size + 1 + procedure.types_de_piece_justificative.size)
+      expect(subject.types_de_champ.size).to eq(procedure.types_de_champ.size)
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
       expect(subject.types_de_champ.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ.map(&:drop_down_list).compact.size
       expect(subject.types_de_champ_private.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_list).compact.size
@@ -428,18 +426,6 @@ describe Procedure do
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
       expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path"])
-    end
-
-    it 'should not clone piece justificatives but create corresponding champs' do
-      expect(subject.types_de_piece_justificative.size).to eq(0)
-
-      champs_pj = subject.types_de_champ[procedure.types_de_champ.size + 1, procedure.types_de_piece_justificative.size]
-      champs_pj.zip(procedure.types_de_piece_justificative).each do |stc, ptpj|
-        expect(stc.libelle).to eq(ptpj.libelle)
-        expect(stc.description).to eq(ptpj.description)
-        expect(stc.mandatory).to eq(ptpj.mandatory)
-        expect(stc.old_pj[:stable_id]).to eq(ptpj.id)
-      end
     end
 
     context 'when the procedure is cloned from the library' do
@@ -554,7 +540,7 @@ describe Procedure do
 
     before do
       Timecop.freeze(now)
-      procedure.publish!(procedure.administrateurs.first, "example-path")
+      procedure.publish!(procedure.administrateurs.first, "example-path", procedure.lien_site_web)
     end
     after { Timecop.return }
 
@@ -690,19 +676,9 @@ describe Procedure do
 
     subject { procedure.export_filename(:csv) }
 
-    context "with a path" do
-      let(:procedure) { create(:procedure, :published) }
+    let(:procedure) { create(:procedure, :published) }
 
-      it { is_expected.to eq("dossiers_#{procedure.path}_2018-01-02_23-11.csv") }
-    end
-
-    context "without a path" do
-      let(:procedure) { create(:procedure, :archived) }
-
-      it do
-        is_expected.to eq("dossiers_procedure-#{procedure.id}_2018-01-02_23-11.csv")
-      end
-    end
+    it { is_expected.to eq("dossiers_#{procedure.path}_2018-01-02_23-11.csv") }
   end
 
   describe '#new_dossier' do

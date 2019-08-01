@@ -4,7 +4,7 @@ class Administrateur < ApplicationRecord
   include ActiveRecord::SecureToken
 
   devise :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :trackable, :validatable, :lockable
 
   has_and_belongs_to_many :gestionnaires
   has_many :administrateurs_procedures
@@ -119,5 +119,9 @@ class Administrateur < ApplicationRecord
 
   def gestionnaire
     Gestionnaire.find_by(email: email)
+  end
+
+  def can_be_deleted?
+    dossiers.state_instruction_commencee.none? && procedures.none?
   end
 end
