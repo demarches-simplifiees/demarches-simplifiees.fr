@@ -478,11 +478,7 @@ class Dossier < ApplicationRecord
   end
 
   def update_with_france_connect(fc_information)
-    self.individual = Individual.create(
-      nom: fc_information.family_name,
-      prenom: fc_information.given_name,
-      gender: fc_information.gender == 'female' ? 'Mme' : 'M.'
-    )
+    self.individual = Individual.create_from_france_connect(fc_information)
   end
 
   private
