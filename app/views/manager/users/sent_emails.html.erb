@@ -1,0 +1,18 @@
+<h1>Liste des messages envoyés à <%= @user.email %></h1>
+<table>
+  <thead>
+    <th>Id</th>
+    <th>ArrivedAt</th>
+    <th>Status</th>
+  </thead>
+  <tbody>
+  <% @messages.each do |message| %>
+    <tr>
+      <td><%= message['ID'] %></td>
+      <td><%= message['ArrivedAt'] %></td>
+      <td><%= message['Status'] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+

@@ -52,5 +52,9 @@ as well as a link to its edit page.
       <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
           ><%= render_field attribute, page: page %></dd>
     <% end %>
+    <dd class="attribute-data">
+      <%= link_to('Voir les emails envoyés', sent_emails_manager_user_path(page.resource)) %>
+    </dd>
   </dl>
 </section>
+
