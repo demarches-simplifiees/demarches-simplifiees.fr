@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_17_151228) do
+ActiveRecord::Schema.define(version: 2019_07_30_153555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -456,19 +456,6 @@ ActiveRecord::Schema.define(version: 2019_07_17_151228) do
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true
   end
 
-  create_table "pieces_justificatives", id: :serial, force: :cascade do |t|
-    t.string "content"
-    t.integer "dossier_id"
-    t.integer "type_de_piece_justificative_id"
-    t.datetime "created_at"
-    t.integer "user_id"
-    t.string "original_filename"
-    t.string "content_secure_token"
-    t.datetime "updated_at"
-    t.index ["dossier_id"], name: "index_pieces_justificatives_on_dossier_id"
-    t.index ["type_de_piece_justificative_id"], name: "index_pieces_justificatives_on_type_de_piece_justificative_id"
-  end
-
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
@@ -585,19 +572,6 @@ ActiveRecord::Schema.define(version: 2019_07_17_151228) do
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["procedure_id"], name: "index_types_de_champ_on_procedure_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
-  end
-
-  create_table "types_de_piece_justificative", id: :serial, force: :cascade do |t|
-    t.string "libelle"
-    t.string "description"
-    t.boolean "api_entreprise", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "procedure_id"
-    t.integer "order_place"
-    t.string "lien_demarche"
-    t.boolean "mandatory", default: false
-    t.index ["procedure_id"], name: "index_types_de_piece_justificative_on_procedure_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
