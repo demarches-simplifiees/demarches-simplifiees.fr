@@ -151,10 +151,25 @@ describe API::V1::DossiersController do
         it { expect(subject.code).to eq('404') }
       end
 
+      context 'when dossier (with attestation) exists and belongs to procedure' do
+        let(:procedure_id) { procedure.id }
+        let(:dossier_id) { dossier.id }
+        let!(:dossier) { create(:dossier, :with_entreprise, :with_attestation, :accepte, procedure: procedure, motivation: "Motivation") }
+        let(:body) { JSON.parse(retour.body, symbolize_names: true) }
+        subject { body[:dossier] }
+
+        it {
+          expect(retour.code).to eq('200')
+          expect(subject[:id]).to eq(dossier.id)
+          expect(subject[:state]).to eq('closed')
+          expect(subject[:attestation]).to_not be_nil
+        }
+      end
+
       context 'when dossier exists and belongs to procedure' do
         let(:procedure_id) { procedure.id }
         let(:date_creation) { Time.zone.local(2008, 9, 1, 10, 5, 0) }
-        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :with_attestation, :accepte, procedure: procedure, motivation: "Motivation") } }
+        let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :accepte, procedure: procedure, motivation: "Motivation") } }
         let(:dossier_id) { dossier.id }
         let(:body) { JSON.parse(retour.body, symbolize_names: true) }
         let(:field_list) { [:id, :created_at, :updated_at, :archived, :individual, :entreprise, :etablissement, :cerfa, :types_de_piece_justificative, :pieces_justificatives, :champs, :champs_private, :commentaires, :state, :simplified_state, :initiated_at, :processed_at, :received_at, :motivation, :email, :instructeurs, :attestation, :avis] }
