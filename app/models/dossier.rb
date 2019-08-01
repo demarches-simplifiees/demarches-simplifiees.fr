@@ -144,7 +144,9 @@ class Dossier < ApplicationRecord
         :etablissement,
         piece_justificative_file_attachment: :blob
       ],
-      avis: [],
+      justificatif_motivation_attachment: :blob,
+      attestation: [],
+      avis: { piece_justificative_file_attachment: :blob },
       etablissement: [],
       individual: [],
       user: [])
