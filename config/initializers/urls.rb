@@ -33,7 +33,7 @@ WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 FAQ_URL = [DOC_URL, "questions-frequentes"].join("/")
 FAQ_ADMIN_URL = "https://faq.demarches-simplifiees.fr/collection/1-administrateur"
 
-COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, 'pages', 'viewpage.action?pageId=24250654'].join("/")
+COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, 'general', 'comment-trouver-ma-demarche'].join("/")
 
 STATUS_PAGE_URL = "https://updown.io/cugq"
 MATOMO_URL = 'https://beta.mes-demarches.gov.pf/matomo'
