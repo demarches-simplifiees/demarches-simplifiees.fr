@@ -14,15 +14,9 @@ class Champs::CarteController < ApplicationController
     end
 
     @champ = if params[:champ_id].present?
-      Champ
-        .joins(:dossier)
-        .where(dossiers: { user_id: logged_user_ids })
-        .find(params[:champ_id])
+      policy_scope(Champ).find(params[:champ_id])
     else
-      TypeDeChamp
-        .joins(:procedure)
-        .where(procedures: { administrateur_id: logged_user_ids })
-        .find(params[:type_de_champ_id]).champ.build
+      policy_scope(TypeDeChamp).find(params[:type_de_champ_id]).champ.build
     end
 
     geo_areas = []
@@ -61,11 +55,15 @@ class Champs::CarteController < ApplicationController
         end
       end
 
+      selection_utilisateur = ApiCartoService.generate_selection_utilisateur(coordinates)
+      selection_utilisateur[:source] = GeoArea.sources.fetch(:selection_utilisateur)
+      geo_areas << selection_utilisateur
+
       @champ.geo_areas = geo_areas.map do |geo_area|
         GeoArea.new(geo_area)
       end
 
-      @champ.value = GeojsonService.to_json_polygon_for_selection_utilisateur(coordinates)
+      @champ.value = coordinates.to_json
     end
 
     if @champ.persisted?

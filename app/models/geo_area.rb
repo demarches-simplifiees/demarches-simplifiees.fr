@@ -30,4 +30,8 @@ class GeoArea < ApplicationRecord
   scope :quartiers_prioritaires, -> { where(source: sources.fetch(:quartier_prioritaire)) }
   scope :cadastres, -> { where(source: sources.fetch(:cadastre)) }
   scope :parcelles_agricoles, -> { where(source: sources.fetch(:parcelle_agricole)) }
+
+  def selection_utilisateur?
+    source == self.class.sources.fetch(:selection_utilisateur)
+  end
 end

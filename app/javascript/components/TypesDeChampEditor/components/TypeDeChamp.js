@@ -68,9 +68,13 @@ const TypeDeChamp = sortableElement(
           <div className="flex justify-start delete">
             <button
               className="button small icon-only danger"
-              onClick={() =>
-                dispatch({ type: 'removeTypeDeChamp', params: { typeDeChamp } })
-              }
+              onClick={() => {
+                if (confirm('Êtes vous sûr de vouloir supprimer ce champ ?'))
+                  dispatch({
+                    type: 'removeTypeDeChamp',
+                    params: { typeDeChamp }
+                  });
+              }}
             >
               <FontAwesomeIcon icon="trash" title="Supprimer" />
             </button>

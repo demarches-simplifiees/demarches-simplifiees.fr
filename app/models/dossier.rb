@@ -86,6 +86,7 @@ class Dossier < ApplicationRecord
     event :repasser_en_instruction, after: :after_repasser_en_instruction do
       transitions from: :refuse, to: :en_instruction
       transitions from: :sans_suite, to: :en_instruction
+      transitions from: :accepte, to: :en_instruction
     end
   end
 
@@ -108,7 +109,24 @@ class Dossier < ApplicationRecord
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :downloadable_sorted,         -> { state_not_brouillon.includes(:etablissement, :user, :individual, :followers_gestionnaires, :avis, champs: { etablissement: [:champ], type_de_champ: :drop_down_list }, champs_private: { etablissement: [:champ], type_de_champ: :drop_down_list }).order(en_construction_at: 'asc') }
+  scope :downloadable_sorted,         -> {
+    state_not_brouillon
+      .includes(
+        :user,
+        :individual,
+        :followers_gestionnaires,
+        :avis,
+        etablissement: :champ,
+        champs: {
+          etablissement: :champ,
+          type_de_champ: :drop_down_list
+        },
+        champs_private: {
+          etablissement: :champ,
+          type_de_champ: :drop_down_list
+        }
+      ).order(en_construction_at: 'asc')
+  }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
@@ -120,14 +138,22 @@ class Dossier < ApplicationRecord
       champs: [
         :geo_areas,
         :etablissement,
-        piece_justificative_file_attachment: :blob
+        piece_justificative_file_attachment: :blob,
+        champs: [
+          piece_justificative_file_attachment: :blob
+        ]
       ],
       champs_private: [
         :geo_areas,
         :etablissement,
-        piece_justificative_file_attachment: :blob
+        piece_justificative_file_attachment: :blob,
+        champs: [
+          piece_justificative_file_attachment: :blob
+        ]
       ],
-      avis: [],
+      justificatif_motivation_attachment: :blob,
+      attestation: [],
+      avis: { piece_justificative_file_attachment: :blob },
       etablissement: [],
       individual: [],
       user: [])

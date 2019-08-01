@@ -11,7 +11,9 @@ feature 'As an administrateur I can edit types de champ', js: true do
   end
 
   it "Add a new champ" do
-    click_on 'Supprimer'
+    page.accept_alert do
+      click_on 'Supprimer'
+    end
 
     within '.buttons' do
       click_on 'Ajouter un champ'
@@ -48,7 +50,9 @@ feature 'As an administrateur I can edit types de champ', js: true do
     expect(page).to have_selector('#champ-3-libelle')
 
     within '.type-de-champ[data-index="2"]' do
-      click_on 'Supprimer'
+      page.accept_alert do
+        click_on 'Supprimer'
+      end
     end
 
     expect(page).not_to have_selector('#champ-3-libelle')
@@ -68,8 +72,9 @@ feature 'As an administrateur I can edit types de champ', js: true do
     blur
     expect(page).to have_content('Formulaire enregistré')
     page.refresh
-
-    click_on 'Supprimer'
+    page.accept_alert do
+      click_on 'Supprimer'
+    end
     expect(page).to have_content('Formulaire enregistré')
     expect(page).to have_content('Supprimer', count: 1)
     page.refresh

@@ -8,6 +8,7 @@ class ChampSerializer < ActiveModel::Serializer
   has_many :geo_areas, if: :include_geo_areas?
   has_one :etablissement, if: :include_etablissement?
   has_one :entreprise, if: :include_etablissement?
+  has_many :rows, serializer: RowSerializer, if: :include_rows?
 
   def value
     case object
@@ -35,12 +36,20 @@ class ChampSerializer < ActiveModel::Serializer
     object.etablissement&.entreprise
   end
 
+  def rows
+    object.rows_for_export
+  end
+
   def include_etablissement?
     object.is_a?(Champs::SiretChamp)
   end
 
   def include_geo_areas?
     object.is_a?(Champs::CarteChamp)
+  end
+
+  def include_rows?
+    object.is_a?(Champs::RepetitionChamp)
   end
 
   private
