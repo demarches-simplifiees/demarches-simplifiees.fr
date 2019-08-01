@@ -4,8 +4,17 @@ describe TypeDeChampPolicy do
   let(:procedure) { create(:procedure) }
   let!(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
 
-  let(:pundit_user) { create(:user) }
-  subject { Pundit.policy_scope(pundit_user, TypeDeChamp) }
+  let(:user) { create(:user) }
+  let(:administrateur) { nil }
+
+  let(:account) do
+    {
+      user: user,
+      administrateur: administrateur
+    }.compact
+  end
+
+  subject { Pundit.policy_scope(account, TypeDeChamp) }
 
   context 'when the user has only user rights' do
     it 'can not access' do
@@ -14,7 +23,7 @@ describe TypeDeChampPolicy do
   end
 
   context 'when the user has administrateur rights' do
-    let(:pundit_user) { procedure.administrateurs.first }
+    let(:administrateur) { procedure.administrateurs.first }
 
     it 'can access' do
       expect(subject.find(type_de_champ.id)).to eq(type_de_champ)
