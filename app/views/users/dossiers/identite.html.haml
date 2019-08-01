@@ -13,7 +13,7 @@
       champs requis
 
     = f.label :gender, class: "required"
-    = f.select :gender, ['M.', 'Mme'], {}, class: "small"
+    = f.select :gender, [Individual::GENDER_MALE, Individual::GENDER_FEMALE], {}, class: "small"
 
     .flex
       .inline-champ
