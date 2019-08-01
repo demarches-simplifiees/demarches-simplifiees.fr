@@ -225,6 +225,10 @@ class Gestionnaire < ApplicationRecord
     end
   end
 
+  def user
+    User.find_by(email: email)
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)

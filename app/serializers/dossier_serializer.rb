@@ -14,6 +14,9 @@ class DossierSerializer < ActiveModel::Serializer
     :motivation,
     :instructeurs
 
+  attribute :attestation, if: :include_attestation?
+  attribute :justificatif_motivation, if: :include_justificatif_motivation?
+
   has_one :individual
   has_one :entreprise
   has_one :etablissement
@@ -22,7 +25,6 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :champs_private
   has_many :pieces_justificatives
   has_many :types_de_piece_justificative
-  has_one :justificatif_motivation
   has_many :avis
 
   has_many :champs, serializer: ChampSerializer
@@ -37,7 +39,9 @@ class DossierSerializer < ActiveModel::Serializer
 
       if champ_carte.present?
         carto_champs = champ_carte.geo_areas.to_a
-        carto_champs << champ_carte.user_geo_area
+        if !carto_champs.find(&:selection_utilisateur?)
+          carto_champs << champ_carte.user_geo_area
+        end
         champs += carto_champs.compact
       end
     end
@@ -53,10 +57,12 @@ class DossierSerializer < ActiveModel::Serializer
     PiecesJustificativesService.serialize_champs_as_pjs(object)
   end
 
+  def attestation
+    object.attestation.pdf_url
+  end
+
   def justificatif_motivation
-    if object.justificatif_motivation.attached?
-      Rails.application.routes.url_helpers.url_for(object.justificatif_motivation)
-    end
+    Rails.application.routes.url_helpers.url_for(object.justificatif_motivation)
   end
 
   def types_de_piece_justificative
@@ -101,5 +107,13 @@ class DossierSerializer < ActiveModel::Serializer
 
   def processed_at
     object.processed_at&.in_time_zone('UTC')
+  end
+
+  def include_attestation?
+    object.accepte?
+  end
+
+  def include_justificatif_motivation?
+    object.justificatif_motivation.attached?
   end
 end

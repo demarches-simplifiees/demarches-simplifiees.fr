@@ -26,9 +26,9 @@ describe ChampSerializer do
     context 'when type champ is carte' do
       let(:champ) { create(:champ_carte, value: value, geo_areas: [geo_area].compact) }
       let(:value) { nil }
-      let(:geo_area) { create(:geo_area, geometry: parsed_geo_json) }
-      let(:parsed_geo_json) { JSON.parse(geo_json) }
-      let(:geo_json) { GeojsonService.to_json_polygon_for_selection_utilisateur(coordinates) }
+      let(:geo_area) { create(:geo_area, geometry: geo_json) }
+      let(:geo_json_as_string) { GeojsonService.to_json_polygon_for_selection_utilisateur(coordinates) }
+      let(:geo_json) { JSON.parse(geo_json_as_string) }
       let(:coordinates) { [[{ "lat" => 48.87442541960633, "lng" => 2.3859214782714844 }, { "lat" => 48.87273183590832, "lng" => 2.3850631713867183 }, { "lat" => 48.87081237174292, "lng" => 2.3809432983398438 }, { "lat" => 48.8712640169951, "lng" => 2.377510070800781 }, { "lat" => 48.87510283703279, "lng" => 2.3778533935546875 }, { "lat" => 48.87544154230615, "lng" => 2.382831573486328 }, { "lat" => 48.87442541960633, "lng" => 2.3859214782714844 }]] }
 
       let(:serialized_champ) {
@@ -49,10 +49,14 @@ describe ChampSerializer do
       let(:serialized_id) { -1 }
       let(:serialized_description) { "" }
       let(:serialized_order_place) { -1 }
-      let(:serialized_value) { parsed_geo_json }
+      let(:serialized_value) { geo_json }
 
       context 'and geo_area is selection_utilisateur' do
+        let(:geo_area) { create(:geo_area, :selection_utilisateur, geometry: geo_json) }
+
         context 'value is empty' do
+          let(:geo_area) { nil }
+
           context 'when value is nil' do
             let(:value) { nil }
 
@@ -85,7 +89,7 @@ describe ChampSerializer do
           end
 
           context 'when value is geojson' do
-            let(:value) { geo_json }
+            let(:value) { geo_json.to_json }
 
             it { expect(subject).to eq(serialized_champ) }
           end
@@ -105,7 +109,7 @@ describe ChampSerializer do
           let(:serialized_order_place) { champ.order_place }
           let(:serialized_libelle) { champ.libelle }
           let(:serialized_type_champ) { champ.type_champ }
-          let(:serialized_value) { geo_json }
+          let(:serialized_value) { nil }
 
           context 'when value is coordinates' do
             let(:value) { coordinates.to_json }
@@ -114,7 +118,7 @@ describe ChampSerializer do
           end
 
           context 'when value is geojson' do
-            let(:value) { geo_json }
+            let(:value) { geo_json.to_json }
 
             it { expect(subject).to eq(serialized_champ) }
           end
@@ -147,7 +151,7 @@ describe ChampSerializer do
           it {
             expect(subject[:geo_areas].first).to include(
               source: GeoArea.sources.fetch(:cadastre),
-              geometry: parsed_geo_json,
+              geometry: geo_json,
               numero: '42',
               feuille: 'A11'
             )
@@ -165,13 +169,13 @@ describe ChampSerializer do
       end
 
       context 'and geo_area is quartier_prioritaire' do
-        let(:geo_area) { create(:geo_area, :quartier_prioritaire, geometry: parsed_geo_json) }
+        let(:geo_area) { create(:geo_area, :quartier_prioritaire, geometry: geo_json) }
 
         context 'new_api' do
           it {
             expect(subject[:geo_areas].first).to include(
               source: GeoArea.sources.fetch(:quartier_prioritaire),
-              geometry: parsed_geo_json,
+              geometry: geo_json,
               nom: 'XYZ',
               commune: 'Paris'
             )

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include TrustedDeviceConcern
+  include Pundit
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
@@ -41,11 +42,17 @@ class ApplicationController < ActionController::Base
     logged_user.present?
   end
 
-  def logged_user_ids
-    logged_users.map(&:id)
-  end
-
   helper_method :logged_in?
+
+  def pundit_user
+    if administrateur_signed_in?
+      current_administrateur
+    elsif gestionnaire_signed_in?
+      current_gestionnaire
+    else
+      current_user
+    end
+  end
 
   protected
 
