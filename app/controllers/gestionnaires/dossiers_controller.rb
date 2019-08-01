@@ -109,8 +109,12 @@ module Gestionnaires
       if dossier.en_instruction?
         flash.notice = 'Le dossier est déjà en instruction.'
       else
-        flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
-        dossier.repasser_en_instruction!(current_gestionnaire)
+        if dossier.accepte?
+          flash.notice = 'Il n’est pas possible de repasser un dossier accepté en instruction.'
+        else
+          flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
+          dossier.repasser_en_instruction!(current_gestionnaire)
+        end
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
