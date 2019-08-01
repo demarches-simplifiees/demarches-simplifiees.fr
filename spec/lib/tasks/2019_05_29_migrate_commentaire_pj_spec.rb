@@ -1,14 +1,16 @@
 describe '2019_05_29_migrate_commentaire_pj.rake' do
   let(:rake_task) { Rake::Task['2019_05_29_migrate_commentaire_pj:run'] }
 
-  let!(:commentaires) do
-    create(:commentaire)
-    create(:commentaire, :with_file)
-    create(:commentaire, :with_file)
+  let(:commentaires) do
+    [
+      create(:commentaire),
+      create(:commentaire, :with_file),
+      create(:commentaire, :with_file)
+    ]
   end
 
   before do
-    Commentaire.all.each do |commentaire|
+    commentaires.each do |commentaire|
       if commentaire.file.present?
         stub_request(:get, commentaire.file_url)
           .to_return(status: 200, body: File.read(commentaire.file.path))
@@ -38,5 +40,23 @@ describe '2019_05_29_migrate_commentaire_pj.rake' do
     rake_task.invoke
     expect(Commentaire.where(file: nil).count).to eq(1)
     expect(Commentaire.all.map(&:piece_jointe).map(&:attached?)).to eq([false, true, false])
+  end
+
+  context 'when a commentaire’s dossier is hidden' do
+    let(:hidden_dossier) { create(:dossier, :en_construction, :hidden) }
+    let(:commentaire) { create(:commentaire, :with_file, dossier: hidden_dossier) }
+    let(:commentaires) { [commentaire] }
+
+    it 'should migrate the pj' do
+      comment_updated_at = commentaire.reload.updated_at
+      dossier_updated_at = hidden_dossier.reload.updated_at
+
+      rake_task.invoke
+      commentaires.each(&:reload)
+
+      expect(commentaire.piece_jointe.attached?).to be true
+      expect(commentaire.updated_at).to eq(comment_updated_at)
+      expect(hidden_dossier.updated_at).to eq(dossier_updated_at)
+    end
   end
 end
