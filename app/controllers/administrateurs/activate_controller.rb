@@ -1,5 +1,3 @@
-require 'zxcvbn'
-
 class Administrateurs::ActivateController < ApplicationController
   include TrustedDeviceConcern
 
@@ -32,10 +30,6 @@ class Administrateurs::ActivateController < ApplicationController
       flash.alert = administrateur.errors.full_messages
       redirect_to admin_activate_path(token: update_administrateur_params[:reset_password_token])
     end
-  end
-
-  def test_password_strength
-    @score = Zxcvbn.test(params[:administrateur][:password], [], ZXCVBN_DICTIONNARIES).score
   end
 
   private

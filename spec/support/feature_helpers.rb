@@ -35,7 +35,7 @@ module FeatureHelpers
     end
   end
 
-  def sign_up_with(email, password = 'testpassword')
+  def sign_up_with(email, password = 'démarches-simplifiées-pwd')
     fill_in :user_email, with: email
     fill_in :user_password, with: password
 
