@@ -1,8 +1,8 @@
-describe 'gestionnaires/procedures/_download_dossiers.html.haml', type: :view do
-  let(:current_gestionnaire) { create(:gestionnaire) }
+describe 'instructeurs/procedures/_download_dossiers.html.haml', type: :view do
+  let(:current_instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }
 
-  subject { render 'gestionnaires/procedures/download_dossiers.html.haml', procedure: procedure }
+  subject { render 'instructeurs/procedures/download_dossiers.html.haml', procedure: procedure }
 
   context "when procedure has 0 dossier" do
     it { is_expected.not_to include("Télécharger tous les dossiers") }

@@ -7,7 +7,7 @@
 .container
   %h1 Notifications par email
 
-  = form_for @assign_to, url: update_email_notifications_gestionnaire_procedure_path(@procedure), html: { class: 'form' } do |form|
+  = form_for @assign_to, url: update_email_notifications_instructeur_procedure_path(@procedure), html: { class: 'form' } do |form|
     .explication
       Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
 
@@ -44,5 +44,5 @@
         Non
 
     .send-wrapper
-      = link_to "Revenir à la procédure", gestionnaire_procedure_path(@procedure), class: 'button mr-1'
+      = link_to "Revenir à la procédure", instructeur_procedure_path(@procedure), class: 'button mr-1'
       = form.submit "Enregistrer", class: "button primary"

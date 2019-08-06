@@ -1,7 +1,7 @@
-RSpec.describe GestionnaireMailer, type: :mailer do
+RSpec.describe InstructeurMailer, type: :mailer do
   describe '#send_dossier' do
-    let(:sender) { create(:gestionnaire) }
-    let(:recipient) { create(:gestionnaire) }
+    let(:sender) { create(:instructeur) }
+    let(:recipient) { create(:instructeur) }
     let(:dossier) { create(:dossier) }
 
     subject { described_class.send_dossier(sender, dossier, recipient) }
@@ -10,8 +10,8 @@ RSpec.describe GestionnaireMailer, type: :mailer do
   end
 
   describe '#last_week_overview' do
-    let(:gestionnaire) { create(:gestionnaire) }
-    let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier) }
     let(:last_week_overview) do
       procedure_overview = double('po',
@@ -30,13 +30,13 @@ RSpec.describe GestionnaireMailer, type: :mailer do
       }
     end
 
-    before { allow(gestionnaire).to receive(:last_week_overview).and_return(last_week_overview) }
+    before { allow(instructeur).to receive(:last_week_overview).and_return(last_week_overview) }
 
-    subject { described_class.last_week_overview(gestionnaire) }
+    subject { described_class.last_week_overview(instructeur) }
 
     it { expect(subject.body).to include('Votre activité hebdomadaire') }
 
-    context 'when the gestionnaire has no active procedures' do
+    context 'when the instructeur has no active procedures' do
       let(:procedure) { nil }
       let(:last_week_overview) { nil }
 

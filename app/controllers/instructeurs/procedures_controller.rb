@@ -1,20 +1,20 @@
-module Gestionnaires
-  class ProceduresController < GestionnaireController
+module Instructeurs
+  class ProceduresController < InstructeurController
     before_action :ensure_ownership!, except: [:index]
     before_action :redirect_to_avis_if_needed, only: [:index]
 
     ITEMS_PER_PAGE = 25
 
     def index
-      @procedures = current_gestionnaire.visible_procedures.order(archived_at: :desc, published_at: :desc, created_at: :desc)
+      @procedures = current_instructeur.visible_procedures.order(archived_at: :desc, published_at: :desc, created_at: :desc)
 
-      dossiers = current_gestionnaire.dossiers
+      dossiers = current_instructeur.dossiers
       @dossiers_count_per_procedure = dossiers.all_state.group(:procedure_id).reorder(nil).count
       @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group(:procedure_id).reorder(nil).count
       @dossiers_archived_count_per_procedure = dossiers.archived.group(:procedure_id).count
       @dossiers_termines_count_per_procedure = dossiers.termine.group(:procedure_id).reorder(nil).count
 
-      @followed_dossiers_count_per_procedure = current_gestionnaire
+      @followed_dossiers_count_per_procedure = current_instructeur
         .followed_dossiers
         .en_cours
         .where(procedure: @procedures)
@@ -39,13 +39,13 @@ module Gestionnaires
         .without_followers
         .en_cours
 
-      @followed_dossiers = current_gestionnaire
+      @followed_dossiers = current_instructeur
         .followed_dossiers
         .includes(:user)
         .where(procedure: @procedure)
         .en_cours
 
-      @followed_dossiers_id = current_gestionnaire
+      @followed_dossiers_id = current_instructeur
         .followed_dossiers
         .where(procedure: @procedure)
         .pluck(:id)
@@ -69,7 +69,7 @@ module Gestionnaires
         @archived_dossiers
       end
 
-      sorted_ids = procedure_presentation.sorted_ids(@dossiers, current_gestionnaire)
+      sorted_ids = procedure_presentation.sorted_ids(@dossiers, current_instructeur)
 
       if @current_filters.count > 0
         filtered_ids = procedure_presentation.filtered_ids(@dossiers, statut)
@@ -112,7 +112,7 @@ module Gestionnaires
         procedure_presentation.update(sort: Procedure.default_sort)
       end
 
-      redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
+      redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
     def update_sort
@@ -134,7 +134,7 @@ module Gestionnaires
 
       procedure_presentation.update(sort: sort)
 
-      redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
+      redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
     def add_filter
@@ -153,7 +153,7 @@ module Gestionnaires
         procedure_presentation.update(filters: filters)
       end
 
-      redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
+      redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
     def remove_filter
@@ -164,7 +164,7 @@ module Gestionnaires
 
       procedure_presentation.update(filters: filters)
 
-      redirect_back(fallback_location: gestionnaire_procedure_url(procedure))
+      redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
     def download_dossiers
@@ -195,7 +195,7 @@ module Gestionnaires
       assign_to.update!(email_notifications_enabled: params[:assign_to][:email_notifications_enabled])
 
       flash.notice = 'Vos notifications sont enregistrées.'
-      redirect_to gestionnaire_procedure_path(procedure)
+      redirect_to instructeur_procedure_path(procedure)
     end
 
     private
@@ -209,7 +209,7 @@ module Gestionnaires
     end
 
     def assign_to
-      current_gestionnaire.assign_to.find_by(procedure: procedure)
+      current_instructeur.assign_to.find_by(procedure: procedure)
     end
 
     def statut
@@ -221,15 +221,15 @@ module Gestionnaires
     end
 
     def ensure_ownership!
-      if !procedure.gestionnaires.include?(current_gestionnaire)
+      if !procedure.instructeurs.include?(current_instructeur)
         flash[:alert] = "Vous n'avez pas accès à cette démarche"
         redirect_to root_path
       end
     end
 
     def redirect_to_avis_if_needed
-      if current_gestionnaire.visible_procedures.count == 0 && current_gestionnaire.avis.count > 0
-        redirect_to gestionnaire_avis_index_path
+      if current_instructeur.visible_procedures.count == 0 && current_instructeur.avis.count > 0
+        redirect_to instructeur_avis_index_path
       end
     end
 
@@ -238,7 +238,7 @@ module Gestionnaires
     end
 
     def get_procedure_presentation
-      procedure_presentation, errors = current_gestionnaire.procedure_presentation_and_errors_for_procedure_id(params[:procedure_id])
+      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(params[:procedure_id])
       if errors.present?
         flash[:alert] = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
       end

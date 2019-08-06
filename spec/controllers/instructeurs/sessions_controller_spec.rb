@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Gestionnaires::SessionsController, type: :controller do
+describe Instructeurs::SessionsController, type: :controller do
   before do
-    @request.env["devise.mapping"] = Devise.mappings[:gestionnaire]
+    @request.env["devise.mapping"] = Devise.mappings[:instructeur]
   end
 
   describe '#create' do

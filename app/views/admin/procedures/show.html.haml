@@ -5,9 +5,9 @@
     = render partial: '/admin/procedures/modal_transfer'
 
     - if @procedure.brouillon?
-      - if @procedure.gestionnaires.empty? || @procedure.service.nil?
+      - if @procedure.instructeurs.empty? || @procedure.service.nil?
         - missing_elements = []
-        - if @procedure.gestionnaires.empty?
+        - if @procedure.instructeurs.empty?
           - missing_elements << 'des instructeurs'
         - if @procedure.service.nil?
           - missing_elements << 'un service'
@@ -59,7 +59,7 @@
           %br
           Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers demarches-simplifiees.fr. Ne dites pas non plus aux usagers de se rendre sur le site générique demarches-simplifiees.fr, donnez-leur toujours le lien complet.
         - elsif @procedure.brouillon_avec_lien?
-          - if @procedure.gestionnaires.present? && @procedure.service.present?
+          - if @procedure.instructeurs.present? && @procedure.service.present?
             %p
               Cette démarche est actuellement <strong>en test</strong>,
               pour y accéder vous pouvez utiliser le lien :
@@ -106,9 +106,9 @@
           - else
             .alert.alert-info
               Pour pouvoir tester cette démarche, vous devez d’abord lui affecter
-              - if @procedure.gestionnaires.empty?
+              - if @procedure.instructeurs.empty?
                 = link_to("des instructeurs", admin_procedure_assigns_path(@procedure))
-              - if @procedure.gestionnaires.empty? && @procedure.service.nil?
+              - if @procedure.instructeurs.empty? && @procedure.service.nil?
                 et
               - if @procedure.service.nil?
                 = link_to("un service", services_path(procedure_id: @procedure))

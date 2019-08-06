@@ -2,7 +2,7 @@ class Commentaire < ApplicationRecord
   belongs_to :dossier, inverse_of: :commentaires, touch: true
 
   belongs_to :user
-  belongs_to :gestionnaire
+  belongs_to :instructeur
 
   mount_uploader :file, CommentaireFileUploader
   validate :messagerie_available?, on: :create
@@ -19,8 +19,8 @@ class Commentaire < ApplicationRecord
   def email
     if user
       user.email
-    elsif gestionnaire
-      gestionnaire.email
+    elsif instructeur
+      instructeur.email
     else
       read_attribute(:email)
     end
@@ -31,8 +31,8 @@ class Commentaire < ApplicationRecord
   end
 
   def redacted_email
-    if gestionnaire.present?
-      gestionnaire.email.split('@').first
+    if instructeur.present?
+      instructeur.email.split('@').first
     else
       email
     end
@@ -40,7 +40,7 @@ class Commentaire < ApplicationRecord
 
   def sent_by_system?
     [CONTACT_EMAIL, OLD_CONTACT_EMAIL].include?(email) &&
-      user.nil? && gestionnaire.nil?
+      user.nil? && instructeur.nil?
   end
 
   def sent_by?(someone)
@@ -70,7 +70,7 @@ class Commentaire < ApplicationRecord
     #   of an automated notification email we sent to a user, so do nothing.
     # - If a user or an invited user posted a commentaire, do nothing,
     #   the notification system will properly
-    # - Otherwise, a gestionnaire posted a commentaire, we need to notify the user
+    # - Otherwise, a instructeur posted a commentaire, we need to notify the user
     if !email.in?([CONTACT_EMAIL, dossier_user_email, *invited_users_emails])
       notify_user
     end

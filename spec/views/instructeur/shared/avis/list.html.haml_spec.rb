@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'gestionnaires/shared/avis/_list.html.haml', type: :view do
+describe 'instructeurs/shared/avis/_list.html.haml', type: :view do
   before { view.extend DossierHelper }
 
-  subject { render 'gestionnaires/shared/avis/list.html.haml', avis: avis, avis_seen_at: seen_at, current_gestionnaire: gestionnaire }
+  subject { render 'instructeurs/shared/avis/list.html.haml', avis: avis, avis_seen_at: seen_at, current_instructeur: instructeur }
 
-  let(:gestionnaire) { create(:gestionnaire) }
-  let(:avis) { [create(:avis, claimant: gestionnaire)] }
+  let(:instructeur) { create(:instructeur) }
+  let(:avis) { [create(:avis, claimant: instructeur)] }
   let(:seen_at) { avis.first.created_at + 1.hour }
 
   it { is_expected.to have_text(avis.first.introduction) }
@@ -19,7 +19,7 @@ describe 'gestionnaires/shared/avis/_list.html.haml', type: :view do
   end
 
   context 'with an answer' do
-    let(:avis) { [create(:avis, :with_answer, claimant: gestionnaire)] }
+    let(:avis) { [create(:avis, :with_answer, claimant: instructeur)] }
 
     it 'renders the answer formatted with newlines' do
       expect(subject).to include(simple_format(avis.first.answer))

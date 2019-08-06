@@ -9,34 +9,34 @@
 
       .procedure-header
         %h1= procedure_libelle @procedure
-        = link_to 'configurez vos notifications', email_notifications_gestionnaire_procedure_path(@procedure), class: 'notifications'
+        = link_to 'configurez vos notifications', email_notifications_instructeur_procedure_path(@procedure), class: 'notifications'
 
 
         %ul.tabs
           = tab_item('à suivre',
-            gestionnaire_procedure_path(@procedure, statut: 'a-suivre'),
+            instructeur_procedure_path(@procedure, statut: 'a-suivre'),
             active: @statut == 'a-suivre',
             badge: @a_suivre_dossiers.count)
 
           = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
-            gestionnaire_procedure_path(@procedure, statut: 'suivis'),
+            instructeur_procedure_path(@procedure, statut: 'suivis'),
             active: @statut == 'suivis',
             badge: @followed_dossiers.count,
-            notification: current_gestionnaire.notifications_for_procedure(@procedure).present?)
+            notification: current_instructeur.notifications_for_procedure(@procedure).present?)
 
           = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
-            gestionnaire_procedure_path(@procedure, statut: 'traites'),
+            instructeur_procedure_path(@procedure, statut: 'traites'),
             active: @statut == 'traites',
             badge: @termines_dossiers.count,
-            notification: current_gestionnaire.notifications_for_procedure(@procedure, :termine).present?)
+            notification: current_instructeur.notifications_for_procedure(@procedure, :termine).present?)
 
           = tab_item('tous les dossiers',
-            gestionnaire_procedure_path(@procedure, statut: 'tous'),
+            instructeur_procedure_path(@procedure, statut: 'tous'),
             active: @statut == 'tous',
             badge: @all_state_dossiers.count)
 
           = tab_item(t('pluralize.archived', count: @archived_dossiers.count),
-            gestionnaire_procedure_path(@procedure, statut: 'archives'),
+            instructeur_procedure_path(@procedure, statut: 'archives'),
             active: @statut == 'archives',
             badge: @archived_dossiers.count)
 
@@ -60,7 +60,7 @@
         %button.button.dropdown-button
           Filtrer
         .dropdown-content.left-aligned.fade-in-down
-          = form_tag add_filter_gestionnaire_procedure_path(@procedure), method: :post, class: 'dropdown-form large' do
+          = form_tag add_filter_instructeur_procedure_path(@procedure), method: :post, class: 'dropdown-form large' do
             = label_tag :field,  "Colonne"
             = select_tag :field, options_for_select(@available_fields_to_filters)
             %br
@@ -77,7 +77,7 @@
           - if i > 0
             ou
           %span.filter
-            = link_to remove_filter_gestionnaire_procedure_path(@procedure, { statut: @statut, table: filter['table'], column: filter['column'], value: filter['value'] }) do
+            = link_to remove_filter_instructeur_procedure_path(@procedure, { statut: @statut, table: filter['table'], column: filter['column'], value: filter['value'] }) do
               %img.close-icon{ src: image_url("close.svg") }
             = "#{filter['label'].truncate(50)} : #{filter['value']}"
       %table.table.dossiers-table.hoverable
@@ -100,7 +100,7 @@
                 %button.button.dropdown-button
                   Personnaliser
                 .dropdown-content.fade-in-down
-                  = form_tag update_displayed_fields_gestionnaire_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
+                  = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
                     = select_tag :values,
                       options_for_select(@procedure_presentation.fields_for_select,
                         selected: @displayed_fields_values),
@@ -112,23 +112,23 @@
           - @dossiers.each do |dossier|
             %tr
               %td.folder-col
-                = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
+                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
                   %span.icon.folder
-                    - if current_gestionnaire.notifications_for_procedure(@procedure, :not_archived).include?(dossier.id)
+                    - if current_instructeur.notifications_for_procedure(@procedure, :not_archived).include?(dossier.id)
                       %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
-                = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
+                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
                   = dossier.id
 
               - @procedure_presentation.displayed_field_values(dossier).each do |value|
                 %td
                   / FIXME: value should automatically fallback to `""` instead of nil
                   / #get_value should call to_s on the champ
-                  = link_to(value || "", gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link')
+                  = link_to(value || "", instructeur_dossier_path(@procedure, dossier), class: 'cell-link')
 
               %td.status-col
-                = link_to(gestionnaire_dossier_path(@procedure, dossier), class: 'cell-link') do
+                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
                   = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
               %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
       = paginate @dossiers

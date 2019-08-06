@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Gestionnaires::ProceduresController, type: :controller do
+describe Instructeurs::ProceduresController, type: :controller do
   describe "before_action: ensure_ownership!" do
     it "is present" do
-      before_actions = Gestionnaires::ProceduresController
+      before_actions = Instructeurs::ProceduresController
         ._process_action_callbacks
         .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
@@ -13,18 +13,18 @@ describe Gestionnaires::ProceduresController, type: :controller do
   end
 
   describe "ensure_ownership!" do
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
 
     before do
       @controller.params = @controller.params.merge(procedure_id: asked_procedure.id)
-      expect(@controller).to receive(:current_gestionnaire).and_return(gestionnaire)
+      expect(@controller).to receive(:current_instructeur).and_return(instructeur)
       allow(@controller).to receive(:redirect_to)
 
       @controller.send(:ensure_ownership!)
     end
 
-    context "when a gestionnaire asks for its procedure" do
-      let(:asked_procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+    context "when a instructeur asks for its procedure" do
+      let(:asked_procedure) { create(:procedure, instructeurs: [instructeur]) }
 
       it "does not redirects nor flash" do
         expect(@controller).not_to have_received(:redirect_to)
@@ -32,7 +32,7 @@ describe Gestionnaires::ProceduresController, type: :controller do
       end
     end
 
-    context "when a gestionnaire asks for another procedure" do
+    context "when a instructeur asks for another procedure" do
       let(:asked_procedure) { create(:procedure) }
 
       it "redirects and flash" do
@@ -44,7 +44,7 @@ describe Gestionnaires::ProceduresController, type: :controller do
 
   describe "before_action: redirect_to_avis_if_needed" do
     it "is present" do
-      before_actions = Gestionnaires::ProceduresController
+      before_actions = Instructeurs::ProceduresController
         ._process_action_callbacks
         .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
@@ -54,15 +54,15 @@ describe Gestionnaires::ProceduresController, type: :controller do
   end
 
   describe "redirect_to_avis_if_needed" do
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
 
     before do
-      expect(@controller).to receive(:current_gestionnaire).at_least(:once).and_return(gestionnaire)
+      expect(@controller).to receive(:current_instructeur).at_least(:once).and_return(instructeur)
       allow(@controller).to receive(:redirect_to)
     end
 
-    context "when a gestionnaire has some procedures" do
-      let!(:some_procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+    context "when a instructeur has some procedures" do
+      let!(:some_procedure) { create(:procedure, instructeurs: [instructeur]) }
 
       before { @controller.send(:redirect_to_avis_if_needed) }
 
@@ -71,20 +71,20 @@ describe Gestionnaires::ProceduresController, type: :controller do
       end
     end
 
-    context "when a gestionnaire has no procedure and some avis" do
+    context "when a instructeur has no procedure and some avis" do
       before do
-        Avis.create!(dossier: create(:dossier), claimant: create(:gestionnaire), gestionnaire: gestionnaire)
+        Avis.create!(dossier: create(:dossier), claimant: create(:instructeur), instructeur: instructeur)
         @controller.send(:redirect_to_avis_if_needed)
       end
 
       it "redirects avis" do
-        expect(@controller).to have_received(:redirect_to).with(gestionnaire_avis_index_path)
+        expect(@controller).to have_received(:redirect_to).with(instructeur_avis_index_path)
       end
     end
   end
 
   describe "#index" do
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
     subject { get :index }
 
     context "when not logged" do
@@ -93,7 +93,7 @@ describe Gestionnaires::ProceduresController, type: :controller do
     end
 
     context "when logged in" do
-      before { sign_in(gestionnaire) }
+      before { sign_in(instructeur) }
 
       it { expect(response).to have_http_status(:ok) }
 
@@ -103,9 +103,9 @@ describe Gestionnaires::ProceduresController, type: :controller do
         let(:procedure3) { create(:procedure) }
 
         before do
-          gestionnaire.procedures << procedure1
-          gestionnaire.procedures << procedure2
-          gestionnaire.procedures << procedure3
+          instructeur.procedures << procedure1
+          instructeur.procedures << procedure2
+          instructeur.procedures << procedure3
           subject
         end
 
@@ -117,7 +117,7 @@ describe Gestionnaires::ProceduresController, type: :controller do
         let(:dossier) { create(:dossier, state: state, procedure: procedure) }
 
         before do
-          gestionnaire.procedures << procedure
+          instructeur.procedures << procedure
           dossier
         end
 
@@ -141,10 +141,10 @@ describe Gestionnaires::ProceduresController, type: :controller do
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction))
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true)
 
-            gestionnaire.procedures << procedure2
+            instructeur.procedures << procedure2
             create(:dossier, :followed, procedure: procedure2, state: Dossier.states.fetch(:en_construction))
             create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:accepte))
-            gestionnaire.followed_dossiers << create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:en_instruction))
+            instructeur.followed_dossiers << create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:en_instruction))
 
             subject
           end
@@ -166,12 +166,12 @@ describe Gestionnaires::ProceduresController, type: :controller do
   end
 
   describe "#show" do
-    let(:gestionnaire) { create(:gestionnaire) }
-    let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+    let(:instructeur) { create(:instructeur) }
+    let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
 
     context "when logged in" do
       before do
-        sign_in(gestionnaire)
+        sign_in(instructeur)
       end
 
       context "without anything" do
@@ -213,7 +213,7 @@ describe Gestionnaires::ProceduresController, type: :controller do
         let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
 
         before do
-          gestionnaire.followed_dossiers << new_followed_dossier
+          instructeur.followed_dossiers << new_followed_dossier
           get :show, params: { procedure_id: procedure.id }
         end
 
@@ -259,7 +259,7 @@ describe Gestionnaires::ProceduresController, type: :controller do
         let!(:archived_dossier) { Timecop.freeze(4.days.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) } }
 
         before do
-          gestionnaire.followed_dossiers << new_followed_dossier
+          instructeur.followed_dossiers << new_followed_dossier
           get :show, params: { procedure_id: procedure.id, statut: statut }
         end
 
@@ -309,12 +309,12 @@ describe Gestionnaires::ProceduresController, type: :controller do
   end
 
   describe "#download_dossiers" do
-    let(:gestionnaire) { create(:gestionnaire) }
-    let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+    let(:instructeur) { create(:instructeur) }
+    let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
 
     context "when logged in" do
       before do
-        sign_in(gestionnaire)
+        sign_in(instructeur)
       end
 
       context "csv" do
@@ -338,22 +338,22 @@ describe Gestionnaires::ProceduresController, type: :controller do
   end
 
   describe '#update_email_notifications' do
-    let(:gestionnaire) { create(:gestionnaire) }
-    let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire]) }
+    let(:instructeur) { create(:instructeur) }
+    let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
 
     context "when logged in" do
-      before { sign_in(gestionnaire) }
+      before { sign_in(instructeur) }
 
-      it { expect(gestionnaire.procedures_with_email_notifications).to be_empty }
+      it { expect(instructeur.procedures_with_email_notifications).to be_empty }
 
-      context 'when the gestionnaire update its preferences' do
-        let(:assign_to) { gestionnaire.assign_to.find_by(procedure: procedure) }
+      context 'when the instructeur update its preferences' do
+        let(:assign_to) { instructeur.assign_to.find_by(procedure: procedure) }
 
         before do
           patch :update_email_notifications, params: { procedure_id: procedure.id, assign_to: { id: assign_to.id, email_notifications_enabled: true } }
         end
 
-        it { expect(gestionnaire.procedures_with_email_notifications).to eq([procedure]) }
+        it { expect(instructeur.procedures_with_email_notifications).to eq([procedure]) }
       end
     end
   end

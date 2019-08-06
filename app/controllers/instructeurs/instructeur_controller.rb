@@ -1,9 +1,9 @@
-module Gestionnaires
-  class GestionnaireController < ApplicationController
-    before_action :authenticate_gestionnaire!
+module Instructeurs
+  class InstructeurController < ApplicationController
+    before_action :authenticate_instructeur!
 
     def nav_bar_profile
-      :gestionnaire
+      :instructeur
     end
   end
 end

@@ -1,17 +1,17 @@
 - if smart_listing.present?
-  %table.table#liste-gestionnaire
+  %table.table#liste-instructeur
     %thead
       %th#libelle= smart_listing.sortable 'Email', 'email'
       %th
 
-    - @gestionnaires.each do |gestionnaire|
+    - @instructeurs.each do |instructeur|
       %tr
-        %td{ style: 'padding-top: 11px; font-size: 15px;' }= gestionnaire.email
+        %td{ style: 'padding-top: 11px; font-size: 15px;' }= instructeur.email
         %td{ style: 'text-align: right;' }
           .delete.btn.btn-sm.fa.fa-trash
 
           .confirm
-            = link_to 'Valider', admin_gestionnaire_path(id: gestionnaire.id), { method: :delete, class: 'btn btn-sm btn-success' }
+            = link_to 'Valider', admin_instructeur_path(id: instructeur.id), { method: :delete, class: 'btn btn-sm btn-success' }
             .cancel.btn.btn-sm.btn-danger.fa.fa-minus{ style: 'top: 0;' }
 
   = smart_listing.paginate

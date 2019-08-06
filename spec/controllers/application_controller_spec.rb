@@ -15,14 +15,14 @@ describe ApplicationController, type: :controller do
 
   describe 'set_raven_context and append_info_to_payload' do
     let(:current_user) { nil }
-    let(:current_gestionnaire) { nil }
+    let(:current_instructeur) { nil }
     let(:current_administrateur) { nil }
     let(:current_administration) { nil }
     let(:payload) { {} }
 
     before do
       expect(@controller).to receive(:current_user).and_return(current_user)
-      expect(@controller).to receive(:current_gestionnaire).and_return(current_gestionnaire)
+      expect(@controller).to receive(:current_instructeur).and_return(current_instructeur)
       expect(@controller).to receive(:current_administrateur).and_return(current_administrateur)
       expect(@controller).to receive(:current_administration).and_return(current_administration)
       allow(Raven).to receive(:user_context)
@@ -69,9 +69,9 @@ describe ApplicationController, type: :controller do
       end
     end
 
-    context 'when someone is logged as a user, gestionnaire, administrateur and administration' do
+    context 'when someone is logged as a user, instructeur, administrateur and administration' do
       let(:current_user) { create(:user) }
-      let(:current_gestionnaire) { create(:gestionnaire) }
+      let(:current_instructeur) { create(:instructeur) }
       let(:current_administrateur) { create(:administrateur) }
       let(:current_administration) { create(:administration) }
 
@@ -88,7 +88,7 @@ describe ApplicationController, type: :controller do
           user_agent: 'Rails Testing',
           user_id: current_user.id,
           user_email: current_user.email,
-          user_roles: 'User, Gestionnaire, Administrateur, Administration'
+          user_roles: 'User, Instructeur, Administrateur, Administration'
         })
       end
     end
@@ -108,7 +108,7 @@ describe ApplicationController, type: :controller do
       before { @controller.send(:reject) }
 
       it { expect(@controller).to have_received(:sign_out).with(:user) }
-      it { expect(@controller).to have_received(:sign_out).with(:gestionnaire) }
+      it { expect(@controller).to have_received(:sign_out).with(:instructeur) }
       it { expect(@controller).to have_received(:sign_out).with(:administrateur) }
       it { expect(flash[:alert]).to eq(ApplicationController::MAINTENANCE_MESSAGE) }
       it { expect(@controller).to have_received(:redirect_to).with(root_path) }
@@ -148,13 +148,13 @@ describe ApplicationController, type: :controller do
   end
 
   describe '#redirect_if_unstrusted' do
-    let(:current_gestionnaire) { create(:gestionnaire) }
+    let(:current_instructeur) { create(:instructeur) }
 
     before do
-      allow(@controller).to receive(:current_gestionnaire).and_return(current_gestionnaire)
+      allow(@controller).to receive(:current_instructeur).and_return(current_instructeur)
       allow(@controller).to receive(:redirect_to)
       allow(@controller).to receive(:trusted_device?).and_return(trusted_device)
-      allow(@controller).to receive(:gestionnaire_signed_in?).and_return(gestionnaire_signed_in)
+      allow(@controller).to receive(:instructeur_signed_in?).and_return(instructeur_signed_in)
       allow(@controller).to receive(:sensitive_path).and_return(sensitive_path)
       allow(@controller).to receive(:send_login_token_or_bufferize)
       allow(@controller).to receive(:store_location_for)
@@ -166,8 +166,8 @@ describe ApplicationController, type: :controller do
     context 'when the path is sensitive' do
       let(:sensitive_path) { true }
 
-      context 'when the gestionnaire is signed_in' do
-        let(:gestionnaire_signed_in) { true }
+      context 'when the instructeur is signed_in' do
+        let(:instructeur_signed_in) { true }
 
         context 'when the feature is activated' do
           before do

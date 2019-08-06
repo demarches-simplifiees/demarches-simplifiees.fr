@@ -1,9 +1,9 @@
-describe 'gestionnaires/dossiers/show.html.haml', type: :view do
-  let(:current_gestionnaire) { create(:gestionnaire) }
+describe 'instructeurs/dossiers/show.html.haml', type: :view do
+  let(:current_instructeur) { create(:instructeur) }
   let(:dossier) { create(:dossier, :en_construction) }
 
   before do
-    sign_in current_gestionnaire
+    sign_in current_instructeur
     assign(:dossier, dossier)
   end
 

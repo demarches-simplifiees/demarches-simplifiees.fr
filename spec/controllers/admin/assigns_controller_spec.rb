@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::AssignsController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:procedure) { create :procedure, administrateur: admin }
-  let(:gestionnaire) { create :gestionnaire, administrateurs: [admin] }
+  let(:instructeur) { create :instructeur, administrateurs: [admin] }
 
   before do
     sign_in admin
@@ -15,7 +15,7 @@ describe Admin::AssignsController, type: :controller do
   end
 
   describe 'PUT #update' do
-    subject { put :update, params: { instructeur_id: gestionnaire.id, procedure_id: procedure.id, to: 'assign' } }
+    subject { put :update, params: { instructeur_id: instructeur.id, procedure_id: procedure.id, to: 'assign' } }
 
     it { expect(subject).to redirect_to admin_procedure_assigns_path(procedure_id: procedure.id) }
 

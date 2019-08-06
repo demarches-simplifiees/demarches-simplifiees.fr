@@ -1,20 +1,20 @@
 module Manager
-  class GestionnairesController < Manager::ApplicationController
+  class InstructeursController < Manager::ApplicationController
     def reinvite
-      gestionnaire = Gestionnaire.find(params[:id])
-      gestionnaire.invite!
+      instructeur = Instructeur.find(params[:id])
+      instructeur.invite!
       flash[:notice] = "Instructeur réinvité."
-      redirect_to manager_gestionnaire_path(gestionnaire)
+      redirect_to manager_instructeur_path(instructeur)
     end
 
     def enable_feature
-      gestionnaire = Gestionnaire.find(params[:id])
+      instructeur = Instructeur.find(params[:id])
 
       params[:features].each do |key, enable|
         if enable
-          gestionnaire.enable_feature(key.to_sym)
+          instructeur.enable_feature(key.to_sym)
         else
-          gestionnaire.disable_feature(key.to_sym)
+          instructeur.disable_feature(key.to_sym)
         end
       end
 

@@ -4,12 +4,12 @@ describe 'admin/assigns/show.html.haml', type: :view do
   let(:admin) { create(:administrateur) }
   let(:procedure) { create :procedure, administrateur: admin }
 
-  let(:assign_gestionnaires) { procedure.gestionnaires }
-  let(:not_assign_gestionnaires) { admin.gestionnaires.where.not(id: assign_gestionnaires.ids) }
+  let(:assign_instructeurs) { procedure.instructeurs }
+  let(:not_assign_instructeurs) { admin.instructeurs.where.not(id: assign_instructeurs.ids) }
 
   before do
     assign(:procedure, procedure)
-    assign(:gestionnaire, Gestionnaire.new)
+    assign(:instructeur, Instructeur.new)
 
     assign(:instructeurs_assign, (smart_listing_create :instructeurs_assign,
       assign_instructeurs,
@@ -35,12 +35,12 @@ describe 'admin/assigns/show.html.haml', type: :view do
   end
 
   context 'when administrateur have two instructeur' do
-    let!(:instructeur_1) { create :gestionnaire, email: 'plop@plop.com', administrateurs: [admin] }
-    let!(:instructeur_2) { create :gestionnaire, email: 'plip@plop.com', administrateurs: [admin] }
+    let!(:instructeur_1) { create :instructeur, email: 'plop@plop.com', administrateurs: [admin] }
+    let!(:instructeur_2) { create :instructeur, email: 'plip@plop.com', administrateurs: [admin] }
 
     before do
-      not_assign_gestionnaires.reload
-      assign_gestionnaires.reload
+      not_assign_instructeurs.reload
+      assign_instructeurs.reload
 
       assign(:instructeurs_assign, (smart_listing_create :instructeurs_assign,
         assign_instructeurs,

@@ -1,11 +1,11 @@
-class Gestionnaires::ActivateController < ApplicationController
+class Instructeurs::ActivateController < ApplicationController
   include TrustedDeviceConcern
 
   def new
-    @gestionnaire = Gestionnaire.with_reset_password_token(params[:token])
+    @instructeur = Instructeur.with_reset_password_token(params[:token])
 
-    if @gestionnaire
-      # the gestionnaire activates its account from an email
+    if @instructeur
+      # the instructeur activates its account from an email
       trust_device(Time.zone.now)
     else
       flash.alert = "Le lien de validation du compte instructeur a expiré, #{helpers.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."
@@ -14,29 +14,29 @@ class Gestionnaires::ActivateController < ApplicationController
   end
 
   def create
-    password = create_gestionnaire_params[:password]
-    gestionnaire = Gestionnaire.reset_password_by_token({
+    password = create_instructeur_params[:password]
+    instructeur = Instructeur.reset_password_by_token({
       password: password,
       password_confirmation: password,
-      reset_password_token: create_gestionnaire_params[:reset_password_token]
+      reset_password_token: create_instructeur_params[:reset_password_token]
     })
 
-    if gestionnaire && gestionnaire.errors.empty?
-      sign_in(gestionnaire, scope: :gestionnaire)
-      try_to_authenticate(User, gestionnaire.email, password)
-      try_to_authenticate(Administrateur, gestionnaire.email, password)
+    if instructeur && instructeur.errors.empty?
+      sign_in(instructeur, scope: :instructeur)
+      try_to_authenticate(User, instructeur.email, password)
+      try_to_authenticate(Administrateur, instructeur.email, password)
       flash.notice = "Mot de passe enregistré"
-      redirect_to gestionnaire_procedures_path
+      redirect_to instructeur_procedures_path
     else
-      flash.alert = gestionnaire.errors.full_messages
-      redirect_to gestionnaire_activate_path(token: create_gestionnaire_params[:reset_password_token])
+      flash.alert = instructeur.errors.full_messages
+      redirect_to instructeur_activate_path(token: create_instructeur_params[:reset_password_token])
     end
   end
 
   private
 
-  def create_gestionnaire_params
-    params.require(:gestionnaire).permit(:reset_password_token, :password)
+  def create_instructeur_params
+    params.require(:instructeur).permit(:reset_password_token, :password)
   end
 
   def try_to_authenticate(klass, email, password)

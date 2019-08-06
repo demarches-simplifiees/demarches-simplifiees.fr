@@ -1,4 +1,4 @@
-class Gestionnaire < ApplicationRecord
+class Instructeur < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
@@ -12,12 +12,12 @@ class Gestionnaire < ApplicationRecord
   has_many :assign_to, dependent: :destroy
   has_many :procedures, through: :assign_to
 
-  has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :gestionnaire
+  has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :procedures_with_email_notifications, through: :assign_to_with_email_notifications, source: :procedure
 
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
-  has_many :follows, -> { active }, inverse_of: :gestionnaire
-  has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :gestionnaire
+  has_many :follows, -> { active }, inverse_of: :instructeur
+  has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
   has_many :avis
@@ -37,7 +37,7 @@ class Gestionnaire < ApplicationRecord
       # Database uniqueness constraint
     rescue ActiveRecord::RecordInvalid => e
       # ActiveRecord validation
-      raise unless e.record.errors.details.dig(:gestionnaire_id, 0, :error) == :taken
+      raise unless e.record.errors.details.dig(:instructeur_id, 0, :error) == :taken
     end
   end
 
@@ -90,7 +90,7 @@ class Gestionnaire < ApplicationRecord
   def notifications_for_dossier(dossier)
     follow = Follow
       .includes(dossier: [:champs, :avis, :commentaires])
-      .find_by(gestionnaire: self, dossier: dossier)
+      .find_by(instructeur: self, dossier: dossier)
 
     if follow.present?
       demande = follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
@@ -175,13 +175,13 @@ class Gestionnaire < ApplicationRecord
   def mark_tab_as_seen(dossier, tab)
     attributes = {}
     attributes["#{tab}_seen_at"] = Time.zone.now
-    Follow.where(gestionnaire: self, dossier: dossier).update_all(attributes)
+    Follow.where(instructeur: self, dossier: dossier).update_all(attributes)
   end
 
   def invite!
     reset_password_token = set_reset_password_token
 
-    GestionnaireMailer.invite_gestionnaire(self, reset_password_token).deliver_later
+    InstructeurMailer.invite_instructeur(self, reset_password_token).deliver_later
   end
 
   def feature_enabled?(feature)

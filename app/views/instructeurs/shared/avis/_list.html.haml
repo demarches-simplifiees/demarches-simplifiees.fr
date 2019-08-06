@@ -9,7 +9,7 @@
         .width-100
           %h2.claimant
             Demandeur :
-            %span.email= (avis.claimant.email == current_gestionnaire.email) ? 'Vous' : avis.claimant.email
+            %span.email= (avis.claimant.email == current_instructeur.email) ? 'Vous' : avis.claimant.email
             - if avis.confidentiel?
               %span.confidentiel
                 confidentiel
@@ -21,8 +21,8 @@
           .answer.flex.align-start
             %span.icon.bubble.avis-icon
             .width-100
-              %h2.gestionnaire
-                = (avis.email_to_display == current_gestionnaire.email) ? 'Vous' : avis.email_to_display
+              %h2.instructeur
+                = (avis.email_to_display == current_instructeur.email) ? 'Vous' : avis.email_to_display
                 - if avis.answer.present?
                   %span.date{ class: highlight_if_unseen_class(avis_seen_at, avis.updated_at) }
                     Réponse donnée le #{l(avis.updated_at, format: '%d/%m/%y à %H:%M')}

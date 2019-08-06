@@ -15,7 +15,7 @@ describe Users::PasswordsController, type: :controller do
         administrateur # make sure it's created
       end
 
-      it "also signs gestionnaire in" do
+      it "also signs instructeur in" do
         put :update, params: {
           user: {
             reset_password_token: @token,
@@ -24,7 +24,7 @@ describe Users::PasswordsController, type: :controller do
           }
         }
         expect(subject.current_user).to eq(user)
-        expect(subject.current_gestionnaire.email).to eq(administrateur.email)
+        expect(subject.current_instructeur.email).to eq(administrateur.email)
       end
 
       it "also signs administrateur in" do

@@ -1,12 +1,12 @@
 module DossierLinkHelper
   def dossier_linked_path(user, dossier)
-    if user.is_a?(Gestionnaire)
-      if dossier.procedure.gestionnaires.include?(user)
-        gestionnaire_dossier_path(dossier.procedure, dossier)
+    if user.is_a?(Instructeur)
+      if dossier.procedure.instructeurs.include?(user)
+        instructeur_dossier_path(dossier.procedure, dossier)
       else
-        avis = dossier.avis.find_by(gestionnaire: user)
+        avis = dossier.avis.find_by(instructeur: user)
         if avis.present?
-          gestionnaire_avis_path(avis)
+          instructeur_avis_path(avis)
         end
       end
     elsif user.owns_or_invite?(dossier)

@@ -45,11 +45,11 @@ describe 'layouts/_new_header.html.haml', type: :view do
     end
   end
 
-  context 'when rendering for gestionnaire' do
-    let(:user) { create(:gestionnaire) }
-    let(:profile) { :gestionnaire }
+  context 'when rendering for instructeur' do
+    let(:user) { create(:instructeur) }
+    let(:profile) { :instructeur }
 
-    it { is_expected.to have_css("a.header-logo[href=\"#{gestionnaire_procedures_path}\"]") }
+    it { is_expected.to have_css("a.header-logo[href=\"#{instructeur_procedures_path}\"]") }
 
     it 'displays the Help dropdown menu' do
       expect(subject).to have_css(".help-dropdown")

@@ -4,7 +4,7 @@
   %p.tab-paragraph
     Vous êtes le seul instructeur assigné sur cette démarche
 - else
-  = form_for dossier, url: send_to_instructeurs_gestionnaire_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form recipients-form' } do |f|
+  = form_for dossier, url: send_to_instructeurs_instructeur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form recipients-form' } do |f|
     .flex.justify-start.align-start
       = select_tag(:recipients,
         options_from_collection_for_select(potential_recipients, :id, :email),

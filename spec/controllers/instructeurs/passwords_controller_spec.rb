@@ -1,37 +1,37 @@
 require "spec_helper"
 
-describe Gestionnaires::PasswordsController, type: :controller do
+describe Instructeurs::PasswordsController, type: :controller do
   before do
-    @request.env["devise.mapping"] = Devise.mappings[:gestionnaire]
+    @request.env["devise.mapping"] = Devise.mappings[:instructeur]
   end
 
   describe "update" do
     context "unified login" do
       let(:user) { create(:user, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
       let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
-      let(:gestionnaire) { administrateur.gestionnaire }
+      let(:instructeur) { administrateur.instructeur }
 
       before do
-        @token = gestionnaire.send(:set_reset_password_token)
+        @token = instructeur.send(:set_reset_password_token)
         user # make sure it's created
         administrateur # make sure it's created
       end
 
       it "also signs user in" do
         put :update, params: {
-          gestionnaire: {
+          instructeur: {
             reset_password_token: @token,
             password: "démarches-simplifiées-pwd",
             password_confirmation: "démarches-simplifiées-pwd"
           }
         }
-        expect(subject.current_gestionnaire).to eq(gestionnaire)
+        expect(subject.current_instructeur).to eq(instructeur)
         expect(subject.current_user).to eq(user)
       end
 
       it "also signs administrateur in" do
         put :update, params: {
-          gestionnaire: {
+          instructeur: {
             reset_password_token: @token,
             password: "démarches-simplifiées-pwd",
             password_confirmation: "démarches-simplifiées-pwd"

@@ -1,4 +1,4 @@
-module Gestionnaires
+module Instructeurs
   class DossiersController < ProceduresController
     include ActionView::Helpers::NumberHelper
     include ActionView::Helpers::TextHelper
@@ -22,72 +22,72 @@ module Gestionnaires
     end
 
     def show
-      @demande_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.demande_seen_at
+      @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.demande_seen_at
     end
 
     def messagerie
       @commentaire = Commentaire.new
-      @messagerie_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.messagerie_seen_at
+      @messagerie_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.messagerie_seen_at
     end
 
     def annotations_privees
-      @annotations_privees_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.annotations_privees_seen_at
+      @annotations_privees_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.annotations_privees_seen_at
     end
 
     def avis
-      @avis_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.avis_seen_at
+      @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
       @avis = Avis.new
     end
 
     def personnes_impliquees
-      @following_instructeurs_emails = dossier.followers_gestionnaires.pluck(:email)
-      previous_followers = dossier.previous_followers_gestionnaires - dossier.followers_gestionnaires
+      @following_instructeurs_emails = dossier.followers_instructeurs.pluck(:email)
+      previous_followers = dossier.previous_followers_instructeurs - dossier.followers_instructeurs
       @previous_following_instructeurs_emails = previous_followers.pluck(:email)
-      @avis_emails = dossier.avis.includes(:gestionnaire).map(&:email_to_display)
+      @avis_emails = dossier.avis.includes(:instructeur).map(&:email_to_display)
       @invites_emails = dossier.invites.map(&:email)
-      @potential_recipients = procedure.gestionnaires.reject { |g| g == current_gestionnaire }
+      @potential_recipients = procedure.instructeurs.reject { |g| g == current_instructeur }
     end
 
     def send_to_instructeurs
-      recipients = Gestionnaire.find(params[:recipients])
+      recipients = Instructeur.find(params[:recipients])
 
       recipients.each do |recipient|
-        GestionnaireMailer.send_dossier(current_gestionnaire, dossier, recipient).deliver_later
+        InstructeurMailer.send_dossier(current_instructeur, dossier, recipient).deliver_later
       end
 
       flash.notice = "Dossier envoyé"
-      redirect_to(personnes_impliquees_gestionnaire_dossier_path(procedure, dossier))
+      redirect_to(personnes_impliquees_instructeur_dossier_path(procedure, dossier))
     end
 
     def follow
-      current_gestionnaire.follow(dossier)
+      current_instructeur.follow(dossier)
       flash.notice = 'Dossier suivi'
-      redirect_back(fallback_location: gestionnaire_procedures_url)
+      redirect_back(fallback_location: instructeur_procedures_url)
     end
 
     def unfollow
-      current_gestionnaire.unfollow(dossier)
+      current_instructeur.unfollow(dossier)
       flash.notice = "Vous ne suivez plus le dossier nº #{dossier.id}"
 
-      redirect_back(fallback_location: gestionnaire_procedures_url)
+      redirect_back(fallback_location: instructeur_procedures_url)
     end
 
     def archive
       dossier.update(archived: true)
-      current_gestionnaire.unfollow(dossier)
-      redirect_back(fallback_location: gestionnaire_procedures_url)
+      current_instructeur.unfollow(dossier)
+      redirect_back(fallback_location: instructeur_procedures_url)
     end
 
     def unarchive
       dossier.update(archived: false)
-      redirect_back(fallback_location: gestionnaire_procedures_url)
+      redirect_back(fallback_location: instructeur_procedures_url)
     end
 
     def passer_en_instruction
       if dossier.en_instruction?
         flash.notice = 'Le dossier est déjà en instruction.'
       else
-        dossier.passer_en_instruction!(current_gestionnaire)
+        dossier.passer_en_instruction!(current_instructeur)
         flash.notice = 'Dossier passé en instruction.'
       end
 
@@ -98,7 +98,7 @@ module Gestionnaires
       if dossier.en_construction?
         flash.notice = 'Le dossier est déjà en construction.'
       else
-        dossier.repasser_en_construction!(current_gestionnaire)
+        dossier.repasser_en_construction!(current_instructeur)
         flash.notice = 'Dossier repassé en construction.'
       end
 
@@ -113,7 +113,7 @@ module Gestionnaires
           flash.notice = 'Il n’est pas possible de repasser un dossier accepté en instruction.'
         else
           flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
-          dossier.repasser_en_instruction!(current_gestionnaire)
+          dossier.repasser_en_instruction!(current_instructeur)
         end
       end
 
@@ -129,13 +129,13 @@ module Gestionnaires
       else
         case params[:process_action]
         when "refuser"
-          dossier.refuser!(current_gestionnaire, motivation, justificatif)
+          dossier.refuser!(current_instructeur, motivation, justificatif)
           flash.notice = "Dossier considéré comme refusé."
         when "classer_sans_suite"
-          dossier.classer_sans_suite!(current_gestionnaire, motivation, justificatif)
+          dossier.classer_sans_suite!(current_instructeur, motivation, justificatif)
           flash.notice = "Dossier considéré comme sans suite."
         when "accepter"
-          dossier.accepter!(current_gestionnaire, motivation, justificatif)
+          dossier.accepter!(current_instructeur, motivation, justificatif)
           flash.notice = "Dossier traité avec succès."
         end
       end
@@ -144,12 +144,12 @@ module Gestionnaires
     end
 
     def create_commentaire
-      @commentaire = CommentaireService.build(current_gestionnaire, dossier, commentaire_params)
+      @commentaire = CommentaireService.build(current_instructeur, dossier, commentaire_params)
 
       if @commentaire.save
-        current_gestionnaire.follow(dossier)
+        current_instructeur.follow(dossier)
         flash.notice = "Message envoyé"
-        redirect_to messagerie_gestionnaire_dossier_path(procedure, dossier)
+        redirect_to messagerie_instructeur_dossier_path(procedure, dossier)
       else
         flash.alert = @commentaire.errors.full_messages
         render :messagerie
@@ -160,18 +160,18 @@ module Gestionnaires
       @avis = create_avis_from_params(dossier)
 
       if @avis.nil?
-        redirect_to avis_gestionnaire_dossier_path(procedure, dossier)
+        redirect_to avis_instructeur_dossier_path(procedure, dossier)
       else
-        @avis_seen_at = current_gestionnaire.follows.find_by(dossier: dossier)&.avis_seen_at
+        @avis_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.avis_seen_at
         render :avis
       end
     end
 
     def update_annotations
-      dossier = current_gestionnaire.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
+      dossier = current_instructeur.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
       dossier.update(champs_private_params)
-      dossier.modifier_annotations!(current_gestionnaire)
-      redirect_to annotations_privees_gestionnaire_dossier_path(procedure, dossier)
+      dossier.modifier_annotations!(current_instructeur)
+      redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier)
     end
 
     def print
@@ -190,7 +190,7 @@ module Gestionnaires
     private
 
     def dossier
-      @dossier ||= current_gestionnaire.dossiers.find(params[:dossier_id])
+      @dossier ||= current_instructeur.dossiers.find(params[:dossier_id])
     end
 
     def commentaire_params
@@ -205,19 +205,19 @@ module Gestionnaires
     end
 
     def mark_demande_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :demande)
+      current_instructeur.mark_tab_as_seen(dossier, :demande)
     end
 
     def mark_messagerie_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :messagerie)
+      current_instructeur.mark_tab_as_seen(dossier, :messagerie)
     end
 
     def mark_avis_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :avis)
+      current_instructeur.mark_tab_as_seen(dossier, :avis)
     end
 
     def mark_annotations_privees_as_read
-      current_gestionnaire.mark_tab_as_seen(dossier, :annotations_privees)
+      current_instructeur.mark_tab_as_seen(dossier, :annotations_privees)
     end
   end
 end

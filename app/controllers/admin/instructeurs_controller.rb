@@ -1,70 +1,70 @@
-class Admin::GestionnairesController < AdminController
+class Admin::InstructeursController < AdminController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
   def index
-    @gestionnaires = smart_listing_create :gestionnaires,
-      current_administrateur.gestionnaires,
-      partial: "admin/gestionnaires/list",
+    @instructeurs = smart_listing_create :instructeurs,
+      current_administrateur.instructeurs,
+      partial: "admin/instructeurs/list",
       array: true
 
-    @gestionnaire ||= Gestionnaire.new
+    @instructeur ||= Instructeur.new
   end
 
   def create
-    email = params[:gestionnaire][:email].downcase
-    @gestionnaire = Gestionnaire.find_by(email: email)
+    email = params[:instructeur][:email].downcase
+    @instructeur = Instructeur.find_by(email: email)
     procedure_id = params[:procedure_id]
 
-    if @gestionnaire.nil?
-      invite_gestionnaire(params[:gestionnaire][:email])
+    if @instructeur.nil?
+      invite_instructeur(params[:instructeur][:email])
     else
-      assign_gestionnaire!
+      assign_instructeur!
     end
 
     if procedure_id.present?
       redirect_to admin_procedure_assigns_path(procedure_id: procedure_id)
     else
-      redirect_to admin_gestionnaires_path
+      redirect_to admin_instructeurs_path
     end
   end
 
   def destroy
-    Gestionnaire.find(params[:id]).administrateurs.delete current_administrateur
-    redirect_to admin_gestionnaires_path
+    Instructeur.find(params[:id]).administrateurs.delete current_administrateur
+    redirect_to admin_instructeurs_path
   end
 
   private
 
-  def invite_gestionnaire(email)
+  def invite_instructeur(email)
     password = SecureRandom.hex
 
-    @gestionnaire = Gestionnaire.create(
+    @instructeur = Instructeur.create(
       email: email,
       password: password,
       password_confirmation: password,
       administrateurs: [current_administrateur]
     )
 
-    if @gestionnaire.errors.messages.empty?
-      @gestionnaire.invite!
+    if @instructeur.errors.messages.empty?
+      @instructeur.invite!
 
-      if User.exists?(email: @gestionnaire.email)
-        GestionnaireMailer.user_to_gestionnaire(@gestionnaire.email).deliver_later
+      if User.exists?(email: @instructeur.email)
+        InstructeurMailer.user_to_instructeur(@instructeur.email).deliver_later
       else
         User.create(email: email, password: password, confirmed_at: Time.zone.now)
       end
       flash.notice = 'Instructeur ajouté'
     else
-      flash.alert = @gestionnaire.errors.full_messages
+      flash.alert = @instructeur.errors.full_messages
     end
   end
 
-  def assign_gestionnaire!
-    if current_administrateur.gestionnaires.include?(@gestionnaire)
+  def assign_instructeur!
+    if current_administrateur.instructeurs.include?(@instructeur)
       flash.alert = 'Instructeur déjà ajouté'
     else
-      @gestionnaire.administrateurs.push current_administrateur
+      @instructeur.administrateurs.push current_administrateur
       flash.notice = 'Instructeur ajouté'
       # TODO Mailer no assign_to
     end

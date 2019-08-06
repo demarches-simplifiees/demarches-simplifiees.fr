@@ -1,17 +1,17 @@
 require 'spec_helper'
 
-describe Gestionnaires::AvisController, type: :controller do
-  context 'with a gestionnaire signed in' do
+describe Instructeurs::AvisController, type: :controller do
+  context 'with a instructeur signed in' do
     render_views
 
-    let(:claimant) { create(:gestionnaire) }
-    let(:gestionnaire) { create(:gestionnaire) }
-    let(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
+    let(:claimant) { create(:instructeur) }
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, gestionnaire: gestionnaire) }
-    let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, gestionnaire: gestionnaire, answer: 'yop') }
+    let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur) }
+    let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur, answer: 'yop') }
 
-    before { sign_in(gestionnaire) }
+    before { sign_in(instructeur) }
 
     describe '#index' do
       before { get :index }
@@ -60,7 +60,7 @@ describe Gestionnaires::AvisController, type: :controller do
         end
 
         it 'should be ok' do
-          expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer))
+          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer))
           expect(avis_without_answer.answer).to eq('answer')
           expect(avis_without_answer.piece_justificative_file).to_not be_attached
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
@@ -80,7 +80,7 @@ describe Gestionnaires::AvisController, type: :controller do
         end
 
         it 'should be ok' do
-          expect(response).to redirect_to(instruction_gestionnaire_avis_path(avis_without_answer))
+          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer))
           expect(avis_without_answer.answer).to eq('answer')
           expect(avis_without_answer.piece_justificative_file).to be_attached
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
@@ -101,7 +101,7 @@ describe Gestionnaires::AvisController, type: :controller do
       it do
         subject
 
-        expect(response).to redirect_to(messagerie_gestionnaire_avis_path(avis_without_answer))
+        expect(response).to redirect_to(messagerie_instructeur_avis_path(avis_without_answer))
         expect(dossier.commentaires.map(&:body)).to match(['commentaire body'])
       end
 
@@ -118,7 +118,7 @@ describe Gestionnaires::AvisController, type: :controller do
     end
 
     describe '#create_avis' do
-      let!(:previous_avis) { Avis.create(dossier: dossier, claimant: claimant, gestionnaire: gestionnaire, confidentiel: previous_avis_confidentiel) }
+      let!(:previous_avis) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur, confidentiel: previous_avis_confidentiel) }
       let(:emails) { ['a@b.com'] }
       let(:intro) { 'introduction' }
       let(:created_avis) { Avis.last }
@@ -160,8 +160,8 @@ describe Gestionnaires::AvisController, type: :controller do
           it { expect(created_avis.email).to eq(emails.last) }
           it { expect(created_avis.introduction).to eq(intro) }
           it { expect(created_avis.dossier).to eq(previous_avis.dossier) }
-          it { expect(created_avis.claimant).to eq(gestionnaire) }
-          it { expect(response).to redirect_to(instruction_gestionnaire_avis_path(previous_avis)) }
+          it { expect(created_avis.claimant).to eq(instructeur) }
+          it { expect(response).to redirect_to(instruction_instructeur_avis_path(previous_avis)) }
         end
 
         context 'when the user asked for a confidentiel avis' do
@@ -183,14 +183,14 @@ describe Gestionnaires::AvisController, type: :controller do
     end
   end
 
-  context 'without a gestionnaire signed in' do
+  context 'without a instructeur signed in' do
     describe '#sign_up' do
       let(:invited_email) { 'invited@avis.com' }
       let(:dossier) { create(:dossier) }
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
       let(:invitations_email) { true }
 
-      context 'when the new gestionnaire has never signed up' do
+      context 'when the new instructeur has never signed up' do
         before do
           expect(Avis).to receive(:avis_exists_and_email_belongs_to_avis?)
             .with(avis.id.to_s, invited_email)
@@ -211,43 +211,43 @@ describe Gestionnaires::AvisController, type: :controller do
         end
       end
 
-      context 'when the gestionnaire has already signed up and belongs to the invitation' do
-        let(:gestionnaire) { create(:gestionnaire, email: invited_email) }
-        let!(:avis) { create(:avis, dossier: dossier, gestionnaire: gestionnaire) }
+      context 'when the instructeur has already signed up and belongs to the invitation' do
+        let(:instructeur) { create(:instructeur, email: invited_email) }
+        let!(:avis) { create(:avis, dossier: dossier, instructeur: instructeur) }
 
-        context 'when the gestionnaire is authenticated' do
+        context 'when the instructeur is authenticated' do
           before do
-            sign_in gestionnaire
+            sign_in instructeur
             get :sign_up, params: { id: avis.id, email: invited_email }
           end
 
-          it { is_expected.to redirect_to gestionnaire_avis_url(avis) }
+          it { is_expected.to redirect_to instructeur_avis_url(avis) }
         end
 
-        context 'when the gestionnaire is not authenticated' do
+        context 'when the instructeur is not authenticated' do
           before do
             get :sign_up, params: { id: avis.id, email: invited_email }
           end
 
-          it { is_expected.to redirect_to new_gestionnaire_session_url }
+          it { is_expected.to redirect_to new_instructeur_session_url }
         end
       end
 
-      context 'when the gestionnaire has already signed up / is authenticated and does not belong to the invitation' do
-        let(:gestionnaire) { create(:gestionnaire, email: 'other@gmail.com') }
+      context 'when the instructeur has already signed up / is authenticated and does not belong to the invitation' do
+        let(:instructeur) { create(:instructeur, email: 'other@gmail.com') }
         let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
 
         before do
-          sign_in gestionnaire
+          sign_in instructeur
           get :sign_up, params: { id: avis.id, email: invited_email }
         end
 
-        # redirected to dossier but then the gestionnaire gonna be banished !
-        it { is_expected.to redirect_to gestionnaire_avis_url(avis) }
+        # redirected to dossier but then the instructeur gonna be banished !
+        it { is_expected.to redirect_to instructeur_avis_url(avis) }
       end
     end
 
-    describe '#create_gestionnaire' do
+    describe '#create_instructeur' do
       let(:existing_user_mail) { 'dummy@example.org' }
       let!(:existing_user) { create(:user, email: existing_user_mail) }
       let(:invited_email) { 'invited@avis.com' }
@@ -255,19 +255,19 @@ describe Gestionnaires::AvisController, type: :controller do
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
       let(:avis_id) { avis.id }
       let(:password) { 'démarches-simplifiées-pwd' }
-      let(:created_gestionnaire) { Gestionnaire.find_by(email: invited_email) }
+      let(:created_instructeur) { Instructeur.find_by(email: invited_email) }
       let(:invitations_email) { true }
 
       before do
-        allow(Avis).to receive(:link_avis_to_gestionnaire)
+        allow(Avis).to receive(:link_avis_to_instructeur)
         expect(Avis).to receive(:avis_exists_and_email_belongs_to_avis?)
           .with(avis_id.to_s, invited_email)
           .and_return(invitations_email)
 
-        post :create_gestionnaire, params: {
+        post :create_instructeur, params: {
           id: avis_id,
           email: invited_email,
-          gestionnaire: {
+          instructeur: {
             password: password
           }
         }
@@ -280,14 +280,14 @@ describe Gestionnaires::AvisController, type: :controller do
       end
 
       context 'when the email belongs to the invitation' do
-        context 'when the gestionnaire creation succeeds' do
-          it { expect(created_gestionnaire).to be_present }
-          it { expect(created_gestionnaire.valid_password?(password)).to be true }
+        context 'when the instructeur creation succeeds' do
+          it { expect(created_instructeur).to be_present }
+          it { expect(created_instructeur.valid_password?(password)).to be true }
 
-          it { expect(Avis).to have_received(:link_avis_to_gestionnaire) }
+          it { expect(Avis).to have_received(:link_avis_to_instructeur) }
 
-          it { expect(subject.current_gestionnaire).to eq(created_gestionnaire) }
-          it { is_expected.to redirect_to gestionnaire_avis_index_path }
+          it { expect(subject.current_instructeur).to eq(created_instructeur) }
+          it { is_expected.to redirect_to instructeur_avis_index_path }
 
           it 'creates a corresponding user account for the email' do
             user = User.find_by(email: invited_email)
@@ -297,17 +297,17 @@ describe Gestionnaires::AvisController, type: :controller do
           context 'when there already is a user account with the same email' do
             let(:existing_user_mail) { invited_email }
 
-            it 'still creates a gestionnaire account' do
-              expect(created_gestionnaire).to be_present
+            it 'still creates a instructeur account' do
+              expect(created_instructeur).to be_present
             end
           end
         end
 
-        context 'when the gestionnaire creation fails' do
+        context 'when the instructeur creation fails' do
           let(:password) { '' }
 
-          it { expect(created_gestionnaire).to be_nil }
-          it { is_expected.to redirect_to sign_up_gestionnaire_avis_path(avis_id, invited_email) }
+          it { expect(created_instructeur).to be_nil }
+          it { is_expected.to redirect_to sign_up_instructeur_avis_path(avis_id, invited_email) }
           it { expect(flash.alert).to eq(['Le mot de passe doit être rempli']) }
         end
       end

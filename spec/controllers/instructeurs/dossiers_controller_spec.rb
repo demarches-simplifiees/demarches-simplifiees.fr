@@ -1,23 +1,23 @@
 require 'spec_helper'
 
-describe Gestionnaires::DossiersController, type: :controller do
+describe Instructeurs::DossiersController, type: :controller do
   render_views
 
-  let(:gestionnaire) { create(:gestionnaire) }
+  let(:instructeur) { create(:instructeur) }
   let(:administrateur) { create(:administrateur) }
   let(:administration) { create(:administration) }
-  let(:gestionnaires) { [gestionnaire] }
-  let(:procedure) { create(:procedure, :published, gestionnaires: gestionnaires) }
+  let(:instructeurs) { [instructeur] }
+  let(:procedure) { create(:procedure, :published, instructeurs: instructeurs) }
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
   let(:fake_justificatif) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
 
-  before { sign_in(gestionnaire) }
+  before { sign_in(instructeur) }
 
   describe '#attestation' do
     context 'when a dossier has an attestation' do
       let(:fake_pdf) { double(read: 'pdf content') }
       let!(:dossier) { create(:dossier, :en_construction, attestation: Attestation.new, procedure: procedure) }
-      let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire]) }
+      let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
       let!(:dossier) { create(:dossier, :en_construction, attestation: Attestation.new, procedure: procedure) }
 
       it 'returns the attestation pdf' do
@@ -35,16 +35,16 @@ describe Gestionnaires::DossiersController, type: :controller do
   end
 
   describe '#send_to_instructeurs' do
-    let(:recipient) { create(:gestionnaire) }
-    let(:gestionnaires) { [gestionnaire, recipient] }
+    let(:recipient) { create(:instructeur) }
+    let(:instructeurs) { [instructeur, recipient] }
     let(:mail) { double("mail") }
 
     before do
       expect(mail).to receive(:deliver_later)
 
-      expect(GestionnaireMailer)
+      expect(InstructeurMailer)
         .to receive(:send_dossier)
-        .with(gestionnaire, dossier, recipient)
+        .with(instructeur, dossier, recipient)
         .and_return(mail)
 
       post(
@@ -57,7 +57,7 @@ describe Gestionnaires::DossiersController, type: :controller do
       )
     end
 
-    it { expect(response).to redirect_to(personnes_impliquees_gestionnaire_dossier_url) }
+    it { expect(response).to redirect_to(personnes_impliquees_instructeur_dossier_url) }
   end
 
   describe '#follow' do
@@ -65,34 +65,34 @@ describe Gestionnaires::DossiersController, type: :controller do
       patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
     end
 
-    it { expect(gestionnaire.followed_dossiers).to match([dossier]) }
+    it { expect(instructeur.followed_dossiers).to match([dossier]) }
     it { expect(flash.notice).to eq('Dossier suivi') }
-    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
+    it { expect(response).to redirect_to(instructeur_procedures_url) }
   end
 
   describe '#unfollow' do
     before do
-      gestionnaire.followed_dossiers << dossier
+      instructeur.followed_dossiers << dossier
       patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-      gestionnaire.reload
+      instructeur.reload
     end
 
-    it { expect(gestionnaire.followed_dossiers).to match([]) }
+    it { expect(instructeur.followed_dossiers).to match([]) }
     it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
-    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
+    it { expect(response).to redirect_to(instructeur_procedures_url) }
   end
 
   describe '#archive' do
     before do
-      gestionnaire.follow(dossier)
+      instructeur.follow(dossier)
       patch :archive, params: { procedure_id: procedure.id, dossier_id: dossier.id }
       dossier.reload
-      gestionnaire.reload
+      instructeur.reload
     end
 
     it { expect(dossier.archived).to be true }
-    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
-    it { expect(gestionnaire.followed_dossiers).not_to include(dossier) }
+    it { expect(response).to redirect_to(instructeur_procedures_url) }
+    it { expect(instructeur.followed_dossiers).not_to include(dossier) }
   end
 
   describe '#unarchive' do
@@ -103,19 +103,19 @@ describe Gestionnaires::DossiersController, type: :controller do
     end
 
     it { expect(dossier.archived).to be false }
-    it { expect(response).to redirect_to(gestionnaire_procedures_url) }
+    it { expect(response).to redirect_to(instructeur_procedures_url) }
   end
 
   describe '#passer_en_instruction' do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     before do
-      sign_in gestionnaire
+      sign_in instructeur
       post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js'
     end
 
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
-    it { expect(gestionnaire.follow?(dossier)).to be true }
+    it { expect(instructeur.follow?(dossier)).to be true }
     it { expect(response).to have_http_status(:ok) }
     it { expect(response.body).to include('.state-button') }
 
@@ -133,7 +133,7 @@ describe Gestionnaires::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
     before do
-      sign_in gestionnaire
+      sign_in instructeur
       post :repasser_en_construction,
         params: { procedure_id: procedure.id, dossier_id: dossier.id },
         format: 'js'
@@ -155,7 +155,7 @@ describe Gestionnaires::DossiersController, type: :controller do
 
   describe '#repasser_en_instruction' do
     let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
-    let(:current_user) { gestionnaire }
+    let(:current_user) { instructeur }
 
     before do
       sign_in current_user
@@ -180,7 +180,7 @@ describe Gestionnaires::DossiersController, type: :controller do
     context 'when the dossier is accepte' do
       let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
-      it 'it is not possible to go back to en_instruction as gestionnaire' do
+      it 'it is not possible to go back to en_instruction as instructeur' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
         expect(response).to have_http_status(:ok)
       end
@@ -205,7 +205,7 @@ describe Gestionnaires::DossiersController, type: :controller do
     context "with refuser" do
       before do
         dossier.en_instruction!
-        sign_in gestionnaire
+        sign_in instructeur
       end
 
       context 'simple refusal' do
@@ -246,7 +246,7 @@ describe Gestionnaires::DossiersController, type: :controller do
     context "with classer_sans_suite" do
       before do
         dossier.en_instruction!
-        sign_in gestionnaire
+        sign_in instructeur
       end
       context 'without attachment' do
         subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
@@ -288,7 +288,7 @@ describe Gestionnaires::DossiersController, type: :controller do
     context "with accepter" do
       before do
         dossier.en_instruction!
-        sign_in gestionnaire
+        sign_in instructeur
 
         expect(NotificationMailer).to receive(:send_closed_notification)
           .with(dossier)
@@ -321,7 +321,7 @@ describe Gestionnaires::DossiersController, type: :controller do
           allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
         end
 
-        it 'The gestionnaire is sent back to the dossier page' do
+        it 'The instructeur is sent back to the dossier page' do
           expect(subject.body).to include('.state-button')
         end
 
@@ -337,7 +337,7 @@ describe Gestionnaires::DossiersController, type: :controller do
       context 'when the attestation template uses the motivation field' do
         let(:emailable) { false }
         let(:template) { create(:attestation_template) }
-        let(:procedure) { create(:procedure, :published, attestation_template: template, gestionnaires: [gestionnaire]) }
+        let(:procedure) { create(:procedure, :published, attestation_template: template, instructeurs: [instructeur]) }
 
         subject do
           post :terminer, params: {
@@ -415,9 +415,9 @@ describe Gestionnaires::DossiersController, type: :controller do
 
     it "creates a commentaire" do
       expect { subject }.to change(Commentaire, :count).by(1)
-      expect(gestionnaire.followed_dossiers).to include(dossier)
+      expect(instructeur.followed_dossiers).to include(dossier)
 
-      expect(response).to redirect_to(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier))
+      expect(response).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
       expect(flash.notice).to be_present
     end
 
@@ -426,9 +426,9 @@ describe Gestionnaires::DossiersController, type: :controller do
 
       it "creates a commentaire (shows message that file have a virus)" do
         expect { subject }.to change(Commentaire, :count).by(1)
-        expect(gestionnaire.followed_dossiers).to include(dossier)
+        expect(instructeur.followed_dossiers).to include(dossier)
 
-        expect(response).to redirect_to(messagerie_gestionnaire_dossier_path(dossier.procedure, dossier))
+        expect(response).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
         expect(flash.notice).to be_present
       end
     end
@@ -456,8 +456,8 @@ describe Gestionnaires::DossiersController, type: :controller do
     it { expect(saved_avis.introduction).to eq('intro') }
     it { expect(saved_avis.confidentiel).to eq(true) }
     it { expect(saved_avis.dossier).to eq(dossier) }
-    it { expect(saved_avis.claimant).to eq(gestionnaire) }
-    it { expect(response).to redirect_to(avis_gestionnaire_dossier_path(dossier.procedure, dossier)) }
+    it { expect(saved_avis.claimant).to eq(instructeur) }
+    it { expect(response).to redirect_to(avis_instructeur_dossier_path(dossier.procedure, dossier)) }
 
     context "with an invalid email" do
       let(:emails) { ['emaila.com'] }
@@ -548,7 +548,7 @@ describe Gestionnaires::DossiersController, type: :controller do
     it { expect(champ_linked_drop_down_list.secondary_value).to eq('secondary') }
     it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
     it { expect(champ_repetition.champs.first.value).to eq('text') }
-    it { expect(response).to redirect_to(annotations_privees_gestionnaire_dossier_path(dossier.procedure, dossier)) }
+    it { expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)) }
   end
 
   describe "#telecharger_pjs" do
