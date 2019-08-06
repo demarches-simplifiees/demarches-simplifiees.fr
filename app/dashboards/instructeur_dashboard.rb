@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class GestionnaireDashboard < Administrate::BaseDashboard
+class InstructeurDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -48,7 +48,7 @@ class GestionnaireDashboard < Administrate::BaseDashboard
   # Overwrite this method to customize how users are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(gestionnaire)
-    gestionnaire.email
+  def display_resource(instructeur)
+    instructeur.email
   end
 end

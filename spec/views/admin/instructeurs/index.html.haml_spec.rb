@@ -1,17 +1,17 @@
 require 'spec_helper'
 
-describe 'admin/gestionnaires/index.html.haml', type: :view do
+describe 'admin/instructeurs/index.html.haml', type: :view do
   let(:admin) { create(:administrateur) }
 
   before do
-    assign(:gestionnaires, (smart_listing_create :gestionnaires,
-      admin.gestionnaires,
-      partial: "admin/gestionnaires/list",
+    assign(:instructeurs, (smart_listing_create :instructeurs,
+      admin.instructeurs,
+      partial: "admin/instructeurs/list",
       array: true))
-    assign(:gestionnaire, Gestionnaire.new())
+    assign(:instructeur, Instructeur.new())
   end
 
-  context 'Aucun gestionnaire' do
+  context 'Aucun instructeur' do
     before do
       render
     end
@@ -20,11 +20,11 @@ describe 'admin/gestionnaires/index.html.haml', type: :view do
 
   context 'Ajout d\'un instructeur' do
     before do
-      create(:gestionnaire, administrateurs: [admin])
+      create(:instructeur, administrateurs: [admin])
       admin.reload
-      assign(:gestionnaires, (smart_listing_create :gestionnaires,
-        admin.gestionnaires,
-        partial: "admin/gestionnaires/list",
+      assign(:instructeurs, (smart_listing_create :instructeurs,
+        admin.instructeurs,
+        partial: "admin/instructeurs/list",
         array: true))
       render
     end

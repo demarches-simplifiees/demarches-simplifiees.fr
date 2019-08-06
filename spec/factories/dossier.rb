@@ -62,7 +62,7 @@ FactoryBot.define do
 
     trait :followed do
       after(:create) do |dossier, _evaluator|
-        g = create(:gestionnaire)
+        g = create(:instructeur)
         g.followed_dossiers << dossier
       end
     end

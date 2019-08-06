@@ -1,7 +1,7 @@
-describe Gestionnaires::ActivateController, type: :controller do
+describe Instructeurs::ActivateController, type: :controller do
   describe '#new' do
-    let(:gestionnaire) { create(:gestionnaire) }
-    let(:token) { gestionnaire.send(:set_reset_password_token) }
+    let(:instructeur) { create(:instructeur) }
+    let(:token) { instructeur.send(:set_reset_password_token) }
 
     before { allow(controller).to receive(:trust_device) }
 

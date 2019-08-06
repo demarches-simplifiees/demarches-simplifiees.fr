@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Users::UserController, type: :controller do
-  describe 'before actions: authenticate_gestionnaire!' do
+  describe 'before actions: authenticate_instructeur!' do
     it 'is present' do
       before_actions = Users::UserController
         ._process_action_callbacks

@@ -17,7 +17,7 @@ as well as a link to its edit page.
 %>
 
 <% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
-<% gestionnaire = page.resource %>
+<% instructeur = page.resource %>
 
 <header class="main-content__header" role="banner">
   <h1 class="main-content__page-title">
@@ -33,7 +33,7 @@ as well as a link to its edit page.
   </div>
 
   <div>
-      <%= link_to 'Réinviter', reinvite_manager_gestionnaire_path(gestionnaire), method: :post, class: 'button' %>
+      <%= link_to 'Réinviter', reinvite_manager_instructeur_path(instructeur), method: :post, class: 'button' %>
   <div>
 </header>
 

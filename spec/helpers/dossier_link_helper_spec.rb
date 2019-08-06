@@ -1,10 +1,10 @@
 describe DossierLinkHelper do
   describe "#dossier_linked_path" do
-    context "when no access as a gestionnaire" do
-      let(:gestionnaire) { create(:gestionnaire) }
+    context "when no access as a instructeur" do
+      let(:instructeur) { create(:instructeur) }
       let(:dossier) { create(:dossier) }
 
-      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to be_nil }
+      it { expect(helper.dossier_linked_path(instructeur, dossier)).to be_nil }
     end
 
     context "when no access as a user" do
@@ -14,21 +14,21 @@ describe DossierLinkHelper do
       it { expect(helper.dossier_linked_path(user, dossier)).to be_nil }
     end
 
-    context "when access as gestionnaire" do
+    context "when access as instructeur" do
       let(:dossier) { create(:dossier) }
-      let(:gestionnaire) { create(:gestionnaire) }
+      let(:instructeur) { create(:instructeur) }
 
-      before { dossier.procedure.gestionnaires << gestionnaire }
+      before { dossier.procedure.instructeurs << instructeur }
 
-      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(gestionnaire_dossier_path(dossier.procedure, dossier)) }
+      it { expect(helper.dossier_linked_path(instructeur, dossier)).to eq(instructeur_dossier_path(dossier.procedure, dossier)) }
     end
 
     context "when access as expert" do
       let(:dossier) { create(:dossier) }
-      let(:gestionnaire) { create(:gestionnaire) }
-      let!(:avis) { create(:avis, dossier: dossier, gestionnaire: gestionnaire) }
+      let(:instructeur) { create(:instructeur) }
+      let!(:avis) { create(:avis, dossier: dossier, instructeur: instructeur) }
 
-      it { expect(helper.dossier_linked_path(gestionnaire, dossier)).to eq(gestionnaire_avis_path(avis)) }
+      it { expect(helper.dossier_linked_path(instructeur, dossier)).to eq(instructeur_avis_path(avis)) }
     end
 
     context "when access as user" do

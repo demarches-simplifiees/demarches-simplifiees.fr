@@ -1,19 +1,19 @@
 require 'spec_helper'
 
-describe Gestionnaires::RechercheController, type: :controller do
+describe Instructeurs::RechercheController, type: :controller do
   let(:dossier) { create(:dossier, :en_construction) }
   let(:dossier2) { create(:dossier, :en_construction, procedure: dossier.procedure) }
-  let(:gestionnaire) { create(:gestionnaire) }
+  let(:instructeur) { create(:instructeur) }
 
-  before { gestionnaire.procedures << dossier2.procedure }
+  before { instructeur.procedures << dossier2.procedure }
 
   describe 'GET #index' do
-    before { sign_in gestionnaire }
+    before { sign_in instructeur }
 
     subject { get :index, params: { q: query } }
 
     describe 'by id' do
-      context 'when gestionnaire own the dossier' do
+      context 'when instructeur own the dossier' do
         let(:query) { dossier.id }
 
         it { is_expected.to have_http_status(200) }
@@ -25,7 +25,7 @@ describe Gestionnaires::RechercheController, type: :controller do
         end
       end
 
-      context 'when gestionnaire do not own the dossier' do
+      context 'when instructeur do not own the dossier' do
         let(:dossier3) { create(:dossier, :en_construction) }
         let(:query) { dossier3.id }
 

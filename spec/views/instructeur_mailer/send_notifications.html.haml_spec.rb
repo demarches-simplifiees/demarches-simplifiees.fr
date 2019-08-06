@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe 'gestionnaire_mailer/send_notifications.html.haml', type: :view do
-  let(:gestionnaire) { create(:gestionnaire) }
+describe 'instructeur_mailer/send_notifications.html.haml', type: :view do
+  let(:instructeur) { create(:instructeur) }
 
   before do
     assign(:data, data)

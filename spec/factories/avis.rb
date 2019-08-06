@@ -3,8 +3,8 @@ FactoryBot.define do
     introduction { 'Bonjour, merci de me donner votre avis sur ce dossier' }
 
     before(:create) do |avis, _evaluator|
-      if !avis.gestionnaire
-        avis.gestionnaire = create :gestionnaire
+      if !avis.instructeur
+        avis.instructeur = create :instructeur
       end
     end
 
@@ -16,7 +16,7 @@ FactoryBot.define do
 
     before(:create) do |avis, _evaluator|
       if !avis.claimant
-        avis.claimant = create :gestionnaire
+        avis.claimant = create :instructeur
       end
     end
 

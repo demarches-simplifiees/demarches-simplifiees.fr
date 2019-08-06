@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Gestionnaire, type: :model do
+describe Instructeur, type: :model do
   let(:admin) { create :administrateur }
   let!(:procedure) { create :procedure, :published, administrateur: admin }
   let!(:procedure_2) { create :procedure, :published, administrateur: admin }
   let!(:procedure_3) { create :procedure, :published, administrateur: admin }
-  let(:gestionnaire) { create :gestionnaire, administrateurs: [admin] }
+  let(:instructeur) { create :instructeur, administrateurs: [admin] }
   let!(:procedure_assign) { assign(procedure) }
 
   before do
@@ -13,7 +13,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe 'default features' do
-    it { expect(gestionnaire.features).to eq({ "enable_email_login_token" => true }) }
+    it { expect(instructeur.features).to eq({ "enable_email_login_token" => true }) }
   end
 
   describe '#visible_procedures' do
@@ -30,7 +30,7 @@ describe Gestionnaire, type: :model do
       assign(procedure_archived_automatically)
     end
 
-    subject { gestionnaire.visible_procedures }
+    subject { instructeur.visible_procedures }
 
     it do
       expect(subject).not_to include(procedure_not_assigned)
@@ -45,74 +45,74 @@ describe Gestionnaire, type: :model do
     let(:dossier) { create :dossier }
     let(:already_followed_dossier) { create :dossier }
 
-    before { gestionnaire.followed_dossiers << already_followed_dossier }
+    before { instructeur.followed_dossiers << already_followed_dossier }
 
-    context 'when a gestionnaire follow a dossier for the first time' do
-      before { gestionnaire.follow(dossier) }
+    context 'when a instructeur follow a dossier for the first time' do
+      before { instructeur.follow(dossier) }
 
-      it { expect(gestionnaire.follow?(dossier)).to be true }
+      it { expect(instructeur.follow?(dossier)).to be true }
     end
 
-    context 'when a gestionnaire follows a dossier already followed' do
-      before { gestionnaire.follow(already_followed_dossier) }
+    context 'when a instructeur follows a dossier already followed' do
+      before { instructeur.follow(already_followed_dossier) }
 
-      it { expect(gestionnaire.follow?(already_followed_dossier)).to be true }
+      it { expect(instructeur.follow?(already_followed_dossier)).to be true }
     end
   end
 
   describe '#unfollow' do
     let(:already_followed_dossier) { create(:dossier) }
-    before { gestionnaire.followed_dossiers << already_followed_dossier }
+    before { instructeur.followed_dossiers << already_followed_dossier }
 
-    context 'when a gestionnaire unfollow a dossier already followed' do
+    context 'when a instructeur unfollow a dossier already followed' do
       before do
-        gestionnaire.unfollow(already_followed_dossier)
+        instructeur.unfollow(already_followed_dossier)
         already_followed_dossier.reload
       end
 
-      it { expect(gestionnaire.follow?(already_followed_dossier)).to be false }
-      it { expect(gestionnaire.previously_followed_dossiers).to include(already_followed_dossier) }
+      it { expect(instructeur.follow?(already_followed_dossier)).to be false }
+      it { expect(instructeur.previously_followed_dossiers).to include(already_followed_dossier) }
     end
   end
 
   describe '#follow?' do
     let!(:dossier) { create :dossier, procedure: procedure }
 
-    subject { gestionnaire.follow?(dossier) }
+    subject { instructeur.follow?(dossier) }
 
-    context 'when gestionnaire follow a dossier' do
+    context 'when instructeur follow a dossier' do
       before do
-        create :follow, dossier_id: dossier.id, gestionnaire_id: gestionnaire.id
+        create :follow, dossier_id: dossier.id, instructeur_id: instructeur.id
       end
 
       it { is_expected.to be_truthy }
     end
 
-    context 'when gestionnaire not follow a dossier' do
+    context 'when instructeur not follow a dossier' do
       it { is_expected.to be_falsey }
     end
   end
 
   describe "#assign_to_procedure" do
-    subject { gestionnaire.assign_to_procedure(procedure_to_assign) }
+    subject { instructeur.assign_to_procedure(procedure_to_assign) }
 
     context "with a procedure not already assigned" do
       let(:procedure_to_assign) { procedure_3 }
 
       it { is_expected.to be_truthy }
-      it { expect { subject }.to change(gestionnaire.procedures, :count) }
+      it { expect { subject }.to change(instructeur.procedures, :count) }
     end
 
     context "with an already assigned procedure" do
       let(:procedure_to_assign) { procedure }
 
       it { is_expected.to be_falsey }
-      it { expect { subject }.not_to change(gestionnaire.procedures, :count) }
+      it { expect { subject }.not_to change(instructeur.procedures, :count) }
     end
   end
 
   describe "#remove_from_procedure" do
-    subject { gestionnaire.remove_from_procedure(procedure_to_remove) }
+    subject { instructeur.remove_from_procedure(procedure_to_remove) }
 
     context "with an assigned procedure" do
       let(:procedure_to_remove) { procedure }
@@ -143,10 +143,10 @@ describe Gestionnaire, type: :model do
 
   context 'unified login' do
     it 'syncs credentials to associated user' do
-      gestionnaire = create(:gestionnaire)
-      user = create(:user, email: gestionnaire.email)
+      instructeur = create(:instructeur)
+      user = create(:user, email: instructeur.email)
 
-      gestionnaire.update(email: 'whoami@plop.com', password: 'démarches-simplifiées-pwd')
+      instructeur.update(email: 'whoami@plop.com', password: 'démarches-simplifiées-pwd')
 
       user.reload
       expect(user.email).to eq('whoami@plop.com')
@@ -155,9 +155,9 @@ describe Gestionnaire, type: :model do
 
     it 'syncs credentials to associated administrateur' do
       admin = create(:administrateur)
-      gestionnaire = admin.gestionnaire
+      instructeur = admin.instructeur
 
-      gestionnaire.update(password: 'démarches-simplifiées-pwd')
+      instructeur.update(password: 'démarches-simplifiées-pwd')
 
       admin.reload
       expect(admin.valid_password?('démarches-simplifiées-pwd')).to be(true)
@@ -165,8 +165,8 @@ describe Gestionnaire, type: :model do
   end
 
   describe 'last_week_overview' do
-    let!(:gestionnaire2) { create(:gestionnaire) }
-    subject { gestionnaire2.last_week_overview }
+    let!(:instructeur2) { create(:instructeur) }
+    subject { instructeur2.last_week_overview }
     let(:friday) { Time.zone.local(2017, 5, 12) }
     let(:monday) { Time.zone.now.beginning_of_week }
 
@@ -174,25 +174,25 @@ describe Gestionnaire, type: :model do
     after { Timecop.return }
 
     context 'when no procedure published was active last week' do
-      let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire2], libelle: 'procedure') }
-      context 'when the gestionnaire has no notifications' do
+      let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur2], libelle: 'procedure') }
+      context 'when the instructeur has no notifications' do
         it { is_expected.to eq(nil) }
       end
     end
 
     context 'when a procedure published was active' do
-      let!(:procedure) { create(:procedure, :published, gestionnaires: [gestionnaire2], libelle: 'procedure') }
+      let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur2], libelle: 'procedure') }
       let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
 
       before :each do
         expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
       end
 
-      it { expect(gestionnaire2.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
+      it { expect(instructeur2.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
     end
 
     context 'when a procedure not published was active with no notifications' do
-      let!(:procedure) { create(:procedure, gestionnaires: [gestionnaire2], libelle: 'procedure') }
+      let!(:procedure) { create(:procedure, instructeurs: [instructeur2], libelle: 'procedure') }
       let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
 
       before :each do
@@ -204,7 +204,7 @@ describe Gestionnaire, type: :model do
   end
 
   describe "procedure_presentation_and_errors_for_procedure_id" do
-    let(:procedure_presentation_and_errors) { gestionnaire.procedure_presentation_and_errors_for_procedure_id(procedure_id) }
+    let(:procedure_presentation_and_errors) { instructeur.procedure_presentation_and_errors_for_procedure_id(procedure_id) }
     let(:procedure_presentation) { procedure_presentation_and_errors.first }
     let(:errors) { procedure_presentation_and_errors.second }
 
@@ -237,11 +237,11 @@ describe Gestionnaire, type: :model do
 
   describe '#notifications_for_dossier' do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
-    let(:gestionnaire) { dossier.follows.first.gestionnaire }
+    let(:instructeur) { dossier.follows.first.instructeur }
 
-    subject { gestionnaire.notifications_for_dossier(dossier) }
+    subject { instructeur.notifications_for_dossier(dossier) }
 
-    context 'when the gestionnaire has just followed the dossier' do
+    context 'when the instructeur has just followed the dossier' do
       it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: false }) }
     end
 
@@ -280,20 +280,20 @@ describe Gestionnaire, type: :model do
 
   describe '#notifications_for_procedure' do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
-    let(:gestionnaire) { dossier.follows.first.gestionnaire }
+    let(:instructeur) { dossier.follows.first.instructeur }
     let(:procedure) { dossier.procedure }
-    let!(:gestionnaire_2) { create(:gestionnaire, procedures: [procedure]) }
+    let!(:instructeur_2) { create(:instructeur, procedures: [procedure]) }
 
     let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
-    let!(:gestionnaire_on_procedure_2) { dossier_on_procedure_2.follows.first.gestionnaire }
+    let!(:instructeur_on_procedure_2) { dossier_on_procedure_2.follows.first.instructeur }
 
     before do
-      gestionnaire_2.followed_dossiers << dossier
+      instructeur_2.followed_dossiers << dossier
     end
 
-    subject { gestionnaire.notifications_for_procedure(procedure) }
+    subject { instructeur.notifications_for_procedure(procedure) }
 
-    context 'when the gestionnaire has just followed the dossier' do
+    context 'when the instructeur has just followed the dossier' do
       it { is_expected.to match([]) }
     end
 
@@ -301,8 +301,8 @@ describe Gestionnaire, type: :model do
       before { dossier.champs.first.update_attribute('value', 'toto') }
 
       it { is_expected.to match([dossier.id]) }
-      it { expect(gestionnaire_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
-      it { expect(gestionnaire_on_procedure_2.notifications_for_procedure(procedure)).to match([]) }
+      it { expect(instructeur_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
+      it { expect(instructeur_on_procedure_2.notifications_for_procedure(procedure)).to match([]) }
 
       context 'and there is a modification on private champs' do
         before { dossier.champs_private.first.update_attribute('value', 'toto') }
@@ -310,13 +310,13 @@ describe Gestionnaire, type: :model do
         it { is_expected.to match([dossier.id]) }
       end
 
-      context 'when gestionnaire update it s public champs last seen' do
-        let(:follow) { gestionnaire.follows.find_by(dossier: dossier) }
+      context 'when instructeur update it s public champs last seen' do
+        let(:follow) { instructeur.follows.find_by(dossier: dossier) }
 
         before { follow.update_attribute('demande_seen_at', Time.zone.now) }
 
         it { is_expected.to match([]) }
-        it { expect(gestionnaire_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
+        it { expect(instructeur_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
       end
     end
 
@@ -355,10 +355,10 @@ describe Gestionnaire, type: :model do
 
   describe '#notifications_per_procedure' do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
-    let(:gestionnaire) { dossier.follows.first.gestionnaire }
+    let(:instructeur) { dossier.follows.first.instructeur }
     let(:procedure) { dossier.procedure }
 
-    subject { gestionnaire.notifications_per_procedure }
+    subject { instructeur.notifications_per_procedure }
 
     context 'when there is a modification on public champs' do
       before { dossier.champs.first.update_attribute('value', 'toto') }
@@ -369,15 +369,15 @@ describe Gestionnaire, type: :model do
 
   describe '#mark_tab_as_seen' do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
-    let(:gestionnaire) { dossier.follows.first.gestionnaire }
+    let(:instructeur) { dossier.follows.first.instructeur }
     let(:freeze_date) { Time.zone.parse('12/12/2012') }
 
     context 'when demande is acknowledged' do
-      let(:follow) { gestionnaire.follows.find_by(dossier: dossier) }
+      let(:follow) { instructeur.follows.find_by(dossier: dossier) }
 
       before do
         Timecop.freeze(freeze_date)
-        gestionnaire.mark_tab_as_seen(dossier, :demande)
+        instructeur.mark_tab_as_seen(dossier, :demande)
       end
       after { Timecop.return }
 
@@ -386,39 +386,39 @@ describe Gestionnaire, type: :model do
   end
 
   describe '#young_login_token?' do
-    let!(:gestionnaire) { create(:gestionnaire) }
+    let!(:instructeur) { create(:instructeur) }
 
     context 'when there is a token' do
-      let!(:good_token) { gestionnaire.create_trusted_device_token }
+      let!(:good_token) { instructeur.create_trusted_device_token }
 
       context 'when the token has just been created' do
-        it { expect(gestionnaire.young_login_token?).to be true }
+        it { expect(instructeur.young_login_token?).to be true }
       end
 
       context 'when the token is a bit old' do
-        before { gestionnaire.trusted_device_tokens.first.update(created_at: (TrustedDeviceToken::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
-        it { expect(gestionnaire.young_login_token?).to be false }
+        before { instructeur.trusted_device_tokens.first.update(created_at: (TrustedDeviceToken::LOGIN_TOKEN_YOUTH + 1.minute).ago) }
+        it { expect(instructeur.young_login_token?).to be false }
       end
     end
 
     context 'when there are no token' do
-      it { expect(gestionnaire.young_login_token?).to be_falsey }
+      it { expect(instructeur.young_login_token?).to be_falsey }
     end
   end
 
   describe '#email_notification_data' do
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
     let(:procedure_to_assign) { create(:procedure) }
 
     before do
-      create(:assign_to, gestionnaire: gestionnaire, procedure: procedure_to_assign, email_notifications_enabled: true)
+      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, email_notifications_enabled: true)
     end
 
     context 'when a dossier in construction exists' do
       let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
 
       it do
-        expect(gestionnaire.email_notification_data).to eq([
+        expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 1,
             nb_notification: 0,
@@ -431,13 +431,13 @@ describe Gestionnaire, type: :model do
 
     context 'when a notification exists' do
       before do
-        allow(gestionnaire).to receive(:notifications_for_procedure)
+        allow(instructeur).to receive(:notifications_for_procedure)
           .with(procedure_to_assign, :all)
           .and_return([1, 2, 3])
       end
 
       it do
-        expect(gestionnaire.email_notification_data).to eq([
+        expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 0,
             nb_notification: 3,
@@ -449,13 +449,13 @@ describe Gestionnaire, type: :model do
     end
 
     context 'otherwise' do
-      it { expect(gestionnaire.email_notification_data).to eq([]) }
+      it { expect(instructeur.email_notification_data).to eq([]) }
     end
   end
 
   private
 
   def assign(procedure_to_assign)
-    create :assign_to, gestionnaire: gestionnaire, procedure: procedure_to_assign
+    create :assign_to, instructeur: instructeur, procedure: procedure_to_assign
   end
 end

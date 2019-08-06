@@ -8,7 +8,7 @@ describe Sessions::SessionsController, type: :controller do
   end
 
   let(:user) { create(:user) }
-  let(:gestionnaire) { create(:gestionnaire) }
+  let(:instructeur) { create(:instructeur) }
   let(:administrateur) { create(:administrateur) }
 
   describe '#create' do
@@ -35,16 +35,16 @@ describe Sessions::SessionsController, type: :controller do
     end
   end
 
-  describe '#create with gestionnaire connected' do
+  describe '#create with instructeur connected' do
     before do
-      @request.env["devise.mapping"] = Devise.mappings[:gestionnaire]
+      @request.env["devise.mapping"] = Devise.mappings[:instructeur]
 
-      allow_any_instance_of(described_class).to receive(:gestionnaire_signed_in?).and_return(true)
-      allow_any_instance_of(described_class).to receive(:current_gestionnaire).and_return(gestionnaire)
+      allow_any_instance_of(described_class).to receive(:instructeur_signed_in?).and_return(true)
+      allow_any_instance_of(described_class).to receive(:current_instructeur).and_return(instructeur)
     end
 
-    it 'calls sign out for gestionnaire' do
-      expect_any_instance_of(described_class).to receive(:sign_out).with(:gestionnaire)
+    it 'calls sign out for instructeur' do
+      expect_any_instance_of(described_class).to receive(:sign_out).with(:instructeur)
       post :create
     end
   end

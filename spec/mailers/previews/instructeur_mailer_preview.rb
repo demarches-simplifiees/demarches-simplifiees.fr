@@ -1,22 +1,22 @@
-class GestionnaireMailerPreview < ActionMailer::Preview
+class InstructeurMailerPreview < ActionMailer::Preview
   def last_week_overview
-    GestionnaireMailer.last_week_overview(Gestionnaire.first)
+    InstructeurMailer.last_week_overview(Instructeur.first)
   end
 
   def send_dossier
-    GestionnaireMailer.send_dossier(gestionnaire, Dossier.new(id: 10, procedure: procedure), target_gestionnaire)
+    InstructeurMailer.send_dossier(instructeur, Dossier.new(id: 10, procedure: procedure), target_instructeur)
   end
 
   def send_login_token
-    GestionnaireMailer.send_login_token(gestionnaire, "token")
+    InstructeurMailer.send_login_token(instructeur, "token")
   end
 
-  def invite_gestionnaire
-    GestionnaireMailer.invite_gestionnaire(gestionnaire, 'aedfa0d0')
+  def invite_instructeur
+    InstructeurMailer.invite_instructeur(instructeur, 'aedfa0d0')
   end
 
-  def user_to_gestionnaire
-    GestionnaireMailer.user_to_gestionnaire(gestionnaire.email)
+  def user_to_instructeur
+    InstructeurMailer.user_to_instructeur(instructeur.email)
   end
 
   def send_notifications
@@ -34,17 +34,17 @@ class GestionnaireMailerPreview < ActionMailer::Preview
         nb_notification: 1
       }
     ]
-    GestionnaireMailer.send_notifications(gestionnaire, data)
+    InstructeurMailer.send_notifications(instructeur, data)
   end
 
   private
 
-  def gestionnaire
-    Gestionnaire.new(id: 10, email: 'instructeur@administration.gouv.fr')
+  def instructeur
+    Instructeur.new(id: 10, email: 'instructeur@administration.gouv.fr')
   end
 
-  def target_gestionnaire
-    Gestionnaire.new(id: 12, email: 'collegue@administration.gouv.fr')
+  def target_instructeur
+    Instructeur.new(id: 12, email: 'collegue@administration.gouv.fr')
   end
 
   def procedure

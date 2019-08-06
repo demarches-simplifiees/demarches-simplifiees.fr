@@ -1,10 +1,10 @@
-describe 'gestionnaires/avis/instruction.html.haml', type: :view do
+describe 'instructeurs/avis/instruction.html.haml', type: :view do
   let(:avis) { create(:avis, confidentiel: confidentiel) }
 
   before do
     assign(:avis, avis)
     @dossier = create(:dossier, :accepte)
-    allow(view).to receive(:current_gestionnaire).and_return(avis.gestionnaire)
+    allow(view).to receive(:current_instructeur).and_return(avis.instructeur)
   end
 
   subject { render }

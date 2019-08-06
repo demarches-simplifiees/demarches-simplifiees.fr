@@ -1,4 +1,4 @@
-class Gestionnaires::SessionsController < Sessions::SessionsController
+class Instructeurs::SessionsController < Sessions::SessionsController
   def new
     redirect_to new_user_session_path
   end

@@ -8,14 +8,14 @@ class Admin::AssignsController < AdminController
   NOT_ASSIGN = 'not_assign'
 
   def show
-    assign_scope = @procedure.gestionnaires
+    assign_scope = @procedure.instructeurs
 
     @instructeurs_assign = smart_listing_create :instructeurs_assign,
       assign_scope,
       partial: "admin/assigns/list_assign",
       array: true
 
-    not_assign_scope = current_administrateur.gestionnaires.where.not(id: assign_scope.ids)
+    not_assign_scope = current_administrateur.instructeurs.where.not(id: assign_scope.ids)
 
     if params[:filter]
       not_assign_scope = not_assign_scope.where("email LIKE ?", "%#{params[:filter]}%")
@@ -26,23 +26,23 @@ class Admin::AssignsController < AdminController
       partial: "admin/assigns/list_not_assign",
       array: true
 
-    @gestionnaire ||= Gestionnaire.new
+    @instructeur ||= Instructeur.new
   end
 
   def update
-    gestionnaire = Gestionnaire.find(params[:instructeur_id])
+    instructeur = Instructeur.find(params[:instructeur_id])
     procedure = Procedure.find(params[:procedure_id])
     to = params[:to]
 
     case to
     when ASSIGN
-      if gestionnaire.assign_to_procedure(procedure)
+      if instructeur.assign_to_procedure(procedure)
         flash.notice = "L'instructeur a bien été affecté"
       else
         flash.alert = "L'instructeur a déjà été affecté"
       end
     when NOT_ASSIGN
-      if gestionnaire.remove_from_procedure(procedure)
+      if instructeur.remove_from_procedure(procedure)
         flash.notice = "L'instructeur a bien été désaffecté"
       else
         flash.alert = "L'instructeur a déjà été désaffecté"

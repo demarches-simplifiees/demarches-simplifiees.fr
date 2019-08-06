@@ -77,15 +77,15 @@ feature 'Getting help:' do
     end
   end
 
-  context 'as a gestionnaire' do
-    let(:gestionnaire) { create(:gestionnaire) }
+  context 'as a instructeur' do
+    let(:instructeur) { create(:instructeur) }
 
     before do
-      login_as gestionnaire, scope: :gestionnaire
+      login_as instructeur, scope: :instructeur
     end
 
     scenario 'a Help menu is visible on signed-in pages' do
-      visit gestionnaire_procedures_path
+      visit instructeur_procedures_path
       within('.new-header') do
         expect(page).to have_help_menu
       end

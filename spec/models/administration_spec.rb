@@ -20,10 +20,10 @@ describe Administration, type: :model do
       expect(user).to be_present
     end
 
-    it 'creates a corresponding gestionnaire account for the email' do
+    it 'creates a corresponding instructeur account for the email' do
       subject
-      gestionnaire = Gestionnaire.find_by(email: valid_email)
-      expect(gestionnaire).to be_present
+      instructeur = Instructeur.find_by(email: valid_email)
+      expect(instructeur).to be_present
     end
 
     context 'when there already is a user account with the same email' do

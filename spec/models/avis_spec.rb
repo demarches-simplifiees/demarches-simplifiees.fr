@@ -1,26 +1,26 @@
 require 'rails_helper'
 
 RSpec.describe Avis, type: :model do
-  let(:claimant) { create(:gestionnaire) }
+  let(:claimant) { create(:instructeur) }
 
   describe '#email_to_display' do
     let(:invited_email) { 'invited@avis.com' }
     let!(:avis) do
       avis = create(:avis, email: invited_email, dossier: create(:dossier))
-      avis.gestionnaire = nil
+      avis.instructeur = nil
       avis
     end
 
     subject { avis.email_to_display }
 
-    context 'when gestionnaire is not known' do
+    context 'when instructeur is not known' do
       it { is_expected.to eq(invited_email) }
     end
 
-    context 'when gestionnaire is known' do
-      let!(:avis) { create(:avis, email: nil, gestionnaire: create(:gestionnaire), dossier: create(:dossier)) }
+    context 'when instructeur is known' do
+      let!(:avis) { create(:avis, email: nil, instructeur: create(:instructeur), dossier: create(:dossier)) }
 
-      it { is_expected.to eq(avis.gestionnaire.email) }
+      it { is_expected.to eq(avis.instructeur.email) }
     end
   end
 
@@ -36,14 +36,14 @@ RSpec.describe Avis, type: :model do
     end
   end
 
-  describe ".link_avis_to_gestionnaire" do
-    let(:gestionnaire) { create(:gestionnaire) }
+  describe ".link_avis_to_instructeur" do
+    let(:instructeur) { create(:instructeur) }
 
-    subject { Avis.link_avis_to_gestionnaire(gestionnaire) }
+    subject { Avis.link_avis_to_instructeur(instructeur) }
 
-    context 'when there are 2 avis linked by email to a gestionnaire' do
-      let!(:avis) { create(:avis, email: gestionnaire.email, gestionnaire: nil) }
-      let!(:avis2) { create(:avis, email: gestionnaire.email, gestionnaire: nil) }
+    context 'when there are 2 avis linked by email to a instructeur' do
+      let!(:avis) { create(:avis, email: instructeur.email, instructeur: nil) }
+      let!(:avis2) { create(:avis, email: instructeur.email, instructeur: nil) }
 
       before do
         subject
@@ -52,9 +52,9 @@ RSpec.describe Avis, type: :model do
       end
 
       it { expect(avis.email).to be_nil }
-      it { expect(avis.gestionnaire).to eq(gestionnaire) }
+      it { expect(avis.instructeur).to eq(instructeur) }
       it { expect(avis2.email).to be_nil }
-      it { expect(avis2.gestionnaire).to eq(gestionnaire) }
+      it { expect(avis2.instructeur).to eq(instructeur) }
     end
   end
 
@@ -87,7 +87,7 @@ RSpec.describe Avis, type: :model do
     end
   end
 
-  describe '#notify_gestionnaire' do
+  describe '#notify_instructeur' do
     context 'when an avis is created' do
       before do
         avis_invitation_double = double('avis_invitation', deliver_later: true)
@@ -99,27 +99,27 @@ RSpec.describe Avis, type: :model do
     end
   end
 
-  describe '#try_to_assign_gestionnaire' do
-    let!(:gestionnaire) { create(:gestionnaire) }
+  describe '#try_to_assign_instructeur' do
+    let!(:instructeur) { create(:instructeur) }
     let(:avis) { Avis.create(claimant: claimant, email: email, dossier: create(:dossier)) }
 
-    context 'when the email belongs to a gestionnaire' do
-      let(:email) { gestionnaire.email }
+    context 'when the email belongs to a instructeur' do
+      let(:email) { instructeur.email }
 
-      it { expect(avis.gestionnaire).to eq(gestionnaire) }
+      it { expect(avis.instructeur).to eq(instructeur) }
       it { expect(avis.email).to be_nil }
     end
 
-    context 'when the email does not belongs to a gestionnaire' do
+    context 'when the email does not belongs to a instructeur' do
       let(:email) { 'unknown@email' }
 
-      it { expect(avis.gestionnaire).to be_nil }
+      it { expect(avis.instructeur).to be_nil }
       it { expect(avis.email).to eq(email) }
     end
   end
 
   describe "email sanitization" do
-    subject { Avis.create(claimant: claimant, email: email, dossier: create(:dossier), gestionnaire: create(:gestionnaire)) }
+    subject { Avis.create(claimant: claimant, email: email, dossier: create(:dossier), instructeur: create(:instructeur)) }
 
     context "when there is no email" do
       let(:email) { nil }

@@ -12,13 +12,13 @@
 .row
   .col-xs-4
 
-    = smart_listing_render :gestionnaires
+    = smart_listing_render :instructeurs
   .col-xs-1
     &nbsp;
   .col-xs-6
     %h3 Ajouter un instructeur
     #procedure_new.section.section-label
-      = form_for @gestionnaire, url: { controller: 'admin/gestionnaires', action: :create } do |f|
+      = form_for @instructeur, url: { controller: 'admin/instructeurs', action: :create } do |f|
         .row
           .col-xs-5
             = render partial: 'informations', locals: { f: f }

@@ -5,7 +5,7 @@ class OperationAuthorSerializer < ActiveModel::Serializer
     case object
     when User
       "Usager##{object.id}"
-    when Gestionnaire
+    when Instructeur
       "Instructeur##{object.id}"
     when Administrateur
       "Administrateur##{object.id}"
