@@ -16,7 +16,7 @@
       %tr
         %td.col-xs-11{ style: 'padding-top: 11px; font-size: 15px;' }= instructeur.email
         %td.center
-          = link_to "#{admin_procedure_instructeurs_path(procedure_id: @procedure.id, instructeur_id: instructeur.id, to: Admin::InstructeursController::ASSIGN)}", class: "btn btn-success gestionnaire-affectation", 'data-method' => 'put' do
+          = link_to "#{admin_procedure_assigns_path(procedure_id: @procedure.id, instructeur_id: instructeur.id, to: Admin::AssignsController::ASSIGN)}", class: "btn btn-success instructeur-affectation", 'data-method' => 'put' do
             .fa.fa-arrow-right
 
 

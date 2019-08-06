@@ -1,4 +1,4 @@
-class Admin::InstructeursController < AdminController
+class Admin::AssignsController < AdminController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
@@ -12,7 +12,7 @@ class Admin::InstructeursController < AdminController
 
     @instructeurs_assign = smart_listing_create :instructeurs_assign,
       assign_scope,
-      partial: "admin/instructeurs/list_assign",
+      partial: "admin/assigns/list_assign",
       array: true
 
     not_assign_scope = current_administrateur.gestionnaires.where.not(id: assign_scope.ids)
@@ -23,7 +23,7 @@ class Admin::InstructeursController < AdminController
 
     @instructeurs_not_assign = smart_listing_create :instructeurs_not_assign,
       not_assign_scope,
-      partial: "admin/instructeurs/list_not_assign",
+      partial: "admin/assigns/list_not_assign",
       array: true
 
     @gestionnaire ||= Gestionnaire.new
@@ -49,6 +49,6 @@ class Admin::InstructeursController < AdminController
       end
     end
 
-    redirect_to admin_procedure_instructeurs_path, procedure_id: params[:procedure_id]
+    redirect_to admin_procedure_assigns_path, procedure_id: params[:procedure_id]
   end
 end
