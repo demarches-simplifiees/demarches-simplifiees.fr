@@ -204,7 +204,7 @@ Rails.application.routes.draw do
       get 'monavis' => 'procedures#monavis', as: :monavis
       patch 'monavis' => 'procedures#update_monavis', as: :update_monavis
 
-      resource :instructeurs, only: [:show, :update]
+      resource :assigns, only: [:show, :update], path: 'instructeurs'
 
       resource :attestation_template, only: [:edit, :update, :create]
 
@@ -218,7 +218,7 @@ Rails.application.routes.draw do
       delete 'attestation_template/signature' => 'attestation_templates#delete_signature'
     end
 
-    namespace :instructeurs do
+    namespace :assigns do
       get 'show' # delete after fixed tests admin/instructeurs/show_spec without this line
     end
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'admin/instructeurs/show.html.haml', type: :view do
+describe 'admin/assigns/show.html.haml', type: :view do
   let(:admin) { create(:administrateur) }
   let(:procedure) { create :procedure, administrateur: admin }
 
@@ -12,13 +12,13 @@ describe 'admin/instructeurs/show.html.haml', type: :view do
     assign(:gestionnaire, Gestionnaire.new)
 
     assign(:instructeurs_assign, (smart_listing_create :instructeurs_assign,
-      assign_gestionnaires,
-      partial: "admin/instructeurs/list_assign",
+      assign_instructeurs,
+      partial: "admin/assigns/list_assign",
       array: true))
 
     assign(:instructeurs_not_assign, (smart_listing_create :instructeurs_not_assign,
-      not_assign_gestionnaires,
-      partial: "admin/instructeurs/list_not_assign",
+      not_assign_instructeurs,
+      partial: "admin/assigns/list_not_assign",
       array: true))
   end
 
@@ -43,13 +43,13 @@ describe 'admin/instructeurs/show.html.haml', type: :view do
       assign_gestionnaires.reload
 
       assign(:instructeurs_assign, (smart_listing_create :instructeurs_assign,
-        assign_gestionnaires,
-        partial: "admin/instructeurs/list_assign",
+        assign_instructeurs,
+        partial: "admin/assigns/list_assign",
         array: true))
 
       assign(:instructeurs_not_assign, (smart_listing_create :instructeurs_not_assign,
-        not_assign_gestionnaires,
-        partial: "admin/instructeurs/list_not_assign",
+        not_assign_instructeurs,
+        partial: "admin/assigns/list_not_assign",
         array: true))
 
       render

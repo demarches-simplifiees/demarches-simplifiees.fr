@@ -107,7 +107,7 @@
             .alert.alert-info
               Pour pouvoir tester cette démarche, vous devez d’abord lui affecter
               - if @procedure.gestionnaires.empty?
-                = link_to("des instructeurs", admin_procedure_instructeurs_path(@procedure))
+                = link_to("des instructeurs", admin_procedure_assigns_path(@procedure))
               - if @procedure.gestionnaires.empty? && @procedure.service.nil?
                 et
               - if @procedure.service.nil?
@@ -122,7 +122,7 @@
           - if @procedure.missing_steps.include?(:instructeurs)
             %p.alert.alert-danger
               Vous devez affecter des instructeurs avant de pouvoir publier votre démarche.
-              = link_to 'Cliquez ici.', admin_procedure_instructeurs_path(@procedure)
+              = link_to 'Cliquez ici.', admin_procedure_assigns_path(@procedure)
 
           %p.alert.alert-info
             Cette démarche n’a pas encore de lien, et n’est pas accessible par le public.
