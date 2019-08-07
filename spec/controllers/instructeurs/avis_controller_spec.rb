@@ -11,7 +11,7 @@ describe Instructeurs::AvisController, type: :controller do
     let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur) }
     let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur, answer: 'yop') }
 
-    before { sign_in(instructeur) }
+    before { sign_in(instructeur.user) }
 
     describe '#index' do
       before { get :index }
@@ -217,7 +217,7 @@ describe Instructeurs::AvisController, type: :controller do
 
         context 'when the instructeur is authenticated' do
           before do
-            sign_in instructeur
+            sign_in(instructeur.user)
             get :sign_up, params: { id: avis.id, email: invited_email }
           end
 
@@ -238,7 +238,7 @@ describe Instructeurs::AvisController, type: :controller do
         let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
 
         before do
-          sign_in instructeur
+          sign_in(instructeur.user)
           get :sign_up, params: { id: avis.id, email: invited_email }
         end
 

@@ -18,7 +18,7 @@ describe RootController, type: :controller do
 
     before do
       instructeur.procedures << procedure
-      sign_in instructeur
+      sign_in(instructeur.user)
     end
 
     it { expect(subject).to redirect_to(instructeur_procedures_path) }

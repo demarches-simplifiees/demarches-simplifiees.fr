@@ -8,7 +8,7 @@ describe Instructeurs::RechercheController, type: :controller do
   before { instructeur.procedures << dossier2.procedure }
 
   describe 'GET #index' do
-    before { sign_in instructeur }
+    before { sign_in(instructeur.user) }
 
     subject { get :index, params: { q: query } }
 

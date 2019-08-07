@@ -52,8 +52,10 @@ describe 'layouts/_new_header.html.haml', type: :view do
   end
 
   context 'when rendering for instructeur' do
-    let(:user) { create(:instructeur) }
+    let(:instructeur) { create(:instructeur) }
+    let(:user) { instructeur.user }
     let(:profile) { :instructeur }
+    let(:current_instructeur) { instructeur }
 
     it { is_expected.to have_css("a.header-logo[href=\"#{instructeur_procedures_path}\"]") }
 

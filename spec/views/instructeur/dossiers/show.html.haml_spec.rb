@@ -3,7 +3,7 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
   let(:dossier) { create(:dossier, :en_construction) }
 
   before do
-    sign_in current_instructeur
+    sign_in(current_instructeur.user)
     allow(view).to receive(:current_instructeur).and_return(current_instructeur)
     assign(:dossier, dossier)
   end
