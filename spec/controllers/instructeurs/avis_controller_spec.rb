@@ -282,7 +282,7 @@ describe Instructeurs::AvisController, type: :controller do
       context 'when the email belongs to the invitation' do
         context 'when the instructeur creation succeeds' do
           it { expect(created_instructeur).to be_present }
-          it { expect(created_instructeur.valid_password?(password)).to be true }
+          it { expect(created_instructeur.user.valid_password?(password)).to be true }
 
           it { expect(Avis).to have_received(:link_avis_to_instructeur) }
 
