@@ -40,6 +40,10 @@ class User < ApplicationRecord
     owns?(dossier) || invite?(dossier.id)
   end
 
+  def invite!
+    UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
+  end
+
   private
 
   def link_invites!

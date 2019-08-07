@@ -177,12 +177,6 @@ class Instructeur < ApplicationRecord
     Follow.where(instructeur: self, dossier: dossier).update_all(attributes)
   end
 
-  def invite!
-    reset_password_token = set_reset_password_token
-
-    InstructeurMailer.invite_instructeur(self, reset_password_token).deliver_later
-  end
-
   def feature_enabled?(feature)
     Flipflop.feature_set.feature(feature)
     features[feature.to_s]
