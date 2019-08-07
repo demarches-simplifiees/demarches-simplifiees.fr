@@ -12,6 +12,7 @@ describe Users::SessionsController, type: :controller do
     context "when the user is also a instructeur and an administrateur" do
       let!(:administrateur) { create(:administrateur, email: email, password: password) }
       let(:instructeur) { administrateur.instructeur }
+      let(:user) { instructeur.user }
       let(:trusted_device) { true }
       let(:send_password) { password }
 
@@ -73,6 +74,8 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#destroy' do
+    let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
+
     before do
       sign_in user
       delete :destroy
@@ -145,7 +148,7 @@ describe Users::SessionsController, type: :controller do
 
       before do
         if logged
-          sign_in instructeur
+          sign_in(instructeur.user)
         end
         allow(controller).to receive(:trust_device)
         allow(controller).to receive(:send_login_token_or_bufferize)

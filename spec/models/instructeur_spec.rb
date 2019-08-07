@@ -144,9 +144,9 @@ describe Instructeur, type: :model do
   context 'unified login' do
     it 'syncs credentials to associated administrateur' do
       admin = create(:administrateur)
-      instructeur = admin.instructeur
+      user = admin.instructeur.user
 
-      instructeur.update(password: 'démarches-simplifiées-pwd')
+      user.update(password: 'démarches-simplifiées-pwd')
 
       admin.reload
       expect(admin.valid_password?('démarches-simplifiées-pwd')).to be(true)
