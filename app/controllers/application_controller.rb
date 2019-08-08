@@ -44,6 +44,14 @@ class ApplicationController < ActionController::Base
 
   helper_method :logged_in?
 
+  def multiple_devise_profile_connect?
+    user_signed_in? && instructeur_signed_in? ||
+        instructeur_signed_in? && administrateur_signed_in? ||
+        user_signed_in? && administrateur_signed_in?
+  end
+
+  helper_method :multiple_devise_profile_connect?
+
   def pundit_user
     {
       administrateur: current_administrateur,
