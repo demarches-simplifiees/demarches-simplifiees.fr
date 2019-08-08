@@ -119,7 +119,7 @@ module Instructeurs
       elsif avis.instructeur&.email == params[:email]
         # the avis instructeur has already signed up and it sould sign in
 
-        redirect_to new_instructeur_session_url
+        redirect_to new_user_session_url
       end
     end
 
