@@ -78,12 +78,10 @@ Rails.application.routes.draw do
     }
 
   devise_for :administrateurs, controllers: {
-    sessions: 'administrateurs/sessions',
     passwords: 'administrateurs/passwords'
   }, skip: [:registrations]
 
   devise_for :instructeurs, controllers: {
-    sessions: 'instructeurs/sessions',
     passwords: 'instructeurs/passwords'
   }, skip: [:registrations]
 
