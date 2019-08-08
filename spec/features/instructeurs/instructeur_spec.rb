@@ -21,7 +21,10 @@ feature 'The instructeur part' do
       expect(page).to have_current_path new_user_session_path
       sign_in_with(instructeur.email, password, true)
 
-      expect(page).to have_current_path(commencer_path(path: procedure.path))
+      # connexion link erase user stored location
+      # expect(page).to have_current_path(commencer_path(path: procedure.path))
+
+      visit commencer_path(path: procedure.path)
       click_on 'Commencer la démarche'
 
       expect(page).to have_content('Identifier votre établissement')
