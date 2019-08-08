@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'layouts/_new_header.html.haml', type: :view do
   before do
+    allow(view).to receive(:multiple_devise_profile_connect?).and_return(false)
     if user
       sign_in user
       allow(controller).to receive(:nav_bar_profile).and_return(profile)
