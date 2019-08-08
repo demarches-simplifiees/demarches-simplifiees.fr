@@ -11,7 +11,7 @@ describe Administrateur, type: :model do
   context 'unified login' do
     it 'syncs credentials to associated user' do
       administrateur = create(:administrateur)
-      user = create(:user, email: administrateur.email)
+      user = administrateur.instructeur.user
 
       administrateur.update(email: 'whoami@plop.com', password: 'voilà un super mdp')
 

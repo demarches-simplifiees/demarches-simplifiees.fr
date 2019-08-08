@@ -7,8 +7,8 @@ describe Users::PasswordsController, type: :controller do
 
   describe "update" do
     context "unified login" do
-      let(:user) { create(:user, email: 'unique@plop.com', password: 'mot de passe complexe') }
       let(:administrateur) { create(:administrateur, email: 'unique@plop.com', password: 'mot de passe complexe') }
+      let(:user) { administrateur.instructeur.user }
 
       before do
         @token = user.send(:set_reset_password_token)

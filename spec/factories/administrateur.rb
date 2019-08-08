@@ -4,8 +4,16 @@ FactoryBot.define do
     email { generate(:administrateur_email) }
     password { 'mon chien aime les bananes' }
 
-    after(:create) do |admin|
-      create(:instructeur, email: admin.email, password: admin.password)
+    transient do
+      user { nil }
+    end
+
+    after(:create) do |admin, evaluator|
+      if evaluator.user.present?
+        create(:instructeur, email: admin.email, password: admin.password, user: evaluator.user)
+      else
+        create(:instructeur, email: admin.email, password: admin.password)
+      end
     end
   end
 

@@ -13,9 +13,7 @@ feature 'The instructeur part' do
     Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
   end
 
-  context 'when the instructeur is also a user' do
-    let!(:user) { create(:user, email: instructeur.email, password: password) }
-
+  context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
       visit commencer_path(path: procedure.path)
       click_on 'J’ai déjà un compte'

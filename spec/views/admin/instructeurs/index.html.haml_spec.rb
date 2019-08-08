@@ -28,6 +28,6 @@ describe 'admin/instructeurs/index.html.haml', type: :view do
         array: true))
       render
     end
-    it { expect(rendered).to match(/gest\d+@gest.com/) }
+    it { expect(rendered).to match(/inst\d+@inst.com/) }
   end
 end
