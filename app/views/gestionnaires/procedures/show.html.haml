@@ -45,7 +45,7 @@
 
   .container
     - if @statut == 'a-suivre'
-      %p.explication-onglet Les dossiers de cet onglet ne sont suivi par aucun instructeur. Cliquez sur le bouton "Suivre le dossier" pour en suivre un !
+      %p.explication-onglet Les dossiers de cet onglet ne sont suivis par aucun instructeur. Cliquez sur le bouton "Suivre le dossier" pour suivre un dossier !
     - if @statut == 'suivis'
       %p.explication-onglet Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu'à pouvoir les accepter, les refuser ou les classer sans suite.
     - if @statut == 'traites'
