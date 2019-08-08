@@ -2,9 +2,6 @@ class Instructeur < ApplicationRecord
   include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
-  devise :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable, :lockable
-
   has_and_belongs_to_many :administrateurs
 
   before_validation -> { sanitize_email(:email) }
