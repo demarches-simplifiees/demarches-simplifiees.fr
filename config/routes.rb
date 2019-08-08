@@ -77,13 +77,9 @@ Rails.application.routes.draw do
       omniauth_callbacks: 'administrations/omniauth_callbacks'
     }
 
-  devise_for :administrateurs, controllers: {
-    passwords: 'administrateurs/passwords'
-  }, skip: [:registrations]
+  devise_for :administrateurs, skip: :all
 
-  devise_for :instructeurs, controllers: {
-    passwords: 'instructeurs/passwords'
-  }, skip: [:registrations]
+  devise_for :instructeurs, skip: :all
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
@@ -96,11 +92,6 @@ Rails.application.routes.draw do
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
     get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
-  end
-
-  devise_scope :instructeur do
-    get '/instructeurs/edit' => 'instructeurs/registrations#edit', :as => 'edit_instructeurs_registration'
-    put '/instructeurs' => 'instructeurs/registrations#update', :as => 'instructeurs_registration'
   end
 
   devise_scope :administrateur do
