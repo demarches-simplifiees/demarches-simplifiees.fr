@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
   before_action :set_active_storage_host
   before_action :setup_tracking
 
+  helper_method :logged_in?, :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur
+
   def staging_authenticate
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
       request_http_basic_authentication
@@ -42,15 +44,11 @@ class ApplicationController < ActionController::Base
     logged_user.present?
   end
 
-  helper_method :logged_in?
-
   def multiple_devise_profile_connect?
     user_signed_in? && instructeur_signed_in? ||
         instructeur_signed_in? && administrateur_signed_in? ||
         user_signed_in? && administrateur_signed_in?
   end
-
-  helper_method :multiple_devise_profile_connect?
 
   def pundit_user
     {
@@ -58,6 +56,14 @@ class ApplicationController < ActionController::Base
       instructeur: current_instructeur,
       user: current_user
     }.compact
+  end
+
+  def current_instructeur
+    current_user&.instructeur
+  end
+
+  def instructeur_signed_in?
+    user_signed_in? && current_user&.instructeur.present?
   end
 
   protected
@@ -73,9 +79,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_instructeur!
-    if instructeur_signed_in?
-      super
-    else
+    if !instructeur_signed_in?
       redirect_to new_user_session_path
     end
   end
