@@ -104,7 +104,7 @@ describe Users::SessionsController, type: :controller do
     end
 
     context "when associated administrateur" do
-      let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
+      let(:administrateur) { create(:administrateur, user: user) }
 
       it 'signs user + instructeur + administrateur out' do
         sign_in user
