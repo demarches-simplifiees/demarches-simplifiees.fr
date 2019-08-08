@@ -20,7 +20,7 @@ class Administration < ApplicationRecord
       AdministrationMailer.new_admin_email(administrateur, self).deliver_later
       administrateur.invite!(id)
 
-      User.create({
+      user = User.create({
         email: email,
         password: password,
         confirmed_at: Time.zone.now
@@ -28,7 +28,7 @@ class Administration < ApplicationRecord
 
       Instructeur.create({
         email: email,
-        password: password
+        user: user
       })
     end
 

@@ -103,47 +103,11 @@ describe Users::SessionsController, type: :controller do
       end
     end
 
-    context "when associated instructeur" do
-      let(:user) { create(:user, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
-      let(:instructeur) { create(:instructeur, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
-
-      it 'signs user out' do
-        sign_in user
-        delete :destroy
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to be(nil)
-      end
-
-      it 'signs instructeur out' do
-        sign_in instructeur
-        delete :destroy
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_instructeur).to be(nil)
-      end
-
-      it 'signs user + instructeur out' do
-        sign_in user
-        sign_in instructeur
-        delete :destroy
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_instructeur).to be(nil)
-      end
-
-      it 'signs user out from france connect' do
-        user.update(loged_in_with_france_connect: User.loged_in_with_france_connects.fetch(:particulier))
-        sign_in user
-        delete :destroy
-        expect(@response.headers["Location"]).to eq(FRANCE_CONNECT[:particulier][:logout_endpoint])
-      end
-    end
-
     context "when associated administrateur" do
       let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
 
       it 'signs user + instructeur + administrateur out' do
         sign_in user
-        sign_in administrateur.instructeur
         sign_in administrateur
         delete :destroy
         expect(@response.redirect?).to be(true)
