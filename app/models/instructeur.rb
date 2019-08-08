@@ -24,6 +24,8 @@ class Instructeur < ApplicationRecord
   has_many :dossiers_from_avis, through: :avis, source: :dossier
   has_many :trusted_device_tokens
 
+  has_one :user
+
   def visible_procedures
     procedures.merge(Procedure.avec_lien.or(Procedure.archivees))
   end

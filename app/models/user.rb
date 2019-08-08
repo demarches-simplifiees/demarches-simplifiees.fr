@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :feedbacks, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
+  belongs_to :instructeur
 
   accepts_nested_attributes_for :france_connect_information
 
