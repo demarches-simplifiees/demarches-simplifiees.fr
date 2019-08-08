@@ -4,6 +4,7 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
 
   before do
     sign_in current_instructeur
+    allow(view).to receive(:current_instructeur).and_return(current_instructeur)
     assign(:dossier, dossier)
   end
 

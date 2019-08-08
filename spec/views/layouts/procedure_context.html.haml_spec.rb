@@ -4,6 +4,10 @@ describe 'layouts/procedure_context.html.haml', type: :view do
   let(:procedure) { create(:simple_procedure, :with_service) }
   let(:dossier) { create(:dossier, procedure: procedure) }
 
+  before do
+    allow(view).to receive(:instructeur_signed_in?).and_return(false)
+  end
+
   subject do
     render html: 'Column content', layout: 'layouts/procedure_context.html.haml'
   end
