@@ -28,7 +28,6 @@ describe Administrateur, type: :model do
 
       instructeur.reload
       expect(instructeur.email).to eq('whoami@plop.com')
-      expect(instructeur.valid_password?('et encore un autre mdp')).to be(true)
     end
   end
 

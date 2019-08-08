@@ -35,20 +35,6 @@ describe Sessions::SessionsController, type: :controller do
     end
   end
 
-  describe '#create with instructeur connected' do
-    before do
-      @request.env["devise.mapping"] = Devise.mappings[:instructeur]
-
-      allow_any_instance_of(described_class).to receive(:instructeur_signed_in?).and_return(true)
-      allow_any_instance_of(described_class).to receive(:current_instructeur).and_return(instructeur)
-    end
-
-    it 'calls sign out for instructeur' do
-      expect_any_instance_of(described_class).to receive(:sign_out).with(:instructeur)
-      post :create
-    end
-  end
-
   describe '#create with administrateur connected' do
     before do
       @request.env["devise.mapping"] = Devise.mappings[:administrateur]

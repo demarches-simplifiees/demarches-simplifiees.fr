@@ -102,18 +102,6 @@ describe User, type: :model do
   end
 
   context 'unified login' do
-    it 'syncs credentials to associated instructeur' do
-      user = create(:user)
-      instructeur = create(:instructeur, email: user.email)
-
-      user.update(email: 'whoami@plop.com', password: 'démarches-simplifiées2')
-      user.confirm
-
-      instructeur.reload
-      expect(instructeur.email).to eq('whoami@plop.com')
-      expect(instructeur.valid_password?('démarches-simplifiées2')).to be(true)
-    end
-
     it 'syncs credentials to associated administrateur' do
       user = create(:user)
       admin = create(:administrateur, email: user.email)
