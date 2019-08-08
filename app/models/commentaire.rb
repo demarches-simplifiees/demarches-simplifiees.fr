@@ -52,7 +52,7 @@ class Commentaire < ApplicationRecord
       if piece_jointe.virus_scanner.safe?
         Rails.application.routes.url_helpers.url_for(piece_jointe)
       end
-    elsif Flipflop.remote_storage?
+    elsif Rails.application.secrets.fog[:enabled]
       RemoteDownloader.new(file.path).url
     elsif file&.url
       # FIXME: this is horrible but used only in dev and will be removed after migration

@@ -28,6 +28,9 @@ as well as a link to its edit page.
   </h1>
 
   <div>
+    <% if dossier.accepte? %>
+      <%= link_to 'Repasser en instruction', repasser_en_instruction_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous le passage en instruction du dossier ?" } %>
+    <% end %>
     <% if dossier.hidden_at.nil? %>
       <%= link_to 'Supprimer le dossier', hide_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous la suppression du dossier ?" } %>
     <% end %>

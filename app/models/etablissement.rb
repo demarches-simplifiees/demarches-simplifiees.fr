@@ -120,6 +120,6 @@ class Etablissement < ApplicationRecord
   end
 
   def libelle_for_export
-    champ&.libelle
+    champ&.libelle || 'Dossier'
   end
 end

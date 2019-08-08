@@ -3,7 +3,7 @@ class WeeklyOverviewJob < ApplicationJob
 
   def perform(*args)
     # Feature flipped to avoid mails in staging due to unprocessed dossier
-    if Flipflop.weekly_overview?
+    if Rails.application.config.ds_weekly_overview
       Gestionnaire.all
         .map { |gestionnaire| [gestionnaire, gestionnaire.last_week_overview] }
         .reject { |_, overview| overview.nil? }

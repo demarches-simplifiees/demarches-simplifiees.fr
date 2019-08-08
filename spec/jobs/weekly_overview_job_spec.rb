@@ -8,7 +8,10 @@ RSpec.describe WeeklyOverviewJob, type: :job do
 
     context 'if the feature is enabled' do
       before do
-        Flipflop::FeatureSet.current.test!.switch!(:weekly_overview, true)
+        Rails.application.config.ds_weekly_overview = true
+      end
+      after do
+        Rails.application.config.ds_weekly_overview = false
       end
 
       context 'with one gestionnaire with one overview' do
@@ -35,7 +38,6 @@ RSpec.describe WeeklyOverviewJob, type: :job do
 
     context 'if the feature is disabled' do
       before do
-        Flipflop::FeatureSet.current.test!.switch!(:weekly_overview, false)
         allow(Gestionnaire).to receive(:all)
         WeeklyOverviewJob.new.perform
       end
