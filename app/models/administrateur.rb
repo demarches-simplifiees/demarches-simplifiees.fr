@@ -55,16 +55,6 @@ class Administrateur < ApplicationRecord
     end
   end
 
-  def remind_invitation!
-    if active?
-      raise "Impossible d'envoyer un rappel d'invitation à un utilisateur déjà actif !"
-    end
-
-    reset_password_token = set_reset_password_token
-
-    AdministrateurMailer.activate_before_expiration(self, reset_password_token).deliver_later
-  end
-
   def invitation_expired?
     !active && !reset_password_period_valid?
   end
