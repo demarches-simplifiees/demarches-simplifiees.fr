@@ -16,7 +16,7 @@ class Administrateur < ApplicationRecord
   scope :inactive, -> { where(active: false) }
   scope :with_publiees_ou_archivees, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :archivee] }) }
 
-  validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
+  # validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
 
   def password_complexity
     if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_ADMIN
