@@ -1,4 +1,4 @@
-class Users::SessionsController < Sessions::SessionsController
+class Users::SessionsController < Devise::SessionsController
   include ProcedureContextConcern
   include TrustedDeviceConcern
   include ActionView::Helpers::DateHelper
