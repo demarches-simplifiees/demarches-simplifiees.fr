@@ -12,6 +12,8 @@ class Administrateur < ApplicationRecord
   has_many :services
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
+  has_one :user
+
   before_validation -> { sanitize_email(:email) }
 
   scope :inactive, -> { where(active: false) }
