@@ -59,7 +59,7 @@ class Users::PasswordsController < Devise::PasswordsController
       administrateur = Administrateur.find_by(email: current_user.email)
 
       if administrateur
-        sign_in administrateur
+        sign_in(administrateur.user)
       end
     end
   end

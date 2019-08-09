@@ -7,7 +7,7 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
-    login_as administrateur, scope: :administrateur
+    login_as administrateur.user, scope: :user
     visit new_from_existing_admin_procedures_path
   end
 

@@ -6,7 +6,7 @@ describe NewAdministrateur::TypesDeChampController, type: :controller do
 
     before do
       admin.procedures << procedure
-      sign_in admin
+      sign_in(admin.user)
     end
 
     let(:type_champ) { TypeDeChamp.type_champs.fetch(:text) }

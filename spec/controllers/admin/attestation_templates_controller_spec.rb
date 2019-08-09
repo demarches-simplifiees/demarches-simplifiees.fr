@@ -11,7 +11,7 @@ describe Admin::AttestationTemplatesController, type: :controller do
   let(:uninterlaced_logo) { fixture_file_upload('spec/fixtures/files/uninterlaced-black.png', 'image/png') }
 
   before do
-    sign_in admin
+    sign_in(admin.user)
     Timecop.freeze(Time.zone.now)
   end
 
