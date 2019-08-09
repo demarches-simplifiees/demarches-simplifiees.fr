@@ -16,8 +16,7 @@ class Users::SessionsController < Sessions::SessionsController
   def create
     remember_me = params[:user][:remember_me] == '1'
 
-    if resource_locked?(try_to_authenticate(User, remember_me)) ||
-      resource_locked?(try_to_authenticate(Administrateur, remember_me))
+    if resource_locked?(try_to_authenticate(User, remember_me))
       flash.alert = 'Votre compte est verrouillé.'
       new
       return render :new, status: 401

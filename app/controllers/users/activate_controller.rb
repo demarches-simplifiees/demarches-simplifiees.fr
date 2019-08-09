@@ -23,7 +23,7 @@ class Users::ActivateController < ApplicationController
 
     if user && user.errors.empty?
       sign_in(user, scope: :user)
-      try_to_authenticate(Administrateur, user.email, password)
+
       flash.notice = "Mot de passe enregistré"
       redirect_to instructeur_procedures_path
     else

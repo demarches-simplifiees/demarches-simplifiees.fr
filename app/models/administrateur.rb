@@ -3,9 +3,6 @@ class Administrateur < ApplicationRecord
   include EmailSanitizableConcern
   include ActiveRecord::SecureToken
 
-  devise :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable, :lockable
-
   has_and_belongs_to_many :instructeurs
   has_many :administrateurs_procedures
   has_many :procedures, through: :administrateurs_procedures
