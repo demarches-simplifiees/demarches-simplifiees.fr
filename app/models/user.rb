@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :feedbacks, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
   belongs_to :instructeur
+  belongs_to :administrateur
 
   accepts_nested_attributes_for :france_connect_information
 
