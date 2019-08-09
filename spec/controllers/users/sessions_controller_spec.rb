@@ -114,7 +114,7 @@ describe Users::SessionsController, type: :controller do
 
       it 'signs user + instructeur + administrateur out' do
         sign_in user
-        sign_in administrateur
+        sign_in(administrateur.user)
         delete :destroy
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to be(nil)
