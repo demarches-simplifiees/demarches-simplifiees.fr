@@ -147,14 +147,6 @@ RSpec.configure do |config|
     Typhoeus::Expectation.clear
 
     ActionMailer::Base.deliveries.clear
-
-    if Flipflop.remote_storage?
-      VCR.use_cassette("ovh_storage_init") do
-        CarrierWave.configure do |config|
-          config.fog_credentials = { provider: 'OpenStack' }
-        end
-      end
-    end
   }
 
   RSpec::Matchers.define :have_same_attributes_as do |expected, options|

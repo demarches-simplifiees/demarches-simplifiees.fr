@@ -22,4 +22,10 @@ class ApiCartoService
       ).results
     end
   end
+
+  def self.generate_selection_utilisateur(coordinates)
+    {
+      geometry: JSON.parse(GeojsonService.to_json_polygon_for_selection_utilisateur(coordinates))
+    }
+  end
 end

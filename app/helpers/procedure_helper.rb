@@ -26,7 +26,7 @@ module ProcedureHelper
     if logo.blank?
       ActionController::Base.helpers.image_path("polynesie.png")
     else
-      if Flipflop.remote_storage?
+      if Rails.application.secrets.fog[:enabled]
         RemoteDownloader.new(logo.filename).url
       else
         LocalDownloader.new(logo.path, 'logo').url

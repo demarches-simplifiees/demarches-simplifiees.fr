@@ -1,6 +1,4 @@
 class Champs::RepetitionChamp < Champ
-  has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
-
   accepts_nested_attributes_for :champs, allow_destroy: true
 
   def rows
@@ -21,10 +19,20 @@ class Champs::RepetitionChamp < Champ
     # The user cannot enter any information here so it doesn’t make much sense to search
   end
 
+  def rows_for_export
+    rows.each.with_index(1).map do |champs, index|
+      Champs::RepetitionChamp::Row.new(index: index, dossier_id: dossier_id.to_s, champs: champs)
+    end
+  end
+
   class Row < Hashie::Dash
     property :index
     property :dossier_id
     property :champs
+
+    def read_attribute_for_serialization(attribute)
+      self[attribute]
+    end
 
     def spreadsheet_columns
       [

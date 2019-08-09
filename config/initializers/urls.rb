@@ -39,4 +39,5 @@ STATUS_PAGE_URL = "https://updown.io/cugq"
 MATOMO_URL = 'https://beta.mes-demarches.gov.pf/matomo'
 
 # FIXME: This is only used in dev in couple of places and should be removed after PJ migration
-LOCAL_DOWNLOAD_URL = "http://#{ENV.fetch('APP_HOST', 'localhost:3000')}"
+host = ENV['APP_HOST']
+LOCAL_DOWNLOAD_URL = if host then 'https://' + host else 'http://localhost:3000' end
