@@ -56,6 +56,11 @@ class User < ApplicationRecord
     reset_password_token
   end
 
+  def remind_invitation!
+    reset_password_token = set_reset_password_token
+
+    AdministrateurMailer.activate_before_expiration(self, reset_password_token).deliver_later
+  end
 
   private
 
