@@ -9,29 +9,33 @@ class Administration < ApplicationRecord
 
   def invite_admin(email)
     password = SecureRandom.hex
-    administrateur = Administrateur.new({
-      email: email,
-      active: false,
-      password: password,
-      password_confirmation: password
-    })
 
-    if administrateur.save
-      AdministrationMailer.new_admin_email(administrateur, self).deliver_later
-      administrateur.invite!(id)
+    user = User.find_by(email: email)
 
-      user = User.create({
+    if user.nil?
+      # set confirmed_at otherwise admin confirmation doesnt work
+      # we somehow mess up using reset_password logic instead of
+      # confirmation_logic
+      # FIXME
+      user = User.create(
         email: email,
         password: password,
         confirmed_at: Time.zone.now
-      })
-
-      Instructeur.create({
-        email: email,
-        user: user
-      })
+      )
     end
 
-    administrateur
+    if user.errors.empty?
+      if user.instructeur.nil?
+        Instructeur.create!(email: email, user: user)
+      end
+
+      if user.administrateur.nil?
+        administrateur = Administrateur.create!(email: email, active: false, user: user)
+        AdministrationMailer.new_admin_email(administrateur, self).deliver_later
+        user.invite_administrateur!(id)
+      end
+    end
+
+    user
   end
 end
