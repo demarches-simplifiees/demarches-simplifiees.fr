@@ -101,7 +101,6 @@ class Users::SessionsController < Devise::SessionsController
       if resource.valid_password?(params[:user][:password])
         resource.remember_me = remember_me
         sign_in resource
-        resource.force_sync_credentials
       end
     end
     resource
