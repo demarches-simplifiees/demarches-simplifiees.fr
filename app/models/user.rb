@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
   enum loged_in_with_france_connect: {
