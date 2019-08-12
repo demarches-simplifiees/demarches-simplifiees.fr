@@ -46,9 +46,9 @@ describe Commentaire do
   describe "#redacted_email" do
     subject { commentaire.redacted_email }
 
-    context 'with a commentaire created by a gestionnaire' do
-      let(:commentaire) { build :commentaire, gestionnaire: gestionnaire }
-      let(:gestionnaire) { build :gestionnaire, email: 'some_user@exemple.fr' }
+    context 'with a commentaire created by a instructeur' do
+      let(:commentaire) { build :commentaire, instructeur: instructeur }
+      let(:instructeur) { build :instructeur, email: 'some_user@exemple.fr' }
 
       it { is_expected.to eq 'some_user' }
     end
@@ -63,25 +63,25 @@ describe Commentaire do
 
   describe "#notify" do
     let(:procedure) { create(:procedure) }
-    let(:gestionnaire) { create(:gestionnaire) }
-    let(:assign_to) { create(:assign_to, gestionnaire: gestionnaire, procedure: procedure) }
+    let(:instructeur) { create(:instructeur) }
+    let(:assign_to) { create(:assign_to, instructeur: instructeur, procedure: procedure) }
     let(:user) { create(:user) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure, user: user) }
     let(:commentaire) { Commentaire.new(dossier: dossier, body: "Mon commentaire") }
 
-    context "with a commentaire created by a gestionnaire" do
+    context "with a commentaire created by a instructeur" do
       it "calls notify_user" do
         expect(commentaire).to receive(:notify_user)
 
-        commentaire.email = gestionnaire.email
+        commentaire.email = instructeur.email
         commentaire.save
       end
     end
 
     context "with a commentaire automatically created (notification)" do
-      it "does not call notify_user or notify_gestionnaires" do
+      it "does not call notify_user or notify_instructeurs" do
         expect(commentaire).not_to receive(:notify_user)
-        expect(commentaire).not_to receive(:notify_gestionnaires)
+        expect(commentaire).not_to receive(:notify_instructeurs)
 
         commentaire.email = CONTACT_EMAIL
         commentaire.save

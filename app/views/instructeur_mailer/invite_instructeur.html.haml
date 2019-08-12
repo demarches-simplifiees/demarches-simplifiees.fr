@@ -1,0 +1,17 @@
+- content_for(:title, 'Activation de votre compte instructeur')
+
+%p
+  Bonjour,
+
+%p
+  Vous venez d'être nommé instructeur sur demarches-simplifiees.fr.
+
+%p
+  Votre compte a été créé pour l'adresse email #{@instructeur.email}. Pour l’activer, je vous invite à cliquer sur le lien suivant : 
+  = link_to(instructeur_activate_url(token: @reset_password_token), instructeur_activate_url(token: @reset_password_token))
+
+%p
+  Par ailleurs, nous vous invitons à prendre quelques minutes pour consulter notre tutoriel à destination des nouveaux instructeurs :
+  = link_to(INSTRUCTEUR_TUTORIAL_URL, INSTRUCTEUR_TUTORIAL_URL)
+
+= render partial: "layouts/mailers/signature"

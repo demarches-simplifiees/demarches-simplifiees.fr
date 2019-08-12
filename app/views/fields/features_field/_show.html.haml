@@ -1,6 +1,6 @@
 :ruby
-  url = if field.resource.class.name == 'Gestionnaire'
-    enable_feature_manager_gestionnaire_path(field.resource.id)
+  url = if field.resource.class.name == 'Instructeur'
+    enable_feature_manager_instructeur_path(field.resource.id)
   else
     enable_feature_manager_administrateur_path(field.resource.id)
   end

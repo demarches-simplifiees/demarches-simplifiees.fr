@@ -5,7 +5,7 @@ RSpec.describe AutoReceiveDossiersForProcedureJob, type: :job do
     let(:date) { Time.utc(2017, 9, 1, 10, 5, 0) }
     let(:instruction_date) { date + 120 }
 
-    let(:procedure) { create(:procedure, :with_gestionnaire) }
+    let(:procedure) { create(:procedure, :with_instructeur) }
     let(:nouveau_dossier1) { create(:dossier, :en_construction, procedure: procedure) }
     let(:nouveau_dossier2) { create(:dossier, :en_construction, procedure: procedure) }
     let(:dossier_recu) { create(:dossier, :en_instruction, procedure: procedure) }

@@ -9,16 +9,16 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#create' do
-    context "when the user is also a gestionnaire and an administrateur" do
+    context "when the user is also a instructeur and an administrateur" do
       let!(:administrateur) { create(:administrateur, email: email, password: password) }
-      let(:gestionnaire) { administrateur.gestionnaire }
+      let(:instructeur) { administrateur.instructeur }
       let(:trusted_device) { true }
       let(:send_password) { password }
 
       before do
         Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
         allow(controller).to receive(:trusted_device?).and_return(trusted_device)
-        allow(GestionnaireMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
+        allow(InstructeurMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
       end
 
       subject do
@@ -35,23 +35,23 @@ describe Users::SessionsController, type: :controller do
           expect(controller).to redirect_to(root_path)
 
           expect(controller.current_user).to eq(user)
-          expect(controller.current_gestionnaire).to eq(gestionnaire)
+          expect(controller.current_instructeur).to eq(instructeur)
           expect(controller.current_administrateur).to eq(administrateur)
           expect(user.loged_in_with_france_connect).to eq(nil)
         end
       end
 
       context 'when the device is trusted' do
-        it 'signs in as user, gestionnaire and adminstrateur' do
+        it 'signs in as user, instructeur and adminstrateur' do
           subject
 
           expect(response.redirect?).to be(true)
           expect(controller).not_to redirect_to link_sent_path(email: email)
-          # TODO when signing in as non-administrateur, and not starting a demarche, log in to gestionnaire path
-          # expect(controller).to redirect_to gestionnaire_procedures_path
+          # TODO when signing in as non-administrateur, and not starting a demarche, log in to instructeur path
+          # expect(controller).to redirect_to instructeur_procedures_path
 
           expect(controller.current_user).to eq(user)
-          expect(controller.current_gestionnaire).to eq(gestionnaire)
+          expect(controller.current_instructeur).to eq(instructeur)
           expect(controller.current_administrateur).to eq(administrateur)
           expect(user.loged_in_with_france_connect).to be(nil)
         end
@@ -65,7 +65,7 @@ describe Users::SessionsController, type: :controller do
 
           expect(response.unauthorized?).to be(true)
           expect(controller.current_user).to be(nil)
-          expect(controller.current_gestionnaire).to be(nil)
+          expect(controller.current_instructeur).to be(nil)
           expect(controller.current_administrateur).to be(nil)
         end
       end
@@ -103,9 +103,9 @@ describe Users::SessionsController, type: :controller do
       end
     end
 
-    context "when associated gestionnaire" do
+    context "when associated instructeur" do
       let(:user) { create(:user, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
-      let(:gestionnaire) { create(:gestionnaire, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
+      let(:instructeur) { create(:instructeur, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
 
       it 'signs user out' do
         sign_in user
@@ -114,20 +114,20 @@ describe Users::SessionsController, type: :controller do
         expect(subject.current_user).to be(nil)
       end
 
-      it 'signs gestionnaire out' do
-        sign_in gestionnaire
+      it 'signs instructeur out' do
+        sign_in instructeur
         delete :destroy
         expect(@response.redirect?).to be(true)
-        expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_instructeur).to be(nil)
       end
 
-      it 'signs user + gestionnaire out' do
+      it 'signs user + instructeur out' do
         sign_in user
-        sign_in gestionnaire
+        sign_in instructeur
         delete :destroy
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_instructeur).to be(nil)
       end
 
       it 'signs user out from france connect' do
@@ -141,14 +141,14 @@ describe Users::SessionsController, type: :controller do
     context "when associated administrateur" do
       let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
 
-      it 'signs user + gestionnaire + administrateur out' do
+      it 'signs user + instructeur + administrateur out' do
         sign_in user
-        sign_in administrateur.gestionnaire
+        sign_in administrateur.instructeur
         sign_in administrateur
         delete :destroy
         expect(@response.redirect?).to be(true)
         expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_instructeur).to be(nil)
         expect(subject.current_administrateur).to be(nil)
       end
     end
@@ -174,56 +174,56 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#sign_in_by_link' do
-    context 'when the gestionnaire has non other account' do
-      let(:gestionnaire) { create(:gestionnaire) }
-      let!(:good_jeton) { gestionnaire.create_trusted_device_token }
+    context 'when the instructeur has non other account' do
+      let(:instructeur) { create(:instructeur) }
+      let!(:good_jeton) { instructeur.create_trusted_device_token }
       let(:logged) { false }
 
       before do
         if logged
-          sign_in gestionnaire
+          sign_in instructeur
         end
         allow(controller).to receive(:trust_device)
         allow(controller).to receive(:send_login_token_or_bufferize)
-        post :sign_in_by_link, params: { id: gestionnaire.id, jeton: jeton }
+        post :sign_in_by_link, params: { id: instructeur.id, jeton: jeton }
       end
 
-      context 'when the gestionnaire is not logged in' do
+      context 'when the instructeur is not logged in' do
         context 'when the token is valid' do
           let(:jeton) { good_jeton }
 
           it { is_expected.to redirect_to new_user_session_path }
-          it { expect(controller.current_gestionnaire).to be_nil }
+          it { expect(controller.current_instructeur).to be_nil }
           it { expect(controller).to have_received(:trust_device) }
         end
 
         context 'when the token is invalid' do
           let(:jeton) { 'invalid_token' }
 
-          it { is_expected.to redirect_to link_sent_path(email: gestionnaire.email) }
-          it { expect(controller.current_gestionnaire).to be_nil }
+          it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
+          it { expect(controller.current_instructeur).to be_nil }
           it { expect(controller).not_to have_received(:trust_device) }
           it { expect(controller).to have_received(:send_login_token_or_bufferize) }
         end
       end
 
-      context 'when the gestionnaire is logged in' do
+      context 'when the instructeur is logged in' do
         let(:logged) { true }
 
         context 'when the token is valid' do
           let(:jeton) { good_jeton }
 
-          # redirect to root_path, then redirect to gestionnaire_procedures_path (see root_controller)
+          # redirect to root_path, then redirect to instructeur_procedures_path (see root_controller)
           it { is_expected.to redirect_to root_path }
-          it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
+          it { expect(controller.current_instructeur).to eq(instructeur) }
           it { expect(controller).to have_received(:trust_device) }
         end
 
         context 'when the token is invalid' do
           let(:jeton) { 'invalid_token' }
 
-          it { is_expected.to redirect_to link_sent_path(email: gestionnaire.email) }
-          it { expect(controller.current_gestionnaire).to eq(gestionnaire) }
+          it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
+          it { expect(controller.current_instructeur).to eq(instructeur) }
           it { expect(controller).not_to have_received(:trust_device) }
           it { expect(controller).to have_received(:send_login_token_or_bufferize) }
         end

@@ -17,7 +17,7 @@ class Users::SessionsController < Sessions::SessionsController
     remember_me = params[:user][:remember_me] == '1'
 
     if resource_locked?(try_to_authenticate(User, remember_me)) ||
-      resource_locked?(try_to_authenticate(Gestionnaire, remember_me)) ||
+      resource_locked?(try_to_authenticate(Instructeur, remember_me)) ||
       resource_locked?(try_to_authenticate(Administrateur, remember_me))
       flash.alert = 'Votre compte est verrouillé.'
       new
@@ -28,7 +28,7 @@ class Users::SessionsController < Sessions::SessionsController
       current_user.update(loged_in_with_france_connect: nil)
     end
 
-    if gestionnaire_signed_in? || user_signed_in?
+    if instructeur_signed_in? || user_signed_in?
       set_flash_message :notice, :signed_in
       redirect_to after_sign_in_path_for(:user)
     else
@@ -44,8 +44,8 @@ class Users::SessionsController < Sessions::SessionsController
 
   # DELETE /resource/sign_out
   def destroy
-    if gestionnaire_signed_in?
-      sign_out :gestionnaire
+    if instructeur_signed_in?
+      sign_out :instructeur
     end
 
     if administrateur_signed_in?
@@ -74,8 +74,8 @@ class Users::SessionsController < Sessions::SessionsController
   end
 
   def sign_in_by_link
-    gestionnaire = Gestionnaire.find(params[:id])
-    trusted_device_token = gestionnaire
+    instructeur = Instructeur.find(params[:id])
+    trusted_device_token = instructeur
       .trusted_device_tokens
       .find_by(token: params[:jeton])
 
@@ -89,7 +89,7 @@ class Users::SessionsController < Sessions::SessionsController
       # redirect to procedure'url if stored by store_location_for(:user) in dossiers_controller
       # redirect to root_path otherwise
 
-      if gestionnaire_signed_in?
+      if instructeur_signed_in?
         redirect_to after_sign_in_path_for(:user)
       else
         redirect_to new_user_session_path
@@ -97,8 +97,8 @@ class Users::SessionsController < Sessions::SessionsController
     else
       flash[:alert] = 'Votre lien est invalide ou expiré, un nouveau vient de vous être envoyé.'
 
-      send_login_token_or_bufferize(gestionnaire)
-      redirect_to link_sent_path(email: gestionnaire.email)
+      send_login_token_or_bufferize(instructeur)
+      redirect_to link_sent_path(email: instructeur.email)
     end
   end
 

@@ -1,0 +1,10 @@
+.sub-header
+  .container
+    %ul.breadcrumbs
+      %li= link_to('Avis', instructeur_avis_index_path)
+      %li= "#{dossier.procedure.libelle}, dossier nº #{dossier.id}"
+
+    %ul.tabs
+      = dynamic_tab_item('Demande', instructeur_avis_path(avis))
+      = dynamic_tab_item('Avis', instruction_instructeur_avis_path(avis), notification: avis.answer.blank?)
+      = dynamic_tab_item('Messagerie', messagerie_instructeur_avis_path(avis))

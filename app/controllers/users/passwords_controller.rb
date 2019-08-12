@@ -1,5 +1,5 @@
 class Users::PasswordsController < Devise::PasswordsController
-  after_action :try_to_authenticate_gestionnaire, only: [:update]
+  after_action :try_to_authenticate_instructeur, only: [:update]
   after_action :try_to_authenticate_administrateur, only: [:update]
 
   # GET /resource/password/new
@@ -14,10 +14,10 @@ class Users::PasswordsController < Devise::PasswordsController
     if Administrateur.find_by(email: email)
       @devise_mapping = Devise.mappings[:administrateur]
       params[:administrateur] = params[:user]
-      # uncomment to check password complexity for Gestionnaire
-      # elsif Gestionnaire.find_by(email: email)
-      #   @devise_mapping = Devise.mappings[:gestionnaire]
-      #   params[:gestionnaire] = params[:user]
+      # uncomment to check password complexity for Instructeur
+      # elsif Instructeur.find_by(email: email)
+      #   @devise_mapping = Devise.mappings[:instructeur]
+      #   params[:instructeur] = params[:user]
     end
     super
   end
@@ -44,12 +44,12 @@ class Users::PasswordsController < Devise::PasswordsController
   #   super(resource_name)
   # end
 
-  def try_to_authenticate_gestionnaire
+  def try_to_authenticate_instructeur
     if user_signed_in?
-      gestionnaire = Gestionnaire.find_by(email: current_user.email)
+      instructeur = Instructeur.find_by(email: current_user.email)
 
-      if gestionnaire
-        sign_in gestionnaire
+      if instructeur
+        sign_in instructeur
       end
     end
   end

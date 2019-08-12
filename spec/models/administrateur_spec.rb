@@ -4,7 +4,7 @@ describe Administrateur, type: :model do
   let(:administration) { create(:administration) }
 
   describe 'assocations' do
-    it { is_expected.to have_and_belong_to_many(:gestionnaires) }
+    it { is_expected.to have_and_belong_to_many(:instructeurs) }
     it { is_expected.to have_many(:procedures) }
   end
 
@@ -22,13 +22,13 @@ describe Administrateur, type: :model do
 
     it 'syncs credentials to associated administrateur' do
       administrateur = create(:administrateur)
-      gestionnaire = administrateur.gestionnaire
+      instructeur = administrateur.instructeur
 
       administrateur.update(email: 'whoami@plop.com', password: 'et encore un autre mdp')
 
-      gestionnaire.reload
-      expect(gestionnaire.email).to eq('whoami@plop.com')
-      expect(gestionnaire.valid_password?('et encore un autre mdp')).to be(true)
+      instructeur.reload
+      expect(instructeur.email).to eq('whoami@plop.com')
+      expect(instructeur.valid_password?('et encore un autre mdp')).to be(true)
     end
   end
 

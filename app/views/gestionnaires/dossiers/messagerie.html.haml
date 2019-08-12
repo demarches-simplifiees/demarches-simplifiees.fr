@@ -1,5 +1,0 @@
-- content_for(:title, "Messagerie · Dossier nº #{@dossier.id} (#{@dossier.owner_name})")
-
-= render partial: "header", locals: { dossier: @dossier }
-
-= render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, connected_user: current_gestionnaire, messagerie_seen_at: @messagerie_seen_at , new_commentaire: @commentaire, form_url: commentaire_gestionnaire_dossier_path(@dossier.procedure, @dossier) }

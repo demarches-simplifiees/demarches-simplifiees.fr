@@ -24,7 +24,7 @@ describe User, type: :model do
     let(:owner) { create(:user) }
     let(:dossier) { create(:dossier, user: owner) }
     let(:invite_user) { create(:user) }
-    let(:invite_gestionnaire) { create(:user) }
+    let(:invite_instructeur) { create(:user) }
 
     subject { user.owns?(dossier) }
 
@@ -74,7 +74,7 @@ describe User, type: :model do
     let(:owner) { create(:user) }
     let(:dossier) { create(:dossier, user: owner) }
     let(:invite_user) { create(:user) }
-    let(:invite_gestionnaire) { create(:user) }
+    let(:invite_instructeur) { create(:user) }
 
     subject { user.owns_or_invite?(dossier) }
 
@@ -102,16 +102,16 @@ describe User, type: :model do
   end
 
   context 'unified login' do
-    it 'syncs credentials to associated gestionnaire' do
+    it 'syncs credentials to associated instructeur' do
       user = create(:user)
-      gestionnaire = create(:gestionnaire, email: user.email)
+      instructeur = create(:instructeur, email: user.email)
 
       user.update(email: 'whoami@plop.com', password: 'démarches-simplifiées2')
       user.confirm
 
-      gestionnaire.reload
-      expect(gestionnaire.email).to eq('whoami@plop.com')
-      expect(gestionnaire.valid_password?('démarches-simplifiées2')).to be(true)
+      instructeur.reload
+      expect(instructeur.email).to eq('whoami@plop.com')
+      expect(instructeur.valid_password?('démarches-simplifiées2')).to be(true)
     end
 
     it 'syncs credentials to associated administrateur' do

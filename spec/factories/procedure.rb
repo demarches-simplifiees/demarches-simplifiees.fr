@@ -56,9 +56,9 @@ FactoryBot.define do
       end
     end
 
-    trait :with_gestionnaire do
+    trait :with_instructeur do
       after(:build) do |procedure, _evaluator|
-        procedure.gestionnaires << create(:gestionnaire)
+        procedure.instructeurs << create(:instructeur)
       end
     end
 

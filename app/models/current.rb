@@ -1,3 +1,3 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :gestionnaire, :administrateur
+  attribute :instructeur, :administrateur
 end
