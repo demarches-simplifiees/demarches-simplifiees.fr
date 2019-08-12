@@ -3,4 +3,20 @@
 - content_for :footer do
   = render partial: "root/footer"
 
-= render 'shared/password/new', object: @administrateur, controller: 'administrateurs/activate', test_password_strength: administrateurs_password_test_strength_path
+.container.devise-container
+  .one-column-centered
+    = form_for @administrateur, url: { controller: 'administrateurs/activate', action: :create }, html: { class: "form" } do |f|
+      %br
+      %h1
+        Choix du mot de passe
+
+      = f.hidden_field :reset_password_token, value: @token
+      = f.label :email, "Email"
+      = f.text_field :email, disabled: true
+
+      = f.label :password do
+        Mot de passe
+
+      = render partial: 'shared/password/edit_password', locals: { form: f, controller: 'administrateurs/passwords' }
+
+      = f.submit 'Continuer', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi..." }
