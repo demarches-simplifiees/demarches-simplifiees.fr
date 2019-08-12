@@ -1,0 +1,23 @@
+.row.white-back
+  #instructeur_form
+    .row
+      .col-xs-6
+        %h3.text-info Disponibles
+        = smart_listing_render :instructeurs_not_assign
+
+        %br
+        %h3
+          = t('dynamics.admin.procedure.onglet_instructeurs.add.title')
+        #procedure_new.section.section-label
+          = form_for @instructeur, url: { controller: 'admin/instructeurs', action: :create } do |f|
+            .row
+              .col-xs-5
+                = hidden_field_tag :procedure_id, params[:procedure_id]
+                = render partial: 'admin/instructeurs/informations', locals: { f: f }
+              .col-xs-2
+                %br
+                %br
+                = f.submit 'Valider', class: 'btn btn-info', style: 'float: left;', id: 'add-instructeur-email'
+      .col-xs-6
+        %h3.text-success Affectés
+        = smart_listing_render :instructeurs_assign

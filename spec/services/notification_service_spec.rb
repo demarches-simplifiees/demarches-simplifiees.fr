@@ -1,40 +1,40 @@
 describe NotificationService do
-  describe '.send_gestionnaire_email_notification' do
+  describe '.send_instructeur_email_notification' do
     let(:procedure) { create(:procedure) }
 
     before do
-      allow(GestionnaireMailer).to receive(:send_notifications)
+      allow(InstructeurMailer).to receive(:send_notifications)
         .and_return(double(deliver_later: true))
     end
 
-    subject { NotificationService.send_gestionnaire_email_notification }
+    subject { NotificationService.send_instructeur_email_notification }
 
-    context 'when a gestionnaire does not enable its email notification' do
+    context 'when a instructeur does not enable its email notification' do
       let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-      let(:gestionnaire) { create(:gestionnaire) }
+      let(:instructeur) { create(:instructeur) }
 
-      before { create(:assign_to, gestionnaire: gestionnaire, procedure: procedure) }
+      before { create(:assign_to, instructeur: instructeur, procedure: procedure) }
 
       it do
         subject
-        expect(GestionnaireMailer).not_to have_received(:send_notifications)
+        expect(InstructeurMailer).not_to have_received(:send_notifications)
       end
     end
 
-    context 'when a gestionnaire enables its email_notification on one procedure' do
-      let(:gestionnaire_with_email_notifications) { create(:gestionnaire) }
+    context 'when a instructeur enables its email_notification on one procedure' do
+      let(:instructeur_with_email_notifications) { create(:instructeur) }
 
       before do
         create(:assign_to,
-          gestionnaire: gestionnaire_with_email_notifications,
+          instructeur: instructeur_with_email_notifications,
           procedure: procedure,
           email_notifications_enabled: true)
       end
 
-      context "when there is no activity on the gestionnaire's procedures" do
+      context "when there is no activity on the instructeur's procedures" do
         it do
           subject
-          expect(GestionnaireMailer).not_to have_received(:send_notifications)
+          expect(InstructeurMailer).not_to have_received(:send_notifications)
         end
       end
 
@@ -43,19 +43,19 @@ describe NotificationService do
 
         it do
           subject
-          expect(GestionnaireMailer).to have_received(:send_notifications)
+          expect(InstructeurMailer).to have_received(:send_notifications)
         end
       end
 
       context 'when there is a notification on this procedure' do
         before do
-          allow_any_instance_of(Gestionnaire).to receive(:notifications_for_procedure)
+          allow_any_instance_of(Instructeur).to receive(:notifications_for_procedure)
             .and_return([12])
         end
 
         it do
           subject
-          expect(GestionnaireMailer).to have_received(:send_notifications)
+          expect(InstructeurMailer).to have_received(:send_notifications)
         end
       end
     end

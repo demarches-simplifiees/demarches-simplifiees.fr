@@ -17,7 +17,7 @@ module CreateAvisConcern
         {
           email: email,
           introduction: create_avis_params[:introduction],
-          claimant: current_gestionnaire,
+          claimant: current_instructeur,
           dossier: dossier,
           confidentiel: confidentiel
         }
