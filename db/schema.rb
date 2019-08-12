@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_30_153555) do
+ActiveRecord::Schema.define(version: 2019_08_05_140346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,14 +71,14 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
     t.index ["unlock_token"], name: "index_administrateurs_on_unlock_token", unique: true
   end
 
-  create_table "administrateurs_gestionnaires", id: false, force: :cascade do |t|
+  create_table "administrateurs_instructeurs", id: false, force: :cascade do |t|
     t.integer "administrateur_id"
-    t.integer "gestionnaire_id"
+    t.integer "instructeur_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["administrateur_id"], name: "index_administrateurs_gestionnaires_on_administrateur_id"
-    t.index ["gestionnaire_id", "administrateur_id"], name: "unique_couple_administrateur_gestionnaire", unique: true
-    t.index ["gestionnaire_id"], name: "index_administrateurs_gestionnaires_on_gestionnaire_id"
+    t.index ["administrateur_id"], name: "index_administrateurs_instructeurs_on_administrateur_id"
+    t.index ["instructeur_id", "administrateur_id"], name: "unique_couple_administrateur_instructeur", unique: true
+    t.index ["instructeur_id"], name: "index_administrateurs_instructeurs_on_instructeur_id"
   end
 
   create_table "administrateurs_procedures", id: false, force: :cascade do |t|
@@ -113,13 +113,13 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
   end
 
   create_table "assign_tos", id: :serial, force: :cascade do |t|
-    t.integer "gestionnaire_id"
+    t.integer "instructeur_id"
     t.integer "procedure_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "email_notifications_enabled", default: false, null: false
-    t.index ["gestionnaire_id", "procedure_id"], name: "index_assign_tos_on_gestionnaire_id_and_procedure_id", unique: true
-    t.index ["gestionnaire_id"], name: "index_assign_tos_on_gestionnaire_id"
+    t.index ["instructeur_id", "procedure_id"], name: "index_assign_tos_on_instructeur_id_and_procedure_id", unique: true
+    t.index ["instructeur_id"], name: "index_assign_tos_on_instructeur_id"
     t.index ["procedure_id"], name: "index_assign_tos_on_procedure_id"
   end
 
@@ -152,7 +152,7 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
     t.string "email"
     t.text "introduction"
     t.text "answer"
-    t.integer "gestionnaire_id"
+    t.integer "instructeur_id"
     t.integer "dossier_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
     t.boolean "confidentiel", default: false, null: false
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
-    t.index ["gestionnaire_id"], name: "index_avis_on_gestionnaire_id"
+    t.index ["instructeur_id"], name: "index_avis_on_instructeur_id"
   end
 
   create_table "bill_signatures", force: :cascade do |t|
@@ -205,9 +205,9 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
     t.integer "piece_justificative_id"
     t.string "file"
     t.bigint "user_id"
-    t.bigint "gestionnaire_id"
+    t.bigint "instructeur_id"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
-    t.index ["gestionnaire_id"], name: "index_commentaires_on_gestionnaire_id"
+    t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
     t.index ["user_id"], name: "index_commentaires_on_user_id"
   end
 
@@ -240,7 +240,7 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
   create_table "dossier_operation_logs", force: :cascade do |t|
     t.string "operation", null: false
     t.bigint "dossier_id"
-    t.bigint "gestionnaire_id"
+    t.bigint "instructeur_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "automatic_operation", default: false, null: false
@@ -252,7 +252,7 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
     t.index ["administration_id"], name: "index_dossier_operation_logs_on_administration_id"
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
-    t.index ["gestionnaire_id"], name: "index_dossier_operation_logs_on_gestionnaire_id"
+    t.index ["instructeur_id"], name: "index_dossier_operation_logs_on_instructeur_id"
     t.index ["keep_until"], name: "index_dossier_operation_logs_on_keep_until"
   end
 
@@ -351,7 +351,7 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
   end
 
   create_table "follows", id: :serial, force: :cascade do |t|
-    t.integer "gestionnaire_id", null: false
+    t.integer "instructeur_id", null: false
     t.integer "dossier_id", null: false
     t.datetime "demande_seen_at", null: false
     t.datetime "annotations_privees_seen_at", null: false
@@ -361,8 +361,8 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
     t.datetime "updated_at"
     t.datetime "unfollowed_at"
     t.index ["dossier_id"], name: "index_follows_on_dossier_id"
-    t.index ["gestionnaire_id", "dossier_id", "unfollowed_at"], name: "uniqueness_index", unique: true
-    t.index ["gestionnaire_id"], name: "index_follows_on_gestionnaire_id"
+    t.index ["instructeur_id", "dossier_id", "unfollowed_at"], name: "uniqueness_index", unique: true
+    t.index ["instructeur_id"], name: "index_follows_on_instructeur_id"
   end
 
   create_table "france_connect_informations", id: :serial, force: :cascade do |t|
@@ -391,30 +391,6 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
     t.index ["source"], name: "index_geo_areas_on_source"
   end
 
-  create_table "gestionnaires", id: :serial, force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text "encrypted_login_token"
-    t.datetime "login_token_created_at"
-    t.jsonb "features", default: {"enable_email_login_token"=>true}, null: false
-    t.integer "failed_attempts", default: 0, null: false
-    t.string "unlock_token"
-    t.datetime "locked_at"
-    t.index ["email"], name: "index_gestionnaires_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_gestionnaires_on_reset_password_token", unique: true
-    t.index ["unlock_token"], name: "index_gestionnaires_on_unlock_token", unique: true
-  end
-
   create_table "individuals", id: :serial, force: :cascade do |t|
     t.string "nom"
     t.string "prenom"
@@ -433,6 +409,30 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_initiated_mails_on_procedure_id"
+  end
+
+  create_table "instructeurs", id: :serial, force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text "encrypted_login_token"
+    t.datetime "login_token_created_at"
+    t.jsonb "features", default: {"enable_email_login_token"=>true}, null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
+    t.index ["email"], name: "index_instructeurs_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_instructeurs_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_instructeurs_on_unlock_token", unique: true
   end
 
   create_table "invites", id: :serial, force: :cascade do |t|
@@ -548,10 +548,10 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
 
   create_table "trusted_device_tokens", force: :cascade do |t|
     t.string "token", null: false
-    t.bigint "gestionnaire_id"
+    t.bigint "instructeur_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["gestionnaire_id"], name: "index_trusted_device_tokens_on_gestionnaire_id"
+    t.index ["instructeur_id"], name: "index_trusted_device_tokens_on_instructeur_id"
     t.index ["token"], name: "index_trusted_device_tokens_on_token", unique: true
   end
 
@@ -623,14 +623,14 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
 
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
-  add_foreign_key "avis", "gestionnaires", column: "claimant_id"
+  add_foreign_key "avis", "instructeurs", column: "claimant_id"
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossier_operation_logs", "administrations"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_operation_logs", "dossiers"
-  add_foreign_key "dossier_operation_logs", "gestionnaires"
+  add_foreign_key "dossier_operation_logs", "instructeurs"
   add_foreign_key "dossiers", "users"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "geo_areas", "champs"
@@ -640,7 +640,7 @@ ActiveRecord::Schema.define(version: 2019_07_30_153555) do
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
-  add_foreign_key "trusted_device_tokens", "gestionnaires"
+  add_foreign_key "trusted_device_tokens", "instructeurs"
   add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "without_continuation_mails", "procedures"
 end

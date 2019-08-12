@@ -22,7 +22,7 @@ describe Users::ConfirmationsController, type: :controller do
 
       it 'signs in the user after confirming its token' do
         expect(controller.current_user).to eq(user)
-        expect(controller.current_gestionnaire).to be(nil)
+        expect(controller.current_instructeur).to be(nil)
         expect(controller.current_administrateur).to be(nil)
       end
 
@@ -45,7 +45,7 @@ describe Users::ConfirmationsController, type: :controller do
 
       it 'doesn’t sign in the user' do
         expect(subject.current_user).to be(nil)
-        expect(subject.current_gestionnaire).to be(nil)
+        expect(subject.current_instructeur).to be(nil)
         expect(subject.current_administrateur).to be(nil)
       end
 

@@ -6,7 +6,7 @@ class Administrateur < ApplicationRecord
   devise :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable, :lockable
 
-  has_and_belongs_to_many :gestionnaires
+  has_and_belongs_to_many :instructeurs
   has_many :administrateurs_procedures
   has_many :procedures, through: :administrateurs_procedures
   has_many :services
@@ -20,11 +20,8 @@ class Administrateur < ApplicationRecord
   validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
 
   def password_complexity
-    if password.present?
-      score = Zxcvbn.test(password, [], ZXCVBN_DICTIONNARIES).score
-      if score < 4
-        errors.add(:password, :not_strength)
-      end
+    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_ADMIN
+      errors.add(:password, :not_strong)
     end
   end
 
@@ -120,8 +117,8 @@ class Administrateur < ApplicationRecord
     procedure.administrateurs.include?(self)
   end
 
-  def gestionnaire
-    Gestionnaire.find_by(email: email)
+  def instructeur
+    Instructeur.find_by(email: email)
   end
 
   def can_be_deleted?

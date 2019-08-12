@@ -35,11 +35,11 @@ class ApplicationPolicy
   end
 
   class Scope
-    attr_reader :user, :gestionnaire, :administrateur, :scope
+    attr_reader :user, :instructeur, :administrateur, :scope
 
     def initialize(account, scope)
       @user = account[:user]
-      @gestionnaire = account[:gestionnaire]
+      @instructeur = account[:instructeur]
       @administrateur = account[:administrateur]
       @scope = scope
     end

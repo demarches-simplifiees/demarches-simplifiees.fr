@@ -6,7 +6,7 @@ RSpec.describe DeclarativeProceduresJob, type: :job do
     let(:instruction_date) { date + 120 }
 
     let(:state) { nil }
-    let(:procedure) { create(:procedure, :with_gestionnaire, declarative_with_state: state) }
+    let(:procedure) { create(:procedure, :with_instructeur, declarative_with_state: state) }
     let(:nouveau_dossier1) { create(:dossier, :en_construction, procedure: procedure) }
     let(:nouveau_dossier2) { create(:dossier, :en_construction, procedure: procedure) }
     let(:dossier_recu) { create(:dossier, :en_instruction, procedure: procedure) }

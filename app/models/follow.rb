@@ -1,8 +1,8 @@
 class Follow < ApplicationRecord
-  belongs_to :gestionnaire
+  belongs_to :instructeur
   belongs_to :dossier
 
-  validates :gestionnaire_id, uniqueness: { scope: [:dossier_id, :unfollowed_at] }
+  validates :instructeur_id, uniqueness: { scope: [:dossier_id, :unfollowed_at] }
 
   before_create :set_default_date
 

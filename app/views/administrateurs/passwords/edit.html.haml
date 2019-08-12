@@ -1,0 +1,6 @@
+- content_for(:title, 'Changement de mot de passe')
+
+- content_for :footer do
+  = render partial: 'root/footer'
+
+= render 'shared/password/edit', test_password_strength: administrateurs_password_test_strength_path

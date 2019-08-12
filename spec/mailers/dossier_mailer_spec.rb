@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe DossierMailer, type: :mailer do
-  let(:to_email) { 'gestionnaire@exemple.gouv.fr' }
+  let(:to_email) { 'instructeur@exemple.gouv.fr' }
 
   shared_examples 'a dossier notification' do
     it 'includes the contact informations in the footer' do

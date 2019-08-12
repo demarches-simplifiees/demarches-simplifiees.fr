@@ -4,7 +4,7 @@ describe Administrateur, type: :model do
   let(:administration) { create(:administration) }
 
   describe 'assocations' do
-    it { is_expected.to have_and_belong_to_many(:gestionnaires) }
+    it { is_expected.to have_and_belong_to_many(:instructeurs) }
     it { is_expected.to have_many(:procedures) }
   end
 
@@ -22,13 +22,13 @@ describe Administrateur, type: :model do
 
     it 'syncs credentials to associated administrateur' do
       administrateur = create(:administrateur)
-      gestionnaire = administrateur.gestionnaire
+      instructeur = administrateur.instructeur
 
       administrateur.update(email: 'whoami@plop.com', password: 'et encore un autre mdp')
 
-      gestionnaire.reload
-      expect(gestionnaire.email).to eq('whoami@plop.com')
-      expect(gestionnaire.valid_password?('et encore un autre mdp')).to be(true)
+      instructeur.reload
+      expect(instructeur.email).to eq('whoami@plop.com')
+      expect(instructeur.valid_password?('et encore un autre mdp')).to be(true)
     end
   end
 
@@ -72,29 +72,33 @@ describe Administrateur, type: :model do
     it { expect(administrateur.feature_enabled?(:test_a)).to be_truthy }
   end
 
-  describe "#password_complexity" do
-    let(:administrateur) { build(:administrateur, password: password) }
+  describe '#password_complexity' do
+    let(:email) { 'mail@beta.gouv.fr' }
+    let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées-pwd'] }
+    let(:administrateur) { build(:administrateur, email: email, password: password) }
+    let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_ADMIN }
 
     subject do
       administrateur.save
-      administrateur.errors[:password]
+      administrateur.errors.full_messages
     end
 
-    context "with a strong password" do
-      let(:password) { "la démat c'est simple" }
+    context 'when password is too short' do
+      let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
+
+      it { expect(subject).to eq(["Le mot de passe est trop court"]) }
+    end
+
+    context 'when password is too simple' do
+      let(:password) { passwords[min_complexity - 1] }
+
+      it { expect(subject).to eq(["Le mot de passe n'est pas assez complexe"]) }
+    end
+
+    context 'when password is acceptable' do
+      let(:password) { passwords[min_complexity] }
+
       it { expect(subject).to eq([]) }
-    end
-
-    context "with a weak password" do
-      let(:password) { "12345678" }
-      it { expect(subject).to include "n'est pas assez complexe" }
-      it { expect(subject).not_to include "est trop court" }
-    end
-
-    context "with a short password" do
-      let(:password) { "1" }
-      it { expect(subject).to include "est trop court" }
-      it { expect(subject).not_to include "n'est pas assez complexe" }
     end
   end
 end

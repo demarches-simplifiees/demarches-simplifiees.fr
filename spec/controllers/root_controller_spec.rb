@@ -11,17 +11,17 @@ describe RootController, type: :controller do
     it { expect(subject).to redirect_to(dossiers_path) }
   end
 
-  context 'when Gestionnaire is connected' do
-    let(:gestionnaire) { create(:gestionnaire) }
+  context 'when Instructeur is connected' do
+    let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     before do
-      gestionnaire.procedures << procedure
-      sign_in gestionnaire
+      instructeur.procedures << procedure
+      sign_in instructeur
     end
 
-    it { expect(subject).to redirect_to(gestionnaire_procedures_path) }
+    it { expect(subject).to redirect_to(instructeur_procedures_path) }
   end
 
   context 'when Administrateur is connected' do
@@ -60,7 +60,7 @@ describe RootController, type: :controller do
       subject
     end
 
-    it "won't have gestionnaire login link" do
+    it "won't have instructeur login link" do
       expect(response.body).to have_css("a[href='#{new_user_session_path}']")
     end
   end

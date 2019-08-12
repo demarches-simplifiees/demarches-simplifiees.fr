@@ -29,7 +29,7 @@ Rails.application.routes.draw do
       post 'resend_confirmation_instructions', on: :member
     end
 
-    resources :gestionnaires, only: [:index, :show] do
+    resources :instructeurs, only: [:index, :show] do
       post 'reinvite', on: :member
       put 'enable_feature', on: :member
     end
@@ -78,12 +78,13 @@ Rails.application.routes.draw do
     }
 
   devise_for :administrateurs, controllers: {
-    sessions: 'administrateurs/sessions'
-  }, skip: [:password, :registrations]
+    sessions: 'administrateurs/sessions',
+    passwords: 'administrateurs/passwords'
+  }, skip: [:registrations]
 
-  devise_for :gestionnaires, controllers: {
-    sessions: 'gestionnaires/sessions',
-    passwords: 'gestionnaires/passwords'
+  devise_for :instructeurs, controllers: {
+    sessions: 'instructeurs/sessions',
+    passwords: 'instructeurs/passwords'
   }, skip: [:registrations]
 
   devise_for :users, controllers: {
@@ -100,14 +101,15 @@ Rails.application.routes.draw do
     get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
   end
 
-  devise_scope :gestionnaire do
-    get '/gestionnaires/sign_in/demo' => redirect("/users/sign_in")
-    get '/gestionnaires/edit' => 'gestionnaires/registrations#edit', :as => 'edit_gestionnaires_registration'
-    put '/gestionnaires' => 'gestionnaires/registrations#update', :as => 'gestionnaires_registration'
+  devise_scope :instructeur do
+    get '/instructeurs/sign_in/demo' => redirect("/users/sign_in")
+    get '/instructeurs/edit' => 'instructeurs/registrations#edit', :as => 'edit_instructeurs_registration'
+    put '/instructeurs' => 'instructeurs/registrations#update', :as => 'instructeurs_registration'
   end
 
   devise_scope :administrateur do
     get '/administrateurs/sign_in/demo' => redirect("/users/sign_in")
+    get '/administrateurs/password/test_strength' => 'administrateurs/passwords#test_strength'
   end
 
   #
@@ -168,15 +170,14 @@ Rails.application.routes.draw do
     get 'dossiers/invites/:id', to: redirect(path: '/invites/%{id}')
   end
 
-  namespace :gestionnaire do
-    get 'activate' => '/gestionnaires/activate#new'
-    patch 'activate' => '/gestionnaires/activate#create'
+  namespace :instructeur do
+    get 'activate' => '/instructeurs/activate#new'
+    patch 'activate' => '/instructeurs/activate#create'
   end
 
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
-    get 'activate/test_password_strength' => '/administrateurs/activate#test_password_strength'
     get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
@@ -203,7 +204,7 @@ Rails.application.routes.draw do
       get 'monavis' => 'procedures#monavis', as: :monavis
       patch 'monavis' => 'procedures#update_monavis', as: :update_monavis
 
-      resource :instructeurs, only: [:show, :update]
+      resource :assigns, only: [:show, :update], path: 'instructeurs'
 
       resource :attestation_template, only: [:edit, :update, :create]
 
@@ -217,11 +218,11 @@ Rails.application.routes.draw do
       delete 'attestation_template/signature' => 'attestation_templates#delete_signature'
     end
 
-    namespace :instructeurs do
+    namespace :assigns do
       get 'show' # delete after fixed tests admin/instructeurs/show_spec without this line
     end
 
-    resources :gestionnaires, only: [:index, :create, :destroy]
+    resources :instructeurs, only: [:index, :create, :destroy]
   end
 
   #
@@ -299,7 +300,7 @@ Rails.application.routes.draw do
   # Gestionnaire
   #
 
-  scope module: 'gestionnaires', as: 'gestionnaire' do
+  scope module: 'instructeurs', as: 'instructeur' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         patch 'update_displayed_fields'
@@ -344,7 +345,7 @@ Rails.application.routes.draw do
         post 'avis' => 'avis#create_avis'
 
         get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
-        post 'sign_up/email/:email' => 'avis#create_gestionnaire', constraints: { email: /.*/ }
+        post 'sign_up/email/:email' => 'avis#create_instructeur', constraints: { email: /.*/ }
       end
     end
     get "recherche" => "recherche#index"

@@ -10,7 +10,7 @@ module Flipflop::Strategies
 
     def enabled?(feature)
       find_current_administrateur&.feature_enabled?(feature) ||
-      find_current_gestionnaire&.feature_enabled?(feature)
+      find_current_instructeur&.feature_enabled?(feature)
     end
 
     private
@@ -22,10 +22,10 @@ module Flipflop::Strategies
       end
     end
 
-    def find_current_gestionnaire
-      gestionnaire_id = Current.gestionnaire&.id
-      if gestionnaire_id
-        Gestionnaire.find_by(id: gestionnaire_id)
+    def find_current_instructeur
+      instructeur_id = Current.instructeur&.id
+      if instructeur_id
+        Instructeur.find_by(id: instructeur_id)
       end
     end
   end

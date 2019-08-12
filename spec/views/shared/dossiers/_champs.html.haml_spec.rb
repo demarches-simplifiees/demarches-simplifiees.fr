@@ -1,18 +1,18 @@
 describe 'shared/dossiers/champs.html.haml', type: :view do
-  let(:gestionnaire) { create(:gestionnaire) }
+  let(:instructeur) { create(:instructeur) }
   let(:demande_seen_at) { nil }
 
   before do
     view.extend DossierHelper
     view.extend DossierLinkHelper
-    allow(view).to receive(:current_gestionnaire).and_return(gestionnaire)
+    allow(view).to receive(:current_instructeur).and_return(instructeur)
   end
 
   subject { render 'shared/dossiers/champs.html.haml', champs: champs, demande_seen_at: demande_seen_at, profile: nil }
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
-    let(:avis) { create :avis, dossier: dossier, gestionnaire: gestionnaire }
+    let(:avis) { create :avis, dossier: dossier, instructeur: instructeur }
     let(:champ1) { create(:champ, :checkbox, value: "on") }
     let(:champ2) { create(:champ, :header_section, value: "Section") }
     let(:champ3) { create(:champ, :explication, value: "mazette") }
