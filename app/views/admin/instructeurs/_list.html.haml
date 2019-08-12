@@ -1,0 +1,22 @@
+- if smart_listing.present?
+  %table.table#liste-instructeur
+    %thead
+      %th#libelle= smart_listing.sortable 'Email', 'email'
+      %th
+
+    - @instructeurs.each do |instructeur|
+      %tr
+        %td{ style: 'padding-top: 11px; font-size: 15px;' }= instructeur.email
+        %td{ style: 'text-align: right;' }
+          .delete.btn.btn-sm.fa.fa-trash
+
+          .confirm
+            = link_to 'Valider', admin_instructeur_path(id: instructeur.id), { method: :delete, class: 'btn btn-sm btn-success' }
+            .cancel.btn.btn-sm.btn-danger.fa.fa-minus{ style: 'top: 0;' }
+
+  = smart_listing.paginate
+  = smart_listing.pagination_per_page_links
+
+- else
+  %h4.center
+    Aucun instructeur

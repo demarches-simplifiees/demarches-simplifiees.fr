@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
   def pundit_user
     {
       administrateur: current_administrateur,
-      gestionnaire: current_gestionnaire,
+      instructeur: current_instructeur,
       user: current_user
     }.compact
   end
@@ -55,8 +55,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def authenticate_logged_user!
-    if gestionnaire_signed_in?
-      authenticate_gestionnaire!
+    if instructeur_signed_in?
+      authenticate_instructeur!
     elsif administrateur_signed_in?
       authenticate_administrateur!
     else
@@ -64,8 +64,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def authenticate_gestionnaire!
-    if gestionnaire_signed_in?
+  def authenticate_instructeur!
+    if instructeur_signed_in?
       super
     else
       redirect_to new_user_session_path
@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
 
   def set_current_roles
     Current.administrateur = current_administrateur
-    Current.gestionnaire = current_gestionnaire
+    Current.instructeur = current_instructeur
   end
 
   def set_active_storage_host
@@ -108,7 +108,7 @@ class ApplicationController < ActionController::Base
   def logged_users
     @logged_users ||= [
       current_user,
-      current_gestionnaire,
+      current_instructeur,
       current_administrateur,
       current_administration
     ].compact
@@ -162,14 +162,14 @@ class ApplicationController < ActionController::Base
     elsif api_request
       render json: { error: MAINTENANCE_MESSAGE }.to_json, status: :service_unavailable
     else
-      [:user, :gestionnaire, :administrateur].each { |role| sign_out(role) }
+      [:user, :instructeur, :administrateur].each { |role| sign_out(role) }
       flash[:alert] = MAINTENANCE_MESSAGE
       redirect_to root_path
     end
   end
 
   def redirect_if_untrusted
-    if gestionnaire_signed_in? &&
+    if instructeur_signed_in? &&
         sensitive_path &&
         Flipflop.enable_email_login_token? &&
         !IPService.ip_trusted?(request.headers['X-Forwarded-For']) &&
@@ -179,8 +179,8 @@ class ApplicationController < ActionController::Base
       # after the device is trusted
       store_location_for(:user, request.fullpath)
 
-      send_login_token_or_bufferize(current_gestionnaire)
-      redirect_to link_sent_path(email: current_gestionnaire.email)
+      send_login_token_or_bufferize(current_instructeur)
+      redirect_to link_sent_path(email: current_instructeur.email)
     end
   end
 
@@ -238,7 +238,7 @@ class ApplicationController < ActionController::Base
           DS_CREATED_AT: current_administrateur&.created_at,
           DS_ACTIVE: current_administrateur&.active,
           DS_ID: current_administrateur&.id,
-          DS_GESTIONNAIRE_ID: current_gestionnaire&.id,
+          DS_GESTIONNAIRE_ID: current_instructeur&.id,
           DS_ROLES: logged_user_roles
         }
       }
@@ -266,7 +266,7 @@ class ApplicationController < ActionController::Base
 
   def current_email
     current_user&.email ||
-      current_gestionnaire&.email ||
+      current_instructeur&.email ||
       current_administrateur&.email
   end
 end

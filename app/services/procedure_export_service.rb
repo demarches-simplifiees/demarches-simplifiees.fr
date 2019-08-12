@@ -167,7 +167,7 @@ class ProcedureExportService
         when :individual_gender
           dossier.individual&.gender
         when :emails_instructeurs
-          dossier.followers_gestionnaires.map(&:email).join(' ')
+          dossier.followers_instructeurs.map(&:email).join(' ')
         else
           dossier.read_attribute(key)
         end

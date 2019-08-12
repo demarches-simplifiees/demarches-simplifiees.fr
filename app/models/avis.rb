@@ -2,8 +2,8 @@ class Avis < ApplicationRecord
   include EmailSanitizableConcern
 
   belongs_to :dossier, inverse_of: :avis, touch: true
-  belongs_to :gestionnaire
-  belongs_to :claimant, class_name: 'Gestionnaire'
+  belongs_to :instructeur
+  belongs_to :claimant, class_name: 'Instructeur'
 
   has_one_attached :piece_justificative_file
 
@@ -11,8 +11,8 @@ class Avis < ApplicationRecord
   validates :claimant, presence: true
 
   before_validation -> { sanitize_email(:email) }
-  before_create :try_to_assign_gestionnaire
-  after_create :notify_gestionnaire
+  before_create :try_to_assign_instructeur
+  after_create :notify_instructeur
 
   default_scope { joins(:dossier) }
   scope :with_answer, -> { where.not(answer: nil) }
@@ -26,11 +26,11 @@ class Avis < ApplicationRecord
   attr_accessor :emails
 
   def email_to_display
-    gestionnaire&.email || email
+    instructeur&.email || email
   end
 
-  def self.link_avis_to_gestionnaire(gestionnaire)
-    Avis.where(email: gestionnaire.email).update_all(email: nil, gestionnaire_id: gestionnaire.id)
+  def self.link_avis_to_instructeur(instructeur)
+    Avis.where(email: instructeur.email).update_all(email: nil, instructeur_id: instructeur.id)
   end
 
   def self.avis_exists_and_email_belongs_to_avis?(avis_id, email)
@@ -49,14 +49,14 @@ class Avis < ApplicationRecord
 
   private
 
-  def notify_gestionnaire
+  def notify_instructeur
     AvisMailer.avis_invitation(self).deliver_later
   end
 
-  def try_to_assign_gestionnaire
-    gestionnaire = Gestionnaire.find_by(email: email)
-    if gestionnaire
-      self.gestionnaire = gestionnaire
+  def try_to_assign_instructeur
+    instructeur = Instructeur.find_by(email: email)
+    if instructeur
+      self.instructeur = instructeur
       self.email = nil
     end
   end

@@ -5,7 +5,7 @@ FactoryBot.define do
     password { 'mon chien aime les bananes' }
 
     after(:create) do |admin|
-      create(:gestionnaire, email: admin.email, password: admin.password)
+      create(:instructeur, email: admin.email, password: admin.password)
     end
   end
 

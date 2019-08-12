@@ -2,7 +2,7 @@ class TrustedDeviceToken < ApplicationRecord
   LOGIN_TOKEN_VALIDITY = 1.week
   LOGIN_TOKEN_YOUTH = 15.minutes
 
-  belongs_to :gestionnaire
+  belongs_to :instructeur
   has_secure_token
 
   def token_valid?

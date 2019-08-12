@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe WeeklyOverviewJob, type: :job do
   describe 'perform' do
-    let!(:gestionnaire) { create(:gestionnaire) }
+    let!(:instructeur) { create(:instructeur) }
     let(:overview) { double('overview') }
     let(:mailer_double) { double('mailer', deliver_later: true) }
 
@@ -14,35 +14,35 @@ RSpec.describe WeeklyOverviewJob, type: :job do
         Rails.application.config.ds_weekly_overview = false
       end
 
-      context 'with one gestionnaire with one overview' do
+      context 'with one instructeur with one overview' do
         before do
-          expect_any_instance_of(Gestionnaire).to receive(:last_week_overview).and_return(overview)
-          allow(GestionnaireMailer).to receive(:last_week_overview).and_return(mailer_double)
+          expect_any_instance_of(Instructeur).to receive(:last_week_overview).and_return(overview)
+          allow(InstructeurMailer).to receive(:last_week_overview).and_return(mailer_double)
           WeeklyOverviewJob.new.perform
         end
 
-        it { expect(GestionnaireMailer).to have_received(:last_week_overview).with(gestionnaire) }
+        it { expect(InstructeurMailer).to have_received(:last_week_overview).with(instructeur) }
         it { expect(mailer_double).to have_received(:deliver_later) }
       end
 
-      context 'with one gestionnaire with no overviews' do
+      context 'with one instructeur with no overviews' do
         before do
-          expect_any_instance_of(Gestionnaire).to receive(:last_week_overview).and_return(nil)
-          allow(GestionnaireMailer).to receive(:last_week_overview)
+          expect_any_instance_of(Instructeur).to receive(:last_week_overview).and_return(nil)
+          allow(InstructeurMailer).to receive(:last_week_overview)
           WeeklyOverviewJob.new.perform
         end
 
-        it { expect(GestionnaireMailer).not_to have_received(:last_week_overview) }
+        it { expect(InstructeurMailer).not_to have_received(:last_week_overview) }
       end
     end
 
     context 'if the feature is disabled' do
       before do
-        allow(Gestionnaire).to receive(:all)
+        allow(Instructeur).to receive(:all)
         WeeklyOverviewJob.new.perform
       end
 
-      it { expect(Gestionnaire).not_to receive(:all) }
+      it { expect(Instructeur).not_to receive(:all) }
     end
   end
 end

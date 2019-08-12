@@ -1,12 +1,12 @@
 describe 'shared/dossiers/demande.html.haml', type: :view do
-  let(:current_gestionnaire) { create(:gestionnaire) }
+  let(:current_instructeur) { create(:instructeur) }
   let(:individual) { nil }
   let(:etablissement) { nil }
   let(:procedure) { create(:procedure, :published) }
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure, etablissement: etablissement, individual: individual) }
 
   before do
-    sign_in current_gestionnaire
+    sign_in current_instructeur
   end
 
   subject! { render 'shared/dossiers/demande.html.haml', dossier: dossier, demande_seen_at: nil, profile: 'usager' }

@@ -122,7 +122,7 @@ fr:
       user:
         siret: 'Numéro SIRET'
         password: 'Le mot de passe'
-      gestionnaire:
+      instructeur:
         password: 'Le mot de passe'
     errors:
       messages:
@@ -153,7 +153,7 @@ fr:
           attributes:
             email:
               taken: ': Invitation déjà envoyée'
-        gestionnaire:
+        instructeur:
           attributes:
             email:
               invalid: invalide

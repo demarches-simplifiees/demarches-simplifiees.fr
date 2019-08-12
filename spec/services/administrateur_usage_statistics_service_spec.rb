@@ -45,7 +45,7 @@ describe AdministrateurUsageStatisticsService do
           active: true,
           features: { holy_hand_grenade_of_antioch: true },
           services: [create(:service)],
-          gestionnaires: [create(:gestionnaire)])
+          instructeurs: [create(:instructeur)])
       end
 
       it do

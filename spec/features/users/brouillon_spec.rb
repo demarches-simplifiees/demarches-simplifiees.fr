@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'The user' do
-  let(:password) { 'secret_password' }
+  let(:password) { 'démarches-simplifiées-pwd' }
   let!(:user) { create(:user, password: password) }
 
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }
@@ -50,7 +50,7 @@ feature 'The user' do
     expect(champ_value_for('datetime')).to eq('06/01/1985 07:05')
     expect(champ_value_for('number')).to eq('42')
     expect(champ_value_for('checkbox')).to eq('on')
-    expect(champ_value_for('civilite')).to eq('Mme.')
+    expect(champ_value_for('civilite')).to eq('Mme')
     expect(champ_value_for('email')).to eq('loulou@yopmail.com')
     expect(champ_value_for('phone')).to eq('1234567890')
     expect(champ_value_for('yes_no')).to eq('false')
