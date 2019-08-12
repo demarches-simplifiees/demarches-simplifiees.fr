@@ -2,7 +2,8 @@ class Administrateurs::ActivateController < ApplicationController
   include TrustedDeviceConcern
 
   def new
-    @administrateur = Administrateur.find_inactive_by_token(params[:token])
+    @token = params[:token]
+    @administrateur = Administrateur.find_inactive_by_token(@token)
 
     if @administrateur
       # the administrateur activates its account from an email

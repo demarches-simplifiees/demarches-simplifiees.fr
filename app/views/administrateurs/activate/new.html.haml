@@ -10,7 +10,7 @@
       %h1
         Choix du mot de passe
 
-      = f.hidden_field :reset_password_token, value: @administrateur.reset_password_token
+      = f.hidden_field :reset_password_token, value: @token
       = f.label :email, "Email"
       = f.text_field :email, disabled: true
 
