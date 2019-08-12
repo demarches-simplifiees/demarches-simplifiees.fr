@@ -9,7 +9,7 @@
             = dossier.procedure.libelle.truncate_words(10)
         %li
           = "Dossier nº #{dossier.id}"
-      .mixed-buttons-bar
+      .header-actions
         = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: dossier }
 
     %ul.tabs
