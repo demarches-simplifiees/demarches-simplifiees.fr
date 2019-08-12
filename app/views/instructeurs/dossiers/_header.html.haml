@@ -10,29 +10,7 @@
         %li
           = "Dossier nº #{dossier.id}"
       .mixed-buttons-bar
-        %span.dropdown.print-menu-opener
-          %button.button.dropdown-button.icon-only
-            %span.icon.printer
-          %ul.print-menu.dropdown-content
-            %li
-              = link_to "Tout le dossier", print_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
-            %li
-              = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
-        - if Flipflop.download_as_zip_enabled? && !PiecesJustificativesService.liste_pieces_justificatives(dossier).empty?
-          %span.dropdown.print-menu-opener
-            %button.button.dropdown-button.icon-only
-              %span.icon.attachment
-            %ul.print-menu.dropdown-content
-              %li
-                - if PiecesJustificativesService.pieces_justificatives_total_size(dossier) < Dossier::TAILLE_MAX_ZIP
-                  = link_to "Télécharger toutes les pièces jointes", telecharger_pjs_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
-                - else
-                  %p.menu-item Le téléchargement des pièces jointes est désactivé pour les dossiers de plus de #{number_to_human_size Dossier::TAILLE_MAX_ZIP}.
-
-
-        = render partial: "instructeurs/procedures/dossier_actions", locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: current_instructeur&.follow?(dossier) }
-        %span.state-button
-          = render partial: "state_button", locals: { dossier: dossier }
+        = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: dossier }
 
     %ul.tabs
       - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
