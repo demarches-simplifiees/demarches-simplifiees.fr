@@ -79,8 +79,6 @@ Rails.application.routes.draw do
 
   devise_for :administrateurs, skip: :all
 
-  devise_for :instructeurs, skip: :all
-
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',
@@ -154,11 +152,9 @@ Rails.application.routes.draw do
     get 'dossiers', to: redirect('/dossiers')
     get 'dossiers/:id/recapitulatif', to: redirect('/dossiers/%{id}')
     get 'dossiers/invites/:id', to: redirect(path: '/invites/%{id}')
-  end
 
-  namespace :instructeur do
-    get 'activate' => '/instructeurs/activate#new'
-    patch 'activate' => '/instructeurs/activate#create'
+    get 'activate' => '/users/activate#new'
+    patch 'activate' => '/users/activate#create'
   end
 
   namespace :admin do

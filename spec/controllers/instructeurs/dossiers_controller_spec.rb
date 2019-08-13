@@ -11,7 +11,7 @@ describe Instructeurs::DossiersController, type: :controller do
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
   let(:fake_justificatif) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
 
-  before { sign_in(instructeur) }
+  before { sign_in(instructeur.user) }
 
   describe '#attestation' do
     context 'when a dossier has an attestation' do
@@ -110,7 +110,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     before do
-      sign_in instructeur
+      sign_in(instructeur.user)
       post :passer_en_instruction, params: { procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js'
     end
 
@@ -133,7 +133,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
     before do
-      sign_in instructeur
+      sign_in(instructeur.user)
       post :repasser_en_construction,
         params: { procedure_id: procedure.id, dossier_id: dossier.id },
         format: 'js'
@@ -155,7 +155,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe '#repasser_en_instruction' do
     let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
-    let(:current_user) { instructeur }
+    let(:current_user) { instructeur.user }
 
     before do
       sign_in current_user
@@ -205,7 +205,7 @@ describe Instructeurs::DossiersController, type: :controller do
     context "with refuser" do
       before do
         dossier.en_instruction!
-        sign_in instructeur
+        sign_in(instructeur.user)
       end
 
       context 'simple refusal' do
@@ -246,7 +246,7 @@ describe Instructeurs::DossiersController, type: :controller do
     context "with classer_sans_suite" do
       before do
         dossier.en_instruction!
-        sign_in instructeur
+        sign_in(instructeur.user)
       end
       context 'without attachment' do
         subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier.id }, format: 'js' }
@@ -288,7 +288,7 @@ describe Instructeurs::DossiersController, type: :controller do
     context "with accepter" do
       before do
         dossier.en_instruction!
-        sign_in instructeur
+        sign_in(instructeur.user)
 
         expect(NotificationMailer).to receive(:send_closed_notification)
           .with(dossier)

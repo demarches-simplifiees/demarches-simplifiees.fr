@@ -83,21 +83,26 @@ module Instructeurs
       email = params[:email]
       password = params['instructeur']['password']
 
-      instructeur = Instructeur.new(email: email, password: password)
+      user = User.find_by(email: email)
 
-      if instructeur.save
-        user = User.find_by(email: email)
-        if user.blank?
-          user = User.create(email: email, password: password, confirmed_at: Time.zone.now)
-        end
+      if user.nil?
+        user = User.create(
+          email: email,
+          password: password,
+          confirmed_at: Time.zone.now
+        )
+      end
+
+      if user.errors.empty?
+        instructeur = Instructeur.create(email: email)
+        user.update!(instructeur: instructeur)
 
         sign_in(user)
-        sign_in(instructeur, scope: :instructeur)
 
         Avis.link_avis_to_instructeur(instructeur)
         redirect_to url_for(instructeur_avis_index_path)
       else
-        flash[:alert] = instructeur.errors.full_messages
+        flash[:alert] = user.errors.full_messages
         redirect_to url_for(sign_up_instructeur_avis_path(params[:id], email))
       end
     end

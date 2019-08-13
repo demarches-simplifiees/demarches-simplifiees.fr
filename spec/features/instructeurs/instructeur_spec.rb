@@ -13,9 +13,7 @@ feature 'The instructeur part' do
     Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
   end
 
-  context 'when the instructeur is also a user' do
-    let!(:user) { create(:user, email: instructeur.email, password: password) }
-
+  context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
       visit commencer_path(path: procedure.path)
       click_on 'J’ai déjà un compte'
@@ -23,7 +21,10 @@ feature 'The instructeur part' do
       expect(page).to have_current_path new_user_session_path
       sign_in_with(instructeur.email, password, true)
 
-      expect(page).to have_current_path(commencer_path(path: procedure.path))
+      # connexion link erase user stored location
+      # expect(page).to have_current_path(commencer_path(path: procedure.path))
+
+      visit commencer_path(path: procedure.path)
       click_on 'Commencer la démarche'
 
       expect(page).to have_content('Identifier votre établissement')

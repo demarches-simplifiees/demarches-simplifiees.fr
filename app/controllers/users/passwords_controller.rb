@@ -49,7 +49,7 @@ class Users::PasswordsController < Devise::PasswordsController
       instructeur = Instructeur.find_by(email: current_user.email)
 
       if instructeur
-        sign_in instructeur
+        sign_in(instructeur.user)
       end
     end
   end

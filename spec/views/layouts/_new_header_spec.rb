@@ -1,7 +1,13 @@
 require 'spec_helper'
 
 describe 'layouts/_new_header.html.haml', type: :view do
+  let(:current_instructeur) { nil }
+
   before do
+    allow(view).to receive(:multiple_devise_profile_connect?).and_return(false)
+    allow(view).to receive(:instructeur_signed_in?).and_return((profile == :instructeur))
+    allow(view).to receive(:current_instructeur).and_return(current_instructeur)
+
     if user
       sign_in user
       allow(controller).to receive(:nav_bar_profile).and_return(profile)
@@ -46,8 +52,10 @@ describe 'layouts/_new_header.html.haml', type: :view do
   end
 
   context 'when rendering for instructeur' do
-    let(:user) { create(:instructeur) }
+    let(:instructeur) { create(:instructeur) }
+    let(:user) { instructeur.user }
     let(:profile) { :instructeur }
+    let(:current_instructeur) { instructeur }
 
     it { is_expected.to have_css("a.header-logo[href=\"#{instructeur_procedures_path}\"]") }
 
