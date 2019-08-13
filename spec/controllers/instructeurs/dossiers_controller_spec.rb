@@ -117,7 +117,7 @@ describe Instructeurs::DossiersController, type: :controller do
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
     it { expect(instructeur.follow?(dossier)).to be true }
     it { expect(response).to have_http_status(:ok) }
-    it { expect(response.body).to include('.state-button') }
+    it { expect(response.body).to include('.header-actions') }
 
     context 'when the dossier has already been put en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
@@ -141,7 +141,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
     it { expect(response).to have_http_status(:ok) }
-    it { expect(response.body).to include('.state-button') }
+    it { expect(response.body).to include('.header-actions') }
 
     context 'when the dossier has already been put en_construction' do
       let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
@@ -166,7 +166,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction)) }
     it { expect(response).to have_http_status(:ok) }
-    it { expect(response.body).to include('.state-button') }
+    it { expect(response.body).to include('.header-actions') }
 
     context 'when the dossier has already been put en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
@@ -239,7 +239,7 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(dossier.justificatif_motivation).to be_attached
         end
 
-        it { expect(subject.body).to include('.state-button') }
+        it { expect(subject.body).to include('.header-actions') }
       end
     end
 
@@ -267,7 +267,7 @@ describe Instructeurs::DossiersController, type: :controller do
           subject
         end
 
-        it { expect(subject.body).to include('.state-button') }
+        it { expect(subject.body).to include('.header-actions') }
       end
 
       context 'with attachment' do
@@ -281,7 +281,7 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(dossier.justificatif_motivation).to be_attached
         end
 
-        it { expect(subject.body).to include('.state-button') }
+        it { expect(subject.body).to include('.header-actions') }
       end
     end
 
@@ -322,14 +322,14 @@ describe Instructeurs::DossiersController, type: :controller do
         end
 
         it 'The instructeur is sent back to the dossier page' do
-          expect(subject.body).to include('.state-button')
+          expect(subject.body).to include('.header-actions')
         end
 
         context 'and the dossier has already an attestation' do
           it 'should not crash' do
             dossier.attestation = Attestation.new
             dossier.save
-            expect(subject.body).to include('.state-button')
+            expect(subject.body).to include('.header-actions')
           end
         end
       end
@@ -372,7 +372,7 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(dossier.justificatif_motivation).to be_attached
         end
 
-        it { expect(subject.body).to include('.state-button') }
+        it { expect(subject.body).to include('.header-actions') }
       end
     end
 
