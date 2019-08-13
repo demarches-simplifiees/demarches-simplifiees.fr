@@ -12,5 +12,5 @@ function updateContactElementsVisibility() {
   }
 }
 
-addEventListener('turbolinks:load', updateContactElementsVisibility);
+addEventListener('ds:page:update', updateContactElementsVisibility);
 delegate('change', '#contact-form #type', updateContactElementsVisibility);

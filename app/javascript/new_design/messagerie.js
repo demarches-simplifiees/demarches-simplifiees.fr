@@ -14,4 +14,4 @@ export function scrollMessagerie() {
   }
 }
 
-addEventListener('turbolinks:load', scrollMessagerie);
+addEventListener('ds:page:update', scrollMessagerie);
