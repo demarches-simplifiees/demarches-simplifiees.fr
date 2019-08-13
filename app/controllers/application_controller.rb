@@ -201,6 +201,8 @@ class ApplicationController < ActionController::Base
 
     if path == '/' ||
       path == '/users/sign_out' ||
+      path == '/contact' ||
+      path == '/contact-admin' ||
       path.start_with?('/connexion-par-jeton') ||
       path.start_with?('/api/') ||
       path.start_with?('/lien-envoye')
