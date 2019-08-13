@@ -229,7 +229,7 @@ describe Instructeurs::AvisController, type: :controller do
             get :sign_up, params: { id: avis.id, email: invited_email }
           end
 
-          it { is_expected.to redirect_to new_instructeur_session_url }
+          it { is_expected.to redirect_to new_user_session_url }
         end
       end
 

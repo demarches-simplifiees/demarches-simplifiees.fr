@@ -77,15 +77,9 @@ Rails.application.routes.draw do
       omniauth_callbacks: 'administrations/omniauth_callbacks'
     }
 
-  devise_for :administrateurs, controllers: {
-    sessions: 'administrateurs/sessions',
-    passwords: 'administrateurs/passwords'
-  }, skip: [:registrations]
+  devise_for :administrateurs, skip: :all
 
-  devise_for :instructeurs, controllers: {
-    sessions: 'instructeurs/sessions',
-    passwords: 'instructeurs/passwords'
-  }, skip: [:registrations]
+  devise_for :instructeurs, skip: :all
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
@@ -95,20 +89,12 @@ Rails.application.routes.draw do
   }
 
   devise_scope :user do
-    get '/users/sign_in/demo' => redirect("/users/sign_in")
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
     get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
   end
 
-  devise_scope :instructeur do
-    get '/instructeurs/sign_in/demo' => redirect("/users/sign_in")
-    get '/instructeurs/edit' => 'instructeurs/registrations#edit', :as => 'edit_instructeurs_registration'
-    put '/instructeurs' => 'instructeurs/registrations#update', :as => 'instructeurs_registration'
-  end
-
   devise_scope :administrateur do
-    get '/administrateurs/sign_in/demo' => redirect("/users/sign_in")
     get '/administrateurs/password/test_strength' => 'administrateurs/passwords#test_strength'
   end
 
@@ -178,7 +164,6 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
-    get 'sign_in' => '/administrateurs/sessions#new'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
     get 'procedures/path_list' => 'procedures#path_list'
