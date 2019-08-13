@@ -93,7 +93,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context "when logged in" do
-      before { sign_in(instructeur) }
+      before { sign_in(instructeur.user) }
 
       it { expect(response).to have_http_status(:ok) }
 
@@ -171,7 +171,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     context "when logged in" do
       before do
-        sign_in(instructeur)
+        sign_in(instructeur.user)
       end
 
       context "without anything" do
@@ -314,7 +314,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     context "when logged in" do
       before do
-        sign_in(instructeur)
+        sign_in(instructeur.user)
       end
 
       context "csv" do
@@ -342,7 +342,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
 
     context "when logged in" do
-      before { sign_in(instructeur) }
+      before { sign_in(instructeur.user) }
 
       it { expect(instructeur.procedures_with_email_notifications).to be_empty }
 

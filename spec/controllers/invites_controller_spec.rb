@@ -14,7 +14,7 @@ describe InvitesController, type: :controller do
     subject { post :create, params: { dossier_id: dossier.id, invite_email: email } }
 
     context "when instructeur is signed_in" do
-      let(:signed_in_profile) { create(:instructeur) }
+      let(:signed_in_profile) { create(:instructeur).user }
 
       shared_examples_for "he can not create invitation" do
         it { expect { subject rescue nil }.to change(Invite, :count).by(0) }
@@ -25,14 +25,14 @@ describe InvitesController, type: :controller do
       end
 
       context 'when instructeur is invited for avis on dossier' do
-        before { Avis.create(instructeur: signed_in_profile, claimant: create(:instructeur), dossier: dossier) }
+        before { Avis.create(instructeur: signed_in_profile.instructeur, claimant: create(:instructeur), dossier: dossier) }
 
         it_behaves_like "he can not create invitation"
       end
 
       context 'when instructeur has access to dossier' do
         before do
-          signed_in_profile.procedures << dossier.procedure
+          signed_in_profile.instructeur.procedures << dossier.procedure
         end
 
         it_behaves_like "he can not create invitation"
