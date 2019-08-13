@@ -67,6 +67,7 @@ feature 'The instructeur part' do
     end
 
     expect(page).to have_text('Dossier traité avec succès.')
+    expect(page).to have_link('Archiver le dossier')
 
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
