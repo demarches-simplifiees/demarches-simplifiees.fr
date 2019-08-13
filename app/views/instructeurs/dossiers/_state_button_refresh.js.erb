@@ -1,5 +1,5 @@
 <%= render_flash %>
-<%= render_to_element('.state-button', partial: "state_button", locals: { dossier: dossier }) %>
+<%= render_to_element('.header-actions', partial: 'header_actions', locals: { dossier: dossier }) %>
 
 <% attachment = dossier.justificatif_motivation.attachment %>
 <% if attachment && attachment.virus_scanner.pending? %>

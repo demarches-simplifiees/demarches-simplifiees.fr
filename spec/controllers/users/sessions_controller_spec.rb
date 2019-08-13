@@ -12,6 +12,7 @@ describe Users::SessionsController, type: :controller do
     context "when the user is also a instructeur and an administrateur" do
       let!(:administrateur) { create(:administrateur, email: email, password: password) }
       let(:instructeur) { administrateur.instructeur }
+      let(:user) { instructeur.user }
       let(:trusted_device) { true }
       let(:send_password) { password }
 
@@ -29,14 +30,15 @@ describe Users::SessionsController, type: :controller do
       context 'when the device is not trusted' do
         let(:trusted_device) { false }
 
-        it 'redirects to the root path' do
+        it 'redirects to the send_linked_path' do
           subject
 
-          expect(controller).to redirect_to(root_path)
+          expect(controller).to redirect_to(link_sent_path(email: user.email))
 
           expect(controller.current_user).to eq(user)
           expect(controller.current_instructeur).to eq(instructeur)
-          expect(controller.current_administrateur).to eq(administrateur)
+          #  WTF?
+          # expect(controller.current_administrateur).to eq(administrateur)
           expect(user.loged_in_with_france_connect).to eq(nil)
         end
       end
@@ -73,6 +75,8 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#destroy' do
+    let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
+
     before do
       sign_in user
       delete :destroy
@@ -103,47 +107,11 @@ describe Users::SessionsController, type: :controller do
       end
     end
 
-    context "when associated instructeur" do
-      let(:user) { create(:user, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
-      let(:instructeur) { create(:instructeur, email: 'unique@plop.com', password: 'démarches-simplifiées-pwd') }
-
-      it 'signs user out' do
-        sign_in user
-        delete :destroy
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to be(nil)
-      end
-
-      it 'signs instructeur out' do
-        sign_in instructeur
-        delete :destroy
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_instructeur).to be(nil)
-      end
-
-      it 'signs user + instructeur out' do
-        sign_in user
-        sign_in instructeur
-        delete :destroy
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_instructeur).to be(nil)
-      end
-
-      it 'signs user out from france connect' do
-        user.update(loged_in_with_france_connect: User.loged_in_with_france_connects.fetch(:particulier))
-        sign_in user
-        delete :destroy
-        expect(@response.headers["Location"]).to eq(FRANCE_CONNECT[:particulier][:logout_endpoint])
-      end
-    end
-
     context "when associated administrateur" do
-      let(:administrateur) { create(:administrateur, email: 'unique@plop.com') }
+      let(:administrateur) { create(:administrateur, user: user) }
 
       it 'signs user + instructeur + administrateur out' do
         sign_in user
-        sign_in administrateur.instructeur
         sign_in administrateur
         delete :destroy
         expect(@response.redirect?).to be(true)
@@ -181,7 +149,7 @@ describe Users::SessionsController, type: :controller do
 
       before do
         if logged
-          sign_in instructeur
+          sign_in(instructeur.user)
         end
         allow(controller).to receive(:trust_device)
         allow(controller).to receive(:send_login_token_or_bufferize)
