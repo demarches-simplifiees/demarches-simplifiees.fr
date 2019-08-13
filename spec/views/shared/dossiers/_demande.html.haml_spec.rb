@@ -6,7 +6,7 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure, etablissement: etablissement, individual: individual) }
 
   before do
-    sign_in current_instructeur
+    sign_in(current_instructeur.user)
   end
 
   subject! { render 'shared/dossiers/demande.html.haml', dossier: dossier, demande_seen_at: nil, profile: 'usager' }
