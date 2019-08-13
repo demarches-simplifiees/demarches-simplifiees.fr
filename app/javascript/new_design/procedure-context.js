@@ -14,7 +14,7 @@ function expandProcedureDescription() {
   descBody.classList.remove('read-more-collapsed');
 }
 
-addEventListener('turbolinks:load', updateReadMoreVisibility);
+addEventListener('ds:page:update', updateReadMoreVisibility);
 addEventListener('resize', updateReadMoreVisibility);
 
 delegate('click', '.read-more-button', expandProcedureDescription);
