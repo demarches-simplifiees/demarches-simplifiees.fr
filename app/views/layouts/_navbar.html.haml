@@ -9,8 +9,9 @@
 .col-xs-10.no-padding
   #navbar-body
     .row
-      %div{ style: "vertical-align: middle;float:left;position:absolute;line-height: 60px;z-index:2;" }
-        👉Besoin d'aide? Contactez-nous par <a style="cursor:hand" onclick="$crisp.push(['do', 'chat:open'])">chat</a>, <a href="#{contact_admin_path}" target="_blank" rel="noopener">email</a> ou <a target="_blank" rel="noopener" href="https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr">prenez RDV</a>
+      %div{ style: "max-width: 50%; position: absolute; display: flex; flex-direction: column; justify-content: center; height: 60px; line-height: 20px; z-index: 2;" }
+        %span
+          👉 Besoin d’aide ? Consultez <a target="_blank" rel="noopener" href="https://doc.demarches-simplifiees.fr/">la documentation</a> et <a target="_blank" rel="noopener" href="https://faq.demarches-simplifiees.fr/">l’aide</a>, contactez-nous par <a style="cursor:hand" onclick="$crisp.push(['do', 'chat:open'])">chat</a> ou <a href="#{contact_admin_path}" target="_blank" rel="noopener">email</a>, ou <a target="_blank" rel="noopener" href="https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr">prenez RDV</a>.
       -# BEST WTF EVER
       -# this begin rescue hides potentials bugs by displaying another navbar
       - begin
