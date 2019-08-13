@@ -6,6 +6,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
   before do
     assign(:procedure, procedure)
+    assign(:procedure_lien, commencer_url(path: procedure.path))
   end
 
   describe 'procedure is draft' do

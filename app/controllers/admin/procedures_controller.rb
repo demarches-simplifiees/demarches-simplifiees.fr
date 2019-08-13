@@ -40,6 +40,11 @@ class Admin::ProceduresController < AdminController
   end
 
   def show
+    if @procedure.brouillon?
+      @procedure_lien = commencer_test_url(path: @procedure.path)
+    else
+      @procedure_lien = commencer_url(path: @procedure.path)
+    end
     @procedure.path = @procedure.suggested_path(current_administrateur)
     @current_administrateur = current_administrateur
   end
