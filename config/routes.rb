@@ -297,7 +297,7 @@ Rails.application.routes.draw do
   end
 
   #
-  # Gestionnaire
+  # Instructeur
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
