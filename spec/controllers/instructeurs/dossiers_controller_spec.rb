@@ -184,13 +184,7 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
         expect(response).to have_http_status(:ok)
       end
-      context 'as administrateur' do
-        let (:current_user) { administrateur }
-        it 'it is not possible to go back to en_instruction' do
-          expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
-          expect(response).to have_http_status(:ok)
-        end
-      end
+
       context 'as superadmin' do
         let (:current_user) { administration }
         it 'it is not possible to go back to en_instruction' do
