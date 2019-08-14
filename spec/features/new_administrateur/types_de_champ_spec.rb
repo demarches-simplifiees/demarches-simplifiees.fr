@@ -5,7 +5,6 @@ feature 'As an administrateur I can edit types de champ', js: true do
   let(:procedure) { create(:procedure) }
 
   before do
-    Flipflop::FeatureSet.current.test!.switch!(:champ_repetition, true)
     login_as administrateur, scope: :administrateur
     visit champs_procedure_path(procedure)
   end
