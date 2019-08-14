@@ -78,6 +78,13 @@ module FeatureHelpers
       value
     end
   end
+
+  def click_reset_password_link_for(email)
+    reset_password_email = open_email(email)
+    token_params = reset_password_email.body.match(/reset_password_token=[^"]+/)
+
+    visit "/users/password/edit?#{token_params}"
+  end
 end
 
 RSpec.configure do |config|
