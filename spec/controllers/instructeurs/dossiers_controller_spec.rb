@@ -82,7 +82,6 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it { expect(dossier.archived).to be true }
     it { expect(response).to redirect_to(instructeur_procedures_url) }
-    it { expect(instructeur.followed_dossiers).not_to include(dossier) }
   end
 
   describe '#unarchive' do

@@ -78,7 +78,6 @@ module Instructeurs
 
     def archive
       dossier.update(archived: true)
-      current_instructeur.unfollow(dossier)
       redirect_back(fallback_location: instructeur_procedures_url)
     end
 
