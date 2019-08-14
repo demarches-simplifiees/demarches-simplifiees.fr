@@ -361,6 +361,57 @@
     }
   }
 
+  .send-dossier-wrapper {
+    display: flex;
+    width: 100%;
+    margin-top: $default-padding;
+    background: #FFFFFF;
+    position: fixed;
+    bottom: 0px;
+    border: 1px solid #CCCCCC;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: none;
+    padding: 30px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    left: 0px;
+    margin: 0 auto;
+
+    .button {
+      margin-top: $default-padding;
+      margin-bottom: 0;
+    }
+
+    // Wide layout: align buttons on a single row
+    @media (min-width: 550px) {
+      flex-direction: row;
+
+      .button:not(:first-of-type) {
+        margin-left: $default-spacer;
+      }
+
+      // If there are more than one button, align the "Send" button to the right
+      .button:not(:first-of-type).send {
+        margin-left: auto;
+      }
+    }
+
+    // Narrow layout: stack buttons vertically
+    @media (max-width: 550px) {
+      flex-direction: column-reverse;
+      align-items: center;
+
+      .button {
+        width: 100%;
+        max-width: 350px;
+        line-height: 30px;
+        margin-left: none;
+        margin-right: none;
+      }
+    }
+  }
+
   .send-notice {
     @include notice-text-style;
     margin-bottom: $default-padding;
