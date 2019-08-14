@@ -12,10 +12,6 @@ describe Instructeur, type: :model do
     assign(procedure_2)
   end
 
-  describe 'default features' do
-    it { expect(instructeur.features).to eq({ "enable_email_login_token" => true }) }
-  end
-
   describe '#visible_procedures' do
     let(:procedure_not_assigned)           { create :procedure, administrateur: admin }
     let(:procedure_with_default_path)      { create :procedure, administrateur: admin }

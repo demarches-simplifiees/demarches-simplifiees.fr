@@ -9,10 +9,6 @@ feature 'The instructeur part' do
   let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
   let!(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure) }
 
-  before do
-    Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
-  end
-
   context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
       visit commencer_path(path: procedure.path)
