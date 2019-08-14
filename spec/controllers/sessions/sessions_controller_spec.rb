@@ -8,8 +8,6 @@ describe Sessions::SessionsController, type: :controller do
   end
 
   let(:user) { create(:user) }
-  let(:instructeur) { create(:instructeur) }
-  let(:administrateur) { create(:administrateur) }
 
   describe '#create' do
     before do
@@ -31,19 +29,6 @@ describe Sessions::SessionsController, type: :controller do
 
     it 'calls sign out for user' do
       expect_any_instance_of(described_class).to receive(:sign_out).with(:user)
-      post :create
-    end
-  end
-
-  describe '#create with administrateur connected' do
-    before do
-      @request.env["devise.mapping"] = Devise.mappings[:administrateur]
-
-      allow_any_instance_of(described_class).to receive(:administrateur_signed_in?).and_return(true)
-    end
-
-    it 'calls sign out for administrateur' do
-      expect_any_instance_of(described_class).to receive(:sign_out).with(:administrateur)
       post :create
     end
   end

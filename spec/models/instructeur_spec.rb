@@ -12,10 +12,6 @@ describe Instructeur, type: :model do
     assign(procedure_2)
   end
 
-  describe 'default features' do
-    it { expect(instructeur.features).to eq({ "enable_email_login_token" => true }) }
-  end
-
   describe '#visible_procedures' do
     let(:procedure_not_assigned)           { create :procedure, administrateur: admin }
     let(:procedure_with_default_path)      { create :procedure, administrateur: admin }
@@ -138,18 +134,6 @@ describe Instructeur, type: :model do
       let(:procedure_to_remove) { procedure_3 }
 
       it { is_expected.to be_falsey }
-    end
-  end
-
-  context 'unified login' do
-    it 'syncs credentials to associated administrateur' do
-      admin = create(:administrateur)
-      user = admin.instructeur.user
-
-      user.update(password: 'démarches-simplifiées-pwd')
-
-      admin.reload
-      expect(admin.valid_password?('démarches-simplifiées-pwd')).to be(true)
     end
   end
 

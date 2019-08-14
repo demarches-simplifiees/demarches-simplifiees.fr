@@ -7,7 +7,7 @@ describe NewAdministrateur::MailTemplatesController, type: :controller do
     let(:procedure) { create(:procedure, :with_logo, :with_service, administrateur: admin) }
 
     before do
-      sign_in admin
+      sign_in(admin.user)
       get :preview, params: { id: "initiated_mail", procedure_id: procedure.id }
     end
 

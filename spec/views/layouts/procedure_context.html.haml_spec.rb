@@ -6,6 +6,7 @@ describe 'layouts/procedure_context.html.haml', type: :view do
 
   before do
     allow(view).to receive(:instructeur_signed_in?).and_return(false)
+    allow(view).to receive(:administrateur_signed_in?).and_return(false)
   end
 
   subject do

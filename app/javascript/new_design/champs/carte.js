@@ -39,7 +39,7 @@ function diplayMap(element, data, initial = false) {
   }
 }
 
-addEventListener('turbolinks:load', initialize);
+addEventListener('ds:page:update', initialize);
 
 addEventListener('carte:update', ({ detail: { selector, data } }) => {
   const element = document.querySelector(selector);

@@ -6,7 +6,7 @@ feature 'As an instructeur', js: true do
   let(:instructeur_email) { 'new_instructeur@gouv.fr' }
 
   before do
-    login_as administrateur, scope: :administrateur
+    login_as administrateur.user, scope: :user
     visit admin_procedure_assigns_path(procedure)
 
     fill_in :instructeur_email, with: instructeur_email

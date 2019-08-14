@@ -16,8 +16,7 @@ class Users::SessionsController < Sessions::SessionsController
   def create
     remember_me = params[:user][:remember_me] == '1'
 
-    if resource_locked?(try_to_authenticate(User, remember_me)) ||
-      resource_locked?(try_to_authenticate(Administrateur, remember_me))
+    if resource_locked?(try_to_authenticate(User, remember_me))
       flash.alert = 'Votre compte est verrouillé.'
       new
       return render :new, status: 401
@@ -43,14 +42,6 @@ class Users::SessionsController < Sessions::SessionsController
 
   # DELETE /resource/sign_out
   def destroy
-    if instructeur_signed_in?
-      sign_out :instructeur
-    end
-
-    if administrateur_signed_in?
-      sign_out :administrateur
-    end
-
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
       current_user.update(loged_in_with_france_connect: '')
