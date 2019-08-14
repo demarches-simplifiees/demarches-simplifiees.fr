@@ -10,7 +10,7 @@ describe Users::ProfilController, type: :controller do
   describe 'POST #renew_api_token' do
     let(:administrateur) { create(:administrateur) }
 
-    before { sign_in(administrateur) }
+    before { sign_in(administrateur.user) }
 
     before do
       allow(administrateur).to receive(:renew_api_token)

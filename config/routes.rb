@@ -77,8 +77,6 @@ Rails.application.routes.draw do
       omniauth_callbacks: 'administrations/omniauth_callbacks'
     }
 
-  devise_for :administrateurs, skip: :all
-
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations',

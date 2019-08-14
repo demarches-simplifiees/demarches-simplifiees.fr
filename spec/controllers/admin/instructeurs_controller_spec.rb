@@ -6,7 +6,7 @@ describe Admin::InstructeursController, type: :controller do
   let(:admin_2) { create :administrateur, email: email_2 }
 
   before do
-    sign_in admin
+    sign_in(admin.user)
   end
 
   describe 'GET #index' do
@@ -117,8 +117,8 @@ describe Admin::InstructeursController, type: :controller do
       before do
         create :instructeur, email: email, administrateurs: [admin]
 
-        sign_out admin
-        sign_in admin_2
+        sign_out(admin.user)
+        sign_in(admin_2.user)
 
         subject
       end
@@ -138,8 +138,8 @@ describe Admin::InstructeursController, type: :controller do
       before do
         create :instructeur, email: email, administrateurs: [admin]
 
-        sign_out admin
-        sign_in admin_2
+        sign_out(admin.user)
+        sign_in(admin_2.user)
 
         subject
       end

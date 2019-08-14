@@ -108,20 +108,6 @@ describe Users::SessionsController, type: :controller do
         expect(response).to redirect_to(root_path)
       end
     end
-
-    context "when associated administrateur" do
-      let(:administrateur) { create(:administrateur, user: user) }
-
-      it 'signs user + instructeur + administrateur out' do
-        sign_in user
-        sign_in administrateur
-        delete :destroy
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_instructeur).to be(nil)
-        expect(subject.current_administrateur).to be(nil)
-      end
-    end
   end
 
   describe '#new' do

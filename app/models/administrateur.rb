@@ -3,21 +3,20 @@ class Administrateur < ApplicationRecord
   include EmailSanitizableConcern
   include ActiveRecord::SecureToken
 
-  devise :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable, :lockable
-
   has_and_belongs_to_many :instructeurs
   has_many :administrateurs_procedures
   has_many :procedures, through: :administrateurs_procedures
   has_many :services
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
+  has_one :user
+
   before_validation -> { sanitize_email(:email) }
 
   scope :inactive, -> { where(active: false) }
   scope :with_publiees_ou_archivees, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :archivee] }) }
 
-  validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
+  # validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
 
   def password_complexity
     if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_ADMIN
@@ -54,28 +53,6 @@ class Administrateur < ApplicationRecord
     else
       'Expiré'
     end
-  end
-
-  def invite!(administration_id)
-    if active?
-      raise "Impossible d'inviter un utilisateur déjà actif !"
-    end
-
-    reset_password_token = set_reset_password_token
-
-    AdministrationMailer.invite_admin(self, reset_password_token, administration_id).deliver_later
-
-    reset_password_token
-  end
-
-  def remind_invitation!
-    if active?
-      raise "Impossible d'envoyer un rappel d'invitation à un utilisateur déjà actif !"
-    end
-
-    reset_password_token = set_reset_password_token
-
-    AdministrateurMailer.activate_before_expiration(self, reset_password_token).deliver_later
   end
 
   def invitation_expired?
