@@ -42,14 +42,6 @@ class Users::SessionsController < Sessions::SessionsController
 
   # DELETE /resource/sign_out
   def destroy
-    if instructeur_signed_in?
-      sign_out :instructeur
-    end
-
-    if administrateur_signed_in?
-      sign_out :administrateur
-    end
-
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
       current_user.update(loged_in_with_france_connect: '')
