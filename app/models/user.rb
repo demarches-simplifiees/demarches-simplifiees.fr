@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :feedbacks, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
   belongs_to :instructeur
+  belongs_to :administrateur
 
   accepts_nested_attributes_for :france_connect_information
 
@@ -42,6 +43,23 @@ class User < ApplicationRecord
 
   def invite!
     UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
+  end
+
+  def invite_administrateur!(administration_id)
+    if administrateur.active?
+      raise "Impossible d'inviter un utilisateur déjà actif !"
+    end
+
+    reset_password_token = set_reset_password_token
+    AdministrationMailer.invite_admin(self, reset_password_token, administration_id).deliver_later
+
+    reset_password_token
+  end
+
+  def remind_invitation!
+    reset_password_token = set_reset_password_token
+
+    AdministrateurMailer.activate_before_expiration(self, reset_password_token).deliver_later
   end
 
   private

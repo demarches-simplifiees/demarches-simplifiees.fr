@@ -6,7 +6,7 @@ describe Admin::AssignsController, type: :controller do
   let(:instructeur) { create :instructeur, administrateurs: [admin] }
 
   before do
-    sign_in admin
+    sign_in(admin.user)
   end
 
   describe 'GET #show' do

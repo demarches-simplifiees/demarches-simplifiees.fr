@@ -14,7 +14,7 @@ feature 'Administrateurs can edit procedures', js: true do
   end
 
   before do
-    login_as administrateur, scope: :administrateur
+    login_as administrateur.user, scope: :user
   end
 
   context 'when the procedure is in draft' do

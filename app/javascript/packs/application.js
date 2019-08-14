@@ -9,6 +9,7 @@ import Highcharts from 'highcharts';
 import ReactUJS from '../shared/react-ujs';
 import reactComponents from '../shared/react-components';
 
+import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
 import '../shared/activestorage/attachment-checker';
 import '../shared/rails-ujs-fix';

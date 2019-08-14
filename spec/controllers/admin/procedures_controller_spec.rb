@@ -33,7 +33,7 @@ describe Admin::ProceduresController, type: :controller do
   }
 
   before do
-    sign_in admin
+    sign_in(admin.user)
   end
 
   describe 'GET #index' do
@@ -155,7 +155,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when user is not connected' do
       before do
-        sign_out admin
+        sign_out(admin.user)
       end
 
       it { is_expected.to redirect_to new_user_session_path }
@@ -252,7 +252,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when administrateur is not connected' do
       before do
-        sign_out admin
+        sign_out(admin.user)
       end
 
       subject { put :update, params: { id: procedure.id } }
@@ -411,8 +411,8 @@ describe Admin::ProceduresController, type: :controller do
       let(:admin_2) { create(:administrateur) }
 
       before do
-        sign_out admin
-        sign_in admin_2
+        sign_out(admin.user)
+        sign_in(admin_2.user)
 
         put :publish, params: { procedure_id: procedure.id, path: 'fake_path' }
         procedure.reload
@@ -471,8 +471,8 @@ describe Admin::ProceduresController, type: :controller do
       let(:admin_2) { create(:administrateur) }
 
       before do
-        sign_out admin
-        sign_in admin_2
+        sign_out(admin.user)
+        sign_in(admin_2.user)
 
         put :archive, params: { procedure_id: procedure.id }
         procedure.reload
@@ -517,8 +517,8 @@ describe Admin::ProceduresController, type: :controller do
       let(:admin_2) { create(:administrateur) }
 
       before do
-        sign_out admin
-        sign_in admin_2
+        sign_out(admin.user)
+        sign_in(admin_2.user)
         subject
       end
 
@@ -783,7 +783,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when administrateur is not connected' do
       before do
-        sign_out admin
+        sign_out(admin.user)
       end
 
       subject { patch :update_monavis, params: { procedure_id: procedure.id } }
