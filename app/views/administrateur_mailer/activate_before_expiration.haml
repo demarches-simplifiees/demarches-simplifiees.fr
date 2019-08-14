@@ -9,7 +9,7 @@
 
 %p
   Afin d’activer votre compte, veuillez cliquer sur le lien ci-dessous :
-  = link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
+  = link_to(users_activate_url(token: @reset_password_token), users_activate_url(token: @reset_password_token))
 
 %p
   Nous restons à votre disposition si vous avez besoin d’accompagnement.

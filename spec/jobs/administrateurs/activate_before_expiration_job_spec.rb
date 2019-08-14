@@ -38,7 +38,7 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
           subject
         end
 
-        it { expect(AdministrateurMailer).to have_received(:activate_before_expiration).with(administrateur, kind_of(String)) }
+        it { expect(AdministrateurMailer).to have_received(:activate_before_expiration).with(administrateur.user, kind_of(String)) }
       end
     end
 

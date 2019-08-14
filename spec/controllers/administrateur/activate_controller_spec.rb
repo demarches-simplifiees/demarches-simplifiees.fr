@@ -1,7 +1,7 @@
 describe Administrateurs::ActivateController, type: :controller do
   describe '#new' do
     let(:admin) { create(:administrateur) }
-    let(:token) { admin.send(:set_reset_password_token) }
+    let(:token) { admin.user.send(:set_reset_password_token) }
 
     before { allow(controller).to receive(:trust_device) }
 

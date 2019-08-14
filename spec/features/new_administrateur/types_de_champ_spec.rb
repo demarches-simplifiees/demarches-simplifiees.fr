@@ -5,7 +5,7 @@ feature 'As an administrateur I can edit types de champ', js: true do
   let(:procedure) { create(:procedure) }
 
   before do
-    login_as administrateur, scope: :administrateur
+    login_as administrateur.user, scope: :user
     visit champs_procedure_path(procedure)
   end
 
