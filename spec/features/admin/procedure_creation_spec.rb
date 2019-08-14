@@ -98,11 +98,16 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       click_on Procedure.last.libelle
       expect(page).to have_current_path(admin_procedure_path(Procedure.last))
 
+      expect(page).to have_content('en test')
+      # Only check the path even though the link is the complete URL
+      # (Capybara runs the app on an arbitrary host/port.)
+      expect(page).to have_link(nil, href: /#{commencer_test_path(Procedure.last.path)}/)
+
       expect(page).to have_selector('#publish-procedure', visible: true)
       find('#publish-procedure').click
 
       within '#publish-modal' do
-        expect(page).to have_field('procedure_path')
+        expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
         fill_in 'lien_site_web', with: 'http://some.website'
         click_on 'publish'
       end
