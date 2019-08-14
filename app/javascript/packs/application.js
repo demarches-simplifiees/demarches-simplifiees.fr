@@ -7,7 +7,6 @@ import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 
 import ReactUJS from '../shared/react-ujs';
-import reactComponents from '../shared/react-components';
 
 import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
@@ -57,9 +56,7 @@ Chartkick.addAdapter(Highcharts);
 Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
-
-const loader = new ReactUJS(reactComponents);
-loader.start();
+ReactUJS.start();
 
 // Expose globals
 window.DS = window.DS || DS;

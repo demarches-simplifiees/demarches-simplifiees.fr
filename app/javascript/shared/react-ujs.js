@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 // This attribute holds the name of component which should be mounted
@@ -15,9 +16,21 @@ function findDOMNodes() {
   return document.querySelectorAll(`[${CLASS_NAME_ATTR}]`);
 }
 
+const Imports = {
+  TypesDeChampEditor: import('components/TypesDeChampEditor')
+};
+
 export default class ReactUJS {
-  constructor(loadComponent) {
-    this.loadComponent = loadComponent;
+  loadComponent(className) {
+    if (Imports[className]) {
+      return Imports[className].then(mod => mod.default).catch(() => null);
+    }
+    console.warn(
+      `Component "${className}" is dynamically loaded. Consider adding static mapping.`
+    );
+    return import(`components/${className}`)
+      .then(mod => mod.default)
+      .catch(() => null);
   }
 
   async mountComponents() {
@@ -25,11 +38,9 @@ export default class ReactUJS {
 
     for (let node of nodes) {
       const className = node.getAttribute(CLASS_NAME_ATTR);
-      const createReactUJSElement = await this.loadComponent(className).catch(
-        () => null
-      );
+      const Component = await this.loadComponent(className);
 
-      if (!createReactUJSElement) {
+      if (!Component) {
         const message = "Cannot find component: '" + className + "'";
         // eslint-disable-next-line no-console
         console.error(
@@ -45,17 +56,19 @@ export default class ReactUJS {
         const propsJson = node.getAttribute(PROPS_ATTR);
         const props = propsJson && JSON.parse(propsJson);
         const hydrate = node.getAttribute(RENDER_ATTR);
+        const ReactElement = React.createElement(Component, props);
 
         if (hydrate && typeof ReactDOM.hydrate === 'function') {
-          ReactDOM.hydrate(createReactUJSElement(props), node);
+          ReactDOM.hydrate(ReactElement, node);
         } else {
-          ReactDOM.render(createReactUJSElement(props), node);
+          ReactDOM.render(ReactElement, node);
         }
       }
     }
   }
 
-  start() {
-    addEventListener('ds:page:update', () => this.mountComponents());
+  static start() {
+    const loader = new this();
+    addEventListener('ds:page:update', () => loader.mountComponents());
   }
 }

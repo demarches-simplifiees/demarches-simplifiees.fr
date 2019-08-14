@@ -51,8 +51,4 @@ TypesDeChampEditor.propTypes = {
   typeDeChampsTypes: PropTypes.array
 };
 
-export function createReactUJSElement(props) {
-  return React.createElement(TypesDeChampEditor, props);
-}
-
 export default TypesDeChampEditor;
