@@ -137,18 +137,6 @@ describe Instructeur, type: :model do
     end
   end
 
-  context 'unified login' do
-    it 'syncs credentials to associated administrateur' do
-      admin = create(:administrateur)
-      user = admin.instructeur.user
-
-      user.update(password: 'démarches-simplifiées-pwd')
-
-      admin.reload
-      expect(admin.valid_password?('démarches-simplifiées-pwd')).to be(true)
-    end
-  end
-
   describe 'last_week_overview' do
     let!(:instructeur2) { create(:instructeur) }
     subject { instructeur2.last_week_overview }
