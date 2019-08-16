@@ -9,7 +9,7 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#create' do
-    let(:user) { create(:user, email: email, password: password) }
+    let(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: 'particulier') }
     let(:send_password) { password }
     let(:remember_me) { '0' }
 
@@ -29,7 +29,7 @@ describe Users::SessionsController, type: :controller do
 
         expect(response).to redirect_to(root_path)
         expect(controller.current_user).to eq(user)
-        expect(user.loged_in_with_france_connect).to be(nil)
+        expect(user.reload.loged_in_with_france_connect).to be(nil)
         expect(user.reload.remember_created_at).to be_nil
       end
 
