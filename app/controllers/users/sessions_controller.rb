@@ -16,9 +16,11 @@ class Users::SessionsController < Devise::SessionsController
   def create
     remember_me = params[:user][:remember_me] == '1'
 
-    try_to_authenticate(User, remember_me)
+    user = User.find_by(email: params[:user][:email])
 
-    if user_signed_in?
+    if user&.valid_password?(params[:user][:password])
+      user.remember_me = remember_me
+      sign_in(user)
       current_user.update(loged_in_with_france_connect: nil)
 
       set_flash_message :notice, :signed_in
@@ -83,19 +85,5 @@ class Users::SessionsController < Devise::SessionsController
       send_login_token_or_bufferize(instructeur)
       redirect_to link_sent_path(email: instructeur.email)
     end
-  end
-
-  private
-
-  def try_to_authenticate(klass, remember_me = false)
-    resource = klass.find_for_database_authentication(email: params[:user][:email])
-
-    if resource.present?
-      if resource.valid_password?(params[:user][:password])
-        resource.remember_me = remember_me
-        sign_in resource
-      end
-    end
-    resource
   end
 end
