@@ -8,14 +8,14 @@
 
   %hr
 
-  = form_for @user, url: user_session_path, html: { class: "form" } do |f|
+  = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
     %h1 Connectez-vous
 
     = f.label :email, "Email"
     = f.text_field :email, autofocus: true
 
     = f.label :password, "Mot de passe"
-    = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
+    = f.password_field :password, placeholder: "8 caractères minimum"
 
     .auth-options
       %div
