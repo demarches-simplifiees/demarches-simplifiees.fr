@@ -31,8 +31,7 @@ class Users::SessionsController < Devise::SessionsController
       redirect_to after_sign_in_path_for(:user)
     else
       flash.alert = 'Mauvais couple login / mot de passe'
-      new
-      render :new, status: 401
+      render :new, assigns: { user: User.new }
     end
   end
 

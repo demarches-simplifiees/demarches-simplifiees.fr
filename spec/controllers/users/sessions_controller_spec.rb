@@ -44,7 +44,7 @@ describe Users::SessionsController, type: :controller do
       it 'fails to sign in with bad credentials' do
         subject
 
-        expect(response.unauthorized?).to be(true)
+        expect(response).to render_template(:new)
         expect(controller.current_user).to be(nil)
       end
     end
