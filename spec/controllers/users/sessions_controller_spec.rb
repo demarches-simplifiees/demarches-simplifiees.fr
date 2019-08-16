@@ -20,10 +20,21 @@ describe Users::SessionsController, type: :controller do
       it 'signs in' do
         subject
 
-        expect(response.redirect?).to be(true)
-        expect(controller).not_to redirect_to link_sent_path(email: email)
+        expect(response).to redirect_to(root_path)
         expect(controller.current_user).to eq(user)
         expect(user.loged_in_with_france_connect).to be(nil)
+      end
+
+      context 'when a previous path was registered' do
+        let(:stored_path) { 'a_path' }
+
+        before { controller.store_location_for(:user, stored_path) }
+
+        it 'redirects to that previous path' do
+          subject
+
+          expect(response).to redirect_to(stored_path)
+        end
       end
     end
 
