@@ -20,9 +20,7 @@ class Users::SessionsController < Devise::SessionsController
 
     if user_signed_in?
       current_user.update(loged_in_with_france_connect: nil)
-    end
 
-    if instructeur_signed_in? || user_signed_in?
       set_flash_message :notice, :signed_in
       redirect_to after_sign_in_path_for(:user)
     else
