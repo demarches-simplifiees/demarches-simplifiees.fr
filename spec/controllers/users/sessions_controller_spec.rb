@@ -13,11 +13,9 @@ describe Users::SessionsController, type: :controller do
       let!(:administrateur) { create(:administrateur, email: email, password: password) }
       let(:instructeur) { administrateur.instructeur }
       let(:user) { instructeur.user }
-      let(:trusted_device) { true }
       let(:send_password) { password }
 
       before do
-        allow(controller).to receive(:trusted_device?).and_return(trusted_device)
         allow(InstructeurMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
       end
 
@@ -26,26 +24,7 @@ describe Users::SessionsController, type: :controller do
         user.reload
       end
 
-      context 'when the device is not trusted' do
-        before do
-          Flipflop::FeatureSet.current.test!.switch!(:bypass_email_login_token, false)
-        end
-        let(:trusted_device) { false }
-
-        it 'redirects to the send_linked_path' do
-          subject
-
-          expect(controller).to redirect_to(link_sent_path(email: user.email))
-
-          expect(controller.current_user).to eq(user)
-          expect(controller.current_instructeur).to eq(instructeur)
-          #  WTF?
-          # expect(controller.current_administrateur).to eq(administrateur)
-          expect(user.loged_in_with_france_connect).to eq(nil)
-        end
-      end
-
-      context 'when the device is trusted' do
+      context 'when the credentials are right' do
         it 'signs in as user, instructeur and adminstrateur' do
           subject
 
