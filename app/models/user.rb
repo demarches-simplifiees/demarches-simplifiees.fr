@@ -61,6 +61,22 @@ class User < ApplicationRecord
     AdministrateurMailer.activate_before_expiration(self, reset_password_token).deliver_later
   end
 
+  def self.create_or_promote_to_instructeur(email, password, administrateurs: [])
+    user = User
+      .create_with(password: password, confirmed_at: Time.zone.now)
+      .find_or_create_by(email: email)
+
+    if user.valid?
+      if user.instructeur_id.nil?
+        user.create_instructeur!(email: email)
+      end
+
+      user.instructeur.administrateurs << administrateurs
+    end
+
+    user
+  end
+
   private
 
   def link_invites!
