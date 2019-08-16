@@ -36,6 +36,17 @@ describe Users::SessionsController, type: :controller do
           expect(response).to redirect_to(stored_path)
         end
       end
+
+      context 'when the user is locked' do
+        before { user.lock_access! }
+
+        it 'redirects to new_path' do
+          subject
+
+          expect(response).to redirect_to(new_user_session_path)
+          expect(flash.alert).to eq(I18n.t('devise.failure.invalid'))
+        end
+      end
     end
 
     context 'when the credentials are wrong' do
