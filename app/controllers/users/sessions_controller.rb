@@ -7,24 +7,15 @@ class Users::SessionsController < Devise::SessionsController
 
   before_action :restore_procedure_context, only: [:new, :create]
 
-  # GET /resource/sign_in
-  def new
-  end
-
   # POST /resource/sign_in
   def create
     user = User.find_by(email: params[:user][:email])
 
     if user&.valid_password?(params[:user][:password])
-      sign_in(user)
-      current_user.update(loged_in_with_france_connect: nil)
-
-      set_flash_message :notice, :signed_in
-      redirect_to after_sign_in_path_for(:user)
-    else
-      flash.alert = 'Mauvais couple login / mot de passe'
-      render :new, assigns: { user: User.new }
+      user.update(loged_in_with_france_connect: nil)
     end
+
+    super
   end
 
   def link_sent

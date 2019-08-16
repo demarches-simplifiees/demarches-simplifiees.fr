@@ -61,7 +61,7 @@ describe Users::SessionsController, type: :controller do
         it 'redirects to new_path' do
           subject
 
-          expect(response).to redirect_to(new_user_session_path)
+          expect(response).to render_template(:new)
           expect(flash.alert).to eq(I18n.t('devise.failure.invalid'))
         end
       end
