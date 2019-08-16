@@ -16,11 +16,7 @@ class Users::SessionsController < Devise::SessionsController
   def create
     remember_me = params[:user][:remember_me] == '1'
 
-    if resource_locked?(try_to_authenticate(User, remember_me))
-      flash.alert = 'Votre compte est verrouillé.'
-      new
-      return render :new, status: 401
-    end
+    try_to_authenticate(User, remember_me)
 
     if user_signed_in?
       current_user.update(loged_in_with_france_connect: nil)
@@ -103,9 +99,5 @@ class Users::SessionsController < Devise::SessionsController
       end
     end
     resource
-  end
-
-  def resource_locked?(resource)
-    resource.present? && resource.access_locked?
   end
 end
