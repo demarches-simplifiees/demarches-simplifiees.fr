@@ -14,12 +14,9 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    remember_me = params[:user][:remember_me] == '1'
-
     user = User.find_by(email: params[:user][:email])
 
     if user&.valid_password?(params[:user][:password])
-      user.remember_me = remember_me
       sign_in(user)
       current_user.update(loged_in_with_france_connect: nil)
 
