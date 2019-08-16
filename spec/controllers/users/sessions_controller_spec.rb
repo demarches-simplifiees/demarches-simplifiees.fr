@@ -15,13 +15,8 @@ describe Users::SessionsController, type: :controller do
       let(:user) { instructeur.user }
       let(:send_password) { password }
 
-      before do
-        allow(InstructeurMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
-      end
-
       subject do
         post :create, params: { user: { email: email, password: send_password } }
-        user.reload
       end
 
       context 'when the credentials are right' do
