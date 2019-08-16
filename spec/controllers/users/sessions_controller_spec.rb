@@ -9,43 +9,32 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#create' do
-    context "when the user is also a instructeur and an administrateur" do
-      let!(:administrateur) { create(:administrateur, email: email, password: password) }
-      let(:instructeur) { administrateur.instructeur }
-      let(:user) { instructeur.user }
-      let(:send_password) { password }
+    let(:user) { create(:user, email: email, password: password) }
+    let(:send_password) { password }
 
-      subject do
-        post :create, params: { user: { email: email, password: send_password } }
+    subject do
+      post :create, params: { user: { email: email, password: send_password } }
+    end
+
+    context 'when the credentials are right' do
+      it 'signs in' do
+        subject
+
+        expect(response.redirect?).to be(true)
+        expect(controller).not_to redirect_to link_sent_path(email: email)
+        expect(controller.current_user).to eq(user)
+        expect(user.loged_in_with_france_connect).to be(nil)
       end
+    end
 
-      context 'when the credentials are right' do
-        it 'signs in as user, instructeur and adminstrateur' do
-          subject
+    context 'when the credentials are wrong' do
+      let(:send_password) { 'wrong_password' }
 
-          expect(response.redirect?).to be(true)
-          expect(controller).not_to redirect_to link_sent_path(email: email)
-          # TODO when signing in as non-administrateur, and not starting a demarche, log in to instructeur path
-          # expect(controller).to redirect_to instructeur_procedures_path
+      it 'fails to sign in with bad credentials' do
+        subject
 
-          expect(controller.current_user).to eq(user)
-          expect(controller.current_instructeur).to eq(instructeur)
-          expect(controller.current_administrateur).to eq(administrateur)
-          expect(user.loged_in_with_france_connect).to be(nil)
-        end
-      end
-
-      context 'when the credentials are wrong' do
-        let(:send_password) { 'wrong_password' }
-
-        it 'fails to sign in with bad credentials' do
-          subject
-
-          expect(response.unauthorized?).to be(true)
-          expect(controller.current_user).to be(nil)
-          expect(controller.current_instructeur).to be(nil)
-          expect(controller.current_administrateur).to be(nil)
-        end
+        expect(response.unauthorized?).to be(true)
+        expect(controller.current_user).to be(nil)
       end
     end
   end
