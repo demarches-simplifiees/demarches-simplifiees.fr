@@ -11,9 +11,16 @@ describe Users::SessionsController, type: :controller do
   describe '#create' do
     let(:user) { create(:user, email: email, password: password) }
     let(:send_password) { password }
+    let(:remember_me) { '0' }
 
     subject do
-      post :create, params: { user: { email: email, password: send_password } }
+      post :create, params: {
+        user: {
+          email: email,
+          password: send_password,
+          remember_me: remember_me
+        }
+      }
     end
 
     context 'when the credentials are right' do
@@ -23,6 +30,17 @@ describe Users::SessionsController, type: :controller do
         expect(response).to redirect_to(root_path)
         expect(controller.current_user).to eq(user)
         expect(user.loged_in_with_france_connect).to be(nil)
+        expect(user.reload.remember_created_at).to be_nil
+      end
+
+      context 'when remember_me is specified' do
+        let(:remember_me) { '1' }
+
+        it 'remembers' do
+          subject
+
+          expect(user.reload.remember_created_at).to be_present
+        end
       end
 
       context 'when a previous path was registered' do
