@@ -13,6 +13,17 @@ feature 'Signin in:' do
     expect(page).to have_current_path dossiers_path
   end
 
+  scenario 'an existing user can lock its account' do
+    visit root_path
+    click_on 'Connexion'
+
+    5.times { sign_in_with user.email, 'bad password' }
+    expect(user.reload.access_locked?).to be false
+
+    sign_in_with user.email, 'bad password'
+    expect(user.reload.access_locked?).to be true
+  end
+
   context 'when visiting a procedure' do
     let(:procedure) { create :simple_procedure, :with_service }
 
