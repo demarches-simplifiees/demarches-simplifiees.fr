@@ -6,8 +6,13 @@ describe Rack::Attack, type: :request do
   let(:ip) { "1.2.3.4" }
 
   before(:each) do
+    ENV['RACK_ATTACK_ENABLE'] = 'true'
     setup_rack_attack_cache_store
     avoid_test_overlaps_in_cache
+  end
+
+  after do
+    ENV['RACK_ATTACK_ENABLE'] = 'false'
   end
 
   def setup_rack_attack_cache_store
