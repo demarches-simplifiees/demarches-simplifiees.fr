@@ -31,7 +31,7 @@
       .procedure-list-element{ class: ('active' if active == 'Administrateurs') }
         Administrateurs
 
-    %a#onglet-instructeurs{ href: url_for(admin_procedure_instructeurs_path(@procedure)) }
+    %a#onglet-instructeurs{ href: url_for(admin_procedure_assigns_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'Instructeurs') }
         Instructeurs
         - if @procedure.missing_steps.include?(:instructeurs)

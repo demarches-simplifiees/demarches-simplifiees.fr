@@ -61,7 +61,7 @@ describe ProcedurePresentation do
           { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at' },
           { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
-          { "label" => 'Email instructeur', "table" => 'followers_gestionnaires', "column" => 'email' },
+          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
           { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique' },
           { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial' },
@@ -197,13 +197,13 @@ describe ProcedurePresentation do
       it { is_expected.to eq('75008') }
     end
 
-    context 'for followers_gestionnaires table' do
-      let(:table) { 'followers_gestionnaires' }
+    context 'for followers_instructeurs table' do
+      let(:table) { 'followers_instructeurs' }
       let(:column) { 'email' }
 
       let(:dossier) { create(:dossier, procedure: procedure) }
-      let!(:follow1) { create(:follow, dossier: dossier, gestionnaire: create(:gestionnaire, email: 'user1@host')) }
-      let!(:follow2) { create(:follow, dossier: dossier, gestionnaire: create(:gestionnaire, email: 'user2@host')) }
+      let!(:follow1) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'user1@host')) }
+      let!(:follow2) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'user2@host')) }
 
       it { is_expected.to eq('user1@host, user2@host') }
     end
@@ -232,12 +232,12 @@ describe ProcedurePresentation do
   end
 
   describe '#sorted_ids' do
-    let(:gestionnaire) { create(:gestionnaire) }
-    let(:assign_to) { create(:assign_to, procedure: procedure, gestionnaire: gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
+    let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
     let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
     let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to, sort: sort) }
 
-    subject { procedure_presentation.sorted_ids(procedure.dossiers, gestionnaire) }
+    subject { procedure_presentation.sorted_ids(procedure.dossiers, instructeur) }
 
     context 'for notifications table' do
       let(:table) { 'notifications' }
@@ -249,7 +249,7 @@ describe ProcedurePresentation do
 
       before do
         notified_dossier.champs.first.touch(time: Time.zone.local(2018, 9, 20))
-        create(:follow, gestionnaire: gestionnaire, dossier: notified_dossier, demande_seen_at: Time.zone.local(2018, 9, 10))
+        create(:follow, instructeur: instructeur, dossier: notified_dossier, demande_seen_at: Time.zone.local(2018, 9, 10))
         notified_dossier.touch(time: Time.zone.local(2018, 9, 20))
         recent_dossier.touch(time: Time.zone.local(2018, 9, 25))
         older_dossier.touch(time: Time.zone.local(2018, 5, 13))
@@ -644,15 +644,15 @@ describe ProcedurePresentation do
       end
     end
 
-    context 'for followers_gestionnaires table' do
-      let(:filter) { [{ 'table' => 'followers_gestionnaires', 'column' => 'email', 'value' => 'keepmail' }] }
+    context 'for followers_instructeurs table' do
+      let(:filter) { [{ 'table' => 'followers_instructeurs', 'column' => 'email', 'value' => 'keepmail' }] }
 
       let!(:kept_dossier) { create(:dossier, procedure: procedure) }
       let!(:discarded_dossier) { create(:dossier, procedure: procedure) }
 
       before do
-        create(:follow, dossier: kept_dossier, gestionnaire: create(:gestionnaire, email: 'me@keepmail.com'))
-        create(:follow, dossier: discarded_dossier, gestionnaire: create(:gestionnaire, email: 'me@discard.com'))
+        create(:follow, dossier: kept_dossier, instructeur: create(:instructeur, email: 'me@keepmail.com'))
+        create(:follow, dossier: discarded_dossier, instructeur: create(:instructeur, email: 'me@discard.com'))
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -660,15 +660,15 @@ describe ProcedurePresentation do
       context 'with multiple search values' do
         let(:filter) do
           [
-            { 'table' => 'followers_gestionnaires', 'column' => 'email', 'value' => 'keepmail' },
-            { 'table' => 'followers_gestionnaires', 'column' => 'email', 'value' => 'beta.gouv.fr' }
+            { 'table' => 'followers_instructeurs', 'column' => 'email', 'value' => 'keepmail' },
+            { 'table' => 'followers_instructeurs', 'column' => 'email', 'value' => 'beta.gouv.fr' }
           ]
         end
 
         let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          create(:follow, dossier: other_kept_dossier, gestionnaire: create(:gestionnaire, email: 'bazinga@beta.gouv.fr'))
+          create(:follow, dossier: other_kept_dossier, instructeur: create(:instructeur, email: 'bazinga@beta.gouv.fr'))
         end
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
@@ -695,7 +695,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
-        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
       end
     end
 
@@ -711,7 +711,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
-        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
       end
     end
 
@@ -725,7 +725,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
-        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
       end
     end
 
@@ -739,7 +739,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
-        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
       end
     end
 
@@ -753,21 +753,21 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).to be_loaded
-        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
       end
     end
 
-    context 'for followers_gestionnaires' do
-      let(:table) { 'followers_gestionnaires' }
+    context 'for followers_instructeurs' do
+      let(:table) { 'followers_instructeurs' }
       let(:column) { 'email' }
 
-      it 'preloads the followers_gestionnaires relation' do
+      it 'preloads the followers_instructeurs relation' do
         expect(displayed_dossier.association(:champs)).not_to be_loaded
         expect(displayed_dossier.association(:champs_private)).not_to be_loaded
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
-        expect(displayed_dossier.association(:followers_gestionnaires)).to be_loaded
+        expect(displayed_dossier.association(:followers_instructeurs)).to be_loaded
       end
     end
 
@@ -781,7 +781,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:user)).not_to be_loaded
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
-        expect(displayed_dossier.association(:followers_gestionnaires)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
       end
     end
   end

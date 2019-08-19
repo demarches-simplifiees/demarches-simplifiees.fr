@@ -7,8 +7,8 @@
         = link_to(dossiers_path, id: :menu_item_procedure, title: 'Aller dans votre espace usager. Vous pourrez revenir ici ensuite') do
           %i.fa.fa-users
           &nbsp; Usager
-    - if gestionnaire_signed_in?
+    - if instructeur_signed_in?
       %li
-        = link_to(gestionnaire_procedures_path, title: 'Aller dans votre espace instructeur. Vous pourrez revenir ici ensuite.') do
+        = link_to(instructeur_procedures_path, title: 'Aller dans votre espace instructeur. Vous pourrez revenir ici ensuite.') do
           %i.fa.fa-user
           &nbsp; Instructeur

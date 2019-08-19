@@ -16,9 +16,9 @@
           = link_to dossiers_path, class: "menu-item menu-link" do
             = image_tag "icons/switch-profile.svg"
             Passer en usager
-      - if gestionnaire_signed_in? && nav_bar_profile != :gestionnaire
+      - if instructeur_signed_in? && nav_bar_profile != :instructeur
         %li
-          = link_to gestionnaire_procedures_path, class: "menu-item menu-link" do
+          = link_to instructeur_procedures_path, class: "menu-item menu-link" do
             = image_tag "icons/switch-profile.svg"
             Passer en instructeur
       - if administrateur_signed_in? && nav_bar_profile != :administrateur

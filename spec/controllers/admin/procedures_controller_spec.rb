@@ -217,15 +217,15 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when procedure is correctly saved' do
-        let(:gestionnaire) { admin.gestionnaire }
+        let(:instructeur) { admin.instructeur }
 
         before do
           post :create, params: regulation_params.merge({ procedure: procedure_params })
         end
 
-        describe "admin can also instruct the procedure as a gestionnaire" do
+        describe "admin can also instruct the procedure as a instructeur" do
           subject { Procedure.last }
-          it { expect(subject.gestionnaires).to include(gestionnaire) }
+          it { expect(subject.instructeurs).to include(instructeur) }
         end
       end
     end

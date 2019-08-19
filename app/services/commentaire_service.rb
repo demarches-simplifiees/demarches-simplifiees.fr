@@ -4,8 +4,8 @@ class CommentaireService
       case sender
       when User
         params[:user] = sender
-      when Gestionnaire
-        params[:gestionnaire] = sender
+      when Instructeur
+        params[:instructeur] = sender
       end
 
       build_with_email(sender.email, dossier, params)

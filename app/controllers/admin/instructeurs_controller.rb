@@ -2,53 +2,71 @@ class Admin::InstructeursController < AdminController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
-  before_action :retrieve_procedure
-
-  ASSIGN = 'assign'
-  NOT_ASSIGN = 'not_assign'
-
-  def show
-    assign_scope = @procedure.gestionnaires
-
-    @instructeurs_assign = smart_listing_create :instructeurs_assign,
-      assign_scope,
-      partial: "admin/instructeurs/list_assign",
+  def index
+    @instructeurs = smart_listing_create :instructeurs,
+      current_administrateur.instructeurs,
+      partial: "admin/instructeurs/list",
       array: true
 
-    not_assign_scope = current_administrateur.gestionnaires.where.not(id: assign_scope.ids)
-
-    if params[:filter]
-      not_assign_scope = not_assign_scope.where("email LIKE ?", "%#{params[:filter]}%")
-    end
-
-    @instructeurs_not_assign = smart_listing_create :instructeurs_not_assign,
-      not_assign_scope,
-      partial: "admin/instructeurs/list_not_assign",
-      array: true
-
-    @gestionnaire ||= Gestionnaire.new
+    @instructeur ||= Instructeur.new
   end
 
-  def update
-    gestionnaire = Gestionnaire.find(params[:instructeur_id])
-    procedure = Procedure.find(params[:procedure_id])
-    to = params[:to]
+  def create
+    email = params[:instructeur][:email].downcase
+    @instructeur = Instructeur.find_by(email: email)
+    procedure_id = params[:procedure_id]
 
-    case to
-    when ASSIGN
-      if gestionnaire.assign_to_procedure(procedure)
-        flash.notice = "L'instructeur a bien été affecté"
-      else
-        flash.alert = "L'instructeur a déjà été affecté"
-      end
-    when NOT_ASSIGN
-      if gestionnaire.remove_from_procedure(procedure)
-        flash.notice = "L'instructeur a bien été désaffecté"
-      else
-        flash.alert = "L'instructeur a déjà été désaffecté"
-      end
+    if @instructeur.nil?
+      invite_instructeur(params[:instructeur][:email])
+    else
+      assign_instructeur!
     end
 
-    redirect_to admin_procedure_instructeurs_path, procedure_id: params[:procedure_id]
+    if procedure_id.present?
+      redirect_to admin_procedure_assigns_path(procedure_id: procedure_id)
+    else
+      redirect_to admin_instructeurs_path
+    end
+  end
+
+  def destroy
+    Instructeur.find(params[:id]).administrateurs.delete current_administrateur
+    redirect_to admin_instructeurs_path
+  end
+
+  private
+
+  def invite_instructeur(email)
+    password = SecureRandom.hex
+
+    @instructeur = Instructeur.create(
+      email: email,
+      password: password,
+      password_confirmation: password,
+      administrateurs: [current_administrateur]
+    )
+
+    if @instructeur.errors.messages.empty?
+      @instructeur.invite!
+
+      if User.exists?(email: @instructeur.email)
+        InstructeurMailer.user_to_instructeur(@instructeur.email).deliver_later
+      else
+        User.create(email: email, password: password, confirmed_at: Time.zone.now)
+      end
+      flash.notice = 'Instructeur ajouté'
+    else
+      flash.alert = @instructeur.errors.full_messages
+    end
+  end
+
+  def assign_instructeur!
+    if current_administrateur.instructeurs.include?(@instructeur)
+      flash.alert = 'Instructeur déjà ajouté'
+    else
+      @instructeur.administrateurs.push current_administrateur
+      flash.notice = 'Instructeur ajouté'
+      # TODO Mailer no assign_to
+    end
   end
 end

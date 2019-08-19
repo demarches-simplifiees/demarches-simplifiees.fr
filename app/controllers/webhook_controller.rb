@@ -4,7 +4,7 @@ class WebhookController < ActionController::Base
   def helpscout
     email = params[:customer][:email].downcase
     user = User.find_by(email: email)
-    gestionnaire = Gestionnaire.find_by(email: email)
+    instructeur = Instructeur.find_by(email: email)
     administrateur = Administrateur.find_by(email: email)
     html = []
 
@@ -13,9 +13,9 @@ class WebhookController < ActionController::Base
       html << link_to_manager(user, url)
     end
 
-    if gestionnaire
-      url = manager_gestionnaire_url(gestionnaire)
-      html << link_to_manager(gestionnaire, url)
+    if instructeur
+      url = manager_instructeur_url(instructeur)
+      html << link_to_manager(instructeur, url)
     end
 
     if administrateur

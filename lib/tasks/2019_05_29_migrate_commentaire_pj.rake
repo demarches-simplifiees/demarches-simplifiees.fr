@@ -14,12 +14,13 @@ namespace :'2019_05_29_migrate_commentaire_pj' do
     progress = ProgressReport.new(commentaires.count)
     commentaires.find_each do |commentaire|
       if commentaire.file.present?
+        dossier = Dossier.unscope(where: :hidden_at).find(commentaire.dossier_id)
         uri = URI.parse(URI.escape(commentaire.file_url))
         response = Typhoeus.get(uri)
         if response.success?
           filename = commentaire.file.filename || commentaire.file_identifier
           updated_at = commentaire.updated_at
-          dossier_updated_at = commentaire.dossier.updated_at
+          dossier_updated_at = dossier.updated_at
           commentaire.piece_jointe.attach(
             io: StringIO.new(response.body),
             filename: filename,
@@ -27,7 +28,7 @@ namespace :'2019_05_29_migrate_commentaire_pj' do
             metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
           )
           commentaire.update_column(:updated_at, updated_at)
-          commentaire.dossier.update_column(:updated_at, dossier_updated_at)
+          dossier.update_column(:updated_at, dossier_updated_at)
         end
       end
       progress.inc

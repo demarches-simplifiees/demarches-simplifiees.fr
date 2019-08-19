@@ -146,19 +146,19 @@ describe Dossier do
 
   context 'when dossier is followed' do
     let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
     let(:date1) { 1.day.ago }
     let(:date2) { 1.hour.ago }
     let(:date3) { 1.minute.ago }
     let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, en_construction_at: date1, en_instruction_at: date2, processed_at: date3, motivation: "Motivation") }
-    let!(:follow) { create(:follow, gestionnaire: gestionnaire, dossier: dossier) }
+    let!(:follow) { create(:follow, instructeur: instructeur, dossier: dossier) }
 
-    describe "followers_gestionnaires" do
-      let(:non_following_gestionnaire) { create(:gestionnaire) }
-      subject { dossier.followers_gestionnaires }
+    describe "followers_instructeurs" do
+      let(:non_following_instructeur) { create(:instructeur) }
+      subject { dossier.followers_instructeurs }
 
-      it { expect(subject).to eq [gestionnaire] }
-      it { expect(subject).not_to include(non_following_gestionnaire) }
+      it { expect(subject).to eq [instructeur] }
+      it { expect(subject).not_to include(non_following_instructeur) }
     end
   end
 
@@ -238,48 +238,48 @@ describe Dossier do
     let!(:procedure) { create(:procedure, :published) }
     let!(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
 
-    let!(:gestionnaire) { create(:gestionnaire, procedures: [procedure]) }
-    let!(:expert_1) { create(:gestionnaire) }
-    let!(:expert_2) { create(:gestionnaire) }
+    let!(:instructeur) { create(:instructeur, procedures: [procedure]) }
+    let!(:expert_1) { create(:instructeur) }
+    let!(:expert_2) { create(:instructeur) }
 
-    context 'when there is a public advice asked from the dossiers gestionnaire' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: gestionnaire, gestionnaire: expert_1, confidentiel: false) }
+    context 'when there is a public advice asked from the dossiers instructeur' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, instructeur: expert_1, confidentiel: false) }
 
-      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for(expert_1)).to match([avis]) }
       it { expect(dossier.avis_for(expert_2)).to match([avis]) }
     end
 
-    context 'when there is a private advice asked from the dossiers gestionnaire' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: gestionnaire, gestionnaire: expert_1, confidentiel: true) }
+    context 'when there is a private advice asked from the dossiers instructeur' do
+      let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, instructeur: expert_1, confidentiel: true) }
 
-      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for(expert_1)).to match([avis]) }
       it { expect(dossier.avis_for(expert_2)).to match([]) }
     end
 
     context 'when there is a public advice asked from one expert to another' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false) }
+      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: false) }
 
-      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for(expert_1)).to match([avis]) }
       it { expect(dossier.avis_for(expert_2)).to match([avis]) }
     end
 
     context 'when there is a private advice asked from one expert to another' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: true) }
+      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: true) }
 
-      it { expect(dossier.avis_for(gestionnaire)).to match([avis]) }
+      it { expect(dossier.avis_for(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for(expert_1)).to match([avis]) }
       it { expect(dossier.avis_for(expert_2)).to match([avis]) }
     end
 
     context 'when they are a lot of advice' do
-      let!(:avis_1) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010')) }
-      let!(:avis_2) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
-      let!(:avis_3) { Avis.create(dossier: dossier, claimant: expert_1, gestionnaire: expert_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010')) }
+      let!(:avis_1) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010')) }
+      let!(:avis_2) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
+      let!(:avis_3) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010')) }
 
-      it { expect(dossier.avis_for(gestionnaire)).to match([avis_2, avis_1, avis_3]) }
+      it { expect(dossier.avis_for(instructeur)).to match([avis_2, avis_1, avis_3]) }
       it { expect(dossier.avis_for(expert_1)).to match([avis_2, avis_1, avis_3]) }
     end
   end
@@ -611,21 +611,21 @@ describe Dossier do
       expect(last_operation.automatic_operation?).to be_falsey
     end
 
-    context 'where gestionnaires are following the dossier' do
+    context 'where instructeurs are following the dossier' do
       let(:dossier) { create(:dossier, :en_construction, :followed) }
-      let!(:non_following_gestionnaire) do
-        non_following_gestionnaire = create(:gestionnaire)
-        non_following_gestionnaire.procedures << dossier.procedure
-        non_following_gestionnaire
+      let!(:non_following_instructeur) do
+        non_following_instructeur = create(:instructeur)
+        non_following_instructeur.procedures << dossier.procedure
+        non_following_instructeur
       end
 
-      it 'notifies the following gestionnaires' do
+      it 'notifies the following instructeurs' do
         expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.followers_gestionnaires.first.email)
+        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.followers_instructeurs.first.email)
       end
     end
 
-    context 'when there are no following gestionnaires' do
+    context 'when there are no following instructeurs' do
       let(:dossier) { create(:dossier, :en_construction) }
       it 'notifies the procedure administrateur' do
         expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
@@ -768,7 +768,7 @@ describe Dossier do
     let(:dossier) { create(:dossier, :en_instruction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
-    let!(:gestionnaire) { create(:gestionnaire) }
+    let!(:instructeur) { create(:instructeur) }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
 
@@ -777,7 +777,7 @@ describe Dossier do
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
       Timecop.freeze(now)
-      dossier.accepter!(gestionnaire, 'motivation')
+      dossier.accepter!(instructeur, 'motivation')
       dossier.reload
     end
 
@@ -827,12 +827,12 @@ describe Dossier do
     let(:dossier) { create(:dossier, :en_construction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
 
-    before { dossier.passer_en_instruction!(gestionnaire) }
+    before { dossier.passer_en_instruction!(instructeur) }
 
     it { expect(dossier.state).to eq('en_instruction') }
-    it { expect(dossier.followers_gestionnaires).to include(gestionnaire) }
+    it { expect(dossier.followers_instructeurs).to include(instructeur) }
     it { expect(last_operation.operation).to eq('passer_en_instruction') }
     it { expect(last_operation.automatic_operation?).to be_falsey }
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
@@ -844,11 +844,11 @@ describe Dossier do
     let(:dossier) { create(:dossier, :en_construction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
 
     before { dossier.passer_automatiquement_en_instruction! }
 
-    it { expect(dossier.followers_gestionnaires).not_to include(gestionnaire) }
+    it { expect(dossier.followers_instructeurs).not_to include(instructeur) }
     it { expect(last_operation.operation).to eq('passer_en_instruction') }
     it { expect(last_operation.automatic_operation?).to be_truthy }
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
@@ -948,14 +948,14 @@ describe Dossier do
 
   describe '#repasser_en_instruction!' do
     let(:dossier) { create(:dossier, :refuse, :with_attestation) }
-    let!(:gestionnaire) { create(:gestionnaire) }
+    let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
     before do
       Timecop.freeze
       allow(DossierMailer).to receive(:notify_revert_to_instruction)
         .and_return(double(deliver_later: true))
-      dossier.repasser_en_instruction!(gestionnaire)
+      dossier.repasser_en_instruction!(instructeur)
       dossier.reload
     end
 
@@ -964,7 +964,7 @@ describe Dossier do
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.attestation).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
-    it { expect(JSON.parse(last_operation.serialized.download)['author']['email']).to eq(gestionnaire.email) }
+    it { expect(JSON.parse(last_operation.serialized.download)['author']['email']).to eq(instructeur.email) }
     it { expect(DossierMailer).to have_received(:notify_revert_to_instruction).with(dossier) }
 
     after { Timecop.return }
@@ -996,5 +996,17 @@ describe Dossier do
         expect(dossier.attachments_downloadable?).to be false
       }
     end
+  end
+
+  describe '#update_with_france_connect' do
+    let(:dossier) { create(:dossier, user: user) }
+    let(:user_info) { create(:france_connect_information) }
+
+    it {
+      dossier.update_with_france_connect(user_info)
+      expect(dossier.individual.gender).to eq 'Mme'
+      expect(dossier.individual.nom).to eq user_info.family_name
+      expect(dossier.individual.prenom).to eq user_info.given_name
+    }
   end
 end

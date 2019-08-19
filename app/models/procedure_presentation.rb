@@ -19,7 +19,7 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('En construction le', 'self', 'en_construction_at'),
       field_hash('Mis à jour le', 'self', 'updated_at'),
       field_hash('Demandeur', 'user', 'email'),
-      field_hash('Email instructeur', 'followers_gestionnaires', 'email')
+      field_hash('Email instructeur', 'followers_instructeurs', 'email')
     ]
 
     if procedure.for_individual
@@ -73,13 +73,13 @@ class ProcedurePresentation < ApplicationRecord
     displayed_fields.map { |field| get_value(dossier, field['table'], field['column']) }
   end
 
-  def sorted_ids(dossiers, gestionnaire)
+  def sorted_ids(dossiers, instructeur)
     dossiers.each { |dossier| assert_matching_procedure(dossier) }
     table, column, order = sort.values_at('table', 'column', 'order')
 
     case table
     when 'notifications'
-      dossiers_id_with_notification = gestionnaire.dossiers_id_with_notifications(dossiers)
+      dossiers_id_with_notification = instructeur.dossiers_id_with_notifications(dossiers)
       if order == 'desc'
         return dossiers_id_with_notification +
             (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
@@ -93,7 +93,7 @@ class ProcedurePresentation < ApplicationRecord
           .where("champs.type_de_champ_id = #{column.to_i}")
           .order("champs.value #{order}")
           .pluck(:id)
-    when 'self', 'user', 'individual', 'etablissement', 'followers_gestionnaires'
+    when 'self', 'user', 'individual', 'etablissement', 'followers_instructeurs'
       return (table == 'self' ? dossiers : dossiers.includes(table))
           .order("#{self.class.sanitized_column(table, column)} #{order}")
           .pluck(:id)
@@ -129,7 +129,7 @@ class ProcedurePresentation < ApplicationRecord
             .includes(table)
             .filter_ilike(table, column, values)
         end
-      when 'user', 'individual', 'followers_gestionnaires'
+      when 'user', 'individual', 'followers_instructeurs'
         dossiers
           .includes(table)
           .filter_ilike(table, column, values)
@@ -202,7 +202,7 @@ class ProcedurePresentation < ApplicationRecord
       dossier.send(column)&.strftime('%d/%m/%Y')
     when 'user', 'individual', 'etablissement'
       dossier.send(table)&.send(column)
-    when 'followers_gestionnaires'
+    when 'followers_instructeurs'
       dossier.send(table)&.map { |g| g.send(column) }&.join(', ')
     when 'type_de_champ'
       dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value

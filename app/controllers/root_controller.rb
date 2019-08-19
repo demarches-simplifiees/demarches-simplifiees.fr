@@ -2,8 +2,8 @@ class RootController < ApplicationController
   def index
     if administrateur_signed_in?
       return redirect_to admin_procedures_path
-    elsif gestionnaire_signed_in?
-      return redirect_to gestionnaire_procedures_path
+    elsif instructeur_signed_in?
+      return redirect_to instructeur_procedures_path
     elsif user_signed_in?
       return redirect_to dossiers_path
     elsif administration_signed_in?

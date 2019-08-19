@@ -1,19 +1,19 @@
 class NotificationService
   class << self
-    def send_gestionnaire_email_notification
-      Gestionnaire
+    def send_instructeur_email_notification
+      Instructeur
         .includes(assign_to: { procedure: :dossiers })
         .where(assign_tos: { email_notifications_enabled: true })
-        .find_in_batches { |gestionnaires| send_batch_of_gestionnaires_email_notification(gestionnaires) }
+        .find_in_batches { |instructeurs| send_batch_of_instructeurs_email_notification(instructeurs) }
     end
 
     private
 
-    def send_batch_of_gestionnaires_email_notification(gestionnaires)
-      gestionnaires
-        .map { |gestionnaire| [gestionnaire, gestionnaire.email_notification_data] }
-        .reject { |(_gestionnaire, data)| data.empty? }
-        .each { |(gestionnaire, data)| GestionnaireMailer.send_notifications(gestionnaire, data).deliver_later }
+    def send_batch_of_instructeurs_email_notification(instructeurs)
+      instructeurs
+        .map { |instructeur| [instructeur, instructeur.email_notification_data] }
+        .reject { |(_instructeur, data)| data.empty? }
+        .each { |(instructeur, data)| InstructeurMailer.send_notifications(instructeur, data).deliver_later }
     end
   end
 end

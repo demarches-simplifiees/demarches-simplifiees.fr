@@ -26,7 +26,7 @@ class User < ApplicationRecord
 
   def password_complexity
     if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_USER
-      errors.add(:password, :not_strength)
+      errors.add(:password, :not_strong)
     end
   end
 

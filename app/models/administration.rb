@@ -26,7 +26,7 @@ class Administration < ApplicationRecord
         confirmed_at: Time.zone.now
       })
 
-      Gestionnaire.create({
+      Instructeur.create({
         email: email,
         password: password
       })

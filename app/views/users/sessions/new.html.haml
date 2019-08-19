@@ -24,7 +24,7 @@
           = f.check_box :remember_me, as: :boolean
           = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
 
-      - if [:user, :gestionnaire].include?(resource_name)
+      - if [:user, :instructeur].include?(resource_name)
         .text-right
           = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
 

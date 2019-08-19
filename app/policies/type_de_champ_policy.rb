@@ -1,10 +1,10 @@
 class TypeDeChampPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user.is_a?(Administrateur)
+      if administrateur.present?
         scope
           .joins(procedure: [:administrateurs])
-          .where({ administrateurs: { id: user.id } })
+          .where({ administrateurs: { id: administrateur.id } })
       else
         scope.none
       end

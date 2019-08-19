@@ -1,6 +1,6 @@
 class AssignTo < ApplicationRecord
   belongs_to :procedure
-  belongs_to :gestionnaire
+  belongs_to :instructeur
   has_one :procedure_presentation, dependent: :destroy
 
   scope :with_email_notifications, -> { where(email_notifications_enabled: true) }

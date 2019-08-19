@@ -2,29 +2,199 @@ require 'spec_helper'
 
 describe Admin::InstructeursController, type: :controller do
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create :procedure, administrateur: admin }
-  let(:gestionnaire) { create :gestionnaire, administrateurs: [admin] }
+  let(:email_2) { 'plip@octo.com' }
+  let(:admin_2) { create :administrateur, email: email_2 }
 
   before do
     sign_in admin
   end
 
-  describe 'GET #show' do
-    subject { get :show, params: { procedure_id: procedure.id } }
+  describe 'GET #index' do
+    subject { get :index }
     it { expect(subject.status).to eq(200) }
   end
 
-  describe 'PUT #update' do
-    subject { put :update, params: { instructeur_id: gestionnaire.id, procedure_id: procedure.id, to: 'assign' } }
+  describe 'GET #index with sorting and pagination' do
+    subject {
+      get :index, params: {
+        'instructeurs_smart_listing[page]': 1,
+        'instructeurs_smart_listing[per_page]': 10,
+        'instructeurs_smart_listing[sort][email]': 'asc'
+      }
+    }
 
-    it { expect(subject).to redirect_to admin_procedure_instructeurs_path(procedure_id: procedure.id) }
+    it { expect(subject.status).to eq(200) }
+  end
 
-    context 'when assignement is valid' do
+  describe 'POST #create' do
+    let(:email) { 'test@plop.com' }
+    let(:procedure_id) { nil }
+    subject { post :create, params: { instructeur: { email: email }, procedure_id: procedure_id } }
+
+    context 'When email is valid' do
       before do
         subject
       end
 
-      it { expect(flash[:notice]).to be_present }
+      let(:instructeur) { Instructeur.last }
+
+      it { expect(response.status).to eq(302) }
+      it { expect(response).to redirect_to admin_instructeurs_path }
+
+      context 'when procedure_id params is not null' do
+        let(:procedure) { create :procedure }
+        let(:procedure_id) { procedure.id }
+
+        it { expect(response.status).to eq(302) }
+        it { expect(response).to redirect_to admin_procedure_assigns_path(procedure_id: procedure_id) }
+      end
+
+      describe 'Instructeur attributs in database' do
+        it { expect(instructeur.email).to eq(email) }
+      end
+
+      describe 'New instructeur is assign to the admin' do
+        it { expect(instructeur.administrateurs).to include admin }
+        it { expect(admin.instructeurs).to include instructeur }
+      end
     end
+
+    context 'when email is not valid' do
+      before do
+        subject
+      end
+      let(:email) { 'piou' }
+      it { expect(response.status).to eq(302) }
+      it { expect { response }.not_to change(Instructeur, :count) }
+      it { expect(flash[:alert]).to be_present }
+
+      describe 'Email Notification' do
+        it {
+          expect(InstructeurMailer).not_to receive(:new_instructeur)
+          expect(InstructeurMailer).not_to receive(:deliver_later)
+          subject
+        }
+      end
+    end
+
+    context 'when email is empty' do
+      before do
+        subject
+      end
+      let(:email) { '' }
+      it { expect(response.status).to eq(302) }
+      it { expect { response }.not_to change(Instructeur, :count) }
+
+      it 'Notification email is not send' do
+        expect(InstructeurMailer).not_to receive(:new_instructeur)
+        expect(InstructeurMailer).not_to receive(:deliver_later)
+      end
+    end
+
+    context 'when email is already assign at the admin' do
+      before do
+        create :instructeur, email: email, administrateurs: [admin]
+        subject
+      end
+
+      it { expect(response.status).to eq(302) }
+      it { expect { response }.not_to change(Instructeur, :count) }
+      it { expect(flash[:alert]).to be_present }
+
+      describe 'Email notification' do
+        it 'is not sent when email already exists' do
+          expect(InstructeurMailer).not_to receive(:new_instructeur)
+          expect(InstructeurMailer).not_to receive(:deliver_later)
+
+          subject
+        end
+      end
+    end
+
+    context 'when an other admin will add the same email' do
+      let(:instructeur) { Instructeur.find_by(email: email) }
+
+      before do
+        create :instructeur, email: email, administrateurs: [admin]
+
+        sign_out admin
+        sign_in admin_2
+
+        subject
+      end
+
+      it { expect(response.status).to eq(302) }
+      it { expect { response }.not_to change(Instructeur, :count) }
+      it { expect(flash[:notice]).to be_present }
+
+      it { expect(admin_2.instructeurs).to include instructeur }
+      it { expect(instructeur.administrateurs.size).to eq 2 }
+    end
+
+    context 'when an other admin will add the same email with some uppercase in it' do
+      let(:email) { 'Test@Plop.com' }
+      let(:instructeur) { Instructeur.find_by(email: email.downcase) }
+
+      before do
+        create :instructeur, email: email, administrateurs: [admin]
+
+        sign_out admin
+        sign_in admin_2
+
+        subject
+      end
+
+      it { expect(admin_2.instructeurs).to include instructeur }
+    end
+
+    context 'Email notification' do
+      it 'Notification email is sent when instructeur is create' do
+        expect_any_instance_of(Instructeur).to receive(:invite!)
+        subject
+      end
+    end
+
+    context 'unified login' do
+      before do
+        subject
+      end
+
+      it "creates associated user with same credentials" do
+        instructeur = controller.instance_variable_get(:@instructeur)
+        user = User.find_by(email: instructeur.email)
+        expect(user.valid_password?(instructeur.password)).to be(true)
+      end
+
+      context 'invalid email' do
+        let(:email) { 'fail' }
+
+        it "won't create associated user" do
+          expect(User.where(email: email).exists?).to be(false)
+        end
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let(:email) { 'test@plop.com' }
+    let!(:admin) { create :administrateur }
+    let!(:instructeur) { create :instructeur, email: email, administrateurs: [admin] }
+
+    subject { delete :destroy, params: { id: instructeur.id } }
+
+    context "when gestionaire_id is valid" do
+      before do
+        subject
+        admin.reload
+        instructeur.reload
+      end
+
+      it { expect(response.status).to eq(302) }
+      it { expect(response).to redirect_to admin_instructeurs_path }
+      it { expect(admin.instructeurs).not_to include instructeur }
+      it { expect(instructeur.administrateurs).not_to include admin }
+    end
+
+    it { expect { subject }.not_to change(Instructeur, :count) }
   end
 end
