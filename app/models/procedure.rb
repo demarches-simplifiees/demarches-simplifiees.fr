@@ -18,6 +18,7 @@ class Procedure < ApplicationRecord
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :instructeurs, through: :assign_to
+  has_many :groupe_instructeurs, dependent: :destroy
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
