@@ -1,5 +1,4 @@
 class Administrateur < ApplicationRecord
-  include CredentialsSyncableConcern
   include EmailSanitizableConcern
   include ActiveRecord::SecureToken
 
