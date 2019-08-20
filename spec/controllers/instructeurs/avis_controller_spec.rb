@@ -11,7 +11,7 @@ describe Instructeurs::AvisController, type: :controller do
     let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur) }
     let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur, answer: 'yop') }
 
-    before { sign_in(instructeur) }
+    before { sign_in(instructeur.user) }
 
     describe '#index' do
       before { get :index }
@@ -217,7 +217,7 @@ describe Instructeurs::AvisController, type: :controller do
 
         context 'when the instructeur is authenticated' do
           before do
-            sign_in instructeur
+            sign_in(instructeur.user)
             get :sign_up, params: { id: avis.id, email: invited_email }
           end
 
@@ -229,7 +229,7 @@ describe Instructeurs::AvisController, type: :controller do
             get :sign_up, params: { id: avis.id, email: invited_email }
           end
 
-          it { is_expected.to redirect_to new_instructeur_session_url }
+          it { is_expected.to redirect_to new_user_session_url }
         end
       end
 
@@ -238,7 +238,7 @@ describe Instructeurs::AvisController, type: :controller do
         let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
 
         before do
-          sign_in instructeur
+          sign_in(instructeur.user)
           get :sign_up, params: { id: avis.id, email: invited_email }
         end
 
@@ -282,7 +282,7 @@ describe Instructeurs::AvisController, type: :controller do
       context 'when the email belongs to the invitation' do
         context 'when the instructeur creation succeeds' do
           it { expect(created_instructeur).to be_present }
-          it { expect(created_instructeur.valid_password?(password)).to be true }
+          it { expect(created_instructeur.user.valid_password?(password)).to be true }
 
           it { expect(Avis).to have_received(:link_avis_to_instructeur) }
 

@@ -9,22 +9,13 @@ class Users::PasswordsController < Devise::PasswordsController
 
   # POST /resource/password
   def create
-    # Check the credentials associated to the mail to generate a correct reset link
-    email = params[:user][:email]
-    if Administrateur.find_by(email: email)
-      @devise_mapping = Devise.mappings[:administrateur]
-      params[:administrateur] = params[:user]
-    elsif Instructeur.find_by(email: email)
-      @devise_mapping = Devise.mappings[:instructeur]
-      params[:instructeur] = params[:user]
-    end
     super
   end
 
   # GET /resource/password/edit?reset_password_token=abcdef
-  # def edit
-  #   super
-  # end
+  def edit
+    super
+  end
 
   # PUT /resource/password
   # def update
@@ -48,7 +39,7 @@ class Users::PasswordsController < Devise::PasswordsController
       instructeur = Instructeur.find_by(email: current_user.email)
 
       if instructeur
-        sign_in instructeur
+        sign_in(instructeur.user)
       end
     end
   end

@@ -13,7 +13,7 @@
 
       = f.label :password do
         Mot de passe
-      = render partial: 'shared/password/edit_password', locals: { form: f, controller: controller }
+      = render partial: 'shared/password/edit_password', locals: { form: f, controller: controller, test_password_strength: test_password_strength }
 
 
       = f.submit 'Continuer', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi..." }

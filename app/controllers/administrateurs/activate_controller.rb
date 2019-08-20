@@ -24,7 +24,6 @@ class Administrateurs::ActivateController < ApplicationController
     if administrateur && administrateur.errors.empty?
       sign_in(administrateur, scope: :administrateur)
       try_to_authenticate(User, administrateur.email, password)
-      try_to_authenticate(Instructeur, administrateur.email, password)
       flash.notice = "Mot de passe enregistré"
       redirect_to admin_procedures_path
     else

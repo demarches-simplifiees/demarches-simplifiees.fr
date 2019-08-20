@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :feedbacks, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
+  belongs_to :instructeur
 
   accepts_nested_attributes_for :france_connect_information
 
@@ -45,6 +46,10 @@ class User < ApplicationRecord
 
   def owns_or_invite?(dossier)
     owns?(dossier) || invite?(dossier.id)
+  end
+
+  def invite!
+    UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
   end
 
   private
