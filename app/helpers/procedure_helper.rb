@@ -20,20 +20,6 @@ module ProcedureHelper
     t(action, scope: [:modal, :publish, key])
   end
 
-  def logo_img(procedure)
-    logo = procedure.logo
-
-    if logo.blank?
-      ActionController::Base.helpers.image_url("marianne.svg")
-    else
-      if Rails.application.secrets.fog[:enabled]
-        RemoteDownloader.new(logo.filename).url
-      else
-        LocalDownloader.new(logo.path, 'logo').url
-      end
-    end
-  end
-
   def types_de_champ_data(procedure)
     {
       isAnnotation: false,

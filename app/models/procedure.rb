@@ -25,6 +25,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
+  has_one_attached :logo_active_storage
   has_one_attached :notice
   has_one_attached :deliberation
 
@@ -215,7 +216,9 @@ class Procedure < ApplicationRecord
     procedure.archived_at = nil
     procedure.published_at = nil
     procedure.logo_secure_token = nil
-    procedure.remote_logo_url = self.logo_url
+    if logo.present?
+      procedure.remote_logo_url = self.logo_url
+    end
     procedure.lien_notice = nil
 
     if is_different_admin || from_library
@@ -252,6 +255,7 @@ class Procedure < ApplicationRecord
     if original.is_a?(TypeDeChamp)
       clone_attachment(:piece_justificative_template, original, kopy)
     elsif original.is_a?(Procedure)
+      clone_attachment(:logo_active_storage, original, kopy)
       clone_attachment(:notice, original, kopy)
       clone_attachment(:deliberation, original, kopy)
     end
@@ -449,6 +453,24 @@ class Procedure < ApplicationRecord
       dossiers
         .state_en_construction
         .find_each(&:accepter_automatiquement!)
+    end
+  end
+
+  def logo?
+    logo.present? || logo_active_storage.attached?
+  end
+
+  def logo_url
+    if !logo?
+      ActionController::Base.helpers.image_url("marianne.svg")
+    elsif logo_active_storage.attached?
+      Rails.application.routes.url_helpers.url_for(logo_active_storage)
+    else
+      if Rails.application.secrets.fog[:enabled]
+        RemoteDownloader.new(logo.filename).url
+      else
+        LocalDownloader.new(logo.path, 'logo').url
+      end
     end
   end
 
