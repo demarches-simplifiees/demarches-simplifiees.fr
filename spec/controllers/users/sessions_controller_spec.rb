@@ -9,69 +9,72 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#create' do
-    context "when the user is also a instructeur and an administrateur" do
-      let!(:administrateur) { create(:administrateur, email: email, password: password) }
-      let(:instructeur) { administrateur.instructeur }
-      let(:user) { instructeur.user }
-      let(:trusted_device) { true }
-      let(:send_password) { password }
+    let(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: 'particulier') }
+    let(:send_password) { password }
+    let(:remember_me) { '0' }
 
-      before do
-        allow(controller).to receive(:trusted_device?).and_return(trusted_device)
-        allow(InstructeurMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
+    subject do
+      post :create, params: {
+        user: {
+          email: email,
+          password: send_password,
+          remember_me: remember_me
+        }
+      }
+    end
+
+    context 'when the credentials are right' do
+      it 'signs in' do
+        subject
+
+        expect(response).to redirect_to(root_path)
+        expect(controller.current_user).to eq(user)
+        expect(user.reload.loged_in_with_france_connect).to be(nil)
+        expect(user.reload.remember_created_at).to be_nil
       end
 
-      subject do
-        post :create, params: { user: { email: email, password: send_password } }
-        user.reload
-      end
+      context 'when remember_me is specified' do
+        let(:remember_me) { '1' }
 
-      context 'when the device is not trusted' do
-        before do
-          Flipflop::FeatureSet.current.test!.switch!(:bypass_email_login_token, false)
-        end
-        let(:trusted_device) { false }
-
-        it 'redirects to the send_linked_path' do
+        it 'remembers' do
           subject
 
-          expect(controller).to redirect_to(link_sent_path(email: user.email))
-
-          expect(controller.current_user).to eq(user)
-          expect(controller.current_instructeur).to eq(instructeur)
-          #  WTF?
-          # expect(controller.current_administrateur).to eq(administrateur)
-          expect(user.loged_in_with_france_connect).to eq(nil)
+          expect(user.reload.remember_created_at).to be_present
         end
       end
 
-      context 'when the device is trusted' do
-        it 'signs in as user, instructeur and adminstrateur' do
+      context 'when a previous path was registered' do
+        let(:stored_path) { 'a_path' }
+
+        before { controller.store_location_for(:user, stored_path) }
+
+        it 'redirects to that previous path' do
           subject
 
-          expect(response.redirect?).to be(true)
-          expect(controller).not_to redirect_to link_sent_path(email: email)
-          # TODO when signing in as non-administrateur, and not starting a demarche, log in to instructeur path
-          # expect(controller).to redirect_to instructeur_procedures_path
-
-          expect(controller.current_user).to eq(user)
-          expect(controller.current_instructeur).to eq(instructeur)
-          expect(controller.current_administrateur).to eq(administrateur)
-          expect(user.loged_in_with_france_connect).to be(nil)
+          expect(response).to redirect_to(stored_path)
         end
       end
 
-      context 'when the credentials are wrong' do
-        let(:send_password) { 'wrong_password' }
+      context 'when the user is locked' do
+        before { user.lock_access! }
 
-        it 'fails to sign in with bad credentials' do
+        it 'redirects to new_path' do
           subject
 
-          expect(response.unauthorized?).to be(true)
-          expect(controller.current_user).to be(nil)
-          expect(controller.current_instructeur).to be(nil)
-          expect(controller.current_administrateur).to be(nil)
+          expect(response).to render_template(:new)
+          expect(flash.alert).to eq(I18n.t('devise.failure.invalid'))
         end
+      end
+    end
+
+    context 'when the credentials are wrong' do
+      let(:send_password) { 'wrong_password' }
+
+      it 'fails to sign in with bad credentials' do
+        subject
+
+        expect(response).to render_template(:new)
+        expect(controller.current_user).to be(nil)
       end
     end
   end
