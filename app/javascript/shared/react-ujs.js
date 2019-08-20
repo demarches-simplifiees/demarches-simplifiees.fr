@@ -56,6 +56,6 @@ export default class ReactUJS {
   }
 
   start() {
-    addEventListener('turbolinks:load', () => this.mountComponents());
+    addEventListener('ds:page:update', () => this.mountComponents());
   }
 }

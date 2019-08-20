@@ -37,22 +37,14 @@ function source(url) {
   };
 }
 
-addEventListener('turbolinks:load', function() {
-  autocompleteSetup();
-});
-
-addEventListener('ajax:success', function() {
-  autocompleteSetup();
-});
-
-function autocompleteSetup() {
+addEventListener('ds:page:update', function() {
   for (let { type, url } of sources) {
     for (let element of document.querySelectorAll(selector(type))) {
       element.removeAttribute('data-autocomplete');
       autocompleteInitializeElement(element, url);
     }
   }
-}
+});
 
 function autocompleteInitializeElement(element, url) {
   const select = autocomplete(element, options, [source(url)]);

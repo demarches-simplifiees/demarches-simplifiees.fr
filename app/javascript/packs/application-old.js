@@ -4,6 +4,7 @@ import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import jQuery from 'jquery';
 
+import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';

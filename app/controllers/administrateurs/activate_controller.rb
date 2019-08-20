@@ -3,7 +3,9 @@ class Administrateurs::ActivateController < ApplicationController
 
   def new
     @token = params[:token]
-    @administrateur = Administrateur.find_inactive_by_token(@token)
+
+    user = User.with_reset_password_token(@token)
+    @administrateur = user&.administrateur
 
     if @administrateur
       # the administrateur activates its account from an email
@@ -16,14 +18,16 @@ class Administrateurs::ActivateController < ApplicationController
 
   def create
     password = update_administrateur_params[:password]
-    administrateur = Administrateur.reset_password(
-      update_administrateur_params[:reset_password_token],
-      password
-    )
 
-    if administrateur && administrateur.errors.empty?
-      sign_in(administrateur, scope: :administrateur)
-      try_to_authenticate(User, administrateur.email, password)
+    user = User.reset_password_by_token({
+      password: password,
+      password_confirmation: password,
+      reset_password_token: update_administrateur_params[:reset_password_token]
+    })
+
+    if user&.administrateur&.errors&.empty?
+      sign_in(user, scope: :user)
+
       flash.notice = "Mot de passe enregistré"
       redirect_to admin_procedures_path
     else

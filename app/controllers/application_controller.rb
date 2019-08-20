@@ -18,7 +18,8 @@ class ApplicationController < ActionController::Base
   before_action :set_active_storage_host
   before_action :setup_tracking
 
-  helper_method :logged_in?, :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur
+  helper_method :logged_in?, :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur,
+    :administrateur_signed_in?, :current_administrateur
 
   def staging_authenticate
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
@@ -66,6 +67,14 @@ class ApplicationController < ActionController::Base
     user_signed_in? && current_user&.instructeur.present?
   end
 
+  def current_administrateur
+    current_user&.administrateur
+  end
+
+  def administrateur_signed_in?
+    current_administrateur.present?
+  end
+
   protected
 
   def authenticate_logged_user!
@@ -85,9 +94,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_administrateur!
-    if administrateur_signed_in?
-      super
-    else
+    if !administrateur_signed_in?
       redirect_to new_user_session_path
     end
   end
@@ -183,7 +190,7 @@ class ApplicationController < ActionController::Base
   def redirect_if_untrusted
     if instructeur_signed_in? &&
         sensitive_path &&
-        Flipflop.enable_email_login_token? &&
+        !Flipflop.bypass_email_login_token? &&
         !IPService.ip_trusted?(request.headers['X-Forwarded-For']) &&
         !trusted_device?
 
@@ -201,6 +208,8 @@ class ApplicationController < ActionController::Base
 
     if path == '/' ||
       path == '/users/sign_out' ||
+      path == '/contact' ||
+      path == '/contact-admin' ||
       path.start_with?('/connexion-par-jeton') ||
       path.start_with?('/api/') ||
       path.start_with?('/lien-envoye')

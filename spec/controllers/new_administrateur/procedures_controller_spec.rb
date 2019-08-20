@@ -5,7 +5,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     let(:procedure) { create(:procedure) }
 
     before do
-      sign_in admin
+      sign_in(admin.user)
       get :apercu, params: { id: procedure.id }
     end
 

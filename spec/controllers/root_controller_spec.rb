@@ -26,7 +26,7 @@ describe RootController, type: :controller do
 
   context 'when Administrateur is connected' do
     before do
-      sign_in create(:administrateur)
+      sign_in(create(:administrateur).user)
     end
 
     it { expect(subject).to redirect_to(admin_procedures_path) }

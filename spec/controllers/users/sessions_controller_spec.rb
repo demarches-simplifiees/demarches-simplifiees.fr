@@ -17,7 +17,6 @@ describe Users::SessionsController, type: :controller do
       let(:send_password) { password }
 
       before do
-        Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
         allow(controller).to receive(:trusted_device?).and_return(trusted_device)
         allow(InstructeurMailer).to receive(:send_login_token).and_return(double(deliver_later: true))
       end
@@ -28,6 +27,9 @@ describe Users::SessionsController, type: :controller do
       end
 
       context 'when the device is not trusted' do
+        before do
+          Flipflop::FeatureSet.current.test!.switch!(:bypass_email_login_token, false)
+        end
         let(:trusted_device) { false }
 
         it 'redirects to the send_linked_path' do
@@ -104,20 +106,6 @@ describe Users::SessionsController, type: :controller do
 
       it 'redirect to root page' do
         expect(response).to redirect_to(root_path)
-      end
-    end
-
-    context "when associated administrateur" do
-      let(:administrateur) { create(:administrateur, user: user) }
-
-      it 'signs user + instructeur + administrateur out' do
-        sign_in user
-        sign_in administrateur
-        delete :destroy
-        expect(@response.redirect?).to be(true)
-        expect(subject.current_user).to be(nil)
-        expect(subject.current_instructeur).to be(nil)
-        expect(subject.current_administrateur).to be(nil)
       end
     end
   end

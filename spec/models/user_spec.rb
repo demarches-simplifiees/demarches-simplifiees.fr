@@ -130,18 +130,4 @@ describe User, type: :model do
       it { is_expected.to be_falsey }
     end
   end
-
-  context 'unified login' do
-    it 'syncs credentials to associated administrateur' do
-      admin = create(:administrateur)
-      user = admin.instructeur.user
-
-      user.update(email: 'whoami@plop.com', password: 'démarches-simplifiées2')
-      user.confirm
-
-      admin.reload
-      expect(admin.email).to eq('whoami@plop.com')
-      expect(admin.valid_password?('démarches-simplifiées2')).to be(true)
-    end
-  end
 end

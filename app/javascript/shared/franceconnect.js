@@ -20,8 +20,7 @@ function init() {
   }
 }
 
-addEventListener('DOMContentLoaded', init);
-addEventListener('turbolinks:load', init);
+addEventListener('ds:page:update', init);
 
 function toggleElement(event) {
   event.preventDefault();
