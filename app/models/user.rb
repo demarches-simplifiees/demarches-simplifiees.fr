@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
   enum loged_in_with_france_connect: {
@@ -68,6 +67,32 @@ class User < ApplicationRecord
     reset_password_token = set_reset_password_token
 
     AdministrateurMailer.activate_before_expiration(self, reset_password_token).deliver_later
+  end
+
+  def self.create_or_promote_to_instructeur(email, password, administrateurs: [])
+    user = User
+      .create_with(password: password, confirmed_at: Time.zone.now)
+      .find_or_create_by(email: email)
+
+    if user.valid?
+      if user.instructeur_id.nil?
+        user.create_instructeur!(email: email)
+      end
+
+      user.instructeur.administrateurs << administrateurs
+    end
+
+    user
+  end
+
+  def self.create_or_promote_to_administrateur(email, password)
+    user = User.create_or_promote_to_instructeur(email, password)
+
+    if user.valid? && user.administrateur_id.nil?
+      user.create_administrateur!(email: email)
+    end
+
+    user
   end
 
   private

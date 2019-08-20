@@ -1,5 +1,4 @@
 class Instructeur < ApplicationRecord
-  include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
   has_and_belongs_to_many :administrateurs

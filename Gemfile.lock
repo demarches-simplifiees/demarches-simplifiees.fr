@@ -367,7 +367,7 @@ GEM
     nenv (0.3.0)
     netrc (0.11.0)
     nio4r (2.3.1)
-    nokogiri (1.10.1)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     notiffany (0.1.1)
       nenv (~> 0.1)
@@ -437,6 +437,8 @@ GEM
     pundit (2.0.1)
       activesupport (>= 3.0.0)
     rack (2.0.6)
+    rack-attack (6.0.0)
+      rack (>= 1.0, < 3)
     rack-mini-profiler (1.0.1)
       rack (>= 1.2.0)
     rack-oauth2 (1.9.3)
@@ -758,6 +760,7 @@ DEPENDENCIES
   pry-byebug
   puma
   pundit
+  rack-attack
   rack-mini-profiler
   rails
   rails-controller-testing

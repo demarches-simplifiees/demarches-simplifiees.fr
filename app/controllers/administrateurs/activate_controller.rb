@@ -54,7 +54,6 @@ class Administrateurs::ActivateController < ApplicationController
 
     if resource&.valid_password?(password)
       sign_in resource
-      resource.force_sync_credentials
     end
   end
 end

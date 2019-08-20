@@ -28,6 +28,18 @@ describe IPService do
 
         it { is_expected.to be(false) }
       end
+
+      context 'when the trusted network is not defined' do
+        it { is_expected.to be(false) }
+      end
+
+      context 'when the trusted network is malformed' do
+        before do
+          ENV['TRUSTED_NETWORKS'] = 'bad network'
+        end
+
+        it { is_expected.to be(false) }
+      end
     end
 
     context 'when a trusted network is defined' do
