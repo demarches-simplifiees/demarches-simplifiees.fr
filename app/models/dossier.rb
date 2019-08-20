@@ -29,8 +29,8 @@ class Dossier < ApplicationRecord
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :dossier
-  has_many :followers_gestionnaires, through: :follows, source: :gestionnaire
-  has_many :previous_followers_gestionnaires, -> { distinct }, through: :previous_follows, source: :gestionnaire
+  has_many :followers_instructeurs, through: :follows, source: :instructeur
+  has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, inverse_of: :dossier, dependent: :destroy
 
   has_many :dossier_operation_logs, dependent: :destroy
@@ -114,7 +114,7 @@ class Dossier < ApplicationRecord
       .includes(
         :user,
         :individual,
-        :followers_gestionnaires,
+        :followers_instructeurs,
         :avis,
         etablissement: :champ,
         champs: {
@@ -129,7 +129,7 @@ class Dossier < ApplicationRecord
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
-  scope :followed_by,                 -> (gestionnaire) { joins(:follows).where(follows: { gestionnaire: gestionnaire }) }
+  scope :followed_by,                 -> (instructeur) { joins(:follows).where(follows: { instructeur: instructeur }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
   scope :since,                       -> (since) { where('dossiers.en_construction_at >= ?', since) }
@@ -273,14 +273,14 @@ class Dossier < ApplicationRecord
     parts.join
   end
 
-  def avis_for(gestionnaire)
-    if gestionnaire.dossiers.include?(self)
+  def avis_for(instructeur)
+    if instructeur.dossiers.include?(self)
       avis.order(created_at: :asc)
     else
       avis
         .where(confidentiel: false)
-        .or(avis.where(claimant: gestionnaire))
-        .or(avis.where(gestionnaire: gestionnaire))
+        .or(avis.where(claimant: instructeur))
+        .or(avis.where(instructeur: instructeur))
         .order(created_at: :asc)
     end
   end
@@ -335,7 +335,7 @@ class Dossier < ApplicationRecord
     update(hidden_at: deleted_dossier.deleted_at)
 
     if en_construction?
-      administration_emails = followers_gestionnaires.present? ? followers_gestionnaires.pluck(:email) : procedure.administrateurs.pluck(:email)
+      administration_emails = followers_instructeurs.present? ? followers_instructeurs.pluck(:email) : procedure.administrateurs.pluck(:email)
       administration_emails.each do |email|
         DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
       end
@@ -345,34 +345,34 @@ class Dossier < ApplicationRecord
     log_dossier_operation(author, :supprimer, self)
   end
 
-  def after_passer_en_instruction(gestionnaire)
-    gestionnaire.follow(self)
+  def after_passer_en_instruction(instructeur)
+    instructeur.follow(self)
 
-    log_dossier_operation(gestionnaire, :passer_en_instruction)
+    log_dossier_operation(instructeur, :passer_en_instruction)
   end
 
   def after_passer_automatiquement_en_instruction
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
-  def after_repasser_en_construction(gestionnaire)
+  def after_repasser_en_construction(instructeur)
     self.en_instruction_at = nil
 
     save!
-    log_dossier_operation(gestionnaire, :repasser_en_construction)
+    log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
-  def after_repasser_en_instruction(gestionnaire)
+  def after_repasser_en_instruction(instructeur)
     self.processed_at = nil
     self.motivation = nil
     attestation&.destroy
 
     save!
     DossierMailer.notify_revert_to_instruction(self).deliver_later
-    log_dossier_operation(gestionnaire, :repasser_en_instruction)
+    log_dossier_operation(instructeur, :repasser_en_instruction)
   end
 
-  def after_accepter(gestionnaire, motivation, justificatif = nil)
+  def after_accepter(instructeur, motivation, justificatif = nil)
     self.motivation = motivation
 
     if justificatif
@@ -385,7 +385,7 @@ class Dossier < ApplicationRecord
 
     save!
     NotificationMailer.send_closed_notification(self).deliver_later
-    log_dossier_operation(gestionnaire, :accepter, self)
+    log_dossier_operation(instructeur, :accepter, self)
   end
 
   def after_accepter_automatiquement
@@ -400,7 +400,7 @@ class Dossier < ApplicationRecord
     log_automatic_dossier_operation(:accepter, self)
   end
 
-  def after_refuser(gestionnaire, motivation, justificatif = nil)
+  def after_refuser(instructeur, motivation, justificatif = nil)
     self.motivation = motivation
 
     if justificatif
@@ -409,10 +409,10 @@ class Dossier < ApplicationRecord
 
     save!
     NotificationMailer.send_refused_notification(self).deliver_later
-    log_dossier_operation(gestionnaire, :refuser, self)
+    log_dossier_operation(instructeur, :refuser, self)
   end
 
-  def after_classer_sans_suite(gestionnaire, motivation, justificatif = nil)
+  def after_classer_sans_suite(instructeur, motivation, justificatif = nil)
     self.motivation = motivation
 
     if justificatif
@@ -421,7 +421,7 @@ class Dossier < ApplicationRecord
 
     save!
     NotificationMailer.send_without_continuation_notification(self).deliver_later
-    log_dossier_operation(gestionnaire, :classer_sans_suite, self)
+    log_dossier_operation(instructeur, :classer_sans_suite, self)
   end
 
   def check_mandatory_champs
@@ -447,9 +447,9 @@ class Dossier < ApplicationRecord
     datetime.to_i.to_s(16) + '-' + datetime.nsec.to_s(16)
   end
 
-  def modifier_annotations!(gestionnaire)
+  def modifier_annotations!(instructeur)
     champs_private.select(&:value_previously_changed?).each do |champ|
-      log_dossier_operation(gestionnaire, :modifier_annotation, champ)
+      log_dossier_operation(instructeur, :modifier_annotation, champ)
     end
   end
 
@@ -472,7 +472,7 @@ class Dossier < ApplicationRecord
       ['Passé en instruction le', :en_instruction_at],
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
-      ['Instructeurs', followers_gestionnaires.map(&:email).join(' ')]
+      ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
     ] + champs_for_export + annotations_for_export
   end
 
@@ -490,6 +490,10 @@ class Dossier < ApplicationRecord
 
   def attachments_downloadable?
     !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
+  end
+
+  def update_with_france_connect(fc_information)
+    self.individual = Individual.create_from_france_connect(fc_information)
   end
 
   private

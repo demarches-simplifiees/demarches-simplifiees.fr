@@ -17,7 +17,7 @@ class Procedure < ApplicationRecord
   has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
-  has_many :gestionnaires, through: :assign_to
+  has_many :instructeurs, through: :assign_to
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
@@ -243,7 +243,7 @@ class Procedure < ApplicationRecord
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
-    admin.gestionnaire.assign_to_procedure(procedure)
+    admin.instructeur.assign_to_procedure(procedure)
 
     procedure
   end
@@ -414,7 +414,7 @@ class Procedure < ApplicationRecord
       result << :service
     end
 
-    if gestionnaires.empty?
+    if instructeurs.empty?
       result << :instructeurs
     end
 

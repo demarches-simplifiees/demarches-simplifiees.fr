@@ -1,22 +1,22 @@
 require 'spec_helper'
 
 describe DossierSearchService do
-  describe '#matching_dossiers_for_gestionnaire' do
+  describe '#matching_dossiers_for_instructeur' do
     subject { liste_dossiers }
 
     let(:liste_dossiers) do
-      described_class.matching_dossiers_for_gestionnaire(terms, gestionnaire_1)
+      described_class.matching_dossiers_for_instructeur(terms, instructeur_1)
     end
 
     let(:administrateur_1) { create(:administrateur) }
     let(:administrateur_2) { create(:administrateur) }
 
-    let(:gestionnaire_1) { create(:gestionnaire, administrateurs: [administrateur_1]) }
-    let(:gestionnaire_2) { create(:gestionnaire, administrateurs: [administrateur_2]) }
+    let(:instructeur_1) { create(:instructeur, administrateurs: [administrateur_1]) }
+    let(:instructeur_2) { create(:instructeur, administrateurs: [administrateur_2]) }
 
     before do
-      create :assign_to, gestionnaire: gestionnaire_1, procedure: procedure_1
-      create :assign_to, gestionnaire: gestionnaire_2, procedure: procedure_2
+      create :assign_to, instructeur: instructeur_1, procedure: procedure_1
+      create :assign_to, instructeur: instructeur_2, procedure: procedure_2
     end
 
     let(:procedure_1) { create(:procedure, :published, administrateur: administrateur_1) }

@@ -2,7 +2,8 @@ class Administrateurs::ActivateController < ApplicationController
   include TrustedDeviceConcern
 
   def new
-    @administrateur = Administrateur.find_inactive_by_token(params[:token])
+    @token = params[:token]
+    @administrateur = Administrateur.find_inactive_by_token(@token)
 
     if @administrateur
       # the administrateur activates its account from an email
@@ -23,13 +24,20 @@ class Administrateurs::ActivateController < ApplicationController
     if administrateur && administrateur.errors.empty?
       sign_in(administrateur, scope: :administrateur)
       try_to_authenticate(User, administrateur.email, password)
-      try_to_authenticate(Gestionnaire, administrateur.email, password)
+      try_to_authenticate(Instructeur, administrateur.email, password)
       flash.notice = "Mot de passe enregistré"
       redirect_to admin_procedures_path
     else
       flash.alert = administrateur.errors.full_messages
       redirect_to admin_activate_path(token: update_administrateur_params[:reset_password_token])
     end
+  end
+
+  def test_strength
+    @score, @words, @length = ZxcvbnService.new(update_administrateur_params[:password]).complexity
+    @min_length = PASSWORD_MIN_LENGTH
+    @min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
+    render 'shared/password/test_strength'
   end
 
   private

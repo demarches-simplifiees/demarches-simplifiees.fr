@@ -14,9 +14,9 @@ class SyncCredentialsService
       end
     end
 
-    if @klass != Gestionnaire
-      gestionnaire = Gestionnaire.find_by(email: @email_before_last_save)
-      if gestionnaire && !gestionnaire.update_columns(email: @email, encrypted_password: @encrypted_password)
+    if @klass != Instructeur
+      instructeur = Instructeur.find_by(email: @email_before_last_save)
+      if instructeur && !instructeur.update_columns(email: @email, encrypted_password: @encrypted_password)
         return false
       end
     end

@@ -11,4 +11,15 @@ class Individual < ApplicationRecord
     sanitize_uppercase(:nom)
     sanitize_camelcase(:prenom)
   }
+
+  GENDER_MALE = 'M.'
+  GENDER_FEMALE = 'Mme'
+
+  def self.create_from_france_connect(fc_information)
+    create(
+      nom: fc_information.family_name,
+      prenom: fc_information.given_name,
+      gender: fc_information.gender == 'female' ? GENDER_FEMALE : GENDER_MALE
+    )
+  end
 end

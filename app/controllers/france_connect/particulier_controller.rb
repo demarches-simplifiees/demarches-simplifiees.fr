@@ -40,8 +40,8 @@ class FranceConnect::ParticulierController < ApplicationController
       sign_out :user
     end
 
-    if gestionnaire_signed_in?
-      sign_out :gestionnaire
+    if instructeur_signed_in?
+      sign_out :instructeur
     end
 
     if administrateur_signed_in?

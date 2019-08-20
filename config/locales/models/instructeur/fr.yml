@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    models:
+      instructeur:
+        one: Instructeur
+        other: Instructeurs

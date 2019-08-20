@@ -2,9 +2,9 @@
   #sign-out.col-xs-6.no-padding
     = render partial: 'users/login_banner'
     = render partial: 'layouts/credentials'
-- elsif gestionnaire_signed_in?
+- elsif instructeur_signed_in?
   #sign-out.col-xs-6.no-padding
-    = render partial: 'gestionnaires/login_banner'
+    = render partial: 'instructeurs/login_banner'
     = render partial: 'layouts/credentials'
 - elsif administrateur_signed_in?
   #sign-out.col-xs-6.no-padding

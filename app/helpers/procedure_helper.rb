@@ -55,7 +55,7 @@ module ProcedureHelper
   end
 
   def procedure_dossiers_download_path(procedure, format:, version:)
-    download_dossiers_gestionnaire_procedure_path(format: format,
+    download_dossiers_instructeur_procedure_path(format: format,
       procedure_id: procedure.id,
       tables: [:etablissements],
       version: version)

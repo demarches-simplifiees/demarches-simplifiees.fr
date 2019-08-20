@@ -240,6 +240,10 @@ module Users
       dossier = Dossier.create!(procedure: procedure, user: current_user, state: Dossier.states.fetch(:brouillon))
 
       if dossier.procedure.for_individual
+        if current_user.france_connect_information.present?
+          dossier.update_with_france_connect(current_user.france_connect_information)
+        end
+
         redirect_to identite_dossier_path(dossier)
       else
         redirect_to siret_dossier_path(id: dossier.id)

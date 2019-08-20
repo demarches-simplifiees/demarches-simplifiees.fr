@@ -11,8 +11,8 @@ class PasswordMockController < ApplicationController
       @credential = User.new
     when 'administrateur', 'admin'
       @credential = Administrateur.new
-    when 'instructeur', 'gestionnaire'
-      @credential = Gestionnaire.new
+    when 'instructeur'
+      @credential = Instructeur.new
     else
       @credential = User.new
       flash.notice = 'credential parameter must be one of (usager,instructeur,administrateur)'
@@ -24,7 +24,7 @@ class PasswordMockController < ApplicationController
     compute_strength
     if params[:administrateur].present?
       credential = 'administrateur'
-    elsif params[:gestionnaire].present?
+    elsif params[:instructeur].present?
       credential = 'instructeur'
     else
       credential = 'usager'
@@ -44,9 +44,9 @@ class PasswordMockController < ApplicationController
     if params[:administrateur].present?
       password = params[:administrateur][:password]
       @min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
-    elsif params[:gestionnaire].present?
-      password = params[:gestionnaire][:password]
-      @min_complexity = PASSWORD_COMPLEXITY_FOR_GESTIONNAIRE
+    elsif params[:instructeur].present?
+      password = params[:instructeur][:password]
+      @min_complexity = PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR
     elsif params[:user].present?
       password = params[:user][:password]
       @min_complexity = PASSWORD_COMPLEXITY_FOR_USER

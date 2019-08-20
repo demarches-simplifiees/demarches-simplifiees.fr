@@ -401,7 +401,7 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.gestionnaires.pluck(:email)).to eq([administrateur.email]) }
+    it { expect(subject.instructeurs.pluck(:email)).to eq([administrateur.email]) }
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
@@ -648,21 +648,21 @@ describe Procedure do
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, procedure: procedure) }
     let!(:dossier2) { create(:dossier, procedure: procedure) }
-    let(:gestionnaire) { create(:gestionnaire) }
+    let(:instructeur) { create(:instructeur) }
 
     it { expect(Dossier.count).to eq(2) }
     it { expect(Dossier.all).to include(dossier, dossier2) }
 
     context "when hidding procedure" do
       before do
-        gestionnaire.followed_dossiers << dossier
+        instructeur.followed_dossiers << dossier
         procedure.hide!
-        gestionnaire.reload
+        instructeur.reload
       end
 
       it { expect(procedure.dossiers.count).to eq(0) }
       it { expect(Dossier.count).to eq(0) }
-      it { expect(gestionnaire.followed_dossiers).not_to include(dossier) }
+      it { expect(instructeur.followed_dossiers).not_to include(dossier) }
     end
   end
 

@@ -1,5 +1,5 @@
 - content_for(:title, 'Invitation à donner votre avis')
-- avis_link = @avis.gestionnaire.present? ? gestionnaire_avis_url(@avis) : sign_up_gestionnaire_avis_url(@avis.id, @avis.email)
+- avis_link = @avis.instructeur.present? ? instructeur_avis_url(@avis) : sign_up_instructeur_avis_url(@avis.id, @avis.email)
 
 - content_for(:footer) do
   Merci de ne pas répondre à cet email. Donnez votre avis
@@ -23,7 +23,7 @@
 %p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
   = @avis.introduction
 
-- if @avis.gestionnaire.present?
+- if @avis.instructeur.present?
   %p
     = link_to "Connectez-vous pour donner votre avis", avis_link
 - else

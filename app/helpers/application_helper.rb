@@ -86,7 +86,7 @@ module ApplicationHelper
 
   def current_email
     current_user&.email ||
-      current_gestionnaire&.email ||
+      current_instructeur&.email ||
       current_administrateur&.email
   end
 
@@ -104,8 +104,8 @@ module ApplicationHelper
 
   def root_path_for_profile(nav_bar_profile)
     case nav_bar_profile
-    when :gestionnaire
-      gestionnaire_procedures_path
+    when :instructeur
+      instructeur_procedures_path
     when :user
       dossiers_path
     else

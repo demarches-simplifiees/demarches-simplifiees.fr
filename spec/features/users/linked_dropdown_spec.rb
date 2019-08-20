@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'linked dropdown lists' do
-  let(:password) { 'déMarches-simPlifiées-pwd' }
+  let(:password) { 'démarches-simplifiées-pwd' }
   let!(:user) { create(:user, password: password) }
 
   let(:list_items) do

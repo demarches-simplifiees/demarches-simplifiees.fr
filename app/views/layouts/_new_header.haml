@@ -9,17 +9,17 @@
     .flex.align-center
       = link_to '', root_path_for_profile(nav_bar_profile), class: "header-logo", title: "Revenir à l’accueil"
 
-      - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
+      - if nav_bar_profile == :instructeur && instructeur_signed_in?
         - current_url = request.path_info
         %ul.header-tabs
-          - if current_gestionnaire.visible_procedures.count > 0
+          - if current_instructeur.visible_procedures.count > 0
             %li
-              = active_link_to "Démarches", gestionnaire_procedures_path, active: :inclusive, class: 'tab-link'
-          - if current_gestionnaire.avis.count > 0
+              = active_link_to "Démarches", instructeur_procedures_path, active: :inclusive, class: 'tab-link'
+          - if current_instructeur.avis.count > 0
             %li
-              = active_link_to gestionnaire_avis_index_path, active: :inclusive, class: 'tab-link' do
+              = active_link_to instructeur_avis_index_path, active: :inclusive, class: 'tab-link' do
                 Avis
-                - avis_counter = current_gestionnaire.avis.without_answer.count
+                - avis_counter = current_instructeur.avis.without_answer.count
                 - if avis_counter > 0
                   %span.badge.warning= avis_counter
 
@@ -29,10 +29,10 @@
             = active_link_to "Dossiers", dossiers_path, active: :inclusive, class: 'tab-link'
 
     %ul.header-right-content
-      - if nav_bar_profile == :gestionnaire && gestionnaire_signed_in?
+      - if nav_bar_profile == :instructeur && instructeur_signed_in?
         %li
           .header-search
-            = form_tag gestionnaire_recherche_path, method: :get, class: "form" do
+            = form_tag instructeur_recherche_path, method: :get, class: "form" do
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
@@ -45,7 +45,7 @@
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg"
 
-      - if gestionnaire_signed_in? || user_signed_in?
+      - if instructeur_signed_in? || user_signed_in?
         %li
           = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
 
@@ -64,8 +64,8 @@
           - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
             = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
 
-          - elsif nav_bar_profile == :gestionnaire
-            = render partial: 'shared/help/help_dropdown_gestionnaire'
+          - elsif nav_bar_profile == :instructeur
+            = render partial: 'shared/help/help_dropdown_instructeur'
 
           - else
             = render partial: 'shared/help/help_button'

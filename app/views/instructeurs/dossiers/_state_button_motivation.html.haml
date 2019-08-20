@@ -1,0 +1,39 @@
+.motivation.hidden{ class: popup_class }
+  %h3
+    %span.icon{ class: popup_class }
+    #{popup_title}
+
+  = form_tag(terminer_instructeur_dossier_path(dossier.procedure, dossier), remote: true, method: :post, class: 'form') do
+    - if title == 'Accepter'
+      = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: false
+      %p.help
+        L'acceptation du dossier envoie automatiquement une attestation à l'usager.
+
+      - unspecified_attestation_champs = dossier.unspecified_attestation_champs
+      - if unspecified_attestation_champs.present?
+        .warning
+          Attention, les valeurs suivantes n'ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
+          - unspecified_champs, unspecified_annotations_privees = unspecified_attestation_champs.partition(&:private)
+
+          - if unspecified_champs.present?
+            %h4 Champs de la demande
+            %ul
+              - unspecified_attestation_champs.each do |unspecified_champ|
+                %li= unspecified_champ.libelle
+
+          - if unspecified_annotations_privees.present?
+            %h4 Annotations privées
+            %ul
+              - unspecified_annotations_privees.each do |unspecified_annotations_privee|
+                %li= unspecified_annotations_privee.libelle
+    - else
+      = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: true
+    .optional-justificatif{ id: "justificatif_motivation_suggest_#{popup_class}", onclick: "DS.showImportJustificatif('#{popup_class}');" }
+      .button Ajouter un justificatif (optionnel)
+    .hidden{ id: "justificatif_motivation_import_#{popup_class}" }
+      = file_field :dossier, :justificatif_motivation, direct_upload: true
+    .text-right
+      - if title == 'Accepter' && dossier.procedure.attestation_template&.activated?
+        = link_to "Voir l'attestation", apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', class: 'button', title: "Voir l'attestation qui sera envoyée au demandeur"
+      %span.button{ onclick: 'DS.motivationCancel();' } Annuler
+      = button_tag 'Valider la décision', name: :process_action, value: process_action, class: 'button primary', title: title, data: { confirm: confirm }
