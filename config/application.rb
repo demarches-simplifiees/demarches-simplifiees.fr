@@ -41,5 +41,6 @@ module TPS
     end
 
     config.ds_weekly_overview = ENV['APP_NAME'] == 'tps'
+    config.middleware.use Rack::Attack
   end
 end

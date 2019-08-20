@@ -48,6 +48,7 @@ gem 'prawn_rails'
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
+gem 'rack-attack'
 gem 'rack-mini-profiler'
 gem 'rails'
 gem 'rails-i18n' # Locales par défaut

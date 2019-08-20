@@ -3,13 +3,7 @@ class IPService
     def ip_trusted?(ip)
       ip_address = parse_address(ip)
 
-      if ip_address.nil?
-        false
-      elsif trusted_networks.present?
-        trusted_networks.any? { |network| network.include?(ip_address) }
-      else
-        false
-      end
+      trusted_networks.any? { |network| network.include?(ip_address) }
     end
 
     private
