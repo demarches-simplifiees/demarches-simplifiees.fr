@@ -8,14 +8,8 @@ FactoryBot.define do
       password { 'somethingverycomplated!' }
     end
 
-    after(:create) do |instructeur, evaluator|
-      if evaluator.user.present?
-        user = evaluator.user
-      else
-        user = create(:user, email: instructeur.email, password: evaluator.password)
-      end
-
-      instructeur.update!(user: user)
+    initialize_with do
+      User.create_or_promote_to_instructeur(email, password).instructeur
     end
   end
 end

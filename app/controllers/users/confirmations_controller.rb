@@ -42,7 +42,6 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     if sign_in_after_confirmation?(resource)
       resource.remember_me = true
       sign_in(resource)
-      resource.force_sync_credentials
       after_sign_in_path_for(resource_name)
     else
       super(resource_name, resource)

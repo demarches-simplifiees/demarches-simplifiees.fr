@@ -100,4 +100,68 @@ describe User, type: :model do
       it { is_expected.to be_falsey }
     end
   end
+
+  describe '.create_or_promote_to_instructeur' do
+    let(:email) { 'inst1@gmail.com' }
+    let(:password) { 'un super password !' }
+    let(:admins) { [] }
+
+    subject { User.create_or_promote_to_instructeur(email, password, administrateurs: admins) }
+
+    context 'without an existing user' do
+      it do
+        user = subject
+        expect(user.valid_password?(password)).to be true
+        expect(user.confirmed_at).to be_present
+        expect(user.instructeur).to be_present
+      end
+
+      context 'with an administrateur' do
+        let(:admins) { [create(:administrateur)] }
+
+        it do
+          user = subject
+          expect(user.instructeur.administrateurs).to eq(admins)
+        end
+      end
+    end
+
+    context 'with an existing user' do
+      before { create(:user, email: email, password: 'démarches-simplifiées-pwd') }
+
+      it 'keeps the previous password' do
+        user = subject
+        expect(user.valid_password?('démarches-simplifiées-pwd')).to be true
+        expect(user.instructeur).to be_present
+      end
+
+      context 'with an existing instructeur' do
+        let(:old_admins) { [create(:administrateur)] }
+        let(:admins) { [create(:administrateur)] }
+        let!(:instructeur) { Instructeur.create(email: 'i@mail.com', administrateurs: old_admins) }
+
+        before do
+          User
+            .find_by(email: email)
+            .update!(instructeur: instructeur)
+        end
+
+        it 'keeps the existing instructeurs and adds administrateur' do
+          user = subject
+          expect(user.instructeur).to eq(instructeur)
+          expect(user.instructeur.administrateurs).to eq(old_admins + admins)
+        end
+      end
+    end
+
+    context 'with an invalid email' do
+      let(:email) { 'invalid' }
+
+      it 'does not build an instructeur' do
+        user = subject
+        expect(user.valid?).to be false
+        expect(user.instructeur).to be_nil
+      end
+    end
+  end
 end
