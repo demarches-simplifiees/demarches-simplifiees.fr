@@ -14,36 +14,25 @@ class Users::ActivateController < ApplicationController
   end
 
   def create
-    password = create_user_params[:password]
     user = User.reset_password_by_token({
-      password: password,
-      password_confirmation: password,
-      reset_password_token: create_user_params[:reset_password_token]
+      password: user_params[:password],
+      reset_password_token: user_params[:reset_password_token]
     })
 
-    if user && user.errors.empty?
+    if user.valid?
       sign_in(user, scope: :user)
 
       flash.notice = "Mot de passe enregistré"
       redirect_to instructeur_procedures_path
     else
       flash.alert = user.errors.full_messages
-      redirect_to users_activate_path(token: create_user_params[:reset_password_token])
+      redirect_to users_activate_path(token: user_params[:reset_password_token])
     end
   end
 
   private
 
-  def create_user_params
+  def user_params
     params.require(:user).permit(:reset_password_token, :password)
-  end
-
-  def try_to_authenticate(klass, email, password)
-    resource = klass.find_for_database_authentication(email: email)
-
-    if resource&.valid_password?(password)
-      sign_in resource
-      resource.force_sync_credentials
-    end
   end
 end
