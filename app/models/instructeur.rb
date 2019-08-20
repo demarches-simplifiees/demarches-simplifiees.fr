@@ -6,8 +6,8 @@ class Instructeur < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
 
   has_many :assign_to, dependent: :destroy
-  has_many :procedures, through: :assign_to
   has_many :groupe_instructeurs, through: :assign_to
+  has_many :procedures, through: :groupe_instructeurs
 
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :procedures_with_email_notifications, through: :assign_to_with_email_notifications, source: :procedure
@@ -64,7 +64,7 @@ class Instructeur < ApplicationRecord
   end
 
   def remove_from_procedure(procedure)
-    !!(procedure.in?(procedures) && procedures.destroy(procedure))
+    !!(procedure.defaut_groupe_instructeur.in?(groupe_instructeurs) && groupe_instructeurs.destroy(procedure.defaut_groupe_instructeur))
   end
 
   def last_week_overview

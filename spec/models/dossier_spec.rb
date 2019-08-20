@@ -615,7 +615,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_construction, :followed) }
       let!(:non_following_instructeur) do
         non_following_instructeur = create(:instructeur)
-        non_following_instructeur.procedures << dossier.procedure
+        non_following_instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
         non_following_instructeur
       end
 

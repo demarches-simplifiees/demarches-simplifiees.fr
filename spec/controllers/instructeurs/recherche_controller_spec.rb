@@ -5,7 +5,7 @@ describe Instructeurs::RechercheController, type: :controller do
   let(:dossier2) { create(:dossier, :en_construction, procedure: dossier.procedure) }
   let(:instructeur) { create(:instructeur) }
 
-  before { instructeur.procedures << dossier2.procedure }
+  before { instructeur.groupe_instructeurs << dossier2.procedure.defaut_groupe_instructeur }
 
   describe 'GET #index' do
     before { sign_in(instructeur.user) }
