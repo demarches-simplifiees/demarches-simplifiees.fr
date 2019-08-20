@@ -53,7 +53,10 @@ class Instructeur < ApplicationRecord
 
   def assign_to_procedure(procedure)
     begin
-      procedures << procedure
+      assign_to.create({
+        procedure: procedure,
+        groupe_instructeur: procedure.defaut_groupe_instructeur
+      })
       true
     rescue ActiveRecord::RecordNotUnique
       false
