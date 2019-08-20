@@ -97,6 +97,10 @@ describe Instructeur, type: :model do
 
       it { is_expected.to be_truthy }
       it { expect { subject }.to change(instructeur.procedures, :count) }
+      it do
+        subject
+        expect(instructeur.groupe_instructeurs).to include(procedure_to_assign.defaut_groupe_instructeur)
+      end
     end
 
     context "with an already assigned procedure" do
