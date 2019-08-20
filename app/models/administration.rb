@@ -8,32 +8,11 @@ class Administration < ApplicationRecord
   end
 
   def invite_admin(email)
-    password = SecureRandom.hex
+    user = User.create_or_promote_to_administrateur(email, SecureRandom.hex)
 
-    user = User.find_by(email: email)
-
-    if user.nil?
-      # set confirmed_at otherwise admin confirmation doesnt work
-      # we somehow mess up using reset_password logic instead of
-      # confirmation_logic
-      # FIXME
-      user = User.create(
-        email: email,
-        password: password,
-        confirmed_at: Time.zone.now
-      )
-    end
-
-    if user.errors.empty?
-      if user.instructeur.nil?
-        Instructeur.create!(email: email, user: user)
-      end
-
-      if user.administrateur.nil?
-        administrateur = Administrateur.create!(email: email, active: false, user: user)
-        AdministrationMailer.new_admin_email(administrateur, self).deliver_later
-        user.invite_administrateur!(id)
-      end
+    if user.valid?
+      AdministrationMailer.new_admin_email(user.administrateur, self).deliver_later
+      user.invite_administrateur!(id)
     end
 
     user
