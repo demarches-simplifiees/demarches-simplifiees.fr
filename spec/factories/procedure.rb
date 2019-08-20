@@ -43,7 +43,7 @@ FactoryBot.define do
     end
 
     trait :with_logo do
-      logo { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
+      logo_active_storage { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
     end
 
     trait :with_path do

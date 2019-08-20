@@ -249,8 +249,11 @@ class Admin::ProceduresController < AdminController
   end
 
   def delete_logo
-    @procedure.remove_logo!
-    @procedure.save
+    if @procedure.logo
+      @procedure.remove_logo!
+      @procedure.save
+    end
+    @procedure.logo_active_storage.purge_later
 
     flash.notice = 'le logo a bien été supprimé'
     redirect_to edit_admin_procedure_path(@procedure)
@@ -278,10 +281,12 @@ class Admin::ProceduresController < AdminController
 
   def procedure_params
     editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on, :monavis_embed]
-    if @procedure&.locked?
+    permited_params = if @procedure&.locked?
       params.require(:procedure).permit(*editable_params)
     else
       params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :ask_birthday, :path)
     end
+    permited_params[:logo_active_storage] = permited_params.delete(:logo)
+    permited_params
   end
 end
