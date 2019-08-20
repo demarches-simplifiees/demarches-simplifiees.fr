@@ -262,8 +262,10 @@ class Procedure < ApplicationRecord
     if original_attachment.attached?
       kopy.send(attribute).attach({
         io: StringIO.new(original_attachment.download),
-        filename: original_attachment.blob.filename,
-        content_type: original_attachment.blob.content_type
+        filename: original_attachment.filename,
+        content_type: original_attachment.content_type,
+        # we don't want to run virus scanner on cloned file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       })
     end
   end
