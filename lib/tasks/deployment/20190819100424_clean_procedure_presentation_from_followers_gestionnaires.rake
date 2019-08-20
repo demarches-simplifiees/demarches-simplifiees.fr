@@ -22,7 +22,7 @@ namespace :after_party do
 
       begin
         pp.save!
-      rescue ActiveRecord::RecordInvalid
+      rescue StandardError
       end
     end
     AfterParty::TaskRecord.create version: '20190819100424'
