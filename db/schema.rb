@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_19_134252) do
+ActiveRecord::Schema.define(version: 2019_08_19_145355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,6 +118,9 @@ ActiveRecord::Schema.define(version: 2019_08_19_134252) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "email_notifications_enabled", default: false, null: false
+    t.bigint "groupe_instructeur_id"
+    t.index ["groupe_instructeur_id", "instructeur_id"], name: "unique_couple_groupe_instructeur_instructeur", unique: true
+    t.index ["groupe_instructeur_id"], name: "index_assign_tos_on_groupe_instructeur_id"
     t.index ["instructeur_id", "procedure_id"], name: "index_assign_tos_on_instructeur_id_and_procedure_id", unique: true
     t.index ["instructeur_id"], name: "index_assign_tos_on_instructeur_id"
     t.index ["procedure_id"], name: "index_assign_tos_on_procedure_id"
@@ -634,6 +637,7 @@ ActiveRecord::Schema.define(version: 2019_08_19_134252) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
   end
 
+  add_foreign_key "assign_tos", "groupe_instructeurs"
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "instructeurs", column: "claimant_id"
