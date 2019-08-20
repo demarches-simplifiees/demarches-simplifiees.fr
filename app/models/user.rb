@@ -77,6 +77,16 @@ class User < ApplicationRecord
     user
   end
 
+  def self.create_or_promote_to_administrateur(email, password)
+    user = User.create_or_promote_to_instructeur(email, password)
+
+    if user.valid? && user.administrateur_id.nil?
+      user.create_administrateur!(email: email)
+    end
+
+    user
+  end
+
   private
 
   def link_invites!
