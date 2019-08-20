@@ -83,23 +83,13 @@ module Instructeurs
       email = params[:email]
       password = params['instructeur']['password']
 
-      user = User.find_by(email: email)
+      # Not perfect because the password will not be changed if the user already exists
+      user = User.create_or_promote_to_instructeur(email, password)
 
-      if user.nil?
-        user = User.create(
-          email: email,
-          password: password,
-          confirmed_at: Time.zone.now
-        )
-      end
-
-      if user.errors.empty?
-        instructeur = Instructeur.create(email: email)
-        user.update!(instructeur: instructeur)
-
+      if user.valid?
         sign_in(user)
 
-        Avis.link_avis_to_instructeur(instructeur)
+        Avis.link_avis_to_instructeur(user.instructeur)
         redirect_to url_for(instructeur_avis_index_path)
       else
         flash[:alert] = user.errors.full_messages

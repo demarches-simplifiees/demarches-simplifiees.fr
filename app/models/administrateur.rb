@@ -1,5 +1,4 @@
 class Administrateur < ApplicationRecord
-  include CredentialsSyncableConcern
   include EmailSanitizableConcern
   include ActiveRecord::SecureToken
 
@@ -9,7 +8,7 @@ class Administrateur < ApplicationRecord
   has_many :services
   has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
-  has_one :user
+  has_one :user, dependent: :nullify
 
   before_validation -> { sanitize_email(:email) }
 
@@ -48,7 +47,7 @@ class Administrateur < ApplicationRecord
   def registration_state
     if active?
       'Actif'
-    elsif reset_password_period_valid?
+    elsif user.reset_password_period_valid?
       'En attente'
     else
       'Expiré'
@@ -56,7 +55,7 @@ class Administrateur < ApplicationRecord
   end
 
   def invitation_expired?
-    !active && !reset_password_period_valid?
+    !active && !user.reset_password_period_valid?
   end
 
   def self.reset_password(reset_password_token, password)
