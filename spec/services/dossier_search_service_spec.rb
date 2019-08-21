@@ -15,8 +15,8 @@ describe DossierSearchService do
     let(:instructeur_2) { create(:instructeur, administrateurs: [administrateur_2]) }
 
     before do
-      create :assign_to, instructeur: instructeur_1, procedure: procedure_1
-      create :assign_to, instructeur: instructeur_2, procedure: procedure_2
+      instructeur_1.assign_to_procedure(procedure_1)
+      instructeur_2.assign_to_procedure(procedure_2)
     end
 
     let(:procedure_1) { create(:procedure, :published, administrateur: administrateur_1) }
