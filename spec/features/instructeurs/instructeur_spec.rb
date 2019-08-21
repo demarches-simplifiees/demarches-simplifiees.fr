@@ -171,7 +171,7 @@ feature 'The instructeur part' do
   scenario 'A instructeur can send a dossier to several instructeurs', js: true do
     instructeur_2 = FactoryBot.create(:instructeur)
     instructeur_3 = FactoryBot.create(:instructeur)
-    procedure.instructeurs << [instructeur_2, instructeur_3]
+    procedure.defaut_groupe_instructeur.instructeurs << [instructeur_2, instructeur_3]
 
     send_dossier = double()
     expect(InstructeurMailer).to receive(:send_dossier).and_return(send_dossier).twice
