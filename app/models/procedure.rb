@@ -14,10 +14,8 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure'
   belongs_to :service
 
-  has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
-  has_many :instructeurs, through: :assign_to
   has_many :groupe_instructeurs, dependent: :destroy
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
