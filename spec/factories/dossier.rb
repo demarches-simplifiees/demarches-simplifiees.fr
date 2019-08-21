@@ -54,10 +54,30 @@ FactoryBot.define do
 
     trait :with_dossier_link do
       after(:create) do |dossier, _evaluator|
+        # create linked dossier
         linked_dossier = create(:dossier)
-        type_de_champ = dossier.procedure.types_de_champ.find { |t| t.type_champ == TypeDeChamp.type_champs.fetch(:dossier_link) }
-        champ = dossier.champs.find { |c| c.type_de_champ == type_de_champ }
 
+        # find first type de champ dossier_link
+        type_de_champ = dossier.procedure.types_de_champ.find do |t|
+          t.type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
+        end
+
+        # if type de champ does not exist create it
+        if !type_de_champ
+          type_de_champ = create(:type_de_champ_dossier_link, procedure: dossier.procedure)
+        end
+
+        # find champ with the type de champ
+        champ = dossier.reload.champs.find do |c|
+          c.type_de_champ == type_de_champ
+        end
+
+        # if champ does not exist create it
+        if !champ
+          champ = create(:champ_dossier_link, dossier: dossier, type_de_champ: type_de_champ)
+        end
+
+        # set champ value with linked dossier
         champ.value = linked_dossier.id
         champ.save!
       end
