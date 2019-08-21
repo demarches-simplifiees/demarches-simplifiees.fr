@@ -3,4 +3,4 @@
 - content_for :footer do
   = render partial: "root/footer"
 
-= render 'shared/password/new', object: @administrateur, controller: 'administrateurs/activate', test_password_strength: administrateurs_password_test_strength_path
+= render 'shared/password/new', object: @administrateur, controller: 'administrateurs/activate', test_password_strength: test_password_strength_path(PASSWORD_COMPLEXITY_FOR_ADMIN)

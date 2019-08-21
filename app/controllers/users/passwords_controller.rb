@@ -14,14 +14,24 @@ class Users::PasswordsController < Devise::PasswordsController
 
   # GET /resource/password/edit?reset_password_token=abcdef
   def edit
+    user = User.with_reset_password_token(params[:reset_password_token])
+
+    if user&.administrateur
+      complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
+    elsif user&.instructeur
+      complexity = PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR
+    else
+      complexity = PASSWORD_COMPLEXITY_FOR_USER
+    end
+    @test_password_strength = test_password_strength_path(complexity)
     super
   end
 
   # PUT /resource/password
-  # def update
-  #   # params[:user][:password_confirmation] = params[:user][:password]
-  #   super
-  # end
+  def update
+    params[:user][:password_confirmation] = params[:user][:password]
+    super
+  end
 
   # protected
 
@@ -55,13 +65,10 @@ class Users::PasswordsController < Devise::PasswordsController
   end
 
   def test_strength
-    @score, @words, @length = ZxcvbnService.new(password_params[:password]).complexity
+    p = params.include?(:administrateur) ? params[:administrateur] : params.require(:user)
+    @score, @words, @length = ZxcvbnService.new(p[:password]).complexity
     @min_length = PASSWORD_MIN_LENGTH
-    @min_complexity = PASSWORD_COMPLEXITY_FOR_USER
+    @min_complexity = params[:complexity].to_i # proper type is verified in toutes.rb
     render 'shared/password/test_strength'
-  end
-
-  def password_params
-    params.require(:user).permit(:reset_password_token, :password)
   end
 end

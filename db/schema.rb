@@ -639,7 +639,7 @@ ActiveRecord::Schema.define(version: 2019_08_09_073736) do
   add_foreign_key "geo_areas", "champs"
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
-  add_foreign_key "procedures", "services", name: "fk_procedures_services"
+  add_foreign_key "procedures", "services"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"

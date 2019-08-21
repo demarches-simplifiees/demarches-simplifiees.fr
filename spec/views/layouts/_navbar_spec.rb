@@ -12,14 +12,16 @@ describe 'layouts/_navbar.html.haml', type: :view do
   end
 
   describe 'polynesian layout' do
-    before do
-      render
-    end
+    let(:instructeur_signed_in) { false }
+    let(:administrateur_signed_in) { false }
+
+    before { render }
+
     subject { rendered }
     it { is_expected.to have_css('img[src*="logo-md"]') }
     it { is_expected.to have_css('.col-xs-9') }
   end
-  
+
   describe 'navbar entries' do
     before { render }
 

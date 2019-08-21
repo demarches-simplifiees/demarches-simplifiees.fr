@@ -22,14 +22,6 @@ class Instructeur < ApplicationRecord
 
   has_one :user
 
-  validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
-
-  def password_complexity
-    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR
-      errors.add(:password, :not_strong)
-    end
-  end
-
   def visible_procedures
     procedures.merge(Procedure.avec_lien.or(Procedure.archivees))
   end

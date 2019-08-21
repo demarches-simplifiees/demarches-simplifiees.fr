@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'Managing password:' do
   context 'for simple users' do
     let(:user) { create(:user) }
-    let(:new_password) { 'a simple password' }
+    let(:new_password) { 'démarches-simple' } # complexity = 2
 
     scenario 'a simple user can reset their password' do
       visit root_path
@@ -21,7 +21,7 @@ feature 'Managing password:' do
       expect(page).to have_content 'Changement de mot de passe'
 
       fill_in 'user_password', with: new_password
-      fill_in 'user_password_confirmation', with: new_password
+      # fill_in 'user_password_confirmation', with: new_password
       click_on 'Changer le mot de passe'
       expect(page).to have_content('Votre mot de passe a été changé avec succès')
     end
@@ -30,7 +30,7 @@ feature 'Managing password:' do
   context 'for admins' do
     let(:user) { create(:user) }
     let(:administrateur) { create(:administrateur, user: user) }
-    let(:new_password) { 'a new, long, and complicated password!' }
+    let(:new_password) { 'démarches-simplifiées-pwd' }
 
     scenario 'an admin can reset their password' do
       visit root_path
@@ -49,7 +49,7 @@ feature 'Managing password:' do
       expect(page).to have_content 'Changement de mot de passe'
 
       fill_in 'user_password', with: new_password
-      fill_in 'user_password_confirmation', with: new_password
+      # fill_in 'user_password_confirmation', with: new_password
       click_on 'Changer le mot de passe'
       expect(page).to have_content('Votre mot de passe a été changé avec succès')
     end

@@ -36,13 +36,6 @@ class Administrateurs::ActivateController < ApplicationController
     end
   end
 
-  def test_strength
-    @score, @words, @length = ZxcvbnService.new(update_administrateur_params[:password]).complexity
-    @min_length = PASSWORD_MIN_LENGTH
-    @min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
-    render 'shared/password/test_strength'
-  end
-
   private
 
   def update_administrateur_params

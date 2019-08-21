@@ -1,19 +1,35 @@
 describe Users::ActivateController, type: :controller do
   describe '#new' do
-    let(:user) { create(:user) }
-    let(:token) { user.send(:set_reset_password_token) }
-
-    before { allow(controller).to receive(:trust_device) }
+    before do
+      allow(controller).to receive(:trust_device)
+      get :new, params: { token: token }
+    end
 
     context 'when the token is ok' do
-      before { get :new, params: { token: token } }
+      let(:user) { create(:user) }
+      let(:token) { user.send(:set_reset_password_token) }
 
-      it { expect(controller).to have_received(:trust_device) }
+      context 'for a simple user' do
+        it do
+          expect(controller).to have_received(:trust_device)
+          expect(assigns(:test_password_strength)).to eq(test_password_strength_path(PASSWORD_COMPLEXITY_FOR_USER))
+        end
+      end
+
+      context 'for an instructeur' do
+        let(:user) { create(:instructeur).user }
+        it { expect(assigns(:test_password_strength)).to eq(test_password_strength_path(PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR)) }
+      end
+
+      context 'administrateur strength path' do
+        let(:user) { create(:administrateur).user }
+        it { expect(assigns(:test_password_strength)).to eq(test_password_strength_path(PASSWORD_COMPLEXITY_FOR_ADMIN)) }
+      end
     end
 
     context 'when the token is bad' do
-      before { get :new, params: { token: 'bad' } }
-
+      let(:user) { create(:user) }
+      let(:token) { 'bad' }
       it { expect(controller).not_to have_received(:trust_device) }
     end
   end
