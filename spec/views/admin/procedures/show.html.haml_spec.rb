@@ -23,7 +23,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
     context 'when procedure have a gestionnare affected' do
       before do
-        create :assign_to, instructeur: create(:instructeur), procedure: procedure
+        create(:instructeur).assign_to_procedure(procedure)
         render
       end
 
