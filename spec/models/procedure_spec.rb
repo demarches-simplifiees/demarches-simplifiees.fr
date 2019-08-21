@@ -889,4 +889,20 @@ describe Procedure do
     it { expect(procedure.groupe_instructeurs.count).to eq(1) }
     it { expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL) }
   end
+
+  describe '.missing_instructeurs?' do
+    let!(:procedure) { create(:procedure) }
+
+    subject { procedure.missing_instructeurs? }
+
+    it { is_expected.to be true }
+
+    context 'when an instructeur is assign to this procedure' do
+      let!(:instructeur) { create(:instructeur) }
+
+      before { instructeur.assign_to_procedure(procedure) }
+
+      it { is_expected.to be false }
+    end
+  end
 end
