@@ -401,7 +401,7 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.instructeurs.pluck(:email)).to eq([administrateur.email]) }
+    it { expect(subject.defaut_groupe_instructeur.instructeurs.pluck(:email)).to eq([administrateur.email]) }
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)

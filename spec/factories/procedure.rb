@@ -61,8 +61,8 @@ FactoryBot.define do
     end
 
     trait :with_instructeur do
-      after(:build) do |procedure, _evaluator|
-        procedure.instructeurs << create(:instructeur)
+      after(:create) do |procedure, _evaluator|
+        procedure.defaut_groupe_instructeur.instructeurs << create(:instructeur)
       end
     end
 
