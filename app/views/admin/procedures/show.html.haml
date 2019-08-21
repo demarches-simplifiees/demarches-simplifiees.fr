@@ -5,7 +5,7 @@
     = render partial: '/admin/procedures/modal_transfer'
 
     - if @procedure.brouillon?
-      - if @procedure.instructeurs.empty? || @procedure.service.nil?
+      - if @procedure.missing_steps.present?
         - missing_elements = []
         - if @procedure.instructeurs.empty?
           - missing_elements << 'des instructeurs'
@@ -59,7 +59,7 @@
           %br
           Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers demarches-simplifiees.fr. Ne dites pas non plus aux usagers de se rendre sur le site générique demarches-simplifiees.fr, donnez-leur toujours le lien complet.
         - elsif @procedure.brouillon_avec_lien?
-          - if @procedure.instructeurs.present? && @procedure.service.present?
+          - if @procedure.missing_steps.empty?
             %p
               Cette démarche est actuellement <strong>en test</strong>,
               pour y accéder vous pouvez utiliser le lien :
