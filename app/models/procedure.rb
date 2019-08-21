@@ -411,7 +411,7 @@ class Procedure < ApplicationRecord
       result << :service
     end
 
-    if instructeurs.empty?
+    if missing_instructeurs?
       result << :instructeurs
     end
 
@@ -480,6 +480,10 @@ class Procedure < ApplicationRecord
 
   def defaut_groupe_instructeur
     groupe_instructeurs.find_by(label: GroupeInstructeur::DEFAULT_LABEL)
+  end
+
+  def missing_instructeurs?
+    !AssignTo.exists?(groupe_instructeur: groupe_instructeurs)
   end
 
   private
