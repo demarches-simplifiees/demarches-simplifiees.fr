@@ -14,6 +14,7 @@ FactoryBot.define do
 
     transient do
       administrateur {}
+      instructeurs { [] }
     end
 
     after(:build) do |procedure, evaluator|
@@ -22,6 +23,10 @@ FactoryBot.define do
       elsif procedure.administrateurs.empty?
         procedure.administrateurs = [create(:administrateur)]
       end
+    end
+
+    after(:create) do |procedure, evaluator|
+      evaluator.instructeurs.each { |i| i.assign_to_procedure(procedure) }
     end
 
     factory :procedure_with_dossiers do
