@@ -344,7 +344,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     context "when logged in" do
       before { sign_in(instructeur.user) }
 
-      it { expect(instructeur.procedures_with_email_notifications).to be_empty }
+      it { expect(instructeur.groupe_instructeur_with_email_notifications).to be_empty }
 
       context 'when the instructeur update its preferences' do
         let(:assign_to) { instructeur.assign_to.find_by(procedure: procedure) }
@@ -353,7 +353,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           patch :update_email_notifications, params: { procedure_id: procedure.id, assign_to: { id: assign_to.id, email_notifications_enabled: true } }
         end
 
-        it { expect(instructeur.procedures_with_email_notifications).to eq([procedure]) }
+        it { expect(instructeur.groupe_instructeur_with_email_notifications).to eq([procedure.defaut_groupe_instructeur]) }
       end
     end
   end
