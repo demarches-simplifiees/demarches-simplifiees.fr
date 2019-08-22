@@ -1,8 +1,8 @@
 namespace :'2019_08_20_migrate_procedure_logo' do
   task run: :environment do
-    procedures = Procedure.where
-      .not(logo: nil)
-      .left_joins(:logo_new_attachment)
+    procedures = Procedure.unscope(where: :hidden_at)
+      .where.not(logo: nil)
+      .left_joins(:logo_active_storage_attachment)
       .where('active_storage_attachments.id IS NULL')
       .order(:created_at)
 
@@ -18,7 +18,7 @@ namespace :'2019_08_20_migrate_procedure_logo' do
         response = Typhoeus.get(uri)
         if response.success?
           filename = procedure.logo.filename || procedure.logo_identifier
-          procedure.logo_new.attach(
+          procedure.logo_active_storage.attach(
             io: StringIO.new(response.body),
             filename: filename,
             content_type: procedure.logo.content_type,
