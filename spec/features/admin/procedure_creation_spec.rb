@@ -7,7 +7,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
   let(:administrateur) { create(:administrateur, :with_procedure) }
 
   before do
-    login_as administrateur, scope: :administrateur
+    login_as administrateur.user, scope: :user
     visit root_path
   end
 

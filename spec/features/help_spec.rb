@@ -81,7 +81,7 @@ feature 'Getting help:' do
     let(:instructeur) { create(:instructeur) }
 
     before do
-      login_as instructeur, scope: :instructeur
+      login_as instructeur.user, scope: :user
     end
 
     scenario 'a Help menu is visible on signed-in pages' do

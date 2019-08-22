@@ -1,9 +1,5 @@
 class Instructeur < ApplicationRecord
-  include CredentialsSyncableConcern
   include EmailSanitizableConcern
-
-  devise :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable, :lockable
 
   has_and_belongs_to_many :administrateurs
 
@@ -24,13 +20,7 @@ class Instructeur < ApplicationRecord
   has_many :dossiers_from_avis, through: :avis, source: :dossier
   has_many :trusted_device_tokens
 
-  validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
-
-  def password_complexity
-    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR
-      errors.add(:password, :not_strong)
-    end
-  end
+  has_one :user
 
   def visible_procedures
     procedures.merge(Procedure.avec_lien.or(Procedure.archivees))
@@ -184,12 +174,6 @@ class Instructeur < ApplicationRecord
     attributes = {}
     attributes["#{tab}_seen_at"] = Time.zone.now
     Follow.where(instructeur: self, dossier: dossier).update_all(attributes)
-  end
-
-  def invite!
-    reset_password_token = set_reset_password_token
-
-    InstructeurMailer.invite_instructeur(self, reset_password_token).deliver_later
   end
 
   def feature_enabled?(feature)

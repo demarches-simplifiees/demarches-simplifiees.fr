@@ -78,10 +78,7 @@ class Admin::ProceduresController < AdminController
       render 'new'
     else
       flash.notice = 'Démarche enregistrée.'
-      instructeur = Instructeur.find_by(email: current_administrateur.email)
-      if instructeur
-        instructeur.assign_to_procedure(@procedure)
-      end
+      current_administrateur.instructeur.assign_to_procedure(@procedure)
 
       redirect_to champs_procedure_path(@procedure)
     end

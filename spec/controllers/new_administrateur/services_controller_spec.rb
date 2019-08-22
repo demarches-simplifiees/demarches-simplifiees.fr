@@ -4,7 +4,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
 
   describe '#create' do
     before do
-      sign_in admin
+      sign_in(admin.user)
       post :create, params: params
     end
 
@@ -52,7 +52,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
     let(:service_params) { { nom: 'nom', type_organisme: Service.type_organismes.fetch(:association) } }
 
     before do
-      sign_in admin
+      sign_in(admin.user)
       params = {
         id: service.id,
         service: service_params,
@@ -82,7 +82,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
     let!(:service) { create(:service, administrateur: admin) }
 
     def post_add_to_procedure
-      sign_in admin
+      sign_in(admin.user)
       params = {
         procedure: {
           id: procedure.id,
@@ -114,7 +114,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
 
     context 'when a service has no related procedure' do
       before do
-        sign_in admin
+        sign_in(admin.user)
         delete :destroy, params: { id: service.id, procedure_id: 12 }
       end
 
@@ -128,7 +128,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       let!(:procedure) { create(:procedure, service: service) }
 
       before do
-        sign_in admin
+        sign_in(admin.user)
         delete :destroy, params: { id: service.id, procedure_id: 12 }
       end
 

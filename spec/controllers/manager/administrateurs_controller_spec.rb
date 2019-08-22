@@ -31,4 +31,18 @@ describe Manager::AdministrateursController, type: :controller do
       it { expect { subject }.to change(Administrateur, :count).by(0) }
     end
   end
+
+  describe '#delete' do
+    let!(:admin) { create(:administrateur) }
+
+    before { sign_in administration }
+
+    subject { delete :delete, params: { id: admin.id } }
+
+    it 'deletes the admin' do
+      subject
+
+      expect(Administrateur.find_by(id: admin.id)).to be_nil
+    end
+  end
 end

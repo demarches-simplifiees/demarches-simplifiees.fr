@@ -83,21 +83,16 @@ module Instructeurs
       email = params[:email]
       password = params['instructeur']['password']
 
-      instructeur = Instructeur.new(email: email, password: password)
+      # Not perfect because the password will not be changed if the user already exists
+      user = User.create_or_promote_to_instructeur(email, password)
 
-      if instructeur.save
-        user = User.find_by(email: email)
-        if user.blank?
-          user = User.create(email: email, password: password, confirmed_at: Time.zone.now)
-        end
-
+      if user.valid?
         sign_in(user)
-        sign_in(instructeur, scope: :instructeur)
 
-        Avis.link_avis_to_instructeur(instructeur)
+        Avis.link_avis_to_instructeur(user.instructeur)
         redirect_to url_for(instructeur_avis_index_path)
       else
-        flash[:alert] = instructeur.errors.full_messages
+        flash[:alert] = user.errors.full_messages
         redirect_to url_for(sign_up_instructeur_avis_path(params[:id], email))
       end
     end
@@ -119,7 +114,7 @@ module Instructeurs
       elsif avis.instructeur&.email == params[:email]
         # the avis instructeur has already signed up and it sould sign in
 
-        redirect_to new_instructeur_session_url
+        redirect_to new_user_session_url
       end
     end
 

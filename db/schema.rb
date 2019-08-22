@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_05_140346) do
+ActiveRecord::Schema.define(version: 2019_08_09_073736) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -595,8 +595,12 @@ ActiveRecord::Schema.define(version: 2019_08_05_140346) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
+    t.bigint "instructeur_id"
+    t.bigint "administrateur_id"
+    t.index ["administrateur_id"], name: "index_users_on_administrateur_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["instructeur_id"], name: "index_users_on_instructeur_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
@@ -641,5 +645,7 @@ ActiveRecord::Schema.define(version: 2019_08_05_140346) do
   add_foreign_key "services", "administrateurs"
   add_foreign_key "trusted_device_tokens", "instructeurs"
   add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
+  add_foreign_key "users", "administrateurs"
+  add_foreign_key "users", "instructeurs"
   add_foreign_key "without_continuation_mails", "procedures"
 end

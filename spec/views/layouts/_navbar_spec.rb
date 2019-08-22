@@ -6,45 +6,45 @@ describe 'layouts/_navbar.html.haml', type: :view do
 
   let!(:procedure) { create(:procedure, administrateur: administrateur) }
 
+  before do
+    allow(view).to receive(:instructeur_signed_in?).and_return(instructeur_signed_in)
+    allow(view).to receive(:administrateur_signed_in?).and_return(administrateur_signed_in)
+  end
+
   describe 'polynesian layout' do
-    before do
-      render
-    end
+    let(:instructeur_signed_in) { false }
+    let(:administrateur_signed_in) { false }
+
+    before { render }
+
     subject { rendered }
     it { is_expected.to have_css('img[src*="logo-md"]') }
     it { is_expected.to have_css('.col-xs-9') }
   end
 
   describe 'navbar entries' do
+    before { render }
+
+    subject { rendered }
+
     context 'when disconnected' do
-      before do
-        render
-      end
-      subject { rendered }
+      let(:instructeur_signed_in) { false }
+      let(:administrateur_signed_in) { false }
+
       it { is_expected.to match(/Connexion/) }
     end
 
     context 'when administrateur is connected' do
-      before do
-        @request.env["devise.mapping"] = Devise.mappings[:administrateur]
-        @current_user = administrateur
-        sign_in @current_user
-        render
-      end
+      let(:instructeur_signed_in) { false }
+      let(:administrateur_signed_in) { true }
 
-      subject { rendered }
       it { is_expected.to match(/Déconnexion/) }
     end
 
     context 'when instructeur is connected' do
-      before do
-        @request.env["devise.mapping"] = Devise.mappings[:instructeur]
-        @current_user = instructeur
-        sign_in @current_user
-        render
-      end
+      let(:instructeur_signed_in) { true }
+      let(:administrateur_signed_in) { false }
 
-      subject { rendered }
       it { is_expected.to match(/Déconnexion/) }
     end
   end

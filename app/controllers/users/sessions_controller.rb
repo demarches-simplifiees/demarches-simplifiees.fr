@@ -1,4 +1,4 @@
-class Users::SessionsController < Sessions::SessionsController
+class Users::SessionsController < Devise::SessionsController
   include ProcedureContextConcern
   include TrustedDeviceConcern
   include ActionView::Helpers::DateHelper
@@ -7,35 +7,15 @@ class Users::SessionsController < Sessions::SessionsController
 
   before_action :restore_procedure_context, only: [:new, :create]
 
-  # GET /resource/sign_in
-  def new
-    @user = User.new
-  end
-
   # POST /resource/sign_in
   def create
-    remember_me = params[:user][:remember_me] == '1'
+    user = User.find_by(email: params[:user][:email])
 
-    if resource_locked?(try_to_authenticate(User, remember_me)) ||
-      resource_locked?(try_to_authenticate(Instructeur, remember_me)) ||
-      resource_locked?(try_to_authenticate(Administrateur, remember_me))
-      flash.alert = 'Votre compte est verrouillé.'
-      new
-      return render :new, status: 401
+    if user&.valid_password?(params[:user][:password])
+      user.update(loged_in_with_france_connect: nil)
     end
 
-    if user_signed_in?
-      current_user.update(loged_in_with_france_connect: nil)
-    end
-
-    if instructeur_signed_in? || user_signed_in?
-      set_flash_message :notice, :signed_in
-      redirect_to after_sign_in_path_for(:user)
-    else
-      flash.alert = 'Mauvais couple login / mot de passe'
-      new
-      render :new, status: 401
-    end
+    super
   end
 
   def link_sent
@@ -44,14 +24,6 @@ class Users::SessionsController < Sessions::SessionsController
 
   # DELETE /resource/sign_out
   def destroy
-    if instructeur_signed_in?
-      sign_out :instructeur
-    end
-
-    if administrateur_signed_in?
-      sign_out :administrateur
-    end
-
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
       current_user.update(loged_in_with_france_connect: '')
@@ -100,24 +72,5 @@ class Users::SessionsController < Sessions::SessionsController
       send_login_token_or_bufferize(instructeur)
       redirect_to link_sent_path(email: instructeur.email)
     end
-  end
-
-  private
-
-  def try_to_authenticate(klass, remember_me = false)
-    resource = klass.find_for_database_authentication(email: params[:user][:email])
-
-    if resource.present?
-      if resource.valid_password?(params[:user][:password])
-        resource.remember_me = remember_me
-        sign_in resource
-        resource.force_sync_credentials
-      end
-    end
-    resource
-  end
-
-  def resource_locked?(resource)
-    resource.present? && resource.access_locked?
   end
 end

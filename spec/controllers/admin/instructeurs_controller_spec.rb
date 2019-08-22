@@ -6,7 +6,7 @@ describe Admin::InstructeursController, type: :controller do
   let(:admin_2) { create :administrateur, email: email_2 }
 
   before do
-    sign_in admin
+    sign_in(admin.user)
   end
 
   describe 'GET #index' do
@@ -117,8 +117,8 @@ describe Admin::InstructeursController, type: :controller do
       before do
         create :instructeur, email: email, administrateurs: [admin]
 
-        sign_out admin
-        sign_in admin_2
+        sign_out(admin.user)
+        sign_in(admin_2.user)
 
         subject
       end
@@ -138,8 +138,8 @@ describe Admin::InstructeursController, type: :controller do
       before do
         create :instructeur, email: email, administrateurs: [admin]
 
-        sign_out admin
-        sign_in admin_2
+        sign_out(admin.user)
+        sign_in(admin_2.user)
 
         subject
       end
@@ -149,28 +149,8 @@ describe Admin::InstructeursController, type: :controller do
 
     context 'Email notification' do
       it 'Notification email is sent when instructeur is create' do
-        expect_any_instance_of(Instructeur).to receive(:invite!)
+        expect_any_instance_of(User).to receive(:invite!)
         subject
-      end
-    end
-
-    context 'unified login' do
-      before do
-        subject
-      end
-
-      it "creates associated user with same credentials" do
-        instructeur = controller.instance_variable_get(:@instructeur)
-        user = User.find_by(email: instructeur.email)
-        expect(user.valid_password?(instructeur.password)).to be(true)
-      end
-
-      context 'invalid email' do
-        let(:email) { 'fail' }
-
-        it "won't create associated user" do
-          expect(User.where(email: email).exists?).to be(false)
-        end
       end
     end
   end

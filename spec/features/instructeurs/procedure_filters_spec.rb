@@ -12,7 +12,7 @@ feature "procedure filters" do
   before do
     champ.update(value: "Mon champ rempli")
     champ_2.update(value: "Mon autre champ rempli différemment")
-    login_as instructeur, scope: :instructeur
+    login_as(instructeur.user, scope: :user)
     visit instructeur_procedure_path(procedure)
   end
 

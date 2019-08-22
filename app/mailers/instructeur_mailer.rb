@@ -2,16 +2,6 @@
 class InstructeurMailer < ApplicationMailer
   layout 'mailers/layout'
 
-  def invite_instructeur(instructeur, reset_password_token)
-    @reset_password_token = reset_password_token
-    @instructeur = instructeur
-    subject = "Activez votre compte instructeur"
-
-    mail(to: instructeur.email,
-      subject: subject,
-      reply_to: CONTACT_EMAIL)
-  end
-
   def user_to_instructeur(email)
     @email = email
     subject = "Vous avez été nommé instructeur"

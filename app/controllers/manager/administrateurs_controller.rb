@@ -42,7 +42,7 @@ module Manager
       administrateur.dossiers.each(&:delete_and_keep_track)
       administrateur.destroy
 
-      logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_user.id}")
+      logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_administration.id}")
       flash[:notice] = "L'administrateur #{administrateur.id} est supprimé"
 
       redirect_to manager_administrateurs_path

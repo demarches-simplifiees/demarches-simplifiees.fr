@@ -9,13 +9,7 @@ feature 'The instructeur part' do
   let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
   let!(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure) }
 
-  before do
-    Flipflop::FeatureSet.current.test!.switch!(:enable_email_login_token, true)
-  end
-
-  context 'when the instructeur is also a user' do
-    let!(:user) { create(:user, email: instructeur.email, password: password) }
-
+  context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
       visit commencer_path(path: procedure.path)
       click_on 'J’ai déjà un compte'
@@ -23,7 +17,10 @@ feature 'The instructeur part' do
       expect(page).to have_current_path new_user_session_path
       sign_in_with(instructeur.email, password, true)
 
-      expect(page).to have_current_path(commencer_path(path: procedure.path))
+      # connexion link erase user stored location
+      # expect(page).to have_current_path(commencer_path(path: procedure.path))
+
+      visit commencer_path(path: procedure.path)
       click_on 'Commencer la démarche'
 
       expect(page).to have_content('Identifier votre établissement')
@@ -67,6 +64,7 @@ feature 'The instructeur part' do
     end
 
     expect(page).to have_text('Dossier traité avec succès.')
+    expect(page).to have_link('Archiver le dossier')
 
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:accepte))

@@ -37,26 +37,18 @@ class Admin::InstructeursController < AdminController
   private
 
   def invite_instructeur(email)
-    password = SecureRandom.hex
-
-    @instructeur = Instructeur.create(
-      email: email,
-      password: password,
-      password_confirmation: password,
+    user = User.create_or_promote_to_instructeur(
+      email,
+      SecureRandom.hex,
       administrateurs: [current_administrateur]
     )
 
-    if @instructeur.errors.messages.empty?
-      @instructeur.invite!
+    if user.valid?
+      user.invite!
 
-      if User.exists?(email: @instructeur.email)
-        InstructeurMailer.user_to_instructeur(@instructeur.email).deliver_later
-      else
-        User.create(email: email, password: password, confirmed_at: Time.zone.now)
-      end
       flash.notice = 'Instructeur ajouté'
     else
-      flash.alert = @instructeur.errors.full_messages
+      flash.alert = user.errors.full_messages
     end
   end
 

@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  include CredentialsSyncableConcern
   include EmailSanitizableConcern
 
   enum loged_in_with_france_connect: {
@@ -17,6 +16,8 @@ class User < ApplicationRecord
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :feedbacks, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
+  belongs_to :instructeur
+  belongs_to :administrateur
 
   accepts_nested_attributes_for :france_connect_information
 
@@ -45,6 +46,53 @@ class User < ApplicationRecord
 
   def owns_or_invite?(dossier)
     owns?(dossier) || invite?(dossier.id)
+  end
+
+  def invite!
+    UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
+  end
+
+  def invite_administrateur!(administration_id)
+    if administrateur.active?
+      raise "Impossible d'inviter un utilisateur déjà actif !"
+    end
+
+    reset_password_token = set_reset_password_token
+    AdministrationMailer.invite_admin(self, reset_password_token, administration_id).deliver_later
+
+    reset_password_token
+  end
+
+  def remind_invitation!
+    reset_password_token = set_reset_password_token
+
+    AdministrateurMailer.activate_before_expiration(self, reset_password_token).deliver_later
+  end
+
+  def self.create_or_promote_to_instructeur(email, password, administrateurs: [])
+    user = User
+      .create_with(password: password, confirmed_at: Time.zone.now)
+      .find_or_create_by(email: email)
+
+    if user.valid?
+      if user.instructeur_id.nil?
+        user.create_instructeur!(email: email)
+      end
+
+      user.instructeur.administrateurs << administrateurs
+    end
+
+    user
+  end
+
+  def self.create_or_promote_to_administrateur(email, password)
+    user = User.create_or_promote_to_instructeur(email, password)
+
+    if user.valid? && user.administrateur_id.nil?
+      user.create_administrateur!(email: email)
+    end
+
+    user
   end
 
   private

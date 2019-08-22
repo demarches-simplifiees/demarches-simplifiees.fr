@@ -17,7 +17,7 @@ feature 'As an administrateur', js: true do
     visit "admin/activate?#{token_params}"
     fill_in :administrateur_password, with: 'démarches-simplifiées-pwd'
 
-    click_button 'Continuer'
+    click_button 'Définir le mot de passe'
 
     expect(page).to have_content 'Mot de passe enregistré'
   end

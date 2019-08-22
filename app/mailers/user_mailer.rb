@@ -16,4 +16,14 @@ class UserMailer < ApplicationMailer
 
     mail(to: requested_email, subject: @subject)
   end
+
+  def invite_instructeur(user, reset_password_token)
+    @reset_password_token = reset_password_token
+    @user = user
+    subject = "Activez votre compte instructeur"
+
+    mail(to: user.email,
+      subject: subject,
+      reply_to: CONTACT_EMAIL)
+  end
 end

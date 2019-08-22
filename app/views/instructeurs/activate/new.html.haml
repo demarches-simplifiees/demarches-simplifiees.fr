@@ -1,6 +1,0 @@
-- content_for(:title, "Choix du mot de passe")
-
-- content_for :footer do
-  = render partial: "root/footer"
-
-= render 'shared/password/new', object: @instructeur, controller: 'instructeurs/activate', test_password_strength: instructeurs_password_test_strength_path

@@ -1,32 +1,29 @@
 = content_for(:page_id, 'auth')
 
 .auth-form.sign-in-form
-  - if resource_name == :user
-    %p.register
-      %span
-        Nouveau sur #{SITE_NAME} ?
-      = link_to "Créer un compte", new_registration_path(resource_name), class: "button primary auth-signup-button"
+  %p.register
+    %span
+      Nouveau sur #{SITE_NAME} ?
+    = link_to "Créer un compte", new_user_registration_path, class: "button primary auth-signup-button"
 
-    %hr
+  %hr
 
-  = form_for @user, url: user_session_path, html: { class: "form" } do |f|
+  = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
     %h1 Connectez-vous
 
     = f.label :email, "Email"
     = f.text_field :email, autofocus: true
 
     = f.label :password, "Mot de passe"
-    = f.password_field :password, value: @user.password, placeholder: "8 caractères minimum"
+    = f.password_field :password, placeholder: "8 caractères minimum"
 
     .auth-options
-      - if devise_mapping.rememberable?
-        %div
-          = f.check_box :remember_me, as: :boolean
-          = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
+      %div
+        = f.check_box :remember_me, as: :boolean
+        = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
 
-      - if [:user, :instructeur].include?(resource_name)
-        .text-right
-          = link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "link"
+      .text-right
+        = link_to "Mot de passe oublié ?", new_user_password_path, class: "link"
 
     = f.submit "Se connecter", class: "button large primary expand"
 

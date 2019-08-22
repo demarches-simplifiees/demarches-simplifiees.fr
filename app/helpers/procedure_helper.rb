@@ -64,8 +64,7 @@ module ProcedureHelper
   private
 
   TOGGLES = {
-    TypeDeChamp.type_champs.fetch(:integer_number)  => :champ_integer_number?,
-    TypeDeChamp.type_champs.fetch(:repetition)      => :champ_repetition?
+    TypeDeChamp.type_champs.fetch(:integer_number) => :champ_integer_number?
   }
 
   def types_de_champ_types
