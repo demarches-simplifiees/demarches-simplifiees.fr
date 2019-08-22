@@ -4,7 +4,7 @@
       = image_tag('header/logo-md-wide.svg', class: 'logo')
     %div{ style: "display:inline; vertical-align: middle;line-height: 60px;" }
       %span.header-text
-        👉 Besoin d’aide ? Consultez <a target="_blank" rel="noopener" href="#{DOC_URL}">la documentation</a> et <a target="_blank" rel="noopener" href="#{FAQ_URL}">l’aide</a>, contactez-nous par <a style="cursor:hand" onclick="$crisp.push(['do', 'chat:open'])">chat</a> ou <a href="#{contact_admin_path}" target="_blank" rel="noopener">email</a>.
+        👉 Besoin d’aide ? Consultez <a class="header-link" target="_blank" rel="noopener" href="#{DOC_URL}">la documentation</a> et <a class="header-link" target="_blank" rel="noopener" href="#{FAQ_URL}">l’aide</a>, contactez-nous par <a class="header-link" style="cursor:hand" onclick="$crisp.push(['do', 'chat:open'])">chat</a> ou <a href="#{contact_admin_path}" class="header-link" target="_blank" rel="noopener">email</a>.
         -# 👉 Besoin d'aide ? Contactez-nous par <a class="header-link" style="cursor:hand" onclick="$crisp.push(['do', 'chat:open'])">chat</a> ou via notre <a class="header-link" href="#{contact_admin_path}" target="_blank" rel="noopener">formulaire</a>.
 
 .col-xs-3.no-padding
