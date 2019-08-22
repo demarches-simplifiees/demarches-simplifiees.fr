@@ -469,7 +469,8 @@ class Procedure < ApplicationRecord
       if Rails.application.secrets.fog[:enabled]
         RemoteDownloader.new(logo.filename).url
       else
-        LocalDownloader.new(logo.path, 'logo').url
+        # FIXME: this is horrible but used only in dev and will be removed after migration
+        File.join(LOCAL_DOWNLOAD_URL, logo.url)
       end
     end
   end
