@@ -155,7 +155,12 @@ class Procedure < ApplicationRecord
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
-    Dossier.new(procedure: self, champs: build_champs, champs_private: build_champs_private)
+    Dossier.new(
+      procedure: self,
+      champs: build_champs,
+      champs_private: build_champs_private,
+      groupe_instructeur: defaut_groupe_instructeur
+    )
   end
 
   def build_champs
