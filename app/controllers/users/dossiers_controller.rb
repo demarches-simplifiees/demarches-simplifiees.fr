@@ -224,7 +224,7 @@ module Users
         procedure = Procedure.publiees.find(params[:procedure_id])
       end
 
-      dossier = Dossier.create!(procedure: procedure, user: current_user, state: Dossier.states.fetch(:brouillon))
+      dossier = Dossier.create!(groupe_instructeur: procedure.defaut_groupe_instructeur, user: current_user, state: Dossier.states.fetch(:brouillon))
 
       if dossier.procedure.for_individual
         if current_user.france_connect_information.present?
