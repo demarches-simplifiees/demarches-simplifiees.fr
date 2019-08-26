@@ -8,17 +8,19 @@ module Instructeurs
     def index
       @procedures = current_instructeur.visible_procedures.order(archived_at: :desc, published_at: :desc, created_at: :desc)
 
-      dossiers = current_instructeur.dossiers
-      @dossiers_count_per_procedure = dossiers.all_state.group(:procedure_id).reorder(nil).count
-      @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group(:procedure_id).reorder(nil).count
-      @dossiers_archived_count_per_procedure = dossiers.archived.group(:procedure_id).count
-      @dossiers_termines_count_per_procedure = dossiers.termine.group(:procedure_id).reorder(nil).count
+      groupe_instructeurs = current_instructeur.groupe_instructeurs.where(procedure: @procedures)
 
-      @followed_dossiers_count_per_procedure = current_instructeur
+      dossiers = current_instructeur.dossiers
+      @dossiers_count_per_groupe_instructeur = dossiers.all_state.group(:groupe_instructeur_id).reorder(nil).count
+      @dossiers_a_suivre_count_per_groupe_instructeur = dossiers.without_followers.en_cours.group(:groupe_instructeur_id).reorder(nil).count
+      @dossiers_archived_count_per_groupe_instructeur = dossiers.archived.group(:groupe_instructeur_id).count
+      @dossiers_termines_count_per_groupe_instructeur = dossiers.termine.group(:groupe_instructeur_id).reorder(nil).count
+
+      @followed_dossiers_count_per_groupe_instructeur = current_instructeur
         .followed_dossiers
         .en_cours
-        .where(procedure: @procedures)
-        .group(:procedure_id)
+        .where(groupe_instructeur: groupe_instructeurs)
+        .group(:groupe_instructeur_id)
         .reorder(nil)
         .count
     end
@@ -34,6 +36,7 @@ module Instructeurs
       @displayed_fields_values = displayed_fields_values
 
       @a_suivre_dossiers = procedure
+        .defaut_groupe_instructeur
         .dossiers
         .includes(:user)
         .without_followers
@@ -42,19 +45,19 @@ module Instructeurs
       @followed_dossiers = current_instructeur
         .followed_dossiers
         .includes(:user)
-        .where(procedure: @procedure)
+        .where(groupe_instructeur: procedure.defaut_groupe_instructeur)
         .en_cours
 
       @followed_dossiers_id = current_instructeur
         .followed_dossiers
-        .where(procedure: @procedure)
+        .where(groupe_instructeur: procedure.defaut_groupe_instructeur)
         .pluck(:id)
 
-      @termines_dossiers = procedure.dossiers.includes(:user).termine
+      @termines_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).termine
 
-      @all_state_dossiers = procedure.dossiers.includes(:user).all_state
+      @all_state_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).all_state
 
-      @archived_dossiers = procedure.dossiers.includes(:user).archived
+      @archived_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).archived
 
       @dossiers = case statut
       when 'a-suivre'
