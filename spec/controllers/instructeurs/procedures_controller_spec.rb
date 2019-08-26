@@ -347,7 +347,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       it { expect(instructeur.groupe_instructeur_with_email_notifications).to be_empty }
 
       context 'when the instructeur update its preferences' do
-        let(:assign_to) { instructeur.assign_to.find_by(procedure: procedure) }
+        let(:assign_to) { instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure }) }
 
         before do
           patch :update_email_notifications, params: { procedure_id: procedure.id, assign_to: { id: assign_to.id, email_notifications_enabled: true } }

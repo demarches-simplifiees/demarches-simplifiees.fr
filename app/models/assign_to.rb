@@ -1,8 +1,8 @@
 class AssignTo < ApplicationRecord
-  belongs_to :procedure
   belongs_to :instructeur
   belongs_to :groupe_instructeur
   has_one :procedure_presentation, dependent: :destroy
+  has_one :procedure, through: :groupe_instructeur
 
   scope :with_email_notifications, -> { where(email_notifications_enabled: true) }
 
