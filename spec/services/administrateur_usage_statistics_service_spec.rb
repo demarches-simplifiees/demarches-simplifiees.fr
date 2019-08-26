@@ -90,13 +90,13 @@ describe AdministrateurUsageStatisticsService do
       end
 
       context 'with a procedure archivee' do
-        let(:procedure) { create(:procedure, aasm_state: 'archivee', dossiers: dossiers) }
-        let(:dossiers) do
+        let(:procedure) { create(:procedure, aasm_state: 'archivee') }
+        let!(:dossiers) do
           (1..7).flat_map do
             [
-              create(:dossier, :en_construction),
-              create(:dossier, :en_instruction),
-              create(:dossier, :accepte)
+              create(:dossier, :en_construction, procedure: procedure),
+              create(:dossier, :en_instruction, procedure: procedure),
+              create(:dossier, :accepte, procedure: procedure)
             ]
           end
         end
@@ -141,13 +141,13 @@ describe AdministrateurUsageStatisticsService do
       end
 
       context 'with a procedure en test' do
-        let(:procedure) { create(:procedure, dossiers: dossiers) }
-        let(:dossiers) do
+        let(:procedure) { create(:procedure) }
+        let!(:dossiers) do
           (1..7).flat_map do
             [
-              create(:dossier, :en_construction),
-              create(:dossier, :en_instruction),
-              create(:dossier, :accepte)
+              create(:dossier, :en_construction, procedure: procedure),
+              create(:dossier, :en_instruction, procedure: procedure),
+              create(:dossier, :accepte, procedure: procedure)
             ]
           end
         end
@@ -171,12 +171,12 @@ describe AdministrateurUsageStatisticsService do
       end
 
       context 'with a procedure en prod' do
-        let(:procedure) { create(:procedure, aasm_state: 'publiee', dossiers: dossiers) }
-        let(:dossiers) do
+        let(:procedure) { create(:procedure, aasm_state: 'publiee') }
+        let!(:dossiers) do
           [
-            create(:dossier, :en_construction),
-            create(:dossier, :en_instruction),
-            create(:dossier, :accepte)
+            create(:dossier, :en_construction, procedure: procedure),
+            create(:dossier, :en_instruction, procedure: procedure),
+            create(:dossier, :accepte, procedure: procedure)
           ]
         end
 
@@ -199,13 +199,13 @@ describe AdministrateurUsageStatisticsService do
       end
 
       context 'with a procedure en prod and more than 20 dossiers' do
-        let(:procedure) { create(:procedure, aasm_state: 'publiee', dossiers: dossiers) }
-        let(:dossiers) do
+        let(:procedure) { create(:procedure, aasm_state: 'publiee') }
+        let!(:dossiers) do
           (1..7).flat_map do
             [
-              create(:dossier, :en_construction),
-              create(:dossier, :en_instruction),
-              create(:dossier, :accepte)
+              create(:dossier, :en_construction, procedure: procedure),
+              create(:dossier, :en_instruction, procedure: procedure),
+              create(:dossier, :accepte, procedure: procedure)
             ]
           end
         end
