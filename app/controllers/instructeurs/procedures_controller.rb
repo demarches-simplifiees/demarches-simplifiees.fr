@@ -212,7 +212,7 @@ module Instructeurs
     end
 
     def assign_to
-      current_instructeur.assign_to.find_by(procedure: procedure)
+      current_instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure })
     end
 
     def statut

@@ -86,7 +86,7 @@ class Instructeur < ApplicationRecord
   end
 
   def procedure_presentation_and_errors_for_procedure_id(procedure_id)
-    assign_to.find_by(procedure_id: procedure_id).procedure_presentation_or_default_and_errors
+    assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure_id: procedure_id }).procedure_presentation_or_default_and_errors
   end
 
   def notifications_for_dossier(dossier)
