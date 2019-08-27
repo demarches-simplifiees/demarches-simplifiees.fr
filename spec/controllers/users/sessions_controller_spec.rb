@@ -137,6 +137,7 @@ describe Users::SessionsController, type: :controller do
       let(:instructeur) { create(:instructeur) }
       let!(:good_jeton) { instructeur.create_trusted_device_token }
       let(:logged) { false }
+      let(:valid_token) { true }
 
       before do
         if logged
@@ -144,6 +145,7 @@ describe Users::SessionsController, type: :controller do
         end
         allow(controller).to receive(:trust_device)
         allow(controller).to receive(:send_login_token_or_bufferize)
+        allow_any_instance_of(TrustedDeviceToken).to receive(:token_valid?).and_return(valid_token)
         post :sign_in_by_link, params: { id: instructeur.id, jeton: jeton }
       end
 
@@ -157,7 +159,8 @@ describe Users::SessionsController, type: :controller do
         end
 
         context 'when the token is invalid' do
-          let(:jeton) { 'invalid_token' }
+          let(:jeton) { good_jeton }
+          let(:valid_token) { false }
 
           it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
           it { expect(controller.current_instructeur).to be_nil }
@@ -179,7 +182,7 @@ describe Users::SessionsController, type: :controller do
         end
 
         context 'when the token is invalid' do
-          let(:jeton) { 'invalid_token' }
+          let(:valid_token) { false }
 
           it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
           it { expect(controller.current_instructeur).to eq(instructeur) }
