@@ -19,7 +19,9 @@ class AttestationUploader < BaseUploader
   end
 
   def filename
-    "attestation-#{secure_token}.pdf"
+    if file.present?
+      "attestation-#{secure_token}.pdf"
+    end
   end
 
   private
