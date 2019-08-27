@@ -882,4 +882,11 @@ describe Procedure do
       end
     end
   end
+
+  describe '.ensure_a_groupe_instructeur_exists' do
+    let!(:procedure) { create(:procedure) }
+
+    it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+    it { expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL) }
+  end
 end
