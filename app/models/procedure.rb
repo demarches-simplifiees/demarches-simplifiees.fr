@@ -236,6 +236,7 @@ class Procedure < ApplicationRecord
     procedure.closed_mail = closed_mail&.dup
     procedure.refused_mail = refused_mail&.dup
     procedure.without_continuation_mail = without_continuation_mail&.dup
+    procedure.ask_birthday = false # see issue #4242
 
     procedure.cloned_from_library = from_library
     procedure.parent_procedure = self
