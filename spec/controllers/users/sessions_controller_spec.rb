@@ -165,6 +165,16 @@ describe Users::SessionsController, type: :controller do
           it { expect(controller).not_to have_received(:trust_device) }
           it { expect(controller).to have_received(:send_login_token_or_bufferize) }
         end
+
+        context 'when the token does not exist' do
+          let(:jeton) { 'I do not exist' }
+
+          it { is_expected.to redirect_to root_path }
+          it { expect(controller.current_instructeur).to be_nil }
+          it { expect(controller).not_to have_received(:trust_device) }
+          it { expect(controller).not_to have_received(:send_login_token_or_bufferize) }
+          it { expect(flash.alert).to eq('Votre lien est invalide.') }
+        end
       end
 
       context 'when the instructeur is logged in' do
