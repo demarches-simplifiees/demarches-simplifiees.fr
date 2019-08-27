@@ -22,7 +22,14 @@ module Instructeurs
     end
 
     def apercu_attestation
-      send_data(dossier.build_attestation.pdf.read, filename: 'apercu_attestation.pdf', disposition: 'inline', type: 'application/pdf')
+      @title      = dossier.procedure.attestation_template.title
+      @body       = dossier.procedure.attestation_template.body
+      @footer     = dossier.procedure.attestation_template.footer
+      @created_at = Time.zone.now
+      @logo       = dossier.procedure.attestation_template&.proxy_logo
+      @signature  = dossier.procedure.attestation_template&.proxy_signature
+
+      render 'admin/attestation_templates/show', formats: [:pdf]
     end
 
     def show
