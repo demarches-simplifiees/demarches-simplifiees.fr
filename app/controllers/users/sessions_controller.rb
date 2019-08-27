@@ -51,7 +51,11 @@ class Users::SessionsController < Devise::SessionsController
       .trusted_device_tokens
       .find_by(token: params[:jeton])
 
-    if trusted_device_token&.token_valid?
+    if trusted_device_token.nil?
+      flash[:alert] = 'Votre lien est invalide.'
+
+      redirect_to root_path
+    elsif trusted_device_token.token_valid?
       trust_device(trusted_device_token.created_at)
 
       period = ((trusted_device_token.created_at + TRUSTED_DEVICE_PERIOD) - Time.zone.now).to_i / ActiveSupport::Duration::SECONDS_PER_DAY
@@ -67,7 +71,7 @@ class Users::SessionsController < Devise::SessionsController
         redirect_to new_user_session_path
       end
     else
-      flash[:alert] = 'Votre lien est invalide ou expiré, un nouveau vient de vous être envoyé.'
+      flash[:alert] = 'Votre lien est expiré, un nouveau vient de vous être envoyé.'
 
       send_login_token_or_bufferize(instructeur)
       redirect_to link_sent_path(email: instructeur.email)
