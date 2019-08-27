@@ -448,6 +448,18 @@ describe Procedure do
       it 'should have one administrateur' do
         expect(subject.administrateurs).to eq([administrateur])
       end
+
+      it 'should set ask_birthday to false' do
+        expect(subject.ask_birthday?).to eq(false)
+      end
+    end
+
+    context 'when the procedure is cloned from the library' do
+      let(:procedure) { create(:procedure, received_mail: received_mail, service: service, ask_birthday: true) }
+
+      it 'should set ask_birthday to false' do
+        expect(subject.ask_birthday?).to eq(false)
+      end
     end
 
     it 'should keep service_id' do
