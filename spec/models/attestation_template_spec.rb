@@ -1,44 +1,44 @@
 describe AttestationTemplate, type: :model do
-  describe 'validate' do
-    let(:logo_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte }
-    let(:signature_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte }
-    let(:fake_logo) { double(AttestationTemplateLogoUploader, file: double(size: logo_size)) }
-    let(:fake_signature) { double(AttestationTemplateSignatureUploader, file: double(size: signature_size)) }
-    let(:attestation_template) { AttestationTemplate.new }
+  # describe 'validate' do
+  #   let(:logo_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte }
+  #   let(:signature_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte }
+  #   let(:fake_logo) { double(AttestationTemplateLogoUploader, file: double(size: logo_size)) }
+  #   let(:fake_signature) { double(AttestationTemplateSignatureUploader, file: double(size: signature_size)) }
+  #   let(:attestation_template) { AttestationTemplate.new }
 
-    before do
-      allow(attestation_template).to receive(:logo).and_return(fake_logo)
-      allow(attestation_template).to receive(:signature).and_return(fake_signature)
-      attestation_template.validate
-    end
+  #   before do
+  #     allow(attestation_template).to receive(:logo).and_return(fake_logo)
+  #     allow(attestation_template).to receive(:signature).and_return(fake_signature)
+  #     attestation_template.validate
+  #   end
 
-    subject { attestation_template.errors.details }
+  #   subject { attestation_template.errors.details }
 
-    context 'when no files are present' do
-      let(:fake_logo) { nil }
-      let(:fake_signature) { nil }
+  #   context 'when no files are present' do
+  #     let(:fake_logo) { nil }
+  #     let(:fake_signature) { nil }
 
-      it { is_expected.to match({}) }
-    end
+  #     it { is_expected.to match({}) }
+  #   end
 
-    context 'when the logo and the signature have the right size' do
-      it { is_expected.to match({}) }
-    end
+  #   context 'when the logo and the signature have the right size' do
+  #     it { is_expected.to match({}) }
+  #   end
 
-    context 'when the logo and the signature are too heavy' do
-      let(:logo_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte + 1 }
-      let(:signature_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte + 1 }
+  #   context 'when the logo and the signature are too heavy' do
+  #     let(:logo_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte + 1 }
+  #     let(:signature_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte + 1 }
 
-      it do
-        expected = {
-          signature: [{ error: ' : vous ne pouvez pas charger une image de plus de 0,5 Mo' }],
-          logo: [{ error: ' : vous ne pouvez pas charger une image de plus de 0,5 Mo' }]
-        }
+  #     it do
+  #       expected = {
+  #         signature: [{ error: ' : vous ne pouvez pas charger une image de plus de 0,5 Mo' }],
+  #         logo: [{ error: ' : vous ne pouvez pas charger une image de plus de 0,5 Mo' }]
+  #       }
 
-        is_expected.to match(expected)
-      end
-    end
-  end
+  #       is_expected.to match(expected)
+  #     end
+  #   end
+  # end
 
   describe 'validates footer length' do
     let(:attestation_template) { AttestationTemplate.new(footer: footer) }
@@ -139,11 +139,6 @@ describe AttestationTemplate, type: :model do
     end
 
     let(:attestation) { attestation_template.attestation_for(dossier) }
-
-    it 'provides a pseudo file' do
-      expect(attestation.pdf.file).to exist
-      expect(attestation.pdf.filename).to start_with('attestation')
-    end
 
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
