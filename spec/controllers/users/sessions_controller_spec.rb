@@ -136,6 +136,7 @@ describe Users::SessionsController, type: :controller do
     context 'when the instructeur has non other account' do
       let(:instructeur) { create(:instructeur) }
       let!(:good_jeton) { instructeur.create_trusted_device_token }
+      let(:jeton) { good_jeton }
       let(:logged) { false }
       let(:valid_token) { true }
 
@@ -151,15 +152,12 @@ describe Users::SessionsController, type: :controller do
 
       context 'when the instructeur is not logged in' do
         context 'when the token is valid' do
-          let(:jeton) { good_jeton }
-
           it { is_expected.to redirect_to new_user_session_path }
           it { expect(controller.current_instructeur).to be_nil }
           it { expect(controller).to have_received(:trust_device) }
         end
 
         context 'when the token is invalid' do
-          let(:jeton) { good_jeton }
           let(:valid_token) { false }
 
           it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
@@ -173,8 +171,6 @@ describe Users::SessionsController, type: :controller do
         let(:logged) { true }
 
         context 'when the token is valid' do
-          let(:jeton) { good_jeton }
-
           # redirect to root_path, then redirect to instructeur_procedures_path (see root_controller)
           it { is_expected.to redirect_to root_path }
           it { expect(controller.current_instructeur).to eq(instructeur) }
