@@ -74,6 +74,7 @@ class Procedure < ApplicationRecord
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
   before_create :ensure_path_exists
+  after_create :ensure_default_groupe_instructeur
 
   include AASM
 
@@ -477,6 +478,10 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def defaut_groupe_instructeur
+    groupe_instructeurs.find_by(label: GroupeInstructeur::DEFAULT_LABEL)
+  end
+
   private
 
   def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
@@ -564,6 +569,12 @@ class Procedure < ApplicationRecord
   def ensure_path_exists
     if self.path.nil?
       self.path = SecureRandom.uuid
+    end
+  end
+
+  def ensure_default_groupe_instructeur
+    if self.groupe_instructeurs.empty?
+      groupe_instructeurs.create(label: GroupeInstructeur::DEFAULT_LABEL)
     end
   end
 end
