@@ -3,24 +3,23 @@ require 'spec_helper'
 feature 'Signing up:' do
   let(:user_email) { generate :user_email }
   let(:user_password) { 'démarches-simplifiées-pwd' }
+  let(:procedure) { create :simple_procedure, :with_service }
 
   scenario 'a new user can sign-up' do
-    visit root_path
-    click_on 'Connexion'
-    click_on 'Créer un compte'
+    visit commencer_path(path: procedure.path)
+    click_on 'Créer un compte demarches-simplifiees.fr'
 
     sign_up_with user_email, user_password
     expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
 
     click_confirmation_link_for user_email
     expect(page).to have_content 'Votre compte a été activé'
-    expect(page).to have_current_path dossiers_path
+    expect(page).to have_current_path commencer_path(path: procedure.path)
   end
 
-  scenario 'a new user can’t sign-up with too short password' do
-    visit root_path
-    click_on 'Connexion'
-    click_on 'Créer un compte'
+  scenario 'a new user can’t sign-up with too short password when visiting a procedure' do
+    visit commencer_path(path: procedure.path)
+    click_on 'Créer un compte demarches-simplifiees.fr'
 
     expect(page).to have_current_path new_user_registration_path
     sign_up_with user_email, '1234567'
@@ -61,9 +60,8 @@ feature 'Signing up:' do
 
   context 'when a user is not confirmed yet' do
     before do
-      visit root_path
-      click_on 'Connexion'
-      click_on 'Créer un compte'
+      visit commencer_path(path: procedure.path)
+      click_on 'Créer un compte demarches-simplifiees.fr'
 
       sign_up_with user_email, user_password
     end

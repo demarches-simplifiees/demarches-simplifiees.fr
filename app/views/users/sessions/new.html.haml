@@ -1,12 +1,6 @@
 = content_for(:page_id, 'auth')
 
 .auth-form.sign-in-form
-  %p.register
-    %span
-      Nouveau sur demarches&#8209;simplifiees.fr ?
-    = link_to "Créer un compte", new_user_registration_path, class: "button primary auth-signup-button"
-
-  %hr
 
   = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
     %h1 Connectez-vous
@@ -28,3 +22,10 @@
     = f.submit "Se connecter", class: "button large primary expand"
 
   = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+
+  %hr
+  %p.center
+    %span Vous êtes nouveau sur demarches&#8209;simplifiees.fr ?
+    %br
+    %br
+    = link_to "Trouvez votre démarche", "https://faq.demarches-simplifiees.fr/article/59-comment-trouver-ma-demarche", target: "_blank", class: "button expend secondary"

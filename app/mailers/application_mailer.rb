@@ -9,8 +9,13 @@ class ApplicationMailer < ActionMailer::Base
     return nil if !procedure.logo?
 
     begin
-      logo_filename = procedure.logo.filename
-      attachments.inline[logo_filename] = procedure.logo.read
+      if procedure.logo_active_storage.attached?
+        logo_filename = procedure.logo_active_storage.filename
+        attachments.inline[logo_filename] = procedure.logo_active_storage.download
+      else
+        logo_filename = procedure.logo.filename
+        attachments.inline[logo_filename] = procedure.logo.read
+      end
       attachments[logo_filename].url
 
     rescue StandardError => e

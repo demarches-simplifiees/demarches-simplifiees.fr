@@ -14,7 +14,7 @@ describe NewAdministrateur::MailTemplatesController, type: :controller do
     it { expect(response).to have_http_status(:ok) }
 
     it 'displays the procedure logo' do
-      expect(response.body).to have_css("img[src*='#{procedure.logo.filename}']")
+      expect(response.body).to have_css("img[src*='#{procedure.logo_url}']")
     end
 
     it 'displays the action buttons' do
