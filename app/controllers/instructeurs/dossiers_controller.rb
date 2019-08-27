@@ -14,7 +14,11 @@ module Instructeurs
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
 
     def attestation
-      send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
+      if dossier.attestation.pdf_active_storage.attached?
+        redirect_to url_for(dossier.attestation.pdf_active_storage)
+      else
+        send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
+      end
     end
 
     def apercu_attestation
