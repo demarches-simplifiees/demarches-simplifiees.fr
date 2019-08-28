@@ -185,8 +185,8 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe "procedure_presentation_and_errors_for_procedure_id" do
-    let(:procedure_presentation_and_errors) { instructeur.procedure_presentation_and_errors_for_procedure_id(procedure_id) }
+  describe "procedure_presentation_and_errors_for_groupe_instructeur_id" do
+    let(:procedure_presentation_and_errors) { instructeur.procedure_presentation_and_errors_for_groupe_instructeur_id(procedure.defaut_groupe_instructeur.id) }
     let(:procedure_presentation) { procedure_presentation_and_errors.first }
     let(:errors) { procedure_presentation_and_errors.second }
 

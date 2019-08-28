@@ -241,7 +241,7 @@ module Instructeurs
     end
 
     def get_procedure_presentation
-      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(params[:procedure_id])
+      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_groupe_instructeur_id(procedure.defaut_groupe_instructeur.id)
       if errors.present?
         flash[:alert] = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
       end
