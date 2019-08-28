@@ -19,6 +19,14 @@ max_logo_width = body_width
 max_logo_height = 50.mm
 max_signature_size = 50.mm
 
+title = @attestation.fetch(:title)
+body = @attestation.fetch(:body)
+footer = @attestation.fetch(:footer)
+created_at = @attestation.fetch(:created_at)
+
+logo = @attestation[:logo]
+signature = @attestation[:signature]
+
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size) do |pdf|
   pdf.font_families.update( 'liberation serif' => { normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' )})
   pdf.font 'liberation serif'
@@ -29,30 +37,30 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   body_height = pdf.cursor - footer_height
 
   pdf.bounding_box([0, pdf.cursor], width: body_width, height: body_height) do
-    if @logo.present?
-      logo_file = if @logo.is_a?(ActiveStorage::Attached::One)
-        @logo.download
+    if logo.present?
+      logo_file = if logo.is_a?(ActiveStorage::Attached::One)
+        logo.download
       else
-        @logo.read
+        logo.read
       end
       pdf.image StringIO.new(logo_file), fit: [max_logo_width , max_logo_height], position: :center
     end
 
     pdf.fill_color grey
-    pdf.pad_top(40) { pdf.text "le #{l(@created_at, format: '%e %B %Y')}", size: 10, align: :right, character_spacing: -0.5 }
+    pdf.pad_top(40) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 10, align: :right, character_spacing: -0.5 }
 
     pdf.fill_color black
-    pdf.pad_top(40) { pdf.text @title, size: 18, character_spacing: -0.2 }
+    pdf.pad_top(40) { pdf.text title, size: 18, character_spacing: -0.2 }
 
     pdf.fill_color grey
-    pdf.pad_top(30) { pdf.text @body, size: 10, character_spacing: -0.2, align: :justify }
+    pdf.pad_top(30) { pdf.text body, size: 10, character_spacing: -0.2, align: :justify }
 
-    if @signature.present?
+    if signature.present?
       pdf.pad_top(40) do
-        signature_file = if @signature.is_a?(ActiveStorage::Attached::One)
-          @signature.download
+        signature_file = if signature.is_a?(ActiveStorage::Attached::One)
+          signature.download
         else
-          @signature.read
+          signature.read
         end
         pdf.image StringIO.new(signature_file), fit: [max_signature_size , max_signature_size], position: :right
       end
@@ -62,6 +70,6 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   pdf.repeat(:all) do
     pdf.move_cursor_to footer_height - 10
     pdf.fill_color grey
-    pdf.text @footer, align: :center, size: 8
+    pdf.text footer, align: :center, size: 8
   end
 end

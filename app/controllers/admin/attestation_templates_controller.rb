@@ -40,33 +40,20 @@ class Admin::AttestationTemplatesController < AdminController
   end
 
   def preview
-    @title      = activated_attestation_params[:title]
-    @body       = activated_attestation_params[:body]
-    @footer     = activated_attestation_params[:footer]
-    @created_at = Time.zone.now
-
-    # In a case of a preview, when the user does not change its images,
-    # the images are not uploaded and thus should be retrieved from previous
-    # attestation_template
-    @logo = activated_attestation_params[:logo] || @procedure.attestation_template&.proxy_logo
-    @signature = activated_attestation_params[:signature] || @procedure.attestation_template&.proxy_signature
+    @attestation = (@procedure.attestation_template || AttestationTemplate.new).render_attributes_for(activated_attestation_params)
 
     render 'admin/attestation_templates/show', formats: [:pdf]
   end
 
   def delete_logo
-    attestation_template = @procedure.attestation_template
-    attestation_template.logo.purge_later
-    attestation_template.logo_active_storage.purge_later
+    @procedure.attestation_template.logo.purge_later
 
     flash.notice = 'le logo a bien été supprimée'
     redirect_to edit_admin_procedure_attestation_template_path(@procedure)
   end
 
   def delete_signature
-    attestation_template = @procedure.attestation_template
-    attestation_template.signature.purge_later
-    attestation_template.signature_active_storage.purge_later
+    @procedure.attestation_template.signature.purge_later
 
     flash.notice = 'la signature a bien été supprimée'
     redirect_to edit_admin_procedure_attestation_template_path(@procedure)
