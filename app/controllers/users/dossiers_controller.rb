@@ -258,7 +258,7 @@ module Users
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.procedure.brouillon?
-        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Il sera supprimé lors de la publication de la démarche et sa soumission n’a pas de valeur juridique."
+        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entrainera sa suppression."
       end
     end
 
