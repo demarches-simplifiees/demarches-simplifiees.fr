@@ -22,8 +22,8 @@ module Instructeurs
     end
 
     def apercu_attestation
-      @title      = dossier.procedure.attestation_template.title
-      @body       = dossier.procedure.attestation_template.body
+      @title      = dossier.procedure.attestation_template.title_for_dossier(dossier)
+      @body       = dossier.procedure.attestation_template.body_for_dossier(dossier)
       @footer     = dossier.procedure.attestation_template.footer
       @created_at = Time.zone.now
       @logo       = dossier.procedure.attestation_template&.proxy_logo
