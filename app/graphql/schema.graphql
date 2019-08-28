@@ -6,12 +6,46 @@ type Avis {
   updatedAt: ISO8601DateTime!
 }
 
+type CarteChamp implements Champ {
+  geoAreas: [GeoArea!]!
+  id: ID!
+  label: String!
+}
+
+interface Champ {
+  id: ID!
+  label: String!
+}
+
 type ChampInfo {
   description: String
   id: ID!
   label: String!
   required: Boolean!
   type: TypeDeChamp!
+}
+
+type CheckboxChamp implements Champ {
+  id: ID!
+  label: String!
+  value: Boolean!
+}
+
+"""
+GeoJSON coordinates
+"""
+scalar Coordinates
+
+type DateChamp implements Champ {
+  id: ID!
+  label: String!
+  value: ISO8601DateTime
+}
+
+type DecimalNumberChamp implements Champ {
+  id: ID!
+  label: String!
+  value: Float
 }
 
 """
@@ -119,7 +153,9 @@ enum DemarcheState {
 Un dossier
 """
 type Dossier {
+  annotations: [Champ!]!
   avis: [Avis!]!
+  champs: [Champ!]!
   createdAt: ISO8601DateTime!
 
   """
@@ -173,6 +209,12 @@ type DossierEdge {
   node: Dossier
 }
 
+type DossierLinkChamp implements Champ {
+  dossier: Dossier
+  id: ID!
+  label: String!
+}
+
 enum DossierState {
   """
   Accepté
@@ -205,10 +247,49 @@ enum DossierState {
   sans_suite
 }
 
+interface GeoArea {
+  geometry: GeoJSON!
+  id: ID
+  source: GeoAreaSource!
+}
+
+enum GeoAreaSource {
+  """
+  translation missing: fr.activerecord.attributes.geo_area.source.cadastre
+  """
+  cadastre
+
+  """
+  translation missing: fr.activerecord.attributes.geo_area.source.parcelle_agricole
+  """
+  parcelle_agricole
+
+  """
+  translation missing: fr.activerecord.attributes.geo_area.source.quartier_prioritaire
+  """
+  quartier_prioritaire
+
+  """
+  translation missing: fr.activerecord.attributes.geo_area.source.selection_utilisateur
+  """
+  selection_utilisateur
+}
+
+type GeoJSON {
+  coordinates: Coordinates!
+  type: String!
+}
+
 """
 An ISO 8601-encoded datetime
 """
 scalar ISO8601DateTime
+
+type IntegerNumberChamp implements Champ {
+  id: ID!
+  label: String!
+  value: Int
+}
 
 type Message {
   attachment: URL
@@ -245,9 +326,54 @@ type PageInfo {
   startCursor: String
 }
 
+type ParcelleCadastrale implements GeoArea {
+  codeArr: String!
+  codeCom: String!
+  codeDep: String!
+  feuille: Int!
+  geometry: GeoJSON!
+  id: ID
+  nomCom: String!
+  numero: String!
+  section: String!
+  source: GeoAreaSource!
+  surfaceIntersection: Float!
+  surfaceParcelle: Float!
+}
+
+type PersonneMorale {
+  adresse: String!
+  codeInseeLocalite: String!
+  codePostal: String!
+  complementAdresse: String!
+  libelleNaf: String!
+  localite: String!
+  naf: String!
+  nomVoie: String!
+  numeroVoie: String!
+  siegeSocial: String!
+  siret: String!
+  typeVoie: String!
+}
+
+type PieceJustificativeChamp implements Champ {
+  id: ID!
+  label: String!
+  url: URL
+}
+
 type Profile {
   email: String!
   id: ID!
+}
+
+type QuartierPrioritaire implements GeoArea {
+  code: String!
+  commune: String!
+  geometry: GeoJSON!
+  id: ID
+  nom: String!
+  source: GeoAreaSource!
 }
 
 type Query {
@@ -270,6 +396,30 @@ type Query {
     """
     id: ID!
   ): Dossier!
+}
+
+type RepetitionChamp implements Champ {
+  champs: [Champ!]!
+  id: ID!
+  label: String!
+}
+
+type SelectionUtilisateur implements GeoArea {
+  geometry: GeoJSON!
+  id: ID
+  source: GeoAreaSource!
+}
+
+type SiretChamp implements Champ {
+  etablissement: PersonneMorale
+  id: ID!
+  label: String!
+}
+
+type TextChamp implements Champ {
+  id: ID!
+  label: String!
+  value: String
 }
 
 enum TypeDeChamp {

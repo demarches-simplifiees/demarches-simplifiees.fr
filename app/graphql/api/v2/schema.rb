@@ -31,6 +31,22 @@ class Api::V2::Schema < GraphQL::Schema
     end
   end
 
+  orphan_types Types::Champs::CarteChampType,
+    Types::Champs::CheckboxChampType,
+    Types::Champs::DateChampType,
+    Types::Champs::DecimalNumberChampType,
+    Types::Champs::DossierLinkChampType,
+    Types::Champs::IntegerNumberChampType,
+    Types::Champs::LinkedDropDownListChampType,
+    Types::Champs::MultipleDropDownListChampType,
+    Types::Champs::PieceJustificativeChampType,
+    Types::Champs::RepetitionChampType,
+    Types::Champs::SiretChampType,
+    Types::Champs::TextChampType,
+    Types::GeoAreas::ParcelleCadastraleType,
+    Types::GeoAreas::QuartierPrioritaireType,
+    Types::GeoAreas::SelectionUtilisateurType
+
   def self.unauthorized_object(error)
     # Add a top-level error to the response instead of returning nil:
     raise GraphQL::ExecutionError.new("An object of type #{error.type.graphql_name} was hidden due to permissions", extensions: { code: :unauthorized })
