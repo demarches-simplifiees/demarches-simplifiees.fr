@@ -27,6 +27,9 @@ module Types
     field :usager, Types::ProfileType, null: false
     field :instructeurs, [Types::ProfileType], null: false
 
+    field :champs, [Types::ChampType], null: false
+    field :annotations, [Types::ChampType], null: false
+
     field :messages, [Types::MessageType], null: false
     field :avis, [Types::AvisType], null: false
 
@@ -48,6 +51,14 @@ module Types
 
     def avis
       Loaders::Association.for(object.class, avis: [:instructeur, :claimant]).load(object)
+    end
+
+    def champs
+      Loaders::Association.for(object.class, :champs).load(object)
+    end
+
+    def annotations
+      Loaders::Association.for(object.class, :champs_private).load(object)
     end
 
     def self.authorized?(object, context)
