@@ -286,7 +286,9 @@ class Admin::ProceduresController < AdminController
     else
       params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :path)
     end
-    permited_params[:logo_active_storage] = permited_params.delete(:logo)
+    if permited_params[:logo]
+      permited_params[:logo_active_storage] = permited_params.delete(:logo)
+    end
     permited_params
   end
 end

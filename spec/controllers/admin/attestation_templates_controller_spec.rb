@@ -87,8 +87,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
       it { expect(procedure.attestation_template).to have_attributes(attestation_params) }
       it { expect(procedure.attestation_template.activated).to be true }
-      it { expect(procedure.attestation_template.logo.read).to eq(logo2.read) }
-      it { expect(procedure.attestation_template.signature.read).to eq(signature2.read) }
+      it { expect(procedure.attestation_template.logo_active_storage.download).to eq(logo2.read) }
+      it { expect(procedure.attestation_template.signature_active_storage.download).to eq(signature2.read) }
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.notice).to eq("L'attestation a bien été sauvegardée") }
 
@@ -130,8 +130,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
       end
 
       it { expect(procedure.attestation_template).to have_attributes(attestation_params) }
-      it { expect(procedure.attestation_template.logo.read).to eq(logo2.read) }
-      it { expect(procedure.attestation_template.signature.read).to eq(signature2.read) }
+      it { expect(procedure.attestation_template.logo_active_storage.download).to eq(logo2.read) }
+      it { expect(procedure.attestation_template.signature_active_storage.download).to eq(signature2.read) }
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.notice).to eq("L'attestation a bien été modifiée") }
 
