@@ -9,7 +9,7 @@
         = link_to(instructeur_procedure_path(p)) do
           .flex
 
-            .procedure-logo{ style: p.logo.present? ? "background-image: url(#{p.logo.url})" : nil }
+            .procedure-logo{ style: "background-image: url(#{p.logo_url})" }
 
             .procedure-details
               %p.procedure-title

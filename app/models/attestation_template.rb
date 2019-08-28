@@ -4,10 +4,9 @@ class AttestationTemplate < ApplicationRecord
 
   belongs_to :procedure
 
-  mount_uploader :logo, AttestationTemplateLogoUploader
-  mount_uploader :signature, AttestationTemplateSignatureUploader
-
+  has_one_attached :logo
   has_one_attached :logo_active_storage
+  has_one_attached :signature
   has_one_attached :signature_active_storage
 
   validates :footer, length: { maximum: 190 }
@@ -16,7 +15,7 @@ class AttestationTemplate < ApplicationRecord
 
   def attestation_for(dossier)
     attestation = Attestation.new(title: replace_tags(title, dossier))
-    attestation.pdf_active_storage.attach(
+    attestation.pdf.attach(
       io: build_pdf(dossier),
       filename: "attestation-dossier-#{dossier.id}.pdf",
       content_type: 'application/pdf',
@@ -45,80 +44,82 @@ class AttestationTemplate < ApplicationRecord
   def dup
     attestation_template = AttestationTemplate.new(title: title, body: body, footer: footer, activated: activated)
 
-    if logo_active_storage.attached?
-      attestation_template.logo_active_storage.attach(
+    if logo.attached?
+      attestation_template.logo.attach(
+        io: StringIO.new(logo.download),
+        filename: logo.filename.to_s,
+        content_type: logo.content_type,
+        # we don't want to run virus scanner on duplicated file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+    elsif logo_active_storage.attached?
+      attestation_template.logo.attach(
         io: StringIO.new(logo_active_storage.download),
-        filename: logo_active_storage.filename,
+        filename: logo_active_storage.filename.to_s,
         content_type: logo_active_storage.content_type,
         # we don't want to run virus scanner on duplicated file
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
-    elsif logo.present?
-      CopyCarrierwaveFile::CopyFileService.new(self, attestation_template, :logo).set_file
     end
 
-    if signature_active_storage.attached?
-      attestation_template.signature_active_storage.attach(
+    if signature.attached?
+      attestation_template.signature.attach(
+        io: StringIO.new(signature.download),
+        filename: signature.filename.to_s,
+        content_type: signature.content_type,
+        # we don't want to run virus scanner on duplicated file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+    elsif signature_active_storage.attached?
+      attestation_template.signature.attach(
         io: StringIO.new(signature_active_storage.download),
-        filename: signature_active_storage.filename,
+        filename: signature_active_storage.filename.to_s,
         content_type: signature_active_storage.content_type,
         # we don't want to run virus scanner on duplicated file
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
-    elsif signature.present?
-      CopyCarrierwaveFile::CopyFileService.new(self, attestation_template, :signature).set_file
     end
 
     attestation_template
   end
 
   def logo?
-    logo_active_storage.attached? || logo.present?
+    logo.attached? || logo_active_storage.attached?
   end
 
   def signature?
-    signature_active_storage.attached? || signature.present?
+    signature.attached? || signature_active_storage.attached?
   end
 
   def logo_url
-    if logo_active_storage.attached?
+    if logo.attached?
+      Rails.application.routes.url_helpers.url_for(logo)
+    elsif logo_active_storage.attached?
       Rails.application.routes.url_helpers.url_for(logo_active_storage)
-    elsif logo.present?
-      if Rails.application.secrets.fog[:enabled]
-        RemoteDownloader.new(logo.path).url
-      elsif logo&.url
-        # FIXME: this is horrible but used only in dev and will be removed after migration
-        File.join(LOCAL_DOWNLOAD_URL, logo.url)
-      end
     end
   end
 
   def signature_url
-    if signature_active_storage.attached?
+    if signature.attached?
+      Rails.application.routes.url_helpers.url_for(signature)
+    elsif signature_active_storage.attached?
       Rails.application.routes.url_helpers.url_for(signature_active_storage)
-    elsif signature.present?
-      if Rails.application.secrets.fog[:enabled]
-        RemoteDownloader.new(signature.path).url
-      elsif signature&.url
-        # FIXME: this is horrible but used only in dev and will be removed after migration
-        File.join(LOCAL_DOWNLOAD_URL, signature.url)
-      end
     end
   end
 
   def proxy_logo
-    if logo_active_storage.attached?
-      logo_active_storage
-    else
+    if logo.attached?
       logo
+    elsif logo_active_storage.attached?
+      logo_active_storage
     end
   end
 
   def proxy_signature
-    if signature_active_storage.attached?
-      signature_active_storage
-    else
+    if signature.attached?
       signature
+    elsif signature_active_storage.attached?
+      signature_active_storage
     end
   end
 
