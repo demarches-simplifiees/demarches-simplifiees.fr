@@ -122,6 +122,14 @@ class AttestationTemplate < ApplicationRecord
     end
   end
 
+  def title_for_dossier(dossier)
+    replace_tags(title, dossier)
+  end
+
+  def body_for_dossier(dossier)
+    replace_tags(body, dossier)
+  end
+
   private
 
   def used_tags
@@ -138,8 +146,8 @@ class AttestationTemplate < ApplicationRecord
   def build_pdf(dossier)
     action_view = ActionView::Base.new(ActionController::Base.view_paths,
       logo: proxy_logo,
-      title: replace_tags(title, dossier),
-      body: replace_tags(body, dossier),
+      title: title_for_dossier(dossier),
+      body: body_for_dossier(dossier),
       signature: proxy_signature,
       footer: footer,
       created_at: Time.zone.now)
