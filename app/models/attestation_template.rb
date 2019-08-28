@@ -1,4 +1,6 @@
 class AttestationTemplate < ApplicationRecord
+  self.ignored_columns = ['logo', 'signature']
+
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
