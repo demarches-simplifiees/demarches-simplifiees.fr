@@ -375,12 +375,17 @@
     padding: 30px;
     padding-bottom: 5px;
     padding-top: 5px;
-    left: 0px;
     margin: 0 auto;
+    margin-left: -30px;
+    max-width: 1100px;
 
     .button {
       margin-top: $default-padding;
       margin-bottom: 0;
+    }
+
+    @media(max-width: 1100px) {
+      margin-left: -16px;
     }
 
     // Wide layout: align buttons on a single row
@@ -401,6 +406,7 @@
     @media (max-width: 550px) {
       flex-direction: column-reverse;
       align-items: center;
+      margin-left: -16px;
 
       .button {
         width: 100%;
