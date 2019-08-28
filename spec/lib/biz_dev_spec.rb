@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe BizDev, lib: true do
-  let(:first_biz_dev_id) { BizDev::BIZ_DEV_IDS.first }
+  let(:first_biz_dev_id) { BizDev::PIPEDRIVE_ID }
   let(:non_biz_dev_id) { first_biz_dev_id - 1 }
 
-  it { expect(BizDev::BIZ_DEV_MAPPING).not_to include(non_biz_dev_id) }
+  it { expect(BizDev::PIPEDRIVE_ID).not_to eq(non_biz_dev_id) }
 
   describe '#full_name' do
     subject { described_class.full_name(administration_id) }
