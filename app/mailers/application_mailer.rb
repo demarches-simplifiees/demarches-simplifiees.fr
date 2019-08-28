@@ -10,7 +10,7 @@ class ApplicationMailer < ActionMailer::Base
 
     begin
       if procedure.logo_active_storage.attached?
-        logo_filename = procedure.logo_active_storage.filename
+        logo_filename = procedure.logo_active_storage.filename.to_s
         attachments.inline[logo_filename] = procedure.logo_active_storage.download
       else
         logo_filename = procedure.logo.filename
