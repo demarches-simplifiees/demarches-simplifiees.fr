@@ -144,10 +144,6 @@ const TypeDeChamp = sortableElement(
               label="Cadastres"
               handler={updateHandlers.cadastres}
             />
-            <TypeDeChampCarteOption
-              label="Parcelles Agricoles"
-              handler={updateHandlers.parcelles_agricoles}
-            />
           </TypeDeChampCarteOptions>
           <TypeDeChampRepetitionOptions
             isVisible={isRepetition}
