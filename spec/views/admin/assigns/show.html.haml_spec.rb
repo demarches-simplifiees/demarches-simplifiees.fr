@@ -4,7 +4,7 @@ describe 'admin/assigns/show.html.haml', type: :view do
   let(:admin) { create(:administrateur) }
   let(:procedure) { create :procedure, administrateur: admin }
 
-  let(:assign_instructeurs) { procedure.instructeurs }
+  let(:assign_instructeurs) { procedure.defaut_groupe_instructeur.instructeurs }
   let(:not_assign_instructeurs) { admin.instructeurs.where.not(id: assign_instructeurs.ids) }
 
   before do

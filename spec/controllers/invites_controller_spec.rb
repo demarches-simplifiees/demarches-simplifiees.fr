@@ -32,7 +32,7 @@ describe InvitesController, type: :controller do
 
       context 'when instructeur has access to dossier' do
         before do
-          signed_in_profile.instructeur.procedures << dossier.procedure
+          signed_in_profile.instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
         end
 
         it_behaves_like "he can not create invitation"
