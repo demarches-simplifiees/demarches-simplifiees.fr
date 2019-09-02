@@ -14,10 +14,9 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure'
   belongs_to :service
 
-  has_many :assign_to, dependent: :destroy
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
-  has_many :instructeurs, through: :assign_to
+  has_many :groupe_instructeurs, dependent: :destroy
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
@@ -73,6 +72,7 @@ class Procedure < ApplicationRecord
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
   before_create :ensure_path_exists
+  after_create :ensure_default_groupe_instructeur
 
   include AASM
 
@@ -247,6 +247,8 @@ class Procedure < ApplicationRecord
       procedure.service = self.service.clone_and_assign_to_administrateur(admin)
     end
 
+    procedure.save
+
     admin.instructeur.assign_to_procedure(procedure)
 
     procedure
@@ -409,7 +411,7 @@ class Procedure < ApplicationRecord
       result << :service
     end
 
-    if instructeurs.empty?
+    if missing_instructeurs?
       result << :instructeurs
     end
 
@@ -474,6 +476,14 @@ class Procedure < ApplicationRecord
         File.join(LOCAL_DOWNLOAD_URL, logo.url)
       end
     end
+  end
+
+  def defaut_groupe_instructeur
+    groupe_instructeurs.find_by(label: GroupeInstructeur::DEFAULT_LABEL)
+  end
+
+  def missing_instructeurs?
+    !AssignTo.exists?(groupe_instructeur: groupe_instructeurs)
   end
 
   private
@@ -563,6 +573,12 @@ class Procedure < ApplicationRecord
   def ensure_path_exists
     if self.path.nil?
       self.path = SecureRandom.uuid
+    end
+  end
+
+  def ensure_default_groupe_instructeur
+    if self.groupe_instructeurs.empty?
+      groupe_instructeurs.create(label: GroupeInstructeur::DEFAULT_LABEL)
     end
   end
 end

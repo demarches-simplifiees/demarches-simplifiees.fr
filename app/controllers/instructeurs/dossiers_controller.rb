@@ -56,7 +56,7 @@ module Instructeurs
       @previous_following_instructeurs_emails = previous_followers.pluck(:email)
       @avis_emails = dossier.avis.includes(:instructeur).map(&:email_to_display)
       @invites_emails = dossier.invites.map(&:email)
-      @potential_recipients = procedure.instructeurs.reject { |g| g == current_instructeur }
+      @potential_recipients = procedure.defaut_groupe_instructeur.instructeurs.reject { |g| g == current_instructeur }
     end
 
     def send_to_instructeurs

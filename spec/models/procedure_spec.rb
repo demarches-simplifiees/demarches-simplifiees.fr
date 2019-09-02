@@ -401,7 +401,7 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.instructeurs.pluck(:email)).to eq([administrateur.email]) }
+    it { expect(subject.defaut_groupe_instructeur.instructeurs.pluck(:email)).to eq([administrateur.email]) }
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
@@ -880,6 +880,29 @@ describe Procedure do
         expect(procedure.types_de_champ_private.index(type_de_champ)).to eq(2)
         expect(type_de_champ.order_place).to eq(2)
       end
+    end
+  end
+
+  describe '.ensure_a_groupe_instructeur_exists' do
+    let!(:procedure) { create(:procedure) }
+
+    it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+    it { expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL) }
+  end
+
+  describe '.missing_instructeurs?' do
+    let!(:procedure) { create(:procedure) }
+
+    subject { procedure.missing_instructeurs? }
+
+    it { is_expected.to be true }
+
+    context 'when an instructeur is assign to this procedure' do
+      let!(:instructeur) { create(:instructeur) }
+
+      before { instructeur.assign_to_procedure(procedure) }
+
+      it { is_expected.to be false }
     end
   end
 end

@@ -97,6 +97,10 @@ describe Instructeur, type: :model do
 
       it { is_expected.to be_truthy }
       it { expect { subject }.to change(instructeur.procedures, :count) }
+      it do
+        subject
+        expect(instructeur.groupe_instructeurs).to include(procedure_to_assign.defaut_groupe_instructeur)
+      end
     end
 
     context "with an already assigned procedure" do
@@ -147,17 +151,21 @@ describe Instructeur, type: :model do
     after { Timecop.return }
 
     context 'when no procedure published was active last week' do
-      let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur2], libelle: 'procedure') }
+      let!(:procedure) { create(:procedure, :published, libelle: 'procedure') }
+
+      before { instructeur2.assign_to_procedure(procedure) }
+
       context 'when the instructeur has no notifications' do
         it { is_expected.to eq(nil) }
       end
     end
 
     context 'when a procedure published was active' do
-      let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur2], libelle: 'procedure') }
+      let!(:procedure) { create(:procedure, :published, libelle: 'procedure') }
       let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
 
       before :each do
+        instructeur2.assign_to_procedure(procedure)
         expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
       end
 
@@ -165,10 +173,11 @@ describe Instructeur, type: :model do
     end
 
     context 'when a procedure not published was active with no notifications' do
-      let!(:procedure) { create(:procedure, instructeurs: [instructeur2], libelle: 'procedure') }
+      let!(:procedure) { create(:procedure, libelle: 'procedure') }
       let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
 
       before :each do
+        instructeur2.assign_to_procedure(procedure)
         allow_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
       end
 
@@ -255,7 +264,7 @@ describe Instructeur, type: :model do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let(:instructeur) { dossier.follows.first.instructeur }
     let(:procedure) { dossier.procedure }
-    let!(:instructeur_2) { create(:instructeur, procedures: [procedure]) }
+    let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur]) }
 
     let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let!(:instructeur_on_procedure_2) { dossier_on_procedure_2.follows.first.instructeur }
@@ -384,7 +393,7 @@ describe Instructeur, type: :model do
     let(:procedure_to_assign) { create(:procedure) }
 
     before do
-      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, email_notifications_enabled: true)
+      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, email_notifications_enabled: true, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur)
     end
 
     context 'when a dossier in construction exists' do
@@ -429,6 +438,6 @@ describe Instructeur, type: :model do
   private
 
   def assign(procedure_to_assign)
-    create :assign_to, instructeur: instructeur, procedure: procedure_to_assign
+    create :assign_to, instructeur: instructeur, procedure: procedure_to_assign, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur
   end
 end
