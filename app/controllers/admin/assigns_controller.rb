@@ -8,7 +8,7 @@ class Admin::AssignsController < AdminController
   NOT_ASSIGN = 'not_assign'
 
   def show
-    assign_scope = @procedure.instructeurs
+    assign_scope = @procedure.defaut_groupe_instructeur.instructeurs
 
     @instructeurs_assign = smart_listing_create :instructeurs_assign,
       assign_scope,

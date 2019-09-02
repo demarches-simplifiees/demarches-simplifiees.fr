@@ -9,7 +9,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
   end
 
   describe 'procedure is draft' do
-    context 'when procedure does not have a gestionnare affected' do
+    context 'when procedure does not have a instructeur affected' do
       before do
         render
       end
@@ -21,9 +21,9 @@ describe 'admin/procedures/show.html.haml', type: :view do
       end
     end
 
-    context 'when procedure have a gestionnare affected' do
+    context 'when procedure have a instructeur affected' do
       before do
-        create :assign_to, instructeur: create(:instructeur), procedure: procedure
+        create(:instructeur).assign_to_procedure(procedure)
         render
       end
 

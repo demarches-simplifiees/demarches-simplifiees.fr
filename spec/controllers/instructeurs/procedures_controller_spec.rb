@@ -103,9 +103,9 @@ describe Instructeurs::ProceduresController, type: :controller do
         let(:procedure3) { create(:procedure) }
 
         before do
-          instructeur.procedures << procedure1
-          instructeur.procedures << procedure2
-          instructeur.procedures << procedure3
+          instructeur.groupe_instructeurs << procedure1.defaut_groupe_instructeur
+          instructeur.groupe_instructeurs << procedure2.defaut_groupe_instructeur
+          instructeur.groupe_instructeurs << procedure3.defaut_groupe_instructeur
           subject
         end
 
@@ -117,7 +117,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         let(:dossier) { create(:dossier, state: state, procedure: procedure) }
 
         before do
-          instructeur.procedures << procedure
+          instructeur.groupe_instructeurs << procedure.defaut_groupe_instructeur
           dossier
         end
 
@@ -141,7 +141,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction))
             create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true)
 
-            instructeur.procedures << procedure2
+            instructeur.groupe_instructeurs << procedure2.defaut_groupe_instructeur
             create(:dossier, :followed, procedure: procedure2, state: Dossier.states.fetch(:en_construction))
             create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:accepte))
             instructeur.followed_dossiers << create(:dossier, procedure: procedure2, state: Dossier.states.fetch(:en_instruction))
