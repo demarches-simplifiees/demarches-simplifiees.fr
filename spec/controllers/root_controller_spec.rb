@@ -17,7 +17,7 @@ describe RootController, type: :controller do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     before do
-      instructeur.procedures << procedure
+      instructeur.groupe_instructeurs << procedure.defaut_groupe_instructeur
       sign_in(instructeur.user)
     end
 

@@ -235,10 +235,10 @@ describe Dossier do
   end
 
   describe '#avis_for' do
-    let!(:procedure) { create(:procedure, :published) }
+    let!(:instructeur) { create(:instructeur) }
+    let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let!(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
 
-    let!(:instructeur) { create(:instructeur, procedures: [procedure]) }
     let!(:expert_1) { create(:instructeur) }
     let!(:expert_2) { create(:instructeur) }
 
@@ -615,7 +615,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_construction, :followed) }
       let!(:non_following_instructeur) do
         non_following_instructeur = create(:instructeur)
-        non_following_instructeur.procedures << dossier.procedure
+        non_following_instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
         non_following_instructeur
       end
 

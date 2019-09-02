@@ -18,7 +18,7 @@ describe DossierLinkHelper do
       let(:dossier) { create(:dossier) }
       let(:instructeur) { create(:instructeur) }
 
-      before { dossier.procedure.instructeurs << instructeur }
+      before { dossier.procedure.defaut_groupe_instructeur.instructeurs << instructeur }
 
       it { expect(helper.dossier_linked_path(instructeur, dossier)).to eq(instructeur_dossier_path(dossier.procedure, dossier)) }
     end

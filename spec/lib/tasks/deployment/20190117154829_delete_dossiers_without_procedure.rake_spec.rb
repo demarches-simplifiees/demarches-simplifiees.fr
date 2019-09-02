@@ -19,6 +19,7 @@ describe '20190117154829_delete_dossiers_without_procedure.rake' do
 
     before do
       procedure_2_dossier_ids
+      procedure2.defaut_groupe_instructeur.delete
       procedure2.delete
       expect(procedure_2_dossier_ids.count).to eq(2)
       expect(Dossier.find_by(id: procedure_2_dossier_ids.first).procedure).to be nil
