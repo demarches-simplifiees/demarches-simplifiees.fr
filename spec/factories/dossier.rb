@@ -4,11 +4,17 @@ FactoryBot.define do
     state { Dossier.states.fetch(:brouillon) }
     association :user, factory: [:user]
 
-    before(:create) do |dossier, _evaluator|
-      if !dossier.procedure
+    transient do
+      procedure { nil }
+    end
+
+    after(:build) do |dossier, evaluator|
+      if evaluator.procedure.present?
+        procedure = evaluator.procedure
+      else
         procedure = create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private)
-        dossier.procedure = procedure
       end
+      dossier.groupe_instructeur = procedure.defaut_groupe_instructeur
     end
 
     trait :with_entreprise do

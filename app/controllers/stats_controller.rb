@@ -253,7 +253,7 @@ class StatsController < ApplicationController
 
     processed_dossiers = dossiers
       .where(:processed_at => min_date..max_date)
-      .pluck(:procedure_id, :en_construction_at, :processed_at)
+      .pluck(:groupe_instructeur_id, :en_construction_at, :processed_at)
 
     # Group dossiers by month
     processed_dossiers_by_month = processed_dossiers
@@ -263,10 +263,10 @@ class StatsController < ApplicationController
 
     processed_dossiers_by_month.map do |month, value|
       # Group the dossiers for this month by procedure
-      dossiers_grouped_by_procedure = value.group_by { |dossier| dossier[0] }
+      dossiers_grouped_by_groupe_instructeur = value.group_by { |dossier| dossier[0] }
 
       # Compute the mean time for this procedure
-      procedure_processing_times = dossiers_grouped_by_procedure.map do |_procedure_id, procedure_dossiers|
+      procedure_processing_times = dossiers_grouped_by_groupe_instructeur.map do |_procedure_id, procedure_dossiers|
         procedure_dossiers_processing_time = procedure_dossiers.map do |dossier|
           (dossier[2] - dossier[1]).to_f / (3600 * 24)
         end
@@ -295,7 +295,7 @@ class StatsController < ApplicationController
     processed_dossiers = dossiers
       .where(:processed_at => min_date..max_date)
       .pluck(
-        :procedure_id,
+        :groupe_instructeur_id,
         Arel.sql('EXTRACT(EPOCH FROM (en_construction_at - created_at)) / 60 AS processing_time'),
         :processed_at
       )
@@ -306,18 +306,26 @@ class StatsController < ApplicationController
         processed_at.beginning_of_month.to_s
       end
 
+    groupe_instructeur_ids = processed_dossiers.map { |gid, _, _| gid }.uniq
+    groupe_instructeurs = GroupeInstructeur.where(id: groupe_instructeur_ids).pluck(:id, :procedure_id)
+
     procedure_id_type_de_champs_count = TypeDeChamp
       .where(private: false)
       .group(:procedure_id)
       .count
 
+    groupe_instructeur_id_type_de_champs_count = groupe_instructeurs.reduce({}) do |acc, (gi_id, procedure_id)|
+      acc[gi_id] = procedure_id_type_de_champs_count[procedure_id]
+      acc
+    end
+
     processed_dossiers_by_month.map do |month, dossier_plucks|
       # Group the dossiers for this month by procedure
-      dossiers_grouped_by_procedure = dossier_plucks.group_by { |(procedure_id, *_)| procedure_id }
+      dossiers_grouped_by_groupe_instructeur = dossier_plucks.group_by { |(groupe_instructeur_id, *_)| groupe_instructeur_id }
 
       # Compute the mean time for this procedure
-      procedure_processing_times = dossiers_grouped_by_procedure.map do |procedure_id, procedure_dossiers|
-        procedure_fields_count = procedure_id_type_de_champs_count[procedure_id]
+      procedure_processing_times = dossiers_grouped_by_groupe_instructeur.map do |groupe_instructeur_id, procedure_dossiers|
+        procedure_fields_count = groupe_instructeur_id_type_de_champs_count[groupe_instructeur_id]
 
         if (procedure_fields_count == 0 || procedure_fields_count.nil?)
           next
