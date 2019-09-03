@@ -10,6 +10,8 @@ import MandatoryInput from './MandatoryInput';
 import MoveButton from './MoveButton';
 import TypeDeChampCarteOption from './TypeDeChampCarteOption';
 import TypeDeChampCarteOptions from './TypeDeChampCarteOptions';
+import TypeDeChampTeFenuaOption from './TypeDeChampTeFenuaOption';
+import TypeDeChampTeFenuaOptions from './TypeDeChampTeFenuaOptions';
 import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
@@ -25,6 +27,7 @@ const TypeDeChamp = sortableElement(
     ].includes(typeDeChamp.type_champ);
     const isFile = typeDeChamp.type_champ === 'piece_justificative';
     const isCarte = typeDeChamp.type_champ === 'carte';
+    const isTeFenua = typeDeChamp.type_champ === 'te_fenua';
     const isExplication = typeDeChamp.type_champ === 'explication';
     const isHeaderSection = typeDeChamp.type_champ === 'header_section';
     const isRepetition = typeDeChamp.type_champ === 'repetition';
@@ -146,6 +149,20 @@ const TypeDeChamp = sortableElement(
               handler={updateHandlers.cadastres}
             />
           </TypeDeChampCarteOptions>
+          <TypeDeChampTeFenuaOptions isVisible={isTeFenua}>
+            <TypeDeChampTeFenuaOption
+              label="Parcelles du cadastre"
+              handler={updateHandlers.parcelles}
+            />
+            <TypeDeChampTeFenuaOption
+              label="Batiments"
+              handler={updateHandlers.batiments}
+            />
+            <TypeDeChampTeFenuaOption
+              label="Zones manuelles"
+              handler={updateHandlers.zones_manuelles}
+            />
+          </TypeDeChampTeFenuaOptions>
           <TypeDeChampRepetitionOptions
             isVisible={isRepetition}
             state={{
@@ -210,17 +227,20 @@ function createUpdateHandlers(dispatch, typeDeChamp, index, prefix) {
 }
 
 export const FIELDS = [
+  'batiments',
   'cadastres',
   'description',
   'drop_down_list_value',
   'libelle',
   'mandatory',
   'order_place',
+  'parcelles',
   'parcelles_agricoles',
   'parent_id',
   'piece_justificative_template',
   'private',
   'quartiers_prioritaires',
+  'zones_manuelles',
   'type_champ'
 ];
 

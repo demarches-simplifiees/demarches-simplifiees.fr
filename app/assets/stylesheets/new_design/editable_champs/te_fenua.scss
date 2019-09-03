@@ -1,0 +1,17 @@
+.ol-control-add {
+  top: 80px;
+  left: 0.5em;
+
+  button {
+    background-image: image-url("icons/polygon.svg");
+  }
+}
+
+.ol-control-delete {
+  top: 110px;
+  left: 0.5em;
+
+  button {
+    background-image: image-url("icons/trash-white.svg");
+  }
+}

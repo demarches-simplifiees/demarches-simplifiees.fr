@@ -1,0 +1,8 @@
+.toolbar
+  %input.address{ data: { te_fenua: true, autocomplete: 'te_fenua' }, placeholder: 'Hopital Raiatea, Eglise Faaone, K210 Pirae' }
+
+.te_fenua.edit{ class: "te_fenua-#{form.index}", data: { entry: champ.entry, marker: image_path('marker-icon.png') } }
+
+.geo-areas
+
+= form.hidden_field :value, class: 'features', value: champ.value

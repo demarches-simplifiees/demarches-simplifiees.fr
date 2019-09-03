@@ -77,6 +77,7 @@ describe ProcedureExportV2Service do
           "piece_justificative",
           "siret",
           "carte",
+          "te_fenua",
           "text"
         ]
         #---- in case of failure, provides better explanation (1st elet is not checked,not important)

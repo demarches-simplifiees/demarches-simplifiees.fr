@@ -9,6 +9,10 @@ const sources = [
   {
     type: 'path',
     url: '/admin/procedures/path_list'
+  },
+  {
+    type: 'te_fenua',
+    url: '/te_fenua/suggestions'
   }
 ];
 

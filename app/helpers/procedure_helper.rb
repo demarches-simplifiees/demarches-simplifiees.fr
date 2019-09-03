@@ -91,12 +91,15 @@ module ProcedureHelper
       :updated_at
     ],
     methods: [
+      :batiments,
       :cadastres,
       :drop_down_list_value,
+      :parcelles,
       :parcelles_agricoles,
       :piece_justificative_template_filename,
       :piece_justificative_template_url,
-      :quartiers_prioritaires
+      :quartiers_prioritaires,
+      :zones_manuelles
     ]
   }
   TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE

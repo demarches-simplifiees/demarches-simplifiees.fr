@@ -7,7 +7,7 @@
     "@rails/actiontext": "^6.0.0-alpha",
     "@rails/activestorage": "^6.0.0-alpha",
     "@rails/ujs": "^6.0.0-alpha",
-    "@rails/webpacker": "4.0.7",
+    "@rails/webpacker": "^4.0.7",
     "@sentry/browser": "^5.4.3",
     "@turf/area": "^6.0.1",
     "autocomplete.js": "^0.36.0",
@@ -22,6 +22,7 @@
     "jquery": "^3.4.1",
     "leaflet": "^1.4.0",
     "leaflet-freedraw": "^2.10.0",
+    "ol": "^5.3.3",
     "prop-types": "^15.7.2",
     "ramda": "=0.24.1",
     "react": "^16.8.6",
@@ -42,7 +43,7 @@
     "eslint-plugin-react": "^7.14.2",
     "eslint-plugin-react-hooks": "^1.6.1",
     "prettier": "^1.18.2",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "^3.8.0"
   },
   "scripts": {
     "lint:ec": "eclint check $({ git ls-files ; find vendor -type f ; echo 'db/schema.rb' ; } | sort | uniq -u)",

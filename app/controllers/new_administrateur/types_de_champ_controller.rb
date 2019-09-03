@@ -60,42 +60,55 @@ module NewAdministrateur
             :updated_at
           ],
           methods: [
+            :batiments,
             :cadastres,
             :drop_down_list_value,
+            :parcelles,
             :parcelles_agricoles,
             :piece_justificative_template_filename,
             :piece_justificative_template_url,
-            :quartiers_prioritaires
+            :quartiers_prioritaires,
+            :zones_manuelles
           ]
         )
       }
     end
 
     def type_de_champ_create_params
-      params.required(:type_de_champ).permit(:cadastres,
+      params.required(:type_de_champ).permit(
+        :batiments,
+        :cadastres,
         :description,
         :drop_down_list_value,
         :libelle,
         :mandatory,
         :order_place,
+        :parcelles,
         :parcelles_agricoles,
         :parent_id,
         :piece_justificative_template,
         :private,
         :quartiers_prioritaires,
-        :type_champ).merge(procedure: @procedure)
+        :zones_manuelles,
+        :type_champ
+      ).merge(procedure: @procedure)
     end
 
     def type_de_champ_update_params
-      params.required(:type_de_champ).permit(:cadastres,
+      params.required(:type_de_champ).permit(
+        :cadastres,
         :description,
         :drop_down_list_value,
         :libelle,
         :mandatory,
         :parcelles_agricoles,
+        :parcelles,
         :piece_justificative_template,
         :quartiers_prioritaires,
-        :type_champ)
+        :batiments,
+        :zones_manuelles,
+        :type_champ
+      )
     end
   end
 end

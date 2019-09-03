@@ -27,6 +27,7 @@ import '../new_design/spinner';
 import '../new_design/support';
 
 import '../new_design/champs/carte';
+import '../new_design/champs/te_fenua';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/repetition';
 

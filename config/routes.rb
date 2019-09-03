@@ -214,6 +214,11 @@ Rails.application.routes.draw do
   get 'address/suggestions' => 'address#suggestions'
   get 'address/geocode' => 'address#geocode'
 
+  #
+  # te_fenua
+  #
+  get 'te_fenua/suggestions' => 'te_fenua#suggestions'
+
   resources :invites, only: [:show] do
     collection do
       post 'dossier/:dossier_id', to: 'invites#create', as: :dossier

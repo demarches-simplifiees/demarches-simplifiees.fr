@@ -176,6 +176,10 @@ FactoryBot.define do
     type_de_champ { create(:type_de_champ_carte) }
   end
 
+  factory :champ_te_fenua, class: 'Champs::TeFenuaChamp' do
+    type_de_champ { create(:type_de_champ_te_fenua) }
+  end
+
   factory :champ_siret, class: 'Champs::SiretChamp' do
     association :type_de_champ, factory: [:type_de_champ_siret]
     association :etablissement, factory: [:etablissement]

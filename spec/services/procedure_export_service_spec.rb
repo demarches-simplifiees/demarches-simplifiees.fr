@@ -64,6 +64,7 @@ describe ProcedureExportService do
           :piece_justificative,
           :siret,
           :carte,
+          :te_fenua,
           :text,
 
           :etablissement_siret,
