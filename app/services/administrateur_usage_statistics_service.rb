@@ -131,10 +131,10 @@ class AdministrateurUsageStatisticsService
     result = {}
 
     Dossier
-      .joins(procedure: [:administrateurs])
+      .joins(groupe_instructeur: { procedure: [:administrateurs] })
       .group(
         'administrateurs.id',
-        :procedure_id,
+        'groupe_instructeurs.procedure_id',
         <<~EOSQL
           CASE
             WHEN state IN('accepte', 'refuse', 'sans_suite') THEN 'termine'
