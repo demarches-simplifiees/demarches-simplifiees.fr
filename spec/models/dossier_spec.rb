@@ -48,7 +48,7 @@ describe Dossier do
 
       it { is_expected.not_to include(young_dossier) }
       it { is_expected.not_to include(expiring_dossier) }
-      # it { is_expected.to include(just_expired_dossier) }
+      it { is_expected.to include(just_expired_dossier) }
       it { is_expected.to include(long_expired_dossier) }
     end
   end
