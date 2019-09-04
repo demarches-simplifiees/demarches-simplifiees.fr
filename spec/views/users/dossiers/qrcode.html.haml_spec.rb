@@ -12,8 +12,8 @@ describe 'users/dossiers/qrcode.html.haml', type: :view do
 
   it 'renders a summary of the attestation' do
     attestation_template = dossier.procedure.attestation_template
-    expect(rendered).to have_text(attestation_template.build_body(dossier))
-    expect(rendered).to have_text(attestation_template.build_title(dossier))
+    expect(rendered).to have_text(attestation_template.body_for_dossier(dossier))
+    expect(rendered).to have_text(attestation_template.title_for_dossier(dossier))
     expect(rendered).not_to have_text(attestation_template.footer)
   end
 end

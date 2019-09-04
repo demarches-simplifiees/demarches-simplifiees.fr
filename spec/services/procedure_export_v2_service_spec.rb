@@ -196,6 +196,16 @@ describe ProcedureExportV2Service do
       it 'should have data' do
         expect(repetition_sheet.data.size).to eq(4)
       end
+
+      context 'with invalid characters' do
+        before do
+          champ_repetition.type_de_champ.update(libelle: 'A / B \ C')
+        end
+
+        it 'should have valid sheet name' do
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', "A - B - C"])
+        end
+      end
     end
   end
 end

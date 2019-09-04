@@ -49,7 +49,11 @@ module Users
     end
 
     def attestation
-      send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
+      if dossier.attestation.pdf_active_storage.attached?
+        redirect_to url_for(dossier.attestation.pdf_active_storage)
+      else
+        send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
+      end
     end
 
     def qrcode
@@ -271,7 +275,7 @@ module Users
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.procedure.brouillon?
-        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Il sera supprimé lors de la publication de la démarche et sa soumission n’a pas de valeur juridique."
+        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entrainera sa suppression."
       end
     end
 
