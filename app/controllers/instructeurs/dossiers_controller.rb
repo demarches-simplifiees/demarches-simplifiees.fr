@@ -14,11 +14,22 @@ module Instructeurs
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
 
     def attestation
-      send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
+      if dossier.attestation.pdf_active_storage.attached?
+        redirect_to url_for(dossier.attestation.pdf_active_storage)
+      else
+        send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
+      end
     end
 
     def apercu_attestation
-      send_data(dossier.build_attestation.pdf.read, filename: 'apercu_attestation.pdf', disposition: 'inline', type: 'application/pdf')
+      @title      = dossier.procedure.attestation_template.title_for_dossier(dossier)
+      @body       = dossier.procedure.attestation_template.body_for_dossier(dossier)
+      @footer     = dossier.procedure.attestation_template.footer
+      @created_at = Time.zone.now
+      @logo       = dossier.procedure.attestation_template&.proxy_logo
+      @signature  = dossier.procedure.attestation_template&.proxy_signature
+
+      render 'admin/attestation_templates/show', formats: [:pdf]
     end
 
     def show

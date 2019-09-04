@@ -8,8 +8,8 @@
     - attestation_template = @dossier.procedure.attestation_template
     - if attestation_template.logo&.url
       = image_tag attestation_template.logo.url, height: '150px', style: "display: block; margin-left: auto; margin-right: auto; "
-    %h1= attestation_template.build_title(@dossier)
-    %p= attestation_template.build_body(@dossier)
+    %h1= attestation_template.title_for_dossier(@dossier)
+    %p= attestation_template.body_for_dossier(@dossier)
     - if attestation_template.signature&.url
       = image_tag attestation_template.signature.url, height: '100px', style: 'display: block; margin-right: 0; margin-left: auto;  margin-bottom: 30px; margin-top: 30px;'
 

@@ -7,14 +7,23 @@ class AttestationTemplate < ApplicationRecord
   mount_uploader :logo, AttestationTemplateLogoUploader
   mount_uploader :signature, AttestationTemplateSignatureUploader
 
-  validate :logo_signature_file_size
+  has_one_attached :logo_active_storage
+  has_one_attached :signature_active_storage
+
   validates :footer, length: { maximum: 190 }
 
-  FILE_MAX_SIZE_IN_MB = 0.5
   DOSSIER_STATE = Dossier.states.fetch(:accepte)
 
   def attestation_for(dossier)
-    Attestation.new(title: replace_tags(title, dossier), pdf: build_pdf(dossier))
+    attestation = Attestation.new(title: replace_tags(title, dossier))
+    attestation.pdf_active_storage.attach(
+      io: build_pdf(dossier),
+      filename: "attestation-dossier-#{dossier.id}.pdf",
+      content_type: 'application/pdf',
+      # we don't want to run virus scanner on this file
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+    )
+    attestation
   end
 
   def unspecified_champs_for_dossier(dossier)
@@ -34,24 +43,90 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def dup
-    result = AttestationTemplate.new(title: title, body: body, footer: footer, activated: activated)
+    attestation_template = AttestationTemplate.new(title: title, body: body, footer: footer, activated: activated)
 
-    if logo.present?
-      CopyCarrierwaveFile::CopyFileService.new(self, result, :logo).set_file
+    if logo_active_storage.attached?
+      attestation_template.logo_active_storage.attach(
+        io: StringIO.new(logo_active_storage.download),
+        filename: logo_active_storage.filename,
+        content_type: logo_active_storage.content_type,
+        # we don't want to run virus scanner on duplicated file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+    elsif logo.present?
+      CopyCarrierwaveFile::CopyFileService.new(self, attestation_template, :logo).set_file
     end
 
-    if signature.present?
-      CopyCarrierwaveFile::CopyFileService.new(self, result, :signature).set_file
+    if signature_active_storage.attached?
+      attestation_template.signature_active_storage.attach(
+        io: StringIO.new(signature_active_storage.download),
+        filename: signature_active_storage.filename,
+        content_type: signature_active_storage.content_type,
+        # we don't want to run virus scanner on duplicated file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+    elsif signature.present?
+      CopyCarrierwaveFile::CopyFileService.new(self, attestation_template, :signature).set_file
     end
 
-    result
+    attestation_template
   end
 
-  def build_title(dossier)
+  def logo?
+    logo_active_storage.attached? || logo.present?
+  end
+
+  def signature?
+    signature_active_storage.attached? || signature.present?
+  end
+
+  def logo_url
+    if logo_active_storage.attached?
+      Rails.application.routes.url_helpers.url_for(logo_active_storage)
+    elsif logo.present?
+      if Rails.application.secrets.fog[:enabled]
+        RemoteDownloader.new(logo.path).url
+      elsif logo&.url
+        # FIXME: this is horrible but used only in dev and will be removed after migration
+        File.join(LOCAL_DOWNLOAD_URL, logo.url)
+      end
+    end
+  end
+
+  def signature_url
+    if signature_active_storage.attached?
+      Rails.application.routes.url_helpers.url_for(signature_active_storage)
+    elsif signature.present?
+      if Rails.application.secrets.fog[:enabled]
+        RemoteDownloader.new(signature.path).url
+      elsif signature&.url
+        # FIXME: this is horrible but used only in dev and will be removed after migration
+        File.join(LOCAL_DOWNLOAD_URL, signature.url)
+      end
+    end
+  end
+
+  def proxy_logo
+    if logo_active_storage.attached?
+      logo_active_storage
+    else
+      logo
+    end
+  end
+
+  def proxy_signature
+    if signature_active_storage.attached?
+      signature_active_storage
+    else
+      signature
+    end
+  end
+
+  def title_for_dossier(dossier)
     replace_tags(title, dossier)
   end
 
-  def build_body(dossier)
+  def body_for_dossier(dossier)
     replace_tags(body, dossier)
   end
 
@@ -68,41 +143,18 @@ class AttestationTemplate < ApplicationRecord
       .flatten
   end
 
-  def logo_signature_file_size
-    [:logo, :signature]
-      .select { |file_name| send(file_name).present? }
-      .each { |file_name| file_size_check(file_name) }
-  end
-
-  def file_size_check(file_name)
-    if send(file_name).file.size.to_f > FILE_MAX_SIZE_IN_MB.megabyte.to_f
-      errors.add(file_name, " : vous ne pouvez pas charger une image de plus de #{number_with_delimiter(FILE_MAX_SIZE_IN_MB, locale: :fr)} Mo")
-    end
-  end
-
   def build_pdf(dossier)
     action_view = ActionView::Base.new(ActionController::Base.view_paths,
-      logo: logo,
-      title: replace_tags(title, dossier),
-      body: replace_tags(body, dossier),
-      signature: signature,
+      logo: proxy_logo,
+      title: title_for_dossier(dossier),
+      body: body_for_dossier(dossier),
+      signature: proxy_signature,
       footer: footer,
       qrcode: qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)),
       created_at: Time.zone.now)
 
-    attestation_view = action_view.render(file: 'admin/attestation_templates/show',
-                                          formats: [:pdf])
+    attestation_view = action_view.render(file: 'admin/attestation_templates/show', formats: [:pdf])
 
-    view_to_memory_file(attestation_view)
-  end
-
-  def view_to_memory_file(view)
-    pdf = StringIO.new(view)
-
-    def pdf.original_filename
-      'attestation'
-    end
-
-    pdf
+    StringIO.new(attestation_view)
   end
 end
