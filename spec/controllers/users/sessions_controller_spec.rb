@@ -136,7 +136,9 @@ describe Users::SessionsController, type: :controller do
     context 'when the instructeur has non other account' do
       let(:instructeur) { create(:instructeur) }
       let!(:good_jeton) { instructeur.create_trusted_device_token }
+      let(:jeton) { good_jeton }
       let(:logged) { false }
+      let(:valid_token) { true }
 
       before do
         if logged
@@ -144,25 +146,34 @@ describe Users::SessionsController, type: :controller do
         end
         allow(controller).to receive(:trust_device)
         allow(controller).to receive(:send_login_token_or_bufferize)
+        allow_any_instance_of(TrustedDeviceToken).to receive(:token_valid?).and_return(valid_token)
         post :sign_in_by_link, params: { id: instructeur.id, jeton: jeton }
       end
 
       context 'when the instructeur is not logged in' do
         context 'when the token is valid' do
-          let(:jeton) { good_jeton }
-
           it { is_expected.to redirect_to new_user_session_path }
           it { expect(controller.current_instructeur).to be_nil }
           it { expect(controller).to have_received(:trust_device) }
         end
 
         context 'when the token is invalid' do
-          let(:jeton) { 'invalid_token' }
+          let(:valid_token) { false }
 
           it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
           it { expect(controller.current_instructeur).to be_nil }
           it { expect(controller).not_to have_received(:trust_device) }
           it { expect(controller).to have_received(:send_login_token_or_bufferize) }
+        end
+
+        context 'when the token does not exist' do
+          let(:jeton) { 'I do not exist' }
+
+          it { is_expected.to redirect_to root_path }
+          it { expect(controller.current_instructeur).to be_nil }
+          it { expect(controller).not_to have_received(:trust_device) }
+          it { expect(controller).not_to have_received(:send_login_token_or_bufferize) }
+          it { expect(flash.alert).to eq('Votre lien est invalide.') }
         end
       end
 
@@ -170,8 +181,6 @@ describe Users::SessionsController, type: :controller do
         let(:logged) { true }
 
         context 'when the token is valid' do
-          let(:jeton) { good_jeton }
-
           # redirect to root_path, then redirect to instructeur_procedures_path (see root_controller)
           it { is_expected.to redirect_to root_path }
           it { expect(controller.current_instructeur).to eq(instructeur) }
@@ -179,7 +188,7 @@ describe Users::SessionsController, type: :controller do
         end
 
         context 'when the token is invalid' do
-          let(:jeton) { 'invalid_token' }
+          let(:valid_token) { false }
 
           it { is_expected.to redirect_to link_sent_path(email: instructeur.email) }
           it { expect(controller.current_instructeur).to eq(instructeur) }
