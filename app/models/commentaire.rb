@@ -4,7 +4,6 @@ class Commentaire < ApplicationRecord
   belongs_to :user
   belongs_to :instructeur
 
-  mount_uploader :file, CommentaireFileUploader
   validate :messagerie_available?, on: :create
 
   has_one_attached :piece_jointe
