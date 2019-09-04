@@ -7,7 +7,7 @@ module NewAdministrateur
       dossier = Dossier.new(id: '1', procedure: procedure)
 
       @dossier = dossier
-      @logo_url = procedure.logo.url
+      @logo_url = procedure.logo_url
       @service = procedure.service
       @rendered_template = sanitize(mail_template.body)
       @actions = mail_template.actions_for_dossier(dossier)
