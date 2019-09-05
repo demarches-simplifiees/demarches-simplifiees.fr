@@ -18,6 +18,7 @@ import { delegate } from '../../shared/utils';
 import {
   createEmpty as olCreateEmpty,
   extend as olExtend,
+  getCenter,
   isEmpty as olIsEmpty
 } from 'ol/extent';
 
@@ -90,18 +91,24 @@ let parcelleToHtml = (html, feature) => {
 
 let batimentToHtml = (html, feature) => {
   const p = feature.getProperties();
-  return `${html}\n<li>${getLink(feature)}&nbsp;Batiment ${p.objectid}${
-    p.nom ? ' - ' + p.nom : ''
-  }</li>`;
+  const labels = [p.objectid, p.nom, p.commune, p.com, p.ile]
+    .filter(Boolean)
+    .join(' - ');
+  return `${html}\n<li>${getLink(feature)}&nbsp;Batiment ${labels}</li>`;
 };
 let zoneToHtml = (html, feature) => {
-  return `${html}\n<li>${getLink(feature)}&nbsp;${feature.getId()}</li>`;
+  let p = feature.getProperties();
+  const labels = [feature.getId(), p.commune, p.ile]
+    .filter(Boolean)
+    .join(' - ');
+  return `${html}\n<li>${getLink(feature)}&nbsp;${labels}</li>`;
 };
 
 function getMapFromLocationButton(element) {
   const mapElement = element.closest('.geo-areas').previousElementSibling;
   if (mapElement.getAttribute('class').includes('te_fenua'))
     return MAPS.get(mapElement);
+  return undefined;
 }
 
 function viewOnMap(element, id) {
@@ -244,15 +251,31 @@ function addInteractions(mapElement, map) {
       let id;
       while (source.getFeatureById((id = `Zone ${index}`)) != null) index++;
       e.feature.setId(id);
+      const coord = getCenter(e.feature.getGeometry().getExtent());
+      let resolution = mapView.getResolution();
+      let projection = mapView.getProjection();
+      getCadastreFeatureInfo(coord, resolution, projection).then(pjson => {
+        if (!pjson || pjson.type !== 'FeatureCollection') {
+          throw new Error('Invalid response returned');
+        }
+        // ajoute le nom de la commune et l'il à la zone créé
+        const features = geojson.readFeatures(pjson);
+        if (features.length) {
+          e.feature.setProperties({
+            commune: features[0].getProperties().commune,
+            ile: features[0].getProperties().ile
+          });
+        }
+        setTimeout(() =>
+          updateChampWith('zones_manuelles', map.zoneManuellesLayer)
+        );
+      });
       // fin de dessin d'une zone ==> désactive l'ajout d'autres zones
       draw.setActive(false);
       // activate lookForBatimentsAndParcelles in a timeout so it doesn't get triggered
       // by the current click
       if (add_parcelle || add_batiment)
         setTimeout(() => map.on('click', lookForBatimentsAndParcelles));
-      setTimeout(() =>
-        updateChampWith('zones_manuelles', map.zoneManuellesLayer)
-      );
     });
   }
 

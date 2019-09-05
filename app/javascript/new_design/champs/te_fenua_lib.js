@@ -14,6 +14,7 @@ import { defaults as defaultControls } from 'ol/control';
 import { Icon } from 'ol/style';
 import ScaleLine from 'ol/control/ScaleLine';
 import { defaults as olDefaultInteractions } from 'ol/interaction';
+import FullScreen from 'ol/control/FullScreen';
 
 const MAP_RESOLUTIONS = [
   0.703125,
@@ -53,9 +54,10 @@ function createDefaultMapView() {
 
 function getDefaultInteractions() {
   return olDefaultInteractions({
-    mouseWheelZoom: false,
+    mouseWheelZoom: true,
     shiftDragZoom: true,
-    doubleClickZoom: false
+    doubleClickZoom: false,
+    onFocusOnly: true
   });
 }
 
@@ -67,7 +69,7 @@ export function createDefaultMap(target, layers) {
   // http://openlayers.org/en/master/apidoc/ol.Map.html
   return new Map({
     // N'afficher aucun contrôle.
-    controls: defaultControls().extend([new ScaleLine()]),
+    controls: defaultControls().extend([new ScaleLine(), new FullScreen()]),
     // interaction by default except mouseWheelZoom
     interactions: getDefaultInteractions(),
     // Couches de la carte.
@@ -233,10 +235,11 @@ function getFeatureInfo(coordinate, resolution, projection, params) {
 export function getBatimentFeatureInfo(coordinate, resolution, projection) {
   const layers = 'TEFENUA:Bati_BatiIndifferencie,TEFENUA:Bati_BatiSpecifique';
   return getFeatureInfo(coordinate, resolution, projection, {
-    feature_count: 10,
+    feature_count: 1,
     layers: layers,
     query_layers: layers,
-    info_format: 'application/json'
+    info_format: 'application/json',
+    buffer: 0
   });
 }
 
@@ -249,13 +252,29 @@ export function getCadastreFeatureInfo(coordinate, resolution, projection) {
   const layers = 'TEFENUA:Cadastre_Parcelle';
   //const possible = 'TEFENUA:Bati_ConstructionLineaire,TEFENUA:Bati_TerrainSport,TEFENUA:BiensPublics_Communes,TEFENUA:BiensPublics_Etat'
   return getFeatureInfo(coordinate, resolution, projection, {
-    feature_count: 10,
+    feature_count: 1,
     layers: layers,
     query_layers: layers,
-    info_format: 'application/json'
+    info_format: 'application/json',
+    buffer: 0
   });
 }
 
+// retourne une feature  décrivant la commune sous le point donné
+// @param coordinate point de la recherche
+// @param resolution resolution de la carte
+// @param projection projection utilisée par la carte
+// @returns {Promise<any | never>}
+export function getCommuneFeatureInfo(coordinate, resolution, projection) {
+  const layers = 'v_Cadastre_Section';
+  return getFeatureInfo(coordinate, resolution, projection, {
+    feature_count: 1,
+    layers: layers,
+    query_layers: layers,
+    info_format: 'application/json',
+    buffer: 0
+  });
+}
 // Retourne les identifiants de la matrice de tuiles.
 // @param projection
 // @param count

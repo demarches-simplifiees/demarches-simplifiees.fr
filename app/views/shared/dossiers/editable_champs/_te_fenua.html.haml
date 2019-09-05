@@ -1,7 +1,7 @@
 .toolbar
   %input.address{ data: { te_fenua: true, autocomplete: 'te_fenua' }, placeholder: 'Hopital Raiatea, Eglise Faaone, K210 Pirae' }
 
-.te_fenua.edit{ class: "te_fenua-#{form.index}", data: { entry: champ.entry, marker: image_path('marker-icon.png') } }
+.te_fenua.edit{ class: "te_fenua-#{form.index}", tabindex: form.index, data: { entry: champ.entry, marker: image_path('marker-icon.png') } }
 
 .geo-areas
 

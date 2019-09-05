@@ -18,7 +18,8 @@ const sources = [
 
 const options = {
   autoselect: true,
-  minLength: 1
+  minLength: 3,
+  debounce: 300
 };
 
 function selector(type) {
