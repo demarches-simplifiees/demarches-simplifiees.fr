@@ -125,11 +125,11 @@ describe Instructeurs::ProceduresController, type: :controller do
           let(:state) { Dossier.states.fetch(:brouillon) }
           before { subject }
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_archived_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:followed_dossiers_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_termines_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
         end
 
         context "with not draft state on multiple procedures" do
@@ -149,17 +149,17 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(3) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(3) }
-          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(1) }
-          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(3) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(3) }
+          it { expect(assigns(:followed_dossiers_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_archived_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(1) }
+          it { expect(assigns(:dossiers_termines_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
 
-          it { expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(nil) }
-          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1) }
-          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure2.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1) }
+          it { expect(assigns(:dossiers_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(3) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:followed_dossiers_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(1) }
+          it { expect(assigns(:dossiers_archived_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_termines_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(1) }
         end
       end
     end
@@ -344,16 +344,16 @@ describe Instructeurs::ProceduresController, type: :controller do
     context "when logged in" do
       before { sign_in(instructeur.user) }
 
-      it { expect(instructeur.procedures_with_email_notifications).to be_empty }
+      it { expect(instructeur.groupe_instructeur_with_email_notifications).to be_empty }
 
       context 'when the instructeur update its preferences' do
-        let(:assign_to) { instructeur.assign_to.find_by(procedure: procedure) }
+        let(:assign_to) { instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure }) }
 
         before do
           patch :update_email_notifications, params: { procedure_id: procedure.id, assign_to: { id: assign_to.id, email_notifications_enabled: true } }
         end
 
-        it { expect(instructeur.procedures_with_email_notifications).to eq([procedure]) }
+        it { expect(instructeur.groupe_instructeur_with_email_notifications).to eq([procedure.defaut_groupe_instructeur]) }
       end
     end
   end

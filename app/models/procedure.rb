@@ -5,7 +5,6 @@ class Procedure < ApplicationRecord
 
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
-  has_many :dossiers, dependent: :restrict_with_exception
   has_many :deleted_dossiers, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
@@ -17,6 +16,8 @@ class Procedure < ApplicationRecord
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, dependent: :destroy
+
+  has_many :dossiers, through: :groupe_instructeurs, dependent: :restrict_with_exception
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
@@ -118,7 +119,7 @@ class Procedure < ApplicationRecord
     if locked?
       raise "Can not reset a locked procedure."
     else
-      dossiers.destroy_all
+      groupe_instructeurs.each { |gi| gi.dossiers.destroy_all }
     end
   end
 
@@ -154,7 +155,12 @@ class Procedure < ApplicationRecord
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
-    Dossier.new(procedure: self, champs: build_champs, champs_private: build_champs_private)
+    Dossier.new(
+      procedure: self,
+      champs: build_champs,
+      champs_private: build_champs_private,
+      groupe_instructeur: defaut_groupe_instructeur
+    )
   end
 
   def build_champs
