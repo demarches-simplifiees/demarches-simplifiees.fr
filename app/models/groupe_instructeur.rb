@@ -3,4 +3,5 @@ class GroupeInstructeur < ApplicationRecord
   belongs_to :procedure
   has_many :assign_tos
   has_many :instructeurs, through: :assign_tos
+  has_many :dossiers
 end

@@ -10,9 +10,9 @@ class Instructeur < ApplicationRecord
   has_many :procedures, through: :groupe_instructeurs
 
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
-  has_many :procedures_with_email_notifications, through: :assign_to_with_email_notifications, source: :procedure
+  has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
 
-  has_many :dossiers, -> { state_not_brouillon }, through: :procedures
+  has_many :dossiers, -> { state_not_brouillon }, through: :groupe_instructeurs
   has_many :follows, -> { active }, inverse_of: :instructeur
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur
   has_many :followed_dossiers, through: :follows, source: :dossier
@@ -86,7 +86,7 @@ class Instructeur < ApplicationRecord
   end
 
   def procedure_presentation_and_errors_for_procedure_id(procedure_id)
-    assign_to.find_by(procedure_id: procedure_id).procedure_presentation_or_default_and_errors
+    assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure_id: procedure_id }).procedure_presentation_or_default_and_errors
   end
 
   def notifications_for_dossier(dossier)
@@ -115,13 +115,13 @@ class Instructeur < ApplicationRecord
   def notifications_for_procedure(procedure, state = :en_cours)
     dossiers = case state
     when :termine
-      procedure.dossiers.termine
+      procedure.defaut_groupe_instructeur.dossiers.termine
     when :not_archived
-      procedure.dossiers.not_archived
+      procedure.defaut_groupe_instructeur.dossiers.not_archived
     when :all
-      procedure.dossiers
+      procedure.defaut_groupe_instructeur.dossiers
     else
-      procedure.dossiers.en_cours
+      procedure.defaut_groupe_instructeur.dossiers.en_cours
     end
 
     dossiers_id_with_notifications(dossiers)
@@ -137,7 +137,7 @@ class Instructeur < ApplicationRecord
       Dossier.en_cours
     end
 
-    Dossier.where(id: dossiers_id_with_notifications(dossiers)).group(:procedure_id).count
+    Dossier.joins(:groupe_instructeur).where(id: dossiers_id_with_notifications(dossiers)).group('groupe_instructeurs.procedure_id').count
   end
 
   def create_trusted_device_token
@@ -203,11 +203,13 @@ class Instructeur < ApplicationRecord
   end
 
   def email_notification_data
-    procedures_with_email_notifications
-      .reduce([]) do |acc, procedure|
+    groupe_instructeur_with_email_notifications
+      .reduce([]) do |acc, groupe|
+
+      procedure = groupe.procedure
 
       h = {
-        nb_en_construction: procedure.dossiers.en_construction.count,
+        nb_en_construction: groupe.dossiers.en_construction.count,
         nb_notification: notifications_for_procedure(procedure, :all).count
       }
 
