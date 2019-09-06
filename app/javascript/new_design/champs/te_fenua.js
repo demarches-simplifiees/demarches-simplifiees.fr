@@ -27,7 +27,7 @@ let MARKER_PATH = '';
 
 // Initialise la carte TeFenua quand le DOM est prêt
 async function initialize() {
-  const elements = document.querySelectorAll('.te_fenua');
+  const elements = document.querySelectorAll('.te-fenua');
 
   window.viewOnMap = viewOnMap;
 
@@ -58,7 +58,7 @@ function getInputFromMap(mapElement) {
 }
 
 function getMapFromAddress(element) {
-  if (!element.matches('.te_fenua')) {
+  if (!element.matches('.te-fenua')) {
     const closestToolbarElement = element.closest('.toolbar');
     element = closestToolbarElement.nextElementSibling;
   }
@@ -106,7 +106,7 @@ let zoneToHtml = (html, feature) => {
 
 function getMapFromLocationButton(element) {
   const mapElement = element.closest('.geo-areas').previousElementSibling;
-  if (mapElement.getAttribute('class').includes('te_fenua'))
+  if (mapElement.getAttribute('class').includes('te-fenua'))
     return MAPS.get(mapElement);
   return undefined;
 }
@@ -229,10 +229,19 @@ function addInteractions(mapElement, map) {
   const add_zone = entry_type.has('zones_manuelles');
   const add_batiment = entry_type.has('batiments');
   const add_parcelle = entry_type.has('parcelles');
+  // help bubbles
+  const bubbles = {
+    add: mapElement.querySelector('.add'),
+    add_zone: mapElement.querySelector('.add-zone'),
+    add_batiment: mapElement.querySelector('.batiment'),
+    add_parcelle: mapElement.querySelector('.parcelle')
+  };
 
+  hideHelps();
   let draw, select, modify;
 
   if (add_zone) {
+    bubbles.add.style.display = 'block';
     draw = new Draw({
       source: zoneManuellesLayer.getSource(),
       type: 'Polygon'
@@ -246,6 +255,7 @@ function addInteractions(mapElement, map) {
     createControl(map, clickOnAddZone, 'add', 'Ajouter une zone');
     createControl(map, clickOnEffaceZone, 'delete', 'Effacer une zone');
     draw.on('drawend', e => {
+      bubbles.add_zone.style.display = 'none';
       let source = map.zoneManuellesLayer.getSource();
       let index = source.getFeatures().length + 1;
       let id;
@@ -275,13 +285,22 @@ function addInteractions(mapElement, map) {
       // activate lookForBatimentsAndParcelles in a timeout so it doesn't get triggered
       // by the current click
       if (add_parcelle || add_batiment)
-        setTimeout(() => map.on('click', lookForBatimentsAndParcelles));
+        setTimeout(() => addBatimentParcelleInteraction());
     });
   }
 
-  // handler to add batiments or parcelles
-  if (add_parcelle || add_batiment)
-    map.on('click', lookForBatimentsAndParcelles);
+  addBatimentParcelleInteraction();
+
+  function hideHelps() {
+    Object.keys(bubbles).forEach(b => (bubbles[b].style.display = 'none'));
+  }
+
+  function addBatimentParcelleInteraction() {
+    if (add_parcelle || add_batiment)
+      map.on('click', lookForBatimentsAndParcelles);
+    if (add_parcelle) bubbles.add_parcelle.style.display = 'block';
+    if (add_batiment) bubbles.add_batiment.style.display = 'block';
+  }
 
   function clickOnAddZone(e) {
     // bouton ajout d'une zone cliqué
@@ -290,6 +309,9 @@ function addInteractions(mapElement, map) {
     map.un('click', lookForBatimentsAndParcelles);
     // activation de l'interaction d'ajout de zone manuelle
     draw.setActive(true);
+    // désactive l'aide du bouton et affiche l'aide de tracé de zone
+    hideHelps();
+    bubbles.add_zone.style.display = 'block';
   }
 
   function clickOnEffaceZone(e) {

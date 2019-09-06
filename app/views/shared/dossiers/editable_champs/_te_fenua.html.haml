@@ -1,7 +1,19 @@
 .toolbar
   %input.address{ data: { te_fenua: true, autocomplete: 'te_fenua' }, placeholder: 'Hopital Raiatea, Eglise Faaone, K210 Pirae' }
 
-.te_fenua.edit{ class: "te_fenua-#{form.index}", tabindex: form.index, data: { entry: champ.entry, marker: image_path('marker-icon.png') } }
+.te-fenua.edit{ class: "te-fenua-#{form.index}", tabindex: form.index, data: { entry: champ.entry, marker: image_path('marker-icon.png') } }
+  .te-fenua-help.add
+    %p
+      Pour ajouter une zone.
+  .te-fenua-help.add-zone
+    %p.te-fenua-header Aide
+    = image_tag('te_fenua/add_zone.webp')
+  .te-fenua-help.batiment{ style: 'display: none;' }
+    %p.te-fenua-header Aide
+    = image_tag('te_fenua/add_batiment.webp')
+  .te-fenua-help.parcelle
+    %p.te-fenua-header Aide
+    = image_tag('te_fenua/add_parcelle.webp')
 
 .geo-areas
 

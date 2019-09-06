@@ -1,5 +1,5 @@
 .ol-control-add {
-  top: 80px;
+  top: 5em;
   left: 0.5em;
 
   button {
@@ -8,10 +8,59 @@
 }
 
 .ol-control-delete {
-  top: 110px;
+  top: 7em;
   left: 0.5em;
 
   button {
     background-image: image-url("icons/trash-white.svg");
+  }
+}
+
+.te-fenua {
+  position: relative;
+}
+
+.te-fenua-header {
+  text-align: center;
+}
+
+.te-fenua-help {
+  position: absolute;
+  z-index: 20;
+  padding: 4px 4px 1px;
+  background-color: rgba(0, 60, 136, 0.7);
+  color: #FFFFFF;
+  border-radius: 5px;
+  bottom: 0.4em;
+  right: 0.4em;
+
+  img {
+    border-radius: 5px;
+  }
+
+
+  &.add-zone {
+    bottom: 156px;
+  }
+
+  &.add {
+    bottom: auto;
+    right: auto;
+    top: 5em;
+    left: 2.8em;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border: 0.357em solid transparent;
+      border-right-color: rgba(0, 60, 136, 0.7);
+      border-left: none;
+      margin-top: -0.357em;
+      margin-left: -0.357em;
+    }
   }
 }
