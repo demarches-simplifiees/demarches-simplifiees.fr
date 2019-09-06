@@ -28,6 +28,7 @@ module Instructeurs
       @created_at = Time.zone.now
       @logo       = dossier.procedure.attestation_template&.proxy_logo
       @signature  = dossier.procedure.attestation_template&.proxy_signature
+      @qrcode     = qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at))
 
       render 'admin/attestation_templates/show', formats: [:pdf]
     end
