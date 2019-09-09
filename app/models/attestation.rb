@@ -5,6 +5,8 @@ class Attestation < ApplicationRecord
 
   has_one_attached :pdf_active_storage
 
+  scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
+
   def pdf_url
     if pdf_active_storage.attached?
       Rails.application.routes.url_helpers.url_for(pdf_active_storage)

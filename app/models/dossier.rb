@@ -10,7 +10,10 @@ class Dossier < ApplicationRecord
     sans_suite:      'sans_suite'
   }
 
+  EN_BROUILLON = [states.fetch(:brouillon)]
+  EN_CONSTRUCTION = [states.fetch(:en_construction)]
   EN_CONSTRUCTION_OU_INSTRUCTION = [states.fetch(:en_construction), states.fetch(:en_instruction)]
+  BROUILLON_OU_EN_CONSTRUCTION = [states.fetch(:en_construction), states.fetch(:brouillon)]
   TERMINE = [states.fetch(:accepte), states.fetch(:refuse), states.fetch(:sans_suite)]
   INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
@@ -95,6 +98,7 @@ class Dossier < ApplicationRecord
   scope :state_brouillon,                      -> { where(state: states.fetch(:brouillon)) }
   scope :state_not_brouillon,                  -> { where.not(state: states.fetch(:brouillon)) }
   scope :state_en_construction,                -> { where(state: states.fetch(:en_construction)) }
+  scope :state_brouillon_en_construction,      -> { where(state: BROUILLON_OU_EN_CONSTRUCTION) }
   scope :state_en_instruction,                 -> { where(state: states.fetch(:en_instruction)) }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
   scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
@@ -102,6 +106,8 @@ class Dossier < ApplicationRecord
 
   scope :archived,      -> { where(archived: true) }
   scope :not_archived,  -> { where(archived: false) }
+
+  scope :hidden, -> {where.not(hidden_at: nil)}
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_for_api, -> (order = :asc) { order(en_construction_at: order, created_at: order, id: order) }
@@ -133,6 +139,9 @@ class Dossier < ApplicationRecord
   scope :followed_by,                 -> (instructeur) { joins(:follows).where(follows: { instructeur: instructeur }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
+  scope :nearing_end_of_construction, -> (duration = '1 month') { joins(:procedure).where("en_construction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (2 * interval '1 day') - now() < interval ?", duration) }
+  scope :nearing_end_of_brouillon,    -> (duration = '1 month') { joins(:procedure).where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (2 * interval '1 day') - now() < interval ?", duration) }
+  scope :nearing_end_of_instruction,  -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (2 * interval '1 day') - now() < interval ?", duration) }
   scope :since,                       -> (since) { where('dossiers.en_construction_at >= ?', since) }
   scope :for_api, -> {
     includes(commentaires: { piece_jointe_attachment: :blob },
@@ -208,6 +217,14 @@ class Dossier < ApplicationRecord
     EN_CONSTRUCTION_OU_INSTRUCTION.include?(state)
   end
 
+  def en_construction?
+    EN_CONSTRUCTION.include?(state)
+  end
+
+  def en_brouillon?
+    EN_BROUILLON.include?(state)
+  end
+
   def termine?
     TERMINE.include?(state)
   end
@@ -250,6 +267,30 @@ class Dossier < ApplicationRecord
 
   def retention_expired?
     instruction_commencee? && retention_end_date <= Time.zone.now
+  end
+
+  def construction_expired_date
+    en_construction_at + procedure.duree_conservation_dossiers_dans_ds.months
+  end
+
+  def construction_expired?
+    en_construction? && construction_expired_date <= Time.zone.now
+  end
+
+  def brouillon_expired_date
+    created_at + procedure.duree_conservation_dossiers_dans_ds.months
+  end
+
+  def brouillon_expired?
+    en_brouillon? && brouillon_expired_date <= Time.zone.now
+  end
+
+  def instruction_expired_date
+    en_instruction_at + procedure.duree_conservation_dossiers_dans_ds.months
+  end
+
+  def instruction_expired?
+    en_instruction? && instruction_expired_date <= Time.zone.now
   end
 
   def text_summary
@@ -532,4 +573,20 @@ class Dossier < ApplicationRecord
       )
     end
   end
+
+  # suppression du dossier ou des dossiers dans la base
+  def self.delete_dossier_from_base(dossier_list)
+    ActiveRecord::Base.transaction do
+      Dossier.unscoped.destroy(dossier_list)
+      # le destroy supprime en cascade dans
+      # Etablissement, Individual, Invite, Attestation,
+      # Champ, Commentaire, Avis, Dossier, DossierOperationLog,
+      # active_storage_attachment, active_storage_blob(par delayed_job)
+
+      Follow.delete(Follow.for_dossier(dossier_list))
+      DeletedDossier.delete(DeletedDossier.for_dossier(dossier_list))
+      #  raise ActiveRecord::Rollback, "error transaction!"
+    end
+  end
+
 end

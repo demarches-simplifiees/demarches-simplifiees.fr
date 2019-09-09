@@ -1,6 +1,8 @@
 class Individual < ApplicationRecord
   belongs_to :dossier
 
+  scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
+
   validates :dossier_id, uniqueness: true
   validates :gender, presence: true, allow_nil: false, on: :update
   validates :nom, presence: true, allow_blank: false, allow_nil: false, on: :update

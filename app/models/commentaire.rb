@@ -12,6 +12,7 @@ class Commentaire < ApplicationRecord
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
+  scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
 
   after_create :notify
 

@@ -15,6 +15,8 @@ class DossierOperationLog < ApplicationRecord
   has_one_attached :serialized
   belongs_to :bill_signature, optional: true
 
+  scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
+
   def self.create_and_serialize(params)
     dossier = params.fetch(:dossier)
 

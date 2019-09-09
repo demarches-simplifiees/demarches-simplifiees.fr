@@ -1,0 +1,19 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+-if @messages.size == 1
+  - @messages.each do |d|
+    %p
+      Le dossier n°#{d}
+-else
+  %p
+    Les dossiers suivant arrivent à expiration :
+    %ul
+    - @messages.each do |d|
+      %li le dossier n°#{d}
+
+%p
+
+= render partial: "layouts/mailers/signature"

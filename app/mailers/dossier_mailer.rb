@@ -64,4 +64,33 @@ class DossierMailer < ApplicationMailer
 
     mail(to: dossier.user.email, subject: @subject)
   end
+
+  def notify_auto_deletion_to(dossiers, to_email)
+    @dossiers = dossiers
+    @subject = "Des dossiers ont été supprimés automatiquement"
+
+    mail(to: to_email, subject: @subject)
+  end
+
+  def notify_excuse_deletion_to_user(dossiers, to_email)
+    @dossiers = dossiers
+    @subject = "Des dossiers ont été supprimés automatiquement"
+
+    mail(to: to_email, subject: @subject)
+  end
+
+
+  def notify_near_deletion(message_doss, to_email)
+    @messages = message_doss
+    @subject = "Des dossiers vont bientôt être supprimés"
+
+    mail(to: to_email, subject: @subject)
+  end
+
+  def notify_near_expired_to(message_doss, to_email)
+    @messages = message_doss
+    @subject = "Des dossiers en instruction vont bientôt expirés"
+    mail(to: to_email, subject: @subject)
+  end
+
 end
