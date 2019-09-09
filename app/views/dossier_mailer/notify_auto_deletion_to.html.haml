@@ -1,0 +1,19 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+-if @dossiers.size == 1
+  - @dossiers.each do |d|
+    %p
+      Le dossier n°#{ d.id} qui concerne la procedure '#{d.procedure.libelle}', a été supprimé automatiquement car
+      sont delais de conservation est dépasé
+-else
+  %p
+    Les dossiers suivant ont été supprimé automatiquement car
+    leur delais de conservation est dépasé :
+    %ul
+    - @dossiers.each do |d|
+      %li dossier n°#{ d.id} qui concerne la procedure '#{d.procedure.libelle}'
+
+= render partial: "layouts/mailers/signature"

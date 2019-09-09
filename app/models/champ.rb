@@ -18,6 +18,7 @@ class Champ < ApplicationRecord
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { includes(:type_de_champ).order(:row, 'types_de_champ.order_place') }
   scope :root, -> { where(parent_id: nil) }
+  scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
 
   before_create :set_dossier_id, if: :needs_dossier_id?
 

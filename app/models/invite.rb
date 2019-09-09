@@ -6,6 +6,8 @@ class Invite < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
+  scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
+
   validates :email, presence: true
   validates :email, uniqueness: { scope: :dossier_id }
 

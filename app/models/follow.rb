@@ -8,6 +8,7 @@ class Follow < ApplicationRecord
 
   scope :active, -> { where(unfollowed_at: nil) }
   scope :inactive, -> { where.not(unfollowed_at: nil) }
+  scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
 
   private
 
