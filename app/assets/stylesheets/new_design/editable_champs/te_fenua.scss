@@ -24,6 +24,18 @@
   text-align: center;
 }
 
+.place {
+  position: absolute;
+  z-index: 20;
+  padding: 2px 2px 2px 2px;
+  background-color: rgba(0, 60, 136, 0.7);
+  border-radius: 5px;
+  top: 0.4em;
+  left: 4em;
+  right: 4em;
+
+}
+
 .te-fenua-help {
   position: absolute;
   z-index: 20;
@@ -40,7 +52,9 @@
 
 
   &.add-zone {
-    bottom: 156px;
+    left: 0.4em;
+    bottom: 2.5em;
+    right: auto;
   }
 
   &.add {

@@ -283,7 +283,7 @@
   }
 
   .editable-champ {
-    &:not(.editable-champ-carte) .algolia-autocomplete {
+    &:not(.editable-champ-carte):not(.editable-champ-te_fenua) .algolia-autocomplete {
       margin-bottom: 2 * $default-padding;
     }
 

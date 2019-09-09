@@ -6,6 +6,7 @@ import {
   createMarkerLayer,
   createParcelleLayer,
   createTeFenuaLayer,
+  formatArea,
   getBatimentFeatureInfo,
   getCadastreFeatureInfo
 } from './te_fenua_lib';
@@ -40,7 +41,7 @@ async function initialize() {
     }
   }
 
-  delegate('autocomplete:select', '.toolbar [data-te-fenua]', event => {
+  delegate('autocomplete:select', '[data-te-fenua-place]', event => {
     let map = getMapFromAddress(event.target);
     if (map) {
       if (event.detail.extent) fitExtent(map, event.detail.extent);
@@ -58,10 +59,7 @@ function getInputFromMap(mapElement) {
 }
 
 function getMapFromAddress(element) {
-  if (!element.matches('.te-fenua')) {
-    const closestToolbarElement = element.closest('.toolbar');
-    element = closestToolbarElement.nextElementSibling;
-  }
+  element = element.closest('.te-fenua');
   return MAPS.get(element);
 }
 
@@ -78,7 +76,7 @@ function getMapFromAddress(element) {
 // }
 
 function getLink(feature) {
-  const link = `<a type='button' onclick="window.viewOnMap(this, '${feature.getId()}')"><img alt='Voir sur la carte' src="${MARKER_PATH}" style="width: 12px"></a>`;
+  const link = `<button type='button' onclick="window.viewOnMap(this, '${feature.getId()}')"><img alt='Voir sur la carte' src="${MARKER_PATH}" style="width: 12px"></button>`;
   return link;
 }
 
@@ -91,14 +89,16 @@ let parcelleToHtml = (html, feature) => {
 
 let batimentToHtml = (html, feature) => {
   const p = feature.getProperties();
-  const labels = [p.objectid, p.nom, p.commune, p.com, p.ile]
+  const area = formatArea(feature.getGeometry());
+  const labels = [p.objectid, p.nom, area, p.commune, p.com, p.ile]
     .filter(Boolean)
     .join(' - ');
   return `${html}\n<li>${getLink(feature)}&nbsp;Batiment ${labels}</li>`;
 };
 let zoneToHtml = (html, feature) => {
-  let p = feature.getProperties();
-  const labels = [feature.getId(), p.commune, p.ile]
+  const p = feature.getProperties();
+  const area = formatArea(feature.getGeometry());
+  const labels = [feature.getId(), area, p.commune, p.ile]
     .filter(Boolean)
     .join(' - ');
   return `${html}\n<li>${getLink(feature)}&nbsp;${labels}</li>`;
@@ -122,12 +122,12 @@ function viewOnMap(element, id) {
 
 function getHtml(layer, toHtml, title) {
   let features = layer.getSource().getFeatures();
-  const header = `<div class='areas-title'>${title}</div>`;
   if (features.length) {
+    const header = `<div class='areas-title'>${title}</div>`;
     const zones = features.reduce(toHtml, '<ul>') + '</ul>';
     return header + zones;
   }
-  return header;
+  return '';
 }
 
 function centerMapOnLocation(map) {
@@ -157,7 +157,7 @@ function moveTo(map, point) {
 
 function fitExtent(map, extent) {
   let view = map.getView();
-  view.fit(extent, { duration: 2000, maxZoom: 16 });
+  view.fit(extent, { duration: 2000, maxZoom: 17 });
 }
 
 function createControl(map, handler, action, tooltip = 'Bouton') {

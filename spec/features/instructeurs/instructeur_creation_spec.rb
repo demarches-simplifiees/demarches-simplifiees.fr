@@ -24,7 +24,6 @@ feature 'As an instructeur', js: true do
     fill_in :user_password, with: 'démarches-simplifiées-pwd'
 
     click_button 'Définir le mot de passe'
-
     expect(page).to have_content 'Mot de passe enregistré'
   end
 end

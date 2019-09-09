@@ -15,6 +15,7 @@ import { Icon } from 'ol/style';
 import ScaleLine from 'ol/control/ScaleLine';
 import { defaults as olDefaultInteractions } from 'ol/interaction';
 import FullScreen from 'ol/control/FullScreen';
+import { getArea } from 'ol/sphere';
 
 const MAP_RESOLUTIONS = [
   0.703125,
@@ -345,4 +346,15 @@ export function createTeFenuaLayer() {
       })
     })
   });
+}
+
+export function formatArea(polygon) {
+  const area = getArea(polygon, { projection: getProjection('EPSG:4326') });
+  let output;
+  if (area > 10000) {
+    output = `${Math.round((area / 1000000) * 100) / 100} km<sup>2</sup>`;
+  } else {
+    output = `${Math.round(area)} m<sup>2</sup>`;
+  }
+  return output;
 }

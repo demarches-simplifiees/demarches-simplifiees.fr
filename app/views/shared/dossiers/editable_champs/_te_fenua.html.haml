@@ -1,7 +1,6 @@
-.toolbar
-  %input.address{ data: { te_fenua: true, autocomplete: 'te_fenua' }, placeholder: 'Hopital Raiatea, Eglise Faaone, K210 Pirae' }
-
 .te-fenua.edit{ class: "te-fenua-#{form.index}", tabindex: form.index, data: { entry: champ.entry, marker: image_path('marker-icon.png') } }
+  .place
+    %input{ data: { te_fenua_place: true, autocomplete: 'te_fenua' }, placeholder: 'Hopital Raiatea, Eglise Faaone, K210 Pirae' }
   .te-fenua-help.add
     %p
       Pour ajouter une zone.
