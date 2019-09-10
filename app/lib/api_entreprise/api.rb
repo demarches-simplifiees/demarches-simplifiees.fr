@@ -44,7 +44,7 @@ class ApiEntreprise::API
   def self.url(resource_name, siret_or_siren)
     base_url = [API_ENTREPRISE_URL, resource_name, siret_or_siren].join("/")
 
-    if Flipflop.insee_api_v3?
+    if Flipper.enabled?(:insee_api_v3)
       base_url += "?with_insee_v3=true"
     end
 

@@ -50,7 +50,7 @@ module ProcedureHelper
   private
 
   TOGGLES = {
-    TypeDeChamp.type_champs.fetch(:integer_number) => :champ_integer_number?
+    TypeDeChamp.type_champs.fetch(:integer_number) => :administrateur_champ_integer_number
   }
 
   def types_de_champ_types
@@ -58,7 +58,7 @@ module ProcedureHelper
 
     types_de_champ_types.select! do |tdc|
       toggle = TOGGLES[tdc.last]
-      toggle.blank? || Flipflop.send(toggle)
+      toggle.blank? || feature_enabled?(toggle)
     end
 
     types_de_champ_types

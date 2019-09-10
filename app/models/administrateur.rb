@@ -72,23 +72,6 @@ class Administrateur < ApplicationRecord
     administrateur
   end
 
-  def feature_enabled?(feature)
-    Flipflop.feature_set.feature(feature)
-    features[feature.to_s]
-  end
-
-  def disable_feature(feature)
-    Flipflop.feature_set.feature(feature)
-    features.delete(feature.to_s)
-    save
-  end
-
-  def enable_feature(feature)
-    Flipflop.feature_set.feature(feature)
-    features[feature.to_s] = true
-    save
-  end
-
   def owns?(procedure)
     procedure.administrateurs.include?(self)
   end
