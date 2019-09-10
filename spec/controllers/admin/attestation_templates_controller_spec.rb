@@ -40,6 +40,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
     end
 
     context 'if an attestation template exists on the procedure' do
+      after { procedure.attestation_template.destroy }
+
       context 'with logos' do
         let!(:attestation_template) do
           create(:attestation_template, logo: logo, signature: signature)
@@ -50,7 +52,14 @@ describe Admin::AttestationTemplatesController, type: :controller do
         it { expect(assigns[:created_at]).to eq(Time.zone.now) }
         it { expect(assigns(:logo).download).to eq(logo2.read) }
         it { expect(assigns(:signature).download).to eq(signature2.read) }
-        after { procedure.attestation_template.destroy }
+      end
+
+      context 'with empty logo' do
+        it { expect(subject.status).to eq(200) }
+        it { expect(assigns).to include(upload_params.stringify_keys) }
+        it { expect(assigns[:created_at]).to eq(Time.zone.now) }
+        it { expect(assigns(:logo)).to eq(nil) }
+        it { expect(assigns(:signature)).to eq(nil) }
       end
     end
   end
