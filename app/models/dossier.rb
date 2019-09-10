@@ -454,7 +454,7 @@ class Dossier < ApplicationRecord
       ['Archivé', :archived],
       ['État du dossier', I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])],
       ['Dernière mise à jour le', :updated_at],
-      ['Passé en construction le', :en_construction_at],
+      ['Déposé le', :en_construction_at],
       ['Passé en instruction le', :en_instruction_at],
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
