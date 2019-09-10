@@ -175,4 +175,18 @@ FactoryBot.define do
       create(:champ_number, row: 1, type_de_champ: type_de_champ_number, parent: champ_repetition)
     end
   end
+
+  factory :champ_repetition_with_piece_jointe, class: 'Champs::RepetitionChamp' do
+    type_de_champ { create(:type_de_champ_repetition) }
+
+    after(:build) do |champ_repetition, _evaluator|
+      type_de_champ_pj0 = create(:type_de_champ_piece_justificative, order_place: 0, parent: champ_repetition.type_de_champ, libelle: 'Justificatif de domicile')
+      type_de_champ_pj1 = create(:type_de_champ_piece_justificative, order_place: 1, parent: champ_repetition.type_de_champ, libelle: 'Carte d\'identité')
+
+      create(:champ_piece_justificative, row: 0, type_de_champ: type_de_champ_pj0, parent: champ_repetition)
+      create(:champ_piece_justificative, row: 0, type_de_champ: type_de_champ_pj1, parent: champ_repetition)
+      create(:champ_piece_justificative, row: 1, type_de_champ: type_de_champ_pj0, parent: champ_repetition)
+      create(:champ_piece_justificative, row: 1, type_de_champ: type_de_champ_pj1, parent: champ_repetition)
+    end
+  end
 end

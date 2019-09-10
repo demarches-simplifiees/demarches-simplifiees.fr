@@ -21,17 +21,6 @@ describe Administrateur, type: :model do
     end
   end
 
-  describe '#feature_enabled?' do
-    let(:administrateur) { create(:administrateur) }
-
-    before do
-      administrateur.enable_feature(:test_a)
-    end
-
-    it { expect(administrateur.feature_enabled?(:test_b)).to be_falsey }
-    it { expect(administrateur.feature_enabled?(:test_a)).to be_truthy }
-  end
-
   # describe '#password_complexity' do
   #   let(:email) { 'mail@beta.gouv.fr' }
   #   let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées-pwd'] }
