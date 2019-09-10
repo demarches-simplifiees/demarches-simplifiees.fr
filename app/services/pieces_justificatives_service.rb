@@ -1,8 +1,12 @@
 class PiecesJustificativesService
   def self.liste_pieces_justificatives(dossier)
-    dossier.champs
-      .select { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
-      .filter { |pj| pj.piece_justificative_file.attached? }
+    champs_blocs_repetables = dossier.champs
+      .select { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
+      .flat_map(&:champs)
+
+    champs_pieces_justificatives_with_attachments(
+      champs_blocs_repetables + dossier.champs
+    )
   end
 
   def self.pieces_justificatives_total_size(dossier)
@@ -36,5 +40,13 @@ class PiecesJustificativesService
         user: champ.dossier.user
       }
     end
+  end
+
+  private
+
+  def self.champs_pieces_justificatives_with_attachments(champs)
+    champs
+      .select { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
+      .filter { |pj| pj.piece_justificative_file.attached? }
   end
 end
