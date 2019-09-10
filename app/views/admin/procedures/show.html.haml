@@ -5,9 +5,9 @@
     = render partial: '/admin/procedures/modal_transfer'
 
     - if @procedure.brouillon?
-      - if @procedure.instructeurs.empty? || @procedure.service.nil?
+      - if @procedure.missing_steps.present?
         - missing_elements = []
-        - if @procedure.instructeurs.empty?
+        - if @procedure.missing_instructeurs?
           - missing_elements << 'des instructeurs'
         - if @procedure.service.nil?
           - missing_elements << 'un service'
@@ -59,7 +59,7 @@
           %br
           Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{SITE_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{SITE_NAME}, donnez-leur toujours le lien complet.
         - elsif @procedure.brouillon_avec_lien?
-          - if @procedure.instructeurs.present? && @procedure.service.present?
+          - if @procedure.missing_steps.empty?
             %p
               <b>Prenez le temps de lire cette page</b>
             %p
@@ -110,9 +110,9 @@
           - else
             .alert.alert-info
               Pour pouvoir tester cette démarche, vous devez d’abord lui affecter
-              - if @procedure.instructeurs.empty?
+              - if @procedure.missing_instructeurs?
                 = link_to("des instructeurs", admin_procedure_assigns_path(@procedure))
-              - if @procedure.instructeurs.empty? && @procedure.service.nil?
+              - if @procedure.missing_instructeurs? && @procedure.service.nil?
                 et
               - if @procedure.service.nil?
                 = link_to("un service", services_path(procedure_id: @procedure))

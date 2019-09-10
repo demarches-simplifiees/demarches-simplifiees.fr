@@ -47,14 +47,6 @@ class Champs::CarteController < ApplicationController
         end
       end
 
-      if @champ.parcelles_agricoles?
-        parcelles_agricoles = ApiCartoService.generate_rpg(coordinates)
-        geo_areas += parcelles_agricoles.map do |parcelle_agricole|
-          parcelle_agricole[:source] = GeoArea.sources.fetch(:parcelle_agricole)
-          parcelle_agricole
-        end
-      end
-
       selection_utilisateur = ApiCartoService.generate_selection_utilisateur(coordinates)
       selection_utilisateur[:source] = GeoArea.sources.fetch(:selection_utilisateur)
       geo_areas << selection_utilisateur
