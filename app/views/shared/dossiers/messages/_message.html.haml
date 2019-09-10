@@ -14,11 +14,6 @@
     - if commentaire.piece_jointe.attached?
       .attachment-link
         = render partial: "shared/attachment/show", locals: { attachment: commentaire.piece_jointe.attachment }
-    - elsif commentaire.file.present?
-      .attachment-link
-        = link_to commentaire.file_url, class: "button", target: "_blank", rel: "noopener", title: "Télécharger" do
-          %span.icon.attachment
-          = commentaire.file_identifier
 
     - if show_reply_button
       = button_tag type: 'button', class: 'button small message-answer-button', onclick: 'document.querySelector("#commentaire_body").focus()' do
