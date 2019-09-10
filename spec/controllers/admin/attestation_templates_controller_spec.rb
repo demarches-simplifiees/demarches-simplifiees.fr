@@ -48,8 +48,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
         it { expect(subject.status).to eq(200) }
         it { expect(assigns).to include(upload_params.stringify_keys) }
         it { expect(assigns[:created_at]).to eq(Time.zone.now) }
-        it { expect(assigns(:logo).read).to eq(logo.read) }
-        it { expect(assigns(:signature).read).to eq(signature.read) }
+        it { expect(assigns(:logo).download).to eq(logo2.read) }
+        it { expect(assigns(:signature).download).to eq(signature2.read) }
         after { procedure.attestation_template.destroy }
       end
     end
@@ -87,8 +87,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
       it { expect(procedure.attestation_template).to have_attributes(attestation_params) }
       it { expect(procedure.attestation_template.activated).to be true }
-      it { expect(procedure.attestation_template.logo_active_storage.download).to eq(logo2.read) }
-      it { expect(procedure.attestation_template.signature_active_storage.download).to eq(signature2.read) }
+      it { expect(procedure.attestation_template.logo.download).to eq(logo2.read) }
+      it { expect(procedure.attestation_template.signature.download).to eq(signature2.read) }
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.notice).to eq("L'attestation a bien été sauvegardée") }
 
@@ -130,8 +130,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
       end
 
       it { expect(procedure.attestation_template).to have_attributes(attestation_params) }
-      it { expect(procedure.attestation_template.logo_active_storage.download).to eq(logo2.read) }
-      it { expect(procedure.attestation_template.signature_active_storage.download).to eq(signature2.read) }
+      it { expect(procedure.attestation_template.logo.download).to eq(logo2.read) }
+      it { expect(procedure.attestation_template.signature.download).to eq(signature2.read) }
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.notice).to eq("L'attestation a bien été modifiée") }
 

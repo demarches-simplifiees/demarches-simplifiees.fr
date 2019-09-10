@@ -4,7 +4,7 @@
   .sub-header
     .container.flex
 
-      .procedure-logo{ style: @procedure.logo? ? "background-image: url(#{@procedure.logo_url})" : nil,
+      .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
         role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
 
       .procedure-header

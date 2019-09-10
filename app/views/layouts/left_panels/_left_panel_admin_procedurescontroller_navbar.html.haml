@@ -1,7 +1,6 @@
 #first-block
   .en-cours
-    - if @procedure.logo?
-      = image_tag @procedure.logo_url, style: 'width: 30px;'
+    = image_tag @procedure.logo_url, style: 'width: 30px;'
     %b
       = @procedure.libelle
 

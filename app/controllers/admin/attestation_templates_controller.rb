@@ -48,19 +48,15 @@ class Admin::AttestationTemplatesController < AdminController
     # In a case of a preview, when the user does not change its images,
     # the images are not uploaded and thus should be retrieved from previous
     # attestation_template
-    @logo = activated_attestation_params[:logo_active_storage] || @procedure.attestation_template&.proxy_logo
-    @signature = activated_attestation_params[:signature_active_storage] || @procedure.attestation_template&.proxy_signature
+    @logo = activated_attestation_params[:logo] || @procedure.attestation_template&.proxy_logo
+    @signature = activated_attestation_params[:signature] || @procedure.attestation_template&.proxy_signature
 
     render 'admin/attestation_templates/show', formats: [:pdf]
   end
 
   def delete_logo
     attestation_template = @procedure.attestation_template
-
-    if attestation_template.logo.present?
-      attestation_template.remove_logo!
-      attestation_template.save
-    end
+    attestation_template.logo.purge_later
     attestation_template.logo_active_storage.purge_later
 
     flash.notice = 'le logo a bien été supprimée'
@@ -69,11 +65,7 @@ class Admin::AttestationTemplatesController < AdminController
 
   def delete_signature
     attestation_template = @procedure.attestation_template
-
-    if attestation_template.signature.present?
-      attestation_template.remove_signature!
-      attestation_template.save
-    end
+    attestation_template.signature.purge_later
     attestation_template.signature_active_storage.purge_later
 
     flash.notice = 'la signature a bien été supprimée'
@@ -93,10 +85,10 @@ class Admin::AttestationTemplatesController < AdminController
       signature_file = params['attestation_template'].delete('signature')
 
       if logo_file.present?
-        @activated_attestation_params[:logo_active_storage] = uninterlaced_png(logo_file)
+        @activated_attestation_params[:logo] = uninterlaced_png(logo_file)
       end
       if signature_file.present?
-        @activated_attestation_params[:signature_active_storage] = uninterlaced_png(signature_file)
+        @activated_attestation_params[:signature] = uninterlaced_png(signature_file)
       end
     end
 

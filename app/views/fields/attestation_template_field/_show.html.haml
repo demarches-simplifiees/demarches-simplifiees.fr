@@ -5,8 +5,8 @@
 
   %strong Logo
   %p
-  - if field.data.logo.present?
-    = image_tag field.data.logo.url
+  - if field.data.logo?
+    = image_tag field.data.logo_url
   - else
     Aucun
 
@@ -20,8 +20,8 @@
 
   %strong Signature
   %p
-    - if field.data.signature.present?
-      = image_tag field.data.signature.url
+    - if field.data.signature?
+      = image_tag field.data.signature_url
     - else
       Aucun
 
