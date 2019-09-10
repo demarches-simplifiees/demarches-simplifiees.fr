@@ -4,6 +4,10 @@ RSpec.describe DossierMailer, type: :mailer do
   let(:to_email) { 'instructeur@exemple.gouv.fr' }
 
   shared_examples 'a dossier notification' do
+    it 'is sent from a no-reply address' do
+      expect(subject.from.first).to eq(Mail::Address.new(NO_REPLY_EMAIL).address)
+    end
+
     it 'includes the contact informations in the footer' do
       expect(subject.body).to include('ne pas répondre')
     end
