@@ -45,7 +45,7 @@ describe ProcedureExportV2Service do
           "Archivé",
           "État du dossier",
           "Dernière mise à jour le",
-          "Passé en construction le",
+          "Déposé le",
           "Passé en instruction le",
           "Traité le",
           "Motivation de la décision",
