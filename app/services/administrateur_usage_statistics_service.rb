@@ -31,7 +31,6 @@ class AdministrateurUsageStatisticsService
       ds_created_at: administrateur.created_at,
       ds_active: administrateur.active,
       ds_id: administrateur.id,
-      ds_features: administrateur.features.to_json,
       nb_services: nb_services_by_administrateur_id[administrateur.id],
       nb_instructeurs: nb_instructeurs_by_administrateur_id[administrateur.id],
 
