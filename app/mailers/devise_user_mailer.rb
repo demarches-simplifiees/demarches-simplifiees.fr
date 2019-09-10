@@ -7,4 +7,9 @@ class DeviseUserMailer < Devise::Mailer
   def template_paths
     ['devise_mailer']
   end
+
+  def confirmation_instructions(record, token, opts = {})
+    opts[:from] = NO_REPLY_EMAIL
+    super
+  end
 end

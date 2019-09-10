@@ -12,6 +12,7 @@ class NotificationMailer < ApplicationMailer
   helper MailerHelper
 
   layout 'mailers/notifications_layout'
+  default from: NO_REPLY_EMAIL
 
   def send_dossier_received(dossier)
     send_notification(dossier, dossier.procedure.received_mail_template)
