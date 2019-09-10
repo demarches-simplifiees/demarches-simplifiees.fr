@@ -10,7 +10,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation, { except: expect_list }
+    DatabaseCleaner.strategy = :deletion, { except: expect_list }
   end
 
   config.before(:each) do
