@@ -1,0 +1,38 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Ruby 2.6
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6.1
+    - name: Set Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        version: 12.x
+
+    - name: Install
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        yarn install --non-interactive
+        bin/webpack
+      env:
+        RAILS_ENV: test
+
+    - name: Lint
+      run: bin/rake lint
+      env:
+        RAILS_ENV: test
+
+    - name: Test
+      run: bin/rspec --profile 10 --format progress
+      env:
+        RAILS_ENV: test
