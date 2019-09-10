@@ -1,5 +1,5 @@
 class ServiceSerializer < ActiveModel::Serializer
-  attributes :id, :siret, :email
+  attributes :id, :email
   attribute :nom, key: :name
   attribute :type_organisme, key: :type_organization
   attribute :organisme, key: :organization
