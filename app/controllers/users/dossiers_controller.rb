@@ -48,10 +48,10 @@ module Users
     end
 
     def attestation
-      if dossier.attestation.pdf_active_storage.attached?
+      if dossier.attestation.pdf.attached?
+        redirect_to url_for(dossier.attestation.pdf)
+      elsif dossier.attestation.pdf_active_storage.attached?
         redirect_to url_for(dossier.attestation.pdf_active_storage)
-      else
-        send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
       end
     end
 
