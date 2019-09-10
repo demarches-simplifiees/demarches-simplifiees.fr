@@ -14,6 +14,10 @@
     %span.mandatory *
   = f.rich_text_area :rich_body, required: true
 
+  -# Disable accepting dropped images
+  :javascript
+    addEventListener('trix-file-accept', function(e) { e.preventDefault(); });
+
   .send-wrapper
     = f.submit "Enregistrer", class: 'button primary send'
     = link_to "Prévisualiser", preview_procedure_mail_template_path(@procedure, @mail_template.class.const_get(:SLUG)), class: 'button secondary ml-1', target: "_blank"
