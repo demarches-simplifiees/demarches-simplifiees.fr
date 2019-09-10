@@ -225,7 +225,7 @@ describe Admin::ProceduresController, type: :controller do
 
         describe "admin can also instruct the procedure as a instructeur" do
           subject { Procedure.last }
-          it { expect(subject.instructeurs).to include(instructeur) }
+          it { expect(subject.defaut_groupe_instructeur.instructeurs).to include(instructeur) }
         end
       end
     end
