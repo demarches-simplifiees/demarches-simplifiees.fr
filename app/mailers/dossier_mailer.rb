@@ -12,7 +12,7 @@ class DossierMailer < ApplicationMailer
 
     subject = "Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »"
 
-    mail(to: dossier.user.email, subject: subject) do |format|
+    mail(from: NO_REPLY_EMAIL, to: dossier.user.email, subject: subject) do |format|
       format.html { render layout: 'mailers/notifications_layout' }
     end
   end
@@ -24,7 +24,7 @@ class DossierMailer < ApplicationMailer
 
     subject = "Nouveau message pour votre dossier nº #{dossier.id} (#{dossier.procedure.libelle})"
 
-    mail(to: dossier.user.email, subject: subject) do |format|
+    mail(from: NO_REPLY_EMAIL, to: dossier.user.email, subject: subject) do |format|
       format.html { render layout: 'mailers/notifications_layout' }
     end
   end
@@ -60,8 +60,13 @@ class DossierMailer < ApplicationMailer
 
   def notify_revert_to_instruction(dossier)
     @dossier = dossier
-    @subject = "Votre dossier nº #{@dossier.id} est en train d'être réexaminé"
+    @service = dossier.procedure.service
+    @logo_url = attach_logo(dossier.procedure)
 
-    mail(to: dossier.user.email, subject: @subject)
+    subject = "Votre dossier nº #{@dossier.id} est en train d'être réexaminé"
+
+    mail(from: NO_REPLY_EMAIL, to: dossier.user.email, subject: subject) do |format|
+      format.html { render layout: 'mailers/notifications_layout' }
+    end
   end
 end

@@ -25,7 +25,7 @@ describe API::V1::ProceduresController, type: :controller do
       it { is_expected.to have_http_status(200) }
 
       describe 'body' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, administrateur: admin) }
+        let(:procedure) { create(:procedure, :with_type_de_champ, :with_service, administrateur: admin) }
         let(:response) { get :show, params: { id: procedure.id, token: token } }
 
         subject { JSON.parse(response.body, symbolize_names: true)[:procedure] }
@@ -50,6 +50,21 @@ describe API::V1::ProceduresController, type: :controller do
           it { expect(subject[:type_champ]).to eq(champ.type_champ) }
           it { expect(subject[:order_place]).to eq(champ.order_place) }
           it { expect(subject[:description]).to eq(champ.description) }
+        end
+
+        describe 'service' do
+          subject { super()[:service] }
+
+          let(:service) { procedure.service }
+
+          it { expect(subject[:id]).to eq(service.id) }
+          it { expect(subject[:email]).to eq(service.email) }
+          it { expect(subject[:name]).to eq(service.nom) }
+          it { expect(subject[:type_organization]).to eq(service.type_organisme) }
+          it { expect(subject[:organization]).to eq(service.organisme) }
+          it { expect(subject[:phone]).to eq(service.telephone) }
+          it { expect(subject[:schedule]).to eq(service.horaires) }
+          it { expect(subject[:address]).to eq(service.adresse) }
         end
       end
     end

@@ -57,13 +57,11 @@ describe AttestationTemplate, type: :model do
 
   describe 'dup' do
     before do
-      @logo = File.open('spec/fixtures/files/white.png')
-      @signature = File.open('spec/fixtures/files/black.png')
+      @logo = Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png')
+      @signature = Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')
     end
 
     after do
-      @logo.close
-      @signature.close
       subject.destroy
     end
 
@@ -75,17 +73,17 @@ describe AttestationTemplate, type: :model do
 
       it { is_expected.to have_attributes(attributes) }
       it { is_expected.to have_attributes(id: nil) }
-      it { expect(subject.logo.file).to be_nil }
+      it { expect(subject.logo.attached?).to be_falsey }
     end
 
     context 'with an attestation with images' do
       let(:attributes) { { logo: @logo, signature: @signature } }
 
-      it { expect(subject.logo.file.file).not_to eq(attestation_template.logo.file.file) }
-      it { expect(subject.logo.file.read).to eq(attestation_template.logo.file.read) }
+      it { expect(subject.logo.blob).not_to eq(attestation_template.logo.blob) }
+      it { expect(subject.logo.download).to eq(attestation_template.logo.download) }
 
-      it { expect(subject.signature.file.file).not_to eq(attestation_template.signature.file.file) }
-      it { expect(subject.signature.file.read).to eq(attestation_template.signature.file.read) }
+      it { expect(subject.signature.blob).not_to eq(attestation_template.signature.blob) }
+      it { expect(subject.signature.download).to eq(attestation_template.signature.download) }
     end
   end
 
@@ -113,14 +111,10 @@ describe AttestationTemplate, type: :model do
     end
 
     before do
-      @logo = File.open('spec/fixtures/files/white.png')
-      @signature = File.open('spec/fixtures/files/black.png')
       Timecop.freeze(Time.zone.now)
     end
 
     after do
-      @logo.close
-      @signature.close
       Timecop.return
     end
 

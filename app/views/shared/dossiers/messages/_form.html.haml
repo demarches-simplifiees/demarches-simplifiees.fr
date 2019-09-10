@@ -1,5 +1,8 @@
 = form_for(commentaire, url: form_url, html: { class: 'form' }) do |f|
-  = f.text_area :body, rows: 5, placeholder: 'Écrivez votre message à l’administration ici', required: true, class: 'message-textarea'
+  - placeholder = 'Écrivez votre message à l’administration ici'
+  - if instructeur_signed_in? || administrateur_signed_in?
+    - placeholder = 'Écrivez votre message ici'
+  = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea'
   .flex.justify-between.wrap
     %div
       = f.file_field :piece_jointe, id: 'piece_jointe', direct_upload: true
