@@ -87,6 +87,10 @@ class User < ApplicationRecord
     user
   end
 
+  def flipper_id
+    "User:#{id}"
+  end
+
   private
 
   def link_invites!
