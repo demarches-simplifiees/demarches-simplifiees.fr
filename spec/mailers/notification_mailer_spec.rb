@@ -56,5 +56,9 @@ RSpec.describe NotificationMailer, type: :mailer do
         expect(mail.body).not_to include('iframe')
       end
     end
+
+    it 'sends the mail from a no-reply address' do
+      expect(subject.from.first).to eq(Mail::Address.new(NO_REPLY_EMAIL).address)
+    end
   end
 end
