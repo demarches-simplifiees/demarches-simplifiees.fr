@@ -4,6 +4,10 @@ RSpec.describe DossierMailer, type: :mailer do
   let(:to_email) { 'instructeur@exemple.gouv.fr' }
 
   shared_examples 'a dossier notification' do
+    it 'is sent from a no-reply address' do
+      expect(subject.from.first).to eq(Mail::Address.new(NO_REPLY_EMAIL).address)
+    end
+
     it 'includes the contact informations in the footer' do
       expect(subject.body).to include('ne pas répondre')
     end
@@ -66,5 +70,17 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include(dossier.id) }
     it { expect(subject.body).to include("n'a pas pu être supprimé") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
+  end
+
+  describe '.notify_revert_to_instruction' do
+    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+
+    subject { described_class.notify_revert_to_instruction(dossier) }
+
+    it { expect(subject.subject).to include('réexaminé') }
+    it { expect(subject.body).to include(dossier.procedure.libelle) }
+    it { expect(subject.body).to include(dossier_url(dossier)) }
+
+    it_behaves_like 'a dossier notification'
   end
 end
