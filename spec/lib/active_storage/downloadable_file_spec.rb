@@ -15,5 +15,14 @@ describe ActiveStorage::DownloadableFile do
 
       it { expect(list.length).to be 1 }
     end
+
+    context 'when there is a repetition bloc' do
+      let(:champ) { build(:champ_repetition_with_piece_jointe) }
+      let(:dossier) { create(:dossier, :en_construction, champs: [champ]) }
+
+      it 'should have 4 piece_justificatives' do
+        expect(list.size).to eq(4)
+      end
+    end
   end
 end
