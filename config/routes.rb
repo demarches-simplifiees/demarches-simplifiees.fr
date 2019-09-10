@@ -21,17 +21,16 @@ Rails.application.routes.draw do
 
     resources :administrateurs, only: [:index, :show, :new, :create] do
       post 'reinvite', on: :member
-      put 'enable_feature', on: :member
       delete 'delete', on: :member
     end
 
     resources :users, only: [:index, :show] do
       post 'resend_confirmation_instructions', on: :member
+      put 'enable_feature', on: :member
     end
 
     resources :instructeurs, only: [:index, :show] do
       post 'reinvite', on: :member
-      put 'enable_feature', on: :member
     end
 
     resources :dossiers, only: [:show]
@@ -46,7 +45,7 @@ Rails.application.routes.draw do
     post 'demandes/refuse_administrateur'
 
     authenticate :administration do
-      mount Flipflop::Engine => "/features"
+      mount Flipper::UI.app(-> { Flipper.instance }) => "/features", as: :flipper
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end
 

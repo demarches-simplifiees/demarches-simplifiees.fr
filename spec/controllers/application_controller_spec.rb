@@ -167,7 +167,7 @@ describe ApplicationController, type: :controller do
       let(:sensitive_path) { true }
 
       before do
-        Flipflop::FeatureSet.current.test!.switch!(:bypass_email_login_token, false)
+        Flipper.disable(:instructeur_bypass_email_login_token)
       end
 
       context 'when the instructeur is signed_in' do

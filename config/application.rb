@@ -42,5 +42,6 @@ module TPS
 
     config.ds_weekly_overview = ENV['APP_NAME'] == 'tps'
     config.middleware.use Rack::Attack
+    config.middleware.use Flipper::Middleware::Memoizer, preload_all: true
   end
 end
