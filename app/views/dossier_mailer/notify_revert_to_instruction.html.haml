@@ -1,3 +1,6 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
 %p
   Bonjour,
 
@@ -13,4 +16,7 @@
     email:
     = mail_to @dossier.procedure.service.email, @dossier.procedure.service.email
 
-= render partial: "layouts/mailers/signature"
+= render 'layouts/mailers/signature'
+
+- content_for :footer do
+  = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier

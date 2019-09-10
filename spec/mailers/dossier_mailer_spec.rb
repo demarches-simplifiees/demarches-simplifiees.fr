@@ -67,4 +67,16 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include("n'a pas pu être supprimé") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
   end
+
+  describe '.notify_revert_to_instruction' do
+    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+
+    subject { described_class.notify_revert_to_instruction(dossier) }
+
+    it { expect(subject.subject).to include('réexaminé') }
+    it { expect(subject.body).to include(dossier.procedure.libelle) }
+    it { expect(subject.body).to include(dossier_url(dossier)) }
+
+    it_behaves_like 'a dossier notification'
+  end
 end
