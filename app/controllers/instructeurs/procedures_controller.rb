@@ -7,9 +7,9 @@ module Instructeurs
     ITEMS_PER_PAGE = 25
 
     def index
-      @procedures = current_instructeur.visible_procedures.order(archived_at: :desc, published_at: :desc, created_at: :desc)
-
-      groupe_instructeurs = current_instructeur.groupe_instructeurs.where(procedure: @procedures)
+      @groupe_instructeurs = current_instructeur
+        .visible_groupe_instructeurs
+        .order('procedures.archived_at DESC, procedures.published_at DESC, procedures.created_at DESC')
 
       dossiers = current_instructeur.dossiers
       @dossiers_count_per_groupe_instructeur = dossiers.all_state.group(:groupe_instructeur_id).reorder(nil).count
@@ -20,7 +20,7 @@ module Instructeurs
       @followed_dossiers_count_per_groupe_instructeur = current_instructeur
         .followed_dossiers
         .en_cours
-        .where(groupe_instructeur: groupe_instructeurs)
+        .where(groupe_instructeur: @groupe_instructeurs)
         .group(:groupe_instructeur_id)
         .reorder(nil)
         .count

@@ -28,6 +28,12 @@ class Instructeur < ApplicationRecord
     procedures.merge(Procedure.avec_lien.or(Procedure.archivees))
   end
 
+  def visible_groupe_instructeurs
+    groupe_instructeurs
+      .joins(:procedure)
+      .merge(Procedure.avec_lien.or(Procedure.archivees))
+  end
+
   def follow(dossier)
     begin
       followed_dossiers << dossier

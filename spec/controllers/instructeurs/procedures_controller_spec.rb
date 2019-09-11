@@ -109,7 +109,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           subject
         end
 
-        it { expect(assigns(:procedures)).to include(procedure1, procedure2) }
+        it { expect(assigns(:groupe_instructeurs)).to include(procedure1.defaut_groupe_instructeur, procedure2.defaut_groupe_instructeur) }
       end
 
       context "with dossiers" do
