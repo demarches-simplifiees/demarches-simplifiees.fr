@@ -3,7 +3,7 @@
     .flex.justify-between
       %ul.breadcrumbs
         %li
-          = link_to instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle do
+          = link_to instructeur_groupe_instructeur_path(dossier.groupe_instructeur), title: dossier.procedure.libelle do
             - if dossier.procedure.brouillon?
               %span.badge démarche en test
             = dossier.procedure.libelle.truncate_words(10)
