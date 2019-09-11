@@ -15,9 +15,7 @@ describe Helpscout::UserConversationsAdapter do
 
     context 'when all required secrets are present' do
       before do
-        Rails.application.secrets.helpscout[:mailbox_id] = '9999'
-        Rails.application.secrets.helpscout[:client_id] = '1234'
-        Rails.application.secrets.helpscout[:client_secret] = '5678'
+        mock_helpscout_secrets
       end
 
       it { expect(described_class.new(from, to).can_fetch_reports?).to be true }
@@ -25,7 +23,10 @@ describe Helpscout::UserConversationsAdapter do
   end
 
   describe '#reports', vcr: { cassette_name: 'helpscout_conversations_reports' } do
-    before { Rails.cache.clear }
+    before do
+      mock_helpscout_secrets
+      Rails.cache.clear
+    end
 
     subject { described_class.new(from, to) }
 
@@ -34,13 +35,19 @@ describe Helpscout::UserConversationsAdapter do
     end
 
     it 'populates each report with data' do
-      expect(subject.reports.first[:conversations_count]).to be > 0
+      expect(subject.reports.first[:replies_sent]).to be > 0
       expect(subject.reports.first[:start_date]).to eq Time.utc(2017, 11)
       expect(subject.reports.first[:end_date]).to eq Time.utc(2017, 12)
 
-      expect(subject.reports.last[:conversations_count]).to be > 0
+      expect(subject.reports.last[:replies_sent]).to be > 0
       expect(subject.reports.last[:start_date]).to eq Time.utc(2017, 12)
       expect(subject.reports.last[:end_date]).to eq Time.utc(2018, 01)
     end
+  end
+
+  def mock_helpscout_secrets
+    Rails.application.secrets.helpscout[:mailbox_id] = '9999'
+    Rails.application.secrets.helpscout[:client_id] = '1234'
+    Rails.application.secrets.helpscout[:client_secret] = '5678'
   end
 end
