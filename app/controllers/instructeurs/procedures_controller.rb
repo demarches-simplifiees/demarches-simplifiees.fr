@@ -1,6 +1,7 @@
 module Instructeurs
   class ProceduresController < InstructeurController
-    before_action :ensure_ownership!, except: [:index]
+    before_action :ensure_ownership!, except: [:index, :show]
+    before_action :ensure_groupe_instructeur_ownership!, only: [:show]
     before_action :redirect_to_avis_if_needed, only: [:index]
 
     ITEMS_PER_PAGE = 25
@@ -26,7 +27,8 @@ module Instructeurs
     end
 
     def show
-      @procedure = procedure
+      @groupe_instructeur = groupe_instructeur
+      @procedure = groupe_instructeur.procedure
 
       @current_filters = current_filters
       @available_fields_to_filters = available_fields_to_filters
@@ -35,8 +37,7 @@ module Instructeurs
       @procedure_presentation = procedure_presentation
       @displayed_fields_values = displayed_fields_values
 
-      @a_suivre_dossiers = procedure
-        .defaut_groupe_instructeur
+      @a_suivre_dossiers = groupe_instructeur
         .dossiers
         .includes(:user)
         .without_followers
@@ -45,19 +46,19 @@ module Instructeurs
       @followed_dossiers = current_instructeur
         .followed_dossiers
         .includes(:user)
-        .where(groupe_instructeur: procedure.defaut_groupe_instructeur)
+        .where(groupe_instructeur: groupe_instructeur)
         .en_cours
 
       @followed_dossiers_id = current_instructeur
         .followed_dossiers
-        .where(groupe_instructeur: procedure.defaut_groupe_instructeur)
+        .where(groupe_instructeur: groupe_instructeur)
         .pluck(:id)
 
-      @termines_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).termine
+      @termines_dossiers = groupe_instructeur.dossiers.includes(:user).termine
 
-      @all_state_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).all_state
+      @all_state_dossiers = groupe_instructeur.dossiers.includes(:user).all_state
 
-      @archived_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).archived
+      @archived_dossiers = groupe_instructeur.dossiers.includes(:user).archived
 
       @dossiers = case statut
       when 'a-suivre'
@@ -223,8 +224,19 @@ module Instructeurs
       Procedure.find(params[:procedure_id])
     end
 
+    def groupe_instructeur
+      GroupeInstructeur.find(params[:groupe_instructeur_id])
+    end
+
     def ensure_ownership!
       if !procedure.defaut_groupe_instructeur.instructeurs.include?(current_instructeur)
+        flash[:alert] = "Vous n'avez pas accès à cette démarche"
+        redirect_to root_path
+      end
+    end
+
+    def ensure_groupe_instructeur_ownership!
+      if !current_instructeur.groupe_instructeurs.include?(groupe_instructeur)
         flash[:alert] = "Vous n'avez pas accès à cette démarche"
         redirect_to root_path
       end
@@ -241,7 +253,7 @@ module Instructeurs
     end
 
     def get_procedure_presentation
-      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_groupe_instructeur_id(procedure.defaut_groupe_instructeur.id)
+      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_groupe_instructeur_id(groupe_instructeur.id)
       if errors.present?
         flash[:alert] = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
       end

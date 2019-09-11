@@ -279,7 +279,9 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
-    resources :procedures, only: [:index, :show], param: :procedure_id do
+    resources :groupe_instructeur, only: [:show], param: :groupe_instructeur_id, controller: 'procedures'
+
+    resources :procedures, only: [:index], param: :procedure_id do
       member do
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
