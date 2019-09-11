@@ -175,7 +175,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       context "without anything" do
-        before { get :show, params: { procedure_id: procedure.id } }
+        before { get :show, params: { groupe_instructeur_id: procedure.defaut_groupe_instructeur.id } }
 
         it { expect(response).to have_http_status(:ok) }
         it { expect(assigns(:procedure)).to eq(procedure) }
@@ -185,7 +185,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         let!(:brouillon_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
 
         before do
-          get :show, params: { procedure_id: procedure.id }
+          get :show, params: { groupe_instructeur_id: procedure.defaut_groupe_instructeur.id }
         end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
@@ -199,7 +199,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
 
         before do
-          get :show, params: { procedure_id: procedure.id }
+          get :show, params: { groupe_instructeur_id: procedure.defaut_groupe_instructeur.id }
         end
 
         it { expect(assigns(:a_suivre_dossiers)).to match([new_unfollow_dossier]) }
@@ -214,7 +214,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         before do
           instructeur.followed_dossiers << new_followed_dossier
-          get :show, params: { procedure_id: procedure.id }
+          get :show, params: { groupe_instructeur_id: procedure.defaut_groupe_instructeur.id }
         end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
@@ -228,7 +228,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         let!(:termine_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) }
 
         before do
-          get :show, params: { procedure_id: procedure.id }
+          get :show, params: { groupe_instructeur_id: procedure.defaut_groupe_instructeur.id }
         end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
@@ -242,7 +242,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         let!(:archived_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) }
 
         before do
-          get :show, params: { procedure_id: procedure.id }
+          get :show, params: { groupe_instructeur_id: procedure.defaut_groupe_instructeur.id }
         end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
@@ -260,7 +260,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         before do
           instructeur.followed_dossiers << new_followed_dossier
-          get :show, params: { procedure_id: procedure.id, statut: statut }
+          get :show, params: { groupe_instructeur_id: procedure.defaut_groupe_instructeur.id, statut: statut }
         end
 
         context 'when statut is empty' do
