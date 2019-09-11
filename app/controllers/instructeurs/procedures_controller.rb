@@ -116,7 +116,7 @@ module Instructeurs
         procedure_presentation.update(sort: Procedure.default_sort)
       end
 
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
+      redirect_back(fallback_location: instructeur_groupe_instructeur_url(groupe_instructeur))
     end
 
     def update_sort
@@ -138,7 +138,7 @@ module Instructeurs
 
       procedure_presentation.update(sort: sort)
 
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
+      redirect_back(fallback_location: instructeur_groupe_instructeur_url(groupe_instructeur))
     end
 
     def add_filter
@@ -157,7 +157,7 @@ module Instructeurs
         procedure_presentation.update(filters: filters)
       end
 
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
+      redirect_back(fallback_location: instructeur_groupe_instructeur_url(groupe_instructeur))
     end
 
     def remove_filter
@@ -168,7 +168,7 @@ module Instructeurs
 
       procedure_presentation.update(filters: filters)
 
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
+      redirect_back(fallback_location: instructeur_groupe_instructeur_url(groupe_instructeur))
     end
 
     def download_dossiers
@@ -199,7 +199,7 @@ module Instructeurs
       assign_to.update!(email_notifications_enabled: params[:assign_to][:email_notifications_enabled])
 
       flash.notice = 'Vos notifications sont enregistrées.'
-      redirect_to instructeur_procedure_path(procedure)
+      redirect_to instructeur_groupe_instructeur_path(procedure.defaut_groupe_instructeur)
     end
 
     private

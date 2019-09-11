@@ -2,7 +2,7 @@ require "spec_helper"
 
 feature "procedure filters" do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, :with_type_de_champ, instructeurs: [instructeur]) }
+  let!(:procedure) { create(:procedure, :published, :with_type_de_champ, instructeurs: [instructeur]) }
   let!(:type_de_champ) { procedure.types_de_champ.first }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
   let!(:champ) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier.id) }
@@ -13,7 +13,7 @@ feature "procedure filters" do
     champ.update(value: "Mon champ rempli")
     champ_2.update(value: "Mon autre champ rempli différemment")
     login_as(instructeur.user, scope: :user)
-    visit instructeur_procedure_path(procedure)
+    visit instructeur_groupe_instructeur_path(procedure.defaut_groupe_instructeur)
   end
 
   scenario "should display demandeur by default" do

@@ -10,7 +10,7 @@
 
   %h2{ style: 'font-size: 16px; font-weight: 300; margin: 25px 0 5px;' }
     #{procedure_overview.procedure.libelle}
-    = link_to 'voir', instructeur_procedure_url(procedure_overview.procedure), style: 'color: #0069CC; font-size: 14px;'
+    = link_to 'voir', instructeur_groupe_instructeur_url(procedure_overview.procedure.defaut_groupe_instructeur), style: 'color: #0069CC; font-size: 14px;'
   %table{ cellpadding: '0', cellspacing: '0', style: 'width: 100%; padding-bottom: 20px;' }
     %tbody
 
