@@ -141,19 +141,11 @@ describe Users::DossiersController, type: :controller do
     before { sign_in(user) }
 
     context 'when a dossier has an attestation' do
-      let(:fake_pdf) { double(read: 'pdf content') }
-      let!(:dossier) { create(:dossier, attestation: Attestation.new, user: user) }
+      let(:dossier) { create(:dossier, :accepte, attestation: create(:attestation, :with_pdf), user: user) }
 
-      it 'returns the attestation pdf' do
-        allow_any_instance_of(Attestation).to receive(:pdf).and_return(fake_pdf)
-
-        expect(controller).to receive(:send_data)
-          .with('pdf content', filename: 'attestation.pdf', type: 'application/pdf') do
-            controller.head :ok
-          end
-
+      it 'redirects to attestation pdf' do
         get :attestation, params: { id: dossier.id }
-        expect(response).to have_http_status(:success)
+        expect(response).to redirect_to(dossier.attestation.pdf_url.gsub('http://localhost:3000', ''))
       end
     end
   end

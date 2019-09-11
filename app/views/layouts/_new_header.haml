@@ -7,7 +7,10 @@
   .header-inner-content
 
     .flex.align-center
-      = link_to '', root_path_for_profile(nav_bar_profile), class: "header-logo", title: "Revenir à l’accueil"
+      - if params[:controller] == 'users/commencer'
+        = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
+      - else
+        = link_to '', root_path_for_profile(nav_bar_profile), class: "header-logo", title: "Revenir à l’accueil"
 
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         - current_url = request.path_info

@@ -4,6 +4,7 @@
   - if defined?(service) && service && service.nom.present?
     = service.nom
   - else
+    -# The WORD JOINER unicode entity prevents email clients from auto-linking the signature
     L'équipe #{SITE_NAME}
     %br
     Direction de la Modernisation et des Réformes de l'Administration / DMRA

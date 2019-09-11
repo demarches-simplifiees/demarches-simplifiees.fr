@@ -15,21 +15,11 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe '#attestation' do
     context 'when a dossier has an attestation' do
-      let(:fake_pdf) { double(read: 'pdf content') }
-      let!(:dossier) { create(:dossier, :en_construction, attestation: Attestation.new, procedure: procedure) }
-      let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-      let!(:dossier) { create(:dossier, :en_construction, attestation: Attestation.new, procedure: procedure) }
+      let(:dossier) { create(:dossier, :accepte, attestation: create(:attestation, :with_pdf), procedure: procedure) }
 
-      it 'returns the attestation pdf' do
-        allow_any_instance_of(Attestation).to receive(:pdf).and_return(fake_pdf)
-
-        expect(controller).to receive(:send_data)
-          .with('pdf content', filename: 'attestation.pdf', type: 'application/pdf') do
-            controller.head :ok
-          end
-
+      it 'redirects to attestation pdf' do
         get :attestation, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-        expect(response).to have_http_status(:success)
+        expect(response).to redirect_to(dossier.attestation.pdf_url.gsub('http://localhost:3000', ''))
       end
     end
   end

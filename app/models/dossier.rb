@@ -35,7 +35,8 @@ class Dossier < ApplicationRecord
 
   has_many :dossier_operation_logs, dependent: :destroy
 
-  belongs_to :procedure
+  belongs_to :groupe_instructeur
+  has_one :procedure, through: :groupe_instructeur
   belongs_to :user
 
   accepts_nested_attributes_for :champs
@@ -167,7 +168,7 @@ class Dossier < ApplicationRecord
 
   before_validation :update_state_dates, if: -> { state_changed? }
 
-  before_save :build_default_champs, if: Proc.new { procedure_id_changed? }
+  before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_changed? }
   before_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   before_save :update_search_terms
 
@@ -468,7 +469,7 @@ class Dossier < ApplicationRecord
       ['Archivé', :archived],
       ['État du dossier', I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])],
       ['Dernière mise à jour le', :updated_at],
-      ['Passé en construction le', :en_construction_at],
+      ['Déposé le', :en_construction_at],
       ['Passé en instruction le', :en_instruction_at],
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],

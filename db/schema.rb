@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_19_145355) do
+ActiveRecord::Schema.define(version: 2019_08_22_143413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -275,8 +275,10 @@ ActiveRecord::Schema.define(version: 2019_08_19_145355) do
     t.datetime "hidden_at"
     t.text "search_terms"
     t.text "private_search_terms"
+    t.bigint "groupe_instructeur_id"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
+    t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
     t.index ["procedure_id"], name: "index_dossiers_on_procedure_id"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
@@ -647,6 +649,7 @@ ActiveRecord::Schema.define(version: 2019_08_19_145355) do
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_operation_logs", "dossiers"
   add_foreign_key "dossier_operation_logs", "instructeurs"
+  add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "users"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "geo_areas", "champs"

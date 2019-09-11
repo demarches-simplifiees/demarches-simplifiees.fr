@@ -1,11 +1,12 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
+  self.ignored_columns = ['logo']
+
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
-  has_many :dossiers, dependent: :restrict_with_exception
   has_many :deleted_dossiers, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
@@ -18,20 +19,21 @@ class Procedure < ApplicationRecord
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, dependent: :destroy
 
+  has_many :dossiers, through: :groupe_instructeurs, dependent: :restrict_with_exception
+
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
   has_one :closed_mail, class_name: "Mails::ClosedMail", dependent: :destroy
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
+  has_one_attached :logo
   has_one_attached :logo_active_storage
   has_one_attached :notice
   has_one_attached :deliberation
 
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
-
-  mount_uploader :logo, ProcedureLogoUploader
 
   default_scope { where(hidden_at: nil) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
@@ -118,7 +120,7 @@ class Procedure < ApplicationRecord
     if locked?
       raise "Can not reset a locked procedure."
     else
-      dossiers.destroy_all
+      groupe_instructeurs.each { |gi| gi.dossiers.destroy_all }
     end
   end
 
@@ -154,7 +156,12 @@ class Procedure < ApplicationRecord
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
-    Dossier.new(procedure: self, champs: build_champs, champs_private: build_champs_private)
+    Dossier.new(
+      procedure: self,
+      champs: build_champs,
+      champs_private: build_champs_private,
+      groupe_instructeur: defaut_groupe_instructeur
+    )
   end
 
   def build_champs
@@ -215,10 +222,6 @@ class Procedure < ApplicationRecord
     procedure.test_started_at = nil
     procedure.archived_at = nil
     procedure.published_at = nil
-    procedure.logo_secure_token = nil
-    if logo.present?
-      procedure.remote_logo_url = self.logo_url
-    end
     procedure.lien_notice = nil
 
     if is_different_admin || from_library
@@ -258,6 +261,7 @@ class Procedure < ApplicationRecord
     if original.is_a?(TypeDeChamp)
       clone_attachment(:piece_justificative_template, original, kopy)
     elsif original.is_a?(Procedure)
+      clone_attachment(:logo, original, kopy)
       clone_attachment(:logo_active_storage, original, kopy)
       clone_attachment(:notice, original, kopy)
       clone_attachment(:deliberation, original, kopy)
@@ -460,21 +464,16 @@ class Procedure < ApplicationRecord
   end
 
   def logo?
-    logo.present? || logo_active_storage.attached?
+    logo.attached? || logo_active_storage.attached?
   end
 
   def logo_url
-    if !logo?
-      ActionController::Base.helpers.image_url("marianne.svg")
+    if logo.attached?
+      Rails.application.routes.url_helpers.url_for(logo)
     elsif logo_active_storage.attached?
       Rails.application.routes.url_helpers.url_for(logo_active_storage)
     else
-      if Rails.application.secrets.fog[:enabled]
-        RemoteDownloader.new(logo.filename).url
-      else
-        # FIXME: this is horrible but used only in dev and will be removed after migration
-        File.join(LOCAL_DOWNLOAD_URL, logo.url)
-      end
+      ActionController::Base.helpers.image_url("marianne.svg")
     end
   end
 
