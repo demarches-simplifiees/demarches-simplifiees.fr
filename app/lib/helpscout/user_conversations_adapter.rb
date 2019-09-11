@@ -1,7 +1,5 @@
 # Fetch and compute monthly reports about the users conversations on Helpscout
 class Helpscout::UserConversationsAdapter
-  EXCLUDED_TAGS = ['openlab', 'bizdev', 'admin', 'webinaire']
-
   def initialize(from, to)
     @from = from
     @to = to
@@ -23,19 +21,12 @@ class Helpscout::UserConversationsAdapter
   private
 
   def report(year, month)
-    report = fetch_conversations_report(year, month)
-
-    total_conversations = report.dig(:current, :totalConversations)
-    excluded_conversations = report
-      .dig(:tags, :top)
-      .select { |tag| tag[:name]&.in?(EXCLUDED_TAGS) }
-      .map { |tag| tag[:count] }
-      .sum
+    report = fetch_productivity_report(year, month)
 
     {
-      start_date: report.dig(:current, :startDate).to_datetime,
-      end_date: report.dig(:current, :endDate).to_datetime,
-      conversations_count: total_conversations - excluded_conversations
+      start_date:   report.dig(:current, :startDate).to_datetime,
+      end_date:     report.dig(:current, :endDate).to_datetime,
+      replies_sent: report.dig(:current, :repliesSent)
     }
   end
 
@@ -43,13 +34,13 @@ class Helpscout::UserConversationsAdapter
     @api_client ||= Helpscout::API.new
   end
 
-  def fetch_conversations_report(year, month)
+  def fetch_productivity_report(year, month)
     if year == Date.today.year && month == Date.today.month
       raise ArgumentError, 'The report for the current month will change in the future, and cannot be cached.'
     end
 
-    Rails.cache.fetch("helpscout-conversation-report-#{year}-#{month}") do
-      api_client.conversations_report(year, month)
+    Rails.cache.fetch("helpscout-productivity-report-#{year}-#{month}") do
+      api_client.productivity_report(year, month)
     end
   end
 end

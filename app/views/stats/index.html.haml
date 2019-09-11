@@ -34,16 +34,15 @@
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
-        Pourcentage de contact usager
+        Pourcentage de contact utilisateur
 
       .chart-container
         .chart
           = line_chart @contact_percentage
 
       .stat-card-details
-        %abbr{ title: "À l’exception des conversations taggées #{@contact_percentage_excluded_tags.join(', ')}" }
-          Nombre de conversations actives dans HelpScout
-        %span / nombre de dossiers déposés
+        Nombre de réponses envoyées via HelpScout
+        \/ nombre de dossiers déposés
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
