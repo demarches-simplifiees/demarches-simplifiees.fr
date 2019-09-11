@@ -1,4 +1,6 @@
 class Administrateur < ApplicationRecord
+  self.ignored_columns = ['features']
+
   include EmailSanitizableConcern
   include ActiveRecord::SecureToken
 

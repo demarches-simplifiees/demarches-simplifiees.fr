@@ -1,4 +1,5 @@
 class Instructeur < ApplicationRecord
+  self.ignored_columns = ['features']
   include EmailSanitizableConcern
 
   has_and_belongs_to_many :administrateurs
