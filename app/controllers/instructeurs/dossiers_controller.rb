@@ -5,6 +5,8 @@ module Instructeurs
     include CreateAvisConcern
     include DossierHelper
 
+    skip_before_action :ensure_groupe_instructeur_ownership!, only: :show
+
     include ActionController::Streaming
     include Zipline
 
