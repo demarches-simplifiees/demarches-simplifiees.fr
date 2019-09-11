@@ -35,7 +35,7 @@ feature 'The instructeur part' do
     expect(page).to have_current_path(instructeur_procedures_path)
 
     click_on procedure.libelle
-    expect(page).to have_current_path(instructeur_procedure_path(procedure))
+    expect(page).to have_current_path(instructeur_groupe_instructeur_path(procedure.defaut_groupe_instructeur))
 
     click_on dossier.user.email
     expect(page).to have_current_path(instructeur_dossier_path(procedure, dossier))
@@ -79,16 +79,16 @@ feature 'The instructeur part' do
     dossier_present?(dossier.id, 'en construction')
 
     click_on 'Suivre le dossier'
-    expect(page).to have_current_path(instructeur_procedure_path(procedure))
+    expect(page).to have_current_path(instructeur_groupe_instructeur_path(procedure.defaut_groupe_instructeur))
     test_statut_bar(suivi: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
 
     click_on 'suivi'
-    expect(page).to have_current_path(instructeur_procedure_path(procedure, statut: 'suivis'))
+    expect(page).to have_current_path(instructeur_groupe_instructeur_path(procedure.defaut_groupe_instructeur, statut: 'suivis'))
     dossier_present?(dossier.id, 'en construction')
 
     click_on 'Ne plus suivre'
-    expect(page).to have_current_path(instructeur_procedure_path(procedure, statut: 'suivis'))
+    expect(page).to have_current_path(instructeur_groupe_instructeur_path(procedure.defaut_groupe_instructeur, statut: 'suivis'))
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
   end

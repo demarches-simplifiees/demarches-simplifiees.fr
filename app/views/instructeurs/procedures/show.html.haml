@@ -14,29 +14,29 @@
 
         %ul.tabs
           = tab_item('à suivre',
-            instructeur_procedure_path(@procedure, statut: 'a-suivre'),
+            instructeur_groupe_instructeur_path(@groupe_instructeur, statut: 'a-suivre'),
             active: @statut == 'a-suivre',
             badge: @a_suivre_dossiers.count)
 
           = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
-            instructeur_procedure_path(@procedure, statut: 'suivis'),
+            instructeur_groupe_instructeur_path(@groupe_instructeur, statut: 'suivis'),
             active: @statut == 'suivis',
             badge: @followed_dossiers.count,
             notification: current_instructeur.notifications_for_procedure(@procedure).present?)
 
           = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
-            instructeur_procedure_path(@procedure, statut: 'traites'),
+            instructeur_groupe_instructeur_path(@groupe_instructeur, statut: 'traites'),
             active: @statut == 'traites',
             badge: @termines_dossiers.count,
             notification: current_instructeur.notifications_for_procedure(@procedure, :termine).present?)
 
           = tab_item('tous les dossiers',
-            instructeur_procedure_path(@procedure, statut: 'tous'),
+            instructeur_groupe_instructeur_path(@groupe_instructeur, statut: 'tous'),
             active: @statut == 'tous',
             badge: @all_state_dossiers.count)
 
           = tab_item(t('pluralize.archived', count: @archived_dossiers.count),
-            instructeur_procedure_path(@procedure, statut: 'archives'),
+            instructeur_groupe_instructeur_path(@groupe_instructeur, statut: 'archives'),
             active: @statut == 'archives',
             badge: @archived_dossiers.count)
 
