@@ -17,7 +17,6 @@ describe AdministrateurUsageStatisticsService do
           ds_created_at: Time.zone.now,
           ds_active: false,
           ds_id: administrateur.id,
-          ds_features: "{}",
           nb_services: 0,
           nb_instructeurs: 0,
           ds_nb_demarches_actives: 0,
@@ -43,7 +42,6 @@ describe AdministrateurUsageStatisticsService do
           current_sign_in_at: Time.zone.local(2019, 3, 7),
           last_sign_in_at: Time.zone.local(2019, 2, 27),
           active: true,
-          features: { holy_hand_grenade_of_antioch: true },
           services: [create(:service)],
           instructeurs: [create(:instructeur)])
       end
@@ -56,7 +54,6 @@ describe AdministrateurUsageStatisticsService do
           ds_created_at: Time.zone.now,
           ds_active: true,
           ds_id: administrateur.id,
-          ds_features: { holy_hand_grenade_of_antioch: true }.to_json,
           nb_services: 1,
           nb_instructeurs: 1
         )
