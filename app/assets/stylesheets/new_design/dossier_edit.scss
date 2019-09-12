@@ -47,59 +47,49 @@
   }
 
   .send-dossier-actions-bar {
+    // scss-lint:disable VendorPrefix
+    position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
+    // scss-lint:enable VendorPrefix
+    position: sticky;
+    bottom: 0;
+
     display: flex;
-    width: 100%;
+    flex-direction: row;
+    align-items: center;
     margin-top: $default-padding;
+    margin-left: -$default-padding;
+    margin-right: -$default-padding;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: $default-spacer;
+    padding-right: $default-padding;
+    padding-left: $default-padding;
     background: #FFFFFF;
-    position: fixed;
-    bottom: 0px;
     border: 1px solid #CCCCCC;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom: none;
-    padding-top: 0px;
-    padding-bottom: $default-spacer;
-    padding-right: 30px;
-    padding-left: 30px;
-    margin: 0 auto;
-    margin-left: -30px;
-    max-width: 1100px;
 
     .button {
-      margin-top: $default-spacer;
+      min-height: 38px;
+      line-height: 16px;
     }
 
-    @media(max-width: 1100px) {
-      margin-left: -16px;
+    // If there are more than one button, align the "Send" button to the right
+    .button:not(:first-of-type).send {
+      margin-left: auto;
     }
 
-    // Wide layout: align buttons on a single row
-    @media (min-width: 550px) {
-      flex-direction: row;
-
-      .button:not(:first-of-type) {
-        margin-left: $default-spacer;
-      }
-
-      // If there are more than one button, align the "Send" button to the right
-      .button:not(:first-of-type).send {
-        margin-left: auto;
-      }
+    // Normal layout
+    @media (min-width: 500px) {
+      padding-top: $default-spacer * 2;
+      padding-bottom: $default-spacer * 2;
     }
 
-    // Narrow layout: stack buttons vertically
-    @media (max-width: 550px) {
-      flex-direction: column-reverse;
-      align-items: center;
-      margin-left: -16px;
-
-      .button {
-        width: 100%;
-        max-width: 350px;
-        line-height: 30px;
-        margin-left: none;
-        margin-right: none;
-      }
+    // Compact layout
+    @media (max-width: 500px) {
+      padding-top: $default-spacer;
+      padding-bottom: $default-spacer;
     }
   }
 }
