@@ -114,6 +114,33 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context 'when the procedure has a type de champ repetition' do
+      let(:template) { '--Répétition--' }
+      let(:types_de_champ) do
+        [
+          create(:type_de_champ_repetition, libelle: 'Répétition', types_de_champ: [
+            create(:type_de_champ_text, libelle: 'Nom'),
+            create(:type_de_champ_text, libelle: 'Prénom')
+          ])
+        ]
+      end
+
+      before do
+        repetition = dossier.champs
+          .find { |champ| champ.libelle == 'Répétition' }
+        repetition.add_row(1)
+        paul_champs, pierre_champs = repetition.rows
+
+        paul_champs.first.update(value: 'Paul')
+        paul_champs.last.update(value: 'Chavard')
+
+        pierre_champs.first.update(value: 'Pierre')
+        pierre_champs.last.update(value: 'de La Morinerie')
+      end
+
+      it { is_expected.to eq("Répétition\n\nNom : Paul\nPrénom : Chavard\n\nNom : Pierre\nPrénom : de La Morinerie") }
+    end
+
     context 'when the procedure has a linked drop down menus type de champ' do
       let(:type_de_champ) do
         create(:type_de_champ_linked_drop_down_list, libelle: 'libelle')

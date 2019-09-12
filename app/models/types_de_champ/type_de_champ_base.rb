@@ -14,7 +14,7 @@ class TypesDeChamp::TypeDeChampBase
         libelle: libelle,
         description: description,
         lambda: -> (champs) {
-          champs.find { |champ| champ.type_de_champ == tdc }
+          champs.find { |champ| champ.type_de_champ == tdc }&.for_tag
         }
       }
     ]
