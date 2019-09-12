@@ -39,7 +39,7 @@ class AdministrateurUsageStatisticsService
       ds_nb_demarches_brouillons: nb_demarches_by_administrateur_id_and_state[[administrateur.id, "brouillon"]],
 
       nb_demarches_test: nb_dossiers_by_procedure_id
-        .select { |procedure_id, count| count > 0 && is_brouillon(procedure_id) }
+        .filter { |procedure_id, count| count > 0 && is_brouillon(procedure_id) }
         .count,
       nb_demarches_prod: nb_dossiers_by_procedure_id
         .reject { |procedure_id, count| count == 0 || is_brouillon(procedure_id) }

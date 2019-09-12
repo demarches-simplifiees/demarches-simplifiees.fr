@@ -99,12 +99,12 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and their value in the dossier are not nil' do
           before do
             dossier.champs
-              .select { |champ| champ.libelle == 'libelleA' }
+              .filter { |champ| champ.libelle == 'libelleA' }
               .first
               .update(value: 'libelle1')
 
             dossier.champs
-              .select { |champ| champ.libelle == 'libelleB' }
+              .filter { |champ| champ.libelle == 'libelleB' }
               .first
               .update(value: 'libelle2')
           end
@@ -228,12 +228,12 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and its value in the dossier are not nil' do
           before do
             dossier.champs
-              .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
+              .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
               .first
               .update(value: '2017-04-15')
 
             dossier.champs
-              .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
+              .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
               .first
               .update(value: '2017-09-13 09:00')
           end
