@@ -57,16 +57,16 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom: none;
-    padding: 30px;
-    padding-bottom: 5px;
-    padding-top: 5px;
+    padding-top: 0px;
+    padding-bottom: $default-spacer;
+    padding-right: 30px;
+    padding-left: 30px;
     margin: 0 auto;
     margin-left: -30px;
     max-width: 1100px;
 
     .button {
-      margin-top: $default-padding;
-      margin-bottom: 0;
+      margin-top: $default-spacer;
     }
 
     @media(max-width: 1100px) {
