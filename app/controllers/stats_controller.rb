@@ -13,7 +13,6 @@ class StatsController < ApplicationController
     @satisfaction_usagers = satisfaction_usagers
 
     @contact_percentage = contact_percentage
-    @contact_percentage_excluded_tags = Helpscout::UserConversationsAdapter::EXCLUDED_TAGS
 
     @dossiers_states = dossiers_states
 
@@ -177,7 +176,7 @@ class StatsController < ApplicationController
       .map do |monthly_report|
         start_date = monthly_report[:start_date].to_time.localtime
         end_date = monthly_report[:end_date].to_time.localtime
-        replies_count = monthly_report[:conversations_count]
+        replies_count = monthly_report[:replies_sent]
 
         dossiers_count = Dossier.where(en_construction_at: start_date..end_date).count
 
