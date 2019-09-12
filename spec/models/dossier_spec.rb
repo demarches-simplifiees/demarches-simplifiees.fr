@@ -460,7 +460,7 @@ describe Dossier do
 
         before do
           (dossier.champs + dossier.champs_private)
-            .select { |c| c.libelle.match?(/^specified/) }
+            .filter { |c| c.libelle.match?(/^specified/) }
             .each { |c| c.update_attribute(:value, "specified") }
         end
 

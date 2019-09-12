@@ -5,7 +5,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     it "is present" do
       before_actions = Instructeurs::ProceduresController
         ._process_action_callbacks
-        .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
+        .filter { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:ensure_ownership!)
@@ -46,7 +46,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     it "is present" do
       before_actions = Instructeurs::ProceduresController
         ._process_action_callbacks
-        .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
+        .filter { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:redirect_to_avis_if_needed)
