@@ -764,6 +764,33 @@ describe Dossier do
     end
   end
 
+  context "dossier expiré" do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let(:dossier_brouillon1) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure, created_at: 1.year.ago) }
+    let(:dossier_brouillon2) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure, created_at: Time.zone.now - 3.months) }
+    let(:dossier_construction1) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure, en_construction_at:1.year.ago) }
+    let(:dossier_construction2) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure, en_construction_at:Time.zone.now - 3.months) }
+    let(:dossier_instruction1) { create(:dossier, state: Dossier.states.fetch(:en_instruction), procedure: procedure, en_instruction_at:1.year.ago) }
+    let(:dossier_instruction2) { create(:dossier, state: Dossier.states.fetch(:en_instruction), procedure: procedure, en_instruction_at:Time.zone.now - 3.months) }
+    describe "brouillon_expired?" do
+      it { expect(dossier_brouillon1.brouillon_expired?).to eq(true) }
+      it { expect(dossier_brouillon2.brouillon_expired?).to eq(false) }
+      it { expect(dossier_construction1.brouillon_expired?).to eq(false) }
+    end
+
+    describe "construction_expired?" do
+      it { expect(dossier_brouillon1.construction_expired?).to eq(false) }
+      it { expect(dossier_construction1.construction_expired?).to eq(true) }
+      it { expect(dossier_construction2.construction_expired?).to eq(false) }
+    end
+
+    describe "instruction_expired?" do
+      it { expect(dossier_brouillon1.instruction_expired?).to eq(false) }
+      it { expect(dossier_instruction1.instruction_expired?).to eq(true) }
+      it { expect(dossier_instruction2.instruction_expired?).to eq(false) }
+    end
+  end
+
   describe '#accepter!' do
     let(:dossier) { create(:dossier, :en_instruction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
@@ -1009,4 +1036,33 @@ describe Dossier do
       expect(dossier.individual.prenom).to eq user_info.given_name
     }
   end
+
+  describe 'Suppression de dossier en base' do
+    let(:procedure) { create(:procedure) }
+    let!(:dossier1) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
+    let!(:dossier2) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_construction), en_construction_at: Time.zone) }
+    let!(:dossier3) { create(:dossier, :with_entreprise, procedure: procedure, state: Dossier.states.fetch(:en_instruction), en_construction_at: Time.zone) }
+
+    before do
+      Timecop.freeze
+      dossier1.reload
+      dossier2.reload
+      dossier3.reload
+
+      dossiers_id_list = [
+        dossier2.id,
+        dossier3.id
+      ]
+
+      Dossier.delete_dossier_from_base(dossier1.id)
+      Dossier.delete_dossier_from_base(dossiers_id_list)
+    end
+
+    it 'Verification de la suppression' do
+      expect { dossier1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { dossier2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { dossier3.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
 end

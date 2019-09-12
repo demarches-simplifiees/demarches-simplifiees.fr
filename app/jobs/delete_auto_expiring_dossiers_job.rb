@@ -122,8 +122,9 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
       end
 
       date_suppression = date + duree.months + 5.days
+
       if date_suppression <= Time.zone.now
-        dossier_to_remove << dossier
+        dossier_to_remove << dossier.id
 
         # les brouillons dont la date de ceation est inferieur au 01-2019 sont supprimé sans envoi de mail
         if ((status != Dossier.states.fetch(:brouillon)) || date >= Date.parse('01-01-2019'))
@@ -167,7 +168,7 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
         if (status == Dossier.states.fetch(:brouillon))
           add_mail_to_send([dossier.user.email], dossier, date_suppression, 'DOSSIER qui concerne la procedure \'PROC\', doit être déposé avant le DATE, sinon il sera supprimé', @array_of_mail_near_deletion)
         else
-          #recherche de l'email de l'instructeur et des administyrateur qui suivent le dossier
+          #recherche de l'email de l'instructeur et des administrateur qui suivent le dossier
           destinataire_email = find_instructeur_email_for_dossier(dossier)
           destinataire_email |= find_administrateur_email_for_dossier(dossier)
 
