@@ -7,8 +7,8 @@ describe IndividualSerializer do
     subject { IndividualSerializer.new(individual).serializable_hash }
 
     it { is_expected.to include(civilite: 'M.') }
-    it { is_expected.to include(nom: 'nom') }
-    it { is_expected.to include(prenom: 'prenom') }
+    it { is_expected.to include(nom: 'NOM') }
+    it { is_expected.to include(prenom: 'Prenom') }
     it { is_expected.not_to have_key(:date_naissance) }
 
     context 'when the procedure asks for a birthdate' do

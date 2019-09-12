@@ -63,7 +63,7 @@ module Users
         if attestation_template&.activated
           render 'qrcode'
         else
-          send_data(dossier.attestation.pdf.read, filename: "attestation-#{dossier.id}.pdf", disposition: 'inline', type: 'application/pdf')
+          attestation
         end
       else
         forbidden!

@@ -473,7 +473,7 @@ class Procedure < ApplicationRecord
     elsif logo_active_storage.attached?
       Rails.application.routes.url_helpers.url_for(logo_active_storage)
     else
-      ActionController::Base.helpers.image_url("marianne.svg")
+      ActionController::Base.helpers.image_url("polynesie.png")
     end
   end
 

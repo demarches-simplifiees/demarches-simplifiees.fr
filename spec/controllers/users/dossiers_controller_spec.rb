@@ -159,7 +159,6 @@ describe Users::DossiersController, type: :controller do
     after { Timecop.return }
 
     context 'when the procedure has an attestation template' do
-      let(:fake_pdf) { double(read: 'pdf content') }
       let(:another_user) { create(:user) }
       let!(:dossier) { create(:dossier, :with_attestation, user: user) }
 
@@ -175,7 +174,6 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the procedure no longer has an attestation template' do
-      let(:fake_pdf) { double(read: 'pdf content') }
       let(:another_user) { create(:user) }
       let!(:dossier) { create(:dossier, :with_attestation, user: user) }
 
@@ -189,7 +187,7 @@ describe Users::DossiersController, type: :controller do
           attestation_template.save
 
           get :qrcode, params: { id: dossier.id, created_at: dossier.encoded_date(:created_at) }
-          expect(response.headers["Content-Type"]).to eq "application/pdf"
+          expect(response.headers["Location"]).to end_with ".pdf"
         end
       end
     end
