@@ -67,4 +67,35 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include("n'a pas pu être supprimé") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
   end
+
+  describe '.notify_auto_deletion_to' do
+    let(:dossier) { create(:dossier) }
+    let(:dossier2) { create(:dossier) }
+
+    subject { described_class.notify_auto_deletion_to([dossier, dossier2], dossier.user.email) }
+
+    it { expect(subject.subject).to eq("Des dossiers ont été supprimés automatiquement") }
+    it { expect(subject.body).to include("dossier n°#{ dossier.id} qui concerne la procedure '#{dossier.procedure.libelle}'")}
+    it { expect(subject.body).to include("dossier n°#{ dossier2.id} qui concerne la procedure '#{dossier2.procedure.libelle}'")}
+  end
+
+  describe '.notify_excuse_deletion_to_user' do
+    let(:dossier) { create(:dossier) }
+
+    subject { described_class.notify_excuse_deletion_to_user([dossier], dossier.user.email) }
+
+    it { expect(subject.subject).to eq("Des dossiers ont été supprimés automatiquement") }
+    it { expect(subject.body).to include("dossier n°#{ dossier.id} qui concerne la procedure '#{dossier.procedure.libelle}'")}
+    it { expect(subject.body).to include("Nous nous excusons de la gène occasionnée.") }
+  end
+
+  describe '.notify_near_deletion' do
+    let!(:dossier) { create(:dossier) }
+    subject { described_class.notify_near_deletion(["#{ dossier.id} avec du texte","texte"], dossier.user.email) }
+
+    it { expect(subject.subject).to eq("Des dossiers vont bientôt être supprimés") }
+    it { expect(subject.body).to include("n°#{ dossier.id} avec du texte")}
+    it { expect(subject.body).to include("n°texte")}
+  end
+
 end

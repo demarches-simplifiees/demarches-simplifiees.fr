@@ -575,16 +575,16 @@ class Dossier < ApplicationRecord
   end
 
   # suppression du dossier ou des dossiers dans la base
-  def self.delete_dossier_from_base(dossier_list)
+  def self.delete_dossier_from_base(dossier_id_list)
     ActiveRecord::Base.transaction do
-      Dossier.unscoped.destroy(dossier_list)
+      Dossier.unscoped.destroy(dossier_id_list)
       # le destroy supprime en cascade dans
       # Etablissement, Individual, Invite, Attestation,
       # Champ, Commentaire, Avis, Dossier, DossierOperationLog,
       # active_storage_attachment, active_storage_blob(par delayed_job)
 
-      Follow.delete(Follow.for_dossier(dossier_list))
-      DeletedDossier.delete(DeletedDossier.for_dossier(dossier_list))
+      Follow.delete(Follow.for_dossier(dossier_id_list))
+      DeletedDossier.delete(DeletedDossier.for_dossier(dossier_id_list))
       #  raise ActiveRecord::Rollback, "error transaction!"
     end
   end
