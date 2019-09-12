@@ -1,7 +1,7 @@
 class PiecesJustificativesService
   def self.liste_pieces_justificatives(dossier)
     champs_blocs_repetables = dossier.champs
-      .select { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
+      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
       .flat_map(&:champs)
 
     champs_pieces_justificatives_with_attachments(
@@ -15,7 +15,7 @@ class PiecesJustificativesService
   end
 
   def self.serialize_types_de_champ_as_type_pj(procedure)
-    tdcs = procedure.types_de_champ.select { |type_champ| type_champ.old_pj.present? }
+    tdcs = procedure.types_de_champ.filter { |type_champ| type_champ.old_pj.present? }
     tdcs.map.with_index do |type_champ, order_place|
       description = type_champ.description
       if /^(?<original_description>.*?)(?:[\r\n]+)Récupérer le formulaire vierge pour mon dossier : (?<lien_demarche>http.*)$/m =~ description
@@ -32,7 +32,7 @@ class PiecesJustificativesService
   end
 
   def self.serialize_champs_as_pjs(dossier)
-    dossier.champs.select { |champ| champ.type_de_champ.old_pj }.map do |champ|
+    dossier.champs.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
       {
         created_at: champ.created_at&.in_time_zone('UTC'),
         type_de_piece_justificative_id: champ.type_de_champ.old_pj[:stable_id],
@@ -46,7 +46,7 @@ class PiecesJustificativesService
 
   def self.champs_pieces_justificatives_with_attachments(champs)
     champs
-      .select { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
+      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
       .filter { |pj| pj.piece_justificative_file.attached? }
   end
 end

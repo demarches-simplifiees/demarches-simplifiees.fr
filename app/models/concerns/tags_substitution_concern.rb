@@ -179,7 +179,7 @@ module TagsSubstitutionConcern
       raise NameError.new("The class #{self.class.name} includes TagsSubstitutionConcern, it should define the DOSSIER_STATE constant but it does not", :DOSSIER_STATE)
     end
 
-    tags.select { |tag| tag[:available_for_states].include?(self.class::DOSSIER_STATE) }
+    tags.filter { |tag| tag[:available_for_states].include?(self.class::DOSSIER_STATE) }
   end
 
   def champ_public_tags
@@ -213,12 +213,12 @@ module TagsSubstitutionConcern
 
     tags_and_datas
       .map { |(tags, data)| [filter_tags(tags), data] }
-      .inject(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
+      .reduce(text) { |acc, (tags, data)| replace_tags_with_values_from_data(acc, tags, data) }
   end
 
   def replace_tags_with_values_from_data(text, tags, data)
     if data.present?
-      tags.inject(text) do |acc, tag|
+      tags.reduce(text) do |acc, tag|
         replace_tag(acc, tag, data)
       end
     else

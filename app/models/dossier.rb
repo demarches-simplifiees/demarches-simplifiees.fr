@@ -426,15 +426,15 @@ class Dossier < ApplicationRecord
   end
 
   def check_mandatory_champs
-    (champs + champs.select(&:repetition?).flat_map(&:champs))
-      .select(&:mandatory_and_blank?)
+    (champs + champs.filter(&:repetition?).flat_map(&:champs))
+      .filter(&:mandatory_and_blank?)
       .map do |champ|
         "Le champ #{champ.libelle.truncate(200)} doit être rempli."
       end
   end
 
   def modifier_annotations!(instructeur)
-    champs_private.select(&:value_previously_changed?).each do |champ|
+    champs_private.filter(&:value_previously_changed?).each do |champ|
       log_dossier_operation(instructeur, :modifier_annotation, champ)
     end
   end

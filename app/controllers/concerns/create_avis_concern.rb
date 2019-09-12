@@ -36,7 +36,7 @@ module CreateAvisConcern
 
     if failed.any?
       flash.now.alert = failed
-        .select { |avis| avis.errors.present? }
+        .filter { |avis| avis.errors.present? }
         .map { |avis| "#{avis.email} : #{avis.errors.full_messages.join(', ')}" }
 
       # When an error occurs, return the avis back to the controller

@@ -6,7 +6,7 @@ module Users
         .includes(:procedure)
         .map(&:procedure)
         .uniq
-        .select(&:publiee?)
+        .filter(&:publiee?)
 
       @popular_demarches = Procedure
         .includes(:service)

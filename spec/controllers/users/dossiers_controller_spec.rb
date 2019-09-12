@@ -7,7 +7,7 @@ describe Users::DossiersController, type: :controller do
     it 'are present' do
       before_actions = Users::DossiersController
         ._process_action_callbacks
-        .find_all { |process_action_callbacks| process_action_callbacks.kind == :before }
+        .filter { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
       expect(before_actions).to include(:ensure_ownership!, :ensure_ownership_or_invitation!, :forbid_invite_submission!)
