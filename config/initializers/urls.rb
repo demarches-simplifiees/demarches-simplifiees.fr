@@ -37,7 +37,3 @@ COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, 'general', 'comment-trouver-ma-demar
 
 STATUS_PAGE_URL = "https://updown.io/cugq"
 MATOMO_URL = 'https://beta.mes-demarches.gov.pf/matomo'
-
-# FIXME: This is only used in dev in couple of places and should be removed after PJ migration
-host = ENV['APP_HOST']
-LOCAL_DOWNLOAD_URL = if host.present? then 'https://' + host else 'http://localhost:3000' end

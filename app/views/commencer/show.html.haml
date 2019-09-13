@@ -11,7 +11,7 @@
     -# = render partial: 'shared/france_connect_login', locals: { url: commencer_france_connect_path(path: @procedure.path) }
 
   - else
-    - dossiers = current_user.dossiers.where(procedure: @procedure)
+    - dossiers = current_user.dossiers.where(groupe_instructeur: @procedure.groupe_instructeurs)
     - drafts = dossiers.merge(Dossier.state_brouillon)
     - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 

@@ -103,9 +103,9 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:procedure_draft) { create :procedure_with_dossiers, administrateur: admin, published_at: nil, archived_at: nil }
-    let(:procedure_published) { create :procedure_with_dossiers, administrateur: admin, aasm_state: :publiee, published_at: Time.zone.now, archived_at: nil }
-    let(:procedure_archived) { create :procedure_with_dossiers, administrateur: admin, aasm_state: :archivee, published_at: nil, archived_at: Time.zone.now }
+    let(:procedure_draft)     { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], published_at: nil, archived_at: nil }
+    let(:procedure_published) { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], aasm_state: :publiee, published_at: Time.zone.now, archived_at: nil }
+    let(:procedure_archived)  { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], aasm_state: :archivee, published_at: nil, archived_at: Time.zone.now }
 
     subject { delete :destroy, params: { id: procedure.id } }
 

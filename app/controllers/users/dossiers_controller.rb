@@ -49,10 +49,10 @@ module Users
     end
 
     def attestation
-      if dossier.attestation.pdf_active_storage.attached?
+      if dossier.attestation.pdf.attached?
+        redirect_to url_for(dossier.attestation.pdf)
+      elsif dossier.attestation.pdf_active_storage.attached?
         redirect_to url_for(dossier.attestation.pdf_active_storage)
-      else
-        send_data(dossier.attestation.pdf.read, filename: 'attestation.pdf', type: 'application/pdf')
       end
     end
 
@@ -63,7 +63,7 @@ module Users
         if attestation_template&.activated
           render 'qrcode'
         else
-          send_data(dossier.attestation.pdf.read, filename: "attestation-#{dossier.id}.pdf", disposition: 'inline', type: 'application/pdf')
+          attestation
         end
       else
         forbidden!
@@ -241,7 +241,7 @@ module Users
         procedure = Procedure.publiees.find(params[:procedure_id])
       end
 
-      dossier = Dossier.create!(procedure: procedure, user: current_user, state: Dossier.states.fetch(:brouillon))
+      dossier = Dossier.create!(groupe_instructeur: procedure.defaut_groupe_instructeur, user: current_user, state: Dossier.states.fetch(:brouillon))
 
       if dossier.procedure.for_individual
         if current_user.france_connect_information.present?

@@ -1,7 +1,11 @@
 namespace :after_party do
   desc 'Deployment task: create_default_groupe_instructeur'
   task create_default_groupe_instructeur: :environment do
-    Procedure.find_each do |procedure|
+    Procedure
+      .unscoped
+      .left_outer_joins(:groupe_instructeurs)
+      .where('groupe_instructeurs.id is null')
+      .find_each do |procedure|
       procedure.groupe_instructeurs.create(label: GroupeInstructeur::DEFAULT_LABEL)
     end
 

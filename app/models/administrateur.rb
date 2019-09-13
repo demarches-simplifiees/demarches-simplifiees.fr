@@ -98,6 +98,6 @@ class Administrateur < ApplicationRecord
   end
 
   def can_be_deleted?
-    dossiers.state_instruction_commencee.none? && procedures.none?
+    dossiers.state_instruction_commencee.none? && procedures.none? && services.none?
   end
 end

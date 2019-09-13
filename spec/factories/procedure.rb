@@ -34,8 +34,13 @@ FactoryBot.define do
         dossiers_count { 1 }
       end
 
-      after(:build) do |procedure, evaluator|
-        procedure.dossiers << create_list(:dossier, evaluator.dossiers_count, procedure: procedure)
+      after(:create) do |procedure, evaluator|
+        user = create(:user)
+        evaluator.dossiers_count.times do
+          dossier = procedure.new_dossier
+          dossier.user = user
+          dossier.save!
+        end
       end
     end
 
@@ -48,10 +53,6 @@ FactoryBot.define do
     end
 
     trait :with_logo do
-      logo_active_storage { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
-    end
-
-    trait :with_legacy_logo do
       logo { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
     end
 

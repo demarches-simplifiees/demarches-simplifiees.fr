@@ -1,4 +1,6 @@
 class Commentaire < ApplicationRecord
+  self.ignored_columns = ['file']
+
   belongs_to :dossier, inverse_of: :commentaires, touch: true
 
   belongs_to :user
@@ -47,15 +49,8 @@ class Commentaire < ApplicationRecord
   end
 
   def file_url
-    if piece_jointe.attached?
-      if piece_jointe.virus_scanner.safe?
-        Rails.application.routes.url_helpers.url_for(piece_jointe)
-      end
-    elsif Rails.application.secrets.fog[:enabled]
-      RemoteDownloader.new(file.path).url
-    elsif file&.url
-      # FIXME: this is horrible but used only in dev and will be removed after migration
-      File.join(LOCAL_DOWNLOAD_URL, file.url)
+    if piece_jointe.attached? && piece_jointe.virus_scanner.safe?
+      Rails.application.routes.url_helpers.url_for(piece_jointe)
     end
   end
 
