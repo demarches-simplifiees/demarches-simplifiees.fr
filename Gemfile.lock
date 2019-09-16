@@ -416,6 +416,8 @@ GEM
       ast (~> 2.4.0)
     pdf-core (0.7.0)
     pg (1.1.3)
+    pghero (2.3.0)
+      activerecord (>= 5)
     powerpack (0.1.2)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
@@ -757,6 +759,7 @@ DEPENDENCIES
   openid_connect
   openstack
   pg
+  pghero
   prawn
   prawn_rails
   premailer-rails
