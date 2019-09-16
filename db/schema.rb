@@ -486,17 +486,6 @@ ActiveRecord::Schema.define(version: 2019_09_16_152127) do
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true
   end
 
-  create_table "pghero_query_stats", force: :cascade do |t|
-    t.text "database"
-    t.text "user"
-    t.text "query"
-    t.bigint "query_hash"
-    t.float "total_time"
-    t.bigint "calls"
-    t.datetime "captured_at"
-    t.index ["database", "captured_at"], name: "index_pghero_query_stats_on_database_and_captured_at"
-  end
-
   create_table "pghero_space_stats", force: :cascade do |t|
     t.text "database"
     t.text "schema"
