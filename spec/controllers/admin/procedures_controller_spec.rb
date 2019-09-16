@@ -383,7 +383,8 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
           expect(procedure.lien_site_web).to match(lien_site_web)
-          expect(response.status).to eq 200
+          expect(assigns(:valid)).to eq true
+          expect(assigns(:mine)).to eq false
         end
 
         it 'previous procedure remains published' do
@@ -401,8 +402,7 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
           expect(procedure.lien_site_web).to match(lien_site_web)
-          expect(response).to redirect_to :admin_procedures
-          expect(flash[:alert]).to have_content 'Lien de la démarche invalide'
+          expect(assigns(:valid)).to eq false
         end
       end
     end

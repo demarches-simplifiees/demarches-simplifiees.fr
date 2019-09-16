@@ -74,7 +74,8 @@ class Procedure < ApplicationRecord
   validates_with MonAvisEmbedValidator
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
-  before_create :ensure_path_exists
+  after_initialize :ensure_path_exists
+  before_save :ensure_path_exists
   after_create :ensure_default_groupe_instructeur
 
   include AASM
@@ -85,11 +86,8 @@ class Procedure < ApplicationRecord
     state :archivee
     state :hidden
 
-    event :publish, after: :after_publish, guard: :can_publish? do
+    event :publish, before: :before_publish, after: :after_publish do
       transitions from: :brouillon, to: :publiee
-    end
-
-    event :reopen, after: :after_reopen, guard: :can_publish? do
       transitions from: :archivee, to: :publiee
     end
 
@@ -109,10 +107,10 @@ class Procedure < ApplicationRecord
   end
 
   def publish_or_reopen!(administrateur, path, lien_site_web)
-    if archivee? && may_reopen?(administrateur, path, lien_site_web)
-      reopen!(administrateur, path, lien_site_web)
-    elsif may_publish?(administrateur, path, lien_site_web)
-      reset!
+    Procedure.transaction do
+      if brouillon?
+        reset!
+      end
       publish!(administrateur, path, lien_site_web)
     end
   end
@@ -364,34 +362,20 @@ class Procedure < ApplicationRecord
     percentile_time(:en_construction_at, :processed_at, 90)
   end
 
-  PATH_AVAILABLE = :available
-  PATH_AVAILABLE_PUBLIEE = :available_publiee
-  PATH_NOT_AVAILABLE = :not_available
-  PATH_NOT_AVAILABLE_BROUILLON = :not_available_brouillon
-  PATH_CAN_PUBLISH = [PATH_AVAILABLE, PATH_AVAILABLE_PUBLIEE]
+  def path_available?(administrateur, path)
+    procedure = Procedure.publiees
+      .where.not(id: self.id)
+      .find_by(path: path)
 
-  def path_availability(administrateur, path)
-    Procedure.path_availability(administrateur, path, id)
+    procedure.blank? || administrateur.owns?(procedure)
   end
 
-  def self.path_availability(administrateur, path, exclude_id = nil)
-    if exclude_id.present?
-      procedure = where.not(id: exclude_id).find_by(path: path)
-    else
-      procedure = find_by(path: path)
-    end
+  def auto_archive_procedure_with_same_path(administrateur, path)
+    procedure = administrateur.procedures.publiees
+      .where.not(id: self.id)
+      .find_by(path: path)
 
-    if procedure.blank?
-      PATH_AVAILABLE
-    elsif administrateur.owns?(procedure)
-      if procedure.brouillon?
-        PATH_NOT_AVAILABLE_BROUILLON
-      else
-        PATH_AVAILABLE_PUBLIEE
-      end
-    else
-      PATH_NOT_AVAILABLE
-    end
+    procedure&.archive!
   end
 
   def self.find_with_path(path)
@@ -491,41 +475,22 @@ class Procedure < ApplicationRecord
       end
   end
 
-  def claim_path_ownership!(path)
-    procedure = Procedure.joins(:administrateurs)
-      .where(administrateurs: { id: administrateur_ids })
-      .find_by(path: path)
-
-    if procedure&.publiee? && procedure != self
-      procedure.archive!
-    end
-
-    update!(path: path)
-  end
-
-  def can_publish?(administrateur, path, lien_site_web)
-    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH) && lien_site_web.present?
+  def before_publish(administrateur, path, lien_site_web)
+    auto_archive_procedure_with_same_path(administrateur, path)
+    update!(path: path, lien_site_web: lien_site_web, archived_at: nil)
   end
 
   def after_publish(administrateur, path, lien_site_web)
     update!(published_at: Time.zone.now)
-
-    claim_path_ownership!(path)
-  end
-
-  def after_reopen(administrateur, path, lien_site_web)
-    update!(published_at: Time.zone.now, archived_at: nil)
-
-    claim_path_ownership!(path)
   end
 
   def after_archive
-    update!(archived_at: Time.zone.now, path: SecureRandom.uuid)
+    update!(archived_at: Time.zone.now)
   end
 
   def after_hide
     now = Time.zone.now
-    update!(hidden_at: now, path: SecureRandom.uuid)
+    update!(hidden_at: now)
     dossiers.update_all(hidden_at: now)
   end
 
@@ -562,7 +527,7 @@ class Procedure < ApplicationRecord
   end
 
   def ensure_path_exists
-    if self.path.nil?
+    if self.path.blank?
       self.path = SecureRandom.uuid
     end
   end
