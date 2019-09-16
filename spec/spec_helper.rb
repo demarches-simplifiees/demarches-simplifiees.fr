@@ -139,7 +139,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   config.before(:each) do
-    Flipflop::FeatureSet.current.test!.reset!
+    Flipper.enable(:instructeur_bypass_email_login_token)
   end
 
   config.before(:all) {

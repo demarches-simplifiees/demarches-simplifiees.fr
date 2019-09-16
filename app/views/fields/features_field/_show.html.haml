@@ -1,14 +1,11 @@
 :ruby
-  url = if field.resource.class.name == 'Instructeur'
-    enable_feature_manager_instructeur_path(field.resource.id)
-  else
-    enable_feature_manager_administrateur_path(field.resource.id)
-  end
+  group = field.resource.class.name.downcase
+  user = field.resource.user
+  url = enable_feature_manager_user_path(user)
 
 %table#features
-  - admin_features = Flipflop.feature_set.features.reject{ |f| f.group.try(:key) == :production }
-  - admin_features.each do |feature|
+  - Flipper.features.select { |feature| feature.key.start_with?("#{group}_") }.each do |feature|
     %tr
-      %td= feature.title
+      %td= feature
       %td
-        = check_box_tag "enable-feature", "enable", field.data[feature.name], data: { url: url, key: feature.key }
+        = check_box_tag "enable-feature", "enable", feature.enabled?(user), data: { url: url, key: feature.key }

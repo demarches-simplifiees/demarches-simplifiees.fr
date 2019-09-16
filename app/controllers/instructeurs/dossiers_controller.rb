@@ -192,7 +192,7 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      return head(:forbidden) if !Flipflop.download_as_zip_enabled? || !dossier.attachments_downloadable?
+      return head(:forbidden) if !feature_enabled?(:instructeur_download_as_zip) || !dossier.attachments_downloadable?
 
       files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
 

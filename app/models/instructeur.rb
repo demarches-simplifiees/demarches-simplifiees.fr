@@ -180,23 +180,6 @@ class Instructeur < ApplicationRecord
     Follow.where(instructeur: self, dossier: dossier).update_all(attributes)
   end
 
-  def feature_enabled?(feature)
-    Flipflop.feature_set.feature(feature)
-    features[feature.to_s]
-  end
-
-  def disable_feature(feature)
-    Flipflop.feature_set.feature(feature)
-    features.delete(feature.to_s)
-    save
-  end
-
-  def enable_feature(feature)
-    Flipflop.feature_set.feature(feature)
-    features[feature.to_s] = true
-    save
-  end
-
   def young_login_token?
     trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
     trusted_device_token&.token_young?
