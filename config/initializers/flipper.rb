@@ -16,12 +16,10 @@ end
 # this will immediately migrate the default features to be controlled.
 def setup_features(features)
   features.each do |feature|
-    if Flipper.exist?(feature)
-      return
+    if !Flipper.exist?(feature)
+      # Disable feature by default
+      Flipper.disable(feature)
     end
-
-    # Disable feature by default
-    Flipper.disable(feature)
   end
 end
 
@@ -39,8 +37,15 @@ features = [
   :xray
 ]
 
+def database_exists?
+  ActiveRecord::Base.connection
+  true
+rescue ActiveRecord::NoDatabaseError
+  false
+end
+
 ActiveSupport.on_load(:active_record) do
-  if ActiveRecord::Base.connection.data_source_exists? 'flipper_features'
+  if database_exists? && ActiveRecord::Base.connection.data_source_exists?('flipper_features')
     setup_features(features)
   end
 end

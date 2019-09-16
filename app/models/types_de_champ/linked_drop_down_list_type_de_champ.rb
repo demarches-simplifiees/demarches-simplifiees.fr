@@ -30,7 +30,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         description: "#{description} (menu primaire)",
         lambda: -> (champs) {
           champs
-            .detect { |champ| champ.type_de_champ == tdc }
+            .find { |champ| champ.type_de_champ == tdc }
             &.primary_value
         }
       }
@@ -41,7 +41,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         description: "#{description} (menu secondaire)",
         lambda: -> (champs) {
           champs
-            .detect { |champ| champ.type_de_champ == tdc }
+            .find { |champ| champ.type_de_champ == tdc }
             &.secondary_value
         }
       }

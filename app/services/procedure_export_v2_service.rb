@@ -40,7 +40,7 @@ class ProcedureExportV2Service
     @etablissements ||= dossiers.flat_map do |dossier|
       [dossier.champs, dossier.champs_private]
         .flatten
-        .select { |champ| champ.is_a?(Champs::SiretChamp) }
+        .filter { |champ| champ.is_a?(Champs::SiretChamp) }
     end.map(&:etablissement).compact + dossiers.map(&:etablissement).compact
   end
 
@@ -52,7 +52,7 @@ class ProcedureExportV2Service
     @champs_repetables ||= dossiers.flat_map do |dossier|
       [dossier.champs, dossier.champs_private]
         .flatten
-        .select { |champ| champ.is_a?(Champs::RepetitionChamp) }
+        .filter { |champ| champ.is_a?(Champs::RepetitionChamp) }
     end.group_by(&:libelle)
   end
 
