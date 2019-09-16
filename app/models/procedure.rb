@@ -27,6 +27,8 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
+  has_one :defaut_groupe_instructeur, -> { where(label: GroupeInstructeur::DEFAULT_LABEL) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
+
   has_one_attached :logo
   has_one_attached :logo_active_storage
   has_one_attached :notice
@@ -475,10 +477,6 @@ class Procedure < ApplicationRecord
     else
       ActionController::Base.helpers.image_url("marianne.svg")
     end
-  end
-
-  def defaut_groupe_instructeur
-    groupe_instructeurs.find_by(label: GroupeInstructeur::DEFAULT_LABEL)
   end
 
   def missing_instructeurs?
