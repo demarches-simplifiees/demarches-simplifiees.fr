@@ -530,7 +530,6 @@ ActiveRecord::Schema.define(version: 2019_08_28_073736) do
     t.boolean "durees_conservation_required", default: true
     t.string "path"
     t.string "declarative_with_state"
-    t.text "monavis"
     t.text "monavis_embed"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
@@ -622,10 +621,10 @@ ActiveRecord::Schema.define(version: 2019_08_28_073736) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.text "unconfirmed_email"
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
-    t.text "unconfirmed_email"
     t.bigint "instructeur_id"
     t.bigint "administrateur_id"
     t.index ["administrateur_id"], name: "index_users_on_administrateur_id"

@@ -4,6 +4,7 @@ require:
 AllCops:
   Exclude:
     - "db/schema.rb"
+    - "db/migrate/20190730153555_recreate_structure.rb"
     - "bin/*"
     - "node_modules/**/*"
 
