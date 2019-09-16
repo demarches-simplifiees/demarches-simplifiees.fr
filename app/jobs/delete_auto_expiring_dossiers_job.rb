@@ -2,7 +2,6 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
   queue_as :cron
 
   def perform(*args)
-
     @array_of_mail_near_deletion = []
     @array_of_mail_to_auto_deletion = []
     @array_of_mail_excuse_deletion = []
@@ -29,32 +28,28 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
     end
   end
 
-  #
-  #
-  #
   def action_dossier_before_instuction(status)
-
     case status
     when Dossier.states.fetch(:brouillon)
       expired, expiring = Dossier
-                            .includes(:procedure)
-                            .state_brouillon
-                            .nearing_end_of_brouillon
-                            .partition(&:brouillon_expired?)
+        .includes(:procedure)
+        .state_brouillon
+        .nearing_end_of_brouillon
+        .partition(&:brouillon_expired?)
 
     when Dossier.states.fetch(:en_construction)
       expired, expiring = Dossier
-                            .includes(:procedure)
-                            .state_en_construction
-                            .nearing_end_of_construction
-                            .partition(&:construction_expired?)
+        .includes(:procedure)
+        .state_en_construction
+        .nearing_end_of_construction
+        .partition(&:construction_expired?)
 
     when Dossier.states.fetch(:en_instruction)
       expired, expiring = Dossier
-                            .includes(:procedure)
-                            .state_en_instruction
-                            .nearing_end_of_instruction
-                            .partition(&:instruction_expired?)
+        .includes(:procedure)
+        .state_en_instruction
+        .nearing_end_of_instruction
+        .partition(&:instruction_expired?)
 
     end
 
@@ -66,7 +61,6 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
   def find_instructeur_email_for_dossier(dossier)
     return dossier.followers_instructeurs.pluck(:email)
   end
-
 
   # recherche l'administarteur du dossier courant
   def find_administrateur_email_for_dossier(dossier)
@@ -86,7 +80,7 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
       end
     end
 
-    if remove_list.size > 0
+    if !remove_list.empty?
       Dossier.delete_dossier_from_base(remove_list)
     end
   end
@@ -135,7 +129,7 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
     end
 
     # supression des dossiers
-    if dossier_to_remove.size > 0
+    if !dossier_to_remove.empty?
       Dossier.delete_dossier_from_base(dossier_to_remove)
     end
   end
@@ -158,17 +152,17 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
 
       date_suppression = date + duree.months
       date_message = date_suppression - 1.month
-      time = Time.new
+      time = Time.zone.now
 
       if (date_message.year == time.year &&
         date_message.month == time.month &&
         date_message.day == time.day)
 
-        #regroupement par destinataire du mail, des dossiers qui vont prochainement expiré
+        # regroupement par destinataire du mail, des dossiers qui vont prochainement expiré
         if (status == Dossier.states.fetch(:brouillon))
           add_mail_to_send([dossier.user.email], dossier, date_suppression, 'DOSSIER qui concerne la procedure \'PROC\', doit être déposé avant le DATE, sinon il sera supprimé', @array_of_mail_near_deletion)
         else
-          #recherche de l'email de l'instructeur et des administrateur qui suivent le dossier
+          # recherche de l'email de l'instructeur et des administrateur qui suivent le dossier
           destinataire_email = find_instructeur_email_for_dossier(dossier)
           destinataire_email |= find_administrateur_email_for_dossier(dossier)
 
@@ -181,7 +175,7 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
   # ############################################################
   # ajoute dans la liste des mails de suppression dans 1 mois
   # ############################################################
-  def add_mail_to_send (destinataire_email, dossier, date_suppression, message, tab_mail)
+  def add_mail_to_send(destinataire_email, dossier, date_suppression, message, tab_mail)
     struct_of_mail_to_send = Struct.new(:email, :message_doss)
 
     message_dossier = message.sub! 'DOSSIER', dossier.id.to_s
@@ -232,5 +226,4 @@ class DeleteAutoExpiringDossiersJob < ApplicationJob
       end
     end
   end
-
 end

@@ -84,12 +84,10 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: @subject)
   end
 
-
   def notify_near_deletion(message_doss, to_email)
     @messages = message_doss
     @subject = "Des dossiers vont bientôt être supprimés"
 
     mail(to: to_email, subject: @subject)
   end
-
 end

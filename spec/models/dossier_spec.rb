@@ -768,10 +768,10 @@ describe Dossier do
     let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
     let(:dossier_brouillon1) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure, created_at: 1.year.ago) }
     let(:dossier_brouillon2) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure, created_at: Time.zone.now - 3.months) }
-    let(:dossier_construction1) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure, en_construction_at:1.year.ago) }
-    let(:dossier_construction2) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure, en_construction_at:Time.zone.now - 3.months) }
-    let(:dossier_instruction1) { create(:dossier, state: Dossier.states.fetch(:en_instruction), procedure: procedure, en_instruction_at:1.year.ago) }
-    let(:dossier_instruction2) { create(:dossier, state: Dossier.states.fetch(:en_instruction), procedure: procedure, en_instruction_at:Time.zone.now - 3.months) }
+    let(:dossier_construction1) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure, en_construction_at: 1.year.ago) }
+    let(:dossier_construction2) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure, en_construction_at: Time.zone.now - 3.months) }
+    let(:dossier_instruction1) { create(:dossier, state: Dossier.states.fetch(:en_instruction), procedure: procedure, en_instruction_at: 1.year.ago) }
+    let(:dossier_instruction2) { create(:dossier, state: Dossier.states.fetch(:en_instruction), procedure: procedure, en_instruction_at: Time.zone.now - 3.months) }
     describe "brouillon_expired?" do
       it { expect(dossier_brouillon1.brouillon_expired?).to eq(true) }
       it { expect(dossier_brouillon2.brouillon_expired?).to eq(false) }
@@ -1064,5 +1064,4 @@ describe Dossier do
       expect { dossier3.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
-
 end

@@ -107,7 +107,7 @@ class Dossier < ApplicationRecord
   scope :archived,      -> { where(archived: true) }
   scope :not_archived,  -> { where(archived: false) }
 
-  scope :hidden, -> {where.not(hidden_at: nil)}
+  scope :hidden, -> { where.not(hidden_at: nil) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
   scope :order_for_api, -> (order = :asc) { order(en_construction_at: order, created_at: order, id: order) }
@@ -588,5 +588,4 @@ class Dossier < ApplicationRecord
       #  raise ActiveRecord::Rollback, "error transaction!"
     end
   end
-
 end
