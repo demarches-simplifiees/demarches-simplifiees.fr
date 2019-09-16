@@ -44,7 +44,7 @@
 
     .lien-demarche
       %h3
-        - if @procedure.brouillon_avec_lien?
+        - if @procedure.brouillon?
           Test et publication
         - else
           Publication
@@ -58,7 +58,7 @@
           %br
           %br
           Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers demarches-simplifiees.fr. Ne dites pas non plus aux usagers de se rendre sur le site générique demarches-simplifiees.fr, donnez-leur toujours le lien complet.
-        - elsif @procedure.brouillon_avec_lien?
+        - elsif @procedure.brouillon?
           - if @procedure.missing_steps.empty?
             %p
               Cette démarche est actuellement <strong>en test</strong>,
