@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_28_073736) do
+ActiveRecord::Schema.define(version: 2019_09_16_152127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -486,6 +486,26 @@ ActiveRecord::Schema.define(version: 2019_08_28_073736) do
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true
   end
 
+  create_table "pghero_query_stats", force: :cascade do |t|
+    t.text "database"
+    t.text "user"
+    t.text "query"
+    t.bigint "query_hash"
+    t.float "total_time"
+    t.bigint "calls"
+    t.datetime "captured_at"
+    t.index ["database", "captured_at"], name: "index_pghero_query_stats_on_database_and_captured_at"
+  end
+
+  create_table "pghero_space_stats", force: :cascade do |t|
+    t.text "database"
+    t.text "schema"
+    t.text "relation"
+    t.bigint "size"
+    t.datetime "captured_at"
+    t.index ["database", "captured_at"], name: "index_pghero_space_stats_on_database_and_captured_at"
+  end
+
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
@@ -530,6 +550,7 @@ ActiveRecord::Schema.define(version: 2019_08_28_073736) do
     t.boolean "durees_conservation_required", default: true
     t.string "path"
     t.string "declarative_with_state"
+    t.text "monavis"
     t.text "monavis_embed"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
@@ -621,10 +642,10 @@ ActiveRecord::Schema.define(version: 2019_08_28_073736) do
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.text "unconfirmed_email"
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
+    t.text "unconfirmed_email"
     t.bigint "instructeur_id"
     t.bigint "administrateur_id"
     t.index ["administrateur_id"], name: "index_users_on_administrateur_id"
