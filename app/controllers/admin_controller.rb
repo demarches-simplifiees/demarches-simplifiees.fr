@@ -25,7 +25,7 @@ class AdminController < ApplicationController
   end
 
   def reset_procedure
-    if @procedure.brouillon_avec_lien?
+    if @procedure.brouillon?
       @procedure.reset!
     end
   end

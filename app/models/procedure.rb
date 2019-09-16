@@ -133,11 +133,6 @@ class Procedure < ApplicationRecord
     !archivee?
   end
 
-  # This method is needed for transition. Eventually this will be the same as brouillon?.
-  def brouillon_avec_lien?
-    brouillon? && path.present?
-  end
-
   def publiee_ou_archivee?
     publiee? || archivee?
   end
