@@ -39,8 +39,10 @@ features = [
   :xray
 ]
 
-ActiveSupport.on_load(:active_record) do
-  if ActiveRecord::Base.connection.data_source_exists? 'flipper_features'
-    setup_features(features)
+if Rake.application.top_level_tasks.empty?
+  ActiveSupport.on_load(:active_record) do
+    if ActiveRecord::Base.connection.data_source_exists? 'flipper_features'
+      setup_features(features)
+    end
   end
 end
