@@ -98,22 +98,24 @@ class Admin::ProceduresController < AdminController
     lien_site_web = params[:lien_site_web]
     procedure = current_administrateur.procedures.find(params[:procedure_id])
 
-    procedure.path = path
-    procedure.lien_site_web = lien_site_web
-
-    if !procedure.validate
-      flash.alert = 'Lien de la démarche invalide ou lien vers la démarche manquant'
-      return redirect_to admin_procedures_path
-    else
-      procedure.path = nil
-    end
-
-    if procedure.publish_or_reopen!(current_administrateur, path, lien_site_web)
-      flash.notice = "Démarche publiée"
-      redirect_to admin_procedures_path
-    else
-      @mine = false
+    procedure.publish_or_reopen!(current_administrateur, path, lien_site_web)
+    flash.notice = "Démarche publiée"
+    redirect_to admin_procedures_path
+  rescue ActiveRecord::RecordInvalid => e
+    errors = e.record.errors
+    if errors.details.key?(:path)
+      path_error = errors.details.dig(:path, 0, :error)
+      case path_error
+      when :invalid
+        @valid = false
+      when :taken
+        @valid = true
+        @mine = false
+      end
       render '/admin/procedures/publish', formats: 'js'
+    else
+      flash.alert = errors.full_messages
+      return redirect_to admin_procedure_path(procedure)
     end
   rescue ActiveRecord::RecordNotFound
     flash.alert = 'Démarche inexistante'
