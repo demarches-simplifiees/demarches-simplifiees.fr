@@ -99,12 +99,12 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and their value in the dossier are not nil' do
           before do
             dossier.champs
-              .select { |champ| champ.libelle == 'libelleA' }
+              .filter { |champ| champ.libelle == 'libelleA' }
               .first
               .update(value: 'libelle1')
 
             dossier.champs
-              .select { |champ| champ.libelle == 'libelleB' }
+              .filter { |champ| champ.libelle == 'libelleB' }
               .first
               .update(value: 'libelle2')
           end
@@ -112,6 +112,33 @@ describe TagsSubstitutionConcern, type: :model do
           it { is_expected.to eq('libelle1 libelle2') }
         end
       end
+    end
+
+    context 'when the procedure has a type de champ repetition' do
+      let(:template) { '--Répétition--' }
+      let(:types_de_champ) do
+        [
+          create(:type_de_champ_repetition, libelle: 'Répétition', types_de_champ: [
+            create(:type_de_champ_text, libelle: 'Nom'),
+            create(:type_de_champ_text, libelle: 'Prénom')
+          ])
+        ]
+      end
+
+      before do
+        repetition = dossier.champs
+          .find { |champ| champ.libelle == 'Répétition' }
+        repetition.add_row(1)
+        paul_champs, pierre_champs = repetition.rows
+
+        paul_champs.first.update(value: 'Paul')
+        paul_champs.last.update(value: 'Chavard')
+
+        pierre_champs.first.update(value: 'Pierre')
+        pierre_champs.last.update(value: 'de La Morinerie')
+      end
+
+      it { is_expected.to eq("Répétition\n\nNom : Paul\nPrénom : Chavard\n\nNom : Pierre\nPrénom : de La Morinerie") }
     end
 
     context 'when the procedure has a linked drop down menus type de champ' do
@@ -228,12 +255,12 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and its value in the dossier are not nil' do
           before do
             dossier.champs
-              .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
+              .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
               .first
               .update(value: '2017-04-15')
 
             dossier.champs
-              .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
+              .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
               .first
               .update(value: '2017-09-13 09:00')
           end

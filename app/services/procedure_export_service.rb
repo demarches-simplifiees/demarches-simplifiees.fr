@@ -122,7 +122,7 @@ class ProcedureExportService
     @etablissements = @dossiers.flat_map do |dossier|
       [dossier.champs, dossier.champs_private]
         .flatten
-        .select { |champ| champ.is_a?(Champs::SiretChamp) }
+        .filter { |champ| champ.is_a?(Champs::SiretChamp) }
     end.map(&:etablissement).compact
 
     if @etablissements.any?

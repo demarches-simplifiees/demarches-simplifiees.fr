@@ -9,6 +9,10 @@ class Champs::DatetimeChamp < Champ
     value.present? ? I18n.l(Time.zone.parse(value)) : ""
   end
 
+  def for_tag
+    value.present? ? I18n.l(Time.zone.parse(value)) : ""
+  end
+
   private
 
   def format_before_save

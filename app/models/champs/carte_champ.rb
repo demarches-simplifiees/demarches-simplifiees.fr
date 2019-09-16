@@ -2,19 +2,19 @@ class Champs::CarteChamp < Champ
   # We are not using scopes here as we want to access
   # the following collections on unsaved records.
   def cadastres
-    geo_areas.select do |area|
+    geo_areas.filter do |area|
       area.source == GeoArea.sources.fetch(:cadastre)
     end
   end
 
   def quartiers_prioritaires
-    geo_areas.select do |area|
+    geo_areas.filter do |area|
       area.source == GeoArea.sources.fetch(:quartier_prioritaire)
     end
   end
 
   def parcelles_agricoles
-    geo_areas.select do |area|
+    geo_areas.filter do |area|
       area.source == GeoArea.sources.fetch(:parcelle_agricole)
     end
   end

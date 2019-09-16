@@ -54,6 +54,10 @@ class Champ < ApplicationRecord
     value
   end
 
+  def for_tag
+    value.present? ? value.to_s : ''
+  end
+
   def main_value_name
     :value
   end

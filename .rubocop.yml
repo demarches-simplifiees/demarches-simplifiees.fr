@@ -4,6 +4,7 @@ require:
 AllCops:
   Exclude:
     - "db/schema.rb"
+    - "db/migrate/20190730153555_recreate_structure.rb"
     - "bin/*"
     - "node_modules/**/*"
 
@@ -866,7 +867,14 @@ Style/ClassVars:
   Enabled: false
 
 Style/CollectionMethods:
-  Enabled: false
+  PreferredMethods:
+    collect: map
+    collect!: map!
+    inject: reduce
+    detect: find
+    select: filter
+    find_all: filter
+  Enabled: true
 
 Style/ColonMethodCall:
   Enabled: true
