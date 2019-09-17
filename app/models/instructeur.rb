@@ -1,5 +1,5 @@
 class Instructeur < ApplicationRecord
-  self.ignored_columns = ['features']
+  self.ignored_columns = ['features', 'encrypted_password', 'reset_password_token', 'reset_password_sent_at', 'remember_created_at', 'sign_in_count', 'current_sign_in_at', 'last_sign_in_at', 'current_sign_in_ip', 'last_sign_in_ip', 'failed_attempts', 'unlock_token', 'locked_at']
   include EmailSanitizableConcern
 
   has_and_belongs_to_many :administrateurs

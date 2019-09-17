@@ -90,6 +90,6 @@ class SupportController < ApplicationController
   end
 
   def email
-    logged_user ? logged_user.email : params[:email]
+    current_user&.email || params[:email]
   end
 end
