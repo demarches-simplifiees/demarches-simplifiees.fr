@@ -11,6 +11,7 @@ FactoryBot.define do
     duree_conservation_dossiers_hors_ds { 6 }
     ask_birthday { false }
     lien_site_web { "https://mon-site.gouv" }
+    path { SecureRandom.uuid }
 
     transient do
       administrateur {}
