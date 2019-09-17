@@ -7,7 +7,7 @@ module Instructeurs
 
     def index
       @procedures = current_instructeur
-        .visible_procedures
+        .procedures
         .with_attached_logo
         .includes(:defaut_groupe_instructeur)
         .order(archived_at: :desc, published_at: :desc, created_at: :desc)
@@ -235,7 +235,7 @@ module Instructeurs
     end
 
     def redirect_to_avis_if_needed
-      if current_instructeur.visible_procedures.count == 0 && current_instructeur.avis.count > 0
+      if current_instructeur.procedures.count == 0 && current_instructeur.avis.count > 0
         redirect_to instructeur_avis_index_path
       end
     end

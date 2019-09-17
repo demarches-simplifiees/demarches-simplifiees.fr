@@ -45,7 +45,6 @@ class Procedure < ApplicationRecord
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
-  scope :avec_lien,             -> { where.not(path: nil) }
   scope :declarative,           -> { where.not(declarative_with_state: nil) }
 
   scope :for_api, -> {
@@ -65,8 +64,10 @@ class Procedure < ApplicationRecord
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
+  validates :lien_site_web, presence: true, if: :publiee?
+  validate :validate_for_publication, on: :publication
   validate :check_juridique
-  validates :path, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: :aasm_state, case_sensitive: false }, presence: true, allow_blank: false, allow_nil: true
+  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :archived_at, :hidden_at], case_sensitive: false }
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
@@ -75,7 +76,8 @@ class Procedure < ApplicationRecord
   validates_with MonAvisEmbedValidator
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
-  before_create :ensure_path_exists
+  after_initialize :ensure_path_exists
+  before_save :ensure_path_exists
   after_create :ensure_default_groupe_instructeur
 
   include AASM
@@ -86,11 +88,8 @@ class Procedure < ApplicationRecord
     state :archivee
     state :hidden
 
-    event :publish, after: :after_publish, guard: :can_publish? do
+    event :publish, before: :before_publish, after: :after_publish do
       transitions from: :brouillon, to: :publiee
-    end
-
-    event :reopen, after: :after_reopen, guard: :can_publish? do
       transitions from: :archivee, to: :publiee
     end
 
@@ -109,12 +108,18 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def publish_or_reopen!(administrateur, path, lien_site_web)
-    if archivee? && may_reopen?(administrateur, path, lien_site_web)
-      reopen!(administrateur, path, lien_site_web)
-    elsif may_publish?(administrateur, path, lien_site_web)
-      reset!
-      publish!(administrateur, path, lien_site_web)
+  def publish_or_reopen!(administrateur)
+    Procedure.transaction do
+      if brouillon?
+        reset!
+      end
+
+      other_procedure = other_procedure_with_path(path)
+      if other_procedure.present? && administrateur.owns?(other_procedure)
+        other_procedure.archive!
+      end
+
+      publish!
     end
   end
 
@@ -126,17 +131,50 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def validate_for_publication
+    old_attributes = self.slice(:aasm_state, :archived_at)
+    self.aasm_state = :publiee
+    self.archived_at = nil
+
+    is_valid = validate
+
+    self.attributes = old_attributes
+
+    is_valid
+  end
+
+  def suggested_path(administrateur)
+    if path_customized?
+      return path
+    end
+    slug = libelle&.parameterize&.first(50)
+    suggestion = slug
+    counter = 1
+    while !path_available?(administrateur, suggestion)
+      counter = counter + 1
+      suggestion = "#{slug}-#{counter}"
+    end
+    suggestion
+  end
+
+  def other_procedure_with_path(path)
+    Procedure.publiees
+      .where.not(id: self.id)
+      .find_by(path: path)
+  end
+
+  def path_available?(administrateur, path)
+    procedure = other_procedure_with_path(path)
+
+    procedure.blank? || administrateur.owns?(procedure)
+  end
+
   def locked?
     publiee_ou_archivee?
   end
 
   def accepts_new_dossiers?
     !archivee?
-  end
-
-  # This method is needed for transition. Eventually this will be the same as brouillon?.
-  def brouillon_avec_lien?
-    brouillon? && path.present?
   end
 
   def publiee_ou_archivee?
@@ -174,8 +212,8 @@ class Procedure < ApplicationRecord
     types_de_champ_private.map(&:build_champ)
   end
 
-  def default_path
-    libelle&.parameterize&.first(50)
+  def path_customized?
+    !path.match?(/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/)
   end
 
   def organisation_name
@@ -370,40 +408,6 @@ class Procedure < ApplicationRecord
     percentile_time(:en_construction_at, :processed_at, 90)
   end
 
-  PATH_AVAILABLE = :available
-  PATH_AVAILABLE_PUBLIEE = :available_publiee
-  PATH_NOT_AVAILABLE = :not_available
-  PATH_NOT_AVAILABLE_BROUILLON = :not_available_brouillon
-  PATH_CAN_PUBLISH = [PATH_AVAILABLE, PATH_AVAILABLE_PUBLIEE]
-
-  def path_availability(administrateur, path)
-    Procedure.path_availability(administrateur, path, id)
-  end
-
-  def self.path_availability(administrateur, path, exclude_id = nil)
-    if exclude_id.present?
-      procedure = where.not(id: exclude_id).find_by(path: path)
-    else
-      procedure = find_by(path: path)
-    end
-
-    if procedure.blank?
-      PATH_AVAILABLE
-    elsif administrateur.owns?(procedure)
-      if procedure.brouillon?
-        PATH_NOT_AVAILABLE_BROUILLON
-      else
-        PATH_AVAILABLE_PUBLIEE
-      end
-    else
-      PATH_NOT_AVAILABLE
-    end
-  end
-
-  def self.find_with_path(path)
-    where.not(aasm_state: :archivee).where("path LIKE ?", "%#{path}%")
-  end
-
   def populate_champ_stable_ids
     TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
       type_de_champ.update_column(:stable_id, type_de_champ.id)
@@ -497,41 +501,21 @@ class Procedure < ApplicationRecord
       end
   end
 
-  def claim_path_ownership!(path)
-    procedure = Procedure.joins(:administrateurs)
-      .where(administrateurs: { id: administrateur_ids })
-      .find_by(path: path)
-
-    if procedure&.publiee? && procedure != self
-      procedure.archive!
-    end
-
-    update!(path: path)
+  def before_publish
+    update!(archived_at: nil)
   end
 
-  def can_publish?(administrateur, path, lien_site_web)
-    path_availability(administrateur, path).in?(PATH_CAN_PUBLISH) && lien_site_web.present?
-  end
-
-  def after_publish(administrateur, path, lien_site_web)
+  def after_publish
     update!(published_at: Time.zone.now)
-
-    claim_path_ownership!(path)
-  end
-
-  def after_reopen(administrateur, path, lien_site_web)
-    update!(published_at: Time.zone.now, archived_at: nil)
-
-    claim_path_ownership!(path)
   end
 
   def after_archive
-    update!(archived_at: Time.zone.now, path: SecureRandom.uuid)
+    update!(archived_at: Time.zone.now)
   end
 
   def after_hide
     now = Time.zone.now
-    update!(hidden_at: now, path: SecureRandom.uuid)
+    update!(hidden_at: now)
     dossiers.update_all(hidden_at: now)
   end
 
@@ -568,7 +552,7 @@ class Procedure < ApplicationRecord
   end
 
   def ensure_path_exists
-    if self.path.nil?
+    if self.path.blank?
       self.path = SecureRandom.uuid
     end
   end

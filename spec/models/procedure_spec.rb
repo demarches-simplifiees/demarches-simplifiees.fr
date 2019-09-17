@@ -547,12 +547,12 @@ describe Procedure do
   end
 
   describe '#publish!' do
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, path: 'example-path') }
     let(:now) { Time.zone.now.beginning_of_minute }
 
     before do
       Timecop.freeze(now)
-      procedure.publish!(procedure.administrateurs.first, "example-path", procedure.lien_site_web)
+      procedure.publish!
     end
     after { Timecop.return }
 
@@ -616,6 +616,22 @@ describe Procedure do
     it { expect(procedure.archived_at).to eq(now) }
   end
 
+  describe 'path_customized?' do
+    let(:procedure) { create :procedure }
+
+    subject { procedure.path_customized? }
+
+    context 'when the path is still the default' do
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when the path has been changed' do
+      before { procedure.path = 'custom_path' }
+
+      it { is_expected.to be_truthy }
+    end
+  end
+
   describe 'total_dossier' do
     let(:procedure) { create :procedure }
 
@@ -630,12 +646,45 @@ describe Procedure do
     it { is_expected.to eq 2 }
   end
 
-  describe '#default_path' do
-    let(:procedure) { create(:procedure, libelle: 'A long libelle with àccênts, blabla coucou hello un deux trois voila') }
+  describe 'suggested_path' do
+    let(:procedure) { create :procedure, aasm_state: :publiee, libelle: 'Inscription au Collège' }
 
-    subject { procedure.default_path }
+    subject { procedure.suggested_path(procedure.administrateurs.first) }
 
-    it { is_expected.to eq('a-long-libelle-with-accents-blabla-coucou-hello-un') }
+    context 'when the path has been customized' do
+      before { procedure.path = 'custom_path' }
+
+      it { is_expected.to eq 'custom_path' }
+    end
+
+    context 'when the suggestion does not conflict' do
+      it { is_expected.to eq 'inscription-au-college' }
+    end
+
+    context 'when the suggestion conflicts with one procedure' do
+      before do
+        create :procedure, aasm_state: :publiee, path: 'inscription-au-college'
+      end
+
+      it { is_expected.to eq 'inscription-au-college-2' }
+    end
+
+    context 'when the suggestion conflicts with several procedures' do
+      before do
+        create :procedure, aasm_state: :publiee, path: 'inscription-au-college'
+        create :procedure, aasm_state: :publiee, path: 'inscription-au-college-2'
+      end
+
+      it { is_expected.to eq 'inscription-au-college-3' }
+    end
+
+    context 'when the suggestion conflicts with another procedure of the same admin' do
+      before do
+        create :procedure, aasm_state: :publiee, path: 'inscription-au-college', administrateurs: procedure.administrateurs
+      end
+
+      it { is_expected.to eq 'inscription-au-college' }
+    end
   end
 
   describe ".default_scope" do

@@ -159,8 +159,6 @@ Rails.application.routes.draw do
     patch 'activate' => '/administrateurs/activate#create'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
-    get 'procedures/path_list' => 'procedures#path_list'
-    get 'procedures/available' => 'procedures#check_availability'
 
     resources :procedures do
       collection do
@@ -176,6 +174,7 @@ Rails.application.routes.draw do
       resources :mail_templates, only: [:index, :edit, :update]
 
       put 'archive' => 'procedures#archive', as: :archive
+      get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
       put 'publish' => 'procedures#publish', as: :publish
       post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
