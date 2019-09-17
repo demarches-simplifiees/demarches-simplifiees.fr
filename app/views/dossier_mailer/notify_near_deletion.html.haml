@@ -3,11 +3,11 @@
 %p
   Bonjour,
 
--if @messages.size == 1
+- if @messages.size == 1
   - @messages.each do |d|
     %p
       Le dossier n°#{d}
--else
+- else
   %p
     Les dossiers suivant arrivent à expiration :
     %ul
