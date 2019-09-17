@@ -38,9 +38,7 @@ describe AdministrateurUsageStatisticsService do
     context 'for an administrateur that has plenty of things' do
       let(:administrateur) do
         create(:administrateur,
-          sign_in_count: 17,
-          current_sign_in_at: Time.zone.local(2019, 3, 7),
-          last_sign_in_at: Time.zone.local(2019, 2, 27),
+          user: create(:user, sign_in_count: 17, current_sign_in_at: Time.zone.local(2019, 3, 7), last_sign_in_at: Time.zone.local(2019, 2, 27)),
           active: true,
           services: [create(:service)],
           instructeurs: [create(:instructeur)])

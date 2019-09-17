@@ -6,7 +6,11 @@ module Instructeurs
     ITEMS_PER_PAGE = 25
 
     def index
-      @procedures = current_instructeur.visible_procedures.order(archived_at: :desc, published_at: :desc, created_at: :desc)
+      @procedures = current_instructeur
+        .visible_procedures
+        .with_attached_logo
+        .includes(:defaut_groupe_instructeur)
+        .order(archived_at: :desc, published_at: :desc, created_at: :desc)
 
       groupe_instructeurs = current_instructeur.groupe_instructeurs.where(procedure: @procedures)
 
