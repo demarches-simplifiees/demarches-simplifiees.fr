@@ -207,9 +207,9 @@ module Instructeurs
 
     def stats
       @procedure = procedure
-      @usual_traitement_time = stats_usual_traitement_time(@procedure)
-      @dossiers_funnel = stats_dossiers_funnel(@procedure)
-      @termines_states = stats_termines_states(@procedure)
+      @usual_traitement_time = @procedure.stats_usual_traitement_time
+      @dossiers_funnel = @procedure.stats_dossiers_funnel
+      @termines_states = @procedure.stats_termines_states
     end
 
     private
@@ -289,32 +289,6 @@ module Instructeurs
           current_page == total_pages
         end
       EVAL
-    end
-
-    def stats_usual_traitement_time(procedure)
-      Rails.cache.fetch("#{procedure.cache_key_with_version}/stats_usual_traitement_time", expires_in: 12.hours) do
-        procedure.usual_traitement_time
-      end
-    end
-    def stats_dossiers_funnel(procedure)
-      Rails.cache.fetch("#{procedure.cache_key_with_version}/stats_dossiers_funnel", expires_in: 12.hours) do
-        [
-          ['Démarrés', procedure.dossiers.count],
-          ['Déposés', procedure.dossiers.state_not_brouillon.count],
-          ['Instruction débutée', procedure.dossiers.state_instruction_commencee.count],
-          ['Traités', procedure.dossiers.state_termine.count]
-        ]
-      end
-    end
-
-    def stats_termines_states(procedure)
-      Rails.cache.fetch("#{procedure.cache_key_with_version}/stats_termines_states", expires_in: 12.hours) do
-        [
-          ['Acceptés', procedure.dossiers.where(state: :accepte).count],
-          ['Refusés', procedure.dossiers.where(state: :refuse).count],
-          ['Classés sans suite', procedure.dossiers.where(state: :sans_suite).count]
-        ]
-      end
     end
   end
 end
