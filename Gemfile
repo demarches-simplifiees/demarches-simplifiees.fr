@@ -27,6 +27,9 @@ gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
 gem 'flipflop'
+gem 'flipper'
+gem 'flipper-active_record'
+gem 'flipper-ui'
 gem 'fog-openstack'
 gem 'font-awesome-rails'
 gem 'gon'

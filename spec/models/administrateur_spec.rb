@@ -21,14 +21,33 @@ describe Administrateur, type: :model do
     end
   end
 
-  describe '#feature_enabled?' do
-    let(:administrateur) { create(:administrateur) }
+  # describe '#password_complexity' do
+  #   let(:email) { 'mail@beta.gouv.fr' }
+  #   let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées-pwd'] }
+  #   let(:administrateur) { build(:administrateur, email: email, password: password) }
+  #   let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_ADMIN }
 
-    before do
-      administrateur.enable_feature(:test_a)
-    end
+  #   subject do
+  #     administrateur.save
+  #     administrateur.errors.full_messages
+  #   end
 
-    it { expect(administrateur.feature_enabled?(:test_b)).to be_falsey }
-    it { expect(administrateur.feature_enabled?(:test_a)).to be_truthy }
-  end
+  #   context 'when password is too short' do
+  #     let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
+
+  #     it { expect(subject).to eq(["Le mot de passe est trop court"]) }
+  #   end
+
+  #   context 'when password is too simple' do
+  #     let(:password) { passwords[min_complexity - 1] }
+
+  #     it { expect(subject).to eq(["Le mot de passe n'est pas assez complexe"]) }
+  #   end
+
+  #   context 'when password is acceptable' do
+  #     let(:password) { passwords[min_complexity] }
+
+  #     it { expect(subject).to eq([]) }
+  #   end
+  # end
 end

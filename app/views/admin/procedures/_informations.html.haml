@@ -125,7 +125,7 @@
   .col-md-6
     %h4 Options avancées
 
-    - if Flipflop.web_hook?
+    - if feature_enabled?(:administrateur_web_hook)
       %label{ for: :web_hook_url } Lien de rappel HTTP (webhook)
       = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
       %p.help-block

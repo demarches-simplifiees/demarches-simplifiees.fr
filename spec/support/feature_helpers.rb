@@ -22,7 +22,7 @@ module FeatureHelpers
     fill_in :user_password, with: password
 
     if sign_in_by_link
-      Flipflop::FeatureSet.current.test!.switch!(:bypass_email_login_token, false)
+      Flipper.disable(:instructeur_bypass_email_login_token)
     end
 
     perform_enqueued_jobs do
