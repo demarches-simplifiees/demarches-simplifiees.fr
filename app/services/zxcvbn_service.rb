@@ -7,7 +7,7 @@ class ZxcvbnService
     wxcvbn = compute_zxcvbn
     score = wxcvbn.score
     length = @password.blank? ? 0 : @password.length
-    vulnerabilities = wxcvbn.match_sequence.map { |m| m.matched_word.nil? ? m.token : m.matched_word }.select { |s| s.length > 2 }.join(', ')
+    vulnerabilities = wxcvbn.match_sequence.map { |m| m.matched_word.nil? ? m.token : m.matched_word }.filter { |s| s.length > 2 }.join(', ')
     [score, vulnerabilities, length]
   end
 

@@ -9,6 +9,10 @@ class Champs::YesNoChamp < Champ
     processed_value
   end
 
+  def for_tag
+    processed_value
+  end
+
   def for_export
     processed_value
   end

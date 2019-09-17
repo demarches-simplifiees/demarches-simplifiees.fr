@@ -19,6 +19,14 @@ class Champs::RepetitionChamp < Champ
     # The user cannot enter any information here so it doesn’t make much sense to search
   end
 
+  def for_tag
+    ([libelle] + rows.map do |champs|
+      champs.map do |champ|
+        "#{champ.libelle} : #{champ}"
+      end.join("\n")
+    end).join("\n\n")
+  end
+
   def rows_for_export
     rows.each.with_index(1).map do |champs, index|
       Champs::RepetitionChamp::Row.new(index: index, dossier_id: dossier_id.to_s, champs: champs)

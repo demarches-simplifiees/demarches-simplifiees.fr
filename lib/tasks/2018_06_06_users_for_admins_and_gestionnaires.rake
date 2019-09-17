@@ -14,7 +14,7 @@ namespace :'2018_06_06_users_for_admins_and_gestionnaires' do
       .joins("INNER JOIN users ON #{table_name}.email = users.email")
       .where(users: { confirmed_at: nil })
       .to_a
-      .select(&block)
+      .filter(&block)
 
     rake_puts "Sending emails to #{already_activated.count} #{table_name} that were already confirmed"
 

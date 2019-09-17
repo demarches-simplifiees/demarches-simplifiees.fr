@@ -3,7 +3,7 @@ require Rails.root.join("lib", "tasks", "task_helper")
 namespace :'2018_06_05_resend_attestations' do
   task set: :environment do
     procedure = Procedure.find(4247)
-    dossiers = procedure.dossiers.includes(:attestation).where(state: 'accepte').select do |d|
+    dossiers = procedure.dossiers.includes(:attestation).where(state: 'accepte').filter do |d|
       d.processed_at < procedure.attestation_template.updated_at
     end
 

@@ -76,7 +76,7 @@ module Instructeurs
 
       if @current_filters.count > 0
         filtered_ids = procedure_presentation.filtered_ids(@dossiers, statut)
-        filtered_sorted_ids = sorted_ids.select { |id| filtered_ids.include?(id) }
+        filtered_sorted_ids = sorted_ids.filter { |id| filtered_ids.include?(id) }
       else
         filtered_sorted_ids = sorted_ids
       end
