@@ -205,6 +205,13 @@ module Instructeurs
       redirect_to instructeur_procedure_path(procedure)
     end
 
+    def stats
+      @procedure = procedure
+      @usual_traitement_time = @procedure.stats_usual_traitement_time
+      @dossiers_funnel = @procedure.stats_dossiers_funnel
+      @termines_states = @procedure.stats_termines_states
+    end
+
     private
 
     def find_field(table, column)
