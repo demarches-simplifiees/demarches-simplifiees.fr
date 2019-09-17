@@ -796,10 +796,11 @@ describe Admin::ProceduresController, type: :controller do
         patch :update_monavis, params: { procedure_id: procedure.id, procedure: procedure_params }
         procedure.reload
       end
+
       let(:monavis_embed) {
         <<-MSG
-        <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
-          <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+        <a href="https://voxusagers.numerique.gouv.fr/Demarches/2136?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=e93e77cfd9bf7cce9d10f7a10be55730">
+          <img src="https://voxusagers.numerique.gouv.fr/static/bouton-bleu.svg" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
         </a>
         MSG
       }
@@ -810,6 +811,24 @@ describe Admin::ProceduresController, type: :controller do
         before { update_monavis }
 
         context 'when the embed code is valid' do
+          describe 'the monavis field is updated' do
+            subject { procedure }
+
+            it { expect(subject.monavis_embed).to eq(monavis_embed) }
+          end
+
+          it { expect(flash[:notice]).to be_present }
+          it { expect(response.body).to include "MonAvis" }
+        end
+
+        context 'when the embed code is valid with the original format' do
+          let(:monavis_embed) {
+            <<-MSG
+            <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
+              <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+            </a>
+            MSG
+          }
           describe 'the monavis field is updated' do
             subject { procedure }
 
