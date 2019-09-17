@@ -2,15 +2,17 @@
 @import "common";
 @import "constants";
 
+.procedure-header {
+  a.header-link {
+    display: inline-block;
+    margin-bottom: 1 * $default-padding;
+  }
+}
+
 #procedure-show {
   h1 {
     color: $black;
     font-size: 22px;
-    margin-bottom: 1 * $default-padding;
-  }
-
-  a.notifications {
-    display: inline-block;
     margin-bottom: 1 * $default-padding;
   }
 

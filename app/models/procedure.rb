@@ -3,6 +3,8 @@ require Rails.root.join('lib', 'percentile')
 class Procedure < ApplicationRecord
   self.ignored_columns = ['logo', 'logo_secure_token']
 
+  include ProcedureStatsConcern
+
   MAX_DUREE_CONSERVATION = 36
 
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy

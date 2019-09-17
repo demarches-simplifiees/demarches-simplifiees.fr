@@ -53,7 +53,7 @@ $stat-card-half-horizontal-spacing: 4 * $default-space;
 
 .stat-card-half {
   width: calc((100% - #{$stat-card-half-horizontal-spacing}) / 2);
-  margin-right: 3 * $default-space;
+  margin-right: $stat-card-half-horizontal-spacing;
 }
 
 .stat-card-title {
