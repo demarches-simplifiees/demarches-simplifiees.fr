@@ -32,7 +32,6 @@ class Procedure < ApplicationRecord
   has_one :defaut_groupe_instructeur, -> { where(label: GroupeInstructeur::DEFAULT_LABEL) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
 
   has_one_attached :logo
-  has_one_attached :logo_active_storage
   has_one_attached :notice
   has_one_attached :deliberation
 
@@ -304,7 +303,6 @@ class Procedure < ApplicationRecord
       clone_attachment(:piece_justificative_template, original, kopy)
     elsif original.is_a?(Procedure)
       clone_attachment(:logo, original, kopy)
-      clone_attachment(:logo_active_storage, original, kopy)
       clone_attachment(:notice, original, kopy)
       clone_attachment(:deliberation, original, kopy)
     end
@@ -471,15 +469,9 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def logo?
-    logo.attached? || logo_active_storage.attached?
-  end
-
   def logo_url
     if logo.attached?
       Rails.application.routes.url_helpers.url_for(logo)
-    elsif logo_active_storage.attached?
-      Rails.application.routes.url_helpers.url_for(logo_active_storage)
     else
       ActionController::Base.helpers.image_url("marianne.svg")
     end
