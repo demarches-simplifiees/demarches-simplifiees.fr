@@ -125,11 +125,11 @@ describe Instructeurs::ProceduresController, type: :controller do
           let(:state) { Dossier.states.fetch(:brouillon) }
           before { subject }
 
-          it { expect(assigns(:dossiers_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_archived_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
-          it { expect(assigns(:followed_dossiers_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_termines_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
         end
 
         context "with not draft state on multiple procedures" do
@@ -149,17 +149,67 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:dossiers_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(3) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(3) }
-          it { expect(assigns(:followed_dossiers_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_archived_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(1) }
-          it { expect(assigns(:dossiers_termines_count_per_groupe_instructeur)[procedure.defaut_groupe_instructeur.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(3) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(3) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(1) }
+          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
 
-          it { expect(assigns(:dossiers_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(3) }
-          it { expect(assigns(:dossiers_a_suivre_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(nil) }
-          it { expect(assigns(:followed_dossiers_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(1) }
-          it { expect(assigns(:dossiers_archived_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(nil) }
-          it { expect(assigns(:dossiers_termines_count_per_groupe_instructeur)[procedure2.defaut_groupe_instructeur.id]).to eq(1) }
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure2.id]).to eq(3) }
+          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure2.id]).to eq(nil) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure2.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1) }
+        end
+      end
+
+      context "with a routed procedure" do
+        let!(:procedure) { create(:procedure, :published) }
+        let!(:gi_p1_1) { procedure.defaut_groupe_instructeur }
+        let!(:gi_p1_2) { GroupeInstructeur.create(label: '2', procedure: procedure) }
+
+        context 'with multiple dossiers en construction on each group' do
+          before do
+            alternate_gis = 0.upto(20).map { |i| i.even? ? gi_p1_1 : gi_p1_2 }
+
+            alternate_gis.take(4).each { |gi| create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), groupe_instructeur: gi) }
+
+            alternate_gis.take(6).each do |gi|
+              instructeur.followed_dossiers << create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), groupe_instructeur: gi)
+            end
+
+            alternate_gis.take(10).each { |gi| create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), groupe_instructeur: gi) }
+            alternate_gis.take(14).each { |gi| create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), archived: true, groupe_instructeur: gi) }
+          end
+
+          context 'when an instructeur belongs to the 2 gi' do
+            before do
+              instructeur.groupe_instructeurs << gi_p1_1 << gi_p1_2
+
+              subject
+            end
+
+            it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(4) }
+            it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(6) }
+            it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(10) }
+            it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4 + 6 + 10) }
+            it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(14) }
+          end
+
+          context 'when an instructeur only belongs to one of them gi' do
+            before do
+              instructeur.groupe_instructeurs << gi_p1_1
+
+              subject
+            end
+
+            it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(2) }
+            # An instructeur cannot follow a dossier which belongs to another groupe
+            it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(3) }
+            it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(5) }
+            it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(2 + 3 + 5) }
+            it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(7) }
+          end
         end
       end
     end
