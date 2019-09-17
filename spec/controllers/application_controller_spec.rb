@@ -21,7 +21,7 @@ describe ApplicationController, type: :controller do
     let(:payload) { {} }
 
     before do
-      expect(@controller).to receive(:current_user).and_return(current_user)
+      allow(@controller).to receive(:current_user).and_return(current_user)
       expect(@controller).to receive(:current_instructeur).and_return(current_instructeur)
       expect(@controller).to receive(:current_administrateur).and_return(current_administrateur)
       expect(@controller).to receive(:current_administration).and_return(current_administration)
