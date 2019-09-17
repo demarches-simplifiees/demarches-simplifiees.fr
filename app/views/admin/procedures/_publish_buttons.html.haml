@@ -1,0 +1,13 @@
+#publish-buttons
+  = button_tag "Annuler", class: %w(btn btn-default), data: { dismiss: :modal }
+
+  - procedure.validate(:publication)
+  - errors = procedure.errors
+  -# Ignore the :taken error if the path can be claimed
+  - if errors.details[:path]&.pluck(:error)&.include?(:taken) && procedure.path_available?(administrateur, procedure.path)
+    - errors.delete(:path)
+
+  - options = { class: %w(btn btn-success), id: 'publish' }
+  - if errors.details[:path].present?
+    - options[:disabled] = :disabled
+  = submit_tag procedure_modal_text(@procedure, :submit), options

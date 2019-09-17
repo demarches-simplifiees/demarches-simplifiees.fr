@@ -7,23 +7,39 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
+    create :procedure, :with_service,
+      aasm_state: :publiee, published_at: Time.zone.now,
+      administrateurs: [administrateur],
+      libelle: 'libellé de la procédure',
+      path: 'libelle-de-la-procedure'
     login_as administrateur.user, scope: :user
-    visit new_from_existing_admin_procedures_path
   end
 
-  context 'Cloning procedure' do
-    before 'Create procedure' do
-      page.find_by_id('from-scratch').click
-      fill_in_dummy_procedure_details
-      page.find_by_id('save-procedure').click
-    end
-
-    scenario 'Cloning' do
-      visit admin_procedures_draft_path
+  context 'Cloning a procedure owned by the current admin' do
+    scenario do
+      visit admin_procedures_path
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
       page.all('.clone-btn').first.click
       visit admin_procedures_draft_path
-      expect(page.find_by_id('procedures')['data-item-count']).to eq('2')
+      expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
+      click_on Procedure.last.libelle
+      expect(page).to have_current_path(admin_procedure_path(Procedure.last))
+
+      find('#publish-procedure').click
+
+      within '#publish-modal' do
+        expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
+        expect(page).to have_text('ancienne sera archivée')
+        fill_in 'lien_site_web', with: 'http://some.website'
+        click_on 'publish'
+      end
+
+      page.refresh
+
+      visit admin_procedures_archived_path
+      expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
+      visit admin_procedures_draft_path
+      expect(page.find_by_id('procedures')['data-item-count']).to eq('0')
     end
   end
 end

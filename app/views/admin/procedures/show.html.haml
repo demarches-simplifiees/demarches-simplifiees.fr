@@ -1,7 +1,7 @@
 = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
 .row.white-back
   #procedure_show
-    = render partial: '/admin/procedures/modal_publish'
+    = render 'modal_publish', procedure: @procedure, administrateur: @current_administrateur
     = render partial: '/admin/procedures/modal_transfer'
 
     - if @procedure.brouillon?
@@ -44,7 +44,7 @@
 
     .lien-demarche
       %h3
-        - if @procedure.brouillon_avec_lien?
+        - if @procedure.brouillon?
           Test et publication
         - else
           Publication
@@ -54,16 +54,16 @@
         - elsif @procedure.publiee?
           Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
           Pour y accéder vous pouvez utiliser le lien :
-          = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank, rel: :noopener
+          = link_to @procedure_lien, sanitize_url(@procedure_lien), target: :blank, rel: :noopener
           %br
           %br
           Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers demarches-simplifiees.fr. Ne dites pas non plus aux usagers de se rendre sur le site générique demarches-simplifiees.fr, donnez-leur toujours le lien complet.
-        - elsif @procedure.brouillon_avec_lien?
+        - elsif @procedure.brouillon?
           - if @procedure.missing_steps.empty?
             %p
               Cette démarche est actuellement <strong>en test</strong>,
               pour y accéder vous pouvez utiliser le lien :
-              = link_to procedure_lien(@procedure), sanitize_url(procedure_lien(@procedure)), target: :blank, rel: :noopener
+              = link_to @procedure_lien, sanitize_url(@procedure_lien), target: :blank, rel: :noopener
             %p
               Toute personne ayant la connaissance de ce lien pourra ainsi remplir des dossiers de test sur votre démarche.
             %br
@@ -117,7 +117,7 @@
           - if @procedure.missing_steps.include?(:service)
             %p.alert.alert-danger
               Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
-              = link_to 'Cliquez ici.', (current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)))
+              = link_to 'Cliquez ici.', (@current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)))
 
           - if @procedure.missing_steps.include?(:instructeurs)
             %p.alert.alert-danger

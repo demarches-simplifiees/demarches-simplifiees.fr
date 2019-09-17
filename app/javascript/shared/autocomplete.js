@@ -5,10 +5,6 @@ const sources = [
   {
     type: 'address',
     url: '/address/suggestions'
-  },
-  {
-    type: 'path',
-    url: '/admin/procedures/path_list'
   }
 ];
 

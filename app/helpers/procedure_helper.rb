@@ -1,11 +1,9 @@
 module ProcedureHelper
   def procedure_lien(procedure)
-    if procedure.path.present?
-      if procedure.brouillon_avec_lien?
-        commencer_test_url(path: procedure.path)
-      else
-        commencer_url(path: procedure.path)
-      end
+    if procedure.brouillon?
+      commencer_test_url(path: procedure.path)
+    else
+      commencer_url(path: procedure.path)
     end
   end
 
