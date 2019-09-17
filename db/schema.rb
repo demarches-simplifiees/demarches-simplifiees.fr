@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_22_143413) do
+ActiveRecord::Schema.define(version: 2019_08_28_073736) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -170,39 +170,6 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.string "digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "champ_api_configs", force: :cascade do |t|
-    t.string "name"
-    t.integer "level"
-    t.string "level_1_url"
-    t.string "level_1_end"
-    t.string "level_1_token"
-    t.string "level_1_login"
-    t.string "level_1_password"
-    t.string "level_2_url"
-    t.string "level_2_end"
-    t.string "level_2_token"
-    t.string "level_2_login"
-    t.string "level_2_password"
-    t.string "search_type"
-    t.string "search_id_path"
-    t.string "search_display_path"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "champ_api_datasets", force: :cascade do |t|
-    t.string "code_champ"
-    t.string "label"
-    t.string "path_champ"
-    t.string "type_champ"
-    t.boolean "editable"
-    t.string "value"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "champ_api_config_id"
-    t.index ["champ_api_config_id"], name: "index_champ_api_datasets_on_champ_api_config_id"
   end
 
   create_table "champs", id: :serial, force: :cascade do |t|
@@ -563,6 +530,7 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.boolean "durees_conservation_required", default: true
     t.string "path"
     t.string "declarative_with_state"
+    t.text "monavis"
     t.text "monavis_embed"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
@@ -630,7 +598,6 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.jsonb "options"
     t.bigint "stable_id"
     t.bigint "parent_id"
-    t.string "api_name"
     t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["procedure_id"], name: "index_types_de_champ_on_procedure_id"
