@@ -11,7 +11,7 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
   end
 
   def process_params
-    etablissement = data_source.sort_by { |a| a[:numEtablissement] }.detect { |h| h[:dateRadiation].nil? }
+    etablissement = data_source.sort_by { |a| a[:numEtablissement] }.find { |h| h[:dateRadiation].nil? }
     if etablissement.present?
       etablissement = translate(etablissement)
       etablissement[:numero_voie]&.gsub!(/(\d+).*/, '\1')
