@@ -45,7 +45,6 @@ class Procedure < ApplicationRecord
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
-  scope :avec_lien,             -> { where.not(path: nil) }
   scope :declarative,           -> { where.not(declarative_with_state: nil) }
 
   scope :for_api, -> {
