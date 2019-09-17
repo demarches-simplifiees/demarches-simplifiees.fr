@@ -208,7 +208,6 @@ class Admin::ProceduresController < AdminController
 
   def delete_logo
     @procedure.logo.purge_later
-    @procedure.logo_active_storage.purge_later
 
     flash.notice = 'le logo a bien été supprimé'
     redirect_to edit_admin_procedure_path(@procedure)

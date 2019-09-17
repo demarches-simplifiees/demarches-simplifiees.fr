@@ -7,9 +7,7 @@ class AttestationTemplate < ApplicationRecord
   belongs_to :procedure
 
   has_one_attached :logo
-  has_one_attached :logo_active_storage
   has_one_attached :signature
-  has_one_attached :signature_active_storage
 
   validates :footer, length: { maximum: 190 }
 
@@ -54,14 +52,6 @@ class AttestationTemplate < ApplicationRecord
         # we don't want to run virus scanner on duplicated file
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
-    elsif logo_active_storage.attached?
-      attestation_template.logo.attach(
-        io: StringIO.new(logo_active_storage.download),
-        filename: logo_active_storage.filename.to_s,
-        content_type: logo_active_storage.content_type,
-        # we don't want to run virus scanner on duplicated file
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      )
     end
 
     if signature.attached?
@@ -72,65 +62,34 @@ class AttestationTemplate < ApplicationRecord
         # we don't want to run virus scanner on duplicated file
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
-    elsif signature_active_storage.attached?
-      attestation_template.signature.attach(
-        io: StringIO.new(signature_active_storage.download),
-        filename: signature_active_storage.filename.to_s,
-        content_type: signature_active_storage.content_type,
-        # we don't want to run virus scanner on duplicated file
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      )
     end
 
     attestation_template
   end
 
-  def logo?
-    logo.attached? || logo_active_storage.attached?
-  end
-
-  def signature?
-    signature.attached? || signature_active_storage.attached?
-  end
-
   def logo_url
     if logo.attached?
       Rails.application.routes.url_helpers.url_for(logo)
-    elsif logo_active_storage.attached?
-      Rails.application.routes.url_helpers.url_for(logo_active_storage)
     end
   end
 
   def signature_url
     if signature.attached?
       Rails.application.routes.url_helpers.url_for(signature)
-    elsif signature_active_storage.attached?
-      Rails.application.routes.url_helpers.url_for(signature_active_storage)
     end
   end
 
-  def proxy_logo
-    if logo.attached?
-      logo
-    elsif logo_active_storage.attached?
-      logo_active_storage
-    end
-  end
+  def render_attributes_for(params = {})
+    dossier = params.fetch(:dossier, false)
 
-  def proxy_signature
-    if signature.attached?
-      signature
-    elsif signature_active_storage.attached?
-      signature_active_storage
-    end
-  end
-
-  def title_for_dossier(dossier)
-    replace_tags(title, dossier)
-  end
-
-  def body_for_dossier(dossier)
-    replace_tags(body, dossier)
+    {
+      created_at: Time.zone.now,
+      title: dossier ? replace_tags(title, dossier) : params.fetch(:title, ''),
+      body: dossier ? replace_tags(body, dossier) : params.fetch(:body, ''),
+      footer: params.fetch(:footer, footer),
+      logo: params.fetch(:logo, logo.attached? ? logo : nil),
+      signature: params.fetch(:signature, signature.attached? ? signature : nil)
+    }
   end
 
   private
@@ -147,14 +106,8 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def build_pdf(dossier)
-    action_view = ActionView::Base.new(ActionController::Base.view_paths,
-      logo: proxy_logo,
-      title: title_for_dossier(dossier),
-      body: body_for_dossier(dossier),
-      signature: proxy_signature,
-      footer: footer,
-      created_at: Time.zone.now)
-
+    attestation = render_attributes_for(dossier: dossier)
+    action_view = ActionView::Base.new(ActionController::Base.view_paths, attestation: attestation)
     attestation_view = action_view.render(file: 'admin/attestation_templates/show', formats: [:pdf])
 
     StringIO.new(attestation_view)
