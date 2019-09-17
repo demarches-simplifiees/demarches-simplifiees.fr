@@ -66,7 +66,7 @@ class Procedure < ApplicationRecord
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
   validate :check_juridique
-  validates :path, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: :aasm_state, case_sensitive: false }, presence: true, allow_blank: false, allow_nil: true
+  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :archived_at, :hidden_at], case_sensitive: false }
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
