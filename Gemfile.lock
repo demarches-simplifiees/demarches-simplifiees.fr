@@ -220,8 +220,6 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
-    flipflop (2.4.0)
-      activesupport (>= 4.0)
     flipper (0.16.2)
     flipper-active_record (0.16.2)
       activerecord (>= 3.2, < 6)
@@ -738,7 +736,6 @@ DEPENDENCIES
   devise-async
   dotenv-rails
   factory_bot
-  flipflop
   flipper
   flipper-active_record
   flipper-ui
