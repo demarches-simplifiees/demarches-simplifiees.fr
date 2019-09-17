@@ -1,5 +1,5 @@
 class Attestation < ApplicationRecord
-  self.ignored_columns = ['pdf']
+  self.ignored_columns = ['pdf', 'content_secure_token']
 
   belongs_to :dossier
 

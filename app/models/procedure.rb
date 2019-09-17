@@ -1,7 +1,7 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['logo']
+  self.ignored_columns = ['logo', 'logo_secure_token']
 
   MAX_DUREE_CONSERVATION = 36
 
