@@ -1,4 +1,5 @@
 class Instructeur < ApplicationRecord
+  self.ignored_columns = ['features']
   include EmailSanitizableConcern
 
   has_and_belongs_to_many :administrateurs
@@ -73,7 +74,7 @@ class Instructeur < ApplicationRecord
     active_procedure_overviews = procedures
       .publiees
       .map { |procedure| procedure.procedure_overview(start_date) }
-      .select(&:had_some_activities?)
+      .filter(&:had_some_activities?)
 
     if active_procedure_overviews.count == 0
       nil

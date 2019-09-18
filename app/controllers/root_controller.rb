@@ -24,11 +24,11 @@ class RootController < ApplicationController
       .map.with_index { |type_de_champ, i| type_de_champ.champ.build(id: i) }
 
     all_champs
-      .select { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
+      .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
       .each { |champ| champ.type_de_champ.libelle = 'un super titre de section' }
 
     all_champs
-      .select { |champ| [TypeDeChamp.type_champs.fetch(:drop_down_list), TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)].include?(champ.type_champ) }
+      .filter { |champ| [TypeDeChamp.type_champs.fetch(:drop_down_list), TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)].include?(champ.type_champ) }
       .each do |champ|
         champ.type_de_champ.drop_down_list = DropDownList.new(type_de_champ: champ.type_de_champ)
         champ.drop_down_list.value =
@@ -47,7 +47,7 @@ class RootController < ApplicationController
 
     type_champ_values.each do |(type_champ, value)|
       all_champs
-        .select { |champ| champ.type_champ == type_champ }
+        .filter { |champ| champ.type_champ == type_champ }
         .each { |champ| champ.value = value }
     end
 

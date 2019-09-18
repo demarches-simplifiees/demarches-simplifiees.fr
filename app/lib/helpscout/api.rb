@@ -26,7 +26,7 @@ class Helpscout::API
     body = {
       subject: subject,
       customer: customer(email),
-      mailboxId: mailbox_id,
+      mailboxId: user_support_mailbox_id,
       type: 'email',
       status: 'active',
       threads: [
@@ -44,7 +44,7 @@ class Helpscout::API
 
   def add_phone_number(email, phone)
     query = URI.encode("(email:#{email})")
-    response = call_api(:get, "#{CUSTOMERS}?mailbox=#{mailbox_id}&query=#{query}")
+    response = call_api(:get, "#{CUSTOMERS}?mailbox=#{user_support_mailbox_id}&query=#{query}")
     if response.success?
       body = parse_response_body(response)
       if body[:page][:totalElements] > 0
@@ -57,17 +57,18 @@ class Helpscout::API
     end
   end
 
-  def conversations_report(year, month)
-    Rails.logger.info("[HelpScout API] Retrieving conversations report for #{month}-#{year}…")
+  def productivity_report(year, month)
+    Rails.logger.info("[HelpScout API] Retrieving productivity report for #{month}-#{year}…")
 
     params = {
+      mailboxes: [user_support_mailbox_id].join(','),
       start: Time.utc(year, month).iso8601,
       end: Time.utc(year, month).next_month.iso8601
     }
 
-    response = call_api(:get, 'reports/conversations?' + params.to_query)
+    response = call_api(:get, 'reports/productivity?' + params.to_query)
     if !response.success?
-      raise StandardError, "Error while fetching conversation report: #{response.response_code} '#{response.body}'"
+      raise StandardError, "Error while fetching productivity report: #{response.response_code} '#{response.body}'"
     end
 
     parse_response_body(response)
@@ -107,7 +108,7 @@ class Helpscout::API
   end
 
   def fetch_custom_fields
-    call_api(:get, "#{MAILBOXES}/#{mailbox_id}/#{FIELDS}")
+    call_api(:get, "#{MAILBOXES}/#{user_support_mailbox_id}/#{FIELDS}")
   end
 
   def call_api(method, path, body = nil)
@@ -135,7 +136,7 @@ class Helpscout::API
     JSON.parse(response.body, symbolize_names: true)
   end
 
-  def mailbox_id
+  def user_support_mailbox_id
     Rails.application.secrets.helpscout[:mailbox_id]
   end
 

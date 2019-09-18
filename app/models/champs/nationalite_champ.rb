@@ -4,6 +4,6 @@ class Champs::NationaliteChamp < Champs::TextChamp
   end
 
   def self.disabled_options
-    options.select { |v| (v =~ /^--.*--$/).present? }
+    options.filter { |v| (v =~ /^--.*--$/).present? }
   end
 end

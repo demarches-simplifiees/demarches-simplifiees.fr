@@ -13,7 +13,6 @@ class StatsController < ApplicationController
     @satisfaction_usagers = satisfaction_usagers
 
     @contact_percentage = contact_percentage
-    @contact_percentage_excluded_tags = Helpscout::UserConversationsAdapter::EXCLUDED_TAGS
 
     @dossiers_states = dossiers_states
 
@@ -175,20 +174,15 @@ class StatsController < ApplicationController
     adapter
       .reports
       .map do |monthly_report|
-      start_date = monthly_report[:start_date].to_time.localtime
-      end_date = monthly_report[:end_date].to_time.localtime
-      replies_count = monthly_report[:conversations_count]
+        start_date = monthly_report[:start_date].to_time.localtime
+        end_date = monthly_report[:end_date].to_time.localtime
+        replies_count = monthly_report[:replies_sent]
 
-      dossiers_count = Dossier.where(en_construction_at: start_date..end_date).count
+        dossiers_count = Dossier.where(en_construction_at: start_date..end_date).count
 
-      monthly_contact_percentage =
-        if dossiers_count > replies_count
-          replies_count.fdiv(dossiers_count) * 100
-        else
-          100
-        end
-      [I18n.l(start_date, format: '%b %y'), monthly_contact_percentage.round(1)]
-    end
+        monthly_contact_percentage = replies_count.fdiv(dossiers_count || 1) * 100
+        [I18n.l(start_date, format: '%b %y'), monthly_contact_percentage.round(1)]
+      end
   end
 
   def cloned_from_library_procedures_ratio
@@ -362,7 +356,7 @@ class StatsController < ApplicationController
       if weekly_dossiers_count == 0
         result = 0
       else
-        weekly_dossier_with_avis_count = weekly_dossiers.select { |dossier| dossier.avis.present? }.count
+        weekly_dossier_with_avis_count = weekly_dossiers.filter { |dossier| dossier.avis.present? }.count
         result = percentage(weekly_dossier_with_avis_count, weekly_dossiers_count)
       end
 
