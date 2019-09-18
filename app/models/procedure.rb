@@ -481,6 +481,10 @@ class Procedure < ApplicationRecord
     !AssignTo.exists?(groupe_instructeur: groupe_instructeurs)
   end
 
+  def routee?
+    groupe_instructeurs.count > 1
+  end
+
   private
 
   def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
