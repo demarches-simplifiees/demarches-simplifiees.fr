@@ -4,7 +4,7 @@ describe ProcedureExportService do
   describe 'to_data' do
     let(:procedure) { create(:procedure, :published, :with_all_champs) }
     let(:table) { :dossiers }
-    subject { ProcedureExportService.new(procedure).to_data(table) }
+    subject { ProcedureExportService.new(procedure, procedure.dossiers).to_data(table) }
 
     let(:headers) { subject[:headers] }
     let(:data) { subject[:data] }
