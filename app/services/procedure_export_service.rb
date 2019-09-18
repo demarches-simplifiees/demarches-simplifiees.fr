@@ -51,6 +51,13 @@ class ProcedureExportService
 
   def initialize(procedure, dossiers, tables: [], ids: nil, since: nil, limit: nil)
     @procedure = procedure
+
+    @attributes = ATTRIBUTES.dup
+
+    if procedure.routee?
+      @attributes << :groupe_instructeur_label
+    end
+
     @dossiers = dossiers.downloadable_sorted
     if ids
       @dossiers = @dossiers.where(id: ids)
@@ -137,7 +144,7 @@ class ProcedureExportService
   end
 
   def dossiers_headers
-    headers = ATTRIBUTES.map(&:to_s) +
+    headers = @attributes.map(&:to_s) +
       @procedure.types_de_champ.reject(&:exclude_from_export?).map(&:libelle) +
       @procedure.types_de_champ_private.reject(&:exclude_from_export?).map(&:libelle) +
       ETABLISSEMENT_ATTRIBUTES.map { |key| "etablissement.#{key}" } +
@@ -148,7 +155,7 @@ class ProcedureExportService
 
   def dossiers_data
     @dossiers.map do |dossier|
-      values = ATTRIBUTES.map do |key|
+      values = @attributes.map do |key|
         case key
         when :email
           dossier.user.email
@@ -168,6 +175,8 @@ class ProcedureExportService
           dossier.individual&.gender
         when :emails_instructeurs
           dossier.followers_instructeurs.map(&:email).join(' ')
+        when :groupe_instructeur_label
+          dossier.groupe_instructeur.label
         else
           dossier.read_attribute(key)
         end
