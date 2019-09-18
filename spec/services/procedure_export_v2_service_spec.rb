@@ -5,7 +5,7 @@ describe ProcedureExportV2Service do
     let(:procedure) { create(:procedure, :published, :with_all_champs) }
     subject do
       Tempfile.create do |f|
-        f << ProcedureExportV2Service.new(procedure).to_xlsx
+        f << ProcedureExportV2Service.new(procedure, procedure.dossiers).to_xlsx
         f.rewind
         SimpleXlsxReader.open(f.path)
       end

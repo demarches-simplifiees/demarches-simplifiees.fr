@@ -1,9 +1,9 @@
 class ProcedureExportV2Service
   attr_reader :dossiers
 
-  def initialize(procedure, ids: nil, since: nil, limit: nil)
+  def initialize(procedure, dossiers, ids: nil, since: nil, limit: nil)
     @procedure = procedure
-    @dossiers = procedure.dossiers.downloadable_sorted
+    @dossiers = dossiers.downloadable_sorted
     if ids
       @dossiers = @dossiers.where(id: ids)
     end
