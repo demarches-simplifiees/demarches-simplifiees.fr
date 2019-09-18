@@ -6,6 +6,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
   before do
     assign(:procedure, procedure)
+    assign(:procedure_lien, commencer_url(path: procedure.path))
   end
 
   describe 'procedure is draft' do
@@ -41,7 +42,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
   describe 'procedure is published' do
     before do
-      procedure.publish!(procedure.administrateurs.first, 'fake_path', procedure.lien_site_web)
+      procedure.publish!
       procedure.reload
       render
     end
@@ -59,7 +60,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
 
   describe 'procedure is archived' do
     before do
-      procedure.publish!(procedure.administrateurs.first, 'fake_path', procedure.lien_site_web)
+      procedure.publish!
       procedure.archive!
       procedure.reload
       render

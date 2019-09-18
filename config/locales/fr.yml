@@ -163,6 +163,8 @@ fr:
         procedure:
           attributes:
             path:
+              taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
+              taken_can_be_claimed: est identique à celui d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera archivée et ne sera plus accessible au public.
               invalid: n'est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
 
   errors:
