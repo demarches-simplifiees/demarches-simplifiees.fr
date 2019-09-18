@@ -8,7 +8,7 @@ class Instructeur < ApplicationRecord
 
   has_many :assign_to, dependent: :destroy
   has_many :groupe_instructeurs, through: :assign_to
-  has_many :procedures, through: :groupe_instructeurs
+  has_many :procedures, -> { distinct }, through: :groupe_instructeurs
 
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur

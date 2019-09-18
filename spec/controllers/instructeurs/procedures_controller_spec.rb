@@ -218,10 +218,14 @@ describe Instructeurs::ProceduresController, type: :controller do
   describe "#show" do
     let(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+    let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
+    let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
 
-    context "when logged in" do
+    context "when logged in, and belonging to gi_1, gi_2" do
       before do
         sign_in(instructeur.user)
+
+        instructeur.groupe_instructeurs << gi_2
       end
 
       context "without anything" do
@@ -257,6 +261,18 @@ describe Instructeurs::ProceduresController, type: :controller do
         it { expect(assigns(:termines_dossiers)).to be_empty }
         it { expect(assigns(:all_state_dossiers)).to match([new_unfollow_dossier]) }
         it { expect(assigns(:archived_dossiers)).to be_empty }
+
+        context 'and dossiers without follower on each of the others groups' do
+          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
+          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
+
+          before do
+            get :show, params: { procedure_id: procedure.id }
+          end
+
+          it { expect(assigns(:a_suivre_dossiers)).to match([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
+          it { expect(assigns(:all_state_dossiers)).to match([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
+        end
       end
 
       context 'with a new dossier with a follower' do
@@ -272,6 +288,20 @@ describe Instructeurs::ProceduresController, type: :controller do
         it { expect(assigns(:termines_dossiers)).to be_empty }
         it { expect(assigns(:all_state_dossiers)).to match([new_followed_dossier]) }
         it { expect(assigns(:archived_dossiers)).to be_empty }
+
+        context 'and dossier with a follower on each of the others groups' do
+          let!(:new_follow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
+          let!(:new_follow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
+
+          before do
+            instructeur.followed_dossiers << new_follow_dossier_on_gi_2 << new_follow_dossier_on_gi_3
+            get :show, params: { procedure_id: procedure.id }
+          end
+
+          # followed dossiers on another groupe should not be displayed
+          it { expect(assigns(:followed_dossiers)).to contain_exactly(new_followed_dossier, new_follow_dossier_on_gi_2) }
+          it { expect(assigns(:all_state_dossiers)).to contain_exactly(new_followed_dossier, new_follow_dossier_on_gi_2) }
+        end
       end
 
       context 'with a termine dossier with a follower' do
@@ -286,6 +316,18 @@ describe Instructeurs::ProceduresController, type: :controller do
         it { expect(assigns(:termines_dossiers)).to match([termine_dossier]) }
         it { expect(assigns(:all_state_dossiers)).to match([termine_dossier]) }
         it { expect(assigns(:archived_dossiers)).to be_empty }
+
+        context 'and terminer dossiers on each of the others groups' do
+          let!(:termine_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:accepte)) }
+          let!(:termine_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:accepte)) }
+
+          before do
+            get :show, params: { procedure_id: procedure.id }
+          end
+
+          it { expect(assigns(:termines_dossiers)).to match([termine_dossier, termine_dossier_on_gi_2]) }
+          it { expect(assigns(:all_state_dossiers)).to match([termine_dossier, termine_dossier_on_gi_2]) }
+        end
       end
 
       context 'with an archived dossier' do
@@ -300,6 +342,17 @@ describe Instructeurs::ProceduresController, type: :controller do
         it { expect(assigns(:termines_dossiers)).to be_empty }
         it { expect(assigns(:all_state_dossiers)).to be_empty }
         it { expect(assigns(:archived_dossiers)).to match([archived_dossier]) }
+
+        context 'and terminer dossiers on each of the others groups' do
+          let!(:archived_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction), archived: true) }
+          let!(:archived_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction), archived: true) }
+
+          before do
+            get :show, params: { procedure_id: procedure.id }
+          end
+
+          it { expect(assigns(:archived_dossiers)).to match([archived_dossier, archived_dossier_on_gi_2]) }
+        end
       end
 
       describe 'statut' do

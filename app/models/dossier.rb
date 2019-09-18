@@ -161,6 +161,8 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
+  scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
+
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
