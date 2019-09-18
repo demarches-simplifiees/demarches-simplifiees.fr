@@ -1,23 +1,26 @@
 type Avis {
   answer: String
+  attachmentUrl: URL
   createdAt: ISO8601DateTime!
   email: String!
+  id: ID!
   question: String!
-  updatedAt: ISO8601DateTime!
 }
 
 type CarteChamp implements Champ {
   geoAreas: [GeoArea!]!
   id: ID!
   label: String!
+  stringValue: String
 }
 
 interface Champ {
   id: ID!
   label: String!
+  stringValue: String
 }
 
-type ChampInfo {
+type ChampDescriptor {
   description: String
   id: ID!
   label: String!
@@ -28,6 +31,7 @@ type ChampInfo {
 type CheckboxChamp implements Champ {
   id: ID!
   label: String!
+  stringValue: String
   value: Boolean!
 }
 
@@ -39,12 +43,14 @@ scalar Coordinates
 type DateChamp implements Champ {
   id: ID!
   label: String!
+  stringValue: String
   value: ISO8601DateTime
 }
 
 type DecimalNumberChamp implements Champ {
   id: ID!
   label: String!
+  stringValue: String
   value: Float
 }
 
@@ -52,15 +58,10 @@ type DecimalNumberChamp implements Champ {
 Une demarche
 """
 type Demarche {
-  annotations: [ChampInfo!]!
+  annotationDescriptors: [ChampDescriptor!]!
   archivedAt: ISO8601DateTime
-  champs: [ChampInfo!]!
+  champDescriptors: [ChampDescriptor!]!
   createdAt: ISO8601DateTime!
-
-  """
-  Lien vers le texte qui justifie le droit de collecter les données demandées dans votre démarche auprès des usagers.
-  """
-  deliberationUrl: URL
 
   """
   Déscription de la démarche.
@@ -101,27 +102,13 @@ type Demarche {
     """
     since: ISO8601DateTime
   ): DossierConnection!
-
-  """
-  L'ID de la démarche.
-  """
   id: ID!
   instructeurs: [Profile!]!
 
   """
-  Lien public de la démarche.
+  Le numero de la démarche.
   """
-  link: URL
-
-  """
-  Lien vers la notice explicative de la démarche.
-  """
-  noticeUrl: URL
-
-  """
-  Lien vers le site internet de la démarche.
-  """
-  siteWebUrl: URL
+  number: ID!
   state: DemarcheState!
   title: String!
   updatedAt: ISO8601DateTime!
@@ -129,7 +116,7 @@ type Demarche {
 
 enum DemarcheState {
   """
-  Archivee
+  Archivée
   """
   archivee
 
@@ -139,12 +126,7 @@ enum DemarcheState {
   brouillon
 
   """
-  Hidden
-  """
-  hidden
-
-  """
-  Publiee
+  Publiée
   """
   publiee
 }
@@ -154,22 +136,43 @@ Un dossier
 """
 type Dossier {
   annotations: [Champ!]!
+  archived: Boolean!
   avis: [Avis!]!
   champs: [Champ!]!
-  createdAt: ISO8601DateTime!
 
   """
-  L'ID du dossier.
+  Date de dépôt.
   """
+  datePassageEnConstruction: ISO8601DateTime!
+
+  """
+  Date de passage en instruction.
+  """
+  datePassageEnInstruction: ISO8601DateTime
+
+  """
+  Date de traitement.
+  """
+  dateTraitement: ISO8601DateTime
   id: ID!
   instructeurs: [Profile!]!
   messages: [Message!]!
   motivation: String
+  motivationAttachmentUrl: URL
+
+  """
+  Le numero du dossier.
+  """
+  number: ID!
 
   """
   L'état du dossier.
   """
   state: DossierState!
+
+  """
+  Date de dernière mise à jour.
+  """
   updatedAt: ISO8601DateTime!
   usager: Profile!
 }
@@ -213,6 +216,7 @@ type DossierLinkChamp implements Champ {
   dossier: Dossier
   id: ID!
   label: String!
+  stringValue: String
 }
 
 enum DossierState {
@@ -220,11 +224,6 @@ enum DossierState {
   Accepté
   """
   accepte
-
-  """
-  Brouillon
-  """
-  brouillon
 
   """
   En construction
@@ -249,7 +248,7 @@ enum DossierState {
 
 interface GeoArea {
   geometry: GeoJSON!
-  id: ID
+  id: ID!
   source: GeoAreaSource!
 }
 
@@ -288,14 +287,31 @@ scalar ISO8601DateTime
 type IntegerNumberChamp implements Champ {
   id: ID!
   label: String!
+  stringValue: String
   value: Int
 }
 
+type LinkedDropDownListChamp implements Champ {
+  id: ID!
+  label: String!
+  primaryValue: String
+  secondaryValue: String
+  stringValue: String
+}
+
 type Message {
-  attachment: URL
+  attachmentUrl: URL
   body: String!
   createdAt: ISO8601DateTime!
   email: String!
+  id: ID!
+}
+
+type MultipleDropDownListChamp implements Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+  values: [String!]!
 }
 
 type Mutation {
@@ -332,7 +348,7 @@ type ParcelleCadastrale implements GeoArea {
   codeDep: String!
   feuille: Int!
   geometry: GeoJSON!
-  id: ID
+  id: ID!
   nomCom: String!
   numero: String!
   section: String!
@@ -359,6 +375,7 @@ type PersonneMorale {
 type PieceJustificativeChamp implements Champ {
   id: ID!
   label: String!
+  stringValue: String
   url: URL
 }
 
@@ -371,7 +388,7 @@ type QuartierPrioritaire implements GeoArea {
   code: String!
   commune: String!
   geometry: GeoJSON!
-  id: ID
+  id: ID!
   nom: String!
   source: GeoAreaSource!
 }
@@ -384,7 +401,7 @@ type Query {
     """
     Numéro de la démarche.
     """
-    id: ID!
+    number: ID!
   ): Demarche!
 
   """
@@ -394,7 +411,7 @@ type Query {
     """
     Numéro du dossier.
     """
-    id: ID!
+    number: ID!
   ): Dossier!
 }
 
@@ -402,11 +419,12 @@ type RepetitionChamp implements Champ {
   champs: [Champ!]!
   id: ID!
   label: String!
+  stringValue: String
 }
 
 type SelectionUtilisateur implements GeoArea {
   geometry: GeoJSON!
-  id: ID
+  id: ID!
   source: GeoAreaSource!
 }
 
@@ -414,11 +432,13 @@ type SiretChamp implements Champ {
   etablissement: PersonneMorale
   id: ID!
   label: String!
+  stringValue: String
 }
 
 type TextChamp implements Champ {
   id: ID!
   label: String!
+  stringValue: String
   value: String
 }
 
