@@ -57,7 +57,7 @@ Rails.application.configure do
       authentication: :cram_md5
     }
   else
-     config.action_mailer.delivery_method = :letter_opener_web
+    config.action_mailer.delivery_method = :letter_opener_web
   end
 
   Rails.application.routes.default_url_options = {
