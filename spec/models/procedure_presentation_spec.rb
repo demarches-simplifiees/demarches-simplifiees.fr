@@ -62,6 +62,7 @@ describe ProcedurePresentation do
           { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at' },
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email' },
           { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email' },
+          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'label' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren' },
           { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique' },
           { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial' },
@@ -195,6 +196,15 @@ describe ProcedurePresentation do
       let!(:dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75008')) }
 
       it { is_expected.to eq('75008') }
+    end
+
+    context 'for groupe_instructeur table' do
+      let(:table) { 'groupe_instructeur' }
+      let(:column) { 'label' }
+
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+
+      it { is_expected.to eq('défaut') }
     end
 
     context 'for followers_instructeurs table' do
@@ -676,6 +686,33 @@ describe ProcedurePresentation do
         end
       end
     end
+
+    context 'for groupe_instructeur table' do
+      let(:filter) { [{ 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => 'défaut' }] }
+
+      let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
+      let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
+
+      let!(:kept_dossier) { create(:dossier, procedure: procedure) }
+      let!(:discarded_dossier) { create(:dossier, groupe_instructeur: gi_2) }
+
+      it { is_expected.to contain_exactly(kept_dossier.id) }
+
+      context 'with multiple search values' do
+        let(:filter) do
+          [
+            { 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => 'défaut' },
+            { 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => '3' }
+          ]
+        end
+
+        let!(:other_kept_dossier) { create(:dossier, groupe_instructeur: gi_3) }
+
+        it 'returns every dossier that matches any of the search criteria for a given column' do
+          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
+    end
   end
 
   describe '#eager_load_displayed_fields' do
@@ -696,6 +733,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
         expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
+        expect(displayed_dossier.association(:groupe_instructeur)).not_to be_loaded
       end
     end
 
@@ -712,6 +750,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
         expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
+        expect(displayed_dossier.association(:groupe_instructeur)).not_to be_loaded
       end
     end
 
@@ -726,6 +765,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
         expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
+        expect(displayed_dossier.association(:groupe_instructeur)).not_to be_loaded
       end
     end
 
@@ -740,6 +780,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:individual)).to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
         expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
+        expect(displayed_dossier.association(:groupe_instructeur)).not_to be_loaded
       end
     end
 
@@ -754,6 +795,7 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).to be_loaded
         expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
+        expect(displayed_dossier.association(:groupe_instructeur)).not_to be_loaded
       end
     end
 
@@ -768,6 +810,22 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
         expect(displayed_dossier.association(:followers_instructeurs)).to be_loaded
+        expect(displayed_dossier.association(:groupe_instructeur)).not_to be_loaded
+      end
+    end
+
+    context 'for groupe_instructeur' do
+      let(:table) { 'groupe_instructeur' }
+      let(:column) { 'email' }
+
+      it 'preloads the followers_instructeurs relation' do
+        expect(displayed_dossier.association(:champs)).not_to be_loaded
+        expect(displayed_dossier.association(:champs_private)).not_to be_loaded
+        expect(displayed_dossier.association(:user)).not_to be_loaded
+        expect(displayed_dossier.association(:individual)).not_to be_loaded
+        expect(displayed_dossier.association(:etablissement)).not_to be_loaded
+        expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
+        expect(displayed_dossier.association(:groupe_instructeur)).to be_loaded
       end
     end
 
