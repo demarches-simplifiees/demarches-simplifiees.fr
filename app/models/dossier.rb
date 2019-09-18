@@ -447,7 +447,7 @@ class Dossier < ApplicationRecord
   end
 
   def spreadsheet_columns
-    [
+    columns = [
       ['ID', id.to_s],
       ['Email', user.email],
       ['Civilité', individual&.gender],
@@ -462,7 +462,13 @@ class Dossier < ApplicationRecord
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
       ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
-    ] + champs_for_export + annotations_for_export
+    ]
+
+    if procedure.routee?
+      columns << ['Groupe instructeur', groupe_instructeur.label]
+    end
+
+    columns + champs_for_export + annotations_for_export
   end
 
   def champs_for_export
