@@ -16,18 +16,11 @@ module Instructeurs
     def attestation
       if dossier.attestation.pdf.attached?
         redirect_to url_for(dossier.attestation.pdf)
-      elsif dossier.attestation.pdf_active_storage.attached?
-        redirect_to url_for(dossier.attestation.pdf_active_storage)
       end
     end
 
     def apercu_attestation
-      @title      = dossier.procedure.attestation_template.title_for_dossier(dossier)
-      @body       = dossier.procedure.attestation_template.body_for_dossier(dossier)
-      @footer     = dossier.procedure.attestation_template.footer
-      @created_at = Time.zone.now
-      @logo       = dossier.procedure.attestation_template&.proxy_logo
-      @signature  = dossier.procedure.attestation_template&.proxy_signature
+      @attestation = dossier.procedure.attestation_template.render_attributes_for(dossier: dossier)
 
       render 'admin/attestation_templates/show', formats: [:pdf]
     end

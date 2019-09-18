@@ -17,11 +17,11 @@
       celle-ci est également disponible au téléchargement depuis l’espace personnel de l’usager.
 
     .image-upload
-      - if @attestation_template.logo?
+      - if @attestation_template.logo.attached?
         = image_tag @attestation_template.logo_url, class: 'thumbnail'
       .form-group
         = f.label :logo, "Logo de l'attestation"
-        - if @attestation_template.logo?
+        - if @attestation_template.logo.attached?
           = link_to 'Supprimer le logo', admin_procedure_attestation_template_logo_path(@procedure), method: :delete
         = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg'
         %p.help-block
@@ -54,11 +54,11 @@
                 = tag[:description]
 
     .image-upload
-      - if @attestation_template.signature?
+      - if @attestation_template.signature.attached?
         = image_tag @attestation_template.signature_url, class: 'thumbnail'
       .form-group
         = f.label :signature, "Tampon de l'attestation"
-        - if @attestation_template.signature?
+        - if @attestation_template.signature.attached?
           = link_to 'Supprimer le tampon', admin_procedure_attestation_template_signature_path(@procedure), method: :delete
         = f.file_field :signature, accept: 'image/png, image/jpg, image/jpeg'
         %p.help-block

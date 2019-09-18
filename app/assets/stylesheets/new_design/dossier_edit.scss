@@ -45,4 +45,51 @@
     padding: 20px;
     border-radius: 4px;
   }
+
+  .send-dossier-actions-bar {
+    // scss-lint:disable VendorPrefix
+    position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
+    // scss-lint:enable VendorPrefix
+    position: sticky;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: $default-padding;
+    margin-left: -$default-padding;
+    margin-right: -$default-padding;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: $default-spacer;
+    padding-right: $default-padding;
+    padding-left: $default-padding;
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: none;
+
+    .button {
+      min-height: 38px;
+      line-height: 16px;
+    }
+
+    // If there are more than one button, align the "Send" button to the right
+    .button:not(:first-of-type).send {
+      margin-left: auto;
+    }
+
+    // Normal layout
+    @media (min-width: 500px) {
+      padding-top: $default-spacer * 2;
+      padding-bottom: $default-spacer * 2;
+    }
+
+    // Compact layout
+    @media (max-width: 500px) {
+      padding-top: $default-spacer;
+      padding-bottom: $default-spacer;
+    }
+  }
 }

@@ -159,9 +159,11 @@ describe AttestationTemplate, type: :model do
               .update(value: 'libelle2')
           end
 
-          it { expect(view_args[:title]).to eq('title libelle1') }
-          it { expect(view_args[:body]).to eq('body libelle2') }
-          it { expect(attestation.title).to eq('title libelle1') }
+          it do
+            expect(view_args[:attestation][:title]).to eq('title libelle1')
+            expect(view_args[:attestation][:body]).to eq('body libelle2')
+            expect(attestation.title).to eq('title libelle1')
+          end
         end
       end
     end

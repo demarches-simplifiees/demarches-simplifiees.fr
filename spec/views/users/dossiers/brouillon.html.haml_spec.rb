@@ -21,7 +21,7 @@ describe 'users/dossiers/brouillon.html.haml', type: :view do
   end
 
   it 'affiche les boutons de validation' do
-    expect(rendered).to have_selector('.send-wrapper')
+    expect(rendered).to have_selector('.send-dossier-actions-bar')
   end
 
   it 'prépare le footer' do

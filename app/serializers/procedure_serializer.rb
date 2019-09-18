@@ -24,12 +24,10 @@ class ProcedureSerializer < ActiveModel::Serializer
   end
 
   def link
-    if object.path.present?
-      if object.brouillon_avec_lien?
-        commencer_test_url(path: object.path)
-      else
-        commencer_url(path: object.path)
-      end
+    if object.brouillon?
+      commencer_test_url(path: object.path)
+    else
+      commencer_url(path: object.path)
     end
   end
 

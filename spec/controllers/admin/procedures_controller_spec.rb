@@ -340,7 +340,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
+        put :publish, format: :js, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
         procedure.reload
         procedure2.reload
       end
@@ -383,7 +383,6 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
           expect(procedure.lien_site_web).to match(lien_site_web)
-          expect(response.status).to eq 200
         end
 
         it 'previous procedure remains published' do
@@ -401,8 +400,6 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_falsey
           expect(procedure.path).not_to match(path)
           expect(procedure.lien_site_web).to match(lien_site_web)
-          expect(response).to redirect_to :admin_procedures
-          expect(flash[:alert]).to have_content 'Lien de la démarche invalide'
         end
       end
     end
@@ -419,8 +416,7 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       it 'fails' do
-        expect(response).to redirect_to :admin_procedures
-        expect(flash[:alert]).to have_content 'Démarche inexistante'
+        expect(response).to have_http_status(404)
       end
     end
 
@@ -573,54 +569,6 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
-  describe 'GET #path_list' do
-    let!(:procedure) { create(:procedure, :published, administrateur: admin) }
-    let(:admin2) { create(:administrateur) }
-    let!(:procedure2) { create(:procedure, :published, administrateur: admin2) }
-    let!(:procedure3) { create(:procedure, :published, administrateur: admin2) }
-
-    subject { get :path_list }
-
-    let(:body) { JSON.parse(response.body) }
-
-    describe 'when no params' do
-      before do
-        subject
-      end
-
-      it { expect(response.status).to eq(200) }
-      it { expect(body.size).to eq(3) }
-      it { expect(body.first['label']).to eq(procedure.path) }
-      it { expect(body.first['mine']).to be_truthy }
-      it { expect(body.second['label']).to eq(procedure2.path) }
-      it { expect(body.second['mine']).to be_falsy }
-    end
-
-    context 'filtered' do
-      before do
-        subject
-      end
-
-      subject { get :path_list, params: { request: URI.encode(procedure2.path) } }
-
-      it { expect(response.status).to eq(200) }
-      it { expect(body.size).to eq(1) }
-      it { expect(body.first['label']).to eq(procedure2.path) }
-      it { expect(body.first['mine']).to be_falsy }
-    end
-
-    context 'when procedure is archived' do
-      let!(:procedure3) { create(:procedure, :archived, administrateur: admin2) }
-      before do
-        subject
-      end
-
-      it 'do not return on the json' do
-        expect(body.size).to eq(2)
-      end
-    end
-  end
-
   describe 'POST #transfer' do
     let!(:procedure) { create :procedure, :with_service, administrateur: admin }
 
@@ -716,63 +664,6 @@ describe Admin::ProceduresController, type: :controller do
     end
   end
 
-  describe "GET #check_availability" do
-    render_views
-    let(:procedure) { create(:procedure, :with_path, administrateur: admin) }
-    let(:params) {
-      {
-        procedure: {
-          path: path,
-          id: procedure.id
-        }
-      }
-    }
-    let(:path) { generate(:published_path) }
-
-    before do
-      get :check_availability, params: params, format: 'js'
-    end
-
-    context 'self path' do
-      let(:path) { procedure.path }
-
-      it { expect(response.body).to include("innerHTML = ''") }
-    end
-
-    context 'available path' do
-      it { expect(response.body).to include("innerHTML = ''") }
-    end
-
-    context 'my path (brouillon)' do
-      let(:procedure_owned) { create(:procedure, :with_path, administrateur: admin) }
-      let(:path) { procedure_owned.path }
-
-      it {
-        expect(response.body).to include('Une démarche en test existe déjà avec ce lien.')
-      }
-    end
-
-    context 'my path' do
-      let(:procedure_owned) { create(:procedure, :published, administrateur: admin) }
-      let(:path) { procedure_owned.path }
-
-      it {
-        expect(response.body).to include('Ce lien est déjà utilisé par une de vos démarche.')
-        expect(response.body).to include('Si vous voulez l’utiliser, l’ancienne démarche sera archivée')
-      }
-    end
-
-    context 'unavailable path' do
-      let(:procedure_not_owned) { create(:procedure, :with_path, administrateur: create(:administrateur)) }
-      let(:path) { procedure_not_owned.path }
-
-      it {
-        expect(response.body).to include('Ce lien est déjà utilisé par une démarche.')
-        expect(response.body).to include('Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.')
-      }
-    end
-  end
-
   describe 'PATCH #monavis' do
     let!(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_params) {
@@ -796,10 +687,11 @@ describe Admin::ProceduresController, type: :controller do
         patch :update_monavis, params: { procedure_id: procedure.id, procedure: procedure_params }
         procedure.reload
       end
+
       let(:monavis_embed) {
         <<-MSG
-        <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
-          <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+        <a href="https://voxusagers.numerique.gouv.fr/Demarches/2136?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=e93e77cfd9bf7cce9d10f7a10be55730">
+          <img src="https://voxusagers.numerique.gouv.fr/static/bouton-bleu.svg" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
         </a>
         MSG
       }
@@ -810,6 +702,24 @@ describe Admin::ProceduresController, type: :controller do
         before { update_monavis }
 
         context 'when the embed code is valid' do
+          describe 'the monavis field is updated' do
+            subject { procedure }
+
+            it { expect(subject.monavis_embed).to eq(monavis_embed) }
+          end
+
+          it { expect(flash[:notice]).to be_present }
+          it { expect(response.body).to include "MonAvis" }
+        end
+
+        context 'when the embed code is valid with the original format' do
+          let(:monavis_embed) {
+            <<-MSG
+            <a href="https://monavis.numerique.gouv.fr/Demarches/123?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=cd4a872d475e4045666057f">
+              <img src="https://monavis.numerique.gouv.fr/monavis-static/bouton-blanc.png" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche" />
+            </a>
+            MSG
+          }
           describe 'the monavis field is updated' do
             subject { procedure }
 

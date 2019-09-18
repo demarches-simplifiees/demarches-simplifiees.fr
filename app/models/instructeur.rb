@@ -24,10 +24,6 @@ class Instructeur < ApplicationRecord
 
   has_one :user
 
-  def visible_procedures
-    procedures.merge(Procedure.avec_lien.or(Procedure.archivees))
-  end
-
   def follow(dossier)
     begin
       followed_dossiers << dossier
