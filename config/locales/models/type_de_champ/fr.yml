@@ -34,5 +34,6 @@ fr:
           dossier_link: 'Lien vers un autre dossier'
           piece_justificative: 'Pièce justificative'
           siret: 'Numéro TAHITI'
-          carte: 'Carte'
+          carte: 'Carte de France'
+          te_fenua: 'Carte de Polynésie'
           repetition: 'Bloc répétable'

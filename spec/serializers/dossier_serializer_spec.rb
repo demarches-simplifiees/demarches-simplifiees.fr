@@ -26,14 +26,16 @@ describe DossierSerializer do
         dossier.champs << create(:champ_integer_number)
         dossier.champs << create(:champ_decimal_number)
         dossier.champs << create(:champ_linked_drop_down_list)
+        dossier.champs << create(:champ_te_fenua)
       end
 
       it {
-        expect(subject.size).to eq(6)
+        expect(subject.size).to eq(7)
 
         expect(subject[0][:type_de_champ][:type_champ]).to eq(TypeDeChamp.type_champs.fetch(:text))
         expect(subject[1][:type_de_champ][:type_champ]).to eq(TypeDeChamp.type_champs.fetch(:carte))
         expect(subject[2][:type_de_champ][:type_champ]).to eq(TypeDeChamp.type_champs.fetch(:siret))
+        expect(subject[6][:type_de_champ][:type_champ]).to eq(TypeDeChamp.type_champs.fetch(:te_fenua))
 
         expect(subject[1][:geo_areas].size).to eq(0)
         expect(subject[2][:etablissement]).to be_present

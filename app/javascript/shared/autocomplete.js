@@ -9,12 +9,17 @@ const sources = [
   {
     type: 'path',
     url: '/admin/procedures/path_list'
+  },
+  {
+    type: 'te_fenua',
+    url: '/te_fenua/suggestions'
   }
 ];
 
 const options = {
   autoselect: true,
-  minLength: 1
+  minLength: 3,
+  debounce: 300
 };
 
 function selector(type) {

@@ -26,6 +26,10 @@
 
     %hr
 
+    -# This button prevent Enter from submitting the form, useful for carte&te_fenua address fields
+    -# See https://stackoverflow.com/a/51507806/5502765
+    %button{ type: :submit, disabled: true, style: 'display: none' } BOUTON
+
     = f.fields_for :champs, dossier.champs do |champ_form|
       - champ = champ_form.object
       = render partial: "shared/dossiers/editable_champs/editable_champ",

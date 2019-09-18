@@ -1,4 +1,4 @@
-- champs.reject(&:exclude_from_view?).each do |c|
+- champs.reject(&:exclude_from_view?).each_with_index do |c,i|
   - if c.type_champ == TypeDeChamp.type_champs.fetch(:repetition)
     %tr
       %th.libelle.repetition{ colspan: 3 }
@@ -20,6 +20,8 @@
             - case c.type_champ
             - when TypeDeChamp.type_champs.fetch(:carte)
               = render partial: "shared/champs/carte/show", locals: { champ: c }
+            - when TypeDeChamp.type_champs.fetch(:te_fenua)
+              = render partial: "shared/champs/te_fenua/show", locals: { champ: c, index: i }
             - when TypeDeChamp.type_champs.fetch(:dossier_link)
               = render partial: "shared/champs/dossier_link/show", locals: { champ: c }
             - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
