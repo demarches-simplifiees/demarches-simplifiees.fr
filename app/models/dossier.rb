@@ -126,7 +126,8 @@ class Dossier < ApplicationRecord
         champs_private: {
           etablissement: :champ,
           type_de_champ: :drop_down_list
-        }
+        },
+        procedure: :groupe_instructeurs
       ).order(en_construction_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
@@ -447,7 +448,7 @@ class Dossier < ApplicationRecord
   end
 
   def spreadsheet_columns
-    [
+    columns = [
       ['ID', id.to_s],
       ['Email', user.email],
       ['Civilité', individual&.gender],
@@ -462,7 +463,13 @@ class Dossier < ApplicationRecord
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
       ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
-    ] + champs_for_export + annotations_for_export
+    ]
+
+    if procedure.routee?
+      columns << ['Groupe instructeur', groupe_instructeur.label]
+    end
+
+    columns + champs_for_export + annotations_for_export
   end
 
   def champs_for_export
