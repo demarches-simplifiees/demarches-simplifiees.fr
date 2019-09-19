@@ -126,7 +126,8 @@ class Dossier < ApplicationRecord
         champs_private: {
           etablissement: :champ,
           type_de_champ: :drop_down_list
-        }
+        },
+        procedure: :groupe_instructeurs
       ).order(en_construction_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
