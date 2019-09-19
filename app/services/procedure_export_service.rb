@@ -49,9 +49,9 @@ class ProcedureExportService
     :prenom
   ]
 
-  def initialize(procedure, tables: [], ids: nil, since: nil, limit: nil)
+  def initialize(procedure, dossiers, tables: [], ids: nil, since: nil, limit: nil)
     @procedure = procedure
-    @dossiers = procedure.dossiers.downloadable_sorted
+    @dossiers = dossiers.downloadable_sorted
     if ids
       @dossiers = @dossiers.where(id: ids)
     end
