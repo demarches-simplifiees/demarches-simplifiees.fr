@@ -109,39 +109,28 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  def notifications_for_procedure(procedure, state)
-    dossiers = case state
-    when :en_cours
-      procedure.defaut_groupe_instructeur.dossiers.en_cours
-    when :termine
-      procedure.defaut_groupe_instructeur.dossiers.termine
-    when :not_archived
-      procedure.defaut_groupe_instructeur.dossiers.not_archived
-    when :all
-      procedure.defaut_groupe_instructeur.dossiers
-    end
-
-    dossiers_id_with_notifications(dossiers)
+  def notifications_for_procedure(procedure, scope)
+    procedure
+      .defaut_groupe_instructeur.dossiers
+      .send(scope) # :en_cours or :termine or :not_archived (or any other Dossier scope)
+      .merge(followed_dossiers_with_notifications)
   end
 
-  def notifications_per_procedure(state)
-    dossiers = case state
-    when :en_cours
-      Dossier.en_cours
-    when :termine
-      Dossier.termine
-    when :not_archived
-      Dossier.not_archived
-    end
+  def procedures_with_notifications(scope)
+    dossiers = Dossier
+      .send(scope) # :en_cours or :termine (or any other Dossier scope)
+      .merge(followed_dossiers_with_notifications)
 
-    Dossier.joins(:groupe_instructeur).where(id: dossiers_id_with_notifications(dossiers)).group('groupe_instructeurs.procedure_id').count
+    Procedure
+      .where(id: dossiers.joins(:groupe_instructeur)
+        .select('groupe_instructeurs.procedure_id')
+        .distinct)
+      .distinct
   end
 
-  def dossiers_id_with_notifications(dossiers)
-    dossiers = dossiers.followed_by(self)
-
+  def followed_dossiers_with_notifications
     # Relations passed to #or must be “structurally compatible”, i.e. query the same tables.
-    joined_dossiers = dossiers
+    joined_dossiers = self.followed_dossiers
       .left_outer_joins(:champs, :champs_private, :avis, :commentaires)
 
     updated_demandes = joined_dossiers
@@ -159,7 +148,7 @@ class Instructeur < ApplicationRecord
       .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
       .where.not(commentaires: { email: CONTACT_EMAIL })
 
-    updated_demandes.or(updated_annotations).or(updated_avis).or(updated_messagerie).ids
+    updated_demandes.or(updated_annotations).or(updated_avis).or(updated_messagerie)
   end
 
   def mark_tab_as_seen(dossier, tab)

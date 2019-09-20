@@ -27,7 +27,7 @@
                 %li
                   %object
                     = link_to(instructeur_procedure_path(p, statut: 'suivis')) do
-                      - if current_instructeur.notifications_per_procedure(:en_cours)[p.id].present?
+                      - if current_instructeur.procedures_with_notifications(:en_cours).include?(p)
                         %span.notifications{ 'aria-label': "notifications" }
                       - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
                       .stats-number
@@ -37,7 +37,7 @@
                 %li
                   %object
                     = link_to(instructeur_procedure_path(p, statut: 'traites')) do
-                      - if current_instructeur.notifications_per_procedure(:termine)[p.id].present?
+                      - if current_instructeur.procedures_with_notifications(:termine).include?(p)
                         %span.notifications{ 'aria-label': "notifications" }
                       - termines_count = @dossiers_termines_count_per_procedure[p.id] || 0
                       .stats-number
