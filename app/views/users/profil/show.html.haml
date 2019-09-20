@@ -25,7 +25,7 @@
   - if current_administrateur.present?
     .card
       .card-title Jeton d’identification de l’API (token)
-      %p Ce jeton est nécessaire pour effectuer des appels vers l’API de demarches-simplifiees.fr.
+      %p Ce jeton est nécessaire pour effectuer des appels vers l’API de #{SITE_NAME}.
 
       - if defined?(@token)
         %p Jeton : <b>#{@token}</b>
