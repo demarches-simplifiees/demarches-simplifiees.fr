@@ -5,11 +5,12 @@
 
 #dossier-show
   .container
-    - attestation_template = @dossier.procedure.attestation_template
-    - if attestation_template.logo?
-      = image_tag attestation_template.logo_url, height: '150px', style: "display: block; margin-left: auto; margin-right: auto; "
-    %h1= attestation_template.title_for_dossier(@dossier)
-    %p= attestation_template.body_for_dossier(@dossier)
-    - if attestation_template.signature?
-      = image_tag attestation_template.signature_url, height: '100px', style: 'display: block; margin-right: 0; margin-left: auto;  margin-bottom: 30px; margin-top: 30px;'
-
+    - if @attestation[:logo].present?
+      = image_tag url_for(@attestation[:logo]), style: "display: block; margin-left: auto; margin-right: auto; margin-top: 2em; margin-bottom: 2em; max-width: 90%; height: auto; max-height: 12em;"
+    .tab-title= @attestation[:title]
+    .card
+      %p.notice= "Le #{l(@attestation[:created_at], format: '%e %B %Y')}"
+      %p.notice= @attestation[:body]
+      - if @attestation[:signature].present?
+        = image_tag url_for(@attestation[:signature]),  style: 'display: block; margin-right: 0; margin-left: auto;  margin-bottom: 30px; margin-top: 30px; max-height: 8em;'
+    -# %p.footer-bottom-line= @attestation[:footer]

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_22_143413) do
+ActiveRecord::Schema.define(version: 2019_09_17_151652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,26 +49,11 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "active", default: false
-    t.jsonb "features", default: {}, null: false
     t.string "encrypted_token"
-    t.integer "failed_attempts", default: 0, null: false
-    t.string "unlock_token"
-    t.datetime "locked_at"
     t.index ["email"], name: "index_administrateurs_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_administrateurs_on_reset_password_token", unique: true
-    t.index ["unlock_token"], name: "index_administrateurs_on_unlock_token", unique: true
   end
 
   create_table "administrateurs_instructeurs", id: false, force: :cascade do |t|
@@ -130,24 +115,18 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.text "title"
     t.text "body"
     t.text "footer"
-    t.string "logo"
-    t.string "signature"
     t.boolean "activated"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "procedure_id"
-    t.string "logo_secure_token"
-    t.string "signature_secure_token"
     t.index ["procedure_id"], name: "index_attestation_templates_on_procedure_id", unique: true
   end
 
   create_table "attestations", id: :serial, force: :cascade do |t|
-    t.string "pdf"
     t.string "title"
     t.integer "dossier_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "content_secure_token"
     t.index ["dossier_id"], name: "index_attestations_on_dossier_id"
   end
 
@@ -205,8 +184,6 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.string "body"
     t.integer "dossier_id"
     t.datetime "updated_at", null: false
-    t.integer "piece_justificative_id"
-    t.string "file"
     t.bigint "user_id"
     t.bigint "instructeur_id"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
@@ -266,7 +243,6 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.datetime "updated_at"
     t.string "state"
     t.integer "user_id"
-    t.text "json_latlngs"
     t.boolean "archived", default: false
     t.datetime "en_construction_at"
     t.datetime "en_instruction_at"
@@ -346,13 +322,6 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.datetime "updated_at", null: false
     t.string "rating", null: false
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
-  end
-
-  create_table "flipflop_features", force: :cascade do |t|
-    t.string "key", null: false
-    t.boolean "enabled", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "flipper_features", force: :cascade do |t|
@@ -443,26 +412,11 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
 
   create_table "instructeurs", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text "encrypted_login_token"
     t.datetime "login_token_created_at"
-    t.jsonb "features", default: {"enable_email_login_token"=>true}, null: false
-    t.integer "failed_attempts", default: 0, null: false
-    t.string "unlock_token"
-    t.datetime "locked_at"
     t.index ["email"], name: "index_instructeurs_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_instructeurs_on_reset_password_token", unique: true
-    t.index ["unlock_token"], name: "index_instructeurs_on_unlock_token", unique: true
   end
 
   create_table "invites", id: :serial, force: :cascade do |t|
@@ -505,9 +459,7 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "euro_flag", default: false
-    t.string "logo"
     t.boolean "cerfa_flag", default: false
-    t.string "logo_secure_token"
     t.string "lien_site_web"
     t.string "lien_notice"
     t.boolean "for_individual", default: false
@@ -528,12 +480,13 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.string "cadre_juridique"
     t.boolean "juridique_required", default: true
     t.boolean "durees_conservation_required", default: true
-    t.string "path"
+    t.string "path", null: false
     t.string "declarative_with_state"
     t.text "monavis_embed"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
+    t.index ["path", "archived_at", "hidden_at"], name: "index_procedures_on_path_and_archived_at_and_hidden_at", unique: true
     t.index ["service_id"], name: "index_procedures_on_service_id"
   end
 
@@ -566,7 +519,6 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
     t.string "telephone"
     t.text "horaires"
     t.text "adresse"
-    t.string "siret"
     t.index ["administrateur_id", "nom"], name: "index_services_on_administrateur_id_and_nom", unique: true
     t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
   end
@@ -672,7 +624,7 @@ ActiveRecord::Schema.define(version: 2019_08_22_143413) do
   add_foreign_key "groupe_instructeurs", "procedures"
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
-  add_foreign_key "procedures", "services", name: "fk_procedures_services"
+  add_foreign_key "procedures", "services"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"

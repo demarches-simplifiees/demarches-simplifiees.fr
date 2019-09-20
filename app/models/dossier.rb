@@ -1,4 +1,5 @@
 class Dossier < ApplicationRecord
+  self.ignored_columns = ['json_latlngs']
   include DossierFilteringConcern
 
   enum state: {

@@ -6,21 +6,26 @@ module Instructeurs
     ITEMS_PER_PAGE = 25
 
     def index
-      @procedures = current_instructeur.visible_procedures.order(archived_at: :desc, published_at: :desc, created_at: :desc)
+      @procedures = current_instructeur
+        .procedures
+        .with_attached_logo
+        .includes(:defaut_groupe_instructeur)
+        .order(archived_at: :desc, published_at: :desc, created_at: :desc)
 
-      groupe_instructeurs = current_instructeur.groupe_instructeurs.where(procedure: @procedures)
+      dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
+      @dossiers_count_per_procedure = dossiers.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count
+      @dossiers_termines_count_per_procedure = dossiers.termine.group('groupe_instructeurs.procedure_id').reorder(nil).count
 
-      dossiers = current_instructeur.dossiers
-      @dossiers_count_per_groupe_instructeur = dossiers.all_state.group(:groupe_instructeur_id).reorder(nil).count
-      @dossiers_a_suivre_count_per_groupe_instructeur = dossiers.without_followers.en_cours.group(:groupe_instructeur_id).reorder(nil).count
-      @dossiers_archived_count_per_groupe_instructeur = dossiers.archived.group(:groupe_instructeur_id).count
-      @dossiers_termines_count_per_groupe_instructeur = dossiers.termine.group(:groupe_instructeur_id).reorder(nil).count
+      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
 
-      @followed_dossiers_count_per_groupe_instructeur = current_instructeur
+      @followed_dossiers_count_per_procedure = current_instructeur
         .followed_dossiers
+        .joins(:groupe_instructeur)
         .en_cours
-        .where(groupe_instructeur: groupe_instructeurs)
-        .group(:groupe_instructeur_id)
+        .where(groupe_instructeur_id: groupe_ids)
+        .group('groupe_instructeurs.procedure_id')
         .reorder(nil)
         .count
     end
@@ -201,6 +206,13 @@ module Instructeurs
       redirect_to instructeur_procedure_path(procedure)
     end
 
+    def stats
+      @procedure = procedure
+      @usual_traitement_time = @procedure.stats_usual_traitement_time
+      @dossiers_funnel = @procedure.stats_dossiers_funnel
+      @termines_states = @procedure.stats_termines_states
+    end
+
     private
 
     def find_field(table, column)
@@ -231,7 +243,7 @@ module Instructeurs
     end
 
     def redirect_to_avis_if_needed
-      if current_instructeur.visible_procedures.count == 0 && current_instructeur.avis.count > 0
+      if current_instructeur.procedures.count == 0 && current_instructeur.avis.count > 0
         redirect_to instructeur_avis_index_path
       end
     end

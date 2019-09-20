@@ -51,16 +51,14 @@ module Users
     def attestation
       if dossier.attestation.pdf.attached?
         redirect_to url_for(dossier.attestation.pdf)
-      elsif dossier.attestation.pdf_active_storage.attached?
-        redirect_to url_for(dossier.attestation.pdf_active_storage)
       end
     end
 
     def qrcode
       if dossier.match_encoded_date?(:created_at, params[:created_at])
         attestation_template = dossier.procedure.attestation_template
-        @dossier = dossier
         if attestation_template&.activated
+          @attestation = attestation_template.render_attributes_for(dossier: dossier)
           render 'qrcode'
         else
           attestation

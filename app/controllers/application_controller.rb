@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   before_action :set_active_storage_host
   before_action :setup_tracking
 
-  helper_method :logged_in?, :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur,
+  helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur,
     :administrateur_signed_in?, :current_administrateur
 
   def staging_authenticate
@@ -39,10 +39,6 @@ class ApplicationController < ActionController::Base
     service = RenderPartialService.new(controller, method)
     @navbar_url = service.navbar
     @left_pannel_url = service.left_panel
-  end
-
-  def logged_in?
-    logged_user.present?
   end
 
   def multiple_devise_profile_connect?
@@ -128,22 +124,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def logged_users
-    @logged_users ||= [
-      current_user,
-      current_instructeur,
-      current_administrateur,
-      current_administration
-    ].compact
-  end
+  def current_user_roles
+    @current_user_roles ||= begin
+      roles = [
+        current_user,
+        current_instructeur,
+        current_administrateur,
+        current_administration
+      ].compact.map { |role| role.class.name }
 
-  def logged_user
-    logged_users.first
-  end
-
-  def logged_user_roles
-    roles = logged_users.map { |logged_user| logged_user.class.name }
-    roles.any? ? roles.join(', ') : 'Guest'
+      roles.any? ? roles.join(', ') : 'Guest'
+    end
   end
 
   def set_raven_context
@@ -152,13 +143,12 @@ class ApplicationController < ActionController::Base
 
   def append_info_to_payload(payload)
     super
-    user = logged_user
 
     payload.merge!({
       user_agent: request.user_agent,
-      user_id: user&.id,
-      user_email: user&.email,
-      user_roles: logged_user_roles
+      user_id: current_user&.id,
+      user_email: current_user&.email,
+      user_roles: current_user_roles
     }.compact)
 
     if browser.known?
@@ -225,8 +215,7 @@ class ApplicationController < ActionController::Base
   end
 
   def sentry_user
-    user = logged_user
-    { id: user ? "#{user.class.name}##{user.id}" : 'Guest' }
+    { id: user_signed_in? ? "User##{current_user.id}" : 'Guest' }
   end
 
   def sentry_config
@@ -257,14 +246,14 @@ class ApplicationController < ActionController::Base
       key: sendinblue[:client_key],
       enabled: sendinblue[:enabled],
       administrateur: {
-        email: current_administrateur&.email,
+        email: current_user&.email,
         payload: {
-          DS_SIGN_IN_COUNT: current_administrateur&.sign_in_count,
+          DS_SIGN_IN_COUNT: current_user&.sign_in_count,
           DS_CREATED_AT: current_administrateur&.created_at,
           DS_ACTIVE: current_administrateur&.active,
           DS_ID: current_administrateur&.id,
           DS_GESTIONNAIRE_ID: current_instructeur&.id,
-          DS_ROLES: logged_user_roles
+          DS_ROLES: current_user_roles
         }
       }
     }
@@ -277,8 +266,8 @@ class ApplicationController < ActionController::Base
       key: crisp[:client_key],
       enabled: crisp[:enabled],
       administrateur: {
-        email: current_administrateur&.email,
-        DS_SIGN_IN_COUNT: current_administrateur&.sign_in_count,
+        email: current_user&.email,
+        DS_SIGN_IN_COUNT: current_user&.sign_in_count,
         DS_CREATED_AT: current_administrateur&.created_at,
         DS_ID: current_administrateur&.id,
         DS_NB_DEMARCHES_BROUILLONS: current_administrateur&.procedures&.brouillons&.count,
@@ -290,8 +279,6 @@ class ApplicationController < ActionController::Base
   end
 
   def current_email
-    current_user&.email ||
-      current_instructeur&.email ||
-      current_administrateur&.email
+    current_user&.email
   end
 end

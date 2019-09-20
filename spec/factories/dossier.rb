@@ -14,7 +14,10 @@ FactoryBot.define do
       else
         procedure = create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private)
       end
-      dossier.groupe_instructeur = procedure.defaut_groupe_instructeur
+
+      if dossier.groupe_instructeur.nil?
+        dossier.groupe_instructeur = procedure.defaut_groupe_instructeur
+      end
     end
 
     trait :with_entreprise do
