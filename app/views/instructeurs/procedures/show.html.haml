@@ -24,13 +24,13 @@
             instructeur_procedure_path(@procedure, statut: 'suivis'),
             active: @statut == 'suivis',
             badge: @followed_dossiers.count,
-            notification: current_instructeur.notifications_for_procedure(@procedure, :en_cours).present?)
+            notification: current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?)
 
           = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'traites'),
             active: @statut == 'traites',
             badge: @termines_dossiers.count,
-            notification: current_instructeur.notifications_for_procedure(@procedure, :termine).present?)
+            notification: current_instructeur.notifications_for_procedure(@procedure, :termine).exists?)
 
           = tab_item('tous les dossiers',
             instructeur_procedure_path(@procedure, statut: 'tous'),
