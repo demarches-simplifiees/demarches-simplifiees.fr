@@ -1,13 +1,13 @@
 .ol-box {
-  box-sizing: border-box;
+  border: 2px solid #00f;
   border-radius: 2px;
-  border: 2px solid blue;
+  box-sizing: border-box;
 }
 
 .ol-mouse-position {
-  top: 8px;
-  right: 8px;
   position: absolute;
+  right: 8px;
+  top: 8px;
 }
 
 .ol-scale-line {
@@ -18,15 +18,17 @@
   padding: 2px;
   position: absolute;
 }
+
 .ol-scale-line-inner {
   border: 1px solid #eee;
-  border-top: none;
+  border-top: 0;
   color: #eee;
   font-size: 10px;
-  text-align: center;
   margin: 1px;
+  text-align: center;
   will-change: contents, width;
 }
+
 .ol-overlay-container {
   will-change: left,right,top,bottom;
 }
@@ -34,63 +36,75 @@
 .ol-unsupported {
   display: none;
 }
+
 .ol-viewport, .ol-unselectable {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
+
 .ol-selectable {
-  -webkit-touch-callout: default;
-  -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
   user-select: text;
 }
+
 .ol-grabbing {
   cursor: -webkit-grabbing;
   cursor: -moz-grabbing;
   cursor: grabbing;
 }
+
 .ol-grab {
   cursor: move;
   cursor: -webkit-grab;
   cursor: -moz-grab;
   cursor: grab;
 }
+
 .ol-control {
-  position: absolute;
   background-color: rgba(255,255,255,0.4);
   border-radius: 4px;
   padding: 2px;
+  position: absolute;
 }
+
 .ol-control:hover {
   background-color: rgba(255,255,255,0.6);
 }
+
 .ol-zoom {
-  top: .5em;
   left: .5em;
-}
-.ol-rotate {
   top: .5em;
+}
+
+.ol-rotate {
   right: .5em;
+  top: .5em;
   transition: opacity .25s linear, visibility 0s linear;
 }
+
 .ol-rotate.ol-hidden {
   opacity: 0;
-  visibility: hidden;
   transition: opacity .25s linear, visibility 0s linear .25s;
+  visibility: hidden;
 }
+
 .ol-zoom-extent {
-  top: 4.643em;
   left: .5em;
+  top: 4.643em;
 }
+
 .ol-full-screen {
   right: .5em;
   top: .5em;
 }
+
 @media print {
   .ol-control {
     display: none;
@@ -98,113 +112,131 @@
 }
 
 .ol-control button {
+  background-color: rgba(0,60,136,0.5);
+  border: 0;
+  border-radius: 2px;
+  color: #fff;
   display: block;
-  margin: 1px;
-  padding: 0;
-  color: white;
   font-size: 1.14em;
   font-weight: bold;
-  text-decoration: none;
-  text-align: center;
   height: 1.375em;
-  width: 1.375em;
   line-height: .4em;
-  background-color: rgba(0,60,136,0.5);
-  border: none;
-  border-radius: 2px;
+  margin: 1px;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  width: 1.375em;
 }
+
 .ol-control button::-moz-focus-inner {
-  border: none;
+  border: 0;
   padding: 0;
 }
+
 .ol-zoom-extent button {
   line-height: 1.4em;
 }
+
 .ol-compass {
   display: block;
-  font-weight: normal;
   font-size: 1.2em;
+  font-weight: normal;
   will-change: transform;
 }
+
 .ol-touch .ol-control button {
   font-size: 1.5em;
 }
+
 .ol-touch .ol-zoom-extent {
   top: 5.5em;
 }
+
 .ol-control button:hover,
 .ol-control button:focus {
-  text-decoration: none;
   background-color: rgba(0,60,136,0.7);
+  text-decoration: none;
 }
+
 .ol-zoom .ol-zoom-in {
   border-radius: 2px 2px 0 0;
 }
+
 .ol-zoom .ol-zoom-out {
   border-radius: 0 0 2px 2px;
 }
 
 
 .ol-attribution {
-  text-align: right;
   bottom: .5em;
-  right: .5em;
   max-width: calc(100% - 1.3em);
+  right: .5em;
+  text-align: right;
 }
 
 .ol-attribution ul {
-  margin: 0;
-  padding: 0 .5em;
+  color: #000;
   font-size: .7rem;
   line-height: 1.375em;
-  color: #000;
+  margin: 0;
+  padding: 0 .5em;
   text-shadow: 0 0 2px #fff;
 }
+
 .ol-attribution li {
   display: inline;
-  list-style: none;
   line-height: inherit;
+  list-style: none;
 }
+
 .ol-attribution li:not(:last-child):after {
   content: " ";
 }
+
 .ol-attribution img {
   max-height: 2em;
   max-width: inherit;
   vertical-align: middle;
 }
+
 .ol-attribution ul, .ol-attribution button {
   display: inline-block;
 }
+
 .ol-attribution.ol-collapsed ul {
   display: none;
 }
+
 .ol-attribution:not(.ol-collapsed) {
   background: rgba(255,255,255,0.8);
 }
+
 .ol-attribution.ol-uncollapsible {
-  bottom: 0;
-  right: 0;
   border-radius: 4px 0 0;
+  bottom: 0;
   height: 1.1em;
   line-height: 1em;
+  right: 0;
 }
+
 .ol-attribution.ol-uncollapsible img {
   margin-top: -.2em;
   max-height: 1.6em;
 }
+
 .ol-attribution.ol-uncollapsible button {
   display: none;
 }
 
 .ol-zoomslider {
-  top: 4.5em;
-  left: .5em;
   height: 200px;
+  left: .5em;
+  top: 4.5em;
 }
+
 .ol-zoomslider button {
-  position: relative;
   height: 10px;
+  position: relative;
 }
 
 .ol-touch .ol-zoomslider {
@@ -212,36 +244,43 @@
 }
 
 .ol-overviewmap {
-  left: 0.5em;
   bottom: 0.5em;
+  left: 0.5em;
 }
+
 .ol-overviewmap.ol-uncollapsible {
+  border-radius: 0 4px 0 0;
   bottom: 0;
   left: 0;
-  border-radius: 0 4px 0 0;
 }
+
 .ol-overviewmap .ol-overviewmap-map,
 .ol-overviewmap button {
   display: inline-block;
 }
+
 .ol-overviewmap .ol-overviewmap-map {
   border: 1px solid #7b98bc;
   height: 150px;
   margin: 2px;
   width: 150px;
 }
+
 .ol-overviewmap:not(.ol-collapsed) button{
   bottom: 1px;
   left: 2px;
   position: absolute;
 }
+
 .ol-overviewmap.ol-collapsed .ol-overviewmap-map,
 .ol-overviewmap.ol-uncollapsible button {
   display: none;
 }
+
 .ol-overviewmap:not(.ol-collapsed) {
   background: rgba(255,255,255,0.8);
 }
+
 .ol-overviewmap-box {
   border: 2px dotted rgba(0,60,136,0.7);
 }

@@ -2,12 +2,13 @@
 @import "constants";
 
 .alert {
-  padding: 15px;
+  padding: 10px;
   border: 1px solid transparent;
+  margin: 1em 1em 0em 1em;
 }
 
 .alert-danger {
-  background-color: $medium-red;
+  background-color: $darker-red;
   color: #FFFFFF;
 
   a {
