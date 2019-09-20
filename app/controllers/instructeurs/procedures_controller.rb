@@ -40,29 +40,38 @@ module Instructeurs
       @procedure_presentation = procedure_presentation
       @displayed_fields_values = displayed_fields_values
 
-      @a_suivre_dossiers = procedure
-        .defaut_groupe_instructeur
+      @a_suivre_dossiers = current_instructeur
         .dossiers
-        .includes(:user)
+        .for_procedure(procedure)
         .without_followers
         .en_cours
 
       @followed_dossiers = current_instructeur
         .followed_dossiers
-        .includes(:user)
-        .where(groupe_instructeur: procedure.defaut_groupe_instructeur)
+        .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
+        .for_procedure(procedure)
         .en_cours
 
       @followed_dossiers_id = current_instructeur
         .followed_dossiers
-        .where(groupe_instructeur: procedure.defaut_groupe_instructeur)
+        .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
+        .for_procedure(procedure)
         .pluck(:id)
 
-      @termines_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).termine
+      @termines_dossiers = current_instructeur
+        .dossiers
+        .for_procedure(procedure)
+        .termine
 
-      @all_state_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).all_state
+      @all_state_dossiers = current_instructeur
+        .dossiers
+        .for_procedure(procedure)
+        .all_state
 
-      @archived_dossiers = procedure.defaut_groupe_instructeur.dossiers.includes(:user).archived
+      @archived_dossiers = current_instructeur
+        .dossiers
+        .for_procedure(procedure)
+        .archived
 
       @dossiers = case statut
       when 'a-suivre'
