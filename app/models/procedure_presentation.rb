@@ -19,7 +19,8 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('En construction le', 'self', 'en_construction_at'),
       field_hash('Mis à jour le', 'self', 'updated_at'),
       field_hash('Demandeur', 'user', 'email'),
-      field_hash('Email instructeur', 'followers_instructeurs', 'email')
+      field_hash('Email instructeur', 'followers_instructeurs', 'email'),
+      field_hash('Groupe instructeur', 'groupe_instructeur', 'label')
     ]
 
     if procedure.for_individual
@@ -93,7 +94,7 @@ class ProcedurePresentation < ApplicationRecord
           .where("champs.type_de_champ_id = #{column.to_i}")
           .order("champs.value #{order}")
           .pluck(:id)
-    when 'self', 'user', 'individual', 'etablissement', 'followers_instructeurs'
+    when 'self', 'user', 'individual', 'etablissement', 'followers_instructeurs', 'groupe_instructeur'
       return (table == 'self' ? dossiers : dossiers.includes(table))
           .order("#{self.class.sanitized_column(table, column)} #{order}")
           .pluck(:id)
@@ -130,6 +131,10 @@ class ProcedurePresentation < ApplicationRecord
             .filter_ilike(table, column, values)
         end
       when 'user', 'individual', 'followers_instructeurs'
+        dossiers
+          .includes(table)
+          .filter_ilike(table, column, values)
+      when 'groupe_instructeur'
         dossiers
           .includes(table)
           .filter_ilike(table, column, values)
@@ -208,6 +213,8 @@ class ProcedurePresentation < ApplicationRecord
       dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value
     when 'type_de_champ_private'
       dossier.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
+    when 'groupe_instructeur'
+      dossier.groupe_instructeur.label
     end
   end
 

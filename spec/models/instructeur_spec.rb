@@ -410,6 +410,19 @@ describe Instructeur, type: :model do
     end
   end
 
+  describe '#procedures' do
+    let(:procedure_a) { create(:procedure) }
+    let(:instructeur_a) { create(:instructeur, groupe_instructeurs: [procedure_a.defaut_groupe_instructeur]) }
+
+    before do
+      gi2 = procedure_a.groupe_instructeurs.create(label: '2')
+
+      instructeur_a.groupe_instructeurs << gi2
+    end
+
+    it { expect(instructeur_a.procedures.all.to_ary).to eq([procedure_a]) }
+  end
+
   private
 
   def assign(procedure_to_assign)
