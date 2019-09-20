@@ -137,11 +137,6 @@ class Instructeur < ApplicationRecord
     Dossier.joins(:groupe_instructeur).where(id: dossiers_id_with_notifications(dossiers)).group('groupe_instructeurs.procedure_id').count
   end
 
-  def create_trusted_device_token
-    trusted_device_token = trusted_device_tokens.create
-    trusted_device_token.token
-  end
-
   def dossiers_id_with_notifications(dossiers)
     dossiers = dossiers.followed_by(self)
 
@@ -173,11 +168,6 @@ class Instructeur < ApplicationRecord
     Follow.where(instructeur: self, dossier: dossier).update_all(attributes)
   end
 
-  def young_login_token?
-    trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
-    trusted_device_token&.token_young?
-  end
-
   def email_notification_data
     groupe_instructeur_with_email_notifications
       .reduce([]) do |acc, groupe|
@@ -197,6 +187,16 @@ class Instructeur < ApplicationRecord
 
       acc
     end
+  end
+
+  def create_trusted_device_token
+    trusted_device_token = trusted_device_tokens.create
+    trusted_device_token.token
+  end
+
+  def young_login_token?
+    trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
+    trusted_device_token&.token_young?
   end
 
   private
