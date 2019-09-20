@@ -145,30 +145,26 @@ class Instructeur < ApplicationRecord
   def dossiers_id_with_notifications(dossiers)
     dossiers = dossiers.followed_by(self)
 
-    updated_demandes = dossiers
-      .joins(:champs)
+    # Relations passed to #or must be “structurally compatible”, i.e. query the same tables.
+    joined_dossiers = dossiers
+      .left_outer_joins(:champs, :champs_private, :avis, :commentaires)
+
+    updated_demandes = joined_dossiers
       .where('champs.updated_at > follows.demande_seen_at')
 
-    updated_annotations = dossiers
-      .joins(:champs_private)
-      .where('champs.updated_at > follows.annotations_privees_seen_at')
+    # We join `:champs` twice, the second time with `has_many :champs_privates`. ActiveRecord generates the SQL: 'LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON …'. We can then use this `champs_privates_dossiers` alias to disambiguate the table in this WHERE clause.
+    updated_annotations = joined_dossiers
+      .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
 
-    updated_avis = dossiers
-      .joins(:avis)
+    updated_avis = joined_dossiers
       .where('avis.updated_at > follows.avis_seen_at')
 
-    updated_messagerie = dossiers
-      .joins(:commentaires)
+    updated_messagerie = joined_dossiers
       .where('commentaires.updated_at > follows.messagerie_seen_at')
       .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
       .where.not(commentaires: { email: CONTACT_EMAIL })
 
-    [
-      updated_demandes,
-      updated_annotations,
-      updated_avis,
-      updated_messagerie
-    ].flat_map { |query| query.distinct.ids }.uniq
+    updated_demandes.or(updated_annotations).or(updated_avis).or(updated_messagerie).ids
   end
 
   def mark_tab_as_seen(dossier, tab)
