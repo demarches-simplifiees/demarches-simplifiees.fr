@@ -15,7 +15,7 @@
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         - current_url = request.path_info
         %ul.header-tabs
-          - if current_instructeur.visible_procedures.count > 0
+          - if current_instructeur.procedures.count > 0
             %li
               = active_link_to "Démarches", instructeur_procedures_path, active: :inclusive, class: 'tab-link'
           - if current_instructeur.avis.count > 0

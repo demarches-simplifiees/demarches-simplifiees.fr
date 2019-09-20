@@ -6,17 +6,12 @@ class ApplicationMailer < ActionMailer::Base
   # Attach the procedure logo to the email (if any).
   # Returns the attachment url.
   def attach_logo(procedure)
-    return nil if !procedure.logo?
-
     if procedure.logo.attached?
       logo_filename = procedure.logo.filename.to_s
       attachments.inline[logo_filename] = procedure.logo.download
-    elsif procedure.logo_active_storage.attached?
-      logo_filename = procedure.logo_active_storage.filename.to_s
-      attachments.inline[logo_filename] = procedure.logo_active_storage.download
+      attachments[logo_filename].url
     end
 
-    attachments[logo_filename].url
   rescue StandardError => e
     # A problem occured when reading logo, maybe the logo is missing and we should clean the procedure to remove logo reference ?
     Raven.extra_context(procedure_id: procedure.id)

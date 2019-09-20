@@ -30,13 +30,13 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
     context 'with an interlaced png' do
       let(:upload_params) { { logo: interlaced_logo } }
-      it { expect(assigns(:logo).read).to eq(uninterlaced_logo.read) }
+      it { expect(assigns(:attestation)[:logo].read).to eq(uninterlaced_logo.read) }
     end
 
     context 'if an attestation template does not exist on the procedure' do
       let(:attestation_template) { nil }
       it { expect(subject.status).to eq(200) }
-      it { expect(assigns).to include(upload_params.stringify_keys) }
+      it { expect(assigns(:attestation)).to include(upload_params) }
     end
 
     context 'if an attestation template exists on the procedure' do
@@ -48,18 +48,18 @@ describe Admin::AttestationTemplatesController, type: :controller do
         end
 
         it { expect(subject.status).to eq(200) }
-        it { expect(assigns).to include(upload_params.stringify_keys) }
-        it { expect(assigns[:created_at]).to eq(Time.zone.now) }
-        it { expect(assigns(:logo).download).to eq(logo2.read) }
-        it { expect(assigns(:signature).download).to eq(signature2.read) }
+        it { expect(assigns(:attestation)).to include(upload_params) }
+        it { expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now) }
+        it { expect(assigns(:attestation)[:logo].download).to eq(logo2.read) }
+        it { expect(assigns(:attestation)[:signature].download).to eq(signature2.read) }
       end
 
       context 'with empty logo' do
         it { expect(subject.status).to eq(200) }
-        it { expect(assigns).to include(upload_params.stringify_keys) }
-        it { expect(assigns[:created_at]).to eq(Time.zone.now) }
-        it { expect(assigns(:logo)).to eq(nil) }
-        it { expect(assigns(:signature)).to eq(nil) }
+        it { expect(assigns(:attestation)).to include(upload_params) }
+        it { expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now) }
+        it { expect(assigns(:attestation)[:logo]).to eq(nil) }
+        it { expect(assigns(:attestation)[:signature]).to eq(nil) }
       end
     end
   end

@@ -43,7 +43,7 @@ class Champs::SiretController < ApplicationController
 
   def find_etablisement
     if params[:champ_id].present?
-      @champ = Champ.find_by(dossier_id: logged_user.dossiers, id: params[:champ_id])
+      @champ = policy_scope(Champ).find(params[:champ_id])
       @etablissement = @champ&.etablissement
     end
     @procedure_id = @champ&.dossier&.procedure_id || 'aperçu'

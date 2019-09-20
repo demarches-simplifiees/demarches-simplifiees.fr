@@ -36,7 +36,7 @@
         locals: { champ: champ, form: champ_form }
 
     - if !apercu
-      .send-wrapper
+      .send-dossier-actions-bar
         - if dossier.brouillon?
           = f.button 'Enregistrer le brouillon',
             formnovalidate: true,

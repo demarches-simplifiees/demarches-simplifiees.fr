@@ -1,0 +1,32 @@
+- title = "Statistiques · #{@procedure.libelle}"
+- content_for(:title, title)
+
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to(@procedure.libelle, procedure_path(@procedure)),
+                    'Statistiques'] }
+
+.statistiques
+  %h1.new-h1= title
+  .stat-cards
+    - if @usual_traitement_time.present?
+      .stat-card.big-number-card
+        %span.big-number-card-title TEMPS DE TRAITEMENT USUEL
+        %span.big-number-card-number
+          = distance_of_time_in_words(@usual_traitement_time)
+        %span.big-number-card-detail
+          90% des demandes du mois dernier ont été traitées en moins de #{distance_of_time_in_words(@usual_traitement_time)}.
+
+  .stat-cards
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title AVANCÉE DES DOSSIERS
+      .chart-container
+        .chart
+          = area_chart @dossiers_funnel
+
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title TAUX D’ACCEPTATION
+      .chart-container
+        .chart
+          - colors = %w(#C3D9FF #0069CC #1C7EC9) # from _colors.scss
+          = pie_chart @termines_states, colors: colors
+

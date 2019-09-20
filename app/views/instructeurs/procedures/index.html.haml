@@ -19,7 +19,7 @@
                 %li
                   %object
                     = link_to(instructeur_procedure_path(p, statut: 'a-suivre')) do
-                      - a_suivre_count = @dossiers_a_suivre_count_per_groupe_instructeur[p.defaut_groupe_instructeur.id] || 0
+                      - a_suivre_count = @dossiers_a_suivre_count_per_procedure[p.id] || 0
                       .stats-number
                         = a_suivre_count
                       .stats-legend
@@ -29,7 +29,7 @@
                     = link_to(instructeur_procedure_path(p, statut: 'suivis')) do
                       - if current_instructeur.notifications_per_procedure[p.id].present?
                         %span.notifications{ 'aria-label': "notifications" }
-                      - followed_count = @followed_dossiers_count_per_groupe_instructeur[p.defaut_groupe_instructeur.id] || 0
+                      - followed_count = @followed_dossiers_count_per_procedure[p.id] || 0
                       .stats-number
                         = followed_count
                       .stats-legend
@@ -39,7 +39,7 @@
                     = link_to(instructeur_procedure_path(p, statut: 'traites')) do
                       - if current_instructeur.notifications_per_procedure(:termine)[p.id].present?
                         %span.notifications{ 'aria-label': "notifications" }
-                      - termines_count = @dossiers_termines_count_per_groupe_instructeur[p.defaut_groupe_instructeur.id] || 0
+                      - termines_count = @dossiers_termines_count_per_procedure[p.id] || 0
                       .stats-number
                         = termines_count
                       .stats-legend
@@ -47,7 +47,7 @@
                 %li
                   %object
                     = link_to(instructeur_procedure_path(p, statut: 'tous')) do
-                      - dossier_count = @dossiers_count_per_groupe_instructeur[p.defaut_groupe_instructeur.id] || 0
+                      - dossier_count = @dossiers_count_per_procedure[p.id] || 0
                       .stats-number
                         = dossier_count
                       .stats-legend
@@ -55,7 +55,7 @@
                 %li
                   %object
                     = link_to(instructeur_procedure_path(p, statut: 'archives')) do
-                      - archived_count = @dossiers_archived_count_per_groupe_instructeur[p.defaut_groupe_instructeur.id] || 0
+                      - archived_count = @dossiers_archived_count_per_procedure[p.id] || 0
                       .stats-number
                         = archived_count
                       .stats-legend

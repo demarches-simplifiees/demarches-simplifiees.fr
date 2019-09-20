@@ -16,7 +16,7 @@
       \.
 
     = form_tag contact_path, method: :post, class: 'form' do |f|
-      - if !logged_in?
+      - if !user_signed_in?
         .contact-champ
           = label_tag :email do
             Adresse email professionnelle

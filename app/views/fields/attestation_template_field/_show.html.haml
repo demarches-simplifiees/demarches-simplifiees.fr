@@ -5,7 +5,7 @@
 
   %strong Logo
   %p
-  - if field.data.logo?
+  - if field.data.logo.attached?
     = image_tag field.data.logo_url
   - else
     Aucun
@@ -20,7 +20,7 @@
 
   %strong Signature
   %p
-    - if field.data.signature?
+    - if field.data.signature.attached?
       = image_tag field.data.signature_url
     - else
       Aucun
