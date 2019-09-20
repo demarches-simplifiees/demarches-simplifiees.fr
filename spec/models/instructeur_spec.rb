@@ -389,7 +389,7 @@ describe Instructeur, type: :model do
     context 'when a notification exists' do
       before do
         allow(instructeur).to receive(:notifications_for_procedure)
-          .with(procedure_to_assign, :all)
+          .with(procedure_to_assign, :not_archived)
           .and_return([1, 2, 3])
       end
 

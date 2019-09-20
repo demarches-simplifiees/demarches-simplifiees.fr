@@ -176,7 +176,7 @@ class Instructeur < ApplicationRecord
 
       h = {
         nb_en_construction: groupe.dossiers.en_construction.count,
-        nb_notification: notifications_for_procedure(procedure, :all).count
+        nb_notification: notifications_for_procedure(procedure, :not_archived).count
       }
 
       if h[:nb_en_construction] > 0 || h[:nb_notification] > 0
