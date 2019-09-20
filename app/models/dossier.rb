@@ -132,7 +132,6 @@ class Dossier < ApplicationRecord
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
-  scope :followed_by,                 -> (instructeur) { joins(:follows).where(follows: { instructeur: instructeur }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
   scope :since,                       -> (since) { where('dossiers.en_construction_at >= ?', since) }
