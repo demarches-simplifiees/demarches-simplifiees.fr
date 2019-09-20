@@ -24,7 +24,7 @@
             instructeur_procedure_path(@procedure, statut: 'suivis'),
             active: @statut == 'suivis',
             badge: @followed_dossiers.count,
-            notification: current_instructeur.notifications_for_procedure(@procedure).present?)
+            notification: current_instructeur.notifications_for_procedure(@procedure, :en_cours).present?)
 
           = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'traites'),

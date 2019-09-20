@@ -109,29 +109,29 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  def notifications_for_procedure(procedure, state = :en_cours)
+  def notifications_for_procedure(procedure, state)
     dossiers = case state
+    when :en_cours
+      procedure.defaut_groupe_instructeur.dossiers.en_cours
     when :termine
       procedure.defaut_groupe_instructeur.dossiers.termine
     when :not_archived
       procedure.defaut_groupe_instructeur.dossiers.not_archived
     when :all
       procedure.defaut_groupe_instructeur.dossiers
-    else
-      procedure.defaut_groupe_instructeur.dossiers.en_cours
     end
 
     dossiers_id_with_notifications(dossiers)
   end
 
-  def notifications_per_procedure(state = :en_cours)
+  def notifications_per_procedure(state)
     dossiers = case state
+    when :en_cours
+      Dossier.en_cours
     when :termine
       Dossier.termine
     when :not_archived
       Dossier.not_archived
-    else
-      Dossier.en_cours
     end
 
     Dossier.joins(:groupe_instructeur).where(id: dossiers_id_with_notifications(dossiers)).group('groupe_instructeurs.procedure_id').count
