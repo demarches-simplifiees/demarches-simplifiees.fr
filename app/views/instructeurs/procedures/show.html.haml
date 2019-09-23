@@ -85,7 +85,7 @@
       %table.table.dossiers-table.hoverable
         %thead
           %tr
-            - if @statut == 'suivis' || @statut == 'tous'
+            - if @statut.in? %w(suivis traites tous)
               = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col" }
             - else
               %th.notification-col
