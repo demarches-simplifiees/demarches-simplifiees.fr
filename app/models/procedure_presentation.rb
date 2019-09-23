@@ -80,7 +80,7 @@ class ProcedurePresentation < ApplicationRecord
 
     case table
     when 'notifications'
-      dossiers_id_with_notification = dossiers.merge(instructeur.followed_dossiers_with_notifications).ids
+      dossiers_id_with_notification = dossiers.with_notifications.merge(instructeur.followed_dossiers).ids
       if order == 'desc'
         return dossiers_id_with_notification +
             (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
