@@ -164,6 +164,31 @@ class Dossier < ApplicationRecord
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
 
+  scope :with_notifications, -> do
+    # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
+    # it will fail otherwise
+
+    # Relations passed to #or must be “structurally compatible”, i.e. query the same tables.
+    joined_dossiers = left_outer_joins(:champs, :champs_private, :avis, :commentaires)
+
+    updated_demandes = joined_dossiers
+      .where('champs.updated_at > follows.demande_seen_at')
+
+    # We join `:champs` twice, the second time with `has_many :champs_privates`. ActiveRecord generates the SQL: 'LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON …'. We can then use this `champs_privates_dossiers` alias to disambiguate the table in this WHERE clause.
+    updated_annotations = joined_dossiers
+      .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
+
+    updated_avis = joined_dossiers
+      .where('avis.updated_at > follows.avis_seen_at')
+
+    updated_messagerie = joined_dossiers
+      .where('commentaires.updated_at > follows.messagerie_seen_at')
+      .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
+      .where.not(commentaires: { email: CONTACT_EMAIL })
+
+    updated_demandes.or(updated_annotations).or(updated_avis).or(updated_messagerie).distinct
+  end
+
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true

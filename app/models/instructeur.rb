@@ -113,42 +113,21 @@ class Instructeur < ApplicationRecord
     procedure
       .defaut_groupe_instructeur.dossiers
       .send(scope) # :en_cours or :termine or :not_archived (or any other Dossier scope)
-      .merge(followed_dossiers_with_notifications)
+      .merge(followed_dossiers)
+      .with_notifications
   end
 
   def procedures_with_notifications(scope)
     dossiers = Dossier
       .send(scope) # :en_cours or :termine (or any other Dossier scope)
-      .merge(followed_dossiers_with_notifications)
+      .merge(followed_dossiers)
+      .with_notifications
 
     Procedure
       .where(id: dossiers.joins(:groupe_instructeur)
         .select('groupe_instructeurs.procedure_id')
         .distinct)
       .distinct
-  end
-
-  def followed_dossiers_with_notifications
-    # Relations passed to #or must be “structurally compatible”, i.e. query the same tables.
-    joined_dossiers = self.followed_dossiers
-      .left_outer_joins(:champs, :champs_private, :avis, :commentaires)
-
-    updated_demandes = joined_dossiers
-      .where('champs.updated_at > follows.demande_seen_at')
-
-    # We join `:champs` twice, the second time with `has_many :champs_privates`. ActiveRecord generates the SQL: 'LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON …'. We can then use this `champs_privates_dossiers` alias to disambiguate the table in this WHERE clause.
-    updated_annotations = joined_dossiers
-      .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
-
-    updated_avis = joined_dossiers
-      .where('avis.updated_at > follows.avis_seen_at')
-
-    updated_messagerie = joined_dossiers
-      .where('commentaires.updated_at > follows.messagerie_seen_at')
-      .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
-      .where.not(commentaires: { email: CONTACT_EMAIL })
-
-    updated_demandes.or(updated_annotations).or(updated_avis).or(updated_messagerie)
   end
 
   def mark_tab_as_seen(dossier, tab)
