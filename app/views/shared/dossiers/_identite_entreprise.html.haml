@@ -71,3 +71,6 @@
       %tr
         %th.libelle Date de déclaration :
         %td= try_format_date(etablissement.association_date_declaration)
+
+%p
+  = link_to 'Autres informations sur l’organisme', "https://entreprise.data.gouv.fr/etablissement/#{etablissement.siret}"
