@@ -18,7 +18,7 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :archived_at, GraphQL::Types::ISO8601DateTime, null: true
 
-    field :instructeurs, [Types::ProfileType], null: false
+    field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
 
     field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d'une démarche.", null: false do
       argument :ids, [ID], required: false, description: "Filtrer les dossiers par ID."
@@ -32,8 +32,8 @@ module Types
       object.aasm.current_state
     end
 
-    def instructeurs
-      Loaders::Association.for(Procedure, :instructeurs).load(object)
+    def groupe_instructeurs
+      Loaders::Association.for(object.class, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
     end
 
     def dossiers(ids: nil, since: nil)
