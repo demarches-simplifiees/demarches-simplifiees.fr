@@ -1,7 +1,7 @@
 .procedure-logos
   = image_tag procedure.logo_url
-  - if procedure.euro_flag
-    = image_tag "flag_of_europe.svg"
+  - if procedure.euro_flag || (defined?(force_euro_flag) && force_euro_flag == true)
+    = image_tag("flag_of_europe.svg", id: 'euro_flag', class: (!procedure.euro_flag ? "hidden" : ""))
 %h2.procedure-title
   = procedure.libelle
 .procedure-description

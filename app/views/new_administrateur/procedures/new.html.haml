@@ -1,0 +1,14 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    'Nouvelle'] }
+
+.container
+  %h1.page-title
+    = t('dynamics.admin.dossiers.tableau_de_bord.nouvelle_procedure')
+
+.container
+  %h1
+  = form_for @procedure, url: { controller: 'new_administrateur/procedures', action: :create }, multipart: true, html: { class: 'form' } do |f|
+    = render partial: 'informations', locals: { f: f }
+    .text-center
+      = f.button 'Valider', class: 'button primary send', id: 'save-procedure'

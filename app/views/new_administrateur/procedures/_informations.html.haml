@@ -1,0 +1,145 @@
+.container
+  - if @procedure.locked?
+    .alert.alert-info
+      Cette démarche est publiée, certains éléments de la description ne sont plus modifiables
+
+.two-columns
+  .columns-container
+    .column
+      = f.label :libelle do
+        Titre de la démarche
+        %span.mandatory *
+      = f.text_field :libelle, class: 'form-control', placeholder: 'Titre'
+
+      = f.label :description do
+        Description
+        %span.mandatory *
+      = f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
+
+      %h2.header-section Logo de la démarche
+      - if @procedure.persisted?
+        = link_to 'supprimer', delete_logo_admin_procedure_path(@procedure), method: :delete
+      .pj-input
+        = f.file_field :logo,
+          direct_upload: true,
+          accept: 'image/png, image/jpg, image/jpeg',
+          style: 'display: inline'
+
+      %div{ style: 'margin-top: 5px;' }
+        %i
+          Fichier accepté : JPG / JPEG / PNG
+
+      = f.label :euro_flag do
+        = f.check_box :euro_flag
+        Afficher aussi le drapeau européen
+
+    .column.procedure-preview
+      = render partial: 'layouts/commencer/procedure_description', locals: { procedure: @procedure, force_euro_flag: true }
+
+.container
+  - if !@procedure.locked?
+    %h2.header-section Conservation des données
+    = f.label :duree_conservation_dossiers_dans_ds, "Sur demarches-simplifiees.fr* (durée en mois après le début de l’instruction)"
+    = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
+
+    = f.label :duree_conservation_dossiers_hors_ds, "Hors demarches-simplifiees.fr* (durée en mois après la fin de l'instruction)"
+    = f.number_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6', required: true
+
+  - if @procedure.created_at.present?
+    = f.label :description do
+      Où les usagers trouveront-ils le lien vers la démarche ?
+    = f.text_field :lien_site_web, class: 'form-control', placeholder: 'https://exemple.gouv.fr/ma_demarche'
+
+  %h2.header-section Cadre juridique *
+  .explication
+    Texte qui justifie le droit de collecter les données demandées dans votre démarche auprès des usagers, par exemple :
+    %br
+    Texte de loi (loi, décret, circulaire, arrêté,…)
+    %br
+    Texte juridique (statuts, délibération, décision du conseil d'administration…)
+    %br
+      = link_to("En savoir plus avec cette vidéo de 5 minutes", CADRE_JURIDIQUE_URL, target: "_blank", rel: "noopener")
+
+  %p
+    Vous pouvez saisir un lien vers ce texte ou importer celui-ci directement.
+
+  = f.label :cadre_juridique, 'Lien vers le texte'
+  = f.text_field :cadre_juridique, class: 'form-control', placeholder: 'https://www.legifrance.gouv.fr/'
+
+  = f.label :deliberation, 'Importer le texte'
+  - deliberation = @procedure.deliberation
+  - if !deliberation.attached?
+    .pj-input
+      = f.file_field :deliberation,
+        direct_upload: true
+  - else
+    %a{ href: url_for(deliberation), target: '_blank', rel: 'noopener' }
+      = deliberation.filename.to_s
+    - if @procedure.persisted?
+      = link_to 'supprimer', delete_deliberation_admin_procedure_path(@procedure), method: :delete
+    %br
+    Modifier :
+    .pj-input
+      = f.file_field :deliberation,
+        direct_upload: true
+
+  - notice = @procedure.notice
+  %h2.header-section Notice explicative de la démarche
+  .explication
+    Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
+
+  - if !notice.attached?
+    .pj-input
+      = f.file_field :notice,
+        direct_upload: true
+  - else
+    %a{ href: url_for(notice), target: '_blank', rel: 'noopener' }
+      = notice.filename.to_s
+    - if @procedure.persisted?
+      \-
+      = link_to 'supprimer', delete_notice_admin_procedure_path(@procedure), method: :delete
+    %br
+    Modifier :
+    .pj-input
+      = f.file_field :notice,
+        direct_upload: true
+
+  - if !@procedure.locked?
+    %h2.header-section À qui s’adresse ma démarche ?
+    .radios
+      = f.label :for_individual, value: true do
+        = f.radio_button :for_individual, true
+        Ma démarche s’adresse à un particulier
+
+      %p.explication
+        En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
+
+    .radios
+      = f.label :for_individual, value: false do
+        = f.radio_button :for_individual, false
+        Ma démarche s’adresse à une personne morale
+
+    %p.explication
+      En choisissant cette option, l’usager devra renseigner son n° SIRET. Grâce à l’API Entreprise, seront alors automatiquement remontées les informations sur la personne morale type raison sociale ou adresse du siège social.
+
+    %p
+      Si votre démarche s’adresse indifféremment à une personne morale ou un particulier choisissez l'option "particuliers". Vous pourrez utilisez le champ SIRET directement dans le formulaire.
+
+  %h2.header-section Options avancées
+  - if feature_enabled?(:administrateur_web_hook)
+    = f.label :web_hook_url do
+      Lien de rappel HTTP (webhook)
+    = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
+    %p.help-block
+      %i.fa.fa-info-circle
+      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
+      = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
+      \.
+
+  = f.label :auto_archive_on do
+    Clôture automatique à 00h01 le :
+  = f.date_field :auto_archive_on, id: 'auto_archive_on', value: @procedure.auto_archive_on
+
+  %p.explication
+    La clôture automatique suspend la publication de la démarche et entraîne le passage de tous les dossiers "en construction"
+    (c'est à dire ceux qui ont été déposés), au statut "en instruction", ce qui ne permet plus aux usagers de les modifier.
