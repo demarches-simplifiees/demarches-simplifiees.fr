@@ -163,6 +163,7 @@ class Dossier < ApplicationRecord
   }
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
+  scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
 
   accepts_nested_attributes_for :individual
 
