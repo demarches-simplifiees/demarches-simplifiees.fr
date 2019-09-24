@@ -47,6 +47,8 @@
 
 - if etablissement.exercices.present?
   %p.etablissement-exercices Les exercices comptables des trois dernières années seront joints à votre dossier.
-  
+
 %p
-  = link_to 'Autres informations sur l’organisme', "https://entreprise.data.gouv.fr/etablissement/#{etablissement.siret}"
+  = link_to '➡ Autres informations sur l’organisme sur « entreprises.data.gouv.fr »',
+  "https://entreprise.data.gouv.fr/etablissement/#{etablissement.siret}",
+  target: "_blank"
