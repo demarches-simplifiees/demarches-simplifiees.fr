@@ -9,7 +9,7 @@ module NewAdministrateur
 
     rescue ActiveRecord::RecordNotFound
       flash.alert = 'Démarche inexistante'
-      redirect_to admin_procedures_path
+      redirect_to admin_procedures_path, status: 404
     end
 
     def procedure_locked?

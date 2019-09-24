@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'admin/procedures/edit.html.haml', type: :view, vcr: { cassette_name: 'admin_procedure_edit' } do
+describe 'new_administrateur/procedures/edit.html.haml' do
   let(:logo) { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
   let(:procedure) { create(:procedure, logo: logo, lien_site_web: 'http://some.website') }
 
@@ -11,7 +11,7 @@ describe 'admin/procedures/edit.html.haml', type: :view, vcr: { cassette_name: '
 
   context 'when procedure logo is present' do
     it 'display on the page' do
-      expect(rendered).to have_selector('#preview_procedure_logo')
+      expect(rendered).to have_selector('.procedure-logos')
     end
   end
 end

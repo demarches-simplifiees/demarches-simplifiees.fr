@@ -1,0 +1,16 @@
+#procedure-edit
+  = render partial: 'new_administrateur/breadcrumbs',
+    locals: { steps: [link_to('Démarches', admin_procedures_path),
+                      link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                      'Description'] }
+
+  .container
+    %h1.page-title Présentation
+
+  = form_for @procedure, url: url_for({ controller: 'new_administrateur/procedures', action: :update, id: @procedure.id }), multipart: true, html: { class: 'form' } do |f|
+
+    = render partial: 'informations', locals: { f: f }
+
+    .container
+      .text-right
+        = f.button 'Enregistrer', class: 'button primary send'

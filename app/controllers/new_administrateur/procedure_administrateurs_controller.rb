@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProcedureAdministrateursController < AdministrateurController
-    before_action :retrieve_procedure
+    before_action :retrieve_procedure, except: [:new]
 
     def index
     end
