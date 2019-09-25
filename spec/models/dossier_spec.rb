@@ -53,6 +53,27 @@ describe Dossier do
     end
   end
 
+  describe 'with_notifications' do
+    let(:dossier) { create(:dossier) }
+    let(:instructeur) { create(:instructeur) }
+
+    before do
+      create(:follow, dossier: dossier, instructeur: instructeur, messagerie_seen_at: 2.hours.ago)
+    end
+
+    subject { instructeur.followed_dossiers.with_notifications }
+
+    context('without changes') do
+      it { is_expected.to eq [] }
+    end
+
+    context('with changes') do
+      before { dossier.commentaires << create(:commentaire, email: 'test@exemple.fr') }
+
+      it { is_expected.to match([dossier]) }
+    end
+  end
+
   describe 'methods' do
     let(:dossier) { create(:dossier, :with_entreprise, user: user) }
     let(:etablissement) { dossier.etablissement }
