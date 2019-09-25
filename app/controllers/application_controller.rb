@@ -262,6 +262,12 @@ class ApplicationController < ActionController::Base
   def crisp_config
     crisp = Rails.application.secrets.crisp
 
+    nb_demarches_by_state = if current_administrateur.present?
+      current_administrateur.procedures.group(:aasm_state).count
+    else
+      {}
+    end
+
     {
       key: crisp[:client_key],
       enabled: crisp[:enabled],
@@ -270,10 +276,9 @@ class ApplicationController < ActionController::Base
         DS_SIGN_IN_COUNT: current_user&.sign_in_count,
         DS_CREATED_AT: current_administrateur&.created_at,
         DS_ID: current_administrateur&.id,
-        DS_NB_DEMARCHES_BROUILLONS: current_administrateur&.procedures&.brouillons&.count,
-        DS_NB_DEMARCHES_ACTIVES: current_administrateur&.procedures&.publiees&.count,
-        DS_NB_DEMARCHES_ARCHIVES: current_administrateur&.procedures&.archivees&.count
-
+        DS_NB_DEMARCHES_BROUILLONS: nb_demarches_by_state['brouillon'],
+        DS_NB_DEMARCHES_ACTIVES: nb_demarches_by_state['publiee'],
+        DS_NB_DEMARCHES_ARCHIVES: nb_demarches_by_state['archivee']
       }
     }
   end
