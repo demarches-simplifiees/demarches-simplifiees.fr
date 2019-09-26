@@ -21,18 +21,26 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    # Handle existing user trying to sign up again
     existing_user = User.find_by(email: params[:user][:email])
     if existing_user.present?
-      if existing_user.confirmed?
-        UserMailer.new_account_warning(existing_user).deliver_later
-      else
-        existing_user.resend_confirmation_instructions
-      end
-      return redirect_to after_inactive_sign_up_path_for(existing_user)
+      handle_existing_user(existing_user) and return
     end
 
     super
+  end
+
+  def handle_existing_user(user)
+    if user.confirmed? && user.valid_password?(params[:user][:password])
+      sign_in(user)
+      flash.notice = t('devise.sessions.signed_in')
+      respond_with user, location: after_sign_in_path_for(user)
+    elsif user.confirmed?
+      UserMailer.new_account_warning(user).deliver_later
+      redirect_to after_inactive_sign_up_path_for(user)
+    else
+      user.resend_confirmation_instructions
+      redirect_to after_inactive_sign_up_path_for(user)
+    end
   end
 
   # GET /resource/edit
