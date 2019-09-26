@@ -167,14 +167,14 @@ class Dossier < ApplicationRecord
   scope :with_notifications, -> do
     # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
     # it will fail otherwise
-
-    # Relations passed to #or must be “structurally compatible”, i.e. query the same tables.
-    joined_dossiers = left_outer_joins(:champs, :champs_private, :avis, :commentaires)
+    joined_dossiers = joins('LEFT OUTER JOIN "champs" ON "champs" . "dossier_id" = "dossiers" . "id" AND "champs" . "parent_id" IS NULL AND "champs" . "private" = FALSE AND "champs"."updated_at" > "follows"."demande_seen_at"')
+      .joins('LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON "champs_privates_dossiers" . "dossier_id" = "dossiers" . "id" AND "champs_privates_dossiers" . "parent_id" IS NULL AND "champs_privates_dossiers" . "private" = TRUE AND "champs_privates_dossiers"."updated_at" > "follows"."annotations_privees_seen_at"')
+      .joins('LEFT OUTER JOIN "avis" ON "avis" . "dossier_id" = "dossiers" . "id" AND avis.updated_at > follows.avis_seen_at')
+      .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'contact@demarches-simplifiees.fr\'')
 
     updated_demandes = joined_dossiers
       .where('champs.updated_at > follows.demande_seen_at')
 
-    # We join `:champs` twice, the second time with `has_many :champs_privates`. ActiveRecord generates the SQL: 'LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON …'. We can then use this `champs_privates_dossiers` alias to disambiguate the table in this WHERE clause.
     updated_annotations = joined_dossiers
       .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
 
