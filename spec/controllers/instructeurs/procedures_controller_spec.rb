@@ -414,6 +414,9 @@ describe Instructeurs::ProceduresController, type: :controller do
   describe "#download_dossiers" do
     let(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+    let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
+    let!(:dossier_1) { create(:dossier, procedure: procedure) }
+    let!(:dossier_2) { create(:dossier, groupe_instructeur: gi_2) }
 
     context "when logged in" do
       before do
@@ -421,7 +424,12 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       context "csv" do
-        before { get :download_dossiers, params: { procedure_id: procedure.id }, format: 'csv' }
+        before do
+          expect_any_instance_of(Procedure).to receive(:to_csv)
+            .with(instructeur.dossiers.for_procedure(procedure), {})
+
+          get :download_dossiers, params: { procedure_id: procedure.id }, format: 'csv'
+        end
 
         it { expect(response).to have_http_status(:ok) }
       end

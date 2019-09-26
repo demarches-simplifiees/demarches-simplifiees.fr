@@ -1,0 +1,585 @@
+type Avis {
+  answer: String
+  attachmentUrl: URL
+  createdAt: ISO8601DateTime!
+  email: String!
+  id: ID!
+  question: String!
+}
+
+type CarteChamp implements Champ {
+  geoAreas: [GeoArea!]!
+  id: ID!
+  label: String!
+  stringValue: String
+}
+
+interface Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+}
+
+type ChampDescriptor {
+  description: String
+  id: ID!
+  label: String!
+  required: Boolean!
+  type: TypeDeChamp!
+}
+
+type CheckboxChamp implements Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+  value: Boolean!
+}
+
+"""
+GeoJSON coordinates
+"""
+scalar Coordinates
+
+type DateChamp implements Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+  value: ISO8601DateTime
+}
+
+type DecimalNumberChamp implements Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+  value: Float
+}
+
+"""
+Une demarche
+"""
+type Demarche {
+  annotationDescriptors: [ChampDescriptor!]!
+  archivedAt: ISO8601DateTime
+  champDescriptors: [ChampDescriptor!]!
+  createdAt: ISO8601DateTime!
+
+  """
+  Déscription de la démarche.
+  """
+  description: String!
+
+  """
+  Liste de tous les dossiers d'une démarche.
+  """
+  dossiers(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Filtrer les dossiers par ID.
+    """
+    ids: [ID!]
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    Dossiers crées depuis la date.
+    """
+    since: ISO8601DateTime
+  ): DossierConnection!
+  id: ID!
+  instructeurs: [Profile!]!
+
+  """
+  Le numero de la démarche.
+  """
+  number: ID!
+  state: DemarcheState!
+  title: String!
+  updatedAt: ISO8601DateTime!
+}
+
+enum DemarcheState {
+  """
+  Archivée
+  """
+  archivee
+
+  """
+  Brouillon
+  """
+  brouillon
+
+  """
+  Publiée
+  """
+  publiee
+}
+
+"""
+Un dossier
+"""
+type Dossier {
+  annotations: [Champ!]!
+  archived: Boolean!
+  avis: [Avis!]!
+  champs: [Champ!]!
+
+  """
+  Date de dépôt.
+  """
+  datePassageEnConstruction: ISO8601DateTime!
+
+  """
+  Date de passage en instruction.
+  """
+  datePassageEnInstruction: ISO8601DateTime
+
+  """
+  Date de traitement.
+  """
+  dateTraitement: ISO8601DateTime
+  id: ID!
+  instructeurs: [Profile!]!
+  messages: [Message!]!
+  motivation: String
+  motivationAttachmentUrl: URL
+
+  """
+  Le numero du dossier.
+  """
+  number: ID!
+
+  """
+  L'état du dossier.
+  """
+  state: DossierState!
+
+  """
+  Date de dernière mise à jour.
+  """
+  updatedAt: ISO8601DateTime!
+  usager: Profile!
+}
+
+"""
+The connection type for Dossier.
+"""
+type DossierConnection {
+  """
+  A list of edges.
+  """
+  edges: [DossierEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [Dossier]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type DossierEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: Dossier
+}
+
+type DossierLinkChamp implements Champ {
+  dossier: Dossier
+  id: ID!
+  label: String!
+  stringValue: String
+}
+
+enum DossierState {
+  """
+  Accepté
+  """
+  accepte
+
+  """
+  En construction
+  """
+  en_construction
+
+  """
+  En instruction
+  """
+  en_instruction
+
+  """
+  Refusé
+  """
+  refuse
+
+  """
+  Sans suite
+  """
+  sans_suite
+}
+
+interface GeoArea {
+  geometry: GeoJSON!
+  id: ID!
+  source: GeoAreaSource!
+}
+
+enum GeoAreaSource {
+  """
+  translation missing: fr.activerecord.attributes.geo_area.source.cadastre
+  """
+  cadastre
+
+  """
+  translation missing: fr.activerecord.attributes.geo_area.source.parcelle_agricole
+  """
+  parcelle_agricole
+
+  """
+  translation missing: fr.activerecord.attributes.geo_area.source.quartier_prioritaire
+  """
+  quartier_prioritaire
+
+  """
+  translation missing: fr.activerecord.attributes.geo_area.source.selection_utilisateur
+  """
+  selection_utilisateur
+}
+
+type GeoJSON {
+  coordinates: Coordinates!
+  type: String!
+}
+
+"""
+An ISO 8601-encoded datetime
+"""
+scalar ISO8601DateTime
+
+type IntegerNumberChamp implements Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+  value: Int
+}
+
+type LinkedDropDownListChamp implements Champ {
+  id: ID!
+  label: String!
+  primaryValue: String
+  secondaryValue: String
+  stringValue: String
+}
+
+type Message {
+  attachmentUrl: URL
+  body: String!
+  createdAt: ISO8601DateTime!
+  email: String!
+  id: ID!
+}
+
+type MultipleDropDownListChamp implements Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+  values: [String!]!
+}
+
+type Mutation {
+}
+
+"""
+Information about pagination in a connection.
+"""
+type PageInfo {
+  """
+  When paginating forwards, the cursor to continue.
+  """
+  endCursor: String
+
+  """
+  When paginating forwards, are there more items?
+  """
+  hasNextPage: Boolean!
+
+  """
+  When paginating backwards, are there more items?
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  When paginating backwards, the cursor to continue.
+  """
+  startCursor: String
+}
+
+type ParcelleCadastrale implements GeoArea {
+  codeArr: String!
+  codeCom: String!
+  codeDep: String!
+  feuille: Int!
+  geometry: GeoJSON!
+  id: ID!
+  nomCom: String!
+  numero: String!
+  section: String!
+  source: GeoAreaSource!
+  surfaceIntersection: Float!
+  surfaceParcelle: Float!
+}
+
+type PersonneMorale {
+  adresse: String!
+  codeInseeLocalite: String!
+  codePostal: String!
+  complementAdresse: String!
+  libelleNaf: String!
+  localite: String!
+  naf: String!
+  nomVoie: String!
+  numeroVoie: String!
+  siegeSocial: String!
+  siret: String!
+  typeVoie: String!
+}
+
+type PieceJustificativeChamp implements Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+  url: URL
+}
+
+type Profile {
+  email: String!
+  id: ID!
+}
+
+type QuartierPrioritaire implements GeoArea {
+  code: String!
+  commune: String!
+  geometry: GeoJSON!
+  id: ID!
+  nom: String!
+  source: GeoAreaSource!
+}
+
+type Query {
+  """
+  Informations concernant une démarche.
+  """
+  demarche(
+    """
+    Numéro de la démarche.
+    """
+    number: ID!
+  ): Demarche!
+
+  """
+  Informations sur un dossier d'une démarche.
+  """
+  dossier(
+    """
+    Numéro du dossier.
+    """
+    number: ID!
+  ): Dossier!
+}
+
+type RepetitionChamp implements Champ {
+  champs: [Champ!]!
+  id: ID!
+  label: String!
+  stringValue: String
+}
+
+type SelectionUtilisateur implements GeoArea {
+  geometry: GeoJSON!
+  id: ID!
+  source: GeoAreaSource!
+}
+
+type SiretChamp implements Champ {
+  etablissement: PersonneMorale
+  id: ID!
+  label: String!
+  stringValue: String
+}
+
+type TextChamp implements Champ {
+  id: ID!
+  label: String!
+  stringValue: String
+  value: String
+}
+
+enum TypeDeChamp {
+  """
+  Adresse
+  """
+  address
+
+  """
+  Carte
+  """
+  carte
+
+  """
+  Case à cocher
+  """
+  checkbox
+
+  """
+  Civilité
+  """
+  civilite
+
+  """
+  Date
+  """
+  date
+
+  """
+  Date et Heure
+  """
+  datetime
+
+  """
+  Nombre décimal
+  """
+  decimal_number
+
+  """
+  Départements
+  """
+  departements
+
+  """
+  Lien vers un autre dossier
+  """
+  dossier_link
+
+  """
+  Menu déroulant
+  """
+  drop_down_list
+
+  """
+  Email
+  """
+  email
+
+  """
+  Engagement
+  """
+  engagement
+
+  """
+  Explication
+  """
+  explication
+
+  """
+  Titre de section
+  """
+  header_section
+
+  """
+  Nombre entier
+  """
+  integer_number
+
+  """
+  Deux menus déroulants liés
+  """
+  linked_drop_down_list
+
+  """
+  Menu déroulant à choix multiples
+  """
+  multiple_drop_down_list
+
+  """
+  Nombre entier
+  """
+  number
+
+  """
+  Pays
+  """
+  pays
+
+  """
+  Téléphone
+  """
+  phone
+
+  """
+  Pièce justificative
+  """
+  piece_justificative
+
+  """
+  Régions
+  """
+  regions
+
+  """
+  Bloc répétable
+  """
+  repetition
+
+  """
+  SIRET
+  """
+  siret
+
+  """
+  Texte
+  """
+  text
+
+  """
+  Zone de texte
+  """
+  textarea
+
+  """
+  Oui/Non
+  """
+  yes_no
+}
+
+"""
+A valid URL, transported as a string
+"""
+scalar URL

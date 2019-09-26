@@ -21,6 +21,10 @@ class Champs::YesNoChamp < Champ
     value == 'true'
   end
 
+  def for_api_v2
+    true? ? 'true' : 'false'
+  end
+
   private
 
   def processed_value

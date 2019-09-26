@@ -4,7 +4,7 @@ describe ProcedureExportService do
   describe 'to_data' do
     let(:procedure) { create(:procedure, :published, :with_all_champs) }
     let(:table) { :dossiers }
-    subject { ProcedureExportService.new(procedure).to_data(table) }
+    subject { ProcedureExportService.new(procedure, procedure.dossiers).to_data(table) }
 
     let(:headers) { subject[:headers] }
     let(:data) { subject[:data] }
@@ -19,8 +19,8 @@ describe ProcedureExportService do
     end
 
     context 'dossiers' do
-      it 'should have headers' do
-        expect(headers).to eq([
+      let(:nominal_header) do
+        [
           :id,
           :created_at,
           :updated_at,
@@ -86,7 +86,19 @@ describe ProcedureExportService do
           :entreprise_date_creation,
           :entreprise_nom,
           :entreprise_prenom
-        ])
+        ]
+      end
+
+      it 'should have headers' do
+        expect(headers).to eq(nominal_header)
+      end
+
+      context 'with a procedure routee' do
+        before { procedure.groupe_instructeurs.create(label: '2') }
+
+        let(:routee_header) { nominal_header.insert(nominal_header.index(:textarea), :groupe_instructeur_label) }
+
+        it { expect(headers).to eq(routee_header) }
       end
 
       it 'should have empty values' do
@@ -137,6 +149,13 @@ describe ProcedureExportService do
           expect(data).to eq([
             dossier_data + champs_data + etablissement_data
           ])
+        end
+
+        context 'with a procedure routee' do
+          before { procedure.groupe_instructeurs.create(label: '2') }
+
+          it { expect(data.first[15]).to eq('défaut') }
+          it { expect(data.first.count).to eq(dossier_data.count + champs_data.count + etablissement_data.count + 1) }
         end
 
         context 'and etablissement' do
