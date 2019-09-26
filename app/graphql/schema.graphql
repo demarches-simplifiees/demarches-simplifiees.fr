@@ -1,10 +1,12 @@
 type Avis {
-  answer: String
   attachmentUrl: URL
-  createdAt: ISO8601DateTime!
-  email: String!
+  dateQuestion: ISO8601DateTime!
+  dateReponse: ISO8601DateTime
+  expert: Profile
   id: ID!
+  instructeur: Profile!
   question: String!
+  reponse: String
 }
 
 type CarteChamp implements Champ {
@@ -160,12 +162,30 @@ Une demarche
 """
 type Demarche {
   annotationDescriptors: [ChampDescriptor!]!
-  archivedAt: ISO8601DateTime
   champDescriptors: [ChampDescriptor!]!
-  createdAt: ISO8601DateTime!
 
   """
-  Déscription de la démarche.
+  Date de la création.
+  """
+  dateCreation: ISO8601DateTime!
+
+  """
+  Date de la dernière modification.
+  """
+  dateDerniereModification: ISO8601DateTime!
+
+  """
+  Date de la fermeture.
+  """
+  dateFermeture: ISO8601DateTime
+
+  """
+  Date de la publication.
+  """
+  datePublication: ISO8601DateTime!
+
+  """
+  Description de la démarche.
   """
   description: String!
 
@@ -225,8 +245,11 @@ type Demarche {
   L'état de la démarche.
   """
   state: DemarcheState!
+
+  """
+  Le titre de la démarche.
+  """
   title: String!
-  updatedAt: ISO8601DateTime!
 }
 
 enum DemarcheState {
@@ -281,6 +304,11 @@ type Dossier {
   champs: [Champ!]!
 
   """
+  Date de la dernière modification.
+  """
+  dateDerniereModification: ISO8601DateTime!
+
+  """
   Date de dépôt.
   """
   datePassageEnConstruction: ISO8601DateTime!
@@ -309,11 +337,6 @@ type Dossier {
   L'état du dossier.
   """
   state: DossierState!
-
-  """
-  Date de dernière mise à jour.
-  """
-  updatedAt: ISO8601DateTime!
   usager: Profile!
 }
 
