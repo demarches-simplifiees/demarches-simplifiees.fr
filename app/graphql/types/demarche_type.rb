@@ -10,13 +10,14 @@ module Types
 
     global_id_field :id
     field :number, Int, "Le numero de la démarche.", null: false, method: :id
-    field :title, String, null: false, method: :libelle
-    field :description, String, "Déscription de la démarche.", null: false
+    field :title, String, "Le titre de la démarche.", null: false, method: :libelle
+    field :description, String, "Description de la démarche.", null: false
     field :state, DemarcheState, "L'état de la démarche.", null: false
 
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :archived_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
+    field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: false, method: :published_at
+    field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
+    field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :archived_at
 
     field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
 
