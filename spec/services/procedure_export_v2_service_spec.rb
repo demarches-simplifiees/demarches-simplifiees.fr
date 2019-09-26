@@ -5,7 +5,7 @@ describe ProcedureExportV2Service do
     let(:procedure) { create(:procedure, :published, :with_all_champs) }
     subject do
       Tempfile.create do |f|
-        f << ProcedureExportV2Service.new(procedure).to_xlsx
+        f << ProcedureExportV2Service.new(procedure, procedure.dossiers).to_xlsx
         f.rewind
         SimpleXlsxReader.open(f.path)
       end
@@ -34,8 +34,8 @@ describe ProcedureExportV2Service do
     context 'with dossier' do
       let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
 
-      it 'should have headers' do
-        expect(dossiers_sheet.headers).to eq([
+      let(:nominal_headers) do
+        [
           "ID",
           "Email",
           "Civilité",
@@ -74,7 +74,11 @@ describe ProcedureExportV2Service do
           "siret",
           "carte",
           "text"
-        ])
+        ]
+      end
+
+      it 'should have headers' do
+        expect(dossiers_sheet.headers).to match(nominal_headers)
       end
 
       it 'should have data' do
@@ -87,6 +91,15 @@ describe ProcedureExportV2Service do
         en_instruction_at = Time.zone.at(dossiers_sheet.data[0][10] - offset.seconds)
         expect(en_construction_at).to eq(dossier.en_construction_at.round)
         expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
+      end
+
+      context 'with a procedure routee' do
+        before { procedure.groupe_instructeurs.create(label: '2') }
+
+        let(:routee_header) { nominal_headers.insert(nominal_headers.index('textarea'), 'Groupe instructeur') }
+
+        it { expect(dossiers_sheet.headers).to match(routee_header) }
+        it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Groupe instructeur')]).to eq('défaut') }
       end
     end
 

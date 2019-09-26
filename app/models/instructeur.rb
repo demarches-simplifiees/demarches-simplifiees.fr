@@ -109,77 +109,31 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  def notifications_for_procedure(procedure, state = :en_cours)
-    dossiers = case state
-    when :termine
-      procedure.defaut_groupe_instructeur.dossiers.termine
-    when :not_archived
-      procedure.defaut_groupe_instructeur.dossiers.not_archived
-    when :all
-      procedure.defaut_groupe_instructeur.dossiers
-    else
-      procedure.defaut_groupe_instructeur.dossiers.en_cours
-    end
-
-    dossiers_id_with_notifications(dossiers)
+  def notifications_for_procedure(procedure, scope)
+    procedure
+      .defaut_groupe_instructeur.dossiers
+      .send(scope) # :en_cours or :termine or :not_archived (or any other Dossier scope)
+      .merge(followed_dossiers)
+      .with_notifications
   end
 
-  def notifications_per_procedure(state = :en_cours)
-    dossiers = case state
-    when :termine
-      Dossier.termine
-    when :not_archived
-      Dossier.not_archived
-    else
-      Dossier.en_cours
-    end
+  def procedures_with_notifications(scope)
+    dossiers = Dossier
+      .send(scope) # :en_cours or :termine (or any other Dossier scope)
+      .merge(followed_dossiers)
+      .with_notifications
 
-    Dossier.joins(:groupe_instructeur).where(id: dossiers_id_with_notifications(dossiers)).group('groupe_instructeurs.procedure_id').count
-  end
-
-  def create_trusted_device_token
-    trusted_device_token = trusted_device_tokens.create
-    trusted_device_token.token
-  end
-
-  def dossiers_id_with_notifications(dossiers)
-    dossiers = dossiers.followed_by(self)
-
-    updated_demandes = dossiers
-      .joins(:champs)
-      .where('champs.updated_at > follows.demande_seen_at')
-
-    updated_annotations = dossiers
-      .joins(:champs_private)
-      .where('champs.updated_at > follows.annotations_privees_seen_at')
-
-    updated_avis = dossiers
-      .joins(:avis)
-      .where('avis.updated_at > follows.avis_seen_at')
-
-    updated_messagerie = dossiers
-      .joins(:commentaires)
-      .where('commentaires.updated_at > follows.messagerie_seen_at')
-      .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
-      .where.not(commentaires: { email: CONTACT_EMAIL })
-
-    [
-      updated_demandes,
-      updated_annotations,
-      updated_avis,
-      updated_messagerie
-    ].flat_map { |query| query.distinct.ids }.uniq
+    Procedure
+      .where(id: dossiers.joins(:groupe_instructeur)
+        .select('groupe_instructeurs.procedure_id')
+        .distinct)
+      .distinct
   end
 
   def mark_tab_as_seen(dossier, tab)
     attributes = {}
     attributes["#{tab}_seen_at"] = Time.zone.now
     Follow.where(instructeur: self, dossier: dossier).update_all(attributes)
-  end
-
-  def young_login_token?
-    trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
-    trusted_device_token&.token_young?
   end
 
   def email_notification_data
@@ -190,7 +144,7 @@ class Instructeur < ApplicationRecord
 
       h = {
         nb_en_construction: groupe.dossiers.en_construction.count,
-        nb_notification: notifications_for_procedure(procedure, :all).count
+        nb_notification: notifications_for_procedure(procedure, :not_archived).count
       }
 
       if h[:nb_en_construction] > 0 || h[:nb_notification] > 0
@@ -201,6 +155,16 @@ class Instructeur < ApplicationRecord
 
       acc
     end
+  end
+
+  def create_trusted_device_token
+    trusted_device_token = trusted_device_tokens.create
+    trusted_device_token.token
+  end
+
+  def young_login_token?
+    trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
+    trusted_device_token&.token_young?
   end
 
   private

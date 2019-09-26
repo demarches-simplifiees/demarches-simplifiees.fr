@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_17_151652) do
+ActiveRecord::Schema.define(version: 2019_09_20_122228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -254,9 +254,11 @@ ActiveRecord::Schema.define(version: 2019_09_17_151652) do
     t.bigint "groupe_instructeur_id"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
+    t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
     t.index ["procedure_id"], name: "index_dossiers_on_procedure_id"
+    t.index ["state"], name: "index_dossiers_on_state"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
   end
 
@@ -353,6 +355,7 @@ ActiveRecord::Schema.define(version: 2019_09_17_151652) do
     t.index ["dossier_id"], name: "index_follows_on_dossier_id"
     t.index ["instructeur_id", "dossier_id", "unfollowed_at"], name: "uniqueness_index", unique: true
     t.index ["instructeur_id"], name: "index_follows_on_instructeur_id"
+    t.index ["unfollowed_at"], name: "index_follows_on_unfollowed_at"
   end
 
   create_table "france_connect_informations", id: :serial, force: :cascade do |t|
