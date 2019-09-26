@@ -190,6 +190,10 @@ class TypeDeChamp < ApplicationRecord
     self.drop_down_list_attributes = { value: value }
   end
 
+  def to_typed_id
+    GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
+  end
+
   private
 
   def set_default_drop_down_list

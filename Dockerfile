@@ -98,7 +98,6 @@ ENV \
 	TRUSTED_NETWORKS=""\
     UNIVERSIGN_USERPWD=""
 
-
 COPY --chown=userapp:userapp . ${APP_PATH}
 RUN bundle exec rails assets:precompile
 
