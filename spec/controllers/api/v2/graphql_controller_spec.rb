@@ -24,6 +24,12 @@ describe API::V2::GraphqlController do
         createdAt
         updatedAt
         archivedAt
+        groupeInstructeurs {
+          label
+          instructeurs {
+            email
+          }
+        }
         champDescriptors {
           id
           type
@@ -67,6 +73,7 @@ describe API::V2::GraphqlController do
         archivedAt: nil,
         createdAt: procedure.created_at.iso8601,
         updatedAt: procedure.updated_at.iso8601,
+        groupeInstructeurs: [{ instructeurs: [], label: "défaut" }],
         champDescriptors: procedure.types_de_champ.map do |tdc|
           {
             id: tdc.to_typed_id,

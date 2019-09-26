@@ -102,8 +102,8 @@ type Demarche {
     """
     since: ISO8601DateTime
   ): DossierConnection!
+  groupeInstructeurs: [GroupeInstructeur!]!
   id: ID!
-  instructeurs: [Profile!]!
 
   """
   Le numero de la démarche.
@@ -277,6 +277,15 @@ enum GeoAreaSource {
 type GeoJSON {
   coordinates: Coordinates!
   type: String!
+}
+
+"""
+Un groupe instructeur
+"""
+type GroupeInstructeur {
+  id: ID!
+  instructeurs: [Profile!]!
+  label: String!
 }
 
 """
