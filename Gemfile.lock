@@ -95,6 +95,7 @@ GEM
       selectize-rails (~> 0.6)
     aes_key_wrap (1.0.1)
     after_party (1.10.0)
+    anchored (1.1.0)
     arel (9.0.0)
     ast (2.4.0)
     attr_required (1.0.1)
@@ -722,6 +723,7 @@ DEPENDENCIES
   activestorage-openstack!
   administrate
   after_party
+  anchored
   axlsx (~> 3.0.0.pre)
   bcrypt
   bootstrap-sass (>= 3.4.1)
