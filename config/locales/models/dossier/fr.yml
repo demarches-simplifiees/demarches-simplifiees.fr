@@ -17,3 +17,9 @@ fr:
           refuse: "Refusé"
           sans_suite: "Sans suite"
         autorisation_donnees: Acceptation des CGU
+        state/brouillon: Brouillon
+        state/en_construction: En construction
+        state/en_instruction: En instruction
+        state/accepte: Accepté
+        state/refuse: Refusé
+        state/sans_suite: Sans suite

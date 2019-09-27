@@ -126,12 +126,12 @@ class Dossier < ApplicationRecord
         champs_private: {
           etablissement: :champ,
           type_de_champ: :drop_down_list
-        }
+        },
+        procedure: :groupe_instructeurs
       ).order(en_construction_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
-  scope :followed_by,                 -> (instructeur) { joins(:follows).where(follows: { instructeur: instructeur }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
   scope :since,                       -> (since) { where('dossiers.en_construction_at >= ?', since) }
@@ -162,6 +162,32 @@ class Dossier < ApplicationRecord
   }
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
+  scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
+
+  scope :with_notifications, -> do
+    # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
+    # it will fail otherwise
+    joined_dossiers = joins('LEFT OUTER JOIN "champs" ON "champs" . "dossier_id" = "dossiers" . "id" AND "champs" . "parent_id" IS NULL AND "champs" . "private" = FALSE AND "champs"."updated_at" > "follows"."demande_seen_at"')
+      .joins('LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON "champs_privates_dossiers" . "dossier_id" = "dossiers" . "id" AND "champs_privates_dossiers" . "parent_id" IS NULL AND "champs_privates_dossiers" . "private" = TRUE AND "champs_privates_dossiers"."updated_at" > "follows"."annotations_privees_seen_at"')
+      .joins('LEFT OUTER JOIN "avis" ON "avis" . "dossier_id" = "dossiers" . "id" AND avis.updated_at > follows.avis_seen_at')
+      .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'contact@demarches-simplifiees.fr\'')
+
+    updated_demandes = joined_dossiers
+      .where('champs.updated_at > follows.demande_seen_at')
+
+    updated_annotations = joined_dossiers
+      .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
+
+    updated_avis = joined_dossiers
+      .where('avis.updated_at > follows.avis_seen_at')
+
+    updated_messagerie = joined_dossiers
+      .where('commentaires.updated_at > follows.messagerie_seen_at')
+      .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
+      .where.not(commentaires: { email: CONTACT_EMAIL })
+
+    updated_demandes.or(updated_annotations).or(updated_avis).or(updated_messagerie).distinct
+  end
 
   accepts_nested_attributes_for :individual
 
@@ -462,7 +488,7 @@ class Dossier < ApplicationRecord
   end
 
   def spreadsheet_columns
-    [
+    columns = [
       ['ID', id.to_s],
       ['Email', user.email],
       ['Civilité', individual&.gender],
@@ -477,7 +503,13 @@ class Dossier < ApplicationRecord
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
       ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
-    ] + champs_for_export + annotations_for_export
+    ]
+
+    if procedure.routee?
+      columns << ['Groupe instructeur', groupe_instructeur.label]
+    end
+
+    columns + champs_for_export + annotations_for_export
   end
 
   def champs_for_export

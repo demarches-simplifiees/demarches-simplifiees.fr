@@ -248,7 +248,7 @@ describe Instructeur, type: :model do
       instructeur_2.followed_dossiers << dossier
     end
 
-    subject { instructeur.notifications_for_procedure(procedure) }
+    subject { instructeur.notifications_for_procedure(procedure, :en_cours) }
 
     context 'when the instructeur has just followed the dossier' do
       it { is_expected.to match([]) }
@@ -257,14 +257,14 @@ describe Instructeur, type: :model do
     context 'when there is a modification on public champs' do
       before { dossier.champs.first.update_attribute('value', 'toto') }
 
-      it { is_expected.to match([dossier.id]) }
-      it { expect(instructeur_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
-      it { expect(instructeur_on_procedure_2.notifications_for_procedure(procedure)).to match([]) }
+      it { is_expected.to match([dossier]) }
+      it { expect(instructeur_2.notifications_for_procedure(procedure, :en_cours)).to match([dossier]) }
+      it { expect(instructeur_on_procedure_2.notifications_for_procedure(procedure, :en_cours)).to match([]) }
 
       context 'and there is a modification on private champs' do
         before { dossier.champs_private.first.update_attribute('value', 'toto') }
 
-        it { is_expected.to match([dossier.id]) }
+        it { is_expected.to match([dossier]) }
       end
 
       context 'when instructeur update it s public champs last seen' do
@@ -273,7 +273,7 @@ describe Instructeur, type: :model do
         before { follow.update_attribute('demande_seen_at', Time.zone.now) }
 
         it { is_expected.to match([]) }
-        it { expect(instructeur_2.notifications_for_procedure(procedure)).to match([dossier.id]) }
+        it { expect(instructeur_2.notifications_for_procedure(procedure, :en_cours)).to match([dossier]) }
       end
     end
 
@@ -286,20 +286,20 @@ describe Instructeur, type: :model do
     context 'when there is a modification on private champs' do
       before { dossier.champs_private.first.update_attribute('value', 'toto') }
 
-      it { is_expected.to match([dossier.id]) }
+      it { is_expected.to match([dossier]) }
     end
 
     context 'when there is a modification on avis' do
       before { create(:avis, dossier: dossier) }
 
-      it { is_expected.to match([dossier.id]) }
+      it { is_expected.to match([dossier]) }
     end
 
     context 'the messagerie' do
       context 'when there is a new commentaire' do
         before { create(:commentaire, dossier: dossier, email: 'a@b.com') }
 
-        it { is_expected.to match([dossier.id]) }
+        it { is_expected.to match([dossier]) }
       end
 
       context 'when there is a new commentaire issued by tps' do
@@ -315,12 +315,12 @@ describe Instructeur, type: :model do
     let(:instructeur) { dossier.follows.first.instructeur }
     let(:procedure) { dossier.procedure }
 
-    subject { instructeur.notifications_per_procedure }
+    subject { instructeur.procedures_with_notifications(:en_cours) }
 
     context 'when there is a modification on public champs' do
       before { dossier.champs.first.update_attribute('value', 'toto') }
 
-      it { is_expected.to match({ procedure.id => 1 }) }
+      it { is_expected.to match([procedure]) }
     end
   end
 
@@ -389,7 +389,7 @@ describe Instructeur, type: :model do
     context 'when a notification exists' do
       before do
         allow(instructeur).to receive(:notifications_for_procedure)
-          .with(procedure_to_assign, :all)
+          .with(procedure_to_assign, :not_archived)
           .and_return([1, 2, 3])
       end
 

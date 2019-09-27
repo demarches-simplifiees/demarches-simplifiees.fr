@@ -54,12 +54,20 @@ class Champ < ApplicationRecord
     value
   end
 
+  def for_api_v2
+    to_s
+  end
+
   def for_tag
     value.present? ? value.to_s : ''
   end
 
   def main_value_name
     :value
+  end
+
+  def to_typed_id
+    type_de_champ.to_typed_id
   end
 
   private

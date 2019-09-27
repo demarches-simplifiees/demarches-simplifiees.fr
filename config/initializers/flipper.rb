@@ -26,6 +26,7 @@ end
 # A list of features to be deployed on first push
 features = [
   :administrateur_champ_integer_number,
+  :administrateur_graphql,
   :administrateur_web_hook,
   :insee_api_v3,
   :instructeur_bypass_email_login_token,

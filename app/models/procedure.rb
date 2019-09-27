@@ -62,6 +62,10 @@ class Procedure < ApplicationRecord
     accepte:         'accepte'
   }
 
+  scope :for_api_v2, -> {
+    includes(administrateurs: :user)
+  }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
@@ -334,26 +338,26 @@ class Procedure < ApplicationRecord
     "dossiers_#{procedure_identifier}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}.#{format}"
   end
 
-  def export(options = {})
+  def export(dossiers, options = {})
     version = options.delete(:version)
     if version == 'v2'
       options.delete(:tables)
-      ProcedureExportV2Service.new(self, **options.to_h.symbolize_keys)
+      ProcedureExportV2Service.new(self, dossiers, **options.to_h.symbolize_keys)
     else
-      ProcedureExportService.new(self, **options.to_h.symbolize_keys)
+      ProcedureExportService.new(self, dossiers, **options.to_h.symbolize_keys)
     end
   end
 
-  def to_csv(options = {})
-    export(options).to_csv
+  def to_csv(dossiers, options = {})
+    export(dossiers, options).to_csv
   end
 
-  def to_xlsx(options = {})
-    export(options).to_xlsx
+  def to_xlsx(dossiers, options = {})
+    export(dossiers, options).to_xlsx
   end
 
-  def to_ods(options = {})
-    export(options).to_ods
+  def to_ods(dossiers, options = {})
+    export(dossiers, options).to_ods
   end
 
   def procedure_overview(start_date)
@@ -479,6 +483,10 @@ class Procedure < ApplicationRecord
 
   def missing_instructeurs?
     !AssignTo.exists?(groupe_instructeur: groupe_instructeurs)
+  end
+
+  def routee?
+    groupe_instructeurs.count > 1
   end
 
   private

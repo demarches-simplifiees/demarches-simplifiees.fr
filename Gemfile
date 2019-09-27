@@ -32,6 +32,10 @@ gem 'flipper-ui'
 gem 'fog-openstack'
 gem 'font-awesome-rails'
 gem 'gon'
+gem 'graphiql-rails'
+gem 'graphql'
+gem 'graphql-batch'
+gem 'graphql-rails_logger'
 gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
@@ -106,6 +110,7 @@ end
 
 group :development, :test do
   gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
   gem 'pry-byebug'
   gem 'rspec-rails'

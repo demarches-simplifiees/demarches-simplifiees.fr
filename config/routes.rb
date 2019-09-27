@@ -228,11 +228,19 @@ Rails.application.routes.draw do
   # API
   #
 
+  authenticated :user, lambda { |user| user.administrateur_id && Flipper.enabled?(:administrateur_graphql, user) } do
+    mount GraphiQL::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql", via: :get
+  end
+
   namespace :api do
     namespace :v1 do
       resources :procedures, only: [:index, :show] do
         resources :dossiers, only: [:index, :show]
       end
+    end
+
+    namespace :v2 do
+      post :graphql, to: "graphql#execute"
     end
   end
 
