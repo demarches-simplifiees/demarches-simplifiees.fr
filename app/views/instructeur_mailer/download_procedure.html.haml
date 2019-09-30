@@ -1,0 +1,8 @@
+%p
+  Bonjour,
+
+%p
+  Vous avez demandé un export des dossiers de la procédure nº #{@procedure.id} « #{@procedure.libelle} ». Cliquez sur le lien ci-dessous pour le télécharger :
+  = link_to('Télécharger les dossiers', @lien_telechargement)
+
+= render partial: "layouts/mailers/signature"

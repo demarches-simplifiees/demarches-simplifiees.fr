@@ -205,6 +205,14 @@ module Instructeurs
       end
     end
 
+    def download_dossiers_mail
+      options = params.permit(:format, tables: [])
+      DownloadDossiersJob.perform_later(procedure, options, current_instructeur)
+
+      flash.notice = "Le dossier va vous être envoyé par mail"
+      redirect_to procedure
+    end
+
     def email_notifications
       @procedure = procedure
       @assign_to = assign_to

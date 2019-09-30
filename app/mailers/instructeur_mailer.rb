@@ -42,4 +42,12 @@ class InstructeurMailer < ApplicationMailer
 
     mail(to: instructeur.email, subject: subject)
   end
+
+  def download_procedure(instructeur, procedure, blob)
+    @procedure = procedure
+    @lien_telechargement = url_for(blob)
+    subject = "Votre export de la procédure #{procedure.id} est disponible"
+
+    mail(to: instructeur.email, subject: subject)
+  end
 end
