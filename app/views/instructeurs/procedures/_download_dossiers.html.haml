@@ -20,3 +20,9 @@
             = link_to "Au format .ods #{old_format_message}", procedure_dossiers_download_path(procedure, format: :ods, version: 'v1'), target: "_blank", rel: "noopener"
           %li
             = link_to "Au format .csv #{old_format_message}", procedure_dossiers_download_path(procedure, format: :csv, version: 'v1'), target: "_blank", rel: "noopener"
+        %li
+          = link_to "Par mail, au format .xlsx", download_dossiers_mail_instructeur_procedure_path(procedure, format: :xlsx, version: 'v2')
+        %li
+          = link_to "Par mail, au format .ods", download_dossiers_mail_instructeur_procedure_path(procedure, format: :ods, version: 'v2')
+        %li
+          = link_to "Par mail, au format .csv", download_dossiers_mail_instructeur_procedure_path(procedure, format: :csv, version: 'v2')
