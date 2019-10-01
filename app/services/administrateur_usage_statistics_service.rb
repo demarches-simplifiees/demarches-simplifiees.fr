@@ -10,7 +10,7 @@ class AdministrateurUsageStatisticsService
   def update_administrateurs
     Administrateur.includes(:user).find_each do |administrateur|
       stats = administrateur_stats(administrateur)
-      api.identify(administrateur.email, stats)
+      api.update_contact(administrateur.email, stats)
     end
     api.run
   end
