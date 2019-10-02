@@ -206,11 +206,19 @@ module Instructeurs
     end
 
     def download_dossiers_mail
-      options = params.permit(:format, tables: [])
-      DownloadDossiersJob.perform_later(procedure, options, current_instructeur)
+      ExportProcedureJob.perform_later(procedure, current_instructeur, params[:format])
 
       flash.notice = "Le dossier va vous être envoyé par mail"
       redirect_to procedure
+    end
+
+    def download_export
+      if procedure.export_file.attachment.created_at < 1.day.ago
+        flash.alert = "Cet export n'est plus disponible. Vous devez en générer un nouveau qui vous sera transmis par mail"
+        redirect_to instructeur_procedure_url(procedure)
+      else
+        redirect_to url_for(procedure.export_file)
+      end
     end
 
     def email_notifications

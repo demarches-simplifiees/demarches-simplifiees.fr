@@ -1,10 +1,9 @@
-class DownloadDossiersJob < ApplicationJob
-  def perform(procedure, options, instructeur)
+class ExportProcedureJob < ApplicationJob
+  def perform(procedure, instructeur, export_format)
     dossiers = instructeur.dossiers.for_procedure(procedure)
-    format = options[:format]
-    options.delete(:format)
+    options = { :version => 'v2', :tables => [:dossiers, :etablissements] }
 
-    case format
+    case export_format
     when 'csv'
       filename = procedure.export_filename(:csv)
       data = procedure.to_csv(dossiers, options)
@@ -20,12 +19,13 @@ class DownloadDossiersJob < ApplicationJob
     IO.write(file_path, data)
 
     File.open(file_path) do |io|
-      blob = ActiveStorage::Blob.create_after_upload!(
+      # todo: add a TTL to the uploaded file, even though it's checked for in the controller too
+      procedure.export_file = ActiveStorage::Blob.create_after_upload!(
         io: io,
         filename: filename
       )
 
-      InstructeurMailer.download_procedure(instructeur, procedure, blob).deliver_now
+      InstructeurMailer.download_procedure_export(instructeur, procedure).deliver_now
       File.delete(file_path)
     end
   end
