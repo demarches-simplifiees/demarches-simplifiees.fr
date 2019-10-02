@@ -169,17 +169,9 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when the dossier is accepte' do
       let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
-      it 'it is not possible to go back to en_instruction as instructeur' do
-        expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
+      it 'it is possible to go back to en_instruction as instructeur' do
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
-      end
-
-      context 'as superadmin' do
-        let (:current_user) { administration }
-        it 'it is not possible to go back to en_instruction' do
-          expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
-          expect(response).to have_http_status(:ok)
-        end
       end
     end
   end
