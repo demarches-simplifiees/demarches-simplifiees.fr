@@ -294,6 +294,7 @@ Rails.application.routes.draw do
         get 'remove_filter' => 'procedures#remove_filter', as: 'remove_filter'
         get 'download_dossiers'
         get 'download_dossiers_mail'
+        get 'download_export'
         get 'stats'
         get 'email_notifications'
         patch 'update_email_notifications'

@@ -34,6 +34,7 @@ class Procedure < ApplicationRecord
   has_one_attached :logo
   has_one_attached :notice
   has_one_attached :deliberation
+  has_one_attached :export_file
 
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
