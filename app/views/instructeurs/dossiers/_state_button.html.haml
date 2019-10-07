@@ -1,4 +1,4 @@
-- if dossier.en_construction? || dossier.en_instruction?
+- if dossier.en_construction? || dossier.en_instruction? || dossier.accepte?
   %span.dropdown
     %button.button.primary.dropdown-button
       = dossier_display_state dossier
@@ -17,6 +17,13 @@
                 %h4 Passer en instruction
                 L'usager ne pourra plus modifier le formulaire
 
+        - if dossier.accepte?
+          %li
+            = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote: true, confirm: "Confirmez-vous le passage en instruction de ce dossier ?" } do
+              %span.icon.in-progress
+              .dropdown-description
+                %h4 Passer en instruction
+                L'usager ne pourra plus modifier le formulaire
         - if dossier.en_instruction?
           %li
             = link_to repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Confirmez-vous le passage en construction de ce dossier ?" } do
