@@ -185,9 +185,9 @@ feature 'The instructeur part' do
     click_on 'Personnes impliquées'
 
     first('.select2-container', minimum: 1).click
-    find('li.select2-results__option[role="treeitem"]', text: instructeur_2.email).click
+    find('li.select2-results__option[role="option"]', text: instructeur_2.email).click
     first('.select2-container', minimum: 1).click
-    find('li.select2-results__option[role="treeitem"]', text: instructeur_3.email).click
+    find('li.select2-results__option[role="option"]', text: instructeur_3.email).click
 
     click_on 'Envoyer'
 
