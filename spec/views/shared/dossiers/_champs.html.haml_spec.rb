@@ -40,6 +40,18 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
       expect(subject).not_to include(champ3.libelle)
       expect(subject).not_to include(champ3.value)
     end
+
+    context "with auto-link" do
+      let(:champ1) { create(:champ_text, value: "https://github.com/tchak") }
+      let(:champ2) { create(:champ_textarea, value: "https://github.com/LeSim") }
+      let(:link1) { '<a href="https://github.com/tchak" target="_blank" rel="noopener">https://github.com/tchak</a>' }
+      let(:link2) { '<a href="https://github.com/LeSim" target="_blank" rel="noopener">https://github.com/LeSim</a>' }
+
+      it "render links" do
+        expect(subject).to include(link1)
+        expect(subject).to include(link2)
+      end
+    end
   end
 
   context "with a dossier champ, but we are not authorized to acces the dossier" do
