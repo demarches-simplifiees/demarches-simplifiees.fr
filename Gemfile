@@ -68,7 +68,6 @@ gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'scenic'
 gem 'select2-rails'
 gem 'sentry-raven'
-gem 'simple_form'
 gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'

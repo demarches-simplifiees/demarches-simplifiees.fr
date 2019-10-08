@@ -616,9 +616,6 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (4.0.1)
       activesupport (>= 4.2.0)
-    simple_form (4.1.0)
-      actionpack (>= 5.0)
-      activemodel (>= 5.0)
     simple_xlsx_reader (1.0.4)
       nokogiri
       rubyzip
@@ -809,7 +806,6 @@ DEPENDENCIES
   select2-rails
   sentry-raven
   shoulda-matchers
-  simple_form
   simple_xlsx_reader
   skylight
   smart_listing
