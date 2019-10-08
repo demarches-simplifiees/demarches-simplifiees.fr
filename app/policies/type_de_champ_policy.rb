@@ -1,5 +1,5 @@
 class TypeDeChampPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationScope
     def resolve
       if administrateur.present?
         scope
