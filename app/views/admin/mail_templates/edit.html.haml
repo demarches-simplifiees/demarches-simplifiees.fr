@@ -4,17 +4,23 @@
   %h3
     = @mail_template.class.const_get(:DISPLAYED_NAME)
 
-  = simple_form_for @mail_template,
+  = form_for @mail_template,
     as: 'mail_template',
     url: admin_procedure_mail_template_path(@procedure, @mail_template.class.const_get(:SLUG)),
     method: :put do |f|
     .row
       .col-md-6
-        = f.input :subject, label: "Objet de l'email"
-    = f.input :body, label: "Corps de l'email", input_html: { class: 'wysihtml5' }
+        .form-group.string.optional.mail_template_subject
+          = f.label :subject, "Objet de l'email", class: 'control-label string optional'
+          = f.text_field :subject, class: 'form-control string optional'
+
+    .form-group.text.optional.mail_template_body
+      = f.label :body, "Corps de l'email", class: 'control-label string optional'
+      = f.text_area :body, class: 'wysihtml5 form-control text optional'
+
     .text-right
       = link_to "Annuler", admin_procedure_mail_templates_path(@procedure), class: "btn btn-default"
-      = f.button :submit, 'Mettre à jour', class: "btn-success"
+      = f.submit 'Mettre à jour', class: "btn btn-default btn-success"
       = link_to "Prévisualiser", preview_procedure_mail_template_path(@procedure, @mail_template.class.const_get(:SLUG)), class: "btn btn-primary", target: "_blank"
 
   .row
