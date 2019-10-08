@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: fix_email_templates_subjects'
   task fix_email_templates_subjects: :environment do
-    puts "Running deploy task 'fix_email_templates_subjects'"
+    rake_puts "Running deploy task 'fix_email_templates_subjects'"
 
     klasses = [
       Mails::ClosedMail,
