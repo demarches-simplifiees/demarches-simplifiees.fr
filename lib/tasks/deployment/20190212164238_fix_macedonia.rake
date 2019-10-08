@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: fix_macedonia'
   task fix_macedonia: :environment do
-    puts "Running deploy task 'fix_macedonia'"
+    rake_puts "Running deploy task 'fix_macedonia'"
 
     # Put your task implementation HERE.
 
