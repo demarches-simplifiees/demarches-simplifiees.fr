@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: rename_active_storage_attachments'
   task rename_active_storage_attachments: :environment do
-    puts "Running deploy task 'rename_active_storage_attachments'"
+    rake_puts "Running deploy task 'rename_active_storage_attachments'"
 
     ActiveStorage::Attachment.where(name: 'logo_active_storage').update_all(name: 'logo')
     ActiveStorage::Attachment.where(name: 'signature_active_storage').update_all(name: 'signature')

@@ -1,3 +1,5 @@
+require Rails.root.join("lib", "tasks", "task_helper")
+
 namespace :cloudstorage do
   task init: :environment do
     os_config = (YAML.load_file(Fog.credentials_path))['default']
@@ -28,7 +30,7 @@ namespace :cloudstorage do
         if !(content.current_path.nil? || File.exist?(File.dirname(content.current_path) + '/uploaded'))
           secure_token = SecureRandom.uuid
           filename = "#{entry.class.to_s.underscore}-#{secure_token}#{File.extname(content.current_path)}"
-          puts "Uploading #{content.current_path}"
+          rake_puts "Uploading #{content.current_path}"
           begin
             @cont.create_object(filename, {}, File.open(content.current_path))
 
@@ -39,7 +41,7 @@ namespace :cloudstorage do
             entry.update_column(c == Procedure ? :logo : :content, filename)
             entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, secure_token)
           rescue Errno::ENOENT
-            puts "ERROR: #{content.current_path} does not exist!"
+            rake_puts "ERROR: #{content.current_path} does not exist!"
             File.open('upload_errors.report', "a+") { |f| f.write(content.current_path) }
             error_count += 1
           end
@@ -51,15 +53,15 @@ namespace :cloudstorage do
             entry.update_column(c == Procedure ? :logo : :content, filename)
             entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, secure_token)
 
-            puts "RESTORE IN DATABASE: #{filename} "
+            rake_puts "RESTORE IN DATABASE: #{filename} "
           elsif content.current_path.present?
-            puts "Skipping #{content.current_path}"
+            rake_puts "Skipping #{content.current_path}"
           end
         end
       end
     end
 
-    puts "There were #{error_count} errors while uploading files. See upload_errors.report file for details."
+    rake_puts "There were #{error_count} errors while uploading files. See upload_errors.report file for details."
     puts 'Enf of migration'
   end
 
@@ -77,7 +79,7 @@ namespace :cloudstorage do
             entry.update_column(c == Procedure ? :logo : :content, previous_filename)
             entry.update_column(c == Procedure ? :logo_secure_token : :content_secure_token, nil)
 
-            puts "restoring #{content.current_path} db data to #{previous_filename}"
+            rake_puts "restoring #{content.current_path} db data to #{previous_filename}"
 
             @cont.delete_object(File.open(File.dirname(content.current_path) + '/filename_cloudstorage', "r").read)
 
@@ -95,7 +97,7 @@ namespace :cloudstorage do
     Rake::Task['cloudstorage:init'].invoke
 
     @cont.objects.each do |object|
-      puts "Removing #{object}"
+      rake_puts "Removing #{object}"
       @cont.delete_object(object)
     end
   end

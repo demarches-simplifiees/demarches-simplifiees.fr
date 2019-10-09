@@ -21,6 +21,8 @@ class User < ApplicationRecord
 
   accepts_nested_attributes_for :france_connect_information
 
+  default_scope { eager_load(:instructeur, :administrateur) }
+
   before_validation -> { sanitize_email(:email) }
 
   # Callback provided by Devise
