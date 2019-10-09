@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: create_dummy_paths_for_archived_and_hidden_procedures'
   task create_dummy_paths_for_archived_and_hidden_procedures: :environment do
-    puts "Running deploy task 'create_dummy_paths_for_archived_procedures'"
+    rake_puts "Running deploy task 'create_dummy_paths_for_archived_procedures'"
 
     Procedure.unscoped.archivees.where(path: nil).each do |p|
       p.update_column(:path, SecureRandom.uuid)

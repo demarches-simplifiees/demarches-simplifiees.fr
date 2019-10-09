@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: migrate_geo_area_data'
   task migrate_geo_area_data: :environment do
-    puts "Running deploy task 'migrate_geo_area_data'"
+    rake_puts "Running deploy task 'migrate_geo_area_data'"
 
     progress = ProgressReport.new(Champs::CarteChamp.count)
 

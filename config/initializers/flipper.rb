@@ -30,7 +30,6 @@ features = [
   :administrateur_web_hook,
   :insee_api_v3,
   :instructeur_bypass_email_login_token,
-  :instructeur_download_as_zip,
   :maintenance_mode,
   :mini_profiler,
   :operation_log_serialize_subject,

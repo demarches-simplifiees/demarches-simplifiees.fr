@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: create_default_path_for_brouillons'
   task create_default_path_for_brouillons: :environment do
-    puts "Running deploy task 'create_default_path_for_brouillons'"
+    rake_puts "Running deploy task 'create_default_path_for_brouillons'"
 
     # Put your task implementation HERE.
 
