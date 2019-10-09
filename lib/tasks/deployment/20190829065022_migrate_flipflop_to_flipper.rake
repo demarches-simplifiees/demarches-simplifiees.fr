@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: migrate_flipflop_to_flipper'
   task migrate_flipflop_to_flipper: :environment do
-    puts "Running deploy task 'migrate_flipflop_to_flipper'"
+    rake_puts "Running deploy task 'migrate_flipflop_to_flipper'"
 
     Instructeur.includes(:user).find_each do |instructeur|
       if instructeur.features['download_as_zip_enabled']

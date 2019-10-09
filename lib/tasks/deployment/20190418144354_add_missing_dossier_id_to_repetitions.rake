@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: add_missing_dossier_id_to_repetitions'
   task add_missing_dossier_id_to_repetitions: :environment do
-    puts "Running deploy task 'add_missing_dossier_id_to_repetitions'"
+    rake_puts "Running deploy task 'add_missing_dossier_id_to_repetitions'"
 
     champs = Champ.where(dossier_id: nil)
     progress = ProgressReport.new(champs.count)
