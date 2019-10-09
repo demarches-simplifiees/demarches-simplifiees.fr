@@ -112,4 +112,39 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)) }
     end
   end
+
+  describe '#remove_instructeur' do
+    let!(:instructeur) { create(:instructeur) }
+
+    before { gi_1_1.instructeurs << admin.instructeur << instructeur }
+
+    def remove_instructeur(email)
+      delete :remove_instructeur,
+        params: {
+          procedure_id: procedure.id,
+          id: gi_1_1.id,
+          instructeur: { id: admin.instructeur.id }
+        }
+    end
+
+    context 'when there are many instructeurs' do
+      before { remove_instructeur(admin.user.email) }
+
+      it { expect(gi_1_1.instructeurs).to include(instructeur) }
+      it { expect(gi_1_1.reload.instructeurs.count).to eq(1) }
+      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+    end
+
+    context 'when there is only one instructeur' do
+      before do
+        remove_instructeur(admin.user.email)
+        remove_instructeur(instructeur.email)
+      end
+
+      it { expect(gi_1_1.instructeurs).to include(instructeur) }
+      it { expect(gi_1_1.instructeurs.count).to eq(1) }
+      it { expect(flash.alert).to eq('Suppression impossible : il doit y avoir au moins un instructeur dans le groupe') }
+      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+    end
+  end
 end

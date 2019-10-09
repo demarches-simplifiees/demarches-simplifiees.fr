@@ -353,6 +353,7 @@ Rails.application.routes.draw do
       resources :groupe_instructeurs, only: [:index, :show, :create, :update] do
         member do
           post 'add_instructeur'
+          delete 'remove_instructeur'
         end
       end
 
