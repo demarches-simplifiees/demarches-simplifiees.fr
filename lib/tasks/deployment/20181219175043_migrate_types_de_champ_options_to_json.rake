@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: migrate_types_de_champ_options_to_json'
   task migrate_types_de_champ_options_to_json: :environment do
-    puts "Running deploy task 'migrate_types_de_champ_options_to_json'"
+    rake_puts "Running deploy task 'migrate_types_de_champ_options_to_json'"
 
     dirty_tdcs = TypeDeChamp.where.not(options: nil)
     progress = ProgressReport.new(dirty_tdcs.count)
