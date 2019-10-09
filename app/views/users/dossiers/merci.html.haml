@@ -16,8 +16,9 @@
       %b dossier en ligne.
     %p
       Vous pouvez
-      %b le modifier
-      et
+      - if !@dossier.read_only?
+        %b le modifier
+        et
       %b échanger avec un instructeur.
 
     .flex.column.align-center

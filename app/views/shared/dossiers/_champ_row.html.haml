@@ -37,7 +37,7 @@
             - when TypeDeChamp.type_champs.fetch(:datetime)
               = c.to_s
             - else
-              = sanitize(c.to_s)
+              = format_text_value(c.to_s)
 
       - if c.type_champ != TypeDeChamp.type_champs.fetch(:header_section)
         %td.updated-at

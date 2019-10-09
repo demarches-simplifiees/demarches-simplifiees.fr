@@ -34,7 +34,7 @@ class ApplicationPolicy
     false
   end
 
-  class Scope
+  class ApplicationScope
     attr_reader :user, :instructeur, :administrateur, :scope
 
     def initialize(account, scope)

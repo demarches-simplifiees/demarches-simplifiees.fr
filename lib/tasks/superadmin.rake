@@ -1,9 +1,11 @@
+require Rails.root.join("lib", "tasks", "task_helper")
+
 namespace :superadmin do
   desc <<~EOD
     List all super-admins
   EOD
   task list: :environment do
-    puts "All Administrations:"
+    rake_puts "All Administrations:"
     Administration.all.pluck(:email).each do |a|
       puts a
     end
@@ -15,13 +17,13 @@ namespace :superadmin do
   task :create, [:email] => :environment do |_t, args|
     email = args[:email]
 
-    puts "Creating Administration for #{email}"
+    rake_puts "Creating Administration for #{email}"
     a = Administration.new(email: email, password: Devise.friendly_token[0, 20])
 
     if a.save
-      puts "#{a.email} created"
+      rake_puts "#{a.email} created"
     else
-      puts "An error occured: #{a.errors.full_messages}"
+      rake_puts "An error occured: #{a.errors.full_messages}"
     end
   end
 
@@ -30,9 +32,9 @@ namespace :superadmin do
   EOD
   task :delete, [:email] => :environment do |_t, args|
     email = args[:email]
-    puts "Deleting Administration for #{email}"
+    rake_puts "Deleting Administration for #{email}"
     a = Administration.find_by(email: email)
     a.destroy
-    puts "#{a.email} deleted"
+    rake_puts "#{a.email} deleted"
   end
 end

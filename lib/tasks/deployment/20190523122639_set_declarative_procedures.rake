@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: set_declarative_procedures'
   task set_declarative_procedures: :environment do
-    puts "Running deploy task 'set_declarative_procedures'"
+    rake_puts "Running deploy task 'set_declarative_procedures'"
 
     Delayed::Job.where.not(cron: nil).find_each do |job|
       job_data = YAML.load_dj(job.handler).job_data

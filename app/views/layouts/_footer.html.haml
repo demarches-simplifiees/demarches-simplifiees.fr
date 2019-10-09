@@ -3,16 +3,14 @@
     = link_to 'DINSIC', "http://etatplateforme.modernisation.gouv.fr"
     = Time.zone.now.year
     \-
-    = link_to 'Nouveautés', 'https://github.com/maatinito/mes-demarches/releases', target: '_blank'
+    = link_to 'Nouveautés', 'https://mes-demarches.gitbook.io/documentation/nouveautes', target: '_blank'
     \-
     = link_to 'Statistiques', stats_path, data: { turbolinks: false } # Turbolinks disabled for Chartkick. See Issue #350
     \-
-    = link_to 'CGU / Mentions légales', CGU_URL
+    = link_to 'CGU / Mentions légales', CGU_URL, target: '_blank'
     \-
-    = contact_link 'Contact'
+    = link_to 'Documentation', DOC_URL, target: '_blank'
     \-
-    = link_to 'Documentation', DOC_URL
-    \-
-    = link_to 'FAQ', FAQ_ADMIN_URL
+    = link_to 'FAQ', FAQ_ADMIN_URL, target: '_blank'
     -# \-
     -# = link_to 'Inscription ateliers en ligne', WEBINAIRE_URL

@@ -112,12 +112,8 @@ module Instructeurs
       if dossier.en_instruction?
         flash.notice = 'Le dossier est déjà en instruction.'
       else
-        if dossier.accepte?
-          flash.notice = 'Il n’est pas possible de repasser un dossier accepté en instruction.'
-        else
-          flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
-          dossier.repasser_en_instruction!(current_instructeur)
-        end
+        flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
+        dossier.repasser_en_instruction!(current_instructeur)
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
@@ -183,7 +179,7 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      return head(:forbidden) if !feature_enabled?(:instructeur_download_as_zip) || !dossier.attachments_downloadable?
+      return head(:forbidden) if !dossier.attachments_downloadable?
 
       files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
 
