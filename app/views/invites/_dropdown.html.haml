@@ -5,7 +5,10 @@
       Voir les personnes invitées
       %span.badge= dossier.invites.count
     - else
-      Inviter une personne à modifier ce dossier
+      - if dossier.read_only?
+        Inviter une personne à consulter ce dossier
+      - else
+        Inviter une personne à modifier ce dossier
 
   .dropdown-content.fade-in-down
     = render partial: "invites/form", locals: { dossier: dossier }

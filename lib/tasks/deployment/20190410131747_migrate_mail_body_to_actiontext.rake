@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: migrate_mail_body_to_actiontext'
   task migrate_mail_body_to_actiontext: :environment do
-    puts "Running deploy task 'migrate_mail_body_to_actiontext'"
+    rake_puts "Running deploy task 'migrate_mail_body_to_actiontext'"
 
     # Put your task implementation HERE.
 
