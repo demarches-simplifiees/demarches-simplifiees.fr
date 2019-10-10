@@ -46,7 +46,35 @@ module NewAdministrateur
       end
     end
 
+    def add_instructeur
+      @instructeur = Instructeur.find_by(email: instructeur_email) ||
+        create_instructeur(instructeur_email)
+
+      if groupe_instructeur.instructeurs.include?(@instructeur)
+        flash[:alert] = "L’instructeur « #{instructeur_email} » est déjà dans le groupe."
+
+      else
+        groupe_instructeur.instructeurs << @instructeur
+        flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
+        GroupeInstructeurMailer
+          .add_instructeur(groupe_instructeur, @instructeur, current_user.email)
+          .deliver_later
+      end
+
+      redirect_to procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+    end
+
     private
+
+    def create_instructeur(email)
+      user = User.create_or_promote_to_instructeur(
+        email,
+        SecureRandom.hex,
+        administrateurs: [current_administrateur]
+      )
+      user.invite!
+      user.instructeur
+    end
 
     def procedure
       current_administrateur
@@ -57,6 +85,10 @@ module NewAdministrateur
 
     def groupe_instructeur
       procedure.groupe_instructeurs.find(params[:id])
+    end
+
+    def instructeur_email
+      params[:instructeur][:email].strip.downcase
     end
 
     def label
