@@ -6,8 +6,9 @@
   = form_tag(terminer_instructeur_dossier_path(dossier.procedure, dossier), remote: true, method: :post, class: 'form') do
     - if title == 'Accepter'
       = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: false
-      %p.help
-        L'acceptation du dossier envoie automatiquement une attestation à l'usager.
+      - if dossier.procedure.attestation_template&.activated?
+        %p.help
+          L'acceptation du dossier envoie automatiquement une attestation à l'usager.
 
       - unspecified_attestation_champs = dossier.unspecified_attestation_champs
       - if unspecified_attestation_champs.present?
