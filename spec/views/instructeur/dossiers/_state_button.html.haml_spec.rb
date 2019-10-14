@@ -7,13 +7,6 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
     render('instructeurs/dossiers/state_button.html.haml', dossier: dossier)
   end
 
-  matcher :have_state_label do |expected_title|
-    match do |rendered|
-      expect(rendered).to have_selector('.label', text: expected_title)
-      expect(rendered).not_to have_selector('.dropdown')
-    end
-  end
-
   matcher :have_dropdown_title do |expected_title|
     match do |rendered|
       expect(rendered).to have_selector('.dropdown .dropdown-button', text: expected_title)
@@ -39,13 +32,13 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
   end
 
   context 'brouillon' do
-    let(:dossier) { create(:dossier) }
-
     # Currently the state button is not supposed to be displayed for brouillons.
     # But better have a sane fallback than crashing.
+    let(:dossier) { create(:dossier) }
 
-    it 'renders a label' do
-      expect(rendered).to have_state_label('brouillon')
+    it 'renders a dropdown' do
+      expect(rendered).to have_dropdown_title('Brouillon')
+      expect(rendered).to have_dropdown_items(count: 0)
     end
   end
 
@@ -77,19 +70,14 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
   shared_examples 'a dropdown for a closed state' do |state|
     let(:dossier) { create :dossier, state }
 
-    # FIXME: it should also render the link to move back to instruction
-    it 'renders a simple label' do
-      expect(rendered).to have_state_label(dossier_display_state(dossier, lower: true))
+    it 'renders a dropdown' do
+      expect(rendered).to have_dropdown_title(dossier_display_state(dossier))
+      expect(rendered).to have_dropdown_items(count: 1)
+      expect(rendered).to have_dropdown_item('Repasser en instruction', href: repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier))
     end
 
     context 'with a motivation' do
       let(:dossier) { create :dossier, state, motivation: 'Correspond au programme' }
-
-      it 'renders a dropdown' do
-        expect(rendered).to have_dropdown_title(dossier_display_state(dossier, lower: true))
-        expect(rendered).to have_dropdown_items(count: 1)
-        expect(rendered).to have_dropdown_item('Repasser en instruction', href: repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier))
-      end
 
       it 'displays the motivation text' do
         expect(rendered).to have_content('Motivation')
@@ -99,12 +87,6 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
 
     context 'with an attestation' do
       let(:dossier) { create :dossier, state, :with_attestation }
-
-      it 'renders a dropdown' do
-        expect(rendered).to have_dropdown_title(dossier_display_state(dossier, lower: true))
-        expect(rendered).to have_dropdown_items(count: 1)
-        expect(rendered).to have_dropdown_item('Repasser en instruction', href: repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier))
-      end
 
       it 'provides a link to the attestation' do
         expect(rendered).to have_content('Attestation')
