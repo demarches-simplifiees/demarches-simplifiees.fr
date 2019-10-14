@@ -16,11 +16,10 @@ describe 'instructeurs/dossiers/state_button_motivation.html.haml', type: :view 
 
   context 'with an attestation preview' do
     let(:dossier) { create :dossier, :accepte, :with_attestation }
-    it { expect(rendered).to have_text("Voir l'attestation") }
+    it { expect(rendered).to have_link(href: apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier)) }
   end
 
   context 'without an attestation preview' do
-    it { expect(rendered).not_to have_text("envoie automatiquement une attestation") }
-    it { expect(rendered).not_to have_text("Voir l'attestation") }
+    it { expect(rendered).not_to have_link(href: apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier)) }
   end
 end
