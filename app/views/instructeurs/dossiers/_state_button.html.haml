@@ -1,4 +1,9 @@
-- if dossier.en_construction? || dossier.en_instruction? || dossier.accepte?
+- if dossier.en_construction? || dossier.en_instruction?
+
+  -# -----------------------------------------
+  -# Dossier EN CONSTRUCTION ou EN INSTRUCTION
+  -# -----------------------------------------
+
   %span.dropdown
     %button.button.primary.dropdown-button
       = dossier_display_state dossier
@@ -17,13 +22,6 @@
                 %h4 Passer en instruction
                 L'usager ne pourra plus modifier le formulaire
 
-        - if dossier.accepte?
-          %li
-            = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote: true, confirm: "Confirmez-vous le passage en instruction de ce dossier ?" } do
-              %span.icon.in-progress
-              .dropdown-description
-                %h4 Passer en instruction
-                L'usager ne pourra plus modifier le formulaire
         - if dossier.en_instruction?
           %li
             = link_to repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Confirmez-vous le passage en construction de ce dossier ?" } do
@@ -59,6 +57,11 @@
       = render partial: 'instructeurs/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Refuser le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)', popup_class: 'refuse', process_action: 'refuser', title: 'Refuser', confirm: 'Confirmez-vous le refus de ce dossier ?' }
 
 - else
+
+  -# ---------------------------------------------------
+  -# Dossier TERMINÉ
+  -# ---------------------------------------------------
+
   - if dossier.motivation.present? || dossier.attestation.present?
     %span.dropdown
       %button.button.dropdown-button{ class: button_or_label_class(dossier) }
@@ -74,8 +77,7 @@
           %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
           = link_to "Voir l'attestation", attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', class: 'button'
 
-
-        - if dossier.refuse? || dossier.sans_suite?
+        - if dossier.termine?
           %ul.dropdown-items.with-top-border
             %li
               = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?" } do
@@ -83,6 +85,9 @@
                 .dropdown-description
                   %h4 Repasser en instruction
                   L’usager sera notifié que son dossier est réexaminé.
+
   - else
+    -# No actions to perform: only display a label with the dossier state
+    -# FIXME: we still should be able to move back the dossier to instruction
     %span.label{ class: button_or_label_class(dossier) }
       = dossier_display_state(dossier, lower: true)
