@@ -20,6 +20,7 @@ describe 'instructeurs/dossiers/state_button_motivation.html.haml', type: :view 
   end
 
   context 'without an attestation preview' do
+    it { expect(rendered).not_to have_text("envoie automatiquement une attestation") }
     it { expect(rendered).not_to have_text("Voir l'attestation") }
   end
 end
