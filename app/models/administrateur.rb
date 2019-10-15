@@ -74,7 +74,7 @@ class Administrateur < ApplicationRecord
   end
 
   def instructeur
-    Instructeur.find_by(email: email)
+    user.instructeur
   end
 
   def can_be_deleted?

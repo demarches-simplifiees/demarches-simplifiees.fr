@@ -13,7 +13,7 @@ class Admin::InstructeursController < AdminController
 
   def create
     email = params[:instructeur][:email].downcase
-    @instructeur = Instructeur.find_by(email: email)
+    @instructeur = Instructeur.by_email(email)
     procedure_id = params[:procedure_id]
 
     if @instructeur.nil?
