@@ -63,13 +63,26 @@
     background-image: image-url("icons/attachment.svg");
   }
 
+  &.preview {
+    background-image: image-url("icons/preview.svg");
+  }
+
   &.download {
+    background-image: image-url("icons/download.svg");
+  }
+
+  &.download-white {
     background-image: image-url("icons/download-white.svg");
   }
 
   &.lock {
     background-image: image-url("icons/lock.svg");
   }
+
+  &.justificatif {
+    background-image: image-url("icons/justificatif.svg");
+  }
+
 
   &.printer {
     background-image: image-url("icons/printer.svg");
