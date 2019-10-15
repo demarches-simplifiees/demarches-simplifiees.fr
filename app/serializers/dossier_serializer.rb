@@ -94,7 +94,7 @@ class DossierSerializer < ActiveModel::Serializer
   end
 
   def instructeurs
-    object.followers_instructeurs.pluck(:email)
+    object.followers_instructeurs.map(&:email)
   end
 
   def created_at
