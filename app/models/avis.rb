@@ -54,7 +54,7 @@ class Avis < ApplicationRecord
   end
 
   def try_to_assign_instructeur
-    instructeur = Instructeur.find_by(email: email)
+    instructeur = Instructeur.by_email(email)
     if instructeur
       self.instructeur = instructeur
       self.email = nil

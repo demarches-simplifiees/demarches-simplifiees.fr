@@ -15,7 +15,7 @@ class Users::PasswordsController < Devise::PasswordsController
       @devise_mapping = Devise.mappings[:administrateur]
       params[:administrateur] = params[:user]
       # uncomment to check password complexity for Instructeur
-      # elsif Instructeur.find_by(email: email)
+      # elsif Instructeur.by_email(email)
       #   @devise_mapping = Devise.mappings[:instructeur]
       #   params[:instructeur] = params[:user]
     end
@@ -46,7 +46,7 @@ class Users::PasswordsController < Devise::PasswordsController
 
   def try_to_authenticate_instructeur
     if user_signed_in?
-      instructeur = Instructeur.find_by(email: current_user.email)
+      instructeur = Instructeur.by_email(current_user.email)
 
       if instructeur
         sign_in(instructeur.user)

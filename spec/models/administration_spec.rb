@@ -24,7 +24,7 @@ describe Administration, type: :model do
 
     it 'creates a corresponding instructeur account for the email' do
       subject
-      instructeur = Instructeur.find_by(email: valid_email)
+      instructeur = Instructeur.by_email(valid_email)
       expect(instructeur).to be_present
     end
 
