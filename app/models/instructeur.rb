@@ -28,6 +28,10 @@ class Instructeur < ApplicationRecord
     Instructeur.eager_load(:user).find_by(users: { email: email } )
   end
 
+  def email
+    user.email
+  end
+
   def follow(dossier)
     begin
       followed_dossiers << dossier
