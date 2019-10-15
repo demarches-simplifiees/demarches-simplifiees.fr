@@ -4,7 +4,7 @@
     = dossier_display_state dossier
 
   -# Dropdown content
-  .dropdown-content.fade-in-down{ class: ('terminated' if dossier.termine?) }
+  .dropdown-content.fade-in-down
 
     - if dossier.en_construction?
       -# ------------------------------------------------------
@@ -75,18 +75,30 @@
       -# ---------------------------------------------------
       -# TERMINÉ
       -# ---------------------------------------------------
-      -# TODO: turn the motivation and attestation into regular dropdown items
-      - if dossier.motivation.present?
-        %h4.title Motivation
-        %p.dossier-motivation= dossier.motivation
-        = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
+      %ul.dropdown-items
+        - if dossier.motivation.present?
+          %li.inactive
+            %span.icon.info
+            .dropdown-description
+              %h4 Motivation
+              %p « #{dossier.motivation} »
 
-      - if dossier.attestation.present?
-        %h4.title Attestation
-        %p.attestation L'acceptation du dossier a envoyé automatiquement une attestation au demandeur
-        = link_to "Voir l'attestation", attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', class: 'button'
+        - if dossier.justificatif_motivation.attached?
+          %li.inactive
+            %span.icon.justificatif
+            .dropdown-description
+              %h4 Justificatif
+              %p Ce justificatif joint par l’instructeur a été envoyé au demandeur.
+              = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
 
-      %ul.dropdown-items.with-top-border
+        - if dossier.attestation.present?
+          %li
+            = link_to attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener' do
+              %span.icon.preview
+              .dropdown-description
+                %h4 Voir l’attestation
+                %p Cette attestation a été envoyée automatiquement au demandeur.
+
         %li
           = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?" } do
             %span.icon.in-progress

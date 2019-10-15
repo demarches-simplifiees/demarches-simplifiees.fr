@@ -77,10 +77,10 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
     end
 
     context 'with a motivation' do
-      let(:dossier) { create :dossier, state, motivation: 'Correspond au programme' }
+      let(:dossier) { create :dossier, state, :with_motivation }
 
       it 'displays the motivation text' do
-        expect(rendered).to have_content('Motivation')
+        expect(rendered).to have_dropdown_item('Motivation')
         expect(rendered).to have_content(dossier.motivation)
       end
     end
@@ -89,8 +89,21 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
       let(:dossier) { create :dossier, state, :with_attestation }
 
       it 'provides a link to the attestation' do
-        expect(rendered).to have_content('Attestation')
+        expect(rendered).to have_dropdown_item('Voir l’attestation')
         expect(rendered).to have_link(href: attestation_instructeur_dossier_path(dossier.procedure, dossier))
+      end
+    end
+
+    context 'with a justificatif' do
+      let(:dossier) do
+        dossier = create(:dossier, state, :with_justificatif)
+        dossier.justificatif_motivation.blob.update(metadata: dossier.justificatif_motivation.blob.metadata.merge(virus_scan_result: ActiveStorage::VirusScanner::SAFE))
+        dossier
+      end
+
+      it 'allows to download the justificatif' do
+        expect(rendered).to have_dropdown_item('Justificatif')
+        expect(rendered).to have_link(href: url_for(dossier.justificatif_motivation.attachment.blob))
       end
     end
   end
