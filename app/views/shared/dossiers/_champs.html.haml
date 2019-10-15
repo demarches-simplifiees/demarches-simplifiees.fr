@@ -1,3 +1,7 @@
 %table.table.vertical.dossier-champs
   %tbody
+    - if dossier.procedure.routee?
+      %th= dossier.procedure.routing_criteria_name
+      %td= dossier.groupe_instructeur.label
+      %td
     = render partial: "shared/dossiers/champ_row", locals: { champs: champs, demande_seen_at: demande_seen_at, profile: profile, repetition: false }

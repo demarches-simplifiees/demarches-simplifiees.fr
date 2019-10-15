@@ -74,6 +74,12 @@ FactoryBot.define do
       end
     end
 
+    trait :routee do
+      after(:create) do |procedure, _evaluator|
+        procedure.groupe_instructeurs.create(label: '2nd groupe')
+      end
+    end
+
     trait :for_individual do
       after(:build) do |procedure, _evaluator|
         procedure.for_individual = true
