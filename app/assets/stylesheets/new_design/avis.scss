@@ -33,6 +33,8 @@
 }
 
 .ask-avis {
+  margin-bottom: 2 * $default-padding;
+
   .avis-notice {
     font-size: 14px;
     color: $grey;
@@ -67,7 +69,7 @@
   .confidentiel-explanation {
     font-size: 14px;
     color: $grey;
-    margin-top: -$default-padding;
+    margin-top: - $default-padding;
     margin-bottom: 2 * $default-padding;
   }
 }
