@@ -10,12 +10,10 @@ default_password = "this is a very complicated password !"
 
 puts "Create test user '#{default_user}'"
 Administration.create!(email: default_user, password: default_password)
-administrateur = Administrateur.create!(email: default_user)
-instructeur = Instructeur.create!(email: default_user)
-User.create!(
+user = User.create!(
   email: default_user,
   password: default_password,
-  confirmed_at: Time.zone.now,
-  administrateur: administrateur,
-  instructeur: instructeur
+  confirmed_at: Time.zone.now
 )
+user.create_instructeur!
+user.create_administrateur!(email: user.email)
