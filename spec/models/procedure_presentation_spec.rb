@@ -379,6 +379,26 @@ describe ProcedurePresentation do
       end
     end
 
+    context 'for followers_instructeurs table' do
+      let(:table) { 'followers_instructeurs' }
+      let(:order) { 'asc' } # Desc works the same, no extra test required
+
+      let!(:dossier_a) { create(:dossier, :en_construction, procedure: procedure) }
+      let!(:dossier_z) { create(:dossier, :en_construction, procedure: procedure) }
+      let!(:dossier_without_instructeur) { create(:dossier, :en_construction, procedure: procedure, ) }
+
+      before do
+        create(:follow, dossier: dossier_a, instructeur: create(:instructeur, email: 'abaca@exemple.fr'))
+        create(:follow, dossier: dossier_z, instructeur: create(:instructeur, email: 'zythum@exemple.fr'))
+      end
+
+      context 'for email column' do
+        let(:column) { 'email' }
+
+        it { is_expected.to eq([dossier_a, dossier_z, dossier_without_instructeur].map(&:id)) }
+      end
+    end
+
     context 'for other tables' do
       # All other columns and tables work the same so it’s ok to test only one
       let(:table) { 'etablissement' }
@@ -395,7 +415,7 @@ describe ProcedurePresentation do
   describe '#filtered_ids' do
     let(:procedure_presentation) { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure), filters: { "suivis" => filter }) }
 
-    subject { procedure_presentation.filtered_ids(procedure.dossiers, 'suivis') }
+    subject { procedure_presentation.filtered_ids(procedure.dossiers.joins(:user), 'suivis') }
 
     context 'for self table' do
       context 'for created_at column' do
