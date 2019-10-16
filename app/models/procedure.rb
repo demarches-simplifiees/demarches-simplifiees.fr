@@ -168,7 +168,7 @@ class Procedure < ApplicationRecord
   end
 
   def queue_export(instructeur, export_format)
-    ExportProcedureJob.perform_later(procedure, instructeur, export_format)
+    ExportProcedureJob.perform_now(self, instructeur, export_format)
     case export_format.to_sym
     when :csv
       update(csv_export_queued: true)
@@ -259,6 +259,8 @@ class Procedure < ApplicationRecord
     xlsx_export_file.purge_later
     ods_export_file.purge_later
     csv_export_file.purge_later
+
+    update(csv_export_queued: false, xlsx_export_queued: false, ods_export_queued: false)
   end
 
   def locked?
