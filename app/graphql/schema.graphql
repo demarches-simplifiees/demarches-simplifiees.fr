@@ -538,7 +538,7 @@ enum TypeDeChamp {
   multiple_drop_down_list
 
   """
-  Nombre entier
+  Nombre
   """
   number
 
