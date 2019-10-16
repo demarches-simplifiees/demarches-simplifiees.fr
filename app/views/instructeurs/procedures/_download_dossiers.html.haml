@@ -11,26 +11,23 @@
           %li
             - if procedure.xlsx_export_stale?
               - if procedure.xlsx_export_queued?
-                L'export au format .xlsx est en cours de préparation
-                = link_to "rafraichir", download_export_instructeur_procedure_path(procedure, export_format: :xlsx), remote: true
+                L'export au format .xlsx est en cours de préparation, vous recevrez un email lorsqu'il sera disponible.
               - else
-                = link_to "Préparer le téléchargement de l'export au format .xlsx", download_export_instructeur_procedure_path(procedure, export_format: :xlsx), remote: true
+                = link_to "Exporter au format .xlsx", download_export_instructeur_procedure_path(procedure, export_format: :xlsx), remote: true
             - else
               = link_to "Au format .xlsx", url_for(procedure.xlsx_export_file), target: "_blank", rel: "noopener"
           %li
             - if procedure.ods_export_stale?
               - if procedure.ods_export_queued?
-                L'export au format .ods est en cours de préparation
-                = link_to "rafraichir", download_export_instructeur_procedure_path(procedure, export_format: :ods), remote: true
+                L'export au format .ods est en cours de préparation, vous recevrez un email lorsqu'il sera disponible.
               - else
-                = link_to "Préparer le téléchargement de l'export au format .ods", download_export_instructeur_procedure_path(procedure, export_format: :ods)#, remote: true
+                = link_to "Préparer le téléchargement de l'export au format .ods", download_export_instructeur_procedure_path(procedure, export_format: :ods), remote: true
             - else
               = link_to "Au format .ods", url_for(procedure.ods_export_file), target: "_blank", rel: "noopener"
           %li
             - if procedure.csv_export_stale?
               - if procedure.csv_export_queued?
-                L'export au format .csv est en cours de préparation
-                = link_to "rafraichir", download_export_instructeur_procedure_path(procedure, export_format: :csv), remote: true
+                L'export au format .csv est en cours de préparation, vous recevrez un email lorsqu'il sera disponible.
               - else
                 = link_to "Préparer le téléchargement de l'export au format .csv", download_export_instructeur_procedure_path(procedure, export_format: :csv), remote: true
             - else
