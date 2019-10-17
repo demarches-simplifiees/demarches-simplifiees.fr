@@ -282,13 +282,14 @@ module Users
     end
 
     # FIXME: require(:dossier) when all the champs are united
-    def champs_params
-      params.permit(dossier: {
+    def champs_and_groupe_instructeurs_params
+      params.permit(dossier: [
+        :groupe_instructeur_id,
         champs_attributes: [
           :id, :value, :primary_value, :secondary_value, :piece_justificative_file, value: [],
           champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
         ]
-      })
+      ])
     end
 
     def dossier
@@ -302,7 +303,7 @@ module Users
     def update_dossier_and_compute_errors
       errors = []
 
-      if champs_params[:dossier] && !@dossier.update(champs_params[:dossier])
+      if champs_and_groupe_instructeurs_params[:dossier] && !@dossier.update(champs_and_groupe_instructeurs_params[:dossier])
         errors += @dossier.errors.full_messages
       end
 
