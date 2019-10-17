@@ -355,6 +355,10 @@ Rails.application.routes.draw do
           post 'add_instructeur'
           delete 'remove_instructeur'
         end
+
+        collection do
+          patch 'update_routing_criteria_name'
+        end
       end
 
       resources :administrateurs, controller: 'procedure_administrateurs', only: [:index, :create, :destroy]
