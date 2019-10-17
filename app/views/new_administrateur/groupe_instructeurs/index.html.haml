@@ -1,0 +1,19 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Groupes d’instructeurs'] }
+
+.container.groupe-instructeur
+  .card
+    .card-title Gestion des Groupes
+
+    %table.table.mt-2
+      %thead
+        %tr
+          %th{ colspan: 2 } Liste des groupes
+      %tbody
+        - @groupes_instructeurs.each do |group|
+          %tr
+            %td= group.label
+
+    = paginate @groupes_instructeurs
