@@ -1,5 +1,4 @@
-- { email: 'Email*' }.each do |key, value|
-  .form-group
-    %h4
-      = value
-    = f.text_field key, class: 'form-control', placeholder: value
+.form-group
+  %h4
+    = 'Email *'
+  = text_field_tag 'instructeur[email]', nil, class: 'form-control', placeholder: 'laura.azema@exemple.gouv.fr'

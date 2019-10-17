@@ -25,8 +25,6 @@ class Admin::AssignsController < AdminController
       not_assign_scope,
       partial: "admin/assigns/list_not_assign",
       array: true
-
-    @instructeur ||= Instructeur.new
   end
 
   def update
