@@ -26,6 +26,13 @@
 
     %hr
 
+    - if dossier.procedure.routee?
+      = f.label :groupe_instructeur_id, dossier.procedure.routing_criteria_name
+      = f.select :groupe_instructeur_id,
+        dossier.procedure.groupe_instructeurs.order(:label).map { |gi| [gi.label, gi.id] },
+        {},
+        required: true
+
     = f.fields_for :champs, dossier.champs do |champ_form|
       - champ = champ_form.object
       = render partial: "shared/dossiers/editable_champs/editable_champ",
