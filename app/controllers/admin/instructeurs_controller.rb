@@ -7,8 +7,6 @@ class Admin::InstructeursController < AdminController
       current_administrateur.instructeurs,
       partial: "admin/instructeurs/list",
       array: true
-
-    @instructeur ||= Instructeur.new
   end
 
   def create

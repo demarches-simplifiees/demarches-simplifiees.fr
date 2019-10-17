@@ -18,11 +18,11 @@
   .col-xs-6
     %h3 Ajouter un instructeur
     #procedure_new.section.section-label
-      = form_for @instructeur, url: { controller: 'admin/instructeurs', action: :create } do |f|
+      = form_with url: { controller: 'admin/instructeurs', action: :create } do
         .row
           .col-xs-5
-            = render partial: 'informations', locals: { f: f }
+            = render partial: 'admin/instructeurs/informations'
           .col-xs-2
             %br
             %br
-            = f.submit 'Valider', class: 'btn btn-info', style: 'float: left;'
+            = submit_tag 'Ajouter', class: 'btn btn-info', style: 'float: left;'
