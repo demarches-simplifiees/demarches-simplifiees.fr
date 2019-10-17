@@ -80,6 +80,13 @@ module NewAdministrateur
       redirect_to procedure_groupe_instructeur_path(procedure, groupe_instructeur)
     end
 
+    def update_routing_criteria_name
+      procedure.update!(routing_criteria_name: routing_criteria_name)
+
+      redirect_to procedure_groupe_instructeurs_path(procedure),
+        notice: "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
+    end
+
     private
 
     def create_instructeur(email)
@@ -129,6 +136,10 @@ module NewAdministrateur
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
         .order(:email)
+    end
+
+    def routing_criteria_name
+      params[:procedure][:routing_criteria_name]
     end
   end
 end

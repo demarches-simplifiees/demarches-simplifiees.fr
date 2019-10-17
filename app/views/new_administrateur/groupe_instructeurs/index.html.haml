@@ -5,6 +5,17 @@
 
 .container.groupe-instructeur
   .card
+    = form_for @procedure,
+      url: { action: :update_routing_criteria_name },
+      html: { class: 'form' } do |f|
+
+      = f.label :routing_criteria_name do
+        Libellé du routage
+        %span.notice Ce texte apparaitra sur le formulaire usager comme le libellé d'une liste
+      = f.text_field :routing_criteria_name, placeholder: 'Votre ville', required: true
+      = f.submit 'Renommer', class: 'button primary send'
+
+  .card
     .card-title Gestion des Groupes
 
     = form_for :groupe_instructeur, html: { class: 'form' } do |f|

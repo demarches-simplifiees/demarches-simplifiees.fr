@@ -147,4 +147,16 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
     end
   end
+
+  describe '#update_routing_criteria_name' do
+    before do
+      patch :update_routing_criteria_name,
+        params: {
+          procedure_id: procedure.id,
+          procedure: { routing_criteria_name: 'new name !' }
+        }
+    end
+
+    it { expect(procedure.reload.routing_criteria_name).to eq('new name !') }
+  end
 end
