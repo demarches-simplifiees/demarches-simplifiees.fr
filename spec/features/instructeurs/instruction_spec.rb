@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'The instructeur part' do
+feature 'Instructing a dossier:' do
   include ActiveJob::TestHelper
 
   let(:password) { 'démarches-simplifiées-pwd' }
