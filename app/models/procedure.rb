@@ -6,6 +6,7 @@ class Procedure < ApplicationRecord
   include ProcedureStatsConcern
 
   MAX_DUREE_CONSERVATION = 36
+  MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
@@ -133,15 +134,15 @@ class Procedure < ApplicationRecord
   end
 
   def csv_export_stale?
-    !csv_export_file.attached? || csv_export_file.created_at < 3.hours.ago
+    !csv_export_file.attached? || csv_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
   end
 
   def xlsx_export_stale?
-    !xlsx_export_file.attached? || xlsx_export_file.created_at < 3.hours.ago
+    !xlsx_export_file.attached? || xlsx_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
   end
 
   def ods_export_stale?
-    !ods_export_file.attached? || ods_export_file.created_at < 3.hours.ago
+    !ods_export_file.attached? || ods_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
   end
 
   def should_generate_export?(format)
