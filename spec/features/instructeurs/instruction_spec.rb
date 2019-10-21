@@ -181,7 +181,7 @@ feature 'Instructing a dossier:' do
 
   def avis_sign_up(avis, email)
     visit sign_up_instructeur_avis_path(avis, email)
-    fill_in 'instructeur_password', with: 'démarches-simplifiées-pwd'
+    fill_in 'user_password', with: 'démarches-simplifiées-pwd'
     click_on 'Créer un compte'
     expect(page).to have_current_path(instructeur_avis_index_path)
   end
