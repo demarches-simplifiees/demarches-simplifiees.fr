@@ -296,7 +296,7 @@ describe Instructeurs::AvisController, type: :controller do
         post :create_instructeur, params: {
           id: avis_id,
           email: invited_email,
-          instructeur: {
+          user: {
             password: password
           }
         }
