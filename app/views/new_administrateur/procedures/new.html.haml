@@ -2,13 +2,23 @@
   locals: { steps: [link_to('Démarches', admin_procedures_path),
                     'Nouvelle'] }
 
-.container
-  %h1.page-title
-    = t('dynamics.admin.dossiers.tableau_de_bord.nouvelle_procedure')
+.procedure-form
+  .procedure-form__columns.container
+    = form_for @procedure,
+      url: url_for({ controller: 'new_administrateur/procedures', action: :create, id: @procedure.id }),
+      multipart: true,
+      html: { class: 'form procedure-form__column--form' } do |f|
 
-.container
-  %h1
-  = form_for @procedure, url: { controller: 'new_administrateur/procedures', action: :create }, multipart: true, html: { class: 'form' } do |f|
-    = render partial: 'informations', locals: { f: f }
-    .text-center
-      = f.button 'Valider', class: 'button primary send', id: 'save-procedure'
+      %h1.page-title Nouvelle démarche
+
+      = render partial: 'new_administrateur/procedures/informations', locals: { f: f }
+
+      .procedure-form__actions.sticky--bottom
+        = link_to 'Annuler', admin_procedures_path, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la création de cette démarche ?'}
+        = f.button 'Créer la démarche', class: 'button primary send'
+
+    .procedure-form__column--preview
+      .procedure-form__preview.sticky--top
+        %h3.procedure-form__preview-title Aperçu
+        .procedure-preview
+          = render partial: 'layouts/commencer/procedure_description', locals: { procedure: @procedure }
