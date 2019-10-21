@@ -9,10 +9,9 @@ function syncInputToElement(fromSelector, toSelector) {
 }
 
 function syncFormToPreview() {
-  syncInputToElement('#procedure_libelle', 'h2.procedure-title');
+  syncInputToElement('#procedure_libelle', '.procedure-title');
   syncInputToElement('#procedure_description', '.procedure-description-body');
 }
 
-delegate('input', '#procedure-edit #procedure_libelle', syncFormToPreview);
-delegate('input', '#procedure-edit #procedure_description', syncFormToPreview);
-
+delegate('input', '.procedure-form #procedure_libelle', syncFormToPreview);
+delegate('input', '.procedure-form #procedure_description', syncFormToPreview);

@@ -1,16 +1,24 @@
-#procedure-edit
-  = render partial: 'new_administrateur/breadcrumbs',
-    locals: { steps: [link_to('Démarches', admin_procedures_path),
-                      link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                      'Description'] }
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Description'] }
+.procedure-form
+  .procedure-form__columns.container
+    = form_for @procedure,
+      url: url_for({ controller: 'new_administrateur/procedures', action: :update, id: @procedure.id }),
+      multipart: true,
+      html: { class: 'form procedure-form__column--form' } do |f|
 
-  .container
-    %h1.page-title Présentation
+      %h1.page-title Description
 
-  = form_for @procedure, url: url_for({ controller: 'new_administrateur/procedures', action: :update, id: @procedure.id }), multipart: true, html: { class: 'form' } do |f|
+      = render partial: 'new_administrateur/procedures/informations', locals: { f: f }
 
-    = render partial: 'informations', locals: { f: f }
-
-    .container
-      .text-right
+      .procedure-form__actions.sticky--bottom
+        = link_to 'Annuler', admin_procedure_path(id: @procedure), class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
         = f.button 'Enregistrer', class: 'button primary send'
+
+    .procedure-form__column--preview
+      .procedure-form__preview.sticky--top
+        %h3.procedure-form__preview-title Aperçu
+        .procedure-preview
+          = render partial: 'layouts/commencer/procedure_description', locals: { procedure: @procedure }
