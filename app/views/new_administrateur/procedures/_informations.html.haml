@@ -29,12 +29,8 @@
         %i
           Fichier accepté : JPG / JPEG / PNG
 
-      = f.label :euro_flag do
-        = f.check_box :euro_flag
-        Afficher aussi le drapeau européen
-
     .column.procedure-preview
-      = render partial: 'layouts/commencer/procedure_description', locals: { procedure: @procedure, force_euro_flag: true }
+      = render partial: 'layouts/commencer/procedure_description', locals: { procedure: @procedure }
 
 .container
   - if !@procedure.locked?
