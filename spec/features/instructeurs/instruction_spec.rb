@@ -93,59 +93,6 @@ feature 'Instructing a dossier:' do
     expect(page).to have_text('Aucun dossier')
   end
 
-  scenario 'A instructeur can use avis' do
-    log_in(instructeur.email, password)
-
-    click_on procedure.libelle
-    click_on dossier.user.email
-
-    click_on 'Avis externes'
-    expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
-
-    expert_email = 'expert@tps.com'
-
-    perform_enqueued_jobs do
-      ask_confidential_avis(expert_email, 'a good introduction')
-    end
-
-    log_out
-
-    avis = dossier.avis.first
-    test_mail(expert_email, sign_up_instructeur_avis_path(avis, expert_email))
-
-    avis_sign_up(avis, expert_email)
-
-    expect(page).to have_current_path(instructeur_avis_index_path)
-    expect(page).to have_text('avis à donner 1')
-    expect(page).to have_text('avis donnés 0')
-
-    click_on dossier.user.email
-    expect(page).to have_current_path(instructeur_avis_path(dossier.avis.first))
-
-    within(:css, '.tabs') do
-      click_on 'Avis'
-    end
-    expect(page).to have_current_path(instruction_instructeur_avis_path(dossier.avis.first))
-
-    within(:css, '.give-avis') do
-      expect(page).to have_text("Demandeur : #{instructeur.email}")
-      expect(page).to have_text('a good introduction')
-      expect(page).to have_text('Cet avis est confidentiel')
-      fill_in 'avis_answer', with: 'a great answer'
-      click_on 'Envoyer votre avis'
-    end
-
-    log_out
-
-    log_in(instructeur.email, password, check_email: false)
-
-    click_on procedure.libelle
-    click_on dossier.user.email
-    click_on 'Avis externes'
-
-    expect(page).to have_text('a great answer')
-  end
-
   scenario 'A instructeur can see the personnes impliquées' do
     instructeur2 = FactoryBot.create(:instructeur, password: password)
 
