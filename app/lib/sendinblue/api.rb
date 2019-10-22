@@ -15,8 +15,8 @@ class Sendinblue::Api
     client_key.present?
   end
 
-  def identify(email, attributes = {})
-    req = api_request('identify', email: email, attributes: attributes)
+  def update_contact(email, attributes = {})
+    req = post_api_request('contacts', email: email, attributes: attributes, updateEnabled: true)
     req.on_complete do |response|
       if !response.success?
         push_failure("Error while updating identity for administrateur '#{email}' in Sendinblue: #{response.response_code} '#{response.body}'")
@@ -34,7 +34,7 @@ class Sendinblue::Api
   private
 
   def hydra
-    @hydra ||= Typhoeus::Hydra.new
+    @hydra ||= Typhoeus::Hydra.new(max_concurrency: 50)
   end
 
   def push_failure(failure)
@@ -49,8 +49,8 @@ class Sendinblue::Api
     end
   end
 
-  def api_request(path, body)
-    url = "#{SENDINBLUE_API_URL}/#{path}"
+  def post_api_request(path, body)
+    url = "#{SENDINBLUE_API_V3_URL}/#{path}"
 
     Typhoeus::Request.new(
       url,
@@ -62,12 +62,12 @@ class Sendinblue::Api
 
   def headers
     {
-      'ma-key': client_key,
+      'api-key': client_key,
       'Content-Type': 'application/json; charset=UTF-8'
     }
   end
 
   def client_key
-    Rails.application.secrets.sendinblue[:client_key]
+    Rails.application.secrets.sendinblue[:api_v3_key]
   end
 end
