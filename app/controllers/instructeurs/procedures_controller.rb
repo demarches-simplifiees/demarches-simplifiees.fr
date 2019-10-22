@@ -205,6 +205,23 @@ module Instructeurs
       end
     end
 
+    def download_export
+      export_format = params[:export_format]
+
+      if procedure.should_generate_export?(export_format)
+        procedure.queue_export(current_instructeur, export_format)
+
+        respond_to do |format|
+          format.js do
+            flash.notice = "Nous générons cet export. Lorsque celui-ci sera disponible, vous recevrez une notification par email accompagnée d'un lien de téléchargement."
+            @procedure = procedure
+          end
+        end
+      else
+        redirect_to url_for(procedure.export_file(export_format))
+      end
+    end
+
     def email_notifications
       @procedure = procedure
       @assign_to = assign_to
