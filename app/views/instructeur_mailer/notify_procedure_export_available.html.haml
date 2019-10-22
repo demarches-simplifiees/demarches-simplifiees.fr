@@ -1,0 +1,11 @@
+%p
+  Bonjour,
+
+%p
+  Votre export des dossiers de la démarche nº #{@procedure.id} « #{@procedure.libelle} » au format #{@export_format} est prêt.
+
+%p
+  Cliquez sur le lien ci-dessous pour le télécharger :
+  = link_to('Télécharger l\'export des dossiers', download_export_instructeur_procedure_url(@procedure, :export_format => @export_format))
+
+= render partial: "layouts/mailers/signature"
