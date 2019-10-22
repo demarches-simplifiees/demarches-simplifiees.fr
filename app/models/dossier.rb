@@ -197,7 +197,7 @@ class Dossier < ApplicationRecord
 
   before_validation :update_state_dates, if: -> { state_changed? }
 
-  before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_changed? }
+  before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
   before_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   before_save :update_search_terms
 
