@@ -8,7 +8,7 @@
 .attachment-link{ 'data-attachment-id': attachment.id, 'data-attachment-check-url': attachment_check_url }
   - if should_display_link
     = link_to url_for(attachment.blob), target: '_blank', rel: 'noopener',  title: "Télécharger la pièce jointe" do
-      %span.icon.attachment
+      %span.icon.attached
       = attachment.filename.to_s
     - if !attachment.virus_scanner.started?
       (ce fichier n’a pas été analysé par notre antivirus, téléchargez-le avec précaution)
