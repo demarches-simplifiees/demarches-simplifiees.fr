@@ -9,7 +9,7 @@ fr:
           textarea: 'Zone de texte'
           date: 'Date'
           datetime: 'Date et Heure'
-          number: 'Nombre entier'
+          number: 'Nombre'
           decimal_number: 'Nombre décimal'
           integer_number: 'Nombre entier'
           checkbox: 'Case à cocher'
