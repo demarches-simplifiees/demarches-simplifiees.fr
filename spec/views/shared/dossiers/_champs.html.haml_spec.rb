@@ -8,7 +8,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     allow(view).to receive(:current_instructeur).and_return(instructeur)
   end
 
-  subject { render 'shared/dossiers/champs.html.haml', champs: champs, demande_seen_at: demande_seen_at, profile: nil }
+  subject { render 'shared/dossiers/champs.html.haml', champs: champs, dossier: dossier, demande_seen_at: demande_seen_at, profile: nil }
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
@@ -54,6 +54,21 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     end
   end
 
+  context "with a routed procedure" do
+    let(:procedure) do
+      create(:procedure,
+        :routee,
+        routing_criteria_name: 'departement')
+    end
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:champs) { [] }
+
+    it "renders the routing criteria name and its value" do
+      expect(subject).to include(procedure.routing_criteria_name)
+      expect(subject).to include(dossier.groupe_instructeur.label)
+    end
+  end
+
   context "with a dossier champ, but we are not authorized to acces the dossier" do
     let(:dossier) { create(:dossier) }
     let(:champ) { create(:champ, :dossier_link, value: dossier.id) }
@@ -65,6 +80,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
   end
 
   context "with a dossier_link champ but without value" do
+    let(:dossier) { create(:dossier) }
     let(:champ) { create(:champ, :dossier_link, value: nil) }
     let(:champs) { [champ] }
 

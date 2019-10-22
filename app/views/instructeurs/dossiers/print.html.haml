@@ -14,7 +14,7 @@
 %h2 Formulaire
 
 - champs = @dossier.champs
-- if champs.any?
+- if champs.any? || @dossier.procedure.routee?
   = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
 
 %h2 Annotations privées
