@@ -39,6 +39,16 @@ class RootController < ApplicationController
         champ.value = '["option B", "option C"]'
       end
 
+    all_champs
+      .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
+      .each do |champ_repetition|
+        libelles = ['Prénom', 'Nom'];
+        champ_repetition.champs << libelles.map.with_index do |libelle, i|
+          text_tdc = TypeDeChamp.new(type_champ: :text, private: false, libelle: libelle, description: description, mandatory: true)
+          text_tdc.champ.build(id: all_champs.length + i)
+        end
+      end
+
     type_champ_values = {
       TypeDeChamp.type_champs.fetch(:date)      => '2016-07-26',
       TypeDeChamp.type_champs.fetch(:datetime)  => '26/07/2016 07:35',
