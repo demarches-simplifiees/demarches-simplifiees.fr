@@ -87,18 +87,6 @@ RSpec.describe Avis, type: :model do
     end
   end
 
-  describe '#notify_instructeur' do
-    context 'when an avis is created' do
-      before do
-        avis_invitation_double = double('avis_invitation', deliver_later: true)
-        allow(AvisMailer).to receive(:avis_invitation).and_return(avis_invitation_double)
-        Avis.create(claimant: claimant, email: 'email@l.com')
-      end
-
-      it { expect(AvisMailer).to have_received(:avis_invitation) }
-    end
-  end
-
   describe '#try_to_assign_instructeur' do
     let!(:instructeur) { create(:instructeur) }
     let(:avis) { Avis.create(claimant: claimant, email: email, dossier: create(:dossier)) }
