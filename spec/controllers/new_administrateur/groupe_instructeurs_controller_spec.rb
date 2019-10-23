@@ -32,4 +32,30 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(response).to have_http_status(:ok) }
     end
   end
+
+  describe '#create' do
+    before do
+      post :create,
+        params: {
+          procedure_id: procedure.id,
+          groupe_instructeur: { label: label }
+        }
+    end
+
+    context 'with a valid name' do
+      let(:label) { "nouveau_groupe" }
+
+      it { expect(flash.notice).to be_present }
+      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.groupe_instructeurs.last)) }
+      it { expect(procedure.groupe_instructeurs.count).to eq(2) }
+    end
+
+    context 'with an invalid group name' do
+      let(:label) { gi_1_1.label }
+
+      it { expect(response).to render_template(:index) }
+      it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+      it { expect(flash.alert).to be_present }
+    end
+  end
 end

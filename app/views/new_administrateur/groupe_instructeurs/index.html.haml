@@ -7,6 +7,13 @@
   .card
     .card-title Gestion des Groupes
 
+    = form_for :groupe_instructeur, html: { class: 'form' } do |f|
+      = f.label :label do
+        Ajouter un groupe
+        %span.notice Ce groupe sera un choix de la liste « #{@procedure.routing_criteria_name} » .
+      = f.text_field :label, placeholder: 'Ville de Bordeaux', required: true
+      = f.submit 'Ajouter le groupe', class: 'button primary send'
+
     %table.table.mt-2
       %thead
         %tr
