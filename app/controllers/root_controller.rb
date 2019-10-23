@@ -17,15 +17,15 @@ class RootController < ApplicationController
   end
 
   def patron
-    description = 'aller voir le super site : https://demarches-simplifiees.fr'
+    description = 'Aller voir le super site : https://demarches-simplifiees.fr'
 
     all_champs = TypeDeChamp.type_champs
-      .map { |name, _| TypeDeChamp.new(type_champ: name, private: false, libelle: name, description: description, mandatory: true) }
+      .map { |name, _| TypeDeChamp.new(type_champ: name, private: false, libelle: name.humanize, description: description, mandatory: true) }
       .map.with_index { |type_de_champ, i| type_de_champ.champ.build(id: i) }
 
     all_champs
       .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
-      .each { |champ| champ.type_de_champ.libelle = 'un super titre de section' }
+      .each { |champ| champ.type_de_champ.libelle = 'Un super titre de section' }
 
     all_champs
       .filter { |champ| [TypeDeChamp.type_champs.fetch(:drop_down_list), TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)].include?(champ.type_champ) }
