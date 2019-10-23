@@ -350,7 +350,7 @@ Rails.application.routes.draw do
         get 'annotations'
       end
 
-      resources :groupe_instructeurs, only: [:index, :show]
+      resources :groupe_instructeurs, only: [:index, :show, :create]
 
       resources :administrateurs, controller: 'procedure_administrateurs', only: [:index, :create, :destroy]
 
