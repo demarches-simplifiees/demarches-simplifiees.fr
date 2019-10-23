@@ -123,9 +123,10 @@ describe Instructeurs::AvisController, type: :controller do
       let(:intro) { 'introduction' }
       let(:created_avis) { Avis.last }
       let!(:old_avis_count) { Avis.count }
+      let(:invite_linked_dossiers) { nil }
 
       before do
-        post :create_avis, params: { id: previous_avis.id, avis: { emails: emails, introduction: intro, confidentiel: asked_confidentiel } }
+        post :create_avis, params: { id: previous_avis.id, avis: { emails: emails, introduction: intro, confidentiel: asked_confidentiel, invite_linked_dossiers: invite_linked_dossiers } }
       end
 
       context 'when an invalid email' do
@@ -178,6 +179,34 @@ describe Instructeurs::AvisController, type: :controller do
           let(:asked_confidentiel) { false }
 
           it { expect(created_avis.confidentiel).to be(true) }
+        end
+      end
+
+      context 'with linked dossiers' do
+        let(:asked_confidentiel) { false }
+        let(:previous_avis_confidentiel) { false }
+        let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
+
+        it do
+          expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+          expect(Avis.count).to eq(old_avis_count + 1)
+          expect(created_avis.email).to eq("a@b.com")
+          expect(created_avis.dossier).to eq(dossier)
+        end
+
+        context 'checked' do
+          let(:invite_linked_dossiers) { true }
+          let(:created_avis) { Avis.last(2).first }
+          let(:linked_avis) { Avis.last }
+          let(:linked_dossier) { dossier.reload.linked_dossiers.first }
+
+          it do
+            expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+            expect(Avis.count).to eq(old_avis_count + 2)
+            expect(created_avis.email).to eq("a@b.com")
+            expect(created_avis.dossier).to eq(dossier)
+            expect(linked_avis.dossier).to eq(linked_dossier)
+          end
         end
       end
     end

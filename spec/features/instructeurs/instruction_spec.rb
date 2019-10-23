@@ -7,8 +7,7 @@ feature 'Instructing a dossier:' do
   let!(:instructeur) { create(:instructeur, password: password) }
 
   let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-  let!(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure) }
-
+  let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
   context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
       visit commencer_path(path: procedure.path)
