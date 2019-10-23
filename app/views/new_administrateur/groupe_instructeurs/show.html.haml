@@ -1,0 +1,24 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    link_to('Groupes d’instructeurs', procedure_groupe_instructeurs_path(@procedure)),
+                    @groupe_instructeur.label] }
+
+.container.groupe-instructeur
+  .rename_form_block
+    .flex.baseline-start
+      %h1 Groupe « #{@groupe_instructeur.label} »
+
+  .card
+    .card-title Gestion des instructeurs
+
+    %table.table.mt-2
+      %thead
+        %tr
+          %th{ colspan: 2 } Instructeurs affectés
+      %tbody
+        - @instructeurs.each do |instructeur|
+          %tr
+            %td= instructeur.email
+
+    = paginate @instructeurs

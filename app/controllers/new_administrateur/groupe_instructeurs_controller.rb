@@ -12,6 +12,16 @@ module NewAdministrateur
         .order(:label)
     end
 
+    def show
+      @procedure = procedure
+      @groupe_instructeur = groupe_instructeur
+      @instructeurs = groupe_instructeur
+        .instructeurs
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(:email)
+    end
+
     private
 
     def procedure
@@ -19,6 +29,10 @@ module NewAdministrateur
         .procedures
         .includes(:groupe_instructeurs)
         .find(params[:procedure_id])
+    end
+
+    def groupe_instructeur
+      procedure.groupe_instructeurs.find(params[:id])
     end
   end
 end

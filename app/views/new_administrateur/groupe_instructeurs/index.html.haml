@@ -15,5 +15,6 @@
         - @groupes_instructeurs.each do |group|
           %tr
             %td= group.label
+            %td.actions= link_to "voir", procedure_groupe_instructeur_path(@procedure, group)
 
     = paginate @groupes_instructeurs
