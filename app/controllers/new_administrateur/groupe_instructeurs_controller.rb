@@ -11,11 +11,7 @@ module NewAdministrateur
     def show
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
-      @instructeurs = groupe_instructeur
-        .instructeurs
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
-        .order(:email)
+      @instructeurs = paginated_instructeurs
     end
 
     def create
@@ -32,6 +28,21 @@ module NewAdministrateur
 
         flash[:alert] = "le nom « #{label} » est déjà pris par un autre groupe."
         render :index
+      end
+    end
+
+    def update
+      @groupe_instructeur = groupe_instructeur
+
+      if @groupe_instructeur.update(label: label)
+        redirect_to procedure_groupe_instructeur_path(procedure, groupe_instructeur),
+          notice: "Le nom est à présent « #{label} »."
+      else
+        @procedure = procedure
+        @instructeurs = paginated_instructeurs
+
+        flash[:alert] = "le nom « #{label} » est déjà pris par un autre groupe."
+        render :show
       end
     end
 
@@ -58,6 +69,14 @@ module NewAdministrateur
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
         .order(:label)
+    end
+
+    def paginated_instructeurs
+      groupe_instructeur
+        .instructeurs
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(:email)
     end
   end
 end
