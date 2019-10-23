@@ -14,6 +14,10 @@
             Supprimer
 
 - if champ.persisted?
-  = link_to "Ajouter une ligne pour « #{champ.libelle} »", champs_repetition_path(form.index), class: 'button add-row', data: { remote: true, method: 'POST', params: { champ_id: champ&.id }.to_query }
+  = link_to champs_repetition_path(form.index), class: 'button add-row', data: { remote: true, method: 'POST', params: { champ_id: champ&.id }.to_query } do
+    %span.icon.add
+    Ajouter une ligne pour « #{champ.libelle} »
 - else
-  %a.button.add-row Ajouter une ligne pour « #{champ.libelle} »
+  %a.button.add-row
+    %span.icon.add
+    Ajouter une ligne pour « #{champ.libelle} »
