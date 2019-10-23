@@ -3,7 +3,7 @@
 .container
   .page-title
     Résultat de la recherche :
-    = pluralize(@dossiers.count, "dossier trouvé", "dossiers trouvés")
+    = t('pluralize.dossier_trouve', count: @dossiers.count)
 
   - if @dossiers.present?
     %table.table.dossiers-table.hoverable
