@@ -1,6 +1,6 @@
 .patron
   .container
-    %h1 Icones
+    %h1 Icônes
 
     %span.icon.follow
     %span.icon.unfollow
@@ -47,7 +47,9 @@
           = render partial: "shared/dossiers/editable_champs/editable_champ",
             locals: { champ: champ, form: champ_form, seen_at: nil }
 
+        %label Mot de passe
         %input{ type: "password", value: "12345678" }
+
         .send-wrapper
           = f.submit 'Enregistrer un brouillon (formnovalidate)', formnovalidate: true, class: 'button send'
           = f.submit 'Envoyer', class: 'button send primary'
