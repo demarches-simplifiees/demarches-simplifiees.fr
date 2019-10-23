@@ -58,4 +58,29 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(flash.alert).to be_present }
     end
   end
+
+  describe '#update' do
+    let(:new_name) { 'nouveau nom du groupe' }
+
+    before do
+      patch :update,
+        params: {
+          procedure_id: procedure.id,
+          id: gi_1_1.id,
+          groupe_instructeur: { label: new_name }
+        }
+    end
+
+    it { expect(gi_1_1.reload.label).to eq(new_name) }
+    it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+    it { expect(flash.notice).to be_present }
+
+    context 'when the name is already taken' do
+      let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+      let(:new_name) { gi_1_2.label }
+
+      it { expect(gi_1_1.reload.label).not_to eq(new_name) }
+      it { expect(flash.alert).to be_present }
+    end
+  end
 end
