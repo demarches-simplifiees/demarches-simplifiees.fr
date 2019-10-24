@@ -56,7 +56,7 @@ class Administrateur < ApplicationRecord
   end
 
   def invitation_expired?
-    !active && !user.reset_password_period_valid?
+    !active? && !user.reset_password_period_valid?
   end
 
   def self.reset_password(reset_password_token, password)
@@ -65,10 +65,6 @@ class Administrateur < ApplicationRecord
       password_confirmation: password,
       reset_password_token: reset_password_token
     })
-
-    if administrateur && administrateur.errors.empty?
-      administrateur.update_column(:active, true)
-    end
 
     administrateur
   end
@@ -83,5 +79,9 @@ class Administrateur < ApplicationRecord
 
   def can_be_deleted?
     dossiers.state_instruction_commencee.none? && procedures.none?
+  end
+
+  def active?
+    user.last_sign_in_at.present?
   end
 end
