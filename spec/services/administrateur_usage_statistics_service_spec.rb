@@ -39,7 +39,6 @@ describe AdministrateurUsageStatisticsService do
       let(:administrateur) do
         create(:administrateur,
           user: create(:user, sign_in_count: 17, current_sign_in_at: Time.zone.local(2019, 3, 7), last_sign_in_at: Time.zone.local(2019, 2, 27)),
-          active: true,
           services: [create(:service)],
           instructeurs: [create(:instructeur)])
       end
