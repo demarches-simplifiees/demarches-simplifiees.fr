@@ -94,6 +94,8 @@ desc "Deploys the current version to the server."
 task :deploy do
   command 'export PATH=$PATH:/home/ds/.rbenv/bin:/home/ds/.rbenv/shims'
   command 'source /home/ds/.profile'
+  # increase db timeout to 5 minutes to allow long migration
+  command 'export PG_STATEMENT_TIMEOUT=300000'
 
   deploy do
     # Put things that will set up an empty directory into a fully set-up
