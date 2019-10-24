@@ -28,4 +28,12 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
       end
     end
   end
+
+  describe '#show' do
+    context 'of a group I belong to' do
+      before { get :show, params: { procedure_id: procedure.id, id: gi_1_2.id } }
+
+      it { expect(response).to have_http_status(:ok) }
+    end
+  end
 end
