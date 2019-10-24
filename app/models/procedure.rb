@@ -145,6 +145,18 @@ class Procedure < ApplicationRecord
     !ods_export_file.attached? || ods_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
   end
 
+  def export_queued?(format)
+    case format.to_sym
+    when :csv
+      return csv_export_queued?
+    when :xlsx
+      return xlsx_export_queued?
+    when :ods
+      return ods_export_queued?
+    end
+    false
+  end
+
   def should_generate_export?(format)
     case format.to_sym
     when :csv
@@ -169,7 +181,6 @@ class Procedure < ApplicationRecord
   end
 
   def queue_export(instructeur, export_format)
-    ExportProcedureJob.perform_now(self, instructeur, export_format)
     case export_format.to_sym
     when :csv
       update(csv_export_queued: true)
@@ -178,6 +189,7 @@ class Procedure < ApplicationRecord
     when :ods
       update(ods_export_queued: true)
     end
+    ExportProcedureJob.perform_later(self, instructeur, export_format)
   end
 
   def prepare_export_download(format)
