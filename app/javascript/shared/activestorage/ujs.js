@@ -38,6 +38,15 @@ addUploadEventListener(PROGRESS_EVENT, ({ detail: { id, progress } }) => {
 });
 
 addUploadEventListener(ERROR_EVENT, event => {
+  // Display an error message
+  alert(
+    `Nous sommes désolés, une erreur s’est produite lors de l’envoi du fichier.
+
+    (${event.detail.error})`
+  );
+  // Prevent ActiveStorage from displaying its own error message
+  event.preventDefault();
+
   ProgressBar.error(event.detail.id, event.detail.error);
   fire(document, 'sentry:capture-exception', new Error(event.detail.error));
 });
