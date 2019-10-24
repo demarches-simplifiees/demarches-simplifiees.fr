@@ -5,9 +5,7 @@
                     @groupe_instructeur.label] }
 
 .container.groupe-instructeur
-  .rename_form_block
-    .flex.baseline-start
-      %h1 Groupe « #{@groupe_instructeur.label} »
+  %h1 Groupe « #{@groupe_instructeur.label} »
 
   .card.mt-2
     = form_for @groupe_instructeur,
