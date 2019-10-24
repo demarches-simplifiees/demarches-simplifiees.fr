@@ -1,0 +1,21 @@
+- content_for(:title, "Instructeurs du groupe #{@groupe_instructeur.label}")
+
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to(@procedure.libelle, procedure_path(@procedure)),
+                    link_to('Groupes d’instructeurs', instructeur_groupes_path(@procedure)),
+                    @groupe_instructeur.label] }
+
+.container.groupe-instructeur
+  %h1 Groupe « #{@groupe_instructeur.label} »
+
+  .card.mt-2
+    .card-title Gestion des instructeurs
+
+    %table.table.mt-2
+      %thead
+        %tr
+          %th{ colspan: 2 } Instructeurs affectés
+      %tbody
+        - @instructeurs.each do |instructeur|
+          %tr
+            %td= instructeur.email
