@@ -31,7 +31,7 @@ const TypeDeChamp = sortableElement(
       !isHeaderSection && !isExplication && !state.isAnnotation;
 
     const [ref, inView] = useInView({
-      threshold: [0.6]
+      threshold: 0.6
     });
 
     const updateHandlers = createUpdateHandlers(
