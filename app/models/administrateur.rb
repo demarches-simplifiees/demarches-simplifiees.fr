@@ -66,10 +66,6 @@ class Administrateur < ApplicationRecord
       reset_password_token: reset_password_token
     })
 
-    if administrateur && administrateur.errors.empty?
-      administrateur.update_column(:active, true)
-    end
-
     administrateur
   end
 
