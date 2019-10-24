@@ -264,7 +264,7 @@ module Instructeurs
     end
 
     def ensure_ownership!
-      if !procedure.defaut_groupe_instructeur.instructeurs.include?(current_instructeur)
+      if !current_instructeur.procedures.include?(procedure)
         flash[:alert] = "Vous n'avez pas accès à cette démarche"
         redirect_to root_path
       end
