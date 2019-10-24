@@ -145,6 +145,18 @@ class Procedure < ApplicationRecord
     !ods_export_file.attached? || ods_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
   end
 
+  def export_queued?(format)
+    case format.to_sym
+    when :csv
+      return csv_export_queued?
+    when :xlsx
+      return xlsx_export_queued?
+    when :ods
+      return ods_export_queued?
+    end
+    false
+  end
+
   def should_generate_export?(format)
     case format.to_sym
     when :csv
