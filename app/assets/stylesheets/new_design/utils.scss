@@ -1,4 +1,5 @@
 @import "colors";
+@import "constants";
 
 .pull-left {
   float: left;
@@ -47,4 +48,8 @@
 .highlighted {
   background: $orange-bg;
   color: $black;
+}
+
+.mt-2 {
+  margin-top: 2 * $default-spacer;
 }
