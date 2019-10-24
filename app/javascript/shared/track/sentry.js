@@ -10,4 +10,10 @@ if (enabled && key) {
     scope.setUser(user);
     scope.setExtra('browser', browser.modern ? 'modern' : 'legacy');
   });
+
+  // Register a way to explicitely capture messages from a different bundle.
+  addEventListener('sentry:capture-exception', event => {
+    const error = event.detail;
+    Sentry.captureException(error);
+  });
 }
