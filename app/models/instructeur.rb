@@ -110,8 +110,10 @@ class Instructeur < ApplicationRecord
   end
 
   def notifications_for_procedure(procedure, scope)
-    procedure
-      .defaut_groupe_instructeur.dossiers
+    target_groupes = groupe_instructeurs.where(procedure: procedure)
+
+    Dossier
+      .where(groupe_instructeur: target_groupes)
       .send(scope) # :en_cours or :termine or :not_archived (or any other Dossier scope)
       .merge(followed_dossiers)
       .with_notifications
