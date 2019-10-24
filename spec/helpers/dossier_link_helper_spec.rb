@@ -15,10 +15,11 @@ describe DossierLinkHelper do
     end
 
     context "when access as instructeur" do
-      let(:dossier) { create(:dossier) }
+      let(:procedure) { create(:procedure, :routee) }
+      let(:dossier) { create(:dossier, groupe_instructeur: procedure.groupe_instructeurs.last) }
       let(:instructeur) { create(:instructeur) }
 
-      before { dossier.procedure.defaut_groupe_instructeur.instructeurs << instructeur }
+      before { procedure.groupe_instructeurs.last.instructeurs << instructeur }
 
       it { expect(helper.dossier_linked_path(instructeur, dossier)).to eq(instructeur_dossier_path(dossier.procedure, dossier)) }
     end
