@@ -27,3 +27,11 @@
         - @instructeurs.each do |instructeur|
           %tr
             %td= instructeur.email
+            %td.actions= button_to 'retirer',
+              { action: :remove_instructeur },
+              { method: :delete,
+                data: { confirm: "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe  « #{@groupe_instructeur.label} » ?" },
+                params: { instructeur: { id: instructeur.id }},
+                class: 'button' }
+
+    = paginate @instructeurs

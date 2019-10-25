@@ -291,6 +291,7 @@ Rails.application.routes.draw do
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           member do
             post 'add_instructeur'
+            delete 'remove_instructeur'
           end
         end
 
