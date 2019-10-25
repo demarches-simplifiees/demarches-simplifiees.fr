@@ -10,6 +10,14 @@
 
   .card.mt-2
     .card-title Gestion des instructeurs
+    = form_for :instructeur,
+      url: { action: :add_instructeur },
+      html: { class: 'form' } do |f|
+
+      = f.label :email do
+        Affecter un nouvel instructeur
+      = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true
+      = f.submit 'Affecter', class: 'button primary send'
 
     %table.table.mt-2
       %thead
