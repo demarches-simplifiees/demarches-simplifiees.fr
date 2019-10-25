@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 feature 'The routing' do
-  let(:procedure) { create(:procedure, :with_service, :for_individual) }
+  let(:password) { 'a very complicated password' }
+  let(:procedure) { create(:procedure, :with_type_de_champ, :with_service, :for_individual) }
   let(:administrateur) { create(:administrateur, procedures: [procedure]) }
-  let(:scientifique_user) { create(:user) }
-  let(:litteraire_user) { create(:user) }
+  let(:scientifique_user) { create(:user, password: password) }
+  let(:litteraire_user) { create(:user, password: password) }
 
   before { Flipper.enable_actor(:routage, administrateur.user) }
 
@@ -67,6 +68,9 @@ feature 'The routing' do
     click_on litteraire_user.email
     expect(page).to have_current_path(instructeur_dossier_path(procedure, litteraire_user.dossiers.first))
 
+    # follow the dossier
+    click_on 'Suivre le dossier'
+
     log_out
 
     # the scientifiques instructeurs only manage the scientifiques dossiers
@@ -74,9 +78,50 @@ feature 'The routing' do
     click_on procedure.libelle
     expect(page).not_to have_text(litteraire_user.email)
     expect(page).to have_text(scientifique_user.email)
+
+    # follow the dossier
+    click_on scientifique_user.email
+    click_on 'Suivre le dossier'
+
     log_out
 
-    # TODO: notifications tests
+    # litteraire_user change its dossier
+    visit root_path
+    click_on 'Connexion'
+    sign_in_with litteraire_user.email, password
+
+    click_on litteraire_user.dossiers.first.id
+    click_on 'Modifier mon dossier'
+
+    fill_in 'dossier_champs_attributes_0_value', with: 'some value'
+    click_on 'Enregistrer les modifications du dossier'
+    log_out
+
+    # the litteraires instructeurs should have a notification
+    visit root_path
+    click_on 'Connexion'
+    sign_in_with victor.user.email, password
+
+    ## on the procedures list
+    visit instructeur_procedures_path
+    expect(page).to have_css("span.notifications")
+
+    ## on the dossiers list
+    click_on procedure.libelle
+    expect(page).to have_css("span.notifications")
+
+    ## on the dossier it self
+    click_on 'suivi'
+    click_on litteraire_user.email
+    expect(page).to have_css("span.notifications")
+
+    log_out
+
+    # the scientifiques instructeurs should not have a notification
+    login_as marie.user, scope: :user
+    visit instructeur_procedures_path
+    expect(page).not_to have_css("span.notifications")
+    log_out
   end
 
   def publish_procedure(procedure)
@@ -113,7 +158,7 @@ feature 'The routing' do
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "users/activate?#{token_params}"
-    fill_in :user_password, with: 'démarches-simplifiées-pwd'
+    fill_in :user_password, with: password
 
     click_button 'Définir le mot de passe'
 
