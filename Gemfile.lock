@@ -1,4 +1,15 @@
 GIT
+  remote: https://github.com/fredZen/activestorage-openstack.git
+  revision: c71d5107a51701eab9d9267dd0000e6c1cf3e39a
+  branch: frederic/fix_upload_signature
+  specs:
+    activestorage-openstack (0.5.0)
+      fog-openstack (~> 1.0)
+      marcel
+      mime-types
+      rails (~> 5.2.0)
+
+GIT
   remote: https://github.com/kobaltz/actiontext.git
   revision: ef59c4ba99d1b7614dd47f5a294eef553224db88
   branch: archive
@@ -64,11 +75,6 @@ GEM
       actionpack (= 5.2.2.1)
       activerecord (= 5.2.2.1)
       marcel (~> 0.3.1)
-    activestorage-openstack (1.0.0)
-      fog-openstack (~> 1.0)
-      marcel
-      mime-types
-      rails (<= 6)
     activesupport (5.2.2.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
@@ -711,7 +717,7 @@ DEPENDENCIES
   actiontext!
   active_link_to
   active_model_serializers
-  activestorage-openstack
+  activestorage-openstack!
   administrate
   after_party
   anchored
