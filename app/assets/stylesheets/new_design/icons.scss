@@ -79,10 +79,15 @@
     background-image: image-url("icons/lock.svg");
   }
 
+  &.add {
+    background-image: image-url("icons/add.svg");
+    margin-left: -5px;
+    margin-right: 0px;
+  }
+
   &.justificatif {
     background-image: image-url("icons/justificatif.svg");
   }
-
 
   &.printer {
     background-image: image-url("icons/printer.svg");

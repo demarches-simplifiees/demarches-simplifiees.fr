@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
   describe 'perform' do
-    let(:administrateur) { create(:administrateur, active: active) }
+    let(:administrateur) { create(:administrateur) }
+    let(:user) { administrateur.user }
     let(:mailer_double) { double('mailer', deliver_later: true) }
 
     subject { Administrateurs::ActivateBeforeExpirationJob.perform_now }
@@ -16,7 +17,7 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
     after { Timecop.return }
 
     context "with an inactive administrateur" do
-      let(:active) { false }
+      before { user.update(last_sign_in_at: nil) }
 
       context "created now" do
         before { subject }
@@ -43,7 +44,7 @@ RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
     end
 
     context "with an active administrateur" do
-      let(:active) { true }
+      before { user.update(last_sign_in_at: Time.zone.now) }
 
       context "created now" do
         before { subject }

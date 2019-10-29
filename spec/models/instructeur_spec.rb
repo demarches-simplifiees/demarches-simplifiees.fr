@@ -236,15 +236,16 @@ describe Instructeur, type: :model do
   end
 
   describe '#notifications_for_procedure' do
-    let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
+    let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private) }
+    let!(:dossier) { create(:dossier, :followed, groupe_instructeur: procedure.groupe_instructeurs.last, state: Dossier.states.fetch(:en_construction)) }
     let(:instructeur) { dossier.follows.first.instructeur }
-    let(:procedure) { dossier.procedure }
-    let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur]) }
+    let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [procedure.groupe_instructeurs.last]) }
 
     let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let!(:instructeur_on_procedure_2) { dossier_on_procedure_2.follows.first.instructeur }
 
     before do
+      procedure.groupe_instructeurs.last.instructeurs << instructeur
       instructeur_2.followed_dossiers << dossier
     end
 
