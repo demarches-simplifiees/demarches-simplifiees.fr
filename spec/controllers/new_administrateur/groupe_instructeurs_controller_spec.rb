@@ -118,17 +118,17 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
     before { gi_1_1.instructeurs << admin.instructeur << instructeur }
 
-    def remove_instructeur(email)
+    def remove_instructeur(instructeur)
       delete :remove_instructeur,
         params: {
           procedure_id: procedure.id,
           id: gi_1_1.id,
-          instructeur: { id: admin.instructeur.id }
+          instructeur: { id: instructeur.id }
         }
     end
 
     context 'when there are many instructeurs' do
-      before { remove_instructeur(admin.user.email) }
+      before { remove_instructeur(admin.instructeur) }
 
       it { expect(gi_1_1.instructeurs).to include(instructeur) }
       it { expect(gi_1_1.reload.instructeurs.count).to eq(1) }
@@ -137,8 +137,8 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
     context 'when there is only one instructeur' do
       before do
-        remove_instructeur(admin.user.email)
-        remove_instructeur(instructeur.email)
+        remove_instructeur(admin.instructeur)
+        remove_instructeur(instructeur)
       end
 
       it { expect(gi_1_1.instructeurs).to include(instructeur) }
