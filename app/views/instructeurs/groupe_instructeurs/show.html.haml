@@ -1,22 +1,14 @@
+- content_for(:title, "Instructeurs du groupe #{@groupe_instructeur.label}")
+
 = render partial: 'new_administrateur/breadcrumbs',
-  locals: { steps: [link_to('Démarches', admin_procedures_path),
-                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    link_to('Groupes d’instructeurs', procedure_groupe_instructeurs_path(@procedure)),
+  locals: { steps: [link_to(@procedure.libelle, procedure_path(@procedure)),
+                    link_to('Groupes d’instructeurs', instructeur_groupes_path(@procedure)),
                     @groupe_instructeur.label] }
 
 .container.groupe-instructeur
   %h1 Groupe « #{@groupe_instructeur.label} »
 
   .card.mt-2
-    = form_for @groupe_instructeur,
-      url: procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
-      html: { class: 'form' } do |f|
-
-      = f.label :label, 'Nom du groupe'
-      = f.text_field :label, placeholder: 'Ville de Bordeaux', required: true
-      = f.submit 'Renommer', class: 'button primary send'
-
-  .card
     .card-title Gestion des instructeurs
     = form_for :instructeur,
       url: { action: :add_instructeur },
