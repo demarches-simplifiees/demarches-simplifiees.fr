@@ -52,3 +52,20 @@
 .blank-tab {
   text-align: center;
 }
+
+.sticky--top {
+  position: sticky;
+  // scss-lint:disable VendorPrefix
+  position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
+  // scss-lint:enable VendorPrefix
+  top: 0;
+}
+
+.sticky--bottom {
+  position: sticky;
+  // scss-lint:disable VendorPrefix
+  position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
+  // scss-lint:enable VendorPrefix
+  bottom: 0;
+}
+
