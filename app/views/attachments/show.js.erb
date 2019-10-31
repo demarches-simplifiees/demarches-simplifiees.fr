@@ -1,4 +1,4 @@
-<%= render_to_element(".pj-link[data-attachment-id=\"#{@attachment.id}\"]",
+<%= render_to_element(".attachment-link[data-attachment-id=\"#{@attachment.id}\"]",
   partial: 'shared/attachment/show',
   outer: true,
   locals: { attachment: @attachment, user_can_upload: @user_can_upload }) %>
