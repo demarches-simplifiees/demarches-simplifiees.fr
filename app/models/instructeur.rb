@@ -24,6 +24,8 @@ class Instructeur < ApplicationRecord
 
   has_one :user
 
+  default_scope { eager_load(:user) }
+
   def self.by_email(email)
     Instructeur.eager_load(:user).find_by(users: { email: email })
   end
