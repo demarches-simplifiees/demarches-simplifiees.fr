@@ -1,0 +1,24 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    'Nouvelle'] }
+
+.procedure-form
+  .procedure-form__columns.container
+    = form_for @procedure,
+      url: url_for({ controller: 'new_administrateur/procedures', action: :create, id: @procedure.id }),
+      multipart: true,
+      html: { class: 'form procedure-form__column--form' } do |f|
+
+      %h1.page-title Nouvelle démarche
+
+      = render partial: 'new_administrateur/procedures/informations', locals: { f: f }
+
+      .procedure-form__actions.sticky--bottom
+        = link_to 'Annuler', admin_procedures_path, class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler la création de cette démarche ?'}
+        = f.button 'Créer la démarche', class: 'button primary send'
+
+    .procedure-form__column--preview
+      .procedure-form__preview.sticky--top
+        %h3.procedure-form__preview-title Aperçu
+        .procedure-preview
+          = render partial: 'shared/procedure_description', locals: { procedure: @procedure }

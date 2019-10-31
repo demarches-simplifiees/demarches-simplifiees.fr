@@ -40,11 +40,11 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         expect(find('#procedure_for_individual_false')).not_to be_checked
         fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
         fill_in 'procedure_duree_conservation_dossiers_hors_ds', with: '6'
-        click_on 'save-procedure'
+        click_on 'Créer la démarche'
 
         expect(page).to have_text('Libelle doit être rempli')
         fill_in_dummy_procedure_details
-        click_on 'save-procedure'
+        click_on 'Créer la démarche'
 
         expect(page).to have_current_path(champs_procedure_path(Procedure.last))
       end
@@ -59,7 +59,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
       expect(page).to have_current_path(new_admin_procedure_path)
       fill_in_dummy_procedure_details
-      click_on 'save-procedure'
+      click_on 'Créer la démarche'
 
       procedure = Procedure.last
       procedure.update(service: create(:service))
