@@ -14,7 +14,7 @@
     %span.icon.edit
     %span.icon.in-progress
     %span.icon.bubble
-    %span.icon.attachment
+    %span.icon.attached
     %span.icon.lock
     %span.icon.add
     %span.icon.justificatif
@@ -48,8 +48,23 @@
           = render partial: "shared/dossiers/editable_champs/editable_champ",
             locals: { champ: champ, form: champ_form, seen_at: nil }
 
-        %label Mot de passe
-        %input{ type: "password", value: "12345678" }
+        .editable-champ.editable-champ-text
+          %label Mot de passe
+          %input{ type: "password", value: "12345678" }
+
+        %h2.header-section Bouton radio verticaux
+        .editable-champ.editable-champ-radio.vertical
+          = f.label :archived, value: true do
+            Option A
+            %span.notice
+              %p Une option tout à fait valable.
+          = f.radio_button :archived, true
+        .editable-champ.editable-champ-radio.vertical
+          = f.label :archived, value: false do
+            Option B
+            %span.notice
+              %p Une autre option, pas mal non plus.
+          = f.radio_button :archived, false
 
         .send-wrapper
           = f.submit 'Enregistrer un brouillon (formnovalidate)', formnovalidate: true, class: 'button send'
