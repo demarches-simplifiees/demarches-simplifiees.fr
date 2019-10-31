@@ -103,12 +103,11 @@
   - if feature_enabled?(:administrateur_web_hook)
     = f.label :web_hook_url do
       Lien de rappel HTTP (webhook)
+      .notice
+        %p
+          Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
+          = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
-    %p.help-block
-      %i.fa.fa-info-circle
-      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
-      = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
-      \.
 
   = f.label :auto_archive_on do
     Clôture automatique à 00h01 le :
