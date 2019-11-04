@@ -532,6 +532,10 @@ class Dossier < ApplicationRecord
     self.individual = Individual.create_from_france_connect(fc_information)
   end
 
+  def linked_dossiers
+    Dossier.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
+  end
+
   private
 
   def log_dossier_operation(author, operation, subject = nil)

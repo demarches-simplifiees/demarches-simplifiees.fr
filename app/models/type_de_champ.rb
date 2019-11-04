@@ -162,6 +162,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:repetition)
   end
 
+  def dossier_link?
+    type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
+  end
+
   def public?
     !private?
   end

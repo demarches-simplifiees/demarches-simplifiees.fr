@@ -313,3 +313,7 @@ fr:
       zero: archivé
       one: archivé
       other: archivés
+    dossier_trouve:
+      zero: 0 dossier trouvé
+      one: 1 dossier trouvé
+      other: "%{count} dossiers trouvés"

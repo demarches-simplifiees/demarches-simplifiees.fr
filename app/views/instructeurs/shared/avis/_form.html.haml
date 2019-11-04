@@ -6,6 +6,10 @@
     = f.email_field :emails, placeholder: 'Adresses email, séparées par des virgules', required: true, multiple: true, onchange: "javascript:DS.replaceSemicolonByComma(event);"
     = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
 
+    - if linked_dossiers.present?
+      = f.check_box :invite_linked_dossiers, value: false
+      = f.label :invite_linked_dossiers, t('helpers.label.invite_linked_dossiers', count: linked_dossiers.length, ids: linked_dossiers.map(&:id).to_sentence)
+
     .flex.justify-between.align-baseline
       - if must_be_confidentiel
         %p.confidentiel.flex

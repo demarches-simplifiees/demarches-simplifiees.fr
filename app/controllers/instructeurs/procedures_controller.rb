@@ -207,16 +207,19 @@ module Instructeurs
 
     def download_export
       export_format = params[:export_format]
-
+      notice_message = "Nous générons cet export. Lorsque celui-ci sera disponible, vous recevrez une notification par email accompagnée d'un lien de téléchargement."
       if procedure.should_generate_export?(export_format)
         procedure.queue_export(current_instructeur, export_format)
 
         respond_to do |format|
           format.js do
-            flash.notice = "Nous générons cet export. Lorsque celui-ci sera disponible, vous recevrez une notification par email accompagnée d'un lien de téléchargement."
+            flash.notice = notice_message
             @procedure = procedure
           end
         end
+      elsif procedure.export_queued?(export_format)
+        flash.notice = notice_message
+        redirect_to procedure
       else
         redirect_to url_for(procedure.export_file(export_format))
       end
@@ -264,7 +267,7 @@ module Instructeurs
     end
 
     def ensure_ownership!
-      if !procedure.defaut_groupe_instructeur.instructeurs.include?(current_instructeur)
+      if !current_instructeur.procedures.include?(procedure)
         flash[:alert] = "Vous n'avez pas accès à cette démarche"
         redirect_to root_path
       end

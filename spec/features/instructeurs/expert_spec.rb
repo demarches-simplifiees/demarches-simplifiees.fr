@@ -8,7 +8,7 @@ feature 'Inviting an expert:' do
   let(:expert) { create(:instructeur, password: expert_password) }
   let(:expert_password) { 'mot de passe d’expert' }
   let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-  let(:dossier) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure) }
+  let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
 
   context 'as an Instructeur' do
     scenario 'I can invite an expert' do
@@ -20,6 +20,7 @@ feature 'Inviting an expert:' do
 
       fill_in 'avis_emails', with: 'expert1@exemple.fr, expert2@exemple.fr'
       fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
+      check 'avis_invite_linked_dossiers'
       page.select 'confidentiel', from: 'avis_confidentiel'
 
       perform_enqueued_jobs do
@@ -34,6 +35,8 @@ feature 'Inviting an expert:' do
         expect(page).to have_content('Bonjour, merci de me donner votre avis sur ce dossier.')
       end
 
+      expect(Avis.count).to eq(4)
+      expect(all_emails.size).to eq(2)
       invitation_email = open_email('expert2@exemple.fr')
       avis = Avis.find_by(email: 'expert2@exemple.fr')
       sign_up_link = sign_up_instructeur_avis_path(avis.id, avis.email)

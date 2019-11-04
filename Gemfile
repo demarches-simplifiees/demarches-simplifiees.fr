@@ -4,7 +4,7 @@ gem 'aasm'
 gem 'actiontext', git: 'https://github.com/kobaltz/actiontext.git', branch: 'archive', require: 'action_text' # Port of ActionText to Rails 5
 gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
-gem 'activestorage-openstack', git: 'https://github.com/fredZen/activestorage-openstack.git', branch: 'frederic/fix_upload_signature'
+gem 'activestorage-openstack'
 gem 'administrate'
 gem 'after_party'
 gem 'anchored'
@@ -80,7 +80,7 @@ gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 group :test do
-  gem 'capybara' # Integration testing
+  gem 'capybara', '3.13.2' # Integration testing
   gem 'capybara-email' # Access emails during integration tests
   gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
   gem 'capybara-selenium'
