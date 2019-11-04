@@ -1,9 +1,11 @@
 describe 'instructeurs/avis/instruction.html.haml', type: :view do
-  let(:avis) { create(:avis, confidentiel: confidentiel) }
+  let(:expert) { create(:instructeur) }
+  let(:avis) { create(:avis, confidentiel: confidentiel, email: expert.email) }
 
   before do
     assign(:avis, avis)
-    @dossier = create(:dossier, :accepte)
+    assign(:new_avis, Avis.new)
+    assign(:dossier, avis.dossier)
     allow(view).to receive(:current_instructeur).and_return(avis.instructeur)
   end
 
