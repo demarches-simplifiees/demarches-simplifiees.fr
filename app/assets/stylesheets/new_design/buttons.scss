@@ -217,7 +217,6 @@
     border-bottom: 1px solid $border-grey;
     font-size: 12px;
     min-width: 300px;
-    cursor: pointer;
 
     &.selected {
       cursor: default;
@@ -228,8 +227,9 @@
     }
 
     &.selected,
-    &:hover {
+    &:hover:not(.inactive) {
       background: $light-grey;
+      cursor: pointer;
     }
 
     &.danger {
@@ -278,8 +278,9 @@
     margin-bottom: $default-spacer;
   }
 
-  &.with-top-border {
-    border-top: 1px solid $grey;
+  p + h4,
+  p + p, {
+    margin-top: $default-spacer;
   }
 }
 
