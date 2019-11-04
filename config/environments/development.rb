@@ -45,14 +45,26 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Action Mailer settings
-  config.action_mailer.delivery_method = :letter_opener_web
-  # Configure default root URL for generating URLs to routes
-  config.action_mailer.default_url_options = {
-    host: 'localhost',
-    port: 3000
-  }
-  # Configure default root URL for email assets
-  config.action_mailer.asset_host = "http://" + ENV['APP_HOST']
+
+  if ENV['SENDINBLUE_ENABLED'] == 'enabled'
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      user_name: Rails.application.secrets.sendinblue[:username],
+      password: Rails.application.secrets.sendinblue[:client_key],
+      address: 'smtp-relay.sendinblue.com',
+      domain: 'smtp-relay.sendinblue.com',
+      port: '587',
+      authentication: :cram_md5
+    }
+  else
+    config.action_mailer.delivery_method = :letter_opener_web
+    config.action_mailer.default_url_options = {
+      host: 'localhost',
+      port: 3000
+    }
+
+    config.action_mailer.asset_host = "http://" + ENV['APP_HOST']
+  end
 
   Rails.application.routes.default_url_options = {
     host: 'localhost',
