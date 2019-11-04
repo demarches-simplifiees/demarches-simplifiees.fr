@@ -77,16 +77,6 @@ Rails.application.configure do
       port: '2525',
       authentication: :cram_md5
     }
-  elsif ENV['SENDINBLUE_ENABLED'] == 'enabled'
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
-      user_name: Rails.application.secrets.sendinblue[:username],
-      password: Rails.application.secrets.sendinblue[:client_key],
-      address: 'smtp-relay.sendinblue.com',
-      domain: 'smtp-relay.sendinblue.com',
-      port: '587',
-      authentication: :cram_md5
-    }
   else
     config.action_mailer.delivery_method = :mailjet
   end
