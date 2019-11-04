@@ -8,7 +8,7 @@ class GroupeInstructeurMailer < ApplicationMailer
 
     subject = "Ajout d’un instructeur dans le groupe \"#{group.label}\""
 
-    emails = @group.instructeurs.pluck(:email)
+    emails = @group.instructeurs.map(&:email)
     mail(bcc: emails, subject: subject)
   end
 
@@ -19,7 +19,7 @@ class GroupeInstructeurMailer < ApplicationMailer
 
     subject = "Suppression d’un instructeur dans le groupe \"#{group.label}\""
 
-    emails = @group.instructeurs.pluck(:email)
+    emails = @group.instructeurs.map(&:email)
     mail(bcc: emails, subject: subject)
   end
 end

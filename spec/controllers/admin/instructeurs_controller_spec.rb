@@ -112,7 +112,7 @@ describe Admin::InstructeursController, type: :controller do
     end
 
     context 'when an other admin will add the same email' do
-      let(:instructeur) { Instructeur.find_by(email: email) }
+      let(:instructeur) { Instructeur.by_email(email) }
 
       before do
         create :instructeur, email: email, administrateurs: [admin]
@@ -133,7 +133,7 @@ describe Admin::InstructeursController, type: :controller do
 
     context 'when an other admin will add the same email with some uppercase in it' do
       let(:email) { 'Test@Plop.com' }
-      let(:instructeur) { Instructeur.find_by(email: email.downcase) }
+      let(:instructeur) { Instructeur.by_email(email.downcase) }
 
       before do
         create :instructeur, email: email, administrateurs: [admin]

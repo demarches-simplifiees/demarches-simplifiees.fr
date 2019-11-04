@@ -401,7 +401,7 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.defaut_groupe_instructeur.instructeurs.pluck(:email)).to eq([administrateur.email]) }
+    it { expect(subject.defaut_groupe_instructeur.instructeurs.map(&:email)).to eq([administrateur.email]) }
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
@@ -814,10 +814,14 @@ describe Procedure do
     end
 
     before do
+      Timecop.freeze(Time.utc(2019, 6, 1, 12, 0))
+
       delays.each do |delay|
         create_dossier(construction_date: 1.week.ago - delay, instruction_date: 1.week.ago - delay + 12.hours, processed_date: 1.week.ago)
       end
     end
+
+    after { Timecop.return }
 
     context 'when there are several processed dossiers' do
       let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
