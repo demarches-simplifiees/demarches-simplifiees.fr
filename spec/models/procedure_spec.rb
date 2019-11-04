@@ -814,10 +814,14 @@ describe Procedure do
     end
 
     before do
+      Timecop.freeze(Time.utc(2019, 6, 1, 12, 0))
+
       delays.each do |delay|
         create_dossier(construction_date: 1.week.ago - delay, instruction_date: 1.week.ago - delay + 12.hours, processed_date: 1.week.ago)
       end
     end
+
+    after { Timecop.return }
 
     context 'when there are several processed dossiers' do
       let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
