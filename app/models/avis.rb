@@ -12,7 +12,6 @@ class Avis < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
   before_create :try_to_assign_instructeur
-  after_create :notify_instructeur
 
   default_scope { joins(:dossier) }
   scope :with_answer, -> { where.not(answer: nil) }
@@ -24,6 +23,7 @@ class Avis < ApplicationRecord
   # The form allows subtmitting avis requests to several emails at once,
   # hence this virtual attribute.
   attr_accessor :emails
+  attr_accessor :invite_linked_dossiers
 
   def email_to_display
     instructeur&.email || email
@@ -48,10 +48,6 @@ class Avis < ApplicationRecord
   end
 
   private
-
-  def notify_instructeur
-    AvisMailer.avis_invitation(self).deliver_later
-  end
 
   def try_to_assign_instructeur
     instructeur = Instructeur.find_by(email: email)

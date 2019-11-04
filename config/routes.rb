@@ -360,6 +360,17 @@ Rails.application.routes.draw do
         get 'annotations'
       end
 
+      resources :groupe_instructeurs, only: [:index, :show, :create, :update] do
+        member do
+          post 'add_instructeur'
+          delete 'remove_instructeur'
+        end
+
+        collection do
+          patch 'update_routing_criteria_name'
+        end
+      end
+
       resources :administrateurs, controller: 'procedure_administrateurs', only: [:index, :create, :destroy]
 
       resources :types_de_champ, only: [:create, :update, :destroy] do

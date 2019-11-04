@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_14_160538) do
+ActiveRecord::Schema.define(version: 2019_10_23_183120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -486,7 +486,7 @@ ActiveRecord::Schema.define(version: 2019_10_14_160538) do
     t.string "path", null: false
     t.string "declarative_with_state"
     t.text "monavis_embed"
-    t.text "routing_criteria_name"
+    t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "csv_export_queued"
     t.boolean "xlsx_export_queued"
     t.boolean "ods_export_queued"

@@ -558,7 +558,7 @@ enum TypeDeChamp {
   nationalites
 
   """
-  Nombre entier
+  Nombre
   """
   number
 

@@ -1,0 +1,47 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    link_to('Groupes d’instructeurs', procedure_groupe_instructeurs_path(@procedure)),
+                    @groupe_instructeur.label] }
+
+.container.groupe-instructeur
+  .rename_form_block
+    .flex.baseline-start
+      %h1 Groupe « #{@groupe_instructeur.label} »
+
+  .card.mt-2
+    = form_for @groupe_instructeur,
+      url: procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
+      html: { class: 'form' } do |f|
+
+      = f.label :label, 'Nom du groupe'
+      = f.text_field :label, placeholder: 'Ville de Bordeaux', required: true
+      = f.submit 'Renommer', class: 'button primary send'
+
+  .card
+    .card-title Gestion des instructeurs
+    = form_for :instructeur,
+      url: { action: :add_instructeur },
+      html: { class: 'form' } do |f|
+
+      = f.label :email do
+        Affecter un nouvel instructeur
+      = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true
+      = f.submit 'Affecter', class: 'button primary send'
+
+    %table.table.mt-2
+      %thead
+        %tr
+          %th{ colspan: 2 } Instructeurs affectés
+      %tbody
+        - @instructeurs.each do |instructeur|
+          %tr
+            %td= instructeur.email
+            %td.actions= button_to 'retirer',
+              { action: :remove_instructeur },
+              { method: :delete,
+                data: { confirm: "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe  « #{@groupe_instructeur.label} » ?" },
+                params: { instructeur: { id: instructeur.id }},
+                class: 'button' }
+
+    = paginate @instructeurs

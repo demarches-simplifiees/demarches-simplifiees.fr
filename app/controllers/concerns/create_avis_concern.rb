@@ -10,28 +10,41 @@ module CreateAvisConcern
     # the :emails parameter is a 1-element array.
     # Hence the call to first
     # https://github.com/rails/rails/issues/17225
-    emails = create_avis_params[:emails].first.split(',').map(&:strip)
+    expert_emails = create_avis_params[:emails].first.split(',').map(&:strip)
+    allowed_dossiers = [dossier]
+
+    if create_avis_params[:invite_linked_dossiers].present?
+      allowed_dossiers += dossier.linked_dossiers
+    end
 
     create_results = Avis.create(
-      emails.map do |email|
-        {
-          email: email,
-          introduction: create_avis_params[:introduction],
-          claimant: current_instructeur,
-          dossier: dossier,
-          confidentiel: confidentiel
-        }
+      expert_emails.flat_map do |email|
+        allowed_dossiers.map do |dossier|
+          {
+            email: email,
+            introduction: create_avis_params[:introduction],
+            claimant: current_instructeur,
+            dossier: dossier,
+            confidentiel: confidentiel
+          }
+        end
       end
     )
 
     persisted, failed = create_results.partition(&:persisted?)
 
     if persisted.any?
-      sent_emails_addresses = persisted.map(&:email_to_display).join(", ")
-      flash.notice = "Une demande d'avis a été envoyée à #{sent_emails_addresses}"
+      sent_emails_addresses = []
       persisted.each do |avis|
-        dossier.demander_un_avis!(avis)
+        avis.dossier.demander_un_avis!(avis)
+
+        if avis.dossier == dossier
+          AvisMailer.avis_invitation(avis).deliver_later
+          sent_emails_addresses << avis.email_to_display
+        end
       end
+
+      flash.notice = "Une demande d'avis a été envoyée à #{sent_emails_addresses.uniq.join(", ")}"
     end
 
     if failed.any?
@@ -41,13 +54,13 @@ module CreateAvisConcern
 
       # When an error occurs, return the avis back to the controller
       # to give the user a chance to correct and resubmit
-      Avis.new(create_avis_params.merge(emails: [failed.map(&:email).join(", ")]))
+      Avis.new(create_avis_params.merge(emails: [failed.map(&:email).uniq.join(", ")]))
     else
       nil
     end
   end
 
   def create_avis_params
-    params.require(:avis).permit(:introduction, :confidentiel, emails: [])
+    params.require(:avis).permit(:introduction, :confidentiel, :invite_linked_dossiers, emails: [])
   end
 end
