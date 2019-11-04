@@ -44,11 +44,17 @@ class InstructeurMailerPreview < ActionMailer::Preview
   private
 
   def instructeur
-    Instructeur.new(id: 10, email: 'instructeur@administration.gouv.fr')
+    Instructeur.new(
+      id: 10,
+      user: User.new(email: 'instructeur@administration.gouv.fr')
+    )
   end
 
   def target_instructeur
-    Instructeur.new(id: 12, email: 'collegue@administration.gouv.fr')
+    Instructeur.new(
+      id: 12,
+      user: User.new(email: 'collegue@administration.gouv.fr')
+    )
   end
 
   def procedure
