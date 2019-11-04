@@ -9,7 +9,7 @@ describe 'admin/assigns/show.html.haml', type: :view do
 
   before do
     assign(:procedure, procedure)
-    assign(:instructeur, Instructeur.new)
+    assign(:instructeur, create(:instructeur))
 
     assign(:instructeurs_assign, (smart_listing_create :instructeurs_assign,
       assign_instructeurs,

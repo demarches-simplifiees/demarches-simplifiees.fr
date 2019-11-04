@@ -284,7 +284,7 @@ describe Instructeurs::AvisController, type: :controller do
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
       let(:avis_id) { avis.id }
       let(:password) { 'démarches-simplifiées-pwd' }
-      let(:created_instructeur) { Instructeur.find_by(email: invited_email) }
+      let(:created_instructeur) { Instructeur.by_email(invited_email) }
       let(:invitations_email) { true }
 
       before do
@@ -296,7 +296,7 @@ describe Instructeurs::AvisController, type: :controller do
         post :create_instructeur, params: {
           id: avis_id,
           email: invited_email,
-          instructeur: {
+          user: {
             password: password
           }
         }

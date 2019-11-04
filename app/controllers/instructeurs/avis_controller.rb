@@ -81,7 +81,7 @@ module Instructeurs
 
     def create_instructeur
       email = params[:email]
-      password = params['instructeur']['password']
+      password = params[:user][:password]
 
       # Not perfect because the password will not be changed if the user already exists
       user = User.create_or_promote_to_instructeur(email, password)
