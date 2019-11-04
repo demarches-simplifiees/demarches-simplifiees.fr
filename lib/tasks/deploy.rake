@@ -3,7 +3,7 @@ def domains_for_stage(stage)
   when 'dev'
     ['web1.dev', 'web2.dev']
   when 'prod'
-    ['web1', 'web2']
+    ['web1', 'web2', 'web3', 'web4']
   else
     raise "STAGE #{stage} is unknown. It must be either dev or prod."
   end

@@ -46,4 +46,18 @@ RSpec.describe InstructeurMailer, type: :mailer do
       end
     end
   end
+
+  describe '#notify_procedure_export_available' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:format) { 'xlsx' }
+
+    context 'when the mail is sent' do
+      subject { described_class.notify_procedure_export_available(instructeur, procedure, format) }
+      it 'contains a download link' do
+        expect(subject.body).to include download_export_instructeur_procedure_url(procedure, :export_format => format)
+      end
+    end
+  end
 end

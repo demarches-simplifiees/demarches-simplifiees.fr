@@ -145,6 +145,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_justificatif do
+      after(:create) do |dossier, _evaluator|
+        dossier.justificatif_motivation.attach(
+          io: StringIO.new('Hello World'),
+          filename: 'hello.txt'
+        )
+      end
+    end
+
     trait :with_all_champs do
       after(:create) do |dossier, _evaluator|
         dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|

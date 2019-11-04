@@ -37,6 +37,10 @@ class InstructeurMailerPreview < ActionMailer::Preview
     InstructeurMailer.send_notifications(instructeur, data)
   end
 
+  def notify_procedure_export_available
+    InstructeurMailer.notify_procedure_export_available(instructeur, procedure, 'xlsx')
+  end
+
   private
 
   def instructeur
