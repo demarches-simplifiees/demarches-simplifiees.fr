@@ -4,28 +4,27 @@ class WebhookController < ActionController::Base
   def helpscout
     email = params[:customer][:email].downcase
     user = User.find_by(email: email)
-    instructeur = user.instructeur
-    administrateur = user.administrateur
-    html = []
 
-    if user
-      url = manager_user_url(user)
-      html << link_to_manager(user, url)
-    end
-
-    if instructeur
-      url = manager_instructeur_url(instructeur)
-      html << link_to_manager(instructeur, url)
-    end
-
-    if administrateur
-      url = manager_administrateur_url(administrateur)
-      html << link_to_manager(administrateur, url)
-    end
-
-    if html.empty?
+    if user.nil?
       head :not_found
+
     else
+      instructeur = user.instructeur
+      administrateur = user.administrateur
+
+      url = manager_user_url(user)
+      html = [link_to_manager(user, url)]
+
+      if instructeur
+        url = manager_instructeur_url(instructeur)
+        html << link_to_manager(instructeur, url)
+      end
+
+      if administrateur
+        url = manager_administrateur_url(administrateur)
+        html << link_to_manager(administrateur, url)
+      end
+
       render json: { html: html.join('<br>') }
     end
   end
