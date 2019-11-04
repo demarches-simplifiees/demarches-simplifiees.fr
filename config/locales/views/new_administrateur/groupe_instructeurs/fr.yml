@@ -1,0 +1,10 @@
+fr:
+  new_administrateur:
+    groupe_instructeurs:
+      add_instructeur:
+        wrong_address:
+          one: "%{value} n'est pas une adresse email valide"
+          other: "%{value} ne sont pas des adresses emails valides"
+        assignment:
+          one: "L’instructeur %{value} a été affecté au groupe « %{groupe} »."
+          other: "Les instructeurs %{value} ont été affectés au groupe « %{groupe} »."

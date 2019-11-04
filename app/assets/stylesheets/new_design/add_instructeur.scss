@@ -1,0 +1,38 @@
+@import "constants";
+@import "colors";
+
+.instructeur-wrapper {
+  .select-instructeurs {
+    width: 100%;
+  }
+
+  .select2-container--default {
+    .select2-selection--multiple {
+      border: solid 1px $border-grey;
+
+      .select2-selection__choice, // scss-lint:disable SelectorFormat
+      .select2-search--inline {
+        padding: $default-spacer;
+      }
+    }
+
+    &.select2-container--focus {
+      .select2-selection--multiple {
+        border: 1px solid $blue;
+        box-shadow: 0px 0px 2px 1px $blue;
+      }
+    }
+
+    .select2-results__option { // scss-lint:disable SelectorFormat
+      padding: $default-spacer;
+    }
+
+    .custom-select2-option {
+      .icon {
+        margin-right: $default-spacer;
+      }
+    }
+  }
+}
+
+
