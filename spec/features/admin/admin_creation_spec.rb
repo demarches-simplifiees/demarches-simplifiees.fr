@@ -3,6 +3,7 @@ require 'spec_helper'
 feature 'As an administrateur', js: true do
   let(:administration) { create(:administration) }
   let(:admin_email) { 'new_admin@gouv.fr' }
+  let(:new_admin) { Administrateur.find_by(email: admin_email) }
 
   before do
     perform_enqueued_jobs do
@@ -11,6 +12,8 @@ feature 'As an administrateur', js: true do
   end
 
   scenario 'I can register' do
+    expect(new_admin.reload.active?).to be(false)
+
     confirmation_email = open_email(admin_email)
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
@@ -20,5 +23,7 @@ feature 'As an administrateur', js: true do
     click_button 'Définir le mot de passe'
 
     expect(page).to have_content 'Mot de passe enregistré'
+
+    expect(new_admin.reload.active?).to be(true)
   end
 end
