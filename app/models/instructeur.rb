@@ -1,10 +1,7 @@
 class Instructeur < ApplicationRecord
-  self.ignored_columns = ['features', 'encrypted_password', 'reset_password_token', 'reset_password_sent_at', 'remember_created_at', 'sign_in_count', 'current_sign_in_at', 'last_sign_in_at', 'current_sign_in_ip', 'last_sign_in_ip', 'failed_attempts', 'unlock_token', 'locked_at']
-  include EmailSanitizableConcern
+  self.ignored_columns = ['email', 'features', 'encrypted_password', 'reset_password_token', 'reset_password_sent_at', 'remember_created_at', 'sign_in_count', 'current_sign_in_at', 'last_sign_in_at', 'current_sign_in_ip', 'last_sign_in_ip', 'failed_attempts', 'unlock_token', 'locked_at']
 
   has_and_belongs_to_many :administrateurs
-
-  before_validation -> { sanitize_email(:email) }
 
   has_many :assign_to, dependent: :destroy
   has_many :groupe_instructeurs, through: :assign_to
@@ -23,6 +20,16 @@ class Instructeur < ApplicationRecord
   has_many :trusted_device_tokens
 
   has_one :user
+
+  default_scope { eager_load(:user) }
+
+  def self.by_email(email)
+    Instructeur.eager_load(:user).find_by(users: { email: email })
+  end
+
+  def email
+    user.email
+  end
 
   def follow(dossier)
     begin

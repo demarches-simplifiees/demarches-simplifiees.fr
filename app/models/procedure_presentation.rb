@@ -94,7 +94,15 @@ class ProcedurePresentation < ApplicationRecord
           .where("champs.type_de_champ_id = #{column.to_i}")
           .order("champs.value #{order}")
           .pluck(:id)
-    when 'self', 'user', 'individual', 'etablissement', 'followers_instructeurs', 'groupe_instructeur'
+    when 'followers_instructeurs'
+      assert_supported_column(table, column)
+      # LEFT OUTER JOIN allows to keep dossiers without assignated instructeurs yet
+      return dossiers
+          .includes(:followers_instructeurs)
+          .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
+          .order("instructeurs_users.email #{order}")
+          .pluck(:id)
+    when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
       return (table == 'self' ? dossiers : dossiers.includes(table))
           .order("#{self.class.sanitized_column(table, column)} #{order}")
           .pluck(:id)
@@ -130,7 +138,13 @@ class ProcedurePresentation < ApplicationRecord
             .includes(table)
             .filter_ilike(table, column, values)
         end
-      when 'user', 'individual', 'followers_instructeurs'
+      when 'followers_instructeurs'
+        assert_supported_column(table, column)
+        dossiers
+          .includes(:followers_instructeurs)
+          .joins('INNER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
+          .filter_ilike('instructeurs_users', :email, values)
+      when 'user', 'individual'
         dossiers
           .includes(table)
           .filter_ilike(table, column, values)
@@ -243,8 +257,12 @@ class ProcedurePresentation < ApplicationRecord
   def self.sanitized_column(association, column)
     table = if association == 'self'
       Dossier.table_name
+    elsif (association_reflection = Dossier.reflect_on_association(association))
+      association_reflection.klass.table_name
     else
-      Dossier.reflect_on_association(association).klass.table_name
+      # Allow filtering on a joined table alias (which doesn’t exist
+      # in the ActiveRecord domain).
+      association
     end
 
     [table, column]
@@ -254,5 +272,11 @@ class ProcedurePresentation < ApplicationRecord
 
   def dossier_field_service
     @dossier_field_service ||= DossierFieldService.new
+  end
+
+  def assert_supported_column(table, column)
+    if table == 'followers_instructeurs' && column != 'email'
+      raise ArgumentError, 'Table `followers_instructeurs` only supports the `email` column.'
+    end
   end
 end

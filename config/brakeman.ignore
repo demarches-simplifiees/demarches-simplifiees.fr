@@ -7,10 +7,10 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/users/dossiers/merci.html.haml",
-      "line": 26,
+      "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "current_user.dossiers.includes(:procedure).find(params[:id]).procedure.monavis_embed",
-      "render_path": [{"type":"controller","class":"Users::DossiersController","method":"merci","line":178,"file":"app/controllers/users/dossiers_controller.rb"}],
+      "render_path": [{"type":"controller","class":"Users::DossiersController","method":"merci","line":177,"file":"app/controllers/users/dossiers_controller.rb"}],
       "location": {
         "type": "template",
         "template": "users/dossiers/merci"
@@ -46,7 +46,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/procedure_presentation.rb",
-      "line": 98,
+      "line": 106,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "((\"self\" == \"self\") ? (dossiers) : (dossiers.includes(\"self\"))).order(\"#{self.class.sanitized_column(\"self\", column)} #{order}\")",
       "render_path": null,
@@ -66,7 +66,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/procedure_presentation.rb",
-      "line": 94,
+      "line": 95,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "dossiers.includes(((\"type_de_champ\" == \"type_de_champ\") ? (:champs) : (:champs_private))).where(\"champs.type_de_champ_id = #{column.to_i}\").order(\"champs.value #{order}\")",
       "render_path": null,
@@ -78,8 +78,28 @@
       "user_input": "order",
       "confidence": "Weak",
       "note": "`column` and `order` come from the model, which is validated to prevent injection attacks. Furthermore, the sql injection attack on `column` would need to survive the `to_i`"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "fd9d738975ccb93c8915833fceb3f43ac35410d653b8c64a1c92c1afc36d2177",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/procedure_presentation.rb",
+      "line": 102,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.includes(:followers_instructeurs).joins(\"LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id\").order(\"instructeurs_users.email #{order}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ProcedurePresentation",
+        "method": "sorted_ids"
+      },
+      "user_input": "order",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2019-07-02 11:23:21 -1000",
+  "updated": "2019-10-16 16:19:43 +0200",
   "brakeman_version": "4.3.1"
 }

@@ -2,9 +2,8 @@ FactoryBot.define do
   sequence(:instructeur_email) { |n| "inst#{n}@inst.com" }
 
   factory :instructeur do
-    email { generate(:instructeur_email) }
-
     transient do
+      email { generate(:instructeur_email) }
       password { 'somethingverycomplated!' }
     end
 
