@@ -24,7 +24,7 @@ module Instructeurs
         groupe_instructeur.instructeurs << @instructeur
         flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
         GroupeInstructeurMailer
-          .add_instructeur(groupe_instructeur, @instructeur, current_user.email)
+          .add_instructeurs(groupe_instructeur, [@instructeur], current_user.email)
           .deliver_later
       end
 

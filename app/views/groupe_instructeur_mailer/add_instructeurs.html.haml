@@ -1,0 +1,11 @@
+%p
+  Bonjour,
+
+%p
+  #{t('new_administrateur.groupe_instructeurs.add_instructeur.assignment', count: @new_instructeur_emails.count, value: @new_instructeur_emails.join(', '), groupe: @group.label).chomp('.')} par « #{@current_instructeur_email} », en charge de la démarche « #{@group.procedure.libelle} ».
+
+%p
+  Cliquez sur le lien ci-dessous pour voir la liste des instructeurs de ce groupe :
+  = link_to(@group.label, procedure_groupe_instructeur_url(@group.procedure, @group))
+
+= render partial: "layouts/mailers/signature"

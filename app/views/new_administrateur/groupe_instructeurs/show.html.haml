@@ -22,9 +22,12 @@
       url: { action: :add_instructeur },
       html: { class: 'form' } do |f|
 
-      = f.label :email do
-        Affecter un nouvel instructeur
-      = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true
+      .instructeur-wrapper
+        = select_tag :emails,
+          options_for_select(@available_instructeur_emails),
+          multiple: true,
+          class: 'select-instructeurs select2-limited'
+
       = f.submit 'Affecter', class: 'button primary send'
 
     %table.table.mt-2
