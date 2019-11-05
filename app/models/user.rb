@@ -47,11 +47,12 @@ class User < ApplicationRecord
   end
 
   def invite_administrateur!(administration_id)
-    if administrateur.active?
-      raise "Impossible d'inviter un utilisateur déjà actif !"
+    reset_password_token = nil
+
+    if !administrateur.active?
+      reset_password_token = set_reset_password_token
     end
 
-    reset_password_token = set_reset_password_token
     AdministrationMailer.invite_admin(self, reset_password_token, administration_id).deliver_later
   end
 
