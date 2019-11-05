@@ -164,4 +164,22 @@ describe User, type: :model do
       end
     end
   end
+
+  describe 'invite_administrateur!' do
+    let(:administration) { create(:administration) }
+    let(:administrateur) { create(:administrateur) }
+    let(:user) { administrateur.user }
+
+    subject { user.invite_administrateur!(administration.id) }
+
+    context 'when the user is inactif' do
+      before do
+        mailer_double = double('mailer', deliver_later: true)
+        allow(AdministrationMailer).to receive(:invite_admin).and_return(mailer_double)
+        subject
+      end
+
+      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), administration.id) }
+    end
+  end
 end
