@@ -12,7 +12,7 @@ feature 'As an administrateur', js: true do
   end
 
   scenario 'I can register' do
-    expect(new_admin.reload.active?).to be(false)
+    expect(new_admin.reload.user.active?).to be(false)
 
     confirmation_email = open_email(admin_email)
     token_params = confirmation_email.body.match(/token=[^"]+/)
@@ -24,6 +24,6 @@ feature 'As an administrateur', js: true do
 
     expect(page).to have_content 'Mot de passe enregistré'
 
-    expect(new_admin.reload.active?).to be(true)
+    expect(new_admin.reload.user.active?).to be(true)
   end
 end

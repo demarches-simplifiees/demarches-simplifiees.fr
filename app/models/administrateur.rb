@@ -46,7 +46,7 @@ class Administrateur < ApplicationRecord
   end
 
   def registration_state
-    if active?
+    if user.active?
       'Actif'
     elsif user.reset_password_period_valid?
       'En attente'
@@ -56,7 +56,7 @@ class Administrateur < ApplicationRecord
   end
 
   def invitation_expired?
-    !active? && !user.reset_password_period_valid?
+    !user.active? && !user.reset_password_period_valid?
   end
 
   def self.reset_password(reset_password_token, password)
