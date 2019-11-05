@@ -80,8 +80,4 @@ class Administrateur < ApplicationRecord
   def can_be_deleted?
     dossiers.state_instruction_commencee.none? && procedures.none?
   end
-
-  def active?
-    user.last_sign_in_at.present?
-  end
 end
