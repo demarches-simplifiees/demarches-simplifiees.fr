@@ -81,7 +81,7 @@ Rails.application.configure do
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       user_name: Rails.application.secrets.sendinblue[:username],
-      password: Rails.application.secrets.sendinblue[:client_key],
+      password: Rails.application.secrets.sendinblue[:smtp_key],
       address: 'smtp-relay.sendinblue.com',
       domain: 'smtp-relay.sendinblue.com',
       port: '587',

@@ -4,7 +4,7 @@ class DynamicSmtpSettingsInterceptor
       if rand(0..99) < ENV['SENDINBLUE_BALANCING_VALUE'].to_i
         message.delivery_method.settings = {
           user_name: ENV['SENDINBLUE_USER_NAME'],
-          password: ENV['SENDINBLUE_CLIENT_KEY'],
+          password: ENV['SENDINBLUE_SMTP_KEY'],
           address: 'smtp-relay.sendinblue.com',
           domain: 'smtp-relay.sendinblue.com',
           port: '587',
