@@ -181,5 +181,16 @@ describe User, type: :model do
 
       it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), administration.id) }
     end
+
+    context 'when the user is actif' do
+      before do
+        user.update(last_sign_in_at: Time.zone.now)
+        mailer_double = double('mailer', deliver_later: true)
+        allow(AdministrationMailer).to receive(:invite_admin).and_return(mailer_double)
+        subject
+      end
+
+      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, nil, administration.id) }
+    end
   end
 end
