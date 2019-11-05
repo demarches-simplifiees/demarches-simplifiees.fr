@@ -1,11 +1,11 @@
-@import "../constants";
+@import "constants";
 
-.piece-justificative-actions {
+.attachment-actions {
   display: flex;
   margin-bottom: $default-spacer;
 }
 
-.piece-justificative-action {
+.attachment-action {
   margin-right: $default-spacer;
 
   .button {
@@ -13,6 +13,6 @@
   }
 }
 
-.piece-justificative-input.hidden {
+.attachment-input.hidden {
   display: none;
 }
