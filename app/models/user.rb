@@ -53,8 +53,6 @@ class User < ApplicationRecord
 
     reset_password_token = set_reset_password_token
     AdministrationMailer.invite_admin(self, reset_password_token, administration_id).deliver_later
-
-    reset_password_token
   end
 
   def remind_invitation!
