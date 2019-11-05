@@ -49,7 +49,7 @@ class User < ApplicationRecord
   def invite_administrateur!(administration_id)
     reset_password_token = nil
 
-    if !administrateur.active?
+    if !active?
       reset_password_token = set_reset_password_token
     end
 
