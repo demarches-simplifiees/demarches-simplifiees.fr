@@ -59,16 +59,6 @@ class Administrateur < ApplicationRecord
     !user.active? && !user.reset_password_period_valid?
   end
 
-  def self.reset_password(reset_password_token, password)
-    administrateur = self.reset_password_by_token({
-      password: password,
-      password_confirmation: password,
-      reset_password_token: reset_password_token
-    })
-
-    administrateur
-  end
-
   def owns?(procedure)
     procedure.administrateurs.include?(self)
   end
