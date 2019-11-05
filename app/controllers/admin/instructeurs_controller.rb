@@ -15,7 +15,7 @@ class Admin::InstructeursController < AdminController
     procedure_id = params[:procedure_id]
 
     if @instructeur.nil?
-      invite_instructeur(params[:instructeur][:email])
+      invite_instructeur(email)
     else
       assign_instructeur!
     end
