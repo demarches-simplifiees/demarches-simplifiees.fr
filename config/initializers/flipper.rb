@@ -34,7 +34,6 @@ features = [
   :mini_profiler,
   :operation_log_serialize_subject,
   :pre_maintenance_mode,
-  :procedure_export_v2_enabled,
   :xray
 ]
 

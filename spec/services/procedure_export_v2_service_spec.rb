@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ProcedureExportV2Service do
   describe 'to_data' do
-    let(:procedure) { create(:procedure, :published, :with_all_champs) }
+    let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
     subject do
       Tempfile.create do |f|
         f << ProcedureExportV2Service.new(procedure, procedure.dossiers).to_xlsx
@@ -109,12 +109,55 @@ describe ProcedureExportV2Service do
     end
 
     context 'with etablissement' do
+      let(:procedure) { create(:procedure, :published, :with_all_champs) }
       let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_entreprise, procedure: procedure) }
 
       let(:dossier_etablissement) { etablissements_sheet.data[1] }
       let(:champ_etablissement) { etablissements_sheet.data[0] }
 
+      let(:nominal_headers) do
+        [
+          "ID",
+          "Email",
+          "Entreprise raison sociale",
+          "Archivé",
+          "État du dossier",
+          "Dernière mise à jour le",
+          "Déposé le",
+          "Passé en instruction le",
+          "Traité le",
+          "Motivation de la décision",
+          "Instructeurs",
+          "textarea",
+          "date",
+          "datetime",
+          "number",
+          "decimal_number",
+          "integer_number",
+          "checkbox",
+          "civilite",
+          "email",
+          "phone",
+          "address",
+          "yes_no",
+          "simple_drop_down_list",
+          "multiple_drop_down_list",
+          "linked_drop_down_list",
+          "pays",
+          "regions",
+          "departements",
+          "engagement",
+          "dossier_link",
+          "piece_justificative",
+          "siret",
+          "carte",
+          "text"
+        ]
+      end
+
       it 'should have headers' do
+        expect(dossiers_sheet.headers).to match(nominal_headers)
+
         expect(etablissements_sheet.headers).to eq([
           "Dossier ID",
           "Champ",
