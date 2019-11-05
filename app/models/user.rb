@@ -92,6 +92,10 @@ class User < ApplicationRecord
     "User:#{id}"
   end
 
+  def active?
+    last_sign_in_at.present?
+  end
+
   private
 
   def link_invites!
