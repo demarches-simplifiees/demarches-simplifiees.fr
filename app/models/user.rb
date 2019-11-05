@@ -49,7 +49,7 @@ class User < ApplicationRecord
   def invite_administrateur!(administration_id)
     reset_password_token = nil
 
-    if !administrateur.active?
+    if !active?
       reset_password_token = set_reset_password_token
     end
 
@@ -90,6 +90,10 @@ class User < ApplicationRecord
 
   def flipper_id
     "User:#{id}"
+  end
+
+  def active?
+    last_sign_in_at.present?
   end
 
   private

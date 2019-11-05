@@ -46,7 +46,7 @@ class Administrateur < ApplicationRecord
   end
 
   def registration_state
-    if active?
+    if user.active?
       'Actif'
     elsif user.reset_password_period_valid?
       'En attente'
@@ -56,17 +56,7 @@ class Administrateur < ApplicationRecord
   end
 
   def invitation_expired?
-    !active? && !user.reset_password_period_valid?
-  end
-
-  def self.reset_password(reset_password_token, password)
-    administrateur = self.reset_password_by_token({
-      password: password,
-      password_confirmation: password,
-      reset_password_token: reset_password_token
-    })
-
-    administrateur
+    !user.active? && !user.reset_password_period_valid?
   end
 
   def owns?(procedure)
@@ -79,9 +69,5 @@ class Administrateur < ApplicationRecord
 
   def can_be_deleted?
     dossiers.state_instruction_commencee.none? && procedures.none?
-  end
-
-  def active?
-    user.last_sign_in_at.present?
   end
 end
