@@ -43,13 +43,14 @@
         - if dossier.brouillon?
           = f.button 'Enregistrer le brouillon',
             formnovalidate: true,
-            name: :save_draft,
             value: true,
             class: 'button send secondary',
             data: { 'disable-with': "Envoi en cours…" }
 
           - if dossier.can_transition_to_en_construction?
             = f.button 'Déposer le dossier',
+              name: :submit_draft,
+              value: true,
               class: 'button send primary',
               disabled: !current_user.owns?(dossier),
               data: { 'disable-with': "Envoi en cours…" }
