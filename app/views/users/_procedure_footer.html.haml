@@ -10,7 +10,7 @@
             %br
             = service.organisme
             %br
-            = string_to_html(service.adresse)
+            = string_to_html(service.adresse, wrapper_tag = 'span')
 
         %li.footer-column
           %h3.footer-header Poser une question sur votre dossier :
@@ -28,7 +28,7 @@
 
           %p
             - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
-            = simple_format(horaires)
+            = simple_format(horaires, {}, wrapper_tag: 'span')
 
 
         - politiques = politiques_conservation_de_donnees(procedure)
