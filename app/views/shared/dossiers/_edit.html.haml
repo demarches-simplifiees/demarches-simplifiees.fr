@@ -2,13 +2,13 @@
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
   - if apercu
-    - form_options = { url: '', method: :get, html: { class: 'form', multipart: true } }
+    - form_options = { url: '', method: :get }
   - elsif dossier.brouillon?
-    - form_options = { url: brouillon_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true } }
+    - form_options = { url: brouillon_dossier_url(dossier), method: :patch }
   - else
-    - form_options = { url: modifier_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true } }
+    - form_options = { url: modifier_dossier_url(dossier), method: :patch }
 
-  = form_for dossier, form_options do |f|
+  = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: 'form', multipart: true } }) do |f|
 
     .prologue
       %p.mandatory-explanation
