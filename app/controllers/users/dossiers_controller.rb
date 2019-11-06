@@ -48,8 +48,11 @@ module Users
     end
 
     def attestation
-      if dossier.attestation.pdf.attached?
+      if dossier.attestation&.pdf&.attached?
         redirect_to url_for(dossier.attestation.pdf)
+      else
+        flash.notice = "L'attestation n'est plus disponible sur ce dossier."
+        redirect_to dossier_path(dossier)
       end
     end
 

@@ -595,14 +595,18 @@ class Procedure < ApplicationRecord
 
   def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
     old_index = types_de_champ.index(type_de_champ)
-    types_de_champ.insert(new_index, types_de_champ.delete_at(old_index))
-      .map.with_index do |type_de_champ, index|
-        {
-          id: type_de_champ.id,
-          libelle: type_de_champ.libelle,
-          order_place: index
-        }
-      end
+    if types_de_champ.delete_at(old_index)
+      types_de_champ.insert(new_index, type_de_champ)
+        .map.with_index do |type_de_champ, index|
+          {
+            id: type_de_champ.id,
+            libelle: type_de_champ.libelle,
+            order_place: index
+          }
+        end
+    else
+      []
+    end
   end
 
   def before_publish
