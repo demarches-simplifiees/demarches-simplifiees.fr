@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'csv'
 
 describe ProcedureExportV2Service do
   describe 'to_data' do
@@ -148,6 +149,91 @@ describe ProcedureExportV2Service do
           "carte",
           "text"
         ]
+      end
+
+      context 'as csv' do
+        subject do
+          Tempfile.create do |f|
+            f << ProcedureExportV2Service.new(procedure, procedure.dossiers).to_csv
+            f.rewind
+            CSV.read(f.path)
+          end
+        end
+
+        let(:nominal_headers) do
+          [
+            "ID",
+            "Email",
+            "Établissement SIRET",
+            "Établissement siège social",
+            "Établissement NAF",
+            "Établissement libellé NAF",
+            "Établissement Adresse",
+            "Établissement numero voie",
+            "Établissement type voie",
+            "Établissement nom voie",
+            "Établissement complément adresse",
+            "Établissement code postal",
+            "Établissement localité",
+            "Établissement code INSEE localité",
+            "Entreprise SIREN",
+            "Entreprise capital social",
+            "Entreprise numero TVA intracommunautaire",
+            "Entreprise forme juridique",
+            "Entreprise forme juridique code",
+            "Entreprise nom commercial",
+            "Entreprise raison sociale",
+            "Entreprise SIRET siège social",
+            "Entreprise code effectif entreprise",
+            "Entreprise date de création",
+            "Entreprise nom",
+            "Entreprise prénom",
+            "Association RNA",
+            "Association titre",
+            "Association objet",
+            "Association date de création",
+            "Association date de déclaration",
+            "Association date de publication",
+            "Archivé",
+            "État du dossier",
+            "Dernière mise à jour le",
+            "Déposé le",
+            "Passé en instruction le",
+            "Traité le",
+            "Motivation de la décision",
+            "Instructeurs",
+            "textarea",
+            "date",
+            "datetime",
+            "number",
+            "decimal_number",
+            "integer_number",
+            "checkbox",
+            "civilite",
+            "email",
+            "phone",
+            "address",
+            "yes_no",
+            "simple_drop_down_list",
+            "multiple_drop_down_list",
+            "linked_drop_down_list",
+            "pays",
+            "regions",
+            "departements",
+            "engagement",
+            "dossier_link",
+            "piece_justificative",
+            "siret",
+            "carte",
+            "text"
+          ]
+        end
+
+        let(:dossiers_sheet_headers) { subject.first }
+
+        it 'should have headers' do
+          expect(dossiers_sheet_headers).to match(nominal_headers)
+        end
       end
 
       it 'should have headers' do
