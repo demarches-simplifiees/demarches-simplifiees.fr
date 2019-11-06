@@ -311,7 +311,7 @@ describe ProcedureExportV2Service do
       let(:champ_repetition) { dossiers.first.champs.find { |champ| champ.type_champ == 'repetition' } }
 
       it 'should have sheets' do
-        expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle])
+        expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export])
       end
 
       it 'should have headers' do
@@ -333,7 +333,18 @@ describe ProcedureExportV2Service do
         end
 
         it 'should have valid sheet name' do
-          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', "A - B - C"])
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', "(#{champ_repetition.type_de_champ.stable_id}) A - B - C"])
+        end
+      end
+
+      context 'with non unique labels' do
+        let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+        let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
+        let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: procedure, libelle: champ_repetition.libelle) }
+        let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
+
+        it 'should have sheets' do
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export, another_champ_repetition.libelle_for_export])
         end
       end
     end

@@ -53,7 +53,7 @@ class ProcedureExportV2Service
       [dossier.champs, dossier.champs_private]
         .flatten
         .filter { |champ| champ.is_a?(Champs::RepetitionChamp) }
-    end.group_by(&:libelle)
+    end.group_by(&:libelle_for_export)
   end
 
   def champs_repetables_options
@@ -70,10 +70,6 @@ class ProcedureExportV2Service
     row_style: { background_color: nil, color: "000000", font_size: 12 }
   }
 
-  def sanitize_sheet_name(name)
-    ActiveStorage::Filename.new(name.to_s).sanitized.truncate(30)
-  end
-
   def options_for(table, format)
     case table
     when :dossiers
@@ -83,8 +79,7 @@ class ProcedureExportV2Service
     when :avis
       { instances: avis.to_a, sheet_name: 'Avis' }.merge(DEFAULT_STYLES)
     when Array
-      # We have to truncate the label here as spreadsheets have a (30 char) limit on length.
-      { instances: table.last, sheet_name: sanitize_sheet_name(table.first) }.merge(DEFAULT_STYLES)
+      { instances: table.last, sheet_name: table.first }.merge(DEFAULT_STYLES)
     end
   end
 end
