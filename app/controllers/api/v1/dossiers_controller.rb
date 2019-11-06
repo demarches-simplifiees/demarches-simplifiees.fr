@@ -2,6 +2,7 @@ class API::V1::DossiersController < APIController
   before_action :fetch_procedure_and_check_token
 
   DEFAULT_PAGE_SIZE = 100
+  MAX_PAGE_SIZE = 1000
   ORDER_DIRECTIONS = { 'asc' => :asc, 'desc' => :desc }
 
   def index
@@ -33,7 +34,12 @@ class API::V1::DossiersController < APIController
   end
 
   def per_page # inherited value from will_paginate
-    [params[:resultats_par_page]&.to_i || DEFAULT_PAGE_SIZE, 1000].min
+    resultats_par_page = params[:resultats_par_page]&.to_i
+    if resultats_par_page && resultats_par_page > 0
+      [resultats_par_page, MAX_PAGE_SIZE].min
+    else
+      DEFAULT_PAGE_SIZE
+    end
   end
 
   def fetch_procedure_and_check_token
