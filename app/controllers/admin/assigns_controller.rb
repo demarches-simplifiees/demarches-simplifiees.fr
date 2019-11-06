@@ -17,8 +17,9 @@ class Admin::AssignsController < AdminController
 
     not_assign_scope = current_administrateur.instructeurs.where.not(id: assign_scope.ids)
 
-    if params[:filter]
-      not_assign_scope = not_assign_scope.where("email LIKE ?", "%#{params[:filter]}%")
+    if params[:filter].present?
+      filter = params[:filter].downcase.strip
+      not_assign_scope = not_assign_scope.where('users.email LIKE ?', "%#{filter}%")
     end
 
     @instructeurs_not_assign = smart_listing_create :instructeurs_not_assign,
