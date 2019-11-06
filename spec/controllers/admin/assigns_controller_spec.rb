@@ -34,6 +34,14 @@ describe Admin::AssignsController, type: :controller do
       it 'does not filter the assigned instructeurs' do
         expect(assigns(:instructeurs_assign)).to match_array([instructeur_assigned_1, instructeur_assigned_2])
       end
+
+      context 'when the filter has spaces or a mixed case' do
+        let(:filter) { ' @ministere_A.gouv.fr  ' }
+
+        it 'trims spaces and ignores the case' do
+          expect(assigns(:instructeurs_not_assign)).to match_array([instructeur_not_assigned_1])
+        end
+      end
     end
   end
 
