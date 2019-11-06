@@ -113,3 +113,19 @@ footer {
     margin-bottom: 0;
   }
 }
+
+.footer-site-links {
+  li {
+    display: inline;
+
+
+    &::before {
+      content: "-";
+      margin: $default-spacer;
+    }
+
+    &:first-child::before {
+      content: none;
+    }
+  }
+}
