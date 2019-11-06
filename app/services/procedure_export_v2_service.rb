@@ -16,21 +16,21 @@ class ProcedureExportV2Service
     @tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
   end
 
-  def to_csv(table = :dossiers)
-    SpreadsheetArchitect.to_csv(options_for(table))
+  def to_csv
+    SpreadsheetArchitect.to_csv(options_for(:dossiers, :csv))
   end
 
   def to_xlsx
     # We recursively build multi page spreadsheet
     @tables.reduce(nil) do |package, table|
-      SpreadsheetArchitect.to_axlsx_package(options_for(table), package)
+      SpreadsheetArchitect.to_axlsx_package(options_for(table, :xlsx), package)
     end.to_stream.read
   end
 
   def to_ods
     # We recursively build multi page spreadsheet
     @tables.reduce(nil) do |spreadsheet, table|
-      SpreadsheetArchitect.to_rodf_spreadsheet(options_for(table), spreadsheet)
+      SpreadsheetArchitect.to_rodf_spreadsheet(options_for(table, :ods), spreadsheet)
     end.bytes
   end
 
@@ -74,10 +74,10 @@ class ProcedureExportV2Service
     ActiveStorage::Filename.new(name.to_s).sanitized.truncate(30)
   end
 
-  def options_for(table)
+  def options_for(table, format)
     case table
     when :dossiers
-      { instances: dossiers.to_a, sheet_name: 'Dossiers' }.merge(DEFAULT_STYLES)
+      { instances: dossiers.to_a, sheet_name: 'Dossiers', spreadsheet_columns: :"spreadsheet_columns_#{format}" }.merge(DEFAULT_STYLES)
     when :etablissements
       { instances: etablissements.to_a, sheet_name: 'Etablissements' }.merge(DEFAULT_STYLES)
     when :avis
