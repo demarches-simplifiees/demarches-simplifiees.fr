@@ -263,5 +263,26 @@ describe API::V2::GraphqlController do
         expect(gql_errors).not_to eq(nil)
       end
     end
+
+    context "mutation" do
+      let(:query) do
+        "mutation {
+          dossierEnvoyerMessage(input: {
+            dossierId: \"#{dossier.to_typed_id}\",
+            instructeurId: \"#{instructeur.to_typed_id}\",
+            body: \"Bonjour\"
+          }) {
+            message {
+              body
+            }
+          }
+        }"
+      end
+
+      it "should return error" do
+        expect(gql_data[:dossierEnvoyerMessage]).to eq(nil)
+        expect(gql_errors).not_to eq(nil)
+      end
+    end
   end
 end
