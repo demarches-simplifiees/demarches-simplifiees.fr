@@ -1,9 +1,8 @@
 Rails.application.config.content_security_policy do |policy|
-  # En cas de non respect d'une des règles, faire un POST sur cette URL
-  if Rails.env.production?
-    policy.report_uri "https://demarchessimplifieestest.report-uri.com/r/d/csp/reportOnly"
-  else
-    policy.report_uri "http://#{ENV['APP_HOST']}/csp/" # ne pas notifier report-uri en dev/test
+  if Rails.env.development?
+    # les CSP ne sont pas appliquées en dev: on notifie cependant une url quelconque de la violation
+    # pour détecter les erreurs lors de l'ajout d'une nouvelle brique externe durant le développement
+    policy.report_uri "http://#{ENV['APP_HOST']}/csp/"
   end
   # Whitelist image
   policy.img_src :self, "*.openstreetmap.org", "static.demarches-simplifiees.fr", "*.cloud.ovh.net", "stats.data.gouv.fr", "*", :data
