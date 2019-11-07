@@ -56,7 +56,9 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
       state.flash.success();
       done();
       if (insertAfter) {
-        scrollToComponent(insertAfter.target.nextElementSibling);
+        scrollToComponent(insertAfter.target.nextElementSibling, {
+          duration: 300
+        });
       }
     })
     .catch(message => state.flash.error(message));
