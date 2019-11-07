@@ -14,6 +14,7 @@ describe API::V2::GraphqlController do
   end
   let(:dossier1) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 1.day.ago) }
   let(:dossier2) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 3.days.ago) }
+  let!(:dossier_brouillon) { create(:dossier, procedure: procedure) }
   let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
