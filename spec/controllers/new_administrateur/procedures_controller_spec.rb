@@ -1,24 +1,25 @@
 describe NewAdministrateur::ProceduresController, type: :controller do
   let(:admin) { create(:administrateur) }
-  let(:bad_procedure_id) { 100000 }
+  let!(:bad_procedure_id) { 100000 }
 
-  let(:path) { 'ma-jolie-demarche' }
-  let(:libelle) { 'Démarche de test' }
-  let(:description) { 'Description de test' }
-  let(:organisation) { 'Organisation de test' }
-  let(:direction) { 'Direction de test' }
-  let(:cadre_juridique) { 'cadre juridique' }
-  let(:duree_conservation_dossiers_dans_ds) { 3 }
-  let(:duree_conservation_dossiers_hors_ds) { 6 }
-  let(:monavis_embed) { nil }
-  let(:lien_site_web) { 'http://mon-site.gouv.fr' }
+  let!(:path) { 'ma-jolie-demarche' }
+  let!(:libelle) { 'Démarche de test' }
+  let!(:description) { 'Description de test' }
+  let!(:organisation) { 'Organisation de test' }
+  let!(:direction) { 'Direction de test' }
+  let!(:cadre_juridique) { 'cadre juridique' }
+  let!(:duree_conservation_dossiers_dans_ds) { 3 }
+  let!(:duree_conservation_dossiers_hors_ds) { 6 }
+  let!(:monavis_embed) { nil }
+  let!(:lien_site_web) { 'http://mon-site.gouv.fr' }
+  let!(:base_params) { { rgpd: '1', rgs_stamp: '1' } }
 
   describe '#apercu' do
     let(:procedure) { create(:procedure) }
 
     before do
       sign_in(admin.user)
-      get :apercu, params: { id: procedure.id }
+      get :apercu, params: base_params.merge({ id: procedure.id })
     end
 
     it { expect(response).to have_http_status(:ok) }
@@ -48,7 +49,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     let(:procedure) { create(:procedure, administrateur: admin, published_at: published_at) }
     let(:procedure_id) { procedure.id }
 
-    subject { get :edit, params: { id: procedure_id } }
+    subject { get :edit, params: base_params.merge({ id: procedure_id }) }
 
     context 'when user is not connected' do
       before do
@@ -80,14 +81,14 @@ describe NewAdministrateur::ProceduresController, type: :controller do
   describe 'POST #create' do
     context 'when all attributs are filled' do
       describe 'new procedure in database' do
-        subject { post :create, params: { procedure: procedure_params } }
+        subject { post :create, params: base_params.merge({ procedure: procedure_params }) }
 
         it { expect { subject }.to change { Procedure.count }.by(1) }
       end
 
       context 'when procedure is correctly save' do
         before do
-          post :create, params: { procedure: procedure_params }
+          post :create, params: base_params.merge({ procedure: procedure_params })
         end
 
         describe 'procedure attributs in database' do
@@ -110,7 +111,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
         let(:instructeur) { admin.instructeur }
 
         before do
-          post :create, params: { procedure: procedure_params }
+          post :create, params: base_params.merge({ procedure: procedure_params })
         end
 
         describe "admin can also instruct the procedure as a instructeur" do
@@ -125,7 +126,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       let(:description) { '' }
 
       describe 'no new procedure in database' do
-        subject { post :create, params: { procedure: procedure_params } }
+        subject { post :create, params: base_params.merge({ procedure: procedure_params }) }
 
         it { expect { subject }.to change { Procedure.count }.by(0) }
 
@@ -136,7 +137,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
 
       describe 'flash message is present' do
         before do
-          post :create, params: { procedure: procedure_params }
+          post :create, params: base_params.merge({ procedure: procedure_params })
         end
 
         it { expect(flash[:alert]).to be_present }
@@ -152,14 +153,14 @@ describe NewAdministrateur::ProceduresController, type: :controller do
         sign_out(admin.user)
       end
 
-      subject { put :update, params: { id: procedure.id } }
+      subject { put :update, params: base_params.merge({ id: procedure.id }) }
 
       it { is_expected.to redirect_to new_user_session_path }
     end
 
     context 'when administrateur is connected' do
       def update_procedure
-        put :update, params: { id: procedure.id, procedure: procedure_params }
+        put :update, params: base_params.merge({ id: procedure.id, procedure: procedure_params })
         procedure.reload
       end
 
@@ -242,14 +243,14 @@ describe NewAdministrateur::ProceduresController, type: :controller do
         sign_out(admin.user)
       end
 
-      subject { patch :update_monavis, params: { id: procedure.id } }
+      subject { patch :update_monavis, params: base_params.merge({ id: procedure.id }) }
 
       it { is_expected.to redirect_to new_user_session_path }
     end
 
     context 'when administrateur is connected' do
       def update_monavis
-        patch :update_monavis, params: { id: procedure.id, procedure: procedure_params }
+        patch :update_monavis, params: base_params.merge({ id: procedure.id, procedure: procedure_params })
         procedure.reload
       end
       let(:monavis_embed) {

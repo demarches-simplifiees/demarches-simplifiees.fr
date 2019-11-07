@@ -10,6 +10,7 @@ module NewAdministrateur
 
     def new
       @procedure ||= Procedure.new(for_individual: true)
+      @terms_of_use_read = {}
     end
 
     def edit
@@ -18,7 +19,8 @@ module NewAdministrateur
     def create
       @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
 
-      if !@procedure.save
+      check_terms_of_use
+      if !@procedure.errors.empty? || !@procedure.save
         flash.now.alert = @procedure.errors.full_messages
         render 'new'
       else
@@ -32,7 +34,8 @@ module NewAdministrateur
     def update
       @procedure = current_administrateur.procedures.find(params[:id])
 
-      if !@procedure.update(procedure_params)
+      check_terms_of_use
+      if !@procedure.errors.empty? || !@procedure.update(procedure_params)
         flash.now.alert = @procedure.errors.full_messages
         render 'edit'
       elsif @procedure.brouillon?
@@ -75,6 +78,14 @@ module NewAdministrateur
         params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :path)
       end
       permited_params
+    end
+
+    def check_terms_of_use
+      terms_of_use = [:rgs_stamp, :rgpd]
+      if terms_of_use.any? { |k| !params.key?(k) }
+        @procedure.errors.add(:base, :rgpd_rgs_not_checked, message: 'Toutes les cases concernant le RGPD et le RGS doivent être cochées')
+      end
+      @terms_of_use_read = params.slice(*terms_of_use)
     end
   end
 end

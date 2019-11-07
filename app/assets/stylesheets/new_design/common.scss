@@ -61,7 +61,8 @@ sup {
 
 .container {
   @include horizontal-padding($default-padding);
-  max-width: $page-width + 2 * $default-padding;
+  max-width: 90%;
+  // $page-width + 2 * $default-padding;
   margin-left: auto;
   margin-right: auto;
 }
