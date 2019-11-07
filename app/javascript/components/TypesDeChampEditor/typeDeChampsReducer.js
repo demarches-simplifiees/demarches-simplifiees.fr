@@ -219,7 +219,7 @@ function getUpdateHandler(typeDeChamp, { queue, flash }) {
 }
 
 function findItemToInsertAfter() {
-  const target = getFirstTarget();
+  const target = getLastVisibleTypeDeChamp();
 
   return {
     target,
@@ -227,8 +227,10 @@ function findItemToInsertAfter() {
   };
 }
 
-function getFirstTarget() {
-  const [target] = document.querySelectorAll('[data-in-view]');
+function getLastVisibleTypeDeChamp() {
+  const typeDeChamps = document.querySelectorAll('[data-in-view]');
+  const target = typeDeChamps[typeDeChamps.length - 1];
+
   if (target) {
     const parentTarget = target.closest('[data-repetition]');
     if (parentTarget) {
