@@ -12,7 +12,7 @@ module Types
     field :number, Int, "Le numero de la démarche.", null: false, method: :id
     field :title, String, null: false, method: :libelle
     field :description, String, "Déscription de la démarche.", null: false
-    field :state, DemarcheState, null: false
+    field :state, DemarcheState, "L'état de la démarche.", null: false
 
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
