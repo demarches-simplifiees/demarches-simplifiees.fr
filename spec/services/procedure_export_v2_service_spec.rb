@@ -128,6 +128,7 @@ describe ProcedureExportV2Service do
           "Traité le",
           "Motivation de la décision",
           "Instructeurs",
+          'auto_completion',
           "textarea",
           "date",
           "datetime",
@@ -144,6 +145,9 @@ describe ProcedureExportV2Service do
           "multiple_drop_down_list",
           "linked_drop_down_list",
           "pays",
+          'nationalites',
+          'commune_de_polynesie',
+          'code_postal_de_polynesie',
           "regions",
           "departements",
           "engagement",
@@ -151,6 +155,7 @@ describe ProcedureExportV2Service do
           "piece_justificative",
           "siret",
           "carte",
+          "te_fenua",
           "text"
         ]
       end
