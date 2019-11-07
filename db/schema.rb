@@ -486,10 +486,10 @@ ActiveRecord::Schema.define(version: 2019_10_23_183120) do
     t.string "path", null: false
     t.string "declarative_with_state"
     t.text "monavis_embed"
-    t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "csv_export_queued"
     t.boolean "xlsx_export_queued"
     t.boolean "ods_export_queued"
+    t.text "routing_criteria_name", default: "Votre ville"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"

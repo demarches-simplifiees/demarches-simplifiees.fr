@@ -93,12 +93,14 @@
 
     // Align checkboxes on the top-left side of the label
     &.editable-champ-checkbox,
+    &.editable-champ-radio.vertical,
     &.editable-champ-engagement {
       label {
         padding-left: 28px;
       }
 
-      input[type=checkbox] {
+      input[type=checkbox],
+      input[type=radio] {
         position: absolute;
         top: 1px;
         left: 0px;
@@ -115,18 +117,6 @@
         margin-left: 0;
       }
     }
-
-    &.vertical {
-      label {
-        display: block;
-        margin-left: 0;
-        margin-bottom: 0;
-      }
-
-      input[type=radio] {
-        margin-bottom: 16px;
-      }
-    }
   }
 
   input[type=text]:not([data-address='true']),
@@ -137,7 +127,7 @@
   input[type=tel],
   textarea,
   select,
-  .piece-justificative {
+  .attachment {
     display: block;
     margin-bottom: 2 * $default-padding;
 

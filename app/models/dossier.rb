@@ -490,11 +490,21 @@ class Dossier < ApplicationRecord
   def spreadsheet_columns
     columns = [
       ['ID', id.to_s],
-      ['Email', user.email],
-      ['Civilité', individual&.gender],
-      ['Nom', individual&.nom],
-      ['Prénom', individual&.prenom],
-      ['Date de naissance', individual&.birthdate],
+      ['Email', user.email]
+    ]
+
+    if procedure.for_individual?
+      columns += [
+        ['Civilité', individual&.gender],
+        ['Nom', individual&.nom],
+        ['Prénom', individual&.prenom],
+        ['Date de naissance', individual&.birthdate]
+      ]
+    else
+      columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
+    end
+
+    columns += [
       ['Archivé', :archived],
       ['État du dossier', I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])],
       ['Dernière mise à jour le', :updated_at],

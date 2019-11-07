@@ -157,6 +157,13 @@ Rails.application.routes.draw do
     patch 'activate' => '/users/activate#create'
   end
 
+  # order matters: we don't want those routes to match /admin/procedures/:id
+  get 'admin/procedures/new' => 'new_administrateur/procedures#new', as: :new_admin_procedure
+  get 'admin/procedures/:id/edit' => 'new_administrateur/procedures#edit', as: :edit_admin_procedure
+  post 'admin/procedures' => 'new_administrateur/procedures#create'
+  get 'admin/procedures/:id/monavis' => 'new_administrateur/procedures#monavis', as: :admin_procedure_monavis
+  patch 'admin/procedures/:id/monavis' => 'new_administrateur/procedures#update_monavis', as: :update_monavis
+
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
@@ -164,7 +171,7 @@ Rails.application.routes.draw do
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
 
-    resources :procedures do
+    resources :procedures, except: [:new, :edit, :update] do
       collection do
         get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
       end
@@ -182,8 +189,6 @@ Rails.application.routes.draw do
       put 'publish' => 'procedures#publish', as: :publish
       post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
-      get 'monavis' => 'procedures#monavis', as: :monavis
-      patch 'monavis' => 'procedures#update_monavis', as: :update_monavis
 
       resource :assigns, only: [:show, :update], path: 'instructeurs'
 
@@ -298,6 +303,13 @@ Rails.application.routes.draw do
   scope module: 'instructeurs', as: 'instructeur' do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
+        resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
+          member do
+            post 'add_instructeur'
+            delete 'remove_instructeur'
+          end
+        end
+
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
@@ -353,7 +365,7 @@ Rails.application.routes.draw do
   #
 
   scope module: 'new_administrateur' do
-    resources :procedures, only: [:update] do
+    resources :procedures, only: [:update, :new] do
       member do
         get 'apercu'
         get 'champs'

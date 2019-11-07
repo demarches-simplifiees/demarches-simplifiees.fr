@@ -1,5 +1,21 @@
 module Manager
   class ProceduresController < Manager::ApplicationController
+    #
+    # Administrate overrides
+    #
+
+    # Override this if you have certain roles that require a subset
+    # this will be used to set the records shown on the `index` action.
+    def scoped_resource
+      if unfiltered_list?
+        # Don't display deleted dossiers in the unfiltered list…
+        Procedure
+      else
+        # … but allow them to be searched and displayed.
+        Procedure.unscope(:where)
+      end
+    end
+
     def whitelist
       procedure.whitelist!
       flash[:notice] = "Démarche whitelistée."
@@ -54,6 +70,10 @@ module Manager
 
     def type_de_champ_params
       params.require(:type_de_champ).permit(:piece_justificative_template)
+    end
+
+    def unfiltered_list?
+      action_name == "index" && !params[:search]
     end
   end
 end

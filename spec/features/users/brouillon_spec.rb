@@ -169,25 +169,19 @@ feature 'The user' do
     # Mark file as scanned and clean
     attachment = ActiveStorage::Attachment.last
     attachment.blob.update(metadata: attachment.blob.metadata.merge(scanned_at: Time.zone.now, virus_scan_result: ActiveStorage::VirusScanner::SAFE))
-    within '.piece-justificative' do
-      click_on 'rafraichir'
-    end
+    within('.attachment') { click_on 'rafraichir' }
     expect(page).to have_link('file.pdf')
     expect(page).to have_no_content('analyse antivirus en cours')
 
     # Replace the attachment
-    within '.piece-justificative' do
-      click_on 'Remplacer'
-    end
+    within('.attachment') { click_on 'Remplacer' }
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
     click_on 'Enregistrer le brouillon'
     expect(page).to have_no_text('file.pdf')
     expect(page).to have_text('RIB.pdf')
 
     # Remove the attachment
-    within '.piece-justificative' do
-      click_on 'Supprimer'
-    end
+    within('.attachment') { click_on 'Supprimer' }
     expect(page).to have_content('La pièce jointe a bien été supprimée')
     expect(page).to have_no_text('RIB.pdf')
   end
