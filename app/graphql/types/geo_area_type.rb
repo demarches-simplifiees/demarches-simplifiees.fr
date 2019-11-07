@@ -4,9 +4,11 @@ module Types
 
     class GeoAreaSource < Types::BaseEnum
       GeoArea.sources.each do |symbol_name, string_name|
-        value(string_name,
-          I18n.t(symbol_name, scope: [:activerecord, :attributes, :geo_area, :source]),
-          value: symbol_name)
+        if string_name != "parcelle_agricole"
+          value(string_name,
+            I18n.t(symbol_name, scope: [:activerecord, :attributes, :geo_area, :source]),
+            value: symbol_name)
+        end
       end
     end
 
