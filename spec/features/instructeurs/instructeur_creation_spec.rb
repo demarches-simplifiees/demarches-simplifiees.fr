@@ -12,7 +12,7 @@ feature 'As an instructeur', js: true do
     fill_in :instructeur_email, with: instructeur_email
 
     perform_enqueued_jobs do
-      click_button 'Valider'
+      click_button 'Ajouter'
     end
   end
 

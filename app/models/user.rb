@@ -78,7 +78,7 @@ class User < ApplicationRecord
 
     if user.valid?
       if user.instructeur_id.nil?
-        user.create_instructeur!(email: email)
+        user.create_instructeur!
       end
 
       user.instructeur.administrateurs << administrateurs
