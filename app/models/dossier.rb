@@ -472,7 +472,19 @@ class Dossier < ApplicationRecord
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
   end
 
-  def spreadsheet_columns
+  def spreadsheet_columns_csv
+    spreadsheet_columns(with_etablissement: true)
+  end
+
+  def spreadsheet_columns_xlsx
+    spreadsheet_columns
+  end
+
+  def spreadsheet_columns_ods
+    spreadsheet_columns
+  end
+
+  def spreadsheet_columns(with_etablissement: false)
     columns = [
       ['ID', id.to_s],
       ['Email', user.email]
@@ -484,6 +496,39 @@ class Dossier < ApplicationRecord
         ['Nom', individual&.nom],
         ['Prénom', individual&.prenom],
         ['Date de naissance', individual&.birthdate]
+      ]
+    elsif with_etablissement
+      columns += [
+        ['Établissement SIRET', etablissement&.siret],
+        ['Établissement siège social', etablissement&.siege_social],
+        ['Établissement NAF', etablissement&.naf],
+        ['Établissement libellé NAF', etablissement&.libelle_naf],
+        ['Établissement Adresse', etablissement&.adresse],
+        ['Établissement numero voie', etablissement&.numero_voie],
+        ['Établissement type voie', etablissement&.type_voie],
+        ['Établissement nom voie', etablissement&.nom_voie],
+        ['Établissement complément adresse', etablissement&.complement_adresse],
+        ['Établissement code postal', etablissement&.code_postal],
+        ['Établissement localité', etablissement&.localite],
+        ['Établissement code INSEE localité', etablissement&.code_insee_localite],
+        ['Entreprise SIREN', etablissement&.entreprise_siren],
+        ['Entreprise capital social', etablissement&.entreprise_capital_social],
+        ['Entreprise numero TVA intracommunautaire', etablissement&.entreprise_numero_tva_intracommunautaire],
+        ['Entreprise forme juridique', etablissement&.entreprise_forme_juridique],
+        ['Entreprise forme juridique code', etablissement&.entreprise_forme_juridique_code],
+        ['Entreprise nom commercial', etablissement&.entreprise_nom_commercial],
+        ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale],
+        ['Entreprise SIRET siège social', etablissement&.entreprise_siret_siege_social],
+        ['Entreprise code effectif entreprise', etablissement&.entreprise_code_effectif_entreprise],
+        ['Entreprise date de création', etablissement&.entreprise_date_creation],
+        ['Entreprise nom', etablissement&.entreprise_nom],
+        ['Entreprise prénom', etablissement&.entreprise_prenom],
+        ['Association RNA', etablissement&.association_rna],
+        ['Association titre', etablissement&.association_titre],
+        ['Association objet', etablissement&.association_objet],
+        ['Association date de création', etablissement&.association_date_creation],
+        ['Association date de déclaration', etablissement&.association_date_declaration],
+        ['Association date de publication', etablissement&.association_date_publication]
       ]
     else
       columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
