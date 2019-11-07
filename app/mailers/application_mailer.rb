@@ -3,6 +3,7 @@ class ApplicationMailer < ActionMailer::Base
   default from: "demarches-simplifiees.fr <#{CONTACT_EMAIL}>"
   layout 'mailer'
 
+  # Don’t retry to send a message if the server rejects the recipient address
   rescue_from Net::SMTPSyntaxError do |_error|
     message.perform_deliveries = false
   end
