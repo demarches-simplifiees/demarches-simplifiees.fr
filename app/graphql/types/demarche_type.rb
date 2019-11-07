@@ -9,7 +9,7 @@ module Types
     description "Une demarche"
 
     global_id_field :id
-    field :number, ID, "Le numero de la démarche.", null: false, method: :id
+    field :number, Int, "Le numero de la démarche.", null: false, method: :id
     field :title, String, null: false, method: :libelle
     field :description, String, "Déscription de la démarche.", null: false
     field :state, DemarcheState, null: false

@@ -164,7 +164,7 @@ type Demarche {
   """
   Le numero de la démarche.
   """
-  number: ID!
+  number: Int!
   state: DemarcheState!
   title: String!
   updatedAt: ISO8601DateTime!
@@ -244,7 +244,7 @@ type Dossier {
   """
   Le numero du dossier.
   """
-  number: ID!
+  number: Int!
 
   """
   L'état du dossier.
@@ -507,7 +507,7 @@ type Query {
     """
     Numéro de la démarche.
     """
-    number: ID!
+    number: Int!
   ): Demarche!
 
   """
@@ -517,7 +517,7 @@ type Query {
     """
     Numéro du dossier.
     """
-    number: ID!
+    number: Int!
   ): Dossier!
 }
 
