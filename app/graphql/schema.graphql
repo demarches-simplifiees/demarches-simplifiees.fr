@@ -129,14 +129,14 @@ type Demarche {
     before: String
 
     """
+    Dossiers déposés depuis la date.
+    """
+    createdSince: ISO8601DateTime
+
+    """
     Returns the first _n_ elements from the list.
     """
     first: Int
-
-    """
-    Filtrer les dossiers par ID.
-    """
-    ids: [ID!]
 
     """
     Returns the last _n_ elements from the list.
@@ -144,9 +144,19 @@ type Demarche {
     last: Int
 
     """
-    Dossiers crées depuis la date.
+    L'ordre des dossiers.
     """
-    since: ISO8601DateTime
+    order: Order = ASC
+
+    """
+    Dossiers avec statut.
+    """
+    state: DossierState
+
+    """
+    Dossiers mis à jour depuis la date.
+    """
+    updatedSince: ISO8601DateTime
   ): DossierConnection!
   groupeInstructeurs: [GroupeInstructeur!]!
   id: ID!
@@ -399,6 +409,18 @@ type Mutation {
   File information required to prepare a direct upload
   """
   createDirectUpload(input: CreateDirectUploadInput!): CreateDirectUploadPayload
+}
+
+enum Order {
+  """
+  L‘ordre ascendant.
+  """
+  ASC
+
+  """
+  L‘ordre descendant.
+  """
+  DESC
 }
 
 """

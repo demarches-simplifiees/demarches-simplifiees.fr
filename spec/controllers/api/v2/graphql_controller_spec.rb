@@ -12,6 +12,15 @@ describe API::V2::GraphqlController do
     create(:commentaire, dossier: dossier, email: 'test@test.com')
     dossier
   end
+  let(:dossier1) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 1.day.ago) }
+  let(:dossier2) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 3.days.ago) }
+  let!(:dossier_brouillon) { create(:dossier, procedure: procedure) }
+  let(:dossiers) { [dossier2, dossier1, dossier] }
+  let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
+
+  before do
+    instructeur.assign_to_procedure(procedure)
+  end
 
   let(:query) do
     "{
@@ -62,31 +71,65 @@ describe API::V2::GraphqlController do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
     end
 
-    it "should return demarche" do
-      expect(gql_errors).to eq(nil)
-      expect(gql_data).to eq(demarche: {
-        id: procedure.to_typed_id,
-        number: procedure.id.to_s,
-        title: procedure.libelle,
-        description: procedure.description,
-        state: 'brouillon',
-        archivedAt: nil,
-        createdAt: procedure.created_at.iso8601,
-        updatedAt: procedure.updated_at.iso8601,
-        groupeInstructeurs: [{ instructeurs: [], label: "défaut" }],
-        champDescriptors: procedure.types_de_champ.map do |tdc|
-          {
-            id: tdc.to_typed_id,
-            label: tdc.libelle,
-            type: tdc.type_champ,
-            description: tdc.description,
-            required: tdc.mandatory?
+    context "demarche" do
+      it "should be returned" do
+        expect(gql_errors).to eq(nil)
+        expect(gql_data).to eq(demarche: {
+          id: procedure.to_typed_id,
+          number: procedure.id.to_s,
+          title: procedure.libelle,
+          description: procedure.description,
+          state: 'brouillon',
+          archivedAt: nil,
+          createdAt: procedure.created_at.iso8601,
+          updatedAt: procedure.updated_at.iso8601,
+          groupeInstructeurs: [
+            {
+              instructeurs: [{ email: instructeur.email }],
+              label: "défaut"
+            }
+          ],
+          champDescriptors: procedure.types_de_champ.map do |tdc|
+            {
+              id: tdc.to_typed_id,
+              label: tdc.libelle,
+              type: tdc.type_champ,
+              description: tdc.description,
+              required: tdc.mandatory?
+            }
+          end,
+          dossiers: {
+            nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
           }
-        end,
-        dossiers: {
-          nodes: []
-        }
-      })
+        })
+      end
+
+      context "filter dossiers" do
+        let(:query) do
+          "{
+            demarche(number: #{procedure.id}) {
+              id
+              number
+              dossiers(createdSince: \"#{2.days.ago.iso8601}\") {
+                nodes {
+                  id
+                }
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id.to_s,
+            dossiers: {
+              nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }]
+            }
+          })
+        end
+      end
     end
 
     context "dossier" do
@@ -130,7 +173,7 @@ describe API::V2::GraphqlController do
         }"
       end
 
-      it "should return dossier" do
+      it "should be returned" do
         expect(gql_errors).to eq(nil)
         expect(gql_data).to eq(dossier: {
           id: dossier.to_typed_id,
@@ -146,7 +189,12 @@ describe API::V2::GraphqlController do
             id: dossier.user.to_typed_id,
             email: dossier.user.email
           },
-          instructeurs: [],
+          instructeurs: [
+            {
+              id: instructeur.to_typed_id,
+              email: instructeur.email
+            }
+          ],
           messages: dossier.commentaires.map do |commentaire|
             {
               body: commentaire.body,
