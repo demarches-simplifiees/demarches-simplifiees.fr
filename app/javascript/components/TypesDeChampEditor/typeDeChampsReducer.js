@@ -56,7 +56,9 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
       state.flash.success();
       done();
       if (insertAfter) {
-        scrollToComponent(insertAfter.target.nextElementSibling);
+        scrollToComponent(insertAfter.target.nextElementSibling, {
+          duration: 300
+        });
       }
     })
     .catch(message => state.flash.error(message));
@@ -219,7 +221,7 @@ function getUpdateHandler(typeDeChamp, { queue, flash }) {
 }
 
 function findItemToInsertAfter() {
-  const target = getFirstTarget();
+  const target = getLastVisibleTypeDeChamp();
 
   return {
     target,
@@ -227,8 +229,10 @@ function findItemToInsertAfter() {
   };
 }
 
-function getFirstTarget() {
-  const [target] = document.querySelectorAll('[data-in-view]');
+function getLastVisibleTypeDeChamp() {
+  const typeDeChamps = document.querySelectorAll('[data-in-view]');
+  const target = typeDeChamps[typeDeChamps.length - 1];
+
   if (target) {
     const parentTarget = target.closest('[data-repetition]');
     if (parentTarget) {

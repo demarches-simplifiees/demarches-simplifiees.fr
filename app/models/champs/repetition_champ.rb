@@ -33,6 +33,12 @@ class Champs::RepetitionChamp < Champ
     end
   end
 
+  # We have to truncate the label here as spreadsheets have a (30 char) limit on length.
+  def libelle_for_export
+    str = "(#{type_de_champ.stable_id}) #{libelle}"
+    ActiveStorage::Filename.new(str).sanitized.truncate(30)
+  end
+
   class Row < Hashie::Dash
     property :index
     property :dossier_id
