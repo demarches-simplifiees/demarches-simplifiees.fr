@@ -402,22 +402,17 @@ interface GeoArea {
 
 enum GeoAreaSource {
   """
-  translation missing: fr.activerecord.attributes.geo_area.source.cadastre
+  Parcelle cadastrale
   """
   cadastre
 
   """
-  translation missing: fr.activerecord.attributes.geo_area.source.parcelle_agricole
-  """
-  parcelle_agricole
-
-  """
-  translation missing: fr.activerecord.attributes.geo_area.source.quartier_prioritaire
+  Quartier prioritaire
   """
   quartier_prioritaire
 
   """
-  translation missing: fr.activerecord.attributes.geo_area.source.selection_utilisateur
+  Sélection utilisateur
   """
   selection_utilisateur
 }
