@@ -8,7 +8,7 @@ describe 'admin/instructeurs/index.html.haml', type: :view do
       admin.instructeurs,
       partial: "admin/instructeurs/list",
       array: true))
-    assign(:instructeur, Instructeur.new())
+    assign(:instructeur, create(:instructeur))
   end
 
   context 'Aucun instructeur' do

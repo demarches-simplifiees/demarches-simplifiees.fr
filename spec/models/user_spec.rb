@@ -168,7 +168,7 @@ describe User, type: :model do
       context 'with an existing instructeur' do
         let(:old_admins) { [create(:administrateur)] }
         let(:admins) { [create(:administrateur)] }
-        let!(:instructeur) { Instructeur.create(email: 'i@mail.com', administrateurs: old_admins) }
+        let!(:instructeur) { create(:instructeur, email: 'i@mail.com', administrateurs: old_admins) }
 
         before do
           User

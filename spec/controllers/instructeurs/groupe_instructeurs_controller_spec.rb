@@ -50,7 +50,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     context 'of a new instructeur' do
       let(:new_instructeur_email) { 'new_instructeur@mail.com' }
 
-      it { expect(gi_1_2.instructeurs.pluck(:email)).to include(new_instructeur_email) }
+      it { expect(gi_1_2.instructeurs.map(&:email)).to include(new_instructeur_email) }
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2)) }
     end

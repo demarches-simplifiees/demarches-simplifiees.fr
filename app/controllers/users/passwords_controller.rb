@@ -9,6 +9,16 @@ class Users::PasswordsController < Devise::PasswordsController
 
   # POST /resource/password
   def create
+    # Check the credentials associated to the mail to generate a correct reset link
+    email = params[:user][:email]
+    if Administrateur.find_by(email: email)
+      @devise_mapping = Devise.mappings[:administrateur]
+      params[:administrateur] = params[:user]
+      # uncomment to check password complexity for Instructeur
+      # elsif Instructeur.by_email(email)
+      #   @devise_mapping = Devise.mappings[:instructeur]
+      #   params[:instructeur] = params[:user]
+    end
     super
   end
 
@@ -46,7 +56,7 @@ class Users::PasswordsController < Devise::PasswordsController
 
   def try_to_authenticate_instructeur
     if user_signed_in?
-      instructeur = Instructeur.find_by(email: current_user.email)
+      instructeur = Instructeur.by_email(current_user.email)
 
       if instructeur
         sign_in(instructeur.user)
