@@ -194,4 +194,49 @@ describe User, type: :model do
       end
     end
   end
+
+  describe 'invite_administrateur!' do
+    let(:administration) { create(:administration) }
+    let(:administrateur) { create(:administrateur) }
+    let(:user) { administrateur.user }
+
+    let(:mailer_double) { double('mailer', deliver_later: true) }
+
+    before { allow(AdministrationMailer).to receive(:invite_admin).and_return(mailer_double) }
+
+    subject { user.invite_administrateur!(administration.id) }
+
+    context 'when the user is inactif' do
+      before { subject }
+
+      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), administration.id) }
+    end
+
+    context 'when the user is actif' do
+      before do
+        user.update(last_sign_in_at: Time.zone.now)
+        subject
+      end
+
+      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, nil, administration.id) }
+    end
+  end
+
+  describe '#active?' do
+    let!(:user) { create(:user) }
+
+    subject { user.active? }
+
+    context 'when the user has never signed in' do
+      before { user.update(last_sign_in_at: nil) }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the user has already signed in' do
+      before { user.update(last_sign_in_at: Time.zone.now) }
+
+      it { is_expected.to be true }
+    end
+  end
 end

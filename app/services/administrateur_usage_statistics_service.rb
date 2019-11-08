@@ -29,7 +29,7 @@ class AdministrateurUsageStatisticsService
     result = {
       ds_sign_in_count: administrateur.user.sign_in_count,
       ds_created_at: administrateur.created_at,
-      ds_active: administrateur.active?,
+      ds_active: administrateur.user.active?,
       ds_id: administrateur.id,
       nb_services: nb_services_by_administrateur_id[administrateur.id],
       nb_instructeurs: nb_instructeurs_by_administrateur_id[administrateur.id],

@@ -50,22 +50,4 @@ describe Administrateur, type: :model do
   #     it { expect(subject).to eq([]) }
   #   end
   # end
-
-  describe '#active?' do
-    let!(:administrateur) { create(:administrateur) }
-
-    subject { administrateur.active? }
-
-    context 'when the user has never signed in' do
-      before { administrateur.user.update(last_sign_in_at: nil) }
-
-      it { is_expected.to be false }
-    end
-
-    context 'when the user has already signed in' do
-      before { administrateur.user.update(last_sign_in_at: Time.zone.now) }
-
-      it { is_expected.to be true }
-    end
-  end
 end

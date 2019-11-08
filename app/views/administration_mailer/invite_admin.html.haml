@@ -9,10 +9,15 @@
 %p
   Votre compte administrateur a été créé pour l'adresse email #{@admin.email}.
 
-%p
-  %b
-    Pour l’activer, cliquez sur le lien suivant :
-    = link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
+- if @reset_password_token.present?
+  %p
+    %b
+      Pour l’activer, cliquez sur le lien suivant :
+      = link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
+- else
+  %p
+    Pour vous connecter, cliquez sur le lien suivant :
+    = link_to(new_user_session_url, new_user_session_url)
 
 %p
   = render partial: "layouts/mailers/bizdev_signature", locals: { author_name: @author_name }
