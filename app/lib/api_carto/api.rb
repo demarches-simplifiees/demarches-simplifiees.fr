@@ -12,11 +12,14 @@ class ApiCarto::API
   private
 
   def self.call(url, geojson)
-    params = geojson.to_s
-    RestClient.post(url, params, content_type: 'application/json')
+    response = Typhoeus.post(url, body: geojson.to_s, headers: { 'content-type' => 'application/json' })
 
-  rescue RestClient::InternalServerError, RestClient::BadGateway, RestClient::GatewayTimeout, RestClient::ServiceUnavailable => e
-    Rails.logger.error "[ApiCarto] Error on #{url}: #{e}"
-    raise RestClient::ResourceNotFound
+    if response.success?
+      response.body
+    else
+      message = response.code == 0 ? response.return_message : response.code.to_s
+      Rails.logger.error "[ApiCarto] Error on #{url}: #{message}"
+      raise RestClient::ResourceNotFound
+    end
   end
 end

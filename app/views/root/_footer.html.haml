@@ -6,23 +6,23 @@
         %ul.footer-logos
           %li.footer-text
             Un service fourni par la
-            = link_to "DINSIC", "http://www.modernisation.gouv.fr/"
+            = link_to "DINUM", "http://www.modernisation.gouv.fr/", title: "Direction Interministérielle au Numérique"
             %br
             et incubé par
-            = link_to "beta.gouv.fr", "https://beta.gouv.fr"
+            = link_to "beta.gouv.fr", "https://beta.gouv.fr", title: "le site de Beta.gouv.fr"
           %li
-            = link_to "http://www.modernisation.gouv.fr/" do
+            = link_to "http://www.modernisation.gouv.fr/", title: "DINUM" do
               %span.footer-logo.footer-logo-dinsic{ role: 'img', 'aria-label': 'DINSIC' }
-            = link_to "http://www.net.pf/" do
+            = link_to "http://www.net.pf/", title: "Net.pf" do
               %span.footer-logo.footer-logo-netpf{ role: 'img', 'aria-label': 'Net.pf' }
           %li
-            = link_to "https://beta.gouv.fr" do
-              %p.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': 'beta.gouv.fr' }
+            = link_to "https://beta.gouv.fr", title: "le site de Beta.gouv.fr" do
+              %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': 'beta.gouv.fr' }
 
       %li.footer-column
         %ul.footer-links
           -# %li.footer-link
-            = link_to "Newsletter", "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1", :class => "footer-link", :target => "_blank", rel: "noopener"
+            = link_to "Newsletter", "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1", :title => "Notre newsletter", :class => "footer-link", :target => "_blank", rel: "noopener"
           %li.footer-link
             = link_to "Nouveautés", "https://github.com/maatinito/mes-demarches/releases", :class => "footer-link"
           %li.footer-link

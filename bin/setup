@@ -18,6 +18,8 @@ chdir APP_ROOT do
   system('bundle check') || system!('bundle install')
   system! 'bin/yarn install'
 
+  puts "\n== Updating webdrivers =="
+  system! 'RAILS_ENV=test bin/rails webdrivers:chromedriver:update'
 
   puts "\n== Copying sample files =="
   unless File.exist?('.env')

@@ -38,4 +38,4 @@ FAQ_ADMIN_URL = "https://faq.demarches-simplifiees.fr/collection/1-administrateu
 COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, 'general', 'comment-trouver-ma-demarche'].join("/")
 
 STATUS_PAGE_URL = "https://updown.io/cugq"
-MATOMO_URL = 'https://beta.mes-demarches.gov.pf/matomo'
+MATOMO_IFRAME_URL = 'https://beta.mes-demarches.gov.pf/matomo/index.php?module=CoreAdminHome&action=optOut&language=fr&backgroundColor=ffffff&fontColor=333333&fontSize=16px&fontFamily=Muli'
