@@ -3,7 +3,7 @@
 - dossier = controller.try(:dossier_for_help)
 - procedure = controller.try(:procedure_for_help)
 
-.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
+%header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
   .header-inner-content
 
     .flex.align-center

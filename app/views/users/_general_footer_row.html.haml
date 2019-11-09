@@ -1,13 +1,7 @@
-= link_to "Accessibilité", accessibilite_path, :class => "footer-link"
-–
-= link_to "CGU", CGU_URL, :class => "footer-link", :target => "_blank", rel: 'noopener noreferrer'
-–
-= link_to "Données personnelles", RGPD_URL, :class => "footer-link", :target => "_blank", rel: 'noopener noreferrer'
-–
-= link_to "Mentions légales", MENTIONS_LEGALES_URL, :class => "footer-link", :target => "_blank", rel: 'noopener noreferrer'
-–
-= link_to 'Documentation', DOC_URL
-–
-= contact_link "Contact technique", class: "footer-link", dossier_id: dossier&.id
-–
-= link_to 'Aide', FAQ_URL
+%ul.footer-row.footer-bottom-line.footer-site-links
+  %li>= link_to "Accessibilité", accessibilite_path
+  %li>= link_to "CGU", CGU_URL, target: "_blank", rel: "noopener noreferrer"
+  %li>= link_to "Mentions légales", MENTIONS_LEGALES_URL, target: "_blank", rel: "noopener noreferrer"
+  %li>= link_to 'Documentation', DOC_URL
+  %li>= contact_link "Contact technique", dossier_id: dossier&.id
+  %li>= link_to 'Aide', FAQ_URL

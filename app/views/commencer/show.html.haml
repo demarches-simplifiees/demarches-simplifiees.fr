@@ -2,7 +2,7 @@
 
 .commencer.form
   - if !user_signed_in?
-    %h1 Commencer la démarche
+    %h2.huge-title Commencer la démarche
     = link_to commencer_sign_up_path(path: @procedure.path), class: ['button large expand primary'] do
       Créer un compte
       %span.optional-on-small-screens
@@ -20,7 +20,7 @@
 
     - elsif drafts.count == 1 && not_drafts.count == 0
       - dossier = drafts.first
-      %h1 Vous avez déjà commencé à remplir un dossier
+      %h2.huge-title Vous avez déjà commencé à remplir un dossier
       %p
         Il y a <strong>#{time_ago_in_words(dossier.created_at)}</strong>,
         vous avez commencé à remplir un dossier sur la démarche « #{dossier.procedure.libelle} ».
@@ -29,7 +29,7 @@
 
     - elsif not_drafts.count == 1
       - dossier = not_drafts.first
-      %h1 Vous avez déjà déposé un dossier
+      %h2.huge-title Vous avez déjà déposé un dossier
       %p
         Il y a <strong>#{time_ago_in_words(dossier.en_construction_at)}</strong>,
         vous avez déposé un dossier sur la démarche « #{dossier.procedure.libelle} ».
@@ -37,6 +37,6 @@
       = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
 
     - else
-      %h1 Vous avez déjà des dossiers pour cette démarche
+      %h2.huge-title Vous avez déjà des dossiers pour cette démarche
       = link_to 'Voir mes dossiers en cours', dossiers_path, class: ['button large expand primary']
       = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
