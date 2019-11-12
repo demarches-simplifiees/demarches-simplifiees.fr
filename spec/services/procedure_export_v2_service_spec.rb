@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'csv'
 
 describe ProcedureExportV2Service do
   describe 'to_data' do
@@ -160,6 +161,96 @@ describe ProcedureExportV2Service do
         ]
       end
 
+      context 'as csv' do
+        subject do
+          Tempfile.create do |f|
+            f << ProcedureExportV2Service.new(procedure, procedure.dossiers).to_csv
+            f.rewind
+            CSV.read(f.path)
+          end
+        end
+
+        let(:nominal_headers) do
+          [
+            "ID",
+            "Email",
+            "Établissement SIRET",
+            "Établissement siège social",
+            "Établissement NAF",
+            "Établissement libellé NAF",
+            "Établissement Adresse",
+            "Établissement numero voie",
+            "Établissement type voie",
+            "Établissement nom voie",
+            "Établissement complément adresse",
+            "Établissement code postal",
+            "Établissement localité",
+            "Établissement code INSEE localité",
+            "Entreprise SIREN",
+            "Entreprise capital social",
+            "Entreprise numero TVA intracommunautaire",
+            "Entreprise forme juridique",
+            "Entreprise forme juridique code",
+            "Entreprise nom commercial",
+            "Entreprise raison sociale",
+            "Entreprise SIRET siège social",
+            "Entreprise code effectif entreprise",
+            "Entreprise date de création",
+            "Entreprise nom",
+            "Entreprise prénom",
+            "Association RNA",
+            "Association titre",
+            "Association objet",
+            "Association date de création",
+            "Association date de déclaration",
+            "Association date de publication",
+            "Archivé",
+            "État du dossier",
+            "Dernière mise à jour le",
+            "Déposé le",
+            "Passé en instruction le",
+            "Traité le",
+            "Motivation de la décision",
+            "Instructeurs",
+            'auto_completion',
+            "textarea",
+            "date",
+            "datetime",
+            "number",
+            "decimal_number",
+            "integer_number",
+            "checkbox",
+            "civilite",
+            "email",
+            "phone",
+            "address",
+            "yes_no",
+            "simple_drop_down_list",
+            "multiple_drop_down_list",
+            "linked_drop_down_list",
+            "pays",
+            'nationalites',
+            'commune_de_polynesie',
+            'code_postal_de_polynesie',
+            "regions",
+            "departements",
+            "engagement",
+            "dossier_link",
+            "piece_justificative",
+            "siret",
+            "carte",
+            "te_fenua",
+            "text"
+          ]
+        end
+
+        let(:dossiers_sheet_headers) { subject.first }
+
+        it 'should have headers' do
+          expect(dossiers_sheet_headers).to match(nominal_headers)
+        end
+      end
+
       it 'should have headers' do
         expect(dossiers_sheet.headers).to match(nominal_headers)
 
@@ -235,7 +326,7 @@ describe ProcedureExportV2Service do
       let(:champ_repetition) { dossiers.first.champs.find { |champ| champ.type_champ == 'repetition' } }
 
       it 'should have sheets' do
-        expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle])
+        expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export])
       end
 
       it 'should have headers' do
@@ -257,7 +348,18 @@ describe ProcedureExportV2Service do
         end
 
         it 'should have valid sheet name' do
-          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', "A - B - C"])
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', "(#{champ_repetition.type_de_champ.stable_id}) A - B - C"])
+        end
+      end
+
+      context 'with non unique labels' do
+        let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+        let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
+        let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: procedure, libelle: champ_repetition.libelle) }
+        let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
+
+        it 'should have sheets' do
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export, another_champ_repetition.libelle_for_export])
         end
       end
     end

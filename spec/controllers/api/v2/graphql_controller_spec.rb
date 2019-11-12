@@ -166,6 +166,39 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs[0].type_de_champ.to_typed_id)
       end
     end
+
+    context "mutations" do
+      context 'createDirectUpload' do
+        let(:query) do
+          "mutation {
+            createDirectUpload(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              filename: \"hello.png\",
+              byteSize: 1234,
+              checksum: \"qwerty1234\",
+              contentType: \"image/png\"
+            }) {
+              directUpload {
+                url
+                headers
+                blobId
+                signedBlobId
+              }
+            }
+          }"
+        end
+
+        it "should initiate a direct upload" do
+          expect(gql_errors).to eq(nil)
+
+          data = gql_data[:createDirectUpload][:directUpload]
+          expect(data[:url]).not_to be_nil
+          expect(data[:headers]).not_to be_nil
+          expect(data[:blobId]).not_to be_nil
+          expect(data[:signedBlobId]).not_to be_nil
+        end
+      end
+    end
   end
 
   context "when not authenticated" do

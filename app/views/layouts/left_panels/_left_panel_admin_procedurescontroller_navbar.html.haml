@@ -30,14 +30,14 @@
       .procedure-list-element
         Administrateurs
 
-    - if !feature_enabled?(:routage)
+    - if !feature_enabled?(:administrateur_routage)
       %a#onglet-instructeurs{ href: url_for(admin_procedure_assigns_path(@procedure)) }
         .procedure-list-element{ class: ('active' if active == 'Instructeurs') }
           Instructeurs
           - if @procedure.missing_steps.include?(:instructeurs)
             %p.missing-steps (à compléter)
 
-    - if feature_enabled?(:routage)
+    - if feature_enabled?(:administrateur_routage)
       %a#onglet-instructeurs{ href: url_for(procedure_groupe_instructeurs_path(@procedure)) }
         .procedure-list-element
           Groupe d'instructeurs
