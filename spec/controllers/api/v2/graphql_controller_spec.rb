@@ -216,6 +216,81 @@ describe API::V2::GraphqlController do
     end
 
     context "mutations" do
+      describe 'dossierEnvoyerMessage' do
+        context 'success' do
+          let(:query) do
+            "mutation {
+              dossierEnvoyerMessage(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                body: \"Bonjour\"
+              }) {
+                message {
+                  body
+                }
+              }
+            }"
+          end
+
+          it "should post a message" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierEnvoyerMessage: {
+              message: {
+                body: "Bonjour"
+              }
+            })
+          end
+        end
+
+        context 'schema error' do
+          let(:query) do
+            "mutation {
+              dossierEnvoyerMessage(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\"
+              }) {
+                message {
+                  body
+                }
+              }
+            }"
+          end
+
+          it "should fail" do
+            expect(gql_data).to eq(nil)
+            expect(gql_errors).not_to eq(nil)
+          end
+        end
+
+        context 'validation error' do
+          let(:query) do
+            "mutation {
+              dossierEnvoyerMessage(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                body: \"\"
+              }) {
+                message {
+                  body
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierEnvoyerMessage: {
+              errors: [{ message: "Votre message ne peut être vide" }],
+              message: nil
+            })
+          end
+        end
+      end
+
       context 'createDirectUpload' do
         let(:query) do
           "mutation {
