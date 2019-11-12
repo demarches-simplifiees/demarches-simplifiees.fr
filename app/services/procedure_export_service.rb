@@ -49,7 +49,7 @@ class ProcedureExportService
     :prenom
   ]
 
-  def initialize(procedure, dossiers, tables: [], ids: nil, since: nil, limit: nil)
+  def initialize(procedure, dossiers, tables: [])
     @procedure = procedure
 
     @attributes = ATTRIBUTES.dup
@@ -59,15 +59,6 @@ class ProcedureExportService
     end
 
     @dossiers = dossiers.downloadable_sorted
-    if ids
-      @dossiers = @dossiers.where(id: ids)
-    end
-    if since
-      @dossiers = @dossiers.since(since)
-    end
-    if limit
-      @dossiers = @dossiers.limit(limit)
-    end
     @dossiers = @dossiers.to_a
     @tables = tables.map(&:to_sym)
   end
