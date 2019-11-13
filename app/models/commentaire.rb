@@ -10,7 +10,7 @@ class Commentaire < ApplicationRecord
 
   has_one_attached :piece_jointe
 
-  validates :body, presence: { message: "Votre message ne peut être vide" }
+  validates :body, presence: { message: "ne peut être vide" }
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
