@@ -10,27 +10,66 @@ type Avis {
 type CarteChamp implements Champ {
   geoAreas: [GeoArea!]!
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
 }
 
 interface Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
 }
 
 type ChampDescriptor {
+  """
+  Description du champ.
+  """
   description: String
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
   required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
   type: TypeDeChamp!
 }
 
 type CheckboxChamp implements Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
   value: Boolean!
 }
@@ -88,14 +127,30 @@ type CreateDirectUploadPayload {
 
 type DateChamp implements Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
   value: ISO8601DateTime
 }
 
 type DecimalNumberChamp implements Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
   value: Float
 }
@@ -164,7 +219,11 @@ type Demarche {
   """
   Le numero de la démarche.
   """
-  number: ID!
+  number: Int!
+
+  """
+  L'état de la démarche.
+  """
   state: DemarcheState!
   title: String!
   updatedAt: ISO8601DateTime!
@@ -244,7 +303,7 @@ type Dossier {
   """
   Le numero du dossier.
   """
-  number: ID!
+  number: Int!
 
   """
   L'état du dossier.
@@ -296,7 +355,15 @@ type DossierEdge {
 type DossierLinkChamp implements Champ {
   dossier: Dossier
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
 }
 
@@ -335,22 +402,17 @@ interface GeoArea {
 
 enum GeoAreaSource {
   """
-  translation missing: fr.activerecord.attributes.geo_area.source.cadastre
+  Parcelle cadastrale
   """
   cadastre
 
   """
-  translation missing: fr.activerecord.attributes.geo_area.source.parcelle_agricole
-  """
-  parcelle_agricole
-
-  """
-  translation missing: fr.activerecord.attributes.geo_area.source.quartier_prioritaire
+  Quartier prioritaire
   """
   quartier_prioritaire
 
   """
-  translation missing: fr.activerecord.attributes.geo_area.source.selection_utilisateur
+  Sélection utilisateur
   """
   selection_utilisateur
 }
@@ -376,16 +438,32 @@ scalar ISO8601DateTime
 
 type IntegerNumberChamp implements Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
   value: Int
 }
 
 type LinkedDropDownListChamp implements Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
   primaryValue: String
   secondaryValue: String
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
 }
 
@@ -399,7 +477,15 @@ type Message {
 
 type MultipleDropDownListChamp implements Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
   values: [String!]!
 }
@@ -480,7 +566,15 @@ type PersonneMorale {
 
 type PieceJustificativeChamp implements Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
   url: URL
 }
@@ -507,7 +601,7 @@ type Query {
     """
     Numéro de la démarche.
     """
-    number: ID!
+    number: Int!
   ): Demarche!
 
   """
@@ -517,14 +611,22 @@ type Query {
     """
     Numéro du dossier.
     """
-    number: ID!
+    number: Int!
   ): Dossier!
 }
 
 type RepetitionChamp implements Champ {
   champs: [Champ!]!
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
 }
 
@@ -537,13 +639,29 @@ type SelectionUtilisateur implements GeoArea {
 type SiretChamp implements Champ {
   etablissement: PersonneMorale
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
 }
 
 type TextChamp implements Champ {
   id: ID!
+
+  """
+  Libellé du champ.
+  """
   label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
   stringValue: String
   value: String
 }

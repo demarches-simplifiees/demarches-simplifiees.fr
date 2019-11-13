@@ -1,11 +1,11 @@
 module Types
   class QueryType < Types::BaseObject
     field :demarche, DemarcheType, null: false, description: "Informations concernant une démarche." do
-      argument :number, ID, "Numéro de la démarche.", required: true
+      argument :number, Int, "Numéro de la démarche.", required: true
     end
 
     field :dossier, DossierType, null: false, description: "Informations sur un dossier d'une démarche." do
-      argument :number, ID, "Numéro du dossier.", required: true
+      argument :number, Int, "Numéro du dossier.", required: true
     end
 
     def demarche(number:)
