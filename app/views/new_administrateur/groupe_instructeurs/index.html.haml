@@ -12,7 +12,7 @@
       = f.label :routing_criteria_name do
         Libellé du routage
         %span.notice Ce texte apparaitra sur le formulaire usager comme le libellé d'une liste
-      = f.text_field :routing_criteria_name, placeholder: 'Votre ville', required: true
+      = f.text_field :routing_criteria_name, placeholder: 'ex. Votre ville', required: true
       = f.submit 'Renommer', class: 'button primary send'
 
   .card
@@ -22,7 +22,7 @@
       = f.label :label do
         Ajouter un groupe
         %span.notice Ce groupe sera un choix de la liste « #{@procedure.routing_criteria_name} » .
-      = f.text_field :label, placeholder: 'Ville de Bordeaux', required: true
+      = f.text_field :label, placeholder: 'ex. Ville de Bordeaux', required: true
       = f.submit 'Ajouter le groupe', class: 'button primary send'
 
     %table.table.mt-2
