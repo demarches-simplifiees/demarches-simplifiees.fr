@@ -76,7 +76,7 @@ describe API::V2::GraphqlController do
         expect(gql_errors).to eq(nil)
         expect(gql_data).to eq(demarche: {
           id: procedure.to_typed_id,
-          number: procedure.id.to_s,
+          number: procedure.id,
           title: procedure.libelle,
           description: procedure.description,
           state: 'brouillon',
@@ -123,7 +123,7 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to eq(nil)
           expect(gql_data).to eq(demarche: {
             id: procedure.to_typed_id,
-            number: procedure.id.to_s,
+            number: procedure.id,
             dossiers: {
               nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }]
             }
@@ -177,7 +177,7 @@ describe API::V2::GraphqlController do
         expect(gql_errors).to eq(nil)
         expect(gql_data).to eq(dossier: {
           id: dossier.to_typed_id,
-          number: dossier.id.to_s,
+          number: dossier.id,
           state: 'en_construction',
           updatedAt: dossier.updated_at.iso8601,
           datePassageEnConstruction: dossier.en_construction_at.iso8601,
