@@ -1,6 +1,14 @@
 fr:
   new_administrateur:
     groupe_instructeurs:
+      index:
+        existing_groupe:
+          one: "%{count} groupe existe"
+          other: "%{count} groupes existent"
+      show:
+        assigned_instructeur:
+          one: "%{count} instructeur est affecté"
+          other: "%{count} instructeurs sont affectés"
       add_instructeur:
         wrong_address:
           one: "%{value} n'est pas une adresse email valide"
