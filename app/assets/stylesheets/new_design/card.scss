@@ -40,6 +40,10 @@
     .card-title {
       margin-bottom: $default-spacer;
     }
+
+    b {
+      font-weight: bold;
+    }
   }
 
   p:not(:last-of-type) {

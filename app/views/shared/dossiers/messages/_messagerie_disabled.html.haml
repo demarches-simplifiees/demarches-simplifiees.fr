@@ -12,4 +12,11 @@
       - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
       = simple_format(horaires)
     %p
-      = link_to service.email, "mailto:#{service.email}"
+      = mail_to service.email,
+        service.email,
+        subject: "[demarches-simplifiees.fr] Question sur le dossier Nº #{dossier.id} de la démarche Nº #{dossier.procedure.id}",
+        rel: "noopener noreferrer",
+        target: '_blank'
+
+    %p
+      Penser bien à préciser que votre demande concerne le <b>dossier Nº #{dossier.id}</b>.
