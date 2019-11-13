@@ -47,7 +47,7 @@ module NewAdministrateur
     end
 
     def add_instructeur
-      @instructeur = Instructeur.find_by(email: instructeur_email) ||
+      @instructeur = Instructeur.by_email(instructeur_email) ||
         create_instructeur(instructeur_email)
 
       if groupe_instructeur.instructeurs.include?(@instructeur)
