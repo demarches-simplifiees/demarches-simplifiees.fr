@@ -37,7 +37,9 @@
       %tbody
         - @instructeurs.each do |instructeur|
           %tr
-            %td= instructeur.email
+            %td
+              %span.icon.person
+              #{instructeur.email}
             %td.actions= button_to 'retirer',
               { action: :remove_instructeur },
               { method: :delete,
