@@ -33,7 +33,7 @@
     %table.table.mt-2
       %thead
         %tr
-          %th{ colspan: 2 } Instructeurs affectés
+          %th{ colspan: 2 }= t('.assigned_instructeur', count: @instructeurs.count)
       %tbody
         - @instructeurs.each do |instructeur|
           %tr
