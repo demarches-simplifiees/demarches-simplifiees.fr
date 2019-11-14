@@ -43,7 +43,13 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
     > create user tps_test with password 'tps_test' superuser;
     > \q
 
+
 ### Initialisation de l'environnement de développement
+
+Sous Ubuntu, certains packages doivent être installés au préalable :
+
+    sudo apt-get install libcurl3 libcurl3-gnutls libcurl4-openssl-dev libcurl4-gnutls-dev zlib1g-dev
+
 
 Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 

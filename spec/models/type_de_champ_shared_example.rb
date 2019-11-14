@@ -148,4 +148,22 @@ shared_examples 'type_de_champ_spec' do
       expect(cloned_procedure.types_de_champ.first.types_de_champ).not_to be_empty
     end
   end
+
+  describe "linked_drop_down_list" do
+    let(:type_de_champ) { create(:type_de_champ_linked_drop_down_list) }
+
+    it 'should validate without label' do
+      type_de_champ.drop_down_list_value = 'toto'
+      expect(type_de_champ.validate).to be_falsey
+      messages = type_de_champ.errors.full_messages
+      expect(messages.size).to eq(1)
+      expect(messages.first.starts_with?("#{type_de_champ.libelle} doit commencer par")).to be_truthy
+
+      type_de_champ.libelle = ''
+      expect(type_de_champ.validate).to be_falsey
+      messages = type_de_champ.errors.full_messages
+      expect(messages.size).to eq(2)
+      expect(messages.last.starts_with?("La liste doit commencer par")).to be_truthy
+    end
+  end
 end

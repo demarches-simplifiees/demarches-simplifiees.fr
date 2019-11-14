@@ -13,12 +13,9 @@ gem 'bcrypt'
 gem 'bootstrap-sass', '>= 3.4.1'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 gem 'browser'
-gem 'carrierwave'
-gem 'carrierwave-i18n'
 gem 'chartkick'
 gem 'chunky_png'
 gem 'clamav-client', require: 'clamav/client'
-gem 'copy_carrierwave_file'
 gem 'daemons'
 gem 'deep_cloneable' # Enable deep clone of active record models
 gem 'delayed_cron_job' # Cron jobs
@@ -93,6 +90,7 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem 'timecop'
   gem 'vcr'
+  gem 'webdrivers', '~> 4.0'
   gem 'webmock'
 end
 

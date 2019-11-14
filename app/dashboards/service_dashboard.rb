@@ -18,8 +18,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     email: Field::String,
     telephone: Field::String,
     horaires: Field::String,
-    adresse: Field::String,
-    siret: Field::String
+    adresse: Field::String
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -45,8 +44,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     :email,
     :telephone,
     :horaires,
-    :adresse,
-    :siret
+    :adresse
   ].freeze
 
   # FORM_ATTRIBUTES
