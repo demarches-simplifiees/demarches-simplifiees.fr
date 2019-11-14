@@ -1,13 +1,16 @@
 require 'spec_helper'
 
-feature 'The routing' do
+feature 'The routing', js: true do
   let(:password) { 'a very complicated password' }
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_service, :for_individual) }
   let(:administrateur) { create(:administrateur, procedures: [procedure]) }
   let(:scientifique_user) { create(:user, password: password) }
   let(:litteraire_user) { create(:user, password: password) }
 
-  before { Flipper.enable_actor(:administrateur_routage, administrateur.user) }
+  before do
+    procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
+    Flipper.enable_actor(:administrateur_routage, administrateur.user)
+  end
 
   scenario 'works' do
     login_as administrateur.user, scope: :user
@@ -22,11 +25,15 @@ feature 'The routing' do
 
     # rename defaut groupe to littéraire
     click_on 'voir'
-    fill_in 'groupe_instructeur_label', with: 'littéraire'
+    expect(page).to have_css('#groupe_instructeur_label')
+    2.times { find(:css, "#groupe_instructeur_label").set("littéraire") }
     click_on 'Renommer'
 
+    expect(procedure.defaut_groupe_instructeur.reload.label).to eq('littéraire')
+
     # add victor to littéraire groupe
-    fill_in 'instructeur_email', with: 'victor@inst.com'
+    try_twice { find('input.select2-search__field').send_keys('victor@inst.com', :enter) }
+
     perform_enqueued_jobs { click_on 'Affecter' }
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
@@ -37,13 +44,13 @@ feature 'The routing' do
     click_on 'Ajouter le groupe'
 
     # add marie to scientifique groupe
-    fill_in 'instructeur_email', with: 'marie@inst.com'
+    try_twice { find('input.select2-search__field').send_keys('marie@inst.com', :enter) }
     perform_enqueued_jobs { click_on 'Affecter' }
     marie = User.find_by(email: 'marie@inst.com').instructeur
 
     # publish
     publish_procedure(procedure)
-    log_out
+    log_out(old_layout: true)
 
     # 2 users fill a dossier in each group
     user_send_dossier(scientifique_user, 'scientifique')
@@ -165,7 +172,25 @@ feature 'The routing' do
     expect(page).to have_content 'Mot de passe enregistré'
   end
 
-  def log_out
-    click_on 'Se déconnecter'
+  def log_out(old_layout: false)
+    if old_layout
+      expect(page).to have_content('Se déconnecter')
+      click_on 'Se déconnecter'
+    else
+      try_twice do
+        expect(page).to have_css('[title="Mon compte"]')
+        find('[title="Mon compte"]').click
+        expect(page).to have_content('Se déconnecter')
+        click_on 'Se déconnecter'
+      end
+    end
+  end
+
+  def try_twice
+    begin
+      yield
+    rescue Selenium::WebDriver::Error::ElementNotInteractableError, Capybara::ElementNotFound
+      yield
+    end
   end
 end
