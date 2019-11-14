@@ -7,7 +7,7 @@ describe Service, type: :model do
         organisme: 'mairie des iles',
         type_organisme: Service.type_organismes.fetch(:association),
         email: 'super@email.com',
-        telephone: '1212202',
+        telephone: '012345678',
         horaires: 'du lundi au vendredi',
         adresse: '12 rue des schtroumpfs',
         administrateur_id: administrateur.id
@@ -15,6 +15,33 @@ describe Service, type: :model do
     end
 
     it { expect(Service.new(params).valid?).to be_truthy }
+
+    it 'should forbid invalid phone numbers' do
+      service = Service.create(params)
+      invalid_phone_numbers = ["1", "Néant", "01 60 50 40 30 20"]
+
+      invalid_phone_numbers.each do |tel|
+        service.telephone = tel
+        expect(service.valid?).to be_falsey
+      end
+    end
+
+    it 'should accept no phone numbers' do
+      service = Service.create(params)
+      service.telephone = nil
+
+      expect(service.valid?).to be_truthy
+    end
+
+    it 'should accept valid phone numbers' do
+      service = Service.create(params)
+      valid_phone_numbers = ["3646", "273115", "0160376983", "01 60 50 40 30 ", "+33160504030"]
+
+      valid_phone_numbers.each do |tel|
+        service.telephone = tel
+        expect(service.valid?).to be_truthy
+      end
+    end
 
     context 'when a first service exists' do
       before { Service.create(params) }
