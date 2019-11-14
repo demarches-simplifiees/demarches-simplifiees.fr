@@ -160,21 +160,11 @@ FactoryBot.define do
       end
     end
 
-    trait :archived do
+    trait :closed do
       after(:build) do |procedure, _evaluator|
         procedure.path = generate(:published_path)
         procedure.publish!
-        procedure.archive!
-      end
-    end
-
-    trait :archived_automatically do
-      # For now the behavior is the same than :archived
-      # (it may be different in the future though)
-      after(:build) do |procedure, _evaluator|
-        procedure.path = generate(:published_path)
-        procedure.publish!
-        procedure.archive!
+        procedure.close!
       end
     end
 

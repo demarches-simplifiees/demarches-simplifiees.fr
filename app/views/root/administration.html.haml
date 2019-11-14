@@ -141,7 +141,7 @@
         %ul.numbers
           %li.number
             .number-value
-              = number_with_delimiter(Administrateur.with_publiees_ou_archivees.uniq.count, :locale => :fr)
+              = number_with_delimiter(Administrateur.with_publiees_ou_closes.uniq.count, :locale => :fr)
             .number-label<
               administrations
               %br<>

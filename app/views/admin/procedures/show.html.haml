@@ -24,7 +24,7 @@
       %i.fa.fa-exchange
       Envoyer une copie
 
-    - if @procedure.archivee?
+    - if @procedure.close?
       %a.btn.btn-default#reopen-procedure{ data: { target: '#publish-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px; margin-right: 10px;' }
         %i.fa.fa-rocket
         Réactiver
@@ -49,8 +49,8 @@
         - else
           Publication
       %div{ style: 'margin-top: 30px;' }
-        - if @procedure.archivee?
-          Cette démarche est <strong>archivée</strong> et n’est donc plus accessible par le public.
+        - if @procedure.close?
+          Cette démarche est <strong>close</strong> et n’est donc plus accessible par le public.
         - elsif @procedure.publiee?
           Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
           Pour y accéder vous pouvez utiliser le lien :

@@ -19,13 +19,13 @@
         %td.col-xs-6= link_to(procedure.libelle, admin_procedure_href)
         - if procedure.publiee?
           %td.procedure-lien= link_to(procedure_lien(procedure), procedure_lien(procedure))
-        - if procedure.publiee_ou_archivee?
+        - if procedure.publiee_ou_close?
           %td= link_to(procedure.published_at.present? ? try_format_datetime(procedure.published_at) : "", admin_procedure_href)
         - else
           %td= link_to(try_format_datetime(procedure.created_at), admin_procedure_href)
         %td
           = link_to('Cloner', admin_procedure_clone_path(procedure.id), data: { method: :put }, class: 'btn-sm btn-primary clone-btn')
-          - if !procedure.publiee_ou_archivee?
+          - if !procedure.publiee_ou_close?
             = link_to('X', url_for(controller: 'admin/procedures', action: :destroy, id: procedure.id), data: { method: :delete, confirm: "Confirmez-vous la suppression de la démarche ? \n\n Attention : toute suppression est définitive et s’appliquera aux éventuels autres administrateurs de cette démarche !" }, class: 'btn-sm btn-danger')
 
   = smart_listing.paginate
