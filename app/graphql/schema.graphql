@@ -254,14 +254,14 @@ type Demarche {
 
 enum DemarcheState {
   """
-  Archivée
-  """
-  archivee
-
-  """
   Brouillon
   """
   brouillon
+
+  """
+  Close
+  """
+  close
 
   """
   Publiée

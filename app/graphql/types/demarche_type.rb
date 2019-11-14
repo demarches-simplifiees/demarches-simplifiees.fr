@@ -17,7 +17,7 @@ module Types
     field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
     field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: false, method: :published_at
     field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
-    field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :archived_at
+    field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :closed_at
 
     field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
 

@@ -13,12 +13,12 @@ describe 'users/dossiers/dossier_actions.html.haml', type: :view do
   end
 
   context 'when the procedure is closed' do
-    let(:procedure) { create(:procedure, :archived) }
+    let(:procedure) { create(:procedure, :closed) }
     it { is_expected.not_to have_link('Commencer un autre dossier') }
   end
 
   context 'when there are no actions to display' do
-    let(:procedure) { create(:procedure, :archived) }
+    let(:procedure) { create(:procedure, :closed) }
     let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
     it 'doesn’t render the menu at all' do
