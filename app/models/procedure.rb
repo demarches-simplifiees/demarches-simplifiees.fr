@@ -1,7 +1,7 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['logo', 'logo_secure_token']
+  self.ignored_columns = ['logo', 'logo_secure_token', 'test_started_at']
 
   include ProcedureStatsConcern
 
@@ -366,7 +366,6 @@ class Procedure < ApplicationRecord
       }, &method(:clone_attachments))
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
-    procedure.test_started_at = nil
     procedure.archived_at = nil
     procedure.published_at = nil
     procedure.lien_notice = nil
