@@ -23,6 +23,8 @@ class Procedure < ApplicationRecord
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, dependent: :destroy
 
+  has_many :millesimes, class_name: 'Procedure', foreign_key: :canonical_procedure_id, inverse_of: :canonical_procedure
+
   has_many :dossiers, through: :groupe_instructeurs, dependent: :restrict_with_exception
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy

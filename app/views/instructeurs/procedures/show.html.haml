@@ -9,6 +9,13 @@
 
       .procedure-header
         %h1= procedure_libelle @procedure
+
+        - if @procedure.canonical_procedure.present?
+          = link_to 'millésimes', millesimes_instructeur_procedure_path(@procedure.canonical_procedure), class: 'header-link'
+          |
+        - elsif @procedure.millesimes.present?
+          = link_to 'millésimes', millesimes_instructeur_procedure_path(@procedure), class: 'header-link'
+          |
         = link_to 'gestion des notifications', email_notifications_instructeur_procedure_path(@procedure), class: 'header-link'
         |
         = link_to 'statistiques', stats_instructeur_procedure_path(@procedure), class: 'header-link', data: { turbolinks: false } # Turbolinks disabled for Chartkick. See Issue #350

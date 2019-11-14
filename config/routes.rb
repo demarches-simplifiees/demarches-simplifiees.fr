@@ -295,6 +295,7 @@ Rails.application.routes.draw do
           end
         end
 
+        get 'millesimes'
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'

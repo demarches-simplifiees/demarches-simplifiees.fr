@@ -1,0 +1,11 @@
+- content_for(:title, "Démarches millésimes")
+
+.container
+  %h1.page-title Démarches millésimes
+
+  = render partial: 'instructeurs/procedures/list', locals: { procedures: @procedures,
+    dossiers_count_per_procedure: @dossiers_count_per_procedure,
+    dossiers_a_suivre_count_per_procedure: @dossiers_a_suivre_count_per_procedure,
+    dossiers_archived_count_per_procedure: @dossiers_archived_count_per_procedure,
+    dossiers_termines_count_per_procedure: @dossiers_termines_count_per_procedure,
+    followed_dossiers_count_per_procedure: @followed_dossiers_count_per_procedure }

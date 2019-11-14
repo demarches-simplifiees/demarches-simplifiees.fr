@@ -12,22 +12,17 @@ module Instructeurs
         .includes(:defaut_groupe_instructeur)
         .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
 
-      dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
-      @dossiers_count_per_procedure = dossiers.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
-      @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count
-      @dossiers_termines_count_per_procedure = dossiers.termine.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      counts_for_procedures
+    end
 
-      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
+    def millesimes
+      @procedures = [procedure] + procedure
+        .millesimes
+        .with_attached_logo
+        .includes(:defaut_groupe_instructeur)
+        .order(archived_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
 
-      @followed_dossiers_count_per_procedure = current_instructeur
-        .followed_dossiers
-        .joins(:groupe_instructeur)
-        .en_cours
-        .where(groupe_instructeur_id: groupe_ids)
-        .group('groupe_instructeurs.procedure_id')
-        .reorder(nil)
-        .count
+      counts_for_procedures
     end
 
     def show
@@ -240,6 +235,26 @@ module Instructeurs
       @ods_export = Export.find_for_format_and_groupe_instructeurs(:ods, groupe_instructeurs_for_procedure)
     end
 
+    def counts_for_procedures
+      dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
+
+      @dossiers_count_per_procedure = dossiers.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_a_suivre_count_per_procedure = dossiers.without_followers.en_cours.group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_archived_count_per_procedure = dossiers.archived.group('groupe_instructeurs.procedure_id').count
+      @dossiers_termines_count_per_procedure = dossiers.termine.group('groupe_instructeurs.procedure_id').reorder(nil).count
+
+      groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
+
+      @followed_dossiers_count_per_procedure = current_instructeur
+        .followed_dossiers
+        .joins(:groupe_instructeur)
+        .en_cours
+        .where(groupe_instructeur_id: groupe_ids)
+        .group('groupe_instructeurs.procedure_id')
+        .reorder(nil)
+        .count
+    end
+
     def find_field(table, column)
       procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }
     end
@@ -257,7 +272,7 @@ module Instructeurs
     end
 
     def procedure
-      Procedure.find(params[:procedure_id])
+      Procedure.includes(:millesimes, :canonical_procedure).find(params[:procedure_id])
     end
 
     def ensure_ownership!
