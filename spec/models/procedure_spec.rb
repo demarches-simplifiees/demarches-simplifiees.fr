@@ -514,7 +514,6 @@ describe Procedure do
       it 'Not published nor archived' do
         expect(subject.archived_at).to be_nil
         expect(subject.published_at).to be_nil
-        expect(subject.test_started_at).to be_nil
         expect(subject.aasm_state).to eq "brouillon"
         expect(subject.path).not_to be_nil
       end
