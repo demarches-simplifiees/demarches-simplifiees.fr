@@ -365,6 +365,11 @@ $cta-panel-button-border-size: 2px;
     color: #FFFFFF;
     text-decoration: none;
   }
+
+  &:active,
+  &:focus {
+    outline: 3px solid #FFFFFF;
+  }
 }
 
 .cta-panel-button-blue {
