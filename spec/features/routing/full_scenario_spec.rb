@@ -7,7 +7,7 @@ feature 'The routing' do
   let(:scientifique_user) { create(:user, password: password) }
   let(:litteraire_user) { create(:user, password: password) }
 
-  before { Flipper.enable_actor(:routage, administrateur.user) }
+  before { Flipper.enable_actor(:administrateur_routage, administrateur.user) }
 
   scenario 'works' do
     login_as administrateur.user, scope: :user

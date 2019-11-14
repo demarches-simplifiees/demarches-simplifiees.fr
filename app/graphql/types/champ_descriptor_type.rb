@@ -9,9 +9,9 @@ module Types
     end
 
     global_id_field :id
-    field :type, TypeDeChampType, null: false, method: :type_champ
-    field :label, String, null: false, method: :libelle
-    field :description, String, null: true
-    field :required, Boolean, null: false, method: :mandatory?
+    field :type, TypeDeChampType, "Type de la valeur du champ.", null: false, method: :type_champ
+    field :label, String, "Libellé du champ.", null: false, method: :libelle
+    field :description, String, "Description du champ.", null: true
+    field :required, Boolean, "Est-ce que le champ est obligatoire ?", null: false, method: :mandatory?
   end
 end

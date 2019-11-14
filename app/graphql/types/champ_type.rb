@@ -3,8 +3,8 @@ module Types
     include Types::BaseInterface
 
     global_id_field :id
-    field :label, String, null: false, method: :libelle
-    field :string_value, String, null: true, method: :for_api_v2
+    field :label, String, "Libellé du champ.", null: false, method: :libelle
+    field :string_value, String, "La valeur du champ sous forme texte.", null: true, method: :for_api_v2
 
     definition_methods do
       def resolve_type(object, context)

@@ -1,36 +1,27 @@
 class ProcedureExportV2Service
   attr_reader :dossiers
 
-  def initialize(procedure, dossiers, ids: nil, since: nil, limit: nil)
+  def initialize(procedure, dossiers)
     @procedure = procedure
     @dossiers = dossiers.downloadable_sorted
-    if ids
-      @dossiers = @dossiers.where(id: ids)
-    end
-    if since
-      @dossiers = @dossiers.since(since)
-    end
-    if limit
-      @dossiers = @dossiers.limit(limit)
-    end
     @tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
   end
 
-  def to_csv(table = :dossiers)
-    SpreadsheetArchitect.to_csv(options_for(table))
+  def to_csv
+    SpreadsheetArchitect.to_csv(options_for(:dossiers, :csv))
   end
 
   def to_xlsx
     # We recursively build multi page spreadsheet
     @tables.reduce(nil) do |package, table|
-      SpreadsheetArchitect.to_axlsx_package(options_for(table), package)
+      SpreadsheetArchitect.to_axlsx_package(options_for(table, :xlsx), package)
     end.to_stream.read
   end
 
   def to_ods
     # We recursively build multi page spreadsheet
     @tables.reduce(nil) do |spreadsheet, table|
-      SpreadsheetArchitect.to_rodf_spreadsheet(options_for(table), spreadsheet)
+      SpreadsheetArchitect.to_rodf_spreadsheet(options_for(table, :ods), spreadsheet)
     end.bytes
   end
 
@@ -53,7 +44,7 @@ class ProcedureExportV2Service
       [dossier.champs, dossier.champs_private]
         .flatten
         .filter { |champ| champ.is_a?(Champs::RepetitionChamp) }
-    end.group_by(&:libelle)
+    end.group_by(&:libelle_for_export)
   end
 
   def champs_repetables_options
@@ -70,21 +61,16 @@ class ProcedureExportV2Service
     row_style: { background_color: nil, color: "000000", font_size: 12 }
   }
 
-  def sanitize_sheet_name(name)
-    ActiveStorage::Filename.new(name.to_s).sanitized.truncate(30)
-  end
-
-  def options_for(table)
+  def options_for(table, format)
     case table
     when :dossiers
-      { instances: dossiers.to_a, sheet_name: 'Dossiers' }.merge(DEFAULT_STYLES)
+      { instances: dossiers.to_a, sheet_name: 'Dossiers', spreadsheet_columns: :"spreadsheet_columns_#{format}" }.merge(DEFAULT_STYLES)
     when :etablissements
       { instances: etablissements.to_a, sheet_name: 'Etablissements' }.merge(DEFAULT_STYLES)
     when :avis
       { instances: avis.to_a, sheet_name: 'Avis' }.merge(DEFAULT_STYLES)
     when Array
-      # We have to truncate the label here as spreadsheets have a (30 char) limit on length.
-      { instances: table.last, sheet_name: sanitize_sheet_name(table.first) }.merge(DEFAULT_STYLES)
+      { instances: table.last, sheet_name: table.first }.merge(DEFAULT_STYLES)
     end
   end
 end

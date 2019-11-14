@@ -9,10 +9,10 @@ module Types
     description "Une demarche"
 
     global_id_field :id
-    field :number, ID, "Le numero de la démarche.", null: false, method: :id
+    field :number, Int, "Le numero de la démarche.", null: false, method: :id
     field :title, String, null: false, method: :libelle
     field :description, String, "Déscription de la démarche.", null: false
-    field :state, DemarcheState, null: false
+    field :state, DemarcheState, "L'état de la démarche.", null: false
 
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
@@ -21,8 +21,10 @@ module Types
     field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
 
     field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d'une démarche.", null: false do
-      argument :ids, [ID], required: false, description: "Filtrer les dossiers par ID."
-      argument :since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers crées depuis la date."
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L'ordre des dossiers."
+      argument :created_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers déposés depuis la date."
+      argument :updated_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers mis à jour depuis la date."
+      argument :state, Types::DossierType::DossierState, required: false, description: "Dossiers avec statut."
     end
 
     field :champ_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ
@@ -36,15 +38,21 @@ module Types
       Loaders::Association.for(object.class, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
     end
 
-    def dossiers(ids: nil, since: nil)
-      dossiers = object.dossiers.for_api_v2
+    def dossiers(updated_since: nil, created_since: nil, state: nil, order:)
+      dossiers = object.dossiers.state_not_brouillon.for_api_v2
 
-      if ids.present?
-        dossiers = dossiers.where(id: ids)
+      if state.present?
+        dossiers = dossiers.where(state: state)
       end
 
-      if since.present?
-        dossiers = dossiers.since(since)
+      if updated_since.present?
+        dossiers = dossiers.updated_since(updated_since).order_by_updated_at(order)
+      else
+        if created_since.present?
+          dossiers = dossiers.created_since(created_since)
+        end
+
+        dossiers = dossiers.order_by_created_at(order)
       end
 
       dossiers

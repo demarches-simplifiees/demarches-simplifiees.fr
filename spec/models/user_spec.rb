@@ -191,4 +191,22 @@ describe User, type: :model do
       it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, nil, administration.id) }
     end
   end
+
+  describe '#active?' do
+    let!(:user) { create(:user) }
+
+    subject { user.active? }
+
+    context 'when the user has never signed in' do
+      before { user.update(last_sign_in_at: nil) }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the user has already signed in' do
+      before { user.update(last_sign_in_at: Time.zone.now) }
+
+      it { is_expected.to be true }
+    end
+  end
 end
