@@ -1,9 +1,9 @@
 class GroupeInstructeurMailer < ApplicationMailer
   layout 'mailers/layout'
 
-  def add_instructeur(group, instructeur, current_instructeur_email)
-    @email = instructeur.email
-    @group = group
+  def add_instructeurs(group, instructeurs, current_instructeur_email)
+    @new_instructeur_emails = instructeurs.map(&:email)
+    @group = Procedure.last.defaut_groupe_instructeur
     @current_instructeur_email = current_instructeur_email
 
     subject = "Ajout d’un instructeur dans le groupe \"#{group.label}\""
