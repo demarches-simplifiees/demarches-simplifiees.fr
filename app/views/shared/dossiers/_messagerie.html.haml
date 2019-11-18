@@ -7,4 +7,4 @@
   - if dossier.messagerie_available?
     = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url }
   - else
-    = render partial: "shared/dossiers/messages/messagerie_disabled", locals: { service: dossier.procedure.service }
+    = render partial: "shared/dossiers/messages/messagerie_disabled", locals: { service: dossier.procedure.service, dossier: dossier }
