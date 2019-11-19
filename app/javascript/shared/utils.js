@@ -86,6 +86,16 @@ function offset(element) {
   };
 }
 
+// Takes a promise, and return a promise that times out after the given delay.
+export function timeoutable(promise, timeoutDelay) {
+  let timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error(`Promise timed out after ${timeoutDelay}ms`));
+    }, timeoutDelay);
+  });
+  return Promise.race([promise, timeoutPromise]);
+}
+
 const DATA_ACTIVE_REQUESTS_COUNT = 'data-active-requests-count';
 
 function incrementActiveRequestsCount() {

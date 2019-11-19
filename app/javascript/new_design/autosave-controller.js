@@ -1,7 +1,10 @@
-import { fire } from '@utils';
+import { fire, timeoutable } from '@utils';
 
+// Manages a queue of Autosave operations,
+// and sends `autosave:*` events to indicate the state of the requests.
 export default class AutosaveController {
   constructor() {
+    this.timeoutDelay = 60000; // 1mn
     this.latestPromise = Promise.resolve();
   }
 
@@ -47,7 +50,9 @@ export default class AutosaveController {
       });
     });
 
-    return autosavePromise;
+    // Time out the request after a while, to avoid recent requests not starting
+    // because an older one is stuck.
+    return timeoutable(autosavePromise, this.timeoutDelay);
   }
 
   // Extract a FormData object of the form fields.
