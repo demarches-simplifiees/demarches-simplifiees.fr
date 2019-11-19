@@ -14,7 +14,7 @@ const AUTOSAVE_DEBOUNCE_DELAY = gon.autosave.debounce_delay;
 const AUTOSAVE_STATUS_VISIBLE_DURATION = gon.autosave.status_visible_duration;
 
 // Create a controller responsible for queuing autosave operations.
-const autosaveController = new AutosaveController(AUTOSAVE_DEBOUNCE_DELAY);
+const autosaveController = new AutosaveController();
 
 // Whenever a 'change' event is triggered on one of the form inputs, try to autosave.
 
