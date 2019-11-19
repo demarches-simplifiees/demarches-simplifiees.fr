@@ -17,6 +17,26 @@ export function toggle(el) {
   el && el.classList.toggle('hidden');
 }
 
+export function enable(el) {
+  el && (el.disabled = false);
+}
+
+export function disable(el) {
+  el && (el.disabled = true);
+}
+
+export function hasClass(el, cssClass) {
+  return el && el.classList.contains(cssClass);
+}
+
+export function addClass(el, cssClass) {
+  el && el.classList.add(cssClass);
+}
+
+export function removeClass(el, cssClass) {
+  el && el.classList.remove(cssClass);
+}
+
 export function delegate(eventNames, selector, callback) {
   eventNames
     .split(' ')
