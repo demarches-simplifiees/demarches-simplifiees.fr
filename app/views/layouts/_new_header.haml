@@ -60,15 +60,14 @@
           = link_to "Connexion", new_user_session_path, class: "button secondary"
 
       %li
-        .header-help
-          - if dossier.present? && nav_bar_profile == :user
-            = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+        - if dossier.present? && nav_bar_profile == :user
+          = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
 
-          - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
-            = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
+        - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+          = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
 
-          - elsif nav_bar_profile == :instructeur
-            = render partial: 'shared/help/help_dropdown_instructeur'
+        - elsif nav_bar_profile == :instructeur
+          = render partial: 'shared/help/help_dropdown_instructeur'
 
-          - else
-            = render partial: 'shared/help/help_button'
+        - else
+          = render partial: 'shared/help/help_button'
