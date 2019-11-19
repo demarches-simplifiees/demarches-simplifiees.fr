@@ -40,8 +40,14 @@ module TPS
       Administrate::ApplicationController.helper(TPS::Application.helpers)
     end
 
-    config.ds_weekly_overview = ENV['APP_NAME'] == 'tps'
     config.middleware.use Rack::Attack
     config.middleware.use Flipper::Middleware::Memoizer, preload_all: true
+
+    config.ds_weekly_overview = ENV['APP_NAME'] == 'tps'
+
+    config.ds_autosave = {
+      debounce_delay: 3000,
+      status_visible_duration: 6000
+    }
   end
 end

@@ -10,9 +10,10 @@ import {
   removeClass
 } from '@utils';
 
-const AUTOSAVE_DEBOUNCE_DELAY = 3000; // 3 seconds
-const AUTOSAVE_STATUS_VISIBLE_DURATION = 6000; // 5 seconds
+const AUTOSAVE_DEBOUNCE_DELAY = gon.autosave.debounce_delay;
+const AUTOSAVE_STATUS_VISIBLE_DURATION = gon.autosave.status_visible_duration;
 
+// Create a controller responsible for queuing autosave operations.
 const autosaveController = new AutosaveController(AUTOSAVE_DEBOUNCE_DELAY);
 
 // Whenever a 'change' event is triggered on one of the form inputs, try to autosave.

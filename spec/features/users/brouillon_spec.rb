@@ -186,6 +186,47 @@ feature 'The user' do
     expect(page).to have_no_text('RIB.pdf')
   end
 
+  context 'when the draft autosave is enabled' do
+    before do
+      Flipper.enable_actor(:autosave_dossier_draft, user)
+    end
+
+    scenario 'autosave a draft', js: true do
+      log_in(user, simple_procedure)
+      fill_individual
+
+      expect(page).not_to have_button('Enregistrer le brouillon')
+      expect(page).to have_content('Votre brouillon est automatiquement enregistré')
+
+      fill_in('texte obligatoire', with: 'a valid user input')
+      blur
+
+      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+
+      visit current_path
+      expect(page).to have_field('texte obligatoire', with: 'a valid user input')
+    end
+
+    scenario 'retry on autosave error', js: true do
+      log_in(user, simple_procedure)
+      fill_individual
+
+      # Test autosave failure
+      logout(:user) # Make the subsequent autosave requests fail
+      fill_in('texte obligatoire', with: 'a valid user input')
+      blur
+      expect(page).to have_css('span', text: 'Impossible d’enregistrer le brouillon', visible: true)
+
+      # Test that retrying after a failure works
+      login_as(user, scope: :user) # Make the autosave requests work again
+      click_on 'réessayer'
+      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+
+      visit current_path
+      expect(page).to have_field('texte obligatoire', with: 'a valid user input')
+    end
+  end
+
   private
 
   def log_in(user, procedure)
