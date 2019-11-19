@@ -8,30 +8,30 @@
     - if administration_signed_in?
       %li
         = link_to manager_root_path, class: "menu-item menu-link" do
-          = image_tag "icons/super-admin.svg"
+          = image_tag "icons/super-admin.svg", alt: ''
           Passer en super-admin
     - if multiple_devise_profile_connect?
       - if user_signed_in? && nav_bar_profile != :user
         %li
           = link_to dossiers_path, class: "menu-item menu-link" do
-            = image_tag "icons/switch-profile.svg"
+            = image_tag "icons/switch-profile.svg", alt: ''
             Passer en usager
       - if instructeur_signed_in? && nav_bar_profile != :instructeur
         %li
           = link_to instructeur_procedures_path, class: "menu-item menu-link" do
-            = image_tag "icons/switch-profile.svg"
+            = image_tag "icons/switch-profile.svg", alt: ''
             Passer en instructeur
       - if administrateur_signed_in? && nav_bar_profile != :administrateur
         %li
           = link_to admin_procedures_path, class: "menu-item menu-link" do
-            = image_tag "icons/switch-profile.svg"
+            = image_tag "icons/switch-profile.svg", alt: ''
             Passer en administrateur
 
     %li
       = link_to profil_path, class: "menu-item menu-link" do
-        = image_tag "icons/switch-profile.svg"
+        = image_tag "icons/switch-profile.svg", alt: ''
         Voir mon profil
     %li
       = link_to destroy_user_session_path, method: :delete, class: "menu-item menu-link" do
-        = image_tag "icons/sign-out.svg"
+        = image_tag "icons/sign-out.svg", alt: ''
         Se déconnecter
