@@ -4,10 +4,14 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
   def get_resource
     if @siret.present?
       no_tahiti = @siret.to_s[0..5]
-      ApiEntreprise::PF_API.entreprise(no_tahiti)
+      pf_api.entreprise(no_tahiti)
     else
       {}
     end
+  end
+
+  def pf_api
+    @api ||= ApiEntreprise::PF_API.new
   end
 
   def process_params

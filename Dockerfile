@@ -39,6 +39,8 @@ RUN bundle install --deployment --without development test && \
 
 ENV \
     API_ENTREPRISE_KEY=""\
+    API_ENTREPRISE_PF_AUTH=""\
+    API_ENTREPRISE_PF_URL=""\
     API_ISPF_PASSWORD=""\
     API_ISPF_USER=""\
     APP_HOST="localhost:3000"\
