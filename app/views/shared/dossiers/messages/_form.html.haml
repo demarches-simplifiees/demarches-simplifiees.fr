@@ -5,10 +5,10 @@
   = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea'
   .flex.justify-between.wrap
     %div
+      = f.label :piece_jointe, for: :piece_jointe do
+        Joindre un document
+        %span.notice (taille max : 20 Mo)
       = f.file_field :piece_jointe, id: 'piece_jointe', direct_upload: true
-      %label{ for: :piece_jointe }
-        %span.notice
-          (taille max : 20 Mo)
 
     %div
       = f.submit 'Envoyer le message', class: 'button primary send', data: { disable: true }

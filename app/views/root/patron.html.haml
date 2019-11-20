@@ -54,16 +54,13 @@
 
         %h2.header-section Bouton radio verticaux
         .editable-champ.editable-champ-radio.vertical
-          = f.label :archived, value: true do
-            Option A
-            %span.notice
-              %p Une option tout à fait valable.
+          = f.label :archived, 'Option A', value: true
+          %p.notice Une option tout à fait valable.
           = f.radio_button :archived, true
+
         .editable-champ.editable-champ-radio.vertical
-          = f.label :archived, value: false do
-            Option B
-            %span.notice
-              %p Une autre option, pas mal non plus.
+          = f.label :archived, 'Option B', value: false
+          %p.notice Une autre option, pas mal non plus.
           = f.radio_button :archived, false
 
         .send-wrapper

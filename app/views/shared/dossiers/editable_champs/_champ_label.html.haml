@@ -7,5 +7,5 @@
     %span.updated-at{ class: highlight_if_unseen_class(seen_at, champ.updated_at) }
       = "modifié le #{try_format_datetime(champ.updated_at)}"
 
-  - if champ.description.present?
-    %span.notice= string_to_html(champ.description)
+- if champ.description.present?
+  .notice= string_to_html(champ.description)
