@@ -444,7 +444,7 @@ class Procedure < ApplicationRecord
     version = options.delete(:version)
     if version == 'v2'
       options.delete(:tables)
-      ProcedureExportV2Service.new(self, dossiers, **options.to_h.symbolize_keys)
+      ProcedureExportV2Service.new(self, dossiers)
     else
       ProcedureExportService.new(self, dossiers, **options.to_h.symbolize_keys)
     end

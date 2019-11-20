@@ -105,7 +105,9 @@ class Dossier < ApplicationRecord
   scope :not_archived,  -> { where(archived: false) }
 
   scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
-  scope :order_for_api, -> (order = :asc) { order(en_construction_at: order, created_at: order, id: order) }
+  scope :order_by_created_at, -> (order = :asc) { order(en_construction_at: order, created_at: order, id: order) }
+  scope :updated_since,       -> (since) { where('dossiers.updated_at >= ?', since) }
+  scope :created_since,       -> (since) { where('dossiers.en_construction_at >= ?', since) }
 
   scope :all_state,                   -> { not_archived.state_not_brouillon }
   scope :en_construction,             -> { not_archived.state_en_construction }
@@ -134,7 +136,6 @@ class Dossier < ApplicationRecord
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
   scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
-  scope :since,                       -> (since) { where('dossiers.en_construction_at >= ?', since) }
   scope :for_api, -> {
     includes(commentaires: { piece_jointe_attachment: :blob },
       champs: [

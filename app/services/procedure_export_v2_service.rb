@@ -1,18 +1,9 @@
 class ProcedureExportV2Service
   attr_reader :dossiers
 
-  def initialize(procedure, dossiers, ids: nil, since: nil, limit: nil)
+  def initialize(procedure, dossiers)
     @procedure = procedure
     @dossiers = dossiers.downloadable_sorted
-    if ids
-      @dossiers = @dossiers.where(id: ids)
-    end
-    if since
-      @dossiers = @dossiers.since(since)
-    end
-    if limit
-      @dossiers = @dossiers.limit(limit)
-    end
     @tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
   end
 
