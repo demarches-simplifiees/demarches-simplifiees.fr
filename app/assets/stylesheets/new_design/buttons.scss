@@ -130,6 +130,10 @@
   }
 }
 
+.state-button {
+  display: inline-block;
+}
+
 .dropdown {
   display: inline-block;
   position: relative;
@@ -213,10 +217,13 @@
       }
     }
 
-    &.selected,
-    &:hover:not(.inactive) {
-      background: $light-grey;
+    &:not(.inactive) {
       cursor: pointer;
+
+      &:hover,
+      &.selected {
+        background: $light-grey;
+      }
     }
 
     &.danger {
