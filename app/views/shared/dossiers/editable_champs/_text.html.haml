@@ -1,3 +1,4 @@
 = form.text_field :value,
   placeholder: champ.libelle,
-  required: champ.mandatory?
+  required: champ.mandatory?,
+  aria: { describedby: describedby_id(champ) }

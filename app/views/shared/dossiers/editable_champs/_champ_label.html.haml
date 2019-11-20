@@ -8,4 +8,4 @@
       = "modifié le #{try_format_datetime(champ.updated_at)}"
 
 - if champ.description.present?
-  .notice= string_to_html(champ.description)
+  .notice{ id: describedby_id(champ) }= string_to_html(champ.description)
