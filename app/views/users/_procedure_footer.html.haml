@@ -24,7 +24,7 @@
 
           %li
             Par téléphone :
-            %a{ href: "tel:#{service.telephone}" }= service.telephone
+            = link_to service.telephone, service.telephone_url
 
           %li
             - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
