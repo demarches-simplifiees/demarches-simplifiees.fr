@@ -147,13 +147,13 @@ module Users
         flash.now.alert = errors
         render :brouillon
       else
-        if save_draft?
-          flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
-          render :brouillon
-        else
+        if passage_en_construction?
           @dossier.en_construction!
           NotificationMailer.send_initiated_notification(@dossier).deliver_later
           redirect_to merci_dossier_path(@dossier)
+        else
+          flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
+          render :brouillon
         end
       end
     end
@@ -368,7 +368,7 @@ module Users
     end
 
     def save_draft?
-      dossier.brouillon? && params[:save_draft]
+      dossier.brouillon? && !params[:submit_draft]
     end
   end
 end
