@@ -210,12 +210,13 @@ module Instructeurs
       notice_message = "Nous générons cet export. Lorsque celui-ci sera disponible, vous recevrez une notification par email accompagnée d'un lien de téléchargement."
       if procedure.should_generate_export?(export_format)
         procedure.queue_export(current_instructeur, export_format)
+        flash.notice = notice_message
 
         respond_to do |format|
           format.js do
-            flash.notice = notice_message
             @procedure = procedure
           end
+          format.all { redirect_to procedure }
         end
       elsif procedure.export_queued?(export_format)
         flash.notice = notice_message
