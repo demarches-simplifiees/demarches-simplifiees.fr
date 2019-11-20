@@ -217,10 +217,13 @@
       }
     }
 
-    &.selected,
-    &:hover:not(.inactive) {
-      background: $light-grey;
+    &:not(.inactive) {
       cursor: pointer;
+
+      &:hover,
+      &.selected {
+        background: $light-grey;
+      }
     }
 
     &.danger {
