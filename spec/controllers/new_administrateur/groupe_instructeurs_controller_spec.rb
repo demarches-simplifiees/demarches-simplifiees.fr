@@ -93,20 +93,26 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: gi_1_1.id,
-          instructeur: { email: new_instructeur_email }
+          emails: new_instructeur_emails
         }
     end
 
-    context 'of a new instructeur' do
-      let(:new_instructeur_email) { 'new_instructeur@mail.com' }
+    context 'of a news instructeurs' do
+      let(:new_instructeur_emails) { ['new_i1@mail.com', 'new_i2@mail.com'] }
 
-      it { expect(gi_1_1.instructeurs.map(&:email)).to include(new_instructeur_email) }
+      it { expect(gi_1_1.instructeurs.pluck(:email)).to include(*new_instructeur_emails) }
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
     end
 
     context 'of an instructeur already in the group' do
-      let(:new_instructeur_email) { instructeur.email }
+      let(:new_instructeur_emails) { [instructeur.email] }
+
+      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)) }
+    end
+
+    context 'of badly formed email' do
+      let(:new_instructeur_emails) { ['badly_formed_email'] }
 
       it { expect(flash.alert).to be_present }
       it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)) }

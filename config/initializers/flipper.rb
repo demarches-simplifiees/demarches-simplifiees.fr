@@ -40,7 +40,7 @@ features = [
 def database_exists?
   ActiveRecord::Base.connection
   true
-rescue ActiveRecord::NoDatabaseError
+rescue ActiveRecord::NoDatabaseError, PG::ConnectionBad
   false
 end
 

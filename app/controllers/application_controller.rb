@@ -141,6 +141,8 @@ class ApplicationController < ActionController::Base
     Raven.user_context(sentry_user)
   end
 
+  # private method called by rails fwk
+  # see https://github.com/roidrage/lograge
   def append_info_to_payload(payload)
     super
 

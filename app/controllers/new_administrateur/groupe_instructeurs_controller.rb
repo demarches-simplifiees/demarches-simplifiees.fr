@@ -12,6 +12,7 @@ module NewAdministrateur
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
       @instructeurs = paginated_instructeurs
+      @available_instructeur_emails = available_instructeur_emails
     end
 
     def create
@@ -40,6 +41,7 @@ module NewAdministrateur
       else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
+        @available_instructeur_emails = available_instructeur_emails
 
         flash[:alert] = "le nom « #{label} » est déjà pris par un autre groupe."
         render :show
@@ -47,18 +49,35 @@ module NewAdministrateur
     end
 
     def add_instructeur
-      @instructeur = Instructeur.find_by(email: instructeur_email) ||
-        create_instructeur(instructeur_email)
+      emails = params['emails'].map(&:strip).map(&:downcase)
 
-      if groupe_instructeur.instructeurs.include?(@instructeur)
-        flash[:alert] = "L’instructeur « #{instructeur_email} » est déjà dans le groupe."
+      correct_emails, bad_emails = emails
+        .partition { |email| URI::MailTo::EMAIL_REGEXP.match?(email) }
 
-      else
-        groupe_instructeur.instructeurs << @instructeur
-        flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
+      if bad_emails.present?
+        flash[:alert] = t('.wrong_address',
+          count: bad_emails.count,
+          value: bad_emails.join(', '))
+      end
+
+      email_to_adds = correct_emails - groupe_instructeur.instructeurs.pluck(:email)
+
+      if email_to_adds.present?
+        instructeurs = email_to_adds.map do |instructeur_email|
+          Instructeur.by_email(instructeur_email) ||
+            create_instructeur(instructeur_email)
+        end
+
         GroupeInstructeurMailer
-          .add_instructeur(groupe_instructeur, @instructeur, current_user.email)
+          .add_instructeurs(groupe_instructeur, instructeurs, current_user.email)
           .deliver_later
+
+        groupe_instructeur.instructeurs << instructeurs
+
+        flash[:notice] = t('.assignment',
+          count: email_to_adds.count,
+          value: email_to_adds.join(', '),
+          groupe: groupe_instructeur.label)
       end
 
       redirect_to procedure_groupe_instructeur_path(procedure, groupe_instructeur)
@@ -110,10 +129,6 @@ module NewAdministrateur
       procedure.groupe_instructeurs.find(params[:id])
     end
 
-    def instructeur_email
-      params[:instructeur][:email].strip.downcase
-    end
-
     def instructeur_id
       params[:instructeur][:id]
     end
@@ -140,6 +155,12 @@ module NewAdministrateur
 
     def routing_criteria_name
       params[:procedure][:routing_criteria_name]
+    end
+
+    def available_instructeur_emails
+      all = current_administrateur.instructeurs.pluck(:email)
+      assigned = groupe_instructeur.instructeurs.pluck(:email)
+      (all - assigned).sort
     end
   end
 end

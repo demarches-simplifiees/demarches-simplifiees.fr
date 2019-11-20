@@ -1,7 +1,10 @@
 @import "colors";
 @import "constants";
+@import "placeholders";
 
 .button {
+  @extend %outline;
+
   display: inline-block;
   padding: 8px 16px;
   border-radius: 30px;
@@ -18,11 +21,6 @@
     cursor: pointer;
     background: $light-grey;
     text-decoration: none;
-  }
-
-  &:active,
-  &:focus {
-    outline: none;
   }
 
   &:disabled {
