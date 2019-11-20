@@ -38,7 +38,7 @@
             = form_tag instructeur_recherche_path, method: :get, class: "form" do
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
-                = image_tag "icons/search-blue.svg"
+                = image_tag "icons/search-blue.svg", alt: ''
 
       - if nav_bar_profile == :user && user_signed_in? && current_user.dossiers.count > 2
         %li
@@ -46,7 +46,7 @@
             = form_tag recherche_dossiers_path, method: :post, class: "form" do
               = text_field_tag :dossier_id, "", placeholder: "Numéro de dossier"
               %button{ title: "Rechercher" }
-                = image_tag "icons/search-blue.svg"
+                = image_tag "icons/search-blue.svg", alt: ''
 
       - if instructeur_signed_in? || user_signed_in?
         %li
@@ -60,15 +60,14 @@
           = link_to "Connexion", new_user_session_path, class: "button secondary"
 
       %li
-        .header-help
-          - if dossier.present? && nav_bar_profile == :user
-            = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+        - if dossier.present? && nav_bar_profile == :user
+          = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
 
-          - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
-            = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
+        - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+          = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
 
-          - elsif nav_bar_profile == :instructeur
-            = render partial: 'shared/help/help_dropdown_instructeur'
+        - elsif nav_bar_profile == :instructeur
+          = render partial: 'shared/help/help_dropdown_instructeur'
 
-          - else
-            = render partial: 'shared/help/help_button'
+        - else
+          = render partial: 'shared/help/help_button'
