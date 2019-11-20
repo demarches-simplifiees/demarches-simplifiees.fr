@@ -14,7 +14,7 @@ module Instructeurs
     end
 
     def add_instructeur
-      @instructeur = Instructeur.find_by(email: instructeur_email) ||
+      @instructeur = Instructeur.by_email(instructeur_email) ||
         create_instructeur(instructeur_email)
 
       if groupe_instructeur.instructeurs.include?(@instructeur)
@@ -24,7 +24,7 @@ module Instructeurs
         groupe_instructeur.instructeurs << @instructeur
         flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
         GroupeInstructeurMailer
-          .add_instructeur(groupe_instructeur, @instructeur, current_user.email)
+          .add_instructeurs(groupe_instructeur, [@instructeur], current_user.email)
           .deliver_later
       end
 
