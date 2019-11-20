@@ -48,6 +48,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     it { expect(response).to redirect_to(personnes_impliquees_instructeur_dossier_url) }
+    it { expect(recipient.followed_dossiers).to include(dossier) }
   end
 
   describe '#follow' do
