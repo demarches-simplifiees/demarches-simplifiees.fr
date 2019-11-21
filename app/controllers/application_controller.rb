@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
 
   before_action :staging_authenticate
   before_action :set_active_storage_host
+  before_action :setup_javascript_settings
   before_action :setup_tracking
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur,
@@ -112,6 +113,10 @@ class ApplicationController < ActionController::Base
 
   def set_active_storage_host
     ActiveStorage::Current.host = request.base_url
+  end
+
+  def setup_javascript_settings
+    gon.autosave = Rails.application.config.ds_autosave
   end
 
   def setup_tracking

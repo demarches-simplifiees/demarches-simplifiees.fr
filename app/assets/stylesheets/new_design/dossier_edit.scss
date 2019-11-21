@@ -70,13 +70,13 @@
     border-top-right-radius: 5px;
     border-bottom: none;
 
-    .button {
+    .button:not(:small) {
       min-height: 38px;
       line-height: 16px;
     }
 
     // If there are more than one button, align the "Send" button to the right
-    .button:not(:first-of-type).send {
+    .button:not(:first-child).send {
       margin-left: auto;
     }
 
@@ -91,5 +91,11 @@
       padding-top: $default-spacer;
       padding-bottom: $default-spacer;
     }
+  }
+
+  .autosave {
+    // Make the autosave block occupy the entire horizontal space,
+    // to ensure the failed state has room to display its content.
+    flex-grow: 1;
   }
 }
