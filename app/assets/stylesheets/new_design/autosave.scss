@@ -1,0 +1,123 @@
+@import "colors";
+@import "constants";
+
+.autosave {
+  position: relative;
+  font-size: 0.9em;
+}
+
+.autosave-explanation {
+  color: $grey;
+  margin-left: 4px;
+}
+
+.autosave-explanation-text,
+.autosave-label {
+  margin-right: 6px;
+}
+
+.autosave-more-infos {
+  white-space: nowrap;
+}
+
+.autosave-status {
+  // Position the status over the explanation text
+  position: absolute;
+  top: 0;
+
+  &.succeeded .autosave-label {
+    color: $green;
+  }
+
+  &.failed .autosave-label {
+    color: $orange;
+  }
+}
+
+.autosave-icon {
+  display: inline-block;
+  vertical-align: -1px;
+  margin-right: 4px;
+}
+
+.autosave-icon.icon.accept {
+  vertical-align: -8px;
+}
+
+.autosave-retry {
+  &:disabled {
+    .autosave-retry-label {
+      display: none;
+    }
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+
+    .autosave-retrying-label {
+      display: none;
+    }
+  }
+}
+
+$autosave-status-fade-in-duration: 0.2s;
+$autosave-status-fade-out-duration: 0.7s;
+
+// By default (and in the idle state), display the explanation text and hide statuses.
+.autosave-explanation {
+  visibility: visible;
+  opacity: 1;
+  // Make the explanation fade-in slowly when the status is being removed
+  transition-property: opacity;
+  transition-duration: $autosave-status-fade-out-duration;
+}
+
+.autosave-status {
+  visibility: hidden;
+  opacity: 0;
+  // Make the status fade-out slowly when being removed
+  transition-property: opacity, visibility;
+  transition-duration: $autosave-status-fade-out-duration;
+}
+
+// When one of the status messages should be displayed:
+.autosave-state-succeeded,
+.autosave-state-failed {
+  // Hide the explanation
+  .autosave-explanation {
+    visibility: hidden;
+    opacity: 0;
+    // Make the explanation fade-out quickly
+    transition-property: opacity, visibility;
+    transition-duration: $autosave-status-fade-in-duration;
+  }
+
+  // Show the status message (succeeded or failed)
+  .autosave-status.succeeded,
+  .autosave-status.failed {
+    opacity: 1;
+    // Make the status message fade-in quickly
+    transition-property: opacity;
+    transition-duration: $autosave-status-fade-in-duration;
+  }
+
+  // Make the icon pulse (if any)
+  .autosave-icon {
+    opacity: 1;
+    // Make the icon pulse after being made visible
+    animation-name: pulse;
+    animation-duration: 0.25s;
+    animation-delay: 0.15s;
+    animation-timing-function: linear;
+    animation-fill-mode: backwards;
+  }
+}
+
+// Show only the relevant status message (succeeded of failed)
+.autosave-state-succeeded .autosave-status.succeeded {
+  visibility: visible;
+}
+
+.autosave-state-failed .autosave-status.failed {
+  visibility: visible;
+}
