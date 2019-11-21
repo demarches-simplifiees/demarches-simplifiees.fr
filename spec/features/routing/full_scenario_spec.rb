@@ -19,33 +19,36 @@ feature 'The routing', js: true do
     click_on "Groupe d'instructeurs"
 
     # rename routing criteria to spécialité
-    fill_in 'procedure_routing_criteria_name', with: 'spécialité'
+    fill_in 'Libellé du routage', with: 'spécialité'
     click_on 'Renommer'
-    expect(procedure.reload.routing_criteria_name).to eq('spécialité')
+    expect(page).to have_text('Le libellé est maintenant « spécialité ».')
+    expect(page).to have_field('Libellé du routage', with: 'spécialité')
 
     # rename defaut groupe to littéraire
     click_on 'voir'
-    expect(page).to have_css('#groupe_instructeur_label')
-    2.times { find(:css, "#groupe_instructeur_label").set("littéraire") }
+    fill_in 'Nom du groupe', with: 'littéraire'
     click_on 'Renommer'
-
-    expect(procedure.defaut_groupe_instructeur.reload.label).to eq('littéraire')
+    expect(page).to have_text('Le nom est à présent « littéraire ».')
+    expect(page).to have_field('Nom du groupe', with: 'littéraire')
 
     # add victor to littéraire groupe
-    try_twice { find('input.select2-search__field').send_keys('victor@inst.com', :enter) }
-
+    find('input.select2-search__field').send_keys('victor@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
+    expect(page).to have_text("L’instructeur victor@inst.com a été affecté")
+
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
-    click_on "Groupes d’instructeurs"
-
     # add scientifique groupe
-    fill_in 'groupe_instructeur_label', with: 'scientifique'
+    click_on 'Groupes d’instructeurs'
+    fill_in 'Ajouter un groupe', with: 'scientifique'
     click_on 'Ajouter le groupe'
+    expect(page).to have_text('Le groupe d’instructeurs « scientifique » a été créé.')
 
     # add marie to scientifique groupe
-    try_twice { find('input.select2-search__field').send_keys('marie@inst.com', :enter) }
+    find('input.select2-search__field').send_keys('marie@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
+    expect(page).to have_text("L’instructeur marie@inst.com a été affecté")
+
     marie = User.find_by(email: 'marie@inst.com').instructeur
 
     # publish
@@ -93,11 +96,10 @@ feature 'The routing', js: true do
     log_out
 
     # litteraire_user change its dossier
-    visit root_path
-    click_on 'Connexion'
+    visit new_user_session_path
     sign_in_with litteraire_user.email, password
 
-    click_on litteraire_user.dossiers.first.id
+    click_on litteraire_user.dossiers.first.id.to_s
     click_on 'Modifier mon dossier'
 
     fill_in 'dossier_champs_attributes_0_value', with: 'some value'
@@ -105,29 +107,31 @@ feature 'The routing', js: true do
     log_out
 
     # the litteraires instructeurs should have a notification
-    visit root_path
-    click_on 'Connexion'
+    visit new_user_session_path
     sign_in_with victor.user.email, password
 
     ## on the procedures list
-    visit instructeur_procedures_path
     expect(page).to have_css("span.notifications")
 
     ## on the dossiers list
     click_on procedure.libelle
+    expect(page).to have_current_path(instructeur_procedure_path(procedure))
     expect(page).to have_css("span.notifications")
 
-    ## on the dossier it self
+    ## on the dossier itself
     click_on 'suivi'
     click_on litteraire_user.email
+    expect(page).to have_current_path(instructeur_dossier_path(procedure, litteraire_user.dossiers.first))
     expect(page).to have_css("span.notifications")
 
     log_out
 
     # the scientifiques instructeurs should not have a notification
-    login_as marie.user, scope: :user
-    visit instructeur_procedures_path
-    expect(page).not_to have_css("span.notifications")
+    visit new_user_session_path
+    sign_in_with marie.user.email, password
+
+    expect(page).to have_current_path(instructeur_procedures_path)
+    expect(find('.procedure-stats')).not_to have_css('span.notifications')
     log_out
   end
 
@@ -136,7 +140,7 @@ feature 'The routing', js: true do
     find('#publish-procedure').click
     within '#publish-modal' do
       fill_in 'lien_site_web', with: 'http://some.website'
-      click_on 'publish'
+      click_on 'Publier'
     end
 
     expect(page).to have_text('Démarche publiée')
@@ -154,6 +158,7 @@ feature 'The routing', js: true do
     select(groupe, from: 'dossier_groupe_instructeur_id')
 
     click_on 'Déposer le dossier'
+    expect(page).to have_text('Merci')
 
     log_out
   end
@@ -166,31 +171,18 @@ feature 'The routing', js: true do
 
     visit "users/activate?#{token_params}"
     fill_in :user_password, with: password
-
     click_button 'Définir le mot de passe'
 
-    expect(page).to have_content 'Mot de passe enregistré'
+    expect(page).to have_text('Mot de passe enregistré')
   end
 
   def log_out(old_layout: false)
     if old_layout
-      expect(page).to have_content('Se déconnecter')
       click_on 'Se déconnecter'
     else
-      try_twice do
-        expect(page).to have_css('[title="Mon compte"]')
-        find('[title="Mon compte"]').click
-        expect(page).to have_content('Se déconnecter')
-        click_on 'Se déconnecter'
-      end
+      click_button(title: 'Mon compte')
+      click_on 'Se déconnecter'
     end
-  end
-
-  def try_twice
-    begin
-      yield
-    rescue Selenium::WebDriver::Error::ElementNotInteractableError, Capybara::ElementNotFound
-      yield
-    end
+    expect(page).to have_current_path(root_path)
   end
 end
