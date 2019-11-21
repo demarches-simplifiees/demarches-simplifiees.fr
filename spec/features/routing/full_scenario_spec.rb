@@ -111,19 +111,20 @@ feature 'The routing', js: true do
     sign_in_with victor.user.email, password
 
     ## on the procedures list
-    expect(page).to have_css("span.notifications")
+    expect(page).to have_current_path(instructeur_procedures_path)
+    expect(find('.procedure-stats')).to have_css('span.notifications')
 
     ## on the dossiers list
     click_on procedure.libelle
     expect(page).to have_current_path(instructeur_procedure_path(procedure))
-    expect(page).to have_css("span.notifications")
+    expect(find('.tabs')).to have_css('span.notifications')
 
     ## on the dossier itself
     click_on 'suivi'
     click_on litteraire_user.email
     expect(page).to have_current_path(instructeur_dossier_path(procedure, litteraire_user.dossiers.first))
-    expect(page).to have_css("span.notifications")
-
+    expect(page).to have_text('Annotations privées') # ensure Turbolinks DID load the DOM content
+    expect(find('.tabs')).to have_css('span.notifications')
     log_out
 
     # the scientifiques instructeurs should not have a notification
