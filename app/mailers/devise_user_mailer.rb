@@ -4,6 +4,11 @@ class DeviseUserMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
   layout 'mailers/layout'
 
+  # Don’t retry to send a message if the server rejects the recipient address
+  rescue_from Net::SMTPSyntaxError do |_error|
+    message.perform_deliveries = false
+  end
+
   def template_paths
     ['devise_mailer']
   end
