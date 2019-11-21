@@ -1,3 +1,12 @@
+type Association {
+  dateCreation: ISO8601Date!
+  dateDeclaration: ISO8601Date!
+  datePublication: ISO8601Date!
+  objet: String!
+  rna: String!
+  titre: String!
+}
+
 type Avis {
   attachmentUrl: URL
   dateQuestion: ISO8601DateTime!
@@ -74,6 +83,33 @@ type CheckboxChamp implements Champ {
   """
   stringValue: String
   value: Boolean!
+}
+
+enum Civilite {
+  """
+  Monsieur
+  """
+  M
+
+  """
+  Madame
+  """
+  Mme
+}
+
+type CiviliteChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+  value: Civilite
 }
 
 """
@@ -155,6 +191,10 @@ type DecimalNumberChamp implements Champ {
   """
   stringValue: String
   value: Float
+}
+
+interface Demandeur {
+  id: ID!
 }
 
 """
@@ -327,6 +367,7 @@ type Dossier {
   Date de traitement.
   """
   dateTraitement: ISO8601DateTime
+  demandeur: Demandeur!
   id: ID!
   instructeurs: [Profile!]!
   messages: [Message!]!
@@ -595,6 +636,22 @@ enum DossierState {
   sans_suite
 }
 
+type Entreprise {
+  capitalSocial: Int!
+  codeEffectifEntreprise: String!
+  dateCreation: ISO8601Date!
+  formeJuridique: String!
+  formeJuridiqueCode: String!
+  inlineAdresse: String!
+  nom: String!
+  nomCommercial: String!
+  numeroTvaIntracommunautaire: String!
+  prenom: String!
+  raisonSociale: String!
+  siren: String!
+  siretSiegeSocial: String!
+}
+
 interface GeoArea {
   geometry: GeoJSON!
   id: ID!
@@ -631,6 +688,11 @@ type GroupeInstructeur {
   instructeurs: [Profile!]!
   label: String!
 }
+
+"""
+An ISO 8601-encoded date
+"""
+scalar ISO8601Date
 
 """
 An ISO 8601-encoded datetime
@@ -775,19 +837,30 @@ type ParcelleCadastrale implements GeoArea {
   surfaceParcelle: Float!
 }
 
-type PersonneMorale {
+type PersonneMorale implements Demandeur {
   adresse: String!
+  association: Association
   codeInseeLocalite: String!
   codePostal: String!
   complementAdresse: String!
+  entreprise: Entreprise
+  id: ID!
   libelleNaf: String!
   localite: String!
   naf: String!
   nomVoie: String!
   numeroVoie: String!
-  siegeSocial: String!
+  siegeSocial: Boolean!
   siret: String!
   typeVoie: String!
+}
+
+type PersonnePhysique implements Demandeur {
+  civilite: Civilite
+  dateDeNaissance: ISO8601Date
+  id: ID!
+  nom: String!
+  prenom: String!
 }
 
 type PieceJustificativeChamp implements Champ {

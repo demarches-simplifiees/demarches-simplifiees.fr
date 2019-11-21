@@ -31,6 +31,8 @@ module Types
           Types::Champs::MultipleDropDownListChampType
         when ::Champs::LinkedDropDownListChamp
           Types::Champs::LinkedDropDownListChampType
+        when ::Champs::CiviliteChamp
+          Types::Champs::CiviliteChampType
         else
           Types::Champs::TextChampType
         end
