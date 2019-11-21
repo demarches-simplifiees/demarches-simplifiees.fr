@@ -2,9 +2,7 @@
   %span.dropdown
     %button.button.dropdown-button
       Télécharger tous les dossiers
-    - old_format_limit_date = Date.parse("Nov 15 2019")
-    - export_v1_enabled = old_format_limit_date > Time.zone.today
-    .dropdown-content.fade-in-down{ style: !export_v1_enabled ? 'width: 330px' : '' }
+    .dropdown-content.fade-in-down{ style: 'width: 330px' }
       %ul.dropdown-items
         %li
           - if procedure.xlsx_export_stale?
@@ -30,12 +28,3 @@
               = link_to "Exporter au format .csv", download_export_instructeur_procedure_path(procedure, export_format: :csv), remote: true
           - else
             = link_to "Au format .csv", url_for(procedure.csv_export_file), target: "_blank", rel: "noopener"
-
-        - if export_v1_enabled
-          - old_format_message = "(ancien format, jusqu’au #{old_format_limit_date.strftime('%d/%m/%Y')})"
-          %li
-            = link_to "Au format .xlsx #{old_format_message}", procedure_dossiers_download_path(procedure, format: :xlsx, version: 'v1'), target: "_blank", rel: "noopener"
-          %li
-            = link_to "Au format .ods #{old_format_message}", procedure_dossiers_download_path(procedure, format: :ods, version: 'v1'), target: "_blank", rel: "noopener"
-          %li
-            = link_to "Au format .csv #{old_format_message}", procedure_dossiers_download_path(procedure, format: :csv, version: 'v1'), target: "_blank", rel: "noopener"
