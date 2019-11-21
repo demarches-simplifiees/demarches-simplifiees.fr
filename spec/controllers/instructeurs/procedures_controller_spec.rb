@@ -426,7 +426,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       context "csv" do
         before do
           expect_any_instance_of(Procedure).to receive(:to_csv)
-            .with(instructeur.dossiers.for_procedure(procedure), {})
+            .with(instructeur.dossiers.for_procedure(procedure))
 
           get :download_dossiers, params: { procedure_id: procedure.id }, format: 'csv'
         end
