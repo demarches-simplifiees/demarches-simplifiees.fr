@@ -25,4 +25,10 @@ module ChampHelper
     end
     simple_format(auto_linked_text, {}, sanitize: false)
   end
+
+  def describedby_id(champ)
+    if champ.description.present?
+      "desc-#{champ.type_de_champ.id}-#{champ.row}"
+    end
+  end
 end

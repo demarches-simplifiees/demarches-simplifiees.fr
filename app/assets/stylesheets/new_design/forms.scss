@@ -35,21 +35,22 @@
     display: block;
     font-weight: bold;
 
-    .notice {
-      @include notice-text-style;
-      display: block;
-      margin-top: $default-spacer;
-
-      p {
-        margin-bottom: $default-spacer;
-      }
-    }
-
     &.required {
       &::after {
         color: $dark-red;
         content: " *";
       }
+    }
+  }
+
+  .notice {
+    @include notice-text-style;
+    font-weight: bold;
+    margin-top: - $default-spacer;
+    margin-bottom: $default-padding;
+
+    p {
+      margin-bottom: $default-spacer;
     }
   }
 
@@ -73,6 +74,7 @@
     &.editable-champ-checkbox,
     &.editable-champ-radio.vertical,
     &.editable-champ-engagement {
+      p,
       label {
         padding-left: 28px;
       }
