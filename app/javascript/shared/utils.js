@@ -17,6 +17,26 @@ export function toggle(el) {
   el && el.classList.toggle('hidden');
 }
 
+export function enable(el) {
+  el && (el.disabled = false);
+}
+
+export function disable(el) {
+  el && (el.disabled = true);
+}
+
+export function hasClass(el, cssClass) {
+  return el && el.classList.contains(cssClass);
+}
+
+export function addClass(el, cssClass) {
+  el && el.classList.add(cssClass);
+}
+
+export function removeClass(el, cssClass) {
+  el && el.classList.remove(cssClass);
+}
+
 export function delegate(eventNames, selector, callback) {
   eventNames
     .split(' ')
@@ -64,6 +84,16 @@ function offset(element) {
     top: rect.top + document.body.scrollTop,
     left: rect.left + document.body.scrollLeft
   };
+}
+
+// Takes a promise, and return a promise that times out after the given delay.
+export function timeoutable(promise, timeoutDelay) {
+  let timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error(`Promise timed out after ${timeoutDelay}ms`));
+    }, timeoutDelay);
+  });
+  return Promise.race([promise, timeoutPromise]);
 }
 
 const DATA_ACTIVE_REQUESTS_COUNT = 'data-active-requests-count';

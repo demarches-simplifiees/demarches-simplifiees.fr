@@ -20,6 +20,7 @@ import '../shared/franceconnect';
 import '../shared/toggle-target';
 
 import '../new_design/dropdown';
+import '../new_design/autosave';
 import '../new_design/form-validation';
 import '../new_design/procedure-context';
 import '../new_design/procedure-form';
