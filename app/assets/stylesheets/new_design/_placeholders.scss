@@ -1,3 +1,4 @@
+@import "colors";
 @import "constants";
 
 %horizontal-list {
@@ -16,4 +17,11 @@
 %animation {
   animation-fill-mode: forwards;
   animation-duration: 0.3s;
+}
+
+%outline {
+  &:active,
+  &:focus {
+    outline: 3px solid $blue;
+  }
 }

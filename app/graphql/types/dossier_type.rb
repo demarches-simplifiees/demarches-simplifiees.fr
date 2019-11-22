@@ -9,7 +9,7 @@ module Types
     description "Un dossier"
 
     global_id_field :id
-    field :number, ID, "Le numero du dossier.", null: false, method: :id
+    field :number, Int, "Le numero du dossier.", null: false, method: :id
     field :state, DossierState, "L'état du dossier.", null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, "Date de dernière mise à jour.", null: false
 

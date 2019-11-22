@@ -1,13 +1,21 @@
 require 'spec_helper'
+require 'csv'
 
 describe ProcedureExportService do
   describe 'to_data' do
-    let(:procedure) { create(:procedure, :published, :with_all_champs) }
-    let(:table) { :dossiers }
-    subject { ProcedureExportService.new(procedure, procedure.dossiers).to_data(table) }
+    let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
+    subject do
+      Tempfile.create do |f|
+        f << ProcedureExportService.new(procedure, procedure.dossiers).to_xlsx
+        f.rewind
+        SimpleXlsxReader.open(f.path)
+      end
+    end
 
-    let(:headers) { subject[:headers] }
-    let(:data) { subject[:data] }
+    let(:dossiers_sheet) { subject.sheets.first }
+    let(:etablissements_sheet) { subject.sheets.second }
+    let(:avis_sheet) { subject.sheets.third }
+    let(:repetition_sheet) { subject.sheets.fourth }
 
     before do
       # change one tdc place to check if the header is ordered
@@ -19,284 +27,340 @@ describe ProcedureExportService do
     end
 
     context 'dossiers' do
-      let(:nominal_header) do
+      it 'should have sheets' do
+        expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis'])
+      end
+    end
+
+    context 'with dossier' do
+      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+
+      let(:nominal_headers) do
         [
-          :id,
-          :created_at,
-          :updated_at,
-          :archived,
-          :email,
-          :state,
-          :initiated_at,
-          :received_at,
-          :processed_at,
-          :motivation,
-          :emails_instructeurs,
-          :individual_gender,
-          :individual_prenom,
-          :individual_nom,
-          :individual_birthdate,
+          "ID",
+          "Email",
+          "Civilité",
+          "Nom",
+          "Prénom",
+          "Date de naissance",
+          "Archivé",
+          "État du dossier",
+          "Dernière mise à jour le",
+          "Déposé le",
+          "Passé en instruction le",
+          "Traité le",
+          "Motivation de la décision",
+          "Instructeurs",
 
-          :auto_completion,
-          :textarea,
-          :date,
-          :datetime,
-          :number,
-          :decimal_number,
-          :integer_number,
-          :checkbox,
-          :civilite,
-          :email,
-          :phone,
-          :address,
-          :yes_no,
-          :simple_drop_down_list,
-          :multiple_drop_down_list,
-          :linked_drop_down_list,
-          :pays,
-          :nationalites,
-          :commune_de_polynesie,
-          :code_postal_de_polynesie,
-          :regions,
-          :departements,
-          :engagement,
-          :dossier_link,
-          :piece_justificative,
-          :siret,
-          :carte,
-          :te_fenua,
-          :text,
-
-          :etablissement_siret,
-          :etablissement_siege_social,
-          :etablissement_naf,
-          :etablissement_libelle_naf,
-          :etablissement_adresse,
-          :etablissement_numero_voie,
-          :etablissement_type_voie,
-          :etablissement_nom_voie,
-          :etablissement_complement_adresse,
-          :etablissement_code_postal,
-          :etablissement_localite,
-          :etablissement_code_insee_localite,
-          :entreprise_siren,
-          :entreprise_capital_social,
-          :entreprise_numero_tva_intracommunautaire,
-          :entreprise_forme_juridique,
-          :entreprise_forme_juridique_code,
-          :entreprise_nom_commercial,
-          :entreprise_raison_sociale,
-          :entreprise_siret_siege_social,
-          :entreprise_code_effectif_entreprise,
-          :entreprise_date_creation,
-          :entreprise_nom,
-          :entreprise_prenom
+          "auto_completion",
+          "textarea",
+          "date",
+          "datetime",
+          "number",
+          "decimal_number",
+          "integer_number",
+          "checkbox",
+          "civilite",
+          "email",
+          "phone",
+          "address",
+          "yes_no",
+          "simple_drop_down_list",
+          "multiple_drop_down_list",
+          "linked_drop_down_list",
+          "pays",
+          "nationalites",
+          "commune_de_polynesie",
+          "code_postal_de_polynesie",
+          "regions",
+          "departements",
+          "engagement",
+          "dossier_link",
+          "piece_justificative",
+          "siret",
+          "carte",
+          "te_fenua",
+          "text"
         ]
       end
 
       it 'should have headers' do
-        expect(headers).to eq(nominal_header)
+        expect(dossiers_sheet.headers).to match(nominal_headers)
+      end
+
+      it 'should have data' do
+        expect(dossiers_sheet.data.size).to eq(1)
+        expect(etablissements_sheet.data.size).to eq(1)
+
+        # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
+        offset = dossier.en_construction_at.utc_offset
+        en_construction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
+        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][10] - offset.seconds)
+        expect(en_construction_at).to eq(dossier.en_construction_at.round)
+        expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
       end
 
       context 'with a procedure routee' do
         before { procedure.groupe_instructeurs.create(label: '2') }
 
-        let(:routee_header) { nominal_header.insert(nominal_header.index(:auto_completion), :groupe_instructeur_label) }
+        let(:routee_header) { nominal_headers.insert(nominal_headers.index('auto_completion'), 'Groupe instructeur') }
 
-        it { expect(headers).to eq(routee_header) }
-      end
-
-      it 'should have empty values' do
-        expect(data).to eq([[]])
-      end
-
-      context 'with dossier' do
-        let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
-
-        let(:dossier_data) {
-          [
-            dossier.id.to_s,
-            dossier.created_at.to_s,
-            dossier.updated_at.to_s,
-            "false",
-            dossier.user.email,
-            "received",
-            dossier.en_construction_at.to_s,
-            dossier.en_instruction_at.to_s,
-            nil,
-            nil,
-            nil
-          ] + individual_data
-        }
-
-        let(:individual_data) {
-          [
-            "Mme.",
-            "Anne-Marie",
-            'JULIEN',
-            "1991-11-01"
-          ]
-        }
-
-        let(:champs_data) {
-          dossier.reload.champs.reject(&:exclude_from_export?).map(&:for_export)
-        }
-
-        let(:etablissement_data) {
-          Array.new(24)
-        }
-
-        it 'should have values' do
-          dossier_end = dossier_data.length
-          data_end = dossier_end + champs_data.length
-          etab_end = data_end + etablissement_data.length
-          expect(data.first[0...dossier_end]).to eq(dossier_data)
-          # data.first[dossier_end...data_end].map.with_index { |d, i|
-          # puts d.to_s + '=' + champs_data[i]&.to_s if (d)
-          # expect(d).to eq(champs_data[i])
-          # }
-          expect(data.first[dossier_end...data_end]).to eq(champs_data)
-          expect(data.first[data_end...etab_end]).to eq(etablissement_data)
-
-          expect(data).to eq([
-            dossier_data + champs_data + etablissement_data
-          ])
-        end
-
-        context 'with a procedure routee' do
-          before { procedure.groupe_instructeurs.create(label: '2') }
-
-          it { expect(data.first[15]).to eq('défaut') }
-          it { expect(data.first.count).to eq(dossier_data.count + champs_data.count + etablissement_data.count + 1) }
-        end
-
-        context 'and etablissement' do
-          let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_entreprise, procedure: procedure) }
-
-          let(:etablissement_data) {
-            [
-              dossier.etablissement.siret,
-              dossier.etablissement.siege_social.to_s,
-              dossier.etablissement.naf,
-              dossier.etablissement.libelle_naf,
-              dossier.etablissement.adresse&.chomp&.gsub("\r\n", ' ')&.delete("\r"),
-              dossier.etablissement.numero_voie,
-              dossier.etablissement.type_voie,
-              dossier.etablissement.nom_voie,
-              dossier.etablissement.complement_adresse,
-              dossier.etablissement.code_postal,
-              dossier.etablissement.localite,
-              dossier.etablissement.code_insee_localite,
-              dossier.etablissement.entreprise_siren,
-              dossier.etablissement.entreprise_capital_social.to_s,
-              dossier.etablissement.entreprise_numero_tva_intracommunautaire,
-              dossier.etablissement.entreprise_forme_juridique,
-              dossier.etablissement.entreprise_forme_juridique_code,
-              dossier.etablissement.entreprise_nom_commercial,
-              dossier.etablissement.entreprise_raison_sociale,
-              dossier.etablissement.entreprise_siret_siege_social,
-              dossier.etablissement.entreprise_code_effectif_entreprise,
-              dossier.etablissement.entreprise_date_creation.to_datetime.to_s,
-              dossier.etablissement.entreprise_nom,
-              dossier.etablissement.entreprise_prenom
-            ]
-          }
-
-          let(:individual_data) {
-            Array.new(4)
-          }
-
-          it 'should have values' do
-            dossier_end = dossier_data.length
-            data_end = dossier_end + champs_data.length
-            etab_end = data_end + etablissement_data.length
-            expect(data.first[0...dossier_end]).to eq(dossier_data)
-            expect(data.first[dossier_end...data_end]).to eq(champs_data)
-            expect(data.first[data_end...etab_end]).to eq(etablissement_data)
-
-            expect(data).to eq([
-              dossier_data + champs_data + etablissement_data
-            ])
-          end
-        end
+        it { expect(dossiers_sheet.headers).to match(routee_header) }
+        it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Groupe instructeur')]).to eq('défaut') }
       end
     end
 
-    context 'etablissements' do
-      let(:table) { :etablissements }
+    context 'with etablissement' do
+      let(:procedure) { create(:procedure, :published, :with_all_champs) }
+      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_entreprise, procedure: procedure) }
+
+      let(:dossier_etablissement) { etablissements_sheet.data[1] }
+      let(:champ_etablissement) { etablissements_sheet.data[0] }
+
+      let(:nominal_headers) do
+        [
+          "ID",
+          "Email",
+          "Entreprise raison sociale",
+          "Archivé",
+          "État du dossier",
+          "Dernière mise à jour le",
+          "Déposé le",
+          "Passé en instruction le",
+          "Traité le",
+          "Motivation de la décision",
+          "Instructeurs",
+          "auto_completion",
+          "textarea",
+          "date",
+          "datetime",
+          "number",
+          "decimal_number",
+          "integer_number",
+          "checkbox",
+          "civilite",
+          "email",
+          "phone",
+          "address",
+          "yes_no",
+          "simple_drop_down_list",
+          "multiple_drop_down_list",
+          "linked_drop_down_list",
+          "pays",
+          "nationalites",
+          "commune_de_polynesie",
+          "code_postal_de_polynesie",
+          "regions",
+          "departements",
+          "engagement",
+          "dossier_link",
+          "piece_justificative",
+          "siret",
+          "carte",
+          "te_fenua",
+          "text"
+        ]
+      end
+
+      context 'as csv' do
+        subject do
+          Tempfile.create do |f|
+            f << ProcedureExportService.new(procedure, procedure.dossiers).to_csv
+            f.rewind
+            CSV.read(f.path)
+          end
+        end
+
+        let(:nominal_headers) do
+          [
+            "ID",
+            "Email",
+            "Établissement SIRET",
+            "Établissement siège social",
+            "Établissement NAF",
+            "Établissement libellé NAF",
+            "Établissement Adresse",
+            "Établissement numero voie",
+            "Établissement type voie",
+            "Établissement nom voie",
+            "Établissement complément adresse",
+            "Établissement code postal",
+            "Établissement localité",
+            "Établissement code INSEE localité",
+            "Entreprise SIREN",
+            "Entreprise capital social",
+            "Entreprise numero TVA intracommunautaire",
+            "Entreprise forme juridique",
+            "Entreprise forme juridique code",
+            "Entreprise nom commercial",
+            "Entreprise raison sociale",
+            "Entreprise SIRET siège social",
+            "Entreprise code effectif entreprise",
+            "Entreprise date de création",
+            "Entreprise nom",
+            "Entreprise prénom",
+            "Association RNA",
+            "Association titre",
+            "Association objet",
+            "Association date de création",
+            "Association date de déclaration",
+            "Association date de publication",
+            "Archivé",
+            "État du dossier",
+            "Dernière mise à jour le",
+            "Déposé le",
+            "Passé en instruction le",
+            "Traité le",
+            "Motivation de la décision",
+            "Instructeurs",
+            "auto_completion",
+            "textarea",
+            "date",
+            "datetime",
+            "number",
+            "decimal_number",
+            "integer_number",
+            "checkbox",
+            "civilite",
+            "email",
+            "phone",
+            "address",
+            "yes_no",
+            "simple_drop_down_list",
+            "multiple_drop_down_list",
+            "linked_drop_down_list",
+            "pays",
+            "nationalites",
+            "commune_de_polynesie",
+            "code_postal_de_polynesie",
+            "regions",
+            "departements",
+            "engagement",
+            "dossier_link",
+            "piece_justificative",
+            "siret",
+            "carte",
+            "te_fenua",
+            "text"
+          ]
+        end
+
+        let(:dossiers_sheet_headers) { subject.first }
+
+        it 'should have headers' do
+          expect(dossiers_sheet_headers).to match(nominal_headers)
+        end
+      end
 
       it 'should have headers' do
-        expect(headers).to eq([
-          :dossier_id,
-          :libelle,
-          :etablissement_siret,
-          :etablissement_siege_social,
-          :etablissement_naf,
-          :etablissement_libelle_naf,
-          :etablissement_adresse,
-          :etablissement_numero_voie,
-          :etablissement_type_voie,
-          :etablissement_nom_voie,
-          :etablissement_complement_adresse,
-          :etablissement_code_postal,
-          :etablissement_localite,
-          :etablissement_code_insee_localite,
-          :entreprise_siren,
-          :entreprise_capital_social,
-          :entreprise_numero_tva_intracommunautaire,
-          :entreprise_forme_juridique,
-          :entreprise_forme_juridique_code,
-          :entreprise_nom_commercial,
-          :entreprise_raison_sociale,
-          :entreprise_siret_siege_social,
-          :entreprise_code_effectif_entreprise,
-          :entreprise_date_creation,
-          :entreprise_nom,
-          :entreprise_prenom
+        expect(dossiers_sheet.headers).to match(nominal_headers)
+
+        expect(etablissements_sheet.headers).to eq([
+          "Dossier ID",
+          "Champ",
+          "Établissement SIRET",
+          "Établissement siège social",
+          "Établissement NAF",
+          "Établissement libellé NAF",
+          "Établissement Adresse",
+          "Établissement numero voie",
+          "Établissement type voie",
+          "Établissement nom voie",
+          "Établissement complément adresse",
+          "Établissement code postal",
+          "Établissement localité",
+          "Établissement code INSEE localité",
+          "Entreprise SIREN",
+          "Entreprise capital social",
+          "Entreprise numero TVA intracommunautaire",
+          "Entreprise forme juridique",
+          "Entreprise forme juridique code",
+          "Entreprise nom commercial",
+          "Entreprise raison sociale",
+          "Entreprise SIRET siège social",
+          "Entreprise code effectif entreprise",
+          "Entreprise date de création",
+          "Entreprise nom",
+          "Entreprise prénom",
+          "Association RNA",
+          "Association titre",
+          "Association objet",
+          "Association date de création",
+          "Association date de déclaration",
+          "Association date de publication"
         ])
       end
 
-      it 'should have empty values' do
-        expect(data).to eq([[]])
+      it 'should have data' do
+        expect(etablissements_sheet.data.size).to eq(2)
+        expect(dossier_etablissement[1]).to eq("Dossier")
+        expect(champ_etablissement[1]).to eq("siret")
+      end
+    end
+
+    context 'with avis' do
+      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+      let!(:avis) { create(:avis, :with_answer, dossier: dossier) }
+
+      it 'should have headers' do
+        expect(avis_sheet.headers).to eq([
+          "Dossier ID",
+          "Question / Introduction",
+          "Réponse",
+          "Créé le",
+          "Répondu le"
+        ])
       end
 
-      context 'with dossier containing champ siret' do
-        let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, procedure: procedure) }
-        let(:etablissement) { dossier.champs.find { |champ| champ.type_champ == 'siret' }.etablissement }
+      it 'should have data' do
+        expect(avis_sheet.data.size).to eq(1)
+      end
+    end
 
-        let(:etablissement_data) {
-          [
-            dossier.id,
-            'siret',
-            etablissement.siret,
-            etablissement.siege_social.to_s,
-            etablissement.naf,
-            etablissement.libelle_naf,
-            etablissement.adresse&.chomp&.gsub("\r\n", ' ')&.delete("\r"),
-            etablissement.numero_voie,
-            etablissement.type_voie,
-            etablissement.nom_voie,
-            etablissement.complement_adresse,
-            etablissement.code_postal,
-            etablissement.localite,
-            etablissement.code_insee_localite,
-            etablissement.entreprise_siren,
-            etablissement.entreprise_capital_social.to_s,
-            etablissement.entreprise_numero_tva_intracommunautaire,
-            etablissement.entreprise_forme_juridique,
-            etablissement.entreprise_forme_juridique_code,
-            etablissement.entreprise_nom_commercial,
-            etablissement.entreprise_raison_sociale,
-            etablissement.entreprise_siret_siege_social,
-            etablissement.entreprise_code_effectif_entreprise,
-            etablissement.entreprise_date_creation.to_datetime.to_s,
-            etablissement.entreprise_nom,
-            etablissement.entreprise_prenom
-          ]
-        }
+    context 'with repetitions' do
+      let!(:dossiers) do
+        [
+          create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure),
+          create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure)
+        ]
+      end
+      let(:champ_repetition) { dossiers.first.champs.find { |champ| champ.type_champ == 'repetition' } }
 
-        it 'should have values' do
-          expect(data.first).to eq(etablissement_data)
+      it 'should have sheets' do
+        expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export])
+      end
+
+      it 'should have headers' do
+        expect(repetition_sheet.headers).to eq([
+          "Dossier ID",
+          "Ligne",
+          "Nom",
+          "Age"
+        ])
+      end
+
+      it 'should have data' do
+        expect(repetition_sheet.data.size).to eq(4)
+      end
+
+      context 'with invalid characters' do
+        before do
+          champ_repetition.type_de_champ.update(libelle: 'A / B \ C')
+        end
+
+        it 'should have valid sheet name' do
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', "(#{champ_repetition.type_de_champ.stable_id}) A - B - C"])
+        end
+      end
+
+      context 'with non unique labels' do
+        let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+        let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
+        let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: procedure, libelle: champ_repetition.libelle) }
+        let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
+
+        it 'should have sheets' do
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export, another_champ_repetition.libelle_for_export])
         end
       end
     end

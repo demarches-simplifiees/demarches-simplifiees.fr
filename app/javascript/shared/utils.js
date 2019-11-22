@@ -5,16 +5,16 @@ import debounce from 'debounce';
 export { debounce };
 export const { fire, ajax } = Rails;
 
-export function show({ classList }) {
-  classList.remove('hidden');
+export function show(el) {
+  el && el.classList.remove('hidden');
 }
 
-export function hide({ classList }) {
-  classList.add('hidden');
+export function hide(el) {
+  el && el.classList.add('hidden');
 }
 
-export function toggle({ classList }) {
-  classList.toggle('hidden');
+export function toggle(el) {
+  el && el.classList.toggle('hidden');
 }
 
 export function delegate(eventNames, selector, callback) {

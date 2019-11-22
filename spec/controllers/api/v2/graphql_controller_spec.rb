@@ -76,7 +76,7 @@ describe API::V2::GraphqlController do
         expect(gql_errors).to eq(nil)
         expect(gql_data).to eq(demarche: {
           id: procedure.to_typed_id,
-          number: procedure.id.to_s,
+          number: procedure.id,
           title: procedure.libelle,
           description: procedure.description,
           state: 'brouillon',
@@ -123,7 +123,7 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to eq(nil)
           expect(gql_data).to eq(demarche: {
             id: procedure.to_typed_id,
-            number: procedure.id.to_s,
+            number: procedure.id,
             dossiers: {
               nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }]
             }
@@ -177,7 +177,7 @@ describe API::V2::GraphqlController do
         expect(gql_errors).to eq(nil)
         expect(gql_data).to eq(dossier: {
           id: dossier.to_typed_id,
-          number: dossier.id.to_s,
+          number: dossier.id,
           state: 'en_construction',
           updatedAt: dossier.updated_at.iso8601,
           datePassageEnConstruction: dossier.en_construction_at.iso8601,
@@ -216,7 +216,310 @@ describe API::V2::GraphqlController do
     end
 
     context "mutations" do
-      context 'createDirectUpload' do
+      describe 'dossierEnvoyerMessage' do
+        context 'success' do
+          let(:query) do
+            "mutation {
+              dossierEnvoyerMessage(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                body: \"Bonjour\"
+              }) {
+                message {
+                  body
+                }
+              }
+            }"
+          end
+
+          it "should post a message" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierEnvoyerMessage: {
+              message: {
+                body: "Bonjour"
+              }
+            })
+          end
+        end
+
+        context 'schema error' do
+          let(:query) do
+            "mutation {
+              dossierEnvoyerMessage(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\"
+              }) {
+                message {
+                  body
+                }
+              }
+            }"
+          end
+
+          it "should fail" do
+            expect(gql_data).to eq(nil)
+            expect(gql_errors).not_to eq(nil)
+          end
+        end
+
+        context 'validation error' do
+          let(:query) do
+            "mutation {
+              dossierEnvoyerMessage(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                body: \"\"
+              }) {
+                message {
+                  body
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierEnvoyerMessage: {
+              errors: [{ message: "Votre message ne peut être vide" }],
+              message: nil
+            })
+          end
+        end
+      end
+
+      describe 'dossierPasserEnInstruction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:query) do
+          "mutation {
+            dossierPasserEnInstruction(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur.to_typed_id}\"
+            }) {
+              dossier {
+                id
+                state
+                motivation
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        context 'success' do
+          it "should passer en instruction dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierPasserEnInstruction: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "en_instruction",
+                motivation: nil
+              },
+              errors: nil
+            })
+          end
+        end
+
+        context 'validation error' do
+          let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierPasserEnInstruction: {
+              errors: [{ message: "Le dossier est déjà en instruction" }],
+              dossier: nil
+            })
+          end
+        end
+      end
+
+      describe 'dossierClasserSansSuite' do
+        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:query) do
+          "mutation {
+            dossierClasserSansSuite(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur.to_typed_id}\",
+              motivation: \"Parce que\"
+            }) {
+              dossier {
+                id
+                state
+                motivation
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        context 'success' do
+          it "should classer sans suite dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierClasserSansSuite: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "sans_suite",
+                motivation: "Parce que"
+              },
+              errors: nil
+            })
+          end
+        end
+
+        context 'validation error' do
+          let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierClasserSansSuite: {
+              errors: [{ message: "Le dossier est déjà accepté" }],
+              dossier: nil
+            })
+          end
+        end
+      end
+
+      describe 'dossierRefuser' do
+        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:query) do
+          "mutation {
+            dossierRefuser(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur.to_typed_id}\",
+              motivation: \"Parce que\"
+            }) {
+              dossier {
+                id
+                state
+                motivation
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        context 'success' do
+          it "should refuser dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierRefuser: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "refuse",
+                motivation: "Parce que"
+              },
+              errors: nil
+            })
+          end
+        end
+
+        context 'validation error' do
+          let(:dossier) { create(:dossier, :sans_suite, procedure: procedure) }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierRefuser: {
+              errors: [{ message: "Le dossier est déjà sans suite" }],
+              dossier: nil
+            })
+          end
+        end
+      end
+
+      describe 'dossierAccepter' do
+        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:query) do
+          "mutation {
+            dossierAccepter(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur.to_typed_id}\",
+              motivation: \"Parce que\"
+            }) {
+              dossier {
+                id
+                state
+                motivation
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        context 'success' do
+          it "should accepter dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierAccepter: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "accepte",
+                motivation: "Parce que"
+              },
+              errors: nil
+            })
+          end
+        end
+
+        context 'success without motivation' do
+          let(:query) do
+            "mutation {
+              dossierAccepter(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\"
+              }) {
+                dossier {
+                  id
+                  state
+                  motivation
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          it "should accepter dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierAccepter: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "accepte",
+                motivation: nil
+              },
+              errors: nil
+            })
+          end
+        end
+
+        context 'validation error' do
+          let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierAccepter: {
+              errors: [{ message: "Le dossier est déjà refusé" }],
+              dossier: nil
+            })
+          end
+        end
+      end
+
+      describe 'createDirectUpload' do
         let(:query) do
           "mutation {
             createDirectUpload(input: {
@@ -260,6 +563,27 @@ describe API::V2::GraphqlController do
 
       it "should return error" do
         expect(gql_data).to eq(nil)
+        expect(gql_errors).not_to eq(nil)
+      end
+    end
+
+    context "mutation" do
+      let(:query) do
+        "mutation {
+          dossierEnvoyerMessage(input: {
+            dossierId: \"#{dossier.to_typed_id}\",
+            instructeurId: \"#{instructeur.to_typed_id}\",
+            body: \"Bonjour\"
+          }) {
+            message {
+              body
+            }
+          }
+        }"
+      end
+
+      it "should return error" do
+        expect(gql_data[:dossierEnvoyerMessage]).to eq(nil)
         expect(gql_errors).not_to eq(nil)
       end
     end

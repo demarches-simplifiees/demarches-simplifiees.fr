@@ -160,18 +160,19 @@ module Users
 
       errors = update_dossier_and_compute_errors
 
-      if errors.present?
+      if passage_en_construction? && errors.blank?
+        @dossier.en_construction!
+        NotificationMailer.send_initiated_notification(@dossier).deliver_later
+        return redirect_to(merci_dossier_path(@dossier))
+      elsif errors.present?
         flash.now.alert = errors
-        render :brouillon
       else
-        if save_draft?
-          flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
-          render :brouillon
-        else
-          @dossier.en_construction!
-          NotificationMailer.send_initiated_notification(@dossier).deliver_later
-          redirect_to merci_dossier_path(@dossier)
-        end
+        flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
+      end
+
+      respond_to do |format|
+        format.html { render :brouillon }
+        format.json { head :ok }
       end
     end
 
@@ -385,7 +386,7 @@ module Users
     end
 
     def save_draft?
-      dossier.brouillon? && params[:save_draft]
+      dossier.brouillon? && !params[:submit_draft]
     end
   end
 end

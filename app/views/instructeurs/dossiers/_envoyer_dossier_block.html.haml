@@ -4,6 +4,8 @@
   %p.tab-paragraph
     Vous êtes le seul instructeur assigné sur cette démarche
 - else
+  %p.tab-paragrah.mb-1
+    Le destinataire suivra automatiquement le dossier
   = form_for dossier, url: send_to_instructeurs_instructeur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form recipients-form' } do |f|
     .flex.justify-start.align-start
       = select_tag(:recipients,

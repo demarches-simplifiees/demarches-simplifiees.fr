@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    attributes:
+      geo_area:
+        source:
+          cadastre: Parcelle cadastrale
+          quartier_prioritaire: Quartier prioritaire
+          selection_utilisateur: Sélection utilisateur
