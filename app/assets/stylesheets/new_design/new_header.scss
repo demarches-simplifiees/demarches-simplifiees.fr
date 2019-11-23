@@ -154,6 +154,8 @@ $header-mobile-breakpoint: 550px;
   }
 
   button {
+    @extend %outline;
+
     padding: 9px;
     border: none;
     background: none;

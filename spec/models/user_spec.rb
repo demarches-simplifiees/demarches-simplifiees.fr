@@ -179,7 +179,7 @@ describe User, type: :model do
         it 'keeps the existing instructeurs and adds administrateur' do
           user = subject
           expect(user.instructeur).to eq(instructeur)
-          expect(user.instructeur.administrateurs).to eq(old_admins + admins)
+          expect(user.instructeur.administrateurs).to match_array(old_admins + admins)
         end
       end
     end

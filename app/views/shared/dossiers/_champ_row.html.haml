@@ -16,7 +16,7 @@
         %th.libelle{ class: repetition ? 'padded' : '' }
           = "#{c.libelle} :"
         %td.rich-text
-          %span{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
+          %div{ class: highlight_if_unseen_class(demande_seen_at, c.updated_at) }
             - case c.type_champ
             - when TypeDeChamp.type_champs.fetch(:carte)
               = render partial: "shared/champs/carte/show", locals: { champ: c }

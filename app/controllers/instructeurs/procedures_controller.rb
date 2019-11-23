@@ -185,21 +185,19 @@ module Instructeurs
     end
 
     def download_dossiers
-      options = params.permit(:version, :limit, :since, tables: [])
-
       dossiers = current_instructeur.dossiers.for_procedure(procedure)
 
       respond_to do |format|
         format.csv do
-          send_data(procedure.to_csv(dossiers, options),
+          send_data(procedure.to_csv(dossiers),
             filename: procedure.export_filename(:csv))
         end
         format.xlsx do
-          send_data(procedure.to_xlsx(dossiers, options),
+          send_data(procedure.to_xlsx(dossiers),
             filename: procedure.export_filename(:xlsx))
         end
         format.ods do
-          send_data(procedure.to_ods(dossiers, options),
+          send_data(procedure.to_ods(dossiers),
             filename: procedure.export_filename(:ods))
         end
       end
@@ -210,12 +208,13 @@ module Instructeurs
       notice_message = "Nous générons cet export. Lorsque celui-ci sera disponible, vous recevrez une notification par email accompagnée d'un lien de téléchargement."
       if procedure.should_generate_export?(export_format)
         procedure.queue_export(current_instructeur, export_format)
+        flash.notice = notice_message
 
         respond_to do |format|
           format.js do
-            flash.notice = notice_message
             @procedure = procedure
           end
+          format.all { redirect_to procedure }
         end
       elsif procedure.export_queued?(export_format)
         flash.notice = notice_message

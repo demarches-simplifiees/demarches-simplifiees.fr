@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
 
   before_action :staging_authenticate
   before_action :set_active_storage_host
+  before_action :setup_javascript_settings
   before_action :setup_tracking
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur,
@@ -114,6 +115,10 @@ class ApplicationController < ActionController::Base
     ActiveStorage::Current.host = request.base_url
   end
 
+  def setup_javascript_settings
+    gon.autosave = Rails.application.config.ds_autosave
+  end
+
   def setup_tracking
     gon.matomo = matomo_config
     gon.sentry = sentry_config
@@ -141,6 +146,8 @@ class ApplicationController < ActionController::Base
     Raven.user_context(sentry_user)
   end
 
+  # private method called by rails fwk
+  # see https://github.com/roidrage/lograge
   def append_info_to_payload(payload)
     super
 

@@ -2,4 +2,5 @@ fr:
   activerecord:
     attributes:
       commentaire:
+        body: 'Votre message'
         file: fichier

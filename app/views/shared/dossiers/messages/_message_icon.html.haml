@@ -1,7 +1,7 @@
 - if commentaire.sent_by_system?
-  = image_tag('icons/mail.svg', class: 'person-icon')
+  = image_tag('icons/mail.svg', class: 'person-icon', alt: '')
 - elsif commentaire.sent_by?(connected_user)
-  = image_tag('icons/account-circle.svg', class: 'person-icon')
+  = image_tag('icons/account-circle.svg', class: 'person-icon', alt: '')
 - else
-  = image_tag('icons/blue-person.svg', class: 'person-icon')
+  = image_tag('icons/blue-person.svg', class: 'person-icon', alt: '')
 

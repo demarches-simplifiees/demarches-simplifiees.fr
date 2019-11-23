@@ -31,6 +31,18 @@ module DossierHelper
     end
   end
 
+  def dossier_form_class(dossier)
+    classes = ['form']
+    if autosave_available?(dossier)
+      classes << 'autosave-enabled'
+    end
+    classes.join(' ')
+  end
+
+  def autosave_available?(dossier)
+    dossier.brouillon? && Flipper.enabled?(:autosave_dossier_draft, dossier.user)
+  end
+
   def dossier_submission_is_closed?(dossier)
     dossier.brouillon? && dossier.procedure.archivee?
   end

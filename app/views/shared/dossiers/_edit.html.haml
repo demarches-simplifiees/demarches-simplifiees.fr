@@ -2,13 +2,13 @@
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
   - if apercu
-    - form_options = { url: '', method: :get, html: { class: 'form', multipart: true } }
+    - form_options = { url: '', method: :get }
   - elsif dossier.brouillon?
-    - form_options = { url: brouillon_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true } }
+    - form_options = { url: brouillon_dossier_url(dossier), method: :patch }
   - else
-    - form_options = { url: modifier_dossier_url(dossier), method: :patch, html: { class: 'form', multipart: true } }
+    - form_options = { url: modifier_dossier_url(dossier), method: :patch }
 
-  = form_for dossier, form_options do |f|
+  = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: dossier_form_class(dossier), multipart: true } }) do |f|
 
     .prologue
       %p.mandatory-explanation
@@ -17,7 +17,10 @@
         ) sont obligatoires.
       - if dossier.brouillon?
         %p.mandatory-explanation
-          Pour enregistrer votre dossier et le reprendre plus tard, cliquez sur le bouton « Enregistrer le brouillon » en bas à gauche du formulaire.
+          - if autosave_available?(dossier)
+            Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
+          - else
+            Pour enregistrer votre dossier et le reprendre plus tard, cliquez sur le bouton « Enregistrer le brouillon » en bas à gauche du formulaire.
 
       - if notice_url(dossier.procedure).present?
         = link_to notice_url(dossier.procedure), target: '_blank', rel: 'noopener', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
@@ -45,15 +48,18 @@
     - if !apercu
       .send-dossier-actions-bar
         - if dossier.brouillon?
-          = f.button 'Enregistrer le brouillon',
-            formnovalidate: true,
-            name: :save_draft,
-            value: true,
-            class: 'button send secondary',
-            data: { 'disable-with': "Envoi en cours…" }
+          - if autosave_available?(dossier)
+            = render partial: 'users/dossiers/autosave'
+          - else
+            = f.button 'Enregistrer le brouillon',
+              formnovalidate: true,
+              class: 'button send secondary',
+              data: { 'disable-with': "Envoi en cours…" }
 
           - if dossier.can_transition_to_en_construction?
             = f.button 'Déposer le dossier',
+              name: :submit_draft,
+              value: true,
               class: 'button send primary',
               disabled: !current_user.owns?(dossier),
               data: { 'disable-with': "Envoi en cours…" }

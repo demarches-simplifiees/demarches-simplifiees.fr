@@ -101,6 +101,7 @@ ENV \
     SKYLIGHT_DISABLE_AGENT="true"\
     SOURCE="tps_local"\
     TRUSTED_NETWORKS=""\
+    UNIVERSIGN_API_URL=""\
     UNIVERSIGN_USERPWD=""
 
 COPY --chown=userapp:userapp . ${APP_PATH}

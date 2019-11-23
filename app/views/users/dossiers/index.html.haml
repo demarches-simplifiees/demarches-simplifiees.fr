@@ -30,26 +30,26 @@
           %th.status-col Statut
           %th.updated-at-col Mis à jour
           %th
-        %tbody
-          - @dossiers.each do |dossier|
-            %tr{ data: { 'dossier-id': dossier.id } }
-              %td.folder-col
-                = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  %span.icon.folder
-              %td.number-col
-                = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  = dossier.id
-              %td
-                = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  = procedure_libelle(dossier.procedure)
-              %td.status-col
-                = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
-              %td.updated-at-col
-                = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                  = try_format_date(dossier.updated_at)
-              %td.action-col.action-col
-                = render partial: 'dossier_actions', locals: { dossier: dossier }
+      %tbody
+        - @dossiers.each do |dossier|
+          %tr{ data: { 'dossier-id': dossier.id } }
+            %td.folder-col
+              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                %span.icon.folder
+            %td.number-col
+              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                = dossier.id
+            %td
+              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                = procedure_libelle(dossier.procedure)
+            %td.status-col
+              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+            %td.updated-at-col
+              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+                = try_format_date(dossier.updated_at)
+            %td.action-col.action-col
+              = render partial: 'dossier_actions', locals: { dossier: dossier }
     = paginate(@dossiers)
 
     - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago
