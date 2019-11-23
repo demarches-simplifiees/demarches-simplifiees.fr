@@ -5,17 +5,15 @@
     - @procedures_and_type_de_champs.each do |procedure, type_de_champs|
       %li{ style: 'margin-bottom: 8px;' }
         = link_to "Nº #{procedure.id},", manager_procedure_url(procedure)
-         #{procedure.libelle} :
-        %b= type_de_champs.map(&:libelle).join(', ')
-        %br
-        État : #{procedure.aasm_state}
-        %br
-        Nombre de dossier : #{procedure.dossiers.count}
-        %br
-          Admin :
-          %ul
-            - procedure.administrateurs.each do |administrateur|
-              %li
-                = link_to "#{administrateur.email}", "mailto:#{administrateur.email}"
+         #{procedure.libelle}
+        %ul
+          %li
+            #{'Champ'.pluralize(type_de_champs.length)} douteux :
+            %b= type_de_champs.map(&:libelle).join(', ')
+          %li
+            État : #{procedure.aasm_state}
+          %li
+            Nombre de #{'dossier'.pluralize(procedure.dossiers.count)} : #{procedure.dossiers.count}
+        = render partial: "field_description", locals: { procedure: procedure }
 - else
   Il n'y a aucune démarche douteuse aujourd'hui
