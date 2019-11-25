@@ -97,5 +97,8 @@
     // Make the autosave block occupy the entire horizontal space,
     // to ensure the failed state has room to display its content.
     flex-grow: 1;
+    // But shrink faster than the "Send" button,
+    // to avoid having the button label on 3 lines.
+    flex-shrink: 2;
   }
 }
