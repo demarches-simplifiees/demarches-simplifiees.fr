@@ -1,17 +1,21 @@
 class PiecesJustificativesService
   def self.liste_pieces_justificatives(dossier)
+    pjs_commentaires = dossier.commentaires
+      .map(&:piece_jointe)
+      .filter(&:attached?)
+
     champs_blocs_repetables = dossier.champs
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
       .flat_map(&:champs)
 
-    champs_pieces_justificatives_with_attachments(
+    pjs_commentaires + champs_pieces_justificatives_with_attachments(
       champs_blocs_repetables + dossier.champs
     )
   end
 
   def self.pieces_justificatives_total_size(dossier)
     liste_pieces_justificatives(dossier)
-      .sum { |pj| pj.piece_justificative_file.byte_size }
+      .sum(&:byte_size)
   end
 
   def self.serialize_types_de_champ_as_type_pj(procedure)
@@ -48,5 +52,6 @@ class PiecesJustificativesService
     champs
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
       .filter { |pj| pj.piece_justificative_file.attached? }
+      .map(&:piece_justificative_file)
   end
 end

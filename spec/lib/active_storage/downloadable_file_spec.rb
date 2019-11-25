@@ -24,5 +24,19 @@ describe ActiveStorage::DownloadableFile do
         expect(list.size).to eq(4)
       end
     end
+
+    context 'when there is a message with no attachment' do
+      let(:commentaire) { create(:commentaire) }
+      let(:dossier) { commentaire.dossier }
+
+      it { expect(list.length).to be 0 }
+    end
+
+    context 'when there is a message with an attachment' do
+      let(:commentaire) { create(:commentaire, :with_file) }
+      let(:dossier) { commentaire.dossier }
+
+      it { expect(list.length).to be 1 }
+    end
   end
 end
