@@ -9,7 +9,7 @@ class InstructeurDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    email: Field::String,
+    user: Field::HasOne.with_options(searchable: true, searchable_field: 'email'),
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     current_sign_in_at: Field::DateTime,
@@ -24,7 +24,7 @@ class InstructeurDashboard < Administrate::BaseDashboard
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
-    :email,
+    :user,
     :created_at
   ].freeze
 
@@ -34,7 +34,7 @@ class InstructeurDashboard < Administrate::BaseDashboard
     :procedures,
     :dossiers,
     :id,
-    :email,
+    :user,
     :current_sign_in_at,
     :created_at,
     :features

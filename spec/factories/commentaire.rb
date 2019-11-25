@@ -9,7 +9,7 @@ FactoryBot.define do
     end
 
     trait :with_file do
-      file { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
+      piece_jointe { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
     end
   end
 end
