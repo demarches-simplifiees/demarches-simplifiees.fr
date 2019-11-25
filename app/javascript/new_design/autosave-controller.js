@@ -37,6 +37,7 @@ export default class AutosaveController {
       const fetchOptions = {
         method: form.method,
         body: formData,
+        credentials: 'same-origin',
         headers: { Accept: 'application/json' }
       };
 
