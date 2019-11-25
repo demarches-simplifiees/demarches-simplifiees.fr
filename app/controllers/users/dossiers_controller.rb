@@ -155,7 +155,7 @@ module Users
 
       respond_to do |format|
         format.html { render :brouillon }
-        format.json { head :ok }
+        format.json { render json: {}, status: :ok }
       end
     end
 
