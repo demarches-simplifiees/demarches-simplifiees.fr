@@ -30,4 +30,10 @@ class Service < ApplicationRecord
     service_cloned.administrateur = administrateur
     service_cloned
   end
+
+  def telephone_url
+    if telephone.present?
+      "tel:#{telephone.gsub(/[[:blank:]]/, '')}"
+    end
+  end
 end

@@ -3,40 +3,43 @@
     - service = procedure.service
     - if service.present?
       .footer-row.footer-columns
-        %ul.footer-column
+        .footer-column
           %p.footer-header Cette démarche est gérée par :
-          %li
-            = service.nom
-            %br
-            = service.organisme
-            %br
-            = string_to_html(service.adresse, wrapper_tag = 'span')
+          %ul
+            %li
+              = service.nom
+              %br
+              = service.organisme
+              %br
+              = string_to_html(service.adresse, wrapper_tag = 'span')
 
-        %ul.footer-column
+        .footer-column
           %p.footer-header Poser une question sur votre dossier :
-          %li
-            - if dossier.present? && dossier.messagerie_available?
-              Directement
-              = link_to "par la messagerie", messagerie_dossier_path(dossier)
-            - else
-              Par email :
-              = link_to service.email, "mailto:#{service.email}"
+          %ul
+            %li
+              - if dossier.present? && dossier.messagerie_available?
+                Directement
+                = link_to "par la messagerie", messagerie_dossier_path(dossier)
+              - else
+                Par email :
+                = link_to service.email, "mailto:#{service.email}"
 
-          %li
-            Par téléphone :
-            %a{ href: "tel:#{service.telephone}" }= service.telephone
+            %li
+              Par téléphone :
+              = link_to service.telephone, service.telephone_url
 
-          %li
-            - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
-            = simple_format(horaires, {}, wrapper_tag: 'span')
+            %li
+              - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
+              = simple_format(horaires, {}, wrapper_tag: 'span')
 
 
         - politiques = politiques_conservation_de_donnees(procedure)
         - if politiques.present?
-          %ul.footer-column
+          .footer-column
             %p.footer-header Conservation des données :
-            - politiques.each do |politique|
-              %li= politique
+            %ul
+              - politiques.each do |politique|
+                %li= politique
 
     = render partial: 'users/general_footer_row', locals: { dossier: dossier }
 

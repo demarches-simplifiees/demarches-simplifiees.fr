@@ -9,7 +9,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    email: Field::String,
+    user: Field::HasOne.with_options(searchable: true, searchable_field: 'email'),
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     procedures: Field::HasMany.with_options(limit: 20),
@@ -24,7 +24,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
-    :email,
+    :user,
     :created_at,
     :procedures,
     :registration_state
@@ -34,7 +34,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
     :id,
-    :email,
+    :user,
     :created_at,
     :updated_at,
     :registration_state,
@@ -46,9 +46,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :email
-  ].freeze
+  FORM_ATTRIBUTES = [].freeze
 
   # Overwrite this method to customize how procedures are displayed
   # across all pages of the admin dashboard.
