@@ -3,7 +3,7 @@
 - dossier = controller.try(:dossier_for_help)
 - procedure = controller.try(:procedure_for_help)
 
-%header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
+%header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: 'banner' }
   .header-inner-content
 
     .flex.align-center
@@ -37,7 +37,7 @@
     %ul.header-right-content
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         %li
-          .header-search
+          .header-search{ role: 'search' }
             = form_tag instructeur_recherche_path, method: :get, class: "form" do
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
@@ -45,7 +45,7 @@
 
       - if nav_bar_profile == :user && user_signed_in? && current_user.dossiers.count > 2
         %li
-          .header-search
+          .header-search{ role: 'search' }
             = form_tag recherche_dossiers_path, method: :post, class: "form" do
               = text_field_tag :dossier_id, "", placeholder: "Numéro de dossier"
               %button{ title: "Rechercher" }
