@@ -13,10 +13,10 @@ class ActiveStorage::DownloadableFile
 
   def self.create_list_from_dossier(dossier)
     pjs = PiecesJustificativesService.liste_pieces_justificatives(dossier)
-    pjs.map do |pj|
+    pjs.map do |piece_justificative|
       [
-        ActiveStorage::DownloadableFile.new(pj.piece_justificative_file),
-        pj.piece_justificative_file.filename.to_s
+        ActiveStorage::DownloadableFile.new(piece_justificative),
+        piece_justificative.filename.to_s
       ]
     end
   end
