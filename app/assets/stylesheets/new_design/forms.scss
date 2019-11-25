@@ -200,6 +200,10 @@
 
   select,
   .select2-selection {
+    // By default a select element will have the size of its largest child.
+    // Ensure long items (like country names) don't make the viewport larger on narrow screens.
+    max-width: 100%;
+
     // hack found here: https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript
     -webkit-appearance: none;
     -moz-appearance: none;
