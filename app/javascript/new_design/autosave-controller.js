@@ -62,7 +62,7 @@ export default class AutosaveController {
     // exclude them from the draft (by disabling them).
     // (Also Safari has issue with FormData containing empty file inputs)
     const fileInputs = form.querySelectorAll(
-      'input[type="file"]:not([disabled])'
+      'input[type="file"]:not([disabled]), .editable-champ-piece_justificative input:not([disabled])'
     );
     fileInputs.forEach(fileInput => (fileInput.disabled = true));
 
