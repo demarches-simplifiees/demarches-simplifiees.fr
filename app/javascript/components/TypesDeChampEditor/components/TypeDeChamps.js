@@ -12,6 +12,8 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
     typeDeChamps
   });
 
+  const hasUnsavedChamps = state.typeDeChamps.some(tdc => tdc.id == undefined);
+
   return (
     <div className="champs-editor">
       <SortableContainer
@@ -43,6 +45,7 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
       <div className="buttons">
         <button
           className="button"
+          disabled={hasUnsavedChamps}
           onClick={() =>
             dispatch({
               type: 'addNewTypeDeChamp',
