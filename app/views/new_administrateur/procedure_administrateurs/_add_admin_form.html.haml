@@ -4,6 +4,6 @@
   remote: true do |f|
   = f.label :email do
     Ajouter un administrateur
-    %span.notice= "Renseignez l’email d’un administrateur déjà enregistré sur #{SITE_NAME} pour lui permettre de modifier « #{procedure.libelle} »."
+  %p.notice Renseignez l’email d’un administrateur déjà enregistré sur #{SITE_NAME} pour lui permettre de modifier « #{procedure.libelle} ».
   = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true
   = f.submit 'Ajouter comme administrateur', class: 'button primary send'

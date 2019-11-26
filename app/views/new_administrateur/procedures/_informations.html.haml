@@ -25,13 +25,13 @@
   = f.label :duree_conservation_dossiers_dans_ds do
     Sur demarches-simplifiees.fr
     %span.mandatory *
-    .notice (durée en mois après le début de l’instruction)
+  %p.notice (durée en mois après le début de l’instruction)
   = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
 
   = f.label :duree_conservation_dossiers_hors_ds do
     Hors demarches-simplifiees.fr
     %span.mandatory *
-    .notice (durée en mois après la fin de l'instruction)
+  %p.notice (durée en mois après la fin de l'instruction)
   = f.number_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6', required: true
 
 - if @procedure.created_at.present?
@@ -43,19 +43,19 @@
   Cadre juridique
   %span.mandatory *
 
-= f.label :cadre_juridique do
-  .notice
-    %p
-      Le cadre juridique justifie le droit de collecter les données demandées dans votre démarche auprès des usagers. Par exemple :
-      %br
-      • Texte de loi (loi, décret, circulaire, arrêté…)
-      %br
-      • Texte juridique (statuts, délibération, décision du conseil d'administration…)
-      %br
-      = link_to("En savoir plus avec cette vidéo de 5 minutes", CADRE_JURIDIQUE_URL, target: "_blank", rel: "noopener")
-      %p
-        Vous pouvez saisir un lien web vers ce texte, ou l’importer depuis un fichier.
-  Lien vers le texte
+%p.notice
+  Le cadre juridique justifie le droit de collecter les données demandées dans votre démarche auprès des usagers. Par exemple :
+  %br
+  • Texte de loi (loi, décret, circulaire, arrêté…)
+  %br
+  • Texte juridique (statuts, délibération, décision du conseil d'administration…)
+  %br
+  = link_to("En savoir plus avec cette vidéo de 5 minutes", CADRE_JURIDIQUE_URL, target: "_blank", rel: "noopener")
+
+%p.notice
+  Vous pouvez saisir un lien web vers ce texte, ou l’importer depuis un fichier.
+
+= f.label :cadre_juridique, 'Lien vers le texte'
 = f.text_field :cadre_juridique, class: 'form-control', placeholder: 'https://www.legifrance.gouv.fr/'
 
 = f.label :deliberation, 'Importer le texte'
@@ -64,14 +64,13 @@
     attached_file: @procedure.deliberation,
     user_can_destroy: true }
 
-%h2.header-section
-  Notice explicative de la démarche
+%h2.header-section Notice explicative de la démarche
 
+%p.notice
+  Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
+
+= f.label :notice, 'Notice'
 - notice = @procedure.notice
-= f.label :notice do
-  .notice
-    %p
-      Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
 = render 'shared/attachment/edit',
   { form: f,
     attached_file: @procedure.notice,
@@ -82,15 +81,14 @@
   .editable-champ.editable-champ-radio.vertical
     = f.label :for_individual, value: true do
       Ma démarche s’adresse à un particulier
-      %span.notice
-        %p En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
+    %p.notice En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
     = f.radio_button :for_individual, true
 
   .editable-champ.editable-champ-radio.vertical
     = f.label :for_individual, value: false do
       Ma démarche s’adresse à une personne morale
-      %span.notice
-        %p En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
+    %p.notice
+      En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
     = f.radio_button :for_individual, false
 
   %p.explication
@@ -160,10 +158,9 @@
   - if feature_enabled?(:administrateur_web_hook)
     = f.label :web_hook_url do
       Lien de rappel HTTP (webhook)
-      .notice
-        %p
-          Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
-          = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
+    %p.notice
+      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
+      = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
   = f.label :auto_archive_on do

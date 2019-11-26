@@ -1,6 +1,6 @@
 .dropdown.header-menu-opener
-  %button.button.dropdown-button.header-menu-button
-    = image_tag "icons/account-circle.svg", title: "Mon compte"
+  %button.button.dropdown-button.header-menu-button{ title: "Mon compte" }
+    = image_tag "icons/account-circle.svg", alt: ''
   %ul.header-menu.dropdown-content
     %li
       .menu-item{ title: current_email }
