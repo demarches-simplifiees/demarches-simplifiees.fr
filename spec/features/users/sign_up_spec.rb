@@ -42,7 +42,7 @@ feature 'Signing up:' do
     scenario 'a new user can sign-up and fill the procedure' do
       click_on 'Créer un compte'
       expect(page).to have_current_path new_user_registration_path
-      expect_page_to_have_procedure_description(procedure)
+      expect(page).to have_procedure_description(procedure)
 
       sign_up_with user_email, user_password
       expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
@@ -54,7 +54,7 @@ feature 'Signing up:' do
       click_on 'Commencer la démarche'
 
       expect(page).to have_current_path identite_dossier_path(procedure.reload.dossiers.last)
-      expect_page_to_have_procedure_description(procedure)
+      expect(page).to have_procedure_description(procedure)
     end
   end
 

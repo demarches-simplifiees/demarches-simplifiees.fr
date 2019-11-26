@@ -55,14 +55,6 @@ module FeatureHelpers
     visit "/users/confirmation?#{token_params}"
   end
 
-  def expect_page_to_have_procedure_description(procedure)
-    # Procedure context on the page
-    expect(page).to have_content(procedure.libelle)
-    expect(page).to have_content(procedure.description)
-    # Procedure contact infos in the footer
-    expect(page).to have_content(procedure.service.email)
-  end
-
   def click_reset_password_link_for(email)
     reset_password_email = open_email(email)
     token_params = reset_password_email.body.match(/reset_password_token=[^"]+/)
