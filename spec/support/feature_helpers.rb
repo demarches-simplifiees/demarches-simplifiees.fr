@@ -77,6 +77,32 @@ module FeatureHelpers
       value
     end
   end
+
+  # Keep the brower window open after a test success of failure, to
+  # allow inspecting the page or the console.
+  #
+  # Usage:
+  #  1. Disable the 'headless' mode in `spec_helper.rb`
+  #  2. Call `leave_browser_open` at the beginning of your scenario
+  def leave_browser_open
+    Selenium::WebDriver::Chrome::Service.class_eval do
+      def stop
+        STDOUT.puts "#{self.class}#stop is a no-op, because leave_browser_open is enabled"
+      end
+    end
+
+    Selenium::WebDriver::Driver.class_eval do
+      def quit
+        STDOUT.puts "#{self.class}#quit is a no-op, because leave_browser_open is enabled"
+      end
+    end
+
+    Capybara::Selenium::Driver.class_eval do
+      def reset!
+        STDOUT.puts "#{self.class}#reset! is a no-op, because leave_browser_open is enabled"
+      end
+    end
+  end
 end
 
 RSpec.configure do |config|
