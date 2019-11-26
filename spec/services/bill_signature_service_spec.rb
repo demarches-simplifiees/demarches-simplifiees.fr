@@ -4,7 +4,7 @@ describe BillSignatureService do
   describe ".grouped_unsigned_operation_until" do
     subject { BillSignatureService.grouped_unsigned_operation_until(date).length }
 
-    let(:date) { Date.today }
+    let(:date) { Time.zone.today }
 
     context "when operations of several days need to be signed" do
       before do
