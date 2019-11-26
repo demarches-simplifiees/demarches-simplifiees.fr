@@ -35,44 +35,45 @@
     display: block;
     font-weight: bold;
 
-    .notice {
-      @include notice-text-style;
-      display: block;
-      margin-top: $default-spacer;
-
-      p {
-        margin-bottom: $default-spacer;
-      }
-
-      ul {
-        list-style-type: square;
-        list-style-position: outside;
-        padding-left: 20px;
-      }
-
-      ol {
-        list-style-type: decimal;
-        list-style-position: outside;
-        padding-left: 20px;
-      }
-
-      b {
-        font-weight: 900;
-        color: $black;
-      }
-
-      table {
-        width: 90%;
-        margin-left: auto;
-        margin-right: auto;
-      }
-    }
-
     &.required {
       &::after {
         color: $dark-red;
         content: " *";
       }
+    }
+  }
+
+  .notice {
+    @include notice-text-style;
+    font-weight: bold;
+    margin-top: - $default-spacer;
+    margin-bottom: $default-padding;
+
+    p {
+      margin-bottom: $default-spacer;
+    }
+
+    ul {
+      list-style-type: square;
+      list-style-position: outside;
+      padding-left: 20px;
+    }
+
+    ol {
+      list-style-type: decimal;
+      list-style-position: outside;
+      padding-left: 20px;
+    }
+
+    b {
+      font-weight: 900;
+      color: $black;
+    }
+
+    table {
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 
@@ -96,6 +97,7 @@
     &.editable-champ-checkbox,
     &.editable-champ-radio.vertical,
     &.editable-champ-engagement {
+      p,
       label {
         padding-left: 28px;
       }

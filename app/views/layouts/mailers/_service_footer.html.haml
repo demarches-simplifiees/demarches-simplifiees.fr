@@ -28,7 +28,7 @@
             = link_to service.email, "mailto:#{service.email}"
           %br
           Par téléphone :
-          = link_to service.telephone, "tel:#{service.telephone}"
+          = link_to service.telephone, service.telephone_url
           %br
           Horaires : #{ formatted_horaires(service.horaires) }
 
