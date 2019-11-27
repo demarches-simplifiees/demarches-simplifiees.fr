@@ -30,9 +30,9 @@ describe API::V2::GraphqlController do
         title
         description
         state
-        createdAt
-        updatedAt
-        archivedAt
+        dateCreation
+        dateDerniereModification
+        dateFermeture
         groupeInstructeurs {
           label
           instructeurs {
@@ -80,9 +80,9 @@ describe API::V2::GraphqlController do
           title: procedure.libelle,
           description: procedure.description,
           state: 'brouillon',
-          archivedAt: nil,
-          createdAt: procedure.created_at.iso8601,
-          updatedAt: procedure.updated_at.iso8601,
+          dateFermeture: nil,
+          dateCreation: procedure.created_at.iso8601,
+          dateDerniereModification: procedure.updated_at.iso8601,
           groupeInstructeurs: [
             {
               instructeurs: [{ email: instructeur.email }],
@@ -139,7 +139,7 @@ describe API::V2::GraphqlController do
             id
             number
             state
-            updatedAt
+            dateDerniereModification
             datePassageEnConstruction
             datePassageEnInstruction
             dateTraitement
@@ -159,9 +159,13 @@ describe API::V2::GraphqlController do
               attachmentUrl
             }
             avis {
-              email
+              expert {
+                email
+              }
               question
-              answer
+              reponse
+              dateQuestion
+              dateReponse
               attachmentUrl
             }
             champs {
@@ -179,7 +183,7 @@ describe API::V2::GraphqlController do
           id: dossier.to_typed_id,
           number: dossier.id,
           state: 'en_construction',
-          updatedAt: dossier.updated_at.iso8601,
+          dateDerniereModification: dossier.updated_at.iso8601,
           datePassageEnConstruction: dossier.en_construction_at.iso8601,
           datePassageEnInstruction: nil,
           dateTraitement: nil,
