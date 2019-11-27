@@ -10,14 +10,8 @@ feature 'As an administrateur I can edit types de champ', js: true do
   end
 
   it "Add a new champ" do
-    page.accept_alert do
-      click_on 'Supprimer'
-    end
+    add_champ
 
-    within '.buttons' do
-      click_on 'Ajouter un champ'
-    end
-    expect(page).to have_selector('#champ-0-libelle')
     fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
     expect(page).to have_content('Formulaire enregistré')
@@ -26,65 +20,64 @@ feature 'As an administrateur I can edit types de champ', js: true do
     within '.buttons' do
       click_on 'Enregistrer'
     end
-
     expect(page).to have_content('Formulaire enregistré')
   end
 
   it "Add multiple champs" do
-    within '.buttons' do
-      click_on 'Ajouter un champ'
-      click_on 'Ajouter un champ'
-      click_on 'Ajouter un champ'
-    end
-    page.refresh
+    # Champs are created when clicking the 'Add field' button
+    add_champs(count: 3)
 
+    # Champs are automatically saved
+    expect(page).to have_button('Ajouter un champ', disabled: false)
+    page.refresh
+    expect(page).to have_selector('.type-de-champ', count: 3)
+
+    # Multiple champs can be edited
     fill_in 'champ-0-libelle', with: 'libellé de champ 0'
     fill_in 'champ-1-libelle', with: 'libellé de champ 1'
     blur
     expect(page).to have_content('Formulaire enregistré')
 
-    expect(page).to have_selector('#champ-0-libelle')
-    expect(page).to have_selector('#champ-1-libelle')
-    expect(page).to have_selector('#champ-2-libelle')
-    expect(page).to have_selector('#champ-3-libelle')
-
+    # Champs can be deleted
     within '.type-de-champ[data-index="2"]' do
       page.accept_alert do
         click_on 'Supprimer'
       end
     end
+    expect(page).not_to have_selector('#champ-2-libelle')
 
-    expect(page).not_to have_selector('#champ-3-libelle')
-    fill_in 'champ-2-libelle', with: 'libellé de champ 2'
+    fill_in 'champ-1-libelle', with: 'edited libellé de champ 1'
     blur
     expect(page).to have_content('Formulaire enregistré')
-
-    expect(page).to have_content('Supprimer', count: 3)
+    expect(page).to have_content('Supprimer', count: 2)
 
     page.refresh
-
-    expect(page).to have_content('Supprimer', count: 3)
+    expect(page).to have_content('Supprimer', count: 2)
   end
 
   it "Remove champs" do
+    add_champ(remove_flash_message: true)
+
     fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
     expect(page).to have_content('Formulaire enregistré')
     page.refresh
+
     page.accept_alert do
       click_on 'Supprimer'
     end
     expect(page).to have_content('Formulaire enregistré')
-    expect(page).to have_content('Supprimer', count: 1)
+    expect(page).to have_content('Supprimer', count: 0)
     page.refresh
 
-    expect(page).to have_content('Supprimer', count: 1)
+    expect(page).to have_content('Supprimer', count: 0)
   end
 
   it "Only add valid champs" do
-    expect(page).to have_selector('#champ-0-description')
+    add_champ(remove_flash_message: true)
+
     fill_in 'champ-0-libelle', with: ''
-    fill_in 'champ-0-description', with: 'déscription du champ'
+    fill_in 'champ-0-description', with: 'description du champ'
     blur
     expect(page).not_to have_content('Formulaire enregistré')
 
@@ -94,7 +87,8 @@ feature 'As an administrateur I can edit types de champ', js: true do
   end
 
   it "Add repetition champ" do
-    expect(page).to have_selector('#champ-0-libelle')
+    add_champ(remove_flash_message: true)
+
     select('Bloc répétable', from: 'champ-0-type_champ')
     fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
@@ -124,6 +118,8 @@ feature 'As an administrateur I can edit types de champ', js: true do
   end
 
   it "Add carte champ" do
+    add_champ
+
     select('Carte', from: 'champ-0-type_champ')
     fill_in 'champ-0-libelle', with: 'Libellé de champ carte', fill_options: { clear: :backspace }
     check 'Quartiers prioritaires'
@@ -140,6 +136,8 @@ feature 'As an administrateur I can edit types de champ', js: true do
   end
 
   it "Add dropdown champ" do
+    add_champ
+
     select('Menu déroulant', from: 'champ-0-type_champ')
     fill_in 'champ-0-libelle', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
     fill_in 'champ-0-drop_down_list_value', with: 'Un menu', fill_options: { clear: :backspace }
