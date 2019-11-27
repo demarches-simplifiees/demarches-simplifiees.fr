@@ -184,25 +184,6 @@ module Instructeurs
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
-    def download_dossiers
-      dossiers = current_instructeur.dossiers.for_procedure(procedure)
-
-      respond_to do |format|
-        format.csv do
-          send_data(procedure.to_csv(dossiers),
-            filename: procedure.export_filename(:csv))
-        end
-        format.xlsx do
-          send_data(procedure.to_xlsx(dossiers),
-            filename: procedure.export_filename(:xlsx))
-        end
-        format.ods do
-          send_data(procedure.to_ods(dossiers),
-            filename: procedure.export_filename(:ods))
-        end
-      end
-    end
-
     def download_export
       export_format = params[:export_format]
       notice_message = "Nous générons cet export. Lorsque celui-ci sera disponible, vous recevrez une notification par email accompagnée d'un lien de téléchargement."
