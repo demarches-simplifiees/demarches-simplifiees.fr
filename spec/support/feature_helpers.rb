@@ -62,6 +62,24 @@ module FeatureHelpers
     visit "/users/password/edit?#{token_params}"
   end
 
+  # Add a new type de champ in the procedure editor
+  def add_champ(options = {})
+    add_champs(options)
+  end
+
+  # Add several new type de champ in the procedure editor
+  def add_champs(count: 1, remove_flash_message: false)
+    within '.buttons' do
+      count.times { click_on 'Ajouter un champ' }
+    end
+
+    if remove_flash_message
+      expect(page).to have_button('Ajouter un champ', disabled: false)
+      expect(page).to have_content('Formulaire enregistré')
+      execute_script("document.querySelector('#flash_message').remove();")
+    end
+  end
+
   def blur
     page.find('body').click
   end
