@@ -6,7 +6,7 @@
     .container
       .hero-wrapper
         .hero-text
-          %p.hero-tagline
+          %h1.hero-tagline
             %em.hero-tagline-em Effectuer
             %br<>
             %em.hero-tagline-em une démarche administrative
@@ -14,16 +14,16 @@
             %em.hero-tagline-em en ligne
 
         .hero-illustration
-          %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: "dématérialisez" }
+          %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: '' }
 
   .landing-panel.usagers-panel
     .container
       .role-panel-wrapper
         .role-panel-30.role-usagers-image
-          %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "usager" }
+          %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: '' }
 
         .role-panel-70
-          %h1.role-panel-title Vous souhaitez effectuer une demande auprès d'une administration ?
+          %h2.role-panel-title Vous souhaitez effectuer une demande auprès d'une administration ?
           %p.role-panel-explanation Réalisez vos demandes en toute simplicité et retrouvez vos dossiers en ligne
 
           = link_to "Comment trouver ma démarche ?",
@@ -67,7 +67,7 @@
     .container
       .cta-panel-wrapper
         %div
-          %h1.cta-panel-title Une question, un problème ?
+          %h2.cta-panel-title Une question, un problème ?
           %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
         %div
           = contact_link "Contactez-nous",
@@ -80,7 +80,7 @@
     .container
       .cta-panel-wrapper
         %div
-          %h1.cta-panel-title Administration : vous voulez dématerialiser ?
+          %h2.cta-panel-title Administration : vous voulez dématerialiser ?
           %p.cta-panel-explanation Proposez à vos usagers de remplir leurs dossiers en ligne
         %div
           = link_to "Découvrez notre outil",
