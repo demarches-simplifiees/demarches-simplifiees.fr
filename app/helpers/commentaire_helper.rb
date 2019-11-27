@@ -18,7 +18,7 @@ module CommentaireHelper
   end
 
   def commentaire_date(commentaire)
-    is_current_year = (commentaire.created_at.year == Date.current.year)
+    is_current_year = (commentaire.created_at.year == Time.zone.today.year)
     template = is_current_year ? :message_date : :message_date_with_year
     I18n.l(commentaire.created_at, format: template)
   end

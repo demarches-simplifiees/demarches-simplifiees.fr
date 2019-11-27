@@ -12,12 +12,7 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
     typeDeChamps
   });
 
-  if (state.typeDeChamps.length === 0) {
-    dispatch({
-      type: 'addFirstTypeDeChamp',
-      done: () => dispatch({ type: 'refresh' })
-    });
-  }
+  const hasUnsavedChamps = state.typeDeChamps.some(tdc => tdc.id == undefined);
 
   return (
     <div className="champs-editor">
@@ -39,10 +34,18 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
           />
         ))}
       </SortableContainer>
+      {state.typeDeChamps.length === 0 && (
+        <h2>
+          <FontAwesomeIcon icon="arrow-circle-down" />
+          &nbsp;&nbsp;Cliquez sur le bouton «&nbsp;Ajouter un champ&nbsp;» pour
+          créer votre premier champ.
+        </h2>
+      )}
       <div className="footer">&nbsp;</div>
       <div className="buttons">
         <button
           className="button"
+          disabled={hasUnsavedChamps}
           onClick={() =>
             dispatch({
               type: 'addNewTypeDeChamp',
