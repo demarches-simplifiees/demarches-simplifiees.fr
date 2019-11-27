@@ -6,11 +6,11 @@ class Champs::DateChamp < Champ
   end
 
   def to_s
-    value.present? ? I18n.l(Date.parse(value)) : ""
+    value.present? ? I18n.l(Time.zone.parse(value), format: '%d %B %Y') : ""
   end
 
   def for_tag
-    value.present? ? I18n.l(Date.parse(value)) : ""
+    value.present? ? I18n.l(Time.zone.parse(value), format: '%d %B %Y') : ""
   end
 
   private
@@ -18,7 +18,7 @@ class Champs::DateChamp < Champ
   def format_before_save
     self.value =
       begin
-        Date.parse(value).iso8601
+        Time.zone.parse(value).to_date.iso8601
       rescue
         nil
       end
