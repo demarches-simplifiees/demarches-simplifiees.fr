@@ -20,6 +20,13 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_revert_to_instruction(dossier)
   end
 
+  def notify_near_delete_dossier
+    DossierMailer.notify_near_deletion(User.new(email: "usager@example.com"), [dossier])
+  end
+
+  def notify_near_delete_dossiers
+    DossierMailer.notify_near_deletion(User.new(email: "usager@example.com"), [dossier, dossier2])
+  end
   private
 
   def deleted_dossier
@@ -31,11 +38,15 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   def dossier
-    Dossier.new(id: 47882, state: :en_instruction, procedure: procedure, user: User.new(email: "usager@example.com"))
+    Dossier.new(id: 47882, state: :en_instruction, procedure: procedure, user: User.new(email: "usager@example.com"), created_at: Time.zone.now)
+  end
+
+  def dossier2
+    Dossier.new(id: 47883, state: :brouillon, procedure: procedure, user: User.new(email: "usager@example.com"), created_at: Time.zone.now)
   end
 
   def procedure
-    Procedure.new(libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'))
+    Procedure.new(libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, duree_conservation_dossiers_dans_ds: 6, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'))
   end
 
   def service

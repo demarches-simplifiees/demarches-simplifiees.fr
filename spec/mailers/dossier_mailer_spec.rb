@@ -83,4 +83,18 @@ RSpec.describe DossierMailer, type: :mailer do
 
     it_behaves_like 'a dossier notification'
   end
+
+  describe '.notify_near_deletion' do
+    let(:dossier) { create(:dossier) }
+
+    before do
+      duree = dossier.procedure.duree_conservation_dossiers_dans_ds
+      @date_suppression = dossier.created_at + duree.months
+    end
+
+    subject { described_class.notify_near_deletion(dossier.user, [dossier]) }
+
+    it { expect(subject.body).to include("n° #{dossier.id} ") }
+    it { expect(subject.body).to include(dossier.procedure.libelle) }
+  end
 end

@@ -71,5 +71,9 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_near_deletion(user, dossiers)
+    @subject = default_i18n_subject(count: dossiers.count)
+    @dossiers = dossiers
+
+    mail(to: user.email, subject: @subject)
   end
 end

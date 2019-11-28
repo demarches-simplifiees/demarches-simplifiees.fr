@@ -1,0 +1,16 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p
+  Afin de limiter la conservation de vos données personnelles,
+  = t('.automatic_dossier_deletion', count: @dossiers.count)
+  %ul
+    - @dossiers.each do |d|
+      %li= link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))
+
+%p
+  Vous avez encore <b>1 mois</b> pour pour soumettre ce dossier ou le supprimer.
+
+= render partial: "layouts/mailers/signature"

@@ -1,0 +1,9 @@
+fr:
+  dossier_mailer:
+    notify_near_deletion:
+      subject:
+        one: Un dossier en brouillon va bientôt être supprimé
+        other: Des dossiers en brouillon vont bientôt être supprimés
+      automatic_dossier_deletion:
+        one: "le dossier en brouillon suivant sera bientôt automatiquement supprimé :"
+        other: "les dossiers en brouillon suivant seront bientôt automatiquement supprimés :"
