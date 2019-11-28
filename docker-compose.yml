@@ -11,7 +11,6 @@ version: '3.3'
 #   - app: Main rails application (frontend)
 #   - worker: responsible of running jobs like sending mails, virus analysis
 #   - clamav: antivirus used to verify documents attached to forms
-#   - itaiete: Server which synchronizes with ISPF server every night and provides access to numéro Tahiti
 # Variables
 # IMAGE : name of the docker image to run (sipf/mes-demarches)
 # TAG : Tag of the image to run (eg master or devpf or b38)
@@ -19,6 +18,8 @@ version: '3.3'
 #
 # APP_HOST: host:port pointing to the application to allows creation of absolute links
 #
+# API_ENTREPRISE_PF_AUTH keycloak URL to connect to iteiete realm
+# API_ENTREPRISE_PF_URL itaiete url
 # API_ISPF_USER: ISPF API configuration
 # API_ISPF_PASSWORD
 #
@@ -44,7 +45,8 @@ services:
     ports:
       - ${PORT}:3000
     environment:
-      - API_ENTREPRISE_PF_URL=http://itaiete-${ENV:-dev}:8080/api/v2
+      - API_ENTREPRISE_PF_AUTH
+      - API_ENTREPRISE_PF_URL
       - API_ISPF_PASSWORD
       - API_ISPF_USER
       - APP_HOST
@@ -116,31 +118,6 @@ services:
       - clamav-logs:/var/log/clamav
       - md-systmp:/tmp
       - md-tmp:/app/tmp
-    networks:
-      - md-network
-
-#------------------- ITAIETE --------------------------
-  itaiete:
-    image: registry.gov.pf/revatua/i-taiete2:${TAG_ITAIETE:-md}
-    container_name: itaiete-${ENV:-dev}
-    restart: always
-    expose:
-      - 8080
-    environment:
-      - 'SPRING_APPLICATION_JSON={
-          "spring": {
-            "datasource": {
-              "url":"jdbc:postgresql://${DB_HOST}:5432/${DB_ITAIETE}",
-              "username":"${DB_USERNAME}",
-              "password":"${DB_PASSWORD}"
-            }
-          },
-          "server": {
-            "ssl" : {
-              "enabled": "false"
-            }
-          }
-        }'
     networks:
       - md-network
 

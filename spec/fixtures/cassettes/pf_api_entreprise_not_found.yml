@@ -1,0 +1,87 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://auth.gov.pf/auth/realms/Itaiete/protocol/openid-connect/token
+    body:
+      encoding: UTF-8
+      string: grant_type=client_credentials
+    headers:
+      User-Agent:
+      - Mes-Démarches
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 19 Nov 2019 01:45:39 GMT
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=63072000; includeSubdomains; preload
+      Cache-Control:
+      - no-store
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1883'
+      Set-Cookie:
+      - KC_RESTART=; Version=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0;
+        Path=/auth/realms/Itaiete/; HttpOnly
+    body:
+      encoding: UTF-8
+      string: '{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIwWVBEUkxuRVBTNVQyaFVMZkpseWN2SjhId1Q4LUF1YUtBTktOcVhCZXhzIn0.eyJqdGkiOiI3ZGM0YmFiNC1kZDBjLTRhMjEtYmZlMC1lZDZlNDdlMWVhNDIiLCJleHAiOjE1NzQxNjM5MzksIm5iZiI6MCwiaWF0IjoxNTc0MTI3OTM5LCJpc3MiOiJodHRwczovL2F1dGguZ292LnBmL2F1dGgvcmVhbG1zL0l0YWlldGUiLCJzdWIiOiIzNjUzMjA3Zi1hNGVmLTQ5MjQtODNhYy01NjFmZmFlNTk4ZDkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJNRVMtREVNQVJDSEVTIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiZjUyZWQ0MWItM2MxNy00OTExLTliNWItMzgwNTIyNjhiZDJkIiwiYWNyIjoiMSIsInNjb3BlIjoiRW50cmVwcmlzZXMuUmVhZCBWZXJzaW9uLlJlYWQiLCJjbGllbnRJZCI6Ik1FUy1ERU1BUkNIRVMiLCJjbGllbnRIb3N0IjoiMTI3LjAuMC4xIiwiY2xpZW50QWRkcmVzcyI6IjEyNy4wLjAuMSJ9.CrftSzXsuHXKQsrCTrc_qU_dDY2wwF9IEsg4KpvBn4pnv3clfBxaz38tACGipKo1bR-PMGAvAY8NHpf2BooZbv-9O7O6pJv9Fdyl1c0xecWbeutmBb5qq21zknbsomqUVzmBMLgpr8yuNqx7dSjO4aKOYvN2RPOhkH7yLiPCeuoYFrraQMU8CAUNvIqPONsUZf-2jbCozVIHxP0Drh4UBXh8rddrFRvBYun5EzYZuh4bGmFXaLFhbea1g4hLv0a9jTQcGYuXs3WljLadi8pczh0bybRfIYWgKDv2hzQ5vJ2tj135-HsCFKeuWbilSI6eK8vZRGkJ9RU86GgmNLj-Ng","expires_in":36000,"refresh_expires_in":36000,"refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJhNjk1ZDhmNy1iYzcyLTQ5YjktOGEwNy0zMGI0M2VhY2E1Y2EifQ.eyJqdGkiOiJkMWRmNWI2OS0xMWUxLTRlN2QtOWY5Zi05YzQ5MTNjMTUzOWQiLCJleHAiOjE1NzQxNjM5MzksIm5iZiI6MCwiaWF0IjoxNTc0MTI3OTM5LCJpc3MiOiJodHRwczovL2F1dGguZ292LnBmL2F1dGgvcmVhbG1zL0l0YWlldGUiLCJhdWQiOiJodHRwczovL2F1dGguZ292LnBmL2F1dGgvcmVhbG1zL0l0YWlldGUiLCJzdWIiOiIzNjUzMjA3Zi1hNGVmLTQ5MjQtODNhYy01NjFmZmFlNTk4ZDkiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoiTUVTLURFTUFSQ0hFUyIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6ImY1MmVkNDFiLTNjMTctNDkxMS05YjViLTM4MDUyMjY4YmQyZCIsInNjb3BlIjoiRW50cmVwcmlzZXMuUmVhZCBWZXJzaW9uLlJlYWQifQ.Wb9QQieHa33G_saKuPTU5-Fs5DPtp4EDNlXzSqLjW1Q","token_type":"bearer","not-before-policy":0,"session_state":"f52ed41b-3c17-4911-9b5b-38052268bd2d","scope":"Entreprises.Read
+        Version.Read"}'
+  recorded_at: Tue, 19 Nov 2019 01:45:39 GMT
+- request:
+    method: get
+    uri: https://api.i-taiete2.dev.gov.pf:8080/api/v2/etablissements/Entreprise?numeroTahiti=111111
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Mes-Démarches
+      Authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIwWVBEUkxuRVBTNVQyaFVMZkpseWN2SjhId1Q4LUF1YUtBTktOcVhCZXhzIn0.eyJqdGkiOiI3ZGM0YmFiNC1kZDBjLTRhMjEtYmZlMC1lZDZlNDdlMWVhNDIiLCJleHAiOjE1NzQxNjM5MzksIm5iZiI6MCwiaWF0IjoxNTc0MTI3OTM5LCJpc3MiOiJodHRwczovL2F1dGguZ292LnBmL2F1dGgvcmVhbG1zL0l0YWlldGUiLCJzdWIiOiIzNjUzMjA3Zi1hNGVmLTQ5MjQtODNhYy01NjFmZmFlNTk4ZDkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJNRVMtREVNQVJDSEVTIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiZjUyZWQ0MWItM2MxNy00OTExLTliNWItMzgwNTIyNjhiZDJkIiwiYWNyIjoiMSIsInNjb3BlIjoiRW50cmVwcmlzZXMuUmVhZCBWZXJzaW9uLlJlYWQiLCJjbGllbnRJZCI6Ik1FUy1ERU1BUkNIRVMiLCJjbGllbnRIb3N0IjoiMTI3LjAuMC4xIiwiY2xpZW50QWRkcmVzcyI6IjEyNy4wLjAuMSJ9.CrftSzXsuHXKQsrCTrc_qU_dDY2wwF9IEsg4KpvBn4pnv3clfBxaz38tACGipKo1bR-PMGAvAY8NHpf2BooZbv-9O7O6pJv9Fdyl1c0xecWbeutmBb5qq21zknbsomqUVzmBMLgpr8yuNqx7dSjO4aKOYvN2RPOhkH7yLiPCeuoYFrraQMU8CAUNvIqPONsUZf-2jbCozVIHxP0Drh4UBXh8rddrFRvBYun5EzYZuh4bGmFXaLFhbea1g4hLv0a9jTQcGYuXs3WljLadi8pczh0bybRfIYWgKDv2hzQ5vJ2tj135-HsCFKeuWbilSI6eK8vZRGkJ9RU86GgmNLj-Ng
+      Content-Type:
+      - application/json; charset=UTF-8
+      Expect:
+      - ''
+  response:
+    status:
+      code: 403
+      message: ''
+    headers:
+      Pragma:
+      - no-cache
+      Www-Authenticate:
+      - Bearer error="insufficient_scope", error_description="Insufficient scope for
+        this resource", scope="Etablissements.Read"
+      Cache-Control:
+      - no-store
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Strict-Transport-Security:
+      - max-age=31536000 ; includeSubDomains
+      X-Frame-Options:
+      - DENY
+      Content-Type:
+      - application/xml;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Tue, 19 Nov 2019 01:45:39 GMT
+    body:
+      encoding: UTF-8
+      string: "<InsufficientScopeException><error>insufficient_scope</error><error_description>Insufficient
+        scope for this resource</error_description><scope>Etablissements.Read</scope></InsufficientScopeException>"
+  recorded_at: Tue, 19 Nov 2019 01:45:39 GMT
+recorded_with: VCR 4.0.0
