@@ -112,10 +112,6 @@ class Procedure < ApplicationRecord
       transitions from: :publiee, to: :hidden
       transitions from: :archivee, to: :hidden
     end
-
-    event :draft, after: :after_draft do
-      transitions from: :publiee, to: :brouillon
-    end
   end
 
   def publish_or_reopen!(administrateur)
@@ -620,10 +616,6 @@ class Procedure < ApplicationRecord
     update!(hidden_at: now)
     dossiers.update_all(hidden_at: now)
     purge_export_files
-  end
-
-  def after_draft
-    update!(published_at: nil)
   end
 
   def update_juridique_required
