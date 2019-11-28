@@ -10,7 +10,7 @@ module Instructeurs
         .procedures
         .with_attached_logo
         .includes(:defaut_groupe_instructeur)
-        .order(archived_at: :desc, published_at: :desc, created_at: :desc)
+        .order(closed_at: :desc, archived_at: :desc, published_at: :desc, created_at: :desc)
 
       dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
       @dossiers_count_per_procedure = dossiers.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
