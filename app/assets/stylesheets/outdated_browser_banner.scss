@@ -1,16 +1,23 @@
 #outdated-browser-banner {
-  position: fixed;
-  text-align: center;
-  line-height: 2em;
-  color: #FFFFFF;
-  background-color: #990000;
   width: 100%;
   margin: 0;
   bottom: 0;
   left: 0;
   z-index: 1000;
 
-  a {
-    color: #C3D9FF;
+  color: #333333;
+  background-color: #FEF3B8;
+
+  .container {
+    display: flex;
+    width: auto;
+    align-items: center;
+    padding: 8px 16px;
   }
+}
+
+.outdater-browser-icon {
+  margin-right: 16px;
+  font-size: 30px;
+  opacity: 0.7;
 }
