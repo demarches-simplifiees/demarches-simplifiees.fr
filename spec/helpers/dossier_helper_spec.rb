@@ -49,8 +49,8 @@ RSpec.describe DossierHelper, type: :helper do
     context "when dossier state is brouillon" do
       it { is_expected.to be false }
 
-      context "when dossier state is brouillon and procedure is archivee" do
-        before { dossier.procedure.archive }
+      context "when dossier state is brouillon and procedure is close" do
+        before { dossier.procedure.close }
 
         it { is_expected.to be true }
       end
@@ -59,8 +59,8 @@ RSpec.describe DossierHelper, type: :helper do
     shared_examples_for "returns false" do
       it { is_expected.to be false }
 
-      context "and procedure is archivee" do
-        before { dossier.procedure.archive }
+      context "and procedure is close" do
+        before { dossier.procedure.close }
 
         it { is_expected.to be false }
       end

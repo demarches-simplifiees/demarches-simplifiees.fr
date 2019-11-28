@@ -61,6 +61,6 @@
                       .stats-legend
                         = t('pluralize.archived', count: archived_count)
 
-            - if p.archivee?
+            - if p.close?
               .procedure-status
-                %span.label Archivée
+                %span.label Close
