@@ -27,6 +27,16 @@ class DossierMailerPreview < ActionMailer::Preview
   def notify_near_delete_dossiers
     DossierMailer.notify_near_deletion(User.new(email: "usager@example.com"), [dossier, dossier2])
   end
+
+  def notify_delete_dossier
+    DossierMailer.notify_deletion(User.new(email: "usager@example.com"), [dossier.hash_for_deletion_mail])
+  end
+
+  def notify_delete_dossiers
+    dossier_hashes = [dossier, dossier2].map(&:hash_for_deletion_mail)
+    DossierMailer.notify_deletion(User.new(email: "usager@example.com"), dossier_hashes)
+  end
+
   private
 
   def deleted_dossier

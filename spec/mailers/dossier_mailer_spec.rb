@@ -97,4 +97,13 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include("n° #{dossier.id} ") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
   end
+
+  describe '.notify_deletion' do
+    let(:dossier) { create(:dossier) }
+
+    subject { described_class.notify_deletion(dossier.user, [dossier.hash_for_deletion_mail]) }
+
+    it { expect(subject.subject).to eq("Un dossier en brouillon a été supprimé automatiquement") }
+    it { expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})") }
+  end
 end

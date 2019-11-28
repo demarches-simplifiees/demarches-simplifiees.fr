@@ -587,6 +587,10 @@ class Dossier < ApplicationRecord
     Dossier.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
   end
 
+  def hash_for_deletion_mail
+    { id: self.id, procedure_libelle: self.procedure.libelle }
+  end
+
   private
 
   def log_dossier_operation(author, operation, subject = nil)
@@ -657,11 +661,12 @@ class Dossier < ApplicationRecord
     expired_brouillons = Dossier.expired_brouillon
 
     expired_brouillons
-      .includes(:user)
+      .includes(:procedure, :user)
       .group_by(&:user)
       .each do |(user, dossiers)|
 
-      DossierMailer.notify_deletion(user, dossiers).deliver_later
+      dossier_hashes = dossiers.map(&:hash_for_deletion_mail)
+      DossierMailer.notify_deletion(user, dossier_hashes).deliver_later
       dossiers.each { |d| DeletedDossier.create_from_dossier(d) }
     end
 
