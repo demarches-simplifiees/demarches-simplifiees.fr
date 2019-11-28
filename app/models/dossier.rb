@@ -162,6 +162,13 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
+  scope :brouillon_close_to_expiration, -> do
+    brouillon
+      .joins(:procedure)
+      .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (1 * interval '1 month') <=  now()")
+  end
+  scope :without_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
+
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
 
@@ -626,5 +633,20 @@ class Dossier < ApplicationRecord
         self
       )
     end
+  end
+
+  def self.send_brouillon_expiration_notices
+    brouillons = Dossier
+      .brouillon_close_to_expiration
+      .without_notice_sent
+
+    brouillons
+      .includes(:user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+        DossierMailer.notify_near_deletion(user, dossiers).deliver_later
+      end
+
+    brouillons.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
   end
 end
