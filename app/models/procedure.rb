@@ -1,7 +1,7 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['logo', 'logo_secure_token']
+  self.ignored_columns = ['logo', 'logo_secure_token', 'test_started_at']
 
   include ProcedureStatsConcern
 
@@ -111,10 +111,6 @@ class Procedure < ApplicationRecord
       transitions from: :brouillon, to: :hidden
       transitions from: :publiee, to: :hidden
       transitions from: :archivee, to: :hidden
-    end
-
-    event :draft, after: :after_draft do
-      transitions from: :publiee, to: :brouillon
     end
   end
 
@@ -366,7 +362,6 @@ class Procedure < ApplicationRecord
       }, &method(:clone_attachments))
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
-    procedure.test_started_at = nil
     procedure.archived_at = nil
     procedure.published_at = nil
     procedure.lien_notice = nil
@@ -621,10 +616,6 @@ class Procedure < ApplicationRecord
     update!(hidden_at: now)
     dossiers.update_all(hidden_at: now)
     purge_export_files
-  end
-
-  def after_draft
-    update!(published_at: nil)
   end
 
   def update_juridique_required
