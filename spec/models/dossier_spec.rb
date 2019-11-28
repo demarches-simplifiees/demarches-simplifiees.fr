@@ -1092,7 +1092,7 @@ describe Dossier do
 
     it 'notifies deletion' do
       expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
-      expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(expired_brouillon.user, [expired_brouillon])
+      expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(expired_brouillon.user, [expired_brouillon.hash_for_deletion_mail])
     end
 
     it 'deletes the expired brouillon' do
