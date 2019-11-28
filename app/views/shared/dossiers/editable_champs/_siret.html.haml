@@ -5,7 +5,7 @@
   required: champ.mandatory?,
   pattern: "[0-9]{14}",
   title: "Le numéro de SIRET doit comporter exactement 14 chiffres"
-.spinner.right-spinner.hidden
+.spinner.right.hidden
 %div{ class: "siret-info-#{form.index}" }
   - if champ.etablissement.present?
     = render partial: 'shared/dossiers/editable_champs/etablissement_titre', locals: { etablissement: champ.etablissement }
