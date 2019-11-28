@@ -1,0 +1,10 @@
+@import "colors";
+@import "constants";
+
+.suspect-email {
+  background-color: $orange-bg;
+  font-weight: bold;
+  text-align: center;
+  padding: $default-padding;
+}
+
