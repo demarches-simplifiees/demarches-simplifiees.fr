@@ -5,6 +5,7 @@ import {
   faArrowDown,
   faArrowsAltV,
   faArrowUp,
+  faArrowCircleDown,
   faPlus,
   faTrash
 } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +14,14 @@ import Flash from './Flash';
 import OperationsQueue from './OperationsQueue';
 import TypeDeChamps from './components/TypeDeChamps';
 
-library.add(faArrowDown, faArrowsAltV, faArrowUp, faPlus, faTrash);
+library.add(
+  faArrowDown,
+  faArrowsAltV,
+  faArrowUp,
+  faArrowCircleDown,
+  faPlus,
+  faTrash
+);
 
 class TypesDeChampEditor extends Component {
   constructor(props) {

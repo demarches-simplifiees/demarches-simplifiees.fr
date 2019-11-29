@@ -19,7 +19,7 @@ const autosaveController = new AutosaveController();
 // Whenever a 'change' event is triggered on one of the form inputs, try to autosave.
 
 const formSelector = 'form#dossier-edit-form.autosave-enabled';
-const formInputsSelector = `${formSelector} input, ${formSelector} select, ${formSelector} textarea`;
+const formInputsSelector = `${formSelector} input:not([type=input]), ${formSelector} select, ${formSelector} textarea`;
 
 delegate(
   'change',
