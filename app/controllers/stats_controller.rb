@@ -163,8 +163,8 @@ class StatsController < ApplicationController
   def contact_percentage
     number_of_months = 13
 
-    from = Time.zone.today.prev_month(number_of_months)
-    to = Time.zone.today.prev_month
+    from = Time.zone.now.prev_month(number_of_months)
+    to = Time.zone.now.prev_month
 
     adapter = Helpscout::UserConversationsAdapter.new(from, to)
     if !adapter.can_fetch_reports?
