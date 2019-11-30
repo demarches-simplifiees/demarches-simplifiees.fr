@@ -11,8 +11,6 @@ export default function typeDeChampsReducer(state, { type, params, done }) {
   switch (type) {
     case 'addNewTypeDeChamp':
       return addNewTypeDeChamp(state, state.typeDeChamps, done);
-    case 'addFirstTypeDeChamp':
-      return addFirstTypeDeChamp(state, state.typeDeChamps, done);
     case 'addNewRepetitionTypeDeChamp':
       return addNewRepetitionTypeDeChamp(
         state,
@@ -96,19 +94,6 @@ function addNewRepetitionTypeDeChamp(state, typeDeChamps, typeDeChamp, done) {
     null,
     done
   );
-}
-
-function addFirstTypeDeChamp(state, typeDeChamps, done) {
-  const typeDeChamp = { ...state.defaultTypeDeChampAttributes, order_place: 0 };
-
-  createTypeDeChampOperation(typeDeChamp, state.queue)
-    .then(() => done())
-    .catch(message => state.flash.error(message));
-
-  return {
-    ...state,
-    typeDeChamps: [...typeDeChamps, typeDeChamp]
-  };
 }
 
 function updateTypeDeChamp(
@@ -223,10 +208,14 @@ function getUpdateHandler(typeDeChamp, { queue, flash }) {
 function findItemToInsertAfter() {
   const target = getLastVisibleTypeDeChamp();
 
-  return {
-    target,
-    index: parseInt(target.dataset.index) + 1
-  };
+  if (target) {
+    return {
+      target,
+      index: parseInt(target.dataset.index) + 1
+    };
+  } else {
+    return null;
+  }
 }
 
 function getLastVisibleTypeDeChamp() {

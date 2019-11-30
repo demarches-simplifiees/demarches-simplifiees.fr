@@ -3,6 +3,7 @@ import Turbolinks from 'turbolinks';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import '@rails/actiontext';
+import 'whatwg-fetch'; // window.fetch polyfill
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 

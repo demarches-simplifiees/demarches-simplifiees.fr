@@ -20,7 +20,7 @@ feature 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
-        expect_page_to_have_procedure_description(procedure)
+        expect(page).to have_procedure_description(procedure)
 
         fill_in 'individual_nom',    with: 'Nom'
         fill_in 'individual_prenom', with: 'Prenom'
@@ -82,7 +82,7 @@ feature 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path siret_dossier_path(dossier)
-        expect_page_to_have_procedure_description(procedure)
+        expect(page).to have_procedure_description(procedure)
 
         fill_in 'Numéro TAHITI', with: siret
         click_on 'Valider'
@@ -99,7 +99,7 @@ feature 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path(siret_dossier_path(dossier))
-        expect_page_to_have_procedure_description(procedure)
+        expect(page).to have_procedure_description(procedure)
 
         fill_in 'Numéro TAHITI', with: '0000'
         click_on 'Valider'
