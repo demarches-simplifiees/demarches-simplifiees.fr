@@ -5,11 +5,13 @@
   = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
     %h1 Créez-vous un compte demarches-simplifiees.fr
 
-    .suspect-email
-      .question Vouliez-vous dire blabla@gmail.com ?
+    .suspect-email.hidden
+      .question Vouliez-vous dire <span class="suggested-email">blabla@gmail.com</span>&nbsp;?
       .answer
-        .button Oui
-        .button Non
+        = button_tag type: 'button', class:'button', onclick: "DS.acceptEmailSuggestion()" do
+          Oui
+        = button_tag type: 'button', class:'button', onclick: "DS.discardEmailSuggestionBox()" do
+          Non
 
     = f.label :email, "Email"
     = f.text_field :email, autofocus: true, placeholder: "Votre adresse email"
