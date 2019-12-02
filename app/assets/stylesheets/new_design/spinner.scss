@@ -9,13 +9,19 @@
   text-indent: -9999em;
   animation: load4 1.3s infinite linear;
   transform: translateZ(0);
-}
 
-.right-spinner {
-  position: absolute;
-  top: 3.7em;
-  right: 1.2em;
-  transform: scale(0.3);
+  &.right {
+    position: absolute;
+    top: 3.7em;
+    right: 1.2em;
+    transform: scale(0.3);
+  }
+
+  &.left {
+    top: 1.2em;
+    left: 1.2em;
+    transform: scale(0.4);
+  }
 }
 
 @keyframes load4 {

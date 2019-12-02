@@ -356,17 +356,17 @@ describe Procedure do
     let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
 
-    context 'when procedure is in draft status and not archived' do
+    context 'when procedure is in draft status and not closed' do
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
-    context 'when procedure is published and not archived' do
+    context 'when procedure is published and not closed' do
       let(:procedure) { create(:procedure, :published) }
       it { is_expected.to be_truthy }
     end
 
-    context 'when procedure is published and archived' do
-      let(:procedure) { create(:procedure, :archived) }
+    context 'when procedure is published and closed' do
+      let(:procedure) { create(:procedure, :closed) }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
@@ -509,12 +509,11 @@ describe Procedure do
     end
 
     describe 'procedure status is reset' do
-      let(:procedure) { create(:procedure, :archived, received_mail: received_mail, service: service) }
+      let(:procedure) { create(:procedure, :closed, received_mail: received_mail, service: service) }
 
-      it 'Not published nor archived' do
-        expect(subject.archived_at).to be_nil
+      it 'Not published nor closed' do
+        expect(subject.closed_at).to be_nil
         expect(subject.published_at).to be_nil
-        expect(subject.test_started_at).to be_nil
         expect(subject.aasm_state).to eq "brouillon"
         expect(subject.path).not_to be_nil
       end
@@ -556,7 +555,7 @@ describe Procedure do
     end
     after { Timecop.return }
 
-    it { expect(procedure.archived_at).to eq(nil) }
+    it { expect(procedure.closed_at).to eq(nil) }
     it { expect(procedure.published_at).to eq(now) }
     it { expect(Procedure.find_by(path: "example-path")).to eq(procedure) }
     it { expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs) }
@@ -565,41 +564,41 @@ describe Procedure do
   describe "#brouillon?" do
     let(:procedure_brouillon) { Procedure.new() }
     let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
+    let(:procedure_close) { Procedure.new(aasm_state: :close, published_at: Time.zone.now, closed_at: Time.zone.now) }
 
     it { expect(procedure_brouillon.brouillon?).to be_truthy }
     it { expect(procedure_publiee.brouillon?).to be_falsey }
-    it { expect(procedure_archivee.brouillon?).to be_falsey }
+    it { expect(procedure_close.brouillon?).to be_falsey }
   end
 
   describe "#publiee?" do
     let(:procedure_brouillon) { Procedure.new() }
     let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
+    let(:procedure_close) { Procedure.new(aasm_state: :close, published_at: Time.zone.now, closed_at: Time.zone.now) }
 
     it { expect(procedure_brouillon.publiee?).to be_falsey }
     it { expect(procedure_publiee.publiee?).to be_truthy }
-    it { expect(procedure_archivee.publiee?).to be_falsey }
+    it { expect(procedure_close.publiee?).to be_falsey }
   end
 
-  describe "#archivee?" do
+  describe "#close?" do
     let(:procedure_brouillon) { Procedure.new() }
     let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
+    let(:procedure_close) { Procedure.new(aasm_state: :close, published_at: Time.zone.now, closed_at: Time.zone.now) }
 
-    it { expect(procedure_brouillon.archivee?).to be_falsey }
-    it { expect(procedure_publiee.archivee?).to be_falsey }
-    it { expect(procedure_archivee.archivee?).to be_truthy }
+    it { expect(procedure_brouillon.close?).to be_falsey }
+    it { expect(procedure_publiee.close?).to be_falsey }
+    it { expect(procedure_close.close?).to be_truthy }
   end
 
-  describe "#publiee_ou_archivee?" do
+  describe "#publiee_ou_close?" do
     let(:procedure_brouillon) { Procedure.new() }
     let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
+    let(:procedure_close) { Procedure.new(aasm_state: :close, published_at: Time.zone.now, closed_at: Time.zone.now) }
 
-    it { expect(procedure_brouillon.publiee_ou_archivee?).to be_falsey }
-    it { expect(procedure_publiee.publiee_ou_archivee?).to be_truthy }
-    it { expect(procedure_archivee.publiee_ou_archivee?).to be_truthy }
+    it { expect(procedure_brouillon.publiee_ou_close?).to be_falsey }
+    it { expect(procedure_publiee.publiee_ou_close?).to be_truthy }
+    it { expect(procedure_close.publiee_ou_close?).to be_truthy }
   end
 
   describe 'archive' do
@@ -607,13 +606,13 @@ describe Procedure do
     let(:now) { Time.zone.now.beginning_of_minute }
     before do
       Timecop.freeze(now)
-      procedure.archive!
+      procedure.close!
       procedure.reload
     end
     after { Timecop.return }
 
-    it { expect(procedure.archivee?).to be_truthy }
-    it { expect(procedure.archived_at).to eq(now) }
+    it { expect(procedure.close?).to be_truthy }
+    it { expect(procedure.closed_at).to eq(now) }
   end
 
   describe 'path_customized?' do

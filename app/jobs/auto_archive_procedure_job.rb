@@ -8,7 +8,7 @@ class AutoArchiveProcedureJob < ApplicationJob
         .state_en_construction
         .find_each(&:passer_automatiquement_en_instruction!)
 
-      procedure.archive!
+      procedure.close!
     end
   end
 end

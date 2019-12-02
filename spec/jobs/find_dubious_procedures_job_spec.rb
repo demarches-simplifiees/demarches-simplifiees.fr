@@ -40,8 +40,8 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
         it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
 
-      context 'and a archived procedure' do
-        let(:procedure) { create(:procedure, :archived) }
+      context 'and a closed procedure' do
+        let(:procedure) { create(:procedure, :closed) }
 
         it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
