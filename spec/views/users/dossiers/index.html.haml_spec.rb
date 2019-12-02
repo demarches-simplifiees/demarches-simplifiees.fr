@@ -24,13 +24,13 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
   it 'affiche les informations des dossiers' do
     dossier = user_dossiers.first
-    expect(rendered).to have_text(dossier_brouillon.id)
+    expect(rendered).to have_text(dossier_brouillon.id.to_s)
     expect(rendered).to have_text(dossier_brouillon.procedure.libelle)
-    expect(rendered).to have_link(dossier_brouillon.id, href: brouillon_dossier_path(dossier_brouillon))
+    expect(rendered).to have_link(dossier_brouillon.id.to_s, href: brouillon_dossier_path(dossier_brouillon))
 
-    expect(rendered).to have_text(dossier_en_construction.id)
+    expect(rendered).to have_text(dossier_en_construction.id.to_s)
     expect(rendered).to have_text(dossier_en_construction.procedure.libelle)
-    expect(rendered).to have_link(dossier_en_construction.id, href: dossier_path(dossier_en_construction))
+    expect(rendered).to have_link(dossier_en_construction.id.to_s, href: dossier_path(dossier_en_construction))
   end
 
   context 'quand il n’y a aucun dossier' do

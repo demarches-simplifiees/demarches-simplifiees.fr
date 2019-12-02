@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'admin/procedures/show.html.haml', type: :view do
-  let(:archived_at) { nil }
-  let(:procedure) { create(:procedure, :with_service, archived_at: archived_at) }
+  let(:closed_at) { nil }
+  let(:procedure) { create(:procedure, :with_service, closed_at: closed_at) }
 
   before do
     assign(:procedure, procedure)
@@ -58,10 +58,10 @@ describe 'admin/procedures/show.html.haml', type: :view do
     end
   end
 
-  describe 'procedure is archived' do
+  describe 'procedure is closed' do
     before do
       procedure.publish!
-      procedure.archive!
+      procedure.close!
       procedure.reload
       render
     end
@@ -73,7 +73,7 @@ describe 'admin/procedures/show.html.haml', type: :view do
     end
 
     describe 'procedure link is present' do
-      it { expect(rendered).to have_content('Cette démarche est archivée et n’est donc plus accessible par le public.') }
+      it { expect(rendered).to have_content('Cette démarche est close et n’est donc plus accessible par le public.') }
     end
   end
 end

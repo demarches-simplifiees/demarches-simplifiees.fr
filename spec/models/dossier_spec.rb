@@ -702,8 +702,8 @@ describe Dossier do
       let(:state) { Dossier.states.fetch(:brouillon) }
       it { is_expected.to be true }
 
-      context "procedure is archived" do
-        before { procedure.archive }
+      context "procedure is closed" do
+        before { procedure.close! }
         it { is_expected.to be false }
       end
     end

@@ -6,9 +6,7 @@ import '@rails/actiontext';
 import 'whatwg-fetch'; // window.fetch polyfill
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
-
-import ReactUJS from '../shared/react-ujs';
-import reactComponents from '../shared/react-components';
+import ReactRailsUJS from 'react_ujs';
 
 import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
@@ -61,8 +59,18 @@ Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
 
-const loader = new ReactUJS(reactComponents);
-loader.start();
+// If Turbolinks is imported via Webpacker (and thus not available globally),
+// ReactRailsUJS will be unable to locate it.
+// https://github.com/reactjs/react-rails#event-handling
+
+// eslint-disable-next-line no-undef
+ReactRailsUJS.useContext(require.context('components', true));
+// Add Turbolinks to the global namespace:
+window.Turbolinks = Turbolinks;
+// Remove previous event handlers and add new ones:
+ReactRailsUJS.detectEvents();
+// (Optional) Clean up global namespace:
+delete window.Turbolinks;
 
 // Expose globals
 window.DS = window.DS || DS;

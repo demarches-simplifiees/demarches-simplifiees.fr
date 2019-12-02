@@ -44,7 +44,7 @@ module DossierHelper
   end
 
   def dossier_submission_is_closed?(dossier)
-    dossier.brouillon? && dossier.procedure.archivee?
+    dossier.brouillon? && dossier.procedure.close?
   end
 
   def dossier_display_state(dossier, lower: false)
