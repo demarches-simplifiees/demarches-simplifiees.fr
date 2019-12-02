@@ -1,30 +1,31 @@
-import { on, show, hide } from '@utils';
+import { delegate, show, hide } from '@utils';
 import { suggest } from 'email-butler';
 
-const user_new_email_selector = '#new_user > #user_email';
-const suspectSuggestionsBox = document.querySelector('.suspect-email');
-const emailSuggestionSpan = document.querySelector(
-  '.suspect-email .question .suggested-email'
-);
+const userNewEmailSelector = '#new_user input#user_email';
+const suggestionsSelector = '.suspect-email';
+const emailSuggestionSelector = '.suspect-email .suggested-email';
 
-on(user_new_email_selector, 'blur', () => {
+delegate('focusout', userNewEmailSelector, () => {
   // When the user leaves the email input during account creation, we check if this account looks correct.
-  // If not (e.g if its "bidou@gmail.coo" or "john@yahoo.rf") we attempt to suggest a fix for the invalid email.
-  const suggestion = suggest(
-    document.querySelector(user_new_email_selector).value
-  );
-  if (suggestion.full) {
-    emailSuggestionSpan.innerHTML = suggestion.full;
-    show(suspectSuggestionsBox);
+  // If not (e.g if its "bidou@gmail.coo" or "john@yahoo.rf"), we attempt to suggest a fix for the invalid email.
+  const userEmailInput = document.querySelector(userNewEmailSelector);
+  const suggestedEmailSpan = document.querySelector(emailSuggestionSelector);
+
+  const suggestion = suggest(userEmailInput.value);
+  if (suggestion && suggestion.full) {
+    suggestedEmailSpan.innerHTML = suggestion.full;
+    show(document.querySelector(suggestionsSelector));
   }
 });
 
 export function acceptEmailSuggestion() {
-  document.querySelector(user_new_email_selector).value =
-    emailSuggestionSpan.innerHTML;
-  hide(suspectSuggestionsBox);
+  const userEmailInput = document.querySelector(userNewEmailSelector);
+  const suggestedEmailSpan = document.querySelector(emailSuggestionSelector);
+
+  userEmailInput.value = suggestedEmailSpan.innerHTML;
+  hide(document.querySelector(suggestionsSelector));
 }
 
 export function discardEmailSuggestionBox() {
-  hide(suspectSuggestionsBox);
+  hide(document.querySelector(suggestionsSelector));
 }
