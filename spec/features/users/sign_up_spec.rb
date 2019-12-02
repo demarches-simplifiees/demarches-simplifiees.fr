@@ -17,6 +17,32 @@ feature 'Signing up:' do
     expect(page).to have_current_path commencer_path(path: procedure.path)
   end
 
+  context 'a new user can sign-up and be suggested a valid email when he makes a typo' do
+    let(:procedure) { create :simple_procedure, :with_service }
+
+    before do
+      visit commencer_path(path: procedure.path)
+      click_on 'Créer un compte demarches-simplifiees.fr'
+      expect(page).to have_selector('.suspect-email', visible: false)
+      fill_in :user_email, with: 'bidou@yahoo.rf'
+      fill_in :user_password, with: '12345'
+    end
+
+    scenario 'it can accept the suggestion' do
+      expect(page).to have_selector('.suspect-email', visible: true)
+      click_on 'Oui'
+      # expect(page).to have_field("Email", :with => 'bidou@yahoo.fr')
+      expect(page).to have_selector('.suspect-email', visible: false)
+    end
+
+    scenario 'it can discard the suggestion' do
+      expect(page).to have_selector('.suspect-email', visible: true)
+      click_on 'Non'
+      expect(page).to have_field("Email", :with => 'bidou@yahoo.rf')
+      expect(page).to have_selector('.suspect-email', visible: false)
+    end
+  end
+
   scenario 'a new user can’t sign-up with too short password when visiting a procedure' do
     visit commencer_path(path: procedure.path)
     click_on 'Créer un compte demarches-simplifiees.fr'
