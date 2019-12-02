@@ -41,6 +41,13 @@ feature 'Signing up:' do
       expect(page).to have_field("Email", :with => 'bidou@yahoo.rf')
       expect(page).to have_selector('.suspect-email', visible: false)
     end
+
+    scenario 'they can fix the typo themselves', js: true do
+      expect(page).to have_selector('.suspect-email', visible: true)
+      fill_in 'Email', with: 'bidou@yahoo.fr'
+      blur
+      expect(page).to have_selector('.suspect-email', visible: false)
+    end
   end
 
   scenario 'a new user can’t sign-up with too short password when visiting a procedure' do
