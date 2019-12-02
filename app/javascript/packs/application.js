@@ -40,7 +40,10 @@ import {
 } from '../new_design/state-button';
 import { toggleChart } from '../new_design/toggle-chart';
 import { replaceSemicolonByComma } from '../new_design/avis';
-import { acceptEmailSuggestion, discardEmailSuggestionBox } from '../new_design/user-sign_up';
+import {
+  acceptEmailSuggestion,
+  discardEmailSuggestionBox
+} from '../new_design/user-sign_up';
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
