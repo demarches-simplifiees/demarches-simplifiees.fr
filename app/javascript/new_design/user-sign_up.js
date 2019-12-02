@@ -15,6 +15,8 @@ delegate('focusout', userNewEmailSelector, () => {
   if (suggestion && suggestion.full) {
     suggestedEmailSpan.innerHTML = suggestion.full;
     show(document.querySelector(suggestionsSelector));
+  } else {
+    hide(document.querySelector(suggestionsSelector));
   }
 });
 
