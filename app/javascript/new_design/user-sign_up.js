@@ -2,6 +2,7 @@ import { delegate, show, hide } from '@utils';
 import { suggest } from 'email-butler';
 
 const userNewEmailSelector = '#new_user input#user_email';
+const passwordFieldSelector = '#new_user input#user_password';
 const suggestionsSelector = '.suspect-email';
 const emailSuggestionSelector = '.suspect-email .email-suggestion-address';
 
@@ -26,6 +27,7 @@ export function acceptEmailSuggestion() {
 
   userEmailInput.value = suggestedEmailSpan.innerHTML;
   hide(document.querySelector(suggestionsSelector));
+  document.querySelector(passwordFieldSelector).focus();
 }
 
 export function discardEmailSuggestionBox() {
