@@ -9,11 +9,14 @@
     = f.text_field :email, autofocus: true, placeholder: "Votre adresse email"
 
     .suspect-email.hidden
-      .question Vouliez-vous dire <span class="suggested-email">blabla@gmail.com</span>&nbsp;?
-      .answer
-        = button_tag type: 'button', class:'button', onclick: "DS.acceptEmailSuggestion()" do
+      .email-suggestion-title
+        Vouliez-vous dire
+        %span.email-suggestion-address blabla@gmail.com
+        &nbsp;?
+      .email-suggestion-answer
+        = button_tag type: 'button', class: 'button', onclick: "DS.acceptEmailSuggestion()" do
           Oui
-        = button_tag type: 'button', class:'button', onclick: "DS.discardEmailSuggestionBox()" do
+        = button_tag type: 'button', class: 'button', onclick: "DS.discardEmailSuggestionBox()" do
           Non
 
     = f.label :password, "Mot de passe"

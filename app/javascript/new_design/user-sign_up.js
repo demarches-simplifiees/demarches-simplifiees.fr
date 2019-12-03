@@ -3,7 +3,7 @@ import { suggest } from 'email-butler';
 
 const userNewEmailSelector = '#new_user input#user_email';
 const suggestionsSelector = '.suspect-email';
-const emailSuggestionSelector = '.suspect-email .suggested-email';
+const emailSuggestionSelector = '.suspect-email .email-suggestion-address';
 
 delegate('focusout', userNewEmailSelector, () => {
   // When the user leaves the email input during account creation, we check if this account looks correct.
