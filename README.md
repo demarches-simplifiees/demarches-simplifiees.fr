@@ -150,7 +150,7 @@ Pour les lister : `bin/rake -D support:`.
 
 ## Compatibilité navigateurs
 
-L'application supporte les navigateurs récents : Firefox, Chrome, Safari, Edge et Internet Explorer 11 (voir `config/initializers/browser.rb`).
+L'application gère les navigateurs récents, parmis lequels Firefox, Chrome, Safari et Edge (voir `config/initializers/browser.rb`).
 
 La compatibilité est testée par Browserstack.<br>[<img src="app/assets/images/browserstack-logo-600x315.png" width="200">](https://www.browserstack.com/)
 
