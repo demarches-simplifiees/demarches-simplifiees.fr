@@ -69,4 +69,18 @@ class DossierMailer < ApplicationMailer
       format.html { render layout: 'mailers/notifications_layout' }
     end
   end
+
+  def notify_brouillon_near_deletion(user, dossiers)
+    @subject = default_i18n_subject(count: dossiers.count)
+    @dossiers = dossiers
+
+    mail(to: user.email, subject: @subject)
+  end
+
+  def notify_brouillon_deletion(user, dossier_hashes)
+    @subject = default_i18n_subject(count: dossier_hashes.count)
+    @dossier_hashes = dossier_hashes
+
+    mail(to: user.email, subject: @subject)
+  end
 end
