@@ -1,0 +1,24 @@
+@import "colors";
+@import "constants";
+
+.suspect-email {
+  background-color: $orange-bg;
+  text-align: center;
+  margin-top: -$default-padding * 2;
+  margin-bottom: $default-padding * 2;
+  padding: ($default-padding - 2) $default-padding $default-padding $default-padding;
+  border-radius: 0 0 5px 5px;
+}
+
+.email-suggestion-address {
+  font-weight: bold;
+}
+
+.email-suggestion-title {
+  margin-bottom: $default-spacer;
+}
+
+.email-suggestion-answer button {
+  margin: 0 $default-spacer / 2;
+  min-width: 66px;
+}
