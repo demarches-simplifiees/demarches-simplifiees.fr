@@ -18,6 +18,8 @@ class Dossier < ApplicationRecord
 
   TAILLE_MAX_ZIP = 50.megabytes
 
+  DRAFT_EXPIRATION = 1.month + 5.days
+
   has_one :etablissement, dependent: :destroy
   has_one :individual, dependent: :destroy
   has_one :attestation, dependent: :destroy
@@ -167,6 +169,7 @@ class Dossier < ApplicationRecord
       .joins(:procedure)
       .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (1 * interval '1 month') <=  now()")
   end
+  scope :expired_brouillon, -> { brouillon.where("brouillon_close_to_expiration_notice_sent_at < ?", (Time.zone.now - (DRAFT_EXPIRATION))) }
   scope :without_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
@@ -648,5 +651,22 @@ class Dossier < ApplicationRecord
       end
 
     brouillons.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
+  end
+
+  def self.destroy_brouillons_and_notify
+    expired_brouillons = Dossier.expired_brouillon
+
+    expired_brouillons
+      .includes(:user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+
+      DossierMailer.notify_brouillon_deletion(user, dossiers).deliver_later
+
+      dossiers.each do |dossier|
+        DeletedDossier.create_from_dossier(dossier)
+        dossier.destroy
+      end
+    end
   end
 end

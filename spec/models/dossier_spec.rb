@@ -1078,4 +1078,26 @@ describe Dossier do
       end
     end
   end
+
+  describe '#destroy_brouillons_and_notify' do
+    let!(:today) { Time.zone.now.at_midnight }
+
+    let!(:expired_brouillon) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION + 1.day)) }
+    let!(:other_brouillon) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION - 1.day)) }
+
+    before do
+      allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
+      Dossier.destroy_brouillons_and_notify
+    end
+
+    it 'notifies deletion' do
+      expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
+      expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(expired_brouillon.user, [expired_brouillon])
+    end
+
+    it 'deletes the expired brouillon' do
+      expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
+      expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end

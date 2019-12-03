@@ -76,4 +76,7 @@ class DossierMailer < ApplicationMailer
 
     mail(to: user.email, subject: @subject)
   end
+
+  def notify_brouillon_deletion(user, dossiers)
+  end
 end
