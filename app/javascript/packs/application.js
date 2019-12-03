@@ -65,19 +65,14 @@ Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
 
-// If Turbolinks is imported via Webpacker (and thus not available globally),
-// ReactRailsUJS will be unable to locate it.
-// https://github.com/reactjs/react-rails#event-handling
-
-// eslint-disable-next-line no-undef
-ReactRailsUJS.useContext(require.context('components', true));
-// Add Turbolinks to the global namespace:
-window.Turbolinks = Turbolinks;
-// Remove previous event handlers and add new ones:
-ReactRailsUJS.detectEvents();
-// (Optional) Clean up global namespace:
-delete window.Turbolinks;
-
 // Expose globals
 window.DS = window.DS || DS;
 window.Chartkick = Chartkick;
+// (Both Rails redirects and ReactRailsUJS expect Turbolinks to be globally available)
+window.Turbolinks = Turbolinks;
+
+// Now that Turbolinks is globally exposed,configure ReactRailsUJS
+// eslint-disable-next-line no-undef
+ReactRailsUJS.useContext(require.context('components', true));
+// Remove previous event handlers and add new ones:
+ReactRailsUJS.detectEvents();
