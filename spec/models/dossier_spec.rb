@@ -1047,4 +1047,35 @@ describe Dossier do
     it { expect(Dossier.for_procedure(procedure_1)).to contain_exactly(dossier_1_1, dossier_1_2) }
     it { expect(Dossier.for_procedure(procedure_2)).to contain_exactly(dossier_2_1) }
   end
+
+  describe '#send_brouillon_expiration_notices' do
+    let!(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:date_close_to_expiration) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 1.month }
+    let!(:date_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
+    let!(:date_not_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
+
+    before { Timecop.freeze(Time.zone.parse('12/12/2012').beginning_of_day) }
+    after { Timecop.return }
+
+    context "Envoi de message pour les dossiers expirant dans - d'un mois" do
+      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired) }
+      let!(:brouillon_close_to_expiration) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration) }
+      let!(:brouillon_close_but_with_notice_sent) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration, brouillon_close_to_expiration_notice_sent_at: Time.zone.now) }
+      let!(:valid_brouillon) { create(:dossier, procedure: procedure, created_at: date_not_expired) }
+
+      before do
+        allow(DossierMailer).to receive(:notify_brouillon_near_deletion).and_return(double(deliver_later: nil))
+        Dossier.send_brouillon_expiration_notices
+      end
+
+      it 'verification de la creation de mail' do
+        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(brouillon_close_to_expiration.user, [brouillon_close_to_expiration])
+        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(expired_brouillon.user, [expired_brouillon])
+      end
+
+      it 'Verification du changement d etat du champ' do
+        expect(brouillon_close_to_expiration.reload.brouillon_close_to_expiration_notice_sent_at).not_to be_nil
+      end
+    end
+  end
 end
