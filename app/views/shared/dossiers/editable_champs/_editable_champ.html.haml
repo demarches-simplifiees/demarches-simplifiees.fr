@@ -1,6 +1,9 @@
 .editable-champ{ class: "editable-champ-#{champ.type_champ}" }
   - if champ.repetition?
     = render partial: 'shared/dossiers/editable_champs/header_section', locals: { champ: champ }
+
+    - if champ.description.present?
+      %p.notice= string_to_html(champ.description, false)
   - elsif has_label?(champ)
     = render partial: 'shared/dossiers/editable_champs/champ_label', locals: { form: form, champ: champ, seen_at: defined?(seen_at) ? seen_at : nil }
 
