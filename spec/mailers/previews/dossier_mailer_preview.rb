@@ -20,6 +20,13 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_revert_to_instruction(dossier)
   end
 
+  def notify_brouillon_near_deletion
+    DossierMailer.notify_brouillon_near_deletion(User.new(email: "usager@example.com"), [dossier])
+  end
+
+  def notify_brouillons_near_deletion
+    DossierMailer.notify_brouillon_near_deletion(User.new(email: "usager@example.com"), [dossier, dossier])
+  end
   private
 
   def deleted_dossier
