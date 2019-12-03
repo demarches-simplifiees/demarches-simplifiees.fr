@@ -69,4 +69,7 @@ class DossierMailer < ApplicationMailer
       format.html { render layout: 'mailers/notifications_layout' }
     end
   end
+
+  def notify_brouillon_near_deletion(user, dossiers)
+  end
 end
