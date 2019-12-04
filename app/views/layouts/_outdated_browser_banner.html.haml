@@ -1,15 +1,14 @@
 -# See config/browser.rb
 - if !browser.modern? && !has_dismissed_outdated_browser_banner?
-  #outdated-browser-banner
-    .container.flex.align-center
-      .outdated-browser-icon
-        ⚠️
-      .outdated-browser-test
+  #outdated-browser-banner.site-banner
+    .container
+      .site-banner-icon ⚠️
+      .site-banner-text
         %strong
           #{browser.name} #{browser.version} est trop ancien pour utiliser demarches-simplifiees.fr.
         %br
         Certaines parties du site ne fonctionneront pas correctement.
-      .outdated-browser-buttons
+      .site-banner-actions
         = button_to 'Ignorer', dismiss_outdated_browser_path, method: :post, remote: true, class: 'button btn', title: 'Ne plus afficher cet avertissement pendant une semaine'
         %a.btn.button.primary{ href: "https://browser-update.org/fr/update.html", target: "_blank", rel: "noopener" }
           Mettre à jour mon navigateur
