@@ -6,6 +6,14 @@ module Types
       end
     end
 
+    class DossierDeclarativeState < Types::BaseEnum
+      Procedure.declarative_with_states.each do |symbol_name, string_name|
+        value(string_name,
+          I18n.t("declarative_with_state/#{string_name}", scope: [:activerecord, :attributes, :procedure]),
+          value: symbol_name)
+      end
+    end
+
     description "Une demarche"
 
     global_id_field :id
@@ -13,6 +21,7 @@ module Types
     field :title, String, "Le titre de la démarche.", null: false, method: :libelle
     field :description, String, "Description de la démarche.", null: false
     field :state, DemarcheState, "L'état de la démarche.", null: false
+    field :declarative, DossierDeclarativeState, "L'état de dossier pour une démarche déclarative", null: true, method: :declarative_with_state
 
     field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
     field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: false, method: :published_at

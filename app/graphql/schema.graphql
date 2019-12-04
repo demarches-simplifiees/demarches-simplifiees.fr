@@ -185,6 +185,11 @@ type Demarche {
   datePublication: ISO8601DateTime!
 
   """
+  L'état de dossier pour une démarche déclarative
+  """
+  declarative: DossierDeclarativeState
+
+  """
   Description de la démarche.
   """
   description: String!
@@ -426,6 +431,18 @@ type DossierConnection {
   Information to aid in pagination.
   """
   pageInfo: PageInfo!
+}
+
+enum DossierDeclarativeState {
+  """
+  Accepté
+  """
+  accepte
+
+  """
+  En instruction
+  """
+  en_instruction
 }
 
 """
