@@ -25,6 +25,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     for_individual: Field::Boolean,
     auto_archive_on: Field::DateTime,
     published_at: Field::DateTime,
+    unpublished_at: Field::DateTime,
     hidden_at: Field::DateTime,
     closed_at: Field::DateTime,
     whitelisted_at: Field::DateTime,
@@ -48,7 +49,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :libelle,
     :service,
     :dossiers,
-    :published_at
+    :published_at,
+    :unpublished_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES

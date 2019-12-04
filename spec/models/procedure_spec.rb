@@ -336,22 +336,6 @@ describe Procedure do
     end
   end
 
-  describe 'locked?' do
-    let(:procedure) { create(:procedure, aasm_state: aasm_state) }
-
-    subject { procedure.locked? }
-
-    context 'when procedure is in brouillon status' do
-      let(:aasm_state) { :brouillon }
-      it { is_expected.to be_falsey }
-    end
-
-    context 'when procedure is in publiee status' do
-      let(:aasm_state) { :publiee }
-      it { is_expected.to be_truthy }
-    end
-  end
-
   describe 'active' do
     let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
@@ -514,6 +498,7 @@ describe Procedure do
       it 'Not published nor closed' do
         expect(subject.closed_at).to be_nil
         expect(subject.published_at).to be_nil
+        expect(subject.unpublished_at).to be_nil
         expect(subject.aasm_state).to eq "brouillon"
         expect(subject.path).not_to be_nil
       end
@@ -549,59 +534,122 @@ describe Procedure do
     let(:procedure) { create(:procedure, path: 'example-path') }
     let(:now) { Time.zone.now.beginning_of_minute }
 
+    after { Timecop.return }
+
+    context "without parent procedure" do
+      before do
+        Timecop.freeze(now)
+        procedure.publish!
+      end
+
+      it do
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+        expect(Procedure.find_by(path: "example-path")).to eq(procedure)
+        expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs)
+      end
+    end
+  end
+
+  describe "#publish_or_reopen!" do
+    let(:published_procedure) { create(:procedure, :published) }
+    let(:administrateur) { published_procedure.administrateurs.first }
+
+    let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
+    let(:now) { Time.zone.now.beginning_of_minute }
+
+    context "without parent procedure" do
+      before do
+        Timecop.freeze(now)
+        procedure.path = published_procedure.path
+        procedure.publish_or_reopen!(administrateur)
+      end
+
+      it do
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+      end
+    end
+  end
+
+  describe "#unpublish!" do
+    let(:procedure) { create(:procedure, :published) }
+    let(:now) { Time.zone.now.beginning_of_minute }
+
     before do
       Timecop.freeze(now)
-      procedure.publish!
+      procedure.unpublish!
     end
     after { Timecop.return }
 
-    it { expect(procedure.closed_at).to eq(nil) }
-    it { expect(procedure.published_at).to eq(now) }
-    it { expect(Procedure.find_by(path: "example-path")).to eq(procedure) }
-    it { expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs) }
+    it {
+      expect(procedure.closed_at).to eq(nil)
+      expect(procedure.published_at).not_to be_nil
+      expect(procedure.unpublished_at).to eq(now)
+    }
   end
 
   describe "#brouillon?" do
-    let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_close) { Procedure.new(aasm_state: :close, published_at: Time.zone.now, closed_at: Time.zone.now) }
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
     it { expect(procedure_brouillon.brouillon?).to be_truthy }
     it { expect(procedure_publiee.brouillon?).to be_falsey }
     it { expect(procedure_close.brouillon?).to be_falsey }
+    it { expect(procedure_depubliee.brouillon?).to be_falsey }
   end
 
   describe "#publiee?" do
-    let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_close) { Procedure.new(aasm_state: :close, published_at: Time.zone.now, closed_at: Time.zone.now) }
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
     it { expect(procedure_brouillon.publiee?).to be_falsey }
     it { expect(procedure_publiee.publiee?).to be_truthy }
     it { expect(procedure_close.publiee?).to be_falsey }
+    it { expect(procedure_depubliee.publiee?).to be_falsey }
   end
 
   describe "#close?" do
-    let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_close) { Procedure.new(aasm_state: :close, published_at: Time.zone.now, closed_at: Time.zone.now) }
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
     it { expect(procedure_brouillon.close?).to be_falsey }
     it { expect(procedure_publiee.close?).to be_falsey }
     it { expect(procedure_close.close?).to be_truthy }
+    it { expect(procedure_depubliee.close?).to be_falsey }
   end
 
-  describe "#publiee_ou_close?" do
-    let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_close) { Procedure.new(aasm_state: :close, published_at: Time.zone.now, closed_at: Time.zone.now) }
+  describe "#depubliee?" do
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
-    it { expect(procedure_brouillon.publiee_ou_close?).to be_falsey }
-    it { expect(procedure_publiee.publiee_ou_close?).to be_truthy }
-    it { expect(procedure_close.publiee_ou_close?).to be_truthy }
+    it { expect(procedure_brouillon.depubliee?).to be_falsey }
+    it { expect(procedure_publiee.depubliee?).to be_falsey }
+    it { expect(procedure_close.depubliee?).to be_falsey }
+    it { expect(procedure_depubliee.depubliee?).to be_truthy }
   end
 
-  describe 'archive' do
+  describe "#locked?" do
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
+
+    it { expect(procedure_brouillon.locked?).to be_falsey }
+    it { expect(procedure_publiee.locked?).to be_truthy }
+    it { expect(procedure_close.locked?).to be_truthy }
+    it { expect(procedure_depubliee.locked?).to be_truthy }
+  end
+
+  describe 'close' do
     let(:procedure) { create(:procedure, :published) }
     let(:now) { Time.zone.now.beginning_of_minute }
     before do

@@ -29,7 +29,7 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
 
       within '#publish-modal' do
         expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
-        expect(page).to have_text('ancienne sera archivée')
+        expect(page).to have_text('ancienne sera dépubliée')
         fill_in 'lien_site_web', with: 'http://some.website'
         click_on 'publish'
       end

@@ -490,6 +490,7 @@ ActiveRecord::Schema.define(version: 2019_11_28_081324) do
     t.boolean "xlsx_export_queued"
     t.boolean "ods_export_queued"
     t.datetime "closed_at"
+    t.datetime "unpublished_at"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
