@@ -6,6 +6,4 @@ import 'dom4';
 import './polyfills/insertAdjacentElement';
 import './polyfills/dataset';
 
-if (typeof window.IntersectionObserver === 'undefined') {
-  import('intersection-observer');
-}
+import('intersection-observer');
