@@ -3,7 +3,7 @@ require 'spec_helper'
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, administrateurs: [admin]) }
   let(:dossier) do
     dossier = create(:dossier,
       :en_construction,
@@ -39,6 +39,11 @@ describe API::V2::GraphqlController do
           instructeurs {
             email
           }
+        }
+        service {
+          nom
+          typeOrganisme
+          organisme
         }
         champDescriptors {
           id
@@ -90,6 +95,11 @@ describe API::V2::GraphqlController do
               label: "défaut"
             }
           ],
+          service: {
+            nom: procedure.service.nom,
+            typeOrganisme: procedure.service.type_organisme,
+            organisme: procedure.service.organisme
+          },
           champDescriptors: procedure.types_de_champ.map do |tdc|
             {
               id: tdc.to_typed_id,

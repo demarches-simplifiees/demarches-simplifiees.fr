@@ -29,6 +29,7 @@ module Types
     field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :closed_at
 
     field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
+    field :service, Types::ServiceType, null: false
 
     field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d'une démarche.", null: false do
       argument :order, Types::Order, default_value: :asc, required: false, description: "L'ordre des dossiers."
@@ -46,6 +47,10 @@ module Types
 
     def groupe_instructeurs
       Loaders::Association.for(object.class, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+    end
+
+    def service
+      Loaders::Record.for(Service).load(object.service_id)
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, order:)
