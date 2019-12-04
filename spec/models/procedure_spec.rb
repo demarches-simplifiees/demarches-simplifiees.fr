@@ -536,38 +536,77 @@ describe Procedure do
 
     after { Timecop.return }
 
-    context "without parent procedure" do
+    context "without canonical procedure" do
       before do
         Timecop.freeze(now)
         procedure.publish!
       end
 
       it do
+        expect(procedure.canonical_procedure).to be_nil
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
         expect(Procedure.find_by(path: "example-path")).to eq(procedure)
         expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs)
       end
     end
+
+    context "with canonical procedure" do
+      let(:canonical_procedure) { create(:procedure, :published) }
+
+      before do
+        Timecop.freeze(now)
+        procedure.publish!(canonical_procedure)
+      end
+
+      it do
+        expect(procedure.canonical_procedure).to eq(canonical_procedure)
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+      end
+    end
   end
 
   describe "#publish_or_reopen!" do
-    let(:published_procedure) { create(:procedure, :published) }
-    let(:administrateur) { published_procedure.administrateurs.first }
+    let(:canonical_procedure) { create(:procedure, :published) }
+    let(:administrateur) { canonical_procedure.administrateurs.first }
 
     let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
     let(:now) { Time.zone.now.beginning_of_minute }
 
-    context "without parent procedure" do
+    context "without canonical procedure" do
       before do
         Timecop.freeze(now)
-        procedure.path = published_procedure.path
+        procedure.path = canonical_procedure.path
         procedure.publish_or_reopen!(administrateur)
+        canonical_procedure.reload
       end
 
       it do
+        expect(procedure.canonical_procedure).to eq(canonical_procedure)
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
+        expect(canonical_procedure.unpublished_at).to eq(now)
+      end
+    end
+
+    context "with canonical procedure" do
+      let(:canonical_procedure) { create(:procedure, :closed) }
+      let(:parent_procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
+
+      before do
+        parent_procedure.update!(path: canonical_procedure.path, canonical_procedure: canonical_procedure)
+        Timecop.freeze(now)
+        procedure.path = canonical_procedure.path
+        procedure.publish_or_reopen!(administrateur)
+        parent_procedure.reload
+      end
+
+      it do
+        expect(procedure.canonical_procedure).to eq(canonical_procedure)
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+        expect(parent_procedure.unpublished_at).to eq(now)
       end
     end
   end
