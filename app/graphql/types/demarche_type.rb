@@ -6,6 +6,14 @@ module Types
       end
     end
 
+    class DossierDeclarativeState < Types::BaseEnum
+      Procedure.declarative_with_states.each do |symbol_name, string_name|
+        value(string_name,
+          I18n.t("declarative_with_state/#{string_name}", scope: [:activerecord, :attributes, :procedure]),
+          value: symbol_name)
+      end
+    end
+
     description "Une demarche"
 
     global_id_field :id
@@ -13,6 +21,7 @@ module Types
     field :title, String, "Le titre de la démarche.", null: false, method: :libelle
     field :description, String, "Description de la démarche.", null: false
     field :state, DemarcheState, "L'état de la démarche.", null: false
+    field :declarative, DossierDeclarativeState, "L'état de dossier pour une démarche déclarative", null: true, method: :declarative_with_state
 
     field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
     field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: false, method: :published_at
@@ -20,6 +29,7 @@ module Types
     field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :closed_at
 
     field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
+    field :service, Types::ServiceType, null: false
 
     field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d'une démarche.", null: false do
       argument :order, Types::Order, default_value: :asc, required: false, description: "L'ordre des dossiers."
@@ -37,6 +47,10 @@ module Types
 
     def groupe_instructeurs
       Loaders::Association.for(object.class, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+    end
+
+    def service
+      Loaders::Record.for(Service).load(object.service_id)
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, order:)
