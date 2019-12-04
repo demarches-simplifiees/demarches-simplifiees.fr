@@ -9,6 +9,10 @@
   background-color: $yellow;
   border-bottom: 1px dashed rgba(0, 0, 0, 0.6);
 
+  &.warning {
+    background-color: $orange-bg;
+  }
+
   .container {
     display: flex;
     align-items: center;

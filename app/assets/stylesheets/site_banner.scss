@@ -6,6 +6,10 @@
   background-color: #FEF3B8;
   border-bottom: 1px dashed rgba(0, 0, 0, 0.6);
 
+  &.warning {
+    background-color: #FFD8A6;
+  }
+
   .container {
     display: flex;
     width: auto;
