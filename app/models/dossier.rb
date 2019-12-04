@@ -267,7 +267,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_transition_to_en_construction?
-    !procedure.close? && brouillon?
+    brouillon? && procedure.dossier_can_transition_to_en_construction?
   end
 
   def can_be_updated_by_user?

@@ -184,8 +184,8 @@ describe Admin::ProceduresController, type: :controller do
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
 
-        it 'archive previous procedure' do
-          expect(procedure2.close?).to be_truthy
+        it 'depubliee previous procedure' do
+          expect(procedure2.depubliee?).to be_truthy
         end
       end
 
