@@ -73,5 +73,4 @@ class Api::V2::Schema < GraphQL::Schema
   end
 
   use GraphQL::Batch
-  use GraphQL::Tracing::SkylightTracing
 end
