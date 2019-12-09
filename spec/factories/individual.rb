@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :individual do
-    gender { 'Mme.' }
-    nom { 'julien' }
-    prenom { 'anne-marie' }
+    gender { 'M.' }
+    nom { 'Julien' }
+    prenom { 'Xavier' }
     birthdate { Date.new(1991, 11, 01) }
   end
 end
