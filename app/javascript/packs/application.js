@@ -74,6 +74,6 @@ window.Turbolinks = Turbolinks;
 
 // Now that Turbolinks is globally exposed,configure ReactRailsUJS
 // eslint-disable-next-line no-undef
-ReactRailsUJS.useContext(require.context('components', true));
+ReactRailsUJS.useContext(require.context('loaders', true));
 // Remove previous event handlers and add new ones:
 ReactRailsUJS.detectEvents();

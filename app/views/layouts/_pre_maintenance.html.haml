@@ -1,4 +1,9 @@
 - if feature_enabled?(:pre_maintenance_mode)
-  .maintenance
-    %span
-      Une opération de maintenance est prévue sur #{SITE_NAME} à 23 h 00. La plateforme sera inaccessible pendant une vingtaine de minutes.
+  .site-banner.warning
+    .container
+      .site-banner-icon 🕚
+      .site-banner-text
+        %strong
+          Une opération de maintenance est prévue sur #{SITE_NAME} à 23 h 00.
+        %br
+        La plateforme sera inaccessible pendant une vingtaine de minutes.
