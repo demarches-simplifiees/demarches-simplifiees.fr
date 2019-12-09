@@ -52,8 +52,6 @@ describe Users::ProfilController, type: :controller do
     end
 
     context 'when the mail is incorrect' do
-      let!(:user2) { create(:user) }
-
       before do
         patch :update_email, params: { user: { email: 'incorrect' } }
         user.reload
