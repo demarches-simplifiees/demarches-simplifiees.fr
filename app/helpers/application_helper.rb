@@ -120,4 +120,15 @@ module ApplicationHelper
   def try_format_datetime(datetime)
     datetime.present? ? I18n.l(datetime) : ''
   end
+
+  def dismiss_outdated_browser_banner
+    cookies[:dismissed_outdated_browser_banner] = {
+      value: 'true',
+      expires: 1.week.from_now
+    }
+  end
+
+  def has_dismissed_outdated_browser_banner?
+    cookies[:dismissed_outdated_browser_banner] == 'true'
+  end
 end

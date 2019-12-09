@@ -17,6 +17,7 @@
     "core-js": "^2.0.0",
     "debounce": "^1.2.0",
     "dom4": "^2.1.5",
+    "email-butler": "^1.0.12",
     "highcharts": "^6.1.2",
     "intersection-observer": "^0.7.0",
     "jquery": "^3.4.1",
