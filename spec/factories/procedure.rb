@@ -168,6 +168,14 @@ FactoryBot.define do
       end
     end
 
+    trait :unpublished do
+      after(:build) do |procedure, _evaluator|
+        procedure.path = generate(:published_path)
+        procedure.publish!
+        procedure.unpublish!
+      end
+    end
+
     trait :hidden do
       after(:build) do |procedure, _evaluator|
         procedure.path = generate(:published_path)

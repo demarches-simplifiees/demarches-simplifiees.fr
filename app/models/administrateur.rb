@@ -14,7 +14,7 @@ class Administrateur < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
 
   scope :inactive, -> { joins(:user).where(users: { last_sign_in_at: nil }) }
-  scope :with_publiees_ou_closes, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :archivee, :close] }) }
+  scope :with_publiees_ou_closes, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :archivee, :close, :depubliee] }) }
 
   # validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
 

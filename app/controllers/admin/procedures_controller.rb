@@ -52,7 +52,7 @@ class Admin::ProceduresController < AdminController
   def destroy
     procedure = current_administrateur.procedures.find(params[:id])
 
-    if procedure.publiee_ou_close?
+    if procedure.locked?
       return render json: {}, status: 401
     end
 

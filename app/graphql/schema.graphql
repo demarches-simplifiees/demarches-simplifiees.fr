@@ -210,6 +210,11 @@ type Demarche {
   dateCreation: ISO8601DateTime!
 
   """
+  Date de la dépublication.
+  """
+  dateDepublication: ISO8601DateTime
+
+  """
   Date de la dernière modification.
   """
   dateDerniereModification: ISO8601DateTime!
@@ -308,6 +313,11 @@ enum DemarcheState {
   Close
   """
   close
+
+  """
+  Depubliee
+  """
+  depubliee
 
   """
   Publiée
