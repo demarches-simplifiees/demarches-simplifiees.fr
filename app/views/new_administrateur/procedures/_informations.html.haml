@@ -23,13 +23,13 @@
 - if !@procedure.locked?
   %h2.header-section Conservation des données
   = f.label :duree_conservation_dossiers_dans_ds do
-    Sur demarches-simplifiees.fr
+    Sur #{SITE_NAME}
     %span.mandatory *
   %p.notice (durée en mois après le début de l’instruction)
   = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
 
   = f.label :duree_conservation_dossiers_hors_ds do
-    Hors demarches-simplifiees.fr
+    Hors #{SITE_NAME}
     %span.mandatory *
   %p.notice (durée en mois après la fin de l'instruction)
   = f.number_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6', required: true
@@ -159,7 +159,7 @@
     = f.label :web_hook_url do
       Lien de rappel HTTP (webhook)
     %p.notice
-      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
+      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur #{SITE_NAME}.
       = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 

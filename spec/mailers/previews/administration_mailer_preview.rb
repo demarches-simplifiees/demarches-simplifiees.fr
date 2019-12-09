@@ -20,7 +20,7 @@ class AdministrationMailerPreview < ActionMailer::Preview
   end
 
   def new_admin
-    administration = Administration.new(email: 'superadmin@demarches-simplifiees.fr')
+    administration = Administration.new(email: 'superadmin@administration.fr')
     AdministrationMailer.new_admin_email(administrateur, administration)
   end
 

@@ -67,21 +67,21 @@ namespace :'2018_10_03_fix_mailjet_mistakes' do
       body = <<-EOS
       Bonjour,
 
-      Suite à un incident technique concernant les envois d'emails sur le site demarches-simplifiees.fr, nous n'avons pas pu vous remettre l'email intitulé #{subject}.
+      Suite à un incident technique concernant les envois d'emails sur le site #{FR_SITE}, nous n'avons pas pu vous remettre l'email intitulé #{subject}.
 
-      Vous pouvez néanmoins le consulter directement dans la messagerie de votre dossier en vous connectant sur https://www.demarches-simplifiees.fr/users/sign_in .
+      Vous pouvez néanmoins le consulter directement dans la messagerie de votre dossier en vous connectant sur https://www.#{FR_SITE}/users/sign_in .
 
       Veuillez nous excuser pour la gêne occasionnée.
 
       Cordialement,
 
-      L'équipe de demarches-simplifiees.fr
+      L'équipe de #{FR_SITE}
       EOS
 
       if user.present?
         rake_puts "sending notification for #{email}"
         ActionMailer::Base.mail(
-          from: "contact@demarches-simplifiees.fr",
+          from: "contact@#{FR_SITE}",
           to: email,
           subject: subject,
           body: body

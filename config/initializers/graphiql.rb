@@ -1,7 +1,7 @@
 DEFAULT_QUERY = "# La documentation officielle de la spécification (Anglais) : https://graphql.org/
 # Une introduction aux concepts et raisons d'être de GraphQL (Français) : https://blog.octo.com/graphql-et-pourquoi-faire/
-# Le schema GraphQL de demarches-simplifiees.fr : https://demarches-simplifiees-graphql.netlify.com
-# Le endpoint GraphQL de demarches-simplifiees.fr : https://demarches-simplifiees.fr/api/v2/graphql
+# Le schema GraphQL de #{SITE_NAME} : https://demarches-simplifiees-graphql.netlify.com
+# Le endpoint GraphQL de #{SITE_NAME} : https://#{SITE}/api/v2/graphql
 
 query getDemarche($demarcheNumber: Int!) {
   demarche(number: $demarcheNumber) {
@@ -76,4 +76,4 @@ query getDemarche($demarcheNumber: Int!) {
 }"
 
 GraphiQL::Rails.config.initial_query = DEFAULT_QUERY
-GraphiQL::Rails.config.title = 'demarches-simplifiees.fr'
+GraphiQL::Rails.config.title = "#{SITE_NAME}"

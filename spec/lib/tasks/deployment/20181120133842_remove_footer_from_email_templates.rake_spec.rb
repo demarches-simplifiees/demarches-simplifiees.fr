@@ -22,7 +22,7 @@ describe '20181120133842_remove_footer_from_email_templates.rake' do
         "<p>Some content</p>--- <br>\r\n<br>\r\nMerci de ne pas répondre à cet email. Postez directement vos questions dans\r\nvotre dossier sur la plateforme.</p>",
         "<p>Some content</p>-<br>\r\n<br>\r\nMerci de ne pas répondre à cet email. Postez directement vos questions dans\r\nvotre dossier sur la plateforme.</p>",
         "<p>Some content</p>— <br>\r\n<br>\r\nMerci de ne pas répondre à cet email. Postez directement vos questions dans\r\nvotre dossier sur la plateforme.</p>",
-        "<p>Some content</p>--- <br>\r\n<br>\r\nMerci de ne pas répondre à cet email. Postez directement vos questions dans\r\nvotre dossier sur demarches-simplifiees.fr.</p>",
+        "<p>Some content</p>--- <br>\r\n<br>\r\nMerci de ne pas répondre à cet email. Postez directement vos questions dans\r\nvotre dossier sur #{FR_SITE}.</p>",
         "<p>Some content</p>— <br><br><small></small><b></b>Merci de ne pas répondre à cet email. Postez directement vos questions dans\r\nvotre dossier sur la plateforme.</p>",
         "<p>Some content</p>--- <br>\r\n<br>\r\nMerci de ne pas répondre à cet email. Postez directement vos questions dans\r\nvotre dossier --libelle-dossier--.</p>",
         "<p>Some content</p>--- <br>\r\n<br>\r\nMerci de ne pas répondre à cet email. Postez directement vos questions dans\r\nvotre dossier sur la plateforme, mais ne répondez pas à ce message.</p><p>\r\n\r\n</p><p>&nbsp;</p><p>\r\n<br></p><br>",
@@ -42,7 +42,7 @@ describe '20181120133842_remove_footer_from_email_templates.rake' do
   context 'when emails don’t have the standard boilerplate in the footer' do
     let(:bodies) do
       [
-        "<p>Some content.</p><p>Merci, l'équipe demarches-simplifiees.fr.\r\n</p>",
+        "<p>Some content.</p><p>Merci, l'équipe #{SITE_NAME}.\r\n</p>",
         "<p>Some content.</p><p>Merci, l'équipe TPS.\r\n</p><small></small>"
       ]
     end
