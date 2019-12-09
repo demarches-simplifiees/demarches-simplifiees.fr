@@ -8,6 +8,17 @@
     = f.label :email, "Email"
     = f.text_field :email, autofocus: true, placeholder: "Votre adresse email"
 
+    .suspect-email
+      .email-suggestion-title
+        Voulez-vous dire
+        %span.email-suggestion-address blabla@gmail.com
+        &nbsp;?
+      .email-suggestion-answer
+        = button_tag type: 'button', class: 'button small', onclick: "DS.acceptEmailSuggestion()" do
+          Oui
+        = button_tag type: 'button', class: 'button small', onclick: "DS.discardEmailSuggestionBox()" do
+          Non
+
     = f.label :password, "Mot de passe"
 
     = render partial: 'shared/password/edit_password', locals: { form: f, test_password_strength: test_password_strength_path(PASSWORD_COMPLEXITY_FOR_USER) }

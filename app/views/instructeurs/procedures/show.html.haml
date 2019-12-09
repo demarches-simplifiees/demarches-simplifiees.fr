@@ -64,6 +64,7 @@
       %p.explication-onglet Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
 
     - if @dossiers.present? || @current_filters.count > 0
+      = paginate @dossiers
       %span.dropdown
         %button.button.dropdown-button
           Filtrer

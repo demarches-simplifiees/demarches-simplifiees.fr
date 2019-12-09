@@ -128,6 +128,7 @@ Rails.application.routes.draw do
   get "patron" => "root#patron"
   get "accessibilite" => "root#accessibilite"
   get "suivi" => "root#suivi"
+  post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
 
   get "contact", to: "support#index"
   post "contact", to: "support#create"

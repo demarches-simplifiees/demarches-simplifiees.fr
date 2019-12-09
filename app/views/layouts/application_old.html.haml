@@ -19,7 +19,6 @@
     = Gon::Base.render_data(camel_case: true, init: true)
 
   %body{ class: browser.platform.ios? ? 'ios' : nil }
-    = render partial: 'layouts/outdated_browser_banner'
     = render partial: 'layouts/pre_maintenance'
     - if staging?
       #beta
