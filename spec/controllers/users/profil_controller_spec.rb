@@ -60,5 +60,18 @@ describe Users::ProfilController, type: :controller do
       it { expect(response).to redirect_to(profil_path) }
       it { expect(flash.alert).to eq(['Email invalide']) }
     end
+
+    context 'when the user has an instructeur role' do
+      let(:instructeur_email) { 'instructeur_email@a.com' }
+      let!(:user) { create(:instructeur, email: instructeur_email).user }
+
+      before do
+        patch :update_email, params: { user: { email: 'loulou@lou.com' } }
+        user.reload
+      end
+
+      it { expect(user.unconfirmed_email).to be_nil }
+      it { expect(response).to redirect_to(profil_path) }
+    end
   end
 end
