@@ -76,4 +76,4 @@ query getDemarche($demarcheNumber: Int!) {
 }"
 
 GraphiQL::Rails.config.initial_query = DEFAULT_QUERY
-GraphiQL::Rails.config.title = "#{SITE_NAME}"
+GraphiQL::Rails.config.title = SITE_NAME

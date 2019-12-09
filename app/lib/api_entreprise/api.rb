@@ -53,7 +53,7 @@ class ApiEntreprise::API
 
   def self.params(siret_or_siren, procedure_id)
     {
-      context: "#{FR_SITE}",
+      context: (FR_SITE).to_s,
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}",
       token: token
