@@ -117,6 +117,12 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(flash.alert).to be_present }
       it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)) }
     end
+
+    context 'of an empty string' do
+      let(:new_instructeur_emails) { '' }
+
+      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)) }
+    end
   end
 
   describe '#remove_instructeur' do

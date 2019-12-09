@@ -104,13 +104,13 @@ feature 'Invitations' do
 
   def navigate_to_brouillon(dossier)
     expect(page).to have_current_path(dossiers_path)
-    click_on(dossier.id)
+    click_on(dossier.id.to_s)
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
   end
 
   def navigate_to_dossier(dossier)
     expect(page).to have_current_path(dossiers_path)
-    click_on(dossier.id)
+    click_on(dossier.id.to_s)
     expect(page).to have_current_path(dossier_path(dossier))
   end
 

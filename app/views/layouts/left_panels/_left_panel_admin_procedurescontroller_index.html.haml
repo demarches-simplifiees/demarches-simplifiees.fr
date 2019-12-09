@@ -24,10 +24,9 @@
 
     %a#archived-procedures{ :href => "#{url_for :admin_procedures_archived}" }
       .procedure-list-element{ class: @archived_class }
-        .badge.counter-archived
-          = current_administrateur.procedures.archivees.count
-        Archivées
-
+        .badge.counter-closed
+          = current_administrateur.procedures.closes.count
+        Closes
 
   .split-hr-left
   = render partial: 'layouts/switch_devise_profile_module'

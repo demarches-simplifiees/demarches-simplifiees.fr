@@ -285,7 +285,7 @@ class ApplicationController < ActionController::Base
         DS_ID: current_administrateur&.id,
         DS_NB_DEMARCHES_BROUILLONS: nb_demarches_by_state['brouillon'],
         DS_NB_DEMARCHES_ACTIVES: nb_demarches_by_state['publiee'],
-        DS_NB_DEMARCHES_ARCHIVES: nb_demarches_by_state['archivee']
+        DS_NB_DEMARCHES_ARCHIVES: nb_demarches_by_state['close']
       }
     }
   end

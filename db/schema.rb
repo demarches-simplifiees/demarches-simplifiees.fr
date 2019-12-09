@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_13_142816) do
+ActiveRecord::Schema.define(version: 2019_11_14_084643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -488,6 +488,7 @@ ActiveRecord::Schema.define(version: 2019_11_13_142816) do
     t.boolean "xlsx_export_queued"
     t.boolean "ods_export_queued"
     t.text "routing_criteria_name", default: "Votre ville"
+    t.datetime "closed_at"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
@@ -629,7 +630,7 @@ ActiveRecord::Schema.define(version: 2019_11_13_142816) do
   add_foreign_key "groupe_instructeurs", "procedures"
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
-  add_foreign_key "procedures", "services"
+  add_foreign_key "procedures", "services", name: "fk_procedures_services"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"

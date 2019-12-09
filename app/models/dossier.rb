@@ -171,7 +171,7 @@ class Dossier < ApplicationRecord
     joined_dossiers = joins('LEFT OUTER JOIN "champs" ON "champs" . "dossier_id" = "dossiers" . "id" AND "champs" . "parent_id" IS NULL AND "champs" . "private" = FALSE AND "champs"."updated_at" > "follows"."demande_seen_at"')
       .joins('LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON "champs_privates_dossiers" . "dossier_id" = "dossiers" . "id" AND "champs_privates_dossiers" . "parent_id" IS NULL AND "champs_privates_dossiers" . "private" = TRUE AND "champs_privates_dossiers"."updated_at" > "follows"."annotations_privees_seen_at"')
       .joins('LEFT OUTER JOIN "avis" ON "avis" . "dossier_id" = "dossiers" . "id" AND avis.updated_at > follows.avis_seen_at')
-      .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'contact@demarches-simplifiees.fr\'')
+      .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'mes-demarches@modernisation.gov.pf\'')
 
     updated_demandes = joined_dossiers
       .where('champs.updated_at > follows.demande_seen_at')
@@ -257,7 +257,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_transition_to_en_construction?
-    !procedure.archivee? && brouillon?
+    !procedure.close? && brouillon?
   end
 
   def can_be_updated_by_user?

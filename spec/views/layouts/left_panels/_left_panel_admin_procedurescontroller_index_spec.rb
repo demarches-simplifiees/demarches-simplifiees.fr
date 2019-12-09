@@ -16,6 +16,6 @@ describe 'layouts/left_panels/_left_panel_admin_procedurescontroller_index.html.
   it 'should have polynesian css' do
     is_expected.to have_css('.badge.counter-draft')
     is_expected.to have_css('.badge.counter-active')
-    is_expected.to have_css('.badge.counter-archived')
+    is_expected.to have_css('.badge.counter-closed')
   end
 end

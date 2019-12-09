@@ -23,31 +23,33 @@ $header-mobile-breakpoint: 550px;
 }
 
 .header-logo {
-  display: inline-block;
-  height: 100%;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: flex;
+  flex-wrap: wrap;
 
-  // Logo large
-  background-image: image-url("header/logo-md-wide.svg");
-  width: 360px;
-  margin-right: 4 * $default-spacer;
-
-  // Logo normal
-  @media (max-width: $header-landing-breakpoint) {
-    background-image: image-url("header/logo-md.svg");
-    width: 132px;
-    margin-right: $default-spacer;
+  img {
+    margin-right: 0px;
   }
 
-  // Logo narrow
-  @media (max-width: $header-mobile-breakpoint) {
-    background-image: image-url("header/logo-md-narrow.svg");
-    width: 32px;
-    margin-right: 0;
-  }
+  .site-title {
+    font-size: 24px;
+    font-weight: bold;
 
+    &.small {
+      width: 32px;
+
+      @media (min-width: $header-mobile-breakpoint) {
+        display: none;
+      }
+    }
+
+    &.big {
+      width: 360px;
+
+      @media (max-width: $header-mobile-breakpoint) {
+        display: none;
+      }
+    }
+  }
 }
 
 .header-tabs {

@@ -4,7 +4,7 @@ class StatsController < ApplicationController
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
-    procedures = Procedure.publiees_ou_archivees
+    procedures = Procedure.publiees_ou_closes
     dossiers = Dossier.state_not_brouillon
 
     @procedures_numbers = procedures_numbers(procedures)

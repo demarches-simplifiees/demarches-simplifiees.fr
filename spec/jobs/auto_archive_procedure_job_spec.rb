@@ -14,7 +14,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
       procedure.reload
     end
 
-    it { expect(procedure.archivee?).to eq false }
+    it { expect(procedure.close?).to eq false }
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
@@ -53,8 +53,8 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     }
 
     it {
-      expect(procedure_hier.archivee?).to eq true
-      expect(procedure_aujourdhui.archivee?).to eq true
+      expect(procedure_hier.close?).to eq true
+      expect(procedure_aujourdhui.close?).to eq true
     }
   end
 
@@ -63,6 +63,6 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
       subject
     end
 
-    it { expect(procedure_demain.archivee?).to eq false }
+    it { expect(procedure_demain.close?).to eq false }
   end
 end
