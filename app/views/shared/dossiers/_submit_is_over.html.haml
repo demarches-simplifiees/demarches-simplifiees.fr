@@ -2,7 +2,7 @@
   .card.featured
     .card-title
       Le dépôt de dossier est fermé
-    - if dossier.procedure.archived_at.present?
-      Il n'est plus possible de déposer de dossier pour cette démarche en ligne depuis le #{try_format_date(dossier.procedure.archived_at)}.
+    - if dossier.procedure.closed_at.present?
+      Il n'est plus possible de déposer de dossier pour cette démarche en ligne depuis le #{try_format_date(dossier.procedure.closed_at)}.
     - else
       Il n'est plus possible de déposer de dossier pour cette démarche en ligne.

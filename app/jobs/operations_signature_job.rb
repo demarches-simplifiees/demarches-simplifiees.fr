@@ -2,7 +2,7 @@ class OperationsSignatureJob < ApplicationJob
   queue_as :cron
 
   def perform(*args)
-    last_midnight = Time.zone.today.beginning_of_day
+    last_midnight = Time.zone.now.beginning_of_day
     operations_by_day = BillSignatureService.grouped_unsigned_operation_until(last_midnight)
     operations_by_day.each do |day, operations|
       begin

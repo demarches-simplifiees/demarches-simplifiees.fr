@@ -14,7 +14,7 @@ module ProcedureHelper
   end
 
   def procedure_modal_text(procedure, key)
-    action = procedure.archivee? ? :reopen : :publish
+    action = procedure.close? ? :reopen : :publish
     t(action, scope: [:modal, :publish, key])
   end
 

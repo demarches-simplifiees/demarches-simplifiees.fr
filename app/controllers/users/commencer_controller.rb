@@ -53,7 +53,7 @@ module Users
     def procedure_not_found
       procedure = Procedure.find_by(path: params[:path])
 
-      if procedure&.archivee?
+      if procedure&.close?
         flash.alert = t('errors.messages.procedure_archived')
       else
         flash.alert = t('errors.messages.procedure_not_found')

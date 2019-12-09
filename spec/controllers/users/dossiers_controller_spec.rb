@@ -466,8 +466,8 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
-      context "on an archived procedure" do
-        before { dossier.procedure.archive }
+      context "on an closed procedure" do
+        before { dossier.procedure.close! }
 
         it "it does not change state" do
           subject
@@ -916,8 +916,8 @@ describe Users::DossiersController, type: :controller do
             it { is_expected.to redirect_to identite_dossier_path(id: Dossier.last) }
           end
 
-          context 'when procedure is archived' do
-            let(:procedure) { create(:procedure, :archived) }
+          context 'when procedure is closed' do
+            let(:procedure) { create(:procedure, :closed) }
 
             it { is_expected.to redirect_to dossiers_path }
           end

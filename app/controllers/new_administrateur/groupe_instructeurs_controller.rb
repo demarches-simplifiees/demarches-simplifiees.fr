@@ -49,7 +49,8 @@ module NewAdministrateur
     end
 
     def add_instructeur
-      emails = params['emails'].map(&:strip).map(&:downcase)
+      emails = params['emails'].presence || []
+      emails = emails.map(&:strip).map(&:downcase)
 
       correct_emails, bad_emails = emails
         .partition { |email| URI::MailTo::EMAIL_REGEXP.match?(email) }
@@ -60,7 +61,7 @@ module NewAdministrateur
           value: bad_emails.join(', '))
       end
 
-      email_to_adds = correct_emails - groupe_instructeur.instructeurs.pluck(:email)
+      email_to_adds = correct_emails - groupe_instructeur.instructeurs.map(&:email)
 
       if email_to_adds.present?
         instructeurs = email_to_adds.map do |instructeur_email|
@@ -158,8 +159,8 @@ module NewAdministrateur
     end
 
     def available_instructeur_emails
-      all = current_administrateur.instructeurs.pluck(:email)
-      assigned = groupe_instructeur.instructeurs.pluck(:email)
+      all = current_administrateur.instructeurs.map(&:email)
+      assigned = groupe_instructeur.instructeurs.map(&:email)
       (all - assigned).sort
     end
   end

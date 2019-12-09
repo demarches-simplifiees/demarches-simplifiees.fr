@@ -35,7 +35,7 @@ class Helpscout::UserConversationsAdapter
   end
 
   def fetch_productivity_report(year, month)
-    if year == Time.zone.today.year && month == Time.zone.today.month
+    if year == Time.zone.now.year && month == Time.zone.now.month
       raise ArgumentError, 'The report for the current month will change in the future, and cannot be cached.'
     end
 

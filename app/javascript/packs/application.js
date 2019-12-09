@@ -6,9 +6,7 @@ import '@rails/actiontext';
 import 'whatwg-fetch'; // window.fetch polyfill
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
-
-import ReactUJS from '../shared/react-ujs';
-import reactComponents from '../shared/react-components';
+import ReactRailsUJS from 'react_ujs';
 
 import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
@@ -43,6 +41,10 @@ import {
 } from '../new_design/state-button';
 import { toggleChart } from '../new_design/toggle-chart';
 import { replaceSemicolonByComma } from '../new_design/avis';
+import {
+  acceptEmailSuggestion,
+  discardEmailSuggestionBox
+} from '../new_design/user-sign_up';
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
@@ -53,7 +55,9 @@ const DS = {
   motivationCancel,
   showImportJustificatif,
   toggleChart,
-  replaceSemicolonByComma
+  replaceSemicolonByComma,
+  acceptEmailSuggestion,
+  discardEmailSuggestionBox
 };
 
 // Start Rails helpers
@@ -62,9 +66,14 @@ Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
 
-const loader = new ReactUJS(reactComponents);
-loader.start();
-
 // Expose globals
 window.DS = window.DS || DS;
 window.Chartkick = Chartkick;
+// (Both Rails redirects and ReactRailsUJS expect Turbolinks to be globally available)
+window.Turbolinks = Turbolinks;
+
+// Now that Turbolinks is globally exposed,configure ReactRailsUJS
+// eslint-disable-next-line no-undef
+ReactRailsUJS.useContext(require.context('components', true));
+// Remove previous event handlers and add new ones:
+ReactRailsUJS.detectEvents();

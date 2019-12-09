@@ -1,9 +1,11 @@
 class BillSignatureService
   def self.grouped_unsigned_operation_until(date)
+    if date.respond_to?(:in_time_zone)
+      date = date.in_time_zone
+    end
     unsigned_operations = DossierOperationLog
       .where(bill_signature: nil)
       .where('executed_at < ?', date)
-
     unsigned_operations.group_by { |e| e.executed_at.to_date }
   end
 

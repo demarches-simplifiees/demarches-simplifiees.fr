@@ -1,7 +1,7 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['logo', 'logo_secure_token']
+  self.ignored_columns = ['logo', 'logo_secure_token', 'test_started_at']
 
   include ProcedureStatsConcern
 
@@ -46,8 +46,8 @@ class Procedure < ApplicationRecord
   default_scope { where(hidden_at: nil) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
-  scope :archivees,             -> { where(aasm_state: :archivee) }
-  scope :publiees_ou_archivees, -> { where(aasm_state: [:publiee, :archivee]) }
+  scope :closes,                -> { where(aasm_state: [:archivee, :close]) }
+  scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :archivee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
@@ -77,7 +77,7 @@ class Procedure < ApplicationRecord
   validates :lien_site_web, presence: true, if: :publiee?
   validate :validate_for_publication, on: :publication
   validate :check_juridique
-  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :archived_at, :hidden_at], case_sensitive: false }
+  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :closed_at, :archived_at, :hidden_at], case_sensitive: false }
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
@@ -95,26 +95,22 @@ class Procedure < ApplicationRecord
   aasm whiny_persistence: true do
     state :brouillon, initial: true
     state :publiee
-    state :archivee
+    state :close
     state :hidden
 
     event :publish, before: :before_publish, after: :after_publish do
       transitions from: :brouillon, to: :publiee
-      transitions from: :archivee, to: :publiee
+      transitions from: :close, to: :publiee
     end
 
-    event :archive, after: :after_archive do
-      transitions from: :publiee, to: :archivee
+    event :close, after: :after_close do
+      transitions from: :publiee, to: :close
     end
 
     event :hide, after: :after_hide do
       transitions from: :brouillon, to: :hidden
       transitions from: :publiee, to: :hidden
-      transitions from: :archivee, to: :hidden
-    end
-
-    event :draft, after: :after_draft do
-      transitions from: :publiee, to: :brouillon
+      transitions from: :close, to: :hidden
     end
   end
 
@@ -126,7 +122,7 @@ class Procedure < ApplicationRecord
 
       other_procedure = other_procedure_with_path(path)
       if other_procedure.present? && administrateur.owns?(other_procedure)
-        other_procedure.archive!
+        other_procedure.close!
       end
 
       publish!
@@ -231,9 +227,10 @@ class Procedure < ApplicationRecord
   end
 
   def validate_for_publication
-    old_attributes = self.slice(:aasm_state, :archived_at)
+    old_attributes = self.slice(:aasm_state, :archived_at, :closed_at)
     self.aasm_state = :publiee
     self.archived_at = nil
+    self.closed_at = nil
 
     is_valid = validate
 
@@ -276,16 +273,24 @@ class Procedure < ApplicationRecord
     update(csv_export_queued: false, xlsx_export_queued: false, ods_export_queued: false)
   end
 
+  def closed_at
+    read_attribute(:closed_at).presence || archived_at
+  end
+
+  def close?
+    aasm_state == 'close' || aasm_state == 'archivee'
+  end
+
   def locked?
-    publiee_ou_archivee?
+    publiee_ou_close?
   end
 
   def accepts_new_dossiers?
-    !archivee?
+    !close?
   end
 
-  def publiee_ou_archivee?
-    publiee? || archivee?
+  def publiee_ou_close?
+    publiee? || close?
   end
 
   def expose_legacy_carto_api?
@@ -366,8 +371,8 @@ class Procedure < ApplicationRecord
       }, &method(:clone_attachments))
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
-    procedure.test_started_at = nil
     procedure.archived_at = nil
+    procedure.closed_at = nil
     procedure.published_at = nil
     procedure.lien_notice = nil
 
@@ -604,15 +609,16 @@ class Procedure < ApplicationRecord
   end
 
   def before_publish
-    update!(archived_at: nil)
+    update!(archived_at: nil, closed_at: nil)
   end
 
   def after_publish
     update!(published_at: Time.zone.now)
   end
 
-  def after_archive
-    update!(archived_at: Time.zone.now)
+  def after_close
+    now = Time.zone.now
+    update!(archived_at: now, closed_at: now)
     purge_export_files
   end
 
@@ -621,10 +627,6 @@ class Procedure < ApplicationRecord
     update!(hidden_at: now)
     dossiers.update_all(hidden_at: now)
     purge_export_files
-  end
-
-  def after_draft
-    update!(published_at: nil)
   end
 
   def update_juridique_required

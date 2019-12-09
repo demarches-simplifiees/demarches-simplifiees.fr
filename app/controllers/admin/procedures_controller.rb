@@ -19,7 +19,7 @@ class Admin::ProceduresController < AdminController
 
   def archived
     @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.archivees.order(published_at: :desc),
+      current_administrateur.procedures.closes.order(published_at: :desc),
       partial: "admin/procedures/list",
       array: true
 
@@ -52,7 +52,7 @@ class Admin::ProceduresController < AdminController
   def destroy
     procedure = current_administrateur.procedures.find(params[:id])
 
-    if procedure.publiee_ou_archivee?
+    if procedure.publiee_ou_close?
       return render json: {}, status: 401
     end
 
@@ -95,9 +95,9 @@ class Admin::ProceduresController < AdminController
 
   def archive
     procedure = current_administrateur.procedures.find(params[:procedure_id])
-    procedure.archive!
+    procedure.close!
 
-    flash.notice = "Démarche archivée"
+    flash.notice = "Démarche close"
     redirect_to admin_procedures_path
 
   rescue ActiveRecord::RecordNotFound
@@ -131,7 +131,7 @@ class Admin::ProceduresController < AdminController
 
   def new_from_existing
     significant_procedure_ids = Procedure
-      .publiees_ou_archivees
+      .publiees_ou_closes
       .joins(:dossiers)
       .group("procedures.id")
       .having("count(dossiers.id) >= ?", SIGNIFICANT_DOSSIERS_THRESHOLD)
