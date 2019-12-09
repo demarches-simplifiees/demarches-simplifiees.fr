@@ -1,5 +1,9 @@
 module Users
   class ProfilController < UserController
+    before_action :redirect_if_instructeur,
+      only: :update_email,
+      if: -> { instructeur_signed_in? }
+
     def show
     end
 
@@ -31,6 +35,10 @@ module Users
 
     def requested_email
       update_email_params[:email]
+    end
+
+    def redirect_if_instructeur
+      redirect_to profil_path
     end
   end
 end
