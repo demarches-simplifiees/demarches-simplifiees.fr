@@ -305,6 +305,12 @@ class Procedure < ApplicationRecord
     declarative_with_state == Procedure.declarative_with_states.fetch(:accepte)
   end
 
+  def self.declarative_attributes_for_select
+    declarative_with_states.map do |state, _|
+      [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
+    end
+  end
+
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier

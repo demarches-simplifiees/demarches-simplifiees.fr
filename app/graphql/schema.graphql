@@ -1,3 +1,12 @@
+type Association {
+  dateCreation: ISO8601Date!
+  dateDeclaration: ISO8601Date!
+  datePublication: ISO8601Date!
+  objet: String!
+  rna: String!
+  titre: String!
+}
+
 type Avis {
   attachmentUrl: URL
   dateQuestion: ISO8601DateTime!
@@ -74,6 +83,33 @@ type CheckboxChamp implements Champ {
   """
   stringValue: String
   value: Boolean!
+}
+
+enum Civilite {
+  """
+  Monsieur
+  """
+  M
+
+  """
+  Madame
+  """
+  Mme
+}
+
+type CiviliteChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+  value: Civilite
 }
 
 """
@@ -157,6 +193,10 @@ type DecimalNumberChamp implements Champ {
   value: Float
 }
 
+interface Demandeur {
+  id: ID!
+}
+
 """
 Une demarche
 """
@@ -183,6 +223,11 @@ type Demarche {
   Date de la publication.
   """
   datePublication: ISO8601DateTime!
+
+  """
+  L'état de dossier pour une démarche déclarative
+  """
+  declarative: DossierDeclarativeState
 
   """
   Description de la démarche.
@@ -240,6 +285,7 @@ type Demarche {
   Le numero de la démarche.
   """
   number: Int!
+  service: Service!
 
   """
   L'état de la démarche.
@@ -322,6 +368,7 @@ type Dossier {
   Date de traitement.
   """
   dateTraitement: ISO8601DateTime
+  demandeur: Demandeur!
   id: ID!
   instructeurs: [Profile!]!
   messages: [Message!]!
@@ -426,6 +473,18 @@ type DossierConnection {
   Information to aid in pagination.
   """
   pageInfo: PageInfo!
+}
+
+enum DossierDeclarativeState {
+  """
+  Accepté
+  """
+  accepte
+
+  """
+  En instruction
+  """
+  en_instruction
 }
 
 """
@@ -578,6 +637,22 @@ enum DossierState {
   sans_suite
 }
 
+type Entreprise {
+  capitalSocial: Int!
+  codeEffectifEntreprise: String!
+  dateCreation: ISO8601Date!
+  formeJuridique: String!
+  formeJuridiqueCode: String!
+  inlineAdresse: String!
+  nom: String!
+  nomCommercial: String!
+  numeroTvaIntracommunautaire: String!
+  prenom: String!
+  raisonSociale: String!
+  siren: String!
+  siretSiegeSocial: String!
+}
+
 interface GeoArea {
   geometry: GeoJSON!
   id: ID!
@@ -614,6 +689,11 @@ type GroupeInstructeur {
   instructeurs: [Profile!]!
   label: String!
 }
+
+"""
+An ISO 8601-encoded date
+"""
+scalar ISO8601Date
 
 """
 An ISO 8601-encoded datetime
@@ -758,19 +838,30 @@ type ParcelleCadastrale implements GeoArea {
   surfaceParcelle: Float!
 }
 
-type PersonneMorale {
+type PersonneMorale implements Demandeur {
   adresse: String!
+  association: Association
   codeInseeLocalite: String!
   codePostal: String!
   complementAdresse: String!
+  entreprise: Entreprise
+  id: ID!
   libelleNaf: String!
   localite: String!
   naf: String!
   nomVoie: String!
   numeroVoie: String!
-  siegeSocial: String!
+  siegeSocial: Boolean!
   siret: String!
   typeVoie: String!
+}
+
+type PersonnePhysique implements Demandeur {
+  civilite: Civilite
+  dateDeNaissance: ISO8601Date
+  id: ID!
+  nom: String!
+  prenom: String!
 }
 
 type PieceJustificativeChamp implements Champ {
@@ -843,6 +934,13 @@ type SelectionUtilisateur implements GeoArea {
   geometry: GeoJSON!
   id: ID!
   source: GeoAreaSource!
+}
+
+type Service {
+  id: ID!
+  nom: String!
+  organisme: String!
+  typeOrganisme: TypeOrganisme!
 }
 
 type SiretChamp implements Champ {
@@ -1035,6 +1133,43 @@ enum TypeDeChamp {
   Oui/Non
   """
   yes_no
+}
+
+enum TypeOrganisme {
+  """
+  Administration centrale
+  """
+  administration_centrale
+
+  """
+  Association
+  """
+  association
+
+  """
+  Autre
+  """
+  autre
+
+  """
+  Collectivité territoriale
+  """
+  collectivite_territoriale
+
+  """
+  Établissement d’enseignement
+  """
+  etablissement_enseignement
+
+  """
+  Opérateur d'État
+  """
+  operateur_d_etat
+
+  """
+  Service déconcentré de l'État
+  """
+  service_deconcentre_de_l_etat
 }
 
 """

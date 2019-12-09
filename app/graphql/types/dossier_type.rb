@@ -24,6 +24,8 @@ module Types
       { Extensions::Attachment => { attachment: :justificatif_motivation } }
     ]
 
+    field :demandeur, Types::DemandeurType, null: false
+
     field :usager, Types::ProfileType, null: false
     field :instructeurs, [Types::ProfileType], null: false
 
@@ -59,6 +61,14 @@ module Types
 
     def annotations
       Loaders::Association.for(object.class, :champs_private).load(object)
+    end
+
+    def demandeur
+      if object.procedure.for_individual
+        Loaders::Association.for(object.class, :individual).load(object)
+      else
+        Loaders::Association.for(object.class, :etablissement).load(object)
+      end
     end
 
     def self.authorized?(object, context)

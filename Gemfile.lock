@@ -241,7 +241,7 @@ GEM
     graphiql-rails (1.7.0)
       railties
       sprockets-rails
-    graphql (1.9.10)
+    graphql (1.9.15)
     graphql-batch (0.4.1)
       graphql (>= 1.3, < 2)
       promise.rb (~> 0.7.2)
@@ -420,6 +420,7 @@ GEM
       ast (~> 2.4.0)
     pdf-core (0.7.0)
     pg (1.1.3)
+    phonelib (0.6.39)
     powerpack (0.1.2)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
@@ -772,6 +773,7 @@ DEPENDENCIES
   openid_connect
   openstack
   pg
+  phonelib
   prawn
   prawn-qrcode
   prawn_rails

@@ -24,13 +24,14 @@
                 Par email :
                 = link_to service.email, "mailto:#{service.email}"
 
-            %li
-              Par téléphone :
-              = link_to service.telephone, service.telephone_url
+            - if service.telephone.present?
+              %li
+                Par téléphone :
+                = link_to service.telephone, service.telephone_url
 
-            %li
-              - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
-              = simple_format(horaires, {}, wrapper_tag: 'span')
+              %li
+                - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
+                = simple_format(horaires, {}, wrapper_tag: 'span')
 
 
         - politiques = politiques_conservation_de_donnees(procedure)
