@@ -37,8 +37,9 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
       {state.typeDeChamps.length === 0 && (
         <h2>
           <FontAwesomeIcon icon="arrow-circle-down" />
-          &nbsp;&nbsp;Cliquez sur le bouton «&nbsp;Ajouter un champ&nbsp;» pour
-          créer votre premier champ.
+          &nbsp;&nbsp;Cliquez sur le bouton «&nbsp;
+          {addChampLabel(state.isAnnotation)}&nbsp;» pour créer votre premier
+          champ.
         </h2>
       )}
       <div className="footer">&nbsp;</div>
