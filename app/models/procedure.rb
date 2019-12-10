@@ -46,8 +46,8 @@ class Procedure < ApplicationRecord
   default_scope { where(hidden_at: nil) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
-  scope :closes,                -> { where(aasm_state: [:archivee, :close]) }
-  scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :archivee]) }
+  scope :closes,                -> { where(aasm_state: [:archivee, :close, :depubliee]) }
+  scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :archivee, :depubliee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
@@ -77,7 +77,7 @@ class Procedure < ApplicationRecord
   validates :lien_site_web, presence: true, if: :publiee?
   validate :validate_for_publication, on: :publication
   validate :check_juridique
-  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :closed_at, :archived_at, :hidden_at], case_sensitive: false }
+  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
@@ -97,10 +97,12 @@ class Procedure < ApplicationRecord
     state :publiee
     state :close
     state :hidden
+    state :depubliee
 
     event :publish, before: :before_publish, after: :after_publish do
       transitions from: :brouillon, to: :publiee
       transitions from: :close, to: :publiee
+      transitions from: :depubliee, to: :publiee
     end
 
     event :close, after: :after_close do
@@ -112,6 +114,10 @@ class Procedure < ApplicationRecord
       transitions from: :publiee, to: :hidden
       transitions from: :close, to: :hidden
     end
+
+    event :unpublish, after: :after_unpublish do
+      transitions from: :publiee, to: :depubliee
+    end
   end
 
   def publish_or_reopen!(administrateur)
@@ -122,7 +128,7 @@ class Procedure < ApplicationRecord
 
       other_procedure = other_procedure_with_path(path)
       if other_procedure.present? && administrateur.owns?(other_procedure)
-        other_procedure.close!
+        other_procedure.unpublish!
       end
 
       publish!
@@ -282,15 +288,15 @@ class Procedure < ApplicationRecord
   end
 
   def locked?
-    publiee_ou_close?
+    publiee? || close? || depubliee?
   end
 
   def accepts_new_dossiers?
-    !close?
+    publiee? || brouillon?
   end
 
-  def publiee_ou_close?
-    publiee? || close?
+  def dossier_can_transition_to_en_construction?
+    accepts_new_dossiers? || depubliee?
   end
 
   def expose_legacy_carto_api?
@@ -303,6 +309,12 @@ class Procedure < ApplicationRecord
 
   def declarative_accepte?
     declarative_with_state == Procedure.declarative_with_states.fetch(:accepte)
+  end
+
+  def self.declarative_attributes_for_select
+    declarative_with_states.map do |state, _|
+      [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
+    end
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -373,6 +385,7 @@ class Procedure < ApplicationRecord
     procedure.aasm_state = :brouillon
     procedure.archived_at = nil
     procedure.closed_at = nil
+    procedure.unpublished_at = nil
     procedure.published_at = nil
     procedure.lien_notice = nil
 
@@ -609,7 +622,7 @@ class Procedure < ApplicationRecord
   end
 
   def before_publish
-    update!(archived_at: nil, closed_at: nil)
+    update!(archived_at: nil, closed_at: nil, unpublished_at: nil)
   end
 
   def after_publish
@@ -627,6 +640,10 @@ class Procedure < ApplicationRecord
     update!(hidden_at: now)
     dossiers.update_all(hidden_at: now)
     purge_export_files
+  end
+
+  def after_unpublish
+    update!(unpublished_at: Time.zone.now)
   end
 
   def update_juridique_required

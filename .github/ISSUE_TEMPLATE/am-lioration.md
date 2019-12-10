@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Votre amélioration est liée à un problème spécifique ?**
-Si oui, décrivez brièvement quel est le problème que vous rencontrez. Par exemple : Sur demarches-simplifiees.fr, je suis agacé quand je dois […]
+Si oui, décrivez brièvement quel est le problème que vous rencontrez. Par exemple : je suis agacé quand je dois […]
 
 **Décrivez la solution proposée**
 Une description rapide de la manière dont vous voudriez résoudre le problème.

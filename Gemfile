@@ -47,6 +47,7 @@ gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem 'openid_connect'
 gem 'openstack'
 gem 'pg'
+gem 'phonelib'
 gem 'prawn' # PDF Generation
 gem 'prawn-qrcode' # to generate qrcode in pdfs
 gem 'prawn_rails'

@@ -1,6 +1,6 @@
 describe ActiveStorage::Service::DsProxyService do
   let(:private_host) { 'storage.sbg1.cloud.ovh.net:443' }
-  let(:public_host) { 'static.demarches-simplifiees.fr' }
+  let(:public_host) { "static.#{FR_SITE}" }
   let(:auth) { 'AUTH_a24c37ed11a84896914514384898c34b' }
   let(:bucket) { 'test_local' }
   let(:key) { '2R6rr89nFeSRkSgXHd3smvEf' }

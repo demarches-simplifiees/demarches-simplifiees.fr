@@ -3,18 +3,19 @@ require 'spec_helper'
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :with_all_champs, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, administrateurs: [admin]) }
   let(:dossier) do
     dossier = create(:dossier,
       :en_construction,
       :with_all_champs,
+      :for_individual,
       procedure: procedure)
     create(:commentaire, dossier: dossier, email: 'test@test.com')
     dossier
   end
-  let(:dossier1) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 1.day.ago) }
-  let(:dossier2) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 3.days.ago) }
-  let!(:dossier_brouillon) { create(:dossier, procedure: procedure) }
+  let(:dossier1) { create(:dossier, :en_construction, :for_individual, procedure: procedure, en_construction_at: 1.day.ago) }
+  let(:dossier2) { create(:dossier, :en_construction, :for_individual, procedure: procedure, en_construction_at: 3.days.ago) }
+  let!(:dossier_brouillon) { create(:dossier, :for_individual, procedure: procedure) }
   let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
@@ -38,6 +39,11 @@ describe API::V2::GraphqlController do
           instructeurs {
             email
           }
+        }
+        service {
+          nom
+          typeOrganisme
+          organisme
         }
         champDescriptors {
           id
@@ -79,7 +85,7 @@ describe API::V2::GraphqlController do
           number: procedure.id,
           title: procedure.libelle,
           description: procedure.description,
-          state: 'brouillon',
+          state: 'publiee',
           dateFermeture: nil,
           dateCreation: procedure.created_at.iso8601,
           dateDerniereModification: procedure.updated_at.iso8601,
@@ -89,6 +95,11 @@ describe API::V2::GraphqlController do
               label: "défaut"
             }
           ],
+          service: {
+            nom: procedure.service.nom,
+            typeOrganisme: procedure.service.type_organisme,
+            organisme: procedure.service.organisme
+          },
           champDescriptors: procedure.types_de_champ.map do |tdc|
             {
               id: tdc.to_typed_id,
@@ -149,6 +160,15 @@ describe API::V2::GraphqlController do
               id
               email
             }
+            demandeur {
+              id
+              ... on PersonnePhysique {
+                nom
+                prenom
+                civilite
+                dateDeNaissance
+              }
+            }
             instructeurs {
               id
               email
@@ -177,45 +197,104 @@ describe API::V2::GraphqlController do
         }"
       end
 
-      it "should be returned" do
-        expect(gql_errors).to eq(nil)
-        expect(gql_data).to eq(dossier: {
-          id: dossier.to_typed_id,
-          number: dossier.id,
-          state: 'en_construction',
-          dateDerniereModification: dossier.updated_at.iso8601,
-          datePassageEnConstruction: dossier.en_construction_at.iso8601,
-          datePassageEnInstruction: nil,
-          dateTraitement: nil,
-          motivation: nil,
-          motivationAttachmentUrl: nil,
-          usager: {
-            id: dossier.user.to_typed_id,
-            email: dossier.user.email
-          },
-          instructeurs: [
-            {
-              id: instructeur.to_typed_id,
-              email: instructeur.email
+      context "with individual" do
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(dossier: {
+            id: dossier.to_typed_id,
+            number: dossier.id,
+            state: 'en_construction',
+            dateDerniereModification: dossier.updated_at.iso8601,
+            datePassageEnConstruction: dossier.en_construction_at.iso8601,
+            datePassageEnInstruction: nil,
+            dateTraitement: nil,
+            motivation: nil,
+            motivationAttachmentUrl: nil,
+            usager: {
+              id: dossier.user.to_typed_id,
+              email: dossier.user.email
+            },
+            instructeurs: [
+              {
+                id: instructeur.to_typed_id,
+                email: instructeur.email
+              }
+            ],
+            demandeur: {
+              id: dossier.individual.to_typed_id,
+              nom: dossier.individual.nom,
+              prenom: dossier.individual.prenom,
+              civilite: 'M',
+              dateDeNaissance: '1991-11-01'
+            },
+            messages: dossier.commentaires.map do |commentaire|
+              {
+                body: commentaire.body,
+                attachmentUrl: nil,
+                email: commentaire.email
+              }
+            end,
+            avis: [],
+            champs: dossier.champs.map do |champ|
+              {
+                id: champ.to_typed_id,
+                label: champ.libelle,
+                stringValue: champ.for_api_v2
+              }
+            end
+          })
+          expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs[0].type_de_champ.to_typed_id)
+        end
+      end
+
+      context "with entreprise" do
+        let(:procedure) { create(:procedure, :published, administrateurs: [admin]) }
+        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
+
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
+              id
+              number
+              usager {
+                id
+                email
+              }
+              demandeur {
+                id
+                ... on PersonneMorale {
+                  siret
+                  siegeSocial
+                  entreprise {
+                    siren
+                    dateCreation
+                  }
+                }
+              }
             }
-          ],
-          messages: dossier.commentaires.map do |commentaire|
-            {
-              body: commentaire.body,
-              attachmentUrl: nil,
-              email: commentaire.email
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(dossier: {
+            id: dossier.to_typed_id,
+            number: dossier.id,
+            usager: {
+              id: dossier.user.to_typed_id,
+              email: dossier.user.email
+            },
+            demandeur: {
+              id: dossier.etablissement.to_typed_id,
+              siret: dossier.etablissement.siret,
+              siegeSocial: dossier.etablissement.siege_social,
+              entreprise: {
+                siren: dossier.etablissement.entreprise_siren,
+                dateCreation: dossier.etablissement.entreprise_date_creation.iso8601
+              }
             }
-          end,
-          avis: [],
-          champs: dossier.champs.map do |champ|
-            {
-              id: champ.to_typed_id,
-              label: champ.libelle,
-              stringValue: champ.for_api_v2
-            }
-          end
-        })
-        expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs[0].type_de_champ.to_typed_id)
+          })
+        end
       end
     end
 
@@ -296,7 +375,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierPasserEnInstruction' do
-        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_construction, :for_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierPasserEnInstruction(input: {
@@ -331,7 +410,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+          let(:dossier) { create(:dossier, :en_instruction, :for_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -344,7 +423,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierClasserSansSuite' do
-        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :for_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierClasserSansSuite(input: {
@@ -380,7 +459,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+          let(:dossier) { create(:dossier, :accepte, :for_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -393,7 +472,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierRefuser' do
-        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :for_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierRefuser(input: {
@@ -429,7 +508,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :sans_suite, procedure: procedure) }
+          let(:dossier) { create(:dossier, :sans_suite, :for_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -442,7 +521,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierAccepter' do
-        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :for_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierAccepter(input: {
@@ -511,7 +590,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
+          let(:dossier) { create(:dossier, :refuse, :for_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)

@@ -15,10 +15,10 @@ API_ENTREPRISE_PF_AUTH = ENV.fetch("API_ENTREPRISE_PF_AUTH", "https://auth.gov.p
 API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://api.i-taiete2.dev.gov.pf:8080/api/v2")
 
 # Internal URLs
-FOG_BASE_URL = "https://static.demarches-simplifiees.fr"
+FOG_BASE_URL = "https://static.#{FR_SITE}"
 
 # External services URLs
-FR_DOC_URL = "https://doc.demarches-simplifiees.fr"
+FR_DOC_URL = "https://doc.#{FR_SITE}"
 DOC_URL = "https://mes-demarches.gitbook.io/documentation"
 ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels", "dematerialiser-formulaire"].join("/")
 INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels"].join("/")
@@ -34,7 +34,9 @@ API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 
 FAQ_URL = [DOC_URL, "questions-frequentes"].join("/")
-FAQ_ADMIN_URL = "https://faq.demarches-simplifiees.fr/collection/1-administrateur"
+FR_FAQ_URL = "https://faq.#{FR_SITE}"
+FR_FAQ_ADMIN_URL = "#{FR_FAQ_URL}/collection/1-administrateur"
+FAQ_ADMIN_URL = FR_FAQ_ADMIN_URL
 
 COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, 'general', 'comment-trouver-ma-demarche'].join("/")
 

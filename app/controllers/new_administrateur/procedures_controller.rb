@@ -71,7 +71,7 @@ module NewAdministrateur
     end
 
     def procedure_params
-      editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on, :monavis_embed]
+      editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :declarative_with_state, :euro_flag, :logo, :auto_archive_on, :monavis_embed]
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
       else

@@ -20,7 +20,7 @@ namespace :'2018_03_08_send_missing_accuse_reception' do
       print "Dossier #{i}/#{total}\n"
       template = dossier.procedure.initiated_mail_template
       date_depot = dossier.en_construction_at.in_time_zone("Paris").strftime('%d/%m/%Y à %H:%M')
-      body_prefix = "<p>Suite à une difficulté technique, veuillez recevoir par la présente l’accusé de réception pour votre dossier déposé le #{date_depot}.<br>L’équipe demarches-simplifiees.fr vous présente ses excuses pour la gène occasionnée.</p><hr>\n"
+      body_prefix = "<p>Suite à une difficulté technique, veuillez recevoir par la présente l’accusé de réception pour votre dossier déposé le #{date_depot}.<br>L’équipe #{FR_SITE} vous présente ses excuses pour la gène occasionnée.</p><hr>\n"
       template.body = body_prefix + template.body
       NotificationMailer.send_notification(dossier, template).deliver_now!
     end

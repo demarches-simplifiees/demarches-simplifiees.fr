@@ -18,6 +18,8 @@ class Dossier < ApplicationRecord
 
   TAILLE_MAX_ZIP = 50.megabytes
 
+  DRAFT_EXPIRATION = 1.month + 5.days
+
   has_one :etablissement, dependent: :destroy
   has_one :individual, dependent: :destroy
   has_one :attestation, dependent: :destroy
@@ -162,6 +164,14 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
+  scope :brouillon_close_to_expiration, -> do
+    brouillon
+      .joins(:procedure)
+      .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (1 * interval '1 month') <=  now()")
+  end
+  scope :expired_brouillon, -> { brouillon.where("brouillon_close_to_expiration_notice_sent_at < ?", (Time.zone.now - (DRAFT_EXPIRATION))) }
+  scope :without_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
+
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
 
@@ -257,7 +267,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_transition_to_en_construction?
-    !procedure.close? && brouillon?
+    brouillon? && procedure.dossier_can_transition_to_en_construction?
   end
 
   def can_be_updated_by_user?
@@ -592,6 +602,10 @@ class Dossier < ApplicationRecord
     Dossier.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
   end
 
+  def hash_for_deletion_mail
+    { id: self.id, procedure_libelle: self.procedure.libelle }
+  end
+
   private
 
   def log_dossier_operation(author, operation, subject = nil)
@@ -640,6 +654,39 @@ class Dossier < ApplicationRecord
         procedure,
         self
       )
+    end
+  end
+
+  def self.send_brouillon_expiration_notices
+    brouillons = Dossier
+      .brouillon_close_to_expiration
+      .without_notice_sent
+
+    brouillons
+      .includes(:user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+        DossierMailer.notify_brouillon_near_deletion(user, dossiers).deliver_later
+      end
+
+    brouillons.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
+  end
+
+  def self.destroy_brouillons_and_notify
+    expired_brouillons = Dossier.expired_brouillon
+
+    expired_brouillons
+      .includes(:procedure, :user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+
+      dossier_hashes = dossiers.map(&:hash_for_deletion_mail)
+      DossierMailer.notify_brouillon_deletion(user, dossier_hashes).deliver_later
+
+      dossiers.each do |dossier|
+        DeletedDossier.create_from_dossier(dossier)
+        dossier.destroy
+      end
     end
   end
 end

@@ -26,6 +26,10 @@ class Api::V2::Schema < GraphQL::Schema
       Types::MessageType
     when Instructeur, User
       Types::ProfileType
+    when Individual
+      Types::PersonnePhysiqueType
+    when Etablissement
+      Types::PersonneMoraleType
     else
       raise GraphQL::ExecutionError.new("Unexpected object: #{obj}")
     end
@@ -33,6 +37,7 @@ class Api::V2::Schema < GraphQL::Schema
 
   orphan_types Types::Champs::CarteChampType,
     Types::Champs::CheckboxChampType,
+    Types::Champs::CiviliteChampType,
     Types::Champs::DateChampType,
     Types::Champs::DecimalNumberChampType,
     Types::Champs::DossierLinkChampType,
@@ -45,7 +50,9 @@ class Api::V2::Schema < GraphQL::Schema
     Types::Champs::TextChampType,
     Types::GeoAreas::ParcelleCadastraleType,
     Types::GeoAreas::QuartierPrioritaireType,
-    Types::GeoAreas::SelectionUtilisateurType
+    Types::GeoAreas::SelectionUtilisateurType,
+    Types::PersonneMoraleType,
+    Types::PersonnePhysiqueType
 
   def self.unauthorized_object(error)
     # Add a top-level error to the response instead of returning nil:

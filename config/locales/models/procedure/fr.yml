@@ -14,3 +14,5 @@ fr:
         aasm_state/publiee: Publiée
         aasm_state/close: Close
         aasm_state/hidden: Suprimée
+        declarative_with_state/en_instruction: En instruction
+        declarative_with_state/accepte: Accepté

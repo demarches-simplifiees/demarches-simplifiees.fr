@@ -23,13 +23,13 @@
 - if !@procedure.locked?
   %h2.header-section Conservation des données
   = f.label :duree_conservation_dossiers_dans_ds do
-    Sur demarches-simplifiees.fr
+    Sur #{SITE_NAME}
     %span.mandatory *
   %p.notice (durée en mois après le début de l’instruction)
   = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
 
   = f.label :duree_conservation_dossiers_hors_ds do
-    Hors demarches-simplifiees.fr
+    Hors #{SITE_NAME}
     %span.mandatory *
   %p.notice (durée en mois après la fin de l'instruction)
   = f.number_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6', required: true
@@ -159,7 +159,7 @@
     = f.label :web_hook_url do
       Lien de rappel HTTP (webhook)
     %p.notice
-      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur demarches-simplifiees.fr.
+      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur #{SITE_NAME}.
       = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
@@ -170,3 +170,13 @@
   %p.explication
     La clôture automatique suspend la publication de la démarche et entraîne le passage de tous les dossiers "en construction"
     (c'est à dire ceux qui ont été déposés), au statut "en instruction", ce qui ne permet plus aux usagers de les modifier.
+
+  = f.label :declarative_with_state do
+    Démarche déclarative
+  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: true }, class: 'form-control'
+
+  %p.explication
+    Par défaut, une démarche n'est pas déclarative; à son dépot, un dossier est «en construction». Vous pouvez choisir de la rendre déclarative, afin que tous les dossiers déposés soient immédiatement au statut "en instruction" en "accepté".
+    %br
+    %br
+    Dans le cadre d'une démarche déclarative, au dépot, seul l'email associé à l'état choisi est envoyé. (ex: démarche déclarative «accepté»: envoi uniquement de l'email d'acceptation)
