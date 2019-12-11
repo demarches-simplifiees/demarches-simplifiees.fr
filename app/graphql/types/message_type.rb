@@ -4,7 +4,7 @@ module Types
     field :email, String, null: false
     field :body, String, null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :attachment_url, Types::URL, null: true, extensions: [
+    field :attachment, Types::File, null: true, extensions: [
       { Extensions::Attachment => { attachment: :piece_jointe } }
     ]
 

@@ -10,7 +10,7 @@ describe API::V2::GraphqlController do
       :with_all_champs,
       :for_individual,
       procedure: procedure)
-    create(:commentaire, dossier: dossier, email: 'test@test.com')
+    create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
     dossier
   end
   let(:dossier1) { create(:dossier, :en_construction, :for_individual, procedure: procedure, en_construction_at: 1.day.ago) }
@@ -155,7 +155,9 @@ describe API::V2::GraphqlController do
             datePassageEnInstruction
             dateTraitement
             motivation
-            motivationAttachmentUrl
+            motivationAttachment {
+              url
+            }
             usager {
               id
               email
@@ -176,7 +178,13 @@ describe API::V2::GraphqlController do
             messages {
               email
               body
-              attachmentUrl
+              attachment {
+                filename
+                checksum
+                byteSize
+                contentType
+                url
+              }
             }
             avis {
               expert {
@@ -186,7 +194,10 @@ describe API::V2::GraphqlController do
               reponse
               dateQuestion
               dateReponse
-              attachmentUrl
+              attachment {
+                url
+                filename
+              }
             }
             champs {
               id
@@ -209,7 +220,7 @@ describe API::V2::GraphqlController do
             datePassageEnInstruction: nil,
             dateTraitement: nil,
             motivation: nil,
-            motivationAttachmentUrl: nil,
+            motivationAttachment: nil,
             usager: {
               id: dossier.user.to_typed_id,
               email: dossier.user.email
@@ -230,7 +241,13 @@ describe API::V2::GraphqlController do
             messages: dossier.commentaires.map do |commentaire|
               {
                 body: commentaire.body,
-                attachmentUrl: nil,
+                attachment: {
+                  filename: commentaire.piece_jointe.filename.to_s,
+                  contentType: commentaire.piece_jointe.content_type,
+                  checksum: commentaire.piece_jointe.checksum,
+                  byteSize: commentaire.piece_jointe.byte_size,
+                  url: Rails.application.routes.url_helpers.url_for(commentaire.piece_jointe)
+                },
                 email: commentaire.email
               }
             end,
