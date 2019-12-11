@@ -8,7 +8,7 @@ type Association {
 }
 
 type Avis {
-  attachmentUrl: URL
+  attachment: File
   dateQuestion: ISO8601DateTime!
   dateReponse: ISO8601DateTime
   expert: Profile
@@ -383,7 +383,7 @@ type Dossier {
   instructeurs: [Profile!]!
   messages: [Message!]!
   motivation: String
-  motivationAttachmentUrl: URL
+  motivationAttachment: File
 
   """
   Le numero du dossier.
@@ -663,6 +663,14 @@ type Entreprise {
   siretSiegeSocial: String!
 }
 
+type File {
+  byteSize: Int!
+  checksum: String!
+  contentType: String!
+  filename: String!
+  url: URL!
+}
+
 interface GeoArea {
   geometry: GeoJSON!
   id: ID!
@@ -742,7 +750,7 @@ type LinkedDropDownListChamp implements Champ {
 }
 
 type Message {
-  attachmentUrl: URL
+  attachment: File
   body: String!
   createdAt: ISO8601DateTime!
   email: String!
@@ -875,6 +883,7 @@ type PersonnePhysique implements Demandeur {
 }
 
 type PieceJustificativeChamp implements Champ {
+  file: File
   id: ID!
 
   """
@@ -886,7 +895,6 @@ type PieceJustificativeChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
-  url: URL
 }
 
 type Profile {
