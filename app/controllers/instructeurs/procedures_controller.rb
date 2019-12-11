@@ -187,23 +187,28 @@ module Instructeurs
     end
 
     def download_export
-      export_format = params[:export_format]
-      notice_message = "Nous générons cet export. Lorsque celui-ci sera disponible, vous recevrez une notification par email accompagnée d'un lien de téléchargement."
-      if procedure.should_generate_export?(export_format)
-        procedure.queue_export(current_instructeur, export_format)
-        flash.notice = notice_message
+      format = params[:export_format]
+      groupe_instructeurs = current_instructeur
+        .groupe_instructeurs
+        .where(procedure: procedure)
 
+      export = Export.find_or_create_export(format, groupe_instructeurs)
+
+      if export.ready?
+        redirect_to export.file.service_url
+      else
         respond_to do |format|
+          notice_message = "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
           format.js do
             @procedure = procedure
+            assign_exports
+            flash.notice = notice_message
           end
-          format.all { redirect_to procedure }
+
+          format.html do
+            redirect_to instructeur_procedure_url(procedure), notice: notice_message
+          end
         end
-      elsif procedure.export_queued?(export_format)
-        flash.notice = notice_message
-        redirect_to procedure
-      else
-        redirect_to url_for(procedure.export_file(export_format))
       end
     end
 
