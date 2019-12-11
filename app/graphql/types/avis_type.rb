@@ -7,7 +7,7 @@ module Types
     field :date_question, GraphQL::Types::ISO8601DateTime, null: false, method: :created_at
     field :date_reponse, GraphQL::Types::ISO8601DateTime, null: true, method: :updated_at
 
-    field :attachment_url, Types::URL, null: true, extensions: [
+    field :attachment, Types::File, null: true, extensions: [
       { Extensions::Attachment => { attachment: :piece_justificative_file } }
     ]
 

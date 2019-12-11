@@ -1,7 +1,7 @@
 DEFAULT_QUERY = "# La documentation officielle de la spécification (Anglais) : https://graphql.org/
 # Une introduction aux concepts et raisons d'être de GraphQL (Français) : https://blog.octo.com/graphql-et-pourquoi-faire/
 # Le schema GraphQL de demarches-simplifiees.fr : https://demarches-simplifiees-graphql.netlify.com
-# Le endpoint GraphQL de demarches-simplifiees.fr : https://demarches-simplifiees.fr/api/v2/graphql
+# Le endpoint GraphQL de demarches-simplifiees.fr : https://www.demarches-simplifiees.fr/api/v2/graphql
 
 query getDemarche($demarcheNumber: Int!) {
   demarche(number: $demarcheNumber) {
@@ -54,7 +54,9 @@ query getDemarche($demarcheNumber: Int!) {
             secondaryValue
           }
           ... on PieceJustificativeChamp {
-            url
+            file {
+              url
+            }
           }
           ... on CarteChamp {
             geoAreas {
