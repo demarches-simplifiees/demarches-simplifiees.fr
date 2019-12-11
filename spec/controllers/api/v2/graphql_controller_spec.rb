@@ -10,7 +10,7 @@ describe API::V2::GraphqlController do
       :with_all_champs,
       :for_individual,
       procedure: procedure)
-    create(:commentaire, dossier: dossier, email: 'test@test.com')
+    create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
     dossier
   end
   let(:dossier1) { create(:dossier, :en_construction, :for_individual, procedure: procedure, en_construction_at: 1.day.ago) }
@@ -18,6 +18,31 @@ describe API::V2::GraphqlController do
   let!(:dossier_brouillon) { create(:dossier, :for_individual, procedure: procedure) }
   let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
+
+  def compute_checksum_in_chunks(io)
+    Digest::MD5.new.tap do |checksum|
+      while (chunk = io.read(5.megabytes))
+        checksum << chunk
+      end
+
+      io.rewind
+    end.base64digest
+  end
+
+  let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
+  let(:blob_info) do
+    {
+      filename: file.original_filename,
+      byte_size: file.size,
+      checksum: compute_checksum_in_chunks(file),
+      content_type: file.content_type
+    }
+  end
+  let(:blob) do
+    blob = ActiveStorage::Blob.create_before_direct_upload!(blob_info)
+    blob.upload(file)
+    blob
+  end
 
   before do
     instructeur.assign_to_procedure(procedure)
@@ -155,7 +180,9 @@ describe API::V2::GraphqlController do
             datePassageEnInstruction
             dateTraitement
             motivation
-            motivationAttachmentUrl
+            motivationAttachment {
+              url
+            }
             usager {
               id
               email
@@ -176,7 +203,13 @@ describe API::V2::GraphqlController do
             messages {
               email
               body
-              attachmentUrl
+              attachment {
+                filename
+                checksum
+                byteSize
+                contentType
+                url
+              }
             }
             avis {
               expert {
@@ -186,7 +219,10 @@ describe API::V2::GraphqlController do
               reponse
               dateQuestion
               dateReponse
-              attachmentUrl
+              attachment {
+                url
+                filename
+              }
             }
             champs {
               id
@@ -209,7 +245,7 @@ describe API::V2::GraphqlController do
             datePassageEnInstruction: nil,
             dateTraitement: nil,
             motivation: nil,
-            motivationAttachmentUrl: nil,
+            motivationAttachment: nil,
             usager: {
               id: dossier.user.to_typed_id,
               email: dossier.user.email
@@ -230,7 +266,13 @@ describe API::V2::GraphqlController do
             messages: dossier.commentaires.map do |commentaire|
               {
                 body: commentaire.body,
-                attachmentUrl: nil,
+                attachment: {
+                  filename: commentaire.piece_jointe.filename.to_s,
+                  contentType: commentaire.piece_jointe.content_type,
+                  checksum: commentaire.piece_jointe.checksum,
+                  byteSize: commentaire.piece_jointe.byte_size,
+                  url: Rails.application.routes.url_helpers.url_for(commentaire.piece_jointe)
+                },
                 email: commentaire.email
               }
             end,
@@ -306,7 +348,8 @@ describe API::V2::GraphqlController do
               dossierEnvoyerMessage(input: {
                 dossierId: \"#{dossier.to_typed_id}\",
                 instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"Bonjour\"
+                body: \"Bonjour\",
+                attachment: \"#{blob.signed_id}\"
               }) {
                 message {
                   body
@@ -429,7 +472,8 @@ describe API::V2::GraphqlController do
             dossierClasserSansSuite(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -478,7 +522,8 @@ describe API::V2::GraphqlController do
             dossierRefuser(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -527,7 +572,8 @@ describe API::V2::GraphqlController do
             dossierAccepter(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -607,10 +653,10 @@ describe API::V2::GraphqlController do
           "mutation {
             createDirectUpload(input: {
               dossierId: \"#{dossier.to_typed_id}\",
-              filename: \"hello.png\",
-              byteSize: 1234,
-              checksum: \"qwerty1234\",
-              contentType: \"image/png\"
+              filename: \"#{blob_info[:filename]}\",
+              byteSize: #{blob_info[:byte_size]},
+              checksum: \"#{blob_info[:checksum]}\",
+              contentType: \"#{blob_info[:content_type]}\"
             }) {
               directUpload {
                 url
