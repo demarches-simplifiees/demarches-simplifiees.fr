@@ -7,8 +7,8 @@
         - [[xlsx_export, :xlsx], [csv_export, :csv], [ods_export, :ods]].each do |(export, format)|
           %li
             - if export.nil?
-              = link_to "Exporter au format .#{format}", download_export_instructeur_procedure_path(procedure, export_format: format), remote: true
+              = link_to "Demander un export au format .#{format}", download_export_instructeur_procedure_path(procedure, export_format: format), remote: true
             - elsif export.ready?
-              = link_to "Au format .#{format}", url_for(export.file), target: "_blank", rel: "noopener"
+              = link_to "Télécharger l'export au format .#{format}", url_for(export.file), target: "_blank", rel: "noopener"
             - else
               L'export au format .#{format} est en cours de préparation
