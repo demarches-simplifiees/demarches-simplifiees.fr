@@ -19,6 +19,31 @@ describe API::V2::GraphqlController do
   let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
+  def compute_checksum_in_chunks(io)
+    Digest::MD5.new.tap do |checksum|
+      while (chunk = io.read(5.megabytes))
+        checksum << chunk
+      end
+
+      io.rewind
+    end.base64digest
+  end
+
+  let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
+  let(:blob_info) do
+    {
+      filename: file.original_filename,
+      byte_size: file.size,
+      checksum: compute_checksum_in_chunks(file),
+      content_type: file.content_type
+    }
+  end
+  let(:blob) do
+    blob = ActiveStorage::Blob.create_before_direct_upload!(blob_info)
+    blob.upload(file)
+    blob
+  end
+
   before do
     instructeur.assign_to_procedure(procedure)
   end
@@ -323,7 +348,8 @@ describe API::V2::GraphqlController do
               dossierEnvoyerMessage(input: {
                 dossierId: \"#{dossier.to_typed_id}\",
                 instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"Bonjour\"
+                body: \"Bonjour\",
+                attachment: \"#{blob.signed_id}\"
               }) {
                 message {
                   body
@@ -446,7 +472,8 @@ describe API::V2::GraphqlController do
             dossierClasserSansSuite(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -495,7 +522,8 @@ describe API::V2::GraphqlController do
             dossierRefuser(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -544,7 +572,8 @@ describe API::V2::GraphqlController do
             dossierAccepter(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -624,10 +653,10 @@ describe API::V2::GraphqlController do
           "mutation {
             createDirectUpload(input: {
               dossierId: \"#{dossier.to_typed_id}\",
-              filename: \"hello.png\",
-              byteSize: 1234,
-              checksum: \"qwerty1234\",
-              contentType: \"image/png\"
+              filename: \"#{blob_info[:filename]}\",
+              byteSize: #{blob_info[:byte_size]},
+              checksum: \"#{blob_info[:checksum]}\",
+              contentType: \"#{blob_info[:content_type]}\"
             }) {
               directUpload {
                 url
