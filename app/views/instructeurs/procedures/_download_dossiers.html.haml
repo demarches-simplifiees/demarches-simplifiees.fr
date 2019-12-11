@@ -4,27 +4,11 @@
       Télécharger tous les dossiers
     .dropdown-content.fade-in-down{ style: 'width: 330px' }
       %ul.dropdown-items
-        %li
-          - if procedure.xlsx_export_stale?
-            - if procedure.xlsx_export_queued?
-              L'export au format .xlsx est en cours de préparation, vous recevrez un email lorsqu'il sera disponible.
+        - [[xlsx_export, :xlsx], [csv_export, :csv], [ods_export, :ods]].each do |(export, format)|
+          %li
+            - if export.nil?
+              = link_to "Exporter au format .#{format}", download_export_instructeur_procedure_path(procedure, export_format: format), remote: true
+            - elsif export.ready?
+              = link_to "Au format .#{format}", url_for(export.file), target: "_blank", rel: "noopener"
             - else
-              = link_to "Exporter au format .xlsx", download_export_instructeur_procedure_path(procedure, export_format: :xlsx), remote: true
-          - else
-            = link_to "Au format .xlsx", url_for(procedure.xlsx_export_file), target: "_blank", rel: "noopener"
-        %li
-          - if procedure.ods_export_stale?
-            - if procedure.ods_export_queued?
-              L'export au format .ods est en cours de préparation, vous recevrez un email lorsqu'il sera disponible.
-            - else
-              = link_to "Exporter au format .ods", download_export_instructeur_procedure_path(procedure, export_format: :ods), remote: true
-          - else
-            = link_to "Au format .ods", url_for(procedure.ods_export_file), target: "_blank", rel: "noopener"
-        %li
-          - if procedure.csv_export_stale?
-            - if procedure.csv_export_queued?
-              L'export au format .csv est en cours de préparation, vous recevrez un email lorsqu'il sera disponible.
-            - else
-              = link_to "Exporter au format .csv", download_export_instructeur_procedure_path(procedure, export_format: :csv), remote: true
-          - else
-            = link_to "Au format .csv", url_for(procedure.csv_export_file), target: "_blank", rel: "noopener"
+              L'export au format .#{format} est en cours de préparation

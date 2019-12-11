@@ -109,6 +109,8 @@ module Instructeurs
       @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
 
       kaminarize(page, filtered_sorted_ids.count)
+
+      assign_exports
     end
 
     def update_displayed_fields
@@ -225,6 +227,13 @@ module Instructeurs
     end
 
     private
+
+    def assign_exports
+      groupe_instructeurs_for_procedure = current_instructeur.groupe_instructeurs.where(procedure: procedure)
+      @xlsx_export = Export.find_for_format_and_groupe_instructeurs(:xlsx, groupe_instructeurs_for_procedure)
+      @csv_export = Export.find_for_format_and_groupe_instructeurs(:csv, groupe_instructeurs_for_procedure)
+      @ods_export = Export.find_for_format_and_groupe_instructeurs(:ods, groupe_instructeurs_for_procedure)
+    end
 
     def find_field(table, column)
       procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }
