@@ -54,7 +54,9 @@ query getDemarche($demarcheNumber: Int!) {
             secondaryValue
           }
           ... on PieceJustificativeChamp {
-            url
+            file {
+              url
+            }
           }
           ... on CarteChamp {
             geoAreas {
