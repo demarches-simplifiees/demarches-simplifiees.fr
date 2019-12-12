@@ -26,9 +26,10 @@
           - else
             Par email :
             = link_to service.email, "mailto:#{service.email}"
-          %br
-          Par téléphone :
-          = link_to service.telephone, service.telephone_url
+          - if service.telephone_url.present?
+            %br
+            Par téléphone :
+            = link_to service.telephone, service.telephone_url
           %br
           Horaires : #{ formatted_horaires(service.horaires) }
 
