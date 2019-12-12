@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe AutoArchiveProcedureJob, type: :job do
   let!(:procedure) { create(:procedure, :published, :with_instructeur, auto_archive_on: nil) }
-  let!(:procedure_hier) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago) }
+  let!(:procedure_hier) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago.to_date) }
   let!(:procedure_aujourdhui) { create(:procedure, :published, :with_instructeur, auto_archive_on: Time.zone.today) }
-  let!(:procedure_demain) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.from_now) }
+  let!(:procedure_demain) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.from_now.to_date) }
 
   subject { AutoArchiveProcedureJob.new.perform }
 
