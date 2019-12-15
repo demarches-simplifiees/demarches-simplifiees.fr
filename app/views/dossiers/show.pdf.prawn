@@ -28,6 +28,51 @@ def format_date(date)
   I18n.l(date, format: template)
 end
 
+def add_identite_individual(pdf, dossier)
+  format_in_2_columns(pdf, "Civilité", dossier.individual.gender)
+  format_in_2_columns(pdf, "Nom", dossier.individual.nom)
+  format_in_2_columns(pdf, "Prénom", dossier.individual.prenom)
+
+  if dossier.individual.birthdate.present?
+    format_in_2_columns(pdf, "Date de naissance", try_format_date(dossier.individual.birthdate))
+  end
+end
+
+def render_siret_info(pdf, etablissement)
+  pdf.text " - Dénomination : #{raison_sociale_or_name(etablissement)}"
+  pdf.text " - Forme juridique : #{etablissement.entreprise_forme_juridique}"
+  if etablissement.entreprise_capital_social.present?
+    pdf.text " - Capital social : #{pretty_currency(etablissement.entreprise_capital_social)}"
+  end
+  pdf.text "\n"
+end
+
+def render_identite_etablissement(pdf, etablissement)
+  pdf.text " - SIRET : #{etablissement.siret}"
+  pdf.text " - SIRET du siège social: #{etablissement.entreprise.siret_siege_social}"
+  pdf.text " - Dénomination : #{raison_sociale_or_name(etablissement)}"
+  pdf.text " - Forme juridique : #{etablissement.entreprise_forme_juridique}"
+  if etablissement.entreprise_capital_social.present?
+    pdf.text " - Capital social : #{pretty_currency(etablissement.entreprise_capital_social)}"
+  end
+  pdf.text " - Libellé NAF : #{etablissement.libelle_naf}"
+  pdf.text " - Code NAF : #{etablissement.naf}"
+  pdf.text " - Date de création : #{try_format_date(etablissement.entreprise.date_creation)}"
+  pdf.text " - Effectif de l'organisation : #{effectif(etablissement)}"
+  pdf.text " - Code effectif : #{etablissement.entreprise.code_effectif_entreprise}"
+  pdf.text " - Numéro de TVA intracommunautaire : #{etablissement.entreprise.numero_tva_intracommunautaire}"
+  pdf.text " - Adresse : #{etablissement.adresse}"
+  if etablissement.association?
+    pdf.text " - Numéro RNA : #{etablissement.association_rna}"
+    pdf.text " - Titre : #{etablissement.association_titre}"
+    pdf.text " - Objet : #{etablissement.association_objet}"
+    pdf.text " - Date de création : #{try_format_date(etablissement.association_date_creation)}"
+    pdf.text " - Date de publication : #{try_format_date(etablissement.association_date_publication)}"
+    pdf.text " - Date de déclaration : #{try_format_date(etablissement.association_date_declaration)}"
+  end
+  pdf.text "\n"
+end
+
 def render_single_champ(pdf, champ)
   case champ.type
   when 'Champs::RepetitionChamp'
@@ -42,11 +87,12 @@ def render_single_champ(pdf, champ)
   when 'Champs::CarteChamp'
     format_in_2_lines(pdf, champ.libelle, champ.geo_json.to_s)
   when 'Champs::SiretChamp'
-    format_in_2_lines(pdf, champ.libelle, champ.to_s)
-    if champ.etablissement.present?
-      etablissement = champ.etablissement
-      format_in_2_lines(pdf, champ.libelle, raison_sociale_or_name(etablissement))
+    pdf.font 'liberation serif', style: :bold, size: 12 do
+      pdf.text champ.libelle
     end
+    pdf.text " - SIRET: #{champ.to_s}"
+    render_identite_etablissement(pdf, champ.etablissement) if champ.etablissement.present?
+    pdf.text "\n"
   else
     value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, champ.libelle, value)
@@ -86,7 +132,8 @@ def add_avis(pdf, avis)
     pdf.text "(confidentiel)", style: :bold
   end
   text = avis.answer || 'En attente de réponse'
-  pdf.text text, style: :bold
+  pdf.text text
+  pdf.text "\n"
 end
 
 prawn_document(page_size: "A4") do |pdf|
@@ -112,15 +159,9 @@ prawn_document(page_size: "A4") do |pdf|
 
   add_title(pdf, "Identité du demandeur")
 
-  if @dossier.individual.present?
-    format_in_2_columns(pdf, "Civilité", @dossier.individual.gender)
-    format_in_2_columns(pdf, "Nom", @dossier.individual.nom)
-    format_in_2_columns(pdf, "Prénom", @dossier.individual.prenom)
-
-    if @dossier.individual.birthdate.present?
-      format_in_2_columns(pdf, "Date de naissance", try_format_date(@dossier.individual.birthdate))
-    end
-  end
+  format_in_2_columns(pdf, "Email", @dossier.user.email)
+  add_identite_individual(pdf, @dossier) if @dossier.individual.present?
+  render_identite_etablissement(pdf, @dossier.etablissement) if @dossier.etablissement.present?
   pdf.text "\n"
 
   add_title(pdf, 'Formulaire')
