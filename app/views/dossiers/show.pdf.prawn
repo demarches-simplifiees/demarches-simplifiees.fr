@@ -20,6 +20,7 @@ def add_title(pdf, title)
   pdf.font 'liberation serif', title_style do
     pdf.text title
   end
+  pdf.text "\n"
 end
 
 def format_date(date)
@@ -136,6 +137,20 @@ def add_avis(pdf, avis)
   pdf.text "\n"
 end
 
+def add_etats_dossier(pdf, dossier)
+  if dossier.en_construction_at.present?
+    format_in_2_columns(pdf, "Déposé le", try_format_date(dossier.en_construction_at))
+  end
+  if dossier.en_instruction_at.present?
+    format_in_2_columns(pdf, "En instruction le", try_format_date(dossier.en_instruction_at))
+  end
+  if dossier.processed_at?.present?
+    format_in_2_columns(pdf, "Décision le", try_format_date(dossier.processed_at))
+  end
+
+  pdf.text "\n"
+end
+
 prawn_document(page_size: "A4") do |pdf|
   pdf.font_families.update( 'liberation serif' => {
     normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' ),
@@ -146,16 +161,18 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.svg IO.read("app/assets/images/header/logo-ds-wide.svg"), width: 300, position: :center
   pdf.move_down(40)
 
-  pdf.text "Dossier Nº #{@dossier.id} déposé sur la démarche #{@dossier.procedure.libelle}"
+  format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
+  format_in_2_columns(pdf, 'Démarche', @dossier.procedure.libelle)
+  format_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name)
   pdf.text "\n"
 
-  entete = "Ce dossier est <b>#{dossier_display_state(@dossier, lower: true)}</b>"
+  pdf.text "Ce dossier est <b>#{dossier_display_state(@dossier, lower: true)}</b>.", inline_format: true
+  pdf.text "\n"
   if @dossier.motivation.present?
-    entete += " avec la motivation suivante : #{@dossier.motivation}"
+    format_in_2_lines(pdf, "Motif de la décision", @dossier.motivation)
   end
-
-  pdf.text entete, inline_format: true
-  pdf.text "\n"
+  add_title(pdf, 'Historique')
+  add_etats_dossier(pdf, @dossier)
 
   add_title(pdf, "Identité du demandeur")
 
