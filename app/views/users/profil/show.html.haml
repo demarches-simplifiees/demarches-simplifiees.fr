@@ -18,9 +18,10 @@
         %p
           Pour finaliser votre changement d’adresse, vérifiez vos emails et cliquez sur le lien de confirmation.
 
-    = form_for @current_user, url: update_email_path, method: :patch, html: { class: 'form' } do |f|
-      = f.email_field :email, value: nil, placeholder: 'Nouvelle adresse email', required: true
-      = f.submit "Changer mon adresse", class: 'button primary'
+    - if !instructeur_signed_in?
+      = form_for @current_user, url: update_email_path, method: :patch, html: { class: 'form' } do |f|
+        = f.email_field :email, value: nil, placeholder: 'Nouvelle adresse email', required: true
+        = f.submit "Changer mon adresse", class: 'button primary'
 
   - if current_administrateur.present?
     .card

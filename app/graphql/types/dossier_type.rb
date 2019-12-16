@@ -20,7 +20,7 @@ module Types
     field :archived, Boolean, null: false
 
     field :motivation, String, null: true
-    field :motivation_attachment_url, Types::URL, null: true, extensions: [
+    field :motivation_attachment, Types::File, null: true, extensions: [
       { Extensions::Attachment => { attachment: :justificatif_motivation } }
     ]
 

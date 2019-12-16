@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_28_081324) do
+ActiveRecord::Schema.define(version: 2019_12_09_141641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -224,12 +224,10 @@ ActiveRecord::Schema.define(version: 2019_11_28_081324) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "automatic_operation", default: false, null: false
-    t.bigint "administration_id"
     t.datetime "keep_until"
     t.datetime "executed_at"
     t.text "digest"
     t.bigint "bill_signature_id"
-    t.index ["administration_id"], name: "index_dossier_operation_logs_on_administration_id"
     t.index ["bill_signature_id"], name: "index_dossier_operation_logs_on_bill_signature_id"
     t.index ["dossier_id"], name: "index_dossier_operation_logs_on_dossier_id"
     t.index ["instructeur_id"], name: "index_dossier_operation_logs_on_instructeur_id"
@@ -621,7 +619,6 @@ ActiveRecord::Schema.define(version: 2019_11_28_081324) do
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
-  add_foreign_key "dossier_operation_logs", "administrations"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_operation_logs", "dossiers"
   add_foreign_key "dossier_operation_logs", "instructeurs"

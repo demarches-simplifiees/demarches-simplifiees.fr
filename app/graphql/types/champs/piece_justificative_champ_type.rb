@@ -3,7 +3,7 @@ module Types::Champs
     include Rails.application.routes.url_helpers
     implements Types::ChampType
 
-    field :url, Types::URL, null: true, extensions: [
+    field :file, Types::File, null: true, extensions: [
       { Extensions::Attachment => { attachment: :piece_justificative_file } }
     ]
   end
