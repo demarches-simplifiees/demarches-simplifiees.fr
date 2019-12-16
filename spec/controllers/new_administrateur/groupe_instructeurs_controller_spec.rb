@@ -89,6 +89,9 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     before do
       gi_1_1.instructeurs << instructeur
 
+      allow(GroupeInstructeurMailer).to receive(:add_instructeurs)
+        .and_return(double(deliver_later: true))
+
       post :add_instructeur,
         params: {
           procedure_id: procedure.id,
@@ -103,6 +106,13 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(gi_1_1.instructeurs.pluck(:email)).to include(*new_instructeur_emails) }
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+      it "calls GroupeInstructeurMailer with the right groupe and instructeurs" do
+        expect(GroupeInstructeurMailer).to have_received(:add_instructeurs).with(
+          gi_1_1,
+          satisfy { |instructeurs| instructeurs.all? { |i| new_instructeur_emails.include?(i.email) } },
+          admin.email
+        )
+      end
     end
 
     context 'of an instructeur already in the group' do
