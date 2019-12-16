@@ -1,0 +1,12 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p= t('.automatic_dossier_deletion', count: @dossier_hashes.count)
+
+%ul
+  - @dossier_hashes.each do |d|
+    %li= "n° #{d[:id]} (#{d[:procedure_libelle]})"
+
+= render partial: "layouts/mailers/signature"

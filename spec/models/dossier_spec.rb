@@ -1070,6 +1070,7 @@ describe Dossier do
       end
 
       it 'verification de la creation de mail' do
+        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).twice
         expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(brouillon_close_to_expiration.user, [brouillon_close_to_expiration])
         expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(expired_brouillon.user, [expired_brouillon])
       end
@@ -1099,6 +1100,63 @@ describe Dossier do
     it 'deletes the expired brouillon' do
       expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
       expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe '#send_en_construction_expiration_notices_to_user' do
+    let!(:procedure1) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:date_close_to_expiration) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months + 1.month }
+    let!(:date_expired) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months - 6.days }
+    let!(:date_not_expired) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months + 2.months }
+
+    context "Envoi de message pour les dossiers expirant dans - d'un mois" do
+      let!(:expired_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_expired) } # expiré
+      let!(:en_construction_close_to_expiration) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_close_to_expiration) } # expirant
+      let!(:en_construction_close_but_with_notice_sent) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_close_to_expiration, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) } # expirant mais mail déja envoyé
+      let!(:valid_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_not_expired) } # autre
+
+      before do
+        Timecop.freeze(Time.zone.parse('12/12/2012').beginning_of_day)
+        allow(DossierMailer).to receive(:notify_en_construction_near_deletion).and_return(double(deliver_later: nil))
+        Dossier.send_en_construction_expiration_notices_to_user
+      end
+
+      it 'verification de la creation de mail' do
+        expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).twice
+        expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(en_construction_close_to_expiration.user, [en_construction_close_to_expiration], true)
+        expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(expired_en_construction.user, [expired_en_construction], true)
+      end
+    end
+
+    after { Timecop.return }
+  end
+
+  describe '#send_en_construction_deletion_notices_to_user' do
+    let!(:state) { nil }
+    let!(:today) { Time.zone.now.at_midnight }
+    let!(:procedure1) { create(:procedure, :with_instructeur, declarative_with_state: state, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:date_close_to_expiration) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months + 1.month }
+    let!(:date_expired) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months - 6.days }
+    let!(:date_not_expired) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months + 2.months }
+    let!(:today) { Time.zone.now.at_midnight }
+
+    context "envoi message de suppression au utilisateur : " do
+      let!(:expired_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_expired) } # expiré
+      let!(:en_construction_close_to_expiration) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_close_to_expiration) } # expirant
+      let!(:en_construction_close_but_with_notice_sent) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_close_to_expiration, en_construction_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION + 1.day)) } # expirant mais mail déja envoyé
+      let!(:valid_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_not_expired) } # autre
+
+      before do
+        allow(DossierMailer).to receive(:notify_excuse_deletion_to_user).and_return(double(deliver_later: nil))
+        Dossier.send_en_construction_destroy_notices_to_user
+      end
+
+      it 'verification de la creation de mail' do
+        expect(DossierMailer).to have_received(:notify_excuse_deletion_to_user).once
+        expect(DossierMailer).to have_received(:notify_excuse_deletion_to_user).with(en_construction_close_but_with_notice_sent.user, [en_construction_close_but_with_notice_sent.hash_for_deletion_mail])
+      end
+
+      after { Timecop.return }
     end
   end
 end

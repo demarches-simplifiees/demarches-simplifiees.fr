@@ -164,6 +164,7 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
+  # scope suppression dossier brouillon
   scope :brouillon_close_to_expiration, -> do
     brouillon
       .joins(:procedure)
@@ -171,6 +172,15 @@ class Dossier < ApplicationRecord
   end
   scope :expired_brouillon, -> { brouillon.where("brouillon_close_to_expiration_notice_sent_at < ?", (Time.zone.now - (DRAFT_EXPIRATION))) }
   scope :without_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
+
+  # scope suppression dossier en construction
+  scope :en_construction_close_to_expiration, -> do
+    en_construction
+      .joins(:procedure)
+      .where("dossiers.en_construction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (1 * interval '1 month') <=  now()")
+  end
+  scope :expired_en_construction, -> { en_construction.where("en_construction_close_to_expiration_notice_sent_at < ?", (Time.zone.now - (DRAFT_EXPIRATION))) }
+  scope :en_construction_without_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
@@ -672,6 +682,31 @@ class Dossier < ApplicationRecord
         DeletedDossier.create_from_dossier(dossier)
         dossier.destroy
       end
+    end
+  end
+
+  def self.send_en_construction_expiration_notices_to_user
+    expiration_en_construction = Dossier
+      .en_construction_close_to_expiration
+      .en_construction_without_notice_sent
+
+    expiration_en_construction
+      .includes(:procedure, :user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+        DossierMailer.notify_en_construction_near_deletion(user, dossiers, true).deliver_later
+    end
+  end
+
+  def self.send_en_construction_destroy_notices_to_user
+    expired_en_construction = Dossier.expired_en_construction
+
+    expired_en_construction
+      .includes(:procedure, :user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+        dossier_hashes = dossiers.map(&:hash_for_deletion_mail)
+        DossierMailer.notify_excuse_deletion_to_user(user, dossier_hashes).deliver_later
     end
   end
 end

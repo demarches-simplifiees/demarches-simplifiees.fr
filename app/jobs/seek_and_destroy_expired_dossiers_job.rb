@@ -2,7 +2,7 @@ class SeekAndDestroyExpiredDossiersJob < ApplicationJob
   queue_as :cron
 
   def perform(*args)
-    Dossier.send_brouillon_expiration_notices
-    Dossier.destroy_brouillons_and_notify
+    SeekAndDestroyExpiredDossiersService.action_dossier_brouillon
+    SeekAndDestroyExpiredDossiersService.action_dossier_en_constuction
   end
 end
