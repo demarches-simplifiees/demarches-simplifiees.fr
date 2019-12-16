@@ -1,0 +1,22 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p
+  - if @for_user == false
+    Afin de limiter la conservation de vos données personnelles,
+
+  = t('.automatic_dossier_deletion', count: @dossiers.count)
+
+  %ul
+    - @dossiers.each do |d|
+      %li= link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))
+
+%p
+  - if @for_user == false
+    #{sanitize(t('.send_user_draft', count: @dossiers.count))}. Vous n'avez rien à faire.
+  - else
+    #{sanitize(t('.send_other_draft', count: @dossiers.count))}.
+
+= render partial: "layouts/mailers/signature"

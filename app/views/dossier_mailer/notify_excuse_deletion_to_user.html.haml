@@ -1,0 +1,14 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+  = t('.automatic_dossier_deletion', count: @dossier_hashes.count)
+
+  %ul
+    - @dossier_hashes.each do |d|
+      %li= link_to("n° #{d[:id]} (#{d[:procedure_libelle]})", dossier_url(d))
+%p
+  #{sanitize(t('.send_other_draft', count: @dossier_hashes.count))}, nous nous excusons de la gène occasionnée.
+
+= render partial: "layouts/mailers/signature"
