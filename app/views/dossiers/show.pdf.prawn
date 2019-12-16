@@ -23,9 +23,7 @@ def add_title(pdf, title)
 end
 
 def format_date(date)
-  is_current_year = (date.year == Time.zone.today.year)
-  template = is_current_year ? :message_date : :message_date_with_year
-  I18n.l(date, format: template)
+  I18n.l(date, format: :message_date_with_year)
 end
 
 def add_identite_individual(pdf, dossier)
@@ -84,6 +82,8 @@ def render_single_champ(pdf, champ)
       pdf.text champ.libelle
     end
     pdf.text "\n"
+  when 'Champs::ExplicationChamp'
+    format_in_2_lines(pdf, champ.libelle, champ.description)
   when 'Champs::CarteChamp'
     format_in_2_lines(pdf, champ.libelle, champ.geo_json.to_s)
   when 'Champs::SiretChamp'
@@ -180,7 +180,7 @@ prawn_document(page_size: "A4") do |pdf|
   end
 
   add_title(pdf, 'Messagerie')
-  @dossier.commentaires.with_attached_piece_jointe.each do |commentaire|
+  @dossier.commentaires.each do |commentaire|
     add_message(pdf, commentaire)
   end
 end
