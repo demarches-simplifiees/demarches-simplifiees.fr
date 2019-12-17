@@ -1,8 +1,8 @@
 # Fetch and compute monthly reports about the users conversations on Helpscout
 class Helpscout::UserConversationsAdapter
   def initialize(from, to)
-    @from = from
-    @to = to
+    @from = from.to_date
+    @to = to.to_date
   end
 
   def can_fetch_reports?
