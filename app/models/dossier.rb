@@ -695,7 +695,7 @@ class Dossier < ApplicationRecord
       .group_by(&:user)
       .each do |(user, dossiers)|
         DossierMailer.notify_en_construction_near_deletion(user, dossiers, true).deliver_later
-    end
+      end
   end
 
   def self.send_en_construction_destroy_notices_to_user
@@ -707,6 +707,6 @@ class Dossier < ApplicationRecord
       .each do |(user, dossiers)|
         dossier_hashes = dossiers.map(&:hash_for_deletion_mail)
         DossierMailer.notify_excuse_deletion_to_user(user, dossier_hashes).deliver_later
-    end
+      end
   end
 end
