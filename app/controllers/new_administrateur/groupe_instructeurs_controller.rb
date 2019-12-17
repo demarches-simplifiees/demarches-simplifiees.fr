@@ -69,11 +69,11 @@ module NewAdministrateur
             create_instructeur(instructeur_email)
         end
 
+        groupe_instructeur.instructeurs << instructeurs
+
         GroupeInstructeurMailer
           .add_instructeurs(groupe_instructeur, instructeurs, current_user.email)
           .deliver_later
-
-        groupe_instructeur.instructeurs << instructeurs
 
         flash[:notice] = t('.assignment',
           count: email_to_adds.count,
