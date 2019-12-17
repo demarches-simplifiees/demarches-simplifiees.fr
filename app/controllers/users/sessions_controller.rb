@@ -34,6 +34,10 @@ class Users::SessionsController < Devise::SessionsController
       when User.loged_in_with_france_connects.fetch(:particulier)
         redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint]
         return
+      when User.loged_in_with_france_connects.fetch(:keycloak)
+        params = { redirect_uri: root_url }
+        redirect_to "#{Rails.application.secrets.keycloak[:logout_endpoint]}?#{params.to_query}"
+        return
       end
     end
 

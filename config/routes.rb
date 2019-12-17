@@ -117,6 +117,9 @@ Rails.application.routes.draw do
     get 'particulier/callback' => 'particulier#callback'
   end
 
+  get 'keycloak' => 'keycloak#login'
+  get 'keycloak/callback' => 'keycloak#callback'
+
   namespace :champs do
     get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
