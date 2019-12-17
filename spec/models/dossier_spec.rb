@@ -1049,13 +1049,12 @@ describe Dossier do
   end
 
   describe '#send_brouillon_expiration_notices' do
-    before { Timecop.freeze(Time.zone.parse('12/12/2012 15:00:00')) }
-
     let!(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
     let!(:date_close_to_expiration) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months + 1.month }
     let!(:date_expired) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
     let!(:date_not_expired) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
 
+    before { Timecop.freeze(Time.zone.parse('12/12/2012 15:00:00')) }
     after { Timecop.return }
 
     context "Envoi de message pour les dossiers expirant dans - d'un mois" do

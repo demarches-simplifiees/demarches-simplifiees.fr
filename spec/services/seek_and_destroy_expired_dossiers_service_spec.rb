@@ -86,7 +86,6 @@ describe SeekAndDestroyExpiredDossiersService do
         expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).thrice
         expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(en_construction_close_to_expiration.user, [en_construction_close_to_expiration], true)
         expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(expired_en_construction.user, [expired_en_construction], true)
-        expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(administrateur, [en_construction_close_to_expiration, expired_en_construction], false)
       end
 
       it 'verification de l enregistrement de l envois du mail' do

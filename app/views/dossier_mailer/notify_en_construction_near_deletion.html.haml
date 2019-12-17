@@ -11,10 +11,15 @@
 
   %ul
     - @dossiers.each do |d|
-      %li= link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))
+      - if @for_user == false
+        %li
+          #{link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}. Retrouvez le dossier au format #{link_to("PDF", instructeur_dossier_url(d.procedure, d, format: :pdf))}
+      - else
+        %li
+          #{link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}. Retrouvez le dossier au format #{link_to("PDF", dossier_url(d, format: :pdf))}
 
 %p
-  - if @for_user == false
+  - if @for_user == true
     #{sanitize(t('.send_user_draft', count: @dossiers.count))}. Vous n'avez rien à faire.
   - else
     #{sanitize(t('.send_other_draft', count: @dossiers.count))}.
