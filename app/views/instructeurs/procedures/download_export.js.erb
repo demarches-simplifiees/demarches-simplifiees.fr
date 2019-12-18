@@ -1,2 +1,3 @@
-<%= render_to_element('.procedure-actions', partial: "download_dossiers", locals: { procedure: @procedure }) %>
+<%= render_to_element('.procedure-actions', partial: "download_dossiers", 
+                      locals: { procedure: @procedure, xlsx_export: @xlsx_export, csv_export: @csv_export, ods_export: @ods_export }) %>
 <%= render_flash %>

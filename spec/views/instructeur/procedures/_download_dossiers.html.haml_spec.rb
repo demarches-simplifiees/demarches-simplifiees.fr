@@ -2,7 +2,7 @@ describe 'instructeurs/procedures/_download_dossiers.html.haml', type: :view do
   let(:current_instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }
 
-  subject { render 'instructeurs/procedures/download_dossiers.html.haml', procedure: procedure }
+  subject { render 'instructeurs/procedures/download_dossiers.html.haml', procedure: procedure, xlsx_export: nil, csv_export: nil, ods_export: nil }
 
   context "when procedure has 0 dossier" do
     it { is_expected.not_to include("Télécharger tous les dossiers") }
