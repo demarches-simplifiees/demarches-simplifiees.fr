@@ -393,6 +393,14 @@ Rails.application.routes.draw do
     end
   end
 
+  if Rails.env.test?
+    scope 'test/api_geo' do
+      get 'regions' => 'api_geo_test#regions'
+      get 'communes' => 'api_geo_test#communes'
+      get 'departements' => 'api_geo_test#departements'
+    end
+  end
+
   #
   # Legacy routes
   #
