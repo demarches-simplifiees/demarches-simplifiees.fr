@@ -1,0 +1,12 @@
+fr:
+  dossier_mailer:
+    notify_excuse_deletion_to_user:
+      subject:
+        one: "Un dossier a été supprimé automatiquement"
+        other: "Des dossiers ont été supprimés automatiquement"
+      automatic_dossier_deletion:
+        one: "Le délai maximum de conservation du dossier suivant a été atteint, il a donc été supprimé :"
+        other: "Le délai maximum de conservation des dossiers suivants a été atteint, ils ont donc été supprimés :"
+      send_other_draft:
+        one: "Le dossier ne sera pas traité"
+        other: "les dossiers ne seront pas traités"

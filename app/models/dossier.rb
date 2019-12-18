@@ -164,7 +164,6 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
-  # scope suppression dossier brouillon
   scope :brouillon_close_to_expiration, -> do
     brouillon
       .joins(:procedure)
@@ -173,12 +172,12 @@ class Dossier < ApplicationRecord
   scope :expired_brouillon, -> { brouillon.where("brouillon_close_to_expiration_notice_sent_at < ?", (Time.zone.now - (DRAFT_EXPIRATION))) }
   scope :without_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
 
-  # scope suppression dossier en construction
   scope :en_construction_close_to_expiration, -> do
     en_construction
       .joins(:procedure)
       .where("dossiers.en_construction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (1 * interval '1 month') <=  now()")
   end
+  scope :expired_en_construction, -> { en_construction.where("en_construction_close_to_expiration_notice_sent_at < ?", (Time.zone.now - (DRAFT_EXPIRATION))) }
   scope :en_construction_without_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
@@ -684,6 +683,26 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def self.dossier_en_construction_expirant
+    send_en_construction_expiration_notices_to_user
+
+    expiring = Dossier
+      .en_construction_close_to_expiration
+      .en_construction_without_notice_sent
+
+    traitement_dossier_expirant(expiring)
+    expiring.update_all(en_construction_close_to_expiration_notice_sent_at: Time.zone.now)
+  end
+
+  def self.dossier_en_construction_expire
+    send_en_construction_destroy_notices_to_user
+
+    expired = Dossier
+      .expired_en_construction
+
+    traitement_dossier_expire(expired)
+  end
+
   def self.send_en_construction_expiration_notices_to_user
     expiration_en_construction = Dossier
       .en_construction_close_to_expiration
@@ -697,9 +716,18 @@ class Dossier < ApplicationRecord
     end
   end
 
-  # #########################################
-  # traitement des dossiers qui vont expirés dans 1 mois
-  # #########################################
+  def self.send_en_construction_destroy_notices_to_user
+    expired_en_construction = Dossier.expired_en_construction
+
+    expired_en_construction
+      .includes(:procedure, :user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+      dossier_hashes = dossiers.map(&:hash_for_deletion_mail)
+      DossierMailer.notify_excuse_deletion_to_user(user, dossier_hashes).deliver_later
+    end
+  end
+
   def self.traitement_dossier_expirant(expiring)
     array_of_mail_near_deletion = []
 
@@ -709,15 +737,36 @@ class Dossier < ApplicationRecord
       add_mail_to_send(destinataire, dossier, array_of_mail_near_deletion)
     end
 
-    # envoi des mails d'alerte de prochaine expiration des dossiers
     array_of_mail_near_deletion.each do |t|
       DossierMailer.notify_en_construction_near_deletion(t[:dest], t[:doss], false).deliver_later
     end
   end
 
-  # ###############################
-  # ajoute dans la liste des mails
-  # ################################
+  def self.traitement_dossier_expire(expired)
+    dossier_to_remove = []
+    array_of_mail_to_auto_deletion = []
+
+    expired.each do |dossier|
+      destinataire = dossier.followers_instructeurs
+      destinataire |= dossier.procedure.administrateurs
+
+      dossier_to_remove << dossier
+      add_mail_to_send(destinataire, dossier, array_of_mail_to_auto_deletion)
+    end
+
+    array_of_mail_to_auto_deletion.each do |t|
+      dossier_hashes = t[:doss].map(&:hash_for_deletion_mail)
+      DossierMailer.notify_deletion(t[:dest], dossier_hashes).deliver_later
+    end
+
+    if !dossier_to_remove.empty?
+      dossier_to_remove.each do |dossier|
+        DeletedDossier.create_from_dossier(dossier)
+        dossier.destroy
+      end
+    end
+  end
+
   def self.add_mail_to_send(destinataires, dossier, tab)
     struct_of_mail_to_send = Struct.new(:dest, :doss)
 
@@ -725,7 +774,6 @@ class Dossier < ApplicationRecord
       stop = false
       tab.each do |current|
         if current[:dest].id == dest.id
-          # un mail pour l'dest existe déjà
           if !current[:doss].include?(dossier)
             current[:doss] << dossier
           end
@@ -734,7 +782,6 @@ class Dossier < ApplicationRecord
       end
 
       if !stop
-        # c'est un nouveau destinataire de mail
         list_dossier_new_mail = [dossier]
         new_structure_of_mail = [dest, list_dossier_new_mail]
         tab << struct_of_mail_to_send.new(*new_structure_of_mail)
