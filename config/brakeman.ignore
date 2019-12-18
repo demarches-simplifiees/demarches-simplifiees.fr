@@ -10,13 +10,33 @@
       "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "current_user.dossiers.includes(:procedure).find(params[:id]).procedure.monavis_embed",
-      "render_path": [{"type":"controller","class":"Users::DossiersController","method":"merci","line":177,"file":"app/controllers/users/dossiers_controller.rb"}],
+      "render_path": [{"type":"controller","class":"Users::DossiersController","method":"merci","line":181,"file":"app/controllers/users/dossiers_controller.rb"}],
       "location": {
         "type": "template",
         "template": "users/dossiers/merci"
       },
       "user_input": "current_user.dossiers.includes(:procedure)",
       "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "8b22d0fa97c6b32921a3383a60dd63f1d2c0723c48f30bdc2d4abe41fe4abccc",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/instructeurs/procedures_controller.rb",
+      "line": 198,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Export.find_or_create_export(params[:export_format], current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Instructeurs::ProceduresController",
+        "method": "download_export"
+      },
+      "user_input": "Export.find_or_create_export(params[:export_format], current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url",
+      "confidence": "High",
       "note": ""
     },
     {
@@ -46,7 +66,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/procedure_presentation.rb",
-      "line": 106,
+      "line": 107,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "((\"self\" == \"self\") ? (dossiers) : (dossiers.includes(\"self\"))).order(\"#{self.class.sanitized_column(\"self\", column)} #{order}\")",
       "render_path": null,
@@ -86,7 +106,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/procedure_presentation.rb",
-      "line": 102,
+      "line": 103,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "dossiers.includes(:followers_instructeurs).joins(\"LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id\").order(\"instructeurs_users.email #{order}\")",
       "render_path": null,
@@ -100,6 +120,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-10-16 16:19:43 +0200",
+  "updated": "2019-12-12 16:36:32 +0100",
   "brakeman_version": "4.3.1"
 }

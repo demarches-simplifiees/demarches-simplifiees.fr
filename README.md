@@ -78,6 +78,7 @@ En local, un utilisateur de test est créé automatiquement, avec les identifian
     PurgeUnattachedBlobsJob.set(cron: "0 0 * * *").perform_later
     OperationsSignatureJob.set(cron: "0 6 * * *").perform_later
     SeekAndDestroyExpiredDossiersJob.set(cron: "0 7 * * *").perform_later
+    PurgeStaleExportsJob.set(cron: "*/5 * * * *").perform_later
 
 ### Voir les emails envoyés en local
 
