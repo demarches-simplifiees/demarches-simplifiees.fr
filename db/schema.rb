@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_11_113341) do
+ActiveRecord::Schema.define(version: 2019_12_11_153436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -251,6 +251,7 @@ ActiveRecord::Schema.define(version: 2019_12_11_113341) do
     t.text "private_search_terms"
     t.bigint "groupe_instructeur_id"
     t.datetime "brouillon_close_to_expiration_notice_sent_at"
+    t.datetime "en_construction_close_to_expiration_notice_sent_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"
