@@ -108,7 +108,7 @@ services:
       - md-network
 
   clamav:
-    image: tiredofit/clamav
+    image: matau/clamav
     container_name: clamav-${ENV:-dev}
     restart: always
     ports:
