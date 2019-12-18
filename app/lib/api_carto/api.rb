@@ -5,20 +5,19 @@ class ApiCarto::API
   end
 
   def self.search_cadastre(geojson)
-    url = [API_CARTO_URL, "cadastre", "geometrie"].join("/")
+    url = [API_CARTO_URL, "cadastre", "parcelle"].join("/")
     call(url, geojson)
   end
 
   private
 
   def self.call(url, geojson)
-    response = Typhoeus.post(url, body: geojson.to_s, headers: { 'content-type' => 'application/json' })
+    response = Typhoeus.get(url, params: { geom: geojson.to_s }, headers: { 'content-type' => 'application/json' })
 
     if response.success?
       response.body
     else
-      message = response.code == 0 ? response.return_message : response.code.to_s
-      Rails.logger.error "[ApiCarto] Error on #{url}: #{message}"
+      Rails.logger.error "[ApiCarto] Error on #{url}. Code #{response.code}, #{response.body}"
       raise RestClient::ResourceNotFound
     end
   end
