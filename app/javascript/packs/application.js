@@ -13,7 +13,6 @@ import '../shared/activestorage/ujs';
 import '../shared/activestorage/attachment-checker';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
-import '../shared/autocomplete';
 import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
