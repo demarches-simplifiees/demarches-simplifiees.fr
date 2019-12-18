@@ -208,13 +208,6 @@ Rails.application.routes.draw do
     resources :instructeurs, only: [:index, :create, :destroy]
   end
 
-  #
-  # Addresses
-  #
-
-  get 'address/suggestions' => 'address#suggestions'
-  get 'address/geocode' => 'address#geocode'
-
   resources :invites, only: [:show] do
     collection do
       post 'dossier/:dossier_id', to: 'invites#create', as: :dossier
