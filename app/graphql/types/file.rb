@@ -7,7 +7,7 @@ module Types
     field :content_type, String, null: false
 
     def url
-      Rails.application.routes.url_helpers.url_for(object)
+      object.service_url
     end
   end
 end
