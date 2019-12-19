@@ -209,7 +209,6 @@ describe API::V2::GraphqlController do
                   checksum
                   byteSize
                   contentType
-                  url
                 }
               }
               avis {
@@ -270,8 +269,7 @@ describe API::V2::GraphqlController do
                   filename: commentaire.piece_jointe.filename.to_s,
                   contentType: commentaire.piece_jointe.content_type,
                   checksum: commentaire.piece_jointe.checksum,
-                  byteSize: commentaire.piece_jointe.byte_size,
-                  url: Rails.application.routes.url_helpers.url_for(commentaire.piece_jointe)
+                  byteSize: commentaire.piece_jointe.byte_size
                 },
                 email: commentaire.email
               }
