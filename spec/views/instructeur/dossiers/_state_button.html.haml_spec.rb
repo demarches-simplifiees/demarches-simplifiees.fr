@@ -103,7 +103,7 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
 
       it 'allows to download the justificatif' do
         expect(rendered).to have_dropdown_item('Justificatif')
-        expect(rendered).to have_link(href: url_for(dossier.justificatif_motivation.attachment.blob))
+        expect(response).to have_css("a[href*='/rails/active_storage/blobs/']", text: dossier.justificatif_motivation.attachment.filename.to_s)
       end
     end
   end
