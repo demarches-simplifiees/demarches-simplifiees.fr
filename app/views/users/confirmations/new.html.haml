@@ -18,7 +18,14 @@
     %p.confirmation-instructions
       Ouvrez votre boîte email, et
       %strong cliquez sur le lien d’activation
-      dans le message que vous avez reçu.
+      dans le message que vous avez reçu.<br/>
+      Si vous semblez ne pas recevoir ce message,
+      regardez dans
+      - if resource.email.end_with?('gmail.com')
+        les dossiers <b>Spam</b>, <b>Promotions</b> ou <b>Notifications</b>.<br/>
+      - else
+        le dossier <b>Spam</b><br/>
+      Si vous ne trouvez toujours pas le message, effectuez une recherche avec '<b>mes-demarches</b>'<br/>
 
     %hr.confirmation-separator
 
