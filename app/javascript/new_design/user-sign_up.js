@@ -11,13 +11,20 @@ delegate('focusout', userNewEmailSelector, () => {
   // If not (e.g if its "bidou@gmail.coo" or "john@yahoo.rf"), we attempt to suggest a fix for the invalid email.
   const userEmailInput = document.querySelector(userNewEmailSelector);
   const suggestedEmailSpan = document.querySelector(emailSuggestionSelector);
+  const email = userEmailInput.value;
 
-  const suggestion = suggest(userEmailInput.value);
-  if (suggestion && suggestion.full) {
-    suggestedEmailSpan.innerHTML = suggestion.full;
+  if (email.toLowerCase().endsWith('@gmail.pf')) {
+    const address = email.substring(0, email.indexOf('@'));
+    suggestedEmailSpan.innerHTML = address + '@gmail.com';
     show(document.querySelector(suggestionsSelector));
   } else {
-    hide(document.querySelector(suggestionsSelector));
+    const suggestion = suggest(email);
+    if (suggestion && suggestion.full) {
+      suggestedEmailSpan.innerHTML = suggestion.full;
+      show(document.querySelector(suggestionsSelector));
+    } else {
+      hide(document.querySelector(suggestionsSelector));
+    }
   }
 });
 
