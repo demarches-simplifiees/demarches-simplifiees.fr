@@ -231,7 +231,11 @@ module Users
         return redirect_to url_for dossiers_path
       end
 
-      dossier = Dossier.create!(groupe_instructeur: procedure.defaut_groupe_instructeur, user: current_user, state: Dossier.states.fetch(:brouillon))
+      dossier = Dossier.create!(
+        groupe_instructeur: procedure.defaut_groupe_instructeur,
+        user: current_user,
+        state: Dossier.states.fetch(:brouillon)
+      )
 
       if dossier.procedure.for_individual
         if current_user.france_connect_information.present?
