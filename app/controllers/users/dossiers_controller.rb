@@ -220,10 +220,15 @@ module Users
     def new
       erase_user_location!
 
-      if params[:brouillon]
-        procedure = Procedure.brouillon.find(params[:procedure_id])
-      else
-        procedure = Procedure.publiees.find(params[:procedure_id])
+      begin
+        if params[:brouillon]
+          procedure = Procedure.brouillon.find(params[:procedure_id])
+        else
+          procedure = Procedure.publiees.find(params[:procedure_id])
+        end
+      rescue ActiveRecord::RecordNotFound
+        flash.alert = t('errors.messages.procedure_not_found')
+        return redirect_to url_for dossiers_path
       end
 
       dossier = Dossier.create!(groupe_instructeur: procedure.defaut_groupe_instructeur, user: current_user, state: Dossier.states.fetch(:brouillon))
@@ -237,10 +242,6 @@ module Users
       else
         redirect_to siret_dossier_path(id: dossier.id)
       end
-    rescue ActiveRecord::RecordNotFound
-      flash.alert = t('errors.messages.procedure_not_found')
-
-      redirect_to url_for dossiers_path
     end
 
     def dossier_for_help
