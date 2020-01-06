@@ -13,7 +13,7 @@ delegate('focusout', userNewEmailSelector, () => {
   const suggestedEmailSpan = document.querySelector(emailSuggestionSelector);
 
   const suggestion = suggest(userEmailInput.value);
-  if (suggestion && suggestion.full) {
+  if (suggestion && suggestion.full && suggestedEmailSpan) {
     suggestedEmailSpan.innerHTML = suggestion.full;
     show(document.querySelector(suggestionsSelector));
   } else {
