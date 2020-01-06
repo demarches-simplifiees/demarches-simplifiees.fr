@@ -34,5 +34,14 @@
           %tr
             %td= group.label
             %td.actions= link_to "voir", procedure_groupe_instructeur_path(@procedure, group)
+            - if @groupes_instructeurs.count > 1
+              - if group.dossiers.count == 0
+                %td.actions
+                  - if group == @procedure.defaut_groupe_instructeur
+                    Groupe par défaut − ne peut être supprimé
+                  - else
+                    = link_to procedure_groupe_instructeur_path(@procedure, group), { method: :delete, class: 'button', data: { confirm: "Êtes-vous sûr de vouloir supprimer le groupe « #{group.label} » ?" }} do
+                      %span.icon.delete
+                      supprimer ce groupe
 
     = paginate @groupes_instructeurs

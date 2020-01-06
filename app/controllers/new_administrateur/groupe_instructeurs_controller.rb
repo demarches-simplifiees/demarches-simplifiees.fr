@@ -48,6 +48,18 @@ module NewAdministrateur
       end
     end
 
+    def destroy
+      if procedure.groupe_instructeurs.one?
+        flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
+      elsif groupe_instructeur == procedure.defaut_groupe_instructeur
+        flash[:alert] = "Impossible de supprimer le groupe par défaut"
+      else
+        flash[:notice] = "le groupe « #{groupe_instructeur.label} » a été supprimé."
+        groupe_instructeur.destroy
+      end
+      redirect_to procedure_groupe_instructeurs_path(procedure)
+    end
+
     def add_instructeur
       emails = params['emails'].presence || []
       emails = emails.map(&:strip).map(&:downcase)
