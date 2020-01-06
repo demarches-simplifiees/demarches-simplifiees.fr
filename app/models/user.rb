@@ -96,6 +96,10 @@ class User < ApplicationRecord
     last_sign_in_at.present?
   end
 
+  def can_be_deleted?
+    dossiers.state_instruction_commencee.empty?
+  end
+
   private
 
   def link_invites!
