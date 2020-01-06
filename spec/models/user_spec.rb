@@ -209,4 +209,20 @@ describe User, type: :model do
       it { is_expected.to be true }
     end
   end
+
+  describe '#can_be_deleted?' do
+    let(:user) { create(:user) }
+
+    subject { user.can_be_deleted? }
+
+    context 'when the user has a dossier in instruction' do
+      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the user has no dossier in instruction' do
+      it { is_expected.to be true }
+    end
+  end
 end
