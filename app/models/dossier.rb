@@ -21,7 +21,7 @@ class Dossier < ApplicationRecord
   DRAFT_EXPIRATION = 1.month + 5.days
 
   has_one :etablissement, dependent: :destroy
-  has_one :individual, dependent: :destroy
+  has_one :individual, validate: false, dependent: :destroy
   has_one :attestation, dependent: :destroy
 
   has_one_attached :justificatif_motivation
@@ -207,9 +207,10 @@ class Dossier < ApplicationRecord
   delegate :france_connect_information, to: :user
 
   before_validation :update_state_dates, if: -> { state_changed? }
+  before_validation :build_default_individual,
+    if: -> { new_record? && procedure.for_individual? && individual.blank? }
 
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
-  before_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   before_save :update_search_terms
 
   after_save :send_dossier_received
@@ -217,6 +218,7 @@ class Dossier < ApplicationRecord
   after_create :send_draft_notification_email
 
   validates :user, presence: true
+  validates :individual, presence: true, if: -> { procedure.for_individual? }
 
   def update_search_terms
     self.search_terms = [
@@ -239,8 +241,10 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_individual
-    if Individual.where(dossier_id: self.id).count == 0
-      build_individual
+    self.individual = if france_connect_information.present?
+      Individual.from_france_connect(france_connect_information)
+    else
+      Individual.new
     end
   end
 
@@ -577,10 +581,6 @@ class Dossier < ApplicationRecord
 
   def attachments_downloadable?
     !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
-  end
-
-  def update_with_france_connect(fc_information)
-    self.individual = Individual.create_from_france_connect(fc_information)
   end
 
   def linked_dossiers
