@@ -534,16 +534,18 @@ describe Procedure do
     let(:procedure) { create(:procedure, path: 'example-path') }
     let(:now) { Time.zone.now.beginning_of_minute }
 
-    after { Timecop.return }
-
-    context "without canonical procedure" do
+    context 'when publishing a new procedure' do
       before do
-        Timecop.freeze(now)
-        procedure.publish!
+        Timecop.freeze(now) do
+          procedure.publish!
+        end
       end
 
-      it do
+      it 'no reference to the canonical procedure on the published procedure' do
         expect(procedure.canonical_procedure).to be_nil
+      end
+
+      it 'changes the procedure state to published' do
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
         expect(Procedure.find_by(path: "example-path")).to eq(procedure)
@@ -551,16 +553,20 @@ describe Procedure do
       end
     end
 
-    context "with canonical procedure" do
+    context 'when publishing over a previous canonical procedure' do
       let(:canonical_procedure) { create(:procedure, :published) }
 
       before do
-        Timecop.freeze(now)
-        procedure.publish!(canonical_procedure)
+        Timecop.freeze(now) do
+          procedure.publish!(canonical_procedure)
+        end
       end
 
-      it do
+      it 'references the canonical procedure on the published procedure' do
         expect(procedure.canonical_procedure).to eq(canonical_procedure)
+      end
+
+      it 'changes the procedure state to published' do
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
       end
@@ -574,38 +580,53 @@ describe Procedure do
     let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
     let(:now) { Time.zone.now.beginning_of_minute }
 
-    context "without canonical procedure" do
+    context 'when publishing over a previous canonical procedure' do
       before do
-        Timecop.freeze(now)
         procedure.path = canonical_procedure.path
-        procedure.publish_or_reopen!(administrateur)
+        Timecop.freeze(now) do
+          procedure.publish_or_reopen!(administrateur)
+        end
         canonical_procedure.reload
       end
 
-      it do
+      it 'references the canonical procedure on the published procedure' do
         expect(procedure.canonical_procedure).to eq(canonical_procedure)
+      end
+
+      it 'changes the procedure state to published' do
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
+      end
+
+      it 'unpublishes the canonical procedure' do
         expect(canonical_procedure.unpublished_at).to eq(now)
       end
     end
 
-    context "with canonical procedure" do
+    context 'when publishing over a previous procedure with canonical procedure' do
       let(:canonical_procedure) { create(:procedure, :closed) }
       let(:parent_procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
 
       before do
         parent_procedure.update!(path: canonical_procedure.path, canonical_procedure: canonical_procedure)
-        Timecop.freeze(now)
         procedure.path = canonical_procedure.path
-        procedure.publish_or_reopen!(administrateur)
+        Timecop.freeze(now) do
+          procedure.publish_or_reopen!(administrateur)
+        end
         parent_procedure.reload
       end
 
-      it do
+      it 'references the canonical procedure on the published procedure' do
+        expect(procedure.canonical_procedure).to eq(canonical_procedure)
+      end
+
+      it 'changes the procedure state to published' do
         expect(procedure.canonical_procedure).to eq(canonical_procedure)
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
+      end
+
+      it 'unpublishes parent procedure' do
         expect(parent_procedure.unpublished_at).to eq(now)
       end
     end
@@ -616,10 +637,10 @@ describe Procedure do
     let(:now) { Time.zone.now.beginning_of_minute }
 
     before do
-      Timecop.freeze(now)
-      procedure.unpublish!
+      Timecop.freeze(now) do
+        procedure.unpublish!
+      end
     end
-    after { Timecop.return }
 
     it {
       expect(procedure.closed_at).to eq(nil)
@@ -692,11 +713,11 @@ describe Procedure do
     let(:procedure) { create(:procedure, :published) }
     let(:now) { Time.zone.now.beginning_of_minute }
     before do
-      Timecop.freeze(now)
-      procedure.close!
+      Timecop.freeze(now) do
+        procedure.close!
+      end
       procedure.reload
     end
-    after { Timecop.return }
 
     it { expect(procedure.close?).to be_truthy }
     it { expect(procedure.closed_at).to eq(now) }
