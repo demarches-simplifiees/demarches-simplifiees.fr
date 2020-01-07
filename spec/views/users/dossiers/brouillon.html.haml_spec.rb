@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'users/dossiers/brouillon.html.haml', type: :view do
-  let(:procedure) { create(:procedure, :with_type_de_champ, :with_notice, :with_service, for_individual: true) }
-  let(:dossier) { create(:dossier, :with_entreprise, state: Dossier.states.fetch(:brouillon), procedure: procedure) }
+  let(:procedure) { create(:procedure, :with_type_de_champ, :with_notice, :with_service) }
+  let(:dossier) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure) }
   let(:footer) { view.content_for(:footer) }
 
   before do

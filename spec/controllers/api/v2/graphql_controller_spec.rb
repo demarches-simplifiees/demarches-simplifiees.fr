@@ -288,8 +288,8 @@ describe API::V2::GraphqlController do
       end
 
       context "with entreprise" do
-        let(:procedure) { create(:procedure, :published, administrateurs: [admin]) }
-        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
+        let(:procedure_for_entreprise) { create(:procedure, :published, administrateurs: [admin]) }
+        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure_for_entreprise) }
 
         let(:query) do
           "{
