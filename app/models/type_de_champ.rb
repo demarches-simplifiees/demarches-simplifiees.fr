@@ -19,6 +19,7 @@ class TypeDeChamp < ApplicationRecord
     pays: 'pays',
     regions: 'regions',
     departements: 'departements',
+    communes: 'communes',
     engagement: 'engagement',
     header_section: 'header_section',
     explication: 'explication',
