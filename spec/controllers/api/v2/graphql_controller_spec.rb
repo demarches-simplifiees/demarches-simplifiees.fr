@@ -169,71 +169,71 @@ describe API::V2::GraphqlController do
     end
 
     context "dossier" do
-      let(:query) do
-        "{
-          dossier(number: #{dossier.id}) {
-            id
-            number
-            state
-            dateDerniereModification
-            datePassageEnConstruction
-            datePassageEnInstruction
-            dateTraitement
-            motivation
-            motivationAttachment {
-              url
-            }
-            usager {
+      context "with individual" do
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
               id
-              email
-            }
-            demandeur {
-              id
-              ... on PersonnePhysique {
-                nom
-                prenom
-                civilite
-                dateDeNaissance
-              }
-            }
-            instructeurs {
-              id
-              email
-            }
-            messages {
-              email
-              body
-              attachment {
-                filename
-                checksum
-                byteSize
-                contentType
+              number
+              state
+              dateDerniereModification
+              datePassageEnConstruction
+              datePassageEnInstruction
+              dateTraitement
+              motivation
+              motivationAttachment {
                 url
               }
-            }
-            avis {
-              expert {
+              usager {
+                id
                 email
               }
-              question
-              reponse
-              dateQuestion
-              dateReponse
-              attachment {
-                url
-                filename
+              demandeur {
+                id
+                ... on PersonnePhysique {
+                  nom
+                  prenom
+                  civilite
+                  dateDeNaissance
+                }
+              }
+              instructeurs {
+                id
+                email
+              }
+              messages {
+                email
+                body
+                attachment {
+                  filename
+                  checksum
+                  byteSize
+                  contentType
+                  url
+                }
+              }
+              avis {
+                expert {
+                  email
+                }
+                question
+                reponse
+                dateQuestion
+                dateReponse
+                attachment {
+                  url
+                  filename
+                }
+              }
+              champs {
+                id
+                label
+                stringValue
               }
             }
-            champs {
-              id
-              label
-              stringValue
-            }
-          }
-        }"
-      end
+          }"
+        end
 
-      context "with individual" do
         it "should be returned" do
           expect(gql_errors).to eq(nil)
           expect(gql_data).to eq(dossier: {
