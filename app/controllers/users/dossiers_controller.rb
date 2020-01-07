@@ -231,11 +231,13 @@ module Users
         return redirect_to url_for dossiers_path
       end
 
-      dossier = Dossier.create!(
+      dossier = Dossier.new(
         groupe_instructeur: procedure.defaut_groupe_instructeur,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
       )
+      dossier.build_default_individual
+      dossier.save!
 
       if dossier.procedure.for_individual
         redirect_to identite_dossier_path(dossier)
