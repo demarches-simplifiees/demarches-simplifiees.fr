@@ -60,6 +60,27 @@ module NewAdministrateur
       redirect_to procedure_groupe_instructeurs_path(procedure)
     end
 
+    def reaffecter_dossiers
+      @procedure = procedure
+      @groupe_instructeur = groupe_instructeur
+      @groupes_instructeurs = paginated_groupe_instructeurs
+        .without_group(@groupe_instructeur)
+    end
+
+    def reaffecter
+      target_group = GroupeInstructeur.find(params[:target_group])
+      if target_group.blank? || !procedure.groupe_instructeurs.include?(target_group)
+        flash[:notice] = "Impossible de réaffecter les dossiers au groupe demandé."
+      else
+        groupe_instructeur.dossiers.each do |d|
+          d.update(groupe_instructeur: target_group)
+        end
+        flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
+
+      end
+      redirect_to procedure_groupe_instructeurs_path(procedure)
+    end
+
     def add_instructeur
       emails = params['emails'].presence || []
       emails = emails.map(&:strip).map(&:downcase)
