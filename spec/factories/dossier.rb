@@ -36,7 +36,7 @@ FactoryBot.define do
       end
     end
 
-    trait :for_individual do
+    trait :with_individual do
       after(:build) do |dossier, evaluator|
         # If the procedure was implicitely created by the factory,
         # mark it automatically as for_individual.
