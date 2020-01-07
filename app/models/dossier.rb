@@ -207,9 +207,6 @@ class Dossier < ApplicationRecord
   delegate :france_connect_information, to: :user
 
   before_validation :update_state_dates, if: -> { state_changed? }
-  before_validation :build_default_individual,
-    if: -> { new_record? && procedure.for_individual? && individual.blank? }
-
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
   before_save :update_search_terms
 
@@ -241,10 +238,12 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_individual
-    self.individual = if france_connect_information.present?
-      Individual.from_france_connect(france_connect_information)
-    else
-      Individual.new
+    if procedure.for_individual? && individual.blank?
+      self.individual = if france_connect_information.present?
+        Individual.from_france_connect(france_connect_information)
+      else
+        Individual.new
+      end
     end
   end
 
