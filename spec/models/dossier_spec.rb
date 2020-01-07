@@ -573,7 +573,7 @@ describe Dossier do
   end
 
   describe '#owner_name' do
-    let!(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure) }
     subject { dossier.owner_name }
 
     context 'when there is no entreprise or individual' do
@@ -589,6 +589,7 @@ describe Dossier do
     end
 
     context 'when there is an individual' do
+      let(:procedure) { create(:procedure, :for_individual) }
       let(:dossier) { create(:dossier, :with_individual, procedure: procedure) }
 
       it { is_expected.to eq("#{dossier.individual.nom} #{dossier.individual.prenom}") }
