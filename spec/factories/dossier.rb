@@ -43,6 +43,9 @@ FactoryBot.define do
         if evaluator.procedure.nil?
           dossier.procedure.update(for_individual: true)
         end
+        if !dossier.procedure.for_individual?
+          raise 'Inconsistent factory: attempting to create a dossier :with_individual on a procedure that is not `for_individual?`'
+        end
         dossier.individual = create(:individual)
       end
     end

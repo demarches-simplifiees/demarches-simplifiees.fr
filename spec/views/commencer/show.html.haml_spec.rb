@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'commencer/show.html.haml', type: :view do
   include Rails.application.routes.url_helpers
 
-  let(:procedure) { create(:procedure, :with_service, :published) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service) }
 
   before do
     assign(:procedure, procedure)
