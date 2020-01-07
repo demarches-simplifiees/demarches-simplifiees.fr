@@ -589,7 +589,7 @@ describe Dossier do
     end
 
     context 'when there is an individual' do
-      let(:dossier) { create(:dossier, :for_individual, procedure: procedure) }
+      let(:dossier) { create(:dossier, :with_individual, procedure: procedure) }
 
       it { is_expected.to eq("#{dossier.individual.nom} #{dossier.individual.prenom}") }
     end
