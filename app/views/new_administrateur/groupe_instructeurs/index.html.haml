@@ -28,7 +28,7 @@
     %table.table.mt-2
       %thead
         %tr
-          %th{ colspan: 2 }= t(".existing_groupe", count: @groupes_instructeurs.count)
+          %th{ colspan: 2 }= t(".existing_groupe", count: @groupes_instructeurs.total_count)
       %tbody
         - @groupes_instructeurs.each do |group|
           %tr
