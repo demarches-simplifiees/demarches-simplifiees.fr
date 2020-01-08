@@ -68,6 +68,6 @@ class Administrateur < ApplicationRecord
   end
 
   def can_be_deleted?
-    dossiers.state_instruction_commencee.none? && procedures.none?
+    dossiers.state_instruction_commencee.none? && procedures.all? { |p| p.administrateurs.count > 1 }
   end
 end
