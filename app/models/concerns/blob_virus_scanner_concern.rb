@@ -2,7 +2,7 @@
 # (rather than on blob creation).
 # This will help to avoid cloberring metadata accidentally (as metadata
 # are more stable on attachment creation than on blob creation).
-module BlobVirusScanner
+module BlobVirusScannerConcern
   extend ActiveSupport::Concern
 
   included do

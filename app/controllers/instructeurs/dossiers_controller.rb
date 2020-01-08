@@ -15,7 +15,7 @@ module Instructeurs
 
     def attestation
       if dossier.attestation.pdf.attached?
-        redirect_to url_for(dossier.attestation.pdf)
+        redirect_to dossier.attestation.pdf.service_url
       end
     end
 
