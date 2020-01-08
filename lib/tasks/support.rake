@@ -15,10 +15,6 @@ namespace :support do
     user = User.find_by!(email: user_email)
     administration = Administration.find_by!(email: administration_email)
 
-    if !user.can_be_deleted?
-      fail "Cannot delete this user because instruction has started for some dossiers"
-    end
-
     user.delete_and_keep_track_dossiers(administration)
     user.destroy
   end
