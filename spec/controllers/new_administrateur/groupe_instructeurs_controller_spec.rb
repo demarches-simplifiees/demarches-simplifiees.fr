@@ -96,6 +96,70 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     end
   end
 
+  describe '#reaffecter_dossiers' do
+    let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+    let!(:gi_1_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
+
+    before do
+      get :reaffecter_dossiers,
+        params: {
+          procedure_id: procedure.id,
+          id: gi_1_2.id
+        }
+    end
+    def reaffecter_url(group)
+      reaffecter_procedure_groupe_instructeur_path(:id => gi_1_2,
+                                                    :target_group => group)
+    end
+
+    it { expect(response).to have_http_status(:ok) }
+    it { expect(response.body).to include(reaffecter_url(procedure.defaut_groupe_instructeur)) }
+    it { expect(response.body).not_to include(reaffecter_url(gi_1_2)) }
+    it { expect(response.body).to include(reaffecter_url(gi_1_3)) }
+  end
+
+  describe '#reaffecter' do
+    let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+    let!(:dossier12) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), groupe_instructeur: gi_1_1) }
+
+    describe 'when the new group is a group of the procedure' do
+      before do
+        post :reaffecter,
+          params: {
+            procedure_id: procedure.id,
+            id: gi_1_1.id,
+            target_group: gi_1_2.id
+          }
+        dossier12.reload
+      end
+
+      it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      it { expect(gi_1_1.dossiers.count).to be(0) }
+      it { expect(gi_1_2.dossiers.count).to be(1) }
+      it { expect(gi_1_2.dossiers.last.id).to be(dossier12.id) }
+      it { expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id) }
+    end
+
+    describe 'when the new group is not a possible group' do
+      before do
+        post :reaffecter,
+          params:
+            {
+              procedure_id: procedure.id,
+              id: gi_1_1.id,
+              target_group: gi_2_2.id
+            }
+        dossier12.reload
+      end
+
+      it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      it { expect(gi_1_1.dossiers.count).to be(1) }
+      it { expect(gi_2_2.dossiers.count).to be(0) }
+      it { expect(gi_1_1.dossiers.last.id).to be(dossier12.id) }
+      it { expect(dossier12.groupe_instructeur.id).to be(gi_1_1.id) }
+    end
+  end
+
   describe '#update' do
     let(:new_name) { 'nouveau nom du groupe' }
 
