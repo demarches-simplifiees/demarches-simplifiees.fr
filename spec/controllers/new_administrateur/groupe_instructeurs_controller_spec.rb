@@ -59,6 +59,43 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     end
   end
 
+  describe '#destroy' do
+    def delete_group(group)
+      delete :destroy,
+        params: {
+          procedure_id: procedure.id,
+          id: group.id
+        }
+    end
+
+    context 'with only one group' do
+      before { delete_group gi_1_1 }
+
+      it { expect(flash.alert).to be_present }
+      it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+    end
+
+    context 'with many groups' do
+      let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+      context 'of the default group' do
+        before { delete_group procedure.defaut_groupe_instructeur }
+
+        it { expect(flash.alert).to be_present }
+        it { expect(procedure.groupe_instructeurs.count).to eq(2) }
+        it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      end
+
+      context 'of a group that can be deleted' do
+        before { delete_group gi_1_2 }
+
+        it { expect(flash.notice).to be_present }
+        it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+        it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      end
+    end
+  end
+
   describe '#update' do
     let(:new_name) { 'nouveau nom du groupe' }
 
