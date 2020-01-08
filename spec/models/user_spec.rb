@@ -232,11 +232,8 @@ describe User, type: :model do
 
     context 'avec un dossier en instruction' do
       let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
-      it 'ne supprime rien si dossier en instruction' do
-        user.delete_and_keep_track_dossiers(administration)
-
-        expect(Dossier.find_by(id: dossier_en_instruction.id)).to be_present
-        expect(User.find_by(id: user.id)).to be_present
+      it 'raises' do
+        expect { user.delete_and_keep_track_dossiers(administration) }.to raise_error
       end
     end
 
