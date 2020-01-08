@@ -225,4 +225,35 @@ describe User, type: :model do
       it { is_expected.to be true }
     end
   end
+
+  describe '#delete_and_keep_track_dossiers' do
+    let(:administration) { create(:administration) }
+    let(:user) { create(:user) }
+
+    context 'avec un dossier en instruction' do
+      let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
+      it 'ne supprime rien si dossier en instruction' do
+
+        user.delete_and_keep_track_dossiers(administration)
+
+        expect(Dossier.find_by(id: dossier_en_instruction.id)).to be_present
+        expect(User.find_by(id: user.id)).to be_present
+      end
+
+    end
+
+    context 'sans dossier en instruction' do
+      let!(:dossier_en_construction) { create(:dossier, :en_construction, user: user) }
+      let!(:dossier_brouillon) { create(:dossier, user: user) }
+
+      it "garde une trace des dossiers et supprime l'utilisateur" do
+
+        user.delete_and_keep_track_dossiers(administration)
+
+        expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
+        expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_present
+        expect(User.find_by(id: user.id)).to be_nil
+      end
+    end
+  end
 end
