@@ -100,6 +100,15 @@ class User < ApplicationRecord
     dossiers.state_instruction_commencee.empty?
   end
 
+  def delete_and_keep_track_dossiers(administration)
+    if can_be_deleted?
+      dossiers.each do |dossier|
+        dossier.delete_and_keep_track(administration)
+      end
+      destroy
+    end
+  end
+
   private
 
   def link_invites!
