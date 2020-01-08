@@ -230,18 +230,18 @@ describe User, type: :model do
     let(:administration) { create(:administration) }
     let(:user) { create(:user) }
 
-    context 'avec un dossier en instruction' do
+    context 'with a dossier in instruction' do
       let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
       it 'raises' do
         expect { user.delete_and_keep_track_dossiers(administration) }.to raise_error
       end
     end
 
-    context 'sans dossier en instruction' do
+    context 'without a dossier in instruction' do
       let!(:dossier_en_construction) { create(:dossier, :en_construction, user: user) }
       let!(:dossier_brouillon) { create(:dossier, user: user) }
 
-      it "garde une trace des dossiers et supprime l'utilisateur" do
+      it "keep track of dossiers and delete user" do
         user.delete_and_keep_track_dossiers(administration)
 
         expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
