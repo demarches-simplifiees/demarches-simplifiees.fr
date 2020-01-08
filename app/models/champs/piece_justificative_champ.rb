@@ -48,7 +48,7 @@ class Champs::PieceJustificativeChamp < Champ
 
   def for_api
     if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
-      Rails.application.routes.url_helpers.url_for(piece_justificative_file)
+      piece_justificative_file.service_url
     end
   end
 end

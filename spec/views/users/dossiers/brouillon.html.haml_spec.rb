@@ -17,7 +17,7 @@ describe 'users/dossiers/brouillon.html.haml', type: :view do
   end
 
   it 'affiche un lien vers la notice' do
-    expect(rendered).to have_link("Guide de la démarche", href: url_for(procedure.notice))
+    expect(response).to have_css("a[href*='/rails/active_storage/blobs/']", text: "Guide de la démarche")
   end
 
   it 'affiche les boutons de validation' do
