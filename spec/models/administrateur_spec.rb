@@ -21,6 +21,31 @@ describe Administrateur, type: :model do
     end
   end
 
+  describe "#can_be_deleted?" do
+    subject { administrateur.can_be_deleted? }
+
+    context 'when the administrateur has a dossier in instruction' do
+      let!(:dossier) { create(:dossier, :en_instruction) }
+      let(:administrateur) { dossier.procedure.administrateurs.first }
+
+      it { is_expected.to be false }
+    end
+
+    context "when the administrateur's procedures have other administrateurs" do
+      let!(:administrateur) { create(:administrateur) }
+      let!(:autre_administrateur) { create(:administrateur) }
+      let!(:procedure) { create(:procedure, administrateurs: [administrateur, autre_administrateur]) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the administrateur has no procedure" do
+      let!(:administrateur) { create(:administrateur) }
+
+      it { is_expected.to be true }
+    end
+  end
+
   # describe '#password_complexity' do
   #   let(:email) { 'mail@beta.gouv.fr' }
   #   let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées-pwd'] }

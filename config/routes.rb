@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: [:index, :show] do
+      delete 'delete', on: :member
       post 'resend_confirmation_instructions', on: :member
       put 'enable_feature', on: :member
     end

@@ -20,5 +20,18 @@ module Manager
 
       head :ok
     end
+
+    def delete
+      user = User.find(params[:id])
+      if !user.can_be_deleted?
+        fail "Impossible de supprimer cet utilisateur car il a des dossiers en instruction"
+      end
+      user.delete_and_keep_track_dossiers(current_administration)
+
+      logger.info("L'utilisateur #{user.id} est supprimé par #{current_administration.id}")
+      flash[:notice] = "L'utilisateur #{user.id} est supprimé"
+
+      redirect_to manager_users_path
+    end
   end
 end

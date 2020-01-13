@@ -15,13 +15,7 @@ namespace :support do
     user = User.find_by!(email: user_email)
     administration = Administration.find_by!(email: administration_email)
 
-    if user.dossiers.state_instruction_commencee.any?
-      fail "Cannot delete this user because instruction has started for some dossiers"
-    end
-
-    user.dossiers.each do |dossier|
-      dossier.delete_and_keep_track(administration)
-    end
+    user.delete_and_keep_track_dossiers(administration)
     user.destroy
   end
 
