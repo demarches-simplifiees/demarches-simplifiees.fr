@@ -32,8 +32,7 @@ class ProcedureSerializer < ActiveModel::Serializer
   end
 
   def state
-    state = object.aasm_state
-    state == 'close' ? 'archivee' : state
+    object.aasm_state
   end
 
   def geographic_information
