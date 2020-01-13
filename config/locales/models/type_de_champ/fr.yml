@@ -24,7 +24,6 @@ fr:
           pays: 'Pays'
           regions: 'Régions'
           departements: 'Départements'
-          communes: 'Communes'
           engagement: 'Engagement'
           header_section: 'Titre de section'
           explication: 'Explication'

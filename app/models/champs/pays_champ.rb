@@ -1,8 +1,6 @@
 class Champs::PaysChamp < Champs::TextChamp
-  PAYS = JSON.parse(Rails.root.join('app', 'lib', 'api_geo', 'pays.json').read, symbolize_names: true)
-
   def self.pays
-    PAYS.pluck(:nom)
+    ApiGeo::API.pays.pluck(:nom)
   end
 
   def self.disabled_options

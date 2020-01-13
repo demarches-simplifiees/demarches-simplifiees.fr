@@ -10,7 +10,10 @@ feature 'The user' do
   # TODO: check
   # the order
   # there are no extraneous input
-  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'api_geo_departements_regions_et_communes' } do
+  scenario 'fill a dossier', js: true do
+    allow(Champs::RegionChamp).to receive(:regions).and_return(['region1', 'region2']).at_least(:once)
+    allow(Champs::DepartementChamp).to receive(:departements).and_return(['dep1', 'dep2']).at_least(:once)
+
     log_in(user, procedure)
 
     fill_individual
@@ -30,16 +33,8 @@ feature 'The user' do
     select('val1', from: form_id_for('multiple_drop_down_list'))
     select('val3', from: form_id_for('multiple_drop_down_list'))
     select('AUSTRALIE', from: 'pays')
-
-    select_champ_geo('regions', 'Ma', 'Martinique')
-    select('Martinique', from: 'regions')
-
-    select_champ_geo('departements', 'Ai', '02 - Aisne')
-    select('02 - Aisne', from: 'departements')
-
-    select_champ_geo('communes', 'Am', 'Ambléon')
-    select('Ambléon', from: 'communes')
-
+    select('region2', from: 'regions')
+    select('dep2', from: 'departements')
     check('engagement')
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
@@ -62,9 +57,8 @@ feature 'The user' do
     expect(champ_value_for('simple_drop_down_list')).to eq('val2')
     expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
     expect(champ_value_for('pays')).to eq('AUSTRALIE')
-    expect(champ_value_for('regions')).to eq('Martinique')
-    expect(champ_value_for('departements')).to eq('02 - Aisne')
-    expect(champ_value_for('communes')).to eq('Ambléon')
+    expect(champ_value_for('regions')).to eq('region2')
+    expect(champ_value_for('departements')).to eq('dep2')
     expect(champ_value_for('engagement')).to eq('on')
     expect(champ_value_for('dossier_link')).to eq('123')
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
@@ -84,9 +78,8 @@ feature 'The user' do
     expect(page).to have_selected_value('simple_drop_down_list', selected: 'val2')
     expect(page).to have_selected_value('multiple_drop_down_list', selected: ['val1', 'val3'])
     expect(page).to have_selected_value('pays', selected: 'AUSTRALIE')
-    expect(page).to have_selected_value('regions', selected: 'Martinique')
-    expect(page).to have_selected_value('departements', selected: '02 - Aisne')
-    expect(page).to have_selected_value('communes', selected: 'Ambléon')
+    expect(page).to have_selected_value('regions', selected: 'region2')
+    expect(page).to have_selected_value('departement', selected: 'dep2')
     expect(page).to have_checked_field('engagement')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
@@ -276,13 +269,5 @@ feature 'The user' do
     expect(page).to have_selected_value("#{field}_3i", selected: date.strftime('%-d'))
     expect(page).to have_selected_value("#{field}_4i", selected: date.strftime('%H'))
     expect(page).to have_selected_value("#{field}_5i", selected: date.strftime('%M'))
-  end
-
-  def select_champ_geo(champ, fill_with, value)
-    find(".editable-champ-#{champ} .select2-container").click
-    id = find('.select2-container--open [role=listbox]')[:id]
-    find("[aria-controls=#{id}]").fill_in with: fill_with
-    expect(page).to have_content(value)
-    find('li', text: value).click
   end
 end

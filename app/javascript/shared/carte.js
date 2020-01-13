@@ -1,6 +1,5 @@
 /* globals FreeDraw L */
-import { fire, delegate } from '@utils';
-import $ from 'jquery';
+import { fire, getJSON, delegate } from '@utils';
 
 import polygonArea from './polygon_area';
 
@@ -112,6 +111,14 @@ function drawParcellesAgricoles(map, { parcellesAgricoles }, editable = false) {
     parcellesAgricoles,
     editable ? RPG_POLYGON_STYLE : noEditStyle(RPG_POLYGON_STYLE)
   );
+}
+
+function geocodeAddress(map, query) {
+  getJSON('/address/geocode', { request: query }).then(data => {
+    if (data.lat !== null) {
+      map.setView(new L.LatLng(data.lat, data.lon), data.zoom);
+    }
+  });
 }
 
 function getCurrentMap(element) {
@@ -239,12 +246,10 @@ delegate('click', '.toolbar .new-area', event => {
   }
 });
 
-$(document).on('select2:select', 'select[data-address]', event => {
+delegate('autocomplete:select', '.toolbar [data-address]', event => {
   const map = getCurrentMap(event.target);
-  const { geometry } = event.params.data;
 
-  if (map && geometry && geometry.type === 'Point') {
-    const [lon, lat] = geometry.coordinates;
-    map.setView(new L.LatLng(lat, lon), 14);
+  if (map) {
+    geocodeAddress(map, event.detail.label);
   }
 });
