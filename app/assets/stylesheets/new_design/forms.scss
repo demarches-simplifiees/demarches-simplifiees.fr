@@ -242,16 +242,6 @@
       }
     }
 
-    .select2-selection--single {
-      min-height: 62px;
-
-      // scss-lint:disable SelectorFormat
-      .select2-selection__arrow {
-        display: none;
-      }
-      // scss-lint:enable
-    }
-
     // scss-lint:disable SelectorFormat
     .select2-selection__rendered {
       padding: $default-padding;
