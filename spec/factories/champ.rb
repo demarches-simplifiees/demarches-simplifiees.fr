@@ -124,11 +124,6 @@ FactoryBot.define do
     value { '971 - Guadeloupe' }
   end
 
-  factory :champ_communes, class: 'Champs::CommuneChamp' do
-    type_de_champ { create(:type_de_champ_communes) }
-    value { 'Paris' }
-  end
-
   factory :champ_engagement, class: 'Champs::EngagementChamp' do
     type_de_champ { create(:type_de_champ_engagement) }
     value { 'true' }

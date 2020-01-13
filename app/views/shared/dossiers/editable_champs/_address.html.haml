@@ -1,4 +1,4 @@
-= form.select :value, [champ.value].compact,
-  { include_blank: true },
-  required: champ.mandatory?,
-  class: 'select2 adresse'
+= form.text_field :value,
+  data: { address: true, autocomplete: 'address' },
+  placeholder: champ.libelle,
+  required: champ.mandatory?

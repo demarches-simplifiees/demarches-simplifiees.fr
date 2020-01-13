@@ -1,158 +1,46 @@
 import $ from 'jquery';
 import 'select2';
 
-const { api_geo_url, api_adresse_url } = gon.autocomplete || {};
-
-const language = {
-  errorLoading: function() {
-    return 'Les résultats ne peuvent pas être chargés.';
-  },
-  inputTooLong: function(args) {
-    var overChars = args.input.length - args.maximum;
-
-    return 'Supprimez ' + overChars + ' caractère' + (overChars > 1 ? 's' : '');
-  },
-  inputTooShort: function(args) {
-    var remainingChars = args.minimum - args.input.length;
-
-    return (
-      'Saisissez au moins ' +
-      remainingChars +
-      ' caractère' +
-      (remainingChars > 1 ? 's' : '')
-    );
-  },
-  loadingMore: function() {
-    return 'Chargement de résultats supplémentaires…';
-  },
-  maximumSelected: function(args) {
-    return (
-      'Vous pouvez seulement sélectionner ' +
-      args.maximum +
-      ' élément' +
-      (args.maximum > 1 ? 's' : '')
-    );
-  },
-  noResults: function() {
-    return 'Aucun résultat trouvé';
-  },
-  searching: function() {
-    return 'Recherche en cours…';
-  },
-  removeAllItems: function() {
-    return 'Supprimer tous les éléments';
-  }
-};
-
-const baseOptions = {
-  language,
-  width: '100%'
-};
-
-const baseAjaxOptions = {
-  delay: 250,
-  cache: true,
-  data({ term: nom }) {
-    return {
-      nom,
-      fields: 'nom,code'
-    };
-  },
-  processResults(data) {
-    return {
-      results: data.map(({ nom }) => ({ id: nom, text: nom }))
-    };
-  }
-};
-
-const regionsOptions = {
-  ...baseOptions,
-  minimumInputLength: 2,
-  ajax: { url: `${api_geo_url}/regions`, ...baseAjaxOptions }
-};
-
-const communesOptions = {
-  ...baseOptions,
-  minimumInputLength: 2,
-  ajax: { url: `${api_geo_url}/communes`, ...baseAjaxOptions }
-};
-
-const etranger99 = { id: '99 - Étranger', text: '99 - Étranger' };
-const departementsOptions = {
-  ...baseOptions,
-  minimumInputLength: 2,
-  ajax: {
-    ...baseAjaxOptions,
-    url: `${api_geo_url}/departements`,
-    processResults(data) {
-      return {
-        results: data
-          .map(({ nom, code }) => ({
-            id: `${code} - ${nom}`,
-            text: `${code} - ${nom}`
-          }))
-          .concat([etranger99])
-      };
-    }
-  }
-};
-
-const adresseOptions = {
-  ...baseOptions,
-  minimumInputLength: 2,
-  ajax: {
-    ...baseAjaxOptions,
-    url: `${api_adresse_url}/search`,
-    data({ term: q }) {
-      return {
-        q,
-        limit: 5
-      };
-    },
-    processResults(data) {
-      return {
-        results: data.features.map(({ properties: { label }, geometry }) => ({
-          id: label,
-          text: label,
-          geometry
-        }))
-      };
-    }
-  }
-};
-
-const templateOption = ({ text }) =>
+const optionTemplate = email =>
   $(
-    `<span class="custom-select2-option"><span class="icon person"></span>${text}</span>`
+    '<span class="custom-select2-option"><span class="icon person"></span>' +
+      email.text +
+      '</span>'
   );
 
 addEventListener('ds:page:update', () => {
-  $('select.select2').select2(baseOptions);
-  $('select.select2.departements').select2(departementsOptions);
-  $('select.select2.regions').select2(regionsOptions);
-  $('select.select2.communes').select2(communesOptions);
-  $('select.select2.adresse').select2(adresseOptions);
+  $('select.select2').select2({
+    language: 'fr',
+    width: '100%'
+  });
 
   $('.columns-form select.select2-limited').select2({
-    width: '300px',
+    language: 'fr',
     placeholder: 'Sélectionnez des colonnes',
-    maximumSelectionLength: '5'
+    maximumSelectionLength: '5',
+    width: '300px'
   });
 
   $('.recipients-form select.select2-limited').select2({
-    language,
-    width: '300px',
+    language: 'fr',
     placeholder: 'Sélectionnez des instructeurs',
-    maximumSelectionLength: '30'
+    maximumSelectionLength: '30',
+    width: '300px'
   });
 
   $('select.select2-limited.select-instructeurs').select2({
-    language,
+    language: 'fr',
     dropdownParent: $('.instructeur-wrapper'),
     placeholder: 'Saisir l’adresse email de l’instructeur',
     tags: true,
     tokenSeparators: [',', ' '],
-    templateResult: templateOption,
-    templateSelection: templateOption
+    templateResult: optionTemplate,
+    templateSelection: function(email) {
+      return $(
+        '<span class="custom-select2-option"><span class="icon person"></span>' +
+          email.text +
+          '</span>'
+      );
+    }
   });
 });
