@@ -1013,11 +1013,6 @@ enum TypeDeChamp {
   civilite
 
   """
-  Communes
-  """
-  communes
-
-  """
   Date
   """
   date
