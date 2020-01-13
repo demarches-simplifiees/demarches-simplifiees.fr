@@ -17,9 +17,9 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when a dossier has an attestation' do
       let(:dossier) { create(:dossier, :accepte, attestation: create(:attestation, :with_pdf), procedure: procedure) }
 
-      it 'redirects to attestation pdf' do
+      it 'redirects to a service tmp_url' do
         get :attestation, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-        expect(response).to redirect_to(dossier.attestation.pdf_url.gsub('http://localhost:3000', ''))
+        expect(response.location).to match '/rails/active_storage/disk/'
       end
     end
   end

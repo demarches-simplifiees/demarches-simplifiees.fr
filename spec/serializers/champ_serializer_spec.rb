@@ -14,7 +14,7 @@ describe ChampSerializer do
       end
       after { champ.piece_justificative_file.purge }
 
-      it { is_expected.to include(value: url_for(champ.piece_justificative_file)) }
+      it { expect(subject[:value]).to match('/rails/active_storage/disk/') }
     end
 
     context 'when type champ is not piece justificative' do

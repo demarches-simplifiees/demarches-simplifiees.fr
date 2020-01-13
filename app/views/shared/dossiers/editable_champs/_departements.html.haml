@@ -1,4 +1,4 @@
-= form.select :value,
-  Champs::DepartementChamp.departements,
-  include_blank: true,
-  required: champ.mandatory?
+= form.select :value, [champ.value].compact,
+  { include_blank: true },
+  required: champ.mandatory?,
+  class: 'select2 departements'

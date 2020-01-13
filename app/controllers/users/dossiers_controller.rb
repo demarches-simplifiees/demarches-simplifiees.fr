@@ -49,7 +49,7 @@ module Users
 
     def attestation
       if dossier.attestation&.pdf&.attached?
-        redirect_to url_for(dossier.attestation.pdf)
+        redirect_to dossier.attestation.pdf.service_url
       else
         flash.notice = "L'attestation n'est plus disponible sur ce dossier."
         redirect_to dossier_path(dossier)
@@ -220,27 +220,30 @@ module Users
     def new
       erase_user_location!
 
-      if params[:brouillon]
-        procedure = Procedure.brouillon.find(params[:procedure_id])
-      else
-        procedure = Procedure.publiees.find(params[:procedure_id])
+      begin
+        if params[:brouillon]
+          procedure = Procedure.brouillon.find(params[:procedure_id])
+        else
+          procedure = Procedure.publiees.find(params[:procedure_id])
+        end
+      rescue ActiveRecord::RecordNotFound
+        flash.alert = t('errors.messages.procedure_not_found')
+        return redirect_to url_for dossiers_path
       end
 
-      dossier = Dossier.create!(groupe_instructeur: procedure.defaut_groupe_instructeur, user: current_user, state: Dossier.states.fetch(:brouillon))
+      dossier = Dossier.new(
+        groupe_instructeur: procedure.defaut_groupe_instructeur,
+        user: current_user,
+        state: Dossier.states.fetch(:brouillon)
+      )
+      dossier.build_default_individual
+      dossier.save!
 
       if dossier.procedure.for_individual
-        if current_user.france_connect_information.present?
-          dossier.update_with_france_connect(current_user.france_connect_information)
-        end
-
         redirect_to identite_dossier_path(dossier)
       else
         redirect_to siret_dossier_path(id: dossier.id)
       end
-    rescue ActiveRecord::RecordNotFound
-      flash.alert = t('errors.messages.procedure_not_found')
-
-      redirect_to url_for dossiers_path
     end
 
     def dossier_for_help

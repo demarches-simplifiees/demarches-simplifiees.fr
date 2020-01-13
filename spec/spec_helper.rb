@@ -150,6 +150,8 @@ RSpec.configure do |config|
     Typhoeus::Expectation.clear
 
     ActionMailer::Base.deliveries.clear
+
+    ActiveStorage::Current.host = 'http://test.host'
   }
 
   RSpec::Matchers.define :have_same_attributes_as do |expected, options|
