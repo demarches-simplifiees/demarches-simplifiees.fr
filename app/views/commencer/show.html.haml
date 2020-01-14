@@ -1,68 +1,49 @@
 - content_for(:title, @procedure.libelle)
 
-.commencer.form
-  - if !user_signed_in?
-    = render partial: 'shared/social_login', locals: { title: "S'identifier avec" }
+= render partial: 'shared/social_login', locals: { title: "Rapide et sûr, identifiez vous", prefix: "via " }
 
-    .login-separator
-      .line
-      ou
-      .line
-    = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
-      = f.label :email, "Email"
-      = f.text_field :email
+.column.commencer
+  .form
+    - if !user_signed_in?
+      %p.center
+        via un compte
+        %span.optional-on-small-screens
+          #{SITE_NAME}
+      %br
+      = link_to new_user_registration_path, class: ['button large expand'] do
+        Créer un compte
+      = link_to new_user_session_path, class: ['button large expand'] do
+        J’ai déjà un compte
 
-      = f.label :password, "Mot de passe"
-      = f.password_field :password, placeholder: "8 caractères minimum"
-
-      .auth-options
-        %div
-          = f.check_box :remember_me
-          = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
-
-        .text-right
-          = link_to "Mot de passe oublié ?", new_user_password_path, class: "link"
-      = f.submit "Se connecter", class: "button large primary expand"
-    %hr
-    %p.center
-      %span Vous n'avez pas de compte #{SITE_NAME} ?
-    %br
-    = link_to new_user_registration_path, class: ['button large expand'] do
-      S'inscrire
-
-    -# %h2.huge-title Ou
-    -# = link_to new_user_session_path, class: ['button large expand'] do
-      J’ai un compte
-      %span.optional-on-small-screens
-        #{SITE_NAME}
-    -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
-
-  - else
-    - dossiers = current_user.dossiers.where(groupe_instructeur: @procedure.groupe_instructeurs)
-    - drafts = dossiers.merge(Dossier.state_brouillon)
-    - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
-
-    - if dossiers.count == 0
-      = link_to 'Commencer la démarche', url_for_new_dossier(@procedure), class: ['button large expand primary']
-    - elsif drafts.count == 1 && not_drafts.count == 0
-      - dossier = drafts.first
-      %h2.huge-title Vous avez déjà commencé à remplir un dossier
-      %p
-        Il y a <strong>#{time_ago_in_words(dossier.created_at)}</strong>,
-        vous avez commencé à remplir un dossier sur la démarche « #{dossier.procedure.libelle} ».
-      = link_to 'Continuer à remplir mon dossier', brouillon_dossier_path(dossier), class: ['button large expand primary']
-      = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
-
-    - elsif not_drafts.count == 1
-      - dossier = not_drafts.first
-      %h2.huge-title Vous avez déjà déposé un dossier
-      %p
-        Il y a <strong>#{time_ago_in_words(dossier.en_construction_at)}</strong>,
-        vous avez déposé un dossier sur la démarche « #{dossier.procedure.libelle} ».
-      = link_to 'Voir mon dossier déposé', dossier_path(dossier), class: ['button large expand primary']
-      = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
+      -# %h2.huge-title Ou
+      -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
     - else
-      %h2.huge-title Vous avez déjà des dossiers pour cette démarche
-      = link_to 'Voir mes dossiers en cours', dossiers_path, class: ['button large expand primary']
-      = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
+      - dossiers = current_user.dossiers.where(groupe_instructeur: @procedure.groupe_instructeurs)
+      - drafts = dossiers.merge(Dossier.state_brouillon)
+      - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
+
+      - if dossiers.count == 0
+        = link_to 'Commencer la démarche', url_for_new_dossier(@procedure), class: ['button large expand primary']
+      - elsif drafts.count == 1 && not_drafts.count == 0
+        - dossier = drafts.first
+        %h2.huge-title Vous avez déjà commencé à remplir un dossier
+        %p
+          Il y a <strong>#{time_ago_in_words(dossier.created_at)}</strong>,
+          vous avez commencé à remplir un dossier sur la démarche « #{dossier.procedure.libelle} ».
+        = link_to 'Continuer à remplir mon dossier', brouillon_dossier_path(dossier), class: ['button large expand primary']
+        = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
+
+      - elsif not_drafts.count == 1
+        - dossier = not_drafts.first
+        %h2.huge-title Vous avez déjà déposé un dossier
+        %p
+          Il y a <strong>#{time_ago_in_words(dossier.en_construction_at)}</strong>,
+          vous avez déposé un dossier sur la démarche « #{dossier.procedure.libelle} ».
+        = link_to 'Voir mon dossier déposé', dossier_path(dossier), class: ['button large expand primary']
+        = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
+
+      - else
+        %h2.huge-title Vous avez déjà des dossiers pour cette démarche
+        = link_to 'Voir mes dossiers en cours', dossiers_path, class: ['button large expand primary']
+        = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']

@@ -1,19 +1,20 @@
 - content_for(:title, "Nouveau dossier (#{@dossier.procedure.libelle})")
 
-- if !dossier_submission_is_closed?(@dossier)
-  = form_for current_user, url: siret_dossier_path(@dossier), html: { class: 'form', method: 'post' } do |f|
-    %h1 Identifier votre établissement
+.form-column
+  - if !dossier_submission_is_closed?(@dossier)
+    = form_for current_user, url: siret_dossier_path(@dossier), html: { class: 'form', method: 'post' } do |f|
+      %h1 Identifier votre établissement
 
-    %p.mb-1 Merci de remplir le numéro TAHITI de votre entreprise, administration ou association pour commencer la démarche.
+      %p.mb-1 Merci de remplir le numéro TAHITI de votre entreprise, administration ou association pour commencer la démarche.
 
-    = f.label :siret, style: "display: none"
-    = f.text_field :siret, placeholder: "Numéro TAHITI (6 caractères)", required: true
+      = f.label :siret, style: "display: none"
+      = f.text_field :siret, placeholder: "Numéro TAHITI (6 caractères)", required: true
 
-    = f.hidden_field :dossier_id, value: @dossier.id
+      = f.hidden_field :dossier_id, value: @dossier.id
 
-    %p.mb-4
-      Pour trouver votre numéro TAHITI, utilisez
-      %a{ href: 'http://www.ispf.pf/bases/repertoires/Entreprises/Recherche.aspx', target: '_blank', rel: 'noopener' }
-        www.ispf.pf
+      %p.mb-4
+        Pour trouver votre numéro TAHITI, utilisez
+        %a{ href: 'http://www.ispf.pf/bases/repertoires/Entreprises/Recherche.aspx', target: '_blank', rel: 'noopener' }
+          www.ispf.pf
 
-    = f.submit "Valider", class: "button large primary expand mt-1", data: { disable_with: "Récupération des informations…" }
+      = f.submit "Valider", class: "button large primary expand mt-1", data: { disable_with: "Récupération des informations…" }

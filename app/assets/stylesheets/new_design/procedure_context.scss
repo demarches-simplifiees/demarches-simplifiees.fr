@@ -6,6 +6,7 @@ $procedure-description-line-height: 22px;
 
 .procedure-preview {
   font-size: 24px;
+  padding: ($default-padding * 2) 6% 0 6%;
 
   .paperless-logo {
     width: 100%;
@@ -108,6 +109,8 @@ $procedure-description-line-height: 22px;
 }
 
 .procedure-context-content {
+  background: $light-grey;
+
   @media (max-width: $procedure-context-breakpoint) {
     input[type=submit] {
       margin-bottom: 2 * $default-padding;

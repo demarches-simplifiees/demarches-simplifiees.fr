@@ -11,10 +11,9 @@ feature 'Instructing a dossier:' do
   context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
       visit commencer_path(path: procedure.path)
-      #---- Since social connection is available, email/password is present on commencer pagea
-      # click_on 'J’ai déjà un compte'
+      click_on 'J’ai déjà un compte'
 
-      # expect(page).to have_current_path new_user_session_path
+      expect(page).to have_current_path new_user_session_path
       sign_in_with(instructeur.email, password, true)
 
       # connexion link erase user stored location

@@ -17,6 +17,11 @@
 }
 
 .auth-form {
+  p {
+    margin-bottom: 30px;
+    font-size: 20px;
+  }
+
   .auth-options {
     display: flex;
     justify-content: space-between;
@@ -25,20 +30,23 @@
 
   .social-logins {
     display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
     margin-bottom: 1 * $default-spacer;
-  }
 
-  .button {
-    margin-bottom: 2 * $default-spacer;
-    display: inline;
-    flex-wrap: nowrap;
+    .button {
+      margin-bottom: 2 * $default-spacer;
+      display: inline;
+      flex-wrap: nowrap;
+      text-align: left;
 
-    img {
-      height: 24px;
-      vertical-align: middle;
-      margin-right: 4px;
+      img {
+        height: 32px;
+        max-width: 32px;
+        vertical-align: middle;
+        margin-right: 4px;
+      }
     }
   }
 

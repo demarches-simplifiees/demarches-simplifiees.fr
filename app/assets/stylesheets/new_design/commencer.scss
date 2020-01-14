@@ -2,7 +2,12 @@
 @import "colors";
 
 .commencer {
+  background-color: $light-grey;
+
   .form {
+    padding: ($default-padding * 0) ($default-padding * 2) ($default-padding * 2) ($default-padding * 2);
+    font-size: 20px;
+
     input[type="password"] {
       margin-bottom: $default-spacer;
     }

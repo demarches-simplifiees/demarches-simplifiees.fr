@@ -1,28 +1,31 @@
 = content_for(:page_id, 'auth')
 
-.auth-form
-  = devise_error_messages!
-  = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
-    %h1 Créez-vous un compte #{SITE_NAME}
+= render partial: 'shared/social_login', locals: { title: "Rapide, simple et sûr. Aucun mot de passe à créer.", prefix: "Créez vous un compte via" }
 
-    = f.label :email, "Email"
-    = f.text_field :email, autofocus: true, placeholder: "Votre adresse email"
+.column.procedure-context-content
+  .auth-form
+    = devise_error_messages!
+    = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
+      %p.center Créez vous un compte
 
-    .suspect-email.hidden
-      .email-suggestion-title
-        Voulez-vous dire
-        %span.email-suggestion-address blabla@gmail.com
-        &nbsp;?
-      .email-suggestion-answer
-        = button_tag type: 'button', class: 'button small', onclick: "DS.acceptEmailSuggestion()" do
-          Oui
-        = button_tag type: 'button', class: 'button small', onclick: "DS.discardEmailSuggestionBox()" do
-          Non
+      = f.label :email, "Email"
+      = f.text_field :email, autofocus: false, placeholder: "Votre adresse email"
 
-    = f.label :password, "Mot de passe"
+      .suspect-email.hidden
+        .email-suggestion-title
+          Voulez-vous dire
+          %span.email-suggestion-address blabla@gmail.com
+          &nbsp;?
+        .email-suggestion-answer
+          = button_tag type: 'button', class: 'button small', onclick: "DS.acceptEmailSuggestion()" do
+            Oui
+          = button_tag type: 'button', class: 'button small', onclick: "DS.discardEmailSuggestionBox()" do
+            Non
 
-    = render partial: 'shared/password/edit_password', locals: { form: f, test_password_strength: test_password_strength_path(PASSWORD_COMPLEXITY_FOR_USER) }
+      = f.label :password, "Mot de passe"
 
-    = f.submit "Créer un compte", class: "button large primary expand", id: "submit-password", data: { disable_with: "Envoi..." }
+      = render partial: 'shared/password/edit_password', locals: { form: f, test_password_strength: test_password_strength_path(PASSWORD_COMPLEXITY_FOR_USER) }
+
+      = f.submit "Créer un compte", class: "button large primary expand", id: "submit-password", data: { disable_with: "Envoi..." }
 
   -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }

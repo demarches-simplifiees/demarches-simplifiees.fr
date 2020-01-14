@@ -3,15 +3,14 @@
 - content_for :content do
   .two-columns.procedure-context
     .columns-container
+      .column
+        .procedure-preview
+          - if procedure
+            = render partial: 'shared/procedure_description', locals: { procedure: procedure }
+          - else
+            = render partial: 'layouts/commencer/no_procedure'
 
-      .column.procedure-preview
-        - if procedure
-          = render partial: 'shared/procedure_description', locals: { procedure: procedure }
-        - else
-          = render partial: 'layouts/commencer/no_procedure'
-
-      .column.procedure-context-content
-        = yield
+      = yield
 
 - content_for :footer do
   - if procedure
