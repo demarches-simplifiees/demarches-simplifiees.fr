@@ -65,7 +65,6 @@ gem 'rgeo-geojson'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'scenic'
-gem 'select2-rails'
 gem 'sentry-raven'
 gem 'skylight'
 gem 'smart_listing'
