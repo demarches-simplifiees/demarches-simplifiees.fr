@@ -49,7 +49,8 @@
             badge: @archived_dossiers.count)
 
       .procedure-actions
-        = render partial: "download_dossiers", locals: { procedure: @procedure }
+        = render partial: "download_dossiers",
+          locals: { procedure: @procedure, xlsx_export: @xlsx_export, csv_export: @csv_export, ods_export: @ods_export }
 
   .container
     - if @statut == 'a-suivre'

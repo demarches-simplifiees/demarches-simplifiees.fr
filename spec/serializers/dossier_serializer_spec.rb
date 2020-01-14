@@ -81,13 +81,14 @@ describe DossierSerializer do
         ],
         pieces_justificatives: [
           {
-            "content_url" => champ_pj.for_api,
+            "content_url" => subject[:pieces_justificatives][0]["content_url"],
             "created_at" => champ_pj.created_at.in_time_zone('UTC').iso8601(3),
             "type_de_piece_justificative_id" => original_pj_id,
             "user" => a_hash_including("id" => dossier.user.id)
           }
         ]
       )
+      expect(subject[:pieces_justificatives][0]["content_url"]).to match('/rails/active_storage/disk/')
     end
 
     it "does not expose the PJ as a champ" do

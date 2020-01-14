@@ -145,7 +145,7 @@ describe Users::DossiersController, type: :controller do
 
       it 'redirects to attestation pdf' do
         get :attestation, params: { id: dossier.id }
-        expect(response).to redirect_to(dossier.attestation.pdf_url.gsub('http://localhost:3000', ''))
+        expect(response.location).to match '/rails/active_storage/disk/'
       end
     end
   end

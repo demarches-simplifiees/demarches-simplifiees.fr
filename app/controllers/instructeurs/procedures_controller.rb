@@ -10,7 +10,7 @@ module Instructeurs
         .procedures
         .with_attached_logo
         .includes(:defaut_groupe_instructeur)
-        .order(closed_at: :desc, archived_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
+        .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
 
       dossiers = current_instructeur.dossiers.joins(:groupe_instructeur)
       @dossiers_count_per_procedure = dossiers.all_state.group('groupe_instructeurs.procedure_id').reorder(nil).count
@@ -109,6 +109,8 @@ module Instructeurs
       @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
 
       kaminarize(page, filtered_sorted_ids.count)
+
+      assign_exports
     end
 
     def update_displayed_fields
@@ -184,43 +186,29 @@ module Instructeurs
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
-    def download_dossiers
-      dossiers = current_instructeur.dossiers.for_procedure(procedure)
-
-      respond_to do |format|
-        format.csv do
-          send_data(procedure.to_csv(dossiers),
-            filename: procedure.export_filename(:csv))
-        end
-        format.xlsx do
-          send_data(procedure.to_xlsx(dossiers),
-            filename: procedure.export_filename(:xlsx))
-        end
-        format.ods do
-          send_data(procedure.to_ods(dossiers),
-            filename: procedure.export_filename(:ods))
-        end
-      end
-    end
-
     def download_export
-      export_format = params[:export_format]
-      notice_message = "Nous générons cet export. Lorsque celui-ci sera disponible, vous recevrez une notification par email accompagnée d'un lien de téléchargement."
-      if procedure.should_generate_export?(export_format)
-        procedure.queue_export(current_instructeur, export_format)
-        flash.notice = notice_message
+      format = params[:export_format]
+      groupe_instructeurs = current_instructeur
+        .groupe_instructeurs
+        .where(procedure: procedure)
 
+      export = Export.find_or_create_export(format, groupe_instructeurs)
+
+      if export.ready?
+        redirect_to export.file.service_url
+      else
         respond_to do |format|
+          notice_message = "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
           format.js do
             @procedure = procedure
+            assign_exports
+            flash.notice = notice_message
           end
-          format.all { redirect_to procedure }
+
+          format.html do
+            redirect_to instructeur_procedure_url(procedure), notice: notice_message
+          end
         end
-      elsif procedure.export_queued?(export_format)
-        flash.notice = notice_message
-        redirect_to procedure
-      else
-        redirect_to url_for(procedure.export_file(export_format))
       end
     end
 
@@ -244,6 +232,13 @@ module Instructeurs
     end
 
     private
+
+    def assign_exports
+      groupe_instructeurs_for_procedure = current_instructeur.groupe_instructeurs.where(procedure: procedure)
+      @xlsx_export = Export.find_for_format_and_groupe_instructeurs(:xlsx, groupe_instructeurs_for_procedure)
+      @csv_export = Export.find_for_format_and_groupe_instructeurs(:csv, groupe_instructeurs_for_procedure)
+      @ods_export = Export.find_for_format_and_groupe_instructeurs(:ods, groupe_instructeurs_for_procedure)
+    end
 
     def find_field(table, column)
       procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }

@@ -17,9 +17,9 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when a dossier has an attestation' do
       let(:dossier) { create(:dossier, :accepte, attestation: create(:attestation, :with_pdf), procedure: procedure) }
 
-      it 'redirects to attestation pdf' do
+      it 'redirects to a service tmp_url' do
         get :attestation, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-        expect(response).to redirect_to(dossier.attestation.pdf_url.gsub('http://localhost:3000', ''))
+        expect(response.location).to match '/rails/active_storage/disk/'
       end
     end
   end
@@ -112,9 +112,23 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when the dossier has already been put en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
-      it 'warns about the error, but doesn’t raise' do
+      it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
+        expect(response.body).to have_text('Le dossier est déjà en instruction.')
+      end
+    end
+
+    context 'when the dossier has already been closed' do
+      let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+      it 'doesn’t change the dossier state' do
+        expect(dossier.reload.state).to eq(Dossier.states.fetch(:accepte))
+      end
+
+      it 'warns about the error' do
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to have_text('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
       end
     end
   end
@@ -136,9 +150,10 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when the dossier has already been put en_construction' do
       let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
-      it 'warns about the error, but doesn’t raise' do
+      it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
         expect(response).to have_http_status(:ok)
+        expect(response.body).to have_text('Le dossier est déjà en construction.')
       end
     end
   end
@@ -161,9 +176,10 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when the dossier has already been put en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
-      it 'warns about the error, but doesn’t raise' do
+      it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
+        expect(response.body).to have_text('Le dossier est déjà en instruction.')
       end
     end
 
@@ -355,15 +371,18 @@ describe Instructeurs::DossiersController, type: :controller do
     context 'when a dossier is already closed' do
       let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
 
-      before { allow(dossier).to receive(:accepter!) }
+      before { allow(dossier).to receive(:after_accepter) }
 
       subject { post :terminer, params: { process_action: "accepter", procedure_id: procedure.id, dossier_id: dossier.id, dossier: { justificatif_motivation: fake_justificatif } }, format: 'js' }
 
       it 'does not close it again' do
         subject
 
-        expect(dossier).not_to have_received(:accepter!)
+        expect(dossier).not_to have_received(:after_accepter)
+        expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
+
         expect(response).to have_http_status(:ok)
+        expect(response.body).to have_text('Le dossier est déjà accepté.')
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_09_141641) do
+ActiveRecord::Schema.define(version: 2019_12_18_103727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -317,6 +317,19 @@ ActiveRecord::Schema.define(version: 2019_12_09_141641) do
     t.datetime "updated_at"
   end
 
+  create_table "exports", force: :cascade do |t|
+    t.string "format", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "exports_groupe_instructeurs", force: :cascade do |t|
+    t.bigint "export_id", null: false
+    t.bigint "groupe_instructeur_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "feedbacks", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", null: false
@@ -492,7 +505,7 @@ ActiveRecord::Schema.define(version: 2019_12_09_141641) do
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
-    t.index ["path", "archived_at", "hidden_at"], name: "index_procedures_on_path_and_archived_at_and_hidden_at", unique: true
+    t.index ["path", "closed_at", "hidden_at"], name: "index_procedures_on_path_and_closed_at_and_hidden_at", unique: true
     t.index ["service_id"], name: "index_procedures_on_service_id"
   end
 

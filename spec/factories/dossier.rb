@@ -15,9 +15,12 @@ FactoryBot.define do
         procedure = create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private)
       end
 
+      # Assign the procedure to the dossier through the groupe_instructeur
       if dossier.groupe_instructeur.nil?
         dossier.groupe_instructeur = procedure.defaut_groupe_instructeur
       end
+
+      dossier.build_default_individual
     end
 
     trait :with_entreprise do

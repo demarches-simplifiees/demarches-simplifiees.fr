@@ -15,7 +15,7 @@ module Instructeurs
 
     def attestation
       if dossier.attestation.pdf.attached?
-        redirect_to url_for(dossier.attestation.pdf)
+        redirect_to dossier.attestation.pdf.service_url
       end
     end
 
@@ -88,33 +88,33 @@ module Instructeurs
     end
 
     def passer_en_instruction
-      if dossier.en_instruction?
-        flash.notice = 'Le dossier est déjà en instruction.'
-      else
+      begin
         dossier.passer_en_instruction!(current_instructeur)
         flash.notice = 'Dossier passé en instruction.'
+      rescue AASM::InvalidTransition => e
+        flash.alert = aasm_error_message(e, target_state: :en_instruction)
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
     def repasser_en_construction
-      if dossier.en_construction?
-        flash.notice = 'Le dossier est déjà en construction.'
-      else
+      begin
         dossier.repasser_en_construction!(current_instructeur)
         flash.notice = 'Dossier repassé en construction.'
+      rescue AASM::InvalidTransition => e
+        flash.alert = aasm_error_message(e, target_state: :en_construction)
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
     end
 
     def repasser_en_instruction
-      if dossier.en_instruction?
-        flash.notice = 'Le dossier est déjà en instruction.'
-      else
+      begin
         flash.notice = "Le dossier #{dossier.id} a été repassé en instruction."
         dossier.repasser_en_instruction!(current_instructeur)
+      rescue AASM::InvalidTransition => e
+        flash.alert = aasm_error_message(e, target_state: :en_instruction)
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
@@ -124,20 +124,23 @@ module Instructeurs
       motivation = params[:dossier] && params[:dossier][:motivation]
       justificatif = params[:dossier] && params[:dossier][:justificatif_motivation]
 
-      if dossier.termine?
-        flash.notice = "Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"
-      else
+      begin
         case params[:process_action]
         when "refuser"
+          target_state = :refuse
           dossier.refuser!(current_instructeur, motivation, justificatif)
           flash.notice = "Dossier considéré comme refusé."
         when "classer_sans_suite"
+          target_state = :sans_suite
           dossier.classer_sans_suite!(current_instructeur, motivation, justificatif)
           flash.notice = "Dossier considéré comme sans suite."
         when "accepter"
+          target_state = :accepte
           dossier.accepter!(current_instructeur, motivation, justificatif)
           flash.notice = "Dossier traité avec succès."
         end
+      rescue AASM::InvalidTransition => e
+        flash.alert = aasm_error_message(e, target_state: target_state)
       end
 
       render partial: 'state_button_refresh', locals: { dossier: dossier }
@@ -218,6 +221,14 @@ module Instructeurs
 
     def mark_annotations_privees_as_read
       current_instructeur.mark_tab_as_seen(dossier, :annotations_privees)
+    end
+
+    def aasm_error_message(exception, target_state:)
+      if exception.originating_state == target_state
+        "Le dossier est déjà #{dossier_display_state(target_state, lower: true)}."
+      else
+        "Le dossier est en ce moment #{dossier_display_state(exception.originating_state, lower: true)} : il n’est pas possible de le passer #{dossier_display_state(target_state, lower: true)}."
+      end
     end
   end
 end
