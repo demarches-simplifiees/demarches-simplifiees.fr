@@ -152,6 +152,8 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.clear
 
     ActiveStorage::Current.host = 'http://test.host'
+
+    Geocoder.configure(lookup: :test)
   }
 
   RSpec::Matchers.define :have_same_attributes_as do |expected, options|
