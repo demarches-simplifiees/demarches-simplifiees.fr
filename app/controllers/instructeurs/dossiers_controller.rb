@@ -27,6 +27,14 @@ module Instructeurs
 
     def show
       @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.demande_seen_at
+
+      respond_to do |format|
+        format.pdf do
+          @include_infos_administration = true
+          render(file: 'dossiers/show', formats: [:pdf])
+        end
+        format.all
+      end
     end
 
     def messagerie

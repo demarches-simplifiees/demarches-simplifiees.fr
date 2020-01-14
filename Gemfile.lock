@@ -425,6 +425,9 @@ GEM
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
+    prawn-svg (0.29.1)
+      css_parser (~> 1.6)
+      prawn (>= 0.11.1, < 3)
     prawn_rails (0.0.11)
       prawn (>= 0.11.1)
       railties (>= 3.0.0)
@@ -770,6 +773,7 @@ DEPENDENCIES
   pg
   phonelib
   prawn
+  prawn-svg
   prawn_rails
   premailer-rails
   pry-byebug
