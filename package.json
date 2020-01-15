@@ -10,7 +10,6 @@
     "@rails/webpacker": "4.0.7",
     "@sentry/browser": "^5.7.1",
     "@turf/area": "^6.0.1",
-    "autocomplete.js": "^0.37.0",
     "babel-plugin-macros": "^2.6.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "chartkick": "^3.1.3",

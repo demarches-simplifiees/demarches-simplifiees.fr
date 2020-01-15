@@ -232,6 +232,7 @@ GEM
     font-awesome-rails (4.7.0.4)
       railties (>= 3.2, < 6.0)
     formatador (0.2.5)
+    geocoder (1.6.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     gon (6.2.1)
@@ -595,8 +596,6 @@ GEM
     scss_lint (0.57.1)
       rake (>= 0.9, < 13)
       sass (~> 3.5, >= 3.5.5)
-    select2-rails (4.0.3)
-      thor (~> 0.14)
     selectize-rails (0.12.6)
     selenium-webdriver (3.141.0)
       childprocess (~> 0.5)
@@ -745,6 +744,7 @@ DEPENDENCIES
   flipper-ui
   fog-openstack
   font-awesome-rails
+  geocoder
   gon
   graphiql-rails
   graphql
@@ -797,7 +797,6 @@ DEPENDENCIES
   sassc-rails
   scenic
   scss_lint
-  select2-rails
   sentry-raven
   shoulda-matchers
   simple_xlsx_reader

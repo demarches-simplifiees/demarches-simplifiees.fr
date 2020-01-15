@@ -343,7 +343,7 @@ class Dossier < ApplicationRecord
 
   def geo_position
     if etablissement.present?
-      point = ApiAdresse::PointAdapter.new(etablissement.geo_adresse).geocode
+      point = Geocoder.search(etablissement.geo_adresse).first
     end
 
     lon = "2.428462"
@@ -351,8 +351,7 @@ class Dossier < ApplicationRecord
     zoom = "13"
 
     if point.present?
-      lon = point.x.to_s
-      lat = point.y.to_s
+      lat, lon = point.coordinates.map(&:to_s)
     end
 
     { lon: lon, lat: lat, zoom: zoom }
