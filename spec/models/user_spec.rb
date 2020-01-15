@@ -234,6 +234,14 @@ describe User, type: :model do
       end
     end
 
+    context 'when the user is an instructeur' do
+      it 'cannot be deleted' do
+        instructeur = create(:instructeur)
+        user = instructeur.user
+
+        expect(user.can_be_deleted?).to be_falsy
+      end
+    end
   end
 
   describe '#delete_and_keep_track_dossiers' do
