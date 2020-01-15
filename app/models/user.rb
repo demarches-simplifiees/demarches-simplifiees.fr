@@ -97,7 +97,7 @@ class User < ApplicationRecord
   end
 
   def can_be_deleted?
-    dossiers.state_instruction_commencee.empty?
+    administrateur.nil? && dossiers.state_instruction_commencee.empty?
   end
 
   def delete_and_keep_track_dossiers(administration)
