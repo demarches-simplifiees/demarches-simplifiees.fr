@@ -105,12 +105,11 @@ class User < ApplicationRecord
       raise "Cannot delete this user because instruction has started for some dossiers"
     end
 
-    if can_be_deleted?
-      dossiers.each do |dossier|
-        dossier.delete_and_keep_track(administration)
-      end
-      destroy
+    dossiers.each do |dossier|
+      dossier.delete_and_keep_track(administration)
     end
+    dossiers.unscoped.destroy_all
+    destroy
   end
 
   private

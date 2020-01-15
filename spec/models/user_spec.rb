@@ -241,12 +241,29 @@ describe User, type: :model do
       let!(:dossier_en_construction) { create(:dossier, :en_construction, user: user) }
       let!(:dossier_brouillon) { create(:dossier, user: user) }
 
-      it "keep track of dossiers and delete user" do
-        user.delete_and_keep_track_dossiers(administration)
+      context 'without a hidden dossier' do
+        it "keep track of dossiers and delete user" do
+          user.delete_and_keep_track_dossiers(administration)
 
-        expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
-        expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_present
-        expect(User.find_by(id: user.id)).to be_nil
+          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
+          expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_present
+          expect(User.find_by(id: user.id)).to be_nil
+        end
+      end
+
+      context 'with a hidden dossier' do
+        let!(:dossier_cache) do
+          create(:dossier, :en_construction, user: user)
+        end
+
+        it "keep track of dossiers and delete user" do
+          dossier_cache.delete_and_keep_track(administration)
+          user.delete_and_keep_track_dossiers(administration)
+
+          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
+          expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_present
+          expect(User.find_by(id: user.id)).to be_nil
+        end
       end
     end
   end
