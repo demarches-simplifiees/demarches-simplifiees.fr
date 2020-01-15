@@ -424,9 +424,40 @@ describe Instructeur, type: :model do
     it { expect(instructeur_a.procedures.all.to_ary).to eq([procedure_a]) }
   end
 
+  describe "#can_be_deleted?" do
+    subject { instructeur.can_be_deleted? }
+
+    context 'when the instructeur is an administrateur' do
+      let!(:administrateur) { create(:administrateur) }
+      let(:instructeur) { administrateur.instructeur }
+
+      it { is_expected.to be false }
+    end
+
+    context "when the instructeur's procedures have other instructeurs" do
+      let(:instructeur_not_admin) { create(:instructeur) }
+      let(:autre_instructeur) { create(:instructeur) }
+
+      it "can be deleted" do
+        assign(procedure, instructeur_assigne: instructeur_not_admin)
+        assign(procedure, instructeur_assigne: autre_instructeur)
+        expect(autre_instructeur.can_be_deleted?).to be_truthy
+      end
+    end
+
+    context "when the instructeur's procedures is the only one" do
+      let(:instructeur_not_admin) { create :instructeur }
+      let(:autre_procedure) { create :procedure }
+      it "can be deleted" do
+        assign(autre_procedure, instructeur_assigne: instructeur_not_admin)
+        expect(instructeur_not_admin.can_be_deleted?).to be_falsy
+      end
+    end
+  end
+
   private
 
-  def assign(procedure_to_assign)
-    create :assign_to, instructeur: instructeur, procedure: procedure_to_assign, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur
+  def assign(procedure_to_assign, instructeur_assigne: instructeur)
+    create :assign_to, instructeur: instructeur_assigne, procedure: procedure_to_assign, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur
   end
 end
