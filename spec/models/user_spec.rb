@@ -224,6 +224,16 @@ describe User, type: :model do
     context 'when the user has no dossier in instruction' do
       it { is_expected.to be true }
     end
+
+    context 'when the user is an administrateur' do
+      it 'cannot be deleted' do
+        administrateur = create(:administrateur)
+        user = administrateur.user
+
+        expect(user.can_be_deleted?).to be_falsy
+      end
+    end
+
   end
 
   describe '#delete_and_keep_track_dossiers' do
