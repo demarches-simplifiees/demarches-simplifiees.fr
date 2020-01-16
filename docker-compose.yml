@@ -83,6 +83,9 @@ services:
       - SENTRY_DSN_JS
       - SENTRY_DSN_RAILS
       - SENTRY_ENABLED
+      - TATOU_BASE_URL
+      - TATOU_CLIENT_ID
+      - TATOU_CLIENT_SECRET
       - YAHOO_CLIENT_ID
       - YAHOO_CLIENT_SECRET
     volumes:

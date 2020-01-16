@@ -8,7 +8,8 @@ class User < ApplicationRecord
     facebook: 'facebook',
     google: 'google',
     microsoft: 'microsoft',
-    yahoo: 'yahoo'
+    yahoo: 'yahoo',
+    tatou: 'tatou'
   }
 
   # Include default devise modules. Others available are:

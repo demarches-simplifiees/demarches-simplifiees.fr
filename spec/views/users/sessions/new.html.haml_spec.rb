@@ -26,6 +26,9 @@ describe 'users/sessions/new.html.haml', type: :view do
     if ENV['YAHOO_CLIENT_ID'].present?
       expect(rendered).to have_link('Yahoo!')
     end
+    if ENV['TATOU_CLIENT_ID'].present?
+      expect(rendered).to have_link('Tatou')
+    end
     if ENV['FC_PARTICULIER_ID'].present?
       expect(rendered).to have_link('S’identifier avec FranceConnect')
     end
