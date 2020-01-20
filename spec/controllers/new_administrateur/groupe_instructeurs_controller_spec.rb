@@ -78,19 +78,20 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
     context 'with many groups' do
       let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
-      context 'of the default group' do
-        before { delete_group procedure.defaut_groupe_instructeur }
-
-        it { expect(flash.alert).to be_present }
-        it { expect(procedure.groupe_instructeurs.count).to eq(2) }
-        it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
-      end
 
       context 'of a group that can be deleted' do
         before { delete_group gi_1_2 }
-
         it { expect(flash.notice).to be_present }
         it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+        it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      end
+
+      context 'of a group with dossiers, that cannot be deleted' do
+        let!(:dossier12) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), groupe_instructeur: gi_1_2) }
+        before { delete_group gi_1_2 }
+
+        it { expect(flash.alert).to be_present }
+        it { expect(procedure.groupe_instructeurs.count).to eq(2) }
         it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
       end
     end
@@ -140,8 +141,8 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id) }
     end
 
-    describe 'when the new group is not a possible group' do
-      before do
+    describe 'when the target group is not a possible group' do
+      subject {
         post :reaffecter,
           params:
             {
@@ -149,14 +150,12 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
               id: gi_1_1.id,
               target_group: gi_2_2.id
             }
+      }
+      before do
         dossier12.reload
       end
 
-      it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
-      it { expect(gi_1_1.dossiers.count).to be(1) }
-      it { expect(gi_2_2.dossiers.count).to be(0) }
-      it { expect(gi_1_1.dossiers.last.id).to be(dossier12.id) }
-      it { expect(dossier12.groupe_instructeur.id).to be(gi_1_1.id) }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 
