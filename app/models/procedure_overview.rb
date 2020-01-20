@@ -10,8 +10,7 @@ class ProcedureOverview
     @start_date = start_date
     @procedure = procedure
 
-    dossiers = procedure.dossiers
-    dossiers = dossiers.where(groupe_instructeur: groups) if procedure.routee?
+    dossiers = procedure.dossiers.where(groupe_instructeur: groups)
 
     @dossiers_en_instruction_count = dossiers.state_en_instruction.count
     @old_dossiers_en_instruction = dossiers
