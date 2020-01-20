@@ -8,7 +8,7 @@ describe ProcedureOverview, type: :model do
   before { Timecop.freeze(friday) }
   after { Timecop.return }
 
-  let(:procedure_overview) { ProcedureOverview.new(procedure, monday, []) }
+  let(:procedure_overview) { ProcedureOverview.new(procedure, monday, [procedure.defaut_groupe_instructeur]) }
 
   describe 'dossiers_en_instruction_count' do
     let!(:en_instruction_dossier) do
