@@ -76,7 +76,7 @@ class Instructeur < ApplicationRecord
 
     active_procedure_overviews = procedures
       .publiees
-      .map { |procedure| procedure.procedure_overview(start_date) }
+      .map { |procedure| procedure.procedure_overview(start_date, groupe_instructeurs) }
       .filter(&:had_some_activities?)
 
     if active_procedure_overviews.count == 0
