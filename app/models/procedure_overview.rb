@@ -6,24 +6,23 @@ class ProcedureOverview
     :dossiers_en_construction_count,
     :old_dossiers_en_construction
 
-  def initialize(procedure, start_date)
+  def initialize(procedure, start_date, groups)
     @start_date = start_date
     @procedure = procedure
 
-    @dossiers_en_instruction_count = procedure.dossiers.state_en_instruction.count
-    @old_dossiers_en_instruction = procedure
-      .dossiers
+    dossiers = procedure.dossiers.where(groupe_instructeur: groups)
+
+    @dossiers_en_instruction_count = dossiers.state_en_instruction.count
+    @old_dossiers_en_instruction = dossiers
       .state_en_instruction
       .where('en_instruction_at < ?', 1.week.ago)
 
-    @dossiers_en_construction_count = procedure.dossiers.state_en_construction.count
-    @old_dossiers_en_construction = procedure
-      .dossiers
+    @dossiers_en_construction_count = dossiers.state_en_construction.count
+    @old_dossiers_en_construction = dossiers
       .state_en_construction
       .where('en_construction_at < ?', 1.week.ago)
 
-    @created_dossiers_count = procedure
-      .dossiers
+    @created_dossiers_count = dossiers
       .where(created_at: start_date..Time.zone.now)
       .state_not_brouillon
       .count
