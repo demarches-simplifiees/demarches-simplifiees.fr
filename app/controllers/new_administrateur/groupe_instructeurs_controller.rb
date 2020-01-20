@@ -49,13 +49,14 @@ module NewAdministrateur
     end
 
     def destroy
-      if procedure.groupe_instructeurs.one?
+      if !groupe_instructeur.dossiers.empty?
+        flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
+      elsif procedure.groupe_instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
-      elsif groupe_instructeur == procedure.defaut_groupe_instructeur
-        flash[:alert] = "Impossible de supprimer le groupe par défaut"
       else
-        flash[:notice] = "le groupe « #{groupe_instructeur.label} » a été supprimé."
-        groupe_instructeur.destroy
+        label = groupe_instructeur.label
+        groupe_instructeur.destroy!
+        flash[:notice] = "le groupe « #{label} » a été supprimé."
       end
       redirect_to procedure_groupe_instructeurs_path(procedure)
     end
@@ -68,16 +69,9 @@ module NewAdministrateur
     end
 
     def reaffecter
-      target_group = GroupeInstructeur.find(params[:target_group])
-      if target_group.blank? || !procedure.groupe_instructeurs.include?(target_group)
-        flash[:notice] = "Impossible de réaffecter les dossiers au groupe demandé."
-      else
-        groupe_instructeur.dossiers.each do |d|
-          d.update(groupe_instructeur: target_group)
-        end
-        flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
-
-      end
+      target_group = procedure.groupe_instructeurs.find(params[:target_group])
+      groupe_instructeur.dossiers.update_all(groupe_instructeur_id: target_group.id)
+      flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
       redirect_to procedure_groupe_instructeurs_path(procedure)
     end
 
