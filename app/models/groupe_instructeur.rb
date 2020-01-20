@@ -10,4 +10,6 @@ class GroupeInstructeur < ApplicationRecord
   validates :label, uniqueness: { scope: :procedure, message: 'existe déjà' }
 
   before_validation -> { label&.strip! }
+
+  scope :without_group, -> (group) { where.not(id: group) }
 end

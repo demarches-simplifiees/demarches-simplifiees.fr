@@ -16,3 +16,7 @@ fr:
         assignment:
           one: "L’instructeur %{value} a été affecté au groupe « %{groupe} »."
           other: "Les instructeurs %{value} ont été affectés au groupe « %{groupe} »."
+      reaffecter_dossiers:
+        existing_groupe:
+          one: "%{count} groupe existe"
+          other: "%{count} groupes existent"
