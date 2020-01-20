@@ -48,6 +48,33 @@ module NewAdministrateur
       end
     end
 
+    def destroy
+      if !groupe_instructeur.dossiers.empty?
+        flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
+      elsif procedure.groupe_instructeurs.one?
+        flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
+      else
+        label = groupe_instructeur.label
+        groupe_instructeur.destroy!
+        flash[:notice] = "le groupe « #{label} » a été supprimé."
+      end
+      redirect_to procedure_groupe_instructeurs_path(procedure)
+    end
+
+    def reaffecter_dossiers
+      @procedure = procedure
+      @groupe_instructeur = groupe_instructeur
+      @groupes_instructeurs = paginated_groupe_instructeurs
+        .without_group(@groupe_instructeur)
+    end
+
+    def reaffecter
+      target_group = procedure.groupe_instructeurs.find(params[:target_group])
+      groupe_instructeur.dossiers.update_all(groupe_instructeur_id: target_group.id)
+      flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
+      redirect_to procedure_groupe_instructeurs_path(procedure)
+    end
+
     def add_instructeur
       emails = params['emails'].presence || []
       emails = emails.map(&:strip).map(&:downcase)
