@@ -109,7 +109,7 @@ class User < ApplicationRecord
       dossier.delete_and_keep_track(administration)
     end
     dossiers.unscoped.destroy_all
-    destroy
+    destroy!
   end
 
   private
