@@ -25,6 +25,9 @@ FactoryBot.define do
 
     trait :with_entreprise do
       after(:build) do |dossier, _evaluator|
+        if dossier.procedure.for_individual?
+          raise 'Inconsistent factory: attempting to create a dossier :with_entreprise on a procedure that is `for_individual?`'
+        end
         etablissement = create(:etablissement)
         dossier.etablissement = etablissement
       end
@@ -36,10 +39,17 @@ FactoryBot.define do
       end
     end
 
-    trait :for_individual do
-      after(:build) do |dossier, _evaluator|
+    trait :with_individual do
+      after(:build) do |dossier, evaluator|
+        # If the procedure was implicitely created by the factory,
+        # mark it automatically as for_individual.
+        if evaluator.procedure.nil?
+          dossier.procedure.update(for_individual: true)
+        end
+        if !dossier.procedure.for_individual?
+          raise 'Inconsistent factory: attempting to create a dossier :with_individual on a procedure that is not `for_individual?`'
+        end
         dossier.individual = create(:individual)
-        dossier.save
       end
     end
 

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'commencer/show.html.haml', type: :view do
   include Rails.application.routes.url_helpers
 
-  let(:procedure) { create(:procedure, :with_service, :published) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service) }
 
   before do
     assign(:procedure, procedure)
@@ -53,7 +53,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
 
     context 'and they have a submitted dossier' do
       let!(:brouillon) { create(:dossier, user: user, procedure: procedure) }
-      let!(:dossier) { create(:dossier, :en_construction, :for_individual, user: user, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :en_construction, :with_individual, user: user, procedure: procedure) }
 
       it_behaves_like 'it renders a link to create a new dossier', 'Commencer un nouveau dossier'
 
@@ -66,7 +66,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
 
     context 'and they have several submitted dossiers' do
       let!(:brouillon) { create(:dossier, user: user, procedure: procedure) }
-      let!(:dossiers) { create_list(:dossier, 2, :en_construction, :for_individual, user: user, procedure: procedure) }
+      let!(:dossiers) { create_list(:dossier, 2, :en_construction, :with_individual, user: user, procedure: procedure) }
 
       it_behaves_like 'it renders a link to create a new dossier', 'Commencer un nouveau dossier'
 

@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe NotificationMailer, type: :mailer do
   let(:user) { create(:user) }
   let(:procedure) { create(:simple_procedure) }
-  let(:dossier) { create(:dossier, :en_construction, :for_individual, :with_service, user: user, procedure: procedure) }
+  let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_service, user: user, procedure: procedure) }
 
   describe '.send_dossier_received' do
     let(:email_template) { create(:received_mail, subject: 'Email subject', body: 'Your dossier was processed. Thanks.') }
