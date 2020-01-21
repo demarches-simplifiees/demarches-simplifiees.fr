@@ -17,9 +17,9 @@ class Instructeur < ApplicationRecord
   has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
   has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
-  has_many :trusted_device_tokens
+  has_many :trusted_device_tokens, dependent: :destroy
 
-  has_one :user
+  has_one :user, dependent: :nullify
 
   default_scope { eager_load(:user) }
 
@@ -174,6 +174,10 @@ class Instructeur < ApplicationRecord
   def young_login_token?
     trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
     trusted_device_token&.token_young?
+  end
+
+  def can_be_deleted?
+    user.administrateur.nil? && procedures.all? { |p| p.defaut_groupe_instructeur.instructeurs.count > 1 }
   end
 
   private
