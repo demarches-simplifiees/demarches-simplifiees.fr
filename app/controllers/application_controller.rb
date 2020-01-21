@@ -117,6 +117,7 @@ class ApplicationController < ActionController::Base
 
   def setup_javascript_settings
     gon.autosave = Rails.application.config.ds_autosave
+    gon.autocomplete = Rails.application.secrets.autocomplete
   end
 
   def setup_tracking
