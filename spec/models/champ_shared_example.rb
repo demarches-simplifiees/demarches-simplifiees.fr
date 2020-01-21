@@ -32,12 +32,6 @@ shared_examples 'champ_spec' do
     end
   end
 
-  describe '.departement', vcr: { cassette_name: 'api_geo_departements' } do
-    subject { Champs::DepartementChamp.departements }
-
-    it { expect(subject).to include '99 - Étranger' }
-  end
-
   context "when type_champ=date" do
     let(:type_de_champ) { create(:type_de_champ_date) }
     let(:champ) { type_de_champ.champ.create }
