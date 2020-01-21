@@ -13,7 +13,7 @@ module Manager
       if !instructeur.can_be_deleted?
         fail "Impossible de supprimer cet instructeur car il est administrateur ou il est le seul instructeur sur une démarche"
       end
-      instructeur.destroy
+      instructeur.destroy!
 
       logger.info("L'instructeur #{instructeur.id} est supprimé par #{current_administration.id}")
       flash[:notice] = "L'instructeur #{instructeur.id} est supprimé"
