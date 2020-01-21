@@ -46,6 +46,21 @@ describe Administrateur, type: :model do
     end
   end
 
+  describe '#delete_and_transfer_services' do
+    let!(:administrateur) { create(:administrateur) }
+    let!(:autre_administrateur) { create(:administrateur) }
+    let!(:procedure) { create(:procedure, :with_service, administrateurs: [administrateur, autre_administrateur]) }
+    let(:service) { procedure.service }
+
+    it "delete and transfer services to other admin" do
+      service.update(administrateur: administrateur)
+      administrateur.delete_and_transfer_services
+
+      expect(Administrateur.find_by(id: administrateur.id)).to be_nil
+      expect(service.reload.administrateur).to eq(autre_administrateur)
+    end
+  end
+
   # describe '#password_complexity' do
   #   let(:email) { 'mail@beta.gouv.fr' }
   #   let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées-pwd'] }
