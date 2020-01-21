@@ -224,24 +224,6 @@ describe User, type: :model do
     context 'when the user has no dossier in instruction' do
       it { is_expected.to be true }
     end
-
-    context 'when the user is an administrateur' do
-      it 'cannot be deleted' do
-        administrateur = create(:administrateur)
-        user = administrateur.user
-
-        expect(user.can_be_deleted?).to be_falsy
-      end
-    end
-
-    context 'when the user is an instructeur' do
-      it 'cannot be deleted' do
-        instructeur = create(:instructeur)
-        user = instructeur.user
-
-        expect(user.can_be_deleted?).to be_falsy
-      end
-    end
   end
 
   describe '#delete_and_keep_track_dossiers' do
@@ -259,29 +241,12 @@ describe User, type: :model do
       let!(:dossier_en_construction) { create(:dossier, :en_construction, user: user) }
       let!(:dossier_brouillon) { create(:dossier, user: user) }
 
-      context 'without a hidden dossier' do
-        it "keep track of dossiers and delete user" do
-          user.delete_and_keep_track_dossiers(administration)
+      it "keep track of dossiers and delete user" do
+        user.delete_and_keep_track_dossiers(administration)
 
-          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
-          expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_present
-          expect(User.find_by(id: user.id)).to be_nil
-        end
-      end
-
-      context 'with a hidden dossier' do
-        let!(:dossier_cache) do
-          create(:dossier, :en_construction, user: user)
-        end
-
-        it "keep track of dossiers and delete user" do
-          dossier_cache.delete_and_keep_track(administration)
-          user.delete_and_keep_track_dossiers(administration)
-
-          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
-          expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_present
-          expect(User.find_by(id: user.id)).to be_nil
-        end
+        expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
+        expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_present
+        expect(User.find_by(id: user.id)).to be_nil
       end
     end
   end
