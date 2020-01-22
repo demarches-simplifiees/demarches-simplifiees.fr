@@ -117,11 +117,8 @@ Rails.application.routes.draw do
     get 'particulier/callback' => 'particulier#callback'
   end
 
-  get 'keycloak' => 'keycloak#login'
-  get 'keycloak/callback' => 'keycloak#callback'
-
-  get '/auth/:provider' => 'omniauth#login', as: :omniauth, constraints: { :provider => /google|microsoft|yahoo|tatou/ }
-  get '/auth/:provider/callback', to: 'omniauth#callback', constraints: { :provider => /google|microsoft|yahoo|tatou/ }
+  get '/auth/:provider' => 'omniauth#login', as: :omniauth, constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
+  get '/auth/:provider/callback', to: 'omniauth#callback', constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
 
   namespace :champs do
     get ':position/siret', to: 'siret#show', as: :siret

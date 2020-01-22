@@ -1,6 +1,7 @@
 - content_for(:title, @procedure.libelle)
 
-= render partial: 'shared/social_login', locals: { title: "Rapide et sûr, identifiez vous", prefix: "via " }
+- if !user_signed_in?
+  = render partial: 'shared/social_login', locals: { title: "Rapide, simple et sûr, identifiez vous", prefix: "via " }
 
 .column.commencer
   .form

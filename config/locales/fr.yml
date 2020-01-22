@@ -186,8 +186,8 @@ fr:
       etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
-      keycloak:
-        connexion: "Erreur lors de la connexion au serveur Keycloak de la Polynésie."
+      sipf:
+        connexion: "Erreur lors de la connexion au serveur d'authentification des agents de l'administration."
       facebook:
         connexion: "Erreur lors de la connexion à Facebook."
       google:

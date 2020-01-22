@@ -1,7 +1,7 @@
 class OmniauthController < ApplicationController
   before_action :redirect_to_login_if_connection_aborted, only: [:callback]
 
-  PROVIDERS = ['google', 'microsoft', 'yahoo', 'tatou']
+  PROVIDERS = ['google', 'microsoft', 'yahoo', 'sipf', 'tatou']
 
   def login
     provider = params[:provider]

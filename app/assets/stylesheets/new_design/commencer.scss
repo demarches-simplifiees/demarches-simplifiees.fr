@@ -15,6 +15,10 @@
     input[type="checkbox"] {
       margin-bottom: 0;
     }
+
+    p {
+      margin-bottom: ($default-padding * 2);
+    }
   }
 
   .remember-me {

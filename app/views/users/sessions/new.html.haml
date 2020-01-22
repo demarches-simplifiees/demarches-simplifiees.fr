@@ -27,8 +27,6 @@
 
     -# - if ENV['FC_PARTICULIER_ID'].present?
       = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
-    -# - if ENV['KEYCLOAK_ID'].present?
-      = render partial: 'shared/keycloak_login', locals: { url: keycloak_path }
 
     %hr
     %p.center

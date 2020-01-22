@@ -21,9 +21,24 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
       subject
       expect(rendered).to have_link("Créer un compte")
       expect(rendered).to have_link("J’ai déjà un compte")
-      # if ENV['FC_PARTICULIER_ID'].present?
-      #  expect(rendered).to have_link('S’identifier avec FranceConnect')
-      # end
+      if ENV['GOOGLE_CLIENT_ID'].present?
+        expect(rendered).to have_link('Gmail, Google')
+      end
+      if ENV['MICROSOFT_CLIENT_ID'].present?
+        expect(rendered).to have_link('Hotmail, Office365')
+      end
+      if ENV['YAHOO_CLIENT_ID'].present?
+        expect(rendered).to have_link('Yahoo!')
+      end
+      if ENV['TATOU_CLIENT_ID'].present?
+        expect(rendered).to have_link('Tatou')
+      end
+      if ENV['SIPF_CLIENT_ID'].present?
+        expect(rendered).to have_link('administration')
+      end
+      if ENV['FC_PARTICULIER_ID'].present?
+        expect(rendered).to have_link('S’identifier avec FranceConnect')
+      end
     end
   end
 
@@ -34,6 +49,12 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
       it 'renders a link to create a new dossier' do
         subject
         expect(rendered).to have_link(button_label, href: new_dossier_url(procedure_id: procedure.id))
+        expect(rendered).not_to have_link('Gmail, Google')
+        expect(rendered).not_to have_link('Hotmail, Office365')
+        expect(rendered).not_to have_link('Yahoo!')
+        expect(rendered).not_to have_link('Tatou')
+        expect(rendered).not_to have_link('administration')
+        expect(rendered).not_to have_link('S’identifier avec FranceConnect')
       end
     end
 
