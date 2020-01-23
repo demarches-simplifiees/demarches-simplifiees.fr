@@ -774,17 +774,37 @@ describe Users::DossiersController, type: :controller do
       sign_in(user)
     end
 
-    subject! { get(:show, params: { id: dossier.id }) }
+    context 'with default output' do
+      subject! { get(:show, params: { id: dossier.id }) }
 
-    context 'when the dossier is a brouillon' do
-      let(:dossier) { create(:dossier, user: user) }
-      it { is_expected.to redirect_to(brouillon_dossier_path(dossier)) }
+      context 'when the dossier is a brouillon' do
+        let(:dossier) { create(:dossier, user: user) }
+        it { is_expected.to redirect_to(brouillon_dossier_path(dossier)) }
+      end
+
+      context 'when the dossier has been submitted' do
+        let(:dossier) { create(:dossier, :en_construction, user: user) }
+        it { expect(assigns(:dossier)).to eq(dossier) }
+        it { is_expected.to render_template(:show) }
+      end
     end
 
-    context 'when the dossier has been submitted' do
-      let(:dossier) { create(:dossier, :en_construction, user: user) }
-      it { expect(assigns(:dossier)).to eq(dossier) }
-      it { is_expected.to render_template(:show) }
+    context "with PDF output" do
+      let(:procedure) { create(:procedure) }
+      let(:dossier) {
+  create(:dossier,
+    :accepte,
+    :with_all_champs,
+    :with_motivation,
+    :with_commentaires,
+    procedure: procedure,
+    user: user)
+}
+
+      subject! { get(:show, params: { id: dossier.id, format: :pdf }) }
+
+      it { expect(assigns(:include_infos_administration)).to eq(false) }
+      it { expect(response).to render_template 'dossiers/show' }
     end
   end
 

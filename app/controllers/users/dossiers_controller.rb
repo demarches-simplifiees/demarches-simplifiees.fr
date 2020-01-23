@@ -37,6 +37,13 @@ module Users
       end
 
       @dossier = dossier
+      respond_to do |format|
+        format.pdf do
+          @include_infos_administration = false
+          render(file: 'dossiers/show', formats: [:pdf])
+        end
+        format.all
+      end
     end
 
     def demande

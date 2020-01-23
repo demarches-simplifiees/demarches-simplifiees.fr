@@ -50,6 +50,7 @@ gem 'pg'
 gem 'phonelib'
 gem 'prawn' # PDF Generation
 gem 'prawn-qrcode' # to generate qrcode in pdfs
+gem 'prawn-svg'
 gem 'prawn_rails'
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server

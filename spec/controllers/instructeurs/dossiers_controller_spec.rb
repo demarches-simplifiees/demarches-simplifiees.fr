@@ -473,6 +473,34 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe "#show" do
+    context "when the dossier is exported as PDF" do
+      let(:instructeur) { create(:instructeur) }
+      let(:dossier) {
+  create(:dossier,
+    :accepte,
+    :with_all_champs,
+    :with_all_annotations,
+    :with_motivation,
+    :with_commentaires, procedure: procedure)
+}
+      let!(:avis) { create(:avis, dossier: dossier, instructeur: instructeur) }
+      subject do
+        get :show, params: {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          format: :pdf
+        }
+      end
+
+      before do
+        subject
+      end
+      it { expect(assigns(:include_infos_administration)).to eq(true) }
+      it { expect(response).to render_template 'dossiers/show' }
+    end
+  end
+
   describe "#update_annotations" do
     let(:champ_multiple_drop_down_list) do
       create(:type_de_champ_multiple_drop_down_list, :private, libelle: 'libelle').champ.create
