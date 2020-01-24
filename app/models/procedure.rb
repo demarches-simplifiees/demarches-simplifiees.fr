@@ -464,8 +464,8 @@ class Procedure < ApplicationRecord
     export(dossiers).to_ods
   end
 
-  def procedure_overview(start_date)
-    ProcedureOverview.new(self, start_date)
+  def procedure_overview(start_date, groups)
+    ProcedureOverview.new(self, start_date, groups)
   end
 
   def initiated_mail_template
