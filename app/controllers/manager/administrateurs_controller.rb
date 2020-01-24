@@ -22,7 +22,11 @@ module Manager
     def delete
       administrateur = Administrateur.find(params[:id])
 
-      administrateur.delete_and_transfer_services
+      if !administrateur.can_be_deleted?
+        fail "Impossible de supprimer cet administrateur car il a des dossiers ou des procédures"
+      end
+      administrateur.dossiers.each(&:delete_and_keep_track)
+      administrateur.destroy
 
       logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_administration.id}")
       flash[:notice] = "L'administrateur #{administrateur.id} est supprimé"
