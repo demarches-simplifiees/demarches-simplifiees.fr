@@ -1084,4 +1084,39 @@ describe Dossier do
       expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
+
+  describe '#geo_position' do
+    let(:lat) { "46.538192" }
+    let(:lon) { "2.428462" }
+    let(:zoom) { "13" }
+
+    let(:etablissement_geo_adresse_lat) { "40.7143528" }
+    let(:etablissement_geo_adresse_lon) { "-74.0059731" }
+
+    let(:result) { { lat: lat, lon: lon, zoom: zoom } }
+    let(:dossier) { create(:dossier) }
+
+    it 'should geolocate' do
+      expect(dossier.geo_position).to eq(result)
+    end
+
+    context 'with etablissement' do
+      before do
+        Geocoder::Lookup::Test.add_stub(
+          dossier.etablissement.geo_adresse, [
+            {
+              'coordinates' => [etablissement_geo_adresse_lat.to_f, etablissement_geo_adresse_lon.to_f]
+            }
+          ]
+        )
+      end
+
+      let(:dossier) { create(:dossier, :with_entreprise) }
+      let(:result) { { lat: etablissement_geo_adresse_lat, lon: etablissement_geo_adresse_lon, zoom: zoom } }
+
+      it 'should geolocate' do
+        expect(dossier.geo_position).to eq(result)
+      end
+    end
+  end
 end

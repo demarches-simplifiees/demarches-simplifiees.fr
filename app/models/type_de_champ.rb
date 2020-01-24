@@ -23,6 +23,7 @@ class TypeDeChamp < ApplicationRecord
     code_postal_de_polynesie: 'code_postal_de_polynesie',
     regions: 'regions',
     departements: 'departements',
+    communes: 'communes',
     engagement: 'engagement',
     header_section: 'header_section',
     explication: 'explication',

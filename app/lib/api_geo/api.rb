@@ -2,16 +2,6 @@ class ApiGeo::API
   TIMEOUT = 15
   CACHE_DURATION = 1.day
 
-  def self.regions
-    url = [API_GEO_URL, "regions"].join("/")
-    call(url, { fields: :nom })
-  end
-
-  def self.departements
-    url = [API_GEO_URL, "departements"].join("/")
-    call(url, { fields: :nom })
-  end
-
   def self.pays
     parse(File.open('app/lib/api_geo/pays.json').read)
   end
@@ -53,11 +43,6 @@ class ApiGeo::API
     big_cities = cities[0].sort_by { |e| [e[:commune], e[:code_postal]] }.map(&method(:city_postal_code))
     small_cities = cities[1].sort_by { |e| [e[:commune], e[:code_postal]] }.map(&method(:city_postal_code))
     big_cities + ['------------------------'] + small_cities
-  end
-
-  def self.search_rpg(geojson)
-    url = [API_GEO_SANDBOX_URL, "rpg", "parcelles", "search"].join("/")
-    call(url, geojson, :post)
   end
 
   private

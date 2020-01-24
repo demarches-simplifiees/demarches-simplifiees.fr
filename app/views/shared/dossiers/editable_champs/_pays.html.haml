@@ -1,5 +1,5 @@
 = form.select :value,
-  Champs::PaysChamp.options,
-  disabled: Champs::PaysChamp.disabled_options,
-  include_blank: true,
-  required: champ.mandatory?
+  Champs::PaysChamp.pays,
+  { disabled: Champs::PaysChamp.disabled_options, include_blank: true },
+  required: champ.mandatory?,
+  class: 'select2 pays'

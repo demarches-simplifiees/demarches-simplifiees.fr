@@ -3,10 +3,6 @@ import { getJSON, fire } from '@utils';
 
 const sources = [
   {
-    type: 'address',
-    url: '/address/suggestions'
-  },
-  {
     type: 'te_fenua',
     url: '/te_fenua/suggestions'
   }

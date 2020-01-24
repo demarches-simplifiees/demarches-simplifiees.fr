@@ -214,13 +214,6 @@ Rails.application.routes.draw do
   end
 
   #
-  # Addresses
-  #
-
-  get 'address/suggestions' => 'address#suggestions'
-  get 'address/geocode' => 'address#geocode'
-
-  #
   # te_fenua
   #
   get 'te_fenua/suggestions' => 'te_fenua#suggestions'
@@ -401,6 +394,14 @@ Rails.application.routes.draw do
       collection do
         patch 'add_to_procedure'
       end
+    end
+  end
+
+  if Rails.env.test?
+    scope 'test/api_geo' do
+      get 'regions' => 'api_geo_test#regions'
+      get 'communes' => 'api_geo_test#communes'
+      get 'departements' => 'api_geo_test#departements'
     end
   end
 
