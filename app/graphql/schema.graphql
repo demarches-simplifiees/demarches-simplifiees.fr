@@ -1026,6 +1026,10 @@ enum TypeDeChamp {
   Commune de Polynésie
   """
   commune_de_polynesie
+  """
+  Communes
+  """
+  communes
 
   """
   Date

@@ -256,10 +256,10 @@ describe Instructeurs::ProceduresController, type: :controller do
           get :show, params: { procedure_id: procedure.id }
         end
 
-        it { expect(assigns(:a_suivre_dossiers)).to match([new_unfollow_dossier]) }
+        it { expect(assigns(:a_suivre_dossiers)).to match_array([new_unfollow_dossier]) }
         it { expect(assigns(:followed_dossiers)).to be_empty }
         it { expect(assigns(:termines_dossiers)).to be_empty }
-        it { expect(assigns(:all_state_dossiers)).to match([new_unfollow_dossier]) }
+        it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier]) }
         it { expect(assigns(:archived_dossiers)).to be_empty }
 
         context 'and dossiers without follower on each of the others groups' do
@@ -270,8 +270,8 @@ describe Instructeurs::ProceduresController, type: :controller do
             get :show, params: { procedure_id: procedure.id }
           end
 
-          it { expect(assigns(:a_suivre_dossiers)).to match([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
-          it { expect(assigns(:all_state_dossiers)).to match([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
+          it { expect(assigns(:a_suivre_dossiers)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
+          it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
         end
       end
 
@@ -284,9 +284,9 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
-        it { expect(assigns(:followed_dossiers)).to match([new_followed_dossier]) }
+        it { expect(assigns(:followed_dossiers)).to match_array([new_followed_dossier]) }
         it { expect(assigns(:termines_dossiers)).to be_empty }
-        it { expect(assigns(:all_state_dossiers)).to match([new_followed_dossier]) }
+        it { expect(assigns(:all_state_dossiers)).to match_array([new_followed_dossier]) }
         it { expect(assigns(:archived_dossiers)).to be_empty }
 
         context 'and dossier with a follower on each of the others groups' do
@@ -313,8 +313,8 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
         it { expect(assigns(:followed_dossiers)).to be_empty }
-        it { expect(assigns(:termines_dossiers)).to match([termine_dossier]) }
-        it { expect(assigns(:all_state_dossiers)).to match([termine_dossier]) }
+        it { expect(assigns(:termines_dossiers)).to match_array([termine_dossier]) }
+        it { expect(assigns(:all_state_dossiers)).to match_array([termine_dossier]) }
         it { expect(assigns(:archived_dossiers)).to be_empty }
 
         context 'and terminer dossiers on each of the others groups' do
@@ -325,8 +325,8 @@ describe Instructeurs::ProceduresController, type: :controller do
             get :show, params: { procedure_id: procedure.id }
           end
 
-          it { expect(assigns(:termines_dossiers)).to match([termine_dossier, termine_dossier_on_gi_2]) }
-          it { expect(assigns(:all_state_dossiers)).to match([termine_dossier, termine_dossier_on_gi_2]) }
+          it { expect(assigns(:termines_dossiers)).to match_array([termine_dossier, termine_dossier_on_gi_2]) }
+          it { expect(assigns(:all_state_dossiers)).to match_array([termine_dossier, termine_dossier_on_gi_2]) }
         end
       end
 
@@ -341,7 +341,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         it { expect(assigns(:followed_dossiers)).to be_empty }
         it { expect(assigns(:termines_dossiers)).to be_empty }
         it { expect(assigns(:all_state_dossiers)).to be_empty }
-        it { expect(assigns(:archived_dossiers)).to match([archived_dossier]) }
+        it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier]) }
 
         context 'and terminer dossiers on each of the others groups' do
           let!(:archived_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction), archived: true) }
@@ -351,7 +351,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             get :show, params: { procedure_id: procedure.id }
           end
 
-          it { expect(assigns(:archived_dossiers)).to match([archived_dossier, archived_dossier_on_gi_2]) }
+          it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier, archived_dossier_on_gi_2]) }
         end
       end
 
@@ -369,7 +369,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         context 'when statut is empty' do
           let(:statut) { nil }
 
-          it { expect(assigns(:dossiers)).to match([a_suivre__dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([a_suivre__dossier]) }
           it { expect(assigns(:statut)).to eq('a-suivre') }
         end
 
@@ -377,21 +377,21 @@ describe Instructeurs::ProceduresController, type: :controller do
           let(:statut) { 'a-suivre' }
 
           it { expect(assigns(:statut)).to eq('a-suivre') }
-          it { expect(assigns(:dossiers)).to match([a_suivre__dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([a_suivre__dossier]) }
         end
 
         context 'when statut is suivis' do
           let(:statut) { 'suivis' }
 
           it { expect(assigns(:statut)).to eq('suivis') }
-          it { expect(assigns(:dossiers)).to match([new_followed_dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([new_followed_dossier]) }
         end
 
         context 'when statut is traites' do
           let(:statut) { 'traites' }
 
           it { expect(assigns(:statut)).to eq('traites') }
-          it { expect(assigns(:dossiers)).to match([termine_dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([termine_dossier]) }
         end
 
         context 'when statut is tous' do
@@ -405,45 +405,8 @@ describe Instructeurs::ProceduresController, type: :controller do
           let(:statut) { 'archives' }
 
           it { expect(assigns(:statut)).to eq('archives') }
-          it { expect(assigns(:dossiers)).to match([archived_dossier]) }
+          it { expect(assigns(:dossiers)).to match_array([archived_dossier]) }
         end
-      end
-    end
-  end
-
-  describe "#download_dossiers" do
-    let(:instructeur) { create(:instructeur) }
-    let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
-    let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
-    let!(:dossier_1) { create(:dossier, procedure: procedure) }
-    let!(:dossier_2) { create(:dossier, groupe_instructeur: gi_2) }
-
-    context "when logged in" do
-      before do
-        sign_in(instructeur.user)
-      end
-
-      context "csv" do
-        before do
-          expect_any_instance_of(Procedure).to receive(:to_csv)
-            .with(instructeur.dossiers.for_procedure(procedure))
-
-          get :download_dossiers, params: { procedure_id: procedure.id }, format: 'csv'
-        end
-
-        it { expect(response).to have_http_status(:ok) }
-      end
-
-      context "xlsx" do
-        before { get :download_dossiers, params: { procedure_id: procedure.id }, format: 'xlsx' }
-
-        it { expect(response).to have_http_status(:ok) }
-      end
-
-      context "ods" do
-        before { get :download_dossiers, params: { procedure_id: procedure.id }, format: 'ods' }
-
-        it { expect(response).to have_http_status(:ok) }
       end
     end
   end
@@ -465,6 +428,82 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
 
         it { expect(instructeur.groupe_instructeur_with_email_notifications).to eq([procedure.defaut_groupe_instructeur]) }
+      end
+    end
+  end
+
+  describe '#download_export' do
+    let(:instructeur) { create(:instructeur) }
+    let!(:procedure) { create(:procedure) }
+    let!(:gi_0) { procedure.defaut_groupe_instructeur }
+    let!(:gi_1) { GroupeInstructeur.create(label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
+
+    before { sign_in(instructeur.user) }
+
+    subject do
+      get :download_export, params: { export_format: :csv, procedure_id: procedure.id }
+    end
+
+    context 'when the export is does not exist' do
+      it 'displays an notice' do
+        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        expect(flash.notice).to be_present
+      end
+
+      it { expect { subject }.to change(Export, :count).by(1) }
+    end
+
+    context 'when the export is not ready' do
+      before do
+        Export.create(format: :csv, groupe_instructeurs: [gi_1])
+      end
+
+      it 'displays an notice' do
+        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        expect(flash.notice).to be_present
+      end
+    end
+
+    context 'when the export is ready' do
+      let!(:export) do
+        Export.create(format: :csv, groupe_instructeurs: [gi_1])
+      end
+
+      before do
+        export.file.attach(io: StringIO.new('export'), filename: 'file.csv')
+      end
+
+      it 'displays the download link' do
+        subject
+        expect(response.headers['Location']).to start_with("http://test.host/rails/active_storage/disk")
+      end
+    end
+
+    context 'when another export is ready' do
+      let!(:export) do
+        Export.create(format: :csv, groupe_instructeurs: [gi_0, gi_1])
+      end
+
+      before do
+        export.file.attach(io: StringIO.new('export'), filename: 'file.csv')
+      end
+
+      it 'displays an notice' do
+        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        expect(flash.notice).to be_present
+      end
+    end
+
+    context 'when the js format is used' do
+      before do
+        post :download_export,
+          params: { export_format: :csv, procedure_id: procedure.id },
+          format: :js
+      end
+
+      it "responses in the correct format" do
+        expect(response.content_type).to eq "text/javascript"
+        expect(response).to have_http_status(:ok)
       end
     end
   end

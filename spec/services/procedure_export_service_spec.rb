@@ -33,7 +33,7 @@ describe ProcedureExportService do
     end
 
     context 'with dossier' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
 
       let(:nominal_headers) do
         [
@@ -74,6 +74,7 @@ describe ProcedureExportService do
           "code_postal_de_polynesie",
           "regions",
           "departements",
+          "communes",
           "engagement",
           "dossier_link",
           "piece_justificative",
@@ -152,6 +153,7 @@ describe ProcedureExportService do
           "code_postal_de_polynesie",
           "regions",
           "departements",
+          "communes",
           "engagement",
           "dossier_link",
           "piece_justificative",
@@ -235,6 +237,7 @@ describe ProcedureExportService do
             "code_postal_de_polynesie",
             "regions",
             "departements",
+            "communes",
             "engagement",
             "dossier_link",
             "piece_justificative",
@@ -299,7 +302,7 @@ describe ProcedureExportService do
     end
 
     context 'with avis' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
       let!(:avis) { create(:avis, :with_answer, dossier: dossier) }
 
       it 'should have headers' do
@@ -320,8 +323,8 @@ describe ProcedureExportService do
     context 'with repetitions' do
       let!(:dossiers) do
         [
-          create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure),
-          create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure)
+          create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure),
+          create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure)
         ]
       end
       let(:champ_repetition) { dossiers.first.champs.find { |champ| champ.type_champ == 'repetition' } }
@@ -354,7 +357,7 @@ describe ProcedureExportService do
       end
 
       context 'with non unique labels' do
-        let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
         let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
         let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: procedure, libelle: champ_repetition.libelle) }
         let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }

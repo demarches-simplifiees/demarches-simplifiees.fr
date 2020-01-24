@@ -1,9 +1,11 @@
 class Champs::PaysChamp < Champs::TextChamp
-  def self.options
-    ApiGeo::API.pays.pluck(:nom)
+  PAYS = JSON.parse(Rails.root.join('app', 'lib', 'api_geo', 'pays.json').read, symbolize_names: true)
+
+  def self.pays
+    PAYS.pluck(:nom)
   end
 
   def self.disabled_options
-    options.filter { |v| (v =~ /^--.*--$/).present? }
+    pays.filter { |v| (v =~ /^--.*--$/).present? }
   end
 end

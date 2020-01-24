@@ -132,37 +132,20 @@ RSpec.describe DossierHelper, type: :helper do
       expect(subject).to eq('Refusé')
     end
 
-    context "lower: true" do
+    context 'when requesting lowercase' do
       subject { dossier_display_state(dossier, lower: true) }
 
-      it 'brouillon is brouillon' do
+      it 'lowercases the display name' do
         dossier.brouillon!
         expect(subject).to eq('brouillon')
       end
+    end
 
-      it 'en_construction is En construction' do
-        dossier.en_construction!
-        expect(subject).to eq('en construction')
-      end
+    context 'when providing directly a state name' do
+      subject { dossier_display_state(:brouillon) }
 
-      it 'accepte is traité' do
-        dossier.accepte!
-        expect(subject).to eq('accepté')
-      end
-
-      it 'en_instruction is reçu' do
-        dossier.en_instruction!
-        expect(subject).to eq('en instruction')
-      end
-
-      it 'sans_suite is traité' do
-        dossier.sans_suite!
-        expect(subject).to eq('sans suite')
-      end
-
-      it 'refuse is traité' do
-        dossier.refuse!
-        expect(subject).to eq('refusé')
+      it 'generates a display name for the given state' do
+        expect(subject).to eq('Brouillon')
       end
     end
   end

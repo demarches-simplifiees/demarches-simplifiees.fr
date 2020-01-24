@@ -47,9 +47,10 @@ module DossierHelper
     dossier.brouillon? && dossier.procedure.close?
   end
 
-  def dossier_display_state(dossier, lower: false)
-    state = I18n.t(dossier.state, scope: [:activerecord, :attributes, :dossier, :state])
-    lower ? state.downcase : state
+  def dossier_display_state(dossier_or_state, lower: false)
+    state = dossier_or_state.is_a?(Dossier) ? dossier_or_state.state : dossier_or_state
+    display_state = I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])
+    lower ? display_state.downcase : display_state
   end
 
   def dossier_legacy_state(dossier)

@@ -1,4 +1,4 @@
-FROM ruby:alpine AS base
+FROM ruby:2.6.5-alpine AS base
 
 #------------ intermediate container with specific dev tools
 FROM base AS builder
@@ -11,7 +11,8 @@ RUN apk add --update --virtual build-dependencies \
         libcurl \
         curl-dev \
         postgresql-dev \
-        yarn
+        yarn \
+        python
 ENV INSTALL_PATH /app
 RUN mkdir -p ${INSTALL_PATH}
 COPY Gemfile Gemfile.lock package.json yarn.lock  ${INSTALL_PATH}/
@@ -107,7 +108,7 @@ ENV \
     UNIVERSIGN_USERPWD=""
 
 COPY --chown=userapp:userapp . ${APP_PATH}
-RUN bundle exec rails assets:precompile
+RUN RAILS_ENV=production bundle exec rails assets:precompile
 
 RUN chmod a+x $APP_PATH/app/lib/docker-entry-point.sh
 

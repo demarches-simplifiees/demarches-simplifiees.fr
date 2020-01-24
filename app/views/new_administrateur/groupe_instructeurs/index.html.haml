@@ -28,11 +28,21 @@
     %table.table.mt-2
       %thead
         %tr
-          %th{ colspan: 2 }= t(".existing_groupe", count: @groupes_instructeurs.count)
+          %th{ colspan: 2 }= t(".existing_groupe", count: @groupes_instructeurs.total_count)
       %tbody
         - @groupes_instructeurs.each do |group|
           %tr
             %td= group.label
             %td.actions= link_to "voir", procedure_groupe_instructeur_path(@procedure, group)
-
+            - if @groupes_instructeurs.many?
+              - if group.dossiers.empty?
+                %td.actions
+                  = link_to procedure_groupe_instructeur_path(@procedure, group), { method: :delete, class: 'button', data: { confirm: "Êtes-vous sûr de vouloir supprimer le groupe « #{group.label} » ?" }} do
+                    %span.icon.delete
+                    supprimer ce groupe
+              - else
+                %td.actions
+                  = link_to reaffecter_dossiers_procedure_groupe_instructeur_path(@procedure, group), class: 'button', title:'Réaffecter les dossiers à un autre groupe afin de pouvoir le supprimer' do
+                    %span.icon.follow
+                    déplacer les dossiers
     = paginate @groupes_instructeurs

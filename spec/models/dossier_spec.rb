@@ -5,6 +5,13 @@ describe Dossier do
 
   let(:user) { create(:user) }
 
+  describe 'validations' do
+    let(:procedure) { create(:procedure, :for_individual) }
+    subject(:dossier) { create(:dossier, procedure: procedure) }
+
+    it { is_expected.to validate_presence_of(:individual) }
+  end
+
   describe "without_followers scope" do
     let!(:dossier) { create(:dossier, :followed, :with_entreprise, user: user) }
     let!(:dossier2) { create(:dossier, :with_entreprise, user: user) }
@@ -112,54 +119,42 @@ describe Dossier do
       end
     end
 
-    describe '#build_default_champs' do
-      context 'when dossier is linked to a procedure with type_de_champ_public and private' do
-        let(:dossier) { create(:dossier, user: user) }
+    describe '#create' do
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
+      let(:dossier) { create(:dossier, procedure: procedure, user: user) }
 
-        it 'build all champs needed' do
-          expect(dossier.champs.count).to eq(1)
+      it 'builds public and private champs' do
+        expect(dossier.champs.count).to eq(1)
+        expect(dossier.champs_private.count).to eq(1)
+      end
+
+      context 'when the dossier belongs to a procedure for individuals' do
+        let(:procedure) { create(:procedure, :with_type_de_champ, for_individual: true) }
+
+        it 'creates a default individual' do
+          expect(dossier.individual).to be_present
+          expect(dossier.individual.nom).to be_nil
+          expect(dossier.individual.prenom).to be_nil
+          expect(dossier.individual.gender).to be_nil
         end
 
-        it 'build all champs_private needed' do
-          expect(dossier.champs_private.count).to eq(1)
+        context 'and the user signs-in using France Connect' do
+          let(:france_connect_information) { build(:france_connect_information) }
+          let(:user) { build(:user, france_connect_information: france_connect_information) }
+
+          it 'fills the individual with the informations from France Connect' do
+            expect(dossier.individual.nom).to eq('DUBOIS')
+            expect(dossier.individual.prenom).to eq('Angela Claire Louise')
+            expect(dossier.individual.gender).to eq(Individual::GENDER_FEMALE)
+          end
         end
       end
-    end
 
-    describe '#build_default_individual' do
-      context 'when dossier is linked to a procedure with for_individual attr false' do
-        let(:dossier) { create(:dossier, user: user) }
+      context 'when the dossier belongs to a procedure for moral personas' do
+        let(:procedure) { create(:procedure, :with_type_de_champ, for_individual: false) }
 
-        it 'have no object created' do
+        it 'doesn’t create a individual' do
           expect(dossier.individual).to be_nil
-        end
-      end
-
-      context 'when dossier is linked to a procedure with for_individual attr true' do
-        let(:dossier) { create(:dossier, user: user, procedure: (create :procedure, for_individual: true)) }
-
-        it 'have no object created' do
-          expect(dossier.individual).not_to be_nil
-        end
-      end
-    end
-
-    describe '#save' do
-      subject { build(:dossier, procedure: procedure, user: user) }
-      let!(:procedure) { create(:procedure) }
-
-      context 'when is linked to a procedure' do
-        it 'creates default champs' do
-          expect(subject).to receive(:build_default_champs)
-          subject.save
-        end
-      end
-      context 'when is not linked to a procedure' do
-        subject { create(:dossier, procedure: nil, user: user) }
-
-        it 'does not create default champs' do
-          expect(subject).not_to receive(:build_default_champs)
-          subject.update(state: Dossier.states.fetch(:en_construction))
         end
       end
     end
@@ -578,7 +573,7 @@ describe Dossier do
   end
 
   describe '#owner_name' do
-    let!(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure) }
     subject { dossier.owner_name }
 
     context 'when there is no entreprise or individual' do
@@ -594,7 +589,8 @@ describe Dossier do
     end
 
     context 'when there is an individual' do
-      let(:dossier) { create(:dossier, :for_individual, procedure: procedure) }
+      let(:procedure) { create(:procedure, :for_individual) }
+      let(:dossier) { create(:dossier, :with_individual, procedure: procedure) }
 
       it { is_expected.to eq("#{dossier.individual.nom} #{dossier.individual.prenom}") }
     end
@@ -1019,18 +1015,6 @@ describe Dossier do
     end
   end
 
-  describe '#update_with_france_connect' do
-    let(:dossier) { create(:dossier, user: user) }
-    let(:user_info) { create(:france_connect_information) }
-
-    it {
-      dossier.update_with_france_connect(user_info)
-      expect(dossier.individual.gender).to eq 'Mme'
-      expect(dossier.individual.nom).to eq user_info.family_name
-      expect(dossier.individual.prenom).to eq user_info.given_name
-    }
-  end
-
   describe '#for_procedure' do
     let!(:procedure_1) { create(:procedure)  }
     let!(:procedure_2) { create(:procedure)  }
@@ -1099,6 +1083,41 @@ describe Dossier do
     it 'deletes the expired brouillon' do
       expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
       expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe '#geo_position' do
+    let(:lat) { "46.538192" }
+    let(:lon) { "2.428462" }
+    let(:zoom) { "13" }
+
+    let(:etablissement_geo_adresse_lat) { "40.7143528" }
+    let(:etablissement_geo_adresse_lon) { "-74.0059731" }
+
+    let(:result) { { lat: lat, lon: lon, zoom: zoom } }
+    let(:dossier) { create(:dossier) }
+
+    it 'should geolocate' do
+      expect(dossier.geo_position).to eq(result)
+    end
+
+    context 'with etablissement' do
+      before do
+        Geocoder::Lookup::Test.add_stub(
+          dossier.etablissement.geo_adresse, [
+            {
+              'coordinates' => [etablissement_geo_adresse_lat.to_f, etablissement_geo_adresse_lon.to_f]
+            }
+          ]
+        )
+      end
+
+      let(:dossier) { create(:dossier, :with_entreprise) }
+      let(:result) { { lat: etablissement_geo_adresse_lat, lon: etablissement_geo_adresse_lon, zoom: zoom } }
+
+      it 'should geolocate' do
+        expect(dossier.geo_position).to eq(result)
+      end
     end
   end
 end

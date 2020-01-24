@@ -77,7 +77,7 @@ feature 'Creating a new dossier:' do
           .to_return(status: 404, body: '')
       end
 
-      scenario 'the user can enter the numéro TAHITI of its etablissement and create a new draft', vcr: { cassette_name: 'api_adresse_search_paris_3' } do
+      scenario 'the user can enter the numéro TAHITI of its etablissement and create a new draft' do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 

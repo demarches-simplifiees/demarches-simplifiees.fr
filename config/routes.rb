@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: [:index, :show] do
+      delete 'delete', on: :member
       post 'resend_confirmation_instructions', on: :member
       put 'enable_feature', on: :member
     end
@@ -213,13 +214,6 @@ Rails.application.routes.draw do
   end
 
   #
-  # Addresses
-  #
-
-  get 'address/suggestions' => 'address#suggestions'
-  get 'address/geocode' => 'address#geocode'
-
-  #
   # te_fenua
   #
   get 'te_fenua/suggestions' => 'te_fenua#suggestions'
@@ -315,7 +309,6 @@ Rails.application.routes.draw do
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
         get 'remove_filter' => 'procedures#remove_filter', as: 'remove_filter'
-        get 'download_dossiers'
         get 'download_export'
         get 'stats'
         get 'email_notifications'
@@ -373,10 +366,12 @@ Rails.application.routes.draw do
         get 'annotations'
       end
 
-      resources :groupe_instructeurs, only: [:index, :show, :create, :update] do
+      resources :groupe_instructeurs, only: [:index, :show, :create, :update, :destroy] do
         member do
           post 'add_instructeur'
           delete 'remove_instructeur'
+          get 'reaffecter_dossiers'
+          post 'reaffecter'
         end
 
         collection do
@@ -401,6 +396,14 @@ Rails.application.routes.draw do
       collection do
         patch 'add_to_procedure'
       end
+    end
+  end
+
+  if Rails.env.test?
+    scope 'test/api_geo' do
+      get 'regions' => 'api_geo_test#regions'
+      get 'communes' => 'api_geo_test#communes'
+      get 'departements' => 'api_geo_test#departements'
     end
   end
 

@@ -28,6 +28,7 @@ fr:
           code_postal_de_polynesie: 'Code Postal de Polynésie'
           regions: 'Régions'
           departements: 'Départements'
+          communes: 'Communes'
           engagement: 'Engagement'
           header_section: 'Titre de section'
           explication: 'Explication'

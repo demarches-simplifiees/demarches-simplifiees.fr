@@ -8,14 +8,14 @@ describe API::V2::GraphqlController do
     dossier = create(:dossier,
       :en_construction,
       :with_all_champs,
-      :for_individual,
+      :with_individual,
       procedure: procedure)
     create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
     dossier
   end
-  let(:dossier1) { create(:dossier, :en_construction, :for_individual, procedure: procedure, en_construction_at: 1.day.ago) }
-  let(:dossier2) { create(:dossier, :en_construction, :for_individual, procedure: procedure, en_construction_at: 3.days.ago) }
-  let!(:dossier_brouillon) { create(:dossier, :for_individual, procedure: procedure) }
+  let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
+  let(:dossier2) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 3.days.ago) }
+  let(:dossier_brouillon) { create(:dossier, :with_individual, procedure: procedure) }
   let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
@@ -169,71 +169,70 @@ describe API::V2::GraphqlController do
     end
 
     context "dossier" do
-      let(:query) do
-        "{
-          dossier(number: #{dossier.id}) {
-            id
-            number
-            state
-            dateDerniereModification
-            datePassageEnConstruction
-            datePassageEnInstruction
-            dateTraitement
-            motivation
-            motivationAttachment {
-              url
-            }
-            usager {
+      context "with individual" do
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
               id
-              email
-            }
-            demandeur {
-              id
-              ... on PersonnePhysique {
-                nom
-                prenom
-                civilite
-                dateDeNaissance
-              }
-            }
-            instructeurs {
-              id
-              email
-            }
-            messages {
-              email
-              body
-              attachment {
-                filename
-                checksum
-                byteSize
-                contentType
+              number
+              state
+              dateDerniereModification
+              datePassageEnConstruction
+              datePassageEnInstruction
+              dateTraitement
+              motivation
+              motivationAttachment {
                 url
               }
-            }
-            avis {
-              expert {
+              usager {
+                id
                 email
               }
-              question
-              reponse
-              dateQuestion
-              dateReponse
-              attachment {
-                url
-                filename
+              demandeur {
+                id
+                ... on PersonnePhysique {
+                  nom
+                  prenom
+                  civilite
+                  dateDeNaissance
+                }
+              }
+              instructeurs {
+                id
+                email
+              }
+              messages {
+                email
+                body
+                attachment {
+                  filename
+                  checksum
+                  byteSize
+                  contentType
+                }
+              }
+              avis {
+                expert {
+                  email
+                }
+                question
+                reponse
+                dateQuestion
+                dateReponse
+                attachment {
+                  url
+                  filename
+                }
+              }
+              champs {
+                id
+                label
+                stringValue
               }
             }
-            champs {
-              id
-              label
-              stringValue
-            }
-          }
-        }"
-      end
+          }"
+        end
 
-      context "with individual" do
         it "should be returned" do
           expect(gql_errors).to eq(nil)
           expect(gql_data).to eq(dossier: {
@@ -270,8 +269,7 @@ describe API::V2::GraphqlController do
                   filename: commentaire.piece_jointe.filename.to_s,
                   contentType: commentaire.piece_jointe.content_type,
                   checksum: commentaire.piece_jointe.checksum,
-                  byteSize: commentaire.piece_jointe.byte_size,
-                  url: Rails.application.routes.url_helpers.url_for(commentaire.piece_jointe)
+                  byteSize: commentaire.piece_jointe.byte_size
                 },
                 email: commentaire.email
               }
@@ -290,8 +288,8 @@ describe API::V2::GraphqlController do
       end
 
       context "with entreprise" do
-        let(:procedure) { create(:procedure, :published, administrateurs: [admin]) }
-        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
+        let(:procedure_for_entreprise) { create(:procedure, :published, administrateurs: [admin]) }
+        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure_for_entreprise) }
 
         let(:query) do
           "{
@@ -418,7 +416,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierPasserEnInstruction' do
-        let(:dossier) { create(:dossier, :en_construction, :for_individual, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierPasserEnInstruction(input: {
@@ -453,7 +451,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :en_instruction, :for_individual, procedure: procedure) }
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -466,7 +464,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierClasserSansSuite' do
-        let(:dossier) { create(:dossier, :en_instruction, :for_individual, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierClasserSansSuite(input: {
@@ -503,7 +501,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :accepte, :for_individual, procedure: procedure) }
+          let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -516,7 +514,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierRefuser' do
-        let(:dossier) { create(:dossier, :en_instruction, :for_individual, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierRefuser(input: {
@@ -553,7 +551,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :sans_suite, :for_individual, procedure: procedure) }
+          let(:dossier) { create(:dossier, :sans_suite, :with_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -566,7 +564,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierAccepter' do
-        let(:dossier) { create(:dossier, :en_instruction, :for_individual, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierAccepter(input: {
@@ -636,7 +634,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :refuse, :for_individual, procedure: procedure) }
+          let(:dossier) { create(:dossier, :refuse, :with_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)

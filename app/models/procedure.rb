@@ -1,7 +1,7 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['logo', 'logo_secure_token', 'test_started_at']
+  self.ignored_columns = ['archived_at']
 
   include ProcedureStatsConcern
 
@@ -46,8 +46,8 @@ class Procedure < ApplicationRecord
   default_scope { where(hidden_at: nil) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
-  scope :closes,                -> { where(aasm_state: [:archivee, :close, :depubliee]) }
-  scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :archivee, :depubliee]) }
+  scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
+  scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :depubliee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
@@ -233,9 +233,8 @@ class Procedure < ApplicationRecord
   end
 
   def validate_for_publication
-    old_attributes = self.slice(:aasm_state, :archived_at, :closed_at)
+    old_attributes = self.slice(:aasm_state, :closed_at)
     self.aasm_state = :publiee
-    self.archived_at = nil
     self.closed_at = nil
 
     is_valid = validate
@@ -277,14 +276,6 @@ class Procedure < ApplicationRecord
     csv_export_file.purge_later
 
     update(csv_export_queued: false, xlsx_export_queued: false, ods_export_queued: false)
-  end
-
-  def closed_at
-    read_attribute(:closed_at).presence || archived_at
-  end
-
-  def close?
-    aasm_state == 'close' || aasm_state == 'archivee'
   end
 
   def locked?
@@ -383,7 +374,6 @@ class Procedure < ApplicationRecord
       }, &method(:clone_attachments))
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
-    procedure.archived_at = nil
     procedure.closed_at = nil
     procedure.unpublished_at = nil
     procedure.published_at = nil
@@ -474,8 +464,8 @@ class Procedure < ApplicationRecord
     export(dossiers).to_ods
   end
 
-  def procedure_overview(start_date)
-    ProcedureOverview.new(self, start_date)
+  def procedure_overview(start_date, groups)
+    ProcedureOverview.new(self, start_date, groups)
   end
 
   def initiated_mail_template
@@ -622,7 +612,7 @@ class Procedure < ApplicationRecord
   end
 
   def before_publish
-    update!(archived_at: nil, closed_at: nil, unpublished_at: nil)
+    update!(closed_at: nil, unpublished_at: nil)
   end
 
   def after_publish
@@ -631,7 +621,7 @@ class Procedure < ApplicationRecord
 
   def after_close
     now = Time.zone.now
-    update!(archived_at: now, closed_at: now)
+    update!(closed_at: now)
     purge_export_files
   end
 

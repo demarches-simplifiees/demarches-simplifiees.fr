@@ -145,7 +145,7 @@ describe Users::DossiersController, type: :controller do
 
       it 'redirects to attestation pdf' do
         get :attestation, params: { id: dossier.id }
-        expect(response).to redirect_to(dossier.attestation.pdf_url.gsub('http://localhost:3000', ''))
+        expect(response.location).to match '/rails/active_storage/disk/'
       end
     end
   end
@@ -213,7 +213,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the identite cannot be updated by the user' do
-      let(:dossier) { create(:dossier, :for_individual, :en_instruction, user: user, procedure: procedure) }
+      let(:dossier) { create(:dossier, :with_individual, :en_instruction, user: user, procedure: procedure) }
       let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
 
       it 'redirects to the dossiers list' do
@@ -774,17 +774,37 @@ describe Users::DossiersController, type: :controller do
       sign_in(user)
     end
 
-    subject! { get(:show, params: { id: dossier.id }) }
+    context 'with default output' do
+      subject! { get(:show, params: { id: dossier.id }) }
 
-    context 'when the dossier is a brouillon' do
-      let(:dossier) { create(:dossier, user: user) }
-      it { is_expected.to redirect_to(brouillon_dossier_path(dossier)) }
+      context 'when the dossier is a brouillon' do
+        let(:dossier) { create(:dossier, user: user) }
+        it { is_expected.to redirect_to(brouillon_dossier_path(dossier)) }
+      end
+
+      context 'when the dossier has been submitted' do
+        let(:dossier) { create(:dossier, :en_construction, user: user) }
+        it { expect(assigns(:dossier)).to eq(dossier) }
+        it { is_expected.to render_template(:show) }
+      end
     end
 
-    context 'when the dossier has been submitted' do
-      let(:dossier) { create(:dossier, :en_construction, user: user) }
-      it { expect(assigns(:dossier)).to eq(dossier) }
-      it { is_expected.to render_template(:show) }
+    context "with PDF output" do
+      let(:procedure) { create(:procedure) }
+      let(:dossier) {
+  create(:dossier,
+    :accepte,
+    :with_all_champs,
+    :with_motivation,
+    :with_commentaires,
+    procedure: procedure,
+    user: user)
+}
+
+      subject! { get(:show, params: { id: dossier.id, format: :pdf }) }
+
+      it { expect(assigns(:include_infos_administration)).to eq(false) }
+      it { expect(response).to render_template 'dossiers/show' }
     end
   end
 

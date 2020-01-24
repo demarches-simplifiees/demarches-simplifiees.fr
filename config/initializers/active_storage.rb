@@ -6,7 +6,10 @@ ActiveStorage::Service.url_expires_in = 1.hour
 # Rails 6 adds support for `.on_load(:active_storage_attachment)`, which is
 # cleaner (as it allows to enqueue the virus scan on attachment creation, rather
 # than on blob creation).
-ActiveSupport.on_load(:active_storage_blob) { include BlobVirusScanner }
+ActiveSupport.on_load(:active_storage_blob) do
+  include BlobSignedIdConcern
+  include BlobVirusScannerConcern
+end
 
 # When an OpenStack service is initialized it makes a request to fetch
 # `publicURL` to use for all operations. We intercept the method that reads
