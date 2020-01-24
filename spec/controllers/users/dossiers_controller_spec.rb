@@ -213,7 +213,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the identite cannot be updated by the user' do
-      let(:dossier) { create(:dossier, :for_individual, :en_instruction, user: user, procedure: procedure) }
+      let(:dossier) { create(:dossier, :with_individual, :en_instruction, user: user, procedure: procedure) }
       let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
 
       it 'redirects to the dossiers list' do

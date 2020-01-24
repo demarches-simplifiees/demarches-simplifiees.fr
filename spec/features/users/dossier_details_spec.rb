@@ -3,7 +3,7 @@ require 'features/users/dossier_shared_examples.rb'
 describe 'Dossier details:' do
   let(:user) { create(:user) }
   let(:procedure) { create(:simple_procedure) }
-  let(:dossier) { create(:dossier, :en_construction, :for_individual, :with_commentaires, user: user, procedure: procedure) }
+  let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_commentaires, user: user, procedure: procedure) }
 
   before do
     visit_dossier dossier
@@ -17,7 +17,7 @@ describe 'Dossier details:' do
   end
 
   describe "the user can see the mean time they are expected to wait" do
-    let(:other_dossier) { create(:dossier, :accepte, :for_individual, procedure: procedure, en_construction_at: 10.days.ago, en_instruction_at: 9.days.ago, processed_at: Time.zone.now) }
+    let(:other_dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure, en_construction_at: 10.days.ago, en_instruction_at: 9.days.ago, processed_at: Time.zone.now) }
 
     context "when the dossier is in construction" do
       it "displays the estimated wait duration" do
@@ -28,7 +28,7 @@ describe 'Dossier details:' do
     end
 
     context "when the dossier is in instruction" do
-      let(:dossier) { create(:dossier, :en_instruction, :for_individual, :with_commentaires, user: user, procedure: procedure) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, :with_commentaires, user: user, procedure: procedure) }
 
       it "displays the estimated wait duration" do
         other_dossier
