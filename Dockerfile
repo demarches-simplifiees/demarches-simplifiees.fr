@@ -39,9 +39,11 @@ RUN bundle install --deployment --without development test && \
     yarn install --production
 
 ENV \
+    API_ADRESSE_URL="https://api-adresse.data.gouv.fr"\
     API_ENTREPRISE_KEY=""\
     API_ENTREPRISE_PF_AUTH=""\
     API_ENTREPRISE_PF_URL=""\
+    API_GEO_URL="https://geo.api.gouv.fr"\
     API_ISPF_PASSWORD=""\
     API_ISPF_USER=""\
     APP_HOST="localhost:3000"\

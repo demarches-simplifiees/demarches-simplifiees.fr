@@ -45,8 +45,10 @@ services:
     ports:
       - ${PORT}:3000
     environment:
+      - API_ADRESSE_URL
       - API_ENTREPRISE_PF_AUTH
       - API_ENTREPRISE_PF_URL
+      - API_GEO_URL
       - API_ISPF_PASSWORD
       - API_ISPF_USER
       - APP_HOST
