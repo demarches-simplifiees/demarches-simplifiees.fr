@@ -13,7 +13,10 @@ defaults: &defaults
 bundle_restore_cache: &bundle_restore_cache
   restore_cache:
     name: Restore Bundler Package Cache
-    key: bundle-install-v9-{{ arch }}-{{ checksum "Gemfile.lock" }}
+    keys:
+      - bundle-install-v9-{{ arch }}-{{ checksum "Gemfile.lock" }}
+      - bundle-install-v9-{{ arch }}
+      - bundle-install-v9
 
 bundle_save_cache: &bundle_save_cache
   save_cache:
@@ -30,7 +33,10 @@ bundle_install: &bundle_install
 yarn_restore_cache: &yarn_restore_cache
   restore_cache:
     name: Restore Yarn Package Cache
-    key: yarn-install-v3-{{ arch }}-{{ checksum "yarn.lock" }}
+    keys:
+      - yarn-install-v3-{{ arch }}-{{ checksum "yarn.lock" }}
+      - yarn-install-v3-{{ arch }}
+      - yarn-install-v3
 
 yarn_save_cache: &yarn_save_cache
   save_cache:
