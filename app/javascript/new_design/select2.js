@@ -127,6 +127,8 @@ const adresseOptions = {
         text: label,
         geometry
       }));
+      // Allow the user to select an arbitrary address missing from the results,
+      // by adding the plain-text query to the list of results.
       r.unshift({ id: data.query, text: data.query });
       return {
         results: r
