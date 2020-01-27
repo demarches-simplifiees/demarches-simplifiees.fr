@@ -9,24 +9,24 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
     sign_in(current_instructeur.user)
   end
 
-  subject! { render 'shared/dossiers/demande.html.haml', dossier: dossier, demande_seen_at: nil, profile: 'usager' }
+  subject { render 'shared/dossiers/demande.html.haml', dossier: dossier, demande_seen_at: nil, profile: 'usager' }
 
   context 'when dossier was created by an etablissement' do
     let(:etablissement) { create(:etablissement) }
 
     it 'renders the etablissement infos' do
-      expect(rendered).to include(etablissement.entreprise_raison_sociale)
-      expect(rendered).to include(etablissement.entreprise_siret_siege_social)
-      expect(rendered).to include(etablissement.entreprise_forme_juridique)
+      expect(subject).to include(etablissement.entreprise_raison_sociale)
+      expect(subject).to include(etablissement.entreprise_siret_siege_social)
+      expect(subject).to include(etablissement.entreprise_forme_juridique)
     end
 
     context 'and entreprise is an association' do
       let(:etablissement) { create(:etablissement, :is_association) }
 
       it 'renders the association infos' do
-        expect(rendered).to include(etablissement.association_rna)
-        expect(rendered).to include(etablissement.association_titre)
-        expect(rendered).to include(etablissement.association_objet)
+        expect(subject).to include(etablissement.association_rna)
+        expect(subject).to include(etablissement.association_titre)
+        expect(subject).to include(etablissement.association_objet)
       end
     end
   end
@@ -35,10 +35,10 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
     let(:individual) { create(:individual) }
 
     it 'renders the individual identity infos' do
-      expect(rendered).to include(individual.gender)
-      expect(rendered).to include(individual.nom)
-      expect(rendered).to include(individual.prenom)
-      expect(rendered).to include(I18n.l(individual.birthdate))
+      expect(subject).to include(individual.gender)
+      expect(subject).to include(individual.nom)
+      expect(subject).to include(individual.prenom)
+      expect(subject).to include(I18n.l(individual.birthdate))
     end
   end
 
@@ -47,7 +47,17 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
 
     it 'renders the champs' do
       dossier.champs.each do |champ|
-        expect(rendered).to include(champ.libelle)
+        expect(subject).to include(champ.libelle)
+      end
+    end
+
+    context 'when the dossier lost some attachments' do
+      before do
+        expect(view).to receive(:has_lost_attachments).and_return(true)
+      end
+
+      it 'displays a warning message' do
+        expect(subject).to include('Des pièces jointes de votre dossier peuvent être manquantes.')
       end
     end
   end

@@ -46,6 +46,18 @@
     }
   }
 
+  ul {
+    list-style-type: disc;
+    list-style-position: inside;
+    padding-left: $default-padding;
+  }
+
+  ol {
+    list-style-type: decimal;
+    list-style-position: inside;
+    padding-left: $default-padding;
+  }
+
   p:not(:last-of-type) {
     margin-bottom: $default-spacer;
   }
