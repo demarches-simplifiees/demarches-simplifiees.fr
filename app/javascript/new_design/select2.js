@@ -122,12 +122,14 @@ const adresseOptions = {
       };
     },
     processResults(data) {
+      let r = data.features.map(({ properties: { label }, geometry }) => ({
+        id: label,
+        text: label,
+        geometry
+      }));
+      r.unshift({ id: data.query, text: data.query });
       return {
-        results: data.features.map(({ properties: { label }, geometry }) => ({
-          id: label,
-          text: label,
-          geometry
-        }))
+        results: r
       };
     }
   }
