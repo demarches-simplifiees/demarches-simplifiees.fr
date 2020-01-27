@@ -1,0 +1,27 @@
+/# FIXME: add a specific wording for Usagers
+.card.warning
+  .card-title Des pièces jointes de ce dossier peuvent être manquantes.
+  %p
+    Suite à un incident survenu le 21 janvier, demarche-simplifiees.fr a perdu par erreur une partie des pièces jointes de ce dossier.
+
+  - if dossier.en_construction?
+    %p
+      Si une ou plusieurs pièces jointes manquent, nous vous invitons à
+      = succeed ',' do
+        = link_to 'contacter le demandeur', messagerie_instructeur_dossier_path(dossier.procedure, dossier)
+      pour lui demander de
+      = succeed '.' do
+        %strong renvoyer les pièces jointes nécessaires
+
+  - else
+    %p
+      Si une ou plusieurs pièces jointes essentielles manquent, nous vous invitons à :
+      %ol
+        %li repasser ce dossier en construction ;
+        %li<
+          = link_to 'contacter le demandeur ', messagerie_instructeur_dossier_path(dossier.procedure, dossier)
+          pour lui demander de
+          = succeed '.' do
+            %strong renvoyer les pièces jointes nécessaires
+
+  %p Le demandeur de ce dossier a également été prévenu. Nous nous excusons pour la gêne occasionnée.

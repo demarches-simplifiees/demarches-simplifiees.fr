@@ -183,4 +183,33 @@ RSpec.describe DossierHelper, type: :helper do
       it { is_expected.to eq('without_continuation') }
     end
   end
+
+  describe '.has_lost_attachments' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier_with_lost_attachments)    { create(:dossier, procedure: procedure) }
+    let(:dossier_without_lost_attachments) { create(:dossier, procedure: procedure) }
+
+    before do
+      expect(ENV).to receive(:[]).with('APP_HOST').at_least(:once).and_return(app_host)
+      allow(helper).to receive(:dossiers_with_lost_attachments_ids).and_return([dossier_with_lost_attachments.id])
+    end
+
+    context 'on the DINUM instance' do
+      let(:app_host) { 'demarches-simplifiees.fr' }
+
+      it 'returns true for dossiers that lost attachments' do
+        expect(helper.has_lost_attachments(dossier_with_lost_attachments)).to be(true)
+        expect(helper.has_lost_attachments(dossier_without_lost_attachments)).to be(false)
+      end
+    end
+
+    context 'on another instance' do
+      let(:app_host) { 'polynesie-francaise.pref.gouv.fr' }
+
+      it 'returns false for all dossiers' do
+        expect(helper.has_lost_attachments(dossier_with_lost_attachments)).to be(false)
+        expect(helper.has_lost_attachments(dossier_without_lost_attachments)).to be(false)
+      end
+    end
+  end
 end
