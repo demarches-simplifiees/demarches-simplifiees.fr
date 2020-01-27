@@ -45,8 +45,9 @@ class Champs::LinkedDropDownListChamp < Champ
     value.present? ? { primary: primary_value, secondary: secondary_value } : nil
   end
 
-  def mandatory_and_blank?
-    mandatory? && (primary_value.blank? || secondary_value.blank?)
+  def blank?
+    primary_value.blank? ||
+      (has_secondary_options_for_primary? && secondary_value.blank?)
   end
 
   def search_terms
@@ -57,5 +58,9 @@ class Champs::LinkedDropDownListChamp < Champ
 
   def pack_value(primary, secondary)
     self.value = JSON.generate([primary, secondary])
+  end
+
+  def has_secondary_options_for_primary?
+    primary_value.present? && secondary_options[primary_value].any?(&:present?)
   end
 end
