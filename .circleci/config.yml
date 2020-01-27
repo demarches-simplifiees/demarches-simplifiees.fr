@@ -44,6 +44,29 @@ yarn_install: &yarn_install
     name: Install JS Dependencies
     command: yarn install --frozen-lockfile --non-interactive || yarn install --frozen-lockfile --non-interactive
 
+webpacker_restore_cache: &webpacker_restore_cache
+  restore_cache:
+    name: Restore Webpacker Cache
+    keys:
+      - webpacker-v1-{{ .Branch }}-{{ .Revision }}
+      - webpacker-v1-{{ .Branch }}
+      - webpacker-v1
+
+webpacker_save_cache: &webpacker_save_cache
+  save_cache:
+    name: Save Webpacker Cache
+    key: webpacker-v1-{{ .Branch }}-{{ .Revision }}
+    paths:
+      - public/packs-test
+      - tmp/cache/webpacker
+
+webpacker_precompile: &webpacker_precompile
+  run:
+    environment:
+      RAILS_ENV: test
+    name: Precompile Webpack assets
+    command: bin/webpack
+
 jobs:
   build:
     <<: *defaults
@@ -64,16 +87,15 @@ jobs:
       - *bundle_install
       - *yarn_restore_cache
       - *yarn_install
+      - *webpacker_restore_cache
+      - *webpacker_precompile
+      - *webpacker_save_cache
       - run:
           environment:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
-          name: Create DB
+          name: Create Database
           command: bundle exec rake db:create db:schema:load db:migrate RAILS_ENV=test
-      - run:
-          environment:
-            RAILS_ENV: test
-          name: Precompile Webpack assets
-          command: bin/webpack
+
       - run:
           environment:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
