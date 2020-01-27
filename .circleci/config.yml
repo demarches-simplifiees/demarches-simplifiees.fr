@@ -30,19 +30,19 @@ bundle_install: &bundle_install
 yarn_restore_cache: &yarn_restore_cache
   restore_cache:
     name: Restore Yarn Package Cache
-    key: yarn-install-v2-{{ arch }}-{{ checksum "yarn.lock" }}
+    key: yarn-install-v3-{{ arch }}-{{ checksum "yarn.lock" }}
 
 yarn_save_cache: &yarn_save_cache
   save_cache:
     name: Save Yarn Package Cache
-    key: yarn-install-v2-{{ arch }}-{{ checksum "yarn.lock" }}
+    key: yarn-install-v3-{{ arch }}-{{ checksum "yarn.lock" }}
     paths:
       - ~/.cache/yarn
 
 yarn_install: &yarn_install
   run:
     name: Install JS Dependencies
-    command: yarn install --non-interactive || yarn install --non-interactive
+    command: yarn install --frozen-lockfile --non-interactive || yarn install --frozen-lockfile --non-interactive
 
 jobs:
   build:
