@@ -78,6 +78,10 @@ export function to(promise) {
   return promise.then(result => [result]).catch(error => [null, error]);
 }
 
+export function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 function offset(element) {
   const rect = element.getBoundingClientRect();
   return {
