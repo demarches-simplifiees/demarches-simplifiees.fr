@@ -295,7 +295,9 @@ describe ProcedureExportService do
           "Question / Introduction",
           "Réponse",
           "Créé le",
-          "Répondu le"
+          "Répondu le",
+          "Instructeur",
+          "Expert"
         ])
       end
 
