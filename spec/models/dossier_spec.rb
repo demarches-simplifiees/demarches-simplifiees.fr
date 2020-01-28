@@ -15,6 +15,24 @@ describe Dossier do
       it { is_expected.to match_array([dossier]) }
     end
 
+    describe '.hidden' do
+      let!(:dossier) { create(:dossier) }
+      let!(:hidden_dossier) { create(:dossier, :hidden) }
+
+      subject { Dossier.all.hidden }
+
+      it { is_expected.to match_array([hidden_dossier]) }
+    end
+
+    describe '.with_hidden' do
+      let!(:dossier) { create(:dossier) }
+      let!(:hidden_dossier) { create(:dossier, :hidden) }
+
+      subject { Dossier.all.with_hidden }
+
+      it { is_expected.to match_array([dossier, hidden_dossier]) }
+    end
+
     describe '.without_followers' do
       let!(:dossier_with_follower) { create(:dossier, :followed, :with_entreprise, user: user) }
       let!(:dossier_without_follower) { create(:dossier, :with_entreprise, user: user) }

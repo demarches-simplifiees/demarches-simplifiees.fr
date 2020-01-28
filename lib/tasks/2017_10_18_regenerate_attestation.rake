@@ -13,7 +13,7 @@ namespace :'2017_10_18_regenerate_attestation' do
 
   def regenerate_attestations(attestation)
     Procedure.with_hidden do
-      Dossier.unscoped do
+      Dossier.with_hidden do
         dossier = attestation.dossier
         procedure = dossier.procedure
 

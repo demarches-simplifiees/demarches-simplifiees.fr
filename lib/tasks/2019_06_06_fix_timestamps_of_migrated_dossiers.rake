@@ -4,7 +4,7 @@ namespace :fix_timestamps_of_migrated_dossiers do
   desc 'Fix the timestamps of dossiers affected by the faulty PJ migration'
   task run: :environment do
     affected_time_range = Time.utc(2019, 6, 4, 8, 0)..Time.utc(2019, 6, 4, 18, 0)
-    dossiers = Dossier.unscoped.includes(:groupe_instructeur).where(groupe_instructeurs: { procedure_id: 0..1000 }).where(updated_at: affected_time_range)
+    dossiers = Dossier.with_hidden.includes(:groupe_instructeur).where(groupe_instructeurs: { procedure_id: 0..1000 }).where(updated_at: affected_time_range)
 
     progress = ProgressReport.new(dossiers.count)
 

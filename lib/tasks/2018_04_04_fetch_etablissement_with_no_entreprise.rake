@@ -4,7 +4,7 @@ namespace :'2018_04_04_fetch_etablissement_with_no_entreprise' do
   task fetch: :environment do
     dossiers = Entreprise.joins('LEFT JOIN etablissements et ON entreprises.id = et.entreprise_id')
       .where('et.id IS NULL')
-      .map(&:dossier_id).map { |id| Dossier.unscoped.find_by(id: id) }.compact
+      .map(&:dossier_id).map { |id| Dossier.with_hidden.find_by(id: id) }.compact
 
     dossiers.each do |dossier|
       siret = dossier.entreprise.siret_siege_social
