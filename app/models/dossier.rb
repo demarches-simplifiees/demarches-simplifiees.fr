@@ -216,6 +216,7 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true
   validates :individual, presence: true, if: -> { procedure.for_individual? }
+  validates :groupe_instructeur, presence: true
 
   def update_search_terms
     self.search_terms = [
