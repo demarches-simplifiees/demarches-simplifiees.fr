@@ -1,6 +1,4 @@
 class ActiveStorage::VirusScanner
-  include ActiveStorage::Downloading
-
   def initialize(blob)
     @blob = blob
   end
@@ -32,7 +30,7 @@ class ActiveStorage::VirusScanner
   end
 
   def metadata
-    download_blob_to_tempfile do |file|
+    blob.open do |file|
       if ClamavService.safe_file?(file.path)
         { virus_scan_result: SAFE, scanned_at: Time.zone.now }
       else

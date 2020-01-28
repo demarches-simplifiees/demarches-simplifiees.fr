@@ -380,16 +380,11 @@ describe Procedure do
     let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
 
     before do
-      @logo = File.open('spec/fixtures/files/white.png')
-      @signature = File.open('spec/fixtures/files/black.png')
+      @logo = Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png')
+      @signature = Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')
       @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
       @procedure = procedure.clone(administrateur, from_library)
       @procedure.save
-    end
-
-    after do
-      @logo.close
-      @signature.close
     end
 
     subject { @procedure }
