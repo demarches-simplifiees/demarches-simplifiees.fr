@@ -4,6 +4,7 @@ describe Manager::ApplicationController, type: :controller do
     let(:payload) { {} }
 
     before do
+      allow(@controller).to receive(:content_type).and_return('')
       allow(@controller).to receive(:current_user).and_return(current_user)
       @controller.send(:append_info_to_payload, payload)
     end
@@ -13,6 +14,8 @@ describe Manager::ApplicationController, type: :controller do
         payload.delete(key)
       end
       expect(payload).to eq({
+        sk_rendered_format: nil,
+        sk_variant: [],
         user_agent: 'Rails Testing',
         user_id: current_user.id,
         user_email: current_user.email

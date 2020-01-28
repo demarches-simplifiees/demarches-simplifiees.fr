@@ -21,6 +21,7 @@ describe ApplicationController, type: :controller do
     let(:payload) { {} }
 
     before do
+      allow(@controller).to receive(:content_type).and_return('')
       allow(@controller).to receive(:current_user).and_return(current_user)
       expect(@controller).to receive(:current_instructeur).and_return(current_instructeur)
       expect(@controller).to receive(:current_administrateur).and_return(current_administrateur)
@@ -42,6 +43,8 @@ describe ApplicationController, type: :controller do
           payload.delete(key)
         end
         expect(payload).to eq({
+          sk_rendered_format: nil,
+          sk_variant: [],
           user_agent: 'Rails Testing',
           user_roles: 'Guest'
         })
@@ -61,6 +64,8 @@ describe ApplicationController, type: :controller do
           payload.delete(key)
         end
         expect(payload).to eq({
+          sk_rendered_format: nil,
+          sk_variant: [],
           user_agent: 'Rails Testing',
           user_id: current_user.id,
           user_email: current_user.email,
@@ -85,6 +90,8 @@ describe ApplicationController, type: :controller do
           payload.delete(key)
         end
         expect(payload).to eq({
+          sk_rendered_format: nil,
+          sk_variant: [],
           user_agent: 'Rails Testing',
           user_id: current_user.id,
           user_email: current_user.email,

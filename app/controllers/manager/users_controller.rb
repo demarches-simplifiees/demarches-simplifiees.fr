@@ -1,5 +1,18 @@
 module Manager
   class UsersController < Manager::ApplicationController
+    def update
+      user = User.find(params[:id])
+      new_email = params[:user][:email]
+      user.skip_reconfirmation!
+      user.update(email: new_email)
+      if (user.valid?)
+        flash[:notice] = "L'email a été modifié en « #{new_email} » sans notification ni validation par email."
+      else
+        flash[:error] = "« #{new_email} » n'est pas une adresse valide."
+      end
+      redirect_to edit_manager_user_path(user)
+    end
+
     def resend_confirmation_instructions
       user = User.find(params[:id])
       user.resend_confirmation_instructions

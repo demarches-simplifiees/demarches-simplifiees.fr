@@ -49,5 +49,7 @@ module TPS
       debounce_delay: 3000,
       status_visible_duration: 6000
     }
+
+    config.skylight.probes += [:graphql]
   end
 end
