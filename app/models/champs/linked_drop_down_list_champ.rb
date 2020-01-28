@@ -61,6 +61,6 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   def has_secondary_options_for_primary?
-    primary_value.present? && secondary_options[primary_value].any?(&:present?)
+    primary_value.present? && secondary_options[primary_value]&.any?(&:present?)
   end
 end
