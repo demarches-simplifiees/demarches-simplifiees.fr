@@ -13,7 +13,10 @@ defaults: &defaults
 bundle_restore_cache: &bundle_restore_cache
   restore_cache:
     name: Restore Bundler Package Cache
-    key: bundle-install-v9-{{ arch }}-{{ checksum "Gemfile.lock" }}
+    keys:
+      - bundle-install-v9-{{ arch }}-{{ checksum "Gemfile.lock" }}
+      - bundle-install-v9-{{ arch }}
+      - bundle-install-v9
 
 bundle_save_cache: &bundle_save_cache
   save_cache:
@@ -30,19 +33,45 @@ bundle_install: &bundle_install
 yarn_restore_cache: &yarn_restore_cache
   restore_cache:
     name: Restore Yarn Package Cache
-    key: yarn-install-v1-{{ arch }}-{{ checksum "yarn.lock" }}
+    keys:
+      - yarn-install-v3-{{ arch }}-{{ checksum "yarn.lock" }}
+      - yarn-install-v3-{{ arch }}
+      - yarn-install-v3
 
 yarn_save_cache: &yarn_save_cache
   save_cache:
     name: Save Yarn Package Cache
-    key: yarn-install-v1-{{ arch }}-{{ checksum "yarn.lock" }}
+    key: yarn-install-v3-{{ arch }}-{{ checksum "yarn.lock" }}
     paths:
       - ~/.cache/yarn
 
 yarn_install: &yarn_install
   run:
     name: Install JS Dependencies
-    command: yarn install --non-interactive || yarn install --non-interactive
+    command: yarn install --frozen-lockfile --non-interactive || yarn install --frozen-lockfile --non-interactive
+
+webpacker_restore_cache: &webpacker_restore_cache
+  restore_cache:
+    name: Restore Webpacker Cache
+    keys:
+      - webpacker-v1-{{ .Branch }}-{{ .Revision }}
+      - webpacker-v1-{{ .Branch }}
+      - webpacker-v1
+
+webpacker_save_cache: &webpacker_save_cache
+  save_cache:
+    name: Save Webpacker Cache
+    key: webpacker-v1-{{ .Branch }}-{{ .Revision }}
+    paths:
+      - public/packs-test
+      - tmp/cache/webpacker
+
+webpacker_precompile: &webpacker_precompile
+  run:
+    environment:
+      RAILS_ENV: test
+    name: Precompile Webpack assets
+    command: bin/webpack
 
 jobs:
   build:
@@ -53,8 +82,8 @@ jobs:
       - *bundle_install
       - *bundle_save_cache
       - *yarn_restore_cache
-      - *yarn_save_cache
       - *yarn_install
+      - *yarn_save_cache
   test:
     <<: *defaults
     parallelism: 3
@@ -64,16 +93,15 @@ jobs:
       - *bundle_install
       - *yarn_restore_cache
       - *yarn_install
+      - *webpacker_restore_cache
+      - *webpacker_precompile
+      - *webpacker_save_cache
       - run:
           environment:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
-          name: Create DB
+          name: Create Database
           command: bundle exec rake db:create db:schema:load db:migrate RAILS_ENV=test
-      - run:
-          environment:
-            RAILS_ENV: test
-          name: Precompile Webpack assets
-          command: bin/webpack
+
       - run:
           environment:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
