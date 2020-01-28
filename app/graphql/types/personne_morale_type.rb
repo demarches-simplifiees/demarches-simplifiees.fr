@@ -2,7 +2,7 @@ module Types
   class PersonneMoraleType < Types::BaseObject
     class EntrepriseType < Types::BaseObject
       field :siren, String, null: false
-      field :capital_social, Int, null: false
+      field :capital_social, GraphQL::Types::BigInt, null: false
       field :numero_tva_intracommunautaire, String, null: false
       field :forme_juridique, String, null: false
       field :forme_juridique_code, String, null: false
