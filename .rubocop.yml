@@ -1,5 +1,6 @@
 require:
   - rubocop/rspec/focused
+  - ./lib/cops/unscoped.rb
 
 AllCops:
   Exclude:
