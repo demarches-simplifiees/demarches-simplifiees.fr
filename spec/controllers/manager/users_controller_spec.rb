@@ -1,6 +1,36 @@
 describe Manager::UsersController, type: :controller do
   let(:administration) { create(:administration) }
 
+  describe '#update' do
+    let!(:user) { create(:user, email: 'ancien.email@domaine.fr') }
+
+    before {
+      sign_in administration
+    }
+    subject { patch :update, params: { id: user.id, user: { email: nouvel_email } } }
+
+    describe 'with a valid email' do
+      let(:nouvel_email) { 'nouvel.email@domaine.fr' }
+
+      it 'updates the user email' do
+        subject
+
+        expect(User.find_by(id: user.id).email).to eq(nouvel_email)
+      end
+    end
+
+    describe 'with an invalid email' do
+      let(:nouvel_email) { 'plop' }
+
+      it 'does not update the user email' do
+        subject
+
+        expect(User.find_by(id: user.id).email).not_to eq(nouvel_email)
+        expect(flash[:error]).to match("« #{nouvel_email} » n'est pas une adresse valide.")
+      end
+    end
+  end
+
   describe '#delete' do
     let!(:user) { create(:user) }
 
