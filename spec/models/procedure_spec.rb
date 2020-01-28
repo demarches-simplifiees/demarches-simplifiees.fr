@@ -151,6 +151,26 @@ describe Procedure do
     end
   end
 
+  describe 'scopes' do
+    let!(:procedure) { create(:procedure) }
+    let!(:hidden_procedure) { create(:procedure, :hidden) }
+
+    describe 'default_scope' do
+      subject { Procedure.all }
+      it { is_expected.to match_array([procedure]) }
+    end
+
+    describe '.hidden' do
+      subject { Procedure.all.hidden }
+      it { is_expected.to match_array([hidden_procedure]) }
+    end
+
+    describe '.with_hidden' do
+      subject { Procedure.all.with_hidden }
+      it { is_expected.to match_array([procedure, hidden_procedure]) }
+    end
+  end
+
   describe 'validation' do
     context 'libelle' do
       it { is_expected.not_to allow_value(nil).for(:libelle) }

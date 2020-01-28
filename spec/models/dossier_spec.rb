@@ -5,18 +5,47 @@ describe Dossier do
 
   let(:user) { create(:user) }
 
+  describe 'scopes' do
+    describe '.default_scope' do
+      let!(:dossier) { create(:dossier) }
+      let!(:hidden_dossier) { create(:dossier, :hidden) }
+
+      subject { Dossier.all }
+
+      it { is_expected.to match_array([dossier]) }
+    end
+
+    describe '.hidden' do
+      let!(:dossier) { create(:dossier) }
+      let!(:hidden_dossier) { create(:dossier, :hidden) }
+
+      subject { Dossier.all.hidden }
+
+      it { is_expected.to match_array([hidden_dossier]) }
+    end
+
+    describe '.with_hidden' do
+      let!(:dossier) { create(:dossier) }
+      let!(:hidden_dossier) { create(:dossier, :hidden) }
+
+      subject { Dossier.all.with_hidden }
+
+      it { is_expected.to match_array([dossier, hidden_dossier]) }
+    end
+
+    describe '.without_followers' do
+      let!(:dossier_with_follower) { create(:dossier, :followed, :with_entreprise, user: user) }
+      let!(:dossier_without_follower) { create(:dossier, :with_entreprise, user: user) }
+
+      it { expect(Dossier.without_followers.to_a).to eq([dossier_without_follower]) }
+    end
+  end
+
   describe 'validations' do
     let(:procedure) { create(:procedure, :for_individual) }
     subject(:dossier) { create(:dossier, procedure: procedure) }
 
     it { is_expected.to validate_presence_of(:individual) }
-  end
-
-  describe "without_followers scope" do
-    let!(:dossier) { create(:dossier, :followed, :with_entreprise, user: user) }
-    let!(:dossier2) { create(:dossier, :with_entreprise, user: user) }
-
-    it { expect(Dossier.without_followers.to_a).to eq([dossier2]) }
   end
 
   describe 'with_champs' do
@@ -519,23 +548,6 @@ describe Dossier do
 
         it { expect(dossier.attestation).not_to be_nil }
       end
-    end
-  end
-
-  describe ".default_scope" do
-    let!(:dossier) { create(:dossier, hidden_at: hidden_at) }
-
-    context "when dossier is not hidden" do
-      let(:hidden_at) { nil }
-
-      it { expect(Dossier.count).to eq(1) }
-      it { expect(Dossier.all).to include(dossier) }
-    end
-
-    context "when dossier is hidden" do
-      let(:hidden_at) { 1.day.ago }
-
-      it { expect(Dossier.count).to eq(0) }
     end
   end
 
