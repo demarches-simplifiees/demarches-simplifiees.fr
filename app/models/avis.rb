@@ -43,7 +43,9 @@ class Avis < ApplicationRecord
       ['Question / Introduction', :introduction],
       ['Réponse', :answer],
       ['Créé le', :created_at],
-      ['Répondu le', :updated_at]
+      ['Répondu le', :updated_at],
+      ['Instructeur', claimant&.email],
+      ['Expert', instructeur&.email]
     ]
   end
 
