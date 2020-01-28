@@ -30,11 +30,22 @@
     %hr
 
     - if dossier.procedure.routee?
-      = f.label :groupe_instructeur_id, dossier.procedure.routing_criteria_name
+      = f.label :groupe_instructeur_id do
+        = dossier.procedure.routing_criteria_name
+        %span.mandatory *
+      -# The routing dropdown has 'include_blank: false', because otherwise a blank
+      -# value may nullify the groupe_instructeur – and thus the link between the dossier
+      -# and its procedure.
+      -#
+      -# If, one day, we need to make clearer to the user that they must actually choose an
+      -# option, THINK TWICE before adding a blank option, and what would happen if the form is
+      -# saved when the blank option is selected.
+      -# Instead please consider other possibilities; like using CSS to gray out the default option,
+      -# or adding some "(please select an option)" wording aside the label of the default group.
+      -# CSS
       = f.select :groupe_instructeur_id,
         dossier.procedure.groupe_instructeurs.order(:label).map { |gi| [gi.label, gi.id] },
-        {},
-        required: true
+        { include_blank: false }
 
     = f.fields_for :champs, dossier.champs do |champ_form|
       - champ = champ_form.object
