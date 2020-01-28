@@ -53,31 +53,32 @@
         locals: { champ: champ, form: champ_form }
 
     - if !apercu
-      .send-dossier-actions-bar
-        - if dossier.brouillon?
-          - if autosave_available?(dossier)
-            = render partial: 'users/dossiers/autosave'
+      .dossier-edit-sticky-footer
+        .send-dossier-actions-bar
+          - if dossier.brouillon?
+            - if autosave_available?(dossier)
+              = render partial: 'users/dossiers/autosave'
+            - else
+              = f.button 'Enregistrer le brouillon',
+                formnovalidate: true,
+                class: 'button send secondary',
+                data: { 'disable-with': "Envoi en cours…" }
+
+            - if dossier.can_transition_to_en_construction?
+              = f.button 'Déposer le dossier',
+                name: :submit_draft,
+                value: true,
+                class: 'button send primary',
+                disabled: !current_user.owns?(dossier),
+                data: { 'disable-with': "Envoi en cours…" }
+
           - else
-            = f.button 'Enregistrer le brouillon',
-              formnovalidate: true,
-              class: 'button send secondary',
-              data: { 'disable-with': "Envoi en cours…" }
-
-          - if dossier.can_transition_to_en_construction?
-            = f.button 'Déposer le dossier',
-              name: :submit_draft,
-              value: true,
+            = f.button 'Enregistrer les modifications du dossier',
               class: 'button send primary',
-              disabled: !current_user.owns?(dossier),
               data: { 'disable-with': "Envoi en cours…" }
 
-        - else
-          = f.button 'Enregistrer les modifications du dossier',
-            class: 'button send primary',
-            data: { 'disable-with': "Envoi en cours…" }
+        - if dossier.brouillon? && !current_user.owns?(dossier)
+          .send-notice.invite-cannot-submit
+            En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le déposer lui-même.
 
-      - if dossier.brouillon? && !current_user.owns?(dossier)
-        .send-notice.invite-cannot-submit
-          En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le déposer lui-même.
-
-      = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
+        = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
