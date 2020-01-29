@@ -334,7 +334,7 @@ describe ProcedureExportService do
 
       context 'with invalid characters' do
         before do
-          champ_repetition.type_de_champ.update(libelle: 'A / B \ C')
+          champ_repetition.type_de_champ.update(libelle: 'A / B \ C *[]?')
         end
 
         it 'should have valid sheet name' do
