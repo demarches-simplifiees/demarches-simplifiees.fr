@@ -104,7 +104,7 @@ services:
       - UNIVERSIGN_USERPWD
     volumes:
       - md-data-files:/app/storage
-      - md-systmp:/tmp
+      - md-root-tmp:/tmp
       - md-tmp:/app/tmp
     networks:
       - md-network
@@ -118,7 +118,7 @@ services:
     volumes:
       - clamav-db:/data
       - clamav-logs:/var/log/clamav
-      - md-systmp:/tmp
+      - md-root-tmp:/tmp
     networks:
       - md-network
 
@@ -148,7 +148,7 @@ volumes:
       device: $ROOT/tmp
       o: bind
   #----- to share file between worker and clamav
-  md-systmp:
+  md-root-tmp:
     driver_opts:
       type: none
       device: $ROOT/systmp
