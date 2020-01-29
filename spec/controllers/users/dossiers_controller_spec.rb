@@ -757,11 +757,17 @@ describe Users::DossiersController, type: :controller do
     procedure: procedure,
     user: user)
 }
-
       subject! { get(:show, params: { id: dossier.id, format: :pdf }) }
 
-      it { expect(assigns(:include_infos_administration)).to eq(false) }
-      it { expect(response).to render_template 'dossiers/show' }
+      context 'when the dossier is a brouillon' do
+        let(:dossier) { create(:dossier, user: user) }
+        it { is_expected.to redirect_to(brouillon_dossier_path(dossier)) }
+      end
+
+      context 'when the dossier has been submitted' do
+        it { expect(assigns(:include_infos_administration)).to eq(false) }
+        it { expect(response).to render_template 'dossiers/show' }
+      end
     end
   end
 
