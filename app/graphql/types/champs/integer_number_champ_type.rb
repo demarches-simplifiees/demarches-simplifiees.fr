@@ -2,7 +2,7 @@ module Types::Champs
   class IntegerNumberChampType < Types::BaseObject
     implements Types::ChampType
 
-    field :value, Int, null: true
+    field :value, GraphQL::Types::BigInt, null: true
 
     def value
       if object.value.present?
