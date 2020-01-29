@@ -308,6 +308,7 @@ describe API::V2::GraphqlController do
                   entreprise {
                     siren
                     dateCreation
+                    capitalSocial
                   }
                 }
               }
@@ -330,7 +331,8 @@ describe API::V2::GraphqlController do
               siegeSocial: dossier.etablissement.siege_social,
               entreprise: {
                 siren: dossier.etablissement.entreprise_siren,
-                dateCreation: dossier.etablissement.entreprise_date_creation.iso8601
+                dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
+                capitalSocial: dossier.etablissement.entreprise_capital_social.to_s
               }
             }
           })

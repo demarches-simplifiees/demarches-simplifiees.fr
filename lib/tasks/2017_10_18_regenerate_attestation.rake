@@ -12,8 +12,8 @@ namespace :'2017_10_18_regenerate_attestation' do
   end
 
   def regenerate_attestations(attestation)
-    Procedure.unscoped do
-      Dossier.unscoped do
+    Procedure.with_hidden do
+      Dossier.with_hidden do
         dossier = attestation.dossier
         procedure = dossier.procedure
 
