@@ -1,47 +1,38 @@
-import { initMap, drawPolygons, addFreeDrawEvents } from '../../shared/carte';
-
 async function initialize() {
   const elements = document.querySelectorAll('.carte');
 
   if (elements.length) {
-    const editable = [...elements].find(element =>
-      element.classList.contains('edit')
-    );
-    await loadLeaflet(editable);
-
     for (let element of elements) {
-      diplayMap(element, null, true);
+      loadAndDrawMap(element);
     }
   }
 }
 
-// We load leaflet dynamically, ramda and freedraw and assign them to globals.
-// Latest freedraw version build needs globals.
-async function loadLeaflet(editable) {
-  window.L = await import('leaflet').then(({ default: L }) => L);
+async function loadAndDrawMap(element) {
+  const data = JSON.parse(element.dataset.geo);
+  const editable = element.classList.contains('edit');
 
   if (editable) {
-    window.R = await import('ramda').then(({ default: R }) => R);
-    await import('leaflet-freedraw/dist/leaflet-freedraw.web.js');
+    const { drawEditableMap } = await import('../../shared/carte-editor');
+
+    drawEditableMap(element, data);
+  } else {
+    const { drawMap } = await import('../../shared/carte');
+
+    drawMap(element, data);
   }
 }
 
-function diplayMap(element, data, initial = false) {
-  data = data || JSON.parse(element.dataset.geo);
-  const editable = element.classList.contains('edit');
-  const map = initMap(element, data.position, editable);
+async function loadAndRedrawMap(element, data) {
+  const { redrawMap } = await import('../../shared/carte-editor');
 
-  drawPolygons(map, data, { initial, editable });
-
-  if (initial && editable) {
-    const input = element.parentElement.querySelector('input[data-remote]');
-    addFreeDrawEvents(map, input);
-  }
+  redrawMap(element, data);
 }
 
 addEventListener('turbolinks:load', initialize);
 
 addEventListener('carte:update', ({ detail: { selector, data } }) => {
   const element = document.querySelector(selector);
-  diplayMap(element, data);
+
+  loadAndRedrawMap(element, data);
 });

@@ -45,6 +45,8 @@ class Procedure < ApplicationRecord
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   default_scope { where(hidden_at: nil) }
+  scope :hidden,                -> { unscope(where: :hidden_at).where.not(hidden_at: nil) }
+  scope :with_hidden,           -> { unscope(where: :hidden_at) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
