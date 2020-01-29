@@ -1,32 +1,42 @@
 import { ajax, delegate } from '@utils';
 
 addEventListener('turbolinks:load', () => {
-  checker.deactivate();
+  attachementPoller.deactivate();
+  exportPoller.deactivate();
 
-  const attachments = document.querySelectorAll('[data-attachment-check-url]');
+  const attachments = document.querySelectorAll('[data-attachment-poll-url]');
+  const exports = document.querySelectorAll('[data-export-poll-url]');
 
-  for (let attachment of attachments) {
-    checker.add(attachment.dataset.attachmentCheckUrl);
+  for (let { dataset } of attachments) {
+    attachementPoller.add(dataset.attachmentPollUrl);
+  }
+
+  for (let { dataset } of exports) {
+    exportPoller.add(dataset.exportPollUrl);
   }
 });
 
 addEventListener('attachment:update', ({ detail: { url } }) => {
-  checker.add(url);
+  attachementPoller.add(url);
+});
+
+addEventListener('export:update', ({ detail: { url } }) => {
+  exportPoller.add(url);
 });
 
 delegate('click', '[data-attachment-refresh]', event => {
   event.preventDefault();
-  checker.check();
+  attachementPoller.check();
 });
 
-class AttachmentChecker {
+class RemotePoller {
   urls = new Set();
   timeout;
   checks = 0;
 
   constructor(settings = {}) {
-    this.interval = settings.interval || 5000;
-    this.maxChecks = settings.maxChecks || 5;
+    this.interval = settings.interval;
+    this.maxChecks = settings.maxChecks;
   }
 
   get isEnabled() {
@@ -58,12 +68,14 @@ class AttachmentChecker {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       this.checks++;
+      this.currentInterval = this.interval * 1.5;
       this.check();
-    }, this.interval);
+    }, this.currentInterval);
   }
 
   deactivate() {
     this.checks = 0;
+    this.currentInterval = this.interval;
     this.reset();
   }
 
@@ -74,4 +86,5 @@ class AttachmentChecker {
   }
 }
 
-const checker = new AttachmentChecker();
+const attachementPoller = new RemotePoller({ interval: 2000, maxChecks: 5 });
+const exportPoller = new RemotePoller({ interval: 4000, maxChecks: 10 });
