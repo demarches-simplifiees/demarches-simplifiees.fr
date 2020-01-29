@@ -1,23 +1,18 @@
-import L from 'leaflet';
+/* globals FreeDraw L */
+import { fire, delegate } from '@utils';
+import $ from 'jquery';
+
+import polygonArea from './polygon_area';
 
 const MAPS = new WeakMap();
 
-export function drawMap(element, data) {
-  const map = initMap(element, data);
-
-  drawCadastre(map, data);
-  drawQuartiersPrioritaires(map, data);
-  drawParcellesAgricoles(map, data);
-  drawUserSelection(map, data);
-}
-
-function initMap(element, { position }) {
+export function initMap(element, position, editable = false) {
   if (MAPS.has(element)) {
     return MAPS.get(element);
   } else {
     const map = L.map(element, {
       scrollWheelZoom: false
-    }).setView([position.lat, position.lon], position.zoom);
+    }).setView([position.lat, position.lon], editable ? 18 : position.zoom);
 
     const loadTilesLayer = process.env.RAILS_ENV != 'test';
     if (loadTilesLayer) {
@@ -27,47 +22,168 @@ function initMap(element, { position }) {
       }).addTo(map);
     }
 
+    if (editable) {
+      const freeDraw = new FreeDraw({
+        mode: FreeDraw.NONE,
+        smoothFactor: 4,
+        mergePolygons: false
+      });
+      map.addLayer(freeDraw);
+      map.freeDraw = freeDraw;
+    }
+
     MAPS.set(element, map);
     return map;
   }
 }
 
-function drawUserSelection(map, { selection }) {
+export function drawPolygons(map, data, { editable, initial }) {
+  if (initial) {
+    drawUserSelection(map, data, editable);
+  }
+  clearLayers(map);
+  drawCadastre(map, data, editable);
+  drawQuartiersPrioritaires(map, data, editable);
+  drawParcellesAgricoles(map, data, editable);
+  bringToFrontUserSelection(map);
+}
+
+export function drawUserSelection(map, { selection }, editable = false) {
   if (selection) {
-    const layer = L.geoJSON(selection, {
-      style: USER_SELECTION_POLYGON_STYLE
-    });
+    const coordinates = toLatLngs(selection);
+    let polygon;
 
-    layer.addTo(map);
+    if (editable) {
+      coordinates.forEach(polygon => map.freeDraw.create(polygon));
+      [polygon] = markFreeDrawLayers(map);
+    } else {
+      polygon = L.polygon(coordinates, {
+        color: 'red',
+        zIndex: 3
+      });
+      polygon.addTo(map);
+    }
 
-    map.fitBounds(layer.getBounds());
+    if (polygon) {
+      map.fitBounds(polygon.getBounds());
+    }
   }
 }
 
-function drawCadastre(map, { cadastres }) {
-  drawLayer(map, cadastres, noEditStyle(CADASTRE_POLYGON_STYLE));
+export function addFreeDrawEvents(map, selector) {
+  const input = findInput(selector);
+  map.freeDraw.on('markers', ({ latLngs }) => {
+    if (latLngs.length === 0) {
+      input.value = EMPTY_GEO_JSON;
+    } else if (polygonArea(latLngs) < 300000) {
+      input.value = JSON.stringify(latLngs);
+    } else {
+      input.value = ERROR_GEO_JSON;
+    }
+
+    markFreeDrawLayers(map);
+    fire(input, 'change');
+  });
 }
 
-function drawQuartiersPrioritaires(map, { quartiersPrioritaires }) {
-  drawLayer(map, quartiersPrioritaires, noEditStyle(QP_POLYGON_STYLE));
+function drawCadastre(map, { cadastres }, editable = false) {
+  drawLayer(
+    map,
+    cadastres,
+    editable ? CADASTRE_POLYGON_STYLE : noEditStyle(CADASTRE_POLYGON_STYLE)
+  );
 }
 
-function drawParcellesAgricoles(map, { parcellesAgricoles }) {
-  drawLayer(map, parcellesAgricoles, noEditStyle(RPG_POLYGON_STYLE));
+function drawQuartiersPrioritaires(
+  map,
+  { quartiersPrioritaires },
+  editable = false
+) {
+  drawLayer(
+    map,
+    quartiersPrioritaires,
+    editable ? QP_POLYGON_STYLE : noEditStyle(QP_POLYGON_STYLE)
+  );
+}
+
+function drawParcellesAgricoles(map, { parcellesAgricoles }, editable = false) {
+  drawLayer(
+    map,
+    parcellesAgricoles,
+    editable ? RPG_POLYGON_STYLE : noEditStyle(RPG_POLYGON_STYLE)
+  );
+}
+
+function getCurrentMap(element) {
+  if (!element.matches('.carte')) {
+    const closestCarteElement = element.closest('.carte');
+    const closestToolbarElement = element.closest('.toolbar');
+
+    element = closestCarteElement
+      ? closestCarteElement
+      : closestToolbarElement.parentElement.querySelector('.carte');
+  }
+
+  if (MAPS.has(element)) {
+    return MAPS.get(element);
+  }
+}
+
+const EMPTY_GEO_JSON = '[]';
+const ERROR_GEO_JSON = '';
+
+function toLatLngs({ coordinates }) {
+  return coordinates.map(polygon =>
+    polygon[0].map(point => ({ lng: point[0], lat: point[1] }))
+  );
+}
+
+function findInput(selector) {
+  return typeof selector === 'string'
+    ? document.querySelector(selector)
+    : selector;
+}
+
+function createLayer(map) {
+  const layer = new L.GeoJSON(undefined, {
+    interactive: false
+  });
+  layer.addTo(map);
+  return layer;
+}
+
+function clearLayers(map) {
+  map.eachLayer(layer => {
+    if (layer instanceof L.GeoJSON) {
+      map.removeLayer(layer);
+    }
+  });
+}
+
+function bringToFrontUserSelection(map) {
+  map.eachLayer(layer => {
+    if (layer.isFreeDraw) {
+      layer.bringToFront();
+    }
+  });
+}
+
+function markFreeDrawLayers(map) {
+  return map.freeDraw.all().map(layer => {
+    layer.isFreeDraw = true;
+    return layer;
+  });
 }
 
 function drawLayer(map, data, style) {
   if (Array.isArray(data) && data.length > 0) {
-    const layer = new L.GeoJSON(undefined, {
-      interactive: false,
-      style
+    const layer = createLayer(map);
+
+    data.forEach(function(item) {
+      layer.addData(item.geometry);
     });
 
-    for (let { geometry } of data) {
-      layer.addData(geometry);
-    }
-
-    layer.addTo(map);
+    layer.setStyle(style).addTo(map);
   }
 }
 
@@ -99,6 +215,36 @@ const RPG_POLYGON_STYLE = Object.assign({}, POLYGON_STYLE, {
   fillColor: '#31708f'
 });
 
-const USER_SELECTION_POLYGON_STYLE = {
-  color: 'red'
-};
+delegate('click', '.carte.edit', event => {
+  const map = getCurrentMap(event.target);
+
+  if (map) {
+    const isPath = event.target.matches('.leaflet-container g path');
+    if (isPath) {
+      setTimeout(() => {
+        map.freeDraw.mode(FreeDraw.EDIT | FreeDraw.DELETE);
+      }, 50);
+    } else {
+      map.freeDraw.mode(FreeDraw.NONE);
+    }
+  }
+});
+
+delegate('click', '.toolbar .new-area', event => {
+  event.preventDefault();
+  const map = getCurrentMap(event.target);
+
+  if (map) {
+    map.freeDraw.mode(FreeDraw.CREATE);
+  }
+});
+
+$(document).on('select2:select', 'select[data-address]', event => {
+  const map = getCurrentMap(event.target);
+  const { geometry } = event.params.data;
+
+  if (map && geometry && geometry.type === 'Point') {
+    const [lon, lat] = geometry.coordinates;
+    map.setView(new L.LatLng(lat, lon), 14);
+  }
+});
