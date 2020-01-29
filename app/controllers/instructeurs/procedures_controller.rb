@@ -198,7 +198,7 @@ module Instructeurs
         redirect_to export.file.service_url
       else
         respond_to do |format|
-          notice_message = "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
+          notice_message = "Nous générons cet export. Veuillez actualiser la page dans quelques minutes pour le télécharger."
           format.js do
             @procedure = procedure
             assign_exports
