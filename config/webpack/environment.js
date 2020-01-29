@@ -9,9 +9,4 @@ const resolve = {
 
 environment.splitChunks();
 environment.config.merge({ resolve });
-
-// Uncoment next lines to run webpack-bundle-analyzer
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-// environment.plugins.append('BundleAnalyzer', new BundleAnalyzerPlugin());
-
 module.exports = environment;
