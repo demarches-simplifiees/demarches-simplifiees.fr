@@ -108,7 +108,7 @@ class User < ApplicationRecord
     dossiers.each do |dossier|
       dossier.delete_and_keep_track(administration)
     end
-    dossiers.unscoped.destroy_all
+    dossiers.with_hidden.destroy_all
     destroy!
   end
 
