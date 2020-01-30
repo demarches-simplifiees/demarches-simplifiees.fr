@@ -114,6 +114,29 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context 'when the procedure has a type de champ with apostrophes' do
+      let(:types_de_champ) do
+        [
+          create(:type_de_champ, libelle: "Intitulé de l'‘«\"évènement\"»’")
+        ]
+      end
+
+      context 'and they are used in the template' do
+        let(:template) { "--Intitulé de l'‘«\"évènement\"»’--" }
+
+        context 'and their value in the dossier are not nil' do
+          before do
+            dossier.champs
+              .filter { |champ| champ.libelle == "Intitulé de l'‘«\"évènement\"»’" }
+              .first
+              .update(value: 'ceci est mon évènement')
+          end
+
+          it { is_expected.to eq('ceci est mon évènement') }
+        end
+      end
+    end
+
     context 'when the procedure has a type de champ repetition' do
       let(:template) { '--Répétition--' }
       let(:types_de_champ) do
