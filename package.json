@@ -53,6 +53,6 @@
     "webpack:build": "NODE_ENV=production bin/webpack"
   },
   "engines": {
-    "node": "8.* || >= 10.*"
+    "node": ">= 12.*"
   }
 }
