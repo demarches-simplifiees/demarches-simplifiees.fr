@@ -187,22 +187,35 @@ module Instructeurs
     end
 
     def download_export
-      format = params[:export_format]
+      export_format = params[:export_format]
       groupe_instructeurs = current_instructeur
         .groupe_instructeurs
         .where(procedure: procedure)
 
-      export = Export.find_or_create_export(format, groupe_instructeurs)
+      export = Export.find_or_create_export(export_format, groupe_instructeurs)
 
       if export.ready?
-        redirect_to export.file.service_url
-      else
         respond_to do |format|
-          notice_message = "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
           format.js do
             @procedure = procedure
             assign_exports
-            flash.notice = notice_message
+            flash.notice = "L’export au format \"#{export_format}\" est prêt."
+          end
+
+          format.html do
+            redirect_to export.file.service_url
+          end
+        end
+      else
+        respond_to do |format|
+          notice_message = "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
+
+          format.js do
+            @procedure = procedure
+            assign_exports
+            if !params[:no_progress_notification]
+              flash.notice = notice_message
+            end
           end
 
           format.html do
@@ -262,7 +275,7 @@ module Instructeurs
 
     def ensure_ownership!
       if !current_instructeur.procedures.include?(procedure)
-        flash[:alert] = "Vous n'avez pas accès à cette démarche"
+        flash[:alert] = "Vous n’avez pas accès à cette démarche"
         redirect_to root_path
       end
     end

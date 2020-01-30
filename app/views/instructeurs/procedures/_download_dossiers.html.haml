@@ -9,6 +9,7 @@
             - if export.nil?
               = link_to "Demander un export au format .#{format}", download_export_instructeur_procedure_path(procedure, export_format: format), remote: true
             - elsif export.ready?
-              = link_to "Télécharger l'export au format .#{format}", url_for(export.file), target: "_blank", rel: "noopener"
+              = link_to "Télécharger l'export au format .#{format}", export.file.service_url, target: "_blank", rel: "noopener"
             - else
-              L'export au format .#{format} est en cours de préparation
+              %span{ 'data-export-poll-url': download_export_instructeur_procedure_path(procedure, export_format: format, no_progress_notification: true) }
+                L'export au format .#{format} est en cours de préparation
