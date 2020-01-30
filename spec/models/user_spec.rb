@@ -273,6 +273,9 @@ describe User, type: :model do
         let!(:dossier_cache) do
           create(:dossier, :en_construction, user: user)
         end
+        let!(:dossier_from_another_user) do
+          create(:dossier, :en_construction, user: create(:user))
+        end
 
         it "keep track of dossiers and delete user" do
           dossier_cache.delete_and_keep_track(administration)
@@ -281,6 +284,13 @@ describe User, type: :model do
           expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
           expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_present
           expect(User.find_by(id: user.id)).to be_nil
+        end
+
+        it "doesn't destroy dossiers of another user" do
+          dossier_cache.delete_and_keep_track(administration)
+          user.delete_and_keep_track_dossiers(administration)
+
+          expect(Dossier.find_by(id: dossier_from_another_user.id)).not_to be_nil
         end
       end
     end
