@@ -15,6 +15,9 @@ class Administrateur < ApplicationRecord
   scope :inactive, -> { joins(:user).where(users: { last_sign_in_at: nil }) }
   scope :with_publiees_ou_closes, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :close, :depubliee] }) }
 
+  def self.by_email(email)
+    Administrateur.eager_load(:user).find_by(users: { email: email })
+  end
   # validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
 
   def password_complexity
