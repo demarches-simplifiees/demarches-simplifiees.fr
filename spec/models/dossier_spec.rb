@@ -1048,57 +1048,105 @@ describe Dossier do
     it { expect(Dossier.for_procedure(procedure_2)).to contain_exactly(dossier_2_1) }
   end
 
-  describe '#send_brouillon_expiration_notices' do
-    before { Timecop.freeze(Time.zone.parse('12/12/2012 15:00:00')) }
-
+  describe '#expire_dossier_brouillon' do
+    let!(:today) { Time.zone.now.at_midnight }
     let!(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
-    let!(:date_close_to_expiration) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months + 1.month }
-    let!(:date_expired) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
-    let!(:date_not_expired) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
-
-    after { Timecop.return }
+    let!(:date_close_to_expiration) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 1.month }
+    let!(:date_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
+    let!(:date_not_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
 
     context "Envoi de message pour les dossiers expirant dans - d'un mois" do
-      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired) }
+      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired, brouillon_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION + 1.day)) }
       let!(:brouillon_close_to_expiration) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration) }
       let!(:brouillon_close_but_with_notice_sent) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration, brouillon_close_to_expiration_notice_sent_at: Time.zone.now) }
       let!(:valid_brouillon) { create(:dossier, procedure: procedure, created_at: date_not_expired) }
 
       before do
         allow(DossierMailer).to receive(:notify_brouillon_near_deletion).and_return(double(deliver_later: nil))
+        allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
+
         Dossier.send_brouillon_expiration_notices
+        Dossier.destroy_brouillons_and_notify
       end
 
       it 'verification de la creation de mail' do
+        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).once
         expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(brouillon_close_to_expiration.user, [brouillon_close_to_expiration])
-        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(expired_brouillon.user, [expired_brouillon])
       end
 
       it 'Verification du changement d etat du champ' do
         expect(brouillon_close_to_expiration.reload.brouillon_close_to_expiration_notice_sent_at).not_to be_nil
       end
+
+      it 'notifies deletion' do
+        expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
+        expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(expired_brouillon.user, [expired_brouillon.hash_for_deletion_mail])
+      end
+
+      it 'deletes the expired brouillon' do
+        expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
+        expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 
-  describe '#destroy_brouillons_and_notify' do
+  describe '#expire_dossier_en_construction' do
+    let!(:state) { nil }
     let!(:today) { Time.zone.now.at_midnight }
+    let!(:administrateur) { create(:administrateur) }
+    let!(:procedure1) { create(:procedure, :with_instructeur, declarative_with_state: state, duree_conservation_dossiers_dans_ds: 6, administrateur: administrateur) }
+    let!(:date_near_expiring) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months + 1.month }
+    let!(:date_close_to_expiration) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months - 6.days }
+    let!(:date_not_expired) { Date.today - procedure1.duree_conservation_dossiers_dans_ds.months + 2.months }
 
-    let!(:expired_brouillon) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION + 1.day)) }
-    let!(:other_brouillon) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION - 1.day)) }
+    context "Suppression automatique des dossiers : " do
+      let!(:expired_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_close_to_expiration) } # expiré
+      let!(:en_construction_close_to_expiration) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_near_expiring) } # expirant
+      let!(:en_construction_close_but_with_notice_sent) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_near_expiring, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) } # expirant mais mail déja envoyé
+      let!(:en_construction_close_but_with_notice_sent2) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_near_expiring, en_construction_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION + 1.day)) } # expirant mais mail déja envoyé depuis longtemp
+      let!(:valid_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure1, en_construction_at: date_not_expired) } # autre
 
-    before do
-      allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
-      Dossier.destroy_brouillons_and_notify
+      before do
+        allow(DossierMailer).to receive(:notify_en_construction_near_deletion).and_return(double(deliver_later: nil))
+        allow(DossierMailer).to receive(:notify_excuse_deletion_to_user).and_return(double(deliver_later: nil))
+        allow(DossierMailer).to receive(:notify_deletion).and_return(double(deliver_later: nil))
+
+        Dossier.dossier_en_construction_expirant
+        Dossier.dossier_en_construction_expire
+      end
+
+      it 'Verification de la presence des dossiers non expirés' do
+        expired_en_construction.reload
+        en_construction_close_to_expiration.reload
+        en_construction_close_but_with_notice_sent.reload
+        valid_en_construction.reload
+      end
+
+      it 'Verification de la suppression des dossiers expirés' do
+        expect { en_construction_close_but_with_notice_sent2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'verification de la creation de mail' do
+        expect(DossierMailer).to have_received(:notify_excuse_deletion_to_user).once
+        expect(DossierMailer).to have_received(:notify_excuse_deletion_to_user).with(en_construction_close_but_with_notice_sent2.user, [en_construction_close_but_with_notice_sent2.hash_for_deletion_mail])
+
+        expect(DossierMailer).to have_received(:notify_deletion).once
+        expect(DossierMailer).to have_received(:notify_deletion).with(administrateur, [en_construction_close_but_with_notice_sent2].map(&:hash_for_deletion_mail))
+
+        expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).thrice
+        expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(en_construction_close_to_expiration.user, [en_construction_close_to_expiration], true)
+        expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(expired_en_construction.user, [expired_en_construction], true)
+      end
+
+      it 'verification de l enregistrement de l envois des mails' do
+        expired_en_construction.reload
+        expect(expired_en_construction.en_construction_close_to_expiration_notice_sent_at).not_to be_nil
+
+        en_construction_close_to_expiration.reload
+        expect(en_construction_close_to_expiration.en_construction_close_to_expiration_notice_sent_at).not_to be_nil
+      end
     end
 
-    it 'notifies deletion' do
-      expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
-      expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(expired_brouillon.user, [expired_brouillon.hash_for_deletion_mail])
-    end
-
-    it 'deletes the expired brouillon' do
-      expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
-      expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
-    end
+    after { Timecop.return }
   end
 end
