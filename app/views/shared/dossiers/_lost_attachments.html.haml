@@ -1,9 +1,12 @@
+- post_mortem_url = 'https://demarches-simplifiees.gitbook.io/articles-demarches-simplifiees-fr/2020/incident-de-production-du-21-janvier-2020'
 - if profile == 'usager'
   /# Message for Usager
   .card.warning
     .card-title Des pièces jointes de votre dossier peuvent être manquantes.
     %p
-      Suite à un incident survenu le 21 janvier, demarche-simplifiees.fr a perdu par erreur une partie des pièces jointes de votre dossier. L’administration en charge de votre dossier a été prévenue.
+      Suite à un
+      = link_to 'incident', post_mortem_url, target: '_blank'
+      survenu le 21 janvier, demarches-simplifiees.fr a perdu par erreur une partie des pièces jointes de votre dossier. L’administration en charge de votre dossier a été prévenue.
 
     - if dossier.read_only?
       %p
@@ -25,7 +28,9 @@
   .card.warning
     .card-title Des pièces jointes de ce dossier peuvent être manquantes.
     %p
-      Suite à un incident survenu le 21 janvier, demarche-simplifiees.fr a perdu par erreur une partie des pièces jointes de ce dossier.
+      Suite à un
+      = link_to 'incident', post_mortem_url, target: '_blank'
+      survenu le 21 janvier, demarches-simplifiees.fr a perdu par erreur une partie des pièces jointes de ce dossier.
 
     - if dossier.read_only?
       %p
