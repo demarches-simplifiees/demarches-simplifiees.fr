@@ -68,14 +68,13 @@ class Administrateur < ApplicationRecord
   end
 
   def can_be_deleted?
-    dossiers.state_instruction_commencee.none? && procedures.all? { |p| p.administrateurs.count > 1 }
+    procedures.all? { |p| p.administrateurs.count > 1 }
   end
 
   def delete_and_transfer_services
     if !can_be_deleted?
-      fail "Impossible de supprimer cet administrateur car il a des dossiers ou des procédures"
+      fail "Impossible de supprimer cet administrateur car il a des procédures où il est le seul administrateur"
     end
-    dossiers.each(&:delete_and_keep_track)
 
     procedures.each do |procedure|
       next_administrateur = procedure.administrateurs.where.not(id: self.id).first
