@@ -7,7 +7,6 @@ class Administrateur < ApplicationRecord
   has_many :administrateurs_procedures
   has_many :procedures, through: :administrateurs_procedures
   has_many :services
-  has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
   has_one :user, dependent: :nullify
 
