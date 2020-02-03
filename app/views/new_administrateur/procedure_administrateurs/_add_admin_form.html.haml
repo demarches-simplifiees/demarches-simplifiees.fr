@@ -1,4 +1,4 @@
-= form_for procedure.administrateurs.new,
+= form_for procedure.administrateurs.new(user: User.new),
   url: { controller: 'procedure_administrateurs' },
   html: { class: 'form', id:  "procedure-#{procedure.id}-new_administrateur" } ,
   remote: true do |f|
