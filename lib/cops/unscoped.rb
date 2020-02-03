@@ -1,4 +1,4 @@
-if ENV["RAILS_ENV"] == "development"
+if defined?(RuboCop)
   module RuboCop
     module Cop
       module DS
