@@ -82,7 +82,7 @@ class User < ApplicationRecord
     user = User.create_or_promote_to_instructeur(email, password)
 
     if user.valid? && user.administrateur_id.nil?
-      user.create_administrateur!(email: email)
+      user.create_administrateur!
     end
 
     user
