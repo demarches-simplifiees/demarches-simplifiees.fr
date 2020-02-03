@@ -119,7 +119,7 @@ class AdministrateurUsageStatisticsService
   end
 
   def nb_instructeurs_by_administrateur_id
-    @nb_instructeurs_by_administrateur_id ||= with_default(0, Administrateur.joins(:instructeurs).group(:administrateur_id).count)
+    @nb_instructeurs_by_administrateur_id ||= with_default(0, Administrateur.joins(:instructeurs).group('administrateurs.id').count)
   end
 
   def nb_dossiers_by_administrateur_id_and_procedure_id_and_synthetic_state
