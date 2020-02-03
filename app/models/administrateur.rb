@@ -9,11 +9,13 @@ class Administrateur < ApplicationRecord
 
   has_one :user, dependent: :nullify
 
+  default_scope { eager_load(:user) }
+
   scope :inactive, -> { joins(:user).where(users: { last_sign_in_at: nil }) }
   scope :with_publiees_ou_closes, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :close, :depubliee] }) }
 
   def self.by_email(email)
-    Administrateur.eager_load(:user).find_by(users: { email: email })
+    Administrateur.find_by(users: { email: email })
   end
 
   def email
