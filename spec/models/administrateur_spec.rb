@@ -32,7 +32,7 @@ describe Administrateur, type: :model do
       it { is_expected.to be true }
     end
 
-    context "when the administrateur has a procedure where he/she is the only admin" do
+    context "when the administrateur has a procedure where they is the only admin" do
       let!(:administrateur) { create(:administrateur) }
       let!(:procedure) { create(:procedure, administrateurs: [administrateur]) }
 

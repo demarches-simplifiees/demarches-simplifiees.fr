@@ -72,7 +72,7 @@ class Administrateur < ApplicationRecord
 
   def delete_and_transfer_services
     if !can_be_deleted?
-      fail "Impossible de supprimer cet administrateur car il a des procédures où il est le seul administrateur"
+      fail "Impossible de supprimer cet administrateur car il a des démarches où il est le seul administrateur"
     end
 
     procedures.each do |procedure|
