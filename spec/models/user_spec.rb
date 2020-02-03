@@ -290,7 +290,7 @@ describe User, type: :model do
           dossier_cache.delete_and_keep_track(administration)
           user.delete_and_keep_track_dossiers(administration)
 
-          expect(Dossier.find_by(id: dossier_from_another_user.id)).not_to be_nil
+          expect(Dossier.find_by(id: dossier_from_another_user.id)).to be_present
         end
       end
     end
