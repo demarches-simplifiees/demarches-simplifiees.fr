@@ -36,7 +36,7 @@ as well as a link to its edit page.
     <% if page.resource.invitation_expired? %>
       <%= link_to "renvoyer l'invitation", reinvite_manager_administrateur_path(page.resource), method: :post, class: "button" %>
     <% end %>
-    <%= button_to "supprimer", delete_manager_administrateur_path(page.resource), method: :delete, disabled: !page.resource.can_be_deleted?, class: "button", data: { confirm: "Confirmez-vous la suppression de l'administrateur ?" }, title: page.resource.can_be_deleted? ? "Supprimer" : "Cet administrateur a des procédures dont il est le seul admin et ne peut être supprimé" %>
+    <%= button_to "supprimer", delete_manager_administrateur_path(page.resource), method: :delete, disabled: !page.resource.can_be_deleted?, class: "button", data: { confirm: "Confirmez-vous la suppression de l'administrateur ?" }, title: page.resource.can_be_deleted? ? "Supprimer" : "Cet administrateur a des démarches dont il est le seul admin et ne peut être supprimé" %>
   </div>
 
 </header>
