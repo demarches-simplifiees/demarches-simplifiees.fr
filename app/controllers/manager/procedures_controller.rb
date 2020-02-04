@@ -29,7 +29,7 @@ module Manager
     end
 
     def add_administrateur
-      administrateur = Administrateur.find_by(email: params[:email])
+      administrateur = Administrateur.by_email(params[:email])
       if administrateur
         procedure.administrateurs << administrateur
         flash[:notice] = "L'administrateur \"#{params[:email]}\" est ajouté à la démarche."
