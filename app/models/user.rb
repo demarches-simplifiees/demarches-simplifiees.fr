@@ -97,7 +97,7 @@ class User < ApplicationRecord
   end
 
   def can_be_deleted?
-    dossiers.state_instruction_commencee.empty?
+    administrateur.nil? && instructeur.nil? && dossiers.state_instruction_commencee.empty?
   end
 
   def delete_and_keep_track_dossiers(administration)
@@ -105,12 +105,11 @@ class User < ApplicationRecord
       raise "Cannot delete this user because instruction has started for some dossiers"
     end
 
-    if can_be_deleted?
-      dossiers.each do |dossier|
-        dossier.delete_and_keep_track(administration)
-      end
-      destroy
+    dossiers.each do |dossier|
+      dossier.delete_and_keep_track(administration)
     end
+    dossiers.with_hidden.destroy_all
+    destroy!
   end
 
   private

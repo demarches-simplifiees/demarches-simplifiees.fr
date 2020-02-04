@@ -7,7 +7,6 @@ class Administrateur < ApplicationRecord
   has_many :administrateurs_procedures
   has_many :procedures, through: :administrateurs_procedures
   has_many :services
-  has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
   has_one :user, dependent: :nullify
 
@@ -68,6 +67,18 @@ class Administrateur < ApplicationRecord
   end
 
   def can_be_deleted?
-    dossiers.state_instruction_commencee.none? && procedures.all? { |p| p.administrateurs.count > 1 }
+    procedures.all? { |p| p.administrateurs.count > 1 }
+  end
+
+  def delete_and_transfer_services
+    if !can_be_deleted?
+      fail "Impossible de supprimer cet administrateur car il a des démarches où il est le seul administrateur"
+    end
+
+    procedures.each do |procedure|
+      next_administrateur = procedure.administrateurs.where.not(id: self.id).first
+      procedure.service.update(administrateur: next_administrateur)
+    end
+    destroy
   end
 end
