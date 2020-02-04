@@ -25,8 +25,10 @@ as well as a link to its edit page.
   </h1>
 
   <div>
+    <%= button_to "modifier", edit_manager_user_path(page.resource), method: :get, class: "button" %>
+  </div>
+  <div>
     <%= button_to "supprimer", delete_manager_user_path(page.resource), method: :delete, disabled: !page.resource.can_be_deleted?, class: "button", data: { confirm: "Confirmez-vous la suppression de l'utilisateur ?" }, title: page.resource.can_be_deleted? ? "Supprimer" : "Cet utilisateur a des dossiers dont l'instruction a commencé et ne peut être supprimé" %>
-
   </div>
   <div>
     <% if !user.confirmed? %>
