@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import 'select2';
+import { isNumeric } from '@utils';
 
 const { api_geo_url, api_adresse_url } = gon.autocomplete || {};
 
@@ -80,10 +81,21 @@ const communesOptions = {
 const etranger99 = { id: '99 - Étranger', text: '99 - Étranger' };
 const departementsOptions = {
   ...baseOptions,
-  minimumInputLength: 2,
+  minimumInputLength: 1,
   ajax: {
     ...baseAjaxOptions,
     url: `${api_geo_url}/departements`,
+    data({ term }) {
+      const data = { fields: 'nom,code' };
+
+      if (isNumeric(term)) {
+        data.code = term.trim().padStart(2, '0');
+      } else {
+        data.nom = term;
+      }
+
+      return data;
+    },
     processResults(data) {
       return {
         results: data
