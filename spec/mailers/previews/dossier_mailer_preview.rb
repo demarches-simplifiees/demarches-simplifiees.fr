@@ -37,6 +37,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_brouillon_deletion(User.new(email: "usager@example.com"), dossier_hashes)
   end
 
+  def notify_dossier_not_submitted
+    DossierMailer.notify_dossier_not_submitted(draft)
+  end
+
   private
 
   def deleted_dossier
@@ -52,7 +56,7 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   def procedure
-    Procedure.new(libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'))
+    Procedure.new(libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'), auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING)
   end
 
   def service

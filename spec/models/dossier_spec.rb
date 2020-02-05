@@ -1098,6 +1098,25 @@ describe Dossier do
     end
   end
 
+  describe '#notify_draft_not_submitted' do
+    let!(:procedure_closed_in_time) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING) }
+    let!(:procedure_closed_later) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING + 1.day) }
+    let!(:procedure_closed_before) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING - 1.day) }
+    let!(:draft_in_time) { create(:dossier, procedure: procedure_closed_in_time) }
+    let!(:draft_before) { create(:dossier, procedure: procedure_closed_before) }
+    let!(:draft_later) { create(:dossier, procedure: procedure_closed_later) }
+
+    before do
+      allow(DossierMailer).to receive(:notify_dossier_not_submitted).and_return(double(deliver_later: nil))
+      Dossier.notify_draft_not_submitted
+    end
+
+    it 'notifies draft is not submitted' do
+      expect(DossierMailer).to have_received(:notify_dossier_not_submitted).once
+      expect(DossierMailer).to have_received(:notify_dossier_not_submitted).with(draft_in_time)
+    end
+  end
+
   describe '#geo_position' do
     let(:lat) { "46.538192" }
     let(:lon) { "2.428462" }

@@ -164,8 +164,8 @@
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
   = f.label :auto_archive_on do
-    Clôture automatique à 00h01 le :
-  = f.date_field :auto_archive_on, id: 'auto_archive_on', value: @procedure.auto_archive_on
+    Clôture automatique à 23h59 le :
+  = f.date_field :auto_archive_on, id: 'auto_archive_on', value: @procedure.auto_archive_on ? @procedure.auto_archive_on - 1.day : nil
 
   %p.explication
     La clôture automatique suspend la publication de la démarche et entraîne le passage de tous les dossiers "en construction"
