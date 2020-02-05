@@ -34,6 +34,7 @@ module Users
     def show
       if dossier.brouillon?
         redirect_to brouillon_dossier_path(dossier)
+        return
       end
 
       @dossier = dossier
