@@ -52,6 +52,10 @@ class DossierMailerPreview < ActionMailer::Preview
   def notify_automatic_deletion_to_administration
     DossierMailer.notify_automatic_deletion_to_administration([deleted_dossier, deleted_dossier], administration_email)
   end
+  
+  def notify_dossier_not_submitted
+    DossierMailer.notify_dossier_not_submitted(draft)
+  end
 
   private
 
@@ -76,7 +80,7 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   def procedure
-    Procedure.new(id: 1234, libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'))
+    Procedure.new(id: 1234, libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'), auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING)
   end
 
   def service
