@@ -12,6 +12,9 @@ feature 'Inviting an expert:' do
 
   context 'as an Instructeur' do
     scenario 'I can invite an expert' do
+      # assign instructeur to linked dossier
+      instructeur.assign_to_procedure(dossier.reload.linked_dossiers.first.procedure)
+
       login_as instructeur.user, scope: :user
       visit instructeur_dossier_path(procedure, dossier)
 

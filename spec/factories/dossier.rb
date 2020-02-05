@@ -68,7 +68,7 @@ FactoryBot.define do
     trait :with_dossier_link do
       after(:create) do |dossier, _evaluator|
         # create linked dossier
-        linked_dossier = create(:dossier)
+        linked_dossier = create(:dossier, :en_construction)
 
         # find first type de champ dossier_link
         type_de_champ = dossier.procedure.types_de_champ.find do |t|

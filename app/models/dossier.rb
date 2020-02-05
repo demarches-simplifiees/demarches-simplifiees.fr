@@ -588,6 +588,10 @@ class Dossier < ApplicationRecord
     Dossier.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
   end
 
+  def linked_dossiers_for(instructeur)
+    instructeur.dossiers.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
+  end
+
   def hash_for_deletion_mail
     { id: self.id, procedure_libelle: self.procedure.libelle }
   end
