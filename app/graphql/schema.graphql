@@ -999,7 +999,7 @@ type TextChamp implements Champ {
 
 enum TypeDeChamp {
   """
-  Adresse
+  Adresse en France
   """
   address
 
@@ -1032,6 +1032,7 @@ enum TypeDeChamp {
   Commune de Polynésie
   """
   commune_de_polynesie
+
   """
   Communes
   """

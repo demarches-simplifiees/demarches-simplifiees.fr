@@ -17,7 +17,7 @@ fr:
           civilite: 'Civilité'
           email: 'Email'
           phone: 'Téléphone'
-          address: 'Adresse'
+          address: 'Adresse en France'
           yes_no: 'Oui/Non'
           drop_down_list: 'Menu déroulant'
           multiple_drop_down_list: 'Menu déroulant à choix multiples'
