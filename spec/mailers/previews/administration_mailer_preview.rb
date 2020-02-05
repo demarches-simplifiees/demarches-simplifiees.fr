@@ -53,6 +53,6 @@ class AdministrationMailerPreview < ActionMailer::Preview
   end
 
   def administrateur
-    Administrateur.new(id: 111, email: "chef.de.service@administration.gouv.fr")
+    Administrateur.new(id: 111, user: User.new(email: "chef.de.service@administration.gouv.fr"))
   end
 end
