@@ -23,6 +23,7 @@ gem 'delayed_job_active_record'
 gem 'delayed_job_web'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
+gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
 gem 'flipper'
 gem 'flipper-active_record'
