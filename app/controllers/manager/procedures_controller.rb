@@ -12,7 +12,7 @@ module Manager
         Procedure
       else
         # … but allow them to be searched and displayed.
-        Procedure.unscope(:where)
+        Procedure.with_hidden
       end
     end
 

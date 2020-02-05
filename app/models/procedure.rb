@@ -16,6 +16,7 @@ class Procedure < ApplicationRecord
   has_one :attestation_template, dependent: :destroy
 
   belongs_to :parent_procedure, class_name: 'Procedure'
+  belongs_to :canonical_procedure, class_name: 'Procedure'
   belongs_to :service
 
   has_many :administrateurs_procedures
@@ -44,6 +45,8 @@ class Procedure < ApplicationRecord
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   default_scope { where(hidden_at: nil) }
+  scope :hidden,                -> { unscope(where: :hidden_at).where.not(hidden_at: nil) }
+  scope :with_hidden,           -> { unscope(where: :hidden_at) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
@@ -129,9 +132,10 @@ class Procedure < ApplicationRecord
       other_procedure = other_procedure_with_path(path)
       if other_procedure.present? && administrateur.owns?(other_procedure)
         other_procedure.unpublish!
+        publish!(other_procedure.canonical_procedure || other_procedure)
+      else
+        publish!
       end
-
-      publish!
     end
   end
 
@@ -615,8 +619,8 @@ class Procedure < ApplicationRecord
     update!(closed_at: nil, unpublished_at: nil)
   end
 
-  def after_publish
-    update!(published_at: Time.zone.now)
+  def after_publish(canonical_procedure = nil)
+    update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure)
   end
 
   def after_close

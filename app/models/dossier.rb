@@ -95,6 +95,8 @@ class Dossier < ApplicationRecord
   end
 
   default_scope { where(hidden_at: nil) }
+  scope :hidden,                               -> { unscope(where: :hidden_at).where.not(hidden_at: nil) }
+  scope :with_hidden,                          -> { unscope(where: :hidden_at) }
   scope :state_brouillon,                      -> { where(state: states.fetch(:brouillon)) }
   scope :state_not_brouillon,                  -> { where.not(state: states.fetch(:brouillon)) }
   scope :state_en_construction,                -> { where(state: states.fetch(:en_construction)) }
@@ -216,6 +218,7 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true
   validates :individual, presence: true, if: -> { procedure.for_individual? }
+  validates :groupe_instructeur, presence: true
 
   def update_search_terms
     self.search_terms = [

@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import 'select2';
+import { isNumeric } from '@utils';
 
 const { api_geo_url, api_adresse_url } = gon.autocomplete || {};
 
@@ -80,10 +81,21 @@ const communesOptions = {
 const etranger99 = { id: '99 - Étranger', text: '99 - Étranger' };
 const departementsOptions = {
   ...baseOptions,
-  minimumInputLength: 2,
+  minimumInputLength: 1,
   ajax: {
     ...baseAjaxOptions,
     url: `${api_geo_url}/departements`,
+    data({ term }) {
+      const data = { fields: 'nom,code' };
+
+      if (isNumeric(term)) {
+        data.code = term.trim().padStart(2, '0');
+      } else {
+        data.nom = term;
+      }
+
+      return data;
+    },
     processResults(data) {
       return {
         results: data
@@ -110,12 +122,16 @@ const adresseOptions = {
       };
     },
     processResults(data) {
+      let r = data.features.map(({ properties: { label }, geometry }) => ({
+        id: label,
+        text: label,
+        geometry
+      }));
+      // Allow the user to select an arbitrary address missing from the results,
+      // by adding the plain-text query to the list of results.
+      r.unshift({ id: data.query, text: data.query });
       return {
-        results: data.features.map(({ properties: { label }, geometry }) => ({
-          id: label,
-          text: label,
-          geometry
-        }))
+        results: r
       };
     }
   }
