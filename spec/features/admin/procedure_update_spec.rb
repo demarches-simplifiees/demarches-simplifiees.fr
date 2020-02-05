@@ -59,4 +59,18 @@ feature 'Administrateurs can edit procedures', js: true do
       expect(page).to have_field('procedure_libelle', with: 'Ma petite démarche')
     end
   end
+
+  scenario 'the administrator can add another administrator' do
+    another_administrateur = create(:administrateur)
+    visit admin_procedure_path(procedure)
+    click_on 'Administrateurs'
+
+    fill_in('administrateur_email', with: another_administrateur.email)
+
+    click_on 'Ajouter comme administrateur'
+
+    within('.alert-success') do
+      expect(page).to have_content(another_administrateur.email)
+    end
+  end
 end

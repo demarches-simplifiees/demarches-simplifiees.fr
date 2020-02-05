@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'As an administrateur', js: true do
   let(:administration) { create(:administration) }
   let(:admin_email) { 'new_admin@gouv.fr' }
-  let(:new_admin) { Administrateur.find_by(email: admin_email) }
+  let(:new_admin) { Administrateur.by_email(admin_email) }
 
   before do
     perform_enqueued_jobs do

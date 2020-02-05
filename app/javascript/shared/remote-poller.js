@@ -86,5 +86,5 @@ class RemotePoller {
   }
 }
 
-const attachementPoller = new RemotePoller({ interval: 2000, maxChecks: 5 });
-const exportPoller = new RemotePoller({ interval: 4000, maxChecks: 10 });
+const attachementPoller = new RemotePoller({ interval: 3000, maxChecks: 5 });
+const exportPoller = new RemotePoller({ interval: 6000, maxChecks: 10 });
