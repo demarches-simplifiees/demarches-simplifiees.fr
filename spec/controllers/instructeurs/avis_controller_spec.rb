@@ -196,16 +196,30 @@ describe Instructeurs::AvisController, type: :controller do
 
         context 'checked' do
           let(:invite_linked_dossiers) { true }
-          let(:created_avis) { Avis.last(2).first }
-          let(:linked_avis) { Avis.last }
-          let(:linked_dossier) { dossier.reload.linked_dossiers.first }
 
-          it do
+          context 'and can access linked dossiers' do
+            let(:created_avis) { Avis.last(2).first }
+            let(:linked_avis) { Avis.last }
+            let(:linked_dossier) { dossier.reload.linked_dossiers.first }
+            let(:invite_linked_dossiers) do
+              instructeur.assign_to_procedure(linked_dossier.procedure)
+              true
+            end
+
+            it 'sends two avis invitations' do
+              expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+              expect(Avis.count).to eq(old_avis_count + 2)
+              expect(created_avis.email).to eq("a@b.com")
+              expect(created_avis.dossier).to eq(dossier)
+              expect(linked_avis.dossier).to eq(linked_dossier)
+            end
+          end
+
+          it 'and can not access linked dossiers' do
             expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
-            expect(Avis.count).to eq(old_avis_count + 2)
+            expect(Avis.count).to eq(old_avis_count + 1)
             expect(created_avis.email).to eq("a@b.com")
             expect(created_avis.dossier).to eq(dossier)
-            expect(linked_avis.dossier).to eq(linked_dossier)
           end
         end
       end
