@@ -31,7 +31,7 @@ require 'devise'
 require 'factory_bot'
 
 require 'selenium/webdriver'
-Capybara.javascript_driver = :headless_chrome
+Capybara.javascript_driver      = ENV.fetch('CAPYBARA_DRIVER', 'headless_chrome').to_sym
 Capybara.ignore_hidden_elements = false
 
 Capybara.register_driver :chrome do |app|
@@ -48,9 +48,26 @@ Capybara.register_driver :headless_chrome do |app|
   )
 
   Capybara::Selenium::Driver.new app,
-    browser: :chrome,
+    browser:              :chrome,
     desired_capabilities: capabilities,
-    options: options
+    options:              options
+end
+
+#---- From https://gist.github.com/danwhitston/5cea26ae0861ce1520695cff3c2c3315#using-capybara-with-a-remote-selenium-server
+
+Capybara.register_driver :wsl do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--window-size=1440,900')
+
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
+  )
+
+  Capybara::Selenium::Driver.new(app,
+    browser:              :remote,
+    url:                  "http://localhost:4444/wd/hub",
+    desired_capabilities: capabilities,
+    options:              options)
 end
 
 # FIXME: remove this line when https://github.com/rspec/rspec-rails/issues/1897 has been fixed
