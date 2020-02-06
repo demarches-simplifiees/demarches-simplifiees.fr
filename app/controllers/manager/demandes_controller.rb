@@ -48,7 +48,7 @@ module Manager
     end
 
     def pending_demandes
-      already_approved_emails = Administrateur.eager(:user)
+      already_approved_emails = Administrateur.eager_load(:user)
         .where(users: { email: demandes.map { |d| d[:email] } })
         .map(&:email)
 
