@@ -96,7 +96,7 @@ def render_single_champ(pdf, champ)
     pdf.text "\n"
   when 'Champs::NumberChamp'
     value = number_with_delimiter(champ.to_s)
-    format_in_2_lines(pdf, champ.libelle, value)
+    format_in_2_lines(pdf, champ.libelle, value) 
   else
     value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, champ.libelle, value)
