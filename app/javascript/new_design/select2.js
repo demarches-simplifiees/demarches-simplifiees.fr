@@ -52,6 +52,7 @@ const baseOptions = {
 
 const baseAjaxOptions = {
   delay: 250,
+  timeout: 10 * 1000, // 10 sec
   cache: true,
   data({ term: nom }) {
     return {

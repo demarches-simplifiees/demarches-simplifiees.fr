@@ -32,6 +32,7 @@ Rails.application.routes.draw do
 
     resources :instructeurs, only: [:index, :show] do
       post 'reinvite', on: :member
+      delete 'delete', on: :member
     end
 
     resources :dossiers, only: [:show]

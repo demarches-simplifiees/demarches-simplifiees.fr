@@ -83,4 +83,11 @@ class DossierMailer < ApplicationMailer
 
     mail(to: user.email, subject: @subject)
   end
+
+  def notify_dossier_not_submitted(dossier)
+    @subject = "Votre dossier n'est pas déposé ?"
+    @dossier = dossier
+
+    mail(to: dossier.user.email, subject: @subject)
+  end
 end

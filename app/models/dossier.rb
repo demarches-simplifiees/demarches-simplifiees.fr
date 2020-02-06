@@ -18,7 +18,8 @@ class Dossier < ApplicationRecord
 
   TAILLE_MAX_ZIP = 50.megabytes
 
-  DRAFT_EXPIRATION = 1.month + 5.days
+  DRAFT_EXPIRATION              = 1.month + 5.days
+  REMAINING_TIME_BEFORE_CLOSING = 2.days
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
@@ -170,6 +171,9 @@ class Dossier < ApplicationRecord
     brouillon
       .joins(:procedure)
       .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (1 * interval '1 month') <=  now()")
+  end
+  scope :brouillon_near_closing_date, -> do
+    brouillon.joins(:procedure).where(procedures: { auto_archive_on: Time.zone.today + REMAINING_TIME_BEFORE_CLOSING })
   end
   scope :expired_brouillon, -> { brouillon.where("brouillon_close_to_expiration_notice_sent_at < ?", (Time.zone.now - (DRAFT_EXPIRATION))) }
   scope :without_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
@@ -381,7 +385,7 @@ class Dossier < ApplicationRecord
     update(hidden_at: deleted_dossier.deleted_at)
 
     if en_construction?
-      administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.pluck(:email)
+      administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
       administration_emails.each do |email|
         DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
       end
@@ -689,5 +693,13 @@ class Dossier < ApplicationRecord
         dossier.destroy
       end
     end
+  end
+
+  def self.notify_draft_not_submitted
+    brouillon_near_closing_date
+      .includes(:procedure, :user)
+      .find_each do |dossier|
+        DossierMailer.notify_dossier_not_submitted(dossier).deliver_later
+      end
   end
 end

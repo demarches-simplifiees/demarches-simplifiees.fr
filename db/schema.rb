@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_14_113700) do
+ActiveRecord::Schema.define(version: 2020_01_30_165328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 2020_01_14_113700) do
     t.datetime "updated_at"
     t.boolean "active", default: false
     t.string "encrypted_token"
-    t.index ["email"], name: "index_administrateurs_on_email", unique: true
+    t.index ["email"], name: "index_administrateurs_on_email"
   end
 
   create_table "administrateurs_instructeurs", id: false, force: :cascade do |t|
