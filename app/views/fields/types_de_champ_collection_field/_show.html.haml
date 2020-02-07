@@ -10,5 +10,10 @@
       - field.data.order(:order_place).each do |type_de_champ|
         = render partial: 'fields/types_de_champ_collection_field/type_champ_line',
           locals: { type_de_champ: type_de_champ }
+
+        - if type_de_champ.type_champ == 'repetition'
+          - type_de_champ.types_de_champ.each do |sub_champ|
+            = render partial: 'fields/types_de_champ_collection_field/type_champ_line',
+              locals: { type_de_champ: sub_champ }
 - else
   Aucun
