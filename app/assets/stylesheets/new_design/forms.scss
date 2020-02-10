@@ -335,6 +335,13 @@
     }
   }
 
+  .siret-info {
+    margin-top: -$default-fields-spacer;
+    margin-bottom: $default-fields-spacer;
+    // Ensure the bottom-margin is not collapsed when the element is empty
+    min-height: 1px;
+  }
+
   .send-wrapper {
     display: flex;
     width: 100%;
