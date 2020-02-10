@@ -94,6 +94,9 @@ def render_single_champ(pdf, champ)
     pdf.text " - SIRET: #{champ.to_s}"
     render_identite_etablissement(pdf, champ.etablissement) if champ.etablissement.present?
     pdf.text "\n"
+  when 'Champs::NumberChamp'
+    value = number_with_delimiter(champ.to_s)
+    format_in_2_lines(pdf, champ.libelle, value)
   else
     value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, champ.libelle, value)
