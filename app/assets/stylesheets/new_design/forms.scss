@@ -18,7 +18,7 @@
     margin-top: $default-padding;
     margin-bottom: 2 * $default-padding;
     border: none;
-    border-bottom: 1px solid $border-grey;
+    border-bottom: 2px solid $border-grey;
   }
 
   @mixin notice-text-style {
