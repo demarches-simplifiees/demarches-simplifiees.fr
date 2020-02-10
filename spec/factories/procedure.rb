@@ -3,8 +3,8 @@ FactoryBot.define do
   factory :procedure do
     sequence(:libelle) { |n| "Procedure #{n}" }
     description { "Demande de subvention à l'intention des associations" }
-    organisation { "Orga DINSIC" }
-    direction { "direction DINSIC" }
+    organisation { "Orga DINUM" }
+    direction { "direction DINUM" }
     cadre_juridique { "un cadre juridique important" }
     published_at { nil }
     duree_conservation_dossiers_dans_ds { 3 }
