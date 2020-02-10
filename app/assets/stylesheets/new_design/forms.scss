@@ -86,6 +86,14 @@
         left: 0px;
       }
     }
+
+    // When the (eventual) notice is displayed after the input, give it some bottom margin
+    &.editable-champ-checkbox,
+    &.editable-champ-engagement {
+      .notice {
+        margin-bottom: $default-fields-spacer;
+      }
+    }
   }
 
   .radios {
@@ -307,7 +315,7 @@
     display: inline-block;
     color: $blue;
     font-size: 30px;
-    margin-bottom: $default-fields-spacer;
+    margin-bottom: 3 * $default-padding;
     border-bottom: 3px solid $blue;
   }
 
@@ -318,7 +326,7 @@
   }
 
   .explication {
-    margin-bottom: $default-padding;
+    margin-bottom: $default-fields-spacer;
     padding: $default-padding / 2;
     background-color: $light-grey;
 
