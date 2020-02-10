@@ -16,7 +16,7 @@
     width: 100%;
     height: 0;
     margin-top: $default-padding;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
     border: none;
     border-bottom: 2px solid $border-grey;
   }
@@ -109,7 +109,7 @@
   select,
   .attachment {
     display: block;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
 
     &.small-margin {
       margin-bottom: $default-padding / 2;
@@ -117,7 +117,7 @@
   }
 
   .add-row {
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
   }
 
   input[type=checkbox] {
@@ -184,7 +184,7 @@
 
     margin-left: 5px;
     margin-right: 4px;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
   }
 
   input[type=checkbox] {
@@ -234,7 +234,7 @@
 
   .select2-container {
     display: block;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
 
     &.select2-container--focus {
       .select2-selection {
@@ -307,7 +307,7 @@
     display: inline-block;
     color: $blue;
     font-size: 30px;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
     border-bottom: 3px solid $blue;
   }
 
