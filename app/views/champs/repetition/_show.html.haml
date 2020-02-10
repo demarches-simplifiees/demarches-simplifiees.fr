@@ -7,5 +7,6 @@
         = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { champ: champ, form: form }
         = form.hidden_field :id
         = form.hidden_field :_destroy, disabled: true
-    %button.button.danger.remove-row
-      Supprimer
+    .flex.row-reverse
+      %button.button.danger.remove-row
+        Supprimer l’élément
