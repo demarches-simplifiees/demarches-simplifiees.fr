@@ -22,7 +22,7 @@
   }
 
   @mixin notice-text-style {
-    font-size: 14px;
+    font-size: 16px;
     color: $grey;
   }
 
@@ -31,6 +31,7 @@
   }
 
   label {
+    font-size: 18px;
     margin-bottom: $default-padding;
     display: block;
     font-weight: bold;
@@ -45,7 +46,6 @@
 
   .notice {
     @include notice-text-style;
-    font-weight: bold;
     margin-top: - $default-spacer;
     margin-bottom: $default-padding;
 
@@ -82,7 +82,7 @@
       input[type=checkbox],
       input[type=radio] {
         position: absolute;
-        top: 1px;
+        top: 3px;
         left: 0px;
       }
     }
