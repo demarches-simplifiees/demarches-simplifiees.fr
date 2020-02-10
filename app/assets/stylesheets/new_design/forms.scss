@@ -389,15 +389,4 @@
       margin-right: 0;
     }
   }
-
-  .pj-input {
-    input[type=file] {
-      margin: $default-padding 0  (2 * $default-padding);
-      padding: 2px;
-    }
-
-    .piece-description {
-      margin-bottom: $default-padding;
-    }
-  }
 }
