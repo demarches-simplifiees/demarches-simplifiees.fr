@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_100938) do
+ActiveRecord::Schema.define(version: 2020_02_11_170134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,12 +48,10 @@ ActiveRecord::Schema.define(version: 2020_02_10_100938) do
   end
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
-    t.string "email", default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "active", default: false
     t.string "encrypted_token"
-    t.index ["email"], name: "index_administrateurs_on_email"
   end
 
   create_table "administrateurs_instructeurs", id: false, force: :cascade do |t|
