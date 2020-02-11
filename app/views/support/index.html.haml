@@ -18,9 +18,9 @@
 
       .contact-champ
         = label_tag :type do
-          Votre problème
+          Votre question
           %span.mandatory *
-        = select_tag :type, options_for_select(@options, params[:type]), include_blank: "Choisir un problème", required: true
+        = select_tag :type, options_for_select(@options, params[:type]), include_blank: "Choisir une question", required: true
 
       .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INFO } }
         .card-title
@@ -52,6 +52,24 @@
             En savoir plus
         %br
         %p Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l'instruction de votre dossier.
+
+      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
+        .card-title
+          👉 Notre réponse
+        %p
+          Une idée ? Pensez à consulter notre
+          = succeed ' !' do
+            %strong
+              tableau de bord des améliorations
+        %p
+          %ul
+            %li • Votez pour vos améliorations prioritaires ;
+            %li • Proposez votre propre idée.
+
+        %p
+          %strong
+            %a{ href: 'https://demarches-simplifiees.featureupvote.com' }
+              ➡ Accéder au tableau des améliorations
 
       .contact-champ
         = label_tag :dossier_id, 'Numéro du dossier concerné'
