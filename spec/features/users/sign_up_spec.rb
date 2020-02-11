@@ -114,4 +114,32 @@ feature 'Signing up:' do
       expect(page).to have_content 'Vous devez confirmer votre adresse email pour continuer'
     end
   end
+
+  context 'when the user already has a confirmed account' do
+    before do
+      create(:user, email: user_email, password: user_password)
+    end
+
+    scenario 'they get a warning email, containing a link to the procedure' do
+      visit commencer_path(path: procedure.path)
+      click_on 'Créer un compte'
+
+      sign_up_with user_email, user_password
+
+      # The same page than for initial sign-ups is displayed, to avoid leaking informations
+      # about the accound existence.
+      expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+
+      # A warning email is sent
+      warning_email = open_email(user_email)
+      expect(warning_email.body).to have_text('Votre compte existe déjà')
+
+      # When clicking the main button, the user has a link to directly sign-in
+      # for the procedure they were initially starting
+      click_procedure_sign_in_link_for user_email
+
+      expect(page).to have_current_path new_user_session_path
+      expect(page).to have_procedure_description(procedure)
+    end
+  end
 end
