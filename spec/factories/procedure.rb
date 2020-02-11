@@ -153,6 +153,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_repetition do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ_repetition)
+        procedure.types_de_champ << type_de_champ
+
+        type_de_champ.types_de_champ << create(:type_de_champ, libelle: 'sub type de champ')
+      end
+    end
+
     trait :published do
       after(:build) do |procedure, _evaluator|
         procedure.path = generate(:published_path)
