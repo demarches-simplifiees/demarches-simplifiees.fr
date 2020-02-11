@@ -4,31 +4,15 @@
       %tr
         %td.cell-label Libelle
         %td.cell-label Type de champ
-        %td.cell-label Rempli
         %td.cell-label Modifier le modèle
     %tbody
-      - field.data.order(:order_place).each do |f|
-        %tr
-          %td.cell-data
-            = f.libelle
-            - if f.mandatory?
-              %span.mandatory{ style: 'color: #A10005;' } *
-          %td.cell-data
-            = I18n.t("activerecord.attributes.type_de_champ.type_champs.#{f.type_champ}")
+      - field.data.order(:order_place).each do |type_de_champ|
+        = render partial: 'fields/types_de_champ_collection_field/type_champ_line',
+          locals: { type_de_champ: type_de_champ }
 
-          %td.cell-data
-            - if f.blank?
-              vide
-            - else
-              rempli
-
-          %td.cell-data
-            - if f.type_champ == 'piece_justificative'
-              = form_for f,
-                url: change_piece_justificative_template_manager_procedure_path,
-                method: :post  do |form|
-                = form.hidden_field :id
-                = form.file_field :piece_justificative_template
-                = form.submit 'modifier'
+        - if type_de_champ.type_champ == 'repetition'
+          - type_de_champ.types_de_champ.each do |sub_champ|
+            = render partial: 'fields/types_de_champ_collection_field/type_champ_line',
+              locals: { type_de_champ: sub_champ }
 - else
   Aucun
