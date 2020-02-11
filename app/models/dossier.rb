@@ -589,7 +589,8 @@ class Dossier < ApplicationRecord
   end
 
   def linked_dossiers_for(instructeur)
-    instructeur.dossiers.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
+    dossier_ids = champs.filter(&:dossier_link?).map(&:value).compact
+    (instructeur.dossiers.where(id: dossier_ids) + instructeur.dossiers_from_avis.where(id: dossier_ids)).uniq
   end
 
   def hash_for_deletion_mail
