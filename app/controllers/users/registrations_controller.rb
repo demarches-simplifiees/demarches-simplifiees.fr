@@ -25,7 +25,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     existing_user = User.find_by(email: params[:user][:email])
     if existing_user.present?
       if existing_user.confirmed?
-        UserMailer.new_account_warning(existing_user).deliver_later
+        UserMailer.new_account_warning(existing_user, @procedure).deliver_later
       else
         existing_user.resend_confirmation_instructions
       end
