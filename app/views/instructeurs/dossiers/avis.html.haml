@@ -4,7 +4,7 @@
 
 .container
   - if !@dossier.termine?
-    = render partial: "instructeurs/shared/avis/form", locals: { url: avis_instructeur_dossier_path(@dossier.procedure, @dossier), linked_dossiers: @dossier.linked_dossiers, must_be_confidentiel: false, avis: @avis }
+    = render partial: "instructeurs/shared/avis/form", locals: { url: avis_instructeur_dossier_path(@dossier.procedure, @dossier), linked_dossiers: @dossier.linked_dossiers_for(current_instructeur), must_be_confidentiel: false, avis: @avis }
 
   - if @dossier.avis.present?
     = render partial: 'instructeurs/shared/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }

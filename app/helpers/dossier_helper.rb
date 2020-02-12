@@ -69,4 +69,27 @@ module DossierHelper
       dossier.state
     end
   end
+
+  # On the 22/01/2020, a technical error on the demarches-simplifees.fr
+  # instance caused some files attached to some dossiers to be deleted.
+  #
+  # This method returns true if the dossier contained attachments
+  # whose files were deleted during this incident.
+  def has_lost_attachments(dossier)
+    if dinum_instance?
+      dossiers_with_lost_attachments_ids.include?(dossier.id)
+    else
+      false
+    end
+  end
+
+  private
+
+  def dinum_instance?
+    ENV['APP_HOST']&.ends_with?('demarches-simplifiees.fr')
+  end
+
+  def dossiers_with_lost_attachments_ids
+    @@ids ||= YAML.load_file(Rails.root.join('config', 'dossiers-with-lost-attachments.yml'))
+  end
 end

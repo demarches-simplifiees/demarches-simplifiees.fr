@@ -107,7 +107,7 @@ feature 'The user' do
     fill_in('text', with: 'super texte')
     expect(page).to have_field('text', with: 'super texte')
 
-    click_on 'Ajouter une ligne pour'
+    click_on 'Ajouter un élément pour'
 
     within '.row-1' do
       fill_in('text', with: 'un autre texte')
@@ -120,7 +120,7 @@ feature 'The user' do
     expect(page).to have_content('Supprimer', count: 2)
 
     within '.row-1' do
-      click_on 'Supprimer'
+      click_on 'Supprimer l’élément'
     end
 
     click_on 'Enregistrer le brouillon'

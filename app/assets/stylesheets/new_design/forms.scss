@@ -16,13 +16,13 @@
     width: 100%;
     height: 0;
     margin-top: $default-padding;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
     border: none;
-    border-bottom: 1px solid $border-grey;
+    border-bottom: 2px solid $border-grey;
   }
 
   @mixin notice-text-style {
-    font-size: 14px;
+    font-size: 16px;
     color: $grey;
   }
 
@@ -31,6 +31,7 @@
   }
 
   label {
+    font-size: 18px;
     margin-bottom: $default-padding;
     display: block;
     font-weight: bold;
@@ -45,7 +46,6 @@
 
   .notice {
     @include notice-text-style;
-    font-weight: bold;
     margin-top: - $default-spacer;
     margin-bottom: $default-padding;
 
@@ -70,31 +70,79 @@
       visibility: visible;
     }
 
-    // Align checkboxes on the top-left side of the label
+    // Move checkbox to the top-left side of the label
     &.editable-champ-checkbox,
-    &.editable-champ-radio.vertical,
     &.editable-champ-engagement {
       p,
       label {
         padding-left: 28px;
       }
 
-      input[type=checkbox],
-      input[type=radio] {
+      input[type=checkbox] {
         position: absolute;
-        top: 1px;
+        top: 3px;
         left: 0px;
+      }
+
+      // When an (eventual) notice is displayed after the input, give it some bottom margin.
+      .notice {
+        margin-bottom: $default-fields-spacer;
       }
     }
   }
 
   .radios {
+    display: flex;
+
+    // Horizontal layout (default)
+    flex-direction: row;
+    align-items: flex-start;
+
     label {
-      display: inline;
-      margin-left: $default-padding;
+      margin-right: $default-padding;
+    }
+
+    // Vertical layout
+    &.vertical {
+      flex-direction: column;
+      align-items: stretch;
+
+      label {
+        margin-right: 0;
+      }
+    }
+
+    label {
+      padding: $default-padding $default-padding $default-padding $default-spacer;
+      border: 1px solid $border-grey;
+      border-radius: 4px;
+      font-weight: normal;
+      background: $white;
+      user-select: none;
+
+      &:last-of-type {
+        margin-bottom: $default-fields-spacer;
+      }
+
+      &:hover {
+        background: $light-grey;
+        cursor: pointer;
+      }
+
+      &:active {
+        border-color: darken($border-grey, 10);
+      }
 
       &:first-child {
         margin-left: 0;
+      }
+
+      input[type=radio] {
+        margin-bottom: 0;
+      }
+
+      .notice {
+        margin: 4px 0 0 27px;
       }
     }
   }
@@ -109,7 +157,7 @@
   select,
   .attachment {
     display: block;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
 
     &.small-margin {
       margin-bottom: $default-padding / 2;
@@ -117,7 +165,7 @@
   }
 
   .add-row {
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
   }
 
   input[type=checkbox] {
@@ -182,16 +230,14 @@
   input[type=radio] {
     @extend %outline;
 
-    margin-left: 5px;
-    margin-right: 4px;
-    margin-bottom: 2 * $default-padding;
-  }
-
-  input[type=checkbox] {
-    // Firefox tends to display checkbox controls smaller than other browsers.
+    // Firefox tends to display some controls smaller than other browsers.
     // Ensure a consistency of size between browsers.
     width: 16px;
     height: 16px;
+
+    margin-left: 5px;
+    margin-right: 4px;
+    margin-bottom: $default-fields-spacer;
   }
 
   input[type=date] {
@@ -234,7 +280,7 @@
 
   .select2-container {
     display: block;
-    margin-bottom: 2 * $default-padding;
+    margin-bottom: $default-fields-spacer;
 
     &.select2-container--focus {
       .select2-selection {
@@ -304,10 +350,17 @@
   }
 
   .header-section {
+    display: inline-block;
     color: $blue;
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 2 * $default-padding;
+    font-size: 30px;
+    margin-bottom: 3 * $default-padding;
+    border-bottom: 3px solid $blue;
+  }
+
+  .header-subsection {
+    font-size: 22px;
+    color: $blue;
+    margin-bottom: $default-padding;
   }
 
   .explication-libelle {
@@ -317,13 +370,20 @@
   }
 
   .explication {
-    margin-bottom: $default-padding;
+    margin-bottom: $default-fields-spacer;
     padding: $default-padding / 2;
     background-color: $light-grey;
 
     p:not(:last-child) {
       margin-bottom: $default-padding;
     }
+  }
+
+  .siret-info {
+    margin-top: -$default-fields-spacer;
+    margin-bottom: $default-fields-spacer;
+    // Ensure the bottom-margin is not collapsed when the element is empty
+    min-height: 1px;
   }
 
   .send-wrapper {
@@ -386,17 +446,6 @@
 
     &:last-child {
       margin-right: 0;
-    }
-  }
-
-  .pj-input {
-    input[type=file] {
-      margin: $default-padding 0  (2 * $default-padding);
-      padding: 2px;
-    }
-
-    .piece-description {
-      margin-bottom: $default-padding;
     }
   }
 }

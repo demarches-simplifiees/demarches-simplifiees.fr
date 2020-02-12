@@ -14,7 +14,7 @@ module CreateAvisConcern
     allowed_dossiers = [dossier]
 
     if create_avis_params[:invite_linked_dossiers].present?
-      allowed_dossiers += dossier.linked_dossiers
+      allowed_dossiers += dossier.linked_dossiers_for(current_instructeur)
     end
 
     create_results = Avis.create(

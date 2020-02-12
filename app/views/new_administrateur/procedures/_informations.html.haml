@@ -78,18 +78,17 @@
 
 - if !@procedure.locked?
   %h2.header-section À qui s’adresse ma démarche ?
-  .editable-champ.editable-champ-radio.vertical
+  .radios.vertical
     = f.label :for_individual, value: true do
+      = f.radio_button :for_individual, true
       Ma démarche s’adresse à un particulier
-    %p.notice En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
-    = f.radio_button :for_individual, true
+      %p.notice En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
 
-  .editable-champ.editable-champ-radio.vertical
     = f.label :for_individual, value: false do
+      = f.radio_button :for_individual, false
       Ma démarche s’adresse à une personne morale
-    %p.notice
-      En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
-    = f.radio_button :for_individual, false
+      %p.notice
+        En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
 
   %p.explication
     Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ SIRET directement dans le formulaire.
