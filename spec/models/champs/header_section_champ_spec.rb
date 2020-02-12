@@ -3,11 +3,11 @@ require 'spec_helper'
 describe Champs::CheckboxChamp do
   let(:types_de_champ) do
     [
-      create(:type_de_champ_header_section),
-      create(:type_de_champ_civilite),
-      create(:type_de_champ_text),
-      create(:type_de_champ_header_section),
-      create(:type_de_champ_email)
+      create(:type_de_champ_header_section, order_place: 1),
+      create(:type_de_champ_civilite,       order_place: 2),
+      create(:type_de_champ_text,           order_place: 3),
+      create(:type_de_champ_header_section, order_place: 4),
+      create(:type_de_champ_email,          order_place: 5)
     ]
   end
 
