@@ -75,11 +75,12 @@ class Instructeur < ApplicationRecord
     start_date = Time.zone.now.beginning_of_week
 
     active_procedure_overviews = procedures
+      .where(assign_tos: { weekly_email_notifications_enabled: true })
       .publiees
       .map { |procedure| procedure.procedure_overview(start_date, groupe_instructeurs) }
       .filter(&:had_some_activities?)
 
-    if active_procedure_overviews.count == 0
+    if active_procedure_overviews.empty?
       nil
     else
       {
