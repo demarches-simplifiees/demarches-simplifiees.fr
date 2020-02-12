@@ -1,2 +1,6 @@
+- section_index = champ.section_index
+
 %h2.header-section
+  - if section_index
+    = "#{section_index}."
   = champ.libelle

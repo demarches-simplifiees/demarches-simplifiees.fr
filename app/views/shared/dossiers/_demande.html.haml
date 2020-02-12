@@ -24,5 +24,7 @@
   .tab-title Formulaire
   - champs = dossier.champs.includes(:type_de_champ)
   - if champs.any? || dossier.procedure.routee?
+    - if has_lost_attachments(dossier)
+      = render partial: "shared/dossiers/lost_attachments", locals: { dossier: dossier, profile: profile }
     .card
       = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: dossier, demande_seen_at: demande_seen_at, profile: profile }
