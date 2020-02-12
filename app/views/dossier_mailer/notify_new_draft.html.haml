@@ -8,13 +8,20 @@
   Vous avez commencé à remplir un dossier pour la démarche
   = succeed '.' do
     %strong « #{@dossier.procedure.libelle} »
-
 %p
-  Vous pouvez
-  %strong retrouver et compléter votre dossier
+  A cette étape, le dossier est
+  %strong uniquement visible par vous
+  et n'est pas transmis à l'administration.
+%p
+  %strong
+    Pour que le dossier soit traité,
+  affichez le dossier et cliquez sur le bouton
+  %strong « Déposer le dossier »
+%p
+  Vous pouvez afficher et compléter ce dossier
   en cliquant sur le bouton ci-dessous:
 
-= round_button('Afficher votre dossier', dossier_url(@dossier), :primary)
+= round_button('Afficher le dossier', dossier_url(@dossier), :primary)
 
 = render 'layouts/mailers/signature'
 
