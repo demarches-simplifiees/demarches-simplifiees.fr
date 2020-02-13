@@ -67,11 +67,9 @@ feature 'Signing up:' do
   context 'when visiting a procedure' do
     let(:procedure) { create :simple_procedure, :with_service }
 
-    before do
-      visit commencer_path(path: procedure.path)
-    end
-
     scenario 'a new user can sign-up and fill the procedure' do
+      visit commencer_path(path: procedure.path)
+
       click_on 'Créer un compte'
       expect(page).to have_current_path new_user_registration_path
       expect(page).to have_procedure_description(procedure)
@@ -102,7 +100,7 @@ feature 'Signing up:' do
       sign_up_with user_email, user_password
 
       # The same page than for initial sign-ups is displayed, to avoid leaking informations
-      # about the accound existence.
+      # about the account existence.
       expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
 
       # The confirmation email is sent again
@@ -130,8 +128,8 @@ feature 'Signing up:' do
       warning_email = open_email(user_email)
       expect(warning_email.body).to have_text('Votre compte existe déjà')
 
-      # When clicking the main button, the user has a link to directly sign-in
-      # for the procedure they were initially starting
+      # When clicking the main button, the user is redirected directly to
+      # the sign-in page for the procedure they were initially starting.
       click_procedure_sign_in_link_for user_email
 
       expect(page).to have_current_path new_user_session_path
