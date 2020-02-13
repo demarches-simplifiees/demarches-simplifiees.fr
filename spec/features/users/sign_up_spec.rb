@@ -5,16 +5,15 @@ feature 'Signing up:' do
   let(:user_password) { 'démarches-simplifiées-pwd' }
   let(:procedure) { create :simple_procedure, :with_service }
 
-  scenario 'a new user can sign-up' do
-    visit commencer_path(path: procedure.path)
-    click_on 'Créer un compte demarches-simplifiees.fr'
+  scenario 'a new user can sign-up from scratch' do
+    visit new_user_registration_path
 
     sign_up_with user_email, user_password
     expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
 
     click_confirmation_link_for user_email
     expect(page).to have_content 'Votre compte a été activé'
-    expect(page).to have_current_path commencer_path(path: procedure.path)
+    expect(page).to have_current_path dossiers_path
   end
 
   context 'when the user makes a typo in their email address' do
