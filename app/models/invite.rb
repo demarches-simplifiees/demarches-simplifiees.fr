@@ -16,5 +16,7 @@ class Invite < ApplicationRecord
   # and Dossier from their respective `default_scope`s.
   # Therefore, we also remove `Invite`s for such effectively deleted `Dossier`s
   # from their default scope.
-  default_scope { joins(:dossier).where(dossiers: { hidden_at: nil }) }
+  scope :kept, -> { joins(:dossier).merge(Dossier.kept) }
+
+  default_scope { kept }
 end
