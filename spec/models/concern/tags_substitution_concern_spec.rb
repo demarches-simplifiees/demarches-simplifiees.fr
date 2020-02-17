@@ -70,6 +70,29 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context 'when the template use the groupe instructeur tags' do
+      let(:template) { '--groupe instructeur--' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
+      let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement, state: state) }
+      context 'and the dossier has a groupe instructeur' do
+        label = 'Ville de Bordeaux'
+        before do
+          gi = procedure.groupe_instructeurs.create(label: label)
+          gi.dossiers << dossier
+          dossier.update(groupe_instructeur: gi)
+          dossier.reload
+        end
+
+        it { expect(procedure.groupe_instructeurs.size).to eq(2) }
+        it { expect(procedure.routee?).to eq(true) }
+        it { is_expected.to eq(label) }
+      end
+
+      context 'and the dossier has no groupe instructeur' do
+        it { is_expected.to eq(template) }
+      end
+    end
+
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
         [
