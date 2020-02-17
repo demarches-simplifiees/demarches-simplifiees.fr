@@ -61,7 +61,7 @@ FactoryBot.define do
       archived { false }
     end
 
-    trait :hidden do
+    trait :discarded do
       hidden_at { Time.zone.now }
     end
 

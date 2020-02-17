@@ -55,6 +55,13 @@ module FeatureHelpers
     visit "/users/confirmation?#{token_params}"
   end
 
+  def click_procedure_sign_in_link_for(email)
+    confirmation_email = open_email(email)
+    procedure_sign_in_link = confirmation_email.body.match(/href="([^"]*\/commencer\/[^"]*)"/)[1]
+
+    visit procedure_sign_in_link
+  end
+
   def click_reset_password_link_for(email)
     reset_password_email = open_email(email)
     token_params = reset_password_email.body.match(/reset_password_token=[^"]+/)

@@ -1,2 +1,5 @@
 %h2.header-section
+  - libelle_starts_with_number = (champ.libelle =~ /^\d/)
+  - if !libelle_starts_with_number
+    = "#{champ.section_index}."
   = champ.libelle
