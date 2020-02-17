@@ -70,6 +70,23 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context 'when the template use the groupe instructeur tags' do
+      let(:template) { '--groupe instructeur--' }
+      context 'and the dossier has a groupe instructeur' do
+        label = 'Ville de Bordeaux'
+        before do
+          gi = procedure.groupe_instructeurs.create(label: label)
+          gi.dossiers << dossier
+        end
+
+        it { is_expected.to eq(gi.label) }
+      end
+
+      context 'and the dossier has no groupe instructeur' do
+        it { is_expected.to eq('défaut') }
+      end
+    end
+
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
         [
