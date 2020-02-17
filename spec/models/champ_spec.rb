@@ -23,15 +23,17 @@ describe Champ do
   end
 
   describe '#siblings' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, types_de_champ_count: 1, types_de_champ_private_count: 1) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:public_champ) { dossier.champs.first }
     let(:private_champ) { dossier.champs_private.first }
+    let(:champ_in_repetition) { dossier.champs.find(&:repetition?).champs.first }
     let(:standalone_champ) { create(:champ, dossier: nil) }
 
     it 'returns the sibling champs of a champ' do
       expect(public_champ.siblings).to eq(dossier.champs)
       expect(private_champ.siblings).to eq(dossier.champs_private)
+      expect(champ_in_repetition.siblings).to eq(champ_in_repetition.parent.champs)
       expect(standalone_champ.siblings).to be_nil
     end
   end
