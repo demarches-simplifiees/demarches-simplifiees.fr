@@ -26,7 +26,9 @@ class Champ < ApplicationRecord
   end
 
   def siblings
-    if public?
+    if parent
+      parent&.champs
+    elsif public?
       dossier&.champs
     else
       dossier&.champs_private
