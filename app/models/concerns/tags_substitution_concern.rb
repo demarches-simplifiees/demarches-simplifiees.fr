@@ -12,6 +12,13 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::TERMINE
     },
     {
+      libelle: 'groupe instructeur',
+      description: 'Le groupe instructeur en charge du dossier',
+      lambda: -> (d) { d.groupe_instructeur.label },
+      available?: -> (d) { d.procedure.routee? },
+      available_for_states: Dossier::SOUMIS
+    },
+    {
       libelle: 'date de dépôt',
       description: 'Date du passage en construction du dossier par l’usager',
       lambda: -> (d) { format_date(d.en_construction_at) },
@@ -219,7 +226,19 @@ module TagsSubstitutionConcern
   def replace_tags_with_values_from_data(text, tags, data)
     if data.present?
       tags.reduce(text) do |acc, tag|
-        replace_tag(acc, tag, data)
+        # A tag is available by default.
+        # If it has an :available? lambda, then we check its result to determine if the tag is available
+        if tag.key?(:available?)
+          tag_available = instance_exec(data, &tag[:available?])
+        else
+          tag_available = true
+        end
+
+        if tag_available
+          replace_tag(acc, tag, data)
+        else
+          text
+        end
       end
     else
       text
