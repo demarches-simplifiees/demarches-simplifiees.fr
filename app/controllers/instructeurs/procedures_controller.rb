@@ -232,6 +232,7 @@ module Instructeurs
 
     def update_email_notifications
       assign_to.update!(assign_to_params)
+      assign_to.update!(daily_email_notifications_enabled: params[:assign_to][:email_notifications_enabled])
       flash.notice = 'Vos notifications sont enregistrées.'
       redirect_to instructeur_procedure_path(procedure)
     end
