@@ -97,4 +97,12 @@ class DossierMailer < ApplicationMailer
 
     mail(to: user.email, subject: @subject)
   end
+
+  def notify_en_construction_near_deletion(user, dossiers, for_user)
+    @subject = default_i18n_subject(count: dossiers.count)
+    @dossiers = dossiers
+    @for_user = for_user
+
+    mail(to: user.email, subject: @subject)
+  end
 end
