@@ -61,17 +61,6 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include(deleted_dossier.procedure.libelle) }
   end
 
-  describe '.notify_unhide_to_user' do
-    let(:dossier) { create(:dossier) }
-
-    subject { described_class.notify_unhide_to_user(dossier) }
-
-    it { expect(subject.subject).to eq("Votre dossier nº #{dossier.id} n'a pas pu être supprimé") }
-    it { expect(subject.body).to include(dossier.id) }
-    it { expect(subject.body).to include("n'a pas pu être supprimé") }
-    it { expect(subject.body).to include(dossier.procedure.libelle) }
-  end
-
   describe '.notify_revert_to_instruction' do
     let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
 
