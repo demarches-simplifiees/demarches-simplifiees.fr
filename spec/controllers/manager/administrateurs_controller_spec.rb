@@ -1,6 +1,18 @@
 describe Manager::AdministrateursController, type: :controller do
   let(:administration) { create(:administration) }
 
+  describe 'GET #new' do
+    render_views
+    before do
+      sign_in administration
+    end
+
+    it 'displays form to create a new admin' do
+      get :new
+      expect(response).to be_success
+    end
+  end
+
   describe 'POST #create' do
     let(:email) { 'plop@plop.com' }
     let(:password) { 'démarches-simplifiées-pwd' }

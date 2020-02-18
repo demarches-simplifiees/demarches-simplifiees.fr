@@ -1,0 +1,13 @@
+= form_for([namespace, Administrateur.new(user: User.new)], html: { class: "form" }) do |f|
+  - if page.resource.errors.any?
+    #error_explanation
+      %h2
+        = t("administrate.form.errors", pluralized_errors: pluralize(page.resource.errors.count, t("administrate.form.error")), resource_name: display_resource_name(page.resource_name))
+      %ul
+        - page.resource.errors.full_messages.each do |message|
+          %li.flash-error= message
+  - page.attributes.each do |attribute|
+    %div{ :class => "field-unit field-unit--#{attribute.html_class}" }
+      = render_field attribute, f: f
+  .form-actions
+    = f.submit
