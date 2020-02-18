@@ -90,4 +90,11 @@ class DossierMailer < ApplicationMailer
 
     mail(to: user.email, subject: @subject)
   end
+
+  def notify_automatic_deletion_to_administration(user, dossier_hashes)
+    @subject = default_i18n_subject(count: dossier_hashes.count)
+    @dossier_hashes = dossier_hashes
+
+    mail(to: user.email, subject: @subject)
+  end
 end

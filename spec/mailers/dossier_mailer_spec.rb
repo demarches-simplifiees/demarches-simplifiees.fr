@@ -122,4 +122,13 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include("nous nous excusons de la gène occasionnée") }
   end
+
+  describe '.notify_automatic_deletion_to_administration' do
+    let(:dossier) { create(:dossier) }
+
+    subject { described_class.notify_automatic_deletion_to_administration(dossier.user, [dossier.hash_for_deletion_mail]) }
+
+    it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
+    it { expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})") }
+  end
 end
