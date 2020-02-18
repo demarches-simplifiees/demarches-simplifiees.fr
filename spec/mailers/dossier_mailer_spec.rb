@@ -106,4 +106,20 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.subject).to eq("Un dossier en brouillon a été supprimé automatiquement") }
     it { expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})") }
   end
+
+  describe '.notify_automatic_deletion_to_user' do
+    let(:dossier) { create(:dossier) }
+
+    before do
+      duree = dossier.procedure.duree_conservation_dossiers_dans_ds
+      @date_suppression = dossier.created_at + duree.months
+    end
+
+    subject { described_class.notify_automatic_deletion_to_user(dossier.user, [dossier.hash_for_deletion_mail]) }
+
+    it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
+    it { expect(subject.body).to include("n° #{dossier.id} ") }
+    it { expect(subject.body).to include(dossier.procedure.libelle) }
+    it { expect(subject.body).to include("nous nous excusons de la gène occasionnée") }
+  end
 end
