@@ -16,7 +16,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     registration_state: Field::String.with_options(searchable: false),
     current_sign_in_at: Field::DateTime,
     features: FeaturesField,
-    email: Field::Email
+    email: Field::Email.with_options(searchable: false)
   }.freeze
 
   # COLLECTION_ATTRIBUTES
