@@ -1,12 +1,12 @@
 describe Manager::AdministrateursController, type: :controller do
   let(:administration) { create(:administration) }
 
+  before do
+    sign_in administration
+  end
+
   describe 'GET #new' do
     render_views
-    before do
-      sign_in administration
-    end
-
     it 'displays form to create a new admin' do
       get :new
       expect(response).to be_success
@@ -16,10 +16,6 @@ describe Manager::AdministrateursController, type: :controller do
   describe 'POST #create' do
     let(:email) { 'plop@plop.com' }
     let(:password) { 'démarches-simplifiées-pwd' }
-
-    before do
-      sign_in administration
-    end
 
     subject { post :create, params: { administrateur: { email: email } } }
 
@@ -46,8 +42,6 @@ describe Manager::AdministrateursController, type: :controller do
 
   describe '#delete' do
     let!(:admin) { create(:administrateur) }
-
-    before { sign_in administration }
 
     subject { delete :delete, params: { id: admin.id } }
 
