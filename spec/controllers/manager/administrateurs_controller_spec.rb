@@ -45,4 +45,18 @@ describe Manager::AdministrateursController, type: :controller do
       expect(Administrateur.find_by(id: admin.id)).to be_nil
     end
   end
+
+  describe '#index' do
+    render_views
+    let!(:admin) { create(:administrateur) }
+
+    before do
+      sign_in administration
+    end
+
+    it 'searches admin by email' do
+      get :index, params: { search: admin.email }
+      expect(response).to be_success
+    end
+  end
 end
