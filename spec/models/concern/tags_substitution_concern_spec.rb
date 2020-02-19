@@ -83,13 +83,13 @@ describe TagsSubstitutionConcern, type: :model do
           dossier.reload
         end
 
-        it { expect(procedure.groupe_instructeurs.size).to eq(2) }
         it { expect(procedure.routee?).to eq(true) }
         it { is_expected.to eq(label) }
       end
 
       context 'and the dossier has no groupe instructeur' do
-        it { is_expected.to eq(template) }
+        it { expect(procedure.routee?).to eq(false) }
+        it { is_expected.to eq('défaut') }
       end
     end
 
