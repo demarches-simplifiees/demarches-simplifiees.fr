@@ -12,13 +12,6 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::TERMINE
     },
     {
-      libelle: 'groupe instructeur',
-      description: 'Le groupe instructeur en charge du dossier',
-      lambda: -> (d) { d.groupe_instructeur.label },
-      available?: -> (d) { d.procedure.routee? },
-      available_for_states: Dossier::SOUMIS
-    },
-    {
       libelle: 'date de dépôt',
       description: 'Date du passage en construction du dossier par l’usager',
       lambda: -> (d) { format_date(d.en_construction_at) },
@@ -137,6 +130,15 @@ module TagsSubstitutionConcern
     }
   ]
 
+  ROUTAGE_TAGS = [
+    {
+      libelle: 'groupe instructeur',
+      description: 'Le groupe instructeur en charge du dossier',
+      lambda: -> (d) { d.groupe_instructeur.label },
+      available_for_states: Dossier::SOUMIS
+    }
+  ]
+
   def tags
     if procedure.for_individual?
       identity_tags = INDIVIDUAL_TAGS
@@ -144,7 +146,12 @@ module TagsSubstitutionConcern
       identity_tags = ENTREPRISE_TAGS
     end
 
-    filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags)
+    routage_tags = []
+    if procedure.routee?
+      routage_tags = ROUTAGE_TAGS
+    end
+
+    filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
   end
 
   private
@@ -214,6 +221,7 @@ module TagsSubstitutionConcern
       [champ_public_tags, dossier.champs],
       [champ_private_tags, dossier.champs_private],
       [dossier_tags, dossier],
+      [ROUTAGE_TAGS, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],
       [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
     ]
@@ -226,19 +234,7 @@ module TagsSubstitutionConcern
   def replace_tags_with_values_from_data(text, tags, data)
     if data.present?
       tags.reduce(text) do |acc, tag|
-        # A tag is available by default.
-        # If it has an :available? lambda, then we check its result to determine if the tag is available
-        if tag.key?(:available?)
-          tag_available = instance_exec(data, &tag[:available?])
-        else
-          tag_available = true
-        end
-
-        if tag_available
-          replace_tag(acc, tag, data)
-        else
-          text
-        end
+        replace_tag(acc, tag, data)
       end
     else
       text
