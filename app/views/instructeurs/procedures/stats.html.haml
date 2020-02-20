@@ -6,6 +6,8 @@
                     'Statistiques'] }
 
 .statistiques
+  = react_component('Chartkick')
+
   %h1.new-h1= title
   .stat-cards
     - if @usual_traitement_time.present?
