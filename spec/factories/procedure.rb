@@ -162,6 +162,14 @@ FactoryBot.define do
       end
     end
 
+    trait :with_number do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ_number)
+
+        procedure.types_de_champ << type_de_champ
+      end
+    end
+
     trait :published do
       after(:build) do |procedure, _evaluator|
         procedure.path = generate(:published_path)
