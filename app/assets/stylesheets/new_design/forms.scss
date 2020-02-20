@@ -114,6 +114,44 @@
     }
   }
 
+  .checkboxes {
+    input[type=checkbox] {
+      margin-bottom: 0;
+    }
+
+    .notice {
+      margin: 5px 0 0 5px;
+
+      input[type="checkbox"] {
+        margin-bottom: 0px;
+      }
+
+      p {
+        margin-bottom: 3px;
+      }
+
+      ul {
+        list-style-type: square;
+        list-style-position: outside;
+        padding-left: 30px;
+      }
+
+      ol {
+        list-style-type: decimal;
+        list-style-position: outside;
+        padding-left: 30px;
+      }
+
+      table {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+    }
+
+  }
+
   .radios {
     display: flex;
 

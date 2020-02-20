@@ -95,7 +95,6 @@
 
 %h2.header-section
   Cadre relatif au RGS et RGPD
-  %span.mandatory *
 .notice
   Le référentiel général de sécurité (RGS), le règlement général de protection des données (RGPD) et le niveau de sécurité
   actuellement de la plateforme Mes-Démarches imposent un cadre pour la collecte et le traitement des données.
@@ -107,48 +106,51 @@
 = f.label :rgpd do
   RGPD
   %span.mandatory *
-  .notice
-    %p
-      Au titre du règlement général pour la protection des données personnelles (RGPD) et
-      de la loi n°78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés,
-      certaines données dites "sensibles" ou "particulières" font l'objet d'une protection spécifique.
-      Sont considérées comme telles :
-      %ul.help-block
+  .checkboxes
+    .notice
+      %p
+        Au titre du règlement général pour la protection des données personnelles (RGPD) et
+        de la loi n°78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés,
+        certaines données dites "sensibles" ou "particulières" font l'objet d'une protection spécifique.
+        Sont considérées comme telles :
+      %ul
         %li les données de santé, les données génétiques ou biométriques,
         %li les données relatives aux infractions et condamnations pénales,
         %li les données révélant l'origine raciale ou ethnique,
         %li les opinions politiques, les convictions religieuses ou philosophiques, l’appartenance syndicale, la vie ou l’orientation sexuelle d'un usager,
         %li le numéro d'inscription au répertoire national d'identification des personnes physiques (NIR).
-    %p
-      La collecte des données de certaines catégories de la population, jugées plus vulnérables,
-      doit également faire l'objet de précautions.
-      C'est le cas des personnes âgées, des enfants, des personnes souffrant de handicap,
-      des personnes en situation de précarité sociale.<br/>
-      Par exemple : un <b>certificat médical</b>, un <b>extrait de casier judiciaire</b>, des informations sur le <b>handicap</b>,
-      une <b>délégation de l'autorité parentale</b>...<br/>
-    %p
-      Si vos formulaires contiennent des données sensibles, vous vous engagez à nous contacter pour trouver des solutions via ce
-      = link_to "formulaire.", contact_admin_path
-  = check_box_tag 'rgpd', '1', @terms_of_use_read ? @terms_of_use_read[:rgpd].present? : @procedure.created_at.present?
-  j'ai pris connaissance du cadre d'usage pour le RGPD
+      %p
+        La collecte des données de certaines catégories de la population, jugées plus vulnérables,
+        doit également faire l'objet de précautions.
+        C'est le cas des personnes âgées, des enfants, des personnes souffrant de handicap,
+        des personnes en situation de précarité sociale.<br/>
+        Par exemple : un <b>certificat médical</b>, un <b>extrait de casier judiciaire</b>, des informations sur le <b>handicap</b>,
+        une <b>délégation de l'autorité parentale</b>...<br/>
+      %p
+        Si vos formulaires contiennent des données sensibles, vous vous engagez à nous contacter pour trouver des solutions via ce
+        = link_to "formulaire.", contact_admin_path
+    = check_box_tag 'rgpd', '1', @terms_of_use_read ? @terms_of_use_read[:rgpd].present? : @procedure.created_at.present?
+    j'ai pris connaissance du cadre d'usage pour le RGPD
 
 = label_tag 'rgs_stamp' do
   Cachets et signatures électroniques
   %span.mandatory *
-  .notice
-    %p
-      La plateforme #{SITE_NAME} peut fournir des attestations vérifiables via un QR code et ne fournit pas de cachet ou signature électronique.
-      Si votre démarche comporte une décision avec une signature ou un cachet, vous pouvez nous contacter pour évaluer les risques et les solutions via ce
-      = link_to "formulaire.", contact_admin_path
-  = check_box_tag 'rgs_stamp', '1', @terms_of_use_read ? @terms_of_use_read[:rgs_stamp].present? : @procedure.created_at.present?
-  j'ai pris connaissance du cadre d'usage cachet/signatures
+  .checkboxes
+    .notice
+      %p
+        La plateforme #{SITE_NAME} peut fournir des attestations vérifiables via un QR code et ne fournit pas de cachet ou signature électronique.
+        Si votre démarche comporte une décision avec une signature ou un cachet, vous pouvez nous contacter pour évaluer les risques et les solutions via ce
+        = link_to "formulaire.", contact_admin_path
+    = check_box_tag 'rgs_stamp', '1', @terms_of_use_read ? @terms_of_use_read[:rgs_stamp].present? : @procedure.created_at.present?
+    j'ai pris connaissance du cadre d'usage cachet/signatures
 
 = label_tag 'rgs_timestamp' do
   Horodatage
-  .notice
-    %p
-      La plateforme dispose depuis le 6 Juin 2019 d'un service d'horodatage permettant de certifier les dates de changement d'état d'un dossier
-      (construction, instruction, ...) et les dates de reception des avis.
+  .checkboxes
+    .notice
+      %p
+        La plateforme dispose depuis le 6 Juin 2019 d'un service d'horodatage permettant de certifier les dates de changement d'état d'un dossier
+        (construction, instruction, ...) et les dates de reception des avis.
 
 %details.procedure-form__options-details
   %summary.procedure-form__options-summary
