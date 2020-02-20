@@ -1,6 +1,7 @@
 - content_for(:title, 'Statistiques')
 
 .statistiques
+  = react_component('Chartkick')
 
   %h1.new-h1 Statistiques
 
@@ -55,9 +56,9 @@
 
     .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ :onclick => "DS.toggleChart(event, '.monthly-procedures-chart');" }
+        %li.segmented-control-item.segmented-control-item-active{ data: { 'toggle-chart': '.monthly-procedures-chart' } }
           Par mois
-        %li.segmented-control-item{ :onclick => "DS.toggleChart(event, '.cumulative-procedures-chart');" }
+        %li.segmented-control-item{ data: { 'toggle-chart': '.cumulative-procedures-chart' } }
           Cumul
       %span.stat-card-title.pull-left Démarches dématérialisées
       .clearfix
@@ -70,9 +71,9 @@
 
     .stat-card.stat-card-half.pull-left
       %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ :onclick => "DS.toggleChart(event, '.monthly-dossiers-chart');" }
+        %li.segmented-control-item.segmented-control-item-active{ data: { 'toggle-chart': '.monthly-dossiers-chart' } }
           Par mois
-        %li.segmented-control-item{ :onclick => "DS.toggleChart(event, '.cumulative-dossiers-chart');" }
+        %li.segmented-control-item{ data: { 'toggle-chart': '.cumulative-dossiers-chart' } }
           Cumul
       %span.stat-card-title.pull-left Dossiers déposés
       .clearfix
