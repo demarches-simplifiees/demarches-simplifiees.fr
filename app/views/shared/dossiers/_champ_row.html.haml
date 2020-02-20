@@ -36,6 +36,8 @@
               = c.to_s
             - when TypeDeChamp.type_champs.fetch(:datetime)
               = c.to_s
+            - when TypeDeChamp.type_champs.fetch(:number)
+              = number_with_delimiter(c.to_s)
             - else
               = format_text_value(c.to_s)
 
