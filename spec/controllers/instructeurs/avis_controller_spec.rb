@@ -187,25 +187,48 @@ describe Instructeurs::AvisController, type: :controller do
         let(:previous_avis_confidentiel) { false }
         let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
 
-        it do
-          expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
-          expect(Avis.count).to eq(old_avis_count + 1)
-          expect(created_avis.email).to eq("a@b.com")
-          expect(created_avis.dossier).to eq(dossier)
-        end
+        context 'when the expert doesn’t share linked dossiers' do
+          let(:invite_linked_dossiers) { false }
 
-        context 'checked' do
-          let(:invite_linked_dossiers) { true }
-          let(:created_avis) { Avis.last(2).first }
-          let(:linked_avis) { Avis.last }
-          let(:linked_dossier) { dossier.reload.linked_dossiers.first }
-
-          it do
+          it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
             expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
-            expect(Avis.count).to eq(old_avis_count + 2)
+            expect(Avis.count).to eq(old_avis_count + 1)
             expect(created_avis.email).to eq("a@b.com")
             expect(created_avis.dossier).to eq(dossier)
-            expect(linked_avis.dossier).to eq(linked_dossier)
+          end
+        end
+
+        context 'when the expert also shares the linked dossiers' do
+          let(:invite_linked_dossiers) { true }
+
+          context 'and the expert can access the linked dossiers' do
+            let(:created_avis) { Avis.last(2).first }
+            let(:linked_avis) { Avis.last }
+            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
+            let(:invite_linked_dossiers) do
+              instructeur.assign_to_procedure(linked_dossier.procedure)
+              true
+            end
+
+            it 'sends one avis for the main dossier' do
+              expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+              expect(created_avis.email).to eq("a@b.com")
+              expect(created_avis.dossier).to eq(dossier)
+            end
+
+            it 'sends another avis for the linked dossiers' do
+              expect(Avis.count).to eq(old_avis_count + 2)
+              expect(linked_avis.dossier).to eq(linked_dossier)
+            end
+          end
+
+          context 'but the expert can’t access the linked dossier' do
+            it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
+              expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+              expect(Avis.count).to eq(old_avis_count + 1)
+              expect(created_avis.email).to eq("a@b.com")
+              expect(created_avis.dossier).to eq(dossier)
+            end
           end
         end
       end

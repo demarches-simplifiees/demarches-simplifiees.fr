@@ -603,8 +603,9 @@ class Dossier < ApplicationRecord
     !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
-  def linked_dossiers
-    Dossier.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
+  def linked_dossiers_for(instructeur)
+    dossier_ids = champs.filter(&:dossier_link?).map(&:value).compact
+    (instructeur.dossiers.where(id: dossier_ids) + instructeur.dossiers_from_avis.where(id: dossier_ids)).uniq
   end
 
   def hash_for_deletion_mail

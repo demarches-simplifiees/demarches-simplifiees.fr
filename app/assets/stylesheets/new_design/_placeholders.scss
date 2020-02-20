@@ -20,7 +20,7 @@
 }
 
 %outline {
-  &:active,
+  &:active:not(:disabled),
   &:focus {
     outline: 3px solid $blue;
   }
