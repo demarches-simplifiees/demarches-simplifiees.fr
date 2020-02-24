@@ -115,7 +115,7 @@
 
   = f.label :declarative_with_state do
     Démarche déclarative
-  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: true }, class: 'form-control'
+  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { prompt: 'Non' }, class: 'form-control'
 
   %p.explication
     Par défaut, une démarche n'est pas déclarative; à son dépot, un dossier est «en construction». Vous pouvez choisir de la rendre déclarative, afin que tous les dossiers déposés soient immédiatement au statut "en instruction" en "accepté".
