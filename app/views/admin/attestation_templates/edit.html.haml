@@ -23,7 +23,7 @@
         = f.label :logo, "Logo de l'attestation"
         - if @attestation_template.logo.attached?
           = link_to 'Supprimer le logo', admin_procedure_attestation_template_logo_path(@procedure), method: :delete
-        = f.file_field :logo, accept: 'image/png, image/jpg, image/jpeg'
+        = f.file_field :logo, accept: 'image/png,image/jpg,image/jpeg'
         %p.help-block
           Fichier accepté : JPG / JPEG / PNG
           %br
@@ -87,3 +87,4 @@
       - else
         - save_data = @procedure.locked? ? { toggle: :tooltip, confirm: "Attention: les modifications n'affecteront pas les attestations déjà délivrées." } : nil
         %button.btn.btn-success{ data: save_data } Enregistrer
+

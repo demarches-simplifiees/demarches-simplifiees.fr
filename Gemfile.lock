@@ -51,8 +51,10 @@ GEM
       activemodel (>= 4.1, < 6.1)
       case_transform (>= 0.2)
       jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
-    activejob (5.2.4.1)
-      activesupport (= 5.2.4.1)
+    active_storage_validations (0.8.7)
+      rails (>= 5.2.0)
+    activejob (5.2.3)
+      activesupport (= 5.2.3)
       globalid (>= 0.3.6)
     activemodel (5.2.4.1)
       activesupport (= 5.2.4.1)
@@ -714,6 +716,7 @@ DEPENDENCIES
   actiontext!
   active_link_to
   active_model_serializers
+  active_storage_validations
   activestorage-openstack
   administrate
   after_party
