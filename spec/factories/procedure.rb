@@ -249,47 +249,5 @@ FactoryBot.define do
         end
       end
     end
-
-    trait :with_csv_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.csv_export_file.attach(io: StringIO.new("some csv data"), filename: "export.csv", content_type: "text/plain")
-        procedure.csv_export_file.update(created_at: 5.minutes.ago)
-      end
-    end
-
-    trait :with_stale_csv_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.csv_export_file.attach(io: StringIO.new("some csv data"), filename: "export.csv", content_type: "text/plain")
-        procedure.csv_export_file.update(created_at: 4.hours.ago)
-      end
-    end
-
-    trait :with_ods_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.ods_export_file.attach(io: StringIO.new("some ods data"), filename: "export.ods", content_type: "text/plain")
-        procedure.ods_export_file.update(created_at: 5.minutes.ago)
-      end
-    end
-
-    trait :with_stale_ods_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.ods_export_file.attach(io: StringIO.new("some ods data"), filename: "export.ods", content_type: "text/plain")
-        procedure.ods_export_file.update(created_at: 4.hours.ago)
-      end
-    end
-
-    trait :with_xlsx_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.xlsx_export_file.attach(io: StringIO.new("some xlsx data"), filename: "export.xlsx", content_type: "text/plain")
-        procedure.xlsx_export_file.update(created_at: 5.minutes.ago)
-      end
-    end
-
-    trait :with_stale_xlsx_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.xlsx_export_file.attach(io: StringIO.new("some xlsx data"), filename: "export.xlsx", content_type: "text/plain")
-        procedure.xlsx_export_file.update(created_at: 4.hours.ago)
-      end
-    end
   end
 end

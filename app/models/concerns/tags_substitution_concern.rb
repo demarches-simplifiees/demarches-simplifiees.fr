@@ -130,6 +130,15 @@ module TagsSubstitutionConcern
     }
   ]
 
+  ROUTAGE_TAGS = [
+    {
+      libelle: 'groupe instructeur',
+      description: 'Le groupe instructeur en charge du dossier',
+      lambda: -> (d) { d.groupe_instructeur.label },
+      available_for_states: Dossier::SOUMIS
+    }
+  ]
+
   def tags
     if procedure.for_individual?
       identity_tags = INDIVIDUAL_TAGS
@@ -137,7 +146,12 @@ module TagsSubstitutionConcern
       identity_tags = ENTREPRISE_TAGS
     end
 
-    filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags)
+    routage_tags = []
+    if procedure.routee?
+      routage_tags = ROUTAGE_TAGS
+    end
+
+    filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
   end
 
   private
@@ -207,6 +221,7 @@ module TagsSubstitutionConcern
       [champ_public_tags, dossier.champs],
       [champ_private_tags, dossier.champs_private],
       [dossier_tags, dossier],
+      [ROUTAGE_TAGS, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],
       [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
     ]
