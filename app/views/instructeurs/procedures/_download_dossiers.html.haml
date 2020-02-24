@@ -4,12 +4,14 @@
       Télécharger tous les dossiers
     .dropdown-content.fade-in-down{ style: 'width: 330px' }
       %ul.dropdown-items
-        - [[xlsx_export, :xlsx], [csv_export, :csv], [ods_export, :ods]].each do |(export, format)|
+        - [[xlsx_export, :xlsx], [ods_export, :ods], [csv_export, :csv]].each do |(export, format)|
           %li
             - if export.nil?
-              = link_to "Demander un export au format .#{format}", download_export_instructeur_procedure_path(procedure, export_format: format), remote: true
+              - export_text = "Demander un export au format .#{format}"
+              - if format == :csv
+                - export_text = "Demander un export au format .#{format}<br/>(uniquement les dossiers, sans les champs répétables)".html_safe
+              = link_to export_text, download_export_instructeur_procedure_path(procedure, export_format: format), remote: true
             - elsif export.ready?
               = link_to "Télécharger l'export au format .#{format}", export.file.service_url, target: "_blank", rel: "noopener"
             - else
               %span{ 'data-export-poll-url': download_export_instructeur_procedure_path(procedure, export_format: format, no_progress_notification: true) }
-                L'export au format .#{format} est en cours de préparation
