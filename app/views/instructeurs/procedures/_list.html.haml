@@ -15,7 +15,7 @@
                   = link_to(instructeur_procedure_path(p, statut: 'a-suivre')) do
                     - a_suivre_count = dossiers_a_suivre_count_per_procedure[p.id] || 0
                     .stats-number
-                      = a_suivre_count
+                      = number_with_html_delimiter(a_suivre_count)
                     .stats-legend
                       à suivre
               %li
@@ -25,7 +25,7 @@
                       %span.notifications{ 'aria-label': "notifications" }
                     - followed_count = followed_dossiers_count_per_procedure[p.id] || 0
                     .stats-number
-                      = followed_count
+                      = number_with_html_delimiter(followed_count)
                     .stats-legend
                       = t('pluralize.followed', count: followed_count)
               %li
@@ -35,7 +35,7 @@
                       %span.notifications{ 'aria-label': "notifications" }
                     - termines_count = dossiers_termines_count_per_procedure[p.id] || 0
                     .stats-number
-                      = termines_count
+                      = number_with_html_delimiter(termines_count)
                     .stats-legend
                       = t('pluralize.processed', count: termines_count)
               %li
@@ -43,7 +43,7 @@
                   = link_to(instructeur_procedure_path(p, statut: 'tous')) do
                     - dossier_count = dossiers_count_per_procedure[p.id] || 0
                     .stats-number
-                      = dossier_count
+                      = number_with_html_delimiter(dossier_count)
                     .stats-legend
                       = t('pluralize.case', count: dossier_count)
               %li
@@ -51,7 +51,7 @@
                   = link_to(instructeur_procedure_path(p, statut: 'archives')) do
                     - archived_count = dossiers_archived_count_per_procedure[p.id] || 0
                     .stats-number
-                      = archived_count
+                      = number_with_html_delimiter(archived_count)
                     .stats-legend
                       = t('pluralize.archived', count: archived_count)
 

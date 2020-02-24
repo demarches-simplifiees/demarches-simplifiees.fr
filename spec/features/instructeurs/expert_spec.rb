@@ -41,8 +41,9 @@ feature 'Inviting an expert:' do
 
       expect(Avis.count).to eq(4)
       expect(all_emails.size).to eq(2)
+
       invitation_email = open_email('expert2@exemple.fr')
-      avis = Avis.find_by(email: 'expert2@exemple.fr')
+      avis = Avis.find_by(email: 'expert2@exemple.fr', dossier: dossier)
       sign_up_link = sign_up_instructeur_avis_path(avis.id, avis.email)
       expect(invitation_email.body).to include(sign_up_link)
     end
