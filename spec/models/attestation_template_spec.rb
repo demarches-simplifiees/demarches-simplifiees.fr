@@ -87,6 +87,25 @@ describe AttestationTemplate, type: :model do
     end
   end
 
+  describe 'invalidate attestation if images attachments are not valid' do
+    before do
+      @logo = Rack::Test::UploadedFile.new('spec/fixtures/files/french-flag.gif', 'image/gif')
+      @signature = Rack::Test::UploadedFile.new('spec/fixtures/files/beta-gouv.gif', 'image/gif')
+    end
+
+    after do
+      subject.destroy
+    end
+
+    let(:attestation_template) { AttestationTemplate.create(attributes) }
+    subject { attestation_template.dup }
+
+    context 'with an attestation which has gif files' do
+      let(:attributes) { { title: 't', body: 'b', footer: 'f', activated: true, logo: @logo, signature: @signature } }
+      it { is_expected.not_to be_valid }
+    end
+  end
+
   describe 'attestation_for' do
     let(:procedure) do
       create(:procedure,
