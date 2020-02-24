@@ -13,7 +13,7 @@
   %span.mandatory *
 = f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
 
-%h2.header-section Logo de la démarche
+%h3.header-subsection Logo de la démarche
 = render 'shared/attachment/edit',
   { form: f,
     attached_file: @procedure.logo,
@@ -21,7 +21,7 @@
     user_can_destroy: true }
 
 - if !@procedure.locked?
-  %h2.header-section Conservation des données
+  %h3.header-subsection Conservation des données
   = f.label :duree_conservation_dossiers_dans_ds do
     Sur demarches-simplifiees.fr
     %span.mandatory *
@@ -39,7 +39,7 @@
     Où les usagers trouveront-ils le lien vers la démarche ?
   = f.text_field :lien_site_web, class: 'form-control', placeholder: 'https://exemple.gouv.fr/ma_demarche'
 
-%h2.header-section
+%h3.header-subsection
   Cadre juridique
   %span.mandatory *
 
@@ -64,7 +64,7 @@
     attached_file: @procedure.deliberation,
     user_can_destroy: true }
 
-%h2.header-section Notice explicative de la démarche
+%h3.header-subsection Notice explicative de la démarche
 
 %p.notice
   Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
@@ -77,7 +77,7 @@
     user_can_destroy: true }
 
 - if !@procedure.locked?
-  %h2.header-section À qui s’adresse ma démarche ?
+  %h3.header-subsection À qui s’adresse ma démarche ?
   .radios.vertical
     = f.label :for_individual, value: true do
       = f.radio_button :for_individual, true
@@ -95,7 +95,7 @@
 
 %details.procedure-form__options-details
   %summary.procedure-form__options-summary
-    %h2.header-section Options avancées
+    %h3.header-subsection Options avancées
 
   - if feature_enabled?(:administrateur_web_hook)
     = f.label :web_hook_url do
