@@ -25,7 +25,9 @@ class Export < ApplicationRecord
     file.attach(
       io: io,
       filename: filename,
-      content_type: content_type
+      content_type: content_type,
+      # We generate the exports ourselves, so they are safe
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     )
   end
 
