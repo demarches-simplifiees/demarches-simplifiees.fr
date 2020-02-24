@@ -77,8 +77,10 @@ feature 'Signing up:' do
       sign_up_with user_email, user_password
       expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
 
-      click_confirmation_link_for user_email
+      click_confirmation_link_for(user_email, in_another_browser: true)
 
+      # After confirmation, the user is redirected to the procedure they were initially starting
+      # (even when confirming the account in another browser).
       expect(page).to have_current_path(commencer_path(path: procedure.path))
       expect(page).to have_content 'Votre compte a été activé'
       click_on 'Commencer la démarche'
@@ -106,6 +108,14 @@ feature 'Signing up:' do
       # The confirmation email is sent again
       confirmation_email = open_email(user_email)
       expect(confirmation_email.body).to have_text('Pour activer votre compte')
+
+      click_confirmation_link_for(user_email, in_another_browser: true)
+
+      # After confirmation, the user is redirected to the procedure they were initially starting
+      # (even when confirming the account in another browser).
+      expect(page).to have_current_path(commencer_path(path: procedure.path))
+      expect(page).to have_content 'Votre compte a été activé'
+      expect(page).to have_content 'Commencer la démarche'
     end
   end
 

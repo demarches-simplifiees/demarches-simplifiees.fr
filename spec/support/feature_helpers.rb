@@ -48,11 +48,16 @@ module FeatureHelpers
     end
   end
 
-  def click_confirmation_link_for(email)
+  def click_confirmation_link_for(email, in_another_browser: false)
     confirmation_email = open_email(email)
-    token_params = confirmation_email.body.match(/confirmation_token=[^"]+/)
+    confirmation_link = confirmation_email.body.match(/href="[^"]*(\/users\/confirmation[^"]*)"/)[1]
 
-    visit "/users/confirmation?#{token_params}"
+    if in_another_browser
+      # Simulate the user opening the link in another browser, thus loosing the session cookie
+      Capybara.reset_session!
+    end
+
+    visit confirmation_link
   end
 
   def click_procedure_sign_in_link_for(email)

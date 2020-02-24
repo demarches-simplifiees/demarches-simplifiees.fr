@@ -42,9 +42,19 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
     if sign_in_after_confirmation?(resource)
       resource.remember_me = true
       sign_in(resource)
+    end
+
+    if procedure_from_params
+      commencer_path(path: procedure_from_params.path)
+    elsif signed_in?
+      # Will try to use `stored_location_for` to find a path
       after_sign_in_path_for(resource_name)
     else
       super(resource_name, resource)
     end
+  end
+
+  def procedure_from_params
+    params[:procedure_id] && Procedure.find_by(id: params[:procedure_id])
   end
 end
