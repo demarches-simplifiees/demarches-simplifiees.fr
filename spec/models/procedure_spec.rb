@@ -538,6 +538,15 @@ describe Procedure do
         expect(subject.deliberation.attached?).to be true
       end
     end
+
+    context 'with canonical procedure' do
+      let(:canonical_procedure) { create(:procedure) }
+      let(:procedure) { create(:procedure, canonical_procedure: canonical_procedure, received_mail: received_mail, service: service) }
+
+      it 'do not clone canonical procedure' do
+        expect(subject.canonical_procedure).to be_nil
+      end
+    end
   end
 
   describe '#publish!' do
