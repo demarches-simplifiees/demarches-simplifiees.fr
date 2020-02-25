@@ -295,6 +295,7 @@ class Procedure < ApplicationRecord
 
     procedure.cloned_from_library = from_library
     procedure.parent_procedure = self
+    procedure.canonical_procedure = nil
 
     if from_library
       procedure.service = nil
