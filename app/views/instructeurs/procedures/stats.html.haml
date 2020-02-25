@@ -6,6 +6,10 @@
                     'Statistiques'] }
 
 .statistiques
+  -# Load Chartkick lazily, by using our React lazy-loader.
+  -# (Chartkick itself doesn't use React though)
+  = react_component('Chartkick')
+
   %h1.new-h1= title
   .stat-cards
     - if @usual_traitement_time.present?
@@ -29,4 +33,3 @@
         .chart
           - colors = %w(#C3D9FF #0069CC #1C7EC9) # from _colors.scss
           = pie_chart @termines_states, colors: colors
-
