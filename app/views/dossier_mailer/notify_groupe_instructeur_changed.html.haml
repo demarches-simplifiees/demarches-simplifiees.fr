@@ -1,0 +1,9 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  = "Vous suiviez jusqu'à maintenant le dossier n°#{@dossier_id} de la démarche #{@demarche}."
+  L'usager a modifié le groupe de routage. Son dossier appartient maintenant à un groupe instructeur dont vous ne faites pas partie.
+%p
+  Suite à cette modification, vous ne suivez plus ce dossier.
+
+= render partial: "layouts/mailers/signature"
