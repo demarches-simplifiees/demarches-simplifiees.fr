@@ -166,4 +166,25 @@ shared_examples 'type_de_champ_spec' do
       expect(messages.last.starts_with?("La liste doit commencer par")).to be_truthy
     end
   end
+
+  describe '#type_de_champ_types_for' do
+    let(:procedure) { create(:procedure) }
+    let(:user) { create(:user) }
+
+    context 'when procedure without legacy "number"' do
+      it 'should have "nombre decimal" instead of "nombre"' do
+        expect(TypeDeChamp.type_de_champ_types_for(procedure, user).find { |tdc| tdc.last == TypeDeChamp.type_champs.fetch(:number) }).to be_nil
+        expect(TypeDeChamp.type_de_champ_types_for(procedure, user).find { |tdc| tdc.last == TypeDeChamp.type_champs.fetch(:decimal_number) }).not_to be_nil
+      end
+    end
+
+    context 'when procedure with legacy "number"' do
+      let(:procedure) { create(:procedure, :with_number) }
+
+      it 'should have "nombre decimal" and "nombre"' do
+        expect(TypeDeChamp.type_de_champ_types_for(procedure, user).find { |tdc| tdc.last == TypeDeChamp.type_champs.fetch(:number) }).not_to be_nil
+        expect(TypeDeChamp.type_de_champ_types_for(procedure, user).find { |tdc| tdc.last == TypeDeChamp.type_champs.fetch(:decimal_number) }).not_to be_nil
+      end
+    end
+  end
 end
