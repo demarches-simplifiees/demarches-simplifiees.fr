@@ -1,6 +1,8 @@
 - content_for(:title, 'Statistiques')
 
 .statistiques
+  -# Load Chartkick lazily, by using our React lazy-loader.
+  -# (Chartkick itself doesn't use React though)
   = react_component('Chartkick')
 
   %h1.new-h1 Statistiques
