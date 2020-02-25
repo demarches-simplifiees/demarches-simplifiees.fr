@@ -405,6 +405,10 @@ describe Dossier do
     let(:instructeur2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur, new_groupe_instructeur]) }
     let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
 
+    before do
+      allow(DossierMailer).to receive(:notify_groupe_instructeur_changed).and_return(double(deliver_later: nil))
+    end
+
     it "unfollows stale instructeurs when groupe instructeur change" do
       instructeur.follow(dossier)
       instructeur2.follow(dossier)
@@ -412,6 +416,8 @@ describe Dossier do
 
       expect(dossier.reload.followers_instructeurs).not_to include(instructeur)
       expect(dossier.reload.followers_instructeurs).to include(instructeur2)
+      expect(DossierMailer).to have_received(:notify_groupe_instructeur_changed).with(instructeur, dossier)
+      expect(DossierMailer).not_to have_received(:notify_groupe_instructeur_changed).with(instructeur2, dossier)
     end
   end
 

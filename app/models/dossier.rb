@@ -649,7 +649,10 @@ class Dossier < ApplicationRecord
   def unfollow_stale_instructeurs
     if saved_change_to_groupe_instructeur_id? && saved_change_to_groupe_instructeur_id[0].present?
       followers_instructeurs.each do |instructeur|
-        instructeur.unfollow(self) unless instructeur.groupe_instructeurs.include?(groupe_instructeur)
+        if instructeur.groupe_instructeurs.exclude?(groupe_instructeur)
+          instructeur.unfollow(self)
+          DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
+        end
       end
     end
   end
