@@ -75,7 +75,6 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def sorted_ids(dossiers, instructeur)
-    dossiers.each { |dossier| assert_matching_procedure(dossier) }
     table, column, order = sort.values_at('table', 'column', 'order')
 
     case table
@@ -110,7 +109,6 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def filtered_ids(dossiers, statut)
-    dossiers.each { |dossier| assert_matching_procedure(dossier) }
     filters[statut].group_by { |filter| filter.values_at('table', 'column') } .map do |(table, column), filters|
       values = filters.pluck('value')
       case table

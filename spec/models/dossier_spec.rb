@@ -398,6 +398,35 @@ describe Dossier do
     it { is_expected.to match([dossier3, dossier4, dossier2]) }
   end
 
+  describe "#unfollow_stale_instructeurs" do
+    let(:procedure) { create(:procedure) }
+    let(:instructeur) { create(:instructeur) }
+    let(:new_groupe_instructeur) { create(:groupe_instructeur) }
+    let(:instructeur2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur, new_groupe_instructeur]) }
+    let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
+    let(:last_operation) { DossierOperationLog.last }
+
+    before do
+      allow(DossierMailer).to receive(:notify_groupe_instructeur_changed).and_return(double(deliver_later: nil))
+    end
+
+    it "unfollows stale instructeurs when groupe instructeur change" do
+      instructeur.follow(dossier)
+      instructeur2.follow(dossier)
+      dossier.reload.update(groupe_instructeur: new_groupe_instructeur)
+
+      expect(dossier.reload.followers_instructeurs).not_to include(instructeur)
+      expect(dossier.reload.followers_instructeurs).to include(instructeur2)
+
+      expect(DossierMailer).to have_received(:notify_groupe_instructeur_changed).with(instructeur, dossier)
+      expect(DossierMailer).not_to have_received(:notify_groupe_instructeur_changed).with(instructeur2, dossier)
+
+      expect(last_operation.operation).to eq("changer_groupe_instructeur")
+      expect(last_operation.dossier).to eq(dossier)
+      expect(last_operation.automatic_operation?).to be_falsey
+    end
+  end
+
   describe "#send_dossier_received" do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
