@@ -90,4 +90,12 @@ class DossierMailer < ApplicationMailer
 
     mail(to: user.email, subject: @subject)
   end
+
+  def notify_groupe_instructeur_changed(instructeur, dossier)
+    @subject = "Un dossier a changé de groupe instructeur"
+    @dossier_id = dossier.id
+    @demarche = dossier.procedure.libelle
+
+    mail(from: NO_REPLY_EMAIL, to: instructeur.email, subject: @subject)
+  end
 end
