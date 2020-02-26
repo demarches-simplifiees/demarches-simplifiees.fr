@@ -223,6 +223,13 @@ describe Instructeur, type: :model do
       it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
 
+    context 'when there is a modification on groupe instructeur' do
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure: dossier.procedure) }
+      before { dossier.assign_to_groupe_instructeur(groupe_instructeur) }
+
+      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
+    end
+
     context 'when there is a modification on private champs' do
       before { dossier.champs_private.first.update_attribute('value', 'toto') }
 
