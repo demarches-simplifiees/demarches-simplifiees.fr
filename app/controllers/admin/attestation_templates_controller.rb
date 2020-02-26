@@ -40,9 +40,16 @@ class Admin::AttestationTemplatesController < AdminController
   end
 
   def preview
-    @attestation = (@procedure.attestation_template || AttestationTemplate.new).render_attributes_for(activated_attestation_params)
+    attestation = (@procedure.attestation_template || AttestationTemplate.new)
+    attestation.assign_attributes(activated_attestation_params)
 
-    render 'admin/attestation_templates/show', formats: [:pdf]
+    if attestation.valid?
+      @attestation = attestation.render_attributes_for(activated_attestation_params)
+
+      render 'admin/attestation_templates/show', formats: [:pdf]
+    else
+      flash.alert = attestation_template.errors.full_messages.join('<br>')
+    end
   end
 
   def delete_logo
