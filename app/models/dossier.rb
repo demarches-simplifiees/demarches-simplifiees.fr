@@ -654,6 +654,7 @@ class Dossier < ApplicationRecord
           DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
         end
       end
+      log_dossier_operation(user, :changer_groupe_instructeur, self)
     end
   end
 
