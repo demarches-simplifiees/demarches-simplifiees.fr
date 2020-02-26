@@ -11,6 +11,9 @@ class AttestationTemplate < ApplicationRecord
 
   validates :footer, length: { maximum: 190 }
 
+  validates :logo, content_type: [:png, :jpg, :jpeg]
+  validates :signature, content_type: [:png, :jpg, :jpeg]
+
   DOSSIER_STATE = Dossier.states.fetch(:accepte)
 
   def attestation_for(dossier)
