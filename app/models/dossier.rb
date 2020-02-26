@@ -22,8 +22,6 @@ class Dossier < ApplicationRecord
 
   TAILLE_MAX_ZIP = 50.megabytes
 
-  DRAFT_EXPIRATION = 1.month + 5.days
-
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
   has_one :attestation, dependent: :destroy
@@ -140,7 +138,6 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
-  scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
   scope :for_api, -> {
     includes(commentaires: { piece_jointe_attachment: :blob },
       champs: [
@@ -170,10 +167,24 @@ class Dossier < ApplicationRecord
   scope :brouillon_close_to_expiration, -> do
     brouillon
       .joins(:procedure)
-      .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - (1 * interval '1 month') <=  now()")
+      .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
   end
-  scope :expired_brouillon, -> { brouillon.where("brouillon_close_to_expiration_notice_sent_at < ?", (Time.zone.now - (DRAFT_EXPIRATION))) }
-  scope :without_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
+  scope :en_construction_close_to_expiration, -> do
+    en_construction
+      .joins(:procedure)
+      .where("dossiers.en_construction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
+  end
+  scope :en_instruction_close_to_expiration, -> do
+    en_instruction
+      .joins(:procedure)
+      .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
+  end
+
+  scope :brouillon_expired, -> { brouillon.where("brouillon_close_to_expiration_notice_sent_at < (now() - INTERVAL '1 month 5 days')") }
+  scope :en_construction_expired, -> { en_construction.where("en_construction_close_to_expiration_notice_sent_at < (now() - INTERVAL '1 month 5 days')") }
+
+  scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
+  scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
