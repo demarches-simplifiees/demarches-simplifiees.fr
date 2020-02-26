@@ -26,11 +26,12 @@ describe Admin::AttestationTemplatesController, type: :controller do
           procedure_id: procedure.id,
           attestation_template: upload_params
         }
+      procedure.reload
     end
 
     context 'with an interlaced png' do
       let(:upload_params) { { logo: interlaced_logo } }
-      it { expect(assigns(:attestation)[:logo].read).to eq(uninterlaced_logo.read) }
+      it { expect(procedure.attestation_template.logo.download).to eq(uninterlaced_logo.read) }
     end
 
     context 'if an attestation template does not exist on the procedure' do
