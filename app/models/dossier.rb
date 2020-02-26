@@ -301,7 +301,7 @@ class Dossier < ApplicationRecord
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
     if groupe_instructeur.procedure == procedure && groupe_instructeur != self.groupe_instructeur
-      if update(groupe_instructeur: groupe_instructeur)
+      if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
         unfollow_stale_instructeurs
 
         if author.present?
