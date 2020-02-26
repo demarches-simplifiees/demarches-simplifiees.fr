@@ -669,37 +669,4 @@ class Dossier < ApplicationRecord
       end
     end
   end
-
-  def self.send_brouillon_expiration_notices
-    brouillons = Dossier
-      .brouillon_close_to_expiration
-      .without_notice_sent
-
-    brouillons
-      .includes(:user)
-      .group_by(&:user)
-      .each do |(user, dossiers)|
-        DossierMailer.notify_brouillon_near_deletion(user, dossiers).deliver_later
-      end
-
-    brouillons.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
-  end
-
-  def self.destroy_brouillons_and_notify
-    expired_brouillons = Dossier.expired_brouillon
-
-    expired_brouillons
-      .includes(:procedure, :user)
-      .group_by(&:user)
-      .each do |(user, dossiers)|
-
-      dossier_hashes = dossiers.map(&:hash_for_deletion_mail)
-      DossierMailer.notify_brouillon_deletion(user, dossier_hashes).deliver_later
-
-      dossiers.each do |dossier|
-        DeletedDossier.create_from_dossier(dossier)
-        dossier.destroy
-      end
-    end
-  end
 end
