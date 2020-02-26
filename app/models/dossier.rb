@@ -187,7 +187,7 @@ class Dossier < ApplicationRecord
       .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'contact@demarches-simplifiees.fr\'')
 
     updated_demandes = joined_dossiers
-      .where('champs.updated_at > follows.demande_seen_at')
+      .where('champs.updated_at > follows.demande_seen_at OR groupe_instructeur_updated_at > follows.demande_seen_at')
 
     updated_annotations = joined_dossiers
       .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
