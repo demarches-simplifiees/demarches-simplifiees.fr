@@ -45,29 +45,54 @@ describe Dossier do
     end
   end
 
-  describe 'nearing_end_of_retention' do
+  describe 'brouillon_close_to_expiration' do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, created_at: 170.days.ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, created_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, created_at: 1.year.ago, procedure: procedure) }
+
+    subject { Dossier.brouillon_close_to_expiration }
+
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
+    end
+  end
+
+  describe 'en_construction_close_to_expiration' do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, :en_construction, en_construction_at: 170.days.ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, :en_construction, en_construction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, :en_construction, en_construction_at: 1.year.ago, procedure: procedure) }
+
+    subject { Dossier.en_construction_close_to_expiration }
+
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
+    end
+  end
+
+  describe 'en_instruction_close_to_expiration' do
     let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 170.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
 
-    context 'with default delay to end of retention' do
-      subject { Dossier.nearing_end_of_retention }
+    subject { Dossier.en_instruction_close_to_expiration }
 
-      it { is_expected.not_to include(young_dossier) }
-      it { is_expected.to include(expiring_dossier) }
-      it { is_expected.to include(just_expired_dossier) }
-      it { is_expected.to include(long_expired_dossier) }
-    end
-
-    context 'with custom delay to end of retention' do
-      subject { Dossier.nearing_end_of_retention('0') }
-
-      it { is_expected.not_to include(young_dossier) }
-      it { is_expected.not_to include(expiring_dossier) }
-      it { is_expected.to include(just_expired_dossier) }
-      it { is_expected.to include(long_expired_dossier) }
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
     end
   end
 
