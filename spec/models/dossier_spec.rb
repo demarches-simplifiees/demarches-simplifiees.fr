@@ -404,6 +404,7 @@ describe Dossier do
     let(:new_groupe_instructeur) { create(:groupe_instructeur) }
     let(:instructeur2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur, new_groupe_instructeur]) }
     let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
+    let(:last_operation) { DossierOperationLog.last }
 
     before do
       allow(DossierMailer).to receive(:notify_groupe_instructeur_changed).and_return(double(deliver_later: nil))
@@ -416,8 +417,13 @@ describe Dossier do
 
       expect(dossier.reload.followers_instructeurs).not_to include(instructeur)
       expect(dossier.reload.followers_instructeurs).to include(instructeur2)
+
       expect(DossierMailer).to have_received(:notify_groupe_instructeur_changed).with(instructeur, dossier)
       expect(DossierMailer).not_to have_received(:notify_groupe_instructeur_changed).with(instructeur2, dossier)
+
+      expect(last_operation.operation).to eq("changer_groupe_instructeur")
+      expect(last_operation.dossier).to eq(dossier)
+      expect(last_operation.automatic_operation?).to be_falsey
     end
   end
 
