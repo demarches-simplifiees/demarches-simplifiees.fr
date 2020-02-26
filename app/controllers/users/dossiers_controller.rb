@@ -297,14 +297,13 @@ module Users
     end
 
     # FIXME: require(:dossier) when all the champs are united
-    def champs_and_groupe_instructeurs_params
-      params.permit(dossier: [
-        :groupe_instructeur_id,
+    def champs_params
+      params.permit(dossier: {
         champs_attributes: [
           :id, :value, :primary_value, :secondary_value, :piece_justificative_file, value: [],
           champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
         ]
-      ])
+      })
     end
 
     def dossier
@@ -315,11 +314,20 @@ module Users
       Dossier.with_champs.find(params[:id])
     end
 
+    def change_groupe_instructeur?
+      params[:dossier][:groupe_instructeur_id].present? && @dossier.groupe_instructeur_id != params[:dossier][:groupe_instructeur_id].to_i
+    end
+
     def update_dossier_and_compute_errors
       errors = []
 
-      if champs_and_groupe_instructeurs_params[:dossier] && !@dossier.update(champs_and_groupe_instructeurs_params[:dossier])
-        errors += @dossier.errors.full_messages
+      if champs_params[:dossier]
+        if !@dossier.update(champs_params[:dossier])
+          errors += @dossier.errors.full_messages
+        elsif change_groupe_instructeur?
+          groupe_instructeur = @dossier.procedure.groupe_instructeurs.find(params[:dossier][:groupe_instructeur_id])
+          @dossier.assign_to_groupe_instructeur(groupe_instructeur)
+        end
       end
 
       if !save_draft?
