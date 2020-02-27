@@ -384,7 +384,7 @@ describe Instructeur, type: :model do
     let(:procedure_to_assign) { create(:procedure) }
 
     before do
-      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, email_notifications_enabled: true, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur)
+      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, daily_email_notifications_enabled: true, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur)
     end
 
     context 'when a dossier in construction exists' do
