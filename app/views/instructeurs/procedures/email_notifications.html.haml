@@ -20,11 +20,11 @@
 
     .radios
       %label
-        = form.radio_button :email_notifications_enabled, true
+        = form.radio_button :daily_email_notifications_enabled, true
         Oui
 
       %label
-        = form.radio_button :email_notifications_enabled, false
+        = form.radio_button :daily_email_notifications_enabled, false
         Non
 
     = form.label :email_notification, "Recevoir un récapitulatif hebdomadaire"
