@@ -16,6 +16,22 @@ module Users
       render 'commencer/show'
     end
 
+    def dossier_vide_pdf
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank? || @procedure.brouillon?
+
+      @dossier = @procedure.new_dossier
+      render(file: 'dossiers/dossier_vide', formats: [:pdf])
+    end
+
+    def dossier_vide_pdf_test
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank? || @procedure.publiee?
+
+      @dossier = @procedure.new_dossier
+      render(file: 'dossiers/dossier_vide', formats: [:pdf])
+    end
+
     def sign_in
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank?
