@@ -24,29 +24,29 @@
           = tab_item('à suivre',
             instructeur_procedure_path(@procedure, statut: 'a-suivre'),
             active: @statut == 'a-suivre',
-            badge: @a_suivre_dossiers.count)
+            badge: number_with_html_delimiter(@a_suivre_dossiers.count))
 
           = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'suivis'),
             active: @statut == 'suivis',
-            badge: @followed_dossiers.count,
+            badge: number_with_html_delimiter(@followed_dossiers.count),
             notification: current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?)
 
           = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'traites'),
             active: @statut == 'traites',
-            badge: @termines_dossiers.count,
+            badge: number_with_html_delimiter(@termines_dossiers.count),
             notification: current_instructeur.notifications_for_procedure(@procedure, :termine).exists?)
 
           = tab_item('tous les dossiers',
             instructeur_procedure_path(@procedure, statut: 'tous'),
             active: @statut == 'tous',
-            badge: @all_state_dossiers.count)
+            badge: number_with_html_delimiter(@all_state_dossiers.count))
 
           = tab_item(t('pluralize.archived', count: @archived_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'archives'),
             active: @statut == 'archives',
-            badge: @archived_dossiers.count)
+            badge: number_with_html_delimiter(@archived_dossiers.count))
 
       .procedure-actions
         = render partial: "download_dossiers",

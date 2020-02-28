@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_11_170134) do
+ActiveRecord::Schema.define(version: 2020_02_18_144724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 2020_02_11_170134) do
     t.boolean "email_notifications_enabled", default: false, null: false
     t.bigint "groupe_instructeur_id"
     t.boolean "weekly_email_notifications_enabled", default: true, null: false
+    t.boolean "daily_email_notifications_enabled", default: false, null: false
     t.index ["groupe_instructeur_id", "instructeur_id"], name: "unique_couple_groupe_instructeur_instructeur", unique: true
     t.index ["groupe_instructeur_id"], name: "index_assign_tos_on_groupe_instructeur_id"
     t.index ["instructeur_id", "procedure_id"], name: "index_assign_tos_on_instructeur_id_and_procedure_id", unique: true

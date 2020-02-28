@@ -42,12 +42,4 @@ class InstructeurMailer < ApplicationMailer
 
     mail(to: instructeur.email, subject: subject)
   end
-
-  def notify_procedure_export_available(instructeur, procedure, export_format)
-    @procedure = procedure
-    @export_format = export_format
-    subject = "Votre export de la démarche nº #{procedure.id} est disponible"
-
-    mail(to: instructeur.email, subject: subject)
-  end
 end
