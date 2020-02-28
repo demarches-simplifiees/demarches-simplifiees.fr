@@ -120,10 +120,6 @@ class TypeDeChamp < ApplicationRecord
     dynamic_type.build_champ
   end
 
-  def self.type_de_champs_list_fr
-    type_champs.map { |champ| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{champ.last}"), champ.first] }
-  end
-
   def check_mandatory
     if non_fillable?
       self.mandatory = false
@@ -167,6 +163,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
   end
 
+  def legacy_number?
+    type_champ == TypeDeChamp.type_champs.fetch(:number)
+  end
+
   def public?
     !private?
   end
@@ -197,6 +197,54 @@ class TypeDeChamp < ApplicationRecord
 
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
+  end
+
+  FEATURE_FLAGS = {}
+
+  def self.type_de_champ_types_for(procedure, user)
+    has_legacy_number = (procedure.types_de_champ + procedure.types_de_champ_private).any?(&:legacy_number?)
+
+    type_champs.map do |type_champ|
+      [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{type_champ.last}"), type_champ.first]
+    end.filter do |tdc|
+      if tdc.last == TypeDeChamp.type_champs.fetch(:number)
+        has_legacy_number
+      else
+        feature_name = FEATURE_FLAGS[tdc.last]
+        feature_name.blank? || Flipper.enabled?(feature_name, user)
+      end
+    end
+  end
+
+  TYPES_DE_CHAMP_BASE = {
+    except: [
+      :created_at,
+      :options,
+      :order_place,
+      :parent_id,
+      :private,
+      :procedure_id,
+      :stable_id,
+      :type,
+      :updated_at
+    ],
+    methods: [
+      :cadastres,
+      :drop_down_list_value,
+      :parcelles_agricoles,
+      :piece_justificative_template_filename,
+      :piece_justificative_template_url,
+      :quartiers_prioritaires
+    ]
+  }
+  TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE
+    .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
+
+  def self.as_json_for_editor
+    includes(:drop_down_list,
+      piece_justificative_template_attachment: :blob,
+      types_de_champ: [:drop_down_list, piece_justificative_template_attachment: :blob])
+      .as_json(TYPES_DE_CHAMP)
   end
 
   private
