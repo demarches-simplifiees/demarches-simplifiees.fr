@@ -289,7 +289,7 @@ describe User, type: :model do
       let!(:dossier_en_construction) { create(:dossier, :en_construction, user: user) }
       let!(:dossier_brouillon) { create(:dossier, user: user) }
 
-      context 'without a hidden dossier' do
+      context 'without a discarded dossier' do
         it "keep track of dossiers and delete user" do
           user.delete_and_keep_track_dossiers(administration)
 
@@ -299,7 +299,7 @@ describe User, type: :model do
         end
       end
 
-      context 'with a hidden dossier' do
+      context 'with a discarded dossier' do
         let!(:dossier_cache) do
           create(:dossier, :en_construction, user: user)
         end

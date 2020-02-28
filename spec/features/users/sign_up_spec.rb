@@ -109,27 +109,52 @@ feature 'Signing up:' do
     end
   end
 
-  context 'when a user is not confirmed yet' do
+  context 'when the user is not confirmed yet' do
     before do
-      visit commencer_path(path: procedure.path)
-      click_on "Créer un compte #{SITE_NAME}"
-
-      sign_up_with user_email, user_password
+      create(:user, :unconfirmed, email: user_email, password: user_password)
     end
 
-    # Ideally, when signing-in with an unconfirmed account,
-    # the user would be redirected to the "resend email confirmation" page.
-    #
-    # However the check for unconfirmed accounts is made by Warden every time a page is loaded –
-    # and much earlier than SessionsController#create.
-    #
-    # For now only test the default behavior (an error message is displayed).
-    scenario 'they get an error message' do
-      visit root_path
-      click_on 'Connexion'
+    scenario 'the email confirmation page is displayed' do
+      visit commencer_path(path: procedure.path)
+      click_on 'Créer un compte'
 
-      sign_in_with user_email, user_password
-      expect(page).to have_content 'Vous devez confirmer votre adresse email pour continuer'
+      sign_up_with user_email, user_password
+
+      # The same page than for initial sign-ups is displayed, to avoid leaking informations
+      # about the accound existence.
+      expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+
+      # The confirmation email is sent again
+      confirmation_email = open_email(user_email)
+      expect(confirmation_email.body).to have_text('Pour activer votre compte')
+    end
+  end
+
+  context 'when the user already has a confirmed account' do
+    before do
+      create(:user, email: user_email, password: user_password)
+    end
+
+    scenario 'they get a warning email, containing a link to the procedure' do
+      visit commencer_path(path: procedure.path)
+      click_on 'Créer un compte'
+
+      sign_up_with user_email, user_password
+
+      # The same page than for initial sign-ups is displayed, to avoid leaking informations
+      # about the accound existence.
+      expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+
+      # A warning email is sent
+      warning_email = open_email(user_email)
+      expect(warning_email.body).to have_text('Votre compte existe déjà')
+
+      # When clicking the main button, the user has a link to directly sign-in
+      # for the procedure they were initially starting
+      click_procedure_sign_in_link_for user_email
+
+      expect(page).to have_current_path new_user_session_path
+      expect(page).to have_procedure_description(procedure)
     end
   end
 end

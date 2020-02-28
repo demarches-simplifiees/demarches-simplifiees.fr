@@ -22,6 +22,20 @@ describe Champ do
     end
   end
 
+  describe '#siblings' do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, types_de_champ_count: 1, types_de_champ_private_count: 1) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:public_champ) { dossier.champs.first }
+    let(:private_champ) { dossier.champs_private.first }
+    let(:standalone_champ) { create(:champ, dossier: nil) }
+
+    it 'returns the sibling champs of a champ' do
+      expect(public_champ.siblings).to eq(dossier.champs)
+      expect(private_champ.siblings).to eq(dossier.champs_private)
+      expect(standalone_champ.siblings).to be_nil
+    end
+  end
+
   describe '#format_datetime' do
     let(:type_de_champ) { build(:type_de_champ_datetime) }
     let(:champ) { type_de_champ.champ.build(value: value) }

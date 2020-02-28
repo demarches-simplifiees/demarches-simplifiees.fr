@@ -2,6 +2,10 @@ class Dossier < ApplicationRecord
   self.ignored_columns = ['json_latlngs']
   include DossierFilteringConcern
 
+  include Discard::Model
+  self.discard_column = :hidden_at
+  default_scope -> { kept }
+
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
@@ -95,9 +99,6 @@ class Dossier < ApplicationRecord
     end
   end
 
-  default_scope { where(hidden_at: nil) }
-  scope :hidden,                               -> { unscope(where: :hidden_at).where.not(hidden_at: nil) }
-  scope :with_hidden,                          -> { unscope(where: :hidden_at) }
   scope :state_brouillon,                      -> { where(state: states.fetch(:brouillon)) }
   scope :state_not_brouillon,                  -> { where.not(state: states.fetch(:brouillon)) }
   scope :state_en_construction,                -> { where(state: states.fetch(:en_construction)) }
@@ -382,7 +383,7 @@ class Dossier < ApplicationRecord
 
   def delete_and_keep_track(author)
     deleted_dossier = DeletedDossier.create_from_dossier(self)
-    update(hidden_at: deleted_dossier.deleted_at)
+    discard!
 
     if en_construction?
       administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)

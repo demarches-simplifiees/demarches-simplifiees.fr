@@ -9,10 +9,10 @@ module Manager
     def scoped_resource
       if unfiltered_list?
         # Don't display deleted dossiers in the unfiltered list…
-        Procedure
+        Procedure.kept
       else
         # … but allow them to be searched and displayed.
-        Procedure.with_hidden
+        Procedure.with_discarded
       end
     end
 

@@ -5,6 +5,10 @@ class Procedure < ApplicationRecord
 
   include ProcedureStatsConcern
 
+  include Discard::Model
+  self.discard_column = :hidden_at
+  default_scope -> { kept }
+
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
@@ -44,9 +48,6 @@ class Procedure < ApplicationRecord
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
-  default_scope { where(hidden_at: nil) }
-  scope :hidden,                -> { unscope(where: :hidden_at).where.not(hidden_at: nil) }
-  scope :with_hidden,           -> { unscope(where: :hidden_at) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
@@ -99,7 +100,6 @@ class Procedure < ApplicationRecord
     state :brouillon, initial: true
     state :publiee
     state :close
-    state :hidden
     state :depubliee
 
     event :publish, before: :before_publish, after: :after_publish do
@@ -110,12 +110,6 @@ class Procedure < ApplicationRecord
 
     event :close, after: :after_close do
       transitions from: :publiee, to: :close
-    end
-
-    event :hide, after: :after_hide do
-      transitions from: :brouillon, to: :hidden
-      transitions from: :publiee, to: :hidden
-      transitions from: :close, to: :hidden
     end
 
     event :unpublish, after: :after_unpublish do
@@ -597,6 +591,12 @@ class Procedure < ApplicationRecord
     groupe_instructeurs.count > 1
   end
 
+  def hide!
+    discard!
+    dossiers.discard_all
+    purge_export_files
+  end
+
   private
 
   def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
@@ -626,13 +626,6 @@ class Procedure < ApplicationRecord
   def after_close
     now = Time.zone.now
     update!(closed_at: now)
-    purge_export_files
-  end
-
-  def after_hide
-    now = Time.zone.now
-    update!(hidden_at: now)
-    dossiers.update_all(hidden_at: now)
     purge_export_files
   end
 
