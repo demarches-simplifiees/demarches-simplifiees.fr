@@ -33,6 +33,20 @@ class User < ApplicationRecord
     end
   end
 
+  # Override of Devise::Models::Confirmable#send_confirmation_instructions
+  def send_confirmation_instructions
+    unless @raw_confirmation_token
+      generate_confirmation_token!
+    end
+
+    opts = pending_reconfirmation? ? { to: unconfirmed_email } : {}
+
+    # Make our procedure_after_confirmation available to the Mailer
+    opts[:procedure_after_confirmation] = CurrentConfirmation.procedure_after_confirmation
+
+    send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+  end
+
   # Callback provided by Devise
   def after_confirmation
     link_invites!
