@@ -154,4 +154,16 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include("PDF") }
     it { expect(subject.body).to include("Vous avez <b>un mois</b> pour traiter le dossier.") }
   end
+
+  describe '.notify_groupe_instructeur_changed_to_instructeur' do
+    let(:dossier) { create(:dossier) }
+    let(:instructeur) { create(:instructeur) }
+
+    subject { described_class.notify_groupe_instructeur_changed(instructeur, dossier) }
+
+    it { expect(subject.subject).to eq("Un dossier a changé de groupe instructeur") }
+    it { expect(subject.body).to include("n°#{dossier.id}") }
+    it { expect(subject.body).to include(dossier.procedure.libelle) }
+    it { expect(subject.body).to include("Suite à cette modification, vous ne suivez plus ce dossier.") }
+  end
 end

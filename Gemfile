@@ -4,6 +4,7 @@ gem 'aasm'
 gem 'actiontext', git: 'https://github.com/kobaltz/actiontext.git', branch: 'archive', require: 'action_text' # Port of ActionText to Rails 5
 gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
+gem 'active_storage_validations'
 gem 'activestorage-openstack'
 gem 'administrate'
 gem 'after_party'
