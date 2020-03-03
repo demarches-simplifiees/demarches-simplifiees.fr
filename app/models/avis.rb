@@ -6,6 +6,7 @@ class Avis < ApplicationRecord
   belongs_to :claimant, class_name: 'Instructeur'
 
   has_one_attached :piece_justificative_file
+  has_one_attached :introduction_file
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
   validates :claimant, presence: true
