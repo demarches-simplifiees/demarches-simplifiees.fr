@@ -35,6 +35,8 @@ module Types
     field :messages, [Types::MessageType], null: false
     field :avis, [Types::AvisType], null: false
 
+    field :groupe_instructeur, Types::GroupeInstructeurType, null: false
+
     def state
       object.state
     end
@@ -45,6 +47,10 @@ module Types
 
     def instructeurs
       Loaders::Association.for(object.class, :followers_instructeurs).load(object)
+    end
+
+    def groupe_instructeur
+      Loaders::Record.for(GroupeInstructeur).load(object.groupe_instructeur_id)
     end
 
     def messages
