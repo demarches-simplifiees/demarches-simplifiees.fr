@@ -5,7 +5,7 @@ gem 'actiontext', git: 'https://github.com/kobaltz/actiontext.git', branch: 'arc
 gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
 gem 'active_storage_validations'
-gem 'activestorage-openstack'
+gem 'activestorage-openstack', git: 'https://github.com/tchak/activestorage-openstack.git', branch: 'fix-activestorage-filename-wrap'
 gem 'administrate'
 gem 'after_party'
 gem 'anchored'
