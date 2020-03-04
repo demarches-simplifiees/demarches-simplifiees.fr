@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'aasm'
-gem 'actiontext', git: 'https://github.com/kobaltz/actiontext.git', branch: 'archive', require: 'action_text' # Port of ActionText to Rails 5
 gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
 gem 'active_storage_validations'
@@ -59,7 +58,7 @@ gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'
 gem 'rack-mini-profiler'
-gem 'rails', '= 5.2.4.2'
+gem 'rails', '= 6.0.2.2'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'react-rails'
