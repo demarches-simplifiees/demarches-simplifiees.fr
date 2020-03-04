@@ -5,7 +5,10 @@
   - @expired_dossiers.group_by(&:procedure).each do |procedure, dossiers|
     %dl
       %dt
-        #{procedure.libelle} (#{link_to(procedure.id, manager_procedure_url(procedure))}) :
+        - if procedure.present?
+          #{procedure.libelle} (#{link_to(procedure.id, manager_procedure_url(procedure))}) :
+        - else
+          Procédure supprimée
       %dd
         = dossiers.map { |d| link_to(d.id, manager_dossier_url(d)) }.join(', ').html_safe
 
@@ -14,7 +17,10 @@
   - @expiring_dossiers.group_by(&:procedure).each do |procedure, dossiers|
     %dl
       %dt
-        #{procedure.libelle} (#{link_to(procedure.id, manager_procedure_url(procedure))}) :
+        - if procedure.present?
+          #{procedure.libelle} (#{link_to(procedure.id, manager_procedure_url(procedure))}) :
+        - else
+          Procédure supprimée
       %dd
         = dossiers.map { |d| link_to(d.id, manager_dossier_url(d)) }.join(', ').html_safe
 
