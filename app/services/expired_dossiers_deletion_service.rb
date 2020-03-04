@@ -9,8 +9,6 @@ class ExpiredDossiersDeletionService
     delete_expired_en_construction_and_notify
   end
 
-  private
-
   def self.send_brouillon_expiration_notices
     dossiers_close_to_expiration = Dossier.brouillon_close_to_expiration
       .without_brouillon_expiration_notice_sent
