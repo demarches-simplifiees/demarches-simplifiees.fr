@@ -41,6 +41,75 @@ describe ExpiredDossiersDeletionService do
     end
   end
 
+  describe '#send_en_construction_expiration_notices' do
+    let!(:conservation_par_defaut) { 3.months }
+
+    before { Timecop.freeze(Time.zone.now) }
+    after  { Timecop.return }
+
+    before do
+      allow(DossierMailer).to receive(:notify_en_construction_near_deletion).and_return(double(deliver_later: nil))
+    end
+
+    context 'with a single dossier' do
+      let!(:dossier) { create(:dossier, :en_construction, :followed, en_construction_at: en_construction_at) }
+
+      before { ExpiredDossiersDeletionService.send_en_construction_expiration_notices }
+
+      context 'when the dossier is not near deletion' do
+        let(:en_construction_at) { (conservation_par_defaut - 1.month - 1.day).ago }
+
+        it { expect(dossier.reload.en_construction_close_to_expiration_notice_sent_at).to be_nil }
+        it { expect(DossierMailer).not_to have_received(:notify_en_construction_near_deletion) }
+      end
+
+      context 'when the dossier is near deletion' do
+        let(:en_construction_at) { (conservation_par_defaut - 1.month + 1.day).ago }
+
+        it { expect(dossier.reload.en_construction_close_to_expiration_notice_sent_at).not_to be_nil }
+
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).thrice }
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier.user.email, [dossier], true) }
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier.procedure.administrateurs.first.email, [dossier], false) }
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier.followers_instructeurs.first.email, [dossier], false) }
+      end
+    end
+
+    context 'with 2 dossiers to notice' do
+      let!(:user) { create(:user) }
+      let!(:dossier_1) { create(:dossier, :en_construction, user: user, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, :en_construction, user: user, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
+
+      let!(:instructeur) { create(:instructeur) }
+
+      before do
+        instructeur.followed_dossiers << dossier_1 << dossier_2
+        ExpiredDossiersDeletionService.send_en_construction_expiration_notices
+      end
+
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).exactly(4).times }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(user.email, match_array([dossier_1, dossier_2]), true) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(instructeur.email, match_array([dossier_1, dossier_2]), false) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier_1.procedure.administrateurs.first.email, [dossier_1], false) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier_2.procedure.administrateurs.first.email, [dossier_2], false) }
+    end
+
+    context 'when an instructeur is also administrateur' do
+      let!(:procedure) { create(:procedure) }
+      let!(:administrateur) { procedure.administrateurs.first }
+      let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
+
+      before do
+        administrateur.instructeur.followed_dossiers << dossier
+        ExpiredDossiersDeletionService.send_en_construction_expiration_notices
+      end
+
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).exactly(2).times }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier.user.email, [dossier], true) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(administrateur.email, [dossier], false) }
+    end
+  end
+
   describe '#delete_expired_en_construction_and_notify' do
     let!(:warning_period) { 1.month + 5.days }
 
