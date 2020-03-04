@@ -38,16 +38,20 @@ class Administrateur < ApplicationRecord
   end
 
   def renew_api_token
-    api_token = Administrateur.generate_unique_secure_token
+    api_token = self.class.generate_unique_secure_token
     encrypted_token = BCrypt::Password.create(api_token)
     update(encrypted_token: encrypted_token)
-    api_token
+    JsonWebToken.encode(sub: id.to_s, iat: Time.zone.now.to_i, jti: api_token)
   end
 
   def valid_api_token?(api_token)
-    BCrypt::Password.new(encrypted_token) == api_token
+    if BCrypt::Password.new(encrypted_token) == api_token
+      true
+    else
+      valid_jwt?(api_token)
+    end
   rescue BCrypt::Errors::InvalidHash
-    false
+    valid_jwt?(api_token)
   end
 
   def registration_state
@@ -86,5 +90,19 @@ class Administrateur < ApplicationRecord
       procedure.service.update(administrateur: next_administrateur)
     end
     destroy
+  end
+
+  private
+
+  def valid_jwt?(jwt)
+    valid_jti?(JsonWebToken.decode(jwt)[:jti])
+  rescue JWT::DecodeError
+    false
+  end
+
+  def valid_jti?(jti)
+    BCrypt::Password.new(encrypted_token) == jti
+  rescue BCrypt::Errors::InvalidHash
+    false
   end
 end

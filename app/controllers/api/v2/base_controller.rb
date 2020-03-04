@@ -5,7 +5,7 @@ class API::V2::BaseController < ApplicationController
 
   def context
     {
-      administrateur_id: current_administrateur&.id,
+      administrateur_id: administrateur_id,
       token: authorization_bearer_token
     }
   end
@@ -16,5 +16,15 @@ class API::V2::BaseController < ApplicationController
       received_token = token
     end
     received_token
+  end
+
+  def administrateur_id
+    if administrateur_signed_in?
+      current_administrateur.id
+    else
+      JsonWebToken.decode(authorization_bearer_token)[:sub].to_i
+    end
+  rescue JWT::DecodeError
+    nil
   end
 end

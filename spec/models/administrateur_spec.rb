@@ -10,7 +10,8 @@ describe Administrateur, type: :model do
 
   describe "#renew_api_token" do
     let!(:administrateur) { create(:administrateur) }
-    let!(:token) { administrateur.renew_api_token }
+    let!(:jwt_token) { administrateur.renew_api_token }
+    let(:token) { JsonWebToken.decode(jwt_token)[:jti] }
 
     it { expect(BCrypt::Password.new(administrateur.encrypted_token)).to eq(token) }
 
