@@ -55,7 +55,7 @@ describe ApiEntreprise::API do
   describe '.etablissement' do
     subject { described_class.etablissement(siret, procedure_id) }
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*non_diffusables=true&.*token=/)
         .to_return(status: status, body: body)
     end
 

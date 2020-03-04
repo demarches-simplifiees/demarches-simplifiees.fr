@@ -62,6 +62,7 @@ class ApiEntreprise::API
       context: "demarches-simplifiees.fr",
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}",
+      non_diffusables: true,
       token: token
     }
   end
