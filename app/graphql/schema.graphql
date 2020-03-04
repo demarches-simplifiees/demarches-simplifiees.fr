@@ -309,6 +309,32 @@ type Demarche {
   title: String!
 }
 
+"""
+Une demarche
+"""
+type DemarcheDescriptor {
+  """
+  Description de la démarche.
+  """
+  description: String!
+  id: ID!
+
+  """
+  Le numero de la démarche.
+  """
+  number: Int!
+
+  """
+  L'état de la démarche.
+  """
+  state: DemarcheState!
+
+  """
+  Le titre de la démarche.
+  """
+  title: String!
+}
+
 enum DemarcheState {
   """
   Brouillon
@@ -928,6 +954,16 @@ type Query {
     """
     number: Int!
   ): Demarche!
+
+  """
+  Liste des démarches.
+  """
+  demarches(
+    """
+    État de la démarche.
+    """
+    state: DemarcheState
+  ): [DemarcheDescriptor!]!
 
   """
   Informations sur un dossier d'une démarche.

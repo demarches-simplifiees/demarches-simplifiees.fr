@@ -102,6 +102,31 @@ describe API::V2::GraphqlController do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
     end
 
+    context "demarches" do
+      let(:query) do
+        "{
+          demarches {
+            id
+            number
+            title
+            state
+          }
+        }"
+      end
+
+      it "should be returned" do
+        expect(gql_errors).to eq(nil)
+        expect(gql_data).to eq(demarches: [
+          {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            title: procedure.libelle,
+            state: 'publiee'
+          }
+        ])
+      end
+    end
+
     context "demarche" do
       it "should be returned" do
         expect(gql_errors).to eq(nil)
