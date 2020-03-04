@@ -385,6 +385,7 @@ type Dossier {
   """
   dateTraitement: ISO8601DateTime
   demandeur: Demandeur!
+  groupeInstructeur: GroupeInstructeur!
   id: ID!
   instructeurs: [Profile!]!
   messages: [Message!]!

@@ -398,12 +398,29 @@ describe Dossier do
     it { is_expected.to match([dossier3, dossier4, dossier2]) }
   end
 
+  describe "#assign_to_groupe_instructeur" do
+    let(:procedure) { create(:procedure) }
+    let(:new_groupe_instructeur_new_procedure) { create(:groupe_instructeur) }
+    let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+    it "can change groupe instructeur" do
+      expect(dossier.assign_to_groupe_instructeur(new_groupe_instructeur_new_procedure)).to be_falsey
+      expect(dossier.groupe_instructeur).not_to eq(new_groupe_instructeur_new_procedure)
+    end
+
+    it "can not change groupe instructeur if new groupe is from another procedure" do
+      expect(dossier.assign_to_groupe_instructeur(new_groupe_instructeur)).to be_truthy
+      expect(dossier.groupe_instructeur).to eq(new_groupe_instructeur)
+    end
+  end
+
   describe "#unfollow_stale_instructeurs" do
     let(:procedure) { create(:procedure) }
     let(:instructeur) { create(:instructeur) }
-    let(:new_groupe_instructeur) { create(:groupe_instructeur) }
+    let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
     let(:instructeur2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur, new_groupe_instructeur]) }
-    let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:last_operation) { DossierOperationLog.last }
 
     before do
@@ -413,7 +430,7 @@ describe Dossier do
     it "unfollows stale instructeurs when groupe instructeur change" do
       instructeur.follow(dossier)
       instructeur2.follow(dossier)
-      dossier.reload.update(groupe_instructeur: new_groupe_instructeur)
+      dossier.reload.assign_to_groupe_instructeur(new_groupe_instructeur, procedure.administrateurs.first)
 
       expect(dossier.reload.followers_instructeurs).not_to include(instructeur)
       expect(dossier.reload.followers_instructeurs).to include(instructeur2)
