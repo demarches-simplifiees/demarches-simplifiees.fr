@@ -41,6 +41,74 @@ describe ExpiredDossiersDeletionService do
     end
   end
 
+  describe '#delete_expired_en_construction_and_notify' do
+    let!(:warning_period) { 1.month + 5.days }
+
+    before { Timecop.freeze(Time.zone.now) }
+    after  { Timecop.return }
+
+    before do
+      allow(DossierMailer).to receive(:notify_automatic_deletion_to_user).and_return(double(deliver_later: nil))
+      allow(DossierMailer).to receive(:notify_automatic_deletion_to_administration).and_return(double(deliver_later: nil))
+    end
+
+    context 'with a single dossier' do
+      let!(:dossier) { create(:dossier, :en_construction, :followed, en_construction_close_to_expiration_notice_sent_at: notice_sent_at) }
+
+      before { ExpiredDossiersDeletionService.delete_expired_en_construction_and_notify }
+
+      context 'when no notice has been sent' do
+        let(:notice_sent_at) { nil }
+
+        it { expect { dossier.reload }.not_to raise_error }
+        it { expect(DossierMailer).not_to have_received(:notify_automatic_deletion_to_user) }
+        it { expect(DossierMailer).not_to have_received(:notify_automatic_deletion_to_administration) }
+      end
+
+      context 'when a notice has been sent not so long ago' do
+        let(:notice_sent_at) { (warning_period - 1.day).ago }
+
+        it { expect { dossier.reload }.not_to raise_error }
+        it { expect(DossierMailer).not_to have_received(:notify_automatic_deletion_to_user) }
+        it { expect(DossierMailer).not_to have_received(:notify_automatic_deletion_to_administration) }
+      end
+
+      context 'when a notice has been sent a long time ago' do
+        let(:notice_sent_at) { (warning_period + 1.day).ago }
+
+        it { expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound) }
+
+        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
+        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).with(dossier.user.email, [dossier.hash_for_deletion_mail]) }
+
+        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).twice }
+        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(dossier.procedure.administrateurs.first.email, [dossier.hash_for_deletion_mail]) }
+        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(dossier.followers_instructeurs.first.email, [dossier.hash_for_deletion_mail]) }
+      end
+    end
+
+    context 'with 2 dossiers to delete' do
+      let!(:user) { create(:user) }
+      let!(:dossier_1) { create(:dossier, :en_construction, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, :en_construction, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+
+      let!(:instructeur) { create(:instructeur) }
+
+      before do
+        instructeur.followed_dossiers << dossier_1 << dossier_2
+        ExpiredDossiersDeletionService.delete_expired_en_construction_and_notify
+      end
+
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).with(user.email, match_array([dossier_1, dossier_2].map(&:hash_for_deletion_mail))) }
+
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).thrice }
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(instructeur.email, match_array([dossier_1, dossier_2].map(&:hash_for_deletion_mail))) }
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(dossier_1.procedure.administrateurs.first.email, [dossier_1.hash_for_deletion_mail]) }
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(dossier_2.procedure.administrateurs.first.email, [dossier_2.hash_for_deletion_mail]) }
+    end
+  end
+
   describe '#process_expired_dossiers_en_constuction' do
     let(:draft_expiration) { 1.month + 5.days }
     let!(:today) { Time.zone.now.at_midnight }
