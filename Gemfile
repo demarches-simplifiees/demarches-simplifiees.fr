@@ -9,7 +9,6 @@ gem 'activestorage-openstack'
 gem 'administrate'
 gem 'after_party'
 gem 'anchored'
-gem 'axlsx', '~> 3.0.0.pre' # https://github.com/randym/axlsx/issues/501#issuecomment-373640365
 gem 'bcrypt'
 gem 'bootstrap-sass', '>= 3.4.1'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
