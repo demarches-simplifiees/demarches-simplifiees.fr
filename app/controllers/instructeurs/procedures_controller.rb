@@ -231,8 +231,7 @@ module Instructeurs
     end
 
     def update_email_notifications
-      assign_to.update!(email_notifications_enabled: params[:assign_to][:email_notifications_enabled])
-
+      assign_to.update!(assign_to_params)
       flash.notice = 'Vos notifications sont enregistrées.'
       redirect_to instructeur_procedure_path(procedure)
     end
@@ -245,6 +244,10 @@ module Instructeurs
     end
 
     private
+
+    def assign_to_params
+      params.require(:assign_to).permit(:daily_email_notifications_enabled, :weekly_email_notifications_enabled)
+    end
 
     def assign_exports
       groupe_instructeurs_for_procedure = current_instructeur.groupe_instructeurs.where(procedure: procedure)

@@ -30,6 +30,9 @@ feature 'The user' do
     select('val1', from: form_id_for('multiple_drop_down_list'))
     select('val3', from: form_id_for('multiple_drop_down_list'))
     select('AUSTRALIE', from: 'pays')
+    select('Australienne', from: 'nationalites')
+    select('Mahina - Tahiti - 98709', from: 'commune_de_polynesie')
+    select('98709 - Mahina - Tahiti', from: 'code_postal_de_polynesie')
 
     select_champ_geo('regions', 'Ma', 'Martinique')
     select('Martinique', from: 'regions')
@@ -62,6 +65,10 @@ feature 'The user' do
     expect(champ_value_for('simple_drop_down_list')).to eq('val2')
     expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
     expect(champ_value_for('pays')).to eq('AUSTRALIE')
+    expect(champ_value_for('nationalites')).to eq('Australienne')
+    expect(champ_value_for('commune_de_polynesie')).to eq('Mahina - Tahiti - 98709')
+    expect(champ_value_for('code_postal_de_polynesie')).to eq('98709 - Mahina - Tahiti')
+
     expect(champ_value_for('regions')).to eq('Martinique')
     expect(champ_value_for('departements')).to eq('02 - Aisne')
     expect(champ_value_for('communes')).to eq('Ambléon')
@@ -84,6 +91,9 @@ feature 'The user' do
     expect(page).to have_selected_value('simple_drop_down_list', selected: 'val2')
     expect(page).to have_selected_value('multiple_drop_down_list', selected: ['val1', 'val3'])
     expect(page).to have_selected_value('pays', selected: 'AUSTRALIE')
+    expect(page).to have_selected_value('nationalites', selected: 'Australienne')
+    expect(page).to have_selected_value('commune_de_polynesie', selected: 'Mahina - Tahiti - 98709')
+    expect(page).to have_selected_value('code_postal_de_polynesie', selected: '98709 - Mahina - Tahiti')
     expect(page).to have_selected_value('regions', selected: 'Martinique')
     expect(page).to have_selected_value('departements', selected: '02 - Aisne')
     expect(page).to have_selected_value('communes', selected: 'Ambléon')
@@ -107,7 +117,7 @@ feature 'The user' do
     fill_in('text', with: 'super texte')
     expect(page).to have_field('text', with: 'super texte')
 
-    click_on 'Ajouter une ligne pour'
+    click_on 'Ajouter un élément pour'
 
     within '.row-1' do
       fill_in('text', with: 'un autre texte')
@@ -120,7 +130,7 @@ feature 'The user' do
     expect(page).to have_content('Supprimer', count: 2)
 
     within '.row-1' do
-      click_on 'Supprimer'
+      click_on 'Supprimer l’élément'
     end
 
     click_on 'Enregistrer le brouillon'

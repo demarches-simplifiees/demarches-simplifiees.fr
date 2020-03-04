@@ -28,7 +28,7 @@ describe NotificationService do
         create(:assign_to,
           instructeur: instructeur_with_email_notifications,
           procedure: procedure,
-          email_notifications_enabled: true)
+          daily_email_notifications_enabled: true)
       end
 
       context "when there is no activity on the instructeur's procedures" do

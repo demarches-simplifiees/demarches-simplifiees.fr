@@ -25,6 +25,16 @@ class Champ < ApplicationRecord
     !private?
   end
 
+  def siblings
+    if parent
+      parent&.champs
+    elsif public?
+      dossier&.champs
+    else
+      dossier&.champs_private
+    end
+  end
+
   def mandatory_and_blank?
     mandatory? && blank?
   end

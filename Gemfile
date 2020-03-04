@@ -4,6 +4,7 @@ gem 'aasm'
 gem 'actiontext', git: 'https://github.com/kobaltz/actiontext.git', branch: 'archive', require: 'action_text' # Port of ActionText to Rails 5
 gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
+gem 'active_storage_validations'
 gem 'activestorage-openstack'
 gem 'administrate'
 gem 'after_party'
@@ -23,6 +24,7 @@ gem 'delayed_job_active_record'
 gem 'delayed_job_web'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
+gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
 gem 'flipper'
 gem 'flipper-active_record'

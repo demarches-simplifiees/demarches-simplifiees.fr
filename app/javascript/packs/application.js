@@ -4,8 +4,6 @@ import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import '@rails/actiontext';
 import 'whatwg-fetch'; // window.fetch polyfill
-import Chartkick from 'chartkick';
-import Highcharts from 'highcharts';
 import ReactRailsUJS from 'react_ujs';
 
 import '../shared/page-update-event';
@@ -39,7 +37,6 @@ import {
   motivationCancel,
   showImportJustificatif
 } from '../new_design/state-button';
-import { toggleChart } from '../new_design/toggle-chart';
 import { replaceSemicolonByComma } from '../new_design/avis';
 import {
   acceptEmailSuggestion,
@@ -54,21 +51,18 @@ const DS = {
   showMotivation,
   motivationCancel,
   showImportJustificatif,
-  toggleChart,
   replaceSemicolonByComma,
   acceptEmailSuggestion,
   discardEmailSuggestionBox
 };
 
 // Start Rails helpers
-Chartkick.addAdapter(Highcharts);
 Rails.start();
 Turbolinks.start();
 ActiveStorage.start();
 
 // Expose globals
 window.DS = window.DS || DS;
-window.Chartkick = Chartkick;
 // (Both Rails redirects and ReactRailsUJS expect Turbolinks to be globally available)
 window.Turbolinks = Turbolinks;
 

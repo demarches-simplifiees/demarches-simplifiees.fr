@@ -2,6 +2,10 @@ class Dossier < ApplicationRecord
   self.ignored_columns = ['json_latlngs']
   include DossierFilteringConcern
 
+  include Discard::Model
+  self.discard_column = :hidden_at
+  default_scope -> { kept }
+
   enum state: {
     brouillon:       'brouillon',
     en_construction: 'en_construction',
@@ -95,9 +99,6 @@ class Dossier < ApplicationRecord
     end
   end
 
-  default_scope { where(hidden_at: nil) }
-  scope :hidden,                               -> { unscope(where: :hidden_at).where.not(hidden_at: nil) }
-  scope :with_hidden,                          -> { unscope(where: :hidden_at) }
   scope :state_brouillon,                      -> { where(state: states.fetch(:brouillon)) }
   scope :state_not_brouillon,                  -> { where.not(state: states.fetch(:brouillon)) }
   scope :state_en_construction,                -> { where(state: states.fetch(:en_construction)) }
@@ -216,6 +217,7 @@ class Dossier < ApplicationRecord
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
   before_save :update_search_terms
 
+  after_save :unfollow_stale_instructeurs
   after_save :send_dossier_received
   after_save :send_web_hook
   after_create :send_draft_notification_email
@@ -382,7 +384,7 @@ class Dossier < ApplicationRecord
 
   def delete_and_keep_track(author)
     deleted_dossier = DeletedDossier.create_from_dossier(self)
-    update(hidden_at: deleted_dossier.deleted_at)
+    discard!
 
     if en_construction?
       administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
@@ -603,8 +605,9 @@ class Dossier < ApplicationRecord
     !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
-  def linked_dossiers
-    Dossier.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
+  def linked_dossiers_for(instructeur)
+    dossier_ids = champs.filter(&:dossier_link?).map(&:value).compact
+    (instructeur.dossiers.where(id: dossier_ids) + instructeur.dossiers_from_avis.where(id: dossier_ids)).uniq
   end
 
   def hash_for_deletion_mail
@@ -659,6 +662,18 @@ class Dossier < ApplicationRecord
         procedure,
         self
       )
+    end
+  end
+
+  def unfollow_stale_instructeurs
+    if saved_change_to_groupe_instructeur_id? && saved_change_to_groupe_instructeur_id[0].present?
+      followers_instructeurs.each do |instructeur|
+        if instructeur.groupe_instructeurs.exclude?(groupe_instructeur)
+          instructeur.unfollow(self)
+          DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
+        end
+      end
+      log_dossier_operation(user, :changer_groupe_instructeur, self)
     end
   end
 

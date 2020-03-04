@@ -61,14 +61,14 @@ FactoryBot.define do
       archived { false }
     end
 
-    trait :hidden do
+    trait :discarded do
       hidden_at { Time.zone.now }
     end
 
     trait :with_dossier_link do
       after(:create) do |dossier, _evaluator|
         # create linked dossier
-        linked_dossier = create(:dossier)
+        linked_dossier = create(:dossier, :en_construction)
 
         # find first type de champ dossier_link
         type_de_champ = dossier.procedure.types_de_champ.find do |t|

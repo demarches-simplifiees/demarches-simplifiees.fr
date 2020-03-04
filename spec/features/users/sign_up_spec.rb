@@ -5,16 +5,15 @@ feature 'Signing up:' do
   let(:user_password) { 'démarches-simplifiées-pwd' }
   let(:procedure) { create :simple_procedure, :with_service }
 
-  scenario 'a new user can sign-up' do
-    visit commencer_path(path: procedure.path)
-    click_on "Créer un compte #{SITE_NAME}"
+  scenario 'a new user can sign-up from scratch' do
+    visit new_user_registration_path
 
     sign_up_with user_email, user_password
     expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
 
     click_confirmation_link_for user_email
     expect(page).to have_content 'Votre compte a été activé'
-    expect(page).to have_current_path commencer_path(path: procedure.path)
+    expect(page).to have_current_path dossiers_path
   end
 
   context 'when the user register with a gmail.pf domain' do
@@ -86,11 +85,9 @@ feature 'Signing up:' do
   context 'when visiting a procedure' do
     let(:procedure) { create :simple_procedure, :with_service }
 
-    before do
-      visit commencer_path(path: procedure.path)
-    end
-
     scenario 'a new user can sign-up and fill the procedure' do
+      visit commencer_path(path: procedure.path)
+
       click_on 'Créer un compte'
       expect(page).to have_current_path new_user_registration_path
       expect(page).to have_procedure_description(procedure)
@@ -98,8 +95,10 @@ feature 'Signing up:' do
       sign_up_with user_email, user_password
       expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
 
-      click_confirmation_link_for user_email
+      click_confirmation_link_for(user_email, in_another_browser: true)
 
+      # After confirmation, the user is redirected to the procedure they were initially starting
+      # (even when confirming the account in another browser).
       expect(page).to have_current_path(commencer_path(path: procedure.path))
       expect(page).to have_content 'Votre compte a été activé'
       click_on 'Commencer la démarche'
@@ -109,27 +108,60 @@ feature 'Signing up:' do
     end
   end
 
-  context 'when a user is not confirmed yet' do
+  context 'when the user is not confirmed yet' do
     before do
-      visit commencer_path(path: procedure.path)
-      click_on "Créer un compte #{SITE_NAME}"
-
-      sign_up_with user_email, user_password
+      create(:user, :unconfirmed, email: user_email, password: user_password)
     end
 
-    # Ideally, when signing-in with an unconfirmed account,
-    # the user would be redirected to the "resend email confirmation" page.
-    #
-    # However the check for unconfirmed accounts is made by Warden every time a page is loaded –
-    # and much earlier than SessionsController#create.
-    #
-    # For now only test the default behavior (an error message is displayed).
-    scenario 'they get an error message' do
-      visit root_path
-      click_on 'Connexion'
+    scenario 'the email confirmation page is displayed' do
+      visit commencer_path(path: procedure.path)
+      click_on 'Créer un compte'
 
-      sign_in_with user_email, user_password
-      expect(page).to have_content 'Vous devez confirmer votre adresse email pour continuer'
+      sign_up_with user_email, user_password
+
+      # The same page than for initial sign-ups is displayed, to avoid leaking informations
+      # about the account existence.
+      expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+
+      # The confirmation email is sent again
+      confirmation_email = open_email(user_email)
+      expect(confirmation_email.body).to have_text('Pour activer votre compte')
+
+      click_confirmation_link_for(user_email, in_another_browser: true)
+
+      # After confirmation, the user is redirected to the procedure they were initially starting
+      # (even when confirming the account in another browser).
+      expect(page).to have_current_path(commencer_path(path: procedure.path))
+      expect(page).to have_content 'Votre compte a été activé'
+      expect(page).to have_content 'Commencer la démarche'
+    end
+  end
+
+  context 'when the user already has a confirmed account' do
+    before do
+      create(:user, email: user_email, password: user_password)
+    end
+
+    scenario 'they get a warning email, containing a link to the procedure' do
+      visit commencer_path(path: procedure.path)
+      click_on 'Créer un compte'
+
+      sign_up_with user_email, user_password
+
+      # The same page than for initial sign-ups is displayed, to avoid leaking informations
+      # about the accound existence.
+      expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+
+      # A warning email is sent
+      warning_email = open_email(user_email)
+      expect(warning_email.body).to have_text('Votre compte existe déjà')
+
+      # When clicking the main button, the user is redirected directly to
+      # the sign-in page for the procedure they were initially starting.
+      click_procedure_sign_in_link_for user_email
+
+      expect(page).to have_current_path new_user_session_path
+      expect(page).to have_procedure_description(procedure)
     end
   end
 end

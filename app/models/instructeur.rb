@@ -1,6 +1,4 @@
 class Instructeur < ApplicationRecord
-  self.ignored_columns = ['email', 'features', 'encrypted_password', 'reset_password_token', 'reset_password_sent_at', 'remember_created_at', 'sign_in_count', 'current_sign_in_at', 'last_sign_in_at', 'current_sign_in_ip', 'last_sign_in_ip', 'failed_attempts', 'unlock_token', 'locked_at']
-
   has_and_belongs_to_many :administrateurs
 
   has_many :assign_to, dependent: :destroy
@@ -75,11 +73,12 @@ class Instructeur < ApplicationRecord
     start_date = Time.zone.now.beginning_of_week
 
     active_procedure_overviews = procedures
+      .where(assign_tos: { weekly_email_notifications_enabled: true })
       .publiees
       .map { |procedure| procedure.procedure_overview(start_date, groupe_instructeurs) }
       .filter(&:had_some_activities?)
 
-    if active_procedure_overviews.count == 0
+    if active_procedure_overviews.empty?
       nil
     else
       {

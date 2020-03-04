@@ -1,9 +1,13 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['archived_at']
+  self.ignored_columns = ['archived_at', 'csv_export_queued', 'xlsx_export_queued', 'ods_export_queued']
 
   include ProcedureStatsConcern
+
+  include Discard::Model
+  self.discard_column = :hidden_at
+  default_scope -> { kept }
 
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
@@ -37,16 +41,9 @@ class Procedure < ApplicationRecord
   has_one_attached :notice
   has_one_attached :deliberation
 
-  has_one_attached :csv_export_file
-  has_one_attached :xlsx_export_file
-  has_one_attached :ods_export_file
-
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
-  default_scope { where(hidden_at: nil) }
-  scope :hidden,                -> { unscope(where: :hidden_at).where.not(hidden_at: nil) }
-  scope :with_hidden,           -> { unscope(where: :hidden_at) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
@@ -99,7 +96,6 @@ class Procedure < ApplicationRecord
     state :brouillon, initial: true
     state :publiee
     state :close
-    state :hidden
     state :depubliee
 
     event :publish, before: :before_publish, after: :after_publish do
@@ -110,12 +106,6 @@ class Procedure < ApplicationRecord
 
     event :close, after: :after_close do
       transitions from: :publiee, to: :close
-    end
-
-    event :hide, after: :after_hide do
-      transitions from: :brouillon, to: :hidden
-      transitions from: :publiee, to: :hidden
-      transitions from: :close, to: :hidden
     end
 
     event :unpublish, after: :after_unpublish do
@@ -139,100 +129,11 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def csv_export_stale?
-    !csv_export_file.attached? || csv_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
-  end
-
-  def xlsx_export_stale?
-    !xlsx_export_file.attached? || xlsx_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
-  end
-
-  def ods_export_stale?
-    !ods_export_file.attached? || ods_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
-  end
-
-  def export_queued?(format)
-    case format.to_sym
-    when :csv
-      return csv_export_queued?
-    when :xlsx
-      return xlsx_export_queued?
-    when :ods
-      return ods_export_queued?
-    end
-    false
-  end
-
-  def should_generate_export?(format)
-    case format.to_sym
-    when :csv
-      return csv_export_stale? && !csv_export_queued?
-    when :xlsx
-      return xlsx_export_stale? && !xlsx_export_queued?
-    when :ods
-      return ods_export_stale? && !ods_export_queued?
-    end
-    false
-  end
-
-  def export_file(export_format)
-    case export_format.to_sym
-    when :csv
-      csv_export_file
-    when :xlsx
-      xlsx_export_file
-    when :ods
-      ods_export_file
-    end
-  end
-
-  def queue_export(instructeur, export_format)
-    case export_format.to_sym
-    when :csv
-      update(csv_export_queued: true)
-    when :xlsx
-      update(xlsx_export_queued: true)
-    when :ods
-      update(ods_export_queued: true)
-    end
-    ExportProcedureJob.perform_later(self, instructeur, export_format)
-  end
-
-  def prepare_export_download(format)
-    service = ProcedureExportService.new(self, self.dossiers)
-    filename = export_filename(format)
-
-    case format.to_sym
-    when :csv
-      csv_export_file.attach(
-        io: StringIO.new(service.to_csv),
-        filename: filename,
-        content_type: 'text/csv'
-      )
-      update(csv_export_queued: false)
-    when :xlsx
-      xlsx_export_file.attach(
-        io: StringIO.new(service.to_xlsx),
-        filename: filename,
-        content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      )
-      update(xlsx_export_queued: false)
-    when :ods
-      ods_export_file.attach(
-        io: StringIO.new(service.to_ods),
-        filename: filename,
-        content_type: 'application/vnd.oasis.opendocument.spreadsheet'
-      )
-      update(ods_export_queued: false)
-    end
-  end
-
   def reset!
     if locked?
       raise "Can not reset a locked procedure."
     else
       groupe_instructeurs.each { |gi| gi.dossiers.destroy_all }
-      purge_export_files
     end
   end
 
@@ -272,14 +173,6 @@ class Procedure < ApplicationRecord
     procedure = other_procedure_with_path(path)
 
     procedure.blank? || administrateur.owns?(procedure)
-  end
-
-  def purge_export_files
-    xlsx_export_file.purge_later
-    ods_export_file.purge_later
-    csv_export_file.purge_later
-
-    update(csv_export_queued: false, xlsx_export_queued: false, ods_export_queued: false)
   end
 
   def locked?
@@ -402,6 +295,7 @@ class Procedure < ApplicationRecord
 
     procedure.cloned_from_library = from_library
     procedure.parent_procedure = self
+    procedure.canonical_procedure = nil
 
     if from_library
       procedure.service = nil
@@ -597,6 +491,11 @@ class Procedure < ApplicationRecord
     groupe_instructeurs.count > 1
   end
 
+  def hide!
+    discard!
+    dossiers.discard_all
+  end
+
   private
 
   def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
@@ -626,14 +525,6 @@ class Procedure < ApplicationRecord
   def after_close
     now = Time.zone.now
     update!(closed_at: now)
-    purge_export_files
-  end
-
-  def after_hide
-    now = Time.zone.now
-    update!(hidden_at: now)
-    dossiers.update_all(hidden_at: now)
-    purge_export_files
   end
 
   def after_unpublish

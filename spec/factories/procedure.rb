@@ -3,8 +3,8 @@ FactoryBot.define do
   factory :procedure do
     sequence(:libelle) { |n| "Procedure #{n}" }
     description { "Demande de subvention à l'intention des associations" }
-    organisation { "Orga DINSIC" }
-    direction { "direction DINSIC" }
+    organisation { "Orga DINUM" }
+    direction { "direction DINUM" }
     cadre_juridique { "un cadre juridique important" }
     published_at { nil }
     duree_conservation_dossiers_dans_ds { 3 }
@@ -153,6 +153,23 @@ FactoryBot.define do
       end
     end
 
+    trait :with_repetition do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ_repetition)
+        procedure.types_de_champ << type_de_champ
+
+        type_de_champ.types_de_champ << create(:type_de_champ, libelle: 'sub type de champ')
+      end
+    end
+
+    trait :with_number do
+      after(:build) do |procedure, _evaluator|
+        type_de_champ = create(:type_de_champ_number)
+
+        procedure.types_de_champ << type_de_champ
+      end
+    end
+
     trait :published do
       after(:build) do |procedure, _evaluator|
         procedure.path = generate(:published_path)
@@ -176,7 +193,7 @@ FactoryBot.define do
       end
     end
 
-    trait :hidden do
+    trait :discarded do
       after(:build) do |procedure, _evaluator|
         procedure.path = generate(:published_path)
         procedure.publish!
@@ -238,48 +255,6 @@ FactoryBot.define do
           end
           build(:"type_de_champ_#{type_champ}", private: true, libelle: libelle, order_place: index)
         end
-      end
-    end
-
-    trait :with_csv_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.csv_export_file.attach(io: StringIO.new("some csv data"), filename: "export.csv", content_type: "text/plain")
-        procedure.csv_export_file.update(created_at: 5.minutes.ago)
-      end
-    end
-
-    trait :with_stale_csv_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.csv_export_file.attach(io: StringIO.new("some csv data"), filename: "export.csv", content_type: "text/plain")
-        procedure.csv_export_file.update(created_at: 4.hours.ago)
-      end
-    end
-
-    trait :with_ods_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.ods_export_file.attach(io: StringIO.new("some ods data"), filename: "export.ods", content_type: "text/plain")
-        procedure.ods_export_file.update(created_at: 5.minutes.ago)
-      end
-    end
-
-    trait :with_stale_ods_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.ods_export_file.attach(io: StringIO.new("some ods data"), filename: "export.ods", content_type: "text/plain")
-        procedure.ods_export_file.update(created_at: 4.hours.ago)
-      end
-    end
-
-    trait :with_xlsx_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.xlsx_export_file.attach(io: StringIO.new("some xlsx data"), filename: "export.xlsx", content_type: "text/plain")
-        procedure.xlsx_export_file.update(created_at: 5.minutes.ago)
-      end
-    end
-
-    trait :with_stale_xlsx_export_file do
-      after(:create) do |procedure, _evaluator|
-        procedure.xlsx_export_file.attach(io: StringIO.new("some xlsx data"), filename: "export.xlsx", content_type: "text/plain")
-        procedure.xlsx_export_file.update(created_at: 4.hours.ago)
       end
     end
   end

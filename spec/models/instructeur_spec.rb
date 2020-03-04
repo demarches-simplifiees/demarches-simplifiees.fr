@@ -147,6 +147,21 @@ describe Instructeur, type: :model do
       it { expect(instructeur2.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
     end
 
+    context 'when a procedure published was active and weekly notifications is disable' do
+      let!(:procedure) { create(:procedure, :published, libelle: 'procedure') }
+      let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
+
+      before :each do
+        instructeur2.assign_to_procedure(procedure)
+        AssignTo
+          .where(instructeur: instructeur2, groupe_instructeur: procedure.groupe_instructeurs.first)
+          .update(weekly_email_notifications_enabled: false)
+        allow_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
+      end
+
+      it { expect(instructeur2.last_week_overview).to be_nil }
+    end
+
     context 'when a procedure not published was active with no notifications' do
       let!(:procedure) { create(:procedure, libelle: 'procedure') }
       let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
@@ -369,7 +384,7 @@ describe Instructeur, type: :model do
     let(:procedure_to_assign) { create(:procedure) }
 
     before do
-      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, email_notifications_enabled: true, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur)
+      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, daily_email_notifications_enabled: true, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur)
     end
 
     context 'when a dossier in construction exists' do

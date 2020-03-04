@@ -153,21 +153,11 @@ describe Procedure do
 
   describe 'scopes' do
     let!(:procedure) { create(:procedure) }
-    let!(:hidden_procedure) { create(:procedure, :hidden) }
+    let!(:discarded_procedure) { create(:procedure, :discarded) }
 
     describe 'default_scope' do
       subject { Procedure.all }
       it { is_expected.to match_array([procedure]) }
-    end
-
-    describe '.hidden' do
-      subject { Procedure.all.hidden }
-      it { is_expected.to match_array([hidden_procedure]) }
-    end
-
-    describe '.with_hidden' do
-      subject { Procedure.all.with_hidden }
-      it { is_expected.to match_array([procedure, hidden_procedure]) }
     end
   end
 
@@ -546,6 +536,15 @@ describe Procedure do
 
       it 'should duplicate deliberation' do
         expect(subject.deliberation.attached?).to be true
+      end
+    end
+
+    context 'with canonical procedure' do
+      let(:canonical_procedure) { create(:procedure) }
+      let(:procedure) { create(:procedure, canonical_procedure: canonical_procedure, received_mail: received_mail, service: service) }
+
+      it 'do not clone canonical procedure' do
+        expect(subject.canonical_procedure).to be_nil
       end
     end
   end
@@ -1083,167 +1082,6 @@ describe Procedure do
       before { instructeur.assign_to_procedure(procedure) }
 
       it { is_expected.to be false }
-    end
-  end
-
-  describe '.ods_export_stale?' do
-    subject { procedure.ods_export_stale? }
-
-    context 'with no ods export' do
-      let(:procedure) { create(:procedure) }
-      it { is_expected.to be true }
-    end
-
-    context 'with a recent ods export' do
-      let(:procedure) { create(:procedure, :with_ods_export_file) }
-      it { is_expected.to be false }
-    end
-
-    context 'with an old ods export' do
-      let(:procedure) { create(:procedure, :with_stale_ods_export_file) }
-      it { is_expected.to be true }
-    end
-  end
-
-  describe '.csv_export_stale?' do
-    subject { procedure.csv_export_stale? }
-
-    context 'with no csv export' do
-      let(:procedure) { create(:procedure) }
-      it { is_expected.to be true }
-    end
-
-    context 'with a recent csv export' do
-      let(:procedure) { create(:procedure, :with_csv_export_file) }
-      it { is_expected.to be false }
-    end
-
-    context 'with an old csv export' do
-      let(:procedure) { create(:procedure, :with_stale_csv_export_file) }
-      it { is_expected.to be true }
-    end
-  end
-
-  describe '.xlsx_export_stale?' do
-    subject { procedure.xlsx_export_stale? }
-
-    context 'with no xlsx export' do
-      let(:procedure) { create(:procedure) }
-      it { is_expected.to be true }
-    end
-
-    context 'with a recent xlsx export' do
-      let(:procedure) { create(:procedure, :with_xlsx_export_file) }
-      it { is_expected.to be false }
-    end
-
-    context 'with an old xlsx export' do
-      let(:procedure) { create(:procedure, :with_stale_xlsx_export_file) }
-      it { is_expected.to be true }
-    end
-  end
-
-  describe '.should_generate_export?' do
-    context 'xlsx' do
-      subject { procedure.should_generate_export?('xlsx') }
-      context 'with no export' do
-        let(:procedure) { create(:procedure) }
-        it { is_expected.to be true }
-      end
-
-      context 'with a recent export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_xlsx_export_file, xlsx_export_queued: false) }
-          it { is_expected.to be false }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_xlsx_export_file, xlsx_export_queued: true) }
-          it { expect(procedure.xlsx_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-
-      context 'with an old export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_stale_xlsx_export_file, xlsx_export_queued: false) }
-          it { is_expected.to be true }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_stale_xlsx_export_file, xlsx_export_queued: true) }
-          it { expect(procedure.xlsx_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-    end
-
-    context 'csv' do
-      subject { procedure.should_generate_export?('csv') }
-      context 'with no export' do
-        let(:procedure) { create(:procedure) }
-        it { is_expected.to be true }
-      end
-
-      context 'with a recent export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_csv_export_file, csv_export_queued: false) }
-          it { is_expected.to be false }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_csv_export_file, csv_export_queued: true) }
-          it { expect(procedure.csv_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-
-      context 'with an old export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_stale_csv_export_file, csv_export_queued: false) }
-          it { is_expected.to be true }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_stale_csv_export_file, csv_export_queued: true) }
-          it { expect(procedure.csv_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-    end
-
-    context 'ods' do
-      subject { procedure.should_generate_export?('ods') }
-      context 'with no export' do
-        let(:procedure) { create(:procedure) }
-        it { is_expected.to be true }
-      end
-
-      context 'with a recent export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_ods_export_file, ods_export_queued: false) }
-          it { is_expected.to be false }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_ods_export_file, ods_export_queued: true) }
-          it { expect(procedure.ods_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-
-      context 'with an old export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_stale_ods_export_file, ods_export_queued: false) }
-          it { is_expected.to be true }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_stale_ods_export_file, ods_export_queued: true) }
-          it { expect(procedure.ods_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
     end
   end
 end

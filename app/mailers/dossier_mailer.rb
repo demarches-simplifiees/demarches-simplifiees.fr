@@ -43,21 +43,6 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: subject)
   end
 
-  def notify_unhide_to_user(dossier)
-    @dossier = dossier
-    subject = "Votre dossier nº #{@dossier.id} n'a pas pu être supprimé"
-
-    mail(to: dossier.user.email, subject: subject)
-  end
-
-  def notify_undelete_to_user(dossier)
-    @dossier = dossier
-    @dossier_kind = dossier.brouillon? ? 'brouillon' : 'dossier'
-    @subject = "Votre #{@dossier_kind} nº #{@dossier.id} est à nouveau accessible"
-
-    mail(to: dossier.user.email, subject: @subject)
-  end
-
   def notify_revert_to_instruction(dossier)
     @dossier = dossier
     @service = dossier.procedure.service
@@ -84,10 +69,40 @@ class DossierMailer < ApplicationMailer
     mail(to: user.email, subject: @subject)
   end
 
+  def notify_automatic_deletion_to_user(user, dossier_hashes)
+    @subject = default_i18n_subject(count: dossier_hashes.count)
+    @dossier_hashes = dossier_hashes
+
+    mail(to: user.email, subject: @subject)
+  end
+
+  def notify_automatic_deletion_to_administration(user, dossier_hashes)
+    @subject = default_i18n_subject(count: dossier_hashes.count)
+    @dossier_hashes = dossier_hashes
+
+    mail(to: user.email, subject: @subject)
+  end
+
+  def notify_en_construction_near_deletion(user, dossiers, for_user)
+    @subject = default_i18n_subject(count: dossiers.count)
+    @dossiers = dossiers
+    @for_user = for_user
+
+    mail(to: user.email, subject: @subject)
+  end
+
   def notify_dossier_not_submitted(dossier)
     @subject = "Attention : votre dossier n'est pas déposé."
     @dossier = dossier
 
     mail(to: dossier.user.email, subject: @subject)
+  end
+
+  def notify_groupe_instructeur_changed(instructeur, dossier)
+    @subject = "Un dossier a changé de groupe instructeur"
+    @dossier_id = dossier.id
+    @demarche = dossier.procedure.libelle
+
+    mail(from: NO_REPLY_EMAIL, to: instructeur.email, subject: @subject)
   end
 end

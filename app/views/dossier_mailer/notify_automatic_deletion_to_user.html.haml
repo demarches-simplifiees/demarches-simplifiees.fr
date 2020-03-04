@@ -1,0 +1,14 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p= t('.automatic_dossier_deletion', count: @dossier_hashes.count)
+
+%ul
+  - @dossier_hashes.each do |d|
+    %li= link_to("n° #{d[:id]} (#{d[:procedure_libelle]})", dossier_url(d))
+
+%p= t('.dossier_will_not_be_processed', count: @dossier_hashes.count)
+
+= render partial: "layouts/mailers/signature"
