@@ -11,6 +11,10 @@
       %span.date Demande d'avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
     %p.introduction= @avis.introduction
 
+    - if @avis.introduction_file.attached?
+      = render partial: 'shared/attachment/show', locals: { attachment: @avis.introduction_file.attachment }
+    %br/
+
     = form_for @avis, url: instructeur_avis_path(@avis), html: { class: 'form' } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
       = render 'shared/attachment/edit',
