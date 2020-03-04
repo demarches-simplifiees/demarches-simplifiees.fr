@@ -96,7 +96,7 @@ describe API::V2::GraphqlController do
   end
 
   context "when authenticated" do
-    let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(token) }
+    let(:authorization_header) { "Bearer token=#{token}" }
 
     before do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
