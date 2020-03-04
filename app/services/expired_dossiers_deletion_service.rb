@@ -30,33 +30,22 @@ class ExpiredDossiersDeletionService
   end
 
   def self.send_en_construction_expiration_notices
-    dossiers_close_to_expiration = Dossier.en_construction_close_to_expiration
+    dossiers_close_to_expiration = Dossier
+      .en_construction_close_to_expiration
       .without_en_construction_expiration_notice_sent
 
-    users_to_notify = {}
-    administrations_to_notify = {}
-
     dossiers_close_to_expiration
-      .includes(:user, :followers_instructeurs, procedure: [:administrateurs])
-      .find_each do |dossier|
-        users_to_notify[dossier.user.email] ||= [dossier.user, Set.new]
-        users_to_notify[dossier.user.email].last.add(dossier)
-
-        (dossier.followers_instructeurs + dossier.procedure.administrateurs).each do |destinataire|
-          administrations_to_notify[destinataire.email] ||= [destinataire, Set.new]
-          administrations_to_notify[destinataire.email].last.add(dossier)
-        end
+      .includes(:user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+        DossierMailer.notify_en_construction_near_deletion(
+          user.email,
+          dossiers,
+          true
+        ).deliver_later
       end
 
-    users_to_notify.each_value do |(user, dossiers)|
-      DossierMailer.notify_en_construction_near_deletion(
-        user,
-        dossiers,
-        true
-      ).deliver_later
-    end
-
-    administrations_to_notify.each_value do |(destinataire, dossiers)|
+    group_by_fonctionnaire_email(dossiers_close_to_expiration).each do |(destinataire, dossiers)|
       DossierMailer.notify_en_construction_near_deletion(
         destinataire,
         dossiers,
@@ -94,41 +83,38 @@ class ExpiredDossiersDeletionService
   end
 
   def self.delete_expired_en_construction_and_notify
-    dossier_to_remove = []
-    users_to_notify = {}
-    administrations_to_notify = {}
+    dossiers_to_remove = Dossier.en_construction_expired
 
-    Dossier.en_construction_expired
-      .includes(:user, :followers_instructeurs, procedure: [:administrateurs])
-      .find_each do |dossier|
-        dossier_to_remove << dossier
-
-        users_to_notify[dossier.user.email] ||= [dossier.user, Set.new]
-        users_to_notify[dossier.user.email].last.add(dossier)
-
-        (dossier.followers_instructeurs + dossier.procedure.administrateurs).each do |destinataire|
-          administrations_to_notify[destinataire.email] ||= [destinataire, Set.new]
-          administrations_to_notify[destinataire.email].last.add(dossier)
-        end
+    dossiers_to_remove
+      .includes(:user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+        DossierMailer.notify_automatic_deletion_to_user(
+          user.email,
+          dossiers.map(&:hash_for_deletion_mail)
+        ).deliver_later
       end
 
-    users_to_notify.each_value do |(user, dossiers)|
-      DossierMailer.notify_deletion_to_user(
-        user,
-        dossiers.map(&:hash_for_deletion_mail)
-      ).deliver_later
-    end
-
-    administrations_to_notify.each_value do |(destinataire, dossiers)|
-      DossierMailer.notify_deletion_to_administration(
+    self.group_by_fonctionnaire_email(dossiers_to_remove).each do |(destinataire, dossiers)|
+      DossierMailer.notify_automatic_deletion_to_administration(
         destinataire,
         dossiers.map(&:hash_for_deletion_mail)
       ).deliver_later
     end
 
-    dossier_to_remove.each do |dossier|
+    dossiers_to_remove.each do |dossier|
       DeletedDossier.create_from_dossier(dossier)
       dossier.destroy
     end
+  end
+
+  private
+
+  def self.group_by_fonctionnaire_email(dossiers)
+    dossiers
+      .includes(:followers_instructeurs, procedure: [:administrateurs])
+      .each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |dossier, h|
+      (dossier.followers_instructeurs + dossier.procedure.administrateurs).each { |destinataire| h[destinataire.email] << dossier }
+      end
   end
 end
