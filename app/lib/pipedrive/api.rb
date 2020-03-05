@@ -51,20 +51,29 @@ class Pipedrive::API
       api_token: token
     })
 
-    response = RestClient.get(url, params: params)
-    JSON.parse(response.body)['data']
+    response = Typhoeus.get(url, params: params)
+
+    if response.success?
+      JSON.parse(response.body)['data']
+    end
   end
 
   def self.put(url, params)
-    url = "#{url}?api_token=#{token}"
-
-    RestClient.put(url, params.to_json, { content_type: :json })
+    Typhoeus.put(
+      url,
+      params: { api_token: token },
+      body: params.to_json,
+      headers: { 'content-type' => 'application/json' }
+    )
   end
 
   def self.post(url, params)
-    url = "#{url}?api_token=#{token}"
-
-    RestClient.post(url, params.to_json, { content_type: :json })
+    Typhoeus.post(
+      url,
+      params: { api_token: token },
+      body: params.to_json,
+      headers: { 'content-type' => 'application/json' }
+    )
   end
 
   def self.token

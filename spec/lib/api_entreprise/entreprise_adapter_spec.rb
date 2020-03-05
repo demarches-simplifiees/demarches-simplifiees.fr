@@ -84,7 +84,7 @@ describe ApiEntreprise::EntrepriseAdapter do
     let(:status) { 502 }
 
     it 'raises an exception' do
-      expect { subject }.to raise_error(RestClient::RequestFailed)
+      expect { subject }.to raise_error(ApiEntreprise::API::RequestFailed)
     end
   end
 end

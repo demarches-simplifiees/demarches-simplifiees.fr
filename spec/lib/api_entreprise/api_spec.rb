@@ -16,8 +16,8 @@ describe ApiEntreprise::API do
       let(:status) { 502 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_unavailable.json') }
 
-      it 'raises RestClient::RequestFailed' do
-        expect { subject }.to raise_error(RestClient::RequestFailed)
+      it 'raises ApiEntreprise::API::RequestFailed' do
+        expect { subject }.to raise_error(ApiEntreprise::API::RequestFailed)
       end
     end
 
@@ -26,8 +26,8 @@ describe ApiEntreprise::API do
       let(:status) { 404 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_not_found.json') }
 
-      it 'raises RestClient::ResourceNotFound' do
-        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      it 'raises ApiEntreprise::API::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
       end
     end
 
@@ -36,8 +36,8 @@ describe ApiEntreprise::API do
       let(:status) { 403 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_private.json') }
 
-      it 'raises RestClient::ResourceNotFound' do
-        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      it 'raises ApiEntreprise::API::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
       end
     end
 
@@ -64,8 +64,8 @@ describe ApiEntreprise::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises RestClient::ResourceNotFound' do
-        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      it 'raises ApiEntreprise::API::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
       end
     end
 
@@ -93,8 +93,8 @@ describe ApiEntreprise::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises RestClient::ResourceNotFound' do
-        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      it 'raises ApiEntreprise::API::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
       end
     end
 
@@ -105,7 +105,7 @@ describe ApiEntreprise::API do
       let(:status) { 200 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
 
-      it 'raises RestClient::Unauthorized' do
+      it 'success' do
         expect(subject).to eq(JSON.parse(body, symbolize_names: true))
       end
     end
@@ -124,8 +124,8 @@ describe ApiEntreprise::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises RestClient::ResourceNotFound' do
-        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      it 'raises ApiEntreprise::API::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
       end
     end
 

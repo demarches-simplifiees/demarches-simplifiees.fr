@@ -75,7 +75,7 @@ describe Champs::CarteController, type: :controller do
 
         allow_any_instance_of(ApiCarto::QuartiersPrioritairesAdapter)
           .to receive(:results)
-          .and_raise(RestClient::ResourceNotFound)
+          .and_raise(ApiCarto::API::ResourceNotFound)
 
         post :show, params: params, format: 'js'
       end

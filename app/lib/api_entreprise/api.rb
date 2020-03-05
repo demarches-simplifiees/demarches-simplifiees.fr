@@ -6,6 +6,12 @@ class ApiEntreprise::API
 
   TIMEOUT = 15
 
+  class ResourceNotFound < StandardError
+  end
+
+  class RequestFailed < StandardError
+  end
+
   def self.entreprise(siren, procedure_id)
     call(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
   end
@@ -35,9 +41,9 @@ class ApiEntreprise::API
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     elsif response.code&.between?(401, 499)
-      raise RestClient::ResourceNotFound
+      raise ResourceNotFound
     else
-      raise RestClient::RequestFailed
+      raise RequestFailed
     end
   end
 
