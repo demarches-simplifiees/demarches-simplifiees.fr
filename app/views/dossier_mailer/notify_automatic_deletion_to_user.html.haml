@@ -7,7 +7,7 @@
 
 %ul
   - @dossier_hashes.each do |d|
-    %li= link_to("n° #{d[:id]} (#{d[:procedure_libelle]})", dossier_url(d))
+    %li= "n° #{d[:id]} (#{d[:procedure_libelle]})"
 
 %p= t('.dossier_will_not_be_processed', count: @dossier_hashes.count)
 
