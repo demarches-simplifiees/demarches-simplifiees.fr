@@ -373,6 +373,12 @@
     margin-bottom: $default-padding;
   }
 
+  .label-not-label {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: $default-padding;
+  }
+
   .explication {
     margin-bottom: $default-fields-spacer;
     padding: $default-padding / 2;
