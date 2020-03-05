@@ -686,6 +686,53 @@ describe API::V2::GraphqlController do
           expect(data[:signedBlobId]).not_to be_nil
         end
       end
+
+      describe 'dossierChangerGroupeInstructeur' do
+        let(:query) do
+          "mutation {
+            dossierChangerGroupeInstructeur(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              groupeInstructeurId: \"#{dossier.groupe_instructeur.to_typed_id}\"
+            }) {
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        it "validation error" do
+          expect(gql_errors).to eq(nil)
+
+          expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
+            errors: [{ message: "Le dossier est déjà avec le grope instructeur: 'défaut'" }]
+          })
+        end
+
+        context "should changer groupe instructeur" do
+          let!(:new_groupe_instructeur) { procedure.groupe_instructeurs.create(label: 'new groupe instructeur') }
+          let(:query) do
+            "mutation {
+            dossierChangerGroupeInstructeur(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              groupeInstructeurId: \"#{new_groupe_instructeur.to_typed_id}\"
+            }) {
+              errors {
+                message
+              }
+            }
+          }"
+          end
+
+          it "change made" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
+              errors: nil
+            })
+          end
+        end
+      end
     end
   end
 

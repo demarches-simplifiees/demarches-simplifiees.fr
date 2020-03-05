@@ -7,5 +7,6 @@ module Types
     field :dossier_classer_sans_suite, mutation: Mutations::DossierClasserSansSuite
     field :dossier_refuser, mutation: Mutations::DossierRefuser
     field :dossier_accepter, mutation: Mutations::DossierAccepter
+    field :dossier_changer_groupe_instructeur, mutation: Mutations::DossierChangerGroupeInstructeur
   end
 end
