@@ -4,6 +4,12 @@ module ChampHelper
     !types_without_label.include?(champ.type_champ)
   end
 
+  def has_html_label?(champ)
+    types_with_no_html_label = [TypeDeChamp.type_champs.fetch(:civilite), TypeDeChamp.type_champs.fetch(:yes_no), TypeDeChamp.type_champs.fetch(:datetime), TypeDeChamp.type_champs.fetch(:piece_justificative)
+    ]
+    types_with_no_html_label.include?(champ.type_champ)
+  end
+
   def geo_data(champ)
     # rubocop:disable Rails/OutputSafety
     raw(champ.to_render_data.to_json)
