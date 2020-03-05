@@ -14,7 +14,7 @@ FactoryBot.define do
     path { SecureRandom.uuid }
 
     transient do
-      administrateur {}
+      administrateur { }
       instructeurs { [] }
     end
 
