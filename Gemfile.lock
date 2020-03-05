@@ -793,7 +793,6 @@ DEPENDENCIES
   rails-i18n
   rake-progressbar
   react-rails
-  rest-client
   rgeo-geojson
   rspec-rails (~> 4.0.0.beta)
   rspec_junit_formatter

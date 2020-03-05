@@ -59,7 +59,7 @@ describe Champs::SiretController, type: :controller do
         let(:siret) { '82161143100015' }
 
         before do
-          allow(controller).to receive(:find_etablissement_with_siret).and_raise(RestClient::RequestFailed)
+          allow(controller).to receive(:find_etablissement_with_siret).and_raise(ApiEntreprise::API::RequestFailed)
         end
 
         subject! { get :show, params: params, format: 'js' }

@@ -63,7 +63,6 @@ gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'react-rails'
-gem 'rest-client'
 gem 'rgeo-geojson'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
