@@ -74,6 +74,9 @@ module NewAdministrateur
       else
         params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :path)
       end
+      if permited_params[:auto_archive_on].present?
+        permited_params[:auto_archive_on] = Date.parse(permited_params[:auto_archive_on]) + 1.day
+      end
       permited_params
     end
   end
