@@ -97,6 +97,7 @@ group :development do
   gem 'haml-lint'
   gem 'letter_opener_web'
   gem 'rubocop', require: false
+  gem 'rubocop-rails_config'
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
   gem 'web-console'

@@ -562,6 +562,16 @@ GEM
       rexml
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-performance (1.5.2)
+      rubocop (>= 0.71.0)
+    rubocop-rails (2.4.2)
+      rack (>= 1.1)
+      rubocop (>= 0.72.0)
+    rubocop-rails_config (0.10.0)
+      railties (>= 5.0)
+      rubocop (~> 0.80)
+      rubocop-performance (~> 1.3)
+      rubocop-rails (~> 2.0)
     rubocop-rspec-focused (1.0.0)
       rubocop (>= 0.51)
     ruby-debug-ide (0.6.1)
@@ -781,6 +791,7 @@ DEPENDENCIES
   rspec-rails (~> 4.0.0.beta)
   rspec_junit_formatter
   rubocop
+  rubocop-rails_config
   rubocop-rspec-focused
   ruby-debug-ide
   sanitize-url
