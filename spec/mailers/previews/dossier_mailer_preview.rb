@@ -37,6 +37,17 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_brouillon_deletion(User.new(email: "usager@example.com"), dossier_hashes)
   end
 
+  def notify_automatic_deletion_to_user
+    dossier_hashes = [dossier, dossier].map(&:hash_for_deletion_mail)
+    DossierMailer.notify_automatic_deletion_to_user("usager@example.com", dossier_hashes)
+  end
+
+  def notify_automatic_deletion_to_administration
+    dossier_hashes = [dossier, dossier].map(&:hash_for_deletion_mail)
+    DossierMailer.notify_automatic_deletion_to_administration("admin@example.com", dossier_hashes)
+  end
+
+
   private
 
   def deleted_dossier
