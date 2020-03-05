@@ -45,6 +45,12 @@ def add_page_numbering(pdf)
   pdf.number_pages string, options
 end
 
+def add_procedure(pdf, dossier)
+  pdf.repeat(lambda {|page| page > 1 })  do
+    pdf.draw_text dossier.procedure.libelle, :at => pdf.bounds.top_left
+  end
+end
+
 def format_date(date)
   I18n.l(date, format: :message_date_with_year)
 end
@@ -186,4 +192,5 @@ prawn_document(page_size: "A4") do |pdf|
   add_title(pdf, 'Formulaire')
   add_champs(pdf, @dossier.champs)
   add_page_numbering(pdf)
+  add_procedure(pdf, @dossier)
 end
