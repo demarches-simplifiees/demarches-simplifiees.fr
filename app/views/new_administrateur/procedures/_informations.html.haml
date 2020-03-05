@@ -115,10 +115,8 @@
 
   = f.label :declarative_with_state do
     Démarche déclarative
+  %p.notice
+    Par défaut, un dossier déposé peut être complété ou corrigé par le demandeur jusqu'à sa mise en instruction.<br>
+    Dans une démarche déclarative, une fois déposé, un dossier ne peut plus être modifié.
+    Soit il passe immédiatement « en instruction » pour être traité soit il est immédiatement « accepté ».
   = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { prompt: 'Non' }, class: 'form-control'
-
-  %p.explication
-    Par défaut, une démarche n’est pas déclarative ; à son dépôt, un dossier est « en construction ». Vous pouvez choisir de la rendre déclarative, afin que tous les dossiers déposés passent immédiatement au statut « en instruction » ou « accepté ».
-    %br
-    %br
-    Dans le cadre d’une démarche déclarative, au dépôt, seul l’email associé à l’état choisi est envoyé. (ex: démarche déclarative « accepté » : envoi uniquement de l’email d'acceptation)
