@@ -116,8 +116,12 @@ jobs:
             eval $COMMAND
       - store_test_results:
           path: ~/test_results
-      - store_test_results:
+      - store_artifacts:
+          path: ~/test_results
+          destination: tests
+      - store_artifacts:
           path: tmp/capybara
+          destination: screenshots
   lint:
     <<: *defaults
     steps:
