@@ -41,7 +41,7 @@ describe AttestationTemplate, type: :model do
   # end
 
   describe 'validates footer length' do
-    let(:attestation_template) { AttestationTemplate.new(footer: footer) }
+    let(:attestation_template) { build(:attestation_template, footer: footer) }
 
     subject do
       attestation_template.validate
@@ -56,20 +56,11 @@ describe AttestationTemplate, type: :model do
   end
 
   describe 'dup' do
-    before do
-      @logo = Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png')
-      @signature = Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')
-    end
-
-    after do
-      subject.destroy
-    end
-
-    let(:attestation_template) { AttestationTemplate.create(attributes) }
+    let(:attestation_template) { create(:attestation_template, attributes) }
     subject { attestation_template.dup }
 
     context 'with an attestation without images' do
-      let(:attributes) { { title: 't', body: 'b', footer: 'f', activated: true } }
+      let(:attributes) { attributes_for(:attestation_template) }
 
       it { is_expected.to have_attributes(attributes) }
       it { is_expected.to have_attributes(id: nil) }
@@ -77,31 +68,24 @@ describe AttestationTemplate, type: :model do
     end
 
     context 'with an attestation with images' do
-      let(:attributes) { { logo: @logo, signature: @signature } }
+      let(:attestation_template) { create(:attestation_template, :with_files) }
 
-      it { expect(subject.logo.blob).not_to eq(attestation_template.logo.blob) }
-      it { expect(subject.logo.download).to eq(attestation_template.logo.download) }
+      it do
+        expect(subject.logo.blob).not_to eq(attestation_template.logo.blob)
+        expect(subject.logo.attached?).to be_truthy
+      end
 
-      it { expect(subject.signature.blob).not_to eq(attestation_template.signature.blob) }
-      it { expect(subject.signature.download).to eq(attestation_template.signature.download) }
+      it do
+        expect(subject.signature.blob).not_to eq(attestation_template.signature.blob)
+        expect(subject.signature.attached?).to be_truthy
+      end
     end
   end
 
   describe 'invalidate attestation if images attachments are not valid' do
-    before do
-      @logo = Rack::Test::UploadedFile.new('spec/fixtures/files/french-flag.gif', 'image/gif')
-      @signature = Rack::Test::UploadedFile.new('spec/fixtures/files/beta-gouv.gif', 'image/gif')
-    end
-
-    after do
-      subject.destroy
-    end
-
-    let(:attestation_template) { AttestationTemplate.create(attributes) }
-    subject { attestation_template.dup }
+    subject { build(:attestation_template, :with_gif_files) }
 
     context 'with an attestation which has gif files' do
-      let(:attributes) { { title: 't', body: 'b', footer: 'f', activated: true, logo: @logo, signature: @signature } }
       it { is_expected.not_to be_valid }
     end
   end
@@ -122,7 +106,7 @@ describe AttestationTemplate, type: :model do
     let(:template_title) { 'title' }
     let(:template_body) { 'body' }
     let(:attestation_template) do
-      AttestationTemplate.new(procedure: procedure,
+      build(:attestation_template, procedure: procedure,
         title: template_title,
         body: template_body,
         logo: @logo,
