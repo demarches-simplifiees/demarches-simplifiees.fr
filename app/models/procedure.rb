@@ -265,6 +265,7 @@ class Procedure < ApplicationRecord
     populate_champ_stable_ids
     procedure = self.deep_clone(include:
       {
+        groupe_instructeurs: :instructeurs,
         attestation_template: nil,
         types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
         types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
@@ -304,8 +305,6 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
-
-    admin.instructeur.assign_to_procedure(procedure)
 
     procedure
   end

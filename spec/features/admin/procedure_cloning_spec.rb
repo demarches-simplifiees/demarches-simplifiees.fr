@@ -7,7 +7,7 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
-    create :procedure, :with_service,
+    create :procedure, :with_service, :with_instructeur,
       aasm_state: :publiee, published_at: Time.zone.now,
       administrateurs: [administrateur],
       libelle: 'libellé de la procédure',
