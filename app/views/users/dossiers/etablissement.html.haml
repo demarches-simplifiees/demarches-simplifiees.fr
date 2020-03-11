@@ -7,20 +7,25 @@
   .container
     %h1 Informations sur l’établissement
 
-    %p
-      Nous avons récupéré auprès de l’INSEE et d’Infogreffe les informations suivantes concernant votre établissement.
+    - etablissement = @dossier.etablissement
+    - if etablissement.diffusable_commercialement == false
+      %p= t('warning_for_private_info', etablissement: raison_sociale_or_name(etablissement), scope: 'views.shared.dossiers.identite_entreprise')
 
-    %p
-      Ces informations seront jointes à votre dossier.
+    - else
+      %p
+        Nous avons récupéré auprès de l’INSEE et d’Infogreffe les informations suivantes concernant votre établissement.
 
-    .etablissement-infos.card.featured
-      - etablissement = @dossier.etablissement
-      %h2.card-title= raison_sociale_or_name(etablissement)
+      %p
+        Ces informations seront jointes à votre dossier.
 
-      = render partial: 'users/dossiers/etablissement/infos_entreprise', locals: { etablissement: etablissement }
+      .etablissement-infos.card.featured
 
-      - if etablissement.association?
-        = render partial: 'users/dossiers/etablissement/infos_association', locals: { etablissement: etablissement }
+        %h2.card-title= raison_sociale_or_name(etablissement)
+
+        = render partial: 'users/dossiers/etablissement/infos_entreprise', locals: { etablissement: etablissement }
+
+        - if etablissement.association?
+          = render partial: 'users/dossiers/etablissement/infos_association', locals: { etablissement: etablissement }
 
     .actions
       = link_to 'Utiliser un autre numéro SIRET', siret_dossier_path(@dossier), class: 'button'
