@@ -10,7 +10,7 @@ module DossierHelper
   end
 
   def highlight_if_unseen_class(seen_at, updated_at)
-    if seen_at&.<(updated_at)
+    if updated_at.present? && seen_at&.<(updated_at)
       "highlighted"
     end
   end

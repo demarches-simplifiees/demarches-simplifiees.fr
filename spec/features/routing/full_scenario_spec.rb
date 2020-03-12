@@ -38,6 +38,13 @@ feature 'The routing', js: true do
 
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
+    # add superwoman to littéraire groupe
+    find('input.select2-search__field').send_keys('superwoman@inst.com', :enter)
+    perform_enqueued_jobs { click_on 'Affecter' }
+    expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
+
+    superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
+
     # add scientifique groupe
     click_on 'Groupes d’instructeurs'
     fill_in 'Ajouter un groupe', with: 'scientifique'
@@ -50,6 +57,11 @@ feature 'The routing', js: true do
     expect(page).to have_text("L’instructeur marie@inst.com a été affecté")
 
     marie = User.find_by(email: 'marie@inst.com').instructeur
+
+    # add superwoman to scientifique groupe
+    find('input.select2-search__field').send_keys('superwoman@inst.com', :enter)
+    perform_enqueued_jobs { click_on 'Affecter' }
+    expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
 
     # publish
     publish_procedure(procedure)
@@ -134,6 +146,31 @@ feature 'The routing', js: true do
     expect(page).to have_current_path(instructeur_procedures_path)
     expect(find('.procedure-stats')).not_to have_css('span.notifications')
     log_out
+
+    # the instructeurs who belong to scientifique AND litteraire groups manage scientifique and litterraire dossiers
+    register_instructeur_and_log_in(superwoman.email)
+    visit procedure_path(procedure, params: { statut: 'tous' })
+    expect(page).to have_text(litteraire_user.email)
+    expect(page).to have_text(scientifique_user.email)
+
+    # follow the dossier
+    click_on scientifique_user.email
+    click_on 'Suivre le dossier'
+
+    visit procedure_path(procedure, params: { statut: 'tous' })
+    click_on litteraire_user.email
+    click_on 'Suivre le dossier'
+    log_out
+
+    # scientifique_user updates its group
+    user_update_group(scientifique_user, 'littéraire')
+
+    # the instructeurs who belong to scientifique AND litteraire groups should have a notification
+    visit new_user_session_path
+    sign_in_with superwoman.user.email, password
+
+    expect(page).to have_current_path(instructeur_procedures_path)
+    expect(find('.procedure-stats')).to have_css('span.notifications')
   end
 
   def publish_procedure(procedure)
@@ -160,6 +197,19 @@ feature 'The routing', js: true do
 
     click_on 'Déposer le dossier'
     expect(page).to have_text('Merci')
+
+    log_out
+  end
+
+  def user_update_group(user, new_group)
+    login_as user, scope: :user
+    visit dossiers_path
+    click_on user.dossiers.first.id.to_s
+    click_on "Modifier mon dossier"
+
+    select(new_group, from: 'dossier_groupe_instructeur_id')
+    click_on "Enregistrer les modifications du dossier"
+    expect(page).to have_text(new_group)
 
     log_out
   end

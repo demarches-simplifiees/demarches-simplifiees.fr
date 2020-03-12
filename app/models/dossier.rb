@@ -191,7 +191,7 @@ class Dossier < ApplicationRecord
       .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'mes-demarches@modernisation.gov.pf\'')
 
     updated_demandes = joined_dossiers
-      .where('champs.updated_at > follows.demande_seen_at')
+      .where('champs.updated_at > follows.demande_seen_at OR groupe_instructeur_updated_at > follows.demande_seen_at')
 
     updated_annotations = joined_dossiers
       .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
@@ -305,7 +305,7 @@ class Dossier < ApplicationRecord
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
     if groupe_instructeur.procedure == procedure && groupe_instructeur != self.groupe_instructeur
-      if update(groupe_instructeur: groupe_instructeur)
+      if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
         unfollow_stale_instructeurs
 
         if author.present?
