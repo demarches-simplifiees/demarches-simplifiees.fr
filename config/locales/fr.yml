@@ -188,6 +188,14 @@ fr:
         connexion: "Erreur lors de la connexion à France Connect."
       keycloak:
         connexion: "Erreur lors de la connexion au serveur Keycloak de la Polynésie."
+      facebook:
+        connexion: "Erreur lors de la connexion à Facebook."
+      google:
+        connexion: "Erreur lors de la connexion à Google."
+      microsoft:
+        connexion: "Erreur lors de la connexion à Microsoft."
+      yahoo:
+        connexion: "Erreur lors de la connexion à Yahoo."
       procedure_archived: "Cette démarche en ligne a été close, il n'est plus possible de déposer de dossier."
       procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
       cadastres_empty:

@@ -1,12 +1,16 @@
 = content_for(:page_id, 'auth')
 
 .auth-form.sign-in-form
+  = render partial: 'shared/social_login', locals: { title: "S'identifier avec" }
 
+  .login-separator
+    .line
+    ou
+    .line
   = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
-    %h2.huge-title Connectez-vous
 
     = f.label :email, "Email"
-    = f.text_field :email, autofocus: true
+    = f.text_field :email
 
     = f.label :password, "Mot de passe"
     = f.password_field :password
@@ -21,9 +25,9 @@
 
     = f.submit "Se connecter", class: "button large primary expand"
 
-  - if ENV['FC_PARTICULIER_ID'].present?
+  -# - if ENV['FC_PARTICULIER_ID'].present?
     = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
-  - if ENV['KEYCLOAK_ID'].present?
+  -# - if ENV['KEYCLOAK_ID'].present?
     = render partial: 'shared/keycloak_login', locals: { url: keycloak_path }
 
   %hr

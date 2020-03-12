@@ -1,0 +1,29 @@
+- google = ENV['GOOGLE_CLIENT_ID'].present?
+- microsoft = ENV['MICROSOFT_CLIENT_ID'].present?
+- yahoo = ENV['YAHOO_CLIENT_ID'].present?
+- sipf = ENV['KEYCLOAK_ID'].present?
+- if google || microsoft || yahoo
+  %h2.huge-title= title
+  .social-logins
+    - if google
+      %button.button
+        = image_tag 'icons/logo_google.svg', alt: 'icone Google'
+        = link_to "Gmail, Google", '/auth/google'
+    - if microsoft
+      %button.button
+        = image_tag 'icons/logo_microsoft.svg', alt: 'icone Microsoft'
+        = link_to "Hotmail, Microsoft", '/auth/microsoft'
+    - if yahoo
+      %button.button
+        = image_tag 'icons/logo_yahoo.svg', alt: 'icone Yahoo'
+        = link_to "Yahoo!", '/auth/yahoo'
+    - if google
+      %button.button
+        = image_tag 'icons/logo_tatou.svg', alt: 'icone Tàtou'
+        = link_to "Tatou, CPS", '/auth/google'
+    - if sipf
+      %button.button
+        = image_tag 'icons/logo_polynesie.svg', alt: 'icone Polynesie'
+        = link_to "Administration", keycloak_path
+  - if ENV['FC_PARTICULIER_ID'].present?
+    = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }

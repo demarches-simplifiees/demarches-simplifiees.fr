@@ -32,8 +32,9 @@ feature 'Signin in:' do
     end
 
     scenario 'an existing user can sign-in and fill the procedure' do
-      click_on 'J’ai déjà un compte'
-      expect(page).to have_current_path new_user_session_path
+      #---- Since social connection is available, email/password is present on commencer pagea
+      # click_on 'J’ai déjà un compte'
+      # expect(page).to have_current_path new_user_session_path
       expect(page).to have_procedure_description(procedure)
 
       sign_in_with user.email, password

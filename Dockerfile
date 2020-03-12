@@ -60,6 +60,8 @@ ENV \
     DB_POOL=""\
     DB_USERNAME="tps"\
     DS_PROXY_URL=""\
+    FACEBOOK_CLIENT_ID=""\
+    FACEBOOK_CLIENT_SECRET=""\
     FC_PARTICULIER_BASE_URL=""\
     FC_PARTICULIER_ID=""\
     FC_PARTICULIER_SECRET=""\
@@ -74,6 +76,8 @@ ENV \
     FOG_OPENSTACK_USERNAME=""\
     GITHUB_CLIENT_ID=""\
     GITHUB_CLIENT_SECRET=""\
+    GOOGLE_CLIENT_ID=""\
+    GOOGLE_CLIENT_SECRET=""\
     HELPSCOUT_CLIENT_ID=""\
     HELPSCOUT_CLIENT_SECRET=""\
     HELPSCOUT_MAILBOX_ID=""\
@@ -89,6 +93,8 @@ ENV \
     MAILTRAP_USERNAME=""\
     MATOMO_ENABLED="disabled"\
     MATOMO_ID="73"\
+    MICROSOFT_CLIENT_ID=""\
+    MICROSOFT_CLIENT_SECRET=""\
     PIPEDRIVE_KEY=""\
     RAILS_ENV="production"\
     RAILS_LOG_TO_STDOUT=true\
@@ -110,7 +116,9 @@ ENV \
     SOURCE="tps_local"\
     TRUSTED_NETWORKS=""\
     UNIVERSIGN_API_URL=""\
-    UNIVERSIGN_USERPWD=""
+    UNIVERSIGN_USERPWD=""\
+    YAHOO_CLIENT_ID=""\
+    YAHOO_CLIENT_SECRET=""
 
 COPY --chown=userapp:userapp . ${APP_PATH}
 RUN RAILS_ENV=production bundle exec rails assets:precompile

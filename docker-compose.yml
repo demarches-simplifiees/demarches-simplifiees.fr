@@ -66,6 +66,8 @@ services:
       - FC_PARTICULIER_SECRET
       - GITHUB_CLIENT_ID
       - GITHUB_CLIENT_SECRET
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
       - HELPSCOUT_CLIENT_ID
       - HELPSCOUT_CLIENT_SECRET
       - HELPSCOUT_MAILBOX_ID
@@ -75,10 +77,14 @@ services:
       - KEYCLOAK_SECRET
       - MATOMO_ENABLED
       - MATOMO_ID
+      - MICROSOFT_CLIENT_ID
+      - MICROSOFT_CLIENT_SECRET
       - SENTRY_CURRENT_ENV
       - SENTRY_DSN_JS
       - SENTRY_DSN_RAILS
       - SENTRY_ENABLED
+      - YAHOO_CLIENT_ID
+      - YAHOO_CLIENT_SECRET
     volumes:
       - md-data-files:/app/storage
       - md-tmp:/app/tmp

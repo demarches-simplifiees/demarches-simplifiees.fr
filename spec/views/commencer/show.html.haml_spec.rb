@@ -19,10 +19,22 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
 
     it 'renders sign-in and sign-up links' do
       subject
-      expect(rendered).to have_link("Créer un compte #{SITE_NAME}")
-      expect(rendered).to have_link('J’ai déjà un compte')
-      # France Connect not available in french Polynesia
-      expect(rendered).not_to have_link('S’identifier avec FranceConnect')
+      expect(rendered).to have_field('Email')
+      expect(rendered).to have_field('Mot de passe')
+      expect(rendered).to have_button('Se connecter')
+      expect(rendered).to have_link("S'inscrire")
+      if ENV['GOOGLE_CLIENT_ID'].present?
+        expect(rendered).to have_link('Gmail, Google')
+      end
+      if ENV['MICROSOFT_CLIENT_ID'].present?
+        expect(rendered).to have_link('Hotmail, Microsoft')
+      end
+      if ENV['YAHOO_CLIENT_ID'].present?
+        expect(rendered).to have_link('Yahoo!')
+      end
+      if ENV['FC_PARTICULIER_ID'].present?
+        expect(rendered).to have_link('S’identifier avec FranceConnect')
+      end
     end
   end
 

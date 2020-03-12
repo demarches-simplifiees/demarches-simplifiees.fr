@@ -48,9 +48,10 @@ feature 'linked dropdown lists' do
 
   def log_in(email, password, procedure)
     visit "/commencer/#{procedure.path}"
-    click_on 'J’ai déjà un compte'
+    #---- Since social connection is available, email/password is present on commencer pagea
+    # click_on 'J’ai déjà un compte'
 
-    expect(page).to have_current_path(new_user_session_path)
+    # expect(page).to have_current_path(new_user_session_path)
 
     sign_in_with(email, password)
 

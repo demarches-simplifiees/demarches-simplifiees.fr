@@ -4,7 +4,11 @@ class User < ApplicationRecord
   enum loged_in_with_france_connect: {
     particulier: 'particulier',
     entreprise: 'entreprise',
-    keycloak: 'keycloak'
+    keycloak: 'keycloak',
+    facebook: 'facebook',
+    google: 'google',
+    microsoft: 'microsoft',
+    yahoo: 'yahoo'
   }
 
   # Include default devise modules. Others available are:

@@ -2,13 +2,40 @@
 
 .commencer.form
   - if !user_signed_in?
-    %h2.huge-title Commencer la démarche
-    = link_to commencer_sign_up_path(path: @procedure.path), class: ['button large expand primary'] do
-      Créer un compte
+    = render partial: 'shared/social_login', locals: { title: "S'identifier avec" }
+
+    .login-separator
+      .line
+      ou
+      .line
+    = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
+      = f.label :email, "Email"
+      = f.text_field :email
+
+      = f.label :password, "Mot de passe"
+      = f.password_field :password, placeholder: "8 caractères minimum"
+
+      .auth-options
+        %div
+          = f.check_box :remember_me
+          = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
+
+        .text-right
+          = link_to "Mot de passe oublié ?", new_user_password_path, class: "link"
+      = f.submit "Se connecter", class: "button large primary expand"
+    %hr
+    %p.center
+      %span Vous n'avez pas de compte #{SITE_NAME} ?
+    %br
+    = link_to new_user_registration_path, class: ['button large expand'] do
+      S'inscrire
+
+    -# %h2.huge-title Ou
+    -# = link_to new_user_session_path, class: ['button large expand'] do
+      J’ai un compte
       %span.optional-on-small-screens
         #{SITE_NAME}
-    = link_to 'J’ai déjà un compte', commencer_sign_in_path(path: @procedure.path), class: ['button large expand']
-    -# = render partial: 'shared/france_connect_login', locals: { url: commencer_france_connect_path(path: @procedure.path) }
+    -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
   - else
     - dossiers = current_user.dossiers.where(groupe_instructeur: @procedure.groupe_instructeurs)
@@ -17,7 +44,6 @@
 
     - if dossiers.count == 0
       = link_to 'Commencer la démarche', url_for_new_dossier(@procedure), class: ['button large expand primary']
-
     - elsif drafts.count == 1 && not_drafts.count == 0
       - dossier = drafts.first
       %h2.huge-title Vous avez déjà commencé à remplir un dossier
