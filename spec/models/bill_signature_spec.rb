@@ -1,6 +1,6 @@
 RSpec.describe BillSignature, type: :model do
   describe 'validations' do
-    subject(:bill_signature) { BillSignature.new }
+    subject(:bill_signature) { build(:bill_signature) }
 
     describe 'check_bill_digest' do
       before do
@@ -119,14 +119,20 @@ RSpec.describe BillSignature, type: :model do
   end
 
   describe '.build_with_operations' do
-    subject(:bill_signature) { described_class.build_with_operations(dossier_operation_logs, Date.new(1871, 03, 18)) }
+    let(:day) { Date.new(1871, 03, 18) }
+    subject(:bill_signature) { build(:bill_signature, :with_signature) }
+
+    before do
+      bill_signature.dossier_operation_logs = dossier_operation_logs
+      bill_signature.serialize_operations(day)
+    end
 
     context 'when there are no operations' do
       let(:dossier_operation_logs) { [] }
 
       it { expect(bill_signature.operations_bill).to eq({}) }
       it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{}')) }
-      it { expect(bill_signature.serialized.download).to eq('{}') }
+      it { expect(bill_signature.read_serialized).to eq('{}') }
       it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
     end
 
@@ -137,7 +143,7 @@ RSpec.describe BillSignature, type: :model do
 
       it { expect(bill_signature.operations_bill).to eq({ '1234' => 'abcd' }) }
       it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd"}')) }
-      it { expect(bill_signature.serialized.download).to eq('{"1234":"abcd"}') }
+      it { expect(bill_signature.read_serialized).to eq('{"1234":"abcd"}') }
       it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
     end
 
@@ -151,7 +157,7 @@ RSpec.describe BillSignature, type: :model do
 
       it { expect(bill_signature.operations_bill).to eq({ '1234' => 'abcd', '5678' => 'dcba' }) }
       it { expect(bill_signature.digest).to eq(Digest::SHA256.hexdigest('{"1234":"abcd","5678":"dcba"}')) }
-      it { expect(bill_signature.serialized.download).to eq('{"1234":"abcd","5678":"dcba"}') }
+      it { expect(bill_signature.read_serialized).to eq('{"1234":"abcd","5678":"dcba"}') }
       it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
     end
   end

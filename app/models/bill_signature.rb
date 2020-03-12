@@ -17,7 +17,7 @@ class BillSignature < ApplicationRecord
   end
 
   def serialize_operations(day)
-    self.serialized.attach(
+    serialized.attach(
       io: StringIO.new(operations_bill_json),
       filename: "demarches-simplifiees-operations-#{day.to_date.iso8601}.json",
       content_type: 'application/json',
@@ -40,7 +40,7 @@ class BillSignature < ApplicationRecord
   end
 
   def set_signature(signature, day)
-    self.signature.attach(
+    signature.attach(
       io: StringIO.new(signature),
       filename: "demarches-simplifiees-signature-#{day.to_date.iso8601}.der",
       content_type: 'application/x-x509-ca-cert'
@@ -49,36 +49,54 @@ class BillSignature < ApplicationRecord
 
   # Validations
   def check_bill_digest
-    if self.digest != self.operations_bill_digest
+    if digest != operations_bill_digest
       errors.add(:digest)
     end
   end
 
   def check_serialized_bill_contents
-    if !self.serialized.attached?
+    if !serialized.attached?
       errors.add(:serialized, :blank)
       return
     end
 
-    if JSON.parse(self.serialized.download) != self.operations_bill
+    if JSON.parse(read_serialized) != operations_bill
       errors.add(:serialized)
     end
   end
 
   def check_signature_contents
-    if !self.signature.attached?
+    if !signature.attached?
       errors.add(:signature, :blank)
       return
     end
 
-    timestamp_signature_date = ASN1::Timestamp.signature_time(self.signature.download)
+    timestamp_signature_date = ASN1::Timestamp.signature_time(read_signature)
     if timestamp_signature_date > Time.zone.now
       errors.add(:signature, :invalid_date)
     end
 
-    timestamp_signed_digest = ASN1::Timestamp.signed_digest(self.signature.download)
-    if timestamp_signed_digest != self.digest
+    timestamp_signed_digest = ASN1::Timestamp.signed_digest(read_signature)
+    if timestamp_signed_digest != digest
       errors.add(:signature)
+    end
+  end
+
+  def read_signature
+    if attachment_changes['signature']
+      io = attachment_changes['signature'].attachable[:io]
+      io.read if io.present?
+    elsif signature.attached?
+      signature.download
+    end
+  end
+
+  def read_serialized
+    if attachment_changes['serialized']
+      io = attachment_changes['serialized'].attachable[:io]
+      io.read if io.present?
+    elsif serialized.attached?
+      serialized.download
     end
   end
 end

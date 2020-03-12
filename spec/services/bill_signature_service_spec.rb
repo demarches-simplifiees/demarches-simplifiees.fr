@@ -25,7 +25,7 @@ describe BillSignatureService do
 
     context "when there are no operations to be signed" do
       before do
-        create :dossier_operation_log, created_at: 1.day.ago, bill_signature: build(:bill_signature)
+        create :dossier_operation_log, created_at: 1.day.ago, bill_signature: build(:bill_signature, :with_signature, :with_serialized)
         create :dossier_operation_log, created_at: 1.day.from_now
       end
 
