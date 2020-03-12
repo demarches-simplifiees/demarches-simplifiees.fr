@@ -48,7 +48,7 @@ class Admin::AttestationTemplatesController < AdminController
 
       render 'admin/attestation_templates/show', formats: [:pdf]
     else
-      flash.alert = attestation_template.errors.full_messages.join('<br>')
+      flash.alert = attestation.errors.full_messages.join('<br>')
     end
   end
 

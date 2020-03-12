@@ -201,6 +201,10 @@ describe API::V2::GraphqlController do
                 id
                 email
               }
+              groupeInstructeur {
+                id
+                label
+              }
               messages {
                 email
                 body
@@ -255,6 +259,10 @@ describe API::V2::GraphqlController do
                 email: instructeur.email
               }
             ],
+            groupeInstructeur: {
+              id: dossier.groupe_instructeur.to_typed_id,
+              label: dossier.groupe_instructeur.label
+            },
             demandeur: {
               id: dossier.individual.to_typed_id,
               nom: dossier.individual.nom,
