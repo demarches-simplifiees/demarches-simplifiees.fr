@@ -401,6 +401,8 @@ describe Instructeur, type: :model do
         expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 1,
+            nb_en_instruction: 0,
+            nb_accepted: 0,
             nb_notification: 0,
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle
@@ -420,7 +422,78 @@ describe Instructeur, type: :model do
         expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 0,
+            nb_en_instruction: 0,
+            nb_accepted: 0,
             nb_notification: 3,
+            procedure_id: procedure_to_assign.id,
+            procedure_libelle: procedure_to_assign.libelle
+          }
+        ])
+      end
+    end
+
+    context 'when a declarated dossier in instruction exists' do
+      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+
+      before do
+        procedure_to_assign.update(declarative_with_state: "en_instruction")
+        DeclarativeProceduresJob.new.perform
+        dossier.reload
+      end
+
+      it { expect(procedure_to_assign.declarative_with_state).to eq("en_instruction") }
+      it { expect(dossier.state).to eq("en_instruction") }
+      it do
+        expect(instructeur.email_notification_data).to eq([
+          {
+            nb_en_construction: 0,
+            nb_en_instruction: 1,
+            nb_accepted: 0,
+            nb_notification: 0,
+            procedure_id: procedure_to_assign.id,
+            procedure_libelle: procedure_to_assign.libelle
+          }
+        ])
+      end
+    end
+
+    context 'when a declarated dossier in accepte processed at today exists' do
+      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+
+      before do
+        procedure_to_assign.update(declarative_with_state: "accepte")
+        DeclarativeProceduresJob.new.perform
+        dossier.reload
+      end
+
+      it { expect(procedure_to_assign.declarative_with_state).to eq("accepte") }
+      it { expect(dossier.state).to eq("accepte") }
+
+      it do
+        expect(instructeur.email_notification_data).to eq([])
+      end
+    end
+
+    context 'when a declarated dossier in accepte processed at yesterday exists' do
+      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+
+      before do
+        procedure_to_assign.update(declarative_with_state: "accepte")
+        DeclarativeProceduresJob.new.perform
+        dossier.update(processed_at: Time.zone.yesterday.beginning_of_day)
+        dossier.reload
+      end
+
+      it { expect(procedure_to_assign.declarative_with_state).to eq("accepte") }
+      it { expect(dossier.state).to eq("accepte") }
+
+      it do
+        expect(instructeur.email_notification_data).to eq([
+          {
+            nb_en_construction: 0,
+            nb_en_instruction: 0,
+            nb_accepted: 1,
+            nb_notification: 0,
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle
           }
