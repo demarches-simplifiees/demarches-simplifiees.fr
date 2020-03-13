@@ -195,7 +195,11 @@ class Procedure < ApplicationRecord
   def path_available?(administrateur, path)
     procedure = other_procedure_with_path(path)
 
-    procedure.blank? || administrateur.owns?(procedure)
+    procedure.blank? || (administrateur.owns?(procedure) && canonical_procedure_child?(procedure))
+  end
+
+  def canonical_procedure_child?(procedure)
+    !canonical_procedure || canonical_procedure == procedure || canonical_procedure == procedure.canonical_procedure
   end
 
   def locked?
