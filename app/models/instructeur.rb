@@ -152,6 +152,8 @@ class Instructeur < ApplicationRecord
 
       h = {
         nb_en_construction: groupe.dossiers.en_construction.count,
+        nb_en_instruction: groupe.dossiers.en_instruction.count,
+        nb_accepted: groupe.dossiers.accepte.where(processed_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count,
         nb_notification: notifications_for_procedure(procedure, :not_archived).count
       }
 
@@ -159,6 +161,14 @@ class Instructeur < ApplicationRecord
         h[:procedure_id] = procedure.id
         h[:procedure_libelle] = procedure.libelle
         acc << h
+      end
+
+      [["en_instruction", h[:nb_en_instruction]], ["accepte", h[:nb_accepted]]].each do |state, count|
+        if procedure.declarative_with_state == state && count > 0
+          h[:procedure_id] = procedure.id
+          h[:procedure_libelle] = procedure.libelle
+          acc << h
+        end
       end
 
       acc
