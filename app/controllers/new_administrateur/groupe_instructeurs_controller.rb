@@ -70,7 +70,11 @@ module NewAdministrateur
 
     def reaffecter
       target_group = procedure.groupe_instructeurs.find(params[:target_group])
-      groupe_instructeur.dossiers.update_all(groupe_instructeur_id: target_group.id)
+
+      groupe_instructeur.dossiers.find_each do |dossier|
+        dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
+      end
+
       flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
       redirect_to procedure_groupe_instructeurs_path(procedure)
     end

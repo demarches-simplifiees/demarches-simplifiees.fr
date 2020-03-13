@@ -75,6 +75,10 @@
       margin-left: auto;
       margin-right: auto;
     }
+
+    input[type='date'] {
+      display: inline;
+    }
   }
 
   .editable-champ {
@@ -367,7 +371,6 @@
     .select2-selection__choice {
       background-color: #FFFFFF;
     }
-
     // scss-lint:enable
   }
 
@@ -501,8 +504,8 @@
         width: 100%;
         max-width: 350px;
         line-height: 30px;
-        margin-left: 0;
-        margin-right: 0;
+        margin-left: none;
+        margin-right: none;
       }
     }
   }

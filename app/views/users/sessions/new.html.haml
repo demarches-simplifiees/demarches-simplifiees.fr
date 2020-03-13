@@ -1,31 +1,36 @@
 = content_for(:page_id, 'auth')
 
-.auth-form.sign-in-form
+= render partial: 'shared/social_login', locals: { title: "Pour se connecter rapidement", prefix: "" }
 
-  = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
-    %h2.huge-title Connectez-vous
+.form-column.procedure-context-content
+  .auth-form.sign-in-form
+    %p.center
+      %span Si vous avez un compte #{SITE_NAME}
+      %br
+    = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
 
-    = f.label :email, "Email"
-    = f.text_field :email, autofocus: true
+      = f.label :email, "Email"
+      = f.text_field :email
 
-    = f.label :password, "Mot de passe"
-    = f.password_field :password
+      = f.label :password, "Mot de passe"
+      = f.password_field :password
 
-    .auth-options
-      %div
-        = f.check_box :remember_me
-        = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
+      .auth-options
+        %div
+          = f.check_box :remember_me
+          = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
 
-      .text-right
-        = link_to "Mot de passe oublié ?", new_user_password_path, class: "link"
+        .text-right
+          = link_to "Mot de passe oublié ?", new_user_password_path, class: "link"
 
-    = f.submit "Se connecter", class: "button large primary expand"
+      = f.submit "Se connecter", class: "button large primary expand"
 
-  -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+    -# - if ENV['FC_PARTICULIER_ID'].present?
+      = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
-  %hr
-  %p.center
-    %span Vous êtes nouveau sur #{SITE_NAME} ?
-    %br
-    %br
-    = link_to "Trouvez votre démarche", COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button expend secondary"
+    %hr
+    %p.center
+      %span Vous êtes nouveau sur #{SITE_NAME} ?
+      %br
+      %br
+      = link_to "Trouvez votre démarche", COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button secondary"

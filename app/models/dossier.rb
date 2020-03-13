@@ -191,7 +191,7 @@ class Dossier < ApplicationRecord
       .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'mes-demarches@modernisation.gov.pf\'')
 
     updated_demandes = joined_dossiers
-      .where('champs.updated_at > follows.demande_seen_at')
+      .where('champs.updated_at > follows.demande_seen_at OR groupe_instructeur_updated_at > follows.demande_seen_at')
 
     updated_annotations = joined_dossiers
       .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
@@ -217,7 +217,6 @@ class Dossier < ApplicationRecord
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
   before_save :update_search_terms
 
-  after_save :unfollow_stale_instructeurs
   after_save :send_dossier_received
   after_save :send_web_hook
   after_create :send_draft_notification_email
@@ -302,6 +301,22 @@ class Dossier < ApplicationRecord
 
   def retention_expired?
     instruction_commencee? && retention_end_date <= Time.zone.now
+  end
+
+  def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
+    if groupe_instructeur.procedure == procedure && groupe_instructeur != self.groupe_instructeur
+      if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
+        unfollow_stale_instructeurs
+
+        if author.present?
+          log_dossier_operation(author, :changer_groupe_instructeur, self)
+        end
+
+        true
+      end
+    else
+      false
+    end
   end
 
   def text_summary
@@ -666,14 +681,11 @@ class Dossier < ApplicationRecord
   end
 
   def unfollow_stale_instructeurs
-    if saved_change_to_groupe_instructeur_id? && saved_change_to_groupe_instructeur_id[0].present?
-      followers_instructeurs.each do |instructeur|
-        if instructeur.groupe_instructeurs.exclude?(groupe_instructeur)
-          instructeur.unfollow(self)
-          DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
-        end
+    followers_instructeurs.each do |instructeur|
+      if instructeur.groupe_instructeurs.exclude?(groupe_instructeur)
+        instructeur.unfollow(self)
+        DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
       end
-      log_dossier_operation(user, :changer_groupe_instructeur, self)
     end
   end
 

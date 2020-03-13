@@ -117,6 +117,9 @@ Rails.application.routes.draw do
     get 'particulier/callback' => 'particulier#callback'
   end
 
+  get '/auth/:provider' => 'omniauth#login', as: :omniauth, constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
+  get '/auth/:provider/callback', to: 'omniauth#callback', constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
+
   namespace :champs do
     get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
@@ -256,6 +259,7 @@ Rails.application.routes.draw do
       get '/:path/sign_in', action: 'sign_in', as: :sign_in
       get '/:path/sign_up', action: 'sign_up', as: :sign_up
       get '/:path/france_connect', action: 'france_connect', as: :france_connect
+      get '/:path/:provider', action: 'openid_connect', as: :openid_connect, constraints: { :provider => /google|microsoft|yahoo|tatou/ }
     end
 
     resources :dossiers, only: [:index, :show, :new] do

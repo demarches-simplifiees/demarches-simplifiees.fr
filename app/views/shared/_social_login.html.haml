@@ -1,0 +1,36 @@
+- google = ENV['GOOGLE_CLIENT_ID'].present?
+- microsoft = ENV['MICROSOFT_CLIENT_ID'].present?
+- yahoo = ENV['YAHOO_CLIENT_ID'].present?
+- sipf = ENV['SIPF_CLIENT_ID'].present?
+- tatou = ENV['TATOU_CLIENT_ID'].present?
+- fc = ENV['FC_PARTICULIER_ID'].present?
+- prefix ||= "S'identifier avec "
+- if google || microsoft || yahoo || tatou || sipf || fc
+  -# %h2.huge-title= title
+  .column.prior-border.ou-border.procedure-context-content
+    .auth-form.sign-in-form
+      .social-logins
+        %p.center
+          %span= title
+        - if google
+          = link_to '/auth/google', class: "button expand"  do
+            = image_tag 'icons/logo_google.svg', alt: 'icone Google'
+            #{prefix} Gmail, Google
+        - if microsoft
+          = link_to '/auth/microsoft', class: "button expand "  do
+            = image_tag 'icons/logo_microsoft.svg', alt: 'icone Microsoft'
+            #{prefix} Hotmail, Office365
+        - if yahoo
+          = link_to '/auth/yahoo', class: "button expand "  do
+            = image_tag 'icons/logo_yahoo.svg', alt: 'icone Yahoo'
+            #{prefix} Yahoo!
+        - if tatou
+          = link_to '/auth/tatou', class: "button expand "  do
+            = image_tag 'icons/logo_tatou.svg', alt: 'icone Tàtou'
+            #{prefix} votre numéro DN, Tatou
+        - if sipf
+          = link_to '/auth/sipf', class: "button expand "  do
+            = image_tag 'icons/logo_polynesie.svg', alt: 'icone Polynesie'
+            Vous êtes agent de l'administration
+        - if fc
+          = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }

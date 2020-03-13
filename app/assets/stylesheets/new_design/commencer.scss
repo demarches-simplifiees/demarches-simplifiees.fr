@@ -1,15 +1,56 @@
 @import "constants";
+@import "colors";
 
 .commencer {
-  @media (min-width: $two-columns-breakpoint) {
-    .button:first-of-type {
-      margin-top: 4 * $default-spacer;
+  background-color: $light-grey;
+
+  .form {
+    padding: ($default-padding * 0) ($default-padding * 2) ($default-padding * 2) ($default-padding * 2);
+    font-size: 20px;
+
+    input[type="password"] {
+      margin-bottom: $default-spacer;
     }
+
+    input[type="checkbox"] {
+      margin-bottom: 0;
+    }
+
+    p {
+      margin-bottom: ($default-padding * 2);
+    }
+  }
+
+  .remember-me {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+
+  .auth-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1 * $default-spacer;
+  }
+
+  .social-logins {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    margin-bottom: 1 * $default-spacer;
   }
 
   .button {
     margin-bottom: 2 * $default-spacer;
+    display: inline-block;
+    flex-wrap: nowrap;
+
+    img {
+      height: 24px;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
   }
+
 
   @media (max-width: 450px) {
     .optional-on-small-screens {
@@ -17,3 +58,19 @@
     }
   }
 }
+
+.login-separator {
+  margin: 16px 0;
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
+
+  .line {
+    display: inline-block;
+    height: 0px;
+    border-bottom: 2px solid $grey;
+    width: 35%;
+    margin: 0px 10px 0px 10px;
+  }
+}
+

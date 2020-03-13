@@ -3,7 +3,13 @@ class User < ApplicationRecord
 
   enum loged_in_with_france_connect: {
     particulier: 'particulier',
-    entreprise: 'entreprise'
+    entreprise: 'entreprise',
+    sipf: 'sipf',
+    facebook: 'facebook',
+    google: 'google',
+    microsoft: 'microsoft',
+    yahoo: 'yahoo',
+    tatou: 'tatou'
   }
 
   # Include default devise modules. Others available are:

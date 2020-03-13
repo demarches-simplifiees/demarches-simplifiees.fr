@@ -215,7 +215,10 @@ describe ProcedurePresentation do
       let!(:follow1) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'user1@host')) }
       let!(:follow2) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'user2@host')) }
 
-      it { is_expected.to eq('user1@host, user2@host') }
+      it "return emails of followers instructeurs" do
+        emails_to_display = procedure_presentation.displayed_field_values(dossier).first.split(', ').sort
+        expect(emails_to_display).to eq ["user1@host", "user2@host"]
+      end
     end
 
     context 'for type_de_champ table' do
