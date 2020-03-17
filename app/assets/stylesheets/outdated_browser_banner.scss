@@ -1,0 +1,25 @@
+#outdated-browser-banner {
+  width: 100%;
+  margin: 0;
+
+  color: #333333;
+  background-color: #FEF3B8;
+
+  .container {
+    display: flex;
+    width: auto;
+    align-items: center;
+    padding: 8px 16px;
+  }
+}
+
+.outdated-browser-icon {
+  margin-right: 16px;
+  font-size: 30px;
+  opacity: 0.7;
+}
+
+.outdated-browser-buttons {
+  display: flex;
+  margin-left: auto;
+}
