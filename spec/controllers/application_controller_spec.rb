@@ -164,6 +164,7 @@ describe ApplicationController, type: :controller do
       allow(@controller).to receive(:instructeur_signed_in?).and_return(instructeur_signed_in)
       allow(@controller).to receive(:sensitive_path).and_return(sensitive_path)
       allow(@controller).to receive(:send_login_token_or_bufferize)
+      allow(@controller).to receive(:get_stored_location_for).and_return(nil)
       allow(@controller).to receive(:store_location_for)
       allow(IPService).to receive(:ip_trusted?).and_return(ip_trusted)
     end
