@@ -35,9 +35,7 @@ module NewAdministrateur
       @procedure = current_administrateur.procedures.find(params[:id])
 
       check_terms_of_use
-      params = procedure_params
-      params[:auto_archive_on] = Date.parse(params[:auto_archive_on]) + 1.day if params[:auto_archive_on].present?
-      if !@procedure.errors.empty? || !@procedure.update(params)
+      if !@procedure.errors.empty? || !@procedure.update(procedure_params)
         flash.now.alert = @procedure.errors.full_messages
         render 'edit'
       elsif @procedure.brouillon?
