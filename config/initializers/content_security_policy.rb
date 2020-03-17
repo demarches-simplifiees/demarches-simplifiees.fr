@@ -1,9 +1,4 @@
 Rails.application.config.content_security_policy do |policy|
-  if Rails.env.development?
-    # les CSP ne sont pas appliquées en dev: on notifie cependant une url quelconque de la violation
-    # pour détecter les erreurs lors de l'ajout d'une nouvelle brique externe durant le développement
-    policy.report_uri "http://#{ENV['APP_HOST']}/csp/"
-  end
   # Whitelist image
   policy.img_src :self, "*.openstreetmap.org", "static.demarches-simplifiees.fr", "*.cloud.ovh.net", "stats.data.gouv.fr", "*", :data
   # Whitelist JS: nous, sendinblue et matomo
@@ -17,4 +12,11 @@ Rails.application.config.content_security_policy do |policy|
   # Pour tout le reste, par défaut on accepte uniquement ce qui vient de chez nous
   # et dans la notification on inclue la source de l'erreur
   policy.default_src :self, :data, :report_sample, "fonts.gstatic.com", "in-automate.sendinblue.com", "player.vimeo.com", "app.franceconnect.gouv.fr", "sentry.io", "static.demarches-simplifiees.fr", "*.crisp.chat", "crisp.chat", "*.crisp.help", "*.sibautomation.com", "sibautomation.com", "data"
+  if Rails.env.development?
+    # Les CSP ne sont pas appliquées en dev: on notifie cependant une url quelconque de la violation
+    # pour détecter les erreurs lors de l'ajout d'une nouvelle brique externe durant le développement
+    policy.report_uri "http://#{ENV['APP_HOST']}/csp/"
+    # En développement, quand bin/webpack-dev-server est utilisé, on autorise les requêtes faites par le live-reload
+    policy.connect_src(*policy.connect_src, "ws://localhost:3035", "localhost:3035")
+  end
 end
