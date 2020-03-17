@@ -24,7 +24,8 @@ class ApiEntreprise::EtablissementAdapter < ApiEntreprise::Adapter
       :siret,
       :siege_social,
       :naf,
-      :libelle_naf
+      :libelle_naf,
+      :diffusable_commercialement
     ]
   end
 
