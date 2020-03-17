@@ -131,4 +131,12 @@ module ApplicationHelper
   def has_dismissed_outdated_browser_banner?
     cookies[:dismissed_outdated_browser_banner] == 'true'
   end
+
+  def supported_browser?
+    BrowserSupport.supported?(browser)
+  end
+
+  def show_outdated_browser_banner?
+    !supported_browser? && !has_dismissed_outdated_browser_banner?
+  end
 end

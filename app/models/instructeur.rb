@@ -148,7 +148,6 @@ class Instructeur < ApplicationRecord
   def email_notification_data
     groupe_instructeur_with_email_notifications
       .reduce([]) do |acc, groupe|
-
       procedure = groupe.procedure
 
       h = {

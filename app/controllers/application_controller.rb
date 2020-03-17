@@ -233,7 +233,7 @@ class ApplicationController < ActionController::Base
       key: sentry[:client_key],
       enabled: sentry[:enabled],
       environment: sentry[:environment],
-      browser: { modern: browser.modern? },
+      browser: { modern: BrowserSupport.supported?(browser) },
       user: sentry_user
     }
   end
