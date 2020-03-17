@@ -42,9 +42,9 @@
       = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
 
   - if feature_enabled_for?(:dossier_pdf_vide, @procedure)
-    - pdf_link = commencer_dossier_vide_path(path: @procedure.path, format: :pdf)
+    - pdf_link = commencer_dossier_vide_path(path: @procedure.path)
     - if @procedure.brouillon?
-      - pdf_link = commencer_dossier_vide_test_path(path: @procedure.path, format: :pdf)
+      - pdf_link = commencer_dossier_vide_test_path(path: @procedure.path)
     %hr
     %p
       Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF,
