@@ -33,6 +33,6 @@ describe ApiCarto::QuartiersPrioritairesAdapter do
     let(:status) { 404 }
     let(:body) { '' }
 
-    it { expect { subject }.to raise_error(RestClient::ResourceNotFound) }
+    it { expect { subject }.to raise_error(ApiCarto::API::ResourceNotFound) }
   end
 end
