@@ -20,16 +20,14 @@ module Users
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
 
-      @dossier = @procedure.new_dossier
-      render(file: 'dossiers/dossier_vide', formats: [:pdf])
+      generate_empty_pdf(@procedure)
     end
 
     def dossier_vide_pdf_test
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.publiee?
 
-      @dossier = @procedure.new_dossier
-      render(file: 'dossiers/dossier_vide', formats: [:pdf])
+      generate_empty_pdf(@procedure)
     end
 
     def sign_in
@@ -80,6 +78,12 @@ module Users
 
     def store_user_location!(procedure)
       store_location_for(:user, helpers.procedure_lien(procedure))
+    end
+
+    def generate_empty_pdf(procedure)
+      @dossier = procedure.new_dossier
+      s = render_to_string(file: 'dossiers/dossier_vide', formats: [:pdf])
+      send_data(s, :filename => "#{procedure.libelle}.pdf")
     end
   end
 end
