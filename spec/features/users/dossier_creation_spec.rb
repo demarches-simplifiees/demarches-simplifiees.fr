@@ -110,16 +110,4 @@ feature 'Creating a new dossier:' do
       end
     end
   end
-
-  context 'when the user is not signed in' do
-    let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, :published) }
-    scenario 'the user is an instructeur with untrusted device' do
-      visit commencer_path(path: procedure.path)
-      click_on "J’ai déjà un compte"
-      sign_in_with(instructeur.email, instructeur.user.password, true)
-
-      expect(page).to have_current_path(commencer_path(path: procedure.path))
-    end
-  end
 end
