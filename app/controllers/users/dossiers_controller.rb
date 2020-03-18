@@ -1,6 +1,5 @@
 module Users
   class DossiersController < UserController
-    include Devise::StoreLocationExtension
     include DossierHelper
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
