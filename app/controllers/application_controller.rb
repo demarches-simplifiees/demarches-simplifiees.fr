@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include TrustedDeviceConcern
   include Pundit
+  include Devise::StoreLocationExtension
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
