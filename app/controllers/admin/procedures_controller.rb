@@ -74,21 +74,27 @@ class Admin::ProceduresController < AdminController
     flash.notice = "Démarche publiée"
     render js: "window.location='#{admin_procedures_path}'"
   rescue ActiveRecord::RecordInvalid
-    render 'publish_validate', formats: :js
+    respond_to do |format|
+      format.js { render :publish_validate }
+    end
   end
 
   def transfer
     admin = Administrateur.by_email(params[:email_admin].downcase)
 
     if admin.nil?
-      render '/admin/procedures/transfer', formats: 'js', status: 404
+      respond_to do |format|
+        format.js { render :transfer, status: :not_found }
+      end
     else
       procedure = current_administrateur.procedures.find(params[:procedure_id])
       procedure.clone(admin, false)
 
       flash.now.notice = "La démarche a correctement été clonée vers le nouvel administrateur."
 
-      render '/admin/procedures/transfer', formats: 'js', status: 200
+      respond_to do |format|
+        format.js
+      end
     end
   end
 
