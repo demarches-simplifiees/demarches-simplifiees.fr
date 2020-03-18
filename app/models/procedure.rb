@@ -496,6 +496,10 @@ class Procedure < ApplicationRecord
     dossiers.discard_all
   end
 
+  def flipper_id
+    "Procedure;#{id}"
+  end
+
   private
 
   def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)

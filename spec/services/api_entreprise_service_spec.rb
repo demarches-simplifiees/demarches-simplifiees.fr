@@ -66,8 +66,8 @@ describe ApiEntrepriseService do
       let(:entreprises_status) { 400 }
       let(:entreprises_body) { '' }
 
-      it 'should raise RestClient::RequestFailed' do
-        expect { result }.to raise_error(RestClient::RequestFailed)
+      it 'should raise ApiEntreprise::API::RequestFailed' do
+        expect { result }.to raise_error(ApiEntreprise::API::RequestFailed)
       end
     end
 
@@ -75,8 +75,8 @@ describe ApiEntrepriseService do
       let(:etablissements_status) { 400 }
       let(:etablissements_body) { '' }
 
-      it 'should raise RestClient::RequestFailed' do
-        expect { result }.to raise_error(RestClient::RequestFailed)
+      it 'should raise ApiEntreprise::API::RequestFailed' do
+        expect { result }.to raise_error(ApiEntreprise::API::RequestFailed)
       end
     end
 

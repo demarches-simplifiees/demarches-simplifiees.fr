@@ -62,7 +62,7 @@ class Champs::CarteController < ApplicationController
       @champ.save
     end
 
-  rescue RestClient::ResourceNotFound
+  rescue ApiCarto::API::ResourceNotFound
     flash.alert = 'Les données cartographiques sont temporairement indisponibles. Réessayez dans un instant.'
     response.status = 503
   end

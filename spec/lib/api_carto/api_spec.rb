@@ -15,8 +15,8 @@ describe ApiCarto::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises RestClient::ResourceNotFound' do
-        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      it 'raises ApiCarto::API::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiCarto::API::ResourceNotFound)
       end
     end
 
@@ -25,8 +25,8 @@ describe ApiCarto::API do
       let(:status) { 500 }
       let(:body) { 'toto' }
 
-      it 'raises RestClient::ResourceNotFound' do
-        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      it 'raises ApiCarto::API::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiCarto::API::ResourceNotFound)
       end
     end
 
@@ -63,8 +63,8 @@ describe ApiCarto::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises RestClient::ResourceNotFound' do
-        expect { subject }.to raise_error(RestClient::ResourceNotFound)
+      it 'raises ApiCarto::API::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiCarto::API::ResourceNotFound)
       end
     end
 
