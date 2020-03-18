@@ -16,7 +16,7 @@ class Champs::SiretController < ApplicationController
 
     begin
       etablissement = find_etablissement_with_siret
-    rescue RestClient::RequestFailed
+    rescue ApiEntreprise::API::RequestFailed
       return siret_error(:network_error)
     end
     if etablissement.blank?

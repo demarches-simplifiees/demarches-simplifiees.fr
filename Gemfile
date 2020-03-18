@@ -9,7 +9,6 @@ gem 'activestorage-openstack'
 gem 'administrate'
 gem 'after_party'
 gem 'anchored'
-gem 'axlsx', '~> 3.0.0.pre' # https://github.com/randym/axlsx/issues/501#issuecomment-373640365
 gem 'bcrypt'
 gem 'bootstrap-sass', '>= 3.4.1'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
@@ -29,8 +28,6 @@ gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
-gem 'fog-openstack'
-gem 'font-awesome-rails'
 gem 'geocoder'
 gem 'gon'
 gem 'graphiql-rails'
@@ -48,12 +45,10 @@ gem 'mailjet'
 gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem 'openid_connect'
-gem 'openstack'
 gem 'pg'
 gem 'phonelib'
-gem 'prawn' # PDF Generation
+gem 'prawn-rails' # PDF Generation
 gem 'prawn-svg'
-gem 'prawn_rails'
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
@@ -63,15 +58,14 @@ gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'react-rails'
-gem 'rest-client'
 gem 'rgeo-geojson'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
-gem 'scenic'
 gem 'sentry-raven'
 gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
+gem 'sprockets', '< 4'
 gem 'turbolinks' # Turbolinks makes following links in your web application faster
 gem 'typhoeus'
 gem 'warden'
@@ -103,6 +97,7 @@ group :development do
   gem 'haml-lint'
   gem 'letter_opener_web'
   gem 'rubocop', require: false
+  gem 'rubocop-rails_config'
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
   gem 'web-console'
@@ -114,7 +109,7 @@ group :development, :test do
   gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
   gem 'pry-byebug'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 4.0.0.beta'
   gem 'rspec_junit_formatter', require: false
   gem 'ruby-debug-ide', require: false
   gem 'simple_xlsx_reader'
