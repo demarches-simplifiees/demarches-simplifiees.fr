@@ -198,7 +198,7 @@ class ApplicationController < ActionController::Base
 
       # return at this location
       # after the device is trusted
-      store_location_for(:user, request.fullpath) if get_stored_location_for(:user).blank?
+      store_location_for(:user, request.fullpath)
 
       send_login_token_or_bufferize(current_instructeur)
       redirect_to link_sent_path(email: current_instructeur.email)
