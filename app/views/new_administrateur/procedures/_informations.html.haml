@@ -121,4 +121,4 @@
     Par défaut, un dossier déposé peut être complété ou corrigé par le demandeur jusqu'à sa mise en instruction.<br>
     Dans une démarche déclarative, une fois déposé, un dossier ne peut plus être modifié.
     Soit il passe immédiatement « en instruction » pour être traité soit il est immédiatement « accepté ».
-  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { prompt: 'Non' }, class: 'form-control'
+  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: 'Non' }, class: 'form-control'
