@@ -16,4 +16,4 @@ user = User.create!(
   confirmed_at: Time.zone.now
 )
 user.create_instructeur!
-user.create_administrateur!(email: user.email)
+user.create_administrateur!
