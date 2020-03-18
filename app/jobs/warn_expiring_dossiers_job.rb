@@ -3,8 +3,7 @@ class WarnExpiringDossiersJob < ApplicationJob
 
   def perform(*args)
     expiring, expired = Dossier
-      .includes(:procedure)
-      .nearing_end_of_retention
+      .en_instruction_close_to_expiration
       .partition(&:retention_expired?)
 
     AdministrationMailer.dossier_expiration_summary(expiring, expired).deliver_later
