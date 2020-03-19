@@ -661,64 +661,110 @@ describe Dossier do
     end
   end
 
-  describe "#delete_and_keep_track" do
-    let(:dossier) { create(:dossier) }
-    let(:deleted_dossier) { DeletedDossier.find_by!(dossier_id: dossier.id) }
+  describe "#delete_and_keep_track!" do
+    let(:dossier) { create(:dossier, :en_construction) }
+    let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
+    let(:reason) { :user_request }
 
     before do
       allow(DossierMailer).to receive(:notify_deletion_to_user).and_return(double(deliver_later: nil))
       allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
-    subject! { dossier.delete_and_keep_track(dossier.user) }
+    subject! { dossier.delete_and_keep_track!(dossier.user, reason) }
 
-    it 'hides the dossier' do
-      expect(dossier.hidden_at).to be_present
-    end
-
-    it 'creates a DeletedDossier record' do
-      expect(deleted_dossier.dossier_id).to eq dossier.id
-      expect(deleted_dossier.procedure).to eq dossier.procedure
-      expect(deleted_dossier.state).to eq dossier.state
-      expect(deleted_dossier.deleted_at).to be_present
-    end
-
-    it 'notifies the user' do
-      expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
-    end
-
-    it 'records the operation in the log' do
-      expect(last_operation.operation).to eq("supprimer")
-      expect(last_operation.automatic_operation?).to be_falsey
-    end
-
-    context 'where instructeurs are following the dossier' do
-      let(:dossier) { create(:dossier, :en_construction, :followed) }
-      let!(:non_following_instructeur) do
-        non_following_instructeur = create(:instructeur)
-        non_following_instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
-        non_following_instructeur
-      end
-
-      it 'notifies the following instructeurs' do
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.followers_instructeurs.first.email)
-      end
-    end
-
-    context 'when there are no following instructeurs' do
-      let(:dossier) { create(:dossier, :en_construction) }
-      it 'notifies the procedure administrateur' do
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateurs.first.email)
-      end
-    end
-
-    context 'when dossier is brouillon' do
+    context 'brouillon' do
       let(:dossier) { create(:dossier) }
-      it 'do not notifies the procedure administrateur' do
-        expect(DossierMailer).not_to have_received(:notify_deletion_to_administration)
+
+      it 'hides the dossier' do
+        expect(dossier.discarded?).to be_truthy
+      end
+
+      it 'do not creates a DeletedDossier record' do
+        expect(deleted_dossier).to be_nil
+      end
+
+      it 'do not records the operation in the log' do
+        expect(last_operation).to be_nil
+      end
+    end
+
+    context 'en_construction' do
+      it 'hides the dossier' do
+        expect(dossier.hidden_at).to be_present
+      end
+
+      it 'creates a DeletedDossier record' do
+        expect(deleted_dossier.reason).to eq DeletedDossier.reasons.fetch(reason)
+        expect(deleted_dossier.dossier_id).to eq dossier.id
+        expect(deleted_dossier.procedure).to eq dossier.procedure
+        expect(deleted_dossier.state).to eq dossier.state
+        expect(deleted_dossier.deleted_at).to be_present
+      end
+
+      it 'notifies the user' do
+        expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
+      end
+
+      it 'records the operation in the log' do
+        expect(last_operation.operation).to eq("supprimer")
+        expect(last_operation.automatic_operation?).to be_falsey
+      end
+
+      context 'where instructeurs are following the dossier' do
+        let(:dossier) { create(:dossier, :en_construction, :followed) }
+        let!(:non_following_instructeur) do
+          non_following_instructeur = create(:instructeur)
+          non_following_instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
+          non_following_instructeur
+        end
+
+        it 'notifies the following instructeurs' do
+          expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
+          expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.followers_instructeurs.first.email)
+        end
+      end
+
+      context 'when there are no following instructeurs' do
+        let(:dossier) { create(:dossier, :en_construction) }
+        it 'notifies the procedure administrateur' do
+          expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
+          expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateurs.first.email)
+        end
+      end
+
+      context 'when dossier is brouillon' do
+        let(:dossier) { create(:dossier) }
+        it 'do not notifies the procedure administrateur' do
+          expect(DossierMailer).not_to have_received(:notify_deletion_to_administration)
+        end
+      end
+
+      context 'with reason: manager_request' do
+        let(:reason) { :manager_request }
+
+        it 'hides the dossier' do
+          expect(dossier.discarded?).to be_truthy
+        end
+
+        it 'records the operation in the log' do
+          expect(last_operation.operation).to eq("supprimer")
+          expect(last_operation.automatic_operation?).to be_falsey
+        end
+      end
+
+      context 'with reason: user_removed' do
+        let(:reason) { :user_removed }
+
+        it 'hides the dossier' do
+          expect(dossier.discarded?).to be_truthy
+        end
+
+        it 'records the operation in the log' do
+          expect(last_operation.operation).to eq("supprimer")
+          expect(last_operation.automatic_operation?).to be_falsey
+        end
       end
     end
   end

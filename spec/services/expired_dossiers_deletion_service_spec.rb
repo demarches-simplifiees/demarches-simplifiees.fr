@@ -34,7 +34,7 @@ describe ExpiredDossiersDeletionService do
       it 'deletes and notify expired brouillon' do
         expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
         expect(DossierMailer).to have_received(:notify_brouillon_deletion).with([expired_brouillon.hash_for_deletion_mail], expired_brouillon.user.email)
-        expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
+        expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).not_to be_present
         expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
