@@ -4,13 +4,11 @@
   Bonjour,
 
 %p
-  Afin de limiter la conservation de vos données personnelles,
-  = t('.automatic_dossier_deletion', count: @dossiers.count)
+  = t('.header', count: @dossiers.count)
   %ul
     - @dossiers.each do |d|
       %li= link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))
 
-%p
-  #{sanitize(t('.send_your_draft', count: @dossiers.count))}. Et sinon, vous n'avez rien à faire.
+%p= sanitize(t('.footer', count: @dossiers.count))
 
 = render partial: "layouts/mailers/signature"
