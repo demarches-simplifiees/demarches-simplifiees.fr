@@ -2,7 +2,7 @@ import { fire, timeoutable } from '@utils';
 
 // Manages a queue of Autosave operations,
 // and sends `autosave:*` events to indicate the state of the requests.
-export default class AutosaveController {
+export default class AutoSaveController {
   constructor() {
     this.timeoutDelay = 60000; // 1mn
     this.latestPromise = Promise.resolve();
