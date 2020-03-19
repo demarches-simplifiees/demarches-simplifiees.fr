@@ -172,7 +172,7 @@ class Dossier < ApplicationRecord
   scope :en_construction_close_to_expiration, -> do
     en_construction
       .joins(:procedure)
-      .where("dossiers.en_construction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
+      .where("dossiers.en_construction_at + dossiers.en_construction_conservation_extension + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
   end
   scope :en_instruction_close_to_expiration, -> do
     en_instruction
@@ -308,6 +308,10 @@ class Dossier < ApplicationRecord
 
   def retention_expired?
     instruction_commencee? && retention_end_date <= Time.zone.now
+  end
+
+  def en_construction_close_to_expiration?
+    Dossier.en_construction_close_to_expiration.where(id: self).present?
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
