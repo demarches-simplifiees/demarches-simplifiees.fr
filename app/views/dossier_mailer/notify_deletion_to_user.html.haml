@@ -1,11 +1,9 @@
-- content_for(:title, "Suppression du dossier n° #{@deleted_dossier.dossier_id}")
+- content_for(:title, "#{@subject}")
 
 %p
   Bonjour,
 
 %p
-  Votre dossier n° #{@deleted_dossier.dossier_id}
-  («&nbsp;#{@deleted_dossier.procedure.libelle}&nbsp;») a bien été supprimé.
-  Une trace anonyme de ce traitement sera conservée pour l’administration.
+  = t('.body', dossier_id: @deleted_dossier.dossier_id, procedure: @deleted_dossier.procedure.libelle)
 
 = render partial: "layouts/mailers/signature"

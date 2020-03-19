@@ -1,0 +1,5 @@
+fr:
+  dossier_mailer:
+    notify_deletion_to_user:
+      subject: Votre dossier nº %{dossier_id} a bien été supprimé
+      body: Votre dossier n° %{dossier_id} (%{procedure}) a bien été supprimé. Une trace de ce traitement sera conservée pour l’administration.
