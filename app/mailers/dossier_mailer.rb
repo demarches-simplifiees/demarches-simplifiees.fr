@@ -105,7 +105,7 @@ class DossierMailer < ApplicationMailer
     mail(from: NO_REPLY_EMAIL, to: instructeur.email, subject: @subject)
   end
 
-  def notify_dossier_not_submitted(dossier)
+  def notify_brouillon_not_submitted(dossier)
     @subject = "Attention : votre dossier n'est pas déposé."
     @dossier = dossier
 
