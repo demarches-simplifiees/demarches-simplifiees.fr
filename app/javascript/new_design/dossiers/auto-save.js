@@ -1,4 +1,4 @@
-import AutosaveController from './autosave-controller.js';
+import AutoSaveController from './auto-save-controller.js';
 import {
   debounce,
   delegate,
@@ -14,7 +14,7 @@ const AUTOSAVE_DEBOUNCE_DELAY = gon.autosave.debounce_delay;
 const AUTOSAVE_STATUS_VISIBLE_DURATION = gon.autosave.status_visible_duration;
 
 // Create a controller responsible for queuing autosave operations.
-const autosaveController = new AutosaveController();
+const autoSaveController = new AutoSaveController();
 
 // Whenever a 'change' event is triggered on one of the form inputs, try to autosave.
 
@@ -26,13 +26,13 @@ delegate(
   formInputsSelector,
   debounce(() => {
     const form = document.querySelector(formSelector);
-    autosaveController.enqueueAutosaveRequest(form);
+    autoSaveController.enqueueAutosaveRequest(form);
   }, AUTOSAVE_DEBOUNCE_DELAY)
 );
 
 delegate('click', '.autosave-retry', () => {
   const form = document.querySelector(formSelector);
-  autosaveController.enqueueAutosaveRequest(form);
+  autoSaveController.enqueueAutosaveRequest(form);
 });
 
 // Display some UI during the autosave
