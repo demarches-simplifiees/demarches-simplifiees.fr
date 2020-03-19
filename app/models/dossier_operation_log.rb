@@ -12,8 +12,9 @@ class DossierOperationLog < ApplicationRecord
     demander_un_avis: 'demander_un_avis'
   }
 
-  belongs_to :dossier
   has_one_attached :serialized
+
+  belongs_to :dossier, optional: true
   belongs_to :bill_signature, optional: true
 
   def self.create_and_serialize(params)
