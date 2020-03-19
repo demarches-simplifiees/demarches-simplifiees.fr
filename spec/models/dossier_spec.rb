@@ -1226,4 +1226,28 @@ describe Dossier do
       expect(DossierOperationLog.count).to eq(1)
     end
   end
+
+  describe 'discarded_brouillon_expired and discarded_en_construction_expired' do
+    before do
+      create(:dossier)
+      create(:dossier, :en_construction)
+      create(:dossier).discard!
+      create(:dossier, :en_construction).discard!
+
+      Timecop.travel(2.months.ago) do
+        create(:dossier).discard!
+        create(:dossier, :en_construction).discard!
+
+        create(:dossier).procedure.hide!
+        create(:dossier, :en_construction).procedure.hide!
+      end
+      Timecop.travel(1.week.ago) do
+        create(:dossier).discard!
+        create(:dossier, :en_construction).discard!
+      end
+    end
+
+    it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
+    it { expect(Dossier.discarded_en_construction_expired.count).to eq(1) }
+  end
 end
