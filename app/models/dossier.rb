@@ -404,19 +404,25 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def delete_and_keep_track(author)
-    deleted_dossier = DeletedDossier.create_from_dossier(self)
-    discard!
+  def expired_keep_track!
+    DeletedDossier.create_from_dossier(self, :expired)
+    log_automatic_dossier_operation(:supprimer, self)
+  end
 
+  def delete_and_keep_track!(author, reason)
     if en_construction?
+      deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+
       administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
       administration_emails.each do |email|
         DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
       end
-    end
-    DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
+      DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
 
-    log_dossier_operation(author, :supprimer, self)
+      log_dossier_operation(author, :supprimer, self)
+    end
+
+    discard!
   end
 
   def after_passer_en_instruction(instructeur)
