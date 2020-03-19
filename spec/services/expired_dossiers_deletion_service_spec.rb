@@ -24,7 +24,7 @@ describe ExpiredDossiersDeletionService do
 
       it 'emails should be sent' do
         expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).once
-        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(brouillon_close_to_expiration.user, [brouillon_close_to_expiration])
+        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with([brouillon_close_to_expiration], brouillon_close_to_expiration.user.email)
       end
 
       it 'dossier state should change' do
@@ -33,8 +33,7 @@ describe ExpiredDossiersDeletionService do
 
       it 'deletes and notify expired brouillon' do
         expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
-        expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(expired_brouillon.user, [expired_brouillon.hash_for_deletion_mail])
-
+        expect(DossierMailer).to have_received(:notify_brouillon_deletion).with([expired_brouillon.hash_for_deletion_mail], expired_brouillon.user.email)
         expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
         expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
@@ -68,7 +67,7 @@ describe ExpiredDossiersDeletionService do
 
         it { expect(dossier.reload.brouillon_close_to_expiration_notice_sent_at).not_to be_nil }
         it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).once }
-        it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(dossier.user, [dossier]) }
+        it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with([dossier], dossier.user.email) }
       end
     end
 
@@ -80,7 +79,7 @@ describe ExpiredDossiersDeletionService do
       before { ExpiredDossiersDeletionService.send_brouillon_expiration_notices }
 
       it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).once }
-      it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(user, match_array([dossier_1, dossier_2])) }
+      it { expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(match_array([dossier_1, dossier_2]), user.email) }
     end
   end
 
@@ -119,7 +118,7 @@ describe ExpiredDossiersDeletionService do
         it { expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound) }
 
         it { expect(DossierMailer).to have_received(:notify_brouillon_deletion).once }
-        it { expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(dossier.user, [dossier.hash_for_deletion_mail]) }
+        it { expect(DossierMailer).to have_received(:notify_brouillon_deletion).with([dossier.hash_for_deletion_mail], dossier.user.email) }
       end
     end
 
@@ -131,7 +130,7 @@ describe ExpiredDossiersDeletionService do
       before { ExpiredDossiersDeletionService.delete_expired_brouillons_and_notify }
 
       it { expect(DossierMailer).to have_received(:notify_brouillon_deletion).once }
-      it { expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(user, match_array([dossier_1, dossier_2].map(&:hash_for_deletion_mail))) }
+      it { expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(match_array([dossier_1.hash_for_deletion_mail, dossier_2.hash_for_deletion_mail]), user.email) }
     end
   end
 
@@ -142,7 +141,8 @@ describe ExpiredDossiersDeletionService do
     after  { Timecop.return }
 
     before do
-      allow(DossierMailer).to receive(:notify_en_construction_near_deletion).and_return(double(deliver_later: nil))
+      allow(DossierMailer).to receive(:notify_en_construction_near_deletion_to_user).and_return(double(deliver_later: nil))
+      allow(DossierMailer).to receive(:notify_en_construction_near_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
     context 'with a single dossier' do
@@ -154,7 +154,8 @@ describe ExpiredDossiersDeletionService do
         let(:en_construction_at) { (conservation_par_defaut - 1.month - 1.day).ago }
 
         it { expect(dossier.reload.en_construction_close_to_expiration_notice_sent_at).to be_nil }
-        it { expect(DossierMailer).not_to have_received(:notify_en_construction_near_deletion) }
+        it { expect(DossierMailer).not_to have_received(:notify_en_construction_near_deletion_to_user) }
+        it { expect(DossierMailer).not_to have_received(:notify_en_construction_near_deletion_to_administration) }
       end
 
       context 'when the dossier is near deletion' do
@@ -162,10 +163,11 @@ describe ExpiredDossiersDeletionService do
 
         it { expect(dossier.reload.en_construction_close_to_expiration_notice_sent_at).not_to be_nil }
 
-        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).thrice }
-        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier.user.email, [dossier], true) }
-        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier.procedure.administrateurs.first.email, [dossier], false) }
-        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier.followers_instructeurs.first.email, [dossier], false) }
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_user).once }
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_administration).twice }
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_user).with([dossier], dossier.user.email) }
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_administration).with([dossier], dossier.procedure.administrateurs.first.email) }
+        it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_administration).with([dossier], dossier.followers_instructeurs.first.email) }
       end
     end
 
@@ -181,11 +183,12 @@ describe ExpiredDossiersDeletionService do
         ExpiredDossiersDeletionService.send_en_construction_expiration_notices
       end
 
-      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).exactly(4).times }
-      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(user.email, match_array([dossier_1, dossier_2]), true) }
-      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(instructeur.email, match_array([dossier_1, dossier_2]), false) }
-      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier_1.procedure.administrateurs.first.email, [dossier_1], false) }
-      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier_2.procedure.administrateurs.first.email, [dossier_2], false) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_user).once }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_administration).exactly(3).times }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_user).with(match_array([dossier_1, dossier_2]), user.email) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_administration).with(match_array([dossier_1, dossier_2]), instructeur.email) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_administration).with([dossier_1], dossier_1.procedure.administrateurs.first.email) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_administration).with([dossier_2], dossier_2.procedure.administrateurs.first.email) }
     end
 
     context 'when an instructeur is also administrateur' do
@@ -198,9 +201,9 @@ describe ExpiredDossiersDeletionService do
         ExpiredDossiersDeletionService.send_en_construction_expiration_notices
       end
 
-      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).exactly(2).times }
-      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(dossier.user.email, [dossier], true) }
-      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion).with(administrateur.email, [dossier], false) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_user).once }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_user).with([dossier], dossier.user.email) }
+      it { expect(DossierMailer).to have_received(:notify_en_construction_near_deletion_to_administration).with([dossier], administrateur.email) }
     end
   end
 
@@ -217,6 +220,7 @@ describe ExpiredDossiersDeletionService do
 
     context 'with a single dossier' do
       let!(:dossier) { create(:dossier, :en_construction, :followed, en_construction_close_to_expiration_notice_sent_at: notice_sent_at) }
+      let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
 
       before { ExpiredDossiersDeletionService.delete_expired_en_construction_and_notify }
 
@@ -242,11 +246,11 @@ describe ExpiredDossiersDeletionService do
         it { expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound) }
 
         it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
-        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).with(dossier.user.email, [dossier.hash_for_deletion_mail]) }
+        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).with([deleted_dossier], dossier.user.email) }
 
         it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).twice }
-        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(dossier.procedure.administrateurs.first.email, [dossier.hash_for_deletion_mail]) }
-        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(dossier.followers_instructeurs.first.email, [dossier.hash_for_deletion_mail]) }
+        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([deleted_dossier], dossier.procedure.administrateurs.first.email) }
+        it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([deleted_dossier], dossier.followers_instructeurs.first.email) }
       end
     end
 
@@ -254,6 +258,8 @@ describe ExpiredDossiersDeletionService do
       let!(:user) { create(:user) }
       let!(:dossier_1) { create(:dossier, :en_construction, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
       let!(:dossier_2) { create(:dossier, :en_construction, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      let(:deleted_dossier_1) { DeletedDossier.find_by(dossier_id: dossier_1.id) }
+      let(:deleted_dossier_2) { DeletedDossier.find_by(dossier_id: dossier_2.id) }
 
       let!(:instructeur) { create(:instructeur) }
 
@@ -263,12 +269,12 @@ describe ExpiredDossiersDeletionService do
       end
 
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
-      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).with(user.email, match_array([dossier_1, dossier_2].map(&:hash_for_deletion_mail))) }
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).with(match_array([deleted_dossier_1, deleted_dossier_2]), user.email) }
 
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).thrice }
-      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(instructeur.email, match_array([dossier_1, dossier_2].map(&:hash_for_deletion_mail))) }
-      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(dossier_1.procedure.administrateurs.first.email, [dossier_1.hash_for_deletion_mail]) }
-      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(dossier_2.procedure.administrateurs.first.email, [dossier_2.hash_for_deletion_mail]) }
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with(match_array([deleted_dossier_1, deleted_dossier_2]), instructeur.email) }
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([deleted_dossier_1], dossier_1.procedure.administrateurs.first.email) }
+      it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([deleted_dossier_2], dossier_2.procedure.administrateurs.first.email) }
     end
   end
 end
