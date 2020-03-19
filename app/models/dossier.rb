@@ -710,7 +710,7 @@ class Dossier < ApplicationRecord
     brouillon_close_to_procedure_closing_date
       .includes(:procedure, :user)
       .find_each do |dossier|
-        DossierMailer.notify_dossier_not_submitted(dossier).deliver_later
+        DossierMailer.notify_brouillon_not_submitted(dossier).deliver_later
       end
   end
 end
