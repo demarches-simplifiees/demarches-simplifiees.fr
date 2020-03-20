@@ -77,6 +77,15 @@ describe Dossier do
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
     end
+
+    context 'does not include an expiring dossier that has been postponed' do
+      before do
+        expiring_dossier.update(en_construction_conservation_extension: 1.month)
+        expiring_dossier.reload
+      end
+
+      it { is_expected.not_to include(expiring_dossier) }
+    end
   end
 
   describe 'en_instruction_close_to_expiration' do
