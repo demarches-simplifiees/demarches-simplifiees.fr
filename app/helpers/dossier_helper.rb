@@ -83,6 +83,12 @@ module DossierHelper
     end
   end
 
+  def status_badge(state)
+    status_text = state.tr('_', ' ')
+    status_class = state.tr('_', '-')
+    content_tag(:span, status_text, class: "label #{status_class} ")
+  end
+
   private
 
   def dinum_instance?

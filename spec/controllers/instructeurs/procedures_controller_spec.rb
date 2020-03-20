@@ -411,6 +411,20 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
   end
 
+  describe '#deleted_dossiers' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+    let(:deleted_dossier) { create(:deleted_dossier, procedure: procedure, state: :en_construction) }
+    let!(:deleted_dossier_brouillon) { create(:deleted_dossier, procedure: procedure, state: :brouillon) }
+
+    before do
+      sign_in(instructeur.user)
+      get :deleted_dossiers, params: { procedure_id: procedure.id }
+    end
+
+    it { expect(assigns(:deleted_dossiers)).to match_array([deleted_dossier]) }
+  end
+
   describe '#update_email_notifications' do
     let(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
