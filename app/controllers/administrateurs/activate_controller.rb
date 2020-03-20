@@ -31,7 +31,7 @@ class Administrateurs::ActivateController < ApplicationController
       flash.notice = "Mot de passe enregistré"
       redirect_to admin_procedures_path
     else
-      flash.alert = administrateur.errors.full_messages
+      flash.alert = user.administrateur.errors.full_messages
       redirect_to admin_activate_path(token: update_administrateur_params[:reset_password_token])
     end
   end

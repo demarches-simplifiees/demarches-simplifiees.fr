@@ -30,6 +30,8 @@ class Api::V2::Schema < GraphQL::Schema
       Types::PersonnePhysiqueType
     when Etablissement
       Types::PersonneMoraleType
+    when GroupeInstructeur
+      Types::GroupeInstructeurType
     else
       raise GraphQL::ExecutionError.new("Unexpected object: #{obj}")
     end
