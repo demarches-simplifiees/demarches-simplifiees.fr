@@ -25,4 +25,20 @@ describe Manager::ProceduresController, type: :controller do
 
     it { expect(response.body).to include('sub type de champ') }
   end
+
+  describe '#index' do
+    render_views
+
+    let(:administration) { create(:administration) }
+    let!(:dossier) { create(:dossier) }
+
+    context 'sort by dossiers' do
+      before do
+        sign_in(administration)
+        get :index, params: { procedure: { direction: 'asc', order: 'dossiers' } }
+      end
+
+      it { expect(response.body).to include('1 dossier') }
+    end
+  end
 end
