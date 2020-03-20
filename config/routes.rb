@@ -307,6 +307,7 @@ Rails.application.routes.draw do
         get 'stats'
         get 'email_notifications'
         patch 'update_email_notifications'
+        get 'deleted_dossiers'
 
         resources :dossiers, only: [:show], param: :dossier_id do
           member do

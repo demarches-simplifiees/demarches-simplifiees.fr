@@ -113,6 +113,11 @@ module Instructeurs
       assign_exports
     end
 
+    def deleted_dossiers
+      @procedure = procedure
+      @deleted_dossiers = @procedure.deleted_dossiers.where.not(state: :brouillon)
+    end
+
     def update_displayed_fields
       values = params[:values]
 

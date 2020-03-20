@@ -30,6 +30,11 @@
     }
   }
 
+  .afficher-dossiers-supprimes {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .filter {
     display: inline-block;
     padding-left: 10px;
