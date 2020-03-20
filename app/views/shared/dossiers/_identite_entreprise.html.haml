@@ -1,79 +1,83 @@
 %table.table.vertical.dossier-champs
   %tbody
-    %tr
-      %th.libelle Dénomination :
-      %td= raison_sociale_or_name(etablissement)
-    %tr
-      %th.libelle SIRET :
-      %td= etablissement.siret
+    - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
+      %tr
+        %td= t('warning_for_private_info', etablissement: raison_sociale_or_name(etablissement), scope: 'views.shared.dossiers.identite_entreprise')
+    - else
+      %tr
+        %th.libelle Dénomination :
+        %td= raison_sociale_or_name(etablissement)
+      %tr
+        %th.libelle SIRET :
+        %td= etablissement.siret
 
-    - if etablissement.siret != etablissement.entreprise.siret_siege_social
+      - if etablissement.siret != etablissement.entreprise.siret_siege_social
+        %tr
+          %th.libelle SIRET du siège social:
+          %td= etablissement.entreprise.siret_siege_social
       %tr
-        %th.libelle SIRET du siège social:
-        %td= etablissement.entreprise.siret_siege_social
-    %tr
-      %th.libelle Nom commercial :
-      %td= sanitize(etablissement.entreprise_nom_commercial)
-    %tr
-      %th.libelle Forme juridique :
-      %td= sanitize(etablissement.entreprise.forme_juridique)
-    %tr
-      %th.libelle Libellé NAF :
-      %td= etablissement.libelle_naf
-    %tr
-      %th.libelle Code NAF :
-      %td= etablissement.naf
-    %tr
-      %th.libelle Date de création :
-      %td= try_format_date(etablissement.entreprise.date_creation)
-    %tr
-      %th.libelle Effectif de l'organisation :
-      %td= effectif(etablissement)
-    %tr
-      %th.libelle Code effectif :
-      %td= etablissement.entreprise.code_effectif_entreprise
-    %tr
-      %th.libelle Numéro de TVA intracommunautaire :
-      %td= etablissement.entreprise.numero_tva_intracommunautaire
-    %tr
-      %th.libelle Adresse :
-      %td
-        - etablissement.adresse.split("\n").each do |line|
-          = line
-          %br
-    %tr
-      %th.libelle Capital social :
-      %td= pretty_currency(etablissement.entreprise.capital_social)
-    %tr
-      %th.libelle Exercices :
-      %td
-        - if profile == 'instructeur'
-          - etablissement.exercices.each_with_index do |exercice, index|
-            = "#{exercice.date_fin_exercice.year} : "
-            = pretty_currency(exercice.ca)
-            %br
-        - elsif etablissement.exercices.present?
-          = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
-
-    - if etablissement.association?
+        %th.libelle Nom commercial :
+        %td= sanitize(etablissement.entreprise_nom_commercial)
       %tr
-        %th.libelle Numéro RNA :
-        %td= etablissement.association_rna
+        %th.libelle Forme juridique :
+        %td= sanitize(etablissement.entreprise.forme_juridique)
       %tr
-        %th.libelle Titre :
-        %td= etablissement.association_titre
+        %th.libelle Libellé NAF :
+        %td= etablissement.libelle_naf
       %tr
-        %th.libelle Objet :
-        %td= etablissement.association_objet
+        %th.libelle Code NAF :
+        %td= etablissement.naf
       %tr
         %th.libelle Date de création :
-        %td= try_format_date(etablissement.association_date_creation)
+        %td= try_format_date(etablissement.entreprise.date_creation)
       %tr
-        %th.libelle Date de publication :
-        %td= try_format_date(etablissement.association_date_publication)
+        %th.libelle Effectif de l'organisation :
+        %td= effectif(etablissement)
       %tr
-        %th.libelle Date de déclaration :
-        %td= try_format_date(etablissement.association_date_declaration)
+        %th.libelle Code effectif :
+        %td= etablissement.entreprise.code_effectif_entreprise
+      %tr
+        %th.libelle Numéro de TVA intracommunautaire :
+        %td= etablissement.entreprise.numero_tva_intracommunautaire
+      %tr
+        %th.libelle Adresse :
+        %td
+          - etablissement.adresse.split("\n").each do |line|
+            = line
+            %br
+      %tr
+        %th.libelle Capital social :
+        %td= pretty_currency(etablissement.entreprise.capital_social)
+      %tr
+        %th.libelle Exercices :
+        %td
+          - if profile == 'instructeur'
+            - etablissement.exercices.each_with_index do |exercice, index|
+              = "#{exercice.date_fin_exercice.year} : "
+              = pretty_currency(exercice.ca)
+              %br
+          - elsif etablissement.exercices.present?
+            = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
+
+      - if etablissement.association?
+        %tr
+          %th.libelle Numéro RNA :
+          %td= etablissement.association_rna
+        %tr
+          %th.libelle Titre :
+          %td= etablissement.association_titre
+        %tr
+          %th.libelle Objet :
+          %td= etablissement.association_objet
+        %tr
+          %th.libelle Date de création :
+          %td= try_format_date(etablissement.association_date_creation)
+        %tr
+          %th.libelle Date de publication :
+          %td= try_format_date(etablissement.association_date_publication)
+        %tr
+          %th.libelle Date de déclaration :
+          %td= try_format_date(etablissement.association_date_declaration)
 
 %p
   = link_to '➡ Autres informations sur le site de l\'ISPF',

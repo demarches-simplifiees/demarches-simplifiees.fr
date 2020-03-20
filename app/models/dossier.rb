@@ -711,7 +711,6 @@ class Dossier < ApplicationRecord
       .includes(:procedure, :user)
       .group_by(&:user)
       .each do |(user, dossiers)|
-
       dossier_hashes = dossiers.map(&:hash_for_deletion_mail)
       DossierMailer.notify_brouillon_deletion(user, dossier_hashes).deliver_later
 

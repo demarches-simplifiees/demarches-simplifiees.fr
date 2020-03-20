@@ -48,3 +48,15 @@
         %h2.huge-title Vous avez déjà des dossiers pour cette démarche
         = link_to 'Voir mes dossiers en cours', dossiers_path, class: ['button large expand primary']
         = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
+
+    - if feature_enabled_for?(:dossier_pdf_vide, @procedure)
+      - pdf_link = commencer_dossier_vide_path(path: @procedure.path)
+      - if @procedure.brouillon?
+        - pdf_link = commencer_dossier_vide_test_path(path: @procedure.path)
+      %hr
+      %p
+        Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF,
+        et l'envoyer à l’administration concernée :
+        #{@procedure&.service&.nom} - #{@procedure&.service&.adresse}
+      %br
+      = link_to 'Télécharger un dossier vide au format PDF', pdf_link, class: ['button large expand']

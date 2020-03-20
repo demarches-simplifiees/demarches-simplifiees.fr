@@ -85,6 +85,11 @@ class Administrateur < ApplicationRecord
       next_administrateur = procedure.administrateurs.where.not(id: self.id).first
       procedure.service.update(administrateur: next_administrateur)
     end
+
+    services.each do |service|
+      service.destroy unless service.procedures.any?
+    end
+
     destroy
   end
 end

@@ -58,7 +58,6 @@ class StatsController < ApplicationController
       .includes(:procedure, :user)
       .in_batches
       .flat_map do |dossiers|
-
       dossiers
         .pluck(
           "dossiers.id",
