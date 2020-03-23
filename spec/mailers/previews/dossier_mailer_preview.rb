@@ -8,33 +8,49 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_new_answer(dossier)
   end
 
-  def notify_deletion_to_user
-    DossierMailer.notify_deletion_to_user(deleted_dossier, "user@ds.fr")
-  end
-
-  def notify_deletion_to_administration
-    DossierMailer.notify_deletion_to_administration(deleted_dossier, "admin@ds.fr")
-  end
-
   def notify_revert_to_instruction
     DossierMailer.notify_revert_to_instruction(dossier)
   end
 
   def notify_brouillon_near_deletion
-    DossierMailer.notify_brouillon_near_deletion(User.new(email: "usager@example.com"), [dossier])
+    DossierMailer.notify_brouillon_near_deletion([dossier], usager_email)
   end
 
   def notify_brouillons_near_deletion
-    DossierMailer.notify_brouillon_near_deletion(User.new(email: "usager@example.com"), [dossier, dossier])
+    DossierMailer.notify_brouillon_near_deletion([dossier, dossier], usager_email)
+  end
+
+  def notify_en_construction_near_deletion_to_user
+    DossierMailer.notify_en_construction_near_deletion_to_user([dossier], usager_email)
+  end
+
+  def notify_en_construction_near_deletion_to_administration
+    DossierMailer.notify_en_construction_near_deletion_to_administration([dossier, dossier], administration_email)
   end
 
   def notify_brouillon_deletion
-    DossierMailer.notify_brouillon_deletion(User.new(email: "usager@example.com"), [dossier.hash_for_deletion_mail])
+    DossierMailer.notify_brouillon_deletion([dossier.hash_for_deletion_mail], usager_email)
   end
 
   def notify_brouillons_deletion
     dossier_hashes = [dossier, dossier].map(&:hash_for_deletion_mail)
-    DossierMailer.notify_brouillon_deletion(User.new(email: "usager@example.com"), dossier_hashes)
+    DossierMailer.notify_brouillon_deletion(dossier_hashes, usager_email)
+  end
+
+  def notify_deletion_to_user
+    DossierMailer.notify_deletion_to_user(deleted_dossier, usager_email)
+  end
+
+  def notify_deletion_to_administration
+    DossierMailer.notify_deletion_to_administration(deleted_dossier, administration_email)
+  end
+
+  def notify_automatic_deletion_to_user
+    DossierMailer.notify_automatic_deletion_to_user([deleted_dossier, deleted_dossier], usager_email)
+  end
+
+  def notify_automatic_deletion_to_administration
+    DossierMailer.notify_automatic_deletion_to_administration([deleted_dossier, deleted_dossier], administration_email)
   end
 
   def notify_dossier_not_submitted
@@ -42,6 +58,14 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   private
+
+  def usager_email
+    "usager@example.com"
+  end
+
+  def administration_email
+    "administration@example.com"
+  end
 
   def deleted_dossier
     DeletedDossier.new(dossier_id: 1, procedure: procedure)
@@ -56,7 +80,7 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   def procedure
-    Procedure.new(libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'), auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING)
+    Procedure.new(id: 1234, libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'), auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING)
   end
 
   def service

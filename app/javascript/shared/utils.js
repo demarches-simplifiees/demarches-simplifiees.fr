@@ -3,7 +3,7 @@ import $ from 'jquery';
 import debounce from 'debounce';
 
 export { debounce };
-export const { fire, ajax } = Rails;
+export const { fire } = Rails;
 
 export function show(el) {
   el && el.classList.remove('hidden');
@@ -43,6 +43,22 @@ export function delegate(eventNames, selector, callback) {
     .forEach(eventName =>
       Rails.delegate(document, selector, eventName, callback)
     );
+}
+
+export function ajax(options) {
+  return new Promise((resolve, reject) => {
+    Object.assign(options, {
+      success: (response, statusText, xhr) => {
+        resolve({ response, statusText, xhr });
+      },
+      error: (response, statusText, xhr) => {
+        let error = new Error(`Erreur ${xhr.status} : ${statusText}`);
+        Object.assign(error, { response, statusText, xhr });
+        reject(error);
+      }
+    });
+    Rails.ajax(options);
+  });
 }
 
 export function getJSON(url, data, method = 'get') {

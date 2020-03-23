@@ -45,29 +45,54 @@ describe Dossier do
     end
   end
 
-  describe 'nearing_end_of_retention' do
+  describe 'brouillon_close_to_expiration' do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, created_at: 170.days.ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, created_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, created_at: 1.year.ago, procedure: procedure) }
+
+    subject { Dossier.brouillon_close_to_expiration }
+
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
+    end
+  end
+
+  describe 'en_construction_close_to_expiration' do
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, :en_construction, en_construction_at: 170.days.ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, :en_construction, en_construction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, :en_construction, en_construction_at: 1.year.ago, procedure: procedure) }
+
+    subject { Dossier.en_construction_close_to_expiration }
+
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
+    end
+  end
+
+  describe 'en_instruction_close_to_expiration' do
     let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 170.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
 
-    context 'with default delay to end of retention' do
-      subject { Dossier.nearing_end_of_retention }
+    subject { Dossier.en_instruction_close_to_expiration }
 
-      it { is_expected.not_to include(young_dossier) }
-      it { is_expected.to include(expiring_dossier) }
-      it { is_expected.to include(just_expired_dossier) }
-      it { is_expected.to include(long_expired_dossier) }
-    end
-
-    context 'with custom delay to end of retention' do
-      subject { Dossier.nearing_end_of_retention('0') }
-
-      it { is_expected.not_to include(young_dossier) }
-      it { is_expected.not_to include(expiring_dossier) }
-      it { is_expected.to include(just_expired_dossier) }
-      it { is_expected.to include(long_expired_dossier) }
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
     end
   end
 
@@ -1070,60 +1095,6 @@ describe Dossier do
 
     it { expect(Dossier.for_procedure(procedure_1)).to contain_exactly(dossier_1_1, dossier_1_2) }
     it { expect(Dossier.for_procedure(procedure_2)).to contain_exactly(dossier_2_1) }
-  end
-
-  describe '#send_brouillon_expiration_notices' do
-    before { Timecop.freeze(Time.zone.parse('12/12/2012 15:00:00')) }
-
-    let!(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
-    let!(:date_close_to_expiration) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months + 1.month }
-    let!(:date_expired) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
-    let!(:date_not_expired) { Time.zone.now - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
-
-    after { Timecop.return }
-
-    context "Envoi de message pour les dossiers expirant dans - d'un mois" do
-      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired) }
-      let!(:brouillon_close_to_expiration) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration) }
-      let!(:brouillon_close_but_with_notice_sent) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration, brouillon_close_to_expiration_notice_sent_at: Time.zone.now) }
-      let!(:valid_brouillon) { create(:dossier, procedure: procedure, created_at: date_not_expired) }
-
-      before do
-        allow(DossierMailer).to receive(:notify_brouillon_near_deletion).and_return(double(deliver_later: nil))
-        Dossier.send_brouillon_expiration_notices
-      end
-
-      it 'verification de la creation de mail' do
-        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(brouillon_close_to_expiration.user, [brouillon_close_to_expiration])
-        expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with(expired_brouillon.user, [expired_brouillon])
-      end
-
-      it 'Verification du changement d etat du champ' do
-        expect(brouillon_close_to_expiration.reload.brouillon_close_to_expiration_notice_sent_at).not_to be_nil
-      end
-    end
-  end
-
-  describe '#destroy_brouillons_and_notify' do
-    let!(:today) { Time.zone.now.at_midnight }
-
-    let!(:expired_brouillon) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION + 1.day)) }
-    let!(:other_brouillon) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: today - (Dossier::DRAFT_EXPIRATION - 1.day)) }
-
-    before do
-      allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
-      Dossier.destroy_brouillons_and_notify
-    end
-
-    it 'notifies deletion' do
-      expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
-      expect(DossierMailer).to have_received(:notify_brouillon_deletion).with(expired_brouillon.user, [expired_brouillon.hash_for_deletion_mail])
-    end
-
-    it 'deletes the expired brouillon' do
-      expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
-      expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
-    end
   end
 
   describe '#notify_draft_not_submitted' do

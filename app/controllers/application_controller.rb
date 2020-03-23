@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include TrustedDeviceConcern
   include Pundit
+  include Devise::StoreLocationExtension
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
@@ -198,7 +199,9 @@ class ApplicationController < ActionController::Base
 
       # return at this location
       # after the device is trusted
-      store_location_for(:user, request.fullpath) if get_stored_location_for(:user).blank?
+      if get_stored_location_for(:user).blank?
+        store_location_for(:user, request.fullpath)
+      end
 
       send_login_token_or_bufferize(current_instructeur)
       redirect_to link_sent_path(email: current_instructeur.email)
