@@ -29,20 +29,6 @@ class DossierMailer < ApplicationMailer
     end
   end
 
-  def notify_deletion_to_user(deleted_dossier, to_email)
-    @deleted_dossier = deleted_dossier
-    subject = "Votre dossier nº #{@deleted_dossier.dossier_id} a bien été supprimé"
-
-    mail(to: to_email, subject: subject)
-  end
-
-  def notify_deletion_to_administration(deleted_dossier, to_email)
-    @deleted_dossier = deleted_dossier
-    subject = "Le dossier nº #{@deleted_dossier.dossier_id} a été supprimé à la demande de l'usager"
-
-    mail(to: to_email, subject: subject)
-  end
-
   def notify_revert_to_instruction(dossier)
     @dossier = dossier
     @service = dossier.procedure.service
@@ -55,40 +41,60 @@ class DossierMailer < ApplicationMailer
     end
   end
 
-  def notify_brouillon_near_deletion(user, dossiers)
+  def notify_brouillon_near_deletion(dossiers, to_email)
     @subject = default_i18n_subject(count: dossiers.count)
     @dossiers = dossiers
 
-    mail(to: user.email, subject: @subject)
+    mail(to: to_email, subject: @subject)
   end
 
-  def notify_brouillon_deletion(user, dossier_hashes)
+  def notify_brouillon_deletion(dossier_hashes, to_email)
     @subject = default_i18n_subject(count: dossier_hashes.count)
     @dossier_hashes = dossier_hashes
 
-    mail(to: user.email, subject: @subject)
+    mail(to: to_email, subject: @subject)
   end
 
-  def notify_automatic_deletion_to_user(user, dossier_hashes)
-    @subject = default_i18n_subject(count: dossier_hashes.count)
-    @dossier_hashes = dossier_hashes
+  def notify_deletion_to_user(deleted_dossier, to_email)
+    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
+    @deleted_dossier = deleted_dossier
 
-    mail(to: user.email, subject: @subject)
+    mail(to: to_email, subject: @subject)
   end
 
-  def notify_automatic_deletion_to_administration(user, dossier_hashes)
-    @subject = default_i18n_subject(count: dossier_hashes.count)
-    @dossier_hashes = dossier_hashes
+  def notify_deletion_to_administration(deleted_dossier, to_email)
+    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
+    @deleted_dossier = deleted_dossier
 
-    mail(to: user.email, subject: @subject)
+    mail(to: to_email, subject: @subject)
   end
 
-  def notify_en_construction_near_deletion(user, dossiers, for_user)
+  def notify_automatic_deletion_to_user(deleted_dossiers, to_email)
+    @subject = default_i18n_subject(count: deleted_dossiers.count)
+    @deleted_dossiers = deleted_dossiers
+
+    mail(to: to_email, subject: @subject)
+  end
+
+  def notify_automatic_deletion_to_administration(deleted_dossiers, to_email)
+    @subject = default_i18n_subject(count: deleted_dossiers.count)
+    @deleted_dossiers = deleted_dossiers
+
+    mail(to: to_email, subject: @subject)
+  end
+
+  def notify_en_construction_near_deletion_to_user(dossiers, to_email)
     @subject = default_i18n_subject(count: dossiers.count)
     @dossiers = dossiers
-    @for_user = for_user
 
-    mail(to: user.email, subject: @subject)
+    mail(to: to_email, subject: @subject)
+  end
+
+  def notify_en_construction_near_deletion_to_administration(dossiers, to_email)
+    @subject = default_i18n_subject(count: dossiers.count)
+    @dossiers = dossiers
+
+    mail(to: to_email, subject: @subject)
   end
 
   def notify_groupe_instructeur_changed(instructeur, dossier)

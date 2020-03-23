@@ -55,8 +55,8 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.notify_deletion_to_administration(deleted_dossier, to_email) }
 
-    it { expect(subject.subject).to eq("Le dossier nº #{deleted_dossier.dossier_id} a été supprimé à la demande de l'usager") }
-    it { expect(subject.body).to include("À la demande de l'usager") }
+    it { expect(subject.subject).to eq("Le dossier nº #{deleted_dossier.dossier_id} a été supprimé à la demande de l’usager") }
+    it { expect(subject.body).to include("À la demande de l’usager") }
     it { expect(subject.body).to include(deleted_dossier.dossier_id) }
     it { expect(subject.body).to include(deleted_dossier.procedure.libelle) }
   end
@@ -81,7 +81,7 @@ RSpec.describe DossierMailer, type: :mailer do
       @date_suppression = dossier.created_at + duree.months
     end
 
-    subject { described_class.notify_brouillon_near_deletion(dossier.user, [dossier]) }
+    subject { described_class.notify_brouillon_near_deletion([dossier], dossier.user.email) }
 
     it { expect(subject.body).to include("n° #{dossier.id} ") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
@@ -90,7 +90,7 @@ RSpec.describe DossierMailer, type: :mailer do
   describe '.notify_brouillon_deletion' do
     let(:dossier) { create(:dossier) }
 
-    subject { described_class.notify_brouillon_deletion(dossier.user, [dossier.hash_for_deletion_mail]) }
+    subject { described_class.notify_brouillon_deletion([dossier.hash_for_deletion_mail], dossier.user.email) }
 
     it { expect(subject.subject).to eq("Un dossier en brouillon a été supprimé automatiquement") }
     it { expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})") }
@@ -98,14 +98,16 @@ RSpec.describe DossierMailer, type: :mailer do
 
   describe '.notify_automatic_deletion_to_user' do
     let(:dossier) { create(:dossier) }
+    let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier) }
 
     before do
       duree = dossier.procedure.duree_conservation_dossiers_dans_ds
       @date_suppression = dossier.created_at + duree.months
     end
 
-    subject { described_class.notify_automatic_deletion_to_user(dossier.user, [dossier.hash_for_deletion_mail]) }
+    subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
+    it { expect(subject.to).to eq([dossier.user.email]) }
     it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
     it { expect(subject.body).to include("n° #{dossier.id} ") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
@@ -114,8 +116,9 @@ RSpec.describe DossierMailer, type: :mailer do
 
   describe '.notify_automatic_deletion_to_administration' do
     let(:dossier) { create(:dossier) }
+    let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier) }
 
-    subject { described_class.notify_automatic_deletion_to_administration(dossier.user, [dossier.hash_for_deletion_mail]) }
+    subject { described_class.notify_automatic_deletion_to_administration([deleted_dossier], dossier.user.email) }
 
     it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
     it { expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})") }
@@ -129,13 +132,13 @@ RSpec.describe DossierMailer, type: :mailer do
       @date_suppression = dossier.created_at + duree.months
     end
 
-    subject { described_class.notify_en_construction_near_deletion(dossier.user, [dossier], true) }
+    subject { described_class.notify_en_construction_near_deletion_to_administration([dossier], dossier.user.email) }
 
     it { expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé") }
     it { expect(subject.body).to include("n° #{dossier.id} ") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include("PDF") }
-    it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n'avez rien à faire.") }
+    it { expect(subject.body).to include("Vous avez <b>un mois</b> pour commencer l'instruction du dossier.") }
   end
 
   describe '.notify_en_construction_near_deletion_to_user' do
@@ -146,13 +149,14 @@ RSpec.describe DossierMailer, type: :mailer do
       @date_suppression = dossier.created_at + duree.months
     end
 
-    subject { described_class.notify_en_construction_near_deletion(dossier.user, [dossier], false) }
+    subject { described_class.notify_en_construction_near_deletion_to_user([dossier], dossier.user.email) }
 
+    it { expect(subject.to).to eq([dossier.user.email]) }
     it { expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé") }
     it { expect(subject.body).to include("n° #{dossier.id} ") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include("PDF") }
-    it { expect(subject.body).to include("Vous avez <b>un mois</b> pour traiter le dossier.") }
+    it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n’avez rien à faire.") }
   end
 
   describe '.notify_groupe_instructeur_changed_to_instructeur' do
