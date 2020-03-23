@@ -40,6 +40,7 @@
   .container
     %p.explication-onglet Les dossiers ont été supprimés. Vous ne pouvez plus les récupérer depuis Démarches Simplifiées.
     - if @deleted_dossiers.any?
+      = paginate @deleted_dossiers
       %table.table.dossiers-table.hoverable
         %thead
           %tr
@@ -56,6 +57,7 @@
               %td.status-col
                 = status_badge(deleted_dossier.state)
               %td.date-col= l(deleted_dossier.deleted_at, format: '%d/%m/%y')
+      = paginate @deleted_dossiers
     - else
       Aucun dossier supprimé
 
