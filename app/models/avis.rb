@@ -10,6 +10,8 @@ class Avis < ApplicationRecord
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
   validates :claimant, presence: true
+  validates :piece_justificative_file, size: { less_than: 20.megabytes }
+  validates :introduction_file, size: { less_than: 20.megabytes }
 
   before_validation -> { sanitize_email(:email) }
   before_create :try_to_assign_instructeur
