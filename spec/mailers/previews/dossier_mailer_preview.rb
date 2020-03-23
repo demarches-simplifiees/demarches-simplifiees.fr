@@ -53,6 +53,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_automatic_deletion_to_administration([deleted_dossier, deleted_dossier], administration_email)
   end
 
+  def notify_brouillon_not_submitted
+    DossierMailer.notify_brouillon_not_submitted(draft)
+  end
+
   def notify_dossier_not_submitted
     DossierMailer.notify_dossier_not_submitted(draft)
   end

@@ -188,6 +188,19 @@ class Dossier < ApplicationRecord
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
 
+  scope :brouillon_close_to_procedure_closing_date, -> do
+    # select users who have submitted dossier for the given 'procedures.id'
+    users_who_submitted =
+      state_not_brouillon
+        .joins(:groupe_instructeur)
+        .where("groupe_instructeurs.procedure_id = procedures.id")
+        .select(:user_id)
+    # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
+    brouillon.joins(:procedure)
+      .where(procedures: { auto_archive_on: Time.zone.today + REMAINING_TIME_BEFORE_CLOSING })
+      .where.not(user: users_who_submitted)
+  end
+
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
 
@@ -699,10 +712,10 @@ class Dossier < ApplicationRecord
   end
 
   def self.notify_draft_not_submitted
-    brouillon_near_closing_date
+    brouillon_close_to_procedure_closing_date
       .includes(:procedure, :user)
       .find_each do |dossier|
-        DossierMailer.notify_dossier_not_submitted(dossier).deliver_later
+        DossierMailer.notify_brouillon_not_submitted(dossier).deliver_later
       end
   end
 end
