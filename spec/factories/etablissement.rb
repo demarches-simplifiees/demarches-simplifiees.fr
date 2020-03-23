@@ -29,6 +29,10 @@ FactoryBot.define do
         create(:exercice, etablissement: etablissement)
       end
     end
+
+    trait :non_diffusable do
+      diffusable_commercialement { false }
+    end
   end
 
   trait :is_association do

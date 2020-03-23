@@ -12,4 +12,13 @@ describe 'shared/dossiers/identite_entreprise.html.haml', type: :view do
       end
     end
   end
+
+  context "for an entreprise with private infos" do
+    let(:etablissement) { create(:etablissement, :non_diffusable) }
+
+    it "displays only public infos" do
+      expect(rendered).to have_text(etablissement.entreprise_raison_sociale)
+      expect(rendered).not_to have_text(etablissement.entreprise.forme_juridique)
+    end
+  end
 end

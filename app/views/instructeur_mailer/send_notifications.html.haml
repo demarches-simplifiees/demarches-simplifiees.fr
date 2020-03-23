@@ -16,5 +16,12 @@
       - if datum[:nb_notification] > 0
         %br
         #{datum[:nb_notification]} #{'notification'.pluralize(datum[:nb_notification])}
+      - if datum[:nb_en_instruction] > 0
+        %br
+        #{datum[:nb_en_instruction]} #{'dossier'.pluralize(datum[:nb_en_instruction])}
+      - if datum[:nb_accepted] > 0
+        %br
+        #{datum[:nb_accepted]} #{'dossier'.pluralize(datum[:nb_accepted])}
+
 
 = render partial: "layouts/mailers/signature"

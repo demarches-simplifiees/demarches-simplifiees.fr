@@ -198,7 +198,7 @@ class ApplicationController < ActionController::Base
 
       # return at this location
       # after the device is trusted
-      store_location_for(:user, request.fullpath)
+      store_location_for(:user, request.fullpath) if get_stored_location_for(:user).blank?
 
       send_login_token_or_bufferize(current_instructeur)
       redirect_to link_sent_path(email: current_instructeur.email)
@@ -233,7 +233,7 @@ class ApplicationController < ActionController::Base
       key: sentry[:client_key],
       enabled: sentry[:enabled],
       environment: sentry[:environment],
-      browser: { modern: browser.modern? },
+      browser: { modern: BrowserSupport.supported?(browser) },
       user: sentry_user
     }
   end

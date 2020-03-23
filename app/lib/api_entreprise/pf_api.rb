@@ -17,9 +17,10 @@ class ApiEntreprise::PF_API
 
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
+    elsif response.code&.between?(401, 499)
+      raise ApiEntreprise::API::ResourceNotFound
     else
-
-      raise RestClient::ResourceNotFound
+      raise ApiEntreprise::API::RequestFailed
     end
   end
 
