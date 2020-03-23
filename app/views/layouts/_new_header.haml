@@ -50,7 +50,7 @@
               = label_tag :dossier_id, "Numéro de dossier", class: 'hidden'
               = text_field_tag :dossier_id, "", placeholder: "Numéro de dossier"
               %button{ title: "Rechercher" }
-                = image_tag "icons/search-blue.svg", alt: '', 'aria-hidden':'true'
+                = image_tag "icons/search-blue.svg", alt: 'Rechercher', 'aria-hidden':'true'
 
       - if instructeur_signed_in? || user_signed_in?
         %li

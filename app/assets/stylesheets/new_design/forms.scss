@@ -44,6 +44,12 @@
     }
   }
 
+  .form-label {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: $default-padding;
+  }
+
   .notice {
     @include notice-text-style;
     margin-top: - $default-spacer;
@@ -370,12 +376,6 @@
   .explication-libelle {
     font-weight: bold;
     font-size: 20px;
-    margin-bottom: $default-padding;
-  }
-
-  .label-not-label {
-    font-weight: bold;
-    font-size: 18px;
     margin-bottom: $default-padding;
   }
 

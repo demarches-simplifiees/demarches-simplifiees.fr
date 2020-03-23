@@ -1,6 +1,6 @@
 = # we do this trick because some html elements should use 'label' and some should be plain paragraphs
 - if has_html_label?(champ)
-  %h2.label-not-label
+  %h4.form-label
     = render partial: 'shared/dossiers/editable_champs/champ_label_content', locals: { champ: champ, seen_at: seen_at }
 - else
   = form.label champ.main_value_name do
