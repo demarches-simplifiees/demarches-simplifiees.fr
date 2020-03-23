@@ -1,0 +1,16 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p
+  = t('.header', count: @dossiers.count)
+  %ul
+    - @dossiers.each do |d|
+      %li
+        #{link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}. Retrouvez le dossier au format #{link_to("PDF", dossier_url(d, format: :pdf))}
+
+%p
+  = sanitize(t('.footer', count: @dossiers.count))
+
+= render partial: "layouts/mailers/signature"
