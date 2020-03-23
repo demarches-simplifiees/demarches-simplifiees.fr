@@ -22,6 +22,7 @@ feature 'Creating a new dossier:' do
         expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
         expect(page).to have_procedure_description(procedure)
 
+        choose 'M.'
         fill_in 'individual_nom',    with: 'Nom'
         fill_in 'individual_prenom', with: 'Prenom'
       end
