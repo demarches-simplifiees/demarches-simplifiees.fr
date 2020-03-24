@@ -56,7 +56,7 @@
               %td.number-col= deleted_dossier.dossier_id
               %td.status-col
                 = status_badge(deleted_dossier.state)
-              %td.date-col= l(deleted_dossier.deleted_at, format: '%d/%m/%y')
+              %td.date-col.deleted-cell= l(deleted_dossier.deleted_at, format: '%d/%m/%y')
       = paginate @deleted_dossiers
     - else
       Aucun dossier supprimé
