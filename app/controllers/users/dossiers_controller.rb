@@ -166,6 +166,12 @@ module Users
       end
     end
 
+    def extend_conservation
+      dossier.update(en_construction_conservation_extension: dossier.en_construction_conservation_extension + 1.month)
+      flash[:notice] = 'Votre dossier sera conservé un mois supplémentaire'
+      redirect_to dossier_path(@dossier)
+    end
+
     def modifier
       @dossier = dossier_with_champs
     end
