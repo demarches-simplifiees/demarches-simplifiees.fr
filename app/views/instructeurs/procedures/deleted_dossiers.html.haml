@@ -38,6 +38,7 @@
             active: true)
 
   .container
+    %h1.titre-dossiers Dossiers supprimés
     %p.explication-onglet Les dossiers ont été supprimés. Vous ne pouvez plus les récupérer depuis Démarches Simplifiées.
     - if @deleted_dossiers.any?
       = paginate @deleted_dossiers
