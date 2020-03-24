@@ -1,6 +1,6 @@
 .sub-header
   .container
-    = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+    = status_badge(dossier.state)
 
     .title-container
       %span.icon.folder
