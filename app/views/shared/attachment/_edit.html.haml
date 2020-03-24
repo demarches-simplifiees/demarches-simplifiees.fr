@@ -13,17 +13,16 @@
       = link_to('le modèle suivant', url_for(template), target: '_blank', rel: 'noopener')
 
   - if persisted
-    .attachment-actions{ id: "attachment_#{attachment_id}" }
+    .attachment-actions{ class: "attachment-actions-#{attachment_id}" }
       .attachment-action
         = render partial: "shared/attachment/show", locals: { attachment: attachment, user_can_upload: true }
       - if user_can_destroy
         .attachment-action
           = link_to 'Supprimer', attachment_url(attachment.id, { signed_id: attachment.blob.signed_id }), remote: true, method: :delete, class: 'button small danger'
       .attachment-action
-        = button_tag 'Remplacer', type: 'button', class: 'button small', data: { 'toggle-target': "#attachment_file_#{attachment_id}" }
+        = button_tag 'Remplacer', type: 'button', class: 'button small', data: { 'toggle-target': ".attachment-input-#{attachment_id}" }
 
   = form.file_field attached_file.name,
-    id: "attachment_file_#{attachment_id}",
-    class: "attachment-input #{'hidden' if persisted}",
+    class: "attachment-input attachment-input-#{attachment_id} #{'hidden' if persisted}",
     accept: accept,
     direct_upload: true
