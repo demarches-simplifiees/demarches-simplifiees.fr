@@ -19,7 +19,7 @@ feature 'The user' do
     fill_in('text', with: 'super texte')
     fill_in('textarea', with: 'super textarea')
     fill_in('date', with: '12-12-2012')
-    select_date_and_time(Time.zone.parse('06/01/1985 7h05'), form_id_for('datetime'))
+    select_date_and_time(Time.zone.parse('06/01/1985 7h05'), form_id_for_datetime('datetime'))
     fill_in('number', with: '42')
     check('checkbox')
     choose('Madame')
@@ -74,7 +74,7 @@ feature 'The user' do
     expect(page).to have_field('text', with: 'super texte')
     expect(page).to have_field('textarea', with: 'super textarea')
     expect(page).to have_field('date', with: '2012-12-12')
-    check_date_and_time(Time.zone.parse('06/01/1985 7:05'), form_id_for('datetime'))
+    check_date_and_time(Time.zone.parse('06/01/1985 7:05'), form_id_for_datetime('datetime'))
     expect(page).to have_field('number', with: '42')
     expect(page).to have_checked_field('checkbox')
     expect(page).to have_checked_field('Madame')
@@ -248,6 +248,32 @@ feature 'The user' do
 
   def form_id_for(libelle)
     find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
+  end
+
+  def form_id_for_datetime(libelle)
+    # The HTML for datetime is a bit specific since it has 5 selects, below here is a sample HTML
+    # So, we want to find the partial id of a datetime (partial because there are 5 ids:
+    # dossier_champs_attributes_3_value_1i, 2i, ... 5i) ; we are interested in the 'dossier_champs_attributes_3_value' part
+    # which is then completed in select_date_and_time and check_date_and_time
+    #
+    # We find the H2, find the first select in the next .datetime div, then strip the last 3 characters
+    #
+    # <h4 class="form-label">
+    #   libelle
+    # </h4>
+    # <div class="datetime">
+    #     <span class="hidden">
+    #         <label for="dossier_champs_attributes_3_value_3i">Jour</label></span>
+    #     <select id="dossier_champs_attributes_3_value_3i" name="dossier[champs_attributes][3][value(3i)]">
+    #     <option value=""></option>
+    #     <option value="1">1</option>
+    #     <option value="2">2</option>
+    #     <!-- … -->
+    #     </select>
+    #     <!-- … 4 other selects for month, year, minute and seconds -->
+    # </div>
+    e = find(:xpath, ".//h4[contains(text()[normalize-space()], '#{libelle}')]")
+    e.sibling('.datetime').first('select')[:id][0..-4]
   end
 
   def champ_value_for(libelle)
