@@ -38,7 +38,7 @@ class Dossier < ApplicationRecord
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, inverse_of: :dossier, dependent: :destroy
 
-  has_many :dossier_operation_logs, dependent: :destroy
+  has_many :dossier_operation_logs, dependent: :nullify
 
   belongs_to :groupe_instructeur
   has_one :procedure, through: :groupe_instructeur
