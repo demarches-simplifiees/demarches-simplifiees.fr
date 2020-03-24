@@ -1131,4 +1131,17 @@ describe Dossier do
       end
     end
   end
+
+  describe 'dossier_operation_log after dossier deletion' do
+    let(:dossier) { create(:dossier) }
+    let(:dossier_operation_log) { create(:dossier_operation_log, dossier: dossier) }
+
+    it 'should nullify dossier link' do
+      expect(dossier_operation_log.dossier).to eq(dossier)
+      expect(DossierOperationLog.count).to eq(1)
+      dossier.destroy
+      expect(dossier_operation_log.reload.dossier).to be_nil
+      expect(DossierOperationLog.count).to eq(1)
+    end
+  end
 end
