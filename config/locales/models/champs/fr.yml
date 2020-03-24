@@ -1,5 +1,5 @@
 fr:
   activerecord:
     attributes:
-      champs:
+      champ:
         value: La valeur du champ
