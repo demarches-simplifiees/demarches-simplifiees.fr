@@ -46,7 +46,7 @@ describe Dossier do
   end
 
   describe 'brouillon_close_to_expiration' do
-    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, created_at: 170.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, created_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
@@ -63,7 +63,7 @@ describe Dossier do
   end
 
   describe 'en_construction_close_to_expiration' do
-    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, :en_construction, en_construction_at: 170.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, :en_construction, en_construction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
@@ -89,7 +89,7 @@ describe Dossier do
   end
 
   describe 'en_instruction_close_to_expiration' do
-    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 170.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
@@ -450,7 +450,7 @@ describe Dossier do
   end
 
   describe "#unfollow_stale_instructeurs" do
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, :published) }
     let(:instructeur) { create(:instructeur) }
     let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
     let(:instructeur2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur, new_groupe_instructeur]) }
