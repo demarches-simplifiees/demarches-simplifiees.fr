@@ -84,6 +84,26 @@ class Procedure < ApplicationRecord
   validates :duree_conservation_dossiers_dans_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, unless: :durees_conservation_required
   validates :duree_conservation_dossiers_hors_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, unless: :durees_conservation_required
   validates_with MonAvisEmbedValidator
+  validates :notice, content_type: [
+    "application/msword",
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.oasis.opendocument.text",
+    "application/vnd.oasis.opendocument.presentation",
+    "text/plain"
+  ], size: { less_than: 20.megabytes }
+
+  validates :deliberation, content_type: [
+    "application/msword",
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+    "application/vnd.oasis.opendocument.text"
+  ], size: { less_than: 20.megabytes }
+
+  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
   before_save :update_juridique_required
   before_save :update_durees_conservation_required
   after_initialize :ensure_path_exists

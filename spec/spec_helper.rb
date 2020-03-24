@@ -44,7 +44,7 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_argument('--window-size=1440,900')
 
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: ['headless', 'disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
+    chromeOptions: { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
   )
 
   Capybara::Selenium::Driver.new app,

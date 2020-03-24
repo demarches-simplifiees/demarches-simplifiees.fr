@@ -1,0 +1,12 @@
+fr:
+  dossier_mailer:
+    notify_en_construction_near_deletion_to_user:
+      subject:
+        one: Un dossier en construction va bientôt être supprimé
+        other: Des dossiers en construction vont bientôt être supprimés
+      header:
+        one: "Afin de limiter la conservation de vos données personnelles, le dossier en construction suivant sera bientôt automatiquement supprimé :"
+        other: "Afin de limiter la conservation de vos données personnelles, les dossiers en construction suivant seront bientôt automatiquement supprimés :"
+      footer:
+        one: "Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n’avez rien à faire."
+        other: "Vous pouvez retrouver vos dossiers pendant encore <b>un mois</b>. Vous n’avez rien à faire."

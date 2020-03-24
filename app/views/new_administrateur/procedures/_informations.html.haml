@@ -70,6 +70,8 @@
   Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
 
 = f.label :notice, 'Notice'
+%p.notice
+  Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
 - notice = @procedure.notice
 = render 'shared/attachment/edit',
   { form: f,

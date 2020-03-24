@@ -163,11 +163,13 @@ class Instructeur < ApplicationRecord
         acc << h
       end
 
-      [["en_instruction", h[:nb_en_instruction]], ["accepte", h[:nb_accepted]]].each do |state, count|
-        if procedure.declarative_with_state == state && count > 0
-          h[:procedure_id] = procedure.id
-          h[:procedure_libelle] = procedure.libelle
-          acc << h
+      if h[:nb_en_instruction] > 0 || h[:nb_accepted] > 0
+        [["en_instruction", h[:nb_en_instruction]], ["accepte", h[:nb_accepted]]].each do |state, count|
+          if procedure&.declarative_with_state == state && count > 0
+            h[:procedure_id] = procedure.id
+            h[:procedure_libelle] = procedure.libelle
+            acc << h
+          end
         end
       end
 

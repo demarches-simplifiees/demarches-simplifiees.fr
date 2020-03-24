@@ -4,9 +4,9 @@ fr:
       subject:
         one: Un dossier en brouillon va bientôt être supprimé
         other: Des dossiers en brouillon vont bientôt être supprimés
-      automatic_dossier_deletion:
-        one: "le dossier en brouillon suivant sera bientôt automatiquement supprimé :"
-        other: "les dossiers en brouillon suivant seront bientôt automatiquement supprimés :"
-      send_your_draft:
-        one: "Si vous souhaitez toujours déposer ce dossier, vous pouvez retrouver votre brouillon pendant encore <b>un mois</b>"
-        other: "Si vous souhaitez toujours déposer ces dossiers, vous pouvez retrouver vos brouillons pendant encore <b>un mois</b>"
+      header:
+        one: "Afin de limiter la conservation de vos données personnelles, le dossier en brouillon suivant sera bientôt automatiquement supprimé :"
+        other: "Afin de limiter la conservation de vos données personnelles, les dossiers en brouillon suivant seront bientôt automatiquement supprimés :"
+      footer:
+        one: "Si vous souhaitez toujours déposer ce dossier, vous pouvez retrouver votre brouillon pendant encore <b>un mois</b>. Et sinon, vous n’avez rien à faire."
+        other: "Si vous souhaitez toujours déposer ces dossiers, vous pouvez retrouver vos brouillons pendant encore <b>un mois</b>. Et sinon, vous n’avez rien à faire."

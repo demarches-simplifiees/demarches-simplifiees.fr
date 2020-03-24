@@ -68,17 +68,18 @@ En local, un utilisateur de test est créé automatiquement, avec les identifian
 ### Programmation des jobs
 
     AutoArchiveProcedureJob.set(cron: "* * * * *").perform_later
-    WeeklyOverviewJob.set(cron: "0 7 * * 1").perform_later
+    WeeklyOverviewJob.set(cron: "0 7 * * MON").perform_later
     DeclarativeProceduresJob.set(cron: "* * * * *").perform_later
     UpdateAdministrateurUsageStatisticsJob.set(cron: "0 10 * * *").perform_later
     FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
     Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
     WarnExpiringDossiersJob.set(cron: "0 0 1 * *").perform_later
-    InstructeurEmailNotificationJob.set(cron: "0 10 * * 1,2,3,4,5,6").perform_later
+    InstructeurEmailNotificationJob.set(cron: "0 8,13 * * MON-FRI").perform_later
     PurgeUnattachedBlobsJob.set(cron: "0 0 * * *").perform_later
     OperationsSignatureJob.set(cron: "0 6 * * *").perform_later
-    SeekAndDestroyExpiredDossiersJob.set(cron: "0 7 * * *").perform_later
+    ExpiredDossiersDeletionJob.set(cron: "0 7 * * *").perform_later
     PurgeStaleExportsJob.set(cron: "*/5 * * * *").perform_later
+    NotifyDraftNotSubmittedJob.set(cron: "30 6 * * *").perform_later
 
 ### Voir les emails envoyés en local
 

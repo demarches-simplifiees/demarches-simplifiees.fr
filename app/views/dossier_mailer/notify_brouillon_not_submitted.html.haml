@@ -7,7 +7,7 @@
   Le dossier n°#{@dossier.id} pour la démarche  «&nbsp;
   %strong
     #{@dossier.procedure.libelle}
-  &nbsp;» est en brouillon.
+  &nbsp;» est commencé mais n'est pas encore déposé.
 %p
   Si vous souhaitez que ce dossier soit pris en compte, il vous faut le déposer avant le
   #{l(@dossier.procedure.auto_archive_on - 1.day, format: '%-d %B %Y')} à 23h59, date de cloture de la démarche.
