@@ -39,7 +39,12 @@
 
   .container
     %h1.titre-dossiers Dossiers supprimés
-    %p.explication-onglet Les dossiers ont été supprimés. Vous ne pouvez plus les récupérer depuis Démarches Simplifiées.
+    %details.explication-onglet
+      %summary Les dossiers ont été supprimés. Vous ne pouvez plus les récupérer depuis Démarches Simplifiées.
+      Ceci s'explique pour les raisons suivantes :
+      %ul
+        %li L'utilisateur a intentionnellement supprimé son dossier.
+        %li Le délai de conservation maximal de #{@procedure.duree_conservation_dossiers_dans_ds} mois a expiré. Conformément au règlement RGPD, DS ne peut continuer à les héberger.
     - if @deleted_dossiers.any?
       = paginate @deleted_dossiers
       %table.table.dossiers-table.hoverable
