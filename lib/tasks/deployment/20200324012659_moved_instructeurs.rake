@@ -13,5 +13,5 @@ namespace :after_party do
     Instructeur.by_email('vaehei.teriiteporouarai@equipement.gov.pf')&.groupe_instructeurs&.destroy_all
 
     AfterParty::TaskRecord.create version: '20200324012659'
-  end  # task :moved_instructeurs
-end  # namespace :after_party
+  end # task :moved_instructeurs
+end # namespace :after_party
