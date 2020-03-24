@@ -143,7 +143,7 @@
 
               %td.status-col
                 = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
-                  = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+                  = status_badge(dossier.state)
               %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
       = paginate @dossiers
     - else

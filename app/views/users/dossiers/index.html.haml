@@ -44,7 +44,7 @@
                 = procedure_libelle(dossier.procedure)
             %td.status-col
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+                = status_badge(dossier.state)
             %td.updated-at-col
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = try_format_date(dossier.updated_at)
