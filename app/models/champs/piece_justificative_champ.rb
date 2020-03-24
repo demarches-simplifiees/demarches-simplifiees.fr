@@ -51,4 +51,8 @@ class Champs::PieceJustificativeChamp < Champ
       piece_justificative_file.service_url
     end
   end
+
+  def html_label?
+    false
+  end
 end

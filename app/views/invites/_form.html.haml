@@ -15,8 +15,12 @@
   = form_tag dossier_invites_path(dossier), remote: true, method: :post, class: 'form' do
     .row
       .col
-        = email_field_tag :invite_email, '', class: 'small', placeholder: 'adresse email', required: true
+        %span
+          = label_tag :invite_email, "Adresse email"
+        = email_field_tag :invite_email, '', class: 'small', placeholder: 'Adresse email', required: true
       .col
+        %span
+          = label_tag :invite_message, "Ajouter un message à la personne invitée (optionnel)"
         = text_area_tag :invite_message, '', class: 'small', placeholder: 'Ajouter un message à la personne invitée (optionnel)'
       .col
         = submit_tag 'Envoyer une invitation', class: 'button accepted'
