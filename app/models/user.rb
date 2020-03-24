@@ -120,7 +120,7 @@ class User < ApplicationRecord
     end
 
     dossiers.each do |dossier|
-      dossier.delete_and_keep_track(administration)
+      dossier.delete_and_keep_track!(administration, :user_removed)
     end
     dossiers.with_discarded.destroy_all
     destroy!

@@ -65,18 +65,12 @@ class ExpiredDossiersDeletionService
         ).deliver_later
       end
 
-    dossiers_to_remove.each do |dossier|
-      DeletedDossier.create_from_dossier(dossier)
-      dossier.destroy
-    end
+    dossiers_to_remove.destroy_all
   end
 
   def self.delete_expired_en_construction_and_notify
     dossiers_to_remove = Dossier.en_construction_expired
-
-    dossiers_to_remove.each do |dossier|
-      DeletedDossier.create_from_dossier(dossier)
-    end
+    dossiers_to_remove.each(&:expired_keep_track!)
 
     dossiers_to_remove
       .includes(:user)
