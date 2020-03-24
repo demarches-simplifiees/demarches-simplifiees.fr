@@ -167,7 +167,7 @@ feature 'The user' do
     fill_individual
 
     # Add an attachment
-    find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
+    find_field('Pièce justificative').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
     click_on 'Enregistrer le brouillon'
     expect(page).to have_content('Votre brouillon a bien été sauvegardé')
     expect(page).to have_text('file.pdf')
@@ -182,7 +182,7 @@ feature 'The user' do
 
     # Replace the attachment
     within('.attachment') { click_on 'Remplacer' }
-    find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
+    find_field('Pièce justificative').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
     click_on 'Enregistrer le brouillon'
     expect(page).to have_no_text('file.pdf')
     expect(page).to have_text('RIB.pdf')
