@@ -15,6 +15,7 @@ class ExpiredDossiersDeletionService
       .without_brouillon_expiration_notice_sent
 
     dossiers_close_to_expiration
+      .with_notifiable_procedure
       .includes(:user, :procedure)
       .group_by(&:user)
       .each do |(user, dossiers)|
@@ -33,6 +34,7 @@ class ExpiredDossiersDeletionService
       .without_en_construction_expiration_notice_sent
 
     dossiers_close_to_expiration
+      .with_notifiable_procedure
       .includes(:user)
       .group_by(&:user)
       .each do |(user, dossiers)|
@@ -56,6 +58,7 @@ class ExpiredDossiersDeletionService
     dossiers_to_remove = Dossier.brouillon_expired
 
     dossiers_to_remove
+      .with_notifiable_procedure
       .includes(:user, :procedure)
       .group_by(&:user)
       .each do |(user, dossiers)|
@@ -73,6 +76,7 @@ class ExpiredDossiersDeletionService
     dossiers_to_remove.each(&:expired_keep_track!)
 
     dossiers_to_remove
+      .with_notifiable_procedure
       .includes(:user)
       .group_by(&:user)
       .each do |(user, dossiers)|
@@ -96,6 +100,7 @@ class ExpiredDossiersDeletionService
 
   def self.group_by_fonctionnaire_email(dossiers)
     dossiers
+      .with_notifiable_procedure
       .includes(:followers_instructeurs, procedure: [:administrateurs])
       .each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |dossier, h|
         (dossier.followers_instructeurs + dossier.procedure.administrateurs).each { |destinataire| h[destinataire.email] << dossier }

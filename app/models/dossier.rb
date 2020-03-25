@@ -166,24 +166,35 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
+  scope :with_notifiable_procedure, -> do
+    joins(:procedure)
+      .where.not(procedures: { aasm_state: :brouillon })
+  end
+
   scope :brouillon_close_to_expiration, -> do
-    brouillon
+    state_brouillon
       .joins(:procedure)
       .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
   end
   scope :en_construction_close_to_expiration, -> do
-    en_construction
+    state_en_construction
       .joins(:procedure)
       .where("dossiers.en_construction_at + dossiers.en_construction_conservation_extension + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
   end
   scope :en_instruction_close_to_expiration, -> do
-    en_instruction
+    state_en_instruction
       .joins(:procedure)
       .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
   end
 
-  scope :brouillon_expired, -> { brouillon.where("brouillon_close_to_expiration_notice_sent_at < (now() - INTERVAL '1 month 5 days')") }
-  scope :en_construction_expired, -> { en_construction.where("en_construction_close_to_expiration_notice_sent_at < (now() - INTERVAL '1 month 5 days')") }
+  scope :brouillon_expired, -> do
+    state_brouillon
+      .where("brouillon_close_to_expiration_notice_sent_at < (now() - INTERVAL '1 month 5 days')")
+  end
+  scope :en_construction_expired, -> do
+    state_en_construction
+      .where("en_construction_close_to_expiration_notice_sent_at < (now() - INTERVAL '1 month 5 days')")
+  end
 
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
@@ -387,6 +398,14 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def log_operations?
+    !procedure.brouillon?
+  end
+
+  def keep_track_on_deletion?
+    !procedure.brouillon?
+  end
+
   def expose_legacy_carto_api?
     procedure.expose_legacy_carto_api?
   end
@@ -424,12 +443,14 @@ class Dossier < ApplicationRecord
   end
 
   def expired_keep_track!
-    DeletedDossier.create_from_dossier(self, :expired)
-    log_automatic_dossier_operation(:supprimer, self)
+    if keep_track_on_deletion?
+      DeletedDossier.create_from_dossier(self, :expired)
+      log_automatic_dossier_operation(:supprimer, self)
+    end
   end
 
   def delete_and_keep_track!(author, reason)
-    if en_construction?
+    if keep_track_on_deletion? && en_construction?
       deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
 
       administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
@@ -649,21 +670,25 @@ class Dossier < ApplicationRecord
   private
 
   def log_dossier_operation(author, operation, subject = nil)
-    DossierOperationLog.create_and_serialize(
-      dossier: self,
-      operation: DossierOperationLog.operations.fetch(operation),
-      author: author,
-      subject: subject
-    )
+    if log_operations?
+      DossierOperationLog.create_and_serialize(
+        dossier: self,
+        operation: DossierOperationLog.operations.fetch(operation),
+        author: author,
+        subject: subject
+      )
+    end
   end
 
   def log_automatic_dossier_operation(operation, subject = nil)
-    DossierOperationLog.create_and_serialize(
-      dossier: self,
-      operation: DossierOperationLog.operations.fetch(operation),
-      automatic_operation: true,
-      subject: subject
-    )
+    if log_operations?
+      DossierOperationLog.create_and_serialize(
+        dossier: self,
+        operation: DossierOperationLog.operations.fetch(operation),
+        automatic_operation: true,
+        subject: subject
+      )
+    end
   end
 
   def update_state_dates
