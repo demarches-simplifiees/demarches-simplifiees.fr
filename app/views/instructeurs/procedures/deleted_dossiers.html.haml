@@ -1,0 +1,69 @@
+- content_for(:title, "#{@procedure.libelle}")
+
+#procedure-show
+  .sub-header
+    .container.flex
+
+      .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
+        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
+
+      .procedure-header
+        %h1= procedure_libelle @procedure
+        = link_to 'gestion des notifications', email_notifications_instructeur_procedure_path(@procedure), class: 'header-link'
+        |
+        = link_to 'statistiques', stats_instructeur_procedure_path(@procedure), class: 'header-link', data: { turbolinks: false } # Turbolinks disabled for Chartkick. See Issue #350
+
+        - if @procedure.routee?
+          |
+          - if current_administrateur.present? && current_administrateur.owns?(@procedure)
+            = link_to 'instructeurs', procedure_groupe_instructeurs_path(@procedure), class: 'header-link'
+          - else
+            = link_to 'instructeurs', instructeur_groupes_path(@procedure), class: 'header-link'
+
+        %ul.tabs
+          = tab_item('à suivre',
+            instructeur_procedure_path(@procedure, statut: 'a-suivre'))
+          = tab_item(t('pluralize.followed', count: 1),
+            instructeur_procedure_path(@procedure, statut: 'suivis'),
+            active: @statut == 'suivis')
+
+          = tab_item(t('pluralize.processed', count: 1),
+            instructeur_procedure_path(@procedure, statut: 'traites'))
+
+          = tab_item('tous les dossiers',
+            instructeur_procedure_path(@procedure, statut: 'tous'))
+
+          = tab_item(t('pluralize.archived', count: 1),
+            instructeur_procedure_path(@procedure, statut: 'archives'),
+            active: true)
+
+  .container
+    %h1.titre-dossiers Dossiers supprimés
+    %details.explication-onglet
+      %summary Les dossiers ont été supprimés. Vous ne pouvez plus les récupérer depuis Démarches Simplifiées.
+      Ceci s'explique pour les raisons suivantes :
+      %ul
+        %li L'utilisateur a intentionnellement supprimé son dossier.
+        %li Le délai de conservation maximal de #{@procedure.duree_conservation_dossiers_dans_ds} mois a expiré. Conformément au règlement RGPD, DS ne peut continuer à les héberger.
+    - if @deleted_dossiers.any?
+      = paginate @deleted_dossiers
+      %table.table.dossiers-table.hoverable
+        %thead
+          %tr
+            %th.notification-col
+            %th.number-col N° dossier
+            %th.status-col Etat
+            %th.status-col Date de suppression
+        %tbody
+          - @deleted_dossiers.each do |deleted_dossier|
+            %tr
+              %td.folder-col
+                %span.icon.folder
+              %td.number-col= deleted_dossier.dossier_id
+              %td.status-col
+                = status_badge(deleted_dossier.state)
+              %td.date-col.deleted-cell= l(deleted_dossier.deleted_at, format: '%d/%m/%y')
+      = paginate @deleted_dossiers
+    - else
+      Aucun dossier supprimé
+
