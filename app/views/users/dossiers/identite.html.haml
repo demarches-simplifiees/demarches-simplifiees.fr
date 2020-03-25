@@ -12,8 +12,16 @@
       %span.mandatory *
       champs requis
 
-    = f.label :gender, class: "required"
-    = f.select :gender, [Individual::GENDER_MALE, Individual::GENDER_FEMALE], {}, class: "small"
+    %fieldset
+      %legend
+        = f.label :gender, class: "required"
+      .radios
+        %label
+          = f.radio_button :gender, Individual::GENDER_MALE
+          = Individual::GENDER_MALE
+        %label
+          = f.radio_button :gender, Individual::GENDER_FEMALE
+          = Individual::GENDER_FEMALE
 
     .flex
       .inline-champ

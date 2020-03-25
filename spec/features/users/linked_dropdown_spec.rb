@@ -62,6 +62,7 @@ feature 'linked dropdown lists' do
   end
 
   def fill_individual
+    choose 'M.'
     fill_in('individual_prenom', with: 'prenom')
     fill_in('individual_nom', with: 'nom')
     click_on 'Continuer'
