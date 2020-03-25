@@ -32,6 +32,10 @@
     display: block;
   }
 
+  .deleted-cell {
+    padding: (2 * $default-spacer) $default-spacer;
+  }
+
   .icon.folder {
     position: relative;
 
