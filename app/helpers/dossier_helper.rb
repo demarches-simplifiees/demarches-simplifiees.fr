@@ -89,6 +89,18 @@ module DossierHelper
     content_tag(:span, status_text, class: "label #{status_class} ")
   end
 
+  def deletion_reason_badge(reason)
+    if reason.present?
+      status_text = I18n.t(reason, scope: [:activerecord, :attributes, :deleted_dossier, :reason])
+      status_class = reason.tr('_', '-')
+    else
+      status_text = I18n.t(:unknown, scope: [:activerecord, :attributes, :deleted_dossier, :reason])
+      status_class = 'unknown'
+    end
+
+    content_tag(:span, status_text, class: "label #{status_class} ")
+  end
+
   private
 
   def dinum_instance?
