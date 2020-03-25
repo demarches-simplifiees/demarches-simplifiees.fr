@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe Devise::StoreLocationExtension, type: :controller do
   class TestController < ActionController::Base
     include Devise::Controllers::StoreLocation

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'As an administrateur', js: true do
   let(:administration) { create(:administration) }
   let(:admin_email) { 'new_admin@gouv.fr' }

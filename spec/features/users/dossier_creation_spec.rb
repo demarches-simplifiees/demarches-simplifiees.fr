@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Creating a new dossier:' do
   let(:user)  { create(:user) }
   let(:siret) { '40307130100044' }

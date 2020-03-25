@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Users::ProfilController, type: :controller do
   include ActiveJob::TestHelper
 

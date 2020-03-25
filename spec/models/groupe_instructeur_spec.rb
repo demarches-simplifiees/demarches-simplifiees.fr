@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GroupeInstructeur, type: :model do
   let(:procedure) { create(:procedure) }
   subject { GroupeInstructeur.new(label: label, procedure: procedure) }

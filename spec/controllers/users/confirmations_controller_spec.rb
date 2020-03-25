@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Users::ConfirmationsController, type: :controller do
   let!(:user) { create(:user, :unconfirmed) }
   let(:confirmation_token) { user.confirmation_token }

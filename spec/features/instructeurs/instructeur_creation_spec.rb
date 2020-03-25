@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'As an instructeur', js: true do
   let(:administrateur) { create(:administrateur, :with_procedure) }
   let(:procedure) { administrateur.procedures.first }

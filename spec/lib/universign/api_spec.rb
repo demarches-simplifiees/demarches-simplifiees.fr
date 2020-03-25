@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Universign::API do
   describe '.request_timestamp', vcr: { cassette_name: 'universign' } do
     subject { described_class.timestamp(digest) }

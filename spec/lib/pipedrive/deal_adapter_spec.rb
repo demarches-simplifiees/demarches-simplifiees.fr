@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Pipedrive::DealAdapter do
   let(:url) { PIPEDRIVE_API_URL }
   let(:status) { 200 }

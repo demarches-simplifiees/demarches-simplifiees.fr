@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe TypeDeChampPolicy do
   let(:procedure) { create(:procedure) }
   let!(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }

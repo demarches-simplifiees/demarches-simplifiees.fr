@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe AttachmentsController, type: :controller do
   let(:user) { create(:user) }
 

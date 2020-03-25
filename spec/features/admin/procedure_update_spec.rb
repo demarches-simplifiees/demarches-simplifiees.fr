@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'features/admin/procedure_spec_helper'
 
 feature 'Administrateurs can edit procedures', js: true do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe RenderPartialService do
   let(:service) { RenderPartialService.new(controller, method) }
   let(:controller) { ApplicationController }

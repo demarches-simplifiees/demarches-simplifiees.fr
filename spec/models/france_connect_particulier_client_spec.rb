@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FranceConnectParticulierClient do
   describe '#initialize' do
     subject { FranceConnectParticulierClient.new(code) }

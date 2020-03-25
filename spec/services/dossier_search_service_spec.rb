@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe DossierSearchService do
   describe '#matching_dossiers_for_instructeur' do
     subject { liste_dossiers }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'admin/mail_templates/edit.html.haml', type: :view do
   let(:procedure) { create(:procedure) }
   let(:mail_template) { create(:received_mail, procedure: procedure) }
