@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'layouts/_navbar.html.haml', type: :view do
   let(:administrateur) { create(:administrateur) }
   let(:instructeur) { create(:instructeur, administrateurs: [administrateur]) }

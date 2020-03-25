@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ProcedurePresentation do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
   let(:assign_to) { create(:assign_to, procedure: procedure) }

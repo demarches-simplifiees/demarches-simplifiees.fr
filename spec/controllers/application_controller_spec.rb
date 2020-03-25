@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApplicationController, type: :controller do
   describe 'before_action: set_raven_context' do
     it 'is present' do

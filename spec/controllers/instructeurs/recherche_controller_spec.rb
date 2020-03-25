@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Instructeurs::RechercheController, type: :controller do
   let(:dossier) { create(:dossier, :en_construction) }
   let(:dossier2) { create(:dossier, :en_construction, procedure: dossier.procedure) }

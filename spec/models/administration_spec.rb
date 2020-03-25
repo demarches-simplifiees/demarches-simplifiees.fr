@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Administration, type: :model do
   describe '#invite_admin' do
     let(:administration) { create :administration }

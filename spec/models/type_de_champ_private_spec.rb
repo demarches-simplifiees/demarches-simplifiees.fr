@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe TypeDeChamp do
   describe '#private?' do
     let(:type_de_champ) { build(:type_de_champ, :private) }

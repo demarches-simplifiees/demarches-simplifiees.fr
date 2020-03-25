@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ChampPolicy do
   let(:champ) { create(:champ_text, private: private, dossier: dossier) }
   let(:dossier) { create(:dossier, user: dossier_owner) }

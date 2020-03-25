@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'France Connect Particulier Connexion' do
   let(:code) { 'plop' }
   let(:given_name) { 'titi' }

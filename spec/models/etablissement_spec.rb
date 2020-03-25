@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Etablissement do
   describe '#geo_adresse' do
     let(:etablissement) { create(:etablissement) }

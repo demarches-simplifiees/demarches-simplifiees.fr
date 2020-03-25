@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Siret, type: :model do
   subject { Siret.new(siret: siret) }
 

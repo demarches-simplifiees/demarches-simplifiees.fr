@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Sign out' do
   context 'when a user is logged in' do
     let(:user) { create(:administrateur).user }

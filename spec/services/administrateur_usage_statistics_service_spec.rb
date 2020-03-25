@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe AdministrateurUsageStatisticsService do
   describe '#administrateur_stats' do
     let(:service) { AdministrateurUsageStatisticsService.new }

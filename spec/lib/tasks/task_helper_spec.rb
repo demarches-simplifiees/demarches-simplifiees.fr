@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ProgressReport, lib: true do
   context 'when the count pass above 100%' do
     let(:total) { 2 }

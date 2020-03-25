@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Instructeurs::ProceduresController, type: :controller do
   describe "before_action: ensure_ownership!" do
     it "is present" do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Individual do
   it { is_expected.to have_db_column(:gender) }
   it { is_expected.to have_db_column(:nom) }

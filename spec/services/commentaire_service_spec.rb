@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe CommentaireService do
   include ActiveJob::TestHelper
 
