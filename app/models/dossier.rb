@@ -22,7 +22,7 @@ class Dossier < ApplicationRecord
 
   TAILLE_MAX_ZIP = 50.megabytes
 
-  REMAINING_TIME_BEFORE_CLOSING = 2.days
+  REMAINING_DAYS_BEFORE_CLOSING = 2
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
@@ -188,7 +188,7 @@ class Dossier < ApplicationRecord
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
 
-  scope :brouillon_close_to_procedure_closing_date, -> do
+  scope :brouillon_near_procedure_closing_date, -> do
     # select users who have submitted dossier for the given 'procedures.id'
     users_who_submitted =
       state_not_brouillon
@@ -197,7 +197,7 @@ class Dossier < ApplicationRecord
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
     brouillon.joins(:procedure)
-      .where(procedures: { auto_archive_on: Time.zone.today + REMAINING_TIME_BEFORE_CLOSING })
+      .where("procedures.auto_archive_on = (now() + INTERVAL '#{REMAINING_DAYS_BEFORE_CLOSING} days')::date")
       .where.not(user: users_who_submitted)
   end
 
@@ -707,8 +707,8 @@ class Dossier < ApplicationRecord
   end
 
   def self.notify_draft_not_submitted
-    brouillon_close_to_procedure_closing_date
-      .includes(:procedure, :user)
+    brouillon_near_procedure_closing_date
+      .includes(:user)
       .find_each do |dossier|
         DossierMailer.notify_brouillon_not_submitted(dossier).deliver_later
       end

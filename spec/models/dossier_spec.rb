@@ -1155,18 +1155,18 @@ describe Dossier do
   describe '#notify_draft_not_submitted' do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
-    let!(:procedure_closed_in_time) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING) }
-    let!(:procedure_closed_later) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING + 1.day) }
-    let!(:procedure_closed_before) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING - 1.day) }
+    let!(:procedure_near_closing) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days) }
+    let!(:procedure_closed_later) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days + 1.day) }
+    let!(:procedure_closed_before) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days - 1.day) }
 
     # user 1 has three draft dossiers where one is for procedure that closes in two days ==> should trigger one mail
-    let!(:draft_near_closing) { create(:dossier, user: user1, procedure: procedure_closed_in_time) }
+    let!(:draft_near_closing) { create(:dossier, user: user1, procedure: procedure_near_closing) }
     let!(:draft_before) { create(:dossier, user: user1, procedure: procedure_closed_before) }
     let!(:draft_later) { create(:dossier, user: user1, procedure: procedure_closed_later) }
 
     # user 2 submitted a draft and en_construction dossier for the same procedure ==> should not trigger the mail
-    let!(:draft_near_closing_2) { create(:dossier, :en_construction, user: user2, procedure: procedure_closed_in_time) }
-    let!(:submitted_in_time_2) { create(:dossier, user: user2, procedure: procedure_closed_in_time) }
+    let!(:draft_near_closing_2) { create(:dossier, :en_construction, user: user2, procedure: procedure_near_closing) }
+    let!(:submitted_near_closing_2) { create(:dossier, user: user2, procedure: procedure_near_closing) }
 
     before do
       allow(DossierMailer).to receive(:notify_brouillon_not_submitted).and_return(double(deliver_later: nil))
