@@ -53,16 +53,21 @@
             %th.notification-col
             %th.number-col N° dossier
             %th.status-col Etat
+            %th.status-col Raison de suppression
             %th.status-col Date de suppression
         %tbody
           - @deleted_dossiers.each do |deleted_dossier|
             %tr
               %td.folder-col
                 %span.icon.folder
-              %td.number-col= deleted_dossier.dossier_id
+              %td.number-col
+                = deleted_dossier.dossier_id
               %td.status-col
                 = status_badge(deleted_dossier.state)
-              %td.date-col.deleted-cell= l(deleted_dossier.deleted_at, format: '%d/%m/%y')
+              %td.reason-col
+                = deletion_reason_badge(deleted_dossier.reason)
+              %td.date-col.deleted-cell
+                = l(deleted_dossier.deleted_at, format: '%d/%m/%y')
       = paginate @deleted_dossiers
     - else
       Aucun dossier supprimé
