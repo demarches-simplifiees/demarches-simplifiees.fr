@@ -1,0 +1,24 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p
+  Le dossier n°#{@dossier.id} pour la démarche  «&nbsp;
+  %strong
+    #{@dossier.procedure.libelle}
+  &nbsp;» est commencé mais n'est pas encore déposé.
+%p
+  Si vous souhaitez que ce dossier soit pris en compte, il vous faut le déposer avant le
+  #{l(@dossier.procedure.auto_archive_on - 1.day, format: '%-d %B %Y')} à 23h59, date de cloture de la démarche.
+%p
+  Pour cela, affichez le dossier avec le bouton ci-dessous, vérifiez votre dossier puis
+  cliquez sur le bouton
+  %strong
+    'Déposer le dossier'
+%p
+  Si vous ne souhaitez plus déposer le dossier, vous n'avez rien à faire.
+
+= round_button('Afficher votre dossier', dossier_url(@dossier), :primary)
+
+= render partial: "layouts/mailers/signature"

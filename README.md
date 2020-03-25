@@ -79,6 +79,7 @@ En local, un utilisateur de test est créé automatiquement, avec les identifian
     OperationsSignatureJob.set(cron: "0 6 * * *").perform_later
     ExpiredDossiersDeletionJob.set(cron: "0 7 * * *").perform_later
     PurgeStaleExportsJob.set(cron: "*/5 * * * *").perform_later
+    NotifyDraftNotSubmittedJob.set(cron: "0 7 * * *").perform_later
 
 ### Voir les emails envoyés en local
 
