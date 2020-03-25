@@ -23,6 +23,9 @@ class Dossier < ApplicationRecord
   TAILLE_MAX_ZIP = 50.megabytes
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
+  INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
+  INTERVAL_BEFORE_EXPIRATION = '1 month'
+  INTERVAL_EXPIRATION = '1 month 5 days'
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
@@ -174,26 +177,26 @@ class Dossier < ApplicationRecord
   scope :brouillon_close_to_expiration, -> do
     state_brouillon
       .joins(:procedure)
-      .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
+      .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :en_construction_close_to_expiration, -> do
     state_en_construction
       .joins(:procedure)
-      .where("dossiers.en_construction_at + dossiers.en_construction_conservation_extension + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
+      .where("dossiers.en_construction_at + dossiers.en_construction_conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :en_instruction_close_to_expiration, -> do
     state_en_instruction
       .joins(:procedure)
-      .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - INTERVAL '1 month' <= now()")
+      .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
 
   scope :brouillon_expired, -> do
     state_brouillon
-      .where("brouillon_close_to_expiration_notice_sent_at < (now() - INTERVAL '1 month 5 days')")
+      .where("brouillon_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
   end
   scope :en_construction_expired, -> do
     state_en_construction
-      .where("en_construction_close_to_expiration_notice_sent_at < (now() - INTERVAL '1 month 5 days')")
+      .where("en_construction_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
   end
 
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
@@ -223,7 +226,7 @@ class Dossier < ApplicationRecord
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
     brouillon.joins(:procedure)
-      .where("procedures.auto_archive_on = (now() + INTERVAL '#{REMAINING_DAYS_BEFORE_CLOSING} days')::date")
+      .where("procedures.auto_archive_on - INTERVAL :before_closing = :now", { now: Time.zone.today, before_closing: INTERVAL_BEFORE_CLOSING })
       .where.not(user: users_who_submitted)
   end
 
