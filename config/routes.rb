@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
 
     resources :dossiers, only: [:index, :show] do
-      post 'hide', on: :member
+      post 'discard', on: :member
       post 'repasser_en_instruction', on: :member
     end
 
