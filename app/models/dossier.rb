@@ -199,6 +199,21 @@ class Dossier < ApplicationRecord
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
 
+  scope :discarded_brouillon_expired, -> do
+    with_discarded
+      .discarded
+      .state_brouillon
+      .where('hidden_at < ?', 1.month.ago)
+  end
+  scope :discarded_en_construction_expired, -> do
+    with_discarded
+      .discarded
+      .state_en_construction
+      .joins(:procedure)
+      .where('dossiers.hidden_at < ?', 1.month.ago)
+      .where(procedures: { hidden_at: nil })
+  end
+
   scope :brouillon_near_procedure_closing_date, -> do
     # select users who have submitted dossier for the given 'procedures.id'
     users_who_submitted =
