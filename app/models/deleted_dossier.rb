@@ -20,4 +20,8 @@ class DeletedDossier < ApplicationRecord
       deleted_at: Time.zone.now
     )
   end
+
+  def procedure_removed?
+    reason == self.class.reasons.fetch(:procedure_removed)
+  end
 end

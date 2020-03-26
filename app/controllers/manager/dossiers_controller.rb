@@ -30,6 +30,15 @@ module Manager
       redirect_to manager_dossier_path(dossier)
     end
 
+    def restore
+      dossier = Dossier.with_discarded.find(params[:id])
+      dossier.restore(current_administration)
+
+      flash[:notice] = "Le dossier #{dossier.id} a été restauré."
+
+      redirect_to manager_dossier_path(dossier)
+    end
+
     def repasser_en_instruction
       dossier = Dossier.find(params[:id])
       dossier.repasser_en_instruction(current_administration)
