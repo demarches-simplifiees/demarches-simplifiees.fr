@@ -3,6 +3,8 @@
     champ.primary_options,
     { required: champ.mandatory? },
     { data: { secondary_options: champ.secondary_options } }
+  %span
+    = form.label :secondary_value, "Valeur secondaire dépendant de la première", class: 'hidden'
   = form.select :secondary_value,
     champ.secondary_options[champ.primary_value],
     { required: champ.mandatory? },

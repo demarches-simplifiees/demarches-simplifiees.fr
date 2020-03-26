@@ -80,6 +80,10 @@ class Champ < ApplicationRecord
     type_de_champ.to_typed_id
   end
 
+  def html_label?
+    true
+  end
+
   private
 
   def needs_dossier_id?
