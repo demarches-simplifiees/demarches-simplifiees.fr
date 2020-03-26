@@ -1,6 +1,20 @@
 describe Manager::UsersController, type: :controller do
   let(:administration) { create(:administration) }
 
+  describe '#show' do
+    render_views
+
+    let(:administration) { create(:administration) }
+    let(:user) { create(:user) }
+
+    before do
+      sign_in(administration)
+      get :show, params: { id: user.id }
+    end
+
+    it { expect(response.body).to include(user.email) }
+  end
+
   describe '#update' do
     let!(:user) { create(:user, email: 'ancien.email@domaine.fr') }
 
