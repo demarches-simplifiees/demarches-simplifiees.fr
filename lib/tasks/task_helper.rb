@@ -18,14 +18,16 @@ end
 class ProgressReport
   def initialize(total)
     @start = Time.zone.now
+    @last_progress = @start - 2.seconds
     rake_puts
     set_progress(total: total, count: 0)
   end
 
   def inc
     set_progress(count: @count + 1)
-    if @per_10_000 % 10 == 0
+    if Time.zone.now - @last_progress >= 1.second
       print_progress
+      @last_progress = Time.zone.now
     end
   end
 

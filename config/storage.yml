@@ -13,7 +13,7 @@ openstack:
     openstack_username: "<%= ENV['FOG_OPENSTACK_USERNAME'] %>"
     openstack_region: "<%= ENV['FOG_OPENSTACK_REGION'] %>"
     openstack_temp_url_key: "<%= ENV['FOG_OPENSTACK_TEMP_URL_KEY'] %>"
-amazon:
+minio:
   service: S3
   endpoint: "<%= ENV['S3_ENDPOINT'] %>"
   bucket: "<%= ENV['S3_BUCKET'] %>"
