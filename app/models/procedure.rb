@@ -517,11 +517,21 @@ class Procedure < ApplicationRecord
     groupe_instructeurs.count > 1
   end
 
+  def can_be_deleted_by_administrateur?
+    brouillon? || dossiers.state_instruction_commencee.empty?
+  end
+
   def can_be_deleted_by_manager?
-    kept? && dossiers.state_instruction_commencee.empty?
+    kept? && can_be_deleted_by_administrateur?
   end
 
   def discard_and_keep_track!(author)
+    if brouillon?
+      reset!
+    elsif publiee?
+      close!
+    end
+
     dossiers.each do |dossier|
       dossier.discard_and_keep_track!(author, :procedure_removed)
     end
