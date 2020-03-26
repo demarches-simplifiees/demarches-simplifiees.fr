@@ -28,28 +28,6 @@ class Champs::PieceJustificativeChamp < Champ
     mandatory? && !piece_justificative_file.attached?
   end
 
-  def piece_justificative_file_errors
-    errors = []
-
-    if piece_justificative_file.attached? && piece_justificative_file.previous_changes.present?
-      if piece_justificative_file.blob.byte_size > PIECE_JUSTIFICATIVE_FILE_MAX_SIZE
-        errors << "Le fichier #{piece_justificative_file.filename} est trop lourd, il doit faire au plus #{PIECE_JUSTIFICATIVE_FILE_MAX_SIZE.to_s(:human_size, precision: 2)}"
-      end
-
-      if !piece_justificative_file.blob.content_type.in?(PIECE_JUSTIFICATIVE_FILE_ACCEPTED_FORMATS)
-        errors << "Le fichier #{piece_justificative_file.filename} est dans un format que nous n'acceptons pas"
-      end
-
-      # FIXME: add Clamav check
-    end
-
-    if errors.present?
-      piece_justificative_file.purge_later
-    end
-
-    errors
-  end
-
   def for_api
     if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
       piece_justificative_file.service_url
