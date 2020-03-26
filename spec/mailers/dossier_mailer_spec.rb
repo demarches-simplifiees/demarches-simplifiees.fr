@@ -138,7 +138,7 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include("n° #{dossier.id} ") }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include("PDF") }
-    it { expect(subject.body).to include("Vous avez <b>un mois</b> pour commencer l'instruction du dossier.") }
+    it { expect(subject.body).to include("Vous avez <b>un mois</b> pour commencer l’instruction du dossier.") }
   end
 
   describe '.notify_en_construction_near_deletion_to_user' do
