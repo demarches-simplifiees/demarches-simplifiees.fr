@@ -1,7 +1,8 @@
 class Champs::PieceJustificativeChamp < Champ
-  PIECE_JUSTIFICATIVE_FILE_MAX_SIZE = 200.megabytes
+  MAX_SIZE = 200.megabytes
 
-  PIECE_JUSTIFICATIVE_FILE_ACCEPTED_FORMATS = [
+  ACCEPTED_FORMATS = [
+    "text/plain",
     "application/pdf",
     "application/msword",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -15,6 +16,13 @@ class Champs::PieceJustificativeChamp < Champ
     "image/png",
     "image/jpeg"
   ]
+
+  # TODO: once we're running on Rails 6, re-enable this validation.
+  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
+  #
+  # validates :piece_justificative_file,
+  #   content_type: ACCEPTED_FORMATS,
+  #   size: { less_than: MAX_SIZE }
 
   def main_value_name
     :piece_justificative_file
