@@ -670,7 +670,7 @@ describe Dossier do
     end
   end
 
-  describe "#delete_and_keep_track!" do
+  describe "#discard_and_keep_track!" do
     let(:dossier) { create(:dossier, :en_construction) }
     let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
@@ -681,7 +681,7 @@ describe Dossier do
       allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
-    subject! { dossier.delete_and_keep_track!(dossier.user, reason) }
+    subject! { dossier.discard_and_keep_track!(dossier.user, reason) }
 
     context 'brouillon' do
       let(:dossier) { create(:dossier) }
