@@ -1248,6 +1248,6 @@ describe Dossier do
     end
 
     it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
-    it { expect(Dossier.discarded_en_construction_expired.count).to eq(1) }
+    it { expect(Dossier.discarded_en_construction_expired.count).to eq(2) }
   end
 end

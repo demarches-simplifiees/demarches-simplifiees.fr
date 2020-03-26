@@ -212,9 +212,7 @@ class Dossier < ApplicationRecord
     with_discarded
       .discarded
       .state_en_construction
-      .joins(:procedure)
       .where('dossiers.hidden_at < ?', 1.month.ago)
-      .where(procedures: { hidden_at: nil })
   end
 
   scope :brouillon_near_procedure_closing_date, -> do
