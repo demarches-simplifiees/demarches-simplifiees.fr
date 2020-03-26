@@ -53,6 +53,12 @@ class Procedure < ApplicationRecord
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
   scope :declarative,           -> { where.not(declarative_with_state: nil) }
 
+  scope :discarded_expired, -> do
+    with_discarded
+      .discarded
+      .where('hidden_at < ?', 1.month.ago)
+  end
+
   scope :for_api, -> {
     includes(
       :administrateurs,
