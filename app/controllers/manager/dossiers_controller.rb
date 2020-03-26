@@ -22,7 +22,7 @@ module Manager
 
     def hide
       dossier = Dossier.find(params[:id])
-      dossier.delete_and_keep_track(current_administration)
+      dossier.delete_and_keep_track!(current_administration, :manager_request)
 
       logger.info("Le dossier #{dossier.id} est supprimé par #{current_administration.email}")
       flash[:notice] = "Le dossier #{dossier.id} a été supprimé."

@@ -26,7 +26,7 @@
 
   input[type=email] {
     width: auto;
-    margin-bottom: 0;
+    margin-bottom: $default-spacer;
   }
 
   .button {

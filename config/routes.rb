@@ -146,6 +146,7 @@ Rails.application.routes.draw do
       post '/carte/zones' => 'carte#zones'
       get '/carte' => 'carte#show'
       post '/carte' => 'carte#save'
+      post '/repousser-expiration' => 'dossiers#extend_conservation'
     end
 
     # Redirection of legacy "/users/dossiers" route to "/dossiers"
@@ -306,6 +307,7 @@ Rails.application.routes.draw do
         get 'stats'
         get 'email_notifications'
         patch 'update_email_notifications'
+        get 'deleted_dossiers'
 
         resources :dossiers, only: [:show], param: :dossier_id do
           member do

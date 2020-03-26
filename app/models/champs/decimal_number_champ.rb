@@ -2,8 +2,8 @@ class Champs::DecimalNumberChamp < Champ
   validates :value, numericality: {
     allow_nil: true,
     allow_blank: true,
-    message: -> (object, data) {
-      "« #{object.libelle} » " + object.errors.generate_message(data[:attribute].downcase, :not_a_number)
+    message: -> (object, _data) {
+      "« #{object.libelle} » " + object.errors.generate_message(:value, :not_a_number)
     }
   }
 

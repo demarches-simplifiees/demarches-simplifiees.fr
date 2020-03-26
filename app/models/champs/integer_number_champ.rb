@@ -3,8 +3,8 @@ class Champs::IntegerNumberChamp < Champ
     only_integer: true,
     allow_nil: true,
     allow_blank: true,
-    message: -> (object, data) {
-      "« #{object.libelle} » " + object.errors.generate_message(data[:attribute].downcase, :not_an_integer)
+    message: -> (object, _data) {
+      "« #{object.libelle} » " + object.errors.generate_message(:value, :not_an_integer)
     }
   }
 

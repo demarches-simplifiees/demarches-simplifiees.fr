@@ -16,6 +16,10 @@
     margin-bottom: 1 * $default-padding;
   }
 
+  .titre-dossiers {
+    text-align: center;
+  }
+
   .dossiers-table {
     margin-top: $default-spacer;
     margin-bottom: 3 * $default-spacer;
@@ -28,6 +32,11 @@
     .dropdown-items li {
       min-width: 150px;
     }
+  }
+
+  .afficher-dossiers-supprimes {
+    display: flex;
+    justify-content: flex-end;
   }
 
   .filter {
@@ -48,7 +57,7 @@
     display: inline-block;
   }
 
-  p.explication-onglet {
+  .explication-onglet {
     margin-bottom: 3 * $default-spacer;
     text-align: center;
   }

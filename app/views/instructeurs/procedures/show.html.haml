@@ -63,6 +63,10 @@
       %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, sans aucun filtre.
     - if @statut == 'archives'
       %p.explication-onglet Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
+      .afficher-dossiers-supprimes
+        = link_to deleted_dossiers_instructeur_procedure_path(@procedure) do
+          %span.icon.delete
+          Afficher les dossiers supprimés
 
     - if @dossiers.present? || @current_filters.count > 0
       = paginate @dossiers
@@ -139,7 +143,7 @@
 
               %td.status-col
                 = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
-                  = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+                  = status_badge(dossier.state)
               %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
       = paginate @dossiers
     - else

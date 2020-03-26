@@ -44,6 +44,12 @@
     }
   }
 
+  .form-label {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: $default-padding;
+  }
+
   .notice {
     @include notice-text-style;
     margin-top: - $default-spacer;

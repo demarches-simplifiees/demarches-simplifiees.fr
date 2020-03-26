@@ -16,6 +16,10 @@ class Champs::PieceJustificativeChamp < Champ
     "image/jpeg"
   ]
 
+  def main_value_name
+    :piece_justificative_file
+  end
+
   def search_terms
     # We don’t know how to search inside documents yet
   end
