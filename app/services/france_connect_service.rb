@@ -5,7 +5,8 @@ class FranceConnectService
     client.authorization_uri(
       scope: [:profile, :email],
       state: SecureRandom.hex(16),
-      nonce: SecureRandom.hex(16)
+      nonce: SecureRandom.hex(16),
+      acr_values: 'eidas1'
     )
   end
 
