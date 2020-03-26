@@ -511,9 +511,16 @@ class Procedure < ApplicationRecord
     groupe_instructeurs.count > 1
   end
 
-  def hide!
+  def can_be_deleted_by_manager?
+    kept? && dossiers.state_instruction_commencee.empty?
+  end
+
+  def discard_and_keep_track!(author)
+    dossiers.each do |dossier|
+      dossier.discard_and_keep_track!(author, :procedure_removed)
+    end
+
     discard!
-    dossiers.discard_all
   end
 
   def flipper_id

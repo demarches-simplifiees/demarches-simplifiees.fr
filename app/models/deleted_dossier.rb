@@ -4,10 +4,11 @@ class DeletedDossier < ApplicationRecord
   validates :dossier_id, uniqueness: true
 
   enum reason: {
-    user_request:    'user_request',
-    manager_request: 'manager_request',
-    user_removed:    'user_removed',
-    expired:         'expired'
+    user_request:      'user_request',
+    manager_request:   'manager_request',
+    user_removed:      'user_removed',
+    procedure_removed: 'procedure_removed',
+    expired:           'expired'
   }
 
   def self.create_from_dossier(dossier, reason)
