@@ -1,20 +1,20 @@
 describe Manager::DossiersController, type: :controller do
-  describe '#hide' do
+  describe '#discard' do
     let(:administration) { create :administration }
-    let!(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier) }
 
     before do
       sign_in administration
-      post :hide, params: { id: dossier.id }
+      post :discard, params: { id: dossier.id }
       dossier.reload
     end
 
-    it { expect(dossier.hidden_at).not_to be_nil }
+    it { expect(dossier.discarded?).to be_truthy }
   end
 
   describe '#repasser_en_instruction' do
     let(:administration) { create :administration }
-    let!(:dossier) { create(:dossier, :accepte) }
+    let(:dossier) { create(:dossier, :accepte) }
 
     before do
       sign_in administration
@@ -22,6 +22,6 @@ describe Manager::DossiersController, type: :controller do
       dossier.reload
     end
 
-    it { expect(dossier.en_instruction?).to be true }
+    it { expect(dossier.en_instruction?).to be_truthy }
   end
 end
