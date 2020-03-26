@@ -8,5 +8,5 @@ fr:
         one: "Le dossier en construction suivant sera bientôt automatiquement supprimé :"
         other: "Les dossiers en construction suivant seront bientôt automatiquement supprimés :"
       footer:
-        one: "Vous avez <b>un mois</b> pour commencer l'instruction du dossier."
-        other: "Vous avez <b>un mois</b> pour commencer l'instruction des dossiers."
+        one: "Vous avez <b>un mois</b> pour commencer l’instruction du dossier."
+        other: "Vous avez <b>un mois</b> pour commencer l’instruction des dossiers."
