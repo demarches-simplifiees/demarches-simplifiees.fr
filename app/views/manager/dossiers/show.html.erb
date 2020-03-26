@@ -33,6 +33,8 @@ as well as a link to its edit page.
     <% end %>
     <% if dossier.can_be_deleted_by_manager? %>
       <%= link_to 'Supprimer le dossier', discard_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous la suppression du dossier ?" } %>
+    <% elsif dossier.discarded? && !dossier.procedure.discarded? %>
+      <%= link_to 'Restaurer le dossier', restore_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous la restauration du dossier ?" } %>
     <% end %>
   </div>
 </header>

@@ -523,6 +523,14 @@ class Procedure < ApplicationRecord
     discard!
   end
 
+  def restore(author)
+    if discarded? && undiscard
+      dossiers.with_discarded.discarded.find_each do |dossier|
+        dossier.restore(author, true)
+      end
+    end
+  end
+
   def flipper_id
     "Procedure;#{id}"
   end

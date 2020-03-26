@@ -10,12 +10,14 @@ Rails.application.routes.draw do
       post 'whitelist', on: :member
       post 'draft', on: :member
       post 'discard', on: :member
+      post 'restore', on: :member
       post 'add_administrateur', on: :member
       post 'change_piece_justificative_template', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
       post 'discard', on: :member
+      post 'restore', on: :member
       post 'repasser_en_instruction', on: :member
     end
 

@@ -487,6 +487,19 @@ class Dossier < ApplicationRecord
     discard!
   end
 
+  def restore(author, only_discarded_with_procedure = false)
+    if discarded?
+      deleted_dossier = DeletedDossier.find_by(dossier_id: id)
+
+      if !only_discarded_with_procedure || deleted_dossier&.procedure_removed?
+        if undiscard && keep_track_on_deletion? && en_construction?
+          deleted_dossier&.destroy
+          log_dossier_operation(author, :restaurer, self)
+        end
+      end
+    end
+  end
+
   def after_passer_en_instruction(instructeur)
     instructeur.follow(self)
 

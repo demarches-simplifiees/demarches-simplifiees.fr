@@ -31,6 +31,14 @@ module Manager
       redirect_to manager_procedure_path(procedure)
     end
 
+    def restore
+      procedure.restore(current_administration)
+
+      flash[:notice] = "La démarche #{procedure.id} a été restauré."
+
+      redirect_to manager_procedure_path(procedure)
+    end
+
     def add_administrateur
       administrateur = Administrateur.by_email(params[:email])
       if administrateur
