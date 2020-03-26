@@ -92,4 +92,8 @@ class Administrateur < ApplicationRecord
 
     destroy
   end
+
+  # required to display feature flags field in manager
+  def features
+  end
 end

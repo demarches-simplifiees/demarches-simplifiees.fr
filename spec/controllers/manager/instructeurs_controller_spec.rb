@@ -1,9 +1,19 @@
 describe Manager::InstructeursController, type: :controller do
   let(:administration) { create(:administration) }
+  let(:instructeur) { create(:instructeur) }
+
+  describe '#show' do
+    render_views
+
+    before do
+      sign_in(administration)
+      get :show, params: { id: instructeur.id }
+    end
+
+    it { expect(response.body).to include(instructeur.email) }
+  end
 
   describe '#delete' do
-    let!(:instructeur) { create(:instructeur) }
-
     before { sign_in administration }
 
     subject { delete :delete, params: { id: instructeur.id } }
