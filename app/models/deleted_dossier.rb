@@ -1,5 +1,5 @@
 class DeletedDossier < ApplicationRecord
-  belongs_to :procedure
+  belongs_to :procedure, -> { with_discarded }, inverse_of: :deleted_dossiers
 
   validates :dossier_id, uniqueness: true
 
