@@ -23,7 +23,7 @@ fr:
   utils:
     deconnexion: "Déconnexion"
     involved: "Voir les personnes impliquées"
-    no-commentaires: "Il n'y a aucun message dans le fil de discussion, n'hésitez pas à initier le premier."
+    no-commentaires: "Il n’y a aucun message dans le fil de discussion, n’hésitez pas à initier le premier."
     depositaire: "Dépositaire"
     pieces: "Pièces jointes"
   views:
@@ -56,16 +56,16 @@ fr:
         publish: Publier
         reopen: Réactiver
   support:
-    info demarche: J'ai un problème lors du remplissage de mon dossier
-    info instruction: J'ai une question sur l'instruction de mon dossier
-    produit: J'ai une idée d'amélioration pour votre site
+    info demarche: J’ai un problème lors du remplissage de mon dossier
+    info instruction: J’ai une question sur l’instruction de mon dossier
+    produit: J’ai une idée d’amélioration pour votre site
     usager perdu: Je ne trouve pas la démarche que je veux faire
     autre: Autre sujet
   supportadmin:
     admin demande rdv: Demande de RDV pour une présentation à distance de demarches-simplifiees.fr
-    admin question: J'ai une question sur demarches-simplifiees.fr
-    admin soucis: J'ai un problème technique avec demarches-simplifiees.fr
-    admin suggestion produit: J'ai une proposition d'évolution
+    admin question: J’ai une question sur demarches-simplifiees.fr
+    admin soucis: J’ai un problème technique avec demarches-simplifiees.fr
+    admin suggestion produit: J’ai une proposition d’évolution
     admin demande compte: Je souhaite ouvrir un compte administrateur avec un email Orange, Wanadoo, etc.
     admin autre: Autre sujet
 
@@ -141,7 +141,7 @@ fr:
         user:
           attributes:
             reset_password_token:
-              invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d'en demander un nouveau."
+              invalid: ": Votre lien de nouveau mot de passe a expiré. Merci d’en demander un nouveau."
             email:
               invalid: invalide
               taken: déjà utilisé
@@ -165,28 +165,28 @@ fr:
             path:
               taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               taken_can_be_claimed: est identique à celui d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
-              invalid: n'est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
+              invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
 
   errors:
     messages:
       already_confirmed: "a déjà été validé(e), veuillez essayer de vous connecter"
       confirmation_period_expired: "à confirmer dans les %{period}, merci de faire une nouvelle demande"
-      expired: "a expiré, merci d'en faire une nouvelle demande"
-      not_found: "n'a pas été trouvé(e)"
-      not_locked: "n'était pas verrouillé(e)"
+      expired: "a expiré, merci d’en faire une nouvelle demande"
+      not_found: "n’a pas été trouvé(e)"
+      not_locked: "n’était pas verrouillé(e)"
       not_saved:
-        one: "1 erreur a empêché ce(tte) %{resource} d'être sauvegardé(e) :"
-        other: "%{count} erreurs ont empêché ce(tte) %{resource} d'être sauvegardé(e) :"
-      dossier_not_found: "Le dossier n'existe pas ou vous n'y avez pas accès."
-      dossier_map_not_activated: "Le dossier n'a pas accès à la cartographie."
+        one: "1 erreur a empêché ce(tte) %{resource} d’être sauvegardé(e) :"
+        other: "%{count} erreurs ont empêché ce(tte) %{resource} d’être sauvegardé(e) :"
+      dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
+      dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
       invalid_siret: "Le siret est incorrect"
-      procedure_not_found: "La démarche n'existe pas"
+      procedure_not_found: "La démarche n’existe pas"
       siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro SIRET.'
       siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
       etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
-      procedure_archived: "Cette démarche en ligne a été close, il n'est plus possible de déposer de dossier."
+      procedure_archived: "Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier."
       procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
       cadastres_empty:
         one: "Aucune parcelle cadastrale sur la zone sélectionnée"
@@ -263,19 +263,19 @@ fr:
         one: environ un an
         other: environ %{count} ans
       almost_x_years:
-        one: presqu'un an
+        one: presqu’un an
         other: presque %{count} ans
       half_a_minute: une demi-minute
       less_than_x_minutes:
-        zero: moins d'une minute
-        one: moins d'une minute
+        zero: moins d’une minute
+        one: moins d’une minute
         other: moins de %{count} minutes
       less_than_x_seconds:
-        zero: moins d'une seconde
-        one: moins d'une seconde
+        zero: moins d’une seconde
+        one: moins d’une seconde
         other: moins de %{count} secondes
       over_x_years:
-        one: plus d'un an
+        one: plus d’un an
         other: plus de %{count} ans
       x_days:
         one: 1 jour
