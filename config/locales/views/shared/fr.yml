@@ -3,4 +3,4 @@ fr:
     shared:
       dossiers:
         identite_entreprise:
-          warning_for_private_info: "L'établissement %{etablissement} a exercé son droit à la non publication des informations relatives à son identité. Les informations ne seront donc visibles que de la part des services instructeurs"
+          warning_for_private_info: "L’établissement %{etablissement} a exercé son droit à la non publication des informations relatives à son identité. Les informations ne seront donc visibles que de la part des services instructeurs"
