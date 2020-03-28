@@ -1,5 +1,5 @@
-class WarnExpiringDossiersJob < ApplicationJob
-  queue_as :cron
+class WarnExpiringDossiersJob < CronJob
+  self.cron_expression = "0 0 1 * *"
 
   def perform(*args)
     expiring, expired = Dossier
