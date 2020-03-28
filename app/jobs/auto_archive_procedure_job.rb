@@ -1,5 +1,5 @@
-class AutoArchiveProcedureJob < ApplicationJob
-  queue_as :cron
+class AutoArchiveProcedureJob < CronJob
+  self.cron_expression = "* * * * *"
 
   def perform(*args)
     Procedure.publiees.where("auto_archive_on <= ?", Time.zone.today).each do |procedure|
