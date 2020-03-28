@@ -65,22 +65,9 @@ L'application tourne à l'adresse `http://localhost:3000`.
 
 En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/demarches-simplifiees.fr/blob/dev/db/seeds.rb))
 
-### Programmation des jobs
+### Programmation des tâches récurrentes
 
-    AutoArchiveProcedureJob.set(cron: "* * * * *").perform_later
-    WeeklyOverviewJob.set(cron: "0 7 * * MON").perform_later
-    DeclarativeProceduresJob.set(cron: "* * * * *").perform_later
-    UpdateAdministrateurUsageStatisticsJob.set(cron: "0 10 * * *").perform_later
-    FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
-    Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
-    WarnExpiringDossiersJob.set(cron: "0 0 1 * *").perform_later
-    InstructeurEmailNotificationJob.set(cron: "0 10 * * MON-FRI").perform_later
-    PurgeUnattachedBlobsJob.set(cron: "0 0 * * *").perform_later
-    OperationsSignatureJob.set(cron: "0 6 * * *").perform_later
-    ExpiredDossiersDeletionJob.set(cron: "0 7 * * *").perform_later
-    PurgeStaleExportsJob.set(cron: "*/5 * * * *").perform_later
-    NotifyDraftNotSubmittedJob.set(cron: "0 7 * * *").perform_later
-    DiscardedDossiersDeletionJob.set(cron: "0 7 * * *").perform_later
+    rails jobs:schedule
 
 ### Voir les emails envoyés en local
 
