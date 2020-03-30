@@ -2,6 +2,7 @@
 @import "common";
 @import "constants";
 @import "mixins";
+@import "utils";
 
 $header-landing-breakpoint: 1040px;
 $header-mobile-breakpoint: 550px;
@@ -153,6 +154,10 @@ $header-mobile-breakpoint: 550px;
     max-width: 300px;
     min-width: 90px;
     margin: 0;
+  }
+
+  label.hidden {
+    @extend .hidden;
   }
 
   button {

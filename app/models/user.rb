@@ -125,7 +125,7 @@ class User < ApplicationRecord
   end
 
   def can_be_deleted?
-    administrateur.nil? && instructeur.nil? && dossiers.state_instruction_commencee.empty?
+    administrateur.nil? && instructeur.nil? && dossiers.with_discarded.state_instruction_commencee.empty?
   end
 
   def delete_and_keep_track_dossiers(administration)
@@ -134,7 +134,7 @@ class User < ApplicationRecord
     end
 
     dossiers.each do |dossier|
-      dossier.delete_and_keep_track(administration)
+      dossier.delete_and_keep_track!(administration, :user_removed)
     end
     dossiers.with_discarded.destroy_all
     destroy!

@@ -183,6 +183,12 @@ module Users
       end
     end
 
+    def extend_conservation
+      dossier.update(en_construction_conservation_extension: dossier.en_construction_conservation_extension + 1.month)
+      flash[:notice] = 'Votre dossier sera conservé un mois supplémentaire'
+      redirect_to dossier_path(@dossier)
+    end
+
     def modifier
       @dossier = dossier_with_champs
     end
@@ -220,7 +226,7 @@ module Users
       dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
 
       if dossier.can_be_deleted_by_user?
-        dossier.delete_and_keep_track(current_user)
+        dossier.delete_and_keep_track!(current_user, :user_request)
         flash.notice = 'Votre dossier a bien été supprimé.'
         redirect_to dossiers_path
       else

@@ -4,7 +4,7 @@ describe ExpiredDossiersDeletionService do
   describe '#process_expired_dossiers_brouillon' do
     let(:draft_expiration) { 1.month + 5.days }
     let!(:today) { Time.zone.now.at_midnight }
-    let!(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:date_close_to_expiration) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 1.month }
     let!(:date_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
     let!(:date_not_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
@@ -34,7 +34,7 @@ describe ExpiredDossiersDeletionService do
       it 'deletes and notify expired brouillon' do
         expect(DossierMailer).to have_received(:notify_brouillon_deletion).once
         expect(DossierMailer).to have_received(:notify_brouillon_deletion).with([expired_brouillon.hash_for_deletion_mail], expired_brouillon.user.email)
-        expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).to be_present
+        expect(DeletedDossier.find_by(dossier_id: expired_brouillon.id)).not_to be_present
         expect { expired_brouillon.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
@@ -192,7 +192,7 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'when an instructeur is also administrateur' do
-      let!(:procedure) { create(:procedure) }
+      let!(:procedure) { create(:procedure, :published) }
       let!(:administrateur) { procedure.administrateurs.first }
       let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
 

@@ -57,10 +57,6 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_brouillon_not_submitted(draft)
   end
 
-  def notify_dossier_not_submitted
-    DossierMailer.notify_dossier_not_submitted(draft)
-  end
-
   private
 
   def usager_email
@@ -84,7 +80,7 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   def procedure
-    Procedure.new(id: 1234, libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'), auto_archive_on: Time.zone.today + Dossier::REMAINING_TIME_BEFORE_CLOSING)
+    Procedure.new(id: 1234, libelle: 'Dotation d’Équipement des Territoires Ruraux - Exercice 2019', service: service, logo: Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png'), auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days)
   end
 
   def service

@@ -30,7 +30,7 @@
             %td= link_to(dossier.user.email, dossier_linked_path(current_instructeur, dossier), class: 'cell-link')
             %td.status-col
               = link_to(dossier_linked_path(current_instructeur, dossier), class: 'cell-link') do
-                = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+                = status_badge(dossier.state)
             %td.action-col.follow-col= render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
   - else
     %h2 Aucun dossier correspondant à votre recherche n'a été trouvé

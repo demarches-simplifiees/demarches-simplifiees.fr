@@ -18,7 +18,7 @@ class Administrateur < ApplicationRecord
   end
 
   def email
-    user.email
+    user&.email
   end
 
   # validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
