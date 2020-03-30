@@ -62,7 +62,6 @@ export function ajax(options) {
 }
 
 export function getJSON(url, data, method = 'get') {
-  incrementActiveRequestsCount();
   data = method !== 'get' ? JSON.stringify(data) : data;
   return Promise.resolve(
     $.ajax({
@@ -72,7 +71,7 @@ export function getJSON(url, data, method = 'get') {
       contentType: 'application/json',
       dataType: 'json'
     })
-  ).finally(decrementActiveRequestsCount);
+  );
 }
 
 export function scrollTo(container, scrollTo) {
@@ -114,16 +113,4 @@ export function timeoutable(promise, timeoutDelay) {
     }, timeoutDelay);
   });
   return Promise.race([promise, timeoutPromise]);
-}
-
-const DATA_ACTIVE_REQUESTS_COUNT = 'data-active-requests-count';
-
-function incrementActiveRequestsCount() {
-  const count = document.body.getAttribute(DATA_ACTIVE_REQUESTS_COUNT) || '0';
-  document.body.setAttribute(DATA_ACTIVE_REQUESTS_COUNT, parseInt(count) + 1);
-}
-
-function decrementActiveRequestsCount() {
-  const count = document.body.getAttribute(DATA_ACTIVE_REQUESTS_COUNT) || '0';
-  document.body.setAttribute(DATA_ACTIVE_REQUESTS_COUNT, parseInt(count) - 1);
 }
