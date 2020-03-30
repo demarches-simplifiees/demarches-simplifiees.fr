@@ -33,6 +33,7 @@
   border-color: red;
 }
 
-input[type=file][data-direct-upload-url][disabled] {
+input[type=file][data-direct-upload-url][disabled],
+input[type=file][data-auto-attach-url][disabled] {
   display: none;
 }
