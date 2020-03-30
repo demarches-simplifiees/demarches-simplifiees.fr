@@ -13,8 +13,14 @@ export function hide(el) {
   el && el.classList.add('hidden');
 }
 
-export function toggle(el) {
-  el && el.classList.toggle('hidden');
+export function toggle(el, force) {
+  if (force == undefined) {
+    el & el.classList.toggle('hidden');
+  } else if (force) {
+    el && el.classList.remove('hidden');
+  } else {
+    el && el.classList.add('hidden');
+  }
 }
 
 export function enable(el) {
