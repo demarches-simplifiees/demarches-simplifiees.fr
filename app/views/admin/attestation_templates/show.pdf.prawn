@@ -38,12 +38,12 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
 
   pdf.bounding_box([0, pdf.cursor], width: body_width, height: body_height) do
     if logo.present?
-      logo_file = if logo.is_a?(ActiveStorage::Attached::One)
+      logo_content = if logo.is_a?(ActiveStorage::Attached::One)
         logo.download
       else
-        logo.read
+        logo.rewind && logo.read
       end
-      pdf.image StringIO.new(logo_file), fit: [max_logo_width , max_logo_height], position: :center
+      pdf.image StringIO.new(logo_content), fit: [max_logo_width , max_logo_height], position: :center
     end
 
     pdf.fill_color grey
@@ -57,12 +57,12 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
 
     if signature.present?
       pdf.pad_top(40) do
-        signature_file = if signature.is_a?(ActiveStorage::Attached::One)
+        signature_content = if signature.is_a?(ActiveStorage::Attached::One)
           signature.download
         else
-          signature.read
+          signature.rewind && signature.read
         end
-        pdf.image StringIO.new(signature_file), fit: [max_signature_size , max_signature_size], position: :right
+        pdf.image StringIO.new(signature_content), fit: [max_signature_size , max_signature_size], position: :right
       end
     end
   end

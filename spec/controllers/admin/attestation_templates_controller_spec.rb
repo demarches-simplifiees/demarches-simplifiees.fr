@@ -46,6 +46,14 @@ describe Admin::AttestationTemplatesController, type: :controller do
     context 'if an attestation template does not exist on the procedure' do
       let(:attestation_template) { nil }
 
+      context 'with images' do
+        let(:upload_params) { { title: 't', body: 'b', footer: 'f', logo: interlaced_logo } }
+
+        it { expect(assigns(:attestation)).to include({ title: 't', body: 'b', footer: 'f' }) }
+        it { expect(assigns(:attestation)[:logo]).to be_present }
+        it_behaves_like 'rendering a PDF successfully'
+      end
+
       context 'without images' do
         let(:upload_params) { { title: 't', body: 'b', footer: 'f' } }
 
