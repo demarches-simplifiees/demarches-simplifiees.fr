@@ -3,3 +3,4 @@ fr:
     attributes:
       champ:
         value: La valeur du champ
+        piece_justificative_file: La pièce justificative
