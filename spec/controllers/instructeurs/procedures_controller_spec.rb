@@ -413,7 +413,6 @@ describe Instructeurs::ProceduresController, type: :controller do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
     let(:deleted_dossier) { create(:deleted_dossier, procedure: procedure, state: :en_construction) }
-    let!(:deleted_dossier_brouillon) { create(:deleted_dossier, procedure: procedure, state: :brouillon) }
 
     before do
       sign_in(instructeur.user)
