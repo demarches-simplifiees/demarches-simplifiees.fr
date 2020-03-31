@@ -22,7 +22,17 @@
       .attachment-action
         = button_tag 'Remplacer', type: 'button', class: 'button small', data: { 'toggle-target': ".attachment-input-#{attachment_id}" }
 
+  .attachment-error.hidden
+    .attachment-error-message
+      %p.attachment-error-title
+        Une erreur s’est produite pendant l’envoi du fichier.
+      %p.attachment-error-description
+    = button_tag type: 'button', class: 'button attachment-error-retry', data: { 'input-target': ".attachment-input-#{attachment_id}" } do
+      %span.icon.retry
+      Ré-essayer
+
   = form.file_field attached_file.name,
     class: "attachment-input attachment-input-#{attachment_id} #{'hidden' if persisted}",
     accept: accept,
-    direct_upload: true
+    direct_upload: true,
+    data: { 'auto-attach-url': auto_attach_url(form, form.object) }
