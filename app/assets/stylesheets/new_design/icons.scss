@@ -67,6 +67,10 @@
     background-image: image-url("icons/preview.svg");
   }
 
+  &.retry {
+    background-image: image-url("icons/retry.svg");
+  }
+
   &.download {
     background-image: image-url("icons/download.svg");
   }

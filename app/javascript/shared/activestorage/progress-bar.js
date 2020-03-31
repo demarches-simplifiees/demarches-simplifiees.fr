@@ -41,7 +41,7 @@ export default class ProgressBar {
   }
 
   static render(id, filename) {
-    return `<div id="direct-upload-${id}" class="direct-upload ${PENDING_CLASS}">
+    return `<div id="direct-upload-${id}" class="direct-upload ${PENDING_CLASS}" data-direct-upload-id="${id}">
       <div class="direct-upload__progress" style="width: 0%"></div>
       <span class="direct-upload__filename">${filename}</span>
     </div>`;
