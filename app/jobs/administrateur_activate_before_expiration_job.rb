@@ -1,5 +1,5 @@
-class Administrateurs::ActivateBeforeExpirationJob < ApplicationJob
-  queue_as :cron
+class AdministrateurActivateBeforeExpirationJob < CronJob
+  self.cron_expression = "0 8 * * *"
 
   def perform(*args)
     Administrateur
