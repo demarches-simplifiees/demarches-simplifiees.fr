@@ -1,5 +1,5 @@
-class PurgeUnattachedBlobsJob < ApplicationJob
-  queue_as :cron
+class PurgeUnattachedBlobsJob < CronJob
+  self.cron_expression = "0 0 * * *"
 
   def perform(*args)
     ActiveStorage::Blob.unattached

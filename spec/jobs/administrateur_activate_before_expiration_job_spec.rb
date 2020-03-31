@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe Administrateurs::ActivateBeforeExpirationJob, type: :job do
+RSpec.describe AdministrateurActivateBeforeExpirationJob, type: :job do
   describe 'perform' do
     let(:administrateur) { create(:administrateur) }
     let(:user) { administrateur.user }
     let(:mailer_double) { double('mailer', deliver_later: true) }
 
-    subject { Administrateurs::ActivateBeforeExpirationJob.perform_now }
+    subject { AdministrateurActivateBeforeExpirationJob.perform_now }
 
     before do
       Timecop.freeze(Time.zone.local(2018, 03, 20))
