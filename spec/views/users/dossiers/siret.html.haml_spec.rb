@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'users/dossiers/siret.html.haml', type: :view do
   let(:dossier) { create(:dossier) }
 

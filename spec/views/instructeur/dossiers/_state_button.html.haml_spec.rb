@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
   include DossierHelper
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Getting help:' do
   scenario 'a Help button is visible on public pages' do
     visit '/'

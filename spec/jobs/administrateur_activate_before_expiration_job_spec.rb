@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe AdministrateurActivateBeforeExpirationJob, type: :job do
   describe 'perform' do
     let(:administrateur) { create(:administrateur) }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Champs::LinkedDropDownListChamp do
   describe '#unpack_value' do
     let(:champ) { described_class.new(value: '["tata", "tutu"]') }

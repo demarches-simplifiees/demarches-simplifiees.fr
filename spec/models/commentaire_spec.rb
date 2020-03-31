@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Commentaire do
   it { is_expected.to have_db_column(:email) }
   it { is_expected.to have_db_column(:body) }

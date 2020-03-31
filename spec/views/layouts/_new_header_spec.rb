@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'layouts/_new_header.html.haml', type: :view do
   let(:current_instructeur) { nil }
 

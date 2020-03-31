@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe BizDev, lib: true do
   let(:first_biz_dev_id) { BizDev::PIPEDRIVE_ID }
   let(:non_biz_dev_id) { first_biz_dev_id - 1 }

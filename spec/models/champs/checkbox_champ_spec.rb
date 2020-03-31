@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Champs::CheckboxChamp do
   let(:checkbox) { Champs::CheckboxChamp.new(value: value) }
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'admin/assigns/show.html.haml', type: :view do
   let(:admin) { create(:administrateur) }
   let(:procedure) { create :procedure, administrateur: admin }

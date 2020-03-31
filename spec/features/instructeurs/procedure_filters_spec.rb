@@ -1,5 +1,3 @@
-require "spec_helper"
-
 feature "procedure filters" do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, :with_type_de_champ, instructeurs: [instructeur]) }

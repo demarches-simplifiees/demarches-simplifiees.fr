@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Champs::HeaderSectionChamp do
   describe '#section_index' do
     let(:types_de_champ) do

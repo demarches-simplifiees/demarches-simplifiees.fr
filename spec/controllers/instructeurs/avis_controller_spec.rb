@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Instructeurs::AvisController, type: :controller do
   context 'with a instructeur signed in' do
     render_views

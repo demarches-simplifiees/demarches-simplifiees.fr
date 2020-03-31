@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::AssignsController, type: :controller do
   let(:admin) { create(:administrateur) }
 

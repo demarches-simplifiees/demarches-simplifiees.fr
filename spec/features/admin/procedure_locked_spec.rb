@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'procedure locked' do
   let(:administrateur) { create(:administrateur) }
 

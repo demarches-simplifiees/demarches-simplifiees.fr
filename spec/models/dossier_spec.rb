@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe Dossier do
   include ActiveJob::TestHelper
 

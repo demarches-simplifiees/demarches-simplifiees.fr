@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::MailTemplatesController, type: :controller do
   let(:procedure) { create :procedure }
   let(:initiated_mail) { Mails::InitiatedMail.default_for_procedure(procedure) }

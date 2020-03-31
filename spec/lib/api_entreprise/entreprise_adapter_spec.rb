@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApiEntreprise::EntrepriseAdapter do
   let(:siren) { '418166096' }
   let(:procedure_id) { 22 }
