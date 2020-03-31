@@ -119,6 +119,7 @@ Rails.application.routes.draw do
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
     post ':position/carte', to: 'carte#show', as: :carte
     post ':position/repetition', to: 'repetition#show', as: :repetition
+    put ':position/piece_justificative', to: 'piece_justificative#update', as: :piece_justificative
   end
 
   get 'attachments/:id', to: 'attachments#show', as: :attachment

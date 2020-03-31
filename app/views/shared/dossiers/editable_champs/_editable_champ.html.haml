@@ -1,4 +1,4 @@
-.editable-champ{ class: "editable-champ-#{champ.type_champ}" }
+.editable-champ{ class: "editable-champ-#{champ.type_champ}", data: { 'champ-id': champ.id } }
   - if champ.repetition?
     %h3.header-subsection= champ.libelle
     - if champ.description.present?

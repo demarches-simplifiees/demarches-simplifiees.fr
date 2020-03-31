@@ -1,3 +1,4 @@
+@import "colors";
 @import "constants";
 
 .attachment-actions {
@@ -10,6 +11,38 @@
 
   .button {
     text-transform: lowercase;
+  }
+}
+
+.attachment-error {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  align-items: center;
+  margin-bottom: $default-padding;
+  padding: $default-padding;
+  background: $background-red;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.attachment-error-message {
+  display: inline-block;
+  margin-right: $default-padding;
+  color: $medium-red;
+}
+
+.attachment-error-title {
+  font-weight: bold;
+}
+
+.attachment-error-retry {
+  white-space: nowrap;
+
+  &.hidden {
+    display: none;
   }
 }
 
