@@ -53,6 +53,12 @@ class Procedure < ApplicationRecord
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
   scope :declarative,           -> { where.not(declarative_with_state: nil) }
 
+  scope :discarded_expired, -> do
+    with_discarded
+      .discarded
+      .where('hidden_at < ?', 1.month.ago)
+  end
+
   scope :for_api, -> {
     includes(
       :administrateurs,
@@ -511,9 +517,34 @@ class Procedure < ApplicationRecord
     groupe_instructeurs.count > 1
   end
 
-  def hide!
+  def can_be_deleted_by_administrateur?
+    brouillon? || dossiers.state_instruction_commencee.empty?
+  end
+
+  def can_be_deleted_by_manager?
+    kept? && can_be_deleted_by_administrateur?
+  end
+
+  def discard_and_keep_track!(author)
+    if brouillon?
+      reset!
+    elsif publiee?
+      close!
+    end
+
+    dossiers.each do |dossier|
+      dossier.discard_and_keep_track!(author, :procedure_removed)
+    end
+
     discard!
-    dossiers.discard_all
+  end
+
+  def restore(author)
+    if discarded? && undiscard
+      dossiers.with_discarded.discarded.find_each do |dossier|
+        dossier.restore(author, true)
+      end
+    end
   end
 
   def flipper_id

@@ -1,6 +1,6 @@
 class GroupeInstructeur < ApplicationRecord
   DEFAULT_LABEL = 'défaut'
-  belongs_to :procedure
+  belongs_to :procedure, -> { with_discarded }, inverse_of: :groupe_instructeurs
   has_many :assign_tos
   has_many :instructeurs, through: :assign_tos, dependent: :destroy
   has_many :dossiers
