@@ -5,7 +5,7 @@ fr:
         reason:
           user_request: Demande d’usager
           manager_request: Demande d’administration
-          user_removed: Suppression d'un compte usager
+          user_removed: Suppression d’un compte usager
           expired: Expiration
           unknown: Inconnue
 

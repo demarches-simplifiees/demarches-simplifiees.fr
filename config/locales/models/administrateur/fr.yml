@@ -12,7 +12,7 @@ fr:
             password:
               too_short: 'est trop court'
               blank: 'doit être rempli'
-              not_strong: "n'est pas assez complexe"
+              not_strong: "n’est pas assez complexe"
         instructeur:
           attributes:
             email:
@@ -20,7 +20,7 @@ fr:
             password:
               too_short: 'est trop court'
               blank: 'doit être rempli'
-              not_strong: "n'est pas assez complexe"
+              not_strong: "n’est pas assez complexe"
         user:
           attributes:
             email:
@@ -28,4 +28,4 @@ fr:
             password:
               too_short: 'est trop court'
               blank: 'doit être rempli'
-              not_strong: "n'est pas assez complexe"
+              not_strong: "n’est pas assez complexe"

@@ -1229,12 +1229,12 @@ enum TypeOrganisme {
   etablissement_enseignement
 
   """
-  Opérateur d'État
+  Opérateur d’État
   """
   operateur_d_etat
 
   """
-  Service déconcentré de l'État
+  Service déconcentré de l’État
   """
   service_deconcentre_de_l_etat
 }

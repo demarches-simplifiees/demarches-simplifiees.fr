@@ -283,7 +283,7 @@ describe Dossier do
 
       subject { dossier.text_summary }
 
-      it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la démarche Démarche gérée par l'organisme nom du service") }
+      it { is_expected.to eq("Dossier déposé le 31/12/2010 sur la démarche Démarche gérée par l’organisme nom du service") }
     end
 
     context 'when the dossier has not been en_construction' do
@@ -291,7 +291,7 @@ describe Dossier do
 
       subject { dossier.text_summary }
 
-      it { is_expected.to eq("Dossier en brouillon répondant à la démarche Démarche gérée par l'organisme nom du service") }
+      it { is_expected.to eq("Dossier en brouillon répondant à la démarche Démarche gérée par l’organisme nom du service") }
     end
   end
 
