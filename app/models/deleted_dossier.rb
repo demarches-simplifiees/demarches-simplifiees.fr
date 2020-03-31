@@ -1,6 +1,8 @@
 class DeletedDossier < ApplicationRecord
   belongs_to :procedure
 
+  validates :dossier_id, uniqueness: true
+
   enum reason: {
     user_request:    'user_request',
     manager_request: 'manager_request',
