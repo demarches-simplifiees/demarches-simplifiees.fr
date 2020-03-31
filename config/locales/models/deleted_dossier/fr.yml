@@ -6,6 +6,6 @@ fr:
           user_request: Demande d’usager
           manager_request: Demande d’administration
           user_removed: Suppression d’un compte usager
+          procedure_removed: Suppression d’une démarche
           expired: Expiration
           unknown: Inconnue
-

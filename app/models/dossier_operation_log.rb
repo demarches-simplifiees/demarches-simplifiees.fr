@@ -8,6 +8,7 @@ class DossierOperationLog < ApplicationRecord
     refuser: 'refuser',
     classer_sans_suite: 'classer_sans_suite',
     supprimer: 'supprimer',
+    restaurer: 'restaurer',
     modifier_annotation: 'modifier_annotation',
     demander_un_avis: 'demander_un_avis'
   }

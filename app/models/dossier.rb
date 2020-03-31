@@ -212,9 +212,7 @@ class Dossier < ApplicationRecord
     with_discarded
       .discarded
       .state_en_construction
-      .joins(:procedure)
       .where('dossiers.hidden_at < ?', 1.month.ago)
-      .where(procedures: { hidden_at: nil })
   end
 
   scope :brouillon_near_procedure_closing_date, -> do
@@ -485,6 +483,19 @@ class Dossier < ApplicationRecord
     end
 
     discard!
+  end
+
+  def restore(author, only_discarded_with_procedure = false)
+    if discarded?
+      deleted_dossier = DeletedDossier.find_by(dossier_id: id)
+
+      if !only_discarded_with_procedure || deleted_dossier&.procedure_removed?
+        if undiscard && keep_track_on_deletion? && en_construction?
+          deleted_dossier&.destroy
+          log_dossier_operation(author, :restaurer, self)
+        end
+      end
+    end
   end
 
   def after_passer_en_instruction(instructeur)
