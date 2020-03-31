@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe DossierHelper, type: :helper do
   describe ".highlight_if_unseen_class" do
     let(:seen_at) { Time.zone.now }

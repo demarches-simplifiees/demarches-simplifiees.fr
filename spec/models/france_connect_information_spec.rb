@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FranceConnectInformation, type: :model do
   describe 'validation' do
     context 'france_connect_particulier_id' do

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Instructeurs::DossiersController, type: :controller do
   render_views
 

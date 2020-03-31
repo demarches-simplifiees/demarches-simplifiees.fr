@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'admin/_closed_mail_template_attestation_inconsistency_alert.html.haml', type: :view do
   let(:procedure) { create(:procedure, closed_mail: closed_mail) }
 

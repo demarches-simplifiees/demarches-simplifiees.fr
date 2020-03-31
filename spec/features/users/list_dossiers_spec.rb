@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'user access to the list of their dossiers' do
   let(:user) { create(:user) }
   let!(:dossier_brouillon)       { create(:dossier, user: user) }

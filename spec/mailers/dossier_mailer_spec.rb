@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe DossierMailer, type: :mailer do
   let(:to_email) { 'instructeur@exemple.gouv.fr' }
 

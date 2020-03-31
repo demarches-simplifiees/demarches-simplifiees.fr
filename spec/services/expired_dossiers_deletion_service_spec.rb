@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ExpiredDossiersDeletionService do
   describe '#process_expired_dossiers_brouillon' do
     let(:draft_expiration) { 1.month + 5.days }
@@ -106,14 +104,14 @@ describe ExpiredDossiersDeletionService do
       end
 
       context 'when a notice has been sent not so long ago' do
-        let(:notice_sent_at) { (warning_period - 1.day).ago }
+        let(:notice_sent_at) { (warning_period - 4.days).ago }
 
         it { expect { dossier.reload }.not_to raise_error }
         it { expect(DossierMailer).not_to have_received(:notify_brouillon_deletion) }
       end
 
       context 'when a notice has been sent a long time ago' do
-        let(:notice_sent_at) { (warning_period + 1.day).ago }
+        let(:notice_sent_at) { (warning_period + 4.days).ago }
 
         it { expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound) }
 
@@ -233,7 +231,7 @@ describe ExpiredDossiersDeletionService do
       end
 
       context 'when a notice has been sent not so long ago' do
-        let(:notice_sent_at) { (warning_period - 1.day).ago }
+        let(:notice_sent_at) { (warning_period - 4.days).ago }
 
         it { expect { dossier.reload }.not_to raise_error }
         it { expect(DossierMailer).not_to have_received(:notify_automatic_deletion_to_user) }
@@ -241,7 +239,7 @@ describe ExpiredDossiersDeletionService do
       end
 
       context 'when a notice has been sent a long time ago' do
-        let(:notice_sent_at) { (warning_period + 1.day).ago }
+        let(:notice_sent_at) { (warning_period + 4.days).ago }
 
         it { expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound) }
 

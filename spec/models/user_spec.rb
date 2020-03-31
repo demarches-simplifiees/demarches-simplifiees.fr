@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe User, type: :model do
   describe '#after_confirmation' do
     let(:email) { 'mail@beta.gouv.fr' }
@@ -251,7 +249,7 @@ describe User, type: :model do
     context 'with a dossier in instruction' do
       let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
       it 'raises' do
-        expect { user.delete_and_keep_track_dossiers(administration) }.to raise_error
+        expect { user.delete_and_keep_track_dossiers(administration) }.to raise_error(RuntimeError)
       end
     end
 

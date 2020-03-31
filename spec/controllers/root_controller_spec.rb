@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe RootController, type: :controller do
   subject { get :index }
 

@@ -1,6 +1,4 @@
 class EtablissementUpdateJob < ApplicationJob
-  queue_as :default
-
   def perform(dossier, siret)
     begin
       etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(siret, dossier.procedure_id)

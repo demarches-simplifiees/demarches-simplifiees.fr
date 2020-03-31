@@ -1,5 +1,5 @@
-class OperationsSignatureJob < ApplicationJob
-  queue_as :cron
+class OperationsSignatureJob < CronJob
+  self.cron_expression = "0 6 * * *"
 
   def perform(*args)
     last_midnight = Time.zone.today.beginning_of_day

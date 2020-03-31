@@ -1,4 +1,5 @@
 include ActionDispatch::TestProcess
+
 describe Admin::AttestationTemplatesController, type: :controller do
   let!(:attestation_template) { create(:attestation_template) }
   let(:admin) { create(:administrateur) }
@@ -16,6 +17,14 @@ describe Admin::AttestationTemplatesController, type: :controller do
   end
 
   after { Timecop.return }
+
+  shared_examples 'rendering a PDF successfully' do
+    render_views
+    it 'renders a PDF' do
+      expect(subject.status).to eq(200)
+      expect(subject.content_type).to eq('application/pdf')
+    end
+  end
 
   describe 'POST #preview' do
     let(:upload_params) { { title: 't', body: 'b', footer: 'f' } }
@@ -36,31 +45,44 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
     context 'if an attestation template does not exist on the procedure' do
       let(:attestation_template) { nil }
-      it { expect(subject.status).to eq(200) }
-      it { expect(assigns(:attestation)).to include(upload_params) }
+
+      context 'with images' do
+        let(:upload_params) { { title: 't', body: 'b', footer: 'f', logo: interlaced_logo } }
+
+        it { expect(assigns(:attestation)).to include({ title: 't', body: 'b', footer: 'f' }) }
+        it { expect(assigns(:attestation)[:logo]).to be_present }
+        it_behaves_like 'rendering a PDF successfully'
+      end
+
+      context 'without images' do
+        let(:upload_params) { { title: 't', body: 'b', footer: 'f' } }
+
+        it { expect(assigns(:attestation)).to include(upload_params) }
+        it_behaves_like 'rendering a PDF successfully'
+      end
     end
 
     context 'if an attestation template exists on the procedure' do
       after { procedure.attestation_template.destroy }
 
-      context 'with logos' do
+      context 'with images' do
         let!(:attestation_template) do
           create(:attestation_template, logo: logo, signature: signature)
         end
 
-        it { expect(subject.status).to eq(200) }
         it { expect(assigns(:attestation)).to include(upload_params) }
         it { expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now) }
         it { expect(assigns(:attestation)[:logo].download).to eq(logo2.read) }
         it { expect(assigns(:attestation)[:signature].download).to eq(signature2.read) }
+        it_behaves_like 'rendering a PDF successfully'
       end
 
-      context 'with empty logo' do
-        it { expect(subject.status).to eq(200) }
+      context 'without images' do
         it { expect(assigns(:attestation)).to include(upload_params) }
         it { expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now) }
         it { expect(assigns(:attestation)[:logo]).to eq(nil) }
         it { expect(assigns(:attestation)[:signature]).to eq(nil) }
+        it_behaves_like 'rendering a PDF successfully'
       end
     end
   end

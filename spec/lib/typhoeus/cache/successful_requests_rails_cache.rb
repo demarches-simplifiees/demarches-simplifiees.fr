@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Typhoeus::Cache::SuccessfulRequestsRailsCache, lib: true do
   let(:cache) { described_class.new }
 
