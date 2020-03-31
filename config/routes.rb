@@ -49,6 +49,7 @@ Rails.application.routes.draw do
     authenticate :administration do
       mount Flipper::UI.app(-> { Flipper.instance }) => "/features", as: :flipper
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
+      mount Blazer::Engine, at: "blazer"
     end
 
     root to: "administrateurs#index"
