@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Inviting an expert:' do
   include ActiveJob::TestHelper
   include ActionView::Helpers

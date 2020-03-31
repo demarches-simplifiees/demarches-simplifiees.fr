@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApiEntreprise::API do
   let(:procedure_id) { 12 }
 

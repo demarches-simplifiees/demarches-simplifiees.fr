@@ -1,6 +1,4 @@
 class WebHookJob < ApplicationJob
-  queue_as :default
-
   TIMEOUT = 10
 
   def perform(procedure, dossier)

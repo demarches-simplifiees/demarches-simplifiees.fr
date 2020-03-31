@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Instructing a dossier:' do
   include ActiveJob::TestHelper
 

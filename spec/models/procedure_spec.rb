@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Procedure do
   describe 'mail templates' do
     subject { create(:procedure) }

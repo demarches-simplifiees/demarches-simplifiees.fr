@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Outdated browsers support:' do
   context 'when the user browser is outdated' do
     before(:each) do

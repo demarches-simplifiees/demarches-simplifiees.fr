@@ -1,5 +1,5 @@
-class DiscardedDossiersDeletionJob < ApplicationJob
-  queue_as :cron
+class DiscardedDossiersDeletionJob < CronJob
+  self.cron_expression = "0 7 * * *"
 
   def perform(*args)
     Dossier.discarded_brouillon_expired.destroy_all

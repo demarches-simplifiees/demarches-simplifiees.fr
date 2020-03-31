@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'users/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
   let(:dossier_brouillon) { create(:dossier, state: Dossier.states.fetch(:brouillon), user: user) }

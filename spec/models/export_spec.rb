@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe Export, type: :model do
   describe 'validations' do
     let(:groupe_instructeur) { create(:groupe_instructeur) }

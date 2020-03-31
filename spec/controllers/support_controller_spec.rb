@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe SupportController, type: :controller do
   render_views
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApiCarto::CadastreAdapter do
   subject { described_class.new(coordinates).results }
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }

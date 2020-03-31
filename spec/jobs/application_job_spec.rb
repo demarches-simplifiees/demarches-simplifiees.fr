@@ -1,4 +1,3 @@
-require 'rails_helper'
 include ActiveJob::TestHelper
 
 RSpec.describe ApplicationJob, type: :job do

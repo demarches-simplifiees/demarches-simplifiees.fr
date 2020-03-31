@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe WeeklyOverviewJob, type: :job do
   describe 'perform' do
     let!(:instructeur) { create(:instructeur) }

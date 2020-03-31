@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.shared_examples 'not owner of dossier' do |controller, redirect|
   let(:dossier_2) { create(:dossier) }
 

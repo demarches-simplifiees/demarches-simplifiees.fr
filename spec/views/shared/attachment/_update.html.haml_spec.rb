@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe 'shared/attachment/_update.html.haml', type: :view do
   let(:champ) { build(:champ_piece_justificative, dossier: create(:dossier)) }
   let(:attached_file) { champ.piece_justificative_file }
