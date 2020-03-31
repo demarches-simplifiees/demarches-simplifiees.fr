@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe StatsController, type: :controller do
   describe "#last_four_months_hash" do
     context "while a regular user is logged in" do

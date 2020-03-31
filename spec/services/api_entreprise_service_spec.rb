@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApiEntrepriseService do
   describe '#get_etablissement_params_for_siret' do
     before do

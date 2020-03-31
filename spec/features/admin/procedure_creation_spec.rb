@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'features/admin/procedure_spec_helper'
 
 feature 'As an administrateur I wanna create a new procedure', js: true do

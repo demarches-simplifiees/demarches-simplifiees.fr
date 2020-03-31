@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'features/users/dossier_shared_examples.rb'
 
 feature 'Invitations' do

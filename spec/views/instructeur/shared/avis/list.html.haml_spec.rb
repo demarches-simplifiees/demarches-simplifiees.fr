@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'instructeurs/shared/avis/_list.html.haml', type: :view do
   before { view.extend DossierHelper }
 

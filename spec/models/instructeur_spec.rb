@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Instructeur, type: :model do
   let(:admin) { create :administrateur }
   let!(:procedure) { create :procedure, :published, administrateur: admin }

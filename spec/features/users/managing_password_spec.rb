@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Managing password:' do
   context 'for simple users' do
     let(:user) { create(:user) }

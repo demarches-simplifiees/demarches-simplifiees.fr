@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe BillSignatureService do
   describe ".grouped_unsigned_operation_until" do
     subject { BillSignatureService.grouped_unsigned_operation_until(date).length }

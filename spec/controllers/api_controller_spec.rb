@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe APIController, type: :controller do
   describe 'valid_token_for_procedure?' do
     let(:procedure) { create(:procedure) }

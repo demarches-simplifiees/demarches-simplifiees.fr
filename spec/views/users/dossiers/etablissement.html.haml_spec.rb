@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'users/dossiers/etablissement.html.haml', type: :view do
   let(:etablissement) { create(:etablissement, :with_exercices) }
   let(:dossier) { create(:dossier, etablissement: etablissement) }
