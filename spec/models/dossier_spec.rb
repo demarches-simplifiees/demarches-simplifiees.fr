@@ -1250,4 +1250,14 @@ describe Dossier do
     it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
     it { expect(Dossier.discarded_en_construction_expired.count).to eq(2) }
   end
+
+  describe "discarded procedure dossier should be able to access it's procedure" do
+    let(:dossier) { create(:dossier) }
+    let(:procedure) { dossier.reload.procedure }
+
+    before { dossier.procedure.discard! }
+
+    it { expect(procedure).not_to be_nil }
+    it { expect(procedure.discarded?).to be_truthy }
+  end
 end
