@@ -226,7 +226,7 @@ module Users
       dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
 
       if dossier.can_be_deleted_by_user?
-        dossier.delete_and_keep_track!(current_user, :user_request)
+        dossier.discard_and_keep_track!(current_user, :user_request)
         flash.notice = 'Votre dossier a bien été supprimé.'
         redirect_to dossiers_path
       else

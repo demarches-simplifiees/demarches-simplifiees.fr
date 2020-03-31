@@ -191,6 +191,10 @@ class Instructeur < ApplicationRecord
     user.administrateur.nil? && procedures.all? { |p| p.defaut_groupe_instructeur.instructeurs.count > 1 }
   end
 
+  # required to display feature flags field in manager
+  def features
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)

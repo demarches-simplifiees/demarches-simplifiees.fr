@@ -340,6 +340,10 @@ class Dossier < ApplicationRecord
     brouillon? || en_construction?
   end
 
+  def can_be_deleted_by_manager?
+    kept? && can_be_deleted_by_user?
+  end
+
   def messagerie_available?
     !brouillon? && !archived
   end
@@ -467,7 +471,7 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def delete_and_keep_track!(author, reason)
+  def discard_and_keep_track!(author, reason)
     if keep_track_on_deletion? && en_construction?
       deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
 
