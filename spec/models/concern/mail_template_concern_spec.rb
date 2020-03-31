@@ -115,7 +115,7 @@ describe MailTemplateConcern do
       end
 
       describe 'without justificatif' do
-        it { is_expected.to include("[l'instructeur n'a pas joint de document supplémentaire]") }
+        it { is_expected.to include("[l’instructeur n’a pas joint de document supplémentaire]") }
       end
 
       describe 'with justificatif' do

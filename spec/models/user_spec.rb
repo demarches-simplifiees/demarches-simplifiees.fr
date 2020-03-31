@@ -71,7 +71,7 @@ describe User, type: :model do
     context 'when password is too simple' do
       let(:password) { passwords[min_complexity - 1] }
 
-      it { expect(subject).to eq(["Le mot de passe n'est pas assez complexe"]) }
+      it { expect(subject).to eq(["Le mot de passe n’est pas assez complexe"]) }
     end
 
     context 'when password is acceptable' do
