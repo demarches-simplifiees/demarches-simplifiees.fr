@@ -1,5 +1,7 @@
 # Preview all emails at http://localhost:3000/rails/mailers/instructeur_mailer
 class InstructeurMailer < ApplicationMailer
+  helper MailerHelper
+
   layout 'mailers/layout'
 
   def user_to_instructeur(email)
@@ -39,6 +41,13 @@ class InstructeurMailer < ApplicationMailer
   def send_notifications(instructeur, data)
     @data = data
     subject = "Vous avez du nouveau sur vos démarches"
+
+    mail(to: instructeur.email, subject: subject)
+  end
+
+  def send_archive(instructeur, archive)
+    @archive = archive
+    subject = "Votre archive est disponible"
 
     mail(to: instructeur.email, subject: subject)
   end

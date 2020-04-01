@@ -1,0 +1,19 @@
+- content_for(:title, 'Votre archive est disponible')
+
+%p
+  Bonjour,
+
+%p
+  Votre archive pour la procédure #{@archive.procedure.id} est disponible.
+  Vous pouvez la télécharger dans votre espace de gestion des archives.
+
+%p
+  = round_button('Consulter mes archives', instructeur_archives_url(@archive.procedure), :primary)
+
+%p
+  Ce fichier est
+  %b valide une semaine
+  et peut-être téléchargé
+  %b plusieurs fois.
+
+= render partial: "layouts/mailers/signature"

@@ -15,3 +15,6 @@
               = link_to "Télécharger l'export au format .#{format}", export.file.service_url, target: "_blank", rel: "noopener"
             - else
               %span{ 'data-export-poll-url': download_export_instructeur_procedure_path(procedure, export_format: format, no_progress_notification: true) }
+        - if procedure.publiee?
+          %li
+            = link_to "Télécharger une archive au format .zip de tous les dossiers et leurs pièces jointes", instructeur_archives_path(procedure)

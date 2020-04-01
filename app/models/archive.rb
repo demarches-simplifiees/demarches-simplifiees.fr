@@ -1,6 +1,4 @@
 class Archive < ApplicationRecord
-  scope :stale, -> { where('updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
-
   include AASM
 
   MAX_DUREE_CONSERVATION_ARCHIVE = 1.week
@@ -9,6 +7,8 @@ class Archive < ApplicationRecord
   belongs_to :procedure
 
   has_one_attached :file
+
+  scope :stale, -> { where('updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_ARCHIVE)) }
 
   enum content_type: {
     everything: 'everything',
@@ -27,5 +27,9 @@ class Archive < ApplicationRecord
     event :make_available do
       transitions from: :pending, to: :generated
     end
+  end
+
+  def available?
+    status == 'generated' && file.attached?
   end
 end

@@ -156,7 +156,12 @@ class Dossier < ApplicationRecord
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
   scope :termine,                     -> { not_archived.state_termine }
-  scope :downloadable_sorted,         -> {
+  scope :termine_durant,              -> (month) do
+    state_termine
+        .joins(:traitements)
+        .where(traitements: { processed_at: month.beginning_of_month..month.end_of_month })
+  end
+  scope :downloadable_sorted, -> {
     state_not_brouillon
       .includes(
         :user,
