@@ -1,5 +1,5 @@
 class FindDubiousProceduresJob < CronJob
-  self.cron_expression = "0 0 * * *"
+  self.schedule_expression = "every day at midnight"
 
   FORBIDDEN_KEYWORDS = [
     'NIR', 'NIRPP', 'race', 'religion',

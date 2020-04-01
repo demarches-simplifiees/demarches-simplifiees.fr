@@ -1,5 +1,5 @@
 class PurgeUnattachedBlobsJob < CronJob
-  self.cron_expression = "0 0 * * *"
+  self.schedule_expression = "every day at midnight"
 
   def perform(*args)
     ActiveStorage::Blob.unattached

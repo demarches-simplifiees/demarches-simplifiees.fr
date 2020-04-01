@@ -1,5 +1,5 @@
 class AutoArchiveProcedureJob < CronJob
-  self.cron_expression = "* * * * *"
+  self.schedule_expression = "every 1 minute"
 
   def perform(*args)
     Procedure.publiees.where("auto_archive_on <= ?", Time.zone.today).each do |procedure|
