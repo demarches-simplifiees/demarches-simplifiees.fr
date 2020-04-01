@@ -121,7 +121,12 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
   describe '#reaffecter' do
     let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
-    let!(:dossier12) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), groupe_instructeur: gi_1_1) }
+    let!(:dossier12) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1_1) }
+    let!(:dossier_discarded) do
+      dossier = create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1_1)
+      dossier.discard!
+      dossier
+    end
 
     describe 'when the new group is a group of the procedure' do
       before do
@@ -135,8 +140,8 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       end
 
       it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
-      it { expect(gi_1_1.dossiers.count).to be(0) }
-      it { expect(gi_1_2.dossiers.count).to be(1) }
+      it { expect(gi_1_1.dossiers.with_discarded.count).to be(0) }
+      it { expect(gi_1_2.dossiers.with_discarded.count).to be(2) }
       it { expect(gi_1_2.dossiers.last.id).to be(dossier12.id) }
       it { expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id) }
     end
