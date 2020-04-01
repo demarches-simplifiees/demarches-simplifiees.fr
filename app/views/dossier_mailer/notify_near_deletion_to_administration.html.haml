@@ -4,13 +4,14 @@
   Bonjour,
 
 %p
-  = t('.header', count: @dossiers.count)
+  = t('.header_en_construction', count: @dossiers.count)
   %ul
     - @dossiers.each do |d|
       %li
         #{link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}. Retrouvez le dossier au format #{link_to("PDF", instructeur_dossier_url(d.procedure, d, format: :pdf))}
 
 %p
-  = sanitize(t('.footer', count: @dossiers.count))
+  - if @state == Dossier.states.fetch(:en_construction)
+    = sanitize(t('.footer_en_construction', count: @dossiers.count))
 
 = render partial: "layouts/mailers/signature"
