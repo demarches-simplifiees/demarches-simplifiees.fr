@@ -783,7 +783,9 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe "#create_commentaire" do
-    let(:dossier) { create(:dossier, :en_construction, user: user) }
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure, user: user) }
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
     let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
@@ -802,12 +804,15 @@ describe Users::DossiersController, type: :controller do
     before do
       sign_in(user)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
+      allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).with(dossier, instructeur.email).and_return(double(deliver_later: nil))
+      instructeur.follow(dossier)
     end
 
     it "creates a commentaire" do
       expect { subject }.to change(Commentaire, :count).by(1)
 
       expect(response).to redirect_to(messagerie_dossier_path(dossier))
+      expect(DossierMailer).to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur.email)
       expect(flash.notice).to be_present
     end
   end
