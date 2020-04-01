@@ -759,7 +759,9 @@ class Dossier < ApplicationRecord
     followers_instructeurs.each do |instructeur|
       if instructeur.groupe_instructeurs.exclude?(groupe_instructeur)
         instructeur.unfollow(self)
-        DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
+        if kept?
+          DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
+        end
       end
     end
   end

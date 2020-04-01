@@ -71,7 +71,7 @@ module NewAdministrateur
     def reaffecter
       target_group = procedure.groupe_instructeurs.find(params[:target_group])
 
-      groupe_instructeur.dossiers.find_each do |dossier|
+      groupe_instructeur.dossiers.with_discarded.find_each do |dossier|
         dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
       end
 
