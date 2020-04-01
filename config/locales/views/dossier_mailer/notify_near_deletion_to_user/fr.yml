@@ -1,10 +1,10 @@
 fr:
   dossier_mailer:
-    notify_en_construction_near_deletion_to_user:
-      subject:
+    notify_near_deletion_to_user:
+      subject_en_construction:
         one: Un dossier en construction va bientôt être supprimé
         other: Des dossiers en construction vont bientôt être supprimés
-      header:
+      header_en_construction:
         one: "Afin de limiter la conservation de vos données personnelles, le dossier en construction suivant sera bientôt automatiquement supprimé :"
         other: "Afin de limiter la conservation de vos données personnelles, les dossiers en construction suivant seront bientôt automatiquement supprimés :"
       footer:
