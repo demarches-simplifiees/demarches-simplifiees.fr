@@ -1,5 +1,5 @@
 class AdministrateurActivateBeforeExpirationJob < CronJob
-  self.cron_expression = "0 8 * * *"
+  self.schedule_expression = "every day at 8 am"
 
   def perform(*args)
     Administrateur

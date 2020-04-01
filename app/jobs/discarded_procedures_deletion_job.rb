@@ -1,5 +1,5 @@
 class DiscardedProceduresDeletionJob < CronJob
-  self.cron_expression = "0 7 * * *"
+  self.schedule_expression = "every day at 1 am"
 
   def perform(*args)
     Procedure.discarded_expired.find_each do |procedure|
