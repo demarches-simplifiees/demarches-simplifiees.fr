@@ -70,6 +70,7 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_automatic_deletion_to_user(deleted_dossiers, to_email)
+    @state = deleted_dossiers.first.state
     @subject = default_i18n_subject(count: deleted_dossiers.count)
     @deleted_dossiers = deleted_dossiers
 
@@ -83,15 +84,17 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: @subject)
   end
 
-  def notify_en_construction_near_deletion_to_user(dossiers, to_email)
-    @subject = default_i18n_subject(count: dossiers.count)
+  def notify_near_deletion_to_user(dossiers, to_email)
+    @state = dossiers.first.state
+    @subject = default_i18n_subject(count: dossiers.count, state: @state)
     @dossiers = dossiers
 
     mail(to: to_email, subject: @subject)
   end
 
-  def notify_en_construction_near_deletion_to_administration(dossiers, to_email)
-    @subject = default_i18n_subject(count: dossiers.count)
+  def notify_near_deletion_to_administration(dossiers, to_email)
+    @state = dossiers.first.state
+    @subject = default_i18n_subject(count: dossiers.count, state: @state)
     @dossiers = dossiers
 
     mail(to: to_email, subject: @subject)
@@ -110,5 +113,18 @@ class DossierMailer < ApplicationMailer
     @dossier = dossier
 
     mail(to: dossier.user.email, subject: @subject)
+  end
+
+  protected
+
+  # This is an override of `default_i18n_subject` method
+  # https://api.rubyonrails.org/v5.0.0/classes/ActionMailer/Base.html#method-i-default_i18n_subject
+  def default_i18n_subject(interpolations = {})
+    if interpolations[:state]
+      mailer_scope = self.class.mailer_name.tr('/', '.')
+      I18n.t("subject_#{interpolations[:state]}", interpolations.merge(scope: [mailer_scope, action_name]))
+    else
+      super
+    end
   end
 end
