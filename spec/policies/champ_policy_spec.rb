@@ -35,6 +35,14 @@ describe ChampPolicy do
       it_behaves_like 'they can’t access a private champ'
     end
 
+    context 'as a person invited on the dossier' do
+      let(:invite) { create(:invite, :with_user, dossier: dossier) }
+      let(:signed_in_user) { invite.user }
+
+      it_behaves_like 'they can access a public champ'
+      it_behaves_like 'they can’t access a private champ'
+    end
+
     context 'as another user' do
       let(:signed_in_user) { create(:user) }
 
