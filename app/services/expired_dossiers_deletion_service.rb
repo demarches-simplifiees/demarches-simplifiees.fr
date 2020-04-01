@@ -33,23 +33,7 @@ class ExpiredDossiersDeletionService
       .en_construction_close_to_expiration
       .without_en_construction_expiration_notice_sent
 
-    dossiers_close_to_expiration
-      .with_notifiable_procedure
-      .includes(:user)
-      .group_by(&:user)
-      .each do |(user, dossiers)|
-        DossierMailer.notify_en_construction_near_deletion_to_user(
-          dossiers,
-          user.email
-        ).deliver_later
-      end
-
-    group_by_fonctionnaire_email(dossiers_close_to_expiration).each do |(email, dossiers)|
-      DossierMailer.notify_en_construction_near_deletion_to_administration(
-        dossiers,
-        email
-      ).deliver_later
-    end
+    send_expiration_notices(dossiers_close_to_expiration)
 
     dossiers_close_to_expiration.update_all(en_construction_close_to_expiration_notice_sent_at: Time.zone.now)
   end
@@ -72,7 +56,32 @@ class ExpiredDossiersDeletionService
   end
 
   def self.delete_expired_en_construction_and_notify
-    dossiers_to_remove = Dossier.en_construction_expired
+    delete_expired_and_notify(Dossier.en_construction_expired)
+  end
+
+  private
+
+  def self.send_expiration_notices(dossiers_close_to_expiration)
+    dossiers_close_to_expiration
+      .with_notifiable_procedure
+      .includes(:user)
+      .group_by(&:user)
+      .each do |(user, dossiers)|
+        DossierMailer.notify_near_deletion_to_user(
+          dossiers,
+          user.email
+        ).deliver_later
+      end
+
+    group_by_fonctionnaire_email(dossiers_close_to_expiration).each do |(email, dossiers)|
+      DossierMailer.notify_near_deletion_to_administration(
+        dossiers.to_a,
+        email
+      ).deliver_later
+    end
+  end
+
+  def self.delete_expired_and_notify(dossiers_to_remove)
     dossiers_to_remove.each(&:expired_keep_track!)
 
     dossiers_to_remove
@@ -95,8 +104,6 @@ class ExpiredDossiersDeletionService
 
     dossiers_to_remove.destroy_all
   end
-
-  private
 
   def self.group_by_fonctionnaire_email(dossiers)
     dossiers
