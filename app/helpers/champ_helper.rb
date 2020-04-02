@@ -33,7 +33,7 @@ module ChampHelper
   end
 
   def auto_attach_url(form, object)
-    if feature_enabled?(:autoupload_dossier_attachments) && object.is_a?(Champ) && object.public?
+    if feature_enabled?(:autoupload_dossier_attachments) && object.is_a?(Champ) && object.persisted? && object.public?
       champs_piece_justificative_url(object.id)
     end
   end
