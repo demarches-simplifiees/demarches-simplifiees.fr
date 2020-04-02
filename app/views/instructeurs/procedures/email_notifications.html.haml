@@ -16,7 +16,7 @@
     %p.notice
       Cet email vous signale le dépôt d'un nouveau message sur vos dossiers suivis.
     %p.notice
-      il est envoyé à chaque fois qu'un usager dépose un message.
+      Il est envoyé à chaque fois qu'un usager dépose un message.
 
     .radios
       %label
@@ -27,21 +27,21 @@
         = form.radio_button :instant_email_message_notifications_enabled, false
         Non
 
-    = form.label :email_notification, "recevoir une notification quotidienne"
+    = form.label :email_notification, "Recevoir une notification quotidienne"
 
     %p.notice
-      cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis.
+      Cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis.
     %p.notice
-      il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
+      Il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
 
     .radios
       %label
         = form.radio_button :daily_email_notifications_enabled, true
-        oui
+        Oui
 
       %label
         = form.radio_button :daily_email_notifications_enabled, false
-        non
+        Non
 
     = form.label :email_notification, "Recevoir un récapitulatif hebdomadaire"
     %p.notice
