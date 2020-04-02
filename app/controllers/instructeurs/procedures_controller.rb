@@ -116,7 +116,7 @@ module Instructeurs
     def deleted_dossiers
       @procedure = procedure
       @deleted_dossiers = @procedure
-        .deleted_dossiers.where.not(state: :brouillon)
+        .deleted_dossiers
         .order(:dossier_id)
         .page params[:page]
     end

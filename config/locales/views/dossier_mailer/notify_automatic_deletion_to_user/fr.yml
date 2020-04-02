@@ -7,6 +7,6 @@ fr:
       header:
         one: "Le délai maximum de conservation du dossier suivant a été atteint, il a donc été supprimé :"
         other: "Le délai maximum de conservation des dossiers suivants a été atteint, ils ont donc été supprimés :"
-      footer:
+      footer_en_construction:
         one: "Le dossier ne sera pas traité, nous nous excusons de la gène occasionnée."
         other: "Les dossiers ne seront pas traités, nous nous excusons de la gène occasionnée."

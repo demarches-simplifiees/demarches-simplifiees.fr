@@ -26,10 +26,10 @@
     .flex
       .inline-champ
         = f.label :prenom, class: "required"
-        = f.text_field :prenom, class: "small", required: true
+        = f.text_field :prenom, class: "small", required: true, autocomplete: 'given-name'
       .inline-champ
         = f.label :nom, class: "required"
-        = f.text_field :nom, class: "small", required: true
+        = f.text_field :nom, class: "small", required: true, autocomplete: 'family-name'
 
     - if @dossier.procedure.ask_birthday?
       = f.label :birthdate, class: "required"

@@ -22,6 +22,9 @@ as well as a link to its edit page.
 <header class="main-content__header" role="banner">
   <h1 class="main-content__page-title">
     <%= content_for(:title) %>
+    <% if procedure.discarded? %>
+      (Supprimé)
+    <% end %>
   </h1>
 
   <div>
@@ -39,8 +42,10 @@ as well as a link to its edit page.
       <%= link_to 'whitelister', whitelist_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% end %>
 
-    <% if !procedure.discarded? %>
-      <%= link_to 'supprimer la démarche', hide_manager_procedure_path(procedure), method: :post, class: 'button', data: { confirm: "Confirmez-vous la suppression de la démarche ?" } %>
+    <% if procedure.can_be_deleted_by_manager? %>
+      <%= link_to 'Supprimer la démarche', discard_manager_procedure_path(procedure), method: :post, class: 'button', data: { confirm: "Confirmez-vous la suppression de la démarche ?" } %>
+    <% elsif procedure.discarded? %>
+      <%= link_to 'Restaurer la démarche', restore_manager_procedure_path(procedure), method: :post, class: 'button', data: { confirm: "Confirmez-vous la restauration de la démarche ?" } %>
     <% end %>
   <div>
 
