@@ -1,4 +1,7 @@
 - if champ.to_s.present?
-  .carte{ data: { geo: geo_data(champ) } }
+  - if supported_browser?
+    = react_component("MapReader", { geoData: champ.to_render_data } )
+  - else
+    %p La carte n'est pas compatible avec votre navigateur. Afin de l'afficher, nous vous conseillons d'utiliser Chrome, Firefox ou Safari
   .geo-areas
     = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, error: false }
