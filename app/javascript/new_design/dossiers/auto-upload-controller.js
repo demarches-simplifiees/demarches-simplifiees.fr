@@ -70,7 +70,7 @@ export default class AutoUploadController {
     const attachmentRequest = {
       url: autoAttachUrl,
       type: 'PUT',
-      data: `champ_id=${champId}&blob_signed_id=${blobSignedId}`
+      data: `blob_signed_id=${blobSignedId}`
     };
     await ajax(attachmentRequest);
 
