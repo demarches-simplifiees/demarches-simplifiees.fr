@@ -194,11 +194,7 @@ FactoryBot.define do
     end
 
     trait :discarded do
-      after(:build) do |procedure, _evaluator|
-        procedure.path = generate(:published_path)
-        procedure.publish!
-        procedure.hide!
-      end
+      hidden_at { Time.zone.now }
     end
 
     trait :whitelisted do

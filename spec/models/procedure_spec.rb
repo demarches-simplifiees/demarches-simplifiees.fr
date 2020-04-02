@@ -836,7 +836,8 @@ describe Procedure do
     end
   end
 
-  describe "#hide!" do
+  describe "#discard_and_keep_track!" do
+    let(:administration) { create(:administration) }
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, procedure: procedure) }
     let!(:dossier2) { create(:dossier, procedure: procedure) }
@@ -845,10 +846,10 @@ describe Procedure do
     it { expect(Dossier.count).to eq(2) }
     it { expect(Dossier.all).to include(dossier, dossier2) }
 
-    context "when hidding procedure" do
+    context "when discarding procedure" do
       before do
         instructeur.followed_dossiers << dossier
-        procedure.hide!
+        procedure.discard_and_keep_track!(administration)
         instructeur.reload
       end
 
