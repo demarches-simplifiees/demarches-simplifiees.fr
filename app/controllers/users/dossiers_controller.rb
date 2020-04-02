@@ -197,7 +197,9 @@ module Users
       @commentaire = CommentaireService.build(current_user, dossier, commentaire_params)
 
       if @commentaire.save
-        dossier.followers_instructeurs.each do |instructeur|
+        dossier.followers_instructeurs
+          .with_instant_email_message_notifications
+          .each do |instructeur|
           DossierMailer.notify_new_commentaire_to_instructeur(dossier, instructeur.email).deliver_later
         end
         flash.notice = "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."

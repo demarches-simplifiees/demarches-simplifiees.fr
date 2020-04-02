@@ -783,8 +783,9 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe "#create_commentaire" do
-    let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let(:instructeur_with_instant_message) { create(:instructeur) }
+    let(:instructeur_without_instant_message) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure, user: user) }
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
@@ -804,15 +805,19 @@ describe Users::DossiersController, type: :controller do
     before do
       sign_in(user)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
-      allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).with(dossier, instructeur.email).and_return(double(deliver_later: nil))
-      instructeur.follow(dossier)
+      allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
+      instructeur_with_instant_message.follow(dossier)
+      instructeur_without_instant_message.follow(dossier)
+      create(:assign_to, instructeur: instructeur_with_instant_message, procedure: procedure, instant_email_message_notifications_enabled: true, groupe_instructeur: procedure.defaut_groupe_instructeur)
+      create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false, groupe_instructeur: procedure.defaut_groupe_instructeur)
     end
 
     it "creates a commentaire" do
       expect { subject }.to change(Commentaire, :count).by(1)
 
       expect(response).to redirect_to(messagerie_dossier_path(dossier))
-      expect(DossierMailer).to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur.email)
+      expect(DossierMailer).to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_with_instant_message.email)
+      expect(DossierMailer).not_to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_without_instant_message.email)
       expect(flash.notice).to be_present
     end
   end
