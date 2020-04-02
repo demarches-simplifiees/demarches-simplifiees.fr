@@ -21,6 +21,8 @@ class Champ < ApplicationRecord
 
   before_create :set_dossier_id, if: :needs_dossier_id?
 
+  validates :type_de_champ_id, uniqueness: { scope: [:dossier_id, :row] }
+
   def public?
     !private?
   end
