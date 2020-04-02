@@ -94,6 +94,10 @@ class Dossier < ApplicationRecord
       transitions from: :en_instruction, to: :sans_suite
     end
 
+    event :classer_sans_suite_automatiquement, after: :after_classer_sans_suite_automatiquement do
+      transitions from: :en_instruction, to: :sans_suite
+    end
+
     event :repasser_en_instruction, after: :after_repasser_en_instruction do
       transitions from: :refuse, to: :en_instruction
       transitions from: :sans_suite, to: :en_instruction
@@ -570,6 +574,13 @@ class Dossier < ApplicationRecord
     save!
     NotificationMailer.send_without_continuation_notification(self).deliver_later
     log_dossier_operation(instructeur, :classer_sans_suite, self)
+  end
+
+  def after_classer_sans_suite_automatiquement
+    self.motivation = 'Délai de traitement expiré.'
+
+    save!
+    log_automatic_dossier_operation(:classer_sans_suite, self)
   end
 
   def check_mandatory_champs
