@@ -1,15 +1,4 @@
-<% dossier = @champ.dossier %>
-
-<%= fields_for dossier do |form| %>
-  <%= form.fields_for :champs, dossier.champs.where(id: @champ.id), include_id: false do |champ_form| %>
-    <% render_to_element(".editable-champ[data-champ-id=\"#{@champ.id}\"]",
-      partial: 'shared/dossiers/editable_champs/editable_champ',
-      locals: {
-        champ: @champ,
-        form: champ_form
-      }) %>
-  <% end %>
-<% end %>
+<%= render_champ(@champ) %>
 
 <% attachment = @champ.piece_justificative_file.attachment %>
 <% if attachment.virus_scanner.pending? %>
