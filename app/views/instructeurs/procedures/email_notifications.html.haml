@@ -11,21 +11,37 @@
     .explication
       Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
 
-    = form.label :email_notification, "Recevoir une notification quotidienne"
+    = form.label :email_notification, "Recevoir une notification à chaque message déposé"
 
     %p.notice
-      Cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis.
+      Cet email vous signale le dépôt d'un nouveau message sur vos dossiers suivis.
     %p.notice
-      Il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
+      il est envoyé à chaque fois qu'un usager dépose un message.
+
+    .radios
+      %label
+        = form.radio_button :instant_email_message_notifications_enabled, true
+        Oui
+
+      %label
+        = form.radio_button :instant_email_message_notifications_enabled, false
+        Non
+
+    = form.label :email_notification, "recevoir une notification quotidienne"
+
+    %p.notice
+      cet email vous signale le dépôt de nouveaux dossiers sur cette démarche, ou des changements sur vos dossiers suivis.
+    %p.notice
+      il est envoyé une fois par jour, du lundi au samedi, vers 10 h du matin.
 
     .radios
       %label
         = form.radio_button :daily_email_notifications_enabled, true
-        Oui
+        oui
 
       %label
         = form.radio_button :daily_email_notifications_enabled, false
-        Non
+        non
 
     = form.label :email_notification, "Recevoir un récapitulatif hebdomadaire"
     %p.notice

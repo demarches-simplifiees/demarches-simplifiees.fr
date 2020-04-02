@@ -19,6 +19,10 @@ class Instructeur < ApplicationRecord
 
   has_one :user, dependent: :nullify
 
+  scope :with_instant_email_message_notifications, -> {
+    includes(:assign_to).where(assign_tos: { instant_email_message_notifications_enabled: true })
+  }
+
   default_scope { eager_load(:user) }
 
   def self.by_email(email)
