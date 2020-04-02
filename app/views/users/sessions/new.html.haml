@@ -6,10 +6,10 @@
     %h2.huge-title Connectez-vous
 
     = f.label :email, "Email"
-    = f.text_field :email, autofocus: true
+    = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
 
     = f.label :password, "Mot de passe"
-    = f.password_field :password
+    = f.password_field :password, autocomplete: 'current-password'
 
     .auth-options
       %div
