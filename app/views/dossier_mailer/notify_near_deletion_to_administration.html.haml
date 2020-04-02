@@ -4,7 +4,10 @@
   Bonjour,
 
 %p
-  = t('.header_en_construction', count: @dossiers.count)
+  - if @state == Dossier.states.fetch(:en_construction)
+    = t('.header_en_construction', count: @dossiers.count)
+  - elsif @state == Dossier.states.fetch(:en_instruction)
+    = t('.header_en_instruction', count: @dossiers.count)
   %ul
     - @dossiers.each do |d|
       %li
@@ -13,5 +16,7 @@
 %p
   - if @state == Dossier.states.fetch(:en_construction)
     = sanitize(t('.footer_en_construction', count: @dossiers.count))
+  - elsif @state == Dossier.states.fetch(:en_instruction)
+    = sanitize(t('.footer_en_instruction', count: @dossiers.count))
 
 = render partial: "layouts/mailers/signature"

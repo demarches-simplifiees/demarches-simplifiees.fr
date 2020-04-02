@@ -126,6 +126,18 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("PDF") }
       it { expect(subject.body).to include("Vous avez <b>un mois</b> pour commencer l’instruction du dossier.") }
     end
+
+    describe 'en_instruction' do
+      let(:dossier) { create(:dossier, :en_instruction) }
+
+      subject { described_class.notify_near_deletion_to_administration([dossier], dossier.user.email) }
+
+      it { expect(subject.subject).to eq("Un dossier en instruction va bientôt être supprimé") }
+      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.body).to include(dossier.procedure.libelle) }
+      it { expect(subject.body).to include("PDF") }
+      it { expect(subject.body).to include("Vous avez <b>un mois</b> pour terminer l’instruction du dossier.") }
+    end
   end
 
   describe '.notify_near_deletion_to_user' do
@@ -136,6 +148,19 @@ RSpec.describe DossierMailer, type: :mailer do
 
       it { expect(subject.to).to eq([dossier.user.email]) }
       it { expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé") }
+      it { expect(subject.body).to include("n° #{dossier.id} ") }
+      it { expect(subject.body).to include(dossier.procedure.libelle) }
+      it { expect(subject.body).to include("PDF") }
+      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n’avez rien à faire.") }
+    end
+
+    describe 'en_instruction' do
+      let(:dossier) { create(:dossier, :en_instruction) }
+
+      subject { described_class.notify_near_deletion_to_user([dossier], dossier.user.email) }
+
+      it { expect(subject.to).to eq([dossier.user.email]) }
+      it { expect(subject.subject).to eq("Un dossier en instruction va bientôt être supprimé") }
       it { expect(subject.body).to include("n° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }

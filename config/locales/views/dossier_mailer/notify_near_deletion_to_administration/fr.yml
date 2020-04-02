@@ -4,9 +4,15 @@ fr:
       subject_en_construction:
         one: Un dossier en construction va bientôt être supprimé
         other: Des dossiers en construction vont bientôt être supprimés
+      subject_en_instruction:
+        one: Un dossier en instruction va bientôt être supprimé
+        other: Des dossiers en instruction vont bientôt être supprimés
       header_en_construction:
         one: "Le dossier en construction suivant sera bientôt automatiquement supprimé :"
         other: "Les dossiers en construction suivant seront bientôt automatiquement supprimés :"
       footer_en_construction:
         one: "Vous avez <b>un mois</b> pour commencer l’instruction du dossier."
         other: "Vous avez <b>un mois</b> pour commencer l’instruction des dossiers."
+      footer_en_instruction:
+        one: "Vous avez <b>un mois</b> pour terminer l’instruction du dossier. Ce délai passé, le dossier sera automatiquement classé sans suite et supprimé."
+        other: "Vous avez <b>un mois</b> pour terminer l’instruction des dossiers. Ce délai passé, les dossiers seront automatiquement classés sans suite et supprimés."
