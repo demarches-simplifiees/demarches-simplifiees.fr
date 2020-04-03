@@ -85,13 +85,13 @@ describe 'user access to the list of their dossiers' do
   describe "recherche" do
     context "when the dossier does not exist" do
       before do
-        page.find_by_id('dossier_id').set(10000000)
+        page.find_by_id('q').set(10000000)
         click_button("Rechercher")
       end
 
       it "shows an error message on the dossiers page" do
         expect(current_path).to eq(dossiers_path)
-        expect(page).to have_content("Vous n’avez pas de dossier avec le nº 10000000.")
+        expect(page).to have_content("Vous n’avez pas de dossiers contenant « 10000000 ».")
       end
     end
 
@@ -99,19 +99,19 @@ describe 'user access to the list of their dossiers' do
       let!(:dossier_other_user) { create(:dossier) }
 
       before do
-        page.find_by_id('dossier_id').set(dossier_other_user.id)
+        page.find_by_id('q').set(dossier_other_user.id)
         click_button("Rechercher")
       end
 
       it "shows an error message on the dossiers page" do
         expect(current_path).to eq(dossiers_path)
-        expect(page).to have_content("Vous n’avez pas de dossier avec le nº #{dossier_other_user.id}.")
+        expect(page).to have_content("Vous n’avez pas de dossiers contenant « #{dossier_other_user.id} ».")
       end
     end
 
     context "when the dossier belongs to the user" do
       before do
-        page.find_by_id('dossier_id').set(dossier_en_construction.id)
+        page.find_by_id('q').set(dossier_en_construction.id)
         click_button("Rechercher")
       end
 
