@@ -220,12 +220,20 @@ module Users
 
     def recherche
       @search_terms = params[:q]
-      @dossiers = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user)
+      return redirect_to dossiers_path if @search_terms.blank?
+
+      @dossiers = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page(page)
 
       if @dossiers.present?
-        redirect_to url_for_dossier(@dossiers.first)
+        # we need the page condition when accessing page n with n>1 when the page has only 1 result
+        # in order to avoid an unpleasant redirection when changing page
+        if @dossiers.count == 1 && page == 1
+          redirect_to url_for_dossier(@dossiers.first)
+        else
+          render :index
+        end
       else
-        flash.alert = "Vous n’avez pas de dossier contenant «#{@search_terms}»."
+        flash.alert = "Vous n’avez pas de dossiers contenant « #{@search_terms} »."
         redirect_to dossiers_path
       end
     end
