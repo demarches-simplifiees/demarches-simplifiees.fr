@@ -219,7 +219,7 @@ module Users
     end
 
     def recherche
-      @dossier_id = params[:dossier_id]
+      @dossier_id = params[:q]
       dossier = current_user.dossiers.find_by(id: @dossier_id)
 
       if dossier

@@ -47,16 +47,17 @@
         %li
           .header-search{ role: 'search' }
             = form_tag instructeur_recherche_path, method: :get, class: "form" do
+              = label_tag :dossier_id, "Numéro de dossier", class: 'hidden'
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
-                = image_tag "icons/search-blue.svg", alt: ''
+                = image_tag "icons/search-blue.svg", alt: 'Rechercher', 'aria-hidden':'true'
 
       - if nav_bar_profile == :user && user_signed_in? && current_user.dossiers.count > 2
         %li
           .header-search{ role: 'search' }
-            = form_tag recherche_dossiers_path, method: :post, class: "form" do
+            = form_tag recherche_dossiers_path, method: :get, class: "form" do
               = label_tag :dossier_id, "Numéro de dossier", class: 'hidden'
-              = text_field_tag :dossier_id, "", placeholder: "Numéro de dossier"
+              = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
               %button{ title: "Rechercher" }
                 = image_tag "icons/search-blue.svg", alt: 'Rechercher', 'aria-hidden':'true'
 
