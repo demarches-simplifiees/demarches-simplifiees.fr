@@ -1,11 +1,16 @@
-- content_for(:title, "Dossiers")
+- if @search_terms.present?
+  - content_for(:title, "Recherche : #{@search_terms}")
+- else
+  - content_for(:title, "Dossiers")
 
 - content_for :footer do
   = render partial: "users/dossiers/index_footer"
 
 .dossiers-headers.sub-header
   .container
-    - if @dossiers_invites.count == 0
+    - if @search_terms.present?
+      %h1.page-title Résultat de la recherche pour « #{@search_terms} »
+    - elsif @dossiers_invites.count == 0
       %h1.page-title Mes dossiers
 
     - else
