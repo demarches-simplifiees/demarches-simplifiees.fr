@@ -219,13 +219,13 @@ module Users
     end
 
     def recherche
-      @dossier_id = params[:q]
-      dossier = current_user.dossiers.find_by(id: @dossier_id)
+      @search_terms = params[:q]
+      @dossiers = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user)
 
-      if dossier
-        redirect_to url_for_dossier(dossier)
+      if @dossiers.present?
+        redirect_to url_for_dossier(@dossiers.first)
       else
-        flash.alert = "Vous n’avez pas de dossier avec le nº #{@dossier_id}."
+        flash.alert = "Vous n’avez pas de dossier contenant «#{@search_terms}»."
         redirect_to dossiers_path
       end
     end
