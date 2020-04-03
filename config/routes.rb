@@ -275,7 +275,7 @@ Rails.application.routes.draw do
       end
 
       collection do
-        post 'recherche'
+        get 'recherche'
       end
     end
     resource :feedback, only: [:create]
