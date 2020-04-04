@@ -17,6 +17,11 @@ ENV INSTALL_PATH /app
 RUN mkdir -p ${INSTALL_PATH}
 COPY Gemfile Gemfile.lock package.json yarn.lock  ${INSTALL_PATH}/
 WORKDIR ${INSTALL_PATH}
+
+# sassc https://github.com/sass/sassc-ruby/issues/146#issuecomment-608489863
+RUN bundle config specific_platform x86_64-linux \
+  && bundle config --local build.sassc --disable-march-tune-native
+
 RUN bundle config --global frozen 1 &&\
     bundle install --deployment --without development test&&\
     yarn install --production
