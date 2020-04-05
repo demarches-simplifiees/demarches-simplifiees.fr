@@ -14,15 +14,15 @@
 
   %li
     Nom commercial :
-    = etablissement.entreprise.nom_commercial
+    = render partial: 'users/dossiers/etablissement/info_field', locals: { value: etablissement.entreprise.nom_commercial }
 
   %li
     Libellé NAF :
-    = etablissement.libelle_naf
+    = render partial: 'users/dossiers/etablissement/info_field', locals: { value: etablissement.libelle_naf }
 
   %li
     Code NAF :
-    = etablissement.naf
+    = render partial: 'users/dossiers/etablissement/info_field', locals: { value: etablissement.naf }
 
   %li
     Date de création :
@@ -43,9 +43,7 @@
 
   %li
     Adresse :
-    - etablissement.adresse.split("\n").each do |line|
-      = line
-
+    = render partial: 'users/dossiers/etablissement/info_field', locals: { value: etablissement.adresse }
   - if etablissement.entreprise.capital_social.present?
     %li
       Capital social :
