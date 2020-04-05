@@ -11,11 +11,11 @@
     .row
       .col-md-6
         .form-group.string.optional.mail_template_subject
-          = f.label :subject, "Objet de l'email", class: 'control-label string optional'
+          = f.label :subject, "Objet de l’email", class: 'control-label string optional'
           = f.text_field :subject, class: 'form-control string optional'
 
     .form-group.text.optional.mail_template_body
-      = f.label :body, "Corps de l'email", class: 'control-label string optional'
+      = f.label :body, "Corps de l’email", class: 'control-label string optional'
       = f.text_area :body, class: 'wysihtml5 form-control text optional'
 
     .text-right

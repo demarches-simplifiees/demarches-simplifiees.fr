@@ -12,7 +12,6 @@ class InstructeurDashboard < Administrate::BaseDashboard
     user: Field::HasOne.with_options(searchable: true, searchable_field: 'email'),
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    current_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany,
     procedures: Field::HasMany,
     features: FeaturesField
@@ -35,7 +34,6 @@ class InstructeurDashboard < Administrate::BaseDashboard
     :dossiers,
     :id,
     :user,
-    :current_sign_in_at,
     :created_at,
     :features
   ].freeze

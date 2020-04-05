@@ -7,7 +7,7 @@ fr:
     attributes:
       dossier:
         montant_projet: 'Le montant du projet'
-        montant_aide_demande: "Le montant d'aide demandée"
+        montant_aide_demande: "Le montant d’aide demandée"
         date_previsionnelle: "La date de début prévisionnelle"
         state:
           brouillon: "Brouillon"

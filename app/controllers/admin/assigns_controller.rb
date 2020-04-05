@@ -36,15 +36,15 @@ class Admin::AssignsController < AdminController
     case to
     when ASSIGN
       if instructeur.assign_to_procedure(procedure)
-        flash.notice = "L'instructeur a bien été affecté"
+        flash.notice = "L’instructeur a bien été affecté"
       else
-        flash.alert = "L'instructeur a déjà été affecté"
+        flash.alert = "L’instructeur a déjà été affecté"
       end
     when NOT_ASSIGN
       if instructeur.remove_from_procedure(procedure)
-        flash.notice = "L'instructeur a bien été désaffecté"
+        flash.notice = "L’instructeur a bien été désaffecté"
       else
-        flash.alert = "L'instructeur a déjà été désaffecté"
+        flash.alert = "L’instructeur a déjà été désaffecté"
       end
     end
 

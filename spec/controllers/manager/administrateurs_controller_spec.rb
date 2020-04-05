@@ -1,8 +1,19 @@
 describe Manager::AdministrateursController, type: :controller do
   let(:administration) { create(:administration) }
+  let(:administrateur) { create(:administrateur) }
 
   before do
     sign_in administration
+  end
+
+  describe '#show' do
+    render_views
+
+    before do
+      get :show, params: { id: administrateur.id }
+    end
+
+    it { expect(response.body).to include(administrateur.email) }
   end
 
   describe 'GET #new' do
@@ -41,23 +52,20 @@ describe Manager::AdministrateursController, type: :controller do
   end
 
   describe '#delete' do
-    let!(:admin) { create(:administrateur) }
-
-    subject { delete :delete, params: { id: admin.id } }
+    subject { delete :delete, params: { id: administrateur.id } }
 
     it 'deletes the admin' do
       subject
 
-      expect(Administrateur.find_by(id: admin.id)).to be_nil
+      expect(Administrateur.find_by(id: administrateur.id)).to be_nil
     end
   end
 
   describe '#index' do
     render_views
-    let(:admin) { create(:administrateur) }
 
     it 'searches admin by email' do
-      get :index, params: { search: admin.email }
+      get :index, params: { search: administrateur.email }
       expect(response).to be_success
     end
   end

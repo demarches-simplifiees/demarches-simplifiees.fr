@@ -71,7 +71,7 @@ describe User, type: :model do
     context 'when password is too simple' do
       let(:password) { passwords[min_complexity - 1] }
 
-      it { expect(subject).to eq(["Le mot de passe n'est pas assez complexe"]) }
+      it { expect(subject).to eq(["Le mot de passe n’est pas assez complexe"]) }
     end
 
     context 'when password is acceptable' do
@@ -308,7 +308,7 @@ describe User, type: :model do
         end
 
         it "keep track of dossiers and delete user" do
-          dossier_cache.delete_and_keep_track!(administration, :user_request)
+          dossier_cache.discard_and_keep_track!(administration, :user_request)
           user.delete_and_keep_track_dossiers(administration)
 
           expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
@@ -317,7 +317,7 @@ describe User, type: :model do
         end
 
         it "doesn't destroy dossiers of another user" do
-          dossier_cache.delete_and_keep_track!(administration, :user_request)
+          dossier_cache.discard_and_keep_track!(administration, :user_request)
           user.delete_and_keep_track_dossiers(administration)
 
           expect(Dossier.find_by(id: dossier_from_another_user.id)).to be_present

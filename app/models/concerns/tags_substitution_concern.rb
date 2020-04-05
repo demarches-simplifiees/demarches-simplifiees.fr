@@ -69,7 +69,7 @@ module TagsSubstitutionConcern
         if d.justificatif_motivation.attached?
           external_link(url_for_justificatif_motivation(d), "Télécharger le document justificatif")
         else
-          return "[l'instructeur n'a pas joint de document supplémentaire]"
+          return "[l’instructeur n’a pas joint de document supplémentaire]"
         end
       },
       available_for_states: Dossier::TERMINE
@@ -85,13 +85,13 @@ module TagsSubstitutionConcern
     },
     {
       libelle: 'nom',
-      description: "nom de l'usager",
+      description: "nom de l’usager",
       target: :nom,
       available_for_states: Dossier::SOUMIS
     },
     {
       libelle: 'prénom',
-      description: "prénom de l'usager",
+      description: "prénom de l’usager",
       target: :prenom,
       available_for_states: Dossier::SOUMIS
     }

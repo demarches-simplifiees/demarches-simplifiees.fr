@@ -340,6 +340,10 @@ class Dossier < ApplicationRecord
     brouillon? || en_construction?
   end
 
+  def can_be_deleted_by_manager?
+    kept? && can_be_deleted_by_user?
+  end
+
   def messagerie_available?
     !brouillon? && !archived
   end
@@ -379,7 +383,7 @@ class Dossier < ApplicationRecord
       parts = [
         "Dossier en brouillon répondant à la démarche ",
         procedure.libelle,
-        " gérée par l'organisme ",
+        " gérée par l’organisme ",
         procedure.organisation_name
       ]
     else
@@ -388,7 +392,7 @@ class Dossier < ApplicationRecord
         en_construction_at.strftime("%d/%m/%Y"),
         " sur la démarche ",
         procedure.libelle,
-        " gérée par l'organisme ",
+        " gérée par l’organisme ",
         procedure.organisation_name
       ]
     end
@@ -467,7 +471,7 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def delete_and_keep_track!(author, reason)
+  def discard_and_keep_track!(author, reason)
     if keep_track_on_deletion? && en_construction?
       deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
 

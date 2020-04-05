@@ -38,7 +38,7 @@ class DemandesController < ApplicationController
       <li>Nom: #{demande_params[:name]}</li>
       <li>Téléphone: #{demande_params[:phone]}</li>
       <li>Poste occupé: #{demande_params[:poste]}:</li>
-      <li>J'ai entendu parler de Mes-Demarches: #{demande_params[:source]}</li>
+      <li>J’ai entendu parler de Mes-Demarches: #{demande_params[:source]}</li>
       <li>Service: #{demande_params[:organization_name]}</li>
       <li>Commune: #{demande_params[:address]}</li>
       <li>Nb de procédure envisagées: #{demande_params[:nb_of_procedures]}</li>

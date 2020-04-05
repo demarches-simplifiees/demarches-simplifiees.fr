@@ -132,7 +132,7 @@
         Si vos formulaires contiennent des données sensibles, vous vous engagez à nous contacter pour trouver des solutions via ce
         = link_to "formulaire.", contact_admin_path
     = check_box_tag 'rgpd', '1', @terms_of_use_read ? @terms_of_use_read[:rgpd].present? : @procedure.created_at.present?
-    j'ai pris connaissance du cadre d'usage pour le RGPD
+    J’ai pris connaissance du cadre d'usage pour le RGPD
 
 = label_tag 'rgs_stamp' do
   Cachets et signatures électroniques
@@ -144,7 +144,7 @@
         Si votre démarche comporte une décision avec une signature ou un cachet, vous pouvez nous contacter pour évaluer les risques et les solutions via ce
         = link_to "formulaire.", contact_admin_path
     = check_box_tag 'rgs_stamp', '1', @terms_of_use_read ? @terms_of_use_read[:rgs_stamp].present? : @procedure.created_at.present?
-    j'ai pris connaissance du cadre d'usage cachet/signatures
+    J’ai pris connaissance du cadre d'usage cachet/signatures
 
 = label_tag 'rgs_timestamp' do
   Horodatage

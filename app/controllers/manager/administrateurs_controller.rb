@@ -24,8 +24,8 @@ module Manager
 
       administrateur.delete_and_transfer_services
 
-      logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_administration.id}")
-      flash[:notice] = "L'administrateur #{administrateur.id} est supprimé"
+      logger.info("L’administrateur #{administrateur.id} est supprimé par #{current_administration.id}")
+      flash[:notice] = "L’administrateur #{administrateur.id} est supprimé"
 
       redirect_to manager_administrateurs_path
     end
