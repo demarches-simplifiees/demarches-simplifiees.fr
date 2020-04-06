@@ -40,7 +40,7 @@ http_interactions:
   recorded_at: Tue, 19 Nov 2019 01:45:39 GMT
 - request:
     method: get
-    uri: https://api.i-taiete2.dev.gov.pf:8080/api/v2/etablissements/Entreprise?numeroTahiti=111111
+    uri: https://ppr.api.i-taiete2.gov.pf/api/v2/etablissements/Entreprise?numeroTahiti=111111
     body:
       encoding: US-ASCII
       string: ''

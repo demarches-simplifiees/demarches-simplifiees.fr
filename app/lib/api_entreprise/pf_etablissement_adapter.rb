@@ -15,18 +15,13 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
   end
 
   def process_params
-    etablissement = data_source.sort_by { |a| a[:numEtablissement] }.find { |h| h[:dateRadiation].nil? }
-    if etablissement.present?
-      etablissement = translate(etablissement)
-      etablissement[:numero_voie]&.gsub!(/(\d+).*/, '\1')
-      etablissement[:nom_voie]&.gsub!(/^[\d\s]+/, '')
-
-      if etablissement[:entreprise_code_effectif_entreprise].present?
-      end
-      etablissement
-    else
-      {}
-    end
+    etablissements = data_source.sort_by { |a| a[:numEtablissement] }.filter { |h| h[:dateRadiation].nil? }
+    etablissements = etablissements.map { |e| translate(e) }
+    fields = Set.new(etablissements.map(&:keys).flatten)
+    etablissement = {}
+    # for each field, concatenate the value of each etablissement (remove duplicates)
+    fields.each { |k| etablissement[k] = Set.new(etablissements.map { |e| e[k] }.compact).to_a.join(' | ') }
+    etablissement
   end
 
   def translation_map
@@ -99,7 +94,7 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
 
   # generate :numero_voie & :nom_voie entries from :rue value
   def normalize_street(json)
-    if (rue = json[:rue]).present?
+    if (rue = json[:rue]).present? && !rue.include?('null')
       json[:numero_voie] = rue[/^\s*(\d+)/, 1]
       voie = rue[/^[ \d]*(.*)/, 1]
       if !/^(#{NOM_VOIES_RE})/i.match?(voie)

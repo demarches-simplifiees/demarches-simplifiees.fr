@@ -1,0 +1,6 @@
+- if value&.include? '|'
+  %ul
+    - value.split(' | ').each do |nom|
+      %li= nom.gsub(/\n/,' ')
+- else
+  = value
