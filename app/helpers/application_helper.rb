@@ -49,6 +49,15 @@ module ApplicationHelper
     end
   end
 
+  def render_champ(champ)
+    champ_selector = ".editable-champ[data-champ-id=\"#{champ.id}\"]"
+    form_html = render 'shared/dossiers/edit', dossier: champ.dossier, apercu: false
+    champ_html = Nokogiri::HTML.fragment(form_html).at_css(champ_selector).to_s
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{champ_selector}').outerHTML = \"#{escape_javascript(champ_html)}\";")
+    # rubocop:enable Rails/OutputSafety
+  end
+
   def remove_element(selector, timeout: 0, inner: false)
     script = "(function() {";
     script << "var el = document.querySelector('#{selector}');"
