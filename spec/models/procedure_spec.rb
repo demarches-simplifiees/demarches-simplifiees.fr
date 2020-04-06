@@ -500,6 +500,17 @@ describe Procedure do
       it 'should have one administrateur' do
         expect(subject.administrateurs).to eq([administrateur])
       end
+
+      it "should discard the existing groupe instructeurs" do
+        expect(subject.groupe_instructeurs.size).not_to eq(procedure.groupe_instructeurs.size)
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first).to be nil
+      end
+
+      it 'should have a default groupe instructeur' do
+        expect(subject.groupe_instructeurs.size).to eq(1)
+        expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL)
+        expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(0)
+      end
     end
 
     it 'should duplicate existing mail_templates' do
