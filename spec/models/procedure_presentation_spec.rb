@@ -500,8 +500,8 @@ describe ProcedurePresentation do
       let(:type_de_champ) { procedure.types_de_champ.first }
 
       before do
-        type_de_champ.champ.create(dossier: kept_dossier, value: 'keep me')
-        type_de_champ.champ.create(dossier: discarded_dossier, value: 'discard me')
+        kept_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'keep me')
+        discarded_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'discard me')
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -517,7 +517,7 @@ describe ProcedurePresentation do
         let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          type_de_champ.champ.create(dossier: other_kept_dossier, value: 'and me too')
+          other_kept_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'and me too')
         end
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
@@ -534,8 +534,8 @@ describe ProcedurePresentation do
       let(:type_de_champ_private) { procedure.types_de_champ_private.first }
 
       before do
-        type_de_champ_private.champ.create(dossier: kept_dossier, value: 'keep me')
-        type_de_champ_private.champ.create(dossier: discarded_dossier, value: 'discard me')
+        kept_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'keep me')
+        discarded_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'discard me')
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -551,7 +551,7 @@ describe ProcedurePresentation do
         let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          type_de_champ_private.champ.create(dossier: other_kept_dossier, value: 'and me too')
+          other_kept_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'and me too')
         end
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
