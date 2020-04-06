@@ -27,7 +27,7 @@ module ApplicationHelper
     method = outer ? 'outerHTML' : 'innerHTML'
     html = escape_javascript(render partial: partial, locals: locals)
     # rubocop:disable Rails/OutputSafety
-    raw("document.querySelector('#{selector}').#{method} = \"#{html}\";")
+    raw("document.querySelector('#{selector}') && document.querySelector('#{selector}').#{method} = \"#{html}\";")
     # rubocop:enable Rails/OutputSafety
   end
 
