@@ -1,14 +1,18 @@
 describe ExpiredDossiersDeletionService do
+  let(:warning_period) { 1.month + 5.days }
+  let(:conservation_par_defaut) { 3.months }
+  let(:user) { create(:user) }
+  let(:procedure) { create(:procedure, :published) }
+  let(:procedure_2) { create(:procedure, :published) }
+
   describe '#process_expired_dossiers_brouillon' do
-    let(:draft_expiration) { 1.month + 5.days }
-    let!(:today) { Time.zone.now.at_midnight }
-    let!(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
-    let!(:date_close_to_expiration) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 1.month }
-    let!(:date_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
-    let!(:date_not_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
+    let(:today) { Time.zone.now.at_midnight }
+    let(:date_close_to_expiration) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 1.month }
+    let(:date_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months - 6.days }
+    let(:date_not_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
 
     context 'send messages for dossiers expiring soon and delete expired' do
-      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired, brouillon_close_to_expiration_notice_sent_at: today - (draft_expiration + 1.day)) }
+      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired, brouillon_close_to_expiration_notice_sent_at: today - (warning_period + 1.day)) }
       let!(:brouillon_close_to_expiration) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration) }
       let!(:brouillon_close_but_with_notice_sent) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration, brouillon_close_to_expiration_notice_sent_at: Time.zone.now) }
       let!(:valid_brouillon) { create(:dossier, procedure: procedure, created_at: date_not_expired) }
@@ -25,7 +29,7 @@ describe ExpiredDossiersDeletionService do
         expect(DossierMailer).to have_received(:notify_brouillon_near_deletion).with([brouillon_close_to_expiration], brouillon_close_to_expiration.user.email)
       end
 
-      it 'dossier state should change' do
+      it 'dossier brouillon_close_to_expiration_notice_sent_at should change' do
         expect(brouillon_close_to_expiration.reload.brouillon_close_to_expiration_notice_sent_at).not_to be_nil
       end
 
@@ -39,8 +43,6 @@ describe ExpiredDossiersDeletionService do
   end
 
   describe '#send_brouillon_expiration_notices' do
-    let!(:conservation_par_defaut) { 3.months }
-
     before { Timecop.freeze(Time.zone.now) }
     after  { Timecop.return }
 
@@ -49,7 +51,7 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with a single dossier' do
-      let!(:dossier) { create(:dossier, created_at: created_at) }
+      let!(:dossier) { create(:dossier, procedure: procedure, created_at: created_at) }
 
       before { ExpiredDossiersDeletionService.send_brouillon_expiration_notices }
 
@@ -70,9 +72,8 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with 2 dossiers to notice' do
-      let!(:user) { create(:user) }
-      let!(:dossier_1) { create(:dossier, user: user, created_at: (conservation_par_defaut - 1.month + 1.day).ago) }
-      let!(:dossier_2) { create(:dossier, user: user, created_at: (conservation_par_defaut - 1.month + 1.day).ago) }
+      let!(:dossier_1) { create(:dossier, procedure: procedure, user: user, created_at: (conservation_par_defaut - 1.month + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, procedure: procedure_2, user: user, created_at: (conservation_par_defaut - 1.month + 1.day).ago) }
 
       before { ExpiredDossiersDeletionService.send_brouillon_expiration_notices }
 
@@ -82,8 +83,6 @@ describe ExpiredDossiersDeletionService do
   end
 
   describe '#delete_expired_brouillons_and_notify' do
-    let!(:warning_period) { 1.month + 5.days }
-
     before { Timecop.freeze(Time.zone.now) }
     after  { Timecop.return }
 
@@ -92,7 +91,7 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with a single dossier' do
-      let!(:dossier) { create(:dossier, brouillon_close_to_expiration_notice_sent_at: notice_sent_at) }
+      let!(:dossier) { create(:dossier, procedure: procedure, brouillon_close_to_expiration_notice_sent_at: notice_sent_at) }
 
       before { ExpiredDossiersDeletionService.delete_expired_brouillons_and_notify }
 
@@ -121,9 +120,8 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with 2 dossiers to delete' do
-      let!(:user) { create(:user) }
-      let!(:dossier_1) { create(:dossier, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
-      let!(:dossier_2) { create(:dossier, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      let!(:dossier_1) { create(:dossier, procedure: procedure, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, procedure: procedure_2, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
 
       before { ExpiredDossiersDeletionService.delete_expired_brouillons_and_notify }
 
@@ -133,8 +131,6 @@ describe ExpiredDossiersDeletionService do
   end
 
   describe '#send_en_construction_expiration_notices' do
-    let!(:conservation_par_defaut) { 3.months }
-
     before { Timecop.freeze(Time.zone.now) }
     after  { Timecop.return }
 
@@ -144,7 +140,7 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with a single dossier' do
-      let!(:dossier) { create(:dossier, :en_construction, :followed, en_construction_at: en_construction_at) }
+      let!(:dossier) { create(:dossier, :en_construction, :followed, procedure: procedure, en_construction_at: en_construction_at) }
 
       before { ExpiredDossiersDeletionService.send_en_construction_expiration_notices }
 
@@ -170,9 +166,8 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with 2 dossiers to notice' do
-      let!(:user) { create(:user) }
-      let!(:dossier_1) { create(:dossier, :en_construction, user: user, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
-      let!(:dossier_2) { create(:dossier, :en_construction, user: user, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
+      let!(:dossier_1) { create(:dossier, :en_construction, procedure: procedure, user: user, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, :en_construction, procedure: procedure_2, user: user, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
 
       let!(:instructeur) { create(:instructeur) }
 
@@ -190,7 +185,6 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'when an instructeur is also administrateur' do
-      let!(:procedure) { create(:procedure, :published) }
       let!(:administrateur) { procedure.administrateurs.first }
       let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: (conservation_par_defaut - 1.month + 1.day).ago) }
 
@@ -217,7 +211,7 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with a single dossier' do
-      let!(:dossier) { create(:dossier, :en_construction, :followed, en_construction_close_to_expiration_notice_sent_at: notice_sent_at) }
+      let!(:dossier) { create(:dossier, :en_construction, :followed, procedure: procedure, en_construction_close_to_expiration_notice_sent_at: notice_sent_at) }
       let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
 
       before { ExpiredDossiersDeletionService.delete_expired_en_construction_and_notify }
@@ -253,9 +247,8 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with 2 dossiers to delete' do
-      let!(:user) { create(:user) }
-      let!(:dossier_1) { create(:dossier, :en_construction, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
-      let!(:dossier_2) { create(:dossier, :en_construction, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      let!(:dossier_1) { create(:dossier, :en_construction, procedure: procedure, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      let!(:dossier_2) { create(:dossier, :en_construction, procedure: procedure_2, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
       let(:deleted_dossier_1) { DeletedDossier.find_by(dossier_id: dossier_1.id) }
       let(:deleted_dossier_2) { DeletedDossier.find_by(dossier_id: dossier_2.id) }
 
