@@ -1,7 +1,7 @@
 describe 'user access to the list of their dossiers' do
   let(:user) { create(:user) }
   let!(:dossier_brouillon)       { create(:dossier, user: user) }
-  let!(:dossier_en_construction) { create(:dossier, :en_construction, user: user) }
+  let!(:dossier_en_construction) { create(:dossier, :with_all_champs, :en_construction, user: user) }
   let!(:dossier_en_instruction)  { create(:dossier, :en_instruction, user: user) }
   let!(:dossier_archived)        { create(:dossier, :en_instruction, :archived, user: user) }
   let(:dossiers_per_page) { 25 }
@@ -117,6 +117,35 @@ describe 'user access to the list of their dossiers' do
 
       it "redirects to the dossier page" do
         expect(current_path).to eq(dossier_path(dossier_en_construction))
+      end
+    end
+
+    context "when user search for something inside the dossier" do
+      let(:dossier_en_construction2) { create(:dossier, :with_all_champs, :en_construction, user: user) }
+      before do
+        page.find_by_id('q').set(dossier_en_construction.champs.first.value)
+      end
+
+      context 'when it only matches one dossier' do
+        before do
+          click_button("Rechercher")
+        end
+        it "redirects to the dossier page" do
+          expect(current_path).to eq(dossier_path(dossier_en_construction))
+        end
+      end
+
+      context 'when it matches multiple dossier' do
+        before do
+          dossier_en_construction2.champs.first.update(value: dossier_en_construction.champs.first.value)
+          click_button("Rechercher")
+        end
+
+        it "redirects to the search results" do
+          expect(current_path).to eq(recherche_dossiers_path)
+          expect(page).to have_content(dossier_en_construction.id)
+          expect(page).to have_content(dossier_en_construction2.id)
+        end
       end
     end
   end
