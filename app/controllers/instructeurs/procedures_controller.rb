@@ -207,7 +207,7 @@ module Instructeurs
           format.js do
             @procedure = procedure
             assign_exports
-            flash.notice = "L’export au format \"#{export_format}\" est prêt."
+            flash.notice = "L’export au format \"#{export_format}\" est prêt. Vous pouvez le <a href=\"#{export.file.service_url}\">télécharger</a>"
           end
 
           format.html do
