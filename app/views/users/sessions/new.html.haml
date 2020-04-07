@@ -21,7 +21,7 @@
 
     = f.submit "Se connecter", class: "button large primary expand"
 
-  = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+  = render FranceConnectLoginComponent.new url: france_connect_particulier_path
 
   %hr
   %p.center
