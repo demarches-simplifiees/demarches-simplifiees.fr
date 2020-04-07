@@ -23,7 +23,27 @@ class ApiEntrepriseService
       rescue ApiEntreprise::API::RequestFailed
       end
 
+      begin
+        effectifs_params = ApiEntreprise::EffectifsAdapter.new(entreprise_params[:entreprise_siren], procedure_id, *get_current_valid_month_for_effectif).to_params
+        etablissement_params.merge!(effectifs_params)
+      rescue ApiEntreprise::API::RequestFailed
+      end
+
       etablissement_params.merge(entreprise_params)
+    end
+  end
+
+  private
+
+  def self.get_current_valid_month_for_effectif
+    today = Date.today
+    date_update = Date.new(today.year, today.month, 15)
+
+    if today >= date_update
+      [today.strftime("%Y"), today.strftime("%m")]
+    else
+      date = today - 1.month
+      [date.strftime("%Y"), date.strftime("%m")]
     end
   end
 end
