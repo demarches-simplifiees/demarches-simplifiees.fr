@@ -1,5 +1,5 @@
 class PurgeStaleExportsJob < CronJob
-  self.cron_expression = "*/5 * * * *"
+  self.schedule_expression = "every 5 minutes"
 
   def perform
     Export.stale.destroy_all
