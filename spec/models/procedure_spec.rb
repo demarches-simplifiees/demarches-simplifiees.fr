@@ -384,6 +384,12 @@ describe Procedure do
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
 
+    let!(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: "groupe_1") }
+    let!(:instructeur_1) { create(:instructeur) }
+    let!(:instructeur_2) { create(:instructeur) }
+    let!(:assign_to_1) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_1) }
+    let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
+
     before do
       @logo = File.open('spec/fixtures/files/white.png')
       @signature = File.open('spec/fixtures/files/black.png')
@@ -400,7 +406,18 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.defaut_groupe_instructeur.instructeurs.map(&:email)).to eq([administrateur.email]) }
+
+    describe "should keep groupe instructeurs " do
+      it "should clone groupe instructeurs" do
+        expect(subject.groupe_instructeurs.size).to eq(2)
+        expect(subject.groupe_instructeurs.size).to eq(procedure.groupe_instructeurs.size)
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first).not_to be nil
+      end
+
+      it "should clone instructeurs in the groupe" do
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first.instructeurs.map(&:email)).to eq(procedure.groupe_instructeurs.where(label: "groupe_1").first.instructeurs.map(&:email))
+      end
+    end
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
@@ -482,6 +499,17 @@ describe Procedure do
 
       it 'should have one administrateur' do
         expect(subject.administrateurs).to eq([administrateur])
+      end
+
+      it "should discard the existing groupe instructeurs" do
+        expect(subject.groupe_instructeurs.size).not_to eq(procedure.groupe_instructeurs.size)
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first).to be nil
+      end
+
+      it 'should have a default groupe instructeur' do
+        expect(subject.groupe_instructeurs.size).to eq(1)
+        expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL)
+        expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(0)
       end
     end
 
