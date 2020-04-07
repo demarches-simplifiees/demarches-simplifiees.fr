@@ -1,0 +1,23 @@
+!!! 5
+%html{ lang: "fr" }
+  %head
+    %meta{ "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" }
+    %meta{ "http-equiv": "X-UA-Compatible", content: "IE=edge" }
+    %meta{ name: "turbolinks-cache-control", content: "no-cache" }
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1" }
+    = csrf_meta_tags
+
+    %title demarches-simplifiees.fr
+
+    = favicon_link_tag(image_url("favicons/16x16.png"), type: "image/png", sizes: "16x16")
+    = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
+    = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
+
+    = javascript_packs_with_chunks_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'new_design/new_application', media: 'all', 'data-turbolinks-track': 'reload'
+
+    = Gon::Base.render_data(camel_case: true, init: true, nonce: request.content_security_policy_nonce)
+  %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
+    .page-wrapper
+      %main
+        = yield
