@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactMapboxGl, { ZoomControl, GeoJSONLayer } from 'react-mapbox-gl';
-import { LngLatBounds } from 'mapbox-gl';
+import mapboxgl, { LngLatBounds } from 'mapbox-gl';
 import PropTypes from 'prop-types';
 
 const Map = ReactMapboxGl({});
@@ -77,6 +77,16 @@ const MapReader = ({ geoData }) => {
     Object.values(bounds._ne)
   ];
   const boundData = [swCoords, neCoords];
+
+  if (!mapboxgl.supported()) {
+    return (
+      <p>
+        Nous ne pouvons pas afficher la carte car elle est imcompatible avec
+        votre navigateur. Nous vous conseillons de le mettre à jour ou utiliser
+        les dernières versions de Chrome, Firefox ou Safari
+      </p>
+    );
+  }
 
   return (
     <Map
