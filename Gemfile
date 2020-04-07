@@ -28,6 +28,7 @@ gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
+gem 'fugit'
 gem 'geocoder'
 gem 'gon'
 gem 'graphiql-rails'
