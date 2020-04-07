@@ -1,5 +1,5 @@
 class WarnExpiringDossiersJob < CronJob
-  self.cron_expression = "0 0 1 * *"
+  self.schedule_expression = "every 1 month at midnight"
 
   def perform(*args)
     expiring, expired = Dossier

@@ -1,5 +1,5 @@
 class OperationsSignatureJob < CronJob
-  self.cron_expression = "0 6 * * *"
+  self.schedule_expression = "every day at 6 am"
 
   def perform(*args)
     last_midnight = Time.zone.today.beginning_of_day
