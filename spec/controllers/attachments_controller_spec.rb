@@ -11,6 +11,7 @@ describe AttachmentsController, type: :controller do
     let(:format) { :js }
 
     subject do
+      request.headers['HTTP_REFERER'] = dossier_url(dossier)
       get :show, params: { id: attachment.id, signed_id: signed_id }, format: format
     end
 
