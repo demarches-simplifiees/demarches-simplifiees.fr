@@ -201,6 +201,7 @@ describe API::V2::GraphqlController do
               }
               groupeInstructeur {
                 id
+                number
                 label
               }
               messages {
@@ -259,6 +260,7 @@ describe API::V2::GraphqlController do
             ],
             groupeInstructeur: {
               id: dossier.groupe_instructeur.to_typed_id,
+              number: dossier.groupe_instructeur.id,
               label: dossier.groupe_instructeur.label
             },
             demandeur: {
@@ -343,6 +345,36 @@ describe API::V2::GraphqlController do
             }
           })
         end
+      end
+    end
+
+    context "groupeInstructeur" do
+      let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+      let(:query) do
+        "{
+          groupeInstructeur(number: #{groupe_instructeur.id}) {
+            id
+            number
+            label
+            dossiers {
+              nodes {
+                id
+              }
+            }
+          }
+        }"
+      end
+
+      it "should be returned" do
+        expect(gql_errors).to eq(nil)
+        expect(gql_data).to eq(groupeInstructeur: {
+          id: groupe_instructeur.to_typed_id,
+          number: groupe_instructeur.id,
+          label: groupe_instructeur.label,
+          dossiers: {
+            nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
+          }
+        })
       end
     end
 
