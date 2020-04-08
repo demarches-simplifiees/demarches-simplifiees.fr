@@ -28,6 +28,12 @@ describe AttachmentsController, type: :controller do
         end
       end
 
+      context 'when the user opens the delete link in a new tab' do
+        let(:format) { :html }
+
+        it { is_expected.to have_http_status(302) }
+        it { is_expected.to redirect_to(dossier_path(dossier)) }
+      end
     end
 
     context 'when not authenticated' do
