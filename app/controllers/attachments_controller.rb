@@ -8,7 +8,7 @@ class AttachmentsController < ApplicationController
 
     respond_to do |format|
       format.js
-      format.html { redirect_back(fallback_location: @attachment.record&.dossier || root_path) }
+      format.html { redirect_back(fallback_location: root_url) }
     end
   end
 
