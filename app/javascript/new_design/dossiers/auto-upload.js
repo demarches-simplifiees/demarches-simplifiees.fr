@@ -16,8 +16,8 @@ delegate('change', fileInputSelector, event => {
 });
 
 const retryButtonSelector = `button.attachment-error-retry`;
-delegate('click', retryButtonSelector, event => {
-  const inputSelector = event.target.dataset.inputTarget;
+delegate('click', retryButtonSelector, function() {
+  const inputSelector = this.dataset.inputTarget;
   const input = document.querySelector(inputSelector);
   startUpload(input);
 });
