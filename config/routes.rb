@@ -124,7 +124,8 @@ Rails.application.routes.draw do
     put 'piece_justificative/:champ_id', to: 'piece_justificative#update', as: :piece_justificative
   end
 
-  resources :attachments, only: [:show, :destroy]
+  get 'attachments/:id', to: 'attachments#show', as: :attachment
+  delete 'attachments/:id', to: 'attachments#destroy'
 
   get "patron" => "root#patron"
   get "accessibilite" => "root#accessibilite"
