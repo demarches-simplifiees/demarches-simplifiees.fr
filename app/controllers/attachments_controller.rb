@@ -5,6 +5,11 @@ class AttachmentsController < ApplicationController
   def show
     @attachment = @blob.attachments.find(params[:id])
     @user_can_upload = params[:user_can_upload]
+
+    respond_to do |format|
+      format.js
+      format.html { redirect_back(fallback_location: @attachment.record&.dossier || root_path) }
+    end
   end
 
   def destroy
