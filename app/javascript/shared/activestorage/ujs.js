@@ -1,4 +1,5 @@
 import ProgressBar from './progress-bar';
+import errorFromDirectUploadMessage from './errors';
 import { fire } from '@utils';
 
 const INITIALIZE_EVENT = 'direct-upload:initialize';
@@ -40,17 +41,22 @@ addUploadEventListener(PROGRESS_EVENT, ({ detail: { id, progress } }) => {
 });
 
 addUploadEventListener(ERROR_EVENT, event => {
+  let id = event.detail.id;
+  let errorMsg = event.detail.error;
+
   // Display an error message
   alert(
     `Nous sommes désolés, une erreur s’est produite lors de l’envoi du fichier.
 
-    (${event.detail.error})`
+    (${errorMsg})`
   );
   // Prevent ActiveStorage from displaying its own error message
   event.preventDefault();
 
-  ProgressBar.error(event.detail.id, event.detail.error);
-  fire(document, 'sentry:capture-exception', new Error(event.detail.error));
+  ProgressBar.error(id, errorMsg);
+
+  let error = errorFromDirectUploadMessage(errorMsg);
+  fire(document, 'sentry:capture-exception', error);
 });
 
 addUploadEventListener(END_EVENT, ({ detail: { id } }) => {
