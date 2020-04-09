@@ -39,14 +39,6 @@ class Champs::CarteController < ApplicationController
         end
       end
 
-      if @champ.quartiers_prioritaires?
-        quartiers_prioritaires = ApiCartoService.generate_qp(coordinates)
-        geo_areas += quartiers_prioritaires.map do |qp|
-          qp[:source] = GeoArea.sources.fetch(:quartier_prioritaire)
-          qp
-        end
-      end
-
       selection_utilisateur = ApiCartoService.generate_selection_utilisateur(coordinates)
       selection_utilisateur[:source] = GeoArea.sources.fetch(:selection_utilisateur)
       geo_areas << selection_utilisateur
