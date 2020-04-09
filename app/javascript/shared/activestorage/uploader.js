@@ -1,5 +1,6 @@
 import { DirectUpload } from '@rails/activestorage';
 import ProgressBar from './progress-bar';
+import errorFromDirectUploadMessage from './errors';
 
 /**
   Uploader class is a delegate for DirectUpload instance
@@ -18,7 +19,8 @@ export default class Uploader {
       this.directUpload.create((errorMsg, attributes) => {
         if (errorMsg) {
           this.progressBar.error(errorMsg);
-          reject(new Error(errorMsg));
+          let error = errorFromDirectUploadMessage(errorMsg);
+          reject(error);
         } else {
           resolve(attributes.signed_id);
         }
