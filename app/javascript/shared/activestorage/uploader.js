@@ -15,10 +15,10 @@ export default class Uploader {
     this.progressBar.start();
 
     return new Promise((resolve, reject) => {
-      this.directUpload.create((error, attributes) => {
-        if (error) {
-          this.progressBar.error(error);
-          reject(error);
+      this.directUpload.create((errorMsg, attributes) => {
+        if (errorMsg) {
+          this.progressBar.error(errorMsg);
+          reject(new Error(errorMsg));
         } else {
           resolve(attributes.signed_id);
         }
