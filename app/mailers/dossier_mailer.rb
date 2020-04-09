@@ -35,6 +35,12 @@ class DossierMailer < ApplicationMailer
     mail(from: NO_REPLY_EMAIL, to: instructeur_email, subject: @subject)
   end
 
+  def notify_new_dossier_depose_to_instructeur(dossier, instructeur_email)
+    @dossier = dossier
+    @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+    mail(from: NO_REPLY_EMAIL, to: instructeur_email, subject: @subject)
+  end
+
   def notify_revert_to_instruction(dossier)
     @dossier = dossier
     @service = dossier.procedure.service
