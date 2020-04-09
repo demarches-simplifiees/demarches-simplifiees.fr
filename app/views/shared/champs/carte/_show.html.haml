@@ -1,4 +1,4 @@
-- if champ.to_s.present?
-  = react_component("MapReader", { geoData: champ.to_render_data } )
+- if champ.geometry?
+  = react_component("MapReader", { featureCollection: champ.to_feature_collection } )
   .geo-areas
     = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, error: false }
