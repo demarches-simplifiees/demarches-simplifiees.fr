@@ -1,4 +1,6 @@
 module DossierHelper
+  include EtablissementHelper
+
   def button_or_label_class(dossier)
     if dossier.accepte?
       'accepted'
@@ -99,6 +101,18 @@ module DossierHelper
     end
 
     content_tag(:span, status_text, class: "label #{status_class} ")
+  end
+
+  def demandeur_dossier(dossier)
+    if dossier.procedure.for_individual?
+      "#{dossier&.individual&.nom} #{dossier&.individual&.prenom}"
+    else
+      if dossier.etablissement.present?
+        raison_sociale_or_name(dossier.etablissement)
+      else
+        ""
+      end
+    end
   end
 
   private
