@@ -1,0 +1,10 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p
+  = t('.body', dossier_id: @dossier.id, libelle_demarche: @dossier.procedure.libelle)
+%p= link_to("Messagerie du dossier n°#{@dossier.id}", messagerie_instructeur_dossier_url(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id))
+
+= render partial: "layouts/mailers/signature"
