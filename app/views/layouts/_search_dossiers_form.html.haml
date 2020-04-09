@@ -1,0 +1,6 @@
+.header-search{ role: 'search' }
+  = form_tag "#{search_endpoint}", method: :get, class: "form" do
+    = label_tag :q, "Numéro de dossier", class: 'hidden'
+    = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
+    %button{ title: "Rechercher" }
+      = image_tag "icons/search-blue.svg", alt: 'Rechercher', 'aria-hidden':'true'
