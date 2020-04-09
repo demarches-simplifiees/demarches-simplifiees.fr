@@ -9,24 +9,6 @@ describe GeojsonService do
     ]
   }
 
-  describe '.toGeoJsonPolygonForQp' do
-    subject { JSON.parse(described_class.to_json_polygon_for_qp coordinates) }
-
-    describe 'coordinates are empty' do
-      let(:coordinates) { '' }
-
-      it { expect(subject['geo']['type']).to eq('Polygon') }
-      it { expect(subject['geo']['coordinates']).to eq([coordinates]) }
-    end
-
-    describe 'coordinates are informed' do
-      let(:coordinates) { good_coordinates }
-
-      it { expect(subject['geo']['type']).to eq('Polygon') }
-      it { expect(subject['geo']['coordinates']).to eq([coordinates]) }
-    end
-  end
-
   describe '.toGeoJsonPolygonForCadastre' do
     subject { JSON.parse(described_class.to_json_polygon_for_cadastre coordinates) }
 
