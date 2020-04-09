@@ -421,6 +421,22 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
+      context 'with instructeurs for the procedure' do
+        let!(:instructeur) { create(:instructeur, groupe_instructeurs: [dossier.procedure.defaut_groupe_instructeur]) }
+        let!(:instructeur2) { create(:instructeur, groupe_instructeurs: [dossier.procedure.defaut_groupe_instructeur]) }
+
+        before do
+          allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
+        end
+
+        it "sends notification mail to instructeurs" do
+          subject
+
+          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur.email)
+          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur2.email)
+        end
+      end
+
       context "on an closed procedure" do
         before { dossier.procedure.close! }
 

@@ -153,6 +153,9 @@ module Users
       if passage_en_construction? && errors.blank?
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
+        @dossier.procedure.instructeurs.each do |instructeur|
+          DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
+        end
         return redirect_to(merci_dossier_path(@dossier))
       elsif errors.present?
         flash.now.alert = errors
