@@ -39,9 +39,10 @@ class Champs::CarteController < ApplicationController
         end
       end
 
-      selection_utilisateur = ApiCartoService.generate_selection_utilisateur(coordinates)
-      selection_utilisateur[:source] = GeoArea.sources.fetch(:selection_utilisateur)
-      geo_areas << selection_utilisateur
+      selections_utilisateur = legacy_selections_utilisateur_to_polygons(coordinates)
+      geo_areas += selections_utilisateur.map do |selection_utilisateur|
+        selection_utilisateur.merge(source: GeoArea.sources.fetch(:selection_utilisateur))
+      end
 
       @champ.geo_areas = geo_areas.map do |geo_area|
         GeoArea.new(geo_area)
@@ -57,5 +58,18 @@ class Champs::CarteController < ApplicationController
   rescue ApiCarto::API::ResourceNotFound
     flash.alert = 'Les données cartographiques sont temporairement indisponibles. Réessayez dans un instant.'
     response.status = 503
+  end
+
+  private
+
+  def legacy_selections_utilisateur_to_polygons(coordinates)
+    coordinates.map do |lat_longs|
+      {
+        geometry: {
+          type: 'Polygon',
+          coordinates: [lat_longs.map { |lat_long| [lat_long['lng'], lat_long['lat']] }]
+        }
+      }
+    end
   end
 end

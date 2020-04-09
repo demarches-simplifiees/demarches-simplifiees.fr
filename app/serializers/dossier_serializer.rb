@@ -38,11 +38,12 @@ class DossierSerializer < ActiveModel::Serializer
       end
 
       if champ_carte.present?
-        carto_champs = champ_carte.geo_areas.to_a
-        if !carto_champs.find(&:selection_utilisateur?)
-          carto_champs << champ_carte.user_geo_area
+        champs_geo_areas = geo_areas.filter do |geo_area|
+          geo_area.source != GeoArea.sources.fetch(:selection_utilisateur)
         end
-        champs += carto_champs.compact
+        champs_geo_areas << champ_carte.selection_utilisateur_legacy_geo_area
+
+        champs += champs_geo_areas.compact
       end
     end
 

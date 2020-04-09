@@ -27,11 +27,20 @@ class GeoArea < ApplicationRecord
     selection_utilisateur: 'selection_utilisateur'
   }
 
+  scope :selections_utilisateur, -> { where(source: sources.fetch(:selection_utilisateur)) }
   scope :quartiers_prioritaires, -> { where(source: sources.fetch(:quartier_prioritaire)) }
   scope :cadastres, -> { where(source: sources.fetch(:cadastre)) }
   scope :parcelles_agricoles, -> { where(source: sources.fetch(:parcelle_agricole)) }
 
-  def selection_utilisateur?
-    source == self.class.sources.fetch(:selection_utilisateur)
+  def to_feature
+    {
+      type: 'Feature',
+      geometry: geometry,
+      properties: properties.merge(source: source)
+    }
+  end
+
+  def rgeo_geometry
+    RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
   end
 end
