@@ -421,19 +421,21 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
-      context 'with instructeurs for the procedure' do
-        let!(:instructeur) { create(:instructeur, groupe_instructeurs: [dossier.procedure.defaut_groupe_instructeur]) }
-        let!(:instructeur2) { create(:instructeur, groupe_instructeurs: [dossier.procedure.defaut_groupe_instructeur]) }
+      context 'with instructeurs ok to be notified instantly' do
+        let!(:instructeur_with_instant_email_dossier) { create(:instructeur) }
+        let!(:instructeur_without_instant_email_dossier) { create(:instructeur) }
 
         before do
           allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
+          create(:assign_to, instructeur: instructeur_with_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier.procedure.defaut_groupe_instructeur)
+          create(:assign_to, instructeur: instructeur_without_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: false, groupe_instructeur: dossier.procedure.defaut_groupe_instructeur)
         end
 
         it "sends notification mail to instructeurs" do
           subject
 
-          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur.email)
-          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur2.email)
+          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_with_instant_email_dossier.email)
+          expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_without_instant_email_dossier.email)
         end
       end
 
