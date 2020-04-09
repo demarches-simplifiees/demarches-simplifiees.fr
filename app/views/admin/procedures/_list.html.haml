@@ -25,7 +25,7 @@
           %td= link_to(try_format_datetime(procedure.created_at), admin_procedure_href)
         %td
           = link_to('Cloner', admin_procedure_clone_path(procedure.id), data: { method: :put }, class: 'btn-sm btn-primary clone-btn')
-          - if !procedure.can_be_deleted_by_administrateur?
+          - if procedure.can_be_deleted_by_administrateur?
             = link_to('X', url_for(controller: 'admin/procedures', action: :destroy, id: procedure.id), data: { method: :delete, confirm: "Confirmez-vous la suppression de la démarche ? \n\n Attention : toute suppression est définitive et s’appliquera aux éventuels autres administrateurs de cette démarche !" }, class: 'btn-sm btn-danger')
 
   = smart_listing.paginate
