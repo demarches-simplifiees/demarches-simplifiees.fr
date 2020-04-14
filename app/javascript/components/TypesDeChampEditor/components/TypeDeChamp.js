@@ -137,10 +137,6 @@ const TypeDeChamp = sortableElement(
           />
           <TypeDeChampCarteOptions isVisible={isCarte}>
             <TypeDeChampCarteOption
-              label="Quartiers prioritaires"
-              handler={updateHandlers.quartiers_prioritaires}
-            />
-            <TypeDeChampCarteOption
               label="Cadastres"
               handler={updateHandlers.cadastres}
             />
