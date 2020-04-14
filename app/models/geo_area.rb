@@ -43,4 +43,14 @@ class GeoArea < ApplicationRecord
   def rgeo_geometry
     RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
   end
+
+  def self.from_feature_collection(feature_collection)
+    feature_collection[:features].map do |feature|
+      GeoArea.new(
+        source: feature[:properties].delete(:source),
+        properties: feature[:properties],
+        geometry: feature[:geometry]
+      )
+    end
+  end
 end
