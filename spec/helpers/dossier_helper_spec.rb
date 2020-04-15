@@ -38,6 +38,40 @@ RSpec.describe DossierHelper, type: :helper do
     end
   end
 
+  describe ".demandeur_dossier" do
+    subject { demandeur_dossier(dossier) }
+
+    let(:individual) { create(:individual) }
+    let(:etablissement) { create(:etablissement) }
+    let(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
+
+    context "when the dossier is for an individual" do
+      let(:procedure) { create(:simple_procedure, :for_individual) }
+
+      context "when the individual is not provided" do
+        let(:individual) { nil }
+        it { is_expected.to be_blank }
+      end
+
+      context "when the individual has name information" do
+        it { is_expected.to eq "#{individual.nom} #{individual.prenom}" }
+      end
+    end
+
+    context "when the dossier is for a company" do
+      let(:procedure) { create(:procedure, for_individual: false) }
+
+      context "when the company is not provided" do
+        let(:etablissement) { nil }
+        it { is_expected.to be_blank }
+      end
+
+      context "when the company has name information" do
+        it { is_expected.to eq raison_sociale_or_name(etablissement) }
+      end
+    end
+  end
+
   describe ".dossier_submission_is_closed?" do
     let(:dossier) { create(:dossier, state: state) }
     let(:state) { Dossier.states.fetch(:brouillon) }
