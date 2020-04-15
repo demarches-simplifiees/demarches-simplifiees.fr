@@ -1,5 +1,5 @@
 import ProgressBar from './progress-bar';
-import errorFromDirectUploadMessage from './errors';
+import { errorFromDirectUploadMessage } from './file-upload-error';
 import { fire } from '@utils';
 
 const INITIALIZE_EVENT = 'direct-upload:initialize';
