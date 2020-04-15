@@ -18,6 +18,8 @@ export default class AutoUploadController {
     );
   }
 
+  // Create, upload and attach the file.
+  // On failure, display an error message and throw a FileUploadError.
   async start() {
     try {
       this._begin();
@@ -55,36 +57,15 @@ export default class AutoUploadController {
     this.input.disabled = false;
   }
 
-  _isError422(error) {
-    // Ajax errors have an xhr attribute
-    if (error && error.xhr && error.xhr.status == 422) return true;
-    // Rails DirectUpload errors are returned as a String, e.g. 'Error creating Blob for "Demain.txt". Status: 422'
-    if (error && error.toString().includes('422')) return true;
-
-    return false;
-  }
-
   _messageFromError(error) {
-    let allowRetry = !this._isError422(error);
+    let message = error.message || error.toString();
+    let canRetry = error.status && error.status != 422;
 
-    if (
-      error.xhr &&
-      error.xhr.status == 422 &&
-      error.response &&
-      error.response.errors &&
-      error.response.errors[0]
-    ) {
-      return {
-        title: error.response.errors[0],
-        description: '',
-        retry: allowRetry
-      };
-    } else {
-      return {
-        title: 'Une erreur s’est produite pendant l’envoi du fichier.',
-        description: error.message || error.toString(),
-        retry: allowRetry
-      };
+
+    return {
+      title: 'Le fichier n’a pas pu être envoyé.',
+      description: message,
+      retry: canRetry
     }
   }
 

@@ -1,7 +1,7 @@
 import { DirectUpload } from '@rails/activestorage';
 import { ajax } from '@utils';
 import ProgressBar from './progress-bar';
-import errorFromDirectUploadMessage from './errors';
+import FileUploadError, { errorFromDirectUploadMessage, ERROR_CODE_ATTACH } from './file-upload-error';
 
 /**
   Uploader class is a delegate for DirectUpload instance
@@ -17,6 +17,7 @@ export default class Uploader {
   /**
     Upload (and optionally attach) the file.
     Returns the blob signed id on success.
+    Throws a FileUploadError on failure.
     */
   async start() {
     this.progressBar.start();
@@ -40,6 +41,7 @@ export default class Uploader {
 
   /**
     Upload the file using the DirectUpload instance, and return the blob signed_id.
+    Throws a FileUploadError on failure.
     */
   async _upload() {
     return new Promise((resolve, reject) => {
@@ -56,6 +58,8 @@ export default class Uploader {
 
   /**
     Attach the file by sending a POST request to the autoAttachUrl.
+    Throws a FileUploadError on failure (containing the first validation
+    error message, if any).
     */
   async _attach(blobSignedId) {
     const attachmentRequest = {
@@ -64,7 +68,16 @@ export default class Uploader {
       data: `blob_signed_id=${blobSignedId}`
     };
 
-    await ajax(attachmentRequest);
+    try {
+      await ajax(attachmentRequest);
+    } catch (e) {
+      let message = e.response && e.response.errors && e.response.errors[0];
+      throw new FileUploadError(
+        message || 'Error attaching file.',
+        e.xhr.status,
+        ERROR_CODE_ATTACH
+      );
+    }
   }
 
   uploadRequestDidProgress(event) {
