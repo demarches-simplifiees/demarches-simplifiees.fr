@@ -1,3 +1,10 @@
+- if champ.selections_utilisateur.present?
+  .areas-title Sélections utilisateur
+  .areas
+    %ul
+      - champ.selections_utilisateur.each do |geo_area|
+        %li= geo_area_label(geo_area)
+
 - if champ.quartiers_prioritaires?
   .areas-title Quartiers prioritaires
   .areas

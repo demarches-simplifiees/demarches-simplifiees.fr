@@ -25,11 +25,13 @@ gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
+gem 'ffi-geos'
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
 gem 'font-awesome-rails'
 gem 'fugit'
+gem 'geo_coord', require: "geo/coord"
 gem 'geocoder'
 gem 'gon'
 gem 'graphql'
