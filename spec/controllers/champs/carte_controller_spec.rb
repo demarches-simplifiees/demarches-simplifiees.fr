@@ -16,7 +16,7 @@ describe Champs::CarteController, type: :controller do
   let(:geojson) { [] }
   let(:champ) do
     create(:type_de_champ_carte, options: {
-      quartiers_prioritaires: true
+      cadastres: true
     }).champ.create(dossier: dossier, value: geojson.to_json)
   end
 
@@ -29,9 +29,9 @@ describe Champs::CarteController, type: :controller do
       before do
         sign_in user
 
-        allow_any_instance_of(ApiCarto::QuartiersPrioritairesAdapter)
+        allow_any_instance_of(ApiCarto::CadastreAdapter)
           .to receive(:results)
-          .and_return([{ code: "QPCODE1234", geometry: { type: "MultiPolygon", coordinates: [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] } }])
+          .and_return([{ code: "QPCODE1234", surface_parcelle: 4, geometry: { type: "MultiPolygon", coordinates: [[[[2.38715792094576, 48.8723062632126], [2.38724851642619, 48.8721392348061]]]] } }])
 
         post :show, params: params, format: 'js'
       end
@@ -71,7 +71,7 @@ describe Champs::CarteController, type: :controller do
       before do
         sign_in user
 
-        allow_any_instance_of(ApiCarto::QuartiersPrioritairesAdapter)
+        allow_any_instance_of(ApiCarto::CadastreAdapter)
           .to receive(:results)
           .and_raise(ApiCarto::API::ResourceNotFound)
 
