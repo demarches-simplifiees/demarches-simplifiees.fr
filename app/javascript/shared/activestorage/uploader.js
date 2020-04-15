@@ -1,7 +1,10 @@
 import { DirectUpload } from '@rails/activestorage';
 import { ajax } from '@utils';
 import ProgressBar from './progress-bar';
-import FileUploadError, { errorFromDirectUploadMessage, ERROR_CODE_ATTACH } from './file-upload-error';
+import FileUploadError, {
+  errorFromDirectUploadMessage,
+  ERROR_CODE_ATTACH
+} from './file-upload-error';
 
 /**
   Uploader class is a delegate for DirectUpload instance
