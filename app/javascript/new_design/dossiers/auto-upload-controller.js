@@ -1,5 +1,6 @@
 import Uploader from '../../shared/activestorage/uploader';
 import { show, hide, toggle } from '@utils';
+import { FAILURE_CONNECTIVITY } from '../../shared/activestorage/file-upload-error';
 
 // Given a file input in a champ with a selected file, upload a file,
 // then attach it to the dossier.
@@ -61,11 +62,18 @@ export default class AutoUploadController {
     let message = error.message || error.toString();
     let canRetry = error.status && error.status != 422;
 
-
-    return {
-      title: 'Le fichier n’a pas pu être envoyé.',
-      description: message,
-      retry: canRetry
+    if (error.failureReason == FAILURE_CONNECTIVITY) {
+      return {
+        title: 'Le fichier n’a pas pu être envoyé.',
+        description: 'Vérifiez votre connexion à Internet, puis ré-essayez.',
+        retry: true
+      };
+    } else {
+      return {
+        title: 'Le fichier n’a pas pu être envoyé.',
+        description: message,
+        retry: canRetry
+      };
     }
   }
 
