@@ -51,8 +51,8 @@ export default class FileUploadError extends Error {
 //   (so that Sentry knows they are different kind of errors, from
 //   the line they were created.)
 export function errorFromDirectUploadMessage(message) {
-  let matches = message.match(/ Status: [0-9]{1,3}/);
-  let status = (matches && parseInt(matches[0], 10)) || undefined;
+  let matches = message.match(/ Status: ([0-9]{1,3})/);
+  let status = matches ? parseInt(matches[1], 10) : undefined;
 
   // prettier-ignore
   if (message.includes('Error reading')) {
