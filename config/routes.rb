@@ -309,6 +309,19 @@ Rails.application.routes.draw do
           end
         end
 
+        resources :avis, only: [:index, :show, :update] do
+          member do
+            get 'instruction'
+            get 'messagerie'
+            post 'commentaire' => 'avis#create_commentaire'
+            post 'avis' => 'avis#create_avis'
+            get 'bilans_bdf'
+
+            get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
+            post 'sign_up/email/:email' => 'avis#create_instructeur', constraints: { email: /.*/ }
+          end
+        end
+
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
@@ -345,18 +358,6 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
-      end
-    end
-    resources :avis, only: [:index, :show, :update] do
-      member do
-        get 'instruction'
-        get 'messagerie'
-        post 'commentaire' => 'avis#create_commentaire'
-        post 'avis' => 'avis#create_avis'
-        get 'bilans_bdf'
-
-        get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
-        post 'sign_up/email/:email' => 'avis#create_instructeur', constraints: { email: /.*/ }
       end
     end
     get "recherche" => "recherche#index"
