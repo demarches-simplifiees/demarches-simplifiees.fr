@@ -26,6 +26,7 @@ class Instructeur < ApplicationRecord
   has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
   has_many :trusted_device_tokens, dependent: :destroy
+  has_many :archives
 
   has_one :user, dependent: :nullify
 
