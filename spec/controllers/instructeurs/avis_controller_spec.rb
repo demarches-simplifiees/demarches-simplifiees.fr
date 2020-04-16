@@ -4,7 +4,7 @@ describe Instructeurs::AvisController, type: :controller do
 
     let(:claimant) { create(:instructeur) }
     let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [claimant]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur) }
     let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur, answer: 'yop') }
