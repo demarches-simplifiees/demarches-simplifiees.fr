@@ -1,4 +1,8 @@
 class Champs::CarteChamp < Champ
+  # Default map location. Center of the World, ahm, France...
+  DEFAULT_LON = 2.428462
+  DEFAULT_LAT = 46.538192
+
   # We are not using scopes here as we want to access
   # the following collections on unsaved records.
   def cadastres
@@ -41,8 +45,8 @@ class Champs::CarteChamp < Champ
     if dossier.present?
       dossier.geo_position
     else
-      lon = "2.428462"
-      lat = "46.538192"
+      lon = DEFAULT_LON.to_s
+      lat = DEFAULT_LAT.to_s
       zoom = "13"
 
       { lon: lon, lat: lat, zoom: zoom }
@@ -61,7 +65,7 @@ class Champs::CarteChamp < Champ
       point = dossier.geo_position
       bounding_box.add(factory.point(point[:lon], point[:lat]))
     else
-      bounding_box.add(factory.point(2.428462, 46.538192))
+      bounding_box.add(factory.point(DEFAULT_LON, DEFAULT_LAT))
     end
 
     [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
