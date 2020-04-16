@@ -37,4 +37,18 @@ module ChampHelper
       champs_piece_justificative_url(object.id)
     end
   end
+
+  def geo_area_label(geo_area)
+    case geo_area.source
+    when GeoArea.sources.fetch(:cadastre)
+      capture do
+        concat "Parcelle n° #{geo_area.numero} - Feuille #{geo_area.code_arr} #{geo_area.section} #{geo_area.feuille} - #{geo_area.surface_parcelle.round} m"
+        concat content_tag(:sup, "2")
+      end
+    when GeoArea.sources.fetch(:quartier_prioritaire)
+      "#{geo_area.commune} : #{geo_area.nom}"
+    when GeoArea.sources.fetch(:parcelle_agricole)
+      "Culture : #{geo_area.culture} - Surface : #{geo_area.surface} ha"
+    end
+  end
 end

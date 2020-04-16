@@ -16,10 +16,6 @@ async function loadAndDrawMap(element) {
     const { drawEditableMap } = await import('../../shared/carte-editor');
 
     drawEditableMap(element, data);
-  } else {
-    const { drawMap } = await import('../../shared/carte');
-
-    drawMap(element, data);
   }
 }
 
