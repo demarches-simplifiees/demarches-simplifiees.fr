@@ -99,7 +99,7 @@ module Instructeurs
         sign_in(user)
 
         Avis.link_avis_to_instructeur(user.instructeur)
-        redirect_to url_for(instructeur_avis_index_path)
+        redirect_to url_for(instructeur_all_avis_path)
       else
         flash[:alert] = user.errors.full_messages
         redirect_to url_for(sign_up_instructeur_avis_path(params[:id], email))

@@ -358,7 +358,7 @@ describe Instructeurs::AvisController, type: :controller do
           it { expect(Avis).to have_received(:link_avis_to_instructeur) }
 
           it { expect(subject.current_instructeur).to eq(created_instructeur) }
-          it { is_expected.to redirect_to instructeur_avis_index_path }
+          it { is_expected.to redirect_to instructeur_all_avis_path }
 
           it 'creates a corresponding user account for the email' do
             user = User.find_by(email: invited_email)
