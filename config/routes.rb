@@ -300,6 +300,7 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
+    get 'avis', to: 'avis#all', as: 'all_avis'
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
