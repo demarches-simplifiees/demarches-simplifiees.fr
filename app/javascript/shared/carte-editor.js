@@ -1,9 +1,10 @@
 import L from 'leaflet';
 import FreeDraw from 'leaflet-freedraw';
+import area from '@turf/area';
 import { fire, delegate } from '@utils';
 import $ from 'jquery';
 
-import polygonArea from './polygon_area';
+import createFeatureCollection from './create-feature-collection';
 
 const MAPS = new WeakMap();
 
@@ -81,13 +82,18 @@ function drawUserSelectionEditor(map, { selection }) {
 
 export function addFreeDrawEvents(map, selector) {
   const input = findInput(selector);
+
   map.freeDraw.on('markers', ({ latLngs }) => {
     if (latLngs.length === 0) {
       input.value = EMPTY_GEO_JSON;
-    } else if (polygonArea(latLngs) < 300000) {
-      input.value = JSON.stringify(latLngs);
     } else {
-      input.value = ERROR_GEO_JSON;
+      const featureCollection = createFeatureCollection(latLngs);
+
+      if (area(featureCollection) < 300000) {
+        input.value = JSON.stringify(featureCollection);
+      } else {
+        input.value = ERROR_GEO_JSON;
+      }
     }
 
     fire(input, 'change');
@@ -121,7 +127,7 @@ function getCurrentMap(element) {
   }
 }
 
-const EMPTY_GEO_JSON = '[]';
+const EMPTY_GEO_JSON = '{ "type": "FeatureCollection", "features": [] }';
 const ERROR_GEO_JSON = '';
 
 function findInput(selector) {
