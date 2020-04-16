@@ -1,4 +1,8 @@
 class Champs::CarteChamp < Champ
+  # Default map location. Center of the World, ahm, France...
+  DEFAULT_LON = 2.428462
+  DEFAULT_LAT = 46.538192
+
   # We are not using scopes here as we want to access
   # the following collections on unsaved records.
   def cadastres
@@ -19,8 +23,10 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def selection_utilisateur
-    geo_areas.find(&:selection_utilisateur?)
+  def selections_utilisateur
+    geo_areas.filter do |area|
+      area.source == GeoArea.sources.fetch(:selection_utilisateur)
+    end
   end
 
   def cadastres?
@@ -39,74 +45,79 @@ class Champs::CarteChamp < Champ
     if dossier.present?
       dossier.geo_position
     else
-      lon = "2.428462"
-      lat = "46.538192"
+      lon = DEFAULT_LON.to_s
+      lat = DEFAULT_LAT.to_s
       zoom = "13"
 
       { lon: lon, lat: lat, zoom: zoom }
     end
   end
 
-  def geo_json
-    @geo_json ||= begin
-      geo_area = selection_utilisateur
+  def bounding_box
+    factory = RGeo::Geographic.simple_mercator_factory
+    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
 
-      if geo_area
-        geo_area.geometry
-      else
-        geo_json_from_value
+    if geo_areas.present?
+      geo_areas.each do |area|
+        bounding_box.add(area.rgeo_geometry)
       end
+    elsif dossier.present?
+      point = dossier.geo_position
+      bounding_box.add(factory.point(point[:lon], point[:lat]))
+    else
+      bounding_box.add(factory.point(DEFAULT_LON, DEFAULT_LAT))
+    end
+
+    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
+  end
+
+  def to_feature_collection
+    {
+      type: 'FeatureCollection',
+      bbox: bounding_box,
+      features: (legacy_selections_utilisateur + except_selections_utilisateur).map(&:to_feature)
+    }
+  end
+
+  def geometry?
+    geo_areas.present?
+  end
+
+  def selection_utilisateur_legacy_geometry
+    if selection_utilisateur_legacy?
+      selections_utilisateur.first.geometry
+    elsif selections_utilisateur.present?
+      {
+        type: 'MultiPolygon',
+        coordinates: selections_utilisateur.filter do |selection_utilisateur|
+          selection_utilisateur.geometry['type'] == 'Polygon'
+        end.map do |selection_utilisateur|
+          selection_utilisateur.geometry['coordinates']
+        end
+      }
+    else
+      nil
     end
   end
 
-  def selection_utilisateur_size
-    if geo_json.present?
-      geo_json['coordinates'].size
-    else
-      0
+  def selection_utilisateur_legacy_geo_area
+    geometry = selection_utilisateur_legacy_geometry
+    if geometry.present?
+      GeoArea.new(
+        source: GeoArea.sources.fetch(:selection_utilisateur),
+        geometry: geometry
+      )
     end
   end
 
   def to_render_data
     {
       position: position,
-      selection: user_geo_area&.geometry,
+      selection: selection_utilisateur_legacy_geometry,
       quartiersPrioritaires: quartiers_prioritaires? ? quartiers_prioritaires.as_json(except: :properties) : [],
       cadastres: cadastres? ? cadastres.as_json(except: :properties) : [],
       parcellesAgricoles: parcelles_agricoles? ? parcelles_agricoles.as_json(except: :properties) : []
     }
-  end
-
-  def user_geo_area
-    geo_area = selection_utilisateur
-
-    if geo_area.present?
-      geo_area
-    elsif geo_json_from_value.present?
-      GeoArea.new(
-        geometry: geo_json_from_value,
-        source: GeoArea.sources.fetch(:selection_utilisateur)
-      )
-    end
-  end
-
-  def geo_json_from_value
-    @geo_json_from_value ||= begin
-      parsed_value = value.blank? ? nil : JSON.parse(value)
-      # We used to store in the value column a json array with coordinates.
-      if parsed_value.is_a?(Array)
-        # Empty array is sent instead of blank to distinguish between empty and error
-        if parsed_value.empty?
-          nil
-        else
-          # If it is a coordinates array, format it as a GEO-JSON
-          JSON.parse(GeojsonService.to_json_polygon_for_selection_utilisateur(parsed_value))
-        end
-      else
-        # It is already a GEO-JSON
-        parsed_value
-      end
-    end
   end
 
   def for_api
@@ -115,5 +126,39 @@ class Champs::CarteChamp < Champ
 
   def for_export
     nil
+  end
+
+  private
+
+  def selection_utilisateur_legacy?
+    if selections_utilisateur.size == 1
+      geometry = selections_utilisateur.first.geometry
+      return geometry && geometry['type'] == 'MultiPolygon'
+    end
+
+    false
+  end
+
+  def legacy_selections_utilisateur
+    if selection_utilisateur_legacy?
+      selections_utilisateur.first.geometry['coordinates'].map do |coordinates|
+        GeoArea.new(
+          geometry: {
+            type: 'Polygon',
+            coordinates: coordinates
+          },
+          properties: {},
+          source: GeoArea.sources.fetch(:selection_utilisateur)
+        )
+      end
+    else
+      selections_utilisateur
+    end
+  end
+
+  def except_selections_utilisateur
+    geo_areas.filter do |area|
+      area.source != GeoArea.sources.fetch(:selection_utilisateur)
+    end
   end
 end
