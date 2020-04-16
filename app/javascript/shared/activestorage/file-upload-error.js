@@ -30,7 +30,7 @@ export default class FileUploadError extends Error {
     See FAILURE_* constants for values.
     */
   get failureReason() {
-    let isNetworkError = this.code != ERROR_CODE_READ;
+    let isNetworkError = this.code && this.code != ERROR_CODE_READ;
 
     if (isNetworkError && this.status != 0) {
       return FAILURE_SERVER;
