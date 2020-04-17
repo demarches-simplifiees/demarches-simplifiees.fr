@@ -1,16 +1,16 @@
-import area from '@turf/area';
-
-export default function polygonArea(latLngs) {
-  return area({
+export default function createFeatureCollection(latLngs) {
+  return {
     type: 'FeatureCollection',
     features: latLngs.map(featurePolygonLatLngs)
-  });
+  };
 }
 
 function featurePolygonLatLngs(latLngs) {
   return {
     type: 'Feature',
-    properties: {},
+    properties: {
+      source: 'selection_utilisateur'
+    },
     geometry: {
       type: 'Polygon',
       coordinates: [latLngs.map(({ lng, lat }) => [lng, lat])]

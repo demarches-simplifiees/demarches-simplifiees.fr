@@ -38,7 +38,7 @@ class DossierSerializer < ActiveModel::Serializer
       end
 
       if champ_carte.present?
-        champs_geo_areas = geo_areas.filter do |geo_area|
+        champs_geo_areas = champ_carte.geo_areas.filter do |geo_area|
           geo_area.source != GeoArea.sources.fetch(:selection_utilisateur)
         end
         champs_geo_areas << champ_carte.selection_utilisateur_legacy_geo_area
