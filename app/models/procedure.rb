@@ -85,11 +85,8 @@ class Procedure < ApplicationRecord
   validate :validate_for_publication, on: :publication
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
-  # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
-  validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
-  validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
-  validates :duree_conservation_dossiers_dans_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, unless: :durees_conservation_required
-  validates :duree_conservation_dossiers_hors_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, unless: :durees_conservation_required
+  validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
+  validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates_with MonAvisEmbedValidator
   validates :notice, content_type: [
     "application/msword",
@@ -112,7 +109,6 @@ class Procedure < ApplicationRecord
 
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
   before_save :update_juridique_required
-  before_save :update_durees_conservation_required
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
   after_create :ensure_default_groupe_instructeur
@@ -595,11 +591,6 @@ class Procedure < ApplicationRecord
     if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
       errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
     end
-  end
-
-  def update_durees_conservation_required
-    self.durees_conservation_required ||= duree_conservation_dossiers_hors_ds.present? && duree_conservation_dossiers_dans_ds.present?
-    true
   end
 
   def percentile_time(start_attribute, end_attribute, p)
