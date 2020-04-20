@@ -4,6 +4,11 @@ module Instructeurs
     before_action :redirect_to_avis_if_needed, only: [:index]
 
     ITEMS_PER_PAGE = 25
+    STATUT_A_SUIVRE = "a-suivre"
+    STATUT_SUIVIS = "suivis"
+    STATUT_TRAITES = "traites"
+    STATUT_TOUS = "tous"
+    STATUT_ARCHIVES = "archives"
 
     def index
       @procedures = current_instructeur
@@ -29,6 +34,12 @@ module Instructeurs
         .group('groupe_instructeurs.procedure_id')
         .reorder(nil)
         .count
+
+      @dossiers_filtered_a_suivre_count_per_procedure = dossiers_filtered_count_per_statut(@dossiers_a_suivre_count_per_procedure, STATUT_A_SUIVRE, dossiers)
+      @dossiers_filtered_followed_count_per_procedure = dossiers_filtered_count_per_statut(@followed_dossiers_count_per_procedure, STATUT_SUIVIS, dossiers)
+      @dossiers_filtered_termines_count_per_procedure = dossiers_filtered_count_per_statut(@dossiers_termines_count_per_procedure, STATUT_TRAITES, dossiers)
+      @dossiers_filtered_all_state_count_per_procedure = dossiers_filtered_count_per_statut(@dossiers_count_per_procedure, STATUT_TOUS, dossiers)
+      @dossiers_filtered_archived_count_per_procedure = dossiers_filtered_count_per_statut(@dossiers_archived_count_per_procedure, STATUT_ARCHIVES, dossiers)
 
       @all_dossiers_counts = {}
       @all_dossiers_counts['à suivre'] = dossiers.without_followers.en_cours.count
@@ -87,15 +98,15 @@ module Instructeurs
         .archived
 
       @dossiers = case statut
-      when 'a-suivre'
+      when STATUT_A_SUIVRE
         @a_suivre_dossiers
-      when 'suivis'
+      when STATUT_SUIVIS
         @followed_dossiers
-      when 'traites'
+      when STATUT_TRAITES
         @termines_dossiers
-      when 'tous'
+      when STATUT_TOUS
         @all_state_dossiers
-      when 'archives'
+      when STATUT_ARCHIVES
         @archived_dossiers
       end
 
@@ -108,6 +119,7 @@ module Instructeurs
         filtered_sorted_ids = sorted_ids
       end
 
+      dossiers_filtered_count_per_procedure
       page = params[:page].presence || 1
 
       filtered_sorted_paginated_ids = Kaminari
@@ -124,6 +136,58 @@ module Instructeurs
       kaminarize(page, filtered_sorted_ids.count)
 
       assign_exports
+    end
+
+    def dossiers_filtered_count_per_procedure
+      @dossiers_a_suivre_filtered_count = @a_suivre_dossiers.size
+      @dossiers_followed_filtered_count = @followed_dossiers.size
+      @dossiers_termines_filtered_count = @termines_dossiers.size
+      @dossiers_filtered_count = @all_state_dossiers.size
+      @dossiers_archived_filtered_count = @archived_dossiers.size
+
+      @dossiers_a_suivre_filtered_count = procedure_presentation.filtered_ids(@a_suivre_dossiers, STATUT_A_SUIVRE).size if procedure_presentation.filters[STATUT_A_SUIVRE].count > 0
+      @dossiers_followed_filtered_count = procedure_presentation.filtered_ids(@followed_dossiers, STATUT_SUIVIS).size if procedure_presentation.filters[STATUT_SUIVIS].count > 0
+      @dossiers_termines_filtered_count = procedure_presentation.filtered_ids(@termines_dossiers, STATUT_TRAITES).size if procedure_presentation.filters[STATUT_TRAITES].count > 0
+      @dossiers_filtered_count = procedure_presentation.filtered_ids(@all_state_dossiers, STATUT_TOUS).size if procedure_presentation.filters[STATUT_TOUS].count > 0
+      @dossiers_archived_filtered_count = procedure_presentation.filtered_ids(@archived_dossiers, STATUT_ARCHIVES).size if procedure_presentation.filters[STATUT_ARCHIVES].count > 0
+    end
+
+    def dossiers_filtered_count_per_statut(count_per_procedure, statut, dossiers)
+      filtered_count_per_statut = {}
+      count_per_procedure.each_key do |procedure_id|
+        procedure_presentation = current_instructeur.procedure_presentation_and_errors_for_procedure_id(procedure_id)[0]
+
+        filtered_count_per_statut[procedure_id] = case statut
+        when STATUT_A_SUIVRE
+          a_suivre_dossiers = dossiers
+            .for_procedure(procedure_presentation.procedure)
+            .without_followers.en_cours
+          procedure_presentation.filters[STATUT_A_SUIVRE].count > 0 ? procedure_presentation.filtered_ids(a_suivre_dossiers, STATUT_A_SUIVRE).size : a_suivre_dossiers.size
+        when STATUT_SUIVIS
+          followed_dossiers = current_instructeur
+            .followed_dossiers
+            .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
+            .for_procedure(procedure_presentation.procedure)
+            .en_cours
+          procedure_presentation.filters[STATUT_SUIVIS].count > 0 ? procedure_presentation.filtered_ids(followed_dossiers, STATUT_SUIVIS).size : followed_dossiers.size
+        when STATUT_TRAITES
+          termines_dossiers = dossiers
+            .for_procedure(procedure_presentation.procedure)
+            .termine
+          procedure_presentation.filters[STATUT_TRAITES].count > 0 ? procedure_presentation.filtered_ids(termines_dossiers, STATUT_TRAITES).size : termines_dossiers.size
+        when STATUT_TOUS
+          all_state_dossiers = dossiers
+            .for_procedure(procedure_presentation.procedure)
+            .all_state
+          procedure_presentation.filters[STATUT_TOUS].count > 0 ? procedure_presentation.filtered_ids(all_state_dossiers, STATUT_TOUS).size : all_state_dossiers.size
+        when STATUT_ARCHIVES
+          archived_dossiers = dossiers
+            .for_procedure(procedure_presentation.procedure)
+            .archived
+          procedure_presentation.filters[STATUT_ARCHIVES].count > 0 ? procedure_presentation.filtered_ids(archived_dossiers, STATUT_ARCHIVES).size : archived_dossiers.size
+        end
+      end
+      filtered_count_per_statut
     end
 
     def deleted_dossiers
