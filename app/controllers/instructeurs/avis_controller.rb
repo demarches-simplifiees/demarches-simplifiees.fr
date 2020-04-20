@@ -37,7 +37,7 @@ module Instructeurs
     def update
       if @avis.update(avis_params)
         flash.notice = 'Votre réponse est enregistrée.'
-        redirect_to instruction_instructeur_avis_path(@avis)
+        redirect_to instruction_instructeur_avis_path(@avis.procedure, @avis)
       else
         flash.now.alert = @avis.errors.full_messages
         @new_avis = Avis.new
@@ -65,7 +65,7 @@ module Instructeurs
       @new_avis = create_avis_from_params(avis.dossier, avis.confidentiel)
 
       if @new_avis.nil?
-        redirect_to instruction_instructeur_avis_path(avis)
+        redirect_to instruction_instructeur_avis_path(avis.procedure, avis)
       else
         set_avis_and_dossier
         render :instruction

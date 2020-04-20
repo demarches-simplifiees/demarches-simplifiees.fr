@@ -64,7 +64,7 @@ describe Instructeurs::AvisController, type: :controller do
         end
 
         it 'should be ok' do
-          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer))
+          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer.procedure, avis_without_answer))
           expect(avis_without_answer.answer).to eq('answer')
           expect(avis_without_answer.piece_justificative_file).to_not be_attached
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
@@ -84,7 +84,7 @@ describe Instructeurs::AvisController, type: :controller do
         end
 
         it 'should be ok' do
-          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer))
+          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer.procedure, avis_without_answer))
           expect(avis_without_answer.answer).to eq('answer')
           expect(avis_without_answer.piece_justificative_file).to be_attached
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
@@ -178,7 +178,7 @@ describe Instructeurs::AvisController, type: :controller do
           it { expect(created_avis.introduction).to eq(intro) }
           it { expect(created_avis.dossier).to eq(previous_avis.dossier) }
           it { expect(created_avis.claimant).to eq(instructeur) }
-          it { expect(response).to redirect_to(instruction_instructeur_avis_path(previous_avis)) }
+          it { expect(response).to redirect_to(instruction_instructeur_avis_path(previous_avis.procedure, previous_avis)) }
         end
 
         context 'when the user asked for a confidentiel avis' do
