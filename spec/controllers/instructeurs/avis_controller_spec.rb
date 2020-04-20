@@ -105,7 +105,7 @@ describe Instructeurs::AvisController, type: :controller do
       it do
         subject
 
-        expect(response).to redirect_to(messagerie_instructeur_avis_path(avis_without_answer))
+        expect(response).to redirect_to(messagerie_instructeur_avis_path(avis_without_answer.procedure, avis_without_answer))
         expect(dossier.commentaires.map(&:body)).to match(['commentaire body'])
       end
 

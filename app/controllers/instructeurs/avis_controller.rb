@@ -54,7 +54,7 @@ module Instructeurs
 
       if @commentaire.save
         flash.notice = "Message envoyé"
-        redirect_to messagerie_instructeur_avis_path(avis)
+        redirect_to messagerie_instructeur_avis_path(avis.procedure, avis)
       else
         flash.alert = @commentaire.errors.full_messages
         render :messagerie
