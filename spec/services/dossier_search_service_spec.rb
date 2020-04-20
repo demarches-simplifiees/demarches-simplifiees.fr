@@ -198,5 +198,11 @@ describe DossierSearchService do
 
       it { expect(subject.size).to eq(1) }
     end
+
+    describe 'search with a single forbidden character should not crash postgres' do
+      let(:terms) { '? OCTO' }
+
+      it { expect(subject.size).to eq(3) }
+    end
   end
 end
