@@ -15,9 +15,9 @@ class ApiEntreprise::EffectifsAdapter < ApiEntreprise::Adapter
   def process_params
     if data_source[:effectifs_mensuels].present?
       {
-        effectif_mensuel: data_source[:effectifs_mensuels],
-        effectif_mois: @mois,
-        effectif_annee: @annee
+        entreprise_effectif_mensuel: data_source[:effectifs_mensuels],
+        entreprise_effectif_mois: @mois,
+        entreprise_effectif_annee: @annee
       }
     else
       {}

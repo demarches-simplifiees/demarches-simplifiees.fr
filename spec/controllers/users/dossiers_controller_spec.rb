@@ -327,7 +327,7 @@ describe Users::DossiersController, type: :controller do
           expect(dossier.etablissement.entreprise).to be_present
           expect(dossier.etablissement.exercices).to be_present
           expect(dossier.etablissement.association?).to be(true)
-          expect(dossier.etablissement.effectif_mensuel).to be_present
+          expect(dossier.etablissement.entreprise_effectif_mensuel).to be_present
         end
       end
     end
