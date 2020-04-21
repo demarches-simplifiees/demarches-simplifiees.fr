@@ -131,8 +131,8 @@ module ApplicationHelper
   end
 
   def try_format_mois_effectif(etablissement)
-    if etablissement.effectif_mois.present? && etablissement.effectif_annee.present?
-      [etablissement.effectif_mois, etablissement.effectif_annee].join('/')
+    if etablissement.entreprise_effectif_mois.present? && etablissement.entreprise_effectif_annee.present?
+      [etablissement.entreprise_effectif_mois, etablissement.entreprise_effectif_annee].join('/')
     else
       ''
     end
