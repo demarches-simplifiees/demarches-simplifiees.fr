@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 feature 'The user' do
   let(:password) { 'démarches-simplifiées-pwd' }
   let!(:user) { create(:user, password: password) }

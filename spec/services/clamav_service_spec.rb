@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ClamavService do
   describe '.safe_file?' do
     let(:path_file) { '/tmp/plop.txt' }

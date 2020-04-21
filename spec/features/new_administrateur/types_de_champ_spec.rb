@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'As an administrateur I can edit types de champ', js: true do
   let(:administrateur) { procedure.administrateurs.first }
   let(:procedure) { create(:procedure) }

@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe 'instructeur_mailer/send_notifications.html.haml', type: :view do
   let(:instructeur) { create(:instructeur) }
 

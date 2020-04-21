@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe 'commencer/show.html.haml', type: :view do
   include Rails.application.routes.url_helpers
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Signing up:' do
   let(:user_email) { generate :user_email }
   let(:user_password) { 'démarches-simplifiées-pwd' }

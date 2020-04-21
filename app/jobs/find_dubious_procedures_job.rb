@@ -1,5 +1,5 @@
-class FindDubiousProceduresJob < ApplicationJob
-  queue_as :cron
+class FindDubiousProceduresJob < CronJob
+  self.cron_expression = "0 0 * * *"
 
   FORBIDDEN_KEYWORDS = [
     'NIR', 'NIRPP', 'race', 'religion',

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe DropDownList do
   let(:dropdownlist) { create :drop_down_list, value: value }
 

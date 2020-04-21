@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Administrations::OmniauthCallbacksController, type: :controller do
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:administration]

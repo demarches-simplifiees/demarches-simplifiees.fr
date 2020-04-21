@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApiEntreprise::ExercicesAdapter do
   let(:siret) { '41816609600051' }
   let(:procedure_id) { 11 }

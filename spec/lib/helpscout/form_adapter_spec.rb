@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Helpscout::FormAdapter do
   describe '#send_form' do
     let(:api) { spy(double(:api)) }

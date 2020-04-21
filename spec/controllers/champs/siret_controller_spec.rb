@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Champs::SiretController, type: :controller do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :published) }

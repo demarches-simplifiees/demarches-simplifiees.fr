@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe BillSignature, type: :model do
   describe 'validations' do
     subject(:bill_signature) { BillSignature.new }

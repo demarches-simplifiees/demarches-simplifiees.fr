@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApiEntreprise::EtablissementAdapter do
   let(:procedure_id) { 33 }
 

@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe DeclarativeProceduresJob, type: :job do
   describe "perform" do
     let(:date) { Time.utc(2017, 9, 1, 10, 5, 0) }

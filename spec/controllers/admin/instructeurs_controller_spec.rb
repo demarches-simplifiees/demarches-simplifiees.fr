@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Admin::InstructeursController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:email_2) { 'plip@octo.com' }

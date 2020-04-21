@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe Avis, type: :model do
   let(:claimant) { create(:instructeur) }
 

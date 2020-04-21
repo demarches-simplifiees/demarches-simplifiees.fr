@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Champs::DecimalNumberChamp do
   subject { build(:champ_decimal_number, value: value).tap(&:valid?) }
 

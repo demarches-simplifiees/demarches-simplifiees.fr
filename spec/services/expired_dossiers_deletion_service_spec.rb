@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ExpiredDossiersDeletionService do
   describe '#process_expired_dossiers_brouillon' do
     let(:draft_expiration) { 1.month + 5.days }

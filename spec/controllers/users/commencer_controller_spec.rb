@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Users::CommencerController, type: :controller do
   let(:user) { create(:user) }
   let(:published_procedure) { create(:procedure, :published) }

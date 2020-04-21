@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Instructeurs::InstructeurController, type: :controller do
   describe 'before actions: authenticate_instructeur!' do
     it 'is present' do

@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe 'shared/attachment/_show.html.haml', type: :view do
   let(:champ) { create(:champ_piece_justificative) }
   let(:virus_scan_result) { nil }

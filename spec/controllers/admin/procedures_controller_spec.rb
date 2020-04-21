@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'uri'
 
 describe Admin::ProceduresController, type: :controller do

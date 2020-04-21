@@ -1,0 +1,4 @@
+fr:
+  errors:
+    messages:
+      content_type_invalid: n’est pas d’un type accepté
