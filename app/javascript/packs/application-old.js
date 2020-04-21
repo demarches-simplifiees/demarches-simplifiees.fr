@@ -8,6 +8,7 @@ import '../shared/page-update-event';
 import '../shared/activestorage/ujs';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
+import '../shared/fix-ujs-with-turbolinks';
 import '../shared/remote-input';
 import '../shared/franceconnect';
 

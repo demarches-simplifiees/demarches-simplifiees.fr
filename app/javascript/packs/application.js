@@ -11,6 +11,7 @@ import '../shared/activestorage/ujs';
 import '../shared/remote-poller';
 import '../shared/rails-ujs-fix';
 import '../shared/safari-11-file-xhr-workaround';
+import '../shared/fix-ujs-with-turbolinks';
 import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
