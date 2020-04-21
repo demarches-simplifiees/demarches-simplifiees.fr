@@ -9,7 +9,12 @@ describe ApiEntrepriseService do
         .to_return(body: exercices_body, status: exercices_status)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/.*token=/)
         .to_return(body: associations_body, status: associations_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/#{annee}\/#{mois}\/entreprise\/#{siren}?.*token=/)
+        .to_return(body: effectifs_mensuels_body, status: effectifs_mensuels_status)
     end
+
+    before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
+    after { Timecop.return }
 
     let(:siren) { '418166096' }
     let(:siret) { '41816609600051' }
@@ -20,6 +25,12 @@ describe ApiEntrepriseService do
 
     let(:etablissements_status) { 200 }
     let(:etablissements_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
+
+    let(:effectifs_mensuels_status) { 200 }
+    let(:effectifs_mensuels_body) { File.read('spec/fixtures/files/api_entreprise/effectifs.json') }
+    let(:annee) { "2020" }
+    let(:mois) { "02" }
+    let(:effectif_mensuel) { 100.5 }
 
     let(:exercices_status) { 200 }
     let(:exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
@@ -35,6 +46,7 @@ describe ApiEntrepriseService do
         expect(result[:siret]).to eq(siret)
         expect(result[:association_rna]).to eq(rna)
         expect(result[:exercices_attributes]).to_not be_empty
+        expect(result[:effectif_mensuel]).to eq(effectif_mensuel)
       end
     end
 
