@@ -29,6 +29,13 @@ delegate('click', '[data-attachment-refresh]', event => {
   attachementPoller.check();
 });
 
+// Periodically check the state of a set of URLs.
+//
+// Each time the given URL is requested, the matching `show.js.erb` view is rendered,
+// causing the state to be refreshed.
+//
+// This is used mainly to refresh attachments during the anti-virus check,
+// but also to refresh the state of a pending spreadsheet export.
 class RemotePoller {
   urls = new Set();
   timeout;

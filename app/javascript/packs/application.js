@@ -24,6 +24,7 @@ import '../new_design/select2';
 import '../new_design/spinner';
 import '../new_design/support';
 import '../new_design/dossiers/auto-save';
+import '../new_design/dossiers/auto-upload';
 
 import '../new_design/champs/carte';
 import '../new_design/champs/te_fenua';
