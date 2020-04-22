@@ -105,6 +105,8 @@ class Etablissement < ApplicationRecord
       effectif_mensuel: entreprise_effectif_mensuel,
       effectif_mois: entreprise_effectif_mois,
       effectif_annee: entreprise_effectif_annee,
+      effectif_annuel: entreprise_effectif_annuel,
+      effectif_annuel_annee: entreprise_effectif_annuel_annee,
       date_creation: entreprise_date_creation,
       nom: entreprise_nom,
       prenom: entreprise_prenom,
