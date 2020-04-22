@@ -20,7 +20,7 @@ describe ApiEntreprise::EffectifsAdapter do
     end
 
     it "renvoie les effectifs du mois demandé" do
-      expect(subject[:effectif_mensuel]).to eq(100.5)
+      expect(subject[:entreprise_effectif_mensuel]).to eq(100.5)
     end
   end
 end

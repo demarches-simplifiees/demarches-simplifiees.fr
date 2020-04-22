@@ -46,7 +46,7 @@ describe ApiEntrepriseService do
         expect(result[:siret]).to eq(siret)
         expect(result[:association_rna]).to eq(rna)
         expect(result[:exercices_attributes]).to_not be_empty
-        expect(result[:effectif_mensuel]).to eq(effectif_mensuel)
+        expect(result[:entreprise_effectif_mensuel]).to eq(effectif_mensuel)
       end
     end
 
