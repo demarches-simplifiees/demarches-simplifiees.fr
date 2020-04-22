@@ -17,6 +17,6 @@ Rails.application.config.content_security_policy do |policy|
     # pour détecter les erreurs lors de l'ajout d'une nouvelle brique externe durant le développement
     policy.report_uri "http://#{ENV['APP_HOST']}/csp/"
     # En développement, quand bin/webpack-dev-server est utilisé, on autorise les requêtes faites par le live-reload
-    policy.connect_src(*policy.connect_src, "ws://localhost:3035", "localhost:3035")
+    policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")
   end
 end

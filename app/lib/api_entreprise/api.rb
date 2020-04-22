@@ -3,6 +3,7 @@ class ApiEntreprise::API
   ETABLISSEMENT_RESOURCE_NAME = "etablissements"
   EXERCICES_RESOURCE_NAME = "exercices"
   RNA_RESOURCE_NAME = "associations"
+  EFFECTIFS_RESOURCE_NAME = "effectifs_mensuels_acoss_covid"
 
   TIMEOUT = 15
 
@@ -26,6 +27,11 @@ class ApiEntreprise::API
 
   def self.rna(siret, procedure_id)
     call(RNA_RESOURCE_NAME, siret, procedure_id)
+  end
+
+  def self.effectifs(siren, procedure_id, annee, mois)
+    endpoint = [EFFECTIFS_RESOURCE_NAME, annee, mois, "entreprise"].join('/')
+    call(endpoint, siren, procedure_id)
   end
 
   private
