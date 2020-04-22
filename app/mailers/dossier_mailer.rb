@@ -134,7 +134,8 @@ class DossierMailer < ApplicationMailer
   def default_i18n_subject(interpolations = {})
     if interpolations[:state]
       mailer_scope = self.class.mailer_name.tr('/', '.')
-      I18n.t("subject_#{interpolations[:state]}", interpolations.merge(scope: [mailer_scope, action_name]))
+      state = interpolations[:state].in?(Dossier::TERMINE) ? 'termine' : interpolations[:state]
+      I18n.t("subject_#{state}", interpolations.merge(scope: [mailer_scope, action_name]))
     else
       super
     end

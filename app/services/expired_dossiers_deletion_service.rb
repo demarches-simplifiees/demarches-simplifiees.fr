@@ -9,6 +9,11 @@ class ExpiredDossiersDeletionService
     delete_expired_en_construction_and_notify
   end
 
+  def self.process_expired_dossiers_termine
+    send_termine_expiration_notices
+    delete_expired_termine_and_notify
+  end
+
   def self.send_brouillon_expiration_notices
     dossiers_close_to_expiration = Dossier
       .brouillon_close_to_expiration
@@ -38,6 +43,16 @@ class ExpiredDossiersDeletionService
     dossiers_close_to_expiration.update_all(en_construction_close_to_expiration_notice_sent_at: Time.zone.now)
   end
 
+  def self.send_termine_expiration_notices
+    dossiers_close_to_expiration = Dossier
+      .termine_close_to_expiration
+      .without_termine_expiration_notice_sent
+
+    send_expiration_notices(dossiers_close_to_expiration)
+
+    dossiers_close_to_expiration.update_all(termine_close_to_expiration_notice_sent_at: Time.zone.now)
+  end
+
   def self.delete_expired_brouillons_and_notify
     dossiers_to_remove = Dossier.brouillon_expired
 
@@ -57,6 +72,10 @@ class ExpiredDossiersDeletionService
 
   def self.delete_expired_en_construction_and_notify
     delete_expired_and_notify(Dossier.en_construction_expired)
+  end
+
+  def self.delete_expired_termine_and_notify
+    delete_expired_and_notify(Dossier.termine_expired)
   end
 
   private
