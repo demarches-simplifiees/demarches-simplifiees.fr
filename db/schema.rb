@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_21_174642) do
+ActiveRecord::Schema.define(version: 2020_04_22_090426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -314,6 +314,8 @@ ActiveRecord::Schema.define(version: 2020_04_21_174642) do
     t.string "entreprise_effectif_mois"
     t.string "entreprise_effectif_annee"
     t.decimal "entreprise_effectif_mensuel"
+    t.decimal "entreprise_effectif_annuel"
+    t.string "entreprise_effectif_annuel_annee"
     t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
   end
 

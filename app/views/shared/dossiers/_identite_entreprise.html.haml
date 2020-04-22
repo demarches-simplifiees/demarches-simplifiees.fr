@@ -34,11 +34,16 @@
             = try_format_mois_effectif(etablissement)
             (URSSAF)
           %td= etablissement.entreprise_effectif_mensuel
+        %tr
+          %th.libelle
+            Effectif moyen annuel
+            = etablissement.entreprise_effectif_annuel_annee
+            (URSSAF)
+          %td= etablissement.entreprise_effectif_annuel
       %tr
-        %th.libelle Effectif de l'organisation :
+        %th.libelle Effectif de l'organisation (INSEE) :
         %td
           = effectif(etablissement)
-          (INSEE)
       %tr
         %th.libelle Numéro de TVA intracommunautaire :
         %td= etablissement.entreprise.numero_tva_intracommunautaire
