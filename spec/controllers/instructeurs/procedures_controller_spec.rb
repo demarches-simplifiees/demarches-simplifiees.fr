@@ -96,18 +96,22 @@ describe Instructeurs::ProceduresController, type: :controller do
       it { expect(response).to have_http_status(:ok) }
 
       context "with procedures assigned" do
-        let(:procedure1) { create(:procedure, :published) }
-        let(:procedure2) { create(:procedure, :closed) }
-        let(:procedure3) { create(:procedure) }
+        let(:procedure_draft) { create(:procedure) }
+        let(:procedure_published) { create(:procedure, :published) }
+        let(:procedure_closed) { create(:procedure, :closed) }
+        let(:procedure_not_assigned) { create(:procedure) }
 
         before do
-          instructeur.groupe_instructeurs << procedure1.defaut_groupe_instructeur
-          instructeur.groupe_instructeurs << procedure2.defaut_groupe_instructeur
-          instructeur.groupe_instructeurs << procedure3.defaut_groupe_instructeur
+          [procedure_draft, procedure_published, procedure_closed].each do |p|
+            instructeur.groupe_instructeurs << p.defaut_groupe_instructeur
+          end
           subject
         end
 
-        it { expect(assigns(:procedures)).to include(procedure1, procedure2) }
+        it 'assigns procedures visible to the instructeur' do
+          expect(assigns(:procedures)).to include(procedure_draft, procedure_published, procedure_closed)
+          expect(assigns(:procedures)).not_to include(procedure_not_assigned)
+        end
       end
 
       context "with dossiers" do
