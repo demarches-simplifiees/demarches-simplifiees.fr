@@ -1,4 +1,6 @@
 class Archive < ApplicationRecord
+  scope :stale, -> { where('updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
+
   include AASM
 
   MAX_DUREE_CONSERVATION_ARCHIVE = 1.week
