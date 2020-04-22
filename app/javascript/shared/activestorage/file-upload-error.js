@@ -20,9 +20,19 @@ export const FAILURE_CONNECTIVITY = 'file-upload-failure-connectivity';
 export default class FileUploadError extends Error {
   constructor(message, status, code) {
     super(message);
+
     this.name = 'FileUploadError';
     this.status = status;
     this.code = code;
+
+    // Prevent the constructor stacktrace from being included.
+    // (it messes up with Sentry issues grouping)
+    if (Error.captureStackTrace) {
+      // V8-only
+      Error.captureStackTrace(this, this.constructor);
+    } else {
+      this.stack = new Error().stack;
+    }
   }
 
   /**
