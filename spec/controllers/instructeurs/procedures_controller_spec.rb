@@ -236,6 +236,14 @@ describe Instructeurs::ProceduresController, type: :controller do
         instructeur.groupe_instructeurs << gi_2
       end
 
+      context 'when the procedure is discarded' do
+        before do
+          procedure.discard!
+        end
+
+        it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+      end
+
       context "without any dossier" do
         before { subject }
 
