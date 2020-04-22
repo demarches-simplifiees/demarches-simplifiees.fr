@@ -25,6 +25,11 @@ bundle_save_cache: &bundle_save_cache
     paths:
       - ~/vendor/bundle
 
+aptget_install: &aptget_install
+  run:
+    name: Install GEOS
+    command: sudo apt-get install libgeos-dev
+
 bundle_install: &bundle_install
   run:
     name: Install Ruby Dependencies
@@ -78,6 +83,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - *aptget_install
       - *bundle_restore_cache
       - *bundle_install
       - *bundle_save_cache
@@ -89,6 +95,7 @@ jobs:
     parallelism: 3
     steps:
       - checkout
+      - *aptget_install
       - *bundle_restore_cache
       - *bundle_install
       - *yarn_restore_cache
@@ -123,6 +130,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - *aptget_install
       - *bundle_restore_cache
       - *bundle_install
       - *yarn_restore_cache
