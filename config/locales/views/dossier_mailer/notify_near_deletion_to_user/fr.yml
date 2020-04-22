@@ -4,9 +4,15 @@ fr:
       subject_en_construction:
         one: Un dossier en construction va bientôt être supprimé
         other: Des dossiers en construction vont bientôt être supprimés
+      subject_termine:
+        one: Un dossier dont le traitement est terminé va bientôt être supprimé
+        other: Des dossiers dont le traitement est terminé vont bientôt être supprimés
       header_en_construction:
         one: "Afin de limiter la conservation de vos données personnelles, le dossier en construction suivant sera bientôt automatiquement supprimé :"
         other: "Afin de limiter la conservation de vos données personnelles, les dossiers en construction suivant seront bientôt automatiquement supprimés :"
+      header_termine:
+        one: "Afin de limiter la conservation de vos données personnelles, le dossier suivant dont le traitement est terminé sera bientôt automatiquement supprimé :"
+        other: "Afin de limiter la conservation de vos données personnelles, les dossiers suivant dont le traitement est terminé seront bientôt automatiquement supprimés :"
       footer:
         one: "Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n’avez rien à faire."
         other: "Vous pouvez retrouver vos dossiers pendant encore <b>un mois</b>. Vous n’avez rien à faire."
