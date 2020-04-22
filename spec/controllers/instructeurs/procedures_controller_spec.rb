@@ -99,10 +99,12 @@ describe Instructeurs::ProceduresController, type: :controller do
         let(:procedure_draft) { create(:procedure) }
         let(:procedure_published) { create(:procedure, :published) }
         let(:procedure_closed) { create(:procedure, :closed) }
+        let(:procedure_draft_discarded) { create(:procedure, :discarded) }
+        let(:procedure_closed_discarded) { create(:procedure, :discarded) }
         let(:procedure_not_assigned) { create(:procedure) }
 
         before do
-          [procedure_draft, procedure_published, procedure_closed].each do |p|
+          [procedure_draft, procedure_published, procedure_closed, procedure_draft_discarded, procedure_closed_discarded].each do |p|
             instructeur.groupe_instructeurs << p.defaut_groupe_instructeur
           end
           subject
@@ -110,7 +112,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         it 'assigns procedures visible to the instructeur' do
           expect(assigns(:procedures)).to include(procedure_draft, procedure_published, procedure_closed)
-          expect(assigns(:procedures)).not_to include(procedure_not_assigned)
+          expect(assigns(:procedures)).not_to include(procedure_draft_discarded, procedure_closed_discarded, procedure_not_assigned)
         end
       end
 
