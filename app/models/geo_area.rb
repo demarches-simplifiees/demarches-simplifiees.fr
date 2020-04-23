@@ -55,13 +55,13 @@ class GeoArea < ApplicationRecord
   end
 
   def area
-    if polygon?
+    if polygon? && RGeo::Geos.supported?
       rgeo_geometry.area.round(1)
     end
   end
 
   def length
-    if line?
+    if line? && RGeo::Geos.supported?
       rgeo_geometry.length.round(1)
     end
   end
