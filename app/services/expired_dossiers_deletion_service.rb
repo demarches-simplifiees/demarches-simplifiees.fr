@@ -28,29 +28,27 @@ class ExpiredDossiersDeletionService
           dossiers,
           user.email
         ).deliver_later
+
+        # mark as sent dossiers from current notification
+        Dossier.where(id: dossiers).update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
       end
 
+    # mark as sent dossiers without notification
     dossiers_close_to_expiration.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
   end
 
   def self.send_en_construction_expiration_notices
-    dossiers_close_to_expiration = Dossier
-      .en_construction_close_to_expiration
-      .without_en_construction_expiration_notice_sent
-
-    send_expiration_notices(dossiers_close_to_expiration)
-
-    dossiers_close_to_expiration.update_all(en_construction_close_to_expiration_notice_sent_at: Time.zone.now)
+    send_expiration_notices(
+      Dossier.en_construction_close_to_expiration.without_en_construction_expiration_notice_sent,
+      :en_construction_close_to_expiration_notice_sent_at
+    )
   end
 
   def self.send_termine_expiration_notices
-    dossiers_close_to_expiration = Dossier
-      .termine_close_to_expiration
-      .without_termine_expiration_notice_sent
-
-    send_expiration_notices(dossiers_close_to_expiration)
-
-    dossiers_close_to_expiration.update_all(termine_close_to_expiration_notice_sent_at: Time.zone.now)
+    send_expiration_notices(
+      Dossier.termine_close_to_expiration.without_termine_expiration_notice_sent,
+      :termine_close_to_expiration_notice_sent_at
+    )
   end
 
   def self.delete_expired_brouillons_and_notify
@@ -65,8 +63,12 @@ class ExpiredDossiersDeletionService
           dossiers.map(&:hash_for_deletion_mail),
           user.email
         ).deliver_later
+
+        # destroy dossiers from current notification
+        Dossier.where(id: dossiers).destroy_all
       end
 
+    # destroy dossiers without notification
     dossiers_to_remove.destroy_all
   end
 
@@ -80,7 +82,7 @@ class ExpiredDossiersDeletionService
 
   private
 
-  def self.send_expiration_notices(dossiers_close_to_expiration)
+  def self.send_expiration_notices(dossiers_close_to_expiration, close_to_expiration_flag)
     dossiers_close_to_expiration
       .with_notifiable_procedure
       .includes(:user)
@@ -97,7 +99,13 @@ class ExpiredDossiersDeletionService
         dossiers.to_a,
         email
       ).deliver_later
+
+      # mark as sent dossiers from current notification
+      Dossier.where(id: dossiers.to_a).update_all(close_to_expiration_flag => Time.zone.now)
     end
+
+    # mark as sent dossiers without notification
+    dossiers_close_to_expiration.update_all(close_to_expiration_flag => Time.zone.now)
   end
 
   def self.delete_expired_and_notify(dossiers_to_remove)
@@ -119,8 +127,12 @@ class ExpiredDossiersDeletionService
         DeletedDossier.where(dossier_id: dossiers.map(&:id)),
         email
       ).deliver_later
+
+      # destroy dossiers from current notification
+      Dossier.where(id: dossiers.to_a).destroy_all
     end
 
+    # destroy dossiers without notification
     dossiers_to_remove.destroy_all
   end
 
