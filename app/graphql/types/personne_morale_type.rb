@@ -2,8 +2,7 @@ module Types
   class PersonneMoraleType < Types::BaseObject
     class EntrepriseType < Types::BaseObject
       class EffectifType < Types::BaseObject
-        field :mois, String, null: false, description: "Mois de l'effectif mensuel"
-        field :annee, String, null: false, description: "Année de l'effectif mensuel"
+        field :periode, String, null: false
         field :nb, Float, null: false
       end
 
@@ -16,21 +15,28 @@ module Types
       field :raison_sociale, String, null: false
       field :siret_siege_social, String, null: false
       field :code_effectif_entreprise, String, null: false
-      field :effectifs, [EffectifType], null: false
+      field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
+      field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d'une année"
       field :date_creation, GraphQL::Types::ISO8601Date, null: false
       field :nom, String, null: false
       field :prenom, String, null: false
       field :inline_adresse, String, null: false
 
-      def effectifs
+      def effectif_mensuel
         if object.effectif_mensuel.present?
-          [
-            {
-              mois: object.effectif_mois,
-              annee: object.effectif_annee,
-              nb: object.effectif_mensuel
-            }
-          ]
+          {
+            periode: [object.effectif_mois, object.effectif_annee].join('/'),
+            nb: object.effectif_mensuel
+          }
+        end
+      end
+
+      def effectif_annuel
+        if object.effectif_annuel.present?
+          {
+            periode: object.effectif_annuel_annee,
+            nb: object.effectif_annuel
+          }
         end
       end
     end
