@@ -1,6 +1,7 @@
 describe ApiEntreprise::EffectifsAnnuelsAdapter do
   let(:siren) { '418166096' }
-  let(:procedure_id) { 22 }
+  let(:procedure) { create(:procedure) }
+  let(:procedure_id) { procedure.id }
   let(:adapter) { described_class.new(siren, procedure_id) }
   subject { adapter.to_params }
 
