@@ -96,18 +96,24 @@ describe Instructeurs::ProceduresController, type: :controller do
       it { expect(response).to have_http_status(:ok) }
 
       context "with procedures assigned" do
-        let(:procedure1) { create(:procedure, :published) }
-        let(:procedure2) { create(:procedure, :closed) }
-        let(:procedure3) { create(:procedure) }
+        let(:procedure_draft) { create(:procedure) }
+        let(:procedure_published) { create(:procedure, :published) }
+        let(:procedure_closed) { create(:procedure, :closed) }
+        let(:procedure_draft_discarded) { create(:procedure, :discarded) }
+        let(:procedure_closed_discarded) { create(:procedure, :discarded) }
+        let(:procedure_not_assigned) { create(:procedure) }
 
         before do
-          instructeur.groupe_instructeurs << procedure1.defaut_groupe_instructeur
-          instructeur.groupe_instructeurs << procedure2.defaut_groupe_instructeur
-          instructeur.groupe_instructeurs << procedure3.defaut_groupe_instructeur
+          [procedure_draft, procedure_published, procedure_closed, procedure_draft_discarded, procedure_closed_discarded].each do |p|
+            instructeur.groupe_instructeurs << p.defaut_groupe_instructeur
+          end
           subject
         end
 
-        it { expect(assigns(:procedures)).to include(procedure1, procedure2) }
+        it 'assigns procedures visible to the instructeur' do
+          expect(assigns(:procedures)).to include(procedure_draft, procedure_published, procedure_closed)
+          expect(assigns(:procedures)).not_to include(procedure_draft_discarded, procedure_closed_discarded, procedure_not_assigned)
+        end
       end
 
       context "with dossiers" do
@@ -218,16 +224,28 @@ describe Instructeurs::ProceduresController, type: :controller do
     let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
     let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
     let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
+    let(:statut) { nil }
+
+    subject do
+      get :show, params: { procedure_id: procedure.id, statut: statut }
+    end
 
     context "when logged in, and belonging to gi_1, gi_2" do
       before do
         sign_in(instructeur.user)
-
         instructeur.groupe_instructeurs << gi_2
       end
 
-      context "without anything" do
-        before { get :show, params: { procedure_id: procedure.id } }
+      context 'when the procedure is discarded' do
+        before do
+          procedure.discard!
+        end
+
+        it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+      end
+
+      context "without any dossier" do
+        before { subject }
 
         it { expect(response).to have_http_status(:ok) }
         it { expect(assigns(:procedure)).to eq(procedure) }
@@ -236,9 +254,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       context 'with a new brouillon dossier' do
         let!(:brouillon_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
 
-        before do
-          get :show, params: { procedure_id: procedure.id }
-        end
+        before { subject }
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
         it { expect(assigns(:followed_dossiers)).to be_empty }
@@ -250,9 +266,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       context 'with a new dossier without follower' do
         let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
 
-        before do
-          get :show, params: { procedure_id: procedure.id }
-        end
+        before { subject }
 
         it { expect(assigns(:a_suivre_dossiers)).to match_array([new_unfollow_dossier]) }
         it { expect(assigns(:followed_dossiers)).to be_empty }
@@ -264,9 +278,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
           let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
 
-          before do
-            get :show, params: { procedure_id: procedure.id }
-          end
+          before { subject }
 
           it { expect(assigns(:a_suivre_dossiers)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
           it { expect(assigns(:all_state_dossiers)).to match_array([new_unfollow_dossier, new_unfollow_dossier_on_gi_2]) }
@@ -278,7 +290,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         before do
           instructeur.followed_dossiers << new_followed_dossier
-          get :show, params: { procedure_id: procedure.id }
+          subject
         end
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
@@ -293,7 +305,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           before do
             instructeur.followed_dossiers << new_follow_dossier_on_gi_2 << new_follow_dossier_on_gi_3
-            get :show, params: { procedure_id: procedure.id }
+            subject
           end
 
           # followed dossiers on another groupe should not be displayed
@@ -305,9 +317,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       context 'with a termine dossier with a follower' do
         let!(:termine_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) }
 
-        before do
-          get :show, params: { procedure_id: procedure.id }
-        end
+        before { subject }
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
         it { expect(assigns(:followed_dossiers)).to be_empty }
@@ -319,9 +329,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           let!(:termine_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:accepte)) }
           let!(:termine_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:accepte)) }
 
-          before do
-            get :show, params: { procedure_id: procedure.id }
-          end
+          before { subject }
 
           it { expect(assigns(:termines_dossiers)).to match_array([termine_dossier, termine_dossier_on_gi_2]) }
           it { expect(assigns(:all_state_dossiers)).to match_array([termine_dossier, termine_dossier_on_gi_2]) }
@@ -331,9 +339,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       context 'with an archived dossier' do
         let!(:archived_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) }
 
-        before do
-          get :show, params: { procedure_id: procedure.id }
-        end
+        before { subject }
 
         it { expect(assigns(:a_suivre_dossiers)).to be_empty }
         it { expect(assigns(:followed_dossiers)).to be_empty }
@@ -345,9 +351,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           let!(:archived_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction), archived: true) }
           let!(:archived_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction), archived: true) }
 
-          before do
-            get :show, params: { procedure_id: procedure.id }
-          end
+          before { subject }
 
           it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier, archived_dossier_on_gi_2]) }
         end
@@ -361,7 +365,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         before do
           instructeur.followed_dossiers << new_followed_dossier
-          get :show, params: { procedure_id: procedure.id, statut: statut }
+          subject
         end
 
         context 'when statut is empty' do

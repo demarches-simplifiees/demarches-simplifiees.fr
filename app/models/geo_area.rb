@@ -36,7 +36,7 @@ class GeoArea < ApplicationRecord
     {
       type: 'Feature',
       geometry: geometry,
-      properties: properties.merge(source: source)
+      properties: properties.merge(source: source, area: area, length: length).compact
     }
   end
 
@@ -52,5 +52,35 @@ class GeoArea < ApplicationRecord
         geometry: feature[:geometry]
       )
     end
+  end
+
+  def area
+    if polygon? && RGeo::Geos.supported?
+      rgeo_geometry.area.round(1)
+    end
+  end
+
+  def length
+    if line? && RGeo::Geos.supported?
+      rgeo_geometry.length.round(1)
+    end
+  end
+
+  def location
+    if point?
+      Geo::Coord.new(*rgeo_geometry.coordinates).to_s
+    end
+  end
+
+  def line?
+    geometry['type'] == 'LineString'
+  end
+
+  def polygon?
+    geometry['type'] == 'Polygon'
+  end
+
+  def point?
+    geometry['type'] == 'Point'
   end
 end
