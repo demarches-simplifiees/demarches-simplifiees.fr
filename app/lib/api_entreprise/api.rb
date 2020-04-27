@@ -5,6 +5,7 @@ class ApiEntreprise::API
   RNA_RESOURCE_NAME = "associations"
   EFFECTIFS_RESOURCE_NAME = "effectifs_mensuels_acoss_covid"
   EFFECTIFS_ANNUELS_RESOURCE_NAME = "effectifs_annuels_acoss_covid"
+  ATTESTATION_SOCIALE_RESOURCE_NAME = "attestations_sociales_acoss"
 
   TIMEOUT = 15
 
@@ -37,6 +38,10 @@ class ApiEntreprise::API
 
   def self.effectifs_annuels(siren, procedure_id)
     call(EFFECTIFS_ANNUELS_RESOURCE_NAME, siren, procedure_id)
+  end
+
+  def self.attestation_sociale(siren, procedure_id)
+    call(ATTESTATION_SOCIALE_RESOURCE_NAME, siren, procedure_id)
   end
 
   private
