@@ -1,11 +1,13 @@
 describe ApiEntreprise::API do
-  let(:procedure_id) { 12 }
+  let(:procedure) { create(:procedure) }
+  let(:procedure_id) { procedure.id }
+  let(:token) { Rails.application.secrets.api_entreprise[:key] }
 
   describe '.entreprise' do
     subject { described_class.entreprise(siren, procedure_id) }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=#{token}/)
         .to_return(status: status, body: body)
     end
 
@@ -46,6 +48,27 @@ describe ApiEntreprise::API do
 
       it 'returns response body' do
         expect(subject).to eq(JSON.parse(body, symbolize_names: true))
+      end
+
+      context 'with specific token for procedure' do
+        let(:token) { 'token-for-demarche' }
+        let(:procedure) { create(:procedure, api_entreprise_token: token) }
+        let(:procedure_id) { procedure.id }
+
+        it 'call api-entreprise with specfic token' do
+          subject
+          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=token-for-demarche/)
+        end
+      end
+
+      context 'without specific token for procedure' do
+        let(:procedure) { create(:procedure, api_entreprise_token: nil) }
+        let(:procedure_id) { procedure.id }
+
+        it 'call api-entreprise with specfic token' do
+          subject
+          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=#{token}/)
+        end
       end
     end
   end

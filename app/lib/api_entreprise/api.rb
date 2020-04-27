@@ -74,11 +74,12 @@ class ApiEntreprise::API
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}",
       non_diffusables: true,
-      token: token
+      token: token_for_procedure(procedure_id)
     }
   end
 
-  def self.token
-    Rails.application.secrets.api_entreprise[:key]
+  def self.token_for_procedure(procedure_id)
+    procedure = Procedure.find(procedure_id)
+    procedure.api_entreprise_token.presence || Rails.application.secrets.api_entreprise[:key]
   end
 end
