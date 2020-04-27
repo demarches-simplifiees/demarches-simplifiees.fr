@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_21_174642) do
+ActiveRecord::Schema.define(version: 2020_04_22_090426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,6 +258,7 @@ ActiveRecord::Schema.define(version: 2020_04_21_174642) do
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.interval "en_construction_conservation_extension", default: "00:00:00"
+    t.datetime "termine_close_to_expiration_notice_sent_at"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
@@ -313,6 +314,8 @@ ActiveRecord::Schema.define(version: 2020_04_21_174642) do
     t.string "entreprise_effectif_mois"
     t.string "entreprise_effectif_annee"
     t.decimal "entreprise_effectif_mensuel"
+    t.decimal "entreprise_effectif_annuel"
+    t.string "entreprise_effectif_annuel_annee"
     t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
   end
 

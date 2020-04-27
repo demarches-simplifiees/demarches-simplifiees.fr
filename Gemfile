@@ -30,6 +30,7 @@ gem 'flipper-active_record'
 gem 'flipper-ui'
 gem 'font-awesome-rails'
 gem 'fugit'
+gem 'geo_coord', require: "geo/coord"
 gem 'geocoder'
 gem 'gon'
 gem 'graphql'

@@ -8,6 +8,7 @@ module Instructeurs
     def index
       @procedures = current_instructeur
         .procedures
+        .kept
         .with_attached_logo
         .includes(:defaut_groupe_instructeur)
         .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)

@@ -212,6 +212,9 @@ describe Users::DossiersController, type: :controller do
     let(:annee) { "2020" }
     let(:mois) { "02" }
 
+    let(:api_entreprise_effectifs_annuels_status) { 200 }
+    let(:api_entreprise_effectifs_annuels_body) { File.read('spec/fixtures/files/api_entreprise/effectifs_annuels.json') }
+
     let(:api_exercices_status) { 200 }
     let(:api_exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
 
@@ -229,6 +232,8 @@ describe Users::DossiersController, type: :controller do
         .to_return(status: api_association_status, body: api_association_body)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/#{annee}\/#{mois}\/entreprise\/#{siren}?.*token=/)
         .to_return(body: api_entreprise_effectifs_mensuels_body, status: api_entreprise_effectifs_mensuels_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_effectifs_annuels_body, status: api_entreprise_effectifs_annuels_status)
     end
 
     before do
@@ -328,6 +333,7 @@ describe Users::DossiersController, type: :controller do
           expect(dossier.etablissement.exercices).to be_present
           expect(dossier.etablissement.association?).to be(true)
           expect(dossier.etablissement.entreprise_effectif_mensuel).to be_present
+          expect(dossier.etablissement.entreprise_effectif_annuel).to be_present
         end
       end
     end
@@ -445,6 +451,28 @@ describe Users::DossiersController, type: :controller do
 
           expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_with_instant_email_dossier.email)
           expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_without_instant_email_dossier.email)
+        end
+      end
+
+      context 'with procedure routee' do
+        let(:procedure) { create(:procedure, :routee, :with_type_de_champ) }
+        let(:dossier_group) { create(:groupe_instructeur, procedure: procedure) }
+        let(:another_group) { create(:groupe_instructeur, procedure: procedure) }
+        let(:instructeur_of_dossier) { create(:instructeur) }
+        let(:instructeur_in_another_group) { create(:instructeur) }
+        let!(:dossier) { create(:dossier, groupe_instructeur: dossier_group, user: user) }
+
+        before do
+          allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
+          create(:assign_to, instructeur: instructeur_of_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier_group)
+          create(:assign_to, instructeur: instructeur_in_another_group, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: another_group)
+        end
+
+        it "sends notification mail to instructeurs in the correct group instructeur" do
+          subject
+
+          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_of_dossier.email)
+          expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_in_another_group.email)
         end
       end
 

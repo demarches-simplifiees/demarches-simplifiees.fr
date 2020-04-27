@@ -15,6 +15,8 @@ class Entreprise < Hashie::Dash
   property :effectif_mois
   property :effectif_annee
   property :effectif_mensuel
+  property :effectif_annuel
+  property :effectif_annuel_annee
   property :date_creation
   property :nom
   property :prenom
