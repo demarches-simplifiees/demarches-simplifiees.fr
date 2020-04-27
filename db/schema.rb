@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_22_090426) do
+ActiveRecord::Schema.define(version: 2020_04_23_171759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -515,6 +515,7 @@ ActiveRecord::Schema.define(version: 2020_04_22_090426) do
     t.datetime "closed_at"
     t.datetime "unpublished_at"
     t.bigint "canonical_procedure_id"
+    t.string "api_entreprise_token"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
