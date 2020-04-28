@@ -44,7 +44,8 @@ describe ApiEntrepriseService do
     let(:associations_status) { 200 }
     let(:associations_body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
 
-    let(:result) { ApiEntrepriseService.get_etablissement_params_for_siret(siret, '1') }
+    let(:procedure) { create(:procedure) }
+    let(:result) { ApiEntrepriseService.get_etablissement_params_for_siret(siret, procedure.id) }
 
     context 'when service is up' do
       it 'should fetch etablissement params' do

@@ -1,6 +1,7 @@
 describe ApiEntreprise::RNAAdapter do
   let(:siret) { '50480511000013' }
-  let(:procedure_id) { 22 }
+  let(:procedure) { create(:procedure) }
+  let(:procedure_id) { procedure.id }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
   let(:status) { 200 }
   let(:adapter) { described_class.new(siret, procedure_id) }
