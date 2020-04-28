@@ -68,6 +68,10 @@
       .procedure-list-element{ class: ('active' if active == 'MonAvis') }
         MonAvis
 
+    %a#onglet-description{ href: url_for(admin_procedure_jeton_path(@procedure)) }
+      .procedure-list-element
+        Jeton
+
     %a#onglet-description{ href: url_for(admin_procedures_path()) }
       .procedure-list-element
         Sortir
