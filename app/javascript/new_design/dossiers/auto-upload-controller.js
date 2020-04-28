@@ -23,18 +23,12 @@ export default class AutoUploadController {
         throw new Error('L’attribut "data-auto-attach-url" est manquant');
       }
 
-      const champ = this.input.closest('.editable-champ[data-champ-id]');
-      if (!champ) {
-        throw new Error('Impossible de trouver l’élément ".editable-champ"');
-      }
-      const champId = champ.dataset.champId;
-
       // Upload the file (using Direct Upload)
       let blobSignedId = await this._upload();
 
       // Attach the blob to the champ
       // (The request responds with Javascript, which displays the attachment HTML fragment).
-      await this._attach(champId, blobSignedId, autoAttachUrl);
+      await this._attach(blobSignedId, autoAttachUrl);
 
       // Everything good: clear the original file input value
       this.input.value = null;
@@ -60,17 +54,21 @@ export default class AutoUploadController {
     return await uploader.start();
   }
 
-  async _attach(champId, blobSignedId, autoAttachUrl) {
+  async _attach(blobSignedId, autoAttachUrl) {
     // Now that the upload is done, display a new progress bar
     // to show that the attachment request is still pending.
-    const progressBar = new ProgressBar(this.input, champId, this.file);
+    const progressBar = new ProgressBar(
+      this.input,
+      `${this.input.id}-progress-bar`,
+      this.file
+    );
     progressBar.progress(100);
     progressBar.end();
 
     const attachmentRequest = {
       url: autoAttachUrl,
       type: 'PUT',
-      data: `champ_id=${champId}&blob_signed_id=${blobSignedId}`
+      data: `blob_signed_id=${blobSignedId}`
     };
     await ajax(attachmentRequest);
 
