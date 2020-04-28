@@ -1,3 +1,5 @@
 = form.date_field :value,
   value: champ.value,
-  required: champ.mandatory?
+  required: champ.mandatory?,
+  max: Date.iso8601('2100-12-31')
+
