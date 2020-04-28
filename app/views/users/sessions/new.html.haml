@@ -10,10 +10,10 @@
     = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
 
       = f.label :email, "Email"
-      = f.text_field :email
+      = f.text_field :email, type: :email, autocomplete: 'username', autofocus: false
 
       = f.label :password, "Mot de passe"
-      = f.password_field :password
+      = f.password_field :password, autocomplete: 'current-password'
 
       .auth-options
         %div

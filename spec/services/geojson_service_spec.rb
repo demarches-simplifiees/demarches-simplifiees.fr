@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe GeojsonService do
   let(:good_coordinates) {
     [

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApiEntreprise::RNAAdapter do
   let(:siret) { '50480511000013' }
   let(:procedure_id) { 22 }

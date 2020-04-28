@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Users::DossiersController, type: :controller do
   let(:user) { create(:user) }
 

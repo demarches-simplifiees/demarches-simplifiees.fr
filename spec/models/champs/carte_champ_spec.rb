@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Champs::CarteChamp do
   let(:champ) { Champs::CarteChamp.new(value: value) }
   let(:value) { '' }

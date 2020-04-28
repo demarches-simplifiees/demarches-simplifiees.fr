@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe 'layouts/procedure_context.html.haml', type: :view do
   let(:procedure) { create(:simple_procedure, :with_service) }
   let(:dossier) { create(:dossier, procedure: procedure) }

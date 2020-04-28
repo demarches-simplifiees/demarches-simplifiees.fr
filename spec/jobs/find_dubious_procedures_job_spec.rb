@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe FindDubiousProceduresJob, type: :job do
   describe 'perform' do
     let(:mailer_double) { double('mailer', deliver_later: true) }

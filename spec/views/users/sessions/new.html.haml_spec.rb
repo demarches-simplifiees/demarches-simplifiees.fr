@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'users/sessions/new.html.haml', type: :view do
   let(:dossier) { create :dossier }
 

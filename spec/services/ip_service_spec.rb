@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe IPService do
   describe '.ip_trusted?' do
     after(:each) { ENV['TRUSTED_NETWORKS'] = nil }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Champs::IntegerNumberChamp do
   subject { build(:champ_integer_number, value: value).tap(&:valid?) }
 

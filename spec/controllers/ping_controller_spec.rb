@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PingController, type: :controller do
   describe 'GET #index' do
     subject { get :index }

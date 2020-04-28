@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'The routing', js: true do
   let(:password) { 'a very complicated password' }
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_service, :for_individual) }

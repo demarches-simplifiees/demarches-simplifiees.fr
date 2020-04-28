@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe 'admin/instructeurs/index.html.haml', type: :view do
   let(:admin) { create(:administrateur) }
 

@@ -9,6 +9,7 @@
     - @deleted_dossiers.each do |d|
       %li n° #{d.dossier_id} (#{d.procedure.libelle})
 
-%p= t('.footer', count: @deleted_dossiers.count)
+- if @state == Dossier.states.fetch(:en_construction)
+  %p= t('.footer_en_construction', count: @deleted_dossiers.count)
 
 = render partial: "layouts/mailers/signature"

@@ -3,7 +3,7 @@ import ProgressBar from './progress-bar';
 
 /**
   Uploader class is a delegate for DirectUpload instance
-  used to track lifecycle and progress of un upload.
+  used to track lifecycle and progress of an upload.
   */
 export default class Uploader {
   constructor(input, file, directUploadUrl) {

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Changing an email' do
   let(:old_email) { 'old@email.com' }
   let(:user) { create(:user, email: old_email) }

@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe AvisMailer, type: :mailer do
   describe '.avis_invitation' do
     let(:avis) { create(:avis) }

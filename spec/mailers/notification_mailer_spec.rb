@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe NotificationMailer, type: :mailer do
   let(:user) { create(:user) }
   let(:procedure) { create(:simple_procedure) }

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Administrateur, type: :model do
   let(:administration) { create(:administration) }
 

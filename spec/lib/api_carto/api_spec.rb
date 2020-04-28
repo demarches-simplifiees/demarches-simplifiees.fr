@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApiCarto::API do
   describe '.search_qp' do
     subject { described_class.search_qp(geojson) }

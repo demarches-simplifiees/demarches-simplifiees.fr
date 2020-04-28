@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'uri'
 
 describe Admin::ProceduresController, type: :controller do
@@ -103,51 +102,65 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:procedure_draft)     { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], published_at: nil, closed_at: nil }
-    let(:procedure_published) { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], aasm_state: :publiee, published_at: Time.zone.now, closed_at: nil }
-    let(:procedure_closed)    { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], aasm_state: :close, published_at: nil, closed_at: Time.zone.now }
+    let(:procedure_draft)     { create(:procedure, administrateurs: [admin]) }
+    let(:procedure_published) { create(:procedure, :published, administrateurs: [admin]) }
+    let(:procedure_closed)    { create(:procedure, :closed, administrateurs: [admin]) }
+    let(:procedure) { dossier.procedure }
 
-    subject { delete :destroy, params: { id: procedure.id } }
+    subject { delete :destroy, params: { id: procedure } }
 
-    context 'when the procedure is a draft' do
-      let!(:procedure) { procedure_draft }
+    context 'when the procedure is a brouillon' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_draft) }
 
-      it 'destroys the procedure' do
-        expect { subject }.to change { Procedure.count }.by(-1)
+      before { subject }
+
+      it 'discard the procedure' do
+        expect(procedure.reload.discarded?).to be_truthy
       end
 
       it 'deletes associated dossiers' do
-        subject
-        expect(Dossier.find_by(procedure_id: procedure.id)).to be_blank
+        expect(procedure.dossiers.with_discarded.count).to eq(0)
       end
 
       it 'redirects to the procedure drafts page' do
-        subject
         expect(response).to redirect_to admin_procedures_draft_path
         expect(flash[:notice]).to be_present
       end
     end
 
     context 'when procedure is published' do
-      let!(:procedure) { procedure_published }
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_published) }
 
-      it { expect { subject }.not_to change { Procedure.count } }
-      it { expect { subject }.not_to change { Dossier.count } }
-      it { expect(subject.status).to eq 401 }
+      before { subject }
+
+      it { expect(response.status).to eq 403 }
+
+      context 'when dossier is en_construction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure_published) }
+
+        it { expect(procedure.reload.close?).to be_truthy }
+        it { expect(procedure.reload.discarded?).to be_truthy }
+        it { expect(dossier.reload.discarded?).to be_truthy }
+      end
     end
 
     context 'when procedure is closed' do
-      let!(:procedure) { procedure_closed }
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_closed) }
 
-      it { expect { subject }.not_to change { Procedure.count } }
-      it { expect { subject }.not_to change { Dossier.count } }
-      it { expect(subject.status).to eq 401 }
+      before { subject }
+
+      it { expect(response.status).to eq 403 }
+
+      context 'when dossier is en_construction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure_published) }
+
+        it { expect(procedure.reload.discarded?).to be_truthy }
+        it { expect(dossier.reload.discarded?).to be_truthy }
+      end
     end
 
     context "when administrateur does not own the procedure" do
-      let(:procedure_not_owned) { create :procedure, administrateur: create(:administrateur), published_at: nil, closed_at: nil }
-
-      subject { delete :destroy, params: { id: procedure_not_owned.id } }
+      let(:dossier) { create(:dossier) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end

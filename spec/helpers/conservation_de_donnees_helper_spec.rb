@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe ConservationDeDonneesHelper, type: :helper do
   let(:procedure) { build(:procedure, duree_conservation_dossiers_dans_ds: dans_ds, duree_conservation_dossiers_hors_ds: hors_ds) }
 
