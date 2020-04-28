@@ -41,7 +41,8 @@ class ApiEntreprise::API
   end
 
   def self.attestation_sociale(siren, procedure_id)
-    call(ATTESTATION_SOCIALE_RESOURCE_NAME, siren, procedure_id)
+    procedure = Procedure.find(procedure_id)
+    call(ATTESTATION_SOCIALE_RESOURCE_NAME, siren, procedure_id) if procedure.api_entreprise_role?("attestations_sociales")
   end
 
   private

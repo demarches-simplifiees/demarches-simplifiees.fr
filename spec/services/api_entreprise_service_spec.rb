@@ -13,6 +13,8 @@ describe ApiEntrepriseService do
         .to_return(body: effectifs_mensuels_body, status: effectifs_mensuels_status)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
         .to_return(body: effectifs_annuels_body, status: effectifs_annuels_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
+        .to_return(body: attestation_sociale_body, status: attestation_sociale_status)
     end
 
     before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
@@ -38,13 +40,17 @@ describe ApiEntrepriseService do
     let(:effectifs_annuels_body) { File.read('spec/fixtures/files/api_entreprise/effectifs_annuels.json') }
     let(:effectif_annuel) { 100.5 }
 
+    let(:attestation_sociale_status) { 200 }
+    let(:attestation_sociale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
+    let(:attestation_sociale_url) { "https://storage.entreprise.api.gouv.fr/siade/1569156881-f749d75e2bfd443316e2e02d59015f-attestation_vigilance_acoss.pdf" }
+
     let(:exercices_status) { 200 }
     let(:exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
 
     let(:associations_status) { 200 }
     let(:associations_body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
 
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, api_entreprise_token: 'un-jeton') }
     let(:result) { ApiEntrepriseService.get_etablissement_params_for_siret(siret, procedure.id) }
 
     context 'when service is up' do
@@ -55,6 +61,7 @@ describe ApiEntrepriseService do
         expect(result[:exercices_attributes]).to_not be_empty
         expect(result[:entreprise_effectif_mensuel]).to eq(effectif_mensuel)
         expect(result[:entreprise_effectif_annuel]).to eq(effectif_annuel)
+        expect(result[:entreprise_attestation_sociale_url]).to eq(attestation_sociale_url)
       end
     end
 
