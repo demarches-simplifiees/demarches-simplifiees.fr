@@ -52,15 +52,14 @@ class Admin::ProceduresController < AdminController
   def destroy
     procedure = current_administrateur.procedures.find(params[:id])
 
-    if procedure.locked?
-      return render json: {}, status: 401
+    if procedure.can_be_deleted_by_administrateur?
+      procedure.discard_and_keep_track!(current_administrateur)
+
+      flash.notice = 'Démarche supprimée'
+      redirect_to admin_procedures_draft_path
+    else
+      render json: {}, status: 403
     end
-
-    procedure.reset!
-    procedure.destroy
-
-    flash.notice = 'Démarche supprimée'
-    redirect_to admin_procedures_draft_path
   end
 
   def publish_validate

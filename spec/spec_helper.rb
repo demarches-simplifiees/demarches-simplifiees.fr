@@ -44,10 +44,14 @@ Capybara.register_driver :headless_chrome do |app|
     chromeOptions: { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
   )
 
+  client = Selenium::WebDriver::Remote::Http::Default.new
+  client.read_timeout = 120
+
   Capybara::Selenium::Driver.new app,
     browser:              :chrome,
     desired_capabilities: capabilities,
-    options:              options
+    options:              options,
+    http_client:          client
 end
 
 #---- From https://gist.github.com/danwhitston/5cea26ae0861ce1520695cff3c2c3315#using-capybara-with-a-remote-selenium-server

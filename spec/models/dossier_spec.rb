@@ -1226,6 +1226,8 @@ describe Dossier do
   end
 
   describe 'discarded_brouillon_expired and discarded_en_construction_expired' do
+    let(:administration) { create(:administration) }
+
     before do
       create(:dossier)
       create(:dossier, :en_construction)
@@ -1236,8 +1238,8 @@ describe Dossier do
         create(:dossier).discard!
         create(:dossier, :en_construction).discard!
 
-        create(:dossier).procedure.hide!
-        create(:dossier, :en_construction).procedure.hide!
+        create(:dossier).procedure.discard_and_keep_track!(administration)
+        create(:dossier, :en_construction).procedure.discard_and_keep_track!(administration)
       end
       Timecop.travel(1.week.ago) do
         create(:dossier).discard!
@@ -1246,6 +1248,16 @@ describe Dossier do
     end
 
     it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
-    it { expect(Dossier.discarded_en_construction_expired.count).to eq(1) }
+    it { expect(Dossier.discarded_en_construction_expired.count).to eq(2) }
+  end
+
+  describe "discarded procedure dossier should be able to access it's procedure" do
+    let(:dossier) { create(:dossier) }
+    let(:procedure) { dossier.reload.procedure }
+
+    before { dossier.procedure.discard! }
+
+    it { expect(procedure).not_to be_nil }
+    it { expect(procedure.discarded?).to be_truthy }
   end
 end
