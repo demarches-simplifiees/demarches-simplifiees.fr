@@ -15,5 +15,8 @@
 
 %p
   = sanitize(t('.footer', count: @dossiers.count))
+%p
+  - if @state == Dossier.states.fetch(:en_construction)
+    = sanitize(t('.footer_en_construction', count: @dossiers.count))
 
 = render partial: "layouts/mailers/signature"
