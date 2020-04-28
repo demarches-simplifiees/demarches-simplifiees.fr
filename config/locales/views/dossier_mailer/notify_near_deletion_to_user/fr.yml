@@ -16,3 +16,6 @@ fr:
       footer:
         one: "Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n’avez rien à faire."
         other: "Vous pouvez retrouver vos dossiers pendant encore <b>un mois</b>. Vous n’avez rien à faire."
+      footer_en_construction:
+        one: "Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l'interface."
+        other: "Si vous souhaitez conserver vos dossiers plus longtemps, vous pouvez <b>prolonger leur durée de conservation</b> au cas par cas dans l'interface."
