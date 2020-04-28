@@ -289,12 +289,13 @@ class Procedure < ApplicationRecord
     is_different_admin = !admin.owns?(self)
 
     populate_champ_stable_ids
-    procedure = self.deep_clone(include:
-      {
-        attestation_template: nil,
-        types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
-        types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
-      }, &method(:clone_attachments))
+    include_list = {
+      attestation_template: nil,
+      types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
+      types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
+    }
+    include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
+    procedure = self.deep_clone(include: include_list, &method(:clone_attachments))
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
     procedure.closed_at = nil
@@ -330,8 +331,6 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
-
-    admin.instructeur.assign_to_procedure(procedure)
 
     procedure
   end

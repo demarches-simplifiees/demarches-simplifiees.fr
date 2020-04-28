@@ -1,5 +1,5 @@
 class WeeklyOverviewJob < CronJob
-  self.cron_expression = "0 7 * * MON"
+  self.schedule_expression = "every monday at 7 am"
 
   def perform(*args)
     # Feature flipped to avoid mails in staging due to unprocessed dossier

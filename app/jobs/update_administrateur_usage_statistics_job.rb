@@ -1,5 +1,5 @@
 class UpdateAdministrateurUsageStatisticsJob < CronJob
-  self.cron_expression = "0 10 * * *"
+  self.schedule_expression = "every day at 10 am"
 
   def perform
     AdministrateurUsageStatisticsService.new.update_administrateurs
