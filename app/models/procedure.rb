@@ -306,6 +306,7 @@ class Procedure < ApplicationRecord
 
     if is_different_admin
       procedure.administrateurs = [admin]
+      procedure.api_entreprise_token = nil
     else
       procedure.administrateurs = administrateurs
     end
