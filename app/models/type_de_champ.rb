@@ -35,7 +35,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
-  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj
+  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj, :min, :max
   delegate :tags_for_template, to: :dynamic_type
 
   class WithIndifferentAccess
@@ -229,7 +229,9 @@ class TypeDeChamp < ApplicationRecord
       :parcelles_agricoles,
       :piece_justificative_template_filename,
       :piece_justificative_template_url,
-      :quartiers_prioritaires
+      :quartiers_prioritaires,
+      :min,
+      :max
     ]
   }
   TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE

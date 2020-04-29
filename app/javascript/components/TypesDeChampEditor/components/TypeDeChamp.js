@@ -10,6 +10,8 @@ import MandatoryInput from './MandatoryInput';
 import MoveButton from './MoveButton';
 import TypeDeChampCarteOption from './TypeDeChampCarteOption';
 import TypeDeChampCarteOptions from './TypeDeChampCarteOptions';
+import TypeDeChampIntegerOption from './TypeDeChampIntegerOption';
+import TypeDeChampIntegerOptions from './TypeDeChampIntegerOptions';
 import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
@@ -24,6 +26,7 @@ const TypeDeChamp = sortableElement(
     ].includes(typeDeChamp.type_champ);
     const isFile = typeDeChamp.type_champ === 'piece_justificative';
     const isCarte = typeDeChamp.type_champ === 'carte';
+    const isInteger = typeDeChamp.type_champ === 'integer_number';
     const isExplication = typeDeChamp.type_champ === 'explication';
     const isHeaderSection = typeDeChamp.type_champ === 'header_section';
     const isRepetition = typeDeChamp.type_champ === 'repetition';
@@ -82,7 +85,7 @@ const TypeDeChamp = sortableElement(
         </div>
         <div
           className={`flex justify-start section ${
-            isDropDown || isFile || isCarte ? 'hr' : ''
+            isDropDown || isFile || isCarte || isInteger ? 'hr' : ''
           }`}
         >
           <div className="flex column justify-start">
@@ -141,6 +144,16 @@ const TypeDeChamp = sortableElement(
               handler={updateHandlers.cadastres}
             />
           </TypeDeChampCarteOptions>
+          <TypeDeChampIntegerOptions isVisible={isInteger}>
+            <TypeDeChampIntegerOption
+              label="Minimum"
+              handler={updateHandlers.min}
+            />
+            <TypeDeChampIntegerOption
+              label="Maximum"
+              handler={updateHandlers.max}
+            />
+          </TypeDeChampIntegerOptions>
           <TypeDeChampRepetitionOptions
             isVisible={isRepetition}
             state={{
@@ -216,6 +229,8 @@ export const FIELDS = [
   'piece_justificative_template',
   'private',
   'quartiers_prioritaires',
+  'min',
+  'max',
   'type_champ'
 ];
 
