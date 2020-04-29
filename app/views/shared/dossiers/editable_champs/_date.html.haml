@@ -1,5 +1,6 @@
 = form.date_field :value,
   value: champ.value,
   required: champ.mandatory?,
-  max: Date.iso8601('2100-12-31')
+  min: champ.type_de_champ.min.present? ? champ.type_de_champ.min : nil,
+  max: champ.type_de_champ.max.present? ? champ.type_de_champ.max : Date.iso8601('2100-12-31')
 
