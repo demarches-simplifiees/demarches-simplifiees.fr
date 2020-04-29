@@ -1,3 +1,5 @@
 = form.number_field :value,
   placeholder: champ.libelle,
+  min: champ.type_de_champ.min.present? ? champ.type_de_champ.min : nil,
+  max: champ.type_de_champ.max.present? ? champ.type_de_champ.max : nil,
   required: champ.mandatory?
