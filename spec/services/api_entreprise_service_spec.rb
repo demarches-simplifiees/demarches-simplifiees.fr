@@ -15,6 +15,10 @@ describe ApiEntrepriseService do
         .to_return(body: effectifs_annuels_body, status: effectifs_annuels_status)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
         .to_return(body: attestation_sociale_body, status: attestation_sociale_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
+        .to_return(body: attestation_sociale_body, status: attestation_sociale_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}?.*token=/)
+        .to_return(body: attestation_fiscale_body, status: attestation_fiscale_status)
     end
 
     before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
@@ -44,6 +48,10 @@ describe ApiEntrepriseService do
     let(:attestation_sociale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
     let(:attestation_sociale_url) { "https://storage.entreprise.api.gouv.fr/siade/1569156881-f749d75e2bfd443316e2e02d59015f-attestation_vigilance_acoss.pdf" }
 
+    let(:attestation_fiscale_status) { 200 }
+    let(:attestation_fiscale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_fiscale.json') }
+    let(:attestation_fiscale_url) { "https://storage.entreprise.api.gouv.fr/siade/1569156756-f6b7779f99fa95cd60dc03c04fcb-attestation_fiscale_dgfip.pdf" }
+
     let(:exercices_status) { 200 }
     let(:exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
 
@@ -54,7 +62,7 @@ describe ApiEntrepriseService do
     let(:result) { ApiEntrepriseService.get_etablissement_params_for_siret(siret, procedure.id) }
 
     before do
-      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(["attestations_sociales"])
+      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(["attestations_sociales", "attestations_fiscales"])
     end
 
     context 'when service is up' do
@@ -66,6 +74,7 @@ describe ApiEntrepriseService do
         expect(result[:entreprise_effectif_mensuel]).to eq(effectif_mensuel)
         expect(result[:entreprise_effectif_annuel]).to eq(effectif_annuel)
         expect(result[:entreprise_attestation_sociale_url]).to eq(attestation_sociale_url)
+        expect(result[:entreprise_attestation_fiscale_url]).to eq(attestation_fiscale_url)
       end
     end
 
