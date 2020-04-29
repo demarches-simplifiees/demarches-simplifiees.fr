@@ -552,7 +552,11 @@ class Procedure < ApplicationRecord
   end
 
   def api_entreprise_role?(role)
-    api_entreprise_roles&.include?(role)
+    api_entreprise_roles.include?(role)
+  end
+
+  def api_entreprise_token
+    self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
   end
 
   private

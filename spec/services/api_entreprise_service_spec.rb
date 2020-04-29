@@ -53,6 +53,10 @@ describe ApiEntrepriseService do
     let(:procedure) { create(:procedure, api_entreprise_token: 'un-jeton') }
     let(:result) { ApiEntrepriseService.get_etablissement_params_for_siret(siret, procedure.id) }
 
+    before do
+      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(["attestations_sociales"])
+    end
+
     context 'when service is up' do
       it 'should fetch etablissement params' do
         expect(result[:entreprise_siren]).to eq(siren)

@@ -67,6 +67,10 @@
           - elsif etablissement.exercices.present?
             = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
+      - if etablissement.entreprise_attestation_sociale.attached?
+        %tr
+          %th.libelle Attestation sociale
+          %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
       - if etablissement.association?
         %tr
           %th.libelle Numéro RNA :

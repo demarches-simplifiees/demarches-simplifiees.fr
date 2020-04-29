@@ -112,7 +112,9 @@ module Users
         return render_siret_error(t('errors.messages.siret_unknown'))
       end
 
+      attestation_sociale_url = etablissement_attributes.delete(:entreprise_attestation_sociale_url)
       etablissement = @dossier.build_etablissement(etablissement_attributes)
+      etablissement.upload_attestation_sociale(attestation_sociale_url) if attestation_sociale_url.present?
       etablissement.save!
       current_user.update!(siret: sanitized_siret)
       @dossier.update!(autorisation_donnees: true)
