@@ -775,6 +775,7 @@ DEPENDENCIES
   haml-rails
   hashie
   jquery-rails
+  jwt
   kaminari (= 1.1.1)
   launchy
   letter_opener_web

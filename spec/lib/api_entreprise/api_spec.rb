@@ -158,4 +158,31 @@ describe ApiEntreprise::API do
       it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
     end
   end
+
+  describe '.attestation_sociale' do
+    let(:procedure) { create(:procedure, api_entreprise_token: token) }
+    let(:siren) { '418166096' }
+    let(:status) { 200 }
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
+
+    before do
+      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(roles)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
+        .to_return(body: body, status: status)
+    end
+
+    subject { described_class.attestation_sociale(siren, procedure.id) }
+
+    context 'when token not authorized' do
+      let(:roles) { ["entreprises"] }
+
+      it { expect(subject).to eq(nil) }
+    end
+
+    context 'when token is authorized' do
+      let(:roles) { ["attestations_sociales"] }
+
+      it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
+    end
+  end
 end
