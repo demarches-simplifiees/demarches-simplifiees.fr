@@ -461,6 +461,10 @@ describe Procedure do
         end
       end
 
+      it 'should discard specific api_entreprise_token' do
+        expect(subject.read_attribute(:api_entreprise_token)).to be_nil
+      end
+
       it 'should have one administrateur' do
         expect(subject.administrateurs).to eq([administrateur])
       end
