@@ -547,6 +547,18 @@ class Procedure < ApplicationRecord
     "Procedure;#{id}"
   end
 
+  def api_entreprise_roles
+    JWT.decode(api_entreprise_token, nil, false)[0]["roles"] if api_entreprise_token.present?
+  end
+
+  def api_entreprise_role?(role)
+    api_entreprise_roles.include?(role)
+  end
+
+  def api_entreprise_token
+    self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
+  end
+
   private
 
   def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)

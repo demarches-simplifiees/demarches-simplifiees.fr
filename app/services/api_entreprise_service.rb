@@ -35,6 +35,12 @@ class ApiEntrepriseService
       rescue ApiEntreprise::API::RequestFailed
       end
 
+      begin
+        attestation_sociale_params = ApiEntreprise::AttestationSocialeAdapter.new(entreprise_params[:entreprise_siren], procedure_id).to_params
+        etablissement_params.merge!(attestation_sociale_params)
+      rescue ApiEntreprise::API::RequestFailed
+      end
+
       etablissement_params.merge(entreprise_params)
     end
   end
