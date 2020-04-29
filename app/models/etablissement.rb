@@ -4,6 +4,8 @@ class Etablissement < ApplicationRecord
   has_one :champ, class_name: 'Champs::SiretChamp'
   has_many :exercices, dependent: :destroy
 
+  has_one_attached :entreprise_attestation_sociale
+
   accepts_nested_attributes_for :exercices
 
   validates :siret, presence: true
@@ -112,6 +114,19 @@ class Etablissement < ApplicationRecord
       prenom: entreprise_prenom,
       inline_adresse: inline_adresse
     )
+  end
+
+  def upload_attestation_sociale(url)
+    filename = File.basename(URI.parse(url).path)
+    response = Typhoeus.get(url)
+
+    if response.success?
+      entreprise_attestation_sociale.attach(
+        io: StringIO.new(response.body),
+        filename: filename,
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+    end
   end
 
   private

@@ -86,6 +86,6 @@ class ApiEntreprise::API
 
   def self.token_for_procedure(procedure_id)
     procedure = Procedure.find(procedure_id)
-    procedure.api_entreprise_token.presence || Rails.application.secrets.api_entreprise[:key]
+    procedure.api_entreprise_token
   end
 end
