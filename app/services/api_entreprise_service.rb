@@ -46,6 +46,13 @@ class ApiEntrepriseService
         etablissement_params.merge!(attestation_fiscale_params)
       rescue ApiEntreprise::API::RequestFailed
       end
+
+      begin
+        bilans_bdf_params = ApiEntreprise::BilansBdfAdapter.new(entreprise_params[:entreprise_siren], procedure_id).to_params
+        etablissement_params.merge!(bilans_bdf_params)
+      rescue ApiEntreprise::API::RequestFailed
+      end
+
       etablissement_params.merge(entreprise_params)
     end
   end
