@@ -213,4 +213,31 @@ describe ApiEntreprise::API do
       it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
     end
   end
+
+  describe '.bilans_bdf' do
+    let(:procedure) { create(:procedure, api_entreprise_token: token) }
+    let(:siren) { '418166096' }
+    let(:status) { 200 }
+    let(:body) { File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json') }
+
+    before do
+      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(roles)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}?.*token=#{token}/)
+        .to_return(body: body, status: status)
+    end
+
+    subject { described_class.bilans_bdf(siren, procedure.id) }
+
+    context 'when token not authorized' do
+      let(:roles) { ["entreprises"] }
+
+      it { expect(subject).to eq(nil) }
+    end
+
+    context 'when token is authorized' do
+      let(:roles) { ["bilans_entreprise_bdf"] }
+
+      it { expect(subject).to eq(JSON.parse(body, symbolize_names: true)) }
+    end
+  end
 end
