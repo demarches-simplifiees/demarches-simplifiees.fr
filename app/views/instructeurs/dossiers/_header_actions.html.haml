@@ -8,6 +8,9 @@
       = link_to "Uniquement cet onglet", "#", onclick: "window.print()", class: "menu-item menu-link"
     %li
       = link_to "Export PDF", instructeur_dossier_path(dossier.procedure, dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+    - if dossier.geo_data?
+      %li
+        = link_to "Export GeoJSON", geo_data_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
 
 - if !PiecesJustificativesService.liste_pieces_justificatives(dossier).empty?
   %span.dropdown.print-menu-opener
