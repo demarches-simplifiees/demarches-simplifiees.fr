@@ -318,6 +318,7 @@ Rails.application.routes.draw do
             get 'attestation'
             get 'geo_data'
             get 'apercu_attestation'
+            get 'bilans_bdf'
             get 'messagerie'
             get 'annotations-privees' => 'dossiers#annotations_privees'
             get 'avis'

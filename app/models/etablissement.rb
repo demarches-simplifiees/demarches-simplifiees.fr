@@ -138,6 +138,15 @@ class Etablissement < ApplicationRecord
     upload_attestation(url, entreprise_attestation_fiscale)
   end
 
+  def entreprise_bilans_bdf_to_csv
+    headers = ["bilans"].concat(entreprise_bilans_bdf[0].keys)
+    data = entreprise_bilans_bdf.each_with_index.map do |bilan, i|
+      month = I18n.l(Date.current - (i + 1).year, format: "%m/%Y")
+      [month].concat(bilan.values)
+    end
+    SpreadsheetArchitect.to_csv(headers: headers, data: data)
+  end
+
   private
 
   def dossier_id_for_export

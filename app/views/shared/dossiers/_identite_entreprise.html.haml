@@ -78,6 +78,13 @@
             %th.libelle Attestation fiscale
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
 
+        - if etablissement.entreprise_bilans_bdf_to_csv.present?
+          %tr
+            %th.libelle
+              Bilans Banque de France
+              = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
+            %td= link_to "Consulter les bilans", bilans_bdf_instructeur_dossier_path
+
       - if etablissement.association?
         %tr
           %th.libelle Numéro RNA :
