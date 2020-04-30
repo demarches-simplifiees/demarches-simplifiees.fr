@@ -19,6 +19,12 @@ module Instructeurs
       end
     end
 
+    def geo_data
+      send_data dossier.to_feature_collection.to_json,
+        type: 'application/json',
+        filename: "dossier-#{dossier.id}-features.json"
+    end
+
     def apercu_attestation
       @attestation = dossier.procedure.attestation_template.render_attributes_for(dossier: dossier)
 
