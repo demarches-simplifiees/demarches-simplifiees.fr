@@ -10,4 +10,4 @@
   = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, error: false }
 
 = form.hidden_field :value,
-  data: { remote: true, feature_collection_id: champ.type_de_champ.stable_id, url: champs_carte_path(form.index), params: champ_carte_params(champ).to_query, method: 'post' }
+  data: { remote: true, feature_collection_id: champ.stable_id, url: champs_carte_path(form.index), params: champ_carte_params(champ).to_query, method: 'post' }

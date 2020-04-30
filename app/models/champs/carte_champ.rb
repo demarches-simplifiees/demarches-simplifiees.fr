@@ -74,7 +74,7 @@ class Champs::CarteChamp < Champ
   def to_feature_collection
     {
       type: 'FeatureCollection',
-      id: type_de_champ.stable_id,
+      id: stable_id,
       bbox: bounding_box,
       features: (legacy_selections_utilisateur + except_selections_utilisateur).map(&:to_feature)
     }
