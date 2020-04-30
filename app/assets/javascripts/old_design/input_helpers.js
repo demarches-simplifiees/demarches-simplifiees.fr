@@ -3,15 +3,15 @@
 $(document).on('turbolinks:load', action_type_de_champs);
 
 function action_type_de_champs() {
-  $("input[type='email']").on('change', function() {
+  $("input[type='email']").on('change', function () {
     toggleErrorClass(this, validateEmail($(this).val()));
   });
 
-  $("input[type='number']").on('change', function() {
+  $("input[type='number']").on('change', function () {
     toggleErrorClass(this, validateNumber($(this).val()));
   });
 
-  $("input[type='phone']").on('change', function() {
+  $("input[type='phone']").on('change', function () {
     var val = $(this).val();
     val = val.replace(/[ ]/g, '');
 

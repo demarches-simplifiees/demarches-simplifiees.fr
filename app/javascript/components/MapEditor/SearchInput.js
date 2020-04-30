@@ -11,12 +11,12 @@ import '@reach/combobox/styles.css';
 import PropTypes from 'prop-types';
 
 let cache = {};
-const useAddressSearch = searchTerm => {
+const useAddressSearch = (searchTerm) => {
   const [addresses, setAddresses] = useState([]);
   useEffect(() => {
     if (searchTerm.trim() !== '') {
       let isFresh = true;
-      fetchAddresses(searchTerm).then(addresses => {
+      fetchAddresses(searchTerm).then((addresses) => {
         if (isFresh) setAddresses(addresses);
       });
       return () => (isFresh = false);
@@ -25,12 +25,12 @@ const useAddressSearch = searchTerm => {
   return addresses;
 };
 
-const fetchAddresses = value => {
+const fetchAddresses = (value) => {
   if (cache[value]) {
     return Promise.resolve(cache[value]);
   }
   const url = `https://api-adresse.data.gouv.fr/search/`;
-  return getJSON(url, { q: value, limit: 5 }, 'get').then(result => {
+  return getJSON(url, { q: value, limit: 5 }, 'get').then((result) => {
     if (result) {
       cache[value] = result;
     }
@@ -41,7 +41,7 @@ const fetchAddresses = value => {
 const SearchInput = ({ getCoords }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const addresses = useAddressSearch(searchTerm);
-  const handleSearchTermChange = event => {
+  const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
   };
   return (
@@ -72,7 +72,7 @@ const SearchInput = ({ getCoords }) => {
         >
           {addresses.features.length > 0 ? (
             <ComboboxList>
-              {addresses.features.map(feature => {
+              {addresses.features.map((feature) => {
                 const str = `${feature.properties.name}, ${feature.properties.city}`;
                 return (
                   <ComboboxOption

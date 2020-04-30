@@ -29,7 +29,7 @@ if (enabled) {
   // Send Matomo a new event when navigating to a new page using Turbolinks
   // (see https://developer.matomo.org/guides/spa-tracking)
   let previousPageUrl = null;
-  addEventListener('turbolinks:load', event => {
+  addEventListener('turbolinks:load', (event) => {
     if (previousPageUrl) {
       window._paq.push(['setReferrerUrl', previousPageUrl]);
       window._paq.push(['setCustomUrl', window.location.href]);
