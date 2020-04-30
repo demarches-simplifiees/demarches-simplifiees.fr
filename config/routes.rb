@@ -166,6 +166,8 @@ Rails.application.routes.draw do
   post 'admin/procedures' => 'new_administrateur/procedures#create'
   get 'admin/procedures/:id/monavis' => 'new_administrateur/procedures#monavis', as: :admin_procedure_monavis
   patch 'admin/procedures/:id/monavis' => 'new_administrateur/procedures#update_monavis', as: :update_monavis
+  get 'admin/procedures/:id/jeton' => 'new_administrateur/procedures#jeton', as: :admin_procedure_jeton
+  patch 'admin/procedures/:id/jeton' => 'new_administrateur/procedures#update_jeton', as: :update_jeton
 
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
@@ -314,7 +316,9 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
             get 'attestation'
+            get 'geo_data'
             get 'apercu_attestation'
+            get 'bilans_bdf'
             get 'messagerie'
             get 'annotations-privees' => 'dossiers#annotations_privees'
             get 'avis'

@@ -86,6 +86,10 @@ class Champ < ApplicationRecord
     true
   end
 
+  def stable_id
+    type_de_champ.stable_id
+  end
+
   private
 
   def needs_dossier_id?
