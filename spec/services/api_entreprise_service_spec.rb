@@ -19,6 +19,8 @@ describe ApiEntrepriseService do
         .to_return(body: attestation_sociale_body, status: attestation_sociale_status)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}?.*token=/)
         .to_return(body: attestation_fiscale_body, status: attestation_fiscale_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}?.*token=/)
+        .to_return(body: bilans_bdf_body, status: bilans_bdf_status)
     end
 
     before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
@@ -52,6 +54,10 @@ describe ApiEntrepriseService do
     let(:attestation_fiscale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_fiscale.json') }
     let(:attestation_fiscale_url) { "https://storage.entreprise.api.gouv.fr/siade/1569156756-f6b7779f99fa95cd60dc03c04fcb-attestation_fiscale_dgfip.pdf" }
 
+    let(:bilans_bdf_status) { 200 }
+    let(:bilans_bdf_body) { File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json') }
+    let(:bilans_bdf) { JSON.parse(bilans_bdf_body, symbolize_names: true)[:bilans] }
+
     let(:exercices_status) { 200 }
     let(:exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
 
@@ -62,7 +68,8 @@ describe ApiEntrepriseService do
     let(:result) { ApiEntrepriseService.get_etablissement_params_for_siret(siret, procedure.id) }
 
     before do
-      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(["attestations_sociales", "attestations_fiscales"])
+      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles)
+        .and_return(["attestations_sociales", "attestations_fiscales", "bilans_entreprise_bdf"])
     end
 
     context 'when service is up' do
@@ -75,6 +82,7 @@ describe ApiEntrepriseService do
         expect(result[:entreprise_effectif_annuel]).to eq(effectif_annuel)
         expect(result[:entreprise_attestation_sociale_url]).to eq(attestation_sociale_url)
         expect(result[:entreprise_attestation_fiscale_url]).to eq(attestation_fiscale_url)
+        expect(result[:entreprise_bilans_bdf]).to eq(bilans_bdf)
       end
     end
 
