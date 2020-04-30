@@ -36,7 +36,14 @@ class GeoArea < ApplicationRecord
     {
       type: 'Feature',
       geometry: geometry,
-      properties: properties.merge(source: source, area: area, length: length).compact
+      properties: properties.symbolize_keys.merge(
+        source: source,
+        area: area,
+        length: length,
+        id: id,
+        champ_id: champ.stable_id,
+        dossier_id: champ.dossier_id
+      ).compact
     }
   end
 

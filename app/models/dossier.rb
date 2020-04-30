@@ -700,7 +700,35 @@ class Dossier < ApplicationRecord
     { id: self.id, procedure_libelle: self.procedure.libelle }
   end
 
+  def geo_data?
+    geo_areas.present?
+  end
+
+  def to_feature_collection
+    {
+      type: 'FeatureCollection',
+      id: id,
+      bbox: bounding_box,
+      features: geo_areas.map(&:to_feature)
+    }
+  end
+
   private
+
+  def geo_areas
+    champs.includes(:geo_areas).flat_map(&:geo_areas) + champs_private.includes(:geo_areas).flat_map(&:geo_areas)
+  end
+
+  def bounding_box
+    factory = RGeo::Geographic.simple_mercator_factory
+    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
+
+    geo_areas.each do |area|
+      bounding_box.add(area.rgeo_geometry)
+    end
+
+    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
+  end
 
   def log_dossier_operation(author, operation, subject = nil)
     if log_operations?

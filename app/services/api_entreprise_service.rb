@@ -6,7 +6,7 @@ class ApiEntrepriseService
   #
   # Raises a ApiEntreprise::API::RequestFailed exception on transcient errors
   # (timeout, 5XX HTTP error code, etc.)
-  def self.get_etablissement_params_for_siret(siret, procedure_id)
+  def self.get_etablissement_params_for_siret(siret, procedure_id, user_id = nil)
     etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
     entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
 
@@ -32,6 +32,24 @@ class ApiEntrepriseService
       begin
         effectifs_annuels_params = ApiEntreprise::EffectifsAnnuelsAdapter.new(entreprise_params[:entreprise_siren], procedure_id).to_params
         etablissement_params.merge!(effectifs_annuels_params)
+      rescue ApiEntreprise::API::RequestFailed
+      end
+
+      begin
+        attestation_sociale_params = ApiEntreprise::AttestationSocialeAdapter.new(entreprise_params[:entreprise_siren], procedure_id).to_params
+        etablissement_params.merge!(attestation_sociale_params)
+      rescue ApiEntreprise::API::RequestFailed
+      end
+
+      begin
+        attestation_fiscale_params = ApiEntreprise::AttestationFiscaleAdapter.new(entreprise_params[:entreprise_siren], procedure_id, user_id).to_params
+        etablissement_params.merge!(attestation_fiscale_params)
+      rescue ApiEntreprise::API::RequestFailed
+      end
+
+      begin
+        bilans_bdf_params = ApiEntreprise::BilansBdfAdapter.new(entreprise_params[:entreprise_siren], procedure_id).to_params
+        etablissement_params.merge!(bilans_bdf_params)
       rescue ApiEntreprise::API::RequestFailed
       end
 
