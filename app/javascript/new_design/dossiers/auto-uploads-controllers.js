@@ -40,18 +40,18 @@ export default class AutoUploadsControllers {
     if (form) {
       form
         .querySelectorAll('button[type=submit]')
-        .forEach(submitButton => Rails.disableElement(submitButton));
+        .forEach((submitButton) => Rails.disableElement(submitButton));
     }
 
     //
     // DEBUG: hook into FileReader onload event
     //
     if (FileReader.prototype.addEventListener === originalImpl) {
-      FileReader.prototype.addEventListener = function() {
+      FileReader.prototype.addEventListener = function () {
         // When DirectUploads attempts to add an event listener for "error",
         // also insert a custom event listener of our that will report errors to Sentry.
         if (arguments[0] == 'error') {
-          let handler = event => {
+          let handler = (event) => {
             let message = `FileReader ${event.target.error.name}: ${event.target.error.message}`;
             fire(document, 'sentry:capture-exception', new Error(message));
           };
@@ -71,7 +71,7 @@ export default class AutoUploadsControllers {
     if (this.inFlightUploadsCount == 0 && form) {
       form
         .querySelectorAll('button[type=submit]')
-        .forEach(submitButton => Rails.enableElement(submitButton));
+        .forEach((submitButton) => Rails.enableElement(submitButton));
     }
 
     //
