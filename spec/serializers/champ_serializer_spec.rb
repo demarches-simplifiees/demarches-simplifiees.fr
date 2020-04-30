@@ -26,7 +26,7 @@ describe ChampSerializer do
     context 'when type champ is carte' do
       let(:champ) { create(:champ_carte, value: value, geo_areas: [geo_area].compact) }
       let(:value) { nil }
-      let(:geo_area) { create(:geo_area, geometry: geo_json) }
+      let(:geo_area) { create(:geo_area, :cadastre, geometry: geo_json) }
       let(:geo_json) do
         {
           "type" => 'MultiPolygon',

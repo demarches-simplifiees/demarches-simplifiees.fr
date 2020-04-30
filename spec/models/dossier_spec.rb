@@ -1234,4 +1234,34 @@ describe Dossier do
     it { expect(procedure).not_to be_nil }
     it { expect(procedure.discarded?).to be_truthy }
   end
+
+  describe "to_feature_collection" do
+    let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
+    let(:champ) { create(:champ_carte, geo_areas: [geo_area]) }
+    let(:dossier) { create(:dossier, champs: [champ]) }
+
+    it 'should have all champs carto' do
+      expect(dossier.to_feature_collection).to eq({
+        type: 'FeatureCollection',
+        id: dossier.id,
+        bbox: [2.428439855575562, 46.538491597754714, 2.42824137210846, 46.53841410755813],
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              'coordinates' => [[[2.428439855575562, 46.538476837725796], [2.4284291267395024, 46.53842148758162], [2.4282521009445195, 46.53841410755813], [2.42824137210846, 46.53847314771794], [2.428284287452698, 46.53847314771794], [2.428364753723145, 46.538487907747864], [2.4284291267395024, 46.538491597754714], [2.428439855575562, 46.538476837725796]]],
+              'type' => 'Polygon'
+            },
+            properties: {
+              area: 219.0,
+              champ_id: champ.stable_id,
+              dossier_id: dossier.id,
+              id: geo_area.id,
+              source: 'selection_utilisateur'
+            }
+          }
+        ]
+      })
+    end
+  end
 end
