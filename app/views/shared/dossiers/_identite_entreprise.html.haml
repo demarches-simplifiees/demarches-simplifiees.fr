@@ -71,6 +71,12 @@
         %tr
           %th.libelle Attestation sociale
           %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
+
+      - if etablissement.entreprise_attestation_fiscale.attached?
+        %tr
+          %th.libelle Attestation fiscale
+          %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
+
       - if etablissement.association?
         %tr
           %th.libelle Numéro RNA :
