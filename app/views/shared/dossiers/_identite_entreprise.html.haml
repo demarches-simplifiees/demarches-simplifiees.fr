@@ -78,7 +78,7 @@
             %th.libelle Attestation fiscale
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
 
-        - if etablissement.entreprise_bilans_bdf_to_csv.present?
+        - if etablissement.entreprise_bilans_bdf.present?
           %tr
             %th.libelle
               Bilans Banque de France
