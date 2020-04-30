@@ -138,6 +138,14 @@ class Etablissement < ApplicationRecord
     upload_attestation(url, entreprise_attestation_fiscale)
   end
 
+  def entreprise_bilans_bdf_to_csv
+    headers = entreprise_bilans_bdf.flat_map(&:keys).uniq
+    data = entreprise_bilans_bdf.map do |bilan|
+      headers.map { |h| bilan[h] }
+    end
+    SpreadsheetArchitect.to_csv(headers: headers, data: data)
+  end
+
   private
 
   def dossier_id_for_export

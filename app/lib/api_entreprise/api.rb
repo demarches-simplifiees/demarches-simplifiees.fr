@@ -7,6 +7,7 @@ class ApiEntreprise::API
   EFFECTIFS_ANNUELS_RESOURCE_NAME = "effectifs_annuels_acoss_covid"
   ATTESTATION_SOCIALE_RESOURCE_NAME = "attestations_sociales_acoss"
   ATTESTATION_FISCALE_RESOURCE_NAME = "attestations_fiscales_dgfip"
+  BILANS_BDF_RESOURCE_NAME = "bilans_entreprises_bdf"
 
   TIMEOUT = 15
 
@@ -49,6 +50,11 @@ class ApiEntreprise::API
   def self.attestation_fiscale(siren, procedure_id, user_id)
     procedure = Procedure.find(procedure_id)
     call(ATTESTATION_FISCALE_RESOURCE_NAME, siren, procedure_id, user_id) if procedure.api_entreprise_role?("attestations_fiscales")
+  end
+
+  def self.bilans_bdf(siren, procedure_id)
+    procedure = Procedure.find(procedure_id)
+    call(BILANS_BDF_RESOURCE_NAME, siren, procedure_id) if procedure.api_entreprise_role?("bilans_entreprise_bdf")
   end
 
   private
