@@ -5,6 +5,7 @@ class Etablissement < ApplicationRecord
   has_many :exercices, dependent: :destroy
 
   has_one_attached :entreprise_attestation_sociale
+  has_one_attached :entreprise_attestation_fiscale
 
   accepts_nested_attributes_for :exercices
 
@@ -116,17 +117,25 @@ class Etablissement < ApplicationRecord
     )
   end
 
-  def upload_attestation_sociale(url)
+  def upload_attestation(url, attestation)
     filename = File.basename(URI.parse(url).path)
     response = Typhoeus.get(url)
 
     if response.success?
-      entreprise_attestation_sociale.attach(
+      attestation.attach(
         io: StringIO.new(response.body),
         filename: filename,
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
     end
+  end
+
+  def upload_attestation_sociale(url)
+    upload_attestation(url, entreprise_attestation_sociale)
+  end
+
+  def upload_attestation_fiscale(url)
+    upload_attestation(url, entreprise_attestation_fiscale)
   end
 
   private

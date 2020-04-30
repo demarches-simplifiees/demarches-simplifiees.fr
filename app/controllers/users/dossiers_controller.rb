@@ -104,7 +104,7 @@ module Users
 
       sanitized_siret = siret_model.siret
       begin
-        etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
+        etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id, current_user.id)
       rescue ApiEntreprise::API::RequestFailed
         return render_siret_error(t('errors.messages.siret_network_error'))
       end
@@ -113,8 +113,10 @@ module Users
       end
 
       attestation_sociale_url = etablissement_attributes.delete(:entreprise_attestation_sociale_url)
+      attestation_fiscale_url = etablissement_attributes.delete(:entreprise_attestation_fiscale_url)
       etablissement = @dossier.build_etablissement(etablissement_attributes)
       etablissement.upload_attestation_sociale(attestation_sociale_url) if attestation_sociale_url.present?
+      etablissement.upload_attestation_fiscale(attestation_fiscale_url) if attestation_fiscale_url.present?
       etablissement.save!
       current_user.update!(siret: sanitized_siret)
       @dossier.update!(autorisation_donnees: true)

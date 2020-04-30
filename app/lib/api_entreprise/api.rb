@@ -6,6 +6,7 @@ class ApiEntreprise::API
   EFFECTIFS_RESOURCE_NAME = "effectifs_mensuels_acoss_covid"
   EFFECTIFS_ANNUELS_RESOURCE_NAME = "effectifs_annuels_acoss_covid"
   ATTESTATION_SOCIALE_RESOURCE_NAME = "attestations_sociales_acoss"
+  ATTESTATION_FISCALE_RESOURCE_NAME = "attestations_fiscales_dgfip"
 
   TIMEOUT = 15
 
@@ -45,11 +46,16 @@ class ApiEntreprise::API
     call(ATTESTATION_SOCIALE_RESOURCE_NAME, siren, procedure_id) if procedure.api_entreprise_role?("attestations_sociales")
   end
 
+  def self.attestation_fiscale(siren, procedure_id, user_id)
+    procedure = Procedure.find(procedure_id)
+    call(ATTESTATION_FISCALE_RESOURCE_NAME, siren, procedure_id, user_id) if procedure.api_entreprise_role?("attestations_fiscales")
+  end
+
   private
 
-  def self.call(resource_name, siret_or_siren, procedure_id)
+  def self.call(resource_name, siret_or_siren, procedure_id, user_id = nil)
     url = url(resource_name, siret_or_siren)
-    params = params(siret_or_siren, procedure_id)
+    params = params(siret_or_siren, procedure_id, user_id)
 
     response = Typhoeus.get(url,
       params: params,
@@ -74,14 +80,16 @@ class ApiEntreprise::API
     base_url
   end
 
-  def self.params(siret_or_siren, procedure_id)
-    {
+  def self.params(siret_or_siren, procedure_id, user_id)
+    params = {
       context: "demarches-simplifiees.fr",
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}",
       non_diffusables: true,
       token: token_for_procedure(procedure_id)
     }
+    params[:user_id] = user_id if user_id.present?
+    params
   end
 
   def self.token_for_procedure(procedure_id)
