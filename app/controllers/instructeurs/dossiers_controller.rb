@@ -31,6 +31,10 @@ module Instructeurs
       render 'admin/attestation_templates/show', formats: [:pdf]
     end
 
+    def bilans_bdf
+      render csv: dossier.etablissement.entreprise_bilans_bdf_to_csv
+    end
+
     def show
       @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.demande_seen_at
 
