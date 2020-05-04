@@ -9,9 +9,7 @@ end
 
 def format_in_2_lines(pdf, champ, nb_lines = 1)
   add_single_line(pdf, champ.libelle, 12, :bold)
-  if champ.description.present?
-    add_explanation(pdf, champ.description)
-  end
+  add_optionnal_description(pdf, champ)
   height = 10 * (nb_lines+1)
   pdf.bounding_box([0, pdf.cursor],:width => 460,:height => height) do
     pdf.stroke_bounds
@@ -91,37 +89,45 @@ def add_explanation(pdf, explanation)
   add_single_line(pdf, explanation, 9, :italic)
 end
 
+def add_optionnal_description(pdf, champ)
+  add_explanation(pdf, champ.description.strip + "\n\n") if champ.description.present?
+end
+
 def render_single_champ(pdf, champ)
   case champ.type
   when 'Champs::RepetitionChamp'
     raise 'There should not be a RepetitionChamp here !'
   when 'Champs::PieceJustificativeChamp'
-    add_single_line(pdf, 'Pièce justificative à joindre', 12, :bold)
-    pdf.text champ.libelle
-    pdf.text champ.description
+    add_single_line(pdf, 'Pièce justificative à joindre en complément du dossier', 12, :bold)
+    format_with_checkbox(pdf, champ.libelle)
+    add_optionnal_description(pdf, champ)
     pdf.text "\n"
   when 'Champs::YesNoChamp', 'Champs::CheckboxChamp'
     add_libelle(pdf, champ)
+    add_optionnal_description(pdf, champ)
     add_explanation(pdf, 'Cochez la mention applicable')
     format_with_checkbox(pdf, 'Oui')
     format_with_checkbox(pdf, 'Non')
     pdf.text "\n"
   when 'Champs::CiviliteChamp'
     add_libelle(pdf, champ)
+    add_optionnal_description(pdf, champ)
     format_with_checkbox(pdf, Individual::GENDER_FEMALE)
     format_with_checkbox(pdf, Individual::GENDER_MALE)
     pdf.text "\n"
   when 'Champs::HeaderSectionChamp'
     add_single_line(pdf, champ.libelle, 18, :bold)
+    add_optionnal_description(pdf, champ)
     pdf.text "\n"
   when 'Champs::ExplicationChamp'
     add_libelle(pdf, champ)
     pdf.text champ.description
     pdf.text "\n"
   when 'Champs::AddressChamp',  'Champs::CarteChamp', 'Champs::TextareaChamp'
-    format_in_2_lines(pdf, champ, 3)
+    format_in_2_lines(pdf, champ, 5)
   when 'Champs::DropDownListChamp'
     add_libelle(pdf, champ)
+    add_optionnal_description(pdf, champ)
     add_explanation(pdf, 'Cochez la mention applicable, une seule valeur possible')
     champ.drop_down_list.options.reject(&:blank?).each do |option|
       format_with_checkbox(pdf, option)
@@ -129,6 +135,7 @@ def render_single_champ(pdf, champ)
     pdf.text "\n"
   when 'Champs::MultipleDropDownListChamp'
     add_libelle(pdf, champ)
+    add_optionnal_description(pdf, champ)
     add_explanation(pdf, 'Cochez la mention applicable, plusieurs valeurs possibles')
     champ.drop_down_list.options.reject(&:blank?).each do |option|
       format_with_checkbox(pdf, option)
