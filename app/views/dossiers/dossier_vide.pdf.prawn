@@ -190,6 +190,7 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.text "\n"
 
   add_title(pdf, 'Formulaire')
+  add_single_line(pdf, @procedure.description + "\n", 12, :italic) if @procedure.description.present?
   add_champs(pdf, @dossier.champs)
   add_page_numbering(pdf)
   add_procedure(pdf, @dossier)
