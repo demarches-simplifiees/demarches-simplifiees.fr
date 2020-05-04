@@ -7,9 +7,11 @@ def render_in_2_columns(pdf, label, text)
   pdf.text "\n"
 end
 
-def format_in_2_lines(pdf, label, nb_lines = 1)
-  add_single_line(pdf, label, 12, :bold)
-
+def format_in_2_lines(pdf, champ, nb_lines = 1)
+  add_single_line(pdf, champ.libelle, 12, :bold)
+  if champ.description.present?
+    add_explanation(pdf, champ.description)
+  end
   height = 10 * (nb_lines+1)
   pdf.bounding_box([0, pdf.cursor],:width => 460,:height => height) do
     pdf.stroke_bounds
@@ -117,7 +119,7 @@ def render_single_champ(pdf, champ)
     pdf.text champ.description
     pdf.text "\n"
   when 'Champs::AddressChamp',  'Champs::CarteChamp', 'Champs::TextareaChamp'
-    format_in_2_lines(pdf, champ.libelle, 3)
+    format_in_2_lines(pdf, champ, 3)
   when 'Champs::DropDownListChamp'
     add_libelle(pdf, champ)
     add_explanation(pdf, 'Cochez la mention applicable, une seule valeur possible')
@@ -144,7 +146,7 @@ def render_single_champ(pdf, champ)
   when 'Champs::SiretChamp'
     add_identite_etablissement(pdf, champ.libelle)
   else
-    format_in_2_lines(pdf, champ.libelle)
+    format_in_2_lines(pdf, champ)
   end
 end
 
