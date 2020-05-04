@@ -1,3 +1,7 @@
-window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+try {
+  window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+} catch {
+  window.scroll(0, 0);
+}
 <%= remove_element('#user-satisfaction') %>
 <%= render_flash %>

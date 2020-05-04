@@ -25,9 +25,9 @@
 
 - if @avis.instructeur.present?
   %p
-    = link_to "Cliquez ici pour donner votre avis", avis_link
+    = round_button("Donner votre avis", avis_link, :primary)
 - else
   %p
-    = link_to "Inscrivez-vous pour donner votre avis", avis_link
+    = round_button("Inscrivez-vous pour donner votre avis", avis_link, :primary)
 
 = render partial: "layouts/mailers/signature"

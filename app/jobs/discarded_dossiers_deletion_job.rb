@@ -1,5 +1,5 @@
 class DiscardedDossiersDeletionJob < CronJob
-  self.cron_expression = "0 7 * * *"
+  self.schedule_expression = "every day at 2 am"
 
   def perform(*args)
     Dossier.discarded_brouillon_expired.destroy_all

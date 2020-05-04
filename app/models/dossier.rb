@@ -43,7 +43,7 @@ class Dossier < ApplicationRecord
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, inverse_of: :dossier, dependent: :destroy
 
-  has_many :dossier_operation_logs, dependent: :nullify
+  has_many :dossier_operation_logs, -> { order(:created_at) }, dependent: :nullify, inverse_of: :dossier
 
   belongs_to :groupe_instructeur
   has_one :procedure, through: :groupe_instructeur
@@ -744,7 +744,7 @@ class Dossier < ApplicationRecord
       self.en_construction_at = Time.zone.now
     elsif en_instruction? && !self.en_instruction_at
       self.en_instruction_at = Time.zone.now
-    elsif TERMINE.include?(state)
+    elsif TERMINE.include?(state) && !self.processed_at
       self.processed_at = Time.zone.now
     end
   end
