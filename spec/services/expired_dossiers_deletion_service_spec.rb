@@ -120,8 +120,9 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with 2 dossiers to delete' do
-      let!(:dossier_1) { create(:dossier, procedure: procedure, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
-      let!(:dossier_2) { create(:dossier, procedure: procedure_2, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      # warning_period + 2 days for Tahiti instead of 1 because (now - 1.month - 5 days) + 1.month + 5 days != now
+      let!(:dossier_1) { create(:dossier, procedure: procedure, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 2.days).ago) }
+      let!(:dossier_2) { create(:dossier, procedure: procedure_2, user: user, brouillon_close_to_expiration_notice_sent_at: (warning_period + 2.days).ago) }
 
       before { ExpiredDossiersDeletionService.delete_expired_brouillons_and_notify }
 
@@ -247,8 +248,9 @@ describe ExpiredDossiersDeletionService do
     end
 
     context 'with 2 dossiers to delete' do
-      let!(:dossier_1) { create(:dossier, :en_construction, procedure: procedure, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
-      let!(:dossier_2) { create(:dossier, :en_construction, procedure: procedure_2, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 1.day).ago) }
+      # warning_period + 2 days for Tahiti instead of 1 because (now - 1.month - 5 days) + 1.month + 5 days != now
+      let!(:dossier_1) { create(:dossier, :en_construction, procedure: procedure, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 2.days).ago) }
+      let!(:dossier_2) { create(:dossier, :en_construction, procedure: procedure_2, user: user, en_construction_close_to_expiration_notice_sent_at: (warning_period + 2.days).ago) }
       let(:deleted_dossier_1) { DeletedDossier.find_by(dossier_id: dossier_1.id) }
       let(:deleted_dossier_2) { DeletedDossier.find_by(dossier_id: dossier_2.id) }
 
