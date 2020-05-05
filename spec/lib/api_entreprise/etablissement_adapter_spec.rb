@@ -2,6 +2,10 @@ describe ApiEntreprise::EtablissementAdapter do
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
 
+  before do
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+  end
+
   context 'SIRET valide avec infos diffusables' do
     let(:siret) { '41816609600051' }
     subject { described_class.new(siret, procedure_id).to_params }

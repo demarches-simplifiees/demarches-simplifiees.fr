@@ -8,6 +8,7 @@ describe ApiEntreprise::EntrepriseAdapter do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
       .to_return(body: body, status: status)
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context "when the SIRET is valid" do
