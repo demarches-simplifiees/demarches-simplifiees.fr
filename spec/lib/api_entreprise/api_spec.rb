@@ -166,7 +166,7 @@ describe ApiEntreprise::API do
     let(:body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
 
     before do
-      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(roles)
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(roles)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
         .to_return(body: body, status: status)
     end
@@ -194,7 +194,7 @@ describe ApiEntreprise::API do
     let(:body) { File.read('spec/fixtures/files/api_entreprise/attestation_fiscale.json') }
 
     before do
-      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(roles)
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(roles)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}?.*token=#{token}&user_id=#{user_id}/)
         .to_return(body: body, status: status)
     end
@@ -221,7 +221,7 @@ describe ApiEntreprise::API do
     let(:body) { File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json') }
 
     before do
-      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(roles)
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(roles)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}?.*token=#{token}/)
         .to_return(body: body, status: status)
     end
