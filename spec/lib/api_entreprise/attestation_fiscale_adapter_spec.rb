@@ -8,7 +8,8 @@ describe ApiEntreprise::AttestationFiscaleAdapter do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}?.*token=/)
       .to_return(body: body, status: status)
-    allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return(["attestations_fiscales"])
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(["attestations_fiscales"])
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context "when the SIREN is valid" do
