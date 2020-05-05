@@ -723,8 +723,8 @@ class Dossier < ApplicationRecord
     factory = RGeo::Geographic.simple_mercator_factory
     bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
 
-    geo_areas.each do |area|
-      bounding_box.add(area.rgeo_geometry)
+    geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+      bounding_box.add(geometry)
     end
 
     [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
