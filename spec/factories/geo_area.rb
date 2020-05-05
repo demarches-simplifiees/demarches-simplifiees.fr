@@ -35,5 +35,28 @@ FactoryBot.define do
         }
       end
     end
+
+    trait :line_string do
+      geometry do
+        {
+          "type": "LineString",
+          "coordinates": [
+            [2.4282521009445195, 46.53841410755813],
+            [2.42824137210846, 46.53847314771794],
+            [2.428284287452698, 46.53847314771794],
+            [2.4284291267395024, 46.538491597754714]
+          ]
+        }
+      end
+    end
+
+    trait :point do
+      geometry do
+        {
+          "type": "Point",
+          "coordinates": [2.428439855575562, 46.538476837725796]
+        }
+      end
+    end
   end
 end
