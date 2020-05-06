@@ -552,16 +552,16 @@ class Procedure < ApplicationRecord
     "Procedure;#{id}"
   end
 
-  def api_entreprise_roles
-    JWT.decode(api_entreprise_token, nil, false)[0]["roles"] if api_entreprise_token.present?
-  end
-
   def api_entreprise_role?(role)
-    api_entreprise_roles.include?(role)
+    ApiEntrepriseToken.new(api_entreprise_token).role?(role)
   end
 
   def api_entreprise_token
     self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
+  end
+
+  def api_entreprise_token_expired?
+    ApiEntrepriseToken.new(api_entreprise_token).expired?
   end
 
   private
