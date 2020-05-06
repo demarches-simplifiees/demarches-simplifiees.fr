@@ -12,6 +12,10 @@ import TypeDeChampCarteOption from './TypeDeChampCarteOption';
 import TypeDeChampCarteOptions from './TypeDeChampCarteOptions';
 import TypeDeChampTeFenuaOption from './TypeDeChampTeFenuaOption';
 import TypeDeChampTeFenuaOptions from './TypeDeChampTeFenuaOptions';
+import TypeDeChampIntegerOption from './TypeDeChampIntegerOption';
+import TypeDeChampIntegerOptions from './TypeDeChampIntegerOptions';
+import TypeDeChampDateOption from './TypeDeChampDateOption';
+import TypeDeChampDateOptions from './TypeDeChampDateOptions';
 import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
@@ -28,6 +32,8 @@ const TypeDeChamp = sortableElement(
     const isFile = typeDeChamp.type_champ === 'piece_justificative';
     const isCarte = typeDeChamp.type_champ === 'carte';
     const isTeFenua = typeDeChamp.type_champ === 'te_fenua';
+    const isInteger = typeDeChamp.type_champ === 'integer_number';
+    const isDate = typeDeChamp.type_champ === 'date';
     const isExplication = typeDeChamp.type_champ === 'explication';
     const isHeaderSection = typeDeChamp.type_champ === 'header_section';
     const isRepetition = typeDeChamp.type_champ === 'repetition';
@@ -86,7 +92,9 @@ const TypeDeChamp = sortableElement(
         </div>
         <div
           className={`flex justify-start section ${
-            isDropDown || isFile || isCarte ? 'hr' : ''
+            isDropDown || isFile || isCarte || isTeFenua || isInteger || isDate
+              ? 'hr'
+              : ''
           }`}
         >
           <div className="flex column justify-start">
@@ -163,6 +171,20 @@ const TypeDeChamp = sortableElement(
               handler={updateHandlers.zones_manuelles}
             />
           </TypeDeChampTeFenuaOptions>
+          <TypeDeChampIntegerOptions isVisible={isInteger}>
+            <TypeDeChampIntegerOption
+              label="Minimum"
+              handler={updateHandlers.min}
+            />
+            <TypeDeChampIntegerOption
+              label="Maximum"
+              handler={updateHandlers.max}
+            />
+          </TypeDeChampIntegerOptions>
+          <TypeDeChampDateOptions isVisible={isDate}>
+            <TypeDeChampDateOption label="Début" handler={updateHandlers.min} />
+            <TypeDeChampDateOption label="Fin" handler={updateHandlers.max} />
+          </TypeDeChampDateOptions>
           <TypeDeChampRepetitionOptions
             isVisible={isRepetition}
             state={{
@@ -241,6 +263,8 @@ export const FIELDS = [
   'private',
   'quartiers_prioritaires',
   'zones_manuelles',
+  'min',
+  'max',
   'type_champ'
 ];
 

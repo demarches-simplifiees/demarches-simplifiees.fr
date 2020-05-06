@@ -68,7 +68,9 @@ module NewAdministrateur
             :piece_justificative_template_filename,
             :piece_justificative_template_url,
             :quartiers_prioritaires,
-            :zones_manuelles
+            :zones_manuelles,
+            :min,
+            :max
           ]
         )
       }
@@ -90,6 +92,8 @@ module NewAdministrateur
         :private,
         :quartiers_prioritaires,
         :zones_manuelles,
+        :min,
+        :max,
         :type_champ
       ).merge(procedure: @procedure)
     end
@@ -107,6 +111,8 @@ module NewAdministrateur
         :quartiers_prioritaires,
         :batiments,
         :zones_manuelles,
+        :min,
+        :max,
         :type_champ
       )
     end
