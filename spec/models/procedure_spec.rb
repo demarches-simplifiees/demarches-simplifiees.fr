@@ -334,6 +334,31 @@ describe Procedure do
     end
   end
 
+  describe 'api_entreprise_token_expired?' do
+    let(:token) { "mon-token" }
+    let(:procedure) { create(:procedure, api_entreprise_token: token) }
+    let(:payload) {
+      [
+        { "exp" => expiration_time }
+      ]
+    }
+    let(:subject) { procedure.api_entreprise_token_expired? }
+
+    before do
+      allow(JWT).to receive(:decode).with(token, nil, false).and_return(payload)
+    end
+
+    context "with token expired" do
+      let(:expiration_time) { (Time.zone.now - 1.day).to_i }
+      it { is_expected.to be_truthy }
+    end
+
+    context "with token not expired" do
+      let(:expiration_time) { (Time.zone.now + 1.day).to_i }
+      it { is_expected.to be_falsey }
+    end
+  end
+
   describe 'clone' do
     let!(:service) { create(:service) }
     let(:procedure) { create(:procedure, received_mail: received_mail, service: service) }
