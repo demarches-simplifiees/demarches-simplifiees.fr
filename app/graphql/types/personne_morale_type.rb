@@ -21,6 +21,16 @@ module Types
       field :nom, String, null: false
       field :prenom, String, null: false
       field :inline_adresse, String, null: false
+      field :attestation_sociale_attachment, Types::File, null: true
+      field :attestation_fiscale_attachment, Types::File, null: true
+
+      def attestation_sociale_attachment
+        load_attachment_for(:entreprise_attestation_sociale_attachment)
+      end
+
+      def attestation_fiscale_attachment
+        load_attachment_for(:entreprise_attestation_fiscale_attachment)
+      end
 
       def effectif_mensuel
         if object.effectif_mensuel.present?
@@ -38,6 +48,15 @@ module Types
             nb: object.effectif_annuel
           }
         end
+      end
+
+      private
+
+      def load_attachment_for(key)
+        Loaders::Association.for(
+          Etablissement,
+          key => :blob
+        ).load(object.etablissement)
       end
     end
 
