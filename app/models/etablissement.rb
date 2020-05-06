@@ -96,6 +96,7 @@ class Etablissement < ApplicationRecord
 
   def entreprise
     Entreprise.new(
+      etablissement: self,
       siren: entreprise_siren,
       capital_social: entreprise_capital_social,
       numero_tva_intracommunautaire: entreprise_numero_tva_intracommunautaire,
