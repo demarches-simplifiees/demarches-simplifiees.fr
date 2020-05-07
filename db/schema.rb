@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_103836) do
+ActiveRecord::Schema.define(version: 2020_04_07_135256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 2020_03_19_103836) do
     t.bigint "groupe_instructeur_id"
     t.boolean "weekly_email_notifications_enabled", default: true, null: false
     t.boolean "daily_email_notifications_enabled", default: false, null: false
+    t.boolean "instant_email_message_notifications_enabled", default: false, null: false
     t.index ["groupe_instructeur_id", "instructeur_id"], name: "unique_couple_groupe_instructeur_instructeur", unique: true
     t.index ["groupe_instructeur_id"], name: "index_assign_tos_on_groupe_instructeur_id"
     t.index ["instructeur_id", "procedure_id"], name: "index_assign_tos_on_instructeur_id_and_procedure_id", unique: true
@@ -253,9 +254,9 @@ ActiveRecord::Schema.define(version: 2020_03_19_103836) do
     t.datetime "brouillon_close_to_expiration_notice_sent_at"
     t.datetime "groupe_instructeur_updated_at"
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
+    t.interval "en_construction_conservation_extension", default: "PT0S"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
-    t.interval "en_construction_conservation_extension", default: "00:00:00"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
