@@ -73,6 +73,28 @@ describe Champs::CarteController, type: :controller do
       it { expect(response.status).to eq 204 }
     end
 
+    describe 'POST #import' do
+      render_views
+
+      let(:params) do
+        {
+          champ_id: champ.id,
+          feature_collection: {
+            features: [feature]
+          }
+        }
+      end
+
+      before do
+        post :import, params: params
+      end
+
+      it {
+        expect(response.status).to eq 201
+        expect(response.body).to include("bbox")
+      }
+    end
+
     describe 'GET #index' do
       render_views
 
