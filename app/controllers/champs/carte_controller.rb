@@ -58,7 +58,7 @@ class Champs::CarteController < ApplicationController
   def create
     champ = policy_scope(Champ).find(params[:champ_id])
     geo_area = champ.geo_areas.selections_utilisateur.new
-    save_geometry!(geo_area)
+    save_geometry!(geo_area, params_feature)
 
     render json: { feature: geo_area.to_feature }, status: :created
   end
@@ -66,7 +66,7 @@ class Champs::CarteController < ApplicationController
   def update
     champ = policy_scope(Champ).find(params[:champ_id])
     geo_area = champ.geo_areas.selections_utilisateur.find(params[:id])
-    save_geometry!(geo_area)
+    save_geometry!(geo_area, params_feature)
 
     head :no_content
   end
@@ -76,6 +76,16 @@ class Champs::CarteController < ApplicationController
     champ.geo_areas.selections_utilisateur.find(params[:id]).destroy!
 
     head :no_content
+  end
+
+  def import
+    champ = policy_scope(Champ).find(params[:champ_id])
+    params_features.each do |feature|
+      geo_area = champ.geo_areas.selections_utilisateur.new
+      save_geometry!(geo_area, feature)
+    end
+
+    render json: champ.to_feature_collection, status: :created
   end
 
   private
@@ -100,8 +110,16 @@ class Champs::CarteController < ApplicationController
     end
   end
 
-  def save_geometry!(geo_area)
-    geo_area.geometry = params[:feature][:geometry]
+  def params_feature
+    params[:feature]
+  end
+
+  def params_features
+    params[:feature_collection][:features]
+  end
+
+  def save_geometry!(geo_area, feature)
+    geo_area.geometry = feature[:geometry]
     geo_area.save!
   end
 

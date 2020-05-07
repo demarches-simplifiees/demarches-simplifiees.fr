@@ -123,6 +123,7 @@ Rails.application.routes.draw do
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
     post ':champ_id/carte/features', to: 'carte#create'
+    post ':champ_id/carte/features/import', to: 'carte#import'
     patch ':champ_id/carte/features/:id', to: 'carte#update'
     delete ':champ_id/carte/features/:id', to: 'carte#destroy'
 
