@@ -45,6 +45,12 @@ RUN bundle install --deployment --without development test && \
 
 ENV \
     API_ADRESSE_URL="https://api-adresse.data.gouv.fr"\
+    API_CPS_AUTH=""\
+    API_CPS_CLIENT_ID=""\
+    API_CPS_CLIENT_SECRET=""\
+    API_CPS_PASSWORD=""\
+    API_CPS_URL=""\
+    API_CPS_USERNAME=""\
     API_ENTREPRISE_KEY=""\
     API_ENTREPRISE_PF_AUTH=""\
     API_ENTREPRISE_PF_URL=""\
