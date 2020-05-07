@@ -346,16 +346,6 @@ class Dossier < ApplicationRecord
     !brouillon? && !archived
   end
 
-  def retention_end_date
-    if instruction_commencee?
-      en_instruction_at + procedure.duree_conservation_dossiers_dans_ds.months
-    end
-  end
-
-  def retention_expired?
-    instruction_commencee? && retention_end_date <= Time.zone.now
-  end
-
   def en_construction_close_to_expiration?
     Dossier.en_construction_close_to_expiration.where(id: self).present?
   end

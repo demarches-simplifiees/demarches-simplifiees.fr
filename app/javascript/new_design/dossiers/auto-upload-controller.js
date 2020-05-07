@@ -93,7 +93,18 @@ export default class AutoUploadController {
     this.input.disabled = false;
   }
 
+  _isError422(error) {
+    // Ajax errors have an xhr attribute
+    if (error && error.xhr && error.xhr.status == 422) return true;
+    // Rails DirectUpload errors are returned as a String, e.g. 'Error creating Blob for "Demain.txt". Status: 422'
+    if (error && error.toString().includes('422')) return true;
+
+    return false;
+  }
+
   _messageFromError(error) {
+    let allowRetry = !this._isError422(error);
+
     if (
       error.xhr &&
       error.xhr.status == 422 &&
@@ -104,13 +115,13 @@ export default class AutoUploadController {
       return {
         title: error.response.errors[0],
         description: '',
-        retry: false
+        retry: allowRetry
       };
     } else {
       return {
         title: 'Une erreur s’est produite pendant l’envoi du fichier.',
         description: error.message || error.toString(),
-        retry: true
+        retry: allowRetry
       };
     }
   }

@@ -8,6 +8,10 @@ module Types
       argument :number, Int, "Numéro du dossier.", required: true
     end
 
+    field :groupe_instructeur, GroupeInstructeurWithDossiersType, null: false, description: "Informations sur un groupe instructeur." do
+      argument :number, Int, "Numéro du groupe instructeur.", required: true
+    end
+
     def demarche(number:)
       Procedure.for_api_v2.find(number)
     rescue => e
@@ -16,6 +20,12 @@ module Types
 
     def dossier(number:)
       Dossier.for_api_v2.find(number)
+    rescue => e
+      raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
+    end
+
+    def groupe_instructeur(number:)
+      GroupeInstructeur.for_api_v2.find(number)
     rescue => e
       raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
     end
