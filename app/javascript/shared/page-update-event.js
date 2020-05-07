@@ -1,6 +1,6 @@
 import { fire } from '@utils';
 
-addEventListener('turbolinks:load', function () {
+addEventListener('DOMContentLoaded', function () {
   fire(document, 'ds:page:update');
 });
 

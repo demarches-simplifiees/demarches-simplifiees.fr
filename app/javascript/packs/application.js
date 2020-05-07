@@ -1,5 +1,4 @@
 import '../shared/polyfills';
-import Turbolinks from 'turbolinks';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import '@rails/actiontext';
@@ -57,13 +56,10 @@ const DS = {
 
 // Start Rails helpers
 Rails.start();
-Turbolinks.start();
 ActiveStorage.start();
 
 // Expose globals
 window.DS = window.DS || DS;
-// (Both Rails redirects and ReactRailsUJS expect Turbolinks to be globally available)
-window.Turbolinks = Turbolinks;
 
 // Now that Turbolinks is globally exposed,configure ReactRailsUJS
 // eslint-disable-next-line no-undef

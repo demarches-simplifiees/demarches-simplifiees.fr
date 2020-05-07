@@ -1,6 +1,6 @@
 /* globals $ */
 
-$(document).on('turbolinks:load', modal_action);
+$(document).on('DOMContentLoaded', modal_action);
 
 function modal_action() {
   $('#pj-modal').on('show.bs.modal', function (event) {

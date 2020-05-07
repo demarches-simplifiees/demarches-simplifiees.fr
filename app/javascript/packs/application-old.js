@@ -1,5 +1,4 @@
 import '../shared/polyfills';
-import Turbolinks from 'turbolinks';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import jQuery from 'jquery';
@@ -13,7 +12,6 @@ import '../shared/franceconnect';
 
 // Start Rails helpers
 Rails.start();
-Turbolinks.start();
 ActiveStorage.start();
 
 // Disable jQuery-driven animations during tests
