@@ -27,7 +27,7 @@
         target: "_blank"
 
       :javascript
-        document.addEventListener("turbolinks:load", function() {
+        document.addEventListener("DOMContentLoaded", function() {
           $crisp.push(["do", "trigger:run", ["admin-signup"]]);
         });
 

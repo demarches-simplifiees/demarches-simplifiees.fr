@@ -1,6 +1,6 @@
 /* globals $ */
 
-$(document).on('turbolinks:load', wysihtml5_active);
+$(document).on('DOMContentLoaded', wysihtml5_active);
 
 function wysihtml5_active() {
   $('.wysihtml5').each(function (i, elem) {

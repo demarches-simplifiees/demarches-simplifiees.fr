@@ -1,6 +1,6 @@
 /* globals $ */
 
-$(document).on('turbolinks:load', filters_init);
+$(document).on('DOMContentLoaded', filters_init);
 
 function filters_init() {
   $('html').click(function (event) {
