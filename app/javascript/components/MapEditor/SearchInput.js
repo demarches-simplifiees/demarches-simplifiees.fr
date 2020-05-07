@@ -47,7 +47,7 @@ const SearchInput = ({ getCoords }) => {
   return (
     <Combobox aria-label="addresses">
       <ComboboxInput
-        placeholder="Saisissez au moins 2 caractères"
+        placeholder="Rechercher une adresse : saisissez au moins 2 caractères"
         className="address-search-input"
         style={{
           font: 'inherit',

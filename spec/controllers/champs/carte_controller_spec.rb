@@ -79,9 +79,8 @@ describe Champs::CarteController, type: :controller do
       let(:params) do
         {
           champ_id: champ.id,
-          feature_collection: {
-            features: [feature]
-          }
+          features: [feature]
+
         }
       end
 

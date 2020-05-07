@@ -115,7 +115,7 @@ class Champs::CarteController < ApplicationController
   end
 
   def params_features
-    params[:feature_collection][:features]
+    params[:features]
   end
 
   def save_geometry!(geo_area, feature)
