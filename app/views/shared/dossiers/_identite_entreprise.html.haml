@@ -83,7 +83,10 @@
             %th.libelle
               Bilans Banque de France
               = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
-            %td= link_to "Consulter les bilans", bilans_bdf_instructeur_dossier_path
+            - if controller.is_a?(Instructeurs::AvisController)
+              %td= link_to "Consulter les bilans", bilans_bdf_instructeur_avis_path(@avis.id)
+            - else
+              %td= link_to "Consulter les bilans", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id)
 
       - if etablissement.association?
         %tr

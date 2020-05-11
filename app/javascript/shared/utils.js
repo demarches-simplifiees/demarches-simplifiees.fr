@@ -68,7 +68,7 @@ export function ajax(options) {
 }
 
 export function getJSON(url, data, method = 'get') {
-  data = method !== 'get' ? JSON.stringify(data) : data;
+  data = method !== 'get' && data ? JSON.stringify(data) : data;
   return Promise.resolve(
     $.ajax({
       method,
