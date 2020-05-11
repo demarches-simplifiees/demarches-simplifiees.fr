@@ -50,6 +50,12 @@ describe Instructeurs::AvisController, type: :controller do
       it { expect(assigns(:dossier)).to eq(dossier) }
     end
 
+    describe '#bilans_bdf' do
+      before { get :bilans_bdf, params: { id: avis_without_answer.id } }
+
+      it { expect(response).to redirect_to(instructeur_avis_path(avis_without_answer)) }
+    end
+
     describe '#update' do
       describe 'without attachment' do
         before do
