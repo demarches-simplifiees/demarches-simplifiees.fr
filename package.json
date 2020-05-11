@@ -11,6 +11,7 @@
     "@rails/webpacker": "4.2.2",
     "@reach/combobox": "^0.10.0",
     "@sentry/browser": "^5.11.2",
+    "@tmcw/togeojson": "^4.0.0",
     "@turf/area": "^6.0.1",
     "babel-plugin-macros": "^2.8.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
