@@ -1,4 +1,3 @@
--# = status
 - case status
 - when :bad_dn
   = t('messages.numero_dn.bad_dn')
@@ -15,5 +14,5 @@
 - when :network_error
   = t('errors.messages.cps_network_error')
 
-- when :goog_dn
+- when :good_dn
   = t('messages.numero_dn.good_dn', dn: numero_dn)
