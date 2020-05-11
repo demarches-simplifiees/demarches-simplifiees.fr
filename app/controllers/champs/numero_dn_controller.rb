@@ -24,8 +24,9 @@ class Champs::NumeroDnController < ApplicationController
     attributes = dossier.key?(:champs_attributes) ? :champs_attributes : champs_private_attributes
     @position  = params[:position]
     champ      = dossier[attributes][@position]
-    @ddn       = champ[:date_de_naissance] || @champ&.date_de_naissance
-    @dn        = champ[:numero_dn] || @champ&.numero_dn
+    @ddn       = champ[:date_de_naissance] || params[:ddn] || @champ&.date_de_naissance
+    @dn        = champ[:numero_dn] || params[:dn] || @champ&.numero_dn
+    @champ&.update(numero_dn: @dn, date_de_naissance: @ddn)
   end
 
   def check_dn
