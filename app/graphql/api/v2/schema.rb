@@ -46,6 +46,7 @@ class Api::V2::Schema < GraphQL::Schema
     Types::Champs::IntegerNumberChampType,
     Types::Champs::LinkedDropDownListChampType,
     Types::Champs::MultipleDropDownListChampType,
+    Types::Champs::NumeroDnChampType,
     Types::Champs::PieceJustificativeChampType,
     Types::Champs::RepetitionChampType,
     Types::Champs::SiretChampType,
