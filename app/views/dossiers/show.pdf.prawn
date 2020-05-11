@@ -57,7 +57,11 @@ def render_identite_etablissement(pdf, etablissement)
   pdf.text " - Libellé NAF : #{etablissement.libelle_naf}"
   pdf.text " - Code NAF : #{etablissement.naf}"
   pdf.text " - Date de création : #{try_format_date(etablissement.entreprise.date_creation)}"
-  pdf.text " - Effectif de l'organisation : #{effectif(etablissement)}"
+  if @include_infos_administration
+    pdf.text " - Effectif mensuel #{try_format_mois_effectif(etablissement)} (URSSAF) : #{etablissement.entreprise_effectif_mensuel}"
+    pdf.text " - Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} (URSSAF) : #{etablissement.entreprise_effectif_annuel}"
+  end
+  pdf.text " - Effectif de l'organisation (INSEE) : #{effectif(etablissement)}"
   pdf.text " - Code effectif : #{etablissement.entreprise.code_effectif_entreprise}"
   pdf.text " - Numéro de TVA intracommunautaire : #{etablissement.entreprise.numero_tva_intracommunautaire}"
   pdf.text " - Adresse : #{etablissement.adresse}"

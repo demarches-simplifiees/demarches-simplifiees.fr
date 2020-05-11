@@ -133,13 +133,13 @@ describe DossierSearchService do
       context 'when the user owns the dossier' do
         let(:terms) { dossier_0.id.to_s }
 
-        it { expect(subject.size).to eq(1) }
+        it { expect(subject.map(&:id)).to include(dossier_0.id) }
       end
 
       context 'when the user does not own the dossier' do
         let(:terms) { dossier_0b.id.to_s }
 
-        it { expect(subject.size).to eq(0) }
+        it { expect(subject.map(&:id)).not_to include(dossier_0b.id) }
       end
     end
 
