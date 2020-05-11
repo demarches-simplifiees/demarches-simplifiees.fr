@@ -6,6 +6,7 @@ import DrawControl from 'react-mapbox-gl-draw';
 import SwitchMapStyle from './SwitchMapStyle';
 import SearchInput from './SearchInput';
 import { getJSON, ajax } from '@utils';
+import { gpx } from '@tmcw/togeojson/dist/togeojson.es.js';
 import ortho from './styles/ortho.json';
 import vector from './styles/vector.json';
 import { polygonCadastresFill, polygonCadastresLine } from './utils';
@@ -28,9 +29,8 @@ const MapEditor = ({ featureCollection, url }) => {
   const [coords, setCoords] = useState([1.7, 46.9]);
   const [zoom, setZoom] = useState([5]);
   const [currentMap, setCurrentMap] = useState({});
-
+  const [bbox, setBbox] = useState(featureCollection.bbox);
   const mapStyle = style === 'ortho' ? ortho : vector;
-  const bbox = featureCollection.bbox;
   const cadastresFeatureCollection = filterFeatureCollection(
     featureCollection,
     'cadastre'
@@ -93,6 +93,29 @@ const MapEditor = ({ featureCollection, url }) => {
     }
   };
 
+  const onGpxImport = e => {
+    let reader = new FileReader();
+    reader.readAsText(e.target.files[0], 'UTF-8');
+    reader.onload = async event => {
+      const featureCollection = gpx(
+        new DOMParser().parseFromString(event.target.result, 'text/xml')
+      );
+      const resultFeatureCollection = await getJSON(
+        `${url}/import`,
+        featureCollection,
+        'post'
+      );
+      drawControl.current.draw.set(
+        filterFeatureCollection(
+          resultFeatureCollection,
+          'selection_utilisateur'
+        )
+      );
+      updateFeaturesList(resultFeatureCollection.features);
+      setBbox(resultFeatureCollection.bbox);
+    };
+  };
+
   useEffect(() => {
     addEventListener('cadastres:update', onCadastresUpdate);
     return () => removeEventListener('cadastres:update', onCadastresUpdate);
@@ -110,6 +133,16 @@ const MapEditor = ({ featureCollection, url }) => {
 
   return (
     <>
+      <div className="file-import" style={{ marginBottom: '20px' }}>
+        <div>
+          <p style={{ fontWeight: 'bolder', marginBottom: '10px' }}>
+            Importer un fichier GPX
+          </p>
+        </div>
+        <div>
+          <input type="file" accept=".gpx" onChange={onGpxImport} />
+        </div>
+      </div>
       <div
         style={{
           marginBottom: '62px'
