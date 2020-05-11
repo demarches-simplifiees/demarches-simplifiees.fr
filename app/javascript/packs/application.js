@@ -28,6 +28,7 @@ import '../new_design/dossiers/auto-upload';
 
 import '../new_design/champs/carte';
 import '../new_design/champs/te_fenua';
+import '../new_design/champs/numero_dn';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/repetition';
 
