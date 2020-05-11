@@ -1,0 +1,103 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://connect.cps.pf/auth/realms/TatouAssures/protocol/openid-connect/token
+    body:
+      encoding: UTF-8
+      string: client_id=sipf&client_secret=abe587b9-08a4-418c-9ca7-319e2a28030b&grant_type=password&password=helloworld1&scope=openid&username=sipf-ext
+    headers:
+      User-Agent:
+      - Mes-Démarches
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 11 May 2020 02:49:14 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3290'
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - KC_RESTART=; Version=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0;
+        Path=/auth/realms/TatouAssures; Secure; HttpOnly
+      X-Frame-Options:
+      - ALLOW-FROM www.google.com
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Security-Policy:
+      - frame-src 'self' www.google-analytics.com www.googletagmanager.com ajax.googleapis.com
+        www.google.com google.com gstatic.com www.gstatic.com;frame-ancestors 'self';
+        object-src 'none';
+    body:
+      encoding: UTF-8
+      string: '{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXWTBzN1ZmYUl3ZW1OeVBPT1d3WUtyZ3pIR3RjbVdYMXgxSmlHZENsVllFIn0.eyJqdGkiOiI0YWE0M2Q5OC0yYzY3LTRhZWQtOWIwNi0zOGEzYzJjYjhiNmIiLCJleHAiOjE1ODkxNjU5NTQsIm5iZiI6MCwiaWF0IjoxNTg5MTY1MzU0LCJpc3MiOiJodHRwczovL2Nvbm5lY3QuY3BzLnBmL2F1dGgvcmVhbG1zL1RhdG91QXNzdXJlcyIsImF1ZCI6InNpcGYiLCJzdWIiOiI3YzliYzM1Zi03NzBjLTQzNjctYWMzZS00MzZhMGE3MzRhNTYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaXBmIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiMzg0MzUwMzQtMTMyMy00MWNjLWFkMDUtNTI0Y2E4NDJmNmVhIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwicHJlZmVycmVkX3VzZXJuYW1lIjoic2lwZi1leHQifQ.jIn1dE_VF4Htp-M5JeRnV6OqkY5eZ2nmSLIISD0Tnts1S93bIBXQtSlTwQbytVG10tKmClYSt0I10kL2bcQM55jQ6GEhfE2u2e1LxYam-3fGpL8DYEr-UvoE_k-02WpbPbvnYSwf5_2IXPDo28ie21aXJ5QcC2YXfsVxC4Lq5R9sSlylOWP_16D3Uas5-C6P_ueA0Dd8oaoRyvElKO6oJYamJG0q6XDtROXJs0w01IoHVTYAqnYS9CRVWa5liorN6PvoKlIuk-A0qsiqek0KZt4sUrNoDqEIOlb5XqV1E3exk8XvhRnfG4WHYgvHnNaNSxcIkR2kgBjPlhYU5q5zFg","expires_in":600,"refresh_expires_in":1800,"refresh_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXWTBzN1ZmYUl3ZW1OeVBPT1d3WUtyZ3pIR3RjbVdYMXgxSmlHZENsVllFIn0.eyJqdGkiOiIwMjVhY2NmNy05OTlkLTQzMjQtYmQ3Ny04MGNjMDk3NDNjYWEiLCJleHAiOjE1ODkxNjcxNTQsIm5iZiI6MCwiaWF0IjoxNTg5MTY1MzU0LCJpc3MiOiJodHRwczovL2Nvbm5lY3QuY3BzLnBmL2F1dGgvcmVhbG1zL1RhdG91QXNzdXJlcyIsImF1ZCI6InNpcGYiLCJzdWIiOiI3YzliYzM1Zi03NzBjLTQzNjctYWMzZS00MzZhMGE3MzRhNTYiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoic2lwZiIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjM4NDM1MDM0LTEzMjMtNDFjYy1hZDA1LTUyNGNhODQyZjZlYSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX19.c16H4kKmUWDubvllM4FB03Ilm-0xdxFbeTrKpnQUw66rAb_RkjBWnRARPrUdLAXRHsEDvmM3vM5S24TLYn6_qcegHsKZiAhvIx7MIc2qvhcOTd7eeGA-QVSUiiLsMxM3sxSibmvE7sCW8Wx9GkBB9JInwmIy1aJs7-G0Uz9HZjlIhDA3n4RHTxl6U_p8TCDflFOo7y0kpF9pLfI9dU0gyjjt_mWJsDXC5l6Ab0zN3K4bTzsFihS7trHoqznO7rp6uwXN9Dj13CGpczWRNyFjCAh2suNVwVYBvYWFYHL8_j4Fmw-Q5Rdksv2HVOWm6ccvft-ZphlIR-s1OH7KTzPHsA","token_type":"bearer","id_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXWTBzN1ZmYUl3ZW1OeVBPT1d3WUtyZ3pIR3RjbVdYMXgxSmlHZENsVllFIn0.eyJqdGkiOiI1ZTQwYWM5NC02NzA5LTQ4MWYtODdjNC1mYzEwNmNlMDM0NDIiLCJleHAiOjE1ODkxNjU5NTQsIm5iZiI6MCwiaWF0IjoxNTg5MTY1MzU0LCJpc3MiOiJodHRwczovL2Nvbm5lY3QuY3BzLnBmL2F1dGgvcmVhbG1zL1RhdG91QXNzdXJlcyIsImF1ZCI6InNpcGYiLCJzdWIiOiI3YzliYzM1Zi03NzBjLTQzNjctYWMzZS00MzZhMGE3MzRhNTYiLCJ0eXAiOiJJRCIsImF6cCI6InNpcGYiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiIzODQzNTAzNC0xMzIzLTQxY2MtYWQwNS01MjRjYTg0MmY2ZWEiLCJhY3IiOiIxIiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2lwZi1leHQifQ.hgUtt0Ku3gNSEa0WftzJVaFoylYFlx2xomaLF71qNTBz8dgKsap2HVwh6RqBYIWAtOtRidVc5pFURmkVFiWpIuFMZd96kEVAanK63otdQAkcWw86jqFjURr2-UQ5r0stm4RA9Y6hHEQAXq1OT3kS9nt3ji0hDoFXTF3PiSLdGtNAw7LZ1HIwTUPp9wm_NF9hvfTdGqN2Kn28QDMBMXZ5coWI-48zV1kRQ9YTFbH7zLcYV0jcLbmte-14n6V6lNTFGgWk4g4dsd6s1kdK11XtZbEU8z2oYm4hbSAekmGr6Tub5sM9FaIC9FAMhNUjsq4gIIzNXtctcXgRA4vxEOovoA","not-before-policy":0,"session_state":"38435034-1323-41cc-ad05-524ca842f6ea","scope":""}'
+    http_version:
+  recorded_at: Mon, 11 May 2020 02:49:14 GMT
+- request:
+    method: post
+    uri: https://tatouapipreprod.cps.pf/covid/assures/coherenceDnDdn/multiples
+    body:
+      encoding: UTF-8
+      string: '{"datas":{"2106223":"28/11/1983"}}'
+    headers:
+      User-Agent:
+      - Mes-Démarches
+      Authorization:
+      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXWTBzN1ZmYUl3ZW1OeVBPT1d3WUtyZ3pIR3RjbVdYMXgxSmlHZENsVllFIn0.eyJqdGkiOiI0YWE0M2Q5OC0yYzY3LTRhZWQtOWIwNi0zOGEzYzJjYjhiNmIiLCJleHAiOjE1ODkxNjU5NTQsIm5iZiI6MCwiaWF0IjoxNTg5MTY1MzU0LCJpc3MiOiJodHRwczovL2Nvbm5lY3QuY3BzLnBmL2F1dGgvcmVhbG1zL1RhdG91QXNzdXJlcyIsImF1ZCI6InNpcGYiLCJzdWIiOiI3YzliYzM1Zi03NzBjLTQzNjctYWMzZS00MzZhMGE3MzRhNTYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaXBmIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiMzg0MzUwMzQtMTMyMy00MWNjLWFkMDUtNTI0Y2E4NDJmNmVhIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwicHJlZmVycmVkX3VzZXJuYW1lIjoic2lwZi1leHQifQ.jIn1dE_VF4Htp-M5JeRnV6OqkY5eZ2nmSLIISD0Tnts1S93bIBXQtSlTwQbytVG10tKmClYSt0I10kL2bcQM55jQ6GEhfE2u2e1LxYam-3fGpL8DYEr-UvoE_k-02WpbPbvnYSwf5_2IXPDo28ie21aXJ5QcC2YXfsVxC4Lq5R9sSlylOWP_16D3Uas5-C6P_ueA0Dd8oaoRyvElKO6oJYamJG0q6XDtROXJs0w01IoHVTYAqnYS9CRVWa5liorN6PvoKlIuk-A0qsiqek0KZt4sUrNoDqEIOlb5XqV1E3exk8XvhRnfG4WHYgvHnNaNSxcIkR2kgBjPlhYU5q5zFg
+      Content-Type:
+      - application/json
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Mon, 11 May 2020 02:49:14 GMT
+      Content-Type:
+      - application/json;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - JSESSIONID=5FAB759BE86F48EC0F14B8BAF9C37092; Path=/; HttpOnly
+      X-Content-Type-Options:
+      - nosniff
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      - 1; mode=block
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - '0'
+      X-Frame-Options:
+      - ALLOW-FROM www.google.com
+      - DENY
+      Content-Security-Policy:
+      - frame-src 'self' www.google-analytics.com www.googletagmanager.com ajax.googleapis.com
+        www.google.com google.com gstatic.com www.gstatic.com;frame-ancestors 'self';
+        object-src 'none';
+    body:
+      encoding: UTF-8
+      string: '{"datas":{"2106223":"true"}}'
+    http_version:
+  recorded_at: Mon, 11 May 2020 02:49:14 GMT
+recorded_with: VCR 4.0.0

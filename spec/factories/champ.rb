@@ -134,6 +134,11 @@ FactoryBot.define do
     value { '98701 - Arue - Tahiti' }
   end
 
+  factory :champ_numero_dn, class: 'Champs::NumeroDnChamp' do
+    type_de_champ { create(:type_de_champ_numero_dn) }
+    value { '["1234567", null]' }
+  end
+
   factory :champ_regions, class: 'Champs::RegionChamp' do
     type_de_champ { create(:type_de_champ_regions) }
     value { 'Guadeloupe' }

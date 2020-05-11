@@ -287,6 +287,13 @@ describe Champ do
         it { is_expected.to eq(["hello", "world"]) }
       end
 
+      context 'for numero dn champ' do
+        let(:type_de_champ) { build(:type_de_champ_numero_dn) }
+        let(:champ) { type_de_champ.champ.build(numero_dn: "1234567", date_de_naissance: nil) }
+
+        it { is_expected.to eq(["1234567", nil]) }
+      end
+
       context 'for multiple drop down list champ' do
         let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list) }
 
