@@ -335,8 +335,8 @@ module Users
     def champs_params
       params.permit(dossier: {
         champs_attributes: [
-          :id, :value, :primary_value, :secondary_value, :piece_justificative_file, value: [],
-          champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
+          :id, :value, :primary_value, :secondary_value, :date_de_naissance, :numero_dn, :piece_justificative_file, value: [],
+          champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :date_de_naissance, :numero_dn, :piece_justificative_file, value: []]
         ]
       })
     end

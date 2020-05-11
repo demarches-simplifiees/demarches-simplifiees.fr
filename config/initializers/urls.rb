@@ -11,6 +11,9 @@ UNIVERSIGN_API_URL = ENV.fetch("UNIVERSIGN_API_URL", "https://ws.universign.eu/t
 API_ENTREPRISE_PF_AUTH = ENV.fetch("API_ENTREPRISE_PF_AUTH", "https://auth.gov.pf/auth/realms/Itaiete/protocol/openid-connect/token")
 API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://ppr.api.i-taiete2.gov.pf/api/v2")
 
+API_CPS_AUTH = ENV.fetch("API_CPS_AUTH", "https://connect.cps.pf/auth/realms/TatouAssures/protocol/openid-connect/token")
+API_CPS_URL = ENV.fetch("API_CPS_URL", "https://tatouapipreprod.cps.pf")
+
 # Internal URLs
 FOG_BASE_URL = "https://static.#{FR_SITE}"
 

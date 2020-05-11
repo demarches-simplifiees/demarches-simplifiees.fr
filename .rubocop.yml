@@ -338,7 +338,7 @@ Lint/EmptyInterpolation:
   Enabled: true
 
 Lint/EmptyWhen:
-  Enabled: true
+  Enabled: false
 
 Lint/EndInMethod:
   Enabled: true

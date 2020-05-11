@@ -53,6 +53,10 @@ query getDemarche($demarcheNumber: Int!) {
             primaryValue
             secondaryValue
           }
+          ... on NumeroDNChamp {
+            numeroDN
+            dateDeNaissance
+          }
           ... on PieceJustificativeChamp {
             file {
               url

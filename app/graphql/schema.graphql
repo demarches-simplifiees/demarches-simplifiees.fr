@@ -911,6 +911,29 @@ type Mutation {
   dossierRefuser(input: DossierRefuserInput!): DossierRefuserPayload
 }
 
+type NumeroDnChamp implements Champ {
+  """
+  La date de naissance associée
+  """
+  dateDeNaissance: ISO8601Date
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Le numero DN sur 7 chiffres
+  """
+  numeroDn: String
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
 enum Order {
   """
   L‘ordre ascendant.
@@ -1223,6 +1246,11 @@ enum TypeDeChamp {
   Nombre
   """
   number
+
+  """
+  Numéro DN
+  """
+  numero_dn
 
   """
   Pays

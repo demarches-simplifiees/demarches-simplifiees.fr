@@ -1,0 +1,34 @@
+<%= render_to_element(".info-#{@position}",
+  partial: 'shared/champs/numero_dn/status',
+  locals: {
+    numero_dn: @dn,
+    attribute: @attribute,
+    status: @status }) %>
+dn = document.querySelector('#dossier_champs_attributes_<%= @position %>_numero_dn');
+ddn = document.querySelector('#dossier_champs_attributes_<%= @position %>_date_de_naissance');
+switch ('<%= @status %>') {
+    case 'bad_dn':
+        ddn.setCustomValidity("");
+        dn.setCustomValidity("<%= t('messages.numero_dn.bad_dn') %>");
+        break;
+    case 'bad_dn_format':
+        ddn.setCustomValidity("");
+        dn.setCustomValidity("<%= t('messages.numero_dn.bad_dn_format') %>");
+        break;
+    case 'bad_ddn_format':
+        dn.setCustomValidity("");
+        ddn.setCustomValidity("<%= t('messages.numero_dn.bad_ddn_format') %>");
+        break;
+    case 'bad_ddn':
+        dn.setCustomValidity("");
+        ddn.setCustomValidity("<%= t('messages.numero_dn.bad_ddn') %>");
+        break;
+    case 'network_error':
+        dn.setCustomValidity("");
+        ddn.setCustomValidity("");
+        break;
+    case 'good_dn':
+        dn.setCustomValidity("");
+        ddn.setCustomValidity("");
+        break;
+}

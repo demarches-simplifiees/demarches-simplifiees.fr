@@ -77,6 +77,9 @@ FactoryBot.define do
     factory :type_de_champ_code_postal_de_polynesie do
       type_champ { TypeDeChamp.type_champs.fetch(:code_postal_de_polynesie) }
     end
+    factory :type_de_champ_numero_dn do
+      type_champ { TypeDeChamp.type_champs.fetch(:numero_dn) }
+    end
     factory :type_de_champ_regions do
       type_champ { TypeDeChamp.type_champs.fetch(:regions) }
     end

@@ -69,6 +69,14 @@ fr:
     admin demande compte: Je souhaite ouvrir un compte administrateur avec un email Orange, Wanadoo, etc.
     admin autre: Autre sujet
 
+  messages:
+    numero_dn:
+      bad_dn_format: Le numéro DN doit comporter 6 à 7 chiffres.
+      bad_dn: Ce numéro DN est inconnu.
+      bad_ddn_format: Entrez la date de naissance associée à ce numéro DN.
+      bad_ddn: Cette date de naissance ne correspond pas à ce numéro DN.
+      good_dn: Le numéro DN et la date de naissance sont corrects.
+
   number:
     currency:
       format:
@@ -183,6 +191,7 @@ fr:
       procedure_not_found: "La démarche n’existe pas"
       siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro.'
       siret_network_error: 'Désolé, la récupération des informations des numéros TAHITI est temporairement indisponible. Veuillez réessayer dans quelques instants.'
+      cps_network_error: 'Désolé, la vérification du numéro DN auprès de la CPS est temporairement indisponible. Vérifiez bien vos informations'
       etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."

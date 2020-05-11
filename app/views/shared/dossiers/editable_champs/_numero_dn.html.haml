@@ -1,0 +1,19 @@
+= form.text_field :numero_dn,
+  value: champ.numero_dn,
+  required: champ.mandatory?,
+  placeholder: '0123456',
+  style: 'width: 7em',
+  pattern: "[0-9]{3,7}",
+  title: "Entrez votre numéro DN",
+  aria: { describedby: describedby_id(champ) },
+  data: { remote: true, debounce: true, url: champs_dn_path(form.index), params: { champ_id: champ&.id }.to_query, spinner: true }
+%span
+  = form.label :date_de_naissance, "Date de naissance associée au numéro DN"
+= form.date_field :date_de_naissance,
+  value: champ.date_de_naissance,
+  required: champ.mandatory?,
+  title: "Date de naissance associée au numéro DN",
+  max: Date.today,
+  data: { remote: true, debounce: true, url: champs_dn_path(form.index), params: { champ_id: champ&.id }.to_query, spinner: true }
+.numero-dn-info{ class: "info-#{form.index}" }
+.spinner.right.hidden
