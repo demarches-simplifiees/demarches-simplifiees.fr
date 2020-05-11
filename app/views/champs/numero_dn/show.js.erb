@@ -1,0 +1,6 @@
+<%= render_to_element(".info-#{@position}",
+  partial: 'shared/champs/numero_dn/status',
+  locals: {
+    numero_dn: @dn,
+    attribute: @attribute,
+    status: @status }) %>

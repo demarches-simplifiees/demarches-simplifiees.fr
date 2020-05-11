@@ -26,6 +26,7 @@ fr:
           nationalites: 'Nationalités'
           commune_de_polynesie: 'Commune de Polynésie'
           code_postal_de_polynesie: 'Code Postal de Polynésie'
+          numero_dn: 'Numéro DN'
           regions: 'Régions'
           departements: 'Départements'
           communes: 'Communes'
