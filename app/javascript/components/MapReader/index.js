@@ -12,25 +12,25 @@ const MapReader = ({ featureCollection }) => {
     [b1, b2]
   ];
 
-  const selectionsFeatureCollection = {
-    type: 'FeatureCollection',
-    features: []
-  };
   const cadastresFeatureCollection = {
     type: 'FeatureCollection',
     features: []
   };
 
-  for (let feature of featureCollection.features) {
-    switch (feature.properties.source) {
-      case 'selection_utilisateur':
-        selectionsFeatureCollection.features.push(feature);
-        break;
-      case 'cadastre':
-        cadastresFeatureCollection.features.push(feature);
-        break;
-    }
-  }
+  const selectionsLineFeatureCollection = {
+    type: 'FeatureCollection',
+    features: []
+  };
+
+  const selectionsPolygonFeatureCollection = {
+    type: 'FeatureCollection',
+    features: []
+  };
+
+  const selectionsPointFeatureCollection = {
+    type: 'FeatureCollection',
+    features: []
+  };
 
   const polygonSelectionFill = {
     'fill-color': '#EC3323',
@@ -40,6 +40,15 @@ const MapReader = ({ featureCollection }) => {
   const polygonSelectionLine = {
     'line-color': 'rgba(255, 0, 0, 1)',
     'line-width': 4
+  };
+
+  const lineStringSelectionLine = {
+    'line-color': 'rgba(55, 42, 127, 1.00)',
+    'line-width': 3
+  };
+
+  const pointSelectionFill = {
+    'circle-color': '#EC3323'
   };
 
   const polygonCadastresFill = {
@@ -52,6 +61,27 @@ const MapReader = ({ featureCollection }) => {
     'line-width': 2,
     'line-dasharray': [1, 1]
   };
+
+  for (let feature of featureCollection.features) {
+    switch (feature.properties.source) {
+      case 'selection_utilisateur':
+        switch (feature.geometry.type) {
+          case 'LineString':
+            selectionsLineFeatureCollection.features.push(feature);
+            break;
+          case 'Polygon':
+            selectionsPolygonFeatureCollection.features.push(feature);
+            break;
+          case 'Point':
+            selectionsPointFeatureCollection.features.push(feature);
+            break;
+        }
+        break;
+      case 'cadastre':
+        cadastresFeatureCollection.features.push(feature);
+        break;
+    }
+  }
 
   if (!mapboxgl.supported()) {
     return (
@@ -74,9 +104,17 @@ const MapReader = ({ featureCollection }) => {
       }}
     >
       <GeoJSONLayer
-        data={selectionsFeatureCollection}
+        data={selectionsPolygonFeatureCollection}
         fillPaint={polygonSelectionFill}
         linePaint={polygonSelectionLine}
+      />
+      <GeoJSONLayer
+        data={selectionsLineFeatureCollection}
+        linePaint={lineStringSelectionLine}
+      />
+      <GeoJSONLayer
+        data={selectionsPointFeatureCollection}
+        circlePaint={pointSelectionFill}
       />
       <GeoJSONLayer
         data={cadastresFeatureCollection}
