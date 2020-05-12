@@ -18,7 +18,7 @@ function filterFeatureCollection(featureCollection, source) {
   return {
     type: 'FeatureCollection',
     features: featureCollection.features.filter(
-      feature => feature.properties.source === source
+      (feature) => feature.properties.source === source
     )
   };
 }
@@ -75,7 +75,7 @@ const MapEditor = ({ featureCollection, url }) => {
     updateFeaturesList(features);
   }
 
-  const onMapLoad = map => {
+  const onMapLoad = (map) => {
     setCurrentMap(map);
 
     drawControl.current.draw.set(
@@ -83,7 +83,7 @@ const MapEditor = ({ featureCollection, url }) => {
     );
   };
 
-  const onCadastresUpdate = evt => {
+  const onCadastresUpdate = (evt) => {
     if (currentMap) {
       currentMap
         .getSource('cadastres-layer')
@@ -93,10 +93,10 @@ const MapEditor = ({ featureCollection, url }) => {
     }
   };
 
-  const onGpxImport = e => {
+  const onGpxImport = (e) => {
     let reader = new FileReader();
     reader.readAsText(e.target.files[0], 'UTF-8');
-    reader.onload = async event => {
+    reader.onload = async (event) => {
       const featureCollection = gpx(
         new DOMParser().parseFromString(event.target.result, 'text/xml')
       );
@@ -149,14 +149,14 @@ const MapEditor = ({ featureCollection, url }) => {
         }}
       >
         <SearchInput
-          getCoords={searchTerm => {
+          getCoords={(searchTerm) => {
             setCoords(searchTerm);
             setZoom([17]);
           }}
         />
       </div>
       <Map
-        onStyleLoad={map => onMapLoad(map)}
+        onStyleLoad={(map) => onMapLoad(map)}
         fitBounds={bbox}
         fitBoundsOptions={{ padding: 100 }}
         center={coords}

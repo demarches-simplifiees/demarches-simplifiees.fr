@@ -3,7 +3,7 @@
 $(document).on('turbolinks:load', modal_action);
 
 function modal_action() {
-  $('#pj-modal').on('show.bs.modal', function(event) {
+  $('#pj-modal').on('show.bs.modal', function (event) {
     $('#pj-modal .modal-body .table .tr-content').hide();
 
     var button = $(event.relatedTarget); // Button that triggered the modal

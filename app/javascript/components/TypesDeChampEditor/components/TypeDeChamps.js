@@ -12,12 +12,14 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
     typeDeChamps
   });
 
-  const hasUnsavedChamps = state.typeDeChamps.some(tdc => tdc.id == undefined);
+  const hasUnsavedChamps = state.typeDeChamps.some(
+    (tdc) => tdc.id == undefined
+  );
 
   return (
     <div className="champs-editor">
       <SortableContainer
-        onSortEnd={params => dispatch({ type: 'onSortTypeDeChamps', params })}
+        onSortEnd={(params) => dispatch({ type: 'onSortTypeDeChamps', params })}
         lockAxis="y"
         useDragHandle
       >

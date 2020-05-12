@@ -6,10 +6,10 @@ import jQuery from 'jquery';
 // https://github.com/Sology/smart_listing/blob/master/app/assets/javascripts/smart_listing.coffee.erb#L9
 addEventListener('load', () => {
   const { href, handleRemote } = Rails;
-  Rails.href = function(element) {
+  Rails.href = function (element) {
     return element.href || href(element);
   };
-  Rails.handleRemote = function(e) {
+  Rails.handleRemote = function (e) {
     if (this instanceof HTMLElement) {
       handleRemote.call(this, e);
     } else {

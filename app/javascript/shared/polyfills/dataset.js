@@ -18,7 +18,7 @@ function clearDataset(event) {
 }
 
 function toCamelCase(string) {
-  return string.replace(dash, function(_, letter) {
+  return string.replace(dash, function (_, letter) {
     return letter.toUpperCase();
   });
 }
