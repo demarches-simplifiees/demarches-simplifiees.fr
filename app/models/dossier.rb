@@ -516,6 +516,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_instruction(instructeur)
+    self.archived = false
     self.processed_at = nil
     self.motivation = nil
     attestation&.destroy
