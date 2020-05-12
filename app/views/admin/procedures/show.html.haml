@@ -12,7 +12,7 @@
         - if @procedure.service.nil?
           - missing_elements << 'un service'
         - message = "Affectez #{missing_elements.join(' et ')} à votre démarche."
-        %button.action_button.btn.btn-success#disabled-publish-procedure{ data: { toggle: :tooltip, placement: :bottom }, style: 'float: right; margin-top: 10px;', disabled: true, title: message }
+        %button.action_button.btn.btn-success#disabled-publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: true, title: message }
           %i.fa.fa-eraser
           Publier
       - else
