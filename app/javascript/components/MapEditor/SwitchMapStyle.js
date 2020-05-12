@@ -9,7 +9,8 @@ const SwitchMapStyle = ({ isVector }) => {
 
   const imgStyle = {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    cursor: 'pointer'
   };
 
   const textStyle = {
@@ -24,11 +25,6 @@ const SwitchMapStyle = ({ isVector }) => {
       <div className="text" style={textStyle}>
         {style}
       </div>
-      <style jsx>{`
-        img:hover {
-          cursor: pointer;
-        }
-      `}</style>
     </div>
   );
 };
