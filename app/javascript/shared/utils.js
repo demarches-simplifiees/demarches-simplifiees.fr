@@ -46,7 +46,7 @@ export function removeClass(el, cssClass) {
 export function delegate(eventNames, selector, callback) {
   eventNames
     .split(' ')
-    .forEach(eventName =>
+    .forEach((eventName) =>
       Rails.delegate(document, selector, eventName, callback)
     );
 }
@@ -90,13 +90,13 @@ export function scrollToBottom(container) {
 }
 
 export function on(selector, eventName, fn) {
-  [...document.querySelectorAll(selector)].forEach(element =>
-    element.addEventListener(eventName, event => fn(event, event.detail))
+  [...document.querySelectorAll(selector)].forEach((element) =>
+    element.addEventListener(eventName, (event) => fn(event, event.detail))
   );
 }
 
 export function to(promise) {
-  return promise.then(result => [result]).catch(error => [null, error]);
+  return promise.then((result) => [result]).catch((error) => [null, error]);
 }
 
 export function isNumeric(n) {

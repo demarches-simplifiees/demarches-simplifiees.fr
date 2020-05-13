@@ -72,7 +72,7 @@ function onFileChange(handler, directUploadUrl) {
 
 function uploadFile(input, file, directUploadUrl) {
   const controller = new Uploader(input, file, directUploadUrl);
-  return controller.start().then(signedId => {
+  return controller.start().then((signedId) => {
     input.value = null;
     return signedId;
   });

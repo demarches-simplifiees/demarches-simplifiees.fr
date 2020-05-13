@@ -59,7 +59,7 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
         });
       }
     })
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   let newTypeDeChamps = [...typeDeChamps, typeDeChamp];
   if (insertAfter) {
@@ -127,7 +127,7 @@ function updateTypeDeChamp(
 function removeTypeDeChamp(state, typeDeChamps, { typeDeChamp }) {
   destroyTypeDeChampOperation(typeDeChamp, state.queue)
     .then(() => state.flash.success())
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   return {
     ...state,
@@ -141,7 +141,7 @@ function moveTypeDeChampUp(state, typeDeChamps, { typeDeChamp }) {
 
   moveTypeDeChampOperation(typeDeChamp, newIndex, state.queue)
     .then(() => state.flash.success())
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   return {
     ...state,
@@ -155,7 +155,7 @@ function moveTypeDeChampDown(state, typeDeChamps, { typeDeChamp }) {
 
   moveTypeDeChampOperation(typeDeChamp, newIndex, state.queue)
     .then(() => state.flash.success())
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   return {
     ...state,
@@ -166,7 +166,7 @@ function moveTypeDeChampDown(state, typeDeChamps, { typeDeChamp }) {
 function onSortTypeDeChamps(state, typeDeChamps, { oldIndex, newIndex }) {
   moveTypeDeChampOperation(typeDeChamps[oldIndex], newIndex, state.queue)
     .then(() => state.flash.success())
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   return {
     ...state,
@@ -191,13 +191,13 @@ function getUpdateHandler(typeDeChamp, { queue, flash }) {
   let handler = updateHandlers.get(typeDeChamp);
   if (!handler) {
     handler = debounce(
-      done =>
+      (done) =>
         updateTypeDeChampOperation(typeDeChamp, queue)
           .then(() => {
             flash.success();
             done();
           })
-          .catch(message => flash.error(message)),
+          .catch((message) => flash.error(message)),
       200
     );
     updateHandlers.set(typeDeChamp, handler);

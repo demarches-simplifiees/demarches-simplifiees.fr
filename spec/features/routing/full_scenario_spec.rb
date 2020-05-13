@@ -133,7 +133,7 @@ feature 'The routing', js: true do
     click_on 'suivi'
     click_on litteraire_user.email
     expect(page).to have_current_path(instructeur_dossier_path(procedure, litteraire_user.dossiers.first))
-    expect(page).to have_text('Annotations privées') # ensure Turbolinks DID load the DOM content
+    expect(page).to have_text('Annotations privées')
     expect(find('.tabs')).to have_css('span.notifications')
     log_out
 
