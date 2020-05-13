@@ -1,6 +1,9 @@
 import Uploader from '../../shared/activestorage/uploader';
 import { show, hide, toggle } from '@utils';
-import { FAILURE_CONNECTIVITY } from '../../shared/activestorage/file-upload-error';
+import {
+  ERROR_CODE_READ,
+  FAILURE_CONNECTIVITY
+} from '../../shared/activestorage/file-upload-error';
 
 // Given a file input in a champ with a selected file, upload a file,
 // then attach it to the dossier.
@@ -67,6 +70,12 @@ export default class AutoUploadController {
         title: 'Le fichier n’a pas pu être envoyé.',
         description: 'Vérifiez votre connexion à Internet, puis ré-essayez.',
         retry: true
+      };
+    } else if (error.code == ERROR_CODE_READ) {
+      return {
+        title: 'Nous n’arrivons pas à lire ce fichier sur votre appareil.',
+        description: 'Essayez à nouveau, ou sélectionnez un autre fichier.',
+        retry: false
       };
     } else {
       return {
