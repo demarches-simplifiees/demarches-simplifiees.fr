@@ -32,6 +32,8 @@
           %th.notification-col
           %th.number-col Nº dossier
           %th Démarche
+          - if @dossiers.count > 1
+            %th Demandeur
           %th.status-col Statut
           %th.updated-at-col Mis à jour
           %th
@@ -47,6 +49,9 @@
             %td
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = procedure_libelle(dossier.procedure)
+            - if @dossiers.count > 1
+              %td.number-col
+                = demandeur_dossier(dossier)
             %td.status-col
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = status_badge(dossier.state)

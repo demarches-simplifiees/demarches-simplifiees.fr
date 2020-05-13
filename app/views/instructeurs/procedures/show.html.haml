@@ -60,7 +60,7 @@
     - if @statut == 'traites'
       %p.explication-onglet Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite.
     - if @statut == 'tous'
-      %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, sans aucun filtre.
+      %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
     - if @statut == 'archives'
       %p.explication-onglet Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
       .afficher-dossiers-supprimes

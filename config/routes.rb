@@ -237,7 +237,7 @@ Rails.application.routes.draw do
   #
 
   authenticated :user, lambda { |user| user.administrateur_id && Flipper.enabled?(:administrateur_graphql, user) } do
-    mount GraphiQL::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql", via: :get
+    mount GraphqlPlayground::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql"
   end
 
   namespace :api do

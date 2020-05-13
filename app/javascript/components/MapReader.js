@@ -1,48 +1,36 @@
 import React from 'react';
 import ReactMapboxGl, { ZoomControl, GeoJSONLayer } from 'react-mapbox-gl';
-import mapboxgl, { LngLatBounds } from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import PropTypes from 'prop-types';
 
 const Map = ReactMapboxGl({});
 
-const MapReader = ({ geoData }) => {
-  let [selectionCollection, cadastresCollection] = [[], []];
+const MapReader = ({ featureCollection }) => {
+  const [a1, a2, b1, b2] = featureCollection.bbox;
+  const boundData = [
+    [a1, a2],
+    [b1, b2]
+  ];
 
-  for (let selection of geoData.selection.coordinates) {
-    selectionCollection.push({
-      type: 'Feature',
-      geometry: {
-        type: 'Polygon',
-        coordinates: selection
-      }
-    });
-  }
-
-  for (let cadastre of geoData.cadastres) {
-    cadastresCollection.push({
-      type: 'Feature',
-      geometry: {
-        type: 'Polygon',
-        coordinates: cadastre.geometry.coordinates[0]
-      }
-    });
-  }
-
-  const selectionData = {
-    type: 'geojson',
-    data: {
-      type: 'FeatureCollection',
-      features: selectionCollection
-    }
+  const selectionsFeatureCollection = {
+    type: 'FeatureCollection',
+    features: []
+  };
+  const cadastresFeatureCollection = {
+    type: 'FeatureCollection',
+    features: []
   };
 
-  const cadastresData = {
-    type: 'geojson',
-    data: {
-      type: 'FeatureCollection',
-      features: cadastresCollection
+  for (let feature of featureCollection.features) {
+    switch (feature.properties.source) {
+      case 'selection_utilisateur':
+        selectionsFeatureCollection.features.push(feature);
+        break;
+      case 'cadastre':
+        cadastresFeatureCollection.features.push(feature);
+        break;
     }
-  };
+  }
 
   const polygonSelectionFill = {
     'fill-color': '#EC3323',
@@ -65,19 +53,6 @@ const MapReader = ({ geoData }) => {
     'line-dasharray': [1, 1]
   };
 
-  let bounds = new LngLatBounds();
-
-  for (let selection of selectionCollection) {
-    for (let coordinate of selection.geometry.coordinates[0]) {
-      bounds.extend(coordinate);
-    }
-  }
-  let [swCoords, neCoords] = [
-    Object.values(bounds._sw),
-    Object.values(bounds._ne)
-  ];
-  const boundData = [swCoords, neCoords];
-
   if (!mapboxgl.supported()) {
     return (
       <p>
@@ -99,12 +74,12 @@ const MapReader = ({ geoData }) => {
       }}
     >
       <GeoJSONLayer
-        data={selectionData.data}
+        data={selectionsFeatureCollection}
         fillPaint={polygonSelectionFill}
         linePaint={polygonSelectionLine}
       />
       <GeoJSONLayer
-        data={cadastresData.data}
+        data={cadastresFeatureCollection}
         fillPaint={polygonCadastresFill}
         linePaint={polygonCadastresLine}
       />
@@ -114,10 +89,10 @@ const MapReader = ({ geoData }) => {
 };
 
 MapReader.propTypes = {
-  geoData: PropTypes.shape({
-    position: PropTypes.object,
-    selection: PropTypes.object,
-    cadastres: PropTypes.array
+  featureCollection: PropTypes.shape({
+    type: PropTypes.string,
+    bbox: PropTypes.array,
+    features: PropTypes.array
   })
 };
 

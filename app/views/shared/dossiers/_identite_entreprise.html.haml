@@ -30,6 +30,12 @@
       %tr
         %th.libelle Date de création :
         %td= try_format_date(etablissement.entreprise.date_creation)
+      - if profile == 'instructeur'
+        %tr
+          %th.libelle
+            Effectif mensuel
+            = try_format_mois_effectif(etablissement)
+          %td= etablissement.entreprise_effectif_mensuel
       %tr
         %th.libelle Effectif de l'organisation :
         %td= effectif(etablissement)
