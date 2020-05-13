@@ -86,7 +86,7 @@ def render_single_champ(pdf, champ)
   when 'Champs::ExplicationChamp'
     format_in_2_lines(pdf, champ.libelle, champ.description)
   when 'Champs::CarteChamp'
-    format_in_2_lines(pdf, champ.libelle, champ.geo_json.to_s)
+    format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
     pdf.font 'liberation serif', style: :bold, size: 12 do
       pdf.text champ.libelle

@@ -197,6 +197,9 @@ describe API::V1::DossiersController do
               :raison_sociale,
               :siret_siege_social,
               :code_effectif_entreprise,
+              :effectif_mois,
+              :effectif_annee,
+              :effectif_mensuel,
               :date_creation,
               :nom,
               :prenom

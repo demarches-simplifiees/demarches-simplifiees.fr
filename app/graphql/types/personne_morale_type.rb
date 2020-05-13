@@ -1,6 +1,12 @@
 module Types
   class PersonneMoraleType < Types::BaseObject
     class EntrepriseType < Types::BaseObject
+      class EffectifType < Types::BaseObject
+        field :mois, String, null: false, description: "Mois de l'effectif mensuel"
+        field :annee, String, null: false, description: "Année de l'effectif mensuel"
+        field :nb, Float, null: false
+      end
+
       field :siren, String, null: false
       field :capital_social, GraphQL::Types::BigInt, null: false
       field :numero_tva_intracommunautaire, String, null: false
@@ -10,10 +16,23 @@ module Types
       field :raison_sociale, String, null: false
       field :siret_siege_social, String, null: false
       field :code_effectif_entreprise, String, null: false
+      field :effectifs, [EffectifType], null: false
       field :date_creation, GraphQL::Types::ISO8601Date, null: false
       field :nom, String, null: false
       field :prenom, String, null: false
       field :inline_adresse, String, null: false
+
+      def effectifs
+        if object.effectif_mensuel.present?
+          [
+            {
+              mois: object.effectif_mois,
+              annee: object.effectif_annee,
+              nb: object.effectif_mensuel
+            }
+          ]
+        end
+      end
     end
 
     class AssociationType < Types::BaseObject

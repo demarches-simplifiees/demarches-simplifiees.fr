@@ -686,10 +686,24 @@ enum DossierState {
   sans_suite
 }
 
+type Effectif {
+  """
+  Année de l'effectif mensuel
+  """
+  annee: String!
+
+  """
+  Mois de l'effectif mensuel
+  """
+  mois: String!
+  nb: Float!
+}
+
 type Entreprise {
   capitalSocial: BigInt!
   codeEffectifEntreprise: String!
   dateCreation: ISO8601Date!
+  effectifs: [Effectif!]!
   formeJuridique: String!
   formeJuridiqueCode: String!
   inlineAdresse: String!
