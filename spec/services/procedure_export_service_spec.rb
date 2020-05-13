@@ -41,7 +41,6 @@ describe ProcedureExportService do
           "Civilité",
           "Nom",
           "Prénom",
-          "Date de naissance",
           "Archivé",
           "État du dossier",
           "Dernière mise à jour le",
@@ -88,10 +87,19 @@ describe ProcedureExportService do
 
         # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
         offset = dossier.en_construction_at.utc_offset
-        en_construction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
-        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][10] - offset.seconds)
+        en_construction_at = Time.zone.at(dossiers_sheet.data[0][8] - offset.seconds)
+        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
         expect(en_construction_at).to eq(dossier.en_construction_at.round)
         expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
+      end
+
+      context 'with a birthdate' do
+        before { procedure.update(ask_birthday: true) }
+
+        let(:birthdate_headers) { nominal_headers.insert(nominal_headers.index('Archivé'), 'Date de naissance') }
+
+        it { expect(dossiers_sheet.headers).to match(birthdate_headers) }
+        it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Date de naissance')]).to be_a(Date) }
       end
 
       context 'with a procedure routee' do
