@@ -1,6 +1,6 @@
 /* globals $ */
 
-$(document).on('turbolinks:load', init_default_data_block);
+$(document).on('DOMContentLoaded', init_default_data_block);
 
 function init_default_data_block() {
   $('.default-data-block #dossier .body').toggle();

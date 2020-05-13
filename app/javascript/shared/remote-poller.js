@@ -1,6 +1,6 @@
 import { ajax, delegate } from '@utils';
 
-addEventListener('turbolinks:load', () => {
+addEventListener('DOMContentLoaded', () => {
   attachementPoller.deactivate();
   exportPoller.deactivate();
 
