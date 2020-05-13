@@ -1,0 +1,32 @@
+@import "colors";
+@import "constants";
+
+.form {
+  .numero-dn {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0 10px 40px 10px;
+
+    input[type=text],
+    input[type=date] {
+      margin: 0 0 0 10px;
+    }
+
+    span {
+      margin: 0 0 0 10px;
+      padding: 10px 0 10px 0;
+    }
+
+    label {
+      font-size: 14px;
+      margin: 0 0 0 0;
+    }
+  }
+
+  .numero-dn-info {
+    font-size: 12px;
+    margin: 0px 10px 0px 10px;
+  }
+}

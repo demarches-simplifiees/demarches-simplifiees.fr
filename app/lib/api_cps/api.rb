@@ -13,14 +13,16 @@ class ApiCPS::API
   private
 
   def call(resource_name, dn_pairs)
-    url      = url(resource_name)
-    response = Typhoeus.post(url, body: json_dn(dn_pairs), timeout: TIMEOUT, ssl_verifypeer: true, verbose: false, headers: headers)
+    url     = url(resource_name)
+    json_dn = json_dn(dn_pairs)
+    response = Typhoeus.post(url, body: json_dn, timeout: TIMEOUT, ssl_verifypeer: true, verbose: false, headers: headers)
 
     if response.success?
       JSON.parse(response.body)['datas']
     elsif response.code&.between?(401, 499)
       raise ApiEntreprise::API::ResourceNotFound
     else
+      Rails.logger.error("Unable to contact CPS API: response code #{response.code} url=#{url} called with #{json_dn}")
       raise ApiEntreprise::API::RequestFailed
     end
   end
@@ -59,8 +61,7 @@ class ApiCPS::API
     if !@expires_at || Time.zone.now >= @expires_at
       body = parse_response_body(fetch_access_token)
       if (body[:error])
-        Rails.logger.error "Unable to connect to I-taiete : #{body[:error_description]}"
-        puts "Unable to connect to i-taiete : #{body[:error_description]}"
+        Rails.logger.error "Unable to connect to CPS's keycloak : #{body[:error_description]} url=#{API_CPS_AUTH}"
         return ''
       end
       @access_token = body[:access_token]
@@ -74,7 +75,6 @@ class ApiCPS::API
   end
 
   def fetch_access_token
-    pp auth_body
     Typhoeus.post(API_CPS_AUTH, body: auth_body)
   end
 

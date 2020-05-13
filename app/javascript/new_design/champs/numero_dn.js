@@ -1,17 +1,32 @@
 import { delegate } from '@utils';
 
-const dnSelector = `input[data-dn]`;
-const ddnSelector = `input[data-ddn]`;
+addEventListener('turbolinks:load', dn_init);
+
+function selector(base) {
+  return 'input[data-' + base + ']';
+}
+
+function setParams(input, side_ref, variable) {
+  let side_input = input.parentElement.querySelector(selector(side_ref));
+  let value = variable + '=' + input.value;
+  side_input.setAttribute('data-params', value);
+}
 
 function handleDN(event) {
-  let ddn = event.target.parentElement.querySelector('input[data-ddn]');
-  ddn.setAttribute('data-params', 'dn=' + event.target.value);
+  setParams(event.target, 'ddn', 'dn');
 }
 
 function handleDDN(event) {
-  let dn = event.target.parentElement.querySelector('input[data-dn]');
-  dn.setAttribute('data-params', 'ddn=' + event.target.value);
+  setParams(event.target, 'dn', 'ddn');
 }
 
-delegate('input', dnSelector, handleDN);
-delegate('input', ddnSelector, handleDDN);
+function dn_init() {
+  for (let input of document.querySelectorAll(selector('dn'))) {
+    setParams(input, 'ddn', 'dn');
+  }
+  for (let input of document.querySelectorAll(selector('ddn'))) {
+    setParams(input, 'dn', 'ddn');
+  }
+  delegate('input', selector('dn'), handleDN);
+  delegate('input', selector('ddn'), handleDDN);
+}
