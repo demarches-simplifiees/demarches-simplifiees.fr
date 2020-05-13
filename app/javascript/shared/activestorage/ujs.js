@@ -1,5 +1,8 @@
 import ProgressBar from './progress-bar';
-import errorFromDirectUploadMessage from './errors';
+import {
+  errorFromDirectUploadMessage,
+  FAILURE_CONNECTIVITY
+} from './file-upload-error';
 import { fire } from '@utils';
 
 const INITIALIZE_EVENT = 'direct-upload:initialize';
@@ -56,7 +59,9 @@ addUploadEventListener(ERROR_EVENT, event => {
   ProgressBar.error(id, errorMsg);
 
   let error = errorFromDirectUploadMessage(errorMsg);
-  fire(document, 'sentry:capture-exception', error);
+  if (error.failureReason != FAILURE_CONNECTIVITY) {
+    fire(document, 'sentry:capture-exception', error);
+  }
 });
 
 addUploadEventListener(END_EVENT, ({ detail: { id } }) => {

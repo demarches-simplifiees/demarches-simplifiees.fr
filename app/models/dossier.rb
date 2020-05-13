@@ -425,8 +425,8 @@ class Dossier < ApplicationRecord
       point = Geocoder.search(etablissement.geo_adresse).first
     end
 
-    lon = "2.428462"
-    lat = "46.538192"
+    lon = Champs::CarteChamp::DEFAULT_LON.to_s
+    lat = Champs::CarteChamp::DEFAULT_LAT.to_s
     zoom = "13"
 
     if point.present?
