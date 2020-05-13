@@ -1,11 +1,7 @@
-<%= render_to_element(".info-#{@position}",
-  partial: 'shared/champs/numero_dn/status',
-  locals: {
-    numero_dn: @dn,
-    attribute: @attribute,
-    status: @status }) %>
-dn = document.querySelector('#dossier_champs_attributes_<%= @position %>_numero_dn');
-ddn = document.querySelector('#dossier_champs_attributes_<%= @position %>_date_de_naissance');
+dn = document.querySelector('#<%=@base_id%>numero_dn');
+ddn = document.querySelector('#<%=@base_id%>date_de_naissance');
+info = dn.parentElement.querySelector('.numero-dn-info');
+info.innerHTML = "<%= escape_javascript(render partial: 'shared/champs/numero_dn/status', locals: { status: @status }) %>";
 switch ('<%= @status %>') {
     case 'bad_dn':
         ddn.setCustomValidity("");
@@ -28,6 +24,7 @@ switch ('<%= @status %>') {
         ddn.setCustomValidity("");
         break;
     case 'good_dn':
+    case 'empty':
         dn.setCustomValidity("");
         ddn.setCustomValidity("");
         break;

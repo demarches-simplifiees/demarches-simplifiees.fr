@@ -3,6 +3,9 @@ class Champs::NumeroDnController < ApplicationController
 
   def show
     set_dn_ddn
+    if @dn.empty?
+      return @status = :empty
+    end
     if @dn !~ /\d{6,7}/
       return @status = :bad_dn_format
     end
@@ -17,16 +20,17 @@ class Champs::NumeroDnController < ApplicationController
   private
 
   def set_dn_ddn
-    if params[:champ_id].present?
-      @champ = policy_scope(Champ).find(params[:champ_id])
+    @base_id = "dossier_"
+    champs   = params[:dossier]
+    loop do
+      key = champs.keys[0]
+      champs = champs[key]
+      @base_id += key + '_'
+      return if champs.empty?
+      break if champs.key?(:numero_dn) || champs.key?(:date_de_naissance)
     end
-    dossier    = params[:dossier]
-    attributes = dossier.key?(:champs_attributes) ? :champs_attributes : champs_private_attributes
-    @position  = params[:position]
-    champ      = dossier[attributes][@position]
-    @ddn       = champ[:date_de_naissance] || params[:ddn] || @champ&.date_de_naissance
-    @dn        = champ[:numero_dn] || params[:dn] || @champ&.numero_dn
-    @champ&.update(numero_dn: @dn, date_de_naissance: @ddn)
+    @ddn = champs[:date_de_naissance] || params[:ddn]
+    @dn  = champs[:numero_dn] || params[:dn]
   end
 
   def check_dn
