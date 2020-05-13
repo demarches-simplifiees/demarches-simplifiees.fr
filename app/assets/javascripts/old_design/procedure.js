@@ -1,6 +1,6 @@
 /* globals $ */
 
-$(document).on('turbolinks:load', button_edit_procedure_init);
+$(document).on('DOMContentLoaded', button_edit_procedure_init);
 
 function button_edit_procedure_init() {
   buttons_api_carto();

@@ -1,6 +1,6 @@
 /* globals $ */
 
-$(document).on('turbolinks:load', action_type_de_champs);
+$(document).on('DOMContentLoaded', action_type_de_champs);
 
 function action_type_de_champs() {
   $("input[type='email']").on('change', function () {

@@ -25,7 +25,7 @@ async function loadAndRedrawMap(element, data) {
   redrawMap(element, data);
 }
 
-addEventListener('turbolinks:load', initialize);
+addEventListener('DOMContentLoaded', initialize);
 
 addEventListener('carte:update', ({ detail: { selector, data } }) => {
   const element = document.querySelector(selector);
