@@ -130,6 +130,14 @@ module ApplicationHelper
     datetime.present? ? I18n.l(datetime) : ''
   end
 
+  def try_format_mois_effectif(etablissement)
+    if etablissement.entreprise_effectif_mois.present? && etablissement.entreprise_effectif_annee.present?
+      [etablissement.entreprise_effectif_mois, etablissement.entreprise_effectif_annee].join('/')
+    else
+      ''
+    end
+  end
+
   def dismiss_outdated_browser_banner
     cookies[:dismissed_outdated_browser_banner] = {
       value: 'true',

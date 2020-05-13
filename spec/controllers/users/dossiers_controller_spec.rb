@@ -250,6 +250,11 @@ describe Users::DossiersController, type: :controller do
     let(:api_entreprise_status) { 200 }
     let(:api_entreprise_body) { File.read('spec/fixtures/files/api_entreprise/entreprises.json') }
 
+    let(:api_entreprise_effectifs_mensuels_status) { 200 }
+    let(:api_entreprise_effectifs_mensuels_body) { File.read('spec/fixtures/files/api_entreprise/effectifs.json') }
+    let(:annee) { "2020" }
+    let(:mois) { "02" }
+
     let(:api_exercices_status) { 200 }
     let(:api_exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
 
@@ -265,12 +270,16 @@ describe Users::DossiersController, type: :controller do
         .to_return(status: api_exercices_status, body: api_exercices_body)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
         .to_return(status: api_association_status, body: api_association_body)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/#{annee}\/#{mois}\/entreprise\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_effectifs_mensuels_body, status: api_entreprise_effectifs_mensuels_status)
     end
 
     before do
       sign_in(user)
       stub_api_entreprise_requests
     end
+    before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
+    after { Timecop.return }
 
     subject! { post :update_siret, params: { id: dossier.id, user: { siret: params_siret } } }
 
@@ -309,8 +318,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'with a valid SIRET' do
-      let(:params_siret) { '440 117 620 01530' }
-
+      let(:params_siret) { '418 166 096 00051' }
       context 'When API-Entreprise is down' do
         let(:api_etablissement_status) { 502 }
         let(:api_body_status) { File.read('spec/fixtures/files/api_entreprise/exercices_unavailable.json') }
@@ -362,6 +370,7 @@ describe Users::DossiersController, type: :controller do
           expect(dossier.etablissement.entreprise).to be_present
           expect(dossier.etablissement.exercices).to be_present
           expect(dossier.etablissement.association?).to be(true)
+          expect(dossier.etablissement.entreprise_effectif_mensuel).to be_present
         end
       end
     end
