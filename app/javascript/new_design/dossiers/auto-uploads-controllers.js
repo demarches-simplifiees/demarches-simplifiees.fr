@@ -1,7 +1,10 @@
 import Rails from '@rails/ujs';
 import AutoUploadController from './auto-upload-controller.js';
 import { fire } from '@utils';
-import { FAILURE_CONNECTIVITY } from '../../shared/activestorage/file-upload-error';
+import {
+  FAILURE_CLIENT,
+  ERROR_CODE_READ
+} from '../../shared/activestorage/file-upload-error';
 
 //
 // DEBUG
@@ -24,10 +27,11 @@ export default class AutoUploadsControllers {
     try {
       let controller = new AutoUploadController(input, file);
       await controller.start();
-    } catch (error) {
-      // Report errors to Sentry (except connectivity issues)
-      if (error.failureReason != FAILURE_CONNECTIVITY) {
-        throw error;
+    } catch (err) {
+      // Report unexpected client errors to Sentry.
+      // (But ignore usual client errors, or errors we can monitor better on the server side.)
+      if (err.failureReason == FAILURE_CLIENT && err.code != ERROR_CODE_READ) {
+        throw err;
       }
     } finally {
       this._decrementInFlightUploads(form);
