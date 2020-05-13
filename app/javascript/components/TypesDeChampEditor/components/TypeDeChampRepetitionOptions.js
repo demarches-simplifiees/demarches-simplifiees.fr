@@ -17,7 +17,9 @@ function TypeDeChampRepetitionOptions({
     return (
       <div className="repetition flex-grow cell">
         <SortableContainer
-          onSortEnd={params => dispatch({ type: 'onSortTypeDeChamps', params })}
+          onSortEnd={(params) =>
+            dispatch({ type: 'onSortTypeDeChamps', params })
+          }
           useDragHandle
         >
           {state.typeDeChamps.map((typeDeChamp, index) => (

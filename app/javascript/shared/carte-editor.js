@@ -63,8 +63,8 @@ function initMap(element, { position }) {
 }
 
 function toLatLngs({ coordinates }) {
-  return coordinates.map(polygon =>
-    polygon[0].map(point => L.GeoJSON.coordsToLatLng(point))
+  return coordinates.map((polygon) =>
+    polygon[0].map((point) => L.GeoJSON.coordsToLatLng(point))
   );
 }
 
@@ -137,7 +137,7 @@ function findInput(selector) {
 }
 
 function clearLayers(map) {
-  map.eachLayer(layer => {
+  map.eachLayer((layer) => {
     if (layer instanceof L.GeoJSON) {
       map.removeLayer(layer);
     }
@@ -185,7 +185,7 @@ const RPG_POLYGON_STYLE = Object.assign({}, POLYGON_STYLE, {
   fillColor: '#31708f'
 });
 
-delegate('click', '.carte.edit', event => {
+delegate('click', '.carte.edit', (event) => {
   const map = getCurrentMap(event.target);
 
   if (map) {
@@ -200,7 +200,7 @@ delegate('click', '.carte.edit', event => {
   }
 });
 
-delegate('click', '.toolbar .new-area', event => {
+delegate('click', '.toolbar .new-area', (event) => {
   event.preventDefault();
   const map = getCurrentMap(event.target);
 
@@ -209,7 +209,7 @@ delegate('click', '.toolbar .new-area', event => {
   }
 });
 
-$(document).on('select2:select', 'select[data-address]', event => {
+$(document).on('select2:select', 'select[data-address]', (event) => {
   const map = getCurrentMap(event.target);
   const { geometry } = event.params.data;
 
