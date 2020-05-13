@@ -8,7 +8,7 @@
     "@rails/actiontext": "^6.0.2-2",
     "@rails/activestorage": "^6.0.2-2",
     "@rails/ujs": "^6.0.2-2",
-    "@rails/webpacker": "5.1.1",
+    "@rails/webpacker": "=4.2.2",
     "@reach/combobox": "^0.10.1",
     "@sentry/browser": "^5.15.5",
     "@tmcw/togeojson": "^4.0.0",

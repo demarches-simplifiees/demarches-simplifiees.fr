@@ -613,7 +613,6 @@ GEM
     selenium-webdriver (3.141.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2, >= 1.2.2)
-    semantic_range (2.3.0)
     sentry-raven (2.7.4)
       faraday (>= 0.7.6, < 1.0)
     sexp_processor (4.14.1)
@@ -696,11 +695,10 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
-    webpacker (5.1.1)
-      activesupport (>= 5.2)
+    webpacker (4.0.2)
+      activesupport (>= 4.2)
       rack-proxy (>= 0.6.1)
-      railties (>= 5.2)
-      semantic_range (>= 2.3.0)
+      railties (>= 4.2)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
@@ -826,7 +824,7 @@ DEPENDENCIES
   web-console
   webdrivers (~> 4.0)
   webmock
-  webpacker
+  webpacker (= 4.0.2)
   xray-rails
   zipline
   zxcvbn-ruby

@@ -73,7 +73,7 @@ gem 'spreadsheet_architect'
 gem 'sprockets', '< 4'
 gem 'typhoeus'
 gem 'warden'
-gem 'webpacker'
+gem 'webpacker', '= 4.0.2'
 gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
