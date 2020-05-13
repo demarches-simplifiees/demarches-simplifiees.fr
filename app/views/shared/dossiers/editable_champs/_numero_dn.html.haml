@@ -1,4 +1,6 @@
 .numero-dn
+  %span
+    = form.label :numero_dn, "DN"
   = form.text_field :numero_dn,
     value: champ.numero_dn,
     required: champ.mandatory?,

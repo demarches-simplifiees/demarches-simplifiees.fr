@@ -11,6 +11,8 @@ class Champs::NumeroDnController < ApplicationController
     end
     begin
       @ddn = Date.parse(@ddn)
+      # don't even call CPS WS if user has not finished giving the year (0196)
+      return :bad_ddn_format if @ddn.year < 1900
     rescue
       return @status = :bad_ddn_format
     end
