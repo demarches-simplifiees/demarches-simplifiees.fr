@@ -65,6 +65,15 @@ describe Administrateur, type: :model do
       expect(Service.find_by(id: service_without_procedure.id)).to be_nil
       expect(Administrateur.find_by(id: administrateur.id)).to be_nil
     end
+
+    it "does not delete service if associated to an archived procedure" do
+      service.update(administrateur: administrateur)
+      procedure.discard!
+      administrateur.delete_and_transfer_services
+
+      expect(Service.find_by(id: procedure.service.id)).not_to be_nil
+      expect(Administrateur.find_by(id: administrateur.id)).to be_nil
+    end
   end
 
   # describe '#password_complexity' do
