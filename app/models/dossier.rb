@@ -131,11 +131,19 @@ class Dossier < ApplicationRecord
         etablissement: :champ,
         champs: {
           etablissement: :champ,
-          type_de_champ: :drop_down_list
+          type_de_champ: :drop_down_list,
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
         },
         champs_private: {
           etablissement: :champ,
-          type_de_champ: :drop_down_list
+          type_de_champ: :drop_down_list,
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
         },
         procedure: :groupe_instructeurs
       ).order(en_construction_at: 'asc')
