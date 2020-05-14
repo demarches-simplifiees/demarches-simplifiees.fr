@@ -23,7 +23,9 @@ function filterFeatureCollection(featureCollection, source) {
   };
 }
 
-const MapEditor = ({ featureCollection, url }) => {
+function noop() {}
+
+function MapEditor({ featureCollection, url, preview }) {
   const drawControl = useRef(null);
   const [style, setStyle] = useState('ortho');
   const [coords, setCoords] = useState([1.7, 46.9]);
@@ -174,9 +176,9 @@ const MapEditor = ({ featureCollection, url }) => {
         />
         <DrawControl
           ref={drawControl}
-          onDrawCreate={onDrawCreate}
-          onDrawUpdate={onDrawUpdate}
-          onDrawDelete={onDrawDelete}
+          onDrawCreate={preview ? noop : onDrawCreate}
+          onDrawUpdate={preview ? noop : onDrawUpdate}
+          onDrawDelete={preview ? noop : onDrawDelete}
           displayControlsDefault={false}
           controls={{
             point: true,
@@ -202,7 +204,7 @@ const MapEditor = ({ featureCollection, url }) => {
       </Map>
     </>
   );
-};
+}
 
 MapEditor.propTypes = {
   featureCollection: PropTypes.shape({
@@ -210,7 +212,8 @@ MapEditor.propTypes = {
     features: PropTypes.array,
     id: PropTypes.number
   }),
-  url: PropTypes.string
+  url: PropTypes.string,
+  preview: PropTypes.bool
 };
 
 export default MapEditor;
