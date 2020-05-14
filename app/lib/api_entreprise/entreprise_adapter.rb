@@ -2,7 +2,6 @@ class ApiEntreprise::EntrepriseAdapter < ApiEntreprise::Adapter
   private
 
   def get_resource
-    siren = @siret[0..8]
     ApiEntreprise::API.entreprise(siren, @procedure_id)
   end
 
