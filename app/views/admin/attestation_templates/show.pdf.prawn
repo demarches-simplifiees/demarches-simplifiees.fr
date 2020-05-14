@@ -41,7 +41,13 @@ info = {
 
 
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size, info: info) do |pdf|
-  pdf.font_families.update('liberation serif' => { normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf') })
+  base = 'lib/prawn/fonts/liberation_serif'
+  pdf.font_families.update('liberation serif' => {
+    normal: Rails.root.join(base,'LiberationSerif-Regular.ttf'),
+    bold: Rails.root.join(base,'LiberationSerif-Bold.ttf'),
+    bold_italic: Rails.root.join(base,'LiberationSerif-BoldItalic.ttf'),
+    italic: Rails.root.join(base,'LiberationSerif-Italic.ttf')
+  })
   pdf.font 'liberation serif'
 
   grey = '555555'
