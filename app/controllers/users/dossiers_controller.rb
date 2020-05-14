@@ -121,7 +121,7 @@ module Users
 
       sanitized_siret = siret_model.siret
       begin
-        etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
+        etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id, current_user.id)
       rescue ApiEntreprise::API::RequestFailed
         return render_siret_error(t('errors.messages.siret_network_error'))
       end
@@ -129,7 +129,11 @@ module Users
         return render_siret_error(t('errors.messages.siret_unknown'))
       end
 
+      attestation_sociale_url = etablissement_attributes.delete(:entreprise_attestation_sociale_url)
+      attestation_fiscale_url = etablissement_attributes.delete(:entreprise_attestation_fiscale_url)
       etablissement = @dossier.build_etablissement(etablissement_attributes)
+      etablissement.upload_attestation_sociale(attestation_sociale_url) if attestation_sociale_url.present?
+      etablissement.upload_attestation_fiscale(attestation_fiscale_url) if attestation_fiscale_url.present?
       etablissement.save!
       current_user.update!(siret: sanitized_siret)
       @dossier.update!(autorisation_donnees: true)
@@ -170,7 +174,7 @@ module Users
       if passage_en_construction? && errors.blank?
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
-        @dossier.procedure.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
+        @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
           DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
         end
         return redirect_to(merci_dossier_path(@dossier))

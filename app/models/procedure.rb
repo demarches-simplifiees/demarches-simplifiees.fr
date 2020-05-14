@@ -195,7 +195,11 @@ class Procedure < ApplicationRecord
   def path_available?(administrateur, path)
     procedure = other_procedure_with_path(path)
 
-    procedure.blank? || administrateur.owns?(procedure)
+    procedure.blank? || (administrateur.owns?(procedure) && canonical_procedure_child?(procedure))
+  end
+
+  def canonical_procedure_child?(procedure)
+    !canonical_procedure || canonical_procedure == procedure || canonical_procedure == procedure.canonical_procedure
   end
 
   def locked?
@@ -306,6 +310,7 @@ class Procedure < ApplicationRecord
 
     if is_different_admin
       procedure.administrateurs = [admin]
+      procedure.api_entreprise_token = nil
     else
       procedure.administrateurs = administrateurs
     end
@@ -545,6 +550,18 @@ class Procedure < ApplicationRecord
 
   def flipper_id
     "Procedure;#{id}"
+  end
+
+  def api_entreprise_role?(role)
+    ApiEntrepriseToken.new(api_entreprise_token).role?(role)
+  end
+
+  def api_entreprise_token
+    self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
+  end
+
+  def api_entreprise_token_expired?
+    ApiEntrepriseToken.new(api_entreprise_token).expired?
   end
 
   private

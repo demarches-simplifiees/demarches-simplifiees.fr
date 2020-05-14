@@ -1,5 +1,10 @@
 describe ApiEntreprise::EtablissementAdapter do
-  let(:procedure_id) { 33 }
+  let(:procedure) { create(:procedure) }
+  let(:procedure_id) { procedure.id }
+
+  before do
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+  end
 
   context 'SIRET valide avec infos diffusables' do
     let(:siret) { '41816609600051' }
@@ -88,7 +93,7 @@ describe ApiEntreprise::EtablissementAdapter do
 
   context 'when siret is not found' do
     let(:bad_siret) { 11_111_111_111_111 }
-    subject { described_class.new(bad_siret, 12).to_params }
+    subject { described_class.new(bad_siret, procedure_id).to_params }
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{bad_siret}?.*token=/)

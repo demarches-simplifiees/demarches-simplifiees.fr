@@ -49,6 +49,17 @@ module ChampHelper
       "#{geo_area.commune} : #{geo_area.nom}"
     when GeoArea.sources.fetch(:parcelle_agricole)
       "Culture : #{geo_area.culture} - Surface : #{geo_area.surface} ha"
+    when GeoArea.sources.fetch(:selection_utilisateur)
+      if geo_area.polygon?
+        capture do
+          concat "Une aire de surface #{geo_area.area} m"
+          concat content_tag(:sup, "2")
+        end
+      elsif geo_area.line?
+        "Une ligne longue de #{geo_area.length} m"
+      elsif geo_area.point?
+        "Un point situé à #{geo_area.location}"
+      end
     end
   end
 end

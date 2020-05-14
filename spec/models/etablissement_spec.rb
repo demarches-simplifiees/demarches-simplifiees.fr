@@ -35,4 +35,28 @@ describe Etablissement do
       end
     end
   end
+
+  describe '.entreprise_bilans_bdf_to_csv' do
+    let(:etablissement) { build(:etablissement, entreprise_bilans_bdf: bilans) }
+    let(:bilans) do
+      [
+        {
+          "total_passif": "1200",
+          "chiffres_affaires_ht": "40000"
+        },
+        {
+          "total_passif": "0",
+          "evolution_total_dettes_stables": "30"
+        }
+      ]
+    end
+
+    subject { etablissement.entreprise_bilans_bdf_to_csv.split("\n") }
+
+    it "build a csv with all keys" do
+      expect(subject[0].split(',').sort).to eq(["total_passif", "chiffres_affaires_ht", "evolution_total_dettes_stables"].sort)
+      expect(subject[1].split(',')).to eq(["1200", "40000"])
+      expect(subject[2].split(',')).to eq(["0", "", "30"])
+    end
+  end
 end

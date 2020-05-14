@@ -58,8 +58,8 @@ class Champs::CarteChamp < Champ
     bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
 
     if geo_areas.present?
-      geo_areas.each do |area|
-        bounding_box.add(area.rgeo_geometry)
+      geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+        bounding_box.add(geometry)
       end
     elsif dossier.present?
       point = dossier.geo_position
@@ -74,7 +74,7 @@ class Champs::CarteChamp < Champ
   def to_feature_collection
     {
       type: 'FeatureCollection',
-      id: type_de_champ.stable_id,
+      id: stable_id,
       bbox: bounding_box,
       features: (legacy_selections_utilisateur + except_selections_utilisateur).map(&:to_feature)
     }

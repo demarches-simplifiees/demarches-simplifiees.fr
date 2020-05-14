@@ -1,0 +1,9 @@
+<%= render_flash(timeout: 5000, fixed: true) %>
+
+<%= render_to_element("#{@selector} + .geo-areas",
+  partial: 'shared/champs/carte/geo_areas',
+  locals: { champ: @champ, error: @error }) %>
+
+<% if @update_cadastres %>
+  <%= fire_event('cadastres:update', { featureCollection: @champ.to_feature_collection }.to_json) %>
+<% end %>

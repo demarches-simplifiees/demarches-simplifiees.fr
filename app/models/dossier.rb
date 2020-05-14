@@ -189,6 +189,11 @@ class Dossier < ApplicationRecord
       .joins(:procedure)
       .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
+  scope :termine_close_to_expiration, -> do
+    state_termine
+      .joins(:procedure)
+      .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
 
   scope :brouillon_expired, -> do
     state_brouillon
@@ -198,9 +203,14 @@ class Dossier < ApplicationRecord
     state_en_construction
       .where("en_construction_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
   end
+  scope :termine_expired, -> do
+    state_termine
+      .where("termine_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
+  end
 
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
+  scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
 
   scope :discarded_brouillon_expired, -> do
     with_discarded
@@ -705,7 +715,35 @@ class Dossier < ApplicationRecord
     { id: self.id, procedure_libelle: self.procedure.libelle }
   end
 
+  def geo_data?
+    geo_areas.present?
+  end
+
+  def to_feature_collection
+    {
+      type: 'FeatureCollection',
+      id: id,
+      bbox: bounding_box,
+      features: geo_areas.map(&:to_feature)
+    }
+  end
+
   private
+
+  def geo_areas
+    champs.includes(:geo_areas).flat_map(&:geo_areas) + champs_private.includes(:geo_areas).flat_map(&:geo_areas)
+  end
+
+  def bounding_box
+    factory = RGeo::Geographic.simple_mercator_factory
+    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
+
+    geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+      bounding_box.add(geometry)
+    end
+
+    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
+  end
 
   def log_dossier_operation(author, operation, subject = nil)
     if log_operations?

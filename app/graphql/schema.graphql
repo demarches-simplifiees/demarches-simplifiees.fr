@@ -687,23 +687,26 @@ enum DossierState {
 }
 
 type Effectif {
-  """
-  Année de l'effectif mensuel
-  """
-  annee: String!
-
-  """
-  Mois de l'effectif mensuel
-  """
-  mois: String!
   nb: Float!
+  periode: String!
 }
 
 type Entreprise {
+  attestationFiscaleAttachment: File
+  attestationSocialeAttachment: File
   capitalSocial: BigInt!
   codeEffectifEntreprise: String!
   dateCreation: ISO8601Date!
-  effectifs: [Effectif!]!
+
+  """
+  effectif moyen d'une année
+  """
+  effectifAnnuel: Effectif
+
+  """
+  effectif pour un mois donné
+  """
+  effectifMensuel: Effectif
   formeJuridique: String!
   formeJuridiqueCode: String!
   inlineAdresse: String!

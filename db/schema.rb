@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_21_174642) do
+ActiveRecord::Schema.define(version: 2020_04_29_191305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -256,6 +256,7 @@ ActiveRecord::Schema.define(version: 2020_04_21_174642) do
     t.datetime "groupe_instructeur_updated_at"
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
     t.interval "en_construction_conservation_extension", default: "PT0S"
+    t.datetime "termine_close_to_expiration_notice_sent_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"
@@ -313,6 +314,10 @@ ActiveRecord::Schema.define(version: 2020_04_21_174642) do
     t.string "entreprise_effectif_mois"
     t.string "entreprise_effectif_annee"
     t.decimal "entreprise_effectif_mensuel"
+    t.decimal "entreprise_effectif_annuel"
+    t.string "entreprise_effectif_annuel_annee"
+    t.jsonb "entreprise_bilans_bdf"
+    t.string "entreprise_bilans_bdf_monnaie"
     t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
   end
 
@@ -512,6 +517,7 @@ ActiveRecord::Schema.define(version: 2020_04_21_174642) do
     t.datetime "closed_at"
     t.datetime "unpublished_at"
     t.bigint "canonical_procedure_id"
+    t.string "api_entreprise_token"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
