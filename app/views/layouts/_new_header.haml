@@ -14,12 +14,13 @@
 %header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: 'banner' }
   .header-inner-content
 
-    .flex.align-center
+    .flex.align-center.justify-center
       - if params[:controller] == 'users/commencer'
         = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
       - else
-        = link_to root_path_for_profile(nav_bar_profile), class: 'header-logo', title: "Aller à la page d'accueil de demarches-simplifiees.fr" do
-          = image_tag 'marianne.svg', alt: 'Liberté, égalité, fraternité', width: 65
+        = link_to root_path_for_profile(nav_bar_profile), class: 'header-logo justify-center', title: "Aller à la page d'accueil de demarches-simplifiees.fr" do
+          = image_tag 'marianne.svg', alt: 'Liberté, égalité, fraternité', width: '65px'
+        = link_to root_path_for_profile(nav_bar_profile), class: 'header-logo justify-center', title: "Aller à la page d'accueil de demarches-simplifiees.fr" do
           %span.big.site-title> demarches-simplifiees.fr
           %span.small.site-title> d-s.fr
 
