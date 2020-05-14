@@ -3,6 +3,7 @@ class Entreprise < Hashie::Dash
     self[attribute]
   end
 
+  property :etablissement
   property :siren
   property :capital_social
   property :numero_tva_intracommunautaire

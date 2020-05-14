@@ -692,6 +692,8 @@ type Effectif {
 }
 
 type Entreprise {
+  attestationFiscaleAttachment: File
+  attestationSocialeAttachment: File
   capitalSocial: BigInt!
   codeEffectifEntreprise: String!
   dateCreation: ISO8601Date!
