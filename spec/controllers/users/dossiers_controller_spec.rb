@@ -264,6 +264,15 @@ describe Users::DossiersController, type: :controller do
     let(:api_association_status) { 200 }
     let(:api_association_body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
 
+    let(:api_entreprise_attestation_sociale_status) { 200 }
+    let(:api_entreprise_attestation_sociale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
+
+    let(:api_entreprise_attestation_fiscale_status) { 200 }
+    let(:api_entreprise_attestation_fiscale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_fiscale.json') }
+
+    let(:api_entreprise_bilans_bdf_status) { 200 }
+    let(:api_entreprise_bilans_bdf_body) { File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json') }
+
     def stub_api_entreprise_requests
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
@@ -277,11 +286,23 @@ describe Users::DossiersController, type: :controller do
         .to_return(body: api_entreprise_effectifs_mensuels_body, status: api_entreprise_effectifs_mensuels_status)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
         .to_return(body: api_entreprise_effectifs_annuels_body, status: api_entreprise_effectifs_annuels_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_attestation_sociale_body, status: api_entreprise_attestation_sociale_status)
+      stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569156881-f749d75e2bfd443316e2e02d59015f-attestation_vigilance_acoss.pdf")
+        .to_return(body: "body attestation", status: 200)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_attestation_fiscale_body, status: api_entreprise_attestation_fiscale_status)
+      stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569156756-f6b7779f99fa95cd60dc03c04fcb-attestation_fiscale_dgfip.pdf")
+        .to_return(body: "body attestation", status: 200)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_bilans_bdf_body, status: api_entreprise_bilans_bdf_status)
     end
 
     before do
       sign_in(user)
       stub_api_entreprise_requests
+      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles)
+        .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
     end
     before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
     after { Timecop.return }
@@ -377,6 +398,9 @@ describe Users::DossiersController, type: :controller do
           expect(dossier.etablissement.association?).to be(true)
           expect(dossier.etablissement.entreprise_effectif_mensuel).to be_present
           expect(dossier.etablissement.entreprise_effectif_annuel).to be_present
+          expect(dossier.etablissement.entreprise_attestation_sociale).to be_attached
+          expect(dossier.etablissement.entreprise_attestation_fiscale).to be_attached
+          expect(dossier.etablissement.entreprise_bilans_bdf).to be_present
         end
       end
     end

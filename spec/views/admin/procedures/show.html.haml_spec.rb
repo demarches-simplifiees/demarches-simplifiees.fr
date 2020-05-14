@@ -14,9 +14,9 @@ describe 'admin/procedures/show.html.haml', type: :view do
       end
 
       describe 'publish button is not visible' do
-        it { expect(rendered).not_to have_css('a#publish-procedure') }
+        it { expect(rendered).not_to have_css('button#publish-procedure') }
         it { expect(rendered).not_to have_css('button#archive-procedure') }
-        it { expect(rendered).not_to have_css('a#reopen-procedure') }
+        it { expect(rendered).not_to have_css('button#reopen-procedure') }
       end
     end
 
@@ -27,9 +27,9 @@ describe 'admin/procedures/show.html.haml', type: :view do
       end
 
       describe 'publish button is visible' do
-        it { expect(rendered).to have_css('a#publish-procedure') }
+        it { expect(rendered).to have_css('button#publish-procedure') }
         it { expect(rendered).not_to have_css('button#archive-procedure') }
-        it { expect(rendered).not_to have_css('a#reopen-procedure') }
+        it { expect(rendered).not_to have_css('button#reopen-procedure') }
       end
 
       describe 'procedure path is not customized' do
@@ -46,9 +46,9 @@ describe 'admin/procedures/show.html.haml', type: :view do
     end
 
     describe 'archive button is visible', js: true do
-      it { expect(rendered).not_to have_css('a#publish-procedure') }
+      it { expect(rendered).not_to have_css('button#publish-procedure') }
       it { expect(rendered).to have_css('button#archive-procedure') }
-      it { expect(rendered).not_to have_css('a#reopen-procedure') }
+      it { expect(rendered).not_to have_css('button#reopen-procedure') }
     end
 
     describe 'procedure link is present' do
@@ -65,9 +65,9 @@ describe 'admin/procedures/show.html.haml', type: :view do
     end
 
     describe 'Re-enable button is visible' do
-      it { expect(rendered).not_to have_css('a#publish-procedure') }
+      it { expect(rendered).not_to have_css('button#publish-procedure') }
       it { expect(rendered).not_to have_css('button#archive-procedure') }
-      it { expect(rendered).to have_css('a#reopen-procedure') }
+      it { expect(rendered).to have_css('button#reopen-procedure') }
     end
 
     describe 'procedure link is present' do

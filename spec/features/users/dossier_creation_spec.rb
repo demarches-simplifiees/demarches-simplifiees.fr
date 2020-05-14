@@ -78,6 +78,7 @@ feature 'Creating a new dossier:' do
           .to_return(status: 404, body: '')
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
           .to_return(status: 404, body: '')
+        allow_any_instance_of(Procedure).to receive(:api_entreprise_roles).and_return([])
       end
       before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
       after { Timecop.return }
