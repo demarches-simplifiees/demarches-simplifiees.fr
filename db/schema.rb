@@ -256,9 +256,9 @@ ActiveRecord::Schema.define(version: 2020_04_22_090426) do
     t.datetime "groupe_instructeur_updated_at"
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
     t.interval "en_construction_conservation_extension", default: "PT0S"
+    t.datetime "termine_close_to_expiration_notice_sent_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
-    t.datetime "termine_close_to_expiration_notice_sent_at"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"

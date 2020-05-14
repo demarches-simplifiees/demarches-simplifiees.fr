@@ -215,6 +215,8 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
+    ffi-geos (2.1.0)
+      ffi (>= 1.0.0)
     flipper (0.17.2)
     flipper-active_record (0.17.2)
       activerecord (>= 4.2, < 7)
@@ -756,6 +758,7 @@ DEPENDENCIES
   discard
   dotenv-rails
   factory_bot
+  ffi-geos
   flipper
   flipper-active_record
   flipper-ui
