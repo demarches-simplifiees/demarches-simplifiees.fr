@@ -49,6 +49,8 @@ class GeoArea < ApplicationRecord
 
   def rgeo_geometry
     RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
+  rescue RGeo::Error::InvalidGeometry
+    nil
   end
 
   def self.from_feature_collection(feature_collection)

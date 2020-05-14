@@ -58,8 +58,8 @@ class Champs::CarteChamp < Champ
     bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
 
     if geo_areas.present?
-      geo_areas.each do |area|
-        bounding_box.add(area.rgeo_geometry)
+      geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+        bounding_box.add(geometry)
       end
     elsif dossier.present?
       point = dossier.geo_position

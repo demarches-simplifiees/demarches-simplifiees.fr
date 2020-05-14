@@ -60,6 +60,7 @@ class ApiEntreprise::API
   private
 
   def self.call(resource_name, siret_or_siren, procedure_id, user_id = nil)
+    return if ApiEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
     url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id, user_id)
 

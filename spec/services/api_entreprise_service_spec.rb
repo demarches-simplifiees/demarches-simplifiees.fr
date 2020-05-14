@@ -68,8 +68,9 @@ describe ApiEntrepriseService do
     let(:result) { ApiEntrepriseService.get_etablissement_params_for_siret(siret, procedure.id) }
 
     before do
-      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles)
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
         .and_return(["attestations_sociales", "attestations_fiscales", "bilans_entreprise_bdf"])
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
     end
 
     context 'when service is up' do

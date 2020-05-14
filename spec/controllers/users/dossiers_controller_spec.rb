@@ -273,6 +273,8 @@ describe Users::DossiersController, type: :controller do
     let(:api_entreprise_bilans_bdf_status) { 200 }
     let(:api_entreprise_bilans_bdf_body) { File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json') }
 
+    let(:token_expired) { false }
+
     def stub_api_entreprise_requests
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
@@ -301,8 +303,9 @@ describe Users::DossiersController, type: :controller do
     before do
       sign_in(user)
       stub_api_entreprise_requests
-      allow_any_instance_of(Procedure).to receive(:api_entreprise_roles)
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(token_expired)
     end
     before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
     after { Timecop.return }
@@ -355,6 +358,14 @@ describe Users::DossiersController, type: :controller do
       context 'when API-Entreprise doesn’t know this SIRET' do
         let(:api_etablissement_status) { 404 }
         let(:api_body_status) { '' }
+
+        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
+      end
+
+      context 'when default token has expired' do
+        let(:api_etablissement_status) { 200 }
+        let(:api_body_status) { '' }
+        let(:token_expired) { true }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
       end

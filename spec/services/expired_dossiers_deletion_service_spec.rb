@@ -4,6 +4,7 @@ describe ExpiredDossiersDeletionService do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :published) }
   let(:procedure_2) { create(:procedure, :published) }
+  let(:reference_date) { Date.parse("March 8") }
 
   describe '#process_expired_dossiers_brouillon' do
     let(:today) { Time.zone.now.at_midnight }
@@ -43,7 +44,7 @@ describe ExpiredDossiersDeletionService do
   end
 
   describe '#send_brouillon_expiration_notices' do
-    before { Timecop.freeze(Time.zone.now) }
+    before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
 
     before do
@@ -83,7 +84,7 @@ describe ExpiredDossiersDeletionService do
   end
 
   describe '#delete_expired_brouillons_and_notify' do
-    before { Timecop.freeze(Time.zone.now) }
+    before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
 
     before do
@@ -132,7 +133,7 @@ describe ExpiredDossiersDeletionService do
   end
 
   describe '#send_en_construction_expiration_notices' do
-    before { Timecop.freeze(Time.zone.now) }
+    before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
 
     before do
@@ -203,7 +204,7 @@ describe ExpiredDossiersDeletionService do
   describe '#delete_expired_en_construction_and_notify' do
     let!(:warning_period) { 1.month + 5.days }
 
-    before { Timecop.freeze(Time.zone.now) }
+    before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
 
     before do
@@ -272,7 +273,7 @@ describe ExpiredDossiersDeletionService do
   end
 
   describe '#send_termine_expiration_notices' do
-    before { Timecop.freeze(Time.zone.now) }
+    before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
 
     before do
@@ -341,7 +342,7 @@ describe ExpiredDossiersDeletionService do
   end
 
   describe '#delete_expired_termine_and_notify' do
-    before { Timecop.freeze(Time.zone.now) }
+    before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
 
     before do
