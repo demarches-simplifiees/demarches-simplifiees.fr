@@ -1,15 +1,9 @@
 import Rails from '@rails/ujs';
 import AutoUploadController from './auto-upload-controller.js';
-import { fire } from '@utils';
 import {
   FAILURE_CLIENT,
   ERROR_CODE_READ
 } from '../../shared/activestorage/file-upload-error';
-
-//
-// DEBUG
-//
-const originalImpl = FileReader.prototype.addEventListener;
 
 // Manage multiple concurrent uploads.
 //
@@ -46,25 +40,6 @@ export default class AutoUploadsControllers {
         .querySelectorAll('button[type=submit]')
         .forEach((submitButton) => Rails.disableElement(submitButton));
     }
-
-    //
-    // DEBUG: hook into FileReader onload event
-    //
-    if (FileReader.prototype.addEventListener === originalImpl) {
-      FileReader.prototype.addEventListener = function () {
-        // When DirectUploads attempts to add an event listener for "error",
-        // also insert a custom event listener of our that will report errors to Sentry.
-        if (arguments[0] == 'error') {
-          let handler = (event) => {
-            let message = `FileReader ${event.target.error.name}: ${event.target.error.message}`;
-            fire(document, 'sentry:capture-exception', new Error(message));
-          };
-          originalImpl.apply(this, ['error', handler]);
-        }
-        // Add the originally requested event listener
-        return originalImpl.apply(this, arguments);
-      };
-    }
   }
 
   _decrementInFlightUploads(form) {
@@ -76,13 +51,6 @@ export default class AutoUploadsControllers {
       form
         .querySelectorAll('button[type=submit]')
         .forEach((submitButton) => Rails.enableElement(submitButton));
-    }
-
-    //
-    // DEBUG: remove the FileReader hook we set before.
-    //
-    if (this.inFlightUploadsCount == 0) {
-      FileReader.prototype.addEventListener = originalImpl;
     }
   }
 }
