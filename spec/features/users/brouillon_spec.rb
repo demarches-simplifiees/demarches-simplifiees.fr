@@ -165,114 +165,77 @@ feature 'The user' do
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
 
-  scenario 'adding, replacing and removing attachments', js: true do
-    log_in(user, procedure_with_pj)
+  scenario 'add an attachment', js: true do
+    log_in(user, procedure_with_pjs)
     fill_individual
 
-    # Add an attachment
-    find_field('Pièce justificative').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
-    click_on 'Enregistrer le brouillon'
-    expect(page).to have_content('Votre brouillon a bien été sauvegardé')
+    # Add attachments
+    find_field('Pièce justificative 1').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
+    find_field('Pièce justificative 2').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
+
+    # Expect the files to be uploaded immediately
+    expect(page).to have_text('analyse antivirus en cours', count: 2)
     expect(page).to have_text('file.pdf')
-    expect(page).to have_text('analyse antivirus en cours')
-
-    # Mark file as scanned and clean
-    attachment = ActiveStorage::Attachment.last
-    attachment.blob.update(metadata: attachment.blob.metadata.merge(scanned_at: Time.zone.now, virus_scan_result: ActiveStorage::VirusScanner::SAFE))
-    within('.attachment') { click_on 'rafraichir' }
-    expect(page).to have_link('file.pdf')
-    expect(page).to have_no_content('analyse antivirus en cours')
-
-    # Replace the attachment
-    within('.attachment') { click_on 'Remplacer' }
-    find_field('Pièce justificative').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
-    click_on 'Enregistrer le brouillon'
-    expect(page).to have_no_text('file.pdf')
     expect(page).to have_text('RIB.pdf')
 
-    # Remove the attachment
-    within('.attachment') { click_on 'Supprimer' }
-    expect(page).to have_content('La pièce jointe a bien été supprimée')
-    expect(page).to have_no_text('RIB.pdf')
+    # Expect the submit buttons to be enabled
+    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
+    expect(page).to have_button('Déposer le dossier', disabled: false)
+
+    # Reload the current page
+    visit current_path
+
+    # Expect the files to have been saved on the dossier
+    expect(page).to have_text('file.pdf')
+    expect(page).to have_text('RIB.pdf')
   end
 
-  context 'when the auto-uploads of attachments is enabled' do
-    before do
-      Flipper.enable_actor(:autoupload_dossier_attachments, user)
-    end
+  # TODO: once we're running on Rails 6, re-enable the validator on PieceJustificativeChamp,
+  # and unmark this spec as pending.
+  #
+  # See piece_justificative_champ.rb
+  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
+  scenario 'add an invalid attachment', js: true, pending: true do
+    log_in(user, procedure_with_pjs)
+    fill_individual
 
-    scenario 'add an attachment', js: true do
-      log_in(user, procedure_with_pjs)
-      fill_individual
+    # Test invalid file type
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
+    expect(page).to have_text('La pièce justificative n’est pas d’un type accepté')
+    expect(page).to have_no_button('Ré-essayer', visible: true)
 
-      # Add attachments
-      find_field('Pièce justificative 1').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
-      find_field('Pièce justificative 2').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
+    # Replace the file by another with a valid type
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/piece_justificative_0.pdf')
+    expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
+    expect(page).to have_text('analyse antivirus en cours')
+    expect(page).to have_text('piece_justificative_0.pdf')
+  end
 
-      # Expect the files to be uploaded immediately
-      expect(page).to have_text('analyse antivirus en cours', count: 2)
-      expect(page).to have_text('file.pdf')
-      expect(page).to have_text('RIB.pdf')
+  scenario 'retry on transcient upload error', js: true do
+    log_in(user, procedure_with_pjs)
+    fill_individual
 
-      # Expect the submit buttons to be enabled
-      expect(page).to have_button('Enregistrer le brouillon', disabled: false)
-      expect(page).to have_button('Déposer le dossier', disabled: false)
+    # Test auto-upload failure
+    logout(:user) # Make the subsequent auto-upload request fail
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
+    expect(page).to have_text('Une erreur s’est produite pendant l’envoi du fichier')
+    expect(page).to have_button('Ré-essayer', visible: true)
+    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
+    expect(page).to have_button('Déposer le dossier', disabled: false)
 
-      # Reload the current page
-      visit current_path
+    # Test that retrying after a failure works
+    login_as(user, scope: :user) # Make the auto-upload request work again
+    click_on('Ré-essayer', visible: true)
+    expect(page).to have_text('analyse antivirus en cours')
+    expect(page).to have_text('file.pdf')
+    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
+    expect(page).to have_button('Déposer le dossier', disabled: false)
 
-      # Expect the files to have been saved on the dossier
-      expect(page).to have_text('file.pdf')
-      expect(page).to have_text('RIB.pdf')
-    end
+    # Reload the current page
+    visit current_path
 
-    # TODO: once we're running on Rails 6, re-enable the validator on PieceJustificativeChamp,
-    # and unmark this spec as pending.
-    #
-    # See piece_justificative_champ.rb
-    # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
-    scenario 'add an invalid attachment', js: true, pending: true do
-      log_in(user, procedure_with_pjs)
-      fill_individual
-
-      # Test invalid file type
-      attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
-      expect(page).to have_text('La pièce justificative n’est pas d’un type accepté')
-      expect(page).to have_no_button('Ré-essayer', visible: true)
-
-      # Replace the file by another with a valid type
-      attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/piece_justificative_0.pdf')
-      expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
-      expect(page).to have_text('analyse antivirus en cours')
-      expect(page).to have_text('piece_justificative_0.pdf')
-    end
-
-    scenario 'retry on transcient upload error', js: true do
-      log_in(user, procedure_with_pjs)
-      fill_individual
-
-      # Test auto-upload failure
-      logout(:user) # Make the subsequent auto-upload request fail
-      attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
-      expect(page).to have_text('Une erreur s’est produite pendant l’envoi du fichier')
-      expect(page).to have_button('Ré-essayer', visible: true)
-      expect(page).to have_button('Enregistrer le brouillon', disabled: false)
-      expect(page).to have_button('Déposer le dossier', disabled: false)
-
-      # Test that retrying after a failure works
-      login_as(user, scope: :user) # Make the auto-upload request work again
-      click_on('Ré-essayer', visible: true)
-      expect(page).to have_text('analyse antivirus en cours')
-      expect(page).to have_text('file.pdf')
-      expect(page).to have_button('Enregistrer le brouillon', disabled: false)
-      expect(page).to have_button('Déposer le dossier', disabled: false)
-
-      # Reload the current page
-      visit current_path
-
-      # Expect the file to have been saved on the dossier
-      expect(page).to have_text('file.pdf')
-    end
+    # Expect the file to have been saved on the dossier
+    expect(page).to have_text('file.pdf')
   end
 
   context 'when the draft autosave is enabled' do
