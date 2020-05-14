@@ -35,6 +35,12 @@ class ApiEntrepriseService
       rescue ApiEntreprise::API::RequestFailed
       end
 
+      begin
+        effectifs_annuels_params = ApiEntreprise::EffectifsAnnuelsAdapter.new(entreprise_params[:entreprise_siren], procedure_id).to_params
+        etablissement_params.merge!(effectifs_annuels_params)
+      rescue ApiEntreprise::API::RequestFailed
+      end
+
       etablissement_params.merge(entreprise_params)
     end
   end

@@ -11,6 +11,8 @@ describe ApiEntrepriseService do
         .to_return(body: associations_body, status: associations_status)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/#{annee}\/#{mois}\/entreprise\/#{siren}?.*token=/)
         .to_return(body: effectifs_mensuels_body, status: effectifs_mensuels_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
+        .to_return(body: effectifs_annuels_body, status: effectifs_annuels_status)
     end
 
     before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
@@ -32,6 +34,10 @@ describe ApiEntrepriseService do
     let(:mois) { "02" }
     let(:effectif_mensuel) { 100.5 }
 
+    let(:effectifs_annuels_status) { 200 }
+    let(:effectifs_annuels_body) { File.read('spec/fixtures/files/api_entreprise/effectifs_annuels.json') }
+    let(:effectif_annuel) { 100.5 }
+
     let(:exercices_status) { 200 }
     let(:exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
 
@@ -47,6 +53,7 @@ describe ApiEntrepriseService do
         expect(result[:association_rna]).to eq(rna)
         expect(result[:exercices_attributes]).to_not be_empty
         expect(result[:entreprise_effectif_mensuel]).to eq(effectif_mensuel)
+        expect(result[:entreprise_effectif_annuel]).to eq(effectif_annuel)
       end
     end
 

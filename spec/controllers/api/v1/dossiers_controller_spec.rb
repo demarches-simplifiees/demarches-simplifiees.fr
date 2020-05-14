@@ -200,6 +200,8 @@ describe API::V1::DossiersController do
               :effectif_mois,
               :effectif_annee,
               :effectif_mensuel,
+              :effectif_annuel,
+              :effectif_annuel_annee,
               :date_creation,
               :nom,
               :prenom
