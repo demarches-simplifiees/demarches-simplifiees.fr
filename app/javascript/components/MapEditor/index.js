@@ -6,7 +6,7 @@ import DrawControl from 'react-mapbox-gl-draw';
 import SwitchMapStyle from './SwitchMapStyle';
 import SearchInput from './SearchInput';
 import { getJSON, ajax } from '@utils';
-import { gpx } from '@tmcw/togeojson/dist/togeojson.es.js';
+import { gpx, kml } from '@tmcw/togeojson/dist/togeojson.es.js';
 import ortho from './styles/ortho.json';
 import vector from './styles/vector.json';
 import { polygonCadastresFill, polygonCadastresLine } from './utils';
@@ -32,6 +32,7 @@ function MapEditor({ featureCollection, url, preview }) {
   const [zoom, setZoom] = useState([5]);
   const [currentMap, setCurrentMap] = useState({});
   const [bbox, setBbox] = useState(featureCollection.bbox);
+  const [importInputs, setImportInputs] = useState([]);
   const mapStyle = style === 'ortho' ? ortho : vector;
   const cadastresFeatureCollection = filterFeatureCollection(
     featureCollection,
@@ -49,6 +50,13 @@ function MapEditor({ featureCollection, url, preview }) {
     const draw = drawControl.current.draw;
     draw.setFeatureProperty(lid, 'id', feature.properties.id);
   }
+
+  const generateId = () => Math.random().toString(20).substr(2, 6);
+
+  const updateImportInputs = (inputs, inputId) => {
+    const updatedInputs = inputs.filter((input) => input.id !== inputId);
+    setImportInputs(updatedInputs);
+  };
 
   async function onDrawCreate({ features }) {
     for (const feature of features) {
@@ -95,27 +103,96 @@ function MapEditor({ featureCollection, url, preview }) {
     }
   };
 
-  const onGpxImport = (e) => {
+  const onFileImport = (e, inputId) => {
+    const isGpxFile = e.target.files[0].name.includes('.gpx');
     let reader = new FileReader();
     reader.readAsText(e.target.files[0], 'UTF-8');
     reader.onload = async (event) => {
-      const featureCollection = gpx(
-        new DOMParser().parseFromString(event.target.result, 'text/xml')
-      );
+      let featureCollection;
+      isGpxFile
+        ? (featureCollection = gpx(
+            new DOMParser().parseFromString(event.target.result, 'text/xml')
+          ))
+        : (featureCollection = kml(
+            new DOMParser().parseFromString(event.target.result, 'text/xml')
+          ));
+
       const resultFeatureCollection = await getJSON(
         `${url}/import`,
         featureCollection,
         'post'
       );
+
+      let inputs = [...importInputs];
+      const setInputs = inputs.map((input) => {
+        if (input.id === inputId) {
+          input.disabled = true;
+          input.hasValue = true;
+          resultFeatureCollection.features.forEach((feature) => {
+            if (
+              JSON.stringify(feature.geometry) ===
+              JSON.stringify(featureCollection.features[0].geometry)
+            ) {
+              input.featureId = feature.properties.id;
+            }
+          });
+        }
+        return input;
+      });
+
       drawControl.current.draw.set(
         filterFeatureCollection(
           resultFeatureCollection,
           'selection_utilisateur'
         )
       );
+
       updateFeaturesList(resultFeatureCollection.features);
+      setImportInputs(setInputs);
       setBbox(resultFeatureCollection.bbox);
     };
+  };
+
+  const addInputFile = (e) => {
+    e.preventDefault();
+    let inputs = [...importInputs];
+    inputs.push({
+      id: generateId(),
+      disabled: false,
+      featureId: null,
+      hasValue: false
+    });
+    setImportInputs(inputs);
+  };
+
+  const removeInputFile = async (e, inputId) => {
+    e.preventDefault();
+    const draw = drawControl.current.draw;
+    const featureCollection = draw.getAll();
+    let inputs = [...importInputs];
+    let drawFeatureIdToRemove;
+    const inputToRemove = inputs.find((input) => input.id === inputId);
+
+    for (const feature of featureCollection.features) {
+      if (inputToRemove.featureId === feature.properties.id) {
+        drawFeatureIdToRemove = feature.id;
+      }
+    }
+
+    if (inputToRemove.featureId) {
+      try {
+        await getJSON(`${url}/${inputToRemove.featureId}`, null, 'delete');
+        draw.delete(drawFeatureIdToRemove).getAll();
+      } catch (e) {
+        throw new Error(
+          `La feature ${inputToRemove.featureId} a déjà été supprimée manuellement`,
+          e
+        );
+      } finally {
+        updateImportInputs(inputs, inputId);
+      }
+    }
+    updateImportInputs(inputs, inputId);
   };
 
   useEffect(() => {
@@ -136,13 +213,33 @@ function MapEditor({ featureCollection, url, preview }) {
   return (
     <>
       <div className="file-import" style={{ marginBottom: '20px' }}>
+        <button className="button send primary" onClick={addInputFile}>
+          Ajouter un fichier GPX ou KML
+        </button>
         <div>
-          <p style={{ fontWeight: 'bolder', marginBottom: '10px' }}>
-            Importer un fichier GPX
-          </p>
-        </div>
-        <div>
-          <input type="file" accept=".gpx" onChange={onGpxImport} />
+          {importInputs.map((input) => (
+            <div key={input.id}>
+              <input
+                title="Choisir un fichier gpx ou kml"
+                style={{ marginTop: '15px' }}
+                id={input.id}
+                type="file"
+                accept=".gpx, .kml"
+                disabled={input.disabled}
+                onChange={(e) => onFileImport(e, input.id)}
+              />
+              {input.hasValue && (
+                <span
+                  title="Supprimer le fichier"
+                  className="icon refuse"
+                  style={{
+                    cursor: 'pointer'
+                  }}
+                  onClick={(e) => removeInputFile(e, input.id)}
+                ></span>
+              )}
+            </div>
+          ))}
         </div>
       </div>
       <div
