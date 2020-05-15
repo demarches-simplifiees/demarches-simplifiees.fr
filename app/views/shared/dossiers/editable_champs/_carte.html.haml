@@ -1,5 +1,6 @@
 - if feature_enabled?(:new_map_editor)
-  = react_component("MapEditor", { featureCollection: champ.to_feature_collection, url: champs_carte_features_path(champ) }, class: "carte-#{champ.id}")
+  - preview = !champ.persisted?
+  = react_component("MapEditor", { featureCollection: champ.to_feature_collection, url: champs_carte_features_path(preview ? 'preview' : champ), preview: preview }, class: "carte-#{champ.id}")
 - else
   .toolbar
     %button.button.primary.new-area Ajouter une zone
