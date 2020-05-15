@@ -44,7 +44,7 @@ class Champ < ApplicationRecord
   def blank?
     case type_de_champ.type_champ
     when TypeDeChamp.type_champs.fetch(:carte)
-      value.blank? || value == '[]'
+      geo_areas.blank? || value == '[]'
     else
       value.blank?
     end
