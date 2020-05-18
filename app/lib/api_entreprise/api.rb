@@ -73,7 +73,7 @@ class ApiEntreprise::API
     elsif response.code&.between?(401, 499)
       raise ResourceNotFound
     else
-      raise RequestFailed
+      raise RequestFailed, "HTTP Error Code: #{response.code}"
     end
   end
 
