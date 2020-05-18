@@ -73,7 +73,6 @@ gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
 gem 'sprockets', '< 4'
-gem 'turbolinks' # Turbolinks makes following links in your web application faster
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'

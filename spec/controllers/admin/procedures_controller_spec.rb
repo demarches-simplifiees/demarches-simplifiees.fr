@@ -187,7 +187,11 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
-          expect(response.status).to eq 302
+        end
+
+        it 'redirects to the procedures page' do
+          expect(response.status).to eq 200
+          expect(response.body).to include(admin_procedures_path)
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
       end
@@ -200,12 +204,16 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
-          expect(response.status).to eq 302
-          expect(flash[:notice]).to have_content 'Démarche publiée'
         end
 
         it 'depubliee previous procedure' do
           expect(procedure2.depubliee?).to be_truthy
+        end
+
+        it 'redirects to the procedures page' do
+          expect(response.status).to eq 200
+          expect(response.body).to include(admin_procedures_path)
+          expect(flash[:notice]).to have_content 'Démarche publiée'
         end
       end
 
@@ -292,8 +300,12 @@ describe Admin::ProceduresController, type: :controller do
         end
 
         it { expect(procedure.publiee?).to be_truthy }
-        it { expect(response.status).to eq 302 }
-        it { expect(flash[:notice]).to have_content 'Démarche publiée' }
+
+        it 'redirects to the procedures page' do
+          expect(response.status).to eq 200
+          expect(response.body).to include(admin_procedures_path)
+          expect(flash[:notice]).to have_content 'Démarche publiée'
+        end
       end
     end
 

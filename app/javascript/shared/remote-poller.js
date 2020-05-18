@@ -1,6 +1,6 @@
 import { ajax, delegate } from '@utils';
 
-addEventListener('turbolinks:load', () => {
+addEventListener('DOMContentLoaded', () => {
   attachementPoller.deactivate();
   exportPoller.deactivate();
 
@@ -24,7 +24,7 @@ addEventListener('export:update', ({ detail: { url } }) => {
   exportPoller.add(url);
 });
 
-delegate('click', '[data-attachment-refresh]', event => {
+delegate('click', '[data-attachment-refresh]', (event) => {
   event.preventDefault();
   attachementPoller.check();
 });

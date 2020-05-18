@@ -5,15 +5,15 @@ import { isNumeric } from '@utils';
 const { api_geo_url, api_adresse_url } = gon.autocomplete || {};
 
 const language = {
-  errorLoading: function() {
+  errorLoading: function () {
     return 'Les résultats ne peuvent pas être chargés.';
   },
-  inputTooLong: function(args) {
+  inputTooLong: function (args) {
     var overChars = args.input.length - args.maximum;
 
     return 'Supprimez ' + overChars + ' caractère' + (overChars > 1 ? 's' : '');
   },
-  inputTooShort: function(args) {
+  inputTooShort: function (args) {
     var remainingChars = args.minimum - args.input.length;
 
     return (
@@ -23,10 +23,10 @@ const language = {
       (remainingChars > 1 ? 's' : '')
     );
   },
-  loadingMore: function() {
+  loadingMore: function () {
     return 'Chargement de résultats supplémentaires…';
   },
-  maximumSelected: function(args) {
+  maximumSelected: function (args) {
     return (
       'Vous pouvez seulement sélectionner ' +
       args.maximum +
@@ -34,13 +34,13 @@ const language = {
       (args.maximum > 1 ? 's' : '')
     );
   },
-  noResults: function() {
+  noResults: function () {
     return 'Aucun résultat trouvé';
   },
-  searching: function() {
+  searching: function () {
     return 'Recherche en cours…';
   },
-  removeAllItems: function() {
+  removeAllItems: function () {
     return 'Supprimer tous les éléments';
   }
 };

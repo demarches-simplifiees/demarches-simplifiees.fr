@@ -1,3 +1,3 @@
 import Loadable from '../components/Loadable';
 
-export default Loadable(() => import('../components/MapEditor/MapEditor'));
+export default Loadable(() => import('../components/MapEditor'));

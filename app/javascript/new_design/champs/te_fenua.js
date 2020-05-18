@@ -445,7 +445,7 @@ function displayMap(mapElement) {
   return map;
 }
 
-addEventListener('turbolinks:load', initialize);
+addEventListener('DOMContentLoaded', initialize);
 
 /*
 addEventListener('carte:update', ({ detail: { selector, data } }) => {
