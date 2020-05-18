@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       post 'restore', on: :member
       post 'add_administrateur', on: :member
       post 'change_piece_justificative_template', on: :member
+      get 'export_mail_brouillons', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
