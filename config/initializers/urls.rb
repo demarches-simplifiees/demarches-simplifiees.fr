@@ -23,7 +23,7 @@ API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 ARCHIVAGE_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")
 FAQ_URL = "https://faq.demarches-simplifiees.fr"
-FAQ_ADMIN_URL = "https://faq.demarches-simplifiees.fr/collection/1-administrateur"
+FAQ_ADMIN_URL = [FAQ_URL, "collection", "1-administrateur-creation-dun-formulaire"].join("/")
 COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, "article", "59-comment-trouver-ma-demarche"].join("/")
 STATUS_PAGE_URL = "https://status.demarches-simplifiees.fr"
 MATOMO_IFRAME_URL = "https://stats.data.gouv.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli"
