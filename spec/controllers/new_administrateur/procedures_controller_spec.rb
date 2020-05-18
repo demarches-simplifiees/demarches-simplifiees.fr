@@ -302,4 +302,21 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe 'GET #jeton' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+
+    subject { get :jeton, params: { id: procedure.id } }
+
+    it { is_expected.to have_http_status(:success) }
+  end
+
+  describe 'PATCH #jeton' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+
+    it "update api_entreprise_token" do
+      patch :update_jeton, params: { id: procedure.id, procedure: { api_entreprise_token: 'ceci-est-un-jeton' } }
+      expect(procedure.reload.api_entreprise_token).to eq('ceci-est-un-jeton')
+    end
+  end
 end

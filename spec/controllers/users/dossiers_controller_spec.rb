@@ -255,11 +255,25 @@ describe Users::DossiersController, type: :controller do
     let(:annee) { "2020" }
     let(:mois) { "02" }
 
+    let(:api_entreprise_effectifs_annuels_status) { 200 }
+    let(:api_entreprise_effectifs_annuels_body) { File.read('spec/fixtures/files/api_entreprise/effectifs_annuels.json') }
+
     let(:api_exercices_status) { 200 }
     let(:api_exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
 
     let(:api_association_status) { 200 }
     let(:api_association_body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
+
+    let(:api_entreprise_attestation_sociale_status) { 200 }
+    let(:api_entreprise_attestation_sociale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
+
+    let(:api_entreprise_attestation_fiscale_status) { 200 }
+    let(:api_entreprise_attestation_fiscale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_fiscale.json') }
+
+    let(:api_entreprise_bilans_bdf_status) { 200 }
+    let(:api_entreprise_bilans_bdf_body) { File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json') }
+
+    let(:token_expired) { false }
 
     def stub_api_entreprise_requests
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
@@ -272,11 +286,26 @@ describe Users::DossiersController, type: :controller do
         .to_return(status: api_association_status, body: api_association_body)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/#{annee}\/#{mois}\/entreprise\/#{siren}?.*token=/)
         .to_return(body: api_entreprise_effectifs_mensuels_body, status: api_entreprise_effectifs_mensuels_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_effectifs_annuels_body, status: api_entreprise_effectifs_annuels_status)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_attestation_sociale_body, status: api_entreprise_attestation_sociale_status)
+      stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569156881-f749d75e2bfd443316e2e02d59015f-attestation_vigilance_acoss.pdf")
+        .to_return(body: "body attestation", status: 200)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_attestation_fiscale_body, status: api_entreprise_attestation_fiscale_status)
+      stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569156756-f6b7779f99fa95cd60dc03c04fcb-attestation_fiscale_dgfip.pdf")
+        .to_return(body: "body attestation", status: 200)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}?.*token=/)
+        .to_return(body: api_entreprise_bilans_bdf_body, status: api_entreprise_bilans_bdf_status)
     end
 
     before do
       sign_in(user)
       stub_api_entreprise_requests
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
+        .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(token_expired)
     end
     before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
     after { Timecop.return }
@@ -333,6 +362,14 @@ describe Users::DossiersController, type: :controller do
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
       end
 
+      context 'when default token has expired' do
+        let(:api_etablissement_status) { 200 }
+        let(:api_body_status) { '' }
+        let(:token_expired) { true }
+
+        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
+      end
+
       context 'when the API returns no Entreprise' do
         let(:api_entreprise_status) { 404 }
         let(:api_entreprise_body) { '' }
@@ -371,6 +408,10 @@ describe Users::DossiersController, type: :controller do
           expect(dossier.etablissement.exercices).to be_present
           expect(dossier.etablissement.association?).to be(true)
           expect(dossier.etablissement.entreprise_effectif_mensuel).to be_present
+          expect(dossier.etablissement.entreprise_effectif_annuel).to be_present
+          expect(dossier.etablissement.entreprise_attestation_sociale).to be_attached
+          expect(dossier.etablissement.entreprise_attestation_fiscale).to be_attached
+          expect(dossier.etablissement.entreprise_bilans_bdf).to be_present
         end
       end
     end
@@ -488,6 +529,28 @@ describe Users::DossiersController, type: :controller do
 
           expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_with_instant_email_dossier.email)
           expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_without_instant_email_dossier.email)
+        end
+      end
+
+      context 'with procedure routee' do
+        let(:procedure) { create(:procedure, :routee, :with_type_de_champ) }
+        let(:dossier_group) { create(:groupe_instructeur, procedure: procedure) }
+        let(:another_group) { create(:groupe_instructeur, procedure: procedure) }
+        let(:instructeur_of_dossier) { create(:instructeur) }
+        let(:instructeur_in_another_group) { create(:instructeur) }
+        let!(:dossier) { create(:dossier, groupe_instructeur: dossier_group, user: user) }
+
+        before do
+          allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
+          create(:assign_to, instructeur: instructeur_of_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier_group)
+          create(:assign_to, instructeur: instructeur_in_another_group, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: another_group)
+        end
+
+        it "sends notification mail to instructeurs in the correct group instructeur" do
+          subject
+
+          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_of_dossier.email)
+          expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_in_another_group.email)
         end
       end
 

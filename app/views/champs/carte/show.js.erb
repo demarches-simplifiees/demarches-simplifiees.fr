@@ -5,4 +5,3 @@
   locals: { champ: @champ, error: @error }) %>
 
 <%= fire_event('carte:update', { selector: @selector, data: @champ.to_render_data }.to_json) %>
-<%= fire_event('map:update', { featureCollection: @champ.to_feature_collection }.to_json) %>

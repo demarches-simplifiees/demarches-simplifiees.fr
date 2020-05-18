@@ -1,5 +1,5 @@
 class Champ < ApplicationRecord
-  belongs_to :dossier, inverse_of: :champs, touch: true
+  belongs_to :dossier, -> { with_discarded }, inverse_of: :champs, touch: true
   belongs_to :type_de_champ, inverse_of: :champ
   belongs_to :parent, class_name: 'Champ'
   has_many :commentaires
@@ -84,6 +84,10 @@ class Champ < ApplicationRecord
 
   def html_label?
     true
+  end
+
+  def stable_id
+    type_de_champ.stable_id
   end
 
   private

@@ -46,7 +46,7 @@ http_interactions:
   recorded_at: Mon, 11 May 2020 02:49:14 GMT
 - request:
     method: post
-    uri: https://tatouapipreprod.cps.pf/covid/assures/coherenceDnDdn/multiples
+    uri: https://tatouapi.cps.pf/covid/assures/coherenceDnDdn/multiples
     body:
       encoding: UTF-8
       string: '{"datas":{"2106223":"28/11/1983"}}'

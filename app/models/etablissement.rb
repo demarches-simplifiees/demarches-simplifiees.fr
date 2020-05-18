@@ -4,6 +4,9 @@ class Etablissement < ApplicationRecord
   has_one :champ, class_name: 'Champs::SiretChamp'
   has_many :exercices, dependent: :destroy
 
+  has_one_attached :entreprise_attestation_sociale
+  has_one_attached :entreprise_attestation_fiscale
+
   accepts_nested_attributes_for :exercices
 
   validates :siret, presence: true
@@ -93,6 +96,7 @@ class Etablissement < ApplicationRecord
 
   def entreprise
     Entreprise.new(
+      etablissement: self,
       siren: entreprise_siren,
       capital_social: entreprise_capital_social,
       numero_tva_intracommunautaire: entreprise_numero_tva_intracommunautaire,
@@ -105,11 +109,42 @@ class Etablissement < ApplicationRecord
       effectif_mensuel: entreprise_effectif_mensuel,
       effectif_mois: entreprise_effectif_mois,
       effectif_annee: entreprise_effectif_annee,
+      effectif_annuel: entreprise_effectif_annuel,
+      effectif_annuel_annee: entreprise_effectif_annuel_annee,
       date_creation: entreprise_date_creation,
       nom: entreprise_nom,
       prenom: entreprise_prenom,
       inline_adresse: inline_adresse
     )
+  end
+
+  def upload_attestation(url, attestation)
+    filename = File.basename(URI.parse(url).path)
+    response = Typhoeus.get(url)
+
+    if response.success?
+      attestation.attach(
+        io: StringIO.new(response.body),
+        filename: filename,
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+    end
+  end
+
+  def upload_attestation_sociale(url)
+    upload_attestation(url, entreprise_attestation_sociale)
+  end
+
+  def upload_attestation_fiscale(url)
+    upload_attestation(url, entreprise_attestation_fiscale)
+  end
+
+  def entreprise_bilans_bdf_to_csv
+    headers = entreprise_bilans_bdf.flat_map(&:keys).uniq
+    data = entreprise_bilans_bdf.map do |bilan|
+      headers.map { |h| bilan[h] }
+    end
+    SpreadsheetArchitect.to_csv(headers: headers, data: data)
   end
 
   private

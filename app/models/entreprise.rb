@@ -3,6 +3,7 @@ class Entreprise < Hashie::Dash
     self[attribute]
   end
 
+  property :etablissement
   property :siren
   property :capital_social
   property :numero_tva_intracommunautaire
@@ -15,6 +16,8 @@ class Entreprise < Hashie::Dash
   property :effectif_mois
   property :effectif_annee
   property :effectif_mensuel
+  property :effectif_annuel
+  property :effectif_annuel_annee
   property :date_creation
   property :nom
   property :prenom
