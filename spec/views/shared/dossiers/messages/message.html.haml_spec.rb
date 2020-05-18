@@ -20,4 +20,31 @@ describe 'shared/dossiers/messages/message.html.haml', type: :view do
 
     it { is_expected.to have_css(".highlighted") }
   end
+
+  context 'with an instructeur message' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure) }
+    let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message') }
+    let(:dossier) { create(:dossier, :en_construction, commentaires: [commentaire], procedure: procedure) }
+
+    context 'on a procedure with anonymous instructeurs' do
+      before { Flipper.enable_actor(:hide_instructeur_email, procedure) }
+
+      context 'redacts the instructeur email' do
+        it { is_expected.to have_text(commentaire.body) }
+        it { is_expected.to have_text("Instructeur n° #{instructeur.id}") }
+        it { is_expected.not_to have_text(instructeur.email) }
+      end
+    end
+
+    context 'on a procedure where instructeurs names are not redacted' do
+      before { Flipper.disable_actor(:hide_instructeur_email, procedure) }
+
+      context 'redacts the instructeur email but keeps the name' do
+        it { is_expected.to have_text(commentaire.body) }
+        it { is_expected.to have_text(instructeur.email.split('@').first) }
+        it { is_expected.not_to have_text(instructeur.email) }
+      end
+    end
+  end
 end

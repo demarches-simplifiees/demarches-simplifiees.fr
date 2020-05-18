@@ -117,14 +117,14 @@ class ExpiredDossiersDeletionService
       .group_by(&:user)
       .each do |(user, dossiers)|
         DossierMailer.notify_automatic_deletion_to_user(
-          DeletedDossier.where(dossier_id: dossiers.map(&:id)),
+          DeletedDossier.where(dossier_id: dossiers.map(&:id)).to_a,
           user.email
         ).deliver_later
       end
 
     self.group_by_fonctionnaire_email(dossiers_to_remove).each do |(email, dossiers)|
       DossierMailer.notify_automatic_deletion_to_administration(
-        DeletedDossier.where(dossier_id: dossiers.map(&:id)),
+        DeletedDossier.where(dossier_id: dossiers.map(&:id)).to_a,
         email
       ).deliver_later
 
