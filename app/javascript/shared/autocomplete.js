@@ -34,7 +34,7 @@ function source(url) {
   };
 }
 
-addEventListener('ds:page:update', function() {
+addEventListener('ds:page:update', () => {
   for (let { type, url } of sources) {
     for (let element of document.querySelectorAll(selector(type))) {
       element.removeAttribute('data-autocomplete');

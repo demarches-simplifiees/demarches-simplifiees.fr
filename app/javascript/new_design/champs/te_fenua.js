@@ -41,7 +41,7 @@ async function initialize() {
     }
   }
 
-  delegate('autocomplete:select', '[data-te-fenua-place]', event => {
+  delegate('autocomplete:select', '[data-te-fenua-place]', (event) => {
     let map = getMapFromAddress(event.target);
     if (map) {
       if (event.detail.extent) fitExtent(map, event.detail.extent);
@@ -189,7 +189,7 @@ function initMap(mapElement, map) {
   function initFeatures(zoneSource, layer) {
     if (zoneSource) {
       const zones = new GeoJSON().readFeatures(zoneSource);
-      zones.forEach(f => layer.getSource().addFeature(f));
+      zones.forEach((f) => layer.getSource().addFeature(f));
     }
   }
 
@@ -254,7 +254,7 @@ function addInteractions(mapElement, map) {
     map.addInteraction(select);
     createControl(map, clickOnAddZone, 'add', 'Ajouter une zone');
     createControl(map, clickOnEffaceZone, 'delete', 'Effacer une zone');
-    draw.on('drawend', e => {
+    draw.on('drawend', (e) => {
       bubbles.add_zone.style.display = 'none';
       let source = map.zoneManuellesLayer.getSource();
       let index = source.getFeatures().length + 1;
@@ -264,7 +264,7 @@ function addInteractions(mapElement, map) {
       const coord = getCenter(e.feature.getGeometry().getExtent());
       let resolution = mapView.getResolution();
       let projection = mapView.getProjection();
-      getCadastreFeatureInfo(coord, resolution, projection).then(pjson => {
+      getCadastreFeatureInfo(coord, resolution, projection).then((pjson) => {
         if (!pjson || pjson.type !== 'FeatureCollection') {
           throw new Error('Invalid response returned');
         }
@@ -292,7 +292,7 @@ function addInteractions(mapElement, map) {
   addBatimentParcelleInteraction();
 
   function hideHelps() {
-    Object.keys(bubbles).forEach(b => (bubbles[b].style.display = 'none'));
+    Object.keys(bubbles).forEach((b) => (bubbles[b].style.display = 'none'));
   }
 
   function addBatimentParcelleInteraction() {
@@ -330,7 +330,7 @@ function addInteractions(mapElement, map) {
   function deleteSelectedZones() {
     select
       .getFeatures()
-      .forEach(f => zoneManuellesLayer.getSource().removeFeature(f));
+      .forEach((f) => zoneManuellesLayer.getSource().removeFeature(f));
     select.getFeatures().clear();
     updateChampWith('zones_manuelles', zoneManuellesLayer);
   }
@@ -344,12 +344,12 @@ function addInteractions(mapElement, map) {
   }
 
   function addRemoveFeatures(features, layer, attribute, areEquals) {
-    features.forEach(f => {
+    features.forEach((f) => {
       //let selected = parcelleLayer.getSource().getFeatureById(f.getId());
       let source = layer.getSource();
       let selected = source
         .getFeatures()
-        .find(ft => areEquals(ft.getProperties(), f.getProperties()));
+        .find((ft) => areEquals(ft.getProperties(), f.getProperties()));
       if (selected) {
         source.removeFeature(selected);
       } else {
@@ -362,7 +362,7 @@ function addInteractions(mapElement, map) {
   // look for parcelles under the cursor, and select/unselect according already selected parcelles
   function lookForParcelles(coord, resolution, projection) {
     // const start = new Date();
-    getCadastreFeatureInfo(coord, resolution, projection).then(pjson => {
+    getCadastreFeatureInfo(coord, resolution, projection).then((pjson) => {
       // const time = new Date(new Date() - start).getMilliseconds();
       // console.info(`get parcelles time = ${time}`);
       if (!pjson || pjson.type !== 'FeatureCollection') {
@@ -378,7 +378,7 @@ function addInteractions(mapElement, map) {
   // look for batiments under the cursor and if not found look for parcelle
   function lookForBatiments(coord, resolution, projection) {
     // const start = new Date();
-    getBatimentFeatureInfo(coord, resolution, projection).then(json => {
+    getBatimentFeatureInfo(coord, resolution, projection).then((json) => {
       // const time = new Date(new Date() - start).getMilliseconds();
       // console.info(`get batiments time = ${time}`);
       if (!json || json.type !== 'FeatureCollection') {
