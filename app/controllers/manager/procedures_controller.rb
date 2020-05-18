@@ -39,6 +39,13 @@ module Manager
       redirect_to manager_procedure_path(procedure)
     end
 
+    def export_mail_brouillons
+      dossiers = procedure.dossiers.state_brouillon
+      emails = dossiers.map { |d| d.user.email }.sort
+      date = Time.zone.now.strftime('%d-%m-%Y')
+      send_data(emails.join("\n"), :filename => "brouillons-#{procedure.id}-au-#{date}.csv")
+    end
+
     def add_administrateur
       administrateur = Administrateur.by_email(params[:email])
       if administrateur
