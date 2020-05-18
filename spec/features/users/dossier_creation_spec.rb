@@ -95,7 +95,7 @@ feature 'Creating a new dossier:' do
         click_on 'Valider'
 
         expect(page).to have_current_path(etablissement_dossier_path(dossier))
-        expect(page).to have_content('OCTO-TECHNOLOGY')
+        expect(page).to have_content('OCTO TECHNOLOGY')
         click_on 'Continuer avec ces informations'
 
         expect(page).to have_current_path(brouillon_dossier_path(dossier))
