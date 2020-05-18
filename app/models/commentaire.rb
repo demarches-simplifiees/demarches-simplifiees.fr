@@ -34,7 +34,11 @@ class Commentaire < ApplicationRecord
 
   def redacted_email
     if instructeur.present?
-      instructeur.email.split('@').first
+      if Flipper.enabled?(:hide_instructeur_email, dossier.procedure)
+        "Instructeur n° #{instructeur.id}"
+      else
+        instructeur.email.split('@').first
+      end
     else
       email
     end
