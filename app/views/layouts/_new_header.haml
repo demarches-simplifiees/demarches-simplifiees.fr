@@ -14,7 +14,7 @@
 %header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: 'banner' }
   .header-inner-content
 
-    .flex.align-center
+    .flex.align-center.justify-center
       - if params[:controller] == 'users/commencer'
         = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
       - else
