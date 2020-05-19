@@ -65,7 +65,7 @@ ActiveStorage.start();
 window.DS = window.DS || DS;
 
 // Now that Turbolinks is globally exposed,configure ReactRailsUJS
-// eslint-disable-next-line no-undef
+// eslint-disable-next-line no-undef, react-hooks/rules-of-hooks
 ReactRailsUJS.useContext(require.context('loaders', true));
 // Remove previous event handlers and add new ones:
 ReactRailsUJS.detectEvents();
