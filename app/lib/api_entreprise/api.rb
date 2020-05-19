@@ -17,6 +17,9 @@ class ApiEntreprise::API
   class RequestFailed < StandardError
   end
 
+  class BadFormatRequest < StandardError
+  end
+
   def self.entreprise(siren, procedure_id)
     call(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
   end
@@ -72,6 +75,8 @@ class ApiEntreprise::API
       JSON.parse(response.body, symbolize_names: true)
     elsif response.code&.between?(401, 499)
       raise ResourceNotFound
+    elsif response.code == 400
+      raise BadFormatRequest
     else
       raise RequestFailed, "HTTP Error Code: #{response.code}"
     end
