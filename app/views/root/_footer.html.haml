@@ -18,6 +18,7 @@
           %li
             = link_to "https://beta.gouv.fr", title: "le site de Beta.gouv.fr" do
               %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': 'beta.gouv.fr' }
+            %span.footer-logo.footer-logo-france{ role: 'img', 'aria-label': 'République Française' }
 
       %li.footer-column
         %ul.footer-links
@@ -26,7 +27,7 @@
           %li.footer-link
             = link_to "Nouveautés", "https://github.com/maatinito/mes-demarches/releases", :class => "footer-link"
           %li.footer-link
-            = link_to "Statistiques", stats_path, :class => "footer-link", data: { turbolinks: false } # Turbolinks disabled for Chartkick. See Issue #350
+            = link_to "Statistiques", stats_path, :class => "footer-link"
           %li.footer-link
             = link_to "CGU", CGU_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link

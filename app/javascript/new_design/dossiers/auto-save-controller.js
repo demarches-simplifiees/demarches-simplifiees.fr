@@ -41,7 +41,7 @@ export default class AutoSaveController {
         headers: { Accept: 'application/json' }
       };
 
-      return window.fetch(form.action, fetchOptions).then(response => {
+      return window.fetch(form.action, fetchOptions).then((response) => {
         if (response.ok) {
           resolve(response);
         } else {
@@ -64,7 +64,7 @@ export default class AutoSaveController {
     const fileInputs = form.querySelectorAll(
       'input[type="file"]:not([disabled]), .editable-champ-piece_justificative input:not([disabled])'
     );
-    fileInputs.forEach(fileInput => (fileInput.disabled = true));
+    fileInputs.forEach((fileInput) => (fileInput.disabled = true));
 
     // Generate the form data
     let formData = null;
@@ -75,7 +75,7 @@ export default class AutoSaveController {
       return [null, error];
     } finally {
       // Re-enable disabled file inputs
-      fileInputs.forEach(fileInput => (fileInput.disabled = false));
+      fileInputs.forEach((fileInput) => (fileInput.disabled = false));
     }
   }
 

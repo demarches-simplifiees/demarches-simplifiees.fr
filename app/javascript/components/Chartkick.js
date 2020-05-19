@@ -2,7 +2,7 @@ import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
 import { toggle, delegate } from '@utils';
 
-export default function() {
+export default function () {
   return null;
 }
 

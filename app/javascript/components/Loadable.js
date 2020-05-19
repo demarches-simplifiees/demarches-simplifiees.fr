@@ -3,6 +3,6 @@ import Loadable from 'react-loadable';
 
 const loading = () => <div className="spinner left" />;
 
-export default function(loader) {
+export default function (loader) {
   return Loadable({ loader, loading });
 }

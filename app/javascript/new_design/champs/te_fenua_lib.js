@@ -223,7 +223,7 @@ function getFeatureInfo(coordinate, resolution, projection, params) {
   const url = new TileWMS({
     url: 'https://www.tefenua.gov.pf/api/wms'
   }).getGetFeatureInfoUrl(coordinate, resolution, projection, params);
-  return fetch(url).then(function(result) {
+  return fetch(url).then((result) => {
     return result.json();
   });
 }

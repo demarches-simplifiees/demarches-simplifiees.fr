@@ -36,6 +36,10 @@ class Champs::PieceJustificativeChamp < Champ
     mandatory? && !piece_justificative_file.attached?
   end
 
+  def for_export
+    piece_justificative_file.filename.to_s if piece_justificative_file.attached?
+  end
+
   def for_api
     if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
       piece_justificative_file.service_url

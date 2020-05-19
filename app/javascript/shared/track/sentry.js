@@ -6,13 +6,13 @@ const { key, enabled, user, environment, browser } = gon.sentry || {};
 if (enabled && key) {
   Sentry.init({ dsn: key, environment });
 
-  Sentry.configureScope(scope => {
+  Sentry.configureScope((scope) => {
     scope.setUser(user);
     scope.setExtra('browser', browser.modern ? 'modern' : 'legacy');
   });
 
   // Register a way to explicitely capture messages from a different bundle.
-  addEventListener('sentry:capture-exception', event => {
+  addEventListener('sentry:capture-exception', (event) => {
     const error = event.detail;
     Sentry.captureException(error);
   });

@@ -72,7 +72,7 @@ class Admin::ProceduresController < AdminController
     @procedure.publish_or_reopen!(current_administrateur)
 
     flash.notice = "Démarche publiée"
-    redirect_to admin_procedures_path
+    render js: "window.location='#{admin_procedures_path}'"
   rescue ActiveRecord::RecordInvalid
     render 'publish_validate', formats: :js
   end

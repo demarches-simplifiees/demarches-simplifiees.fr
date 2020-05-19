@@ -76,29 +76,12 @@ class Champs::CarteChamp < Champ
       type: 'FeatureCollection',
       id: stable_id,
       bbox: bounding_box,
-      features: (legacy_selections_utilisateur + except_selections_utilisateur).map(&:to_feature)
+      features: geo_areas.map(&:to_feature)
     }
   end
 
   def geometry?
     geo_areas.present?
-  end
-
-  def selection_utilisateur_legacy_geometry
-    if selection_utilisateur_legacy?
-      selections_utilisateur.first.geometry
-    elsif selections_utilisateur.present?
-      {
-        type: 'MultiPolygon',
-        coordinates: selections_utilisateur.filter do |selection_utilisateur|
-          selection_utilisateur.geometry['type'] == 'Polygon'
-        end.map do |selection_utilisateur|
-          selection_utilisateur.geometry['coordinates']
-        end
-      }
-    else
-      nil
-    end
   end
 
   def selection_utilisateur_legacy_geo_area
@@ -131,35 +114,18 @@ class Champs::CarteChamp < Champ
 
   private
 
-  def selection_utilisateur_legacy?
-    if selections_utilisateur.size == 1
-      geometry = selections_utilisateur.first.geometry
-      return geometry && geometry['type'] == 'MultiPolygon'
-    end
-
-    false
-  end
-
-  def legacy_selections_utilisateur
-    if selection_utilisateur_legacy?
-      selections_utilisateur.first.geometry['coordinates'].map do |coordinates|
-        GeoArea.new(
-          geometry: {
-            type: 'Polygon',
-            coordinates: coordinates
-          },
-          properties: {},
-          source: GeoArea.sources.fetch(:selection_utilisateur)
-        )
-      end
+  def selection_utilisateur_legacy_geometry
+    if selections_utilisateur.present?
+      {
+        type: 'MultiPolygon',
+        coordinates: selections_utilisateur.filter do |selection_utilisateur|
+          selection_utilisateur.geometry['type'] == 'Polygon'
+        end.map do |selection_utilisateur|
+          selection_utilisateur.geometry['coordinates']
+        end
+      }
     else
-      selections_utilisateur
-    end
-  end
-
-  def except_selections_utilisateur
-    geo_areas.filter do |area|
-      area.source != GeoArea.sources.fetch(:selection_utilisateur)
+      nil
     end
   end
 end

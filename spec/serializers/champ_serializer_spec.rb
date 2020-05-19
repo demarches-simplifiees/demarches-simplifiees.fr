@@ -24,16 +24,9 @@ describe ChampSerializer do
     end
 
     context 'when type champ is carte' do
-      let(:champ) { create(:champ_carte, value: value, geo_areas: [geo_area].compact) }
-      let(:value) { nil }
-      let(:geo_area) { create(:geo_area, :cadastre, geometry: geo_json) }
-      let(:geo_json) do
-        {
-          "type" => 'MultiPolygon',
-          "coordinates" => coordinates
-        }
-      end
-      let(:coordinates) { [[[2.3859214782714844, 48.87442541960633], [2.3850631713867183, 48.87273183590832], [2.3809432983398438, 48.87081237174292], [2.3859214782714844, 48.87442541960633]]] }
+      let(:champ) { create(:champ_carte, geo_areas: [geo_area].compact) }
+      let(:geo_area) { create(:geo_area, :cadastre, :multi_polygon) }
+      let(:geo_json) { attributes_for(:geo_area, :multi_polygon)[:geometry].stringify_keys }
 
       let(:serialized_champ) {
         {
@@ -56,29 +49,7 @@ describe ChampSerializer do
       let(:serialized_value) { geo_json }
 
       context 'and geo_area is selection_utilisateur' do
-        let(:geo_area) { create(:geo_area, :selection_utilisateur, geometry: geo_json) }
-
-        context 'value is empty' do
-          let(:geo_area) { nil }
-
-          context 'when value is nil' do
-            let(:value) { nil }
-
-            it { expect(champ.selection_utilisateur_legacy_geo_area).to be_nil }
-          end
-
-          context 'when value is empty array' do
-            let(:value) { '[]' }
-
-            it { expect(champ.selection_utilisateur_legacy_geo_area).to be_nil }
-          end
-
-          context 'when value is blank' do
-            let(:value) { '' }
-
-            it { expect(champ.selection_utilisateur_legacy_geo_area).to be_nil }
-          end
-        end
+        let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
 
         context 'old_api' do
           let(:serialized_libelle) { "user geometry" }
@@ -87,14 +58,6 @@ describe ChampSerializer do
           let(:serializable_object) { champ.selection_utilisateur_legacy_geo_area }
 
           context 'when value is coordinates' do
-            let(:value) { coordinates.to_json }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is geojson' do
-            let(:value) { geo_json.to_json }
-
             it { expect(subject).to eq(serialized_champ) }
           end
         end
@@ -117,33 +80,6 @@ describe ChampSerializer do
 
           context 'when value is coordinates' do
             let(:value) { coordinates.to_json }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is geojson' do
-            let(:value) { geo_json.to_json }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is nil' do
-            let(:value) { nil }
-            let(:serialized_value) { nil }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is empty array' do
-            let(:value) { '[]' }
-            let(:serialized_value) { nil }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is blank' do
-            let(:value) { '' }
-            let(:serialized_value) { nil }
 
             it { expect(subject).to eq(serialized_champ) }
           end

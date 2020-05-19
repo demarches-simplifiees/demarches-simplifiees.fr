@@ -1,7 +1,8 @@
 import ProgressBar from './progress-bar';
 import {
   errorFromDirectUploadMessage,
-  FAILURE_CONNECTIVITY
+  ERROR_CODE_READ,
+  FAILURE_CLIENT
 } from './file-upload-error';
 import { fire } from '@utils';
 
@@ -12,7 +13,7 @@ const ERROR_EVENT = 'direct-upload:error';
 const END_EVENT = 'direct-upload:end';
 
 function addUploadEventListener(type, handler) {
-  addEventListener(type, event => {
+  addEventListener(type, (event) => {
     // Internet Explorer and Edge will sometime replay Javascript events
     // that were dispatched just before a page navigation (!), but without
     // the event payload.
@@ -43,7 +44,7 @@ addUploadEventListener(PROGRESS_EVENT, ({ detail: { id, progress } }) => {
   ProgressBar.progress(id, progress);
 });
 
-addUploadEventListener(ERROR_EVENT, event => {
+addUploadEventListener(ERROR_EVENT, (event) => {
   let id = event.detail.id;
   let errorMsg = event.detail.error;
 
@@ -58,8 +59,10 @@ addUploadEventListener(ERROR_EVENT, event => {
 
   ProgressBar.error(id, errorMsg);
 
+  // Report unexpected client errors to Sentry.
+  // (But ignore usual client errors, or errors we can monitor better on the server side.)
   let error = errorFromDirectUploadMessage(errorMsg);
-  if (error.failureReason != FAILURE_CONNECTIVITY) {
+  if (error.failureReason == FAILURE_CLIENT && error.code != ERROR_CODE_READ) {
     fire(document, 'sentry:capture-exception', error);
   }
 });
