@@ -378,7 +378,7 @@ describe Instructeurs::AvisController, type: :controller do
           let(:password) { '' }
 
           it { expect(created_instructeur).to be_nil }
-          it { is_expected.to redirect_to sign_up_instructeur_avis_path(avis_id, invited_email) }
+          it { is_expected.to redirect_to sign_up_instructeur_avis_path(procedure.id, avis_id, invited_email) }
           it { expect(flash.alert).to eq(['Le mot de passe doit être rempli']) }
         end
       end

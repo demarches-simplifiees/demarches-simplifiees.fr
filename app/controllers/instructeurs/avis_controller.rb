@@ -89,6 +89,8 @@ module Instructeurs
     end
 
     def create_instructeur
+      procedure_id = params[:procedure_id]
+      avis_id = params[:id]
       email = params[:email]
       password = params[:user][:password]
 
@@ -102,7 +104,7 @@ module Instructeurs
         redirect_to url_for(instructeur_all_avis_path)
       else
         flash[:alert] = user.errors.full_messages
-        redirect_to url_for(sign_up_instructeur_avis_path(params[:id], email))
+        redirect_to url_for(sign_up_instructeur_avis_path(procedure_id, avis_id, email))
       end
     end
 

@@ -42,7 +42,7 @@ feature 'Inviting an expert:' do
 
       invitation_email = open_email('expert2@exemple.fr')
       avis = Avis.find_by(email: 'expert2@exemple.fr', dossier: dossier)
-      sign_up_link = sign_up_instructeur_avis_path(avis.id, avis.email)
+      sign_up_link = sign_up_instructeur_avis_path(avis.dossier.procedure, avis, avis.email)
       expect(invitation_email.body).to include(sign_up_link)
     end
 
@@ -71,7 +71,7 @@ feature 'Inviting an expert:' do
       let(:avis_email) { 'not-signed-up-expert@exemple.fr' }
 
       scenario 'I can sign up' do
-        visit sign_up_instructeur_avis_path(avis.id, avis_email)
+        visit sign_up_instructeur_avis_path(avis.dossier.procedure, avis, avis_email)
 
         expect(page).to have_field('Email', with: avis_email, disabled: true)
         fill_in 'Mot de passe', with: 'This is a very complicated password !'
@@ -86,7 +86,7 @@ feature 'Inviting an expert:' do
       let(:avis_email) { expert.email }
 
       scenario 'I can sign in' do
-        visit sign_up_instructeur_avis_path(avis.id, avis_email)
+        visit sign_up_instructeur_avis_path(avis.dossier.procedure, avis, avis_email)
 
         expect(page).to have_current_path(new_user_session_path)
         sign_in_with(expert.email, expert_password)
