@@ -1,11 +1,12 @@
 describe ApiEntreprise::AttestationSocialeAdapter do
+  let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
   let(:procedure) { create(:procedure) }
-  let(:adapter) { described_class.new(siren, procedure.id) }
+  let(:adapter) { described_class.new(siret, procedure.id) }
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}\?.*token=/)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(["attestations_sociales"])
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)

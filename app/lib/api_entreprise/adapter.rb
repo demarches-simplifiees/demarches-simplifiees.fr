@@ -25,4 +25,8 @@ class ApiEntreprise::Adapter
   def valid_params?(params)
     !params.has_value?(UNAVAILABLE)
   end
+
+  def siren
+    @siret[0..8]
+  end
 end
