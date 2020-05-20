@@ -15,7 +15,7 @@ RSpec.describe AvisMailer, type: :mailer do
         avis.instructeur = nil
       end
 
-      it { expect(subject.body).to include(sign_up_instructeur_avis_url(avis.id, avis.email)) }
+      it { expect(subject.body).to include(sign_up_instructeur_avis_url(avis.dossier.procedure.id, avis.id, avis.email)) }
     end
   end
 end
