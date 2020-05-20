@@ -119,7 +119,7 @@ module Instructeurs
       if current_instructeur.present?
         # a instructeur is authenticated ... lets see if it can view the dossier
 
-        redirect_to instructeur_avis_url(avis)
+        redirect_to instructeur_avis_url(avis.procedure, avis)
       elsif avis.instructeur&.email == params[:email]
         # the avis instructeur has already signed up and it sould sign in
 
