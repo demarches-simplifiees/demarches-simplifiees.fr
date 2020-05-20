@@ -290,7 +290,7 @@ describe Instructeurs::AvisController, type: :controller do
             get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: invited_email }
           end
 
-          it { is_expected.to redirect_to instructeur_avis_url(avis) }
+          it { is_expected.to redirect_to instructeur_avis_url(avis.procedure, avis) }
         end
 
         context 'when the instructeur is not authenticated' do
@@ -312,7 +312,7 @@ describe Instructeurs::AvisController, type: :controller do
         end
 
         # redirected to dossier but then the instructeur gonna be banished !
-        it { is_expected.to redirect_to instructeur_avis_url(avis) }
+        it { is_expected.to redirect_to instructeur_avis_url(avis.procedure, avis) }
       end
     end
 

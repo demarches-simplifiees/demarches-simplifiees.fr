@@ -29,7 +29,7 @@ describe DossierLinkHelper do
       let(:instructeur) { create(:instructeur) }
       let!(:avis) { create(:avis, dossier: dossier, instructeur: instructeur) }
 
-      it { expect(helper.dossier_linked_path(instructeur, dossier)).to eq(instructeur_avis_path(avis)) }
+      it { expect(helper.dossier_linked_path(instructeur, dossier)).to eq(instructeur_avis_path(avis.dossier.procedure, avis)) }
     end
 
     context "when access as user" do
