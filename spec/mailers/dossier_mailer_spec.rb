@@ -12,7 +12,7 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_new_draft' do
-    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+    let(:dossier) { create(:dossier, procedure: build(:simple_procedure, :with_auto_archive)) }
 
     subject { described_class.notify_new_draft(dossier) }
 
@@ -20,6 +20,7 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.subject).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier_url(dossier)) }
+    it { expect(subject.body).to include("Vous pouvez déposer votre dossier jusqu'au") }
 
     it_behaves_like 'a dossier notification'
   end
