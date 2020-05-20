@@ -1,13 +1,13 @@
 class ApiEntreprise::BilansBdfAdapter < ApiEntreprise::Adapter
-  def initialize(siren, procedure_id)
-    @siren = siren
+  def initialize(siret, procedure_id)
+    @siret = siret
     @procedure_id = procedure_id
   end
 
   private
 
   def get_resource
-    ApiEntreprise::API.bilans_bdf(@siren, @procedure_id)
+    ApiEntreprise::API.bilans_bdf(siren, @procedure_id)
   end
 
   def process_params
