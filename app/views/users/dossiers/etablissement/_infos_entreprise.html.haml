@@ -3,15 +3,6 @@
     Siret :
     = etablissement.siret
 
-  - if etablissement.siret != etablissement.entreprise.siret_siege_social
-    %li
-      SIRET siègle social :
-      = etablissement.entreprise.siret_siege_social
-
-  %li
-    Forme juridique :
-    = etablissement.entreprise.forme_juridique
-
   %li
     Libellé NAF :
     = etablissement.libelle_naf
@@ -21,33 +12,23 @@
     = etablissement.naf
 
   %li
-    Date de création :
-    = try_format_date(etablissement.entreprise.date_creation)
-
-  %li
-    Effectif organisation :
-    = effectif(etablissement)
-
-  %li
-    Code effectif :
-    = etablissement.entreprise.code_effectif_entreprise
-
-  %li
-    Numéro TVA intracommunautaire :
-    = etablissement.entreprise.numero_tva_intracommunautaire
-
-  %li
     Adresse :
     - etablissement.adresse.split("\n").each do |line|
       = line
 
-  %li
-    Capital social :
-    = pretty_currency(etablissement.entreprise.capital_social)
+  %p.etablissement-exercices
+    Nous allons également récupérer la forme juridique, la date de création, les effectifs, le numéro TVA intracommunautaire, le capital social de votre organisation.
+    Pour les associations, nous récupérerons également l'objet, la date de création, de déclaration et de publication.
 
-- if etablissement.exercices.present?
-  %p.etablissement-exercices Les exercices comptables des trois dernières années seront joints à votre dossier.
+  %p.etablissement-exercices Les exercices comptables des trois dernières années pourront être joints à votre dossier.
 
+  - procedure = etablissement.dossier.procedure
+  - if procedure.api_entreprise_role?("attestations_sociales")
+    %p.etablissement-exercices Une attestation sociale sera jointe à votre dossier
+  - if procedure.api_entreprise_role?("attestations_fiscales")
+    %p.etablissement-exercices Une attestation fiscale sera jointe à votre dossier
+  - if procedure.api_entreprise_role?("bilans_bdf")
+    %p.etablissement-exercices Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
 %p
   = link_to '➡ Autres informations sur l’organisme sur « entreprise.data.gouv.fr »',
   "https://entreprise.data.gouv.fr/etablissement/#{etablissement.siret}",

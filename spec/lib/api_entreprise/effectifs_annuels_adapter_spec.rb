@@ -1,12 +1,13 @@
 describe ApiEntreprise::EffectifsAnnuelsAdapter do
+  let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
-  let(:adapter) { described_class.new(siren, procedure_id) }
+  let(:adapter) { described_class.new(siret, procedure_id) }
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}\?.*token=/)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
