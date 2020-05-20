@@ -7,6 +7,14 @@ class ApplicationJob < ActiveJob::Base
     Rails.logger.info("#{job.class.name} ended at #{Time.zone.now}")
   end
 
+  rescue_from(ApiEntreprise::API::ResourceNotFound) do |exception|
+    error(self, exception)
+  end
+
+  rescue_from(ApiEntreprise::API::BadFormatRequest) do |exception|
+    error(self, exception)
+  end
+
   def error(job, exception)
     Raven.capture_exception(exception)
   end
