@@ -10,7 +10,7 @@
   &nbsp;» est commencé mais n'est pas encore déposé.
 %p
   Si vous souhaitez que ce dossier soit pris en compte, il vous faut le déposer avant le
-  #{l(@dossier.procedure.auto_archive_on - 1.day, format: '%-d %B %Y')} à 23h59, date de cloture de la démarche.
+  #{l(@dossier.procedure.auto_archive_on - 1.day, format: '%-d %B %Y')} à 23 h 59 (heure de #{Rails.application.config.time_zone}), date limite de dépôt des dossiers.
 %p
   Pour cela, affichez le dossier avec le bouton ci-dessous, vérifiez votre dossier puis
   cliquez sur le bouton
