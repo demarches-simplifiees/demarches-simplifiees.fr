@@ -20,7 +20,7 @@ class Dossier < ApplicationRecord
   INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
-  TAILLE_MAX_ZIP = 50.megabytes
+  TAILLE_MAX_ZIP = 100.megabytes
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
@@ -131,11 +131,19 @@ class Dossier < ApplicationRecord
         etablissement: :champ,
         champs: {
           etablissement: :champ,
-          type_de_champ: :drop_down_list
+          type_de_champ: :drop_down_list,
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
         },
         champs_private: {
           etablissement: :champ,
-          type_de_champ: :drop_down_list
+          type_de_champ: :drop_down_list,
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
         },
         procedure: :groupe_instructeurs
       ).order(en_construction_at: 'asc')
@@ -516,6 +524,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_instruction(instructeur)
+    self.archived = false
     self.processed_at = nil
     self.motivation = nil
     attestation&.destroy

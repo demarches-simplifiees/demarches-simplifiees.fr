@@ -9,7 +9,7 @@ import { delegate, toggle } from '@utils';
 
 const TOGGLE_SOURCE_SELECTOR = '[data-toggle-target]';
 
-delegate('click', TOGGLE_SOURCE_SELECTOR, evt => {
+delegate('click', TOGGLE_SOURCE_SELECTOR, (evt) => {
   evt.preventDefault();
 
   const targetSelector = evt.target.dataset.toggleTarget;

@@ -33,6 +33,7 @@ MENTIONS_LEGALES_URL = [CGU_URL, "mentions-legales"].join("#")
 API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 
+ARCHIVAGE_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")
 FAQ_URL = [DOC_URL, "questions-frequentes"].join("/")
 FR_FAQ_URL = "https://faq.#{FR_SITE}"
 FR_FAQ_ADMIN_URL = "#{FR_FAQ_URL}/collection/1-administrateur"

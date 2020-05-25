@@ -32,7 +32,6 @@ features = [
   :insee_api_v3,
   :instructeur_bypass_email_login_token,
   :autosave_dossier_draft,
-  :autoupload_dossier_attachments,
   :new_map_editor,
   :maintenance_mode,
   :mini_profiler,

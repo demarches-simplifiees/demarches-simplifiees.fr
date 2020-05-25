@@ -1056,7 +1056,7 @@ describe Dossier do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1069,6 +1069,7 @@ describe Dossier do
     end
 
     it { expect(dossier.state).to eq('en_instruction') }
+    it { expect(dossier.archived).to be_falsey }
     it { expect(dossier.processed_at).to be_nil }
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.attestation).to be_nil }

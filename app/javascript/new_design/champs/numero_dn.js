@@ -1,6 +1,6 @@
 import { delegate } from '@utils';
 
-addEventListener('turbolinks:load', dn_init);
+addEventListener('DOMContentLoaded', dn_init);
 
 function selector(base) {
   return 'input[data-' + base + ']';

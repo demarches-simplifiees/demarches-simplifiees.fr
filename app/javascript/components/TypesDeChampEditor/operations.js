@@ -5,7 +5,7 @@ export function createTypeDeChampOperation(typeDeChamp, queue) {
       method: 'post',
       payload: { type_de_champ: typeDeChamp }
     })
-    .then(data => {
+    .then((data) => {
       handleResponseData(typeDeChamp, data);
     });
 }
@@ -33,7 +33,7 @@ export function updateTypeDeChampOperation(typeDeChamp, queue) {
       method: 'patch',
       payload: { type_de_champ: typeDeChamp }
     })
-    .then(data => {
+    .then((data) => {
       handleResponseData(typeDeChamp, data);
     });
 }
