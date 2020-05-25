@@ -58,18 +58,7 @@ const SearchInput = ({ getCoords }) => {
         onChange={handleSearchTermChange}
       />
       {addresses.features && (
-        <ComboboxPopover
-          style={{
-            borderTopColor: '#ddd',
-            marginTop: '-1px',
-            boxShadow: '0 2px 4px rgba(0,0,0,.15)',
-            position: 'absolute',
-            width: '400px',
-            left: '351px',
-            top: '5562px'
-          }}
-          className="shadow-popup"
-        >
+        <ComboboxPopover className="shadow-popup">
           {addresses.features.length > 0 ? (
             <ComboboxList>
               {addresses.features.map((feature) => {
