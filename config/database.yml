@@ -15,6 +15,8 @@ development:
   host: <%= ENV["DB_HOST"] %>
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
+  # Workaround for https://github.com/ged/ruby-pg/issues/311
+  gssencmode: disable
 
 test:
   <<: *default
@@ -22,6 +24,8 @@ test:
   host: localhost
   username: tps_test
   password: tps_test
+  # Workaround for https://github.com/ged/ruby-pg/issues/311
+  gssencmode: disable
 
 production: &production
   <<: *default
