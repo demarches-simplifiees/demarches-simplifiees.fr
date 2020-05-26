@@ -50,7 +50,7 @@ class Champs::SiretController < ApplicationController
   end
 
   def find_etablissement_with_siret
-    ApiEntrepriseService.create_etablissement(@champ.dossier, @siret, current_user.id)
+    ApiEntrepriseService.create_etablissement(@champ, @siret, current_user.id)
   end
 
   def clear_siret_and_etablissement

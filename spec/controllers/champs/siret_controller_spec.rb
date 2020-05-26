@@ -4,7 +4,11 @@ describe Champs::SiretController, type: :controller do
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:champ) { create(:champ_siret, dossier: dossier, value: nil, etablissement: nil) }
+    let(:champ) do
+      d = dossier
+      type_de_champ = create(:type_de_champ_siret, procedure: procedure)
+      type_de_champ.champ.create(dossier: d, value: nil, etablissement: nil)
+    end
     let(:params) do
       {
         champ_id: champ.id,
@@ -109,6 +113,7 @@ describe Champs::SiretController, type: :controller do
           expect(champ.value).to eq(siret)
           expect(champ.etablissement.siret).to eq(siret)
           expect(champ.reload.etablissement.naf).to eq("6202A")
+          expect(dossier.reload.etablissement).to eq(nil)
         end
       end
     end
