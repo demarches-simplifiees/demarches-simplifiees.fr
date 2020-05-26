@@ -74,11 +74,11 @@ class ApiEntreprise::API
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     elsif response.code&.between?(401, 499)
-      raise ResourceNotFound
+      raise ResourceNotFound, "url: #{url}"
     elsif response.code == 400
-      raise BadFormatRequest
+      raise BadFormatRequest, "url:  #{url}"
     else
-      raise RequestFailed, "HTTP Error Code: #{response.code}"
+      raise RequestFailed, "HTTP Error Code: #{response.code} for #{url}"
     end
   end
 
