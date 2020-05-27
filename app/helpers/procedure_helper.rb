@@ -38,5 +38,9 @@ module ProcedureHelper
     }
   end
 
+  def show_auto_archive(procedure)
+    I18n.l(procedure.auto_archive_on - 1.day, format: '%-d %B %Y')
+  end
+
   private
 end
