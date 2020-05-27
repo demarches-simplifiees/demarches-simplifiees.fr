@@ -2,6 +2,7 @@
 class DossierMailer < ApplicationMailer
   helper ServiceHelper
   helper MailerHelper
+  helper ProcedureHelper
 
   layout 'mailers/layout'
 
