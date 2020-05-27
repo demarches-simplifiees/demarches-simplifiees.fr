@@ -7,6 +7,15 @@
     = image_tag("flag_of_europe.svg", id: 'euro_flag', class: (!procedure.euro_flag ? "hidden" : ""))
 %h1.procedure-title
   = procedure.libelle
+
+- if procedure.auto_archive_on
+  %details.procedure-auto-archive
+    %summary
+      %span.icon.clock
+
+      %span.procedure-auto-archive-title Date limite : #{show_auto_archive(procedure)}
+    %p Vous pouvez déposer vos dossiers jusqu'au #{show_auto_archive(procedure)} à 23 h 59 (heure de #{Rails.application.config.time_zone}).
+
 .procedure-description
   .procedure-description-body.read-more-enabled.read-more-collapsed
     = h string_to_html(procedure.description)
