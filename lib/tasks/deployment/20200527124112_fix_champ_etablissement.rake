@@ -11,7 +11,7 @@ namespace :after_party do
         dossier = e.dossier
         if user.dossiers.count == 1 && user.siret == e.champ.value
           e.update!(dossier_id: nil)
-          dossier.etablissement = e.dup
+          dossier.reload.etablissement = e.reload.dup
           dossier.save!
           dossiers_modif << dossier.id
           fetch_api_entreprise_infos(dossier.etablissement.id, dossier.procedure.id, user.id)
