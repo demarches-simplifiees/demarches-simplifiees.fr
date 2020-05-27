@@ -18,7 +18,7 @@
 
 - if @dossier.procedure.auto_archive_on
   %p
-    Vous pouvez déposer votre dossier jusqu'au #{show_auto_archive(@dossier.procedure)} à 23 h 59 (heure de #{Rails.application.config.time_zone}).
+    Vous pouvez déposer votre dossier jusqu'au #{procedure_auto_archive_datetime(@dossier.procedure)}.
 
 = render 'layouts/mailers/signature'
 
