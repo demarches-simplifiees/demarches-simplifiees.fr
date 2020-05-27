@@ -177,9 +177,10 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
-  scope :with_notifiable_procedure, -> do
+  scope :with_notifiable_procedure, -> (notify_on_closed: false) do
+    states = notify_on_closed ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
     joins(:procedure)
-      .where.not(procedures: { aasm_state: :brouillon })
+      .where(procedures: { aasm_state: states })
   end
 
   scope :brouillon_close_to_expiration, -> do
@@ -241,7 +242,8 @@ class Dossier < ApplicationRecord
         .where("groupe_instructeurs.procedure_id = procedures.id")
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
-    brouillon.joins(:procedure)
+    state_brouillon
+      .with_notifiable_procedure
       .where("procedures.auto_archive_on - INTERVAL :before_closing = :now", { now: Time.zone.today, before_closing: INTERVAL_BEFORE_CLOSING })
       .where.not(user: users_who_submitted)
   end
