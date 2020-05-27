@@ -21,6 +21,7 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier_url(dossier)) }
     it { expect(subject.body).to include("Vous pouvez déposer votre dossier jusqu'au") }
+    it { expect(subject.body).to include("heure de") }
 
     it_behaves_like 'a dossier notification'
   end
