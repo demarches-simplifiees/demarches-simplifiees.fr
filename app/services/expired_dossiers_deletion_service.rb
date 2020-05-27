@@ -77,7 +77,7 @@ class ExpiredDossiersDeletionService
   end
 
   def self.delete_expired_termine_and_notify
-    delete_expired_and_notify(Dossier.termine_expired)
+    delete_expired_and_notify(Dossier.termine_expired, notify_on_closed_procedures_to_user: true)
   end
 
   private
@@ -108,11 +108,11 @@ class ExpiredDossiersDeletionService
     dossiers_close_to_expiration.update_all(close_to_expiration_flag => Time.zone.now)
   end
 
-  def self.delete_expired_and_notify(dossiers_to_remove)
+  def self.delete_expired_and_notify(dossiers_to_remove, notify_on_closed_procedures_to_user: false)
     dossiers_to_remove.each(&:expired_keep_track!)
 
     dossiers_to_remove
-      .with_notifiable_procedure
+      .with_notifiable_procedure(notify_on_closed: notify_on_closed_procedures_to_user)
       .includes(:user)
       .group_by(&:user)
       .each do |(user, dossiers)|
@@ -138,7 +138,7 @@ class ExpiredDossiersDeletionService
 
   def self.group_by_fonctionnaire_email(dossiers)
     dossiers
-      .with_notifiable_procedure
+      .with_notifiable_procedure(notify_on_closed: true)
       .includes(:followers_instructeurs, procedure: [:administrateurs])
       .each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |dossier, h|
         (dossier.followers_instructeurs + dossier.procedure.administrateurs).each { |destinataire| h[destinataire.email] << dossier }
