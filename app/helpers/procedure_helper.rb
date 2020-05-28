@@ -38,5 +38,15 @@ module ProcedureHelper
     }
   end
 
-  private
+  def procedure_auto_archive_date(procedure)
+    I18n.l(procedure.auto_archive_on - 1.day, format: '%-d %B %Y')
+  end
+
+  def procedure_auto_archive_time(procedure)
+    "à 23 h 59 (heure de " + Rails.application.config.time_zone + ")"
+  end
+
+  def procedure_auto_archive_datetime(procedure)
+    procedure_auto_archive_date(procedure) + ' ' + procedure_auto_archive_time(procedure)
+  end
 end
