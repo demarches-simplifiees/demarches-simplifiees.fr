@@ -16,6 +16,10 @@
 
 = round_button('Afficher votre dossier', dossier_url(@dossier), :primary)
 
+- if @dossier.procedure.auto_archive_on
+  %p
+    Vous pouvez déposer votre dossier jusqu'au #{procedure_auto_archive_datetime(@dossier.procedure)}.
+
 = render 'layouts/mailers/signature'
 
 - content_for :footer do
