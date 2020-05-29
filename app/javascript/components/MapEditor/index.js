@@ -7,8 +7,8 @@ import SwitchMapStyle from './SwitchMapStyle';
 import SearchInput from './SearchInput';
 import { getJSON, ajax } from '@utils';
 import { gpx, kml } from '@tmcw/togeojson/dist/togeojson.es.js';
-import ortho from './styles/ortho.json';
-import vector from './styles/vector.json';
+import ortho from '../MapStyles/ortho.json';
+import vector from '../MapStyles/vector.json';
 import { polygonCadastresFill, polygonCadastresLine } from './utils';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
@@ -212,6 +212,18 @@ function MapEditor({ featureCollection, url, preview }) {
 
   return (
     <>
+      <div>
+        <p style={{ marginBottom: '20px' }}>
+          Besoin d&apos;aide ?&nbsp;
+          <a
+            href="https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/cartographie"
+            target="_blank"
+            rel="noreferrer"
+          >
+            consulter les tutoriels video
+          </a>
+        </p>
+      </div>
       <div className="file-import" style={{ marginBottom: '20px' }}>
         <button className="button send primary" onClick={addInputFile}>
           Ajouter un fichier GPX ou KML
@@ -244,7 +256,7 @@ function MapEditor({ featureCollection, url, preview }) {
       </div>
       <div
         style={{
-          marginBottom: '62px'
+          marginBottom: '50px'
         }}
       >
         <SearchInput
