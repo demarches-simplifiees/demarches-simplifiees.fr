@@ -32,6 +32,16 @@ describe ApiEntreprise::API do
       end
     end
 
+    context 'when request has bad format' do
+      let(:siren) { '111111111' }
+      let(:status) { 400 }
+      let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_not_found.json') }
+
+      it 'raises ApiEntreprise::API::BadFormatRequest' do
+        expect { subject }.to raise_error(ApiEntreprise::API::BadFormatRequest)
+      end
+    end
+
     context 'when siren infos are private' do
       let(:siren) { '111111111' }
       let(:status) { 403 }

@@ -4,7 +4,11 @@ describe Champs::SiretController, type: :controller do
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:champ) { create(:champ_siret, dossier: dossier, value: nil, etablissement: nil) }
+    let(:champ) do
+      d = dossier
+      type_de_champ = create(:type_de_champ_siret, procedure: procedure)
+      type_de_champ.champ.create(dossier: d, value: nil, etablissement: nil)
+    end
     let(:params) do
       {
         champ_id: champ.id,
@@ -20,7 +24,17 @@ describe Champs::SiretController, type: :controller do
 
     context 'when the user is signed in' do
       render_views
-      before { sign_in user }
+      let(:api_etablissement_status) { 200 }
+      let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
+      let(:token_expired) { false }
+      before do
+        sign_in user
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+          .to_return(status: api_etablissement_status, body: api_etablissement_body)
+        allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
+          .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
+        allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(token_expired)
+      end
 
       context 'when the SIRET is empty' do
         subject! { get :show, params: params, format: 'js' }
@@ -55,10 +69,7 @@ describe Champs::SiretController, type: :controller do
 
       context 'when the API is unavailable' do
         let(:siret) { '82161143100015' }
-
-        before do
-          allow(controller).to receive(:find_etablissement_with_siret).and_raise(ApiEntreprise::API::RequestFailed)
-        end
+        let(:api_etablissement_status) { 503 }
 
         subject! { get :show, params: params, format: 'js' }
 
@@ -75,10 +86,7 @@ describe Champs::SiretController, type: :controller do
 
       context 'when the SIRET is valid but unknown' do
         let(:siret) { '0' * SIRET_LENGTH }
-
-        before do
-          allow(controller).to receive(:find_etablissement_with_siret).and_return(false)
-        end
+        let(:api_etablissement_status) { 404 }
 
         subject! { get :show, params: params, format: 'js' }
 
@@ -94,23 +102,18 @@ describe Champs::SiretController, type: :controller do
       end
 
       context 'when the SIRET informations are retrieved successfully' do
-        let(:siret) { etablissement.siret }
-        let(:etablissement) { build(:etablissement) }
-
-        before do
-          allow(controller).to receive(:find_etablissement_with_siret).and_return(etablissement)
-        end
+        let(:siret) { '41816609600051' }
+        let(:api_etablissement_status) { 200 }
+        let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
 
         subject! { get :show, params: params, format: 'js' }
 
         it 'populates the etablissement and SIRET on the model' do
           champ.reload
-          expect(champ.value).to eq(etablissement.siret)
-          expect(champ.etablissement.siret).to eq(etablissement.siret)
-        end
-
-        it 'displays the name of the company' do
-          expect(response.body).to include(etablissement.entreprise_raison_sociale)
+          expect(champ.value).to eq(siret)
+          expect(champ.etablissement.siret).to eq(siret)
+          expect(champ.reload.etablissement.naf).to eq("6202A")
+          expect(dossier.reload.etablissement).to eq(nil)
         end
       end
     end

@@ -1,6 +1,6 @@
 class ApiEntreprise::EffectifsAdapter < ApiEntreprise::Adapter
-  def initialize(siren, procedure_id, annee, mois)
-    @siren = siren
+  def initialize(siret, procedure_id, annee, mois)
+    @siret = siret
     @procedure_id = procedure_id
     @annee = annee
     @mois = mois
@@ -9,7 +9,7 @@ class ApiEntreprise::EffectifsAdapter < ApiEntreprise::Adapter
   private
 
   def get_resource
-    ApiEntreprise::API.effectifs(@siren, @procedure_id, @annee, @mois)
+    ApiEntreprise::API.effectifs(siren, @procedure_id, @annee, @mois)
   end
 
   def process_params
