@@ -8,7 +8,9 @@ import SearchInput from './SearchInput';
 import { getJSON, ajax } from '@utils';
 import { gpx, kml } from '@tmcw/togeojson/dist/togeojson.es.js';
 import ortho from '../MapStyles/ortho.json';
+import orthoCadastre from '../MapStyles/orthoCadastre.json';
 import vector from '../MapStyles/vector.json';
+import vectorCadastre from '../MapStyles/vectorCadastre.json';
 import { polygonCadastresFill, polygonCadastresLine } from './utils';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
@@ -25,7 +27,7 @@ function filterFeatureCollection(featureCollection, source) {
 
 function noop() {}
 
-function MapEditor({ featureCollection, url, preview }) {
+function MapEditor({ featureCollection, url, preview, hasCadastres }) {
   const drawControl = useRef(null);
   const [style, setStyle] = useState('ortho');
   const [coords, setCoords] = useState([1.7, 46.9]);
@@ -33,7 +35,12 @@ function MapEditor({ featureCollection, url, preview }) {
   const [currentMap, setCurrentMap] = useState({});
   const [bbox, setBbox] = useState(featureCollection.bbox);
   const [importInputs, setImportInputs] = useState([]);
-  const mapStyle = style === 'ortho' ? ortho : vector;
+  let mapStyle = style === 'ortho' ? ortho : vector;
+
+  if (hasCadastres) {
+    mapStyle = style === 'ortho' ? orthoCadastre : vectorCadastre;
+  }
+
   const cadastresFeatureCollection = filterFeatureCollection(
     featureCollection,
     'cadastre'
@@ -170,26 +177,14 @@ function MapEditor({ featureCollection, url, preview }) {
     const draw = drawControl.current.draw;
     const featureCollection = draw.getAll();
     let inputs = [...importInputs];
-    let drawFeatureIdToRemove;
     const inputToRemove = inputs.find((input) => input.id === inputId);
 
     for (const feature of featureCollection.features) {
       if (inputToRemove.featureId === feature.properties.id) {
-        drawFeatureIdToRemove = feature.id;
-      }
-    }
-
-    if (inputToRemove.featureId) {
-      try {
+        const featureToRemove = draw.get(feature.id);
         await getJSON(`${url}/${inputToRemove.featureId}`, null, 'delete');
-        draw.delete(drawFeatureIdToRemove).getAll();
-      } catch (e) {
-        throw new Error(
-          `La feature ${inputToRemove.featureId} a déjà été supprimée manuellement`,
-          e
-        );
-      } finally {
-        updateImportInputs(inputs, inputId);
+        draw.delete(feature.id).getAll();
+        updateFeaturesList([featureToRemove]);
       }
     }
     updateImportInputs(inputs, inputId);
@@ -322,7 +317,8 @@ MapEditor.propTypes = {
     id: PropTypes.number
   }),
   url: PropTypes.string,
-  preview: PropTypes.bool
+  preview: PropTypes.bool,
+  hasCadastres: PropTypes.bool
 };
 
 export default MapEditor;
