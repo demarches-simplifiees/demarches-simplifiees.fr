@@ -40,3 +40,26 @@ module Fog::OpenStack::Auth::Catalog
     end
   end
 end
+
+require 'fog/openstack/auth/catalog/v3'
+module Fog::OpenStack::Auth::Catalog
+  class V3
+    def endpoint_url(endpoint, interface)
+      url = endpoint["#{interface}URL"]
+
+      if interface == 'public'
+        publicize(url)
+      else
+        url
+      end
+    end
+
+    private
+
+    def publicize(url)
+      search = %r{^https://[^/]+/}
+      replace = "#{ENV['DS_PROXY_URL']}/"
+      url.gsub(search, replace)
+    end
+  end
+end
