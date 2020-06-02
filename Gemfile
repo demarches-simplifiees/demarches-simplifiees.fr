@@ -43,7 +43,7 @@ gem 'haml-rails'
 gem 'hashie'
 gem 'jquery-rails' # Use jquery as the JavaScript library
 gem 'jwt'
-gem 'kaminari', '= 1.1.1' # Pagination
+gem 'kaminari', '1.2.1' # Pagination
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
