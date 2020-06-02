@@ -80,6 +80,10 @@ class Champs::CarteChamp < Champ
     }
   end
 
+  def has_cadastres?
+    cadastres? ? true : false
+  end
+
   def geometry?
     geo_areas.present?
   end
