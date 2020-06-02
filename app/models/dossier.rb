@@ -641,9 +641,11 @@ class Dossier < ApplicationRecord
       columns += [
         ['Civilité', individual&.gender],
         ['Nom', individual&.nom],
-        ['Prénom', individual&.prenom],
-        ['Date de naissance', individual&.birthdate]
+        ['Prénom', individual&.prenom]
       ]
+      if procedure.ask_birthday
+        columns += [['Date de naissance', individual&.birthdate]]
+      end
     elsif with_etablissement
       columns += [
         ['Établissement SIRET', etablissement&.siret],

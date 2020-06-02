@@ -38,6 +38,7 @@ FAQ_URL = [DOC_URL, "questions-frequentes"].join("/")
 FR_FAQ_URL = "https://faq.#{FR_SITE}"
 FR_FAQ_ADMIN_URL = "#{FR_FAQ_URL}/collection/1-administrateur"
 FAQ_ADMIN_URL = FR_FAQ_ADMIN_URL
+FAQ_AUTOSAVE_URL = [FR_FAQ_URL, "article", "77-enregistrer-mon-formulaire-pour-le-reprendre-plus-tard?preview=5ec28ca1042863474d1aee00"].join("/")
 
 COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, 'general', 'comment-trouver-ma-demarche'].join("/")
 
