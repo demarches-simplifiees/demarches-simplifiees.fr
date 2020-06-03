@@ -23,27 +23,31 @@
     %br
     Il est donc important que les usagers puissent vous contacter s'ils ont des questions sur votre démarche.
     %br
-    Ces informations seront visibles par les utilisateurs de la démarche, affichées dans le menu "Aide".
+    Ces informations seront visibles par les utilisateurs de la démarche, affichées dans le menu "Aide", ainsi qu'en pied de page lors du dépot d'un dossier.
 
-  %p.explication Indiquez une adresse mail en capacité de répondre à l'usager.
   = f.label :email do
     Adresse email
     %span.mandatory *
+  %p.explication
+    Indiquer une adresse email <strong>valide</strong> est indispensable pour publier votre démarche.
+    Cette adresse email doit permettre de recevoir les questions des usagers.
+
   = f.email_field :email, placeholder: 'secretariat@mon-service.gov.pf', required: true
 
-  %p.explication Indiquez le numéro de téléphone du service le plus à même de fournir des réponses pertinentes à vos usagers.
   = f.label :telephone do
-    %span.mandatory *
     Numéro de téléphone
+    %span.mandatory *
+  %p.explication Indiquez le numéro de téléphone du service <strong>valide</strong> le plus à même de fournir des réponses pertinentes à vos usagers aux horaires où vous êtes joignables.
   = f.telephone_field :telephone, placeholder: '40 54 43 54', required: true
 
   = f.label :horaires do
     Horaires
     %span.mandatory *
+  %p.explication Indiquez les horaires où les usagers peuvent vous joindre.
   = f.text_area :horaires, placeholder: "Du lundi au jeudi de 7h30 à 15h30. Le vendredi de 7h30 à 14h30.", required: true
 
   = f.label :adresse do
-    Adresse
+    Adresse géographique
     %span.mandatory *
   = f.text_area :adresse, placeholder: "Immeuble Toriki 1er et 2ème étage, rue Dumont d’Urville, Papeete", required: true
 

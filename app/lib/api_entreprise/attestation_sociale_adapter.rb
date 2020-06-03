@@ -1,13 +1,13 @@
 class ApiEntreprise::AttestationSocialeAdapter < ApiEntreprise::Adapter
-  def initialize(siren, procedure_id)
-    @siren = siren
+  def initialize(siret, procedure_id)
+    @siret = siret
     @procedure_id = procedure_id
   end
 
   private
 
   def get_resource
-    ApiEntreprise::API.attestation_sociale(@siren, @procedure_id)
+    ApiEntreprise::API.attestation_sociale(siren, @procedure_id)
   end
 
   def process_params

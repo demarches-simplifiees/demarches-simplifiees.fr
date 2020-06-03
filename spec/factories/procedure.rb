@@ -86,6 +86,10 @@ FactoryBot.define do
       end
     end
 
+    trait :with_auto_archive do
+      auto_archive_on { Time.zone.today + 20 }
+    end
+
     trait :with_type_de_champ do
       transient do
         types_de_champ_count { 1 }

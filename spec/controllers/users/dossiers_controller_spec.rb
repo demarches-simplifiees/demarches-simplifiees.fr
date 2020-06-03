@@ -243,72 +243,18 @@ describe Users::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, user: user) }
     let(:siret) { params_siret.delete(' ') }
     let(:siren) { siret[0..8] }
-
     let(:api_etablissement_status) { 200 }
     let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
-
-    let(:api_entreprise_status) { 200 }
-    let(:api_entreprise_body) { File.read('spec/fixtures/files/api_entreprise/entreprises.json') }
-
-    let(:api_entreprise_effectifs_mensuels_status) { 200 }
-    let(:api_entreprise_effectifs_mensuels_body) { File.read('spec/fixtures/files/api_entreprise/effectifs.json') }
-    let(:annee) { "2020" }
-    let(:mois) { "02" }
-
-    let(:api_entreprise_effectifs_annuels_status) { 200 }
-    let(:api_entreprise_effectifs_annuels_body) { File.read('spec/fixtures/files/api_entreprise/effectifs_annuels.json') }
-
-    let(:api_exercices_status) { 200 }
-    let(:api_exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
-
-    let(:api_association_status) { 200 }
-    let(:api_association_body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
-
-    let(:api_entreprise_attestation_sociale_status) { 200 }
-    let(:api_entreprise_attestation_sociale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
-
-    let(:api_entreprise_attestation_fiscale_status) { 200 }
-    let(:api_entreprise_attestation_fiscale_body) { File.read('spec/fixtures/files/api_entreprise/attestation_fiscale.json') }
-
-    let(:api_entreprise_bilans_bdf_status) { 200 }
-    let(:api_entreprise_bilans_bdf_body) { File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json') }
-
     let(:token_expired) { false }
-
-    def stub_api_entreprise_requests
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
-        .to_return(status: api_etablissement_status, body: api_etablissement_body)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
-        .to_return(status: api_entreprise_status, body: api_entreprise_body)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
-        .to_return(status: api_exercices_status, body: api_exercices_body)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
-        .to_return(status: api_association_status, body: api_association_body)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/#{annee}\/#{mois}\/entreprise\/#{siren}?.*token=/)
-        .to_return(body: api_entreprise_effectifs_mensuels_body, status: api_entreprise_effectifs_mensuels_status)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
-        .to_return(body: api_entreprise_effectifs_annuels_body, status: api_entreprise_effectifs_annuels_status)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}?.*token=/)
-        .to_return(body: api_entreprise_attestation_sociale_body, status: api_entreprise_attestation_sociale_status)
-      stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569156881-f749d75e2bfd443316e2e02d59015f-attestation_vigilance_acoss.pdf")
-        .to_return(body: "body attestation", status: 200)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}?.*token=/)
-        .to_return(body: api_entreprise_attestation_fiscale_body, status: api_entreprise_attestation_fiscale_status)
-      stub_request(:get, "https://storage.entreprise.api.gouv.fr/siade/1569156756-f6b7779f99fa95cd60dc03c04fcb-attestation_fiscale_dgfip.pdf")
-        .to_return(body: "body attestation", status: 200)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}?.*token=/)
-        .to_return(body: api_entreprise_bilans_bdf_body, status: api_entreprise_bilans_bdf_status)
-    end
 
     before do
       sign_in(user)
-      stub_api_entreprise_requests
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+        .to_return(status: api_etablissement_status, body: api_etablissement_body)
       allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
       allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(token_expired)
     end
-    before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
-    after { Timecop.return }
 
     subject! { post :update_siret, params: { id: dossier.id, user: { siret: params_siret } } }
 
@@ -350,53 +296,21 @@ describe Users::DossiersController, type: :controller do
       let(:params_siret) { '418 166 096 00051' }
       context 'When API-Entreprise is down' do
         let(:api_etablissement_status) { 502 }
-        let(:api_body_status) { File.read('spec/fixtures/files/api_entreprise/exercices_unavailable.json') }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
       end
 
       context 'when API-Entreprise doesn’t know this SIRET' do
         let(:api_etablissement_status) { 404 }
-        let(:api_body_status) { '' }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
       end
 
       context 'when default token has expired' do
         let(:api_etablissement_status) { 200 }
-        let(:api_body_status) { '' }
         let(:token_expired) { true }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
-      end
-
-      context 'when the API returns no Entreprise' do
-        let(:api_entreprise_status) { 404 }
-        let(:api_entreprise_body) { '' }
-
-        it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
-      end
-
-      context 'when the API returns no Exercices' do
-        let(:api_exercices_status) { 404 }
-        let(:api_exercices_body) { '' }
-
-        it_behaves_like 'SIRET informations are successfully saved'
-
-        it 'doesn’t save the etablissement exercices' do
-          expect(dossier.reload.etablissement.exercices).to be_empty
-        end
-      end
-
-      context 'when the RNA doesn’t have informations on the SIRET' do
-        let(:api_association_status) { 404 }
-        let(:api_association_body) { '' }
-
-        it_behaves_like 'SIRET informations are successfully saved'
-
-        it 'doesn’t save the RNA informations' do
-          expect(dossier.reload.etablissement.association?).to be(false)
-        end
       end
 
       context 'when all API informations available' do
@@ -405,13 +319,6 @@ describe Users::DossiersController, type: :controller do
         it 'saves the associated informations on the etablissement' do
           dossier.reload
           expect(dossier.etablissement.entreprise).to be_present
-          expect(dossier.etablissement.exercices).to be_present
-          expect(dossier.etablissement.association?).to be(true)
-          expect(dossier.etablissement.entreprise_effectif_mensuel).to be_present
-          expect(dossier.etablissement.entreprise_effectif_annuel).to be_present
-          expect(dossier.etablissement.entreprise_attestation_sociale).to be_attached
-          expect(dossier.etablissement.entreprise_attestation_fiscale).to be_attached
-          expect(dossier.etablissement.entreprise_bilans_bdf).to be_present
         end
       end
     end

@@ -1,12 +1,13 @@
 describe ApiEntreprise::AttestationFiscaleAdapter do
+  let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
   let(:procedure) { create(:procedure) }
   let(:user_id) { 1 }
-  let(:adapter) { described_class.new(siren, procedure.id, user_id) }
+  let(:adapter) { described_class.new(siret, procedure.id, user_id) }
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}\?.*token=/)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(["attestations_fiscales"])
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
