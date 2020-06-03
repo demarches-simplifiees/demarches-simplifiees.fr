@@ -1128,9 +1128,9 @@ describe Dossier do
   describe '#notify_draft_not_submitted' do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
-    let!(:procedure_near_closing) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days) }
-    let!(:procedure_closed_later) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days + 1.day) }
-    let!(:procedure_closed_before) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days - 1.day) }
+    let!(:procedure_near_closing) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days) }
+    let!(:procedure_closed_later) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days + 1.day) }
+    let!(:procedure_closed_before) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days - 1.day) }
 
     # user 1 has three draft dossiers where one is for procedure that closes in two days ==> should trigger one mail
     let!(:draft_near_closing) { create(:dossier, user: user1, procedure: procedure_near_closing) }
@@ -1263,6 +1263,33 @@ describe Dossier do
           }
         ]
       })
+    end
+  end
+
+  describe "with_notifiable_procedure" do
+    let(:test_procedure) { create(:procedure) }
+    let(:published_procedure) { create(:procedure, :published) }
+    let(:closed_procedure) { create(:procedure, :closed) }
+    let(:unpublished_procedure) { create(:procedure, :unpublished) }
+
+    let!(:dossier_on_test_procedure) { create(:dossier, procedure: test_procedure) }
+    let!(:dossier_on_published_procedure) { create(:dossier, procedure: published_procedure) }
+    let!(:dossier_on_closed_procedure) { create(:dossier, procedure: closed_procedure) }
+    let!(:dossier_on_unpublished_procedure) { create(:dossier, procedure: unpublished_procedure) }
+
+    let(:notify_on_closed) { false }
+    let(:dossiers) { Dossier.with_notifiable_procedure(notify_on_closed: notify_on_closed) }
+
+    it 'should find dossiers with notifiable procedure' do
+      expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_unpublished_procedure])
+    end
+
+    context 'when notify on closed is true' do
+      let(:notify_on_closed) { true }
+
+      it 'should find dossiers with notifiable procedure' do
+        expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_closed_procedure, dossier_on_unpublished_procedure])
+      end
     end
   end
 end
