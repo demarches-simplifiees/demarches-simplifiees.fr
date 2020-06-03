@@ -7,6 +7,15 @@
     = image_tag("flag_of_europe.svg", id: 'euro_flag', class: (!procedure.euro_flag ? "hidden" : ""))
 %h1.procedure-title
   = procedure.libelle
+
+- if procedure.auto_archive_on
+  %details.procedure-auto-archive
+    %summary
+      %span.icon.clock
+
+      %span.procedure-auto-archive-title Date limite : #{procedure_auto_archive_date(procedure)}
+    %p Vous pouvez déposer vos dossiers jusqu'au #{procedure_auto_archive_datetime(procedure)}.
+
 .procedure-description
   .procedure-description-body.read-more-enabled.read-more-collapsed
     = h string_to_html(procedure.description)

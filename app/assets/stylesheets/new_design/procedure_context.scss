@@ -38,6 +38,29 @@ $procedure-description-line-height: 22px;
     }
   }
 
+  .procedure-auto-archive {
+    cursor: pointer;
+
+    margin-bottom: 32px;
+
+    p {
+      padding-top: 8px;
+      font-size: 16px;
+    }
+
+    summary {
+      font-size: 20px;
+
+      &:-webkit-details-marker {
+        display: none;
+      }
+    }
+  }
+
+  .procedure-auto-archive-title {
+    border-bottom: 1px dotted $blue;
+  }
+
   .procedure-description {
     font-size: 16px;
 
