@@ -19,8 +19,8 @@ describe ExpiredDossiersDeletionService do
       let!(:valid_brouillon) { create(:dossier, procedure: procedure, created_at: date_not_expired) }
 
       before do
-        allow(DossierMailer).to receive(:notify_brouillon_near_deletion).and_return(double(deliver_later: nil))
-        allow(DossierMailer).to receive(:notify_brouillon_deletion).and_return(double(deliver_later: nil))
+        allow(DossierMailer).to receive(:notify_brouillon_near_deletion).and_call_original
+        allow(DossierMailer).to receive(:notify_brouillon_deletion).and_call_original
 
         ExpiredDossiersDeletionService.process_expired_dossiers_brouillon
       end
@@ -208,8 +208,8 @@ describe ExpiredDossiersDeletionService do
     after  { Timecop.return }
 
     before do
-      allow(DossierMailer).to receive(:notify_automatic_deletion_to_user).and_return(double(deliver_later: nil))
-      allow(DossierMailer).to receive(:notify_automatic_deletion_to_administration).and_return(double(deliver_later: nil))
+      allow(DossierMailer).to receive(:notify_automatic_deletion_to_user).and_call_original
+      allow(DossierMailer).to receive(:notify_automatic_deletion_to_administration).and_call_original
     end
 
     context 'with a single dossier' do
@@ -277,8 +277,8 @@ describe ExpiredDossiersDeletionService do
     after  { Timecop.return }
 
     before do
-      allow(DossierMailer).to receive(:notify_near_deletion_to_user).and_return(double(deliver_later: nil))
-      allow(DossierMailer).to receive(:notify_near_deletion_to_administration).and_return(double(deliver_later: nil))
+      allow(DossierMailer).to receive(:notify_near_deletion_to_user).and_call_original
+      allow(DossierMailer).to receive(:notify_near_deletion_to_administration).and_call_original
     end
 
     context 'with a single dossier' do
@@ -346,8 +346,8 @@ describe ExpiredDossiersDeletionService do
     after  { Timecop.return }
 
     before do
-      allow(DossierMailer).to receive(:notify_automatic_deletion_to_user).and_return(double(deliver_later: nil))
-      allow(DossierMailer).to receive(:notify_automatic_deletion_to_administration).and_return(double(deliver_later: nil))
+      allow(DossierMailer).to receive(:notify_automatic_deletion_to_user).and_call_original
+      allow(DossierMailer).to receive(:notify_automatic_deletion_to_administration).and_call_original
     end
 
     context 'with a single dossier' do

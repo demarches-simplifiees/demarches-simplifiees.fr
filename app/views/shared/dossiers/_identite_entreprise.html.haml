@@ -70,26 +70,34 @@
           - elsif etablissement.exercices.present?
             = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
-      - if profile == 'instructeur'
-        - if etablissement.entreprise_attestation_sociale.attached?
-          %tr
-            %th.libelle Attestation sociale
+      - if etablissement.entreprise_attestation_sociale.attached?
+        %tr
+          %th.libelle Attestation sociale
+          - if profile == 'instructeur'
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
+          - else
+            %td Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
 
-        - if etablissement.entreprise_attestation_fiscale.attached?
-          %tr
-            %th.libelle Attestation fiscale
+      - if etablissement.entreprise_attestation_fiscale.attached?
+        %tr
+          %th.libelle Attestation fiscale
+          - if profile == 'instructeur'
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
+          - else
+            %td Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
 
-        - if etablissement.entreprise_bilans_bdf.present?
-          %tr
-            %th.libelle
-              Bilans Banque de France
-              = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
+      - if etablissement.entreprise_bilans_bdf.present?
+        %tr
+          %th.libelle
+            Bilans Banque de France
+            = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
+          - if profile == 'instructeur'
             - if controller.is_a?(Instructeurs::AvisController)
               %td= link_to "Consulter les bilans", bilans_bdf_instructeur_avis_path(@avis.id)
             - else
               %td= link_to "Consulter les bilans", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id)
+          - else
+            %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
 
       - if etablissement.association?
         %tr

@@ -1,16 +1,14 @@
-- more_infos_url = "#{FR_FAQ_URL}/article/73-enregistrer-mon-dossier?preview=5dcbf0bb2c7d3a7e9ae3e33f"
-
 .autosave.autosave-state-idle
   %p.autosave-explanation
     %span.autosave-explanation-text
       Votre brouillon est automatiquement enregistré.
-    = link_to 'En savoir plus', more_infos_url, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
+    = link_to 'En savoir plus', FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
 
   %p.autosave-status.succeeded
     %span.autosave-icon.icon.accept
     %span.autosave-label
       Brouillon enregistré
-    = link_to 'En savoir plus', more_infos_url, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
+    = link_to 'En savoir plus', FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
 
   %p.autosave-status.failed
     %span.autosave-icon ⚠️
