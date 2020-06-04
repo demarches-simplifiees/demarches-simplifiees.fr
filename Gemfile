@@ -120,4 +120,5 @@ group :development, :test do
   gem 'simple_xlsx_reader'
   gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'
+  gem 'w3c_validators'
 end
