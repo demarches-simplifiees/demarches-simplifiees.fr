@@ -13,7 +13,7 @@ class ApiEntreprise::PF_API
     url = url(resource_name)
     params = params(no_tahiti)
 
-    response = Typhoeus.get(url, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: true, headers: headers)
+    response = Typhoeus.get(url, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: false, headers: headers)
 
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
