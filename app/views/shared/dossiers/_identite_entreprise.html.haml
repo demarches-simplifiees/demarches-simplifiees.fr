@@ -90,9 +90,21 @@
             = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
           - if profile == 'instructeur'
             - if controller.is_a?(Instructeurs::AvisController)
-              %td= link_to "Consulter les bilans", bilans_bdf_instructeur_avis_path(@avis.id)
+              %td
+                Consulter les bilans
+                = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
             - else
-              %td= link_to "Consulter les bilans", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id)
+              %td
+                Consulter les bilans
+                = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
             %tr
               %th.libelle
                 Résultat exercice

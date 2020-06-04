@@ -75,7 +75,7 @@ describe Etablissement do
       ]
     end
 
-    subject { etablissement.entreprise_bilans_bdf_to_csv.split("\n") }
+    subject { etablissement.entreprise_bilans_bdf_to_sheet('csv').split("\n") }
 
     it "build a csv with keys in right order" do
       headers = subject[0].split(',')
