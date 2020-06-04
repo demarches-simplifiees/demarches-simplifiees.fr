@@ -13,11 +13,12 @@
 
   %li
     Adresse :
-    - etablissement.adresse.split("\n").each do |line|
-      = line
+    %ul
+      - etablissement.adresse.split(" | ").each do |line|
+        %li= line
 
   %p.etablissement-exercices
-    Nous allons également récupérer la forme juridique, la date de création, les effectifs, le numéro TVA intracommunautaire, le capital social de votre organisation.
+    Nous allons également récupérer la forme juridique, la date de création, les effectifs de votre organisation.
 
   -# %p.etablissement-exercices Les exercices comptables des trois dernières années pourront être joints à votre dossier.
 
