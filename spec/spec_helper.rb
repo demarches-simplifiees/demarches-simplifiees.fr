@@ -158,4 +158,33 @@ RSpec.configure do |config|
       end
     end
   end
+
+  # Asserts that a given page has a valid HTML according to the W3C specs
+  #
+  # Usage:
+  #  scenario 'the homepage has valid HTML' do
+  #    visit root_path
+  #    expect(page).to have_w3c_valid_html
+  #  end
+  RSpec::Matchers.define :have_w3c_valid_html do |_|
+    validator = NuValidator.new(:validator_uri => 'http://localhost:8888/')
+
+    def clean_errors(errors)
+      # for some reason, there is no <!DOCTYPE html> in capybara's HTML, whereas it is present in dev/prod
+      errors.reject do |e|
+        e.message.include?("Start tag seen without seeing a doctype first")
+      end
+    end
+
+    match do |page|
+      results = validator.validate_text(page.html)
+
+      clean_errors(results.errors).empty?
+    end
+
+    failure_message do |page|
+      results = validator.validate_text(page.html)
+      "url #{page.current_path} should have valid HTML:\n" + clean_errors(results.errors).join("\n")
+    end
+  end
 end

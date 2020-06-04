@@ -1,4 +1,25 @@
-feature 'wcag rules for usager', js: true do
+require 'w3c_validators'
+
+include W3CValidators
+
+# Runs automated accessibility tests (WCAG validation, W3C validation)
+# on all the "usager" pages
+#  - all the unlogged pages (home, sign-in, sign-up, contact…)
+#  - after authentication:
+#    - identité
+#     - personne physique
+#     - personne morale
+#    - formulaire de dépot de dossier:
+#      - depot initial
+#      - modifier
+#      - merci
+#    - liste des dossiers
+#    - dossier déposé
+#      - résumé
+#      - demande
+#      - messagerie
+
+feature 'accessibility rules for usager', js: true do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_all_champs, :with_service, :for_individual, :published) }
   let(:password) { 'a very complicated password' }
   let(:litteraire_user) { create(:user, password: password) }
@@ -7,11 +28,13 @@ feature 'wcag rules for usager', js: true do
     scenario 'homepage' do
       visit root_path
       expect(page).to be_accessible.excluding ".footer-logo"
+      expect(page).to have_w3c_valid_html
     end
 
     scenario 'sign_up page' do
       visit new_user_registration_path
       expect(page).to be_accessible.excluding ".footer-logo"
+      expect(page).to have_w3c_valid_html
     end
 
     scenario 'account confirmation page' do
@@ -23,22 +46,26 @@ feature 'wcag rules for usager', js: true do
       perform_enqueued_jobs do
         click_button 'Créer un compte'
         expect(page).to be_accessible.skipping(:'page-has-heading-one', :'role-img-alt', :label)
+        expect(page).to have_w3c_valid_html
       end
     end
 
     scenario 'sign_in page' do
       visit new_user_session_path
       expect(page).to be_accessible.excluding ".footer-logo", '#user_email'
+      expect(page).not_to have_w3c_valid_html
     end
 
     scenario 'contact page' do
       visit contact_path
       expect(page).to be_accessible.excluding ".footer-logo"
+      expect(page).to have_w3c_valid_html
     end
 
     scenario 'commencer page' do
       visit commencer_path(path: procedure.reload.path)
       expect(page).to be_accessible
+      expect(page).to have_w3c_valid_html
     end
   end
 
@@ -51,6 +78,7 @@ feature 'wcag rules for usager', js: true do
     scenario 'écran identité usager' do
       click_on 'Commencer la démarche'
       expect(page).to be_accessible
+      expect(page).not_to have_w3c_valid_html
     end
 
     # with no surprise, there's a lot of work on this one
@@ -63,6 +91,7 @@ feature 'wcag rules for usager', js: true do
       click_on 'Continuer'
 
       expect(page).to be_accessible.skipping :'aria-input-field-name', :'heading-order', :label
+      expect(page).not_to have_w3c_valid_html
     end
   end
 
@@ -77,6 +106,7 @@ feature 'wcag rules for usager', js: true do
     scenario "écran identification de l'entreprise" do
       click_on 'Commencer la démarche'
       expect(page).to be_accessible.skipping :label
+      expect(page).not_to have_w3c_valid_html
     end
   end
 
@@ -89,36 +119,43 @@ feature 'wcag rules for usager', js: true do
     scenario 'liste des dossiers' do
       visit dossiers_path
       expect(page).to be_accessible
+      expect(page).not_to have_w3c_valid_html
     end
 
     scenario 'dossier' do
       visit dossier_path(dossier)
       expect(page).to be_accessible.skipping :'heading-order', :label, :'aria-input-field-name'
+      expect(page).not_to have_w3c_valid_html
     end
 
     scenario 'merci' do
       visit merci_dossier_path(dossier)
       expect(page).to be_accessible
+      expect(page).not_to have_w3c_valid_html
     end
 
     scenario 'demande' do
       visit demande_dossier_path(dossier)
       expect(page).to be_accessible
+      expect(page).not_to have_w3c_valid_html
     end
 
     scenario 'messagerie' do
       visit messagerie_dossier_path(dossier)
       expect(page).to be_accessible
+      expect(page).not_to have_w3c_valid_html
     end
 
     scenario 'modifier' do
       visit modifier_dossier_path(dossier)
       expect(page).to be_accessible.skipping :'aria-input-field-name', :'heading-order', :label
+      expect(page).not_to have_w3c_valid_html
     end
 
     scenario 'brouillon' do
       visit brouillon_dossier_path(dossier)
       expect(page).to be_accessible.skipping :'aria-input-field-name', :'heading-order', :label
+      expect(page).not_to have_w3c_valid_html
     end
   end
 end
