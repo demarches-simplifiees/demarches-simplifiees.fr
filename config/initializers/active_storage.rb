@@ -16,7 +16,31 @@ end
 # this url and replace the host with DS_Proxy host. This way all the operation
 # are performed through DS_Proxy.
 #
-# https://github.com/fog/fog-openstack/blob/79116756ab04058a4bd970f3f1944886210221ed/lib/fog/openstack/auth/catalog/v3.rb#L16
+# https://github.com/fog/fog-openstack/blob/37621bb1d5ca78d037b3c56bd307f93bba022ae1/lib/fog/openstack/auth/catalog/v2.rb#L16
+require 'fog/openstack/auth/catalog/v2'
+
+module Fog::OpenStack::Auth::Catalog
+  class V2
+    def endpoint_url(endpoint, interface)
+      url = endpoint["#{interface}URL"]
+
+      if interface == 'public'
+        publicize(url)
+      else
+        url
+      end
+    end
+
+    private
+
+    def publicize(url)
+      search = %r{^https://[^/]+/}
+      replace = "#{ENV['DS_PROXY_URL']}/"
+      url.gsub(search, replace)
+    end
+  end
+end
+
 require 'fog/openstack/auth/catalog/v3'
 module Fog::OpenStack::Auth::Catalog
   class V3
