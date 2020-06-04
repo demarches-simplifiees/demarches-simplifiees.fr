@@ -15,34 +15,6 @@ describe Champs::CarteChamp do
     }
   end
 
-  describe '#to_render_data' do
-    subject { champ.to_render_data }
-
-    let(:render_data) {
-      {
-        position: champ.position,
-        selection: selection,
-        cadastres: [],
-        parcellesAgricoles: [],
-        quartiersPrioritaires: []
-      }
-    }
-
-    context 'when has no geo_areas' do
-      let(:geo_areas) { [] }
-      let(:selection) { nil }
-
-      it { is_expected.to eq(render_data) }
-    end
-
-    context 'when has one geo_area' do
-      let(:geo_areas) { [build(:geo_area, :selection_utilisateur, geometry: geo_json)] }
-      let(:selection) { legacy_geo_json }
-
-      it { is_expected.to eq(render_data) }
-    end
-  end
-
   describe '#to_feature_collection' do
     subject { champ.to_feature_collection }
 

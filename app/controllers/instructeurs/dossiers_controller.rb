@@ -32,7 +32,8 @@ module Instructeurs
     end
 
     def bilans_bdf
-      render csv: dossier.etablissement.entreprise_bilans_bdf_to_csv
+      extension = params[:format]
+      render extension.to_sym => dossier.etablissement.entreprise_bilans_bdf_to_sheet(extension)
     end
 
     def show
