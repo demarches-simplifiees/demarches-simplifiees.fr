@@ -1,7 +1,8 @@
-class ApiEntreprise::EffectifsJob < ApplicationJob
+class ApiEntreprise::EffectifsJob < ApiEntreprise::Job
   def perform(etablissement_id, procedure_id)
     etablissement = Etablissement.find(etablissement_id)
-    etablissement_params = ApiEntreprise::EffectifsAdapter.new(etablissement.siret, procedure_id, *get_current_valid_month_for_effectif).to_params
+    # effectifs endpoint currently only works when asking for february 2020 month
+    etablissement_params = ApiEntreprise::EffectifsAdapter.new(etablissement.siret, procedure_id, "2020", "02").to_params
     etablissement.update!(etablissement_params)
   end
 

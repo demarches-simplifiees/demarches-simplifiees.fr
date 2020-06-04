@@ -1,4 +1,4 @@
-class ApiEntreprise::EffectifsAnnuelsJob < ApplicationJob
+class ApiEntreprise::EffectifsAnnuelsJob < ApiEntreprise::Job
   def perform(etablissement_id, procedure_id)
     etablissement = Etablissement.find(etablissement_id)
     etablissement_params = ApiEntreprise::EffectifsAnnuelsAdapter.new(etablissement.siret, procedure_id).to_params
