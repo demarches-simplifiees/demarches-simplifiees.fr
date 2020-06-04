@@ -5,7 +5,7 @@
   = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
     %h1 Créez-vous un compte demarches-simplifiees.fr
 
-    = f.label :email, "Email"
+    = f.label :email, "Email (nom@site.com)"
     = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true, placeholder: "Votre adresse email"
 
     .suspect-email.hidden
@@ -19,8 +19,8 @@
         = button_tag type: 'button', class: 'button small', onclick: "DS.discardEmailSuggestionBox()" do
           Non
 
-    = f.label :password, "Mot de passe"
-    = f.password_field :password, autocomplete: 'new-password', value: @user.password, placeholder: "8 caractères minimum", 'aria-describedby':'8 caractères minimum'
+    = f.label :password, "Mot de passe (#{PASSWORD_MIN_LENGTH} caractères minimum)"
+    = f.password_field :password, autocomplete: 'new-password', value: @user.password, placeholder: "#{PASSWORD_MIN_LENGTH} caractères minimum", 'aria-describedby':'8 caractères minimum'
 
     = f.submit "Créer un compte", class: "button large primary expand"
 

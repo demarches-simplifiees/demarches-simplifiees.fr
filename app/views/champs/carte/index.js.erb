@@ -2,7 +2,7 @@
 
 <%= render_to_element("#{@selector} + .geo-areas",
   partial: 'shared/champs/carte/geo_areas',
-  locals: { champ: @champ, error: @error }) %>
+  locals: { champ: @champ }) %>
 
 <% if @update_cadastres %>
   <%= fire_event('cadastres:update', { featureCollection: @champ.to_feature_collection }.to_json) %>
