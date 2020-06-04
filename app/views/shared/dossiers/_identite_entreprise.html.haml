@@ -90,7 +90,13 @@
             = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
           - if profile == 'instructeur'
             - if controller.is_a?(Instructeurs::AvisController)
-              %td= link_to "Consulter les bilans", bilans_bdf_instructeur_avis_path(@avis.id)
+              %td
+                Consulter les bilans
+                = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
             - else
               %td
                 Consulter les bilans
