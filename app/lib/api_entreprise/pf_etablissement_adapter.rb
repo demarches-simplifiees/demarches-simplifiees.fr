@@ -66,7 +66,7 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
           /(?<variable>[^(]+)(?:\((?<label>[^)]*)\))?/ =~ key
           value = value[variable.to_sym] if value
         end
-        if value
+        if value.present?
           add_value(etablissement, fr, get_value(value, concatenation, label, variable))
         end
       end

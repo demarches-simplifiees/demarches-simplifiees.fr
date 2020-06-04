@@ -8,7 +8,7 @@
       %span.guest Invité
     %span.date{ class: highlight_if_unseen_class(messagerie_seen_at, commentaire.created_at) }
       = commentaire_date(commentaire)
-  .rich-text= sanitize(simple_format(commentaire.body))
+  .rich-text= string_to_html(commentaire.body)
 
   .message-extras.flex.justify-start
     - if commentaire.piece_jointe.attached?
