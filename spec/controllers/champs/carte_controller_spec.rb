@@ -44,19 +44,43 @@ describe Champs::CarteController, type: :controller do
     end
 
     describe 'PATCH #update' do
-      let(:params) do
-        {
-          champ_id: champ.id,
-          id: geo_area.id,
-          feature: feature
-        }
-      end
-
       before do
         patch :update, params: params
       end
 
-      it { expect(response.status).to eq 204 }
+      context 'update geometry' do
+        let(:params) do
+          {
+            champ_id: champ.id,
+            id: geo_area.id,
+            feature: feature
+          }
+        end
+
+        it { expect(response.status).to eq 204 }
+      end
+
+      context 'update description' do
+        let(:feature) do
+          {
+            properties: {
+              description: 'un point'
+            }
+          }
+        end
+        let(:params) do
+          {
+            champ_id: champ.id,
+            id: geo_area.id,
+            feature: feature
+          }
+        end
+
+        it {
+          expect(response.status).to eq 204
+          expect(geo_area.reload.description).to eq('un point')
+        }
+      end
     end
 
     describe 'DELETE #destroy' do
