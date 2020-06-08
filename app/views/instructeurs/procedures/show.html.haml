@@ -100,7 +100,7 @@
           %span.filter
             = link_to remove_filter_instructeur_procedure_path(@procedure, { statut: @statut, table: filter['table'], column: filter['column'], value: filter['value'] }) do
               %img.close-icon{ src: image_url("close.svg") }
-            = "#{filter['label'].truncate(50)} : #{filter['value']}"
+            = "#{filter['label'].truncate(50)} : #{@procedure_presentation.human_value_for_filter(filter)}"
       %table.table.dossiers-table.hoverable
         %thead
           %tr
