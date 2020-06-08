@@ -189,7 +189,7 @@ class ProcedurePresentation < ApplicationRecord
 
       if table == 'type_de_champ'
         type_de_champ = TypeDeChamp.find_by(id: column)
-        value = type_de_champ.dynamic_type.human_to_filter(value.downcase)
+        value = type_de_champ.dynamic_type.human_to_filter(value)
       end
 
       updated_filters[statut] << {
