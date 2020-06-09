@@ -67,6 +67,55 @@
           - elsif etablissement.exercices.present?
             = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
+
+      - if etablissement.entreprise_bilans_bdf.present?
+        - if profile == 'instructeur'
+          %tr
+            %th.libelle
+              Résultat exercice
+              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+            %td= pretty_currency(etablissement.entreprise_resultat_exercice, unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
+          %tr
+            %th
+              Excédent brut d'exploitation
+              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+            %td= pretty_currency(etablissement.entreprise_excedent_brut_exploitation, unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
+          %tr
+            %th
+              Fonds de roulement net global
+              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+            %td= pretty_currency(etablissement.entreprise_fdr_net_global, unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
+          %tr
+            %th
+              Besoin en fonds de roulement
+              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+            %td= pretty_currency(etablissement.entreprise_besoin_fdr, unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
+          %tr
+            %th.libelle
+              Chiffres financiers clés (Banque de France)
+              = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)}"
+
+            - if controller.is_a?(Instructeurs::AvisController)
+              %td
+                Les consulter
+                = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
+            - else
+              %td
+                Les consulter
+                = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
+        - else
+          %tr
+            %th.libelle
+              Bilans Banque de France
+            %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
       - if etablissement.entreprise_attestation_sociale.attached?
         %tr
           %th.libelle Attestation sociale
@@ -82,49 +131,6 @@
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
           - else
             %td Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
-
-      - if etablissement.entreprise_bilans_bdf.present?
-        %tr
-          %th.libelle
-            Bilans Banque de France
-            = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
-          - if profile == 'instructeur'
-            - if controller.is_a?(Instructeurs::AvisController)
-              %td
-                Consulter les bilans
-                = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
-                ,
-                = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
-                ou
-                = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
-            - else
-              %td
-                Consulter les bilans
-                = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
-                ,
-                = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
-                ou
-                = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
-            %tr
-              %th.libelle
-                Résultat exercice
-                = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
-              %td= etablissement.entreprise_resultat_exercice
-            %tr
-              %th
-                Excédent brut d'exploitation
-              %td= etablissement.entreprise_excedent_brut_exploitation
-            %tr
-              %th
-                Fonds de roulement net global
-              %td= etablissement.entreprise_fdr_net_global
-            %tr
-              %th
-                Besoin en fonds de roulement
-              %td= etablissement.entreprise_besoin_fdr
-
-          - else
-            %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
 
       - if etablissement.association?
         %tr
@@ -147,6 +153,6 @@
           %td= try_format_date(etablissement.association_date_declaration)
 
 %p
-  = link_to '➡ Autres informations sur l’organisme sur « entreprise.data.gouv.fr »',
+  = link_to "➡ Autres informations sur l’organisme sur « entreprise.data.gouv.fr » (ex: fiche d'immatriculation RNCS)",
   "https://entreprise.data.gouv.fr/etablissement/#{etablissement.siret}",
   target: "_blank"
