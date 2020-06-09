@@ -40,6 +40,6 @@ module EtablissementHelper
   end
 
   def pretty_date_exercice(date)
-    date.sub(/(?<year>\d{4})(?<month>\d{2})/, '\k<month>/\k<year>') if date.present?
+    date.sub(/(?<year>\d{4})(?<month>\d{2})/, '\k<year>') if date.present?
   end
 end
