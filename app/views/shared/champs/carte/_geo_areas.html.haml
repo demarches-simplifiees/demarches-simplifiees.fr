@@ -3,7 +3,17 @@
   .areas
     %ul
       - champ.selections_utilisateur.each do |geo_area|
-        %li= geo_area_label(geo_area)
+        %li{ class: editing ? '' : 'flex column mb-2' }
+          - if editing
+            = link_to '#', data: { geo_area: geo_area.id } do
+              = geo_area_label(geo_area)
+            = text_field_tag :description, geo_area.description, data: { geo_area: geo_area.id }, placeholder: 'Description de la sélection'
+          - else
+            = link_to '#', data: { geo_area: geo_area.id } do
+              = geo_area_label(geo_area)
+            - if geo_area.description.present?
+              %span
+                = geo_area.description
 
 - if champ.quartiers_prioritaires?
   .areas-title Quartiers prioritaires
@@ -27,7 +37,9 @@
     - else
       %ul
         - champ.cadastres.each do |geo_area|
-          %li= geo_area_label(geo_area)
+          %li.flex.column.mb-2
+            = link_to '#', data: { geo_area: geo_area.id } do
+              = geo_area_label(geo_area)
 
 - if champ.parcelles_agricoles?
   .areas-title Parcelles agricoles (RPG)
