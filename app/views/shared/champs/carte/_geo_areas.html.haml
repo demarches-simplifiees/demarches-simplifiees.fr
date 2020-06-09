@@ -15,18 +15,6 @@
               %span
                 = geo_area.description
 
-- if champ.quartiers_prioritaires?
-  .areas-title Quartiers prioritaires
-  .areas
-    - if !champ.geometry?
-      Aucune zone tracée
-    - elsif champ.quartiers_prioritaires.blank?
-      = t('errors.messages.quartiers_prioritaires_empty', count: champ.selections_utilisateur.size)
-    - else
-      %ul
-        - champ.quartiers_prioritaires.each do |geo_area|
-          %li= geo_area_label(geo_area)
-
 - if champ.cadastres?
   .areas-title Parcelles cadastrales
   .areas
@@ -40,15 +28,3 @@
           %li.flex.column.mb-2
             = link_to '#', data: { geo_area: geo_area.id } do
               = geo_area_label(geo_area)
-
-- if champ.parcelles_agricoles?
-  .areas-title Parcelles agricoles (RPG)
-  .areas
-    - if !champ.geometry?
-      Aucune zone tracée
-    - elsif champ.parcelles_agricoles.blank?
-      = t('errors.messages.parcelles_agricoles_empty', count: champ.selections_utilisateur.size)
-    - else
-      %ul
-        - champ.parcelles_agricoles.each do |geo_area|
-          %li= geo_area_label(geo_area)
