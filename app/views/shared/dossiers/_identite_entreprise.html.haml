@@ -32,13 +32,13 @@
           %th.libelle
             Effectif mensuel
             = try_format_mois_effectif(etablissement)
-            (URSSAF)
+            (URSSAF) :
           %td= etablissement.entreprise_effectif_mensuel
         %tr
           %th.libelle
             Effectif moyen annuel
             = etablissement.entreprise_effectif_annuel_annee
-            (URSSAF)
+            (URSSAF) :
           %td= etablissement.entreprise_effectif_annuel
       %tr
         %th.libelle Effectif de l'organisation (INSEE) :
@@ -73,27 +73,27 @@
           %tr
             %th.libelle
               Résultat exercice
-              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)}) :"
             %td= pretty_currency(etablissement.entreprise_resultat_exercice, unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
           %tr
             %th
               Excédent brut d'exploitation
-              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)}) :"
             %td= pretty_currency(etablissement.entreprise_excedent_brut_exploitation, unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
           %tr
             %th
               Fonds de roulement net global
-              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)}) :"
             %td= pretty_currency(etablissement.entreprise_fdr_net_global, unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
           %tr
             %th
               Besoin en fonds de roulement
-              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+              = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)}) :"
             %td= pretty_currency(etablissement.entreprise_besoin_fdr, unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
           %tr
             %th.libelle
               Chiffres financiers clés (Banque de France)
-              = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)}"
+              = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)} :"
 
             - if controller.is_a?(Instructeurs::AvisController)
               %td
@@ -114,11 +114,11 @@
         - else
           %tr
             %th.libelle
-              Bilans Banque de France
+              Bilans Banque de France :
             %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
       - if etablissement.entreprise_attestation_sociale.attached?
         %tr
-          %th.libelle Attestation sociale
+          %th.libelle Attestation sociale :
           - if profile == 'instructeur'
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
           - else
@@ -126,7 +126,7 @@
 
       - if etablissement.entreprise_attestation_fiscale.attached?
         %tr
-          %th.libelle Attestation fiscale
+          %th.libelle Attestation fiscale :
           - if profile == 'instructeur'
             %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
           - else
