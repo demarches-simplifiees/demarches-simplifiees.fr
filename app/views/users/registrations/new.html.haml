@@ -6,9 +6,9 @@
   .auth-form
     = devise_error_messages!
     = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
-      %p.center Créez vous un compte
+      %p.center Créez-vous un compte
 
-      = f.label :email, "Email"
+      = f.label :email, "Email (nom@site.com)"
       = f.text_field :email, type: :email, autocomplete: 'username', autofocus: false, placeholder: "Votre adresse email"
 
       .suspect-email.hidden

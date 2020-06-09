@@ -139,12 +139,28 @@ class Etablissement < ApplicationRecord
     upload_attestation(url, entreprise_attestation_fiscale)
   end
 
-  def entreprise_bilans_bdf_to_csv
-    headers = bilans_headers.concat(bilans_new_keys)
-    data = entreprise_bilans_bdf.map do |bilan|
-      headers.map { |h| bilan[h] }
-    end
-    SpreadsheetArchitect.to_csv(headers: headers, data: data)
+  def entreprise_date_arret_exercice
+    entreprise_last_bilan_info_cle("date_arret_exercice")
+  end
+
+  def entreprise_resultat_exercice
+    entreprise_last_bilan_info_cle("resultat_exercice")
+  end
+
+  def entreprise_excedent_brut_exploitation
+    entreprise_last_bilan_info_cle("excedent_brut_exploitation")
+  end
+
+  def entreprise_fdr_net_global
+    entreprise_last_bilan_info_cle("fonds_roulement_net_global")
+  end
+
+  def entreprise_besoin_fdr
+    entreprise_last_bilan_info_cle("besoin_en_fonds_de_roulement")
+  end
+
+  def entreprise_bilans_bdf_to_sheet(format)
+    SpreadsheetArchitect.send("to_#{format}".to_sym, bilans_bdf_data)
   end
 
   private
@@ -152,6 +168,18 @@ class Etablissement < ApplicationRecord
   def bilans_new_keys
     keys = entreprise_bilans_bdf.flat_map(&:keys).uniq
     keys - bilans_headers
+  end
+
+  def entreprise_last_bilan_info_cle(key)
+    entreprise_bilans_bdf.first[key]
+  end
+
+  def bilans_bdf_data
+    headers = bilans_headers.concat(bilans_new_keys)
+    data = entreprise_bilans_bdf.map do |bilan|
+      headers.map { |h| bilan[h] }
+    end
+    { headers: headers, data: data }
   end
 
   def dossier_id_for_export

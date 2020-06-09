@@ -1,14 +1,5 @@
-- if feature_enabled?(:new_map_editor)
-  - preview = !champ.persisted?
-  = react_component("MapEditor", { featureCollection: champ.to_feature_collection, hasCadastres: champ.has_cadastres?, url: champs_carte_features_path(preview ? 'preview' : champ), preview: preview }, class: "carte-#{champ.id}")
-- else
-  .toolbar
-    %button.button.primary.new-area Ajouter une zone
-    %select.select2.adresse{ data: { address: true }, placeholder: 'Saisissez une adresse ou positionner la carte' }
-  .carte.edit{ data: { geo: geo_data(champ) }, class: "carte-#{form.index}" }
-
-  = form.hidden_field :value,
-    data: { remote: true, feature_collection_id: champ.stable_id, url: champs_carte_path(form.index), params: champ_carte_params(champ).to_query, method: 'post' }
+- preview = !champ.persisted?
+= react_component("MapEditor", { featureCollection: champ.to_feature_collection, url: champs_carte_features_path(preview ? 'preview' : champ), preview: preview, hasCadastres: !!champ.cadastres? }, class: "carte-#{champ.id}")
 
 .geo-areas
-  = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, error: false }
+  = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ }

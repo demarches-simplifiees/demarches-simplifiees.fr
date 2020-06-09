@@ -56,4 +56,9 @@ RSpec.describe EtablissementHelper, type: :helper do
 
     it { is_expected.to eq('123 000,00 €') }
   end
+
+  describe '#pretty_date_exercice' do
+    subject { pretty_date_exercice("201908") }
+    it { is_expected.to eq("08/2019") }
+  end
 end
