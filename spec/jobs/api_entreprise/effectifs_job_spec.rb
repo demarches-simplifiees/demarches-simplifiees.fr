@@ -6,7 +6,7 @@ RSpec.describe ApiEntreprise::EffectifsJob, type: :job do
   let(:procedure_id) { procedure.id }
   let(:now) { Time.zone.local(2020, 3, 12) }
   let(:annee) { "2020" }
-  let(:mois) { "02" }
+  let(:mois) { "04" }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/effectifs.json') }
   let(:status) { 200 }
 
