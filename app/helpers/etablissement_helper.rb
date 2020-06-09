@@ -1,6 +1,11 @@
 module EtablissementHelper
-  def pretty_currency(capital_social)
-    number_to_currency(capital_social, locale: :fr)
+  def pretty_currency(capital_social, unit: '€')
+    number_to_currency(capital_social, locale: :fr, unit: unit)
+  end
+
+  def pretty_currency_unit(unit)
+    dict = { 'kEuros' => 'k€' }
+    dict[unit]
   end
 
   def raison_sociale_or_name(etablissement)
@@ -35,6 +40,6 @@ module EtablissementHelper
   end
 
   def pretty_date_exercice(date)
-    date.sub(/(?<year>\d{4})(?<month>\d{2})/, '\k<month>/\k<year>') if date.present?
+    date.sub(/(?<year>\d{4})(?<month>\d{2})/, '\k<year>') if date.present?
   end
 end
