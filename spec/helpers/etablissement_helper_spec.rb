@@ -59,6 +59,6 @@ RSpec.describe EtablissementHelper, type: :helper do
   end
   describe '#pretty_date_exercice' do
     subject { pretty_date_exercice("201908") }
-    it { is_expected.to eq("08/2019") }
+    it { is_expected.to eq("2019") }
   end
 end
