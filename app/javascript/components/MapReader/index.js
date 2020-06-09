@@ -1,51 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import ReactMapboxGl, { ZoomControl, GeoJSONLayer } from 'react-mapbox-gl';
-import mapboxgl from 'mapbox-gl';
-import SwitchMapStyle from './SwitchMapStyle';
-import ortho from '../MapStyles/ortho.json';
-import orthoCadastre from '../MapStyles/orthoCadastre.json';
-import vector from '../MapStyles/vector.json';
-import vectorCadastre from '../MapStyles/vectorCadastre.json';
+import mapboxgl, { Popup } from 'mapbox-gl';
 import PropTypes from 'prop-types';
+
+import SwitchMapStyle from './SwitchMapStyle';
+import { getMapStyle } from '../MapStyles';
+
+import {
+  filterFeatureCollection,
+  filterFeatureCollectionByGeometryType,
+  useEvent,
+  findFeature,
+  fitBounds,
+  getCenter
+} from '../shared/map';
 
 const Map = ReactMapboxGl({});
 
 const MapReader = ({ featureCollection }) => {
+  const [currentMap, setCurrentMap] = useState(null);
   const [style, setStyle] = useState('ortho');
-  const hasCadastres = featureCollection.features.find(
-    (feature) => feature.properties.source === 'cadastre'
+  const cadastresFeatureCollection = useMemo(
+    () => filterFeatureCollection(featureCollection, 'cadastre'),
+    [featureCollection]
   );
-  let mapStyle = style === 'ortho' ? ortho : vector;
+  const selectionsUtilisateurFeatureCollection = useMemo(
+    () => filterFeatureCollection(featureCollection, 'selection_utilisateur'),
+    [featureCollection]
+  );
+  const selectionsLineFeatureCollection = useMemo(
+    () =>
+      filterFeatureCollectionByGeometryType(
+        selectionsUtilisateurFeatureCollection,
+        'LineString'
+      ),
+    [selectionsUtilisateurFeatureCollection]
+  );
+  const selectionsPolygonFeatureCollection = useMemo(
+    () =>
+      filterFeatureCollectionByGeometryType(
+        selectionsUtilisateurFeatureCollection,
+        'Polygon'
+      ),
+    [selectionsUtilisateurFeatureCollection]
+  );
+  const selectionsPointFeatureCollection = useMemo(
+    () =>
+      filterFeatureCollectionByGeometryType(
+        selectionsUtilisateurFeatureCollection,
+        'Point'
+      ),
+    [selectionsUtilisateurFeatureCollection]
+  );
+  const mapStyle = useMemo(
+    () => getMapStyle(style, cadastresFeatureCollection.length),
+    [style, cadastresFeatureCollection]
+  );
+  const popup = useMemo(
+    () =>
+      new Popup({
+        closeButton: false,
+        closeOnClick: false
+      })
+  );
 
-  if (hasCadastres) {
-    mapStyle = style === 'ortho' ? orthoCadastre : vectorCadastre;
-  }
+  const onMouseEnter = useCallback(
+    (event) => {
+      const feature = event.features[0];
+      if (feature.properties && feature.properties.description) {
+        const coordinates = getCenter(feature.geometry, event.lngLat);
+        const description = feature.properties.description;
+        currentMap.getCanvas().style.cursor = 'pointer';
+        popup.setLngLat(coordinates).setHTML(description).addTo(currentMap);
+      } else {
+        popup.remove();
+      }
+    },
+    [currentMap, popup]
+  );
+
+  const onMouseLeave = useCallback(() => {
+    currentMap.getCanvas().style.cursor = '';
+    popup.remove();
+  }, [currentMap, popup]);
+
+  const onFeatureFocus = useCallback(
+    ({ detail }) => {
+      const feature = findFeature(featureCollection, detail.id);
+      if (feature) {
+        fitBounds(currentMap, feature);
+      }
+    },
+    [currentMap, featureCollection]
+  );
+
+  useEvent('map:feature:focus', onFeatureFocus);
 
   const [a1, a2, b1, b2] = featureCollection.bbox;
   const boundData = [
     [a1, a2],
     [b1, b2]
   ];
-
-  const cadastresFeatureCollection = {
-    type: 'FeatureCollection',
-    features: []
-  };
-
-  const selectionsLineFeatureCollection = {
-    type: 'FeatureCollection',
-    features: []
-  };
-
-  const selectionsPolygonFeatureCollection = {
-    type: 'FeatureCollection',
-    features: []
-  };
-
-  const selectionsPointFeatureCollection = {
-    type: 'FeatureCollection',
-    features: []
-  };
 
   const polygonSelectionFill = {
     'fill-color': '#EC3323',
@@ -77,25 +132,8 @@ const MapReader = ({ featureCollection }) => {
     'line-dasharray': [1, 1]
   };
 
-  for (let feature of featureCollection.features) {
-    switch (feature.properties.source) {
-      case 'selection_utilisateur':
-        switch (feature.geometry.type) {
-          case 'LineString':
-            selectionsLineFeatureCollection.features.push(feature);
-            break;
-          case 'Polygon':
-            selectionsPolygonFeatureCollection.features.push(feature);
-            break;
-          case 'Point':
-            selectionsPointFeatureCollection.features.push(feature);
-            break;
-        }
-        break;
-      case 'cadastre':
-        cadastresFeatureCollection.features.push(feature);
-        break;
-    }
+  function onMapLoad(map) {
+    setCurrentMap(map);
   }
 
   if (!mapboxgl.supported()) {
@@ -110,6 +148,7 @@ const MapReader = ({ featureCollection }) => {
 
   return (
     <Map
+      onStyleLoad={(map) => onMapLoad(map)}
       fitBounds={boundData}
       fitBoundsOptions={{ padding: 100 }}
       style={mapStyle}
@@ -122,14 +161,20 @@ const MapReader = ({ featureCollection }) => {
         data={selectionsPolygonFeatureCollection}
         fillPaint={polygonSelectionFill}
         linePaint={polygonSelectionLine}
+        fillOnMouseEnter={onMouseEnter}
+        fillOnMouseLeave={onMouseLeave}
       />
       <GeoJSONLayer
         data={selectionsLineFeatureCollection}
         linePaint={lineStringSelectionLine}
+        lineOnMouseEnter={onMouseEnter}
+        lineOnMouseLeave={onMouseLeave}
       />
       <GeoJSONLayer
         data={selectionsPointFeatureCollection}
         circlePaint={pointSelectionFill}
+        circleOnMouseEnter={onMouseEnter}
+        circleOnMouseLeave={onMouseLeave}
       />
       <GeoJSONLayer
         data={cadastresFeatureCollection}
