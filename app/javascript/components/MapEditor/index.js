@@ -1,69 +1,102 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import ReactMapboxGl, { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
 import DrawControl from 'react-mapbox-gl-draw';
-import SwitchMapStyle from './SwitchMapStyle';
-import SearchInput from './SearchInput';
-import { getJSON, ajax } from '@utils';
 import { gpx, kml } from '@tmcw/togeojson/dist/togeojson.es.js';
-import ortho from '../MapStyles/ortho.json';
-import orthoCadastre from '../MapStyles/orthoCadastre.json';
-import vector from '../MapStyles/vector.json';
-import vectorCadastre from '../MapStyles/vectorCadastre.json';
-import { polygonCadastresFill, polygonCadastresLine } from './utils';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+
+import { getJSON, ajax, fire } from '@utils';
+
+import SwitchMapStyle from './SwitchMapStyle';
+import { getMapStyle } from '../MapStyles';
+
+import SearchInput from './SearchInput';
+import { polygonCadastresFill, polygonCadastresLine } from './utils';
+import {
+  noop,
+  filterFeatureCollection,
+  fitBounds,
+  generateId,
+  useEvent,
+  findFeature
+} from '../shared/map';
 
 const Map = ReactMapboxGl({});
 
-function filterFeatureCollection(featureCollection, source) {
-  return {
-    type: 'FeatureCollection',
-    features: featureCollection.features.filter(
-      (feature) => feature.properties.source === source
-    )
-  };
-}
-
-function noop() {}
-
 function MapEditor({ featureCollection, url, preview, hasCadastres }) {
   const drawControl = useRef(null);
+  const [currentMap, setCurrentMap] = useState(null);
+
   const [style, setStyle] = useState('ortho');
   const [coords, setCoords] = useState([1.7, 46.9]);
   const [zoom, setZoom] = useState([5]);
-  const [currentMap, setCurrentMap] = useState({});
   const [bbox, setBbox] = useState(featureCollection.bbox);
   const [importInputs, setImportInputs] = useState([]);
-  let mapStyle = style === 'ortho' ? ortho : vector;
+  const [cadastresFeatureCollection, setCadastresFeatureCollection] = useState(
+    filterFeatureCollection(featureCollection, 'cadastre')
+  );
+  const mapStyle = getMapStyle(style, hasCadastres);
 
-  if (hasCadastres) {
-    mapStyle = style === 'ortho' ? orthoCadastre : vectorCadastre;
-  }
-
-  const cadastresFeatureCollection = filterFeatureCollection(
-    featureCollection,
-    'cadastre'
+  const onFeatureFocus = useCallback(
+    ({ detail }) => {
+      const { id } = detail;
+      const featureCollection = drawControl.current.draw.getAll();
+      const feature = findFeature(featureCollection, id);
+      if (feature) {
+        fitBounds(currentMap, feature);
+      }
+    },
+    [currentMap, drawControl.current]
   );
 
-  function updateFeaturesList(features) {
-    const cadastres = features.find(
-      ({ geometry }) => geometry.type === 'Polygon'
+  const onFeatureUpdate = useCallback(
+    async ({ detail }) => {
+      const { id, properties } = detail;
+      const featureCollection = drawControl.current.draw.getAll();
+      const feature = findFeature(featureCollection, id);
+
+      if (feature) {
+        getJSON(`${url}/${id}`, { feature: { properties } }, 'patch');
+      }
+    },
+    [url, drawControl.current]
+  );
+
+  const updateFeaturesList = useCallback(
+    async (features) => {
+      const cadastres = features.find(
+        ({ geometry }) => geometry.type === 'Polygon'
+      );
+      await ajax({
+        url,
+        type: 'get',
+        data: cadastres ? 'cadastres=update' : ''
+      });
+      fire(document, 'ds:page:update');
+    },
+    [url]
+  );
+
+  const onCadastresUpdate = useCallback(({ detail }) => {
+    setCadastresFeatureCollection(
+      filterFeatureCollection(detail.featureCollection, 'cadastre')
     );
-    ajax({ url, type: 'get', data: cadastres ? 'cadastres=update' : '' });
-  }
+  }, []);
+
+  useEvent('map:feature:focus', onFeatureFocus);
+  useEvent('map:feature:update', onFeatureUpdate);
+  useEvent('cadastres:update', onCadastresUpdate);
 
   function setFeatureId(lid, feature) {
     const draw = drawControl.current.draw;
     draw.setFeatureProperty(lid, 'id', feature.properties.id);
   }
 
-  const generateId = () => Math.random().toString(20).substr(2, 6);
-
-  const updateImportInputs = (inputs, inputId) => {
+  function updateImportInputs(inputs, inputId) {
     const updatedInputs = inputs.filter((input) => input.id !== inputId);
     setImportInputs(updatedInputs);
-  };
+  }
 
   async function onDrawCreate({ features }) {
     for (const feature of features) {
@@ -92,23 +125,13 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
     updateFeaturesList(features);
   }
 
-  const onMapLoad = (map) => {
+  function onMapLoad(map) {
     setCurrentMap(map);
 
     drawControl.current.draw.set(
       filterFeatureCollection(featureCollection, 'selection_utilisateur')
     );
-  };
-
-  const onCadastresUpdate = (evt) => {
-    if (currentMap) {
-      currentMap
-        .getSource('cadastres-layer')
-        .setData(
-          filterFeatureCollection(evt.detail.featureCollection, 'cadastre')
-        );
-    }
-  };
+  }
 
   const onFileImport = (e, inputId) => {
     const isGpxFile = e.target.files[0].name.includes('.gpx');
@@ -189,11 +212,6 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
     }
     updateImportInputs(inputs, inputId);
   };
-
-  useEffect(() => {
-    addEventListener('cadastres:update', onCadastresUpdate);
-    return () => removeEventListener('cadastres:update', onCadastresUpdate);
-  });
 
   if (!mapboxgl.supported()) {
     return (
