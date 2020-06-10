@@ -922,11 +922,11 @@ describe ProcedurePresentation do
     context 'when type_de_champ text' do
       let(:filters) { { "suivis" => [] } }
 
-      it 'should downcase and passthrough value' do
+      it 'should passthrough value' do
         procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "Oui")
 
         expect(procedure_presentation.filters).to eq({ "suivis" => [
-          { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "oui" }
+          { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "Oui" }
         ]
         })
       end
