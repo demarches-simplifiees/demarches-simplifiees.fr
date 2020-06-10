@@ -94,16 +94,6 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def to_render_data
-    {
-      position: position,
-      selection: selection_utilisateur_legacy_geometry,
-      quartiersPrioritaires: quartiers_prioritaires? ? quartiers_prioritaires.as_json(except: :properties) : [],
-      cadastres: cadastres? ? cadastres.as_json(except: :properties) : [],
-      parcellesAgricoles: parcelles_agricoles? ? parcelles_agricoles.as_json(except: :properties) : []
-    }
-  end
-
   def for_api
     nil
   end

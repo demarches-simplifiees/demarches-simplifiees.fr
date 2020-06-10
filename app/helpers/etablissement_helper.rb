@@ -44,4 +44,8 @@ module EtablissementHelper
       '10' => 'Aucune personne'
     }[etablissement.entreprise_code_effectif_entreprise]
   end
+
+  def pretty_date_exercice(date)
+    date.sub(/(?<year>\d{4})(?<month>\d{2})/, '\k<month>/\k<year>') if date.present?
+  end
 end

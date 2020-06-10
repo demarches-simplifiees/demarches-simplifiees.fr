@@ -4,7 +4,7 @@ describe 'root/_footer.html.haml', type: :view do
   subject { render }
 
   it "should contains polynesian links" do
-    expect(subject).to have_link('DINUM', href: 'http://www.modernisation.gouv.fr/')
+    expect(subject).to have_link('DINUM', href: 'https://numerique.gouv.fr/')
     expect(subject).to have_link('CGU', href: CGU_URL)
     expect(subject).to have_link('Données personnelles', href: RGPD_URL)
     expect(subject).to have_link('Mentions légales', href: MENTIONS_LEGALES_URL)

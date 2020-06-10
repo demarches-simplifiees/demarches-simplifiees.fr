@@ -1,4 +1,4 @@
-class ApiEntreprise::AttestationFiscaleJob < ApplicationJob
+class ApiEntreprise::AttestationFiscaleJob < ApiEntreprise::Job
   def perform(etablissement_id, procedure_id, user_id)
     etablissement = Etablissement.find(etablissement_id)
     etablissement_params = ApiEntreprise::AttestationFiscaleAdapter.new(etablissement.siret, procedure_id, user_id).to_params

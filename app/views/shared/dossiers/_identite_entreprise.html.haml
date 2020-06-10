@@ -93,9 +93,39 @@
             = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
           - if profile == 'instructeur'
             - if controller.is_a?(Instructeurs::AvisController)
-              %td= link_to "Consulter les bilans", bilans_bdf_instructeur_avis_path(@avis.id)
+              %td
+                Consulter les bilans
+                = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
             - else
-              %td= link_to "Consulter les bilans", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id)
+              %td
+                Consulter les bilans
+                = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
+            %tr
+              %th.libelle
+                Résultat exercice
+                = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
+              %td= etablissement.entreprise_resultat_exercice
+            %tr
+              %th
+                Excédent brut d'exploitation
+              %td= etablissement.entreprise_excedent_brut_exploitation
+            %tr
+              %th
+                Fonds de roulement net global
+              %td= etablissement.entreprise_fdr_net_global
+            %tr
+              %th
+                Besoin en fonds de roulement
+              %td= etablissement.entreprise_besoin_fdr
+
           - else
             %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
 

@@ -26,6 +26,7 @@ $header-mobile-breakpoint: 550px;
 .header-logo {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 
   img {
     margin-right: 0px;
