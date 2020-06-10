@@ -8,12 +8,12 @@
         %th.libelle Dénomination :
         %td= raison_sociale_or_name(etablissement)
       %tr
-        %th.libelle SIRET :
+        %th.libelle Numéro TAHITI :
         %td= etablissement.siret
 
       - if etablissement.siret != etablissement.entreprise.siret_siege_social
         %tr
-          %th.libelle SIRET du siège social:
+          %th.libelle Numéro TAHITI du siège social:
           %td= etablissement.entreprise.siret_siege_social
       %tr
         %th.libelle Nom commercial :
@@ -35,13 +35,13 @@
           %th.libelle
             Effectif mensuel
             = try_format_mois_effectif(etablissement)
-            (URSSAF)
+            (URSSAF) :
           %td= etablissement.entreprise_effectif_mensuel
         %tr
           %th.libelle
             Effectif moyen annuel
             = etablissement.entreprise_effectif_annuel_annee
-            (URSSAF)
+            (URSSAF) :
           %td= etablissement.entreprise_effectif_annuel
       %tr
         %th.libelle Effectif de l'organisation (INSEE) :
@@ -60,41 +60,39 @@
         %th.libelle Capital social :
         %td= pretty_currency(etablissement.entreprise.capital_social)
       %tr
-        %th.libelle Exercices :
+        %th.libelle Chiffre d'affaires :
         %td
           - if profile == 'instructeur'
-            - etablissement.exercices.each_with_index do |exercice, index|
-              = "#{exercice.date_fin_exercice.year} : "
-              = pretty_currency(exercice.ca)
-              %br
+            %details
+              - etablissement.exercices.each_with_index do |exercice, index|
+                = "#{exercice.date_fin_exercice.year} : "
+                = pretty_currency(exercice.ca)
+                %br
           - elsif etablissement.exercices.present?
             = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
-      - if etablissement.entreprise_attestation_sociale.attached?
-        %tr
-          %th.libelle Attestation sociale
-          - if profile == 'instructeur'
-            %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
-          - else
-            %td Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
-
-      - if etablissement.entreprise_attestation_fiscale.attached?
-        %tr
-          %th.libelle Attestation fiscale
-          - if profile == 'instructeur'
-            %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
-          - else
-            %td Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
 
       - if etablissement.entreprise_bilans_bdf.present?
-        %tr
-          %th.libelle
-            Bilans Banque de France
-            = "en #{etablissement.entreprise_bilans_bdf_monnaie}"
-          - if profile == 'instructeur'
+        - if profile == 'instructeur'
+          = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: 'Résultat exercice', key: 'resultat_exercice', etablissement: etablissement }
+
+          = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: "Excédent brut d'exploitation", key: 'excedent_brut_exploitation', etablissement: etablissement }
+
+          = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: 'Fonds de roulement net global', key: 'fonds_roulement_net_global', etablissement: etablissement }
+
+          = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: 'Besoin en fonds de roulement', key: 'besoin_en_fonds_de_roulement', etablissement: etablissement }
+          %tr
+            %th.libelle
+              Chiffres financiers clés (Banque de France)
+              = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)} :"
+
             - if controller.is_a?(Instructeurs::AvisController)
               %td
-                Consulter les bilans
+                Les consulter
                 = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
                 ,
                 = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
@@ -102,32 +100,32 @@
                 = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
             - else
               %td
-                Consulter les bilans
+                Les consulter
                 = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
                 ,
                 = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
                 ou
                 = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
-            %tr
-              %th.libelle
-                Résultat exercice
-                = "(#{pretty_date_exercice(etablissement.entreprise_date_arret_exercice)})"
-              %td= etablissement.entreprise_resultat_exercice
-            %tr
-              %th
-                Excédent brut d'exploitation
-              %td= etablissement.entreprise_excedent_brut_exploitation
-            %tr
-              %th
-                Fonds de roulement net global
-              %td= etablissement.entreprise_fdr_net_global
-            %tr
-              %th
-                Besoin en fonds de roulement
-              %td= etablissement.entreprise_besoin_fdr
-
-          - else
+        - else
+          %tr
+            %th.libelle
+              Bilans Banque de France :
             %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
+      - if etablissement.entreprise_attestation_sociale.attached?
+        %tr
+          %th.libelle Attestation sociale :
+          - if profile == 'instructeur'
+            %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
+          - else
+            %td Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
+
+      - if etablissement.entreprise_attestation_fiscale.attached?
+        %tr
+          %th.libelle Attestation fiscale :
+          - if profile == 'instructeur'
+            %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
+          - else
+            %td Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
 
       - if etablissement.association?
         %tr
