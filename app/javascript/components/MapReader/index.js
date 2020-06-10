@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactMapboxGl, { ZoomControl, GeoJSONLayer } from 'react-mapbox-gl';
 import mapboxgl from 'mapbox-gl';
+import SwitchMapStyle from './SwitchMapStyle';
+import ortho from '../MapStyles/ortho.json';
+import orthoCadastre from '../MapStyles/orthoCadastre.json';
+import vector from '../MapStyles/vector.json';
+import vectorCadastre from '../MapStyles/vectorCadastre.json';
 import PropTypes from 'prop-types';
 
 const Map = ReactMapboxGl({});
 
 const MapReader = ({ featureCollection }) => {
+  const [style, setStyle] = useState('ortho');
+  const hasCadastres = featureCollection.features.find(
+    (feature) => feature.properties.source === 'cadastre'
+  );
+  let mapStyle = style === 'ortho' ? ortho : vector;
+
+  if (hasCadastres) {
+    mapStyle = style === 'ortho' ? orthoCadastre : vectorCadastre;
+  }
+
   const [a1, a2, b1, b2] = featureCollection.bbox;
   const boundData = [
     [a1, a2],
@@ -52,7 +67,7 @@ const MapReader = ({ featureCollection }) => {
   };
 
   const polygonCadastresFill = {
-    'fill-color': '#9CA090',
+    'fill-color': '#FAD859',
     'fill-opacity': 0.5
   };
 
@@ -97,7 +112,7 @@ const MapReader = ({ featureCollection }) => {
     <Map
       fitBounds={boundData}
       fitBoundsOptions={{ padding: 100 }}
-      style="https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json"
+      style={mapStyle}
       containerStyle={{
         height: '400px',
         width: '100%'
@@ -121,6 +136,20 @@ const MapReader = ({ featureCollection }) => {
         fillPaint={polygonCadastresFill}
         linePaint={polygonCadastresLine}
       />
+
+      <div
+        className="style-switch"
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0
+        }}
+        onClick={() =>
+          style === 'ortho' ? setStyle('vector') : setStyle('ortho')
+        }
+      >
+        <SwitchMapStyle isVector={style === 'vector' ? true : false} />
+      </div>
       <ZoomControl />
     </Map>
   );

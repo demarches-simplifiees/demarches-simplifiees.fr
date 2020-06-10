@@ -139,15 +139,48 @@ class Etablissement < ApplicationRecord
     upload_attestation(url, entreprise_attestation_fiscale)
   end
 
-  def entreprise_bilans_bdf_to_csv
-    headers = entreprise_bilans_bdf.flat_map(&:keys).uniq
-    data = entreprise_bilans_bdf.map do |bilan|
-      headers.map { |h| bilan[h] }
-    end
-    SpreadsheetArchitect.to_csv(headers: headers, data: data)
+  def entreprise_date_arret_exercice
+    entreprise_last_bilan_info_cle("date_arret_exercice")
+  end
+
+  def entreprise_resultat_exercice
+    entreprise_last_bilan_info_cle("resultat_exercice")
+  end
+
+  def entreprise_excedent_brut_exploitation
+    entreprise_last_bilan_info_cle("excedent_brut_exploitation")
+  end
+
+  def entreprise_fdr_net_global
+    entreprise_last_bilan_info_cle("fonds_roulement_net_global")
+  end
+
+  def entreprise_besoin_fdr
+    entreprise_last_bilan_info_cle("besoin_en_fonds_de_roulement")
+  end
+
+  def entreprise_bilans_bdf_to_sheet(format)
+    SpreadsheetArchitect.send("to_#{format}".to_sym, bilans_bdf_data)
   end
 
   private
+
+  def bilans_new_keys
+    keys = entreprise_bilans_bdf.flat_map(&:keys).uniq
+    keys - bilans_headers
+  end
+
+  def entreprise_last_bilan_info_cle(key)
+    entreprise_bilans_bdf.first[key]
+  end
+
+  def bilans_bdf_data
+    headers = bilans_headers.concat(bilans_new_keys)
+    data = entreprise_bilans_bdf.map do |bilan|
+      headers.map { |h| bilan[h] }
+    end
+    { headers: headers, data: data }
+  end
 
   def dossier_id_for_export
     if dossier_id
@@ -159,5 +192,29 @@ class Etablissement < ApplicationRecord
 
   def libelle_for_export
     champ&.libelle || 'Dossier'
+  end
+
+  def bilans_headers
+    [
+      "date_arret_exercice", "duree_exercice", "chiffre_affaires_ht", "evolution_chiffre_affaires_ht",
+      "valeur_ajoutee_bdf", "evolution_valeur_ajoutee_bdf", "excedent_brut_exploitation",
+      "evolution_excedent_brut_exploitation", "resultat_exercice", "evolution_resultat_exercice",
+      "capacite_autofinancement", "evolution_capacite_autofinancement", "fonds_roulement_net_global",
+      "evolution_fonds_roulement_net_global", "besoin_en_fonds_de_roulement", "evolution_besoin_en_fonds_de_roulement",
+      "ratio_fonds_roulement_net_global_sur_besoin_en_fonds_de_roulement",
+      "evolution_ratio_fonds_roulement_net_global_sur_besoin_en_fonds_de_roulement", "disponibilites",
+      "evolution_disponibilites", "capital_social_inclus_dans_capitaux_propres_et_assimiles",
+      "evolution_capital_social_inclus_dans_capitaux_propres_et_assimiles", "capitaux_propres_et_assimiles",
+      "evolution_capitaux_propres_et_assimiles", "autres_fonds_propres", "evolution_autres_fonds_propres",
+      "total_provisions_pour_risques_et_charges", "evolution_total_provisions_pour_risques_et_charges",
+      "dettes1_emprunts_obligataires_et_convertibles", "evolution_dettes1_emprunts_obligataires_et_convertibles",
+      "dettes2_autres_emprunts_obligataires", "evolution_dettes2_autres_emprunts_obligataires",
+      "dettes3_emprunts_et_dettes_aupres_des_etablissements_de_credit",
+      "evolution_dettes3_emprunts_et_dettes_aupres_des_etablissements_de_credit",
+      "dettes4_maturite_a_un_an_au_plus", "evolution_dettes4_maturite_a_un_an_au_plus",
+      "emprunts_et_dettes_financieres_divers", "evolution_emprunts_et_dettes_financieres_divers",
+      "total_dettes_stables", "evolution_total_dettes_stables", "groupes_et_associes",
+      "evolution_groupes_et_associes", "total_passif", "evolution_total_passif"
+    ]
   end
 end

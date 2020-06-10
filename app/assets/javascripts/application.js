@@ -12,6 +12,7 @@
 //
 //= require_tree ./old_design
 //= require bootstrap-sprockets
+//= require jquery_ujs
 
 //= require smart_listing
 //= require bootstrap-wysihtml5

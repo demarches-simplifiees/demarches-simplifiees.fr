@@ -73,8 +73,9 @@ module Instructeurs
     end
 
     def bilans_bdf
-      if avis.dossier.etablissement&.entreprise_bilans_bdf_to_csv.present?
-        render csv: avis.dossier.etablissement.entreprise_bilans_bdf_to_csv
+      if avis.dossier.etablissement&.entreprise_bilans_bdf.present?
+        extension = params[:format]
+        render extension.to_sym => avis.dossier.etablissement.entreprise_bilans_bdf_to_sheet(extension)
       else
         redirect_to instructeur_avis_path(avis)
       end
