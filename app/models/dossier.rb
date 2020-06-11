@@ -1,5 +1,5 @@
 class Dossier < ApplicationRecord
-  self.ignored_columns = ['json_latlngs']
+  self.ignored_columns = ['procedure_id']
   include DossierFilteringConcern
 
   include Discard::Model
