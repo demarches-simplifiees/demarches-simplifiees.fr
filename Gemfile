@@ -62,6 +62,7 @@ gem 'rack-mini-profiler'
 gem 'rails', '= 5.2.4.2'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
+gem 'rbtrace', require: false
 gem 'react-rails'
 gem 'rgeo-geojson'
 gem 'sanitize-url'
