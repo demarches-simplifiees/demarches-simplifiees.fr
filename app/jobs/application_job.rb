@@ -13,10 +13,6 @@ class ApplicationJob < ActiveJob::Base
     error(self, exception)
   end
 
-  rescue_from(ApiEntreprise::API::BadFormatRequest) do |exception|
-    error(self, exception)
-  end
-
   def error(job, exception)
     Raven.capture_exception(exception)
   end
