@@ -13,6 +13,7 @@ class Admin::InstructeursController < AdminController
     email = params[:instructeur][:email].downcase
     @instructeur = Instructeur.by_email(email)
     procedure_id = params[:procedure_id]
+    procedure = Procedure.find_by(id: procedure_id)
 
     if @instructeur.nil?
       invite_instructeur(email)
@@ -21,7 +22,7 @@ class Admin::InstructeursController < AdminController
     end
 
     if procedure_id.present?
-      redirect_to admin_procedure_assigns_path(procedure_id: procedure_id)
+      redirect_to procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)
     else
       redirect_to admin_instructeurs_path
     end
