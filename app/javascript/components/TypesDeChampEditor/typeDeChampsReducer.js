@@ -18,6 +18,13 @@ export default function typeDeChampsReducer(state, { type, params, done }) {
         params.typeDeChamp,
         done
       );
+    case 'addNewConditionTypeDeChamp':
+      return addNewConditionTypeDeChamp(
+        state,
+        state.typeDeChamps,
+        params.typeDeChamp,
+        done
+      );
     case 'updateTypeDeChamp':
       return updateTypeDeChamp(state, state.typeDeChamps, params, done);
     case 'removeTypeDeChamp':
@@ -33,6 +40,21 @@ export default function typeDeChampsReducer(state, { type, params, done }) {
     default:
       throw new Error(`Unknown action "${type}"`);
   }
+}
+
+function addNewConditionTypeDeChamp(state, typeDeChamps, typeDeChamp, done) {
+  return addTypeDeChamp(
+    {
+      ...state,
+      defaultTypeDeChampAttributes: {
+        ...state.defaultTypeDeChampAttributes,
+        parent_id: typeDeChamp.id
+      }
+    },
+    typeDeChamps,
+    null,
+    done
+  );
 }
 
 function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
@@ -224,8 +246,11 @@ function getLastVisibleTypeDeChamp() {
 
   if (target) {
     const parentTarget = target.closest('[data-repetition]');
+    const parentTargetCondition = target.closest('[data-condition]');
     if (parentTarget) {
       return parentTarget;
+    } else if (parentTargetCondition) {
+      return parentTargetCondition;
     }
     return target;
   }

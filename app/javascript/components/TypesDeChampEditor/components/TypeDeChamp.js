@@ -14,6 +14,7 @@ import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
 import TypeDeChampTypesSelect from './TypeDeChampTypesSelect';
+import TypeDeChampCondition from './TypeDeChampCondition';
 
 const TypeDeChamp = sortableElement(
   ({ typeDeChamp, dispatch, idx: index, isFirstItem, isLastItem, state }) => {
@@ -27,6 +28,7 @@ const TypeDeChamp = sortableElement(
     const isExplication = typeDeChamp.type_champ === 'explication';
     const isHeaderSection = typeDeChamp.type_champ === 'header_section';
     const isRepetition = typeDeChamp.type_champ === 'repetition';
+    const isConditionChamp = typeDeChamp.type_champ === 'condition_champ';
     const canBeMandatory =
       !isHeaderSection && !isExplication && !state.isAnnotation;
 
@@ -45,12 +47,17 @@ const TypeDeChamp = sortableElement(
       ([, type]) => !EXCLUDE_FROM_REPETITION.includes(type)
     );
 
+    const typeDeChampsTypesForCondition = state.typeDeChampsTypes.filter(
+      ([, type]) => !EXCLUDE_FROM_CONDITION.includes(type)
+    );
+
     return (
       <div
         ref={ref}
         data-index={index}
         data-in-view={inView ? true : undefined}
         data-repetition={isRepetition ? true : undefined}
+        data-condition={isConditionChamp ? true : undefined}
         className={`type-de-champ form flex column justify-start ${
           isHeaderSection ? 'type-header-section' : ''
         }`}
@@ -151,6 +158,16 @@ const TypeDeChamp = sortableElement(
             }}
             typeDeChamp={typeDeChamp}
           />
+          <TypeDeChampCondition
+            isVisible={isConditionChamp}
+            state={{
+              ...state,
+              typeDeChampsTypes: typeDeChampsTypesForCondition,
+              prefix: `condition-${index}`,
+              typeDeChamps: typeDeChamp.types_de_champ || []
+            }}
+            typeDeChamp={typeDeChamp}
+          />
         </div>
       </div>
     );
@@ -228,6 +245,16 @@ const EXCLUDE_FROM_REPETITION = [
   'dossier_link',
   'repetition',
   'siret'
+];
+
+const EXCLUDE_FROM_CONDITION = [
+  'carte',
+  'dossier_link',
+  'repetition',
+  'siret',
+  'repetition',
+  'condition_champ',
+  'apis'
 ];
 
 export default TypeDeChamp;

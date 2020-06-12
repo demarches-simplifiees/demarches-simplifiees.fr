@@ -572,6 +572,14 @@ describe Instructeurs::DossiersController, type: :controller do
       champ
     end
 
+    let(:champ_condition) do
+      sous_champs = create(:type_de_champ_condition, libelle: 'condition 1')
+      sous_champs.type_de_champ << create(:type_de_champ_text_limitation, libelle: 'champ texte limité')
+      champ = sous_champs.champ.create
+      champ.add_row
+      champ
+    end
+
     let(:dossier) do
       create(:dossier, :en_construction, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime, champ_repetition])
     end

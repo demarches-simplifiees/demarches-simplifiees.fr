@@ -103,6 +103,9 @@ FactoryBot.define do
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }
     end
+    factory :type_de_champ_condition do
+      type_champ { TypeDeChamp.type_champs.fetch(:condition_champ) }
+    end
 
     trait :private do
       private { true }

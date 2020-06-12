@@ -1,0 +1,14 @@
+= form.check_box :value,
+  {id: "check_#{champ.type_de_champ_id}",
+  onchange: "DS.manage_sub_champ(event, id, 'div_condition#{champ.type_de_champ_id}')"},
+  'oui',
+  'non'
+%div{ id: "div_condition#{champ.type_de_champ_id}", style: 'display: none;' }
+  .card
+    - champ.rows.each do |champs|
+      %div{ class: "row row" }
+        - champs.each do |champ|
+          = form.fields_for :champs, champ do |form_sub|
+            - form_sub.options['parent_index'] = form.index
+            = render partial: 'shared/dossiers/editable_champs/editable_champ', locals: { champ: form_sub.object, form: form_sub }
+            = form_sub.hidden_field :_destroy, disabled: true

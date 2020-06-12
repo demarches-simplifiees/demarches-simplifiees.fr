@@ -33,3 +33,4 @@ fr:
           siret: 'SIRET'
           carte: 'Carte'
           repetition: 'Bloc répétable'
+          condition_champ: 'Champ conditionnel'

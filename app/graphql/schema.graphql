@@ -1152,6 +1152,11 @@ enum TypeDeChamp {
   communes
 
   """
+  Champ conditionnel
+  """
+  condition_champ
+
+  """
   Date
   """
   date

@@ -7,6 +7,7 @@ class TypeDeChamp < ApplicationRecord
     number: 'number',
     decimal_number: 'decimal_number',
     integer_number: 'integer_number',
+    condition_champ: 'condition_champ',
     checkbox: 'checkbox',
     civilite: 'civilite',
     email: 'email',
@@ -164,6 +165,10 @@ class TypeDeChamp < ApplicationRecord
 
   def public?
     !private?
+  end
+
+  def condition_champ?
+    type_champ == TypeDeChamp.type_champs.fetch(:condition_champ)
   end
 
   def self.type_champ_to_class_name(type_champ)

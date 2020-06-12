@@ -28,6 +28,7 @@ import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/repetition';
 
+import { manage_sub_champ } from '../new_design/champs/Check_condition_champ';
 import { toggleCondidentielExplanation } from '../new_design/avis';
 import { scrollMessagerie } from '../new_design/messagerie';
 import {
@@ -51,7 +52,8 @@ const DS = {
   showImportJustificatif,
   replaceSemicolonByComma,
   acceptEmailSuggestion,
-  discardEmailSuggestionBox
+  discardEmailSuggestionBox,
+  manage_sub_champ
 };
 
 // Start Rails helpers

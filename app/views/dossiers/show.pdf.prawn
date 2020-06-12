@@ -109,7 +109,7 @@ end
 
 def add_champs(pdf, champs)
   champs.each do |champ|
-    if champ.type == 'Champs::RepetitionChamp'
+    if champ.type == 'Champs::RepetitionChamp' || champ.type == 'Champs::ConditionChampChamp'
       champ.rows.each do |row|
         row.each do |inner_champ|
           render_single_champ(pdf, inner_champ)

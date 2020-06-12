@@ -1,5 +1,5 @@
 - champs.reject(&:exclude_from_view?).each do |c|
-  - if c.type_champ == TypeDeChamp.type_champs.fetch(:repetition)
+  - if c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) || c.type_champ == TypeDeChamp.type_champs.fetch(:condition_champ) && c.value == 'oui'
     %tr
       %th.libelle.repetition{ colspan: 3 }
         = "#{c.libelle} :"

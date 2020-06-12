@@ -1039,6 +1039,29 @@ describe Dossier do
         end
       end
 
+      context "with champ condition" do
+        let(:procedure) { create(:procedure) }
+        let(:type_de_champ_condition) { create(:type_de_champ_condition, mandatory: true) }
+
+        before do
+          procedure.types_de_champ << type_de_champ_condition
+          type_de_champ_condition.types_de_champ << create(:type_de_champ_text, mandatory: true)
+        end
+
+        context "when no champs" do
+          let(:champ_with_error) do
+            repetition_champ = dossier.champs.first
+            text_champ = repetition_champ.rows.first.first
+            text_champ
+          end
+          it 'should have errors' do
+            errors = dossier.check_mandatory_champs
+            expect(errors).not_to be_empty
+            expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+          end
+        end
+      end
+
       context "when mandatory champ inside repetition" do
         let(:champ_with_error) { dossier.champs.first.champs.first }
 

@@ -181,6 +181,21 @@ FactoryBot.define do
     end
   end
 
+  factory :champ_condition_champ, class: 'Champs::ConditionChampChamp' do
+    type_de_champ { create(:type_de_champ_condition_champ) }
+
+    after(:build) do |champ_condition, _evaluator|
+      type_champ_text_limite = create(:type_de_champ_text_limitation, order_place: 0, parent: champ_condition.type_de_champ, libelle: 'Fonction')
+      type_de_champ_number = create(:type_de_champ_number, order_place: 1, parent: champ_condition.type_de_champ, libelle: 'Année expérience')
+
+      create(:champ_text, row: 0, type_de_champ: type_champ_text_limite, parent: champ_condition)
+      create(:champ_number, row: 0, type_de_champ: type_de_champ_number, parent: champ_condition)
+      create(:champ_text, row: 1, type_de_champ: type_de_champ_text, parent: champ_condition)
+      create(:champ_number, row: 1, type_de_champ: type_de_champ_number, parent: champ_condition)
+      create(:champ_piece_justificative, row: 1, type_de_champ: type_de_champ_pj1, parent: champ_condition)
+    end
+  end
+
   factory :champ_repetition_with_piece_jointe, class: 'Champs::RepetitionChamp' do
     type_de_champ { create(:type_de_champ_repetition) }
 

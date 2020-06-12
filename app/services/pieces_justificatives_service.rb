@@ -8,8 +8,12 @@ class PiecesJustificativesService
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
       .flat_map(&:champs)
 
+    champs_condition = dossier.champs
+      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:condition_champ) }
+      .flat_map(&:champs)
+
     pjs_commentaires + champs_pieces_justificatives_with_attachments(
-      champs_blocs_repetables + dossier.champs
+      champs_blocs_repetables + champs_condition + dossier.champs
     )
   end
 
