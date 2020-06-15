@@ -78,7 +78,7 @@ class ApiEntreprise::API
     elsif response.code == 400
       raise BadFormatRequest, "url:  #{url}"
     else
-      raise RequestFailed, "HTTP Error Code: #{response.code} for #{url}"
+      raise RequestFailed, "HTTP Error Code: #{response.code} for #{url}\nheaders: #{response.headers}\nbody: #{response.body}"
     end
   end
 
