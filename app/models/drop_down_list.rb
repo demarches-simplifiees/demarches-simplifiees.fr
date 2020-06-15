@@ -8,6 +8,10 @@ class DropDownList < ApplicationRecord
     result.blank? ? [] : [''] + result
   end
 
+  def enabled_non_empty_options
+    (options - disabled_options).reject(&:empty?)
+  end
+
   def disabled_options
     options.filter { |v| (v =~ /^--.*--$/).present? }
   end
