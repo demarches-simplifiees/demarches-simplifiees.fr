@@ -1,0 +1,10 @@
+%tr
+  %th.libelle
+    = "#{libelle} :"
+  %td
+    %details
+      - etablissement.entreprise_bilans_bdf.each do |bilan|
+        = "#{pretty_date_exercice(bilan["date_arret_exercice"])} : "
+        = pretty_currency(bilan[key], unit: pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie))
+        %br
+

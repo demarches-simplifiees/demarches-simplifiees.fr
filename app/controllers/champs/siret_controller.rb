@@ -46,7 +46,7 @@ class Champs::SiretController < ApplicationController
       @champ = policy_scope(Champ).find(params[:champ_id])
       @etablissement = @champ&.etablissement
     end
-    @procedure_id = @champ&.dossier&.procedure_id || 'aperçu'
+    @procedure_id = @champ&.dossier&.procedure&.id || 'aperçu'
   end
 
   def find_etablissement_with_siret

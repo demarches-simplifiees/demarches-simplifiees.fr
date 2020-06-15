@@ -16,8 +16,8 @@ class ApiEntreprise::EffectifsAdapter < ApiEntreprise::Adapter
     if data_source[:effectifs_mensuels].present?
       {
         entreprise_effectif_mensuel: data_source[:effectifs_mensuels],
-        entreprise_effectif_mois: @mois,
-        entreprise_effectif_annee: @annee
+        entreprise_effectif_mois: data_source[:mois],
+        entreprise_effectif_annee: data_source[:annee]
       }
     else
       {}
