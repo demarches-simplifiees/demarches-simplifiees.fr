@@ -2,6 +2,7 @@ class GeoArea < ApplicationRecord
   belongs_to :champ
 
   store :properties, accessors: [
+    :description,
     :surface_intersection,
     :surface_parcelle,
     :numero,
