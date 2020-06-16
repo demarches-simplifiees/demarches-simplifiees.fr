@@ -10,6 +10,6 @@ class ApiEntreprise::Job < ApplicationJob
   end
 
   def max_attempts
-    ENV[MAX_ATTEMPTS_API_ENTREPRISE_JOBS].to_i || DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS
+    ENV.fetch("MAX_ATTEMPTS_API_ENTREPRISE_JOBS", DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS).to_i
   end
 end
