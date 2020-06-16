@@ -4,13 +4,14 @@
 
 - if !dossier_submission_is_closed?(@dossier)
   = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
-    %h1 Données d'identité
+    %h1 Données d’identité
 
     %p.mb-1 Merci de remplir vos informations personnelles pour accéder à la démarche.
 
     %fieldset
       %legend
-        = f.label :gender
+        %h2.form-label Civilité
+        .notice Si le demandeur n’est pas le bénéficiaire, merci de renseigner l’identité du demandeur.
       .radios
         %label
           = f.radio_button :gender, Individual::GENDER_MALE, required: true
