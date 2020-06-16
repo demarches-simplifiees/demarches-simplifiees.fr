@@ -14,6 +14,6 @@ class ApplicationJob < ActiveJob::Base
   end
 
   def max_attempts
-    ENV["MAX_ATTEMPTS_JOBS"].to_i || DEFAULT_MAX_ATTEMPTS_JOBS
+    ENV.fetch("MAX_ATTEMPTS_JOBS", DEFAULT_MAX_ATTEMPTS_JOBS).to_i
   end
 end
