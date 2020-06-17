@@ -23,4 +23,12 @@ class TypesDeChamp::TypeDeChampBase
   def build_champ
     @type_de_champ.champ.build
   end
+
+  def filter_to_human(filter_value)
+    filter_value
+  end
+
+  def human_to_filter(human_value)
+    human_value
+  end
 end

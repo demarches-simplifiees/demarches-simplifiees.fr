@@ -47,7 +47,7 @@ addEventListener('autosave:end', () => {
   hideSucceededStatusAfterDelay();
 });
 
-addEventListener('autosave:error', event => {
+addEventListener('autosave:error', (event) => {
   enable(document.querySelector('button.autosave-retry'));
   setState('failed');
   logError(event.detail);

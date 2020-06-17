@@ -3,6 +3,27 @@ describe Champ do
 
   it_should_behave_like "champ_spec"
 
+  describe "associations" do
+    it { is_expected.to belong_to(:dossier) }
+
+    context 'when the parent dossier is discarded' do
+      let(:discarded_dossier) { create(:dossier, :discarded) }
+      subject(:champ) { discarded_dossier.champs.first }
+
+      it { expect(champ.reload.dossier).to eq discarded_dossier }
+    end
+  end
+
+  describe "validations" do
+    let(:row) { 1 }
+    let(:champ) { create(:champ, type_de_champ: create(:type_de_champ), row: row) }
+    let(:champ2) { build(:champ, type_de_champ: champ.type_de_champ, row: champ.row, dossier: champ.dossier) }
+
+    it "returns false when champ with same type_de_champ and row already exist" do
+      expect(champ2).not_to be_valid
+    end
+  end
+
   describe '#public?' do
     let(:type_de_champ) { build(:type_de_champ) }
     let(:champ) { type_de_champ.champ.build }

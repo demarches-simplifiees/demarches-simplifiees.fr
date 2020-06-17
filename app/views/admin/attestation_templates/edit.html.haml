@@ -85,6 +85,6 @@
       - if @attestation_template.new_record? || !@attestation_template.activated
         %button.btn.btn-success Activer l'attestation
       - else
-        - save_data = @procedure.locked? ? { toggle: :tooltip, confirm: "Attention: les modifications n'affecteront pas les attestations déjà délivrées." } : nil
+        - save_data = @procedure.locked? ? { confirm: "Attention: les modifications n'affecteront pas les attestations déjà délivrées." } : nil
         %button.btn.btn-success{ data: save_data } Enregistrer
 

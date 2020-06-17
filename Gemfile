@@ -25,20 +25,25 @@ gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
+gem 'ffi-geos', require: false
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
+gem 'font-awesome-rails'
+gem 'fugit'
+gem 'geo_coord', require: "geo/coord"
 gem 'geocoder'
 gem 'gon'
-gem 'graphiql-rails'
 gem 'graphql'
 gem 'graphql-batch'
 gem 'graphql-rails_logger'
+gem 'graphql_playground-rails'
 gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
 gem 'jquery-rails' # Use jquery as the JavaScript library
-gem 'kaminari', '= 1.1.1' # Pagination
+gem 'jwt'
+gem 'kaminari', '1.2.1' # Pagination
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
@@ -66,7 +71,6 @@ gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
 gem 'sprockets', '< 4'
-gem 'turbolinks' # Turbolinks makes following links in your web application faster
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'

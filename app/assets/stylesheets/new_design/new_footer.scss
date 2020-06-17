@@ -84,6 +84,13 @@ footer {
   height: 25px;
 }
 
+.footer-logo-france {
+  @include ie-compatible-background-image("republique-francaise-logo.svg");
+
+  width: 105px;
+  height: 90px;
+}
+
 .footer-link a,
 .footer-text a {
   color: $black;

@@ -8,6 +8,7 @@ module Instructeurs
     def index
       @procedures = current_instructeur
         .procedures
+        .kept
         .with_attached_logo
         .includes(:defaut_groupe_instructeur)
         .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
@@ -166,18 +167,7 @@ module Instructeurs
 
     def add_filter
       if params[:value].present?
-        filters = procedure_presentation.filters
-        table, column = params[:field].split('/')
-        label = find_field(table, column)['label']
-
-        filters[statut] << {
-          'label' => label,
-          'table' => table,
-          'column' => column,
-          'value' => params[:value]
-        }
-
-        procedure_presentation.update(filters: filters)
+        procedure_presentation.add_filter(statut, params[:field], params[:value])
       end
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
@@ -254,7 +244,8 @@ module Instructeurs
     private
 
     def assign_to_params
-      params.require(:assign_to).permit(:daily_email_notifications_enabled, :weekly_email_notifications_enabled)
+      params.require(:assign_to)
+        .permit(:instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :daily_email_notifications_enabled, :weekly_email_notifications_enabled)
     end
 
     def assign_exports

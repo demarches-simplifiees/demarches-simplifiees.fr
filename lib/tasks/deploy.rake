@@ -32,3 +32,13 @@ task :post_deploy do
 
   sh "mina post_deploy domain=#{domains.first} branch=#{branch}"
 end
+
+task :rollback do
+  domains = domains_for_stage(ENV.fetch('STAGE'))
+  branch = ENV.fetch('BRANCH')
+
+  domains.each do |domain|
+    sh "mina rollback domain=#{domain} branch=#{branch}"
+    sh "mina service:restart_puma domain=#{domain} branch=#{branch}"
+  end
+end

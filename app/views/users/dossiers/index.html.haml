@@ -1,11 +1,16 @@
-- content_for(:title, "Dossiers")
+- if @search_terms.present?
+  - content_for(:title, "Recherche : #{@search_terms}")
+- else
+  - content_for(:title, "Dossiers")
 
 - content_for :footer do
   = render partial: "users/dossiers/index_footer"
 
 .dossiers-headers.sub-header
   .container
-    - if @dossiers_invites.count == 0
+    - if @search_terms.present?
+      %h1.page-title Résultat de la recherche pour « #{@search_terms} »
+    - elsif @dossiers_invites.count == 0
       %h1.page-title Mes dossiers
 
     - else
@@ -27,6 +32,8 @@
           %th.notification-col
           %th.number-col Nº dossier
           %th Démarche
+          - if @dossiers.count > 1
+            %th Demandeur
           %th.status-col Statut
           %th.updated-at-col Mis à jour
           %th
@@ -42,6 +49,9 @@
             %td
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = procedure_libelle(dossier.procedure)
+            - if @dossiers.count > 1
+              %td.number-col
+                = demandeur_dossier(dossier)
             %td.status-col
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = status_badge(dossier.state)

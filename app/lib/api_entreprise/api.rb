@@ -3,6 +3,11 @@ class ApiEntreprise::API
   ETABLISSEMENT_RESOURCE_NAME = "etablissements"
   EXERCICES_RESOURCE_NAME = "exercices"
   RNA_RESOURCE_NAME = "associations"
+  EFFECTIFS_RESOURCE_NAME = "effectifs_mensuels_acoss_covid"
+  EFFECTIFS_ANNUELS_RESOURCE_NAME = "effectifs_annuels_acoss_covid"
+  ATTESTATION_SOCIALE_RESOURCE_NAME = "attestations_sociales_acoss"
+  ATTESTATION_FISCALE_RESOURCE_NAME = "attestations_fiscales_dgfip"
+  BILANS_BDF_RESOURCE_NAME = "bilans_entreprises_bdf"
 
   TIMEOUT = 15
 
@@ -10,6 +15,9 @@ class ApiEntreprise::API
   end
 
   class RequestFailed < StandardError
+  end
+
+  class BadFormatRequest < StandardError
   end
 
   def self.entreprise(siren, procedure_id)
@@ -28,11 +36,36 @@ class ApiEntreprise::API
     call(RNA_RESOURCE_NAME, siret, procedure_id)
   end
 
+  def self.effectifs(siren, procedure_id, annee, mois)
+    endpoint = [EFFECTIFS_RESOURCE_NAME, annee, mois, "entreprise"].join('/')
+    call(endpoint, siren, procedure_id)
+  end
+
+  def self.effectifs_annuels(siren, procedure_id)
+    call(EFFECTIFS_ANNUELS_RESOURCE_NAME, siren, procedure_id)
+  end
+
+  def self.attestation_sociale(siren, procedure_id)
+    procedure = Procedure.find(procedure_id)
+    call(ATTESTATION_SOCIALE_RESOURCE_NAME, siren, procedure_id) if procedure.api_entreprise_role?("attestations_sociales")
+  end
+
+  def self.attestation_fiscale(siren, procedure_id, user_id)
+    procedure = Procedure.find(procedure_id)
+    call(ATTESTATION_FISCALE_RESOURCE_NAME, siren, procedure_id, user_id) if procedure.api_entreprise_role?("attestations_fiscales")
+  end
+
+  def self.bilans_bdf(siren, procedure_id)
+    procedure = Procedure.find(procedure_id)
+    call(BILANS_BDF_RESOURCE_NAME, siren, procedure_id) if procedure.api_entreprise_role?("bilans_entreprise_bdf")
+  end
+
   private
 
-  def self.call(resource_name, siret_or_siren, procedure_id)
+  def self.call(resource_name, siret_or_siren, procedure_id, user_id = nil)
+    return if ApiEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
     url = url(resource_name, siret_or_siren)
-    params = params(siret_or_siren, procedure_id)
+    params = params(siret_or_siren, procedure_id, user_id)
 
     response = Typhoeus.get(url,
       params: params,
@@ -41,9 +74,11 @@ class ApiEntreprise::API
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     elsif response.code&.between?(401, 499)
-      raise ResourceNotFound
+      raise ResourceNotFound, "url: #{url}"
+    elsif response.code == 400
+      raise BadFormatRequest, "url:  #{url}"
     else
-      raise RequestFailed
+      raise RequestFailed, "HTTP Error Code: #{response.code} for #{url}\nheaders: #{response.headers}\nbody: #{response.body}"
     end
   end
 
@@ -57,17 +92,20 @@ class ApiEntreprise::API
     base_url
   end
 
-  def self.params(siret_or_siren, procedure_id)
-    {
+  def self.params(siret_or_siren, procedure_id, user_id)
+    params = {
       context: "demarches-simplifiees.fr",
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}",
       non_diffusables: true,
-      token: token
+      token: token_for_procedure(procedure_id)
     }
+    params[:user_id] = user_id if user_id.present?
+    params
   end
 
-  def self.token
-    Rails.application.secrets.api_entreprise[:key]
+  def self.token_for_procedure(procedure_id)
+    procedure = Procedure.find(procedure_id)
+    procedure.api_entreprise_token
   end
 end

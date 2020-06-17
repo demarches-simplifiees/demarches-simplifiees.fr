@@ -19,7 +19,7 @@ class Champs::SiretController < ApplicationController
     rescue ApiEntreprise::API::RequestFailed
       return siret_error(:network_error)
     end
-    if etablissement.blank?
+    if etablissement.nil?
       return siret_error(:not_found)
     end
 
@@ -46,14 +46,11 @@ class Champs::SiretController < ApplicationController
       @champ = policy_scope(Champ).find(params[:champ_id])
       @etablissement = @champ&.etablissement
     end
-    @procedure_id = @champ&.dossier&.procedure_id || 'aperçu'
+    @procedure_id = @champ&.dossier&.procedure&.id || 'aperçu'
   end
 
   def find_etablissement_with_siret
-    etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(@siret, @procedure_id)
-    if etablissement_attributes.present?
-      Etablissement.new(etablissement_attributes)
-    end
+    ApiEntrepriseService.create_etablissement(@champ, @siret, current_user.id)
   end
 
   def clear_siret_and_etablissement

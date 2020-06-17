@@ -25,23 +25,4 @@ if (enabled) {
   script.async = true;
   script.src = jsUrl;
   firstScript.parentNode.insertBefore(script, firstScript);
-
-  // Send Matomo a new event when navigating to a new page using Turbolinks
-  // (see https://developer.matomo.org/guides/spa-tracking)
-  let previousPageUrl = null;
-  addEventListener('turbolinks:load', event => {
-    if (previousPageUrl) {
-      window._paq.push(['setReferrerUrl', previousPageUrl]);
-      window._paq.push(['setCustomUrl', window.location.href]);
-      window._paq.push(['setDocumentTitle', document.title]);
-      if (event.data && event.data.timing) {
-        window._paq.push([
-          'setGenerationTimeMs',
-          event.data.timing.visitEnd - event.data.timing.visitStart
-        ]);
-      }
-      window._paq.push(['trackPageView']);
-    }
-    previousPageUrl = window.location.href;
-  });
 }

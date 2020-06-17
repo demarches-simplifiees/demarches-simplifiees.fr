@@ -4,7 +4,7 @@ const BUTTON_SELECTOR = '.button.remove-row';
 const DESTROY_INPUT_SELECTOR = 'input[type=hidden][name*=_destroy]';
 const CHAMP_SELECTOR = '.editable-champ';
 
-delegate('click', BUTTON_SELECTOR, evt => {
+delegate('click', BUTTON_SELECTOR, (evt) => {
   evt.preventDefault();
 
   const row = evt.target.closest('.row');

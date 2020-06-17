@@ -1,8 +1,9 @@
 describe ProcedurePresentation do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
   let(:assign_to) { create(:assign_to, procedure: procedure) }
-  let(:first_type_de_champ_id) { assign_to.procedure.types_de_champ.first.id.to_s }
-  let (:procedure_presentation_id) {
+  let(:first_type_de_champ) { assign_to.procedure.types_de_champ.first }
+  let(:first_type_de_champ_id) { first_type_de_champ.id.to_s }
+  let(:procedure_presentation) {
     ProcedurePresentation.create(
       assign_to: assign_to,
       displayed_fields: [
@@ -10,10 +11,11 @@ describe ProcedurePresentation do
         { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }
       ],
       sort: { "table" => "user", "column" => "email", "order" => "asc" },
-      filters: { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] }
-    ).id
+      filters: filters
+    )
   }
-  let (:procedure_presentation) { ProcedurePresentation.find(procedure_presentation_id) }
+  let(:procedure_presentation_id) { procedure_presentation.id }
+  let(:filters) { { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] } }
 
   describe "#displayed_fields" do
     it { expect(procedure_presentation.displayed_fields).to eq([{ "label" => "test1", "table" => "user", "column" => "email" }, { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }]) }
@@ -499,12 +501,14 @@ describe ProcedurePresentation do
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
       let(:type_de_champ) { procedure.types_de_champ.first }
 
-      before do
-        type_de_champ.champ.create(dossier: kept_dossier, value: 'keep me')
-        type_de_champ.champ.create(dossier: discarded_dossier, value: 'discard me')
-      end
+      context 'with single value' do
+        before do
+          kept_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'keep me')
+          discarded_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'discard me')
+        end
 
-      it { is_expected.to contain_exactly(kept_dossier.id) }
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
 
       context 'with multiple search values' do
         let(:filter) do
@@ -517,12 +521,26 @@ describe ProcedurePresentation do
         let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          type_de_champ.champ.create(dossier: other_kept_dossier, value: 'and me too')
+          kept_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'keep me')
+          discarded_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'discard me')
+          other_kept_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'and me too')
         end
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
         end
+      end
+
+      context 'with yes_no type_de_champ' do
+        let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'true' }] }
+        let(:procedure) { create(:procedure, :with_yes_no) }
+
+        before do
+          kept_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'true')
+          discarded_dossier.champs.find_by(type_de_champ: type_de_champ).update(value: 'false')
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
       end
     end
 
@@ -534,8 +552,8 @@ describe ProcedurePresentation do
       let(:type_de_champ_private) { procedure.types_de_champ_private.first }
 
       before do
-        type_de_champ_private.champ.create(dossier: kept_dossier, value: 'keep me')
-        type_de_champ_private.champ.create(dossier: discarded_dossier, value: 'discard me')
+        kept_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'keep me')
+        discarded_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'discard me')
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -551,7 +569,7 @@ describe ProcedurePresentation do
         let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          type_de_champ_private.champ.create(dossier: other_kept_dossier, value: 'and me too')
+          other_kept_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'and me too')
         end
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
@@ -861,6 +879,56 @@ describe ProcedurePresentation do
         expect(displayed_dossier.association(:individual)).not_to be_loaded
         expect(displayed_dossier.association(:etablissement)).not_to be_loaded
         expect(displayed_dossier.association(:followers_instructeurs)).not_to be_loaded
+      end
+    end
+  end
+
+  describe "#human_value_for_filter" do
+    let(:filters) { { "suivis" => [{ "label" => "label1", "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true" }] } }
+
+    subject { procedure_presentation.human_value_for_filter(procedure_presentation.filters["suivis"].first) }
+
+    context 'when type_de_champ text' do
+      it 'should passthrough value' do
+        expect(subject).to eq("true")
+      end
+    end
+
+    context 'when type_de_champ yes_no' do
+      let(:procedure) { create(:procedure, :with_yes_no) }
+
+      it 'should transform value' do
+        expect(subject).to eq("oui")
+      end
+    end
+  end
+
+  describe "#add_filter" do
+    let(:filters) { { "suivis" => [] } }
+
+    context 'when type_de_champ yes_no' do
+      let(:procedure) { create(:procedure, :with_yes_no) }
+
+      it 'should downcase and transform value' do
+        procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "Oui")
+
+        expect(procedure_presentation.filters).to eq({ "suivis" => [
+          { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true" }
+        ]
+        })
+      end
+    end
+
+    context 'when type_de_champ text' do
+      let(:filters) { { "suivis" => [] } }
+
+      it 'should passthrough value' do
+        procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "Oui")
+
+        expect(procedure_presentation.filters).to eq({ "suivis" => [
+          { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "Oui" }
+        ]
+        })
       end
     end
   end

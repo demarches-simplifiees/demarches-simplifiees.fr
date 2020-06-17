@@ -34,7 +34,7 @@ function toggleElement(event) {
 function closeFCPopin(event) {
   event.preventDefault();
   fconnect.popin.className = 'fade-out';
-  setTimeout(function() {
+  setTimeout(function () {
     document.body.removeChild(fconnect.popin);
   }, 200);
 }
@@ -49,7 +49,7 @@ function openFCPopin() {
 
   fconnect.popin.appendChild(iframe);
 
-  setTimeout(function() {
+  setTimeout(function () {
     fconnect.popin.className = 'fade-in';
   }, 200);
 }
@@ -112,7 +112,7 @@ var messageEvent = eventMethod == 'attachEvent' ? 'onmessage' : 'message';
 // Listen to message from child window
 eventer(
   messageEvent,
-  function(e) {
+  function (e) {
     var key = e.message ? 'message' : 'data';
     var data = e[key];
     if (data === 'close_popup') {

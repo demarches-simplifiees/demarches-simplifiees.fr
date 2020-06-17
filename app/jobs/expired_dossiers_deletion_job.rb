@@ -1,7 +1,8 @@
 class ExpiredDossiersDeletionJob < CronJob
-  self.cron_expression = "0 7 * * *"
+  self.schedule_expression = "every day at 7 am"
 
   def perform(*args)
     ExpiredDossiersDeletionService.process_expired_dossiers_brouillon
+    ExpiredDossiersDeletionService.process_expired_dossiers_en_construction
   end
 end

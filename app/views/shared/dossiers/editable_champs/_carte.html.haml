@@ -1,11 +1,5 @@
-.toolbar
-  %button.button.primary.new-area Ajouter une zone
-  %select.select2.adresse{ data: { address: true }, placeholder: 'Saisissez une adresse ou positionner la carte' }
-
-.carte.edit{ data: { geo: geo_data(champ) }, class: "carte-#{form.index}" }
+- preview = !champ.persisted?
+= react_component("MapEditor", { featureCollection: champ.to_feature_collection, url: champs_carte_features_path(preview ? 'preview' : champ), preview: preview, hasCadastres: !!champ.cadastres? }, class: "carte-#{champ.id}")
 
 .geo-areas
-  = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, error: false }
-
-= form.hidden_field :value,
-  data: { remote: true, url: champs_carte_path(form.index), params: champ_carte_params(champ).to_query, method: 'post' }
+  = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, editing: true }

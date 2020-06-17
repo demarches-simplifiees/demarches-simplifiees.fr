@@ -24,12 +24,9 @@ describe ChampSerializer do
     end
 
     context 'when type champ is carte' do
-      let(:champ) { create(:champ_carte, value: value, geo_areas: [geo_area].compact) }
-      let(:value) { nil }
-      let(:geo_area) { create(:geo_area, geometry: geo_json) }
-      let(:geo_json_as_string) { GeojsonService.to_json_polygon_for_selection_utilisateur(coordinates) }
-      let(:geo_json) { JSON.parse(geo_json_as_string) }
-      let(:coordinates) { [[{ "lat" => 48.87442541960633, "lng" => 2.3859214782714844 }, { "lat" => 48.87273183590832, "lng" => 2.3850631713867183 }, { "lat" => 48.87081237174292, "lng" => 2.3809432983398438 }, { "lat" => 48.8712640169951, "lng" => 2.377510070800781 }, { "lat" => 48.87510283703279, "lng" => 2.3778533935546875 }, { "lat" => 48.87544154230615, "lng" => 2.382831573486328 }, { "lat" => 48.87442541960633, "lng" => 2.3859214782714844 }]] }
+      let(:champ) { create(:champ_carte, geo_areas: [geo_area].compact) }
+      let(:geo_area) { create(:geo_area, :cadastre, :multi_polygon) }
+      let(:geo_json) { attributes_for(:geo_area, :multi_polygon)[:geometry].stringify_keys }
 
       let(:serialized_champ) {
         {
@@ -52,45 +49,15 @@ describe ChampSerializer do
       let(:serialized_value) { geo_json }
 
       context 'and geo_area is selection_utilisateur' do
-        let(:geo_area) { create(:geo_area, :selection_utilisateur, geometry: geo_json) }
-
-        context 'value is empty' do
-          let(:geo_area) { nil }
-
-          context 'when value is nil' do
-            let(:value) { nil }
-
-            it { expect(champ.user_geo_area).to be_nil }
-          end
-
-          context 'when value is empty array' do
-            let(:value) { '[]' }
-
-            it { expect(champ.user_geo_area).to be_nil }
-          end
-
-          context 'when value is blank' do
-            let(:value) { '' }
-
-            it { expect(champ.user_geo_area).to be_nil }
-          end
-        end
+        let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
 
         context 'old_api' do
           let(:serialized_libelle) { "user geometry" }
           let(:serialized_type_champ) { "user_geometry" }
 
-          let(:serializable_object) { champ.user_geo_area }
+          let(:serializable_object) { champ.selection_utilisateur_legacy_geo_area }
 
           context 'when value is coordinates' do
-            let(:value) { coordinates.to_json }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is geojson' do
-            let(:value) { geo_json.to_json }
-
             it { expect(subject).to eq(serialized_champ) }
           end
         end
@@ -116,33 +83,6 @@ describe ChampSerializer do
 
             it { expect(subject).to eq(serialized_champ) }
           end
-
-          context 'when value is geojson' do
-            let(:value) { geo_json.to_json }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is nil' do
-            let(:value) { nil }
-            let(:serialized_value) { nil }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is empty array' do
-            let(:value) { '[]' }
-            let(:serialized_value) { nil }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
-
-          context 'when value is blank' do
-            let(:value) { '' }
-            let(:serialized_value) { nil }
-
-            it { expect(subject).to eq(serialized_champ) }
-          end
         end
       end
 
@@ -163,30 +103,6 @@ describe ChampSerializer do
           let(:serializable_object) { champ.geo_areas.first }
           let(:serialized_libelle) { "cadastre" }
           let(:serialized_type_champ) { "cadastre" }
-
-          it { expect(subject).to eq(serialized_champ) }
-        end
-      end
-
-      context 'and geo_area is quartier_prioritaire' do
-        let(:geo_area) { create(:geo_area, :quartier_prioritaire, geometry: geo_json) }
-
-        context 'new_api' do
-          it {
-            expect(subject[:geo_areas].first).to include(
-              source: GeoArea.sources.fetch(:quartier_prioritaire),
-              geometry: geo_json,
-              nom: 'XYZ',
-              commune: 'Paris'
-            )
-            expect(subject[:geo_areas].first.key?(:numero)).to be_falsey
-          }
-        end
-
-        context 'old_api' do
-          let(:serializable_object) { champ.geo_areas.first }
-          let(:serialized_libelle) { "quartier prioritaire" }
-          let(:serialized_type_champ) { "quartier_prioritaire" }
 
           it { expect(subject).to eq(serialized_champ) }
         end

@@ -200,33 +200,17 @@ describe Users::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, user: user) }
     let(:siret) { params_siret.delete(' ') }
     let(:siren) { siret[0..8] }
-
     let(:api_etablissement_status) { 200 }
     let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
-
-    let(:api_entreprise_status) { 200 }
-    let(:api_entreprise_body) { File.read('spec/fixtures/files/api_entreprise/entreprises.json') }
-
-    let(:api_exercices_status) { 200 }
-    let(:api_exercices_body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
-
-    let(:api_association_status) { 200 }
-    let(:api_association_body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
-
-    def stub_api_entreprise_requests
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
-        .to_return(status: api_etablissement_status, body: api_etablissement_body)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
-        .to_return(status: api_entreprise_status, body: api_entreprise_body)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
-        .to_return(status: api_exercices_status, body: api_exercices_body)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
-        .to_return(status: api_association_status, body: api_association_body)
-    end
+    let(:token_expired) { false }
 
     before do
       sign_in(user)
-      stub_api_entreprise_requests
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+        .to_return(status: api_etablissement_status, body: api_etablissement_body)
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
+        .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
+      allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(token_expired)
     end
 
     subject! { post :update_siret, params: { id: dossier.id, user: { siret: params_siret } } }
@@ -266,49 +250,24 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'with a valid SIRET' do
-      let(:params_siret) { '440 117 620 01530' }
-
+      let(:params_siret) { '418 166 096 00051' }
       context 'When API-Entreprise is down' do
         let(:api_etablissement_status) { 502 }
-        let(:api_body_status) { File.read('spec/fixtures/files/api_entreprise/exercices_unavailable.json') }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
       end
 
       context 'when API-Entreprise doesn’t know this SIRET' do
         let(:api_etablissement_status) { 404 }
-        let(:api_body_status) { '' }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
       end
 
-      context 'when the API returns no Entreprise' do
-        let(:api_entreprise_status) { 404 }
-        let(:api_entreprise_body) { '' }
+      context 'when default token has expired' do
+        let(:api_etablissement_status) { 200 }
+        let(:token_expired) { true }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_unknown')
-      end
-
-      context 'when the API returns no Exercices' do
-        let(:api_exercices_status) { 404 }
-        let(:api_exercices_body) { '' }
-
-        it_behaves_like 'SIRET informations are successfully saved'
-
-        it 'doesn’t save the etablissement exercices' do
-          expect(dossier.reload.etablissement.exercices).to be_empty
-        end
-      end
-
-      context 'when the RNA doesn’t have informations on the SIRET' do
-        let(:api_association_status) { 404 }
-        let(:api_association_body) { '' }
-
-        it_behaves_like 'SIRET informations are successfully saved'
-
-        it 'doesn’t save the RNA informations' do
-          expect(dossier.reload.etablissement.association?).to be(false)
-        end
       end
 
       context 'when all API informations available' do
@@ -317,8 +276,6 @@ describe Users::DossiersController, type: :controller do
         it 'saves the associated informations on the etablissement' do
           dossier.reload
           expect(dossier.etablissement.entreprise).to be_present
-          expect(dossier.etablissement.exercices).to be_present
-          expect(dossier.etablissement.association?).to be(true)
         end
       end
     end
@@ -419,6 +376,46 @@ describe Users::DossiersController, type: :controller do
         expect(first_champ.reload.value).to eq('beautiful value')
         expect(dossier.reload.updated_at.year).to eq(2100)
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
+      end
+
+      context 'with instructeurs ok to be notified instantly' do
+        let!(:instructeur_with_instant_email_dossier) { create(:instructeur) }
+        let!(:instructeur_without_instant_email_dossier) { create(:instructeur) }
+
+        before do
+          allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
+          create(:assign_to, instructeur: instructeur_with_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier.procedure.defaut_groupe_instructeur)
+          create(:assign_to, instructeur: instructeur_without_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: false, groupe_instructeur: dossier.procedure.defaut_groupe_instructeur)
+        end
+
+        it "sends notification mail to instructeurs" do
+          subject
+
+          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_with_instant_email_dossier.email)
+          expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_without_instant_email_dossier.email)
+        end
+      end
+
+      context 'with procedure routee' do
+        let(:procedure) { create(:procedure, :routee, :with_type_de_champ) }
+        let(:dossier_group) { create(:groupe_instructeur, procedure: procedure) }
+        let(:another_group) { create(:groupe_instructeur, procedure: procedure) }
+        let(:instructeur_of_dossier) { create(:instructeur) }
+        let(:instructeur_in_another_group) { create(:instructeur) }
+        let!(:dossier) { create(:dossier, groupe_instructeur: dossier_group, user: user) }
+
+        before do
+          allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
+          create(:assign_to, instructeur: instructeur_of_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier_group)
+          create(:assign_to, instructeur: instructeur_in_another_group, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: another_group)
+        end
+
+        it "sends notification mail to instructeurs in the correct group instructeur" do
+          subject
+
+          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_of_dossier.email)
+          expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_in_another_group.email)
+        end
       end
 
       context "on an closed procedure" do
@@ -783,7 +780,10 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe "#create_commentaire" do
-    let(:dossier) { create(:dossier, :en_construction, user: user) }
+    let(:instructeur_with_instant_message) { create(:instructeur) }
+    let(:instructeur_without_instant_message) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure, user: user) }
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
     let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
@@ -802,12 +802,19 @@ describe Users::DossiersController, type: :controller do
     before do
       sign_in(user)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
+      allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
+      instructeur_with_instant_message.follow(dossier)
+      instructeur_without_instant_message.follow(dossier)
+      create(:assign_to, instructeur: instructeur_with_instant_message, procedure: procedure, instant_email_message_notifications_enabled: true, groupe_instructeur: procedure.defaut_groupe_instructeur)
+      create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false, groupe_instructeur: procedure.defaut_groupe_instructeur)
     end
 
     it "creates a commentaire" do
       expect { subject }.to change(Commentaire, :count).by(1)
 
       expect(response).to redirect_to(messagerie_dossier_path(dossier))
+      expect(DossierMailer).to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_with_instant_message.email)
+      expect(DossierMailer).not_to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_without_instant_message.email)
       expect(flash.notice).to be_present
     end
   end

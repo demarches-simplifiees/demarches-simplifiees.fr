@@ -873,32 +873,6 @@ describe Dossier do
     end
   end
 
-  context "retention date" do
-    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
-    let(:uninstructed_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:young_dossier) { create(:dossier, :en_instruction, en_instruction_at: Time.zone.now, procedure: procedure) }
-    let(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 6.months.ago, procedure: procedure) }
-    let(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
-    let(:modif_date) { Time.zone.parse('01/01/2100') }
-
-    before { Timecop.freeze(modif_date) }
-    after { Timecop.return }
-
-    describe "#retention_end_date" do
-      it { expect(uninstructed_dossier.retention_end_date).to be_nil }
-      it { expect(young_dossier.retention_end_date).to eq(6.months.from_now) }
-      it { expect(just_expired_dossier.retention_end_date).to eq(Time.zone.now) }
-      it { expect(long_expired_dossier.retention_end_date).to eq(6.months.ago) }
-    end
-
-    describe "#retention_expired?" do
-      it { expect(uninstructed_dossier).not_to be_retention_expired }
-      it { expect(young_dossier).not_to be_retention_expired }
-      it { expect(just_expired_dossier).to be_retention_expired }
-      it { expect(long_expired_dossier).to be_retention_expired }
-    end
-  end
-
   describe '#accepter!' do
     let(:dossier) { create(:dossier, :en_instruction) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
@@ -1082,7 +1056,7 @@ describe Dossier do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1095,6 +1069,7 @@ describe Dossier do
     end
 
     it { expect(dossier.state).to eq('en_instruction') }
+    it { expect(dossier.archived).to be_falsey }
     it { expect(dossier.processed_at).to be_nil }
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.attestation).to be_nil }
@@ -1153,9 +1128,9 @@ describe Dossier do
   describe '#notify_draft_not_submitted' do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
-    let!(:procedure_near_closing) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days) }
-    let!(:procedure_closed_later) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days + 1.day) }
-    let!(:procedure_closed_before) { create(:procedure, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days - 1.day) }
+    let!(:procedure_near_closing) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days) }
+    let!(:procedure_closed_later) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days + 1.day) }
+    let!(:procedure_closed_before) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days - 1.day) }
 
     # user 1 has three draft dossiers where one is for procedure that closes in two days ==> should trigger one mail
     let!(:draft_near_closing) { create(:dossier, user: user1, procedure: procedure_near_closing) }
@@ -1259,5 +1234,62 @@ describe Dossier do
 
     it { expect(procedure).not_to be_nil }
     it { expect(procedure.discarded?).to be_truthy }
+  end
+
+  describe "to_feature_collection" do
+    let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
+    let(:champ) { create(:champ_carte, geo_areas: [geo_area]) }
+    let(:dossier) { create(:dossier, champs: [champ]) }
+
+    it 'should have all champs carto' do
+      expect(dossier.to_feature_collection).to eq({
+        type: 'FeatureCollection',
+        id: dossier.id,
+        bbox: [2.428439855575562, 46.538491597754714, 2.42824137210846, 46.53841410755813],
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              'coordinates' => [[[2.428439855575562, 46.538476837725796], [2.4284291267395024, 46.53842148758162], [2.4282521009445195, 46.53841410755813], [2.42824137210846, 46.53847314771794], [2.428284287452698, 46.53847314771794], [2.428364753723145, 46.538487907747864], [2.4284291267395024, 46.538491597754714], [2.428439855575562, 46.538476837725796]]],
+              'type' => 'Polygon'
+            },
+            properties: {
+              area: 219.0,
+              champ_id: champ.stable_id,
+              dossier_id: dossier.id,
+              id: geo_area.id,
+              source: 'selection_utilisateur'
+            }
+          }
+        ]
+      })
+    end
+  end
+
+  describe "with_notifiable_procedure" do
+    let(:test_procedure) { create(:procedure) }
+    let(:published_procedure) { create(:procedure, :published) }
+    let(:closed_procedure) { create(:procedure, :closed) }
+    let(:unpublished_procedure) { create(:procedure, :unpublished) }
+
+    let!(:dossier_on_test_procedure) { create(:dossier, procedure: test_procedure) }
+    let!(:dossier_on_published_procedure) { create(:dossier, procedure: published_procedure) }
+    let!(:dossier_on_closed_procedure) { create(:dossier, procedure: closed_procedure) }
+    let!(:dossier_on_unpublished_procedure) { create(:dossier, procedure: unpublished_procedure) }
+
+    let(:notify_on_closed) { false }
+    let(:dossiers) { Dossier.with_notifiable_procedure(notify_on_closed: notify_on_closed) }
+
+    it 'should find dossiers with notifiable procedure' do
+      expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_unpublished_procedure])
+    end
+
+    context 'when notify on closed is true' do
+      let(:notify_on_closed) { true }
+
+      it 'should find dossiers with notifiable procedure' do
+        expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_closed_procedure, dossier_on_unpublished_procedure])
+      end
+    end
   end
 end

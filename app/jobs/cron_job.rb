@@ -1,6 +1,6 @@
 class CronJob < ApplicationJob
   queue_as :cron
-  class_attribute :cron_expression
+  class_attribute :schedule_expression
 
   class << self
     def schedule
@@ -10,6 +10,10 @@ class CronJob < ApplicationJob
 
     def remove
       delayed_job.destroy if scheduled?
+    end
+
+    def display_schedule
+      pp "#{name}: #{schedule_expression} cron(#{cron_expression})"
     end
 
     def scheduled?
@@ -24,6 +28,10 @@ class CronJob < ApplicationJob
       Delayed::Job
         .where('handler LIKE ?', "%job_class: #{name}%")
         .first
+    end
+
+    def cron_expression
+      Fugit.do_parse(schedule_expression, multi: :fail).to_cron_s
     end
   end
 end

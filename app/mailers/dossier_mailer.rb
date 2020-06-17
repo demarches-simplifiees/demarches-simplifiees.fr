@@ -2,6 +2,7 @@
 class DossierMailer < ApplicationMailer
   helper ServiceHelper
   helper MailerHelper
+  helper ProcedureHelper
 
   layout 'mailers/layout'
 
@@ -27,6 +28,18 @@ class DossierMailer < ApplicationMailer
     mail(from: NO_REPLY_EMAIL, to: dossier.user.email, subject: subject) do |format|
       format.html { render layout: 'mailers/notifications_layout' }
     end
+  end
+
+  def notify_new_commentaire_to_instructeur(dossier, instructeur_email)
+    @dossier = dossier
+    @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+    mail(from: NO_REPLY_EMAIL, to: instructeur_email, subject: @subject)
+  end
+
+  def notify_new_dossier_depose_to_instructeur(dossier, instructeur_email)
+    @dossier = dossier
+    @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+    mail(from: NO_REPLY_EMAIL, to: instructeur_email, subject: @subject)
   end
 
   def notify_revert_to_instruction(dossier)
@@ -122,7 +135,8 @@ class DossierMailer < ApplicationMailer
   def default_i18n_subject(interpolations = {})
     if interpolations[:state]
       mailer_scope = self.class.mailer_name.tr('/', '.')
-      I18n.t("subject_#{interpolations[:state]}", interpolations.merge(scope: [mailer_scope, action_name]))
+      state = interpolations[:state].in?(Dossier::TERMINE) ? 'termine' : interpolations[:state]
+      I18n.t("subject_#{state}", interpolations.merge(scope: [mailer_scope, action_name]))
     else
       super
     end

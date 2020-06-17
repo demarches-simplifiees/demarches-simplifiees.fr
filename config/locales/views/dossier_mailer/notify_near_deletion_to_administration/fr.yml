@@ -4,9 +4,18 @@ fr:
       subject_en_construction:
         one: Un dossier en construction va bientôt être supprimé
         other: Des dossiers en construction vont bientôt être supprimés
+      subject_termine:
+        one: Un dossier dont le traitement est terminé va bientôt être supprimé
+        other: Des dossiers dont le traitement est terminé vont bientôt être supprimés
       header_en_construction:
         one: "Le dossier en construction suivant sera bientôt automatiquement supprimé :"
         other: "Les dossiers en construction suivant seront bientôt automatiquement supprimés :"
+      header_termine:
+        one: "Le dossier suivant dont le traitement est terminé sera bientôt automatiquement supprimé :"
+        other: "Les dossiers suivant dont le traitement est terminé seront bientôt automatiquement supprimés :"
       footer_en_construction:
         one: "Vous avez <b>un mois</b> pour commencer l’instruction du dossier."
         other: "Vous avez <b>un mois</b> pour commencer l’instruction des dossiers."
+      footer_termine:
+        one: "Vous avez <b>un mois</b> pour archiver le dossier."
+        other: "Vous avez <b>un mois</b> pour archiver les dossiers."

@@ -104,16 +104,14 @@ module Users
 
       sanitized_siret = siret_model.siret
       begin
-        etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
+        etablissement = ApiEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
       rescue ApiEntreprise::API::RequestFailed
         return render_siret_error(t('errors.messages.siret_network_error'))
       end
-      if etablissement_attributes.blank?
+      if etablissement.nil?
         return render_siret_error(t('errors.messages.siret_unknown'))
       end
 
-      etablissement = @dossier.build_etablissement(etablissement_attributes)
-      etablissement.save!
       current_user.update!(siret: sanitized_siret)
       @dossier.update!(autorisation_donnees: true)
 
@@ -153,6 +151,9 @@ module Users
       if passage_en_construction? && errors.blank?
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
+        @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
+          DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
+        end
         return redirect_to(merci_dossier_path(@dossier))
       elsif errors.present?
         flash.now.alert = errors
@@ -197,6 +198,11 @@ module Users
       @commentaire = CommentaireService.build(current_user, dossier, commentaire_params)
 
       if @commentaire.save
+        dossier.followers_instructeurs
+          .with_instant_email_message_notifications
+          .each do |instructeur|
+          DossierMailer.notify_new_commentaire_to_instructeur(dossier, instructeur.email).deliver_later
+        end
         flash.notice = "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
         redirect_to messagerie_dossier_path(dossier)
       else
@@ -219,13 +225,21 @@ module Users
     end
 
     def recherche
-      @dossier_id = params[:dossier_id]
-      dossier = current_user.dossiers.find_by(id: @dossier_id)
+      @search_terms = params[:q]
+      return redirect_to dossiers_path if @search_terms.blank?
 
-      if dossier
-        redirect_to url_for_dossier(dossier)
+      @dossiers = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page(page)
+
+      if @dossiers.present?
+        # we need the page condition when accessing page n with n>1 when the page has only 1 result
+        # in order to avoid an unpleasant redirection when changing page
+        if @dossiers.count == 1 && page == 1
+          redirect_to url_for_dossier(@dossiers.first)
+        else
+          render :index
+        end
       else
-        flash.alert = "Vous n’avez pas de dossier avec le nº #{@dossier_id}."
+        flash.alert = "Vous n’avez pas de dossiers contenant « #{@search_terms} »."
         redirect_to dossiers_path
       end
     end

@@ -1,6 +1,6 @@
 feature 'Creating a new dossier:' do
   let(:user)  { create(:user) }
-  let(:siret) { '40307130100044' }
+  let(:siret) { '41816609600051' }
   let(:siren) { siret[0...9] }
 
   context 'when the user is already signed in' do
@@ -74,7 +74,15 @@ feature 'Creating a new dossier:' do
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/exercices.json'))
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
           .to_return(status: 404, body: '')
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/2020\/02\/entreprise\/#{siren}?.*token=/)
+          .to_return(status: 404, body: '')
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
+          .to_return(status: 404, body: '')
+        allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return([])
+        allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
       end
+      before { Timecop.freeze(Time.zone.local(2020, 3, 14)) }
+      after { Timecop.return }
 
       scenario 'the user can enter the SIRET of its etablissement and create a new draft' do
         visit commencer_path(path: procedure.path)
@@ -87,7 +95,7 @@ feature 'Creating a new dossier:' do
         click_on 'Valider'
 
         expect(page).to have_current_path(etablissement_dossier_path(dossier))
-        expect(page).to have_content('OCTO-TECHNOLOGY')
+        expect(page).to have_content('OCTO TECHNOLOGY')
         click_on 'Continuer avec ces informations'
 
         expect(page).to have_current_path(brouillon_dossier_path(dossier))

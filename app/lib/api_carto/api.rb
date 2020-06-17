@@ -2,11 +2,6 @@ class ApiCarto::API
   class ResourceNotFound < StandardError
   end
 
-  def self.search_qp(geojson)
-    url = [API_CARTO_URL, "quartiers-prioritaires", "search"].join("/")
-    call(url, geojson)
-  end
-
   def self.search_cadastre(geojson)
     url = [API_CARTO_URL, "cadastre", "geometrie"].join("/")
     call(url, geojson)

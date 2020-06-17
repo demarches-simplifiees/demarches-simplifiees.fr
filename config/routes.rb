@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       post 'restore', on: :member
       post 'add_administrateur', on: :member
       post 'change_piece_justificative_template', on: :member
+      get 'export_mail_brouillons', on: :member
     end
 
     resources :dossiers, only: [:index, :show] do
@@ -120,12 +121,18 @@ Rails.application.routes.draw do
     get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link
     post ':position/carte', to: 'carte#show', as: :carte
+
+    get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
+    post ':champ_id/carte/features', to: 'carte#create'
+    post ':champ_id/carte/features/import', to: 'carte#import'
+    patch ':champ_id/carte/features/:id', to: 'carte#update'
+    delete ':champ_id/carte/features/:id', to: 'carte#destroy'
+
     post ':position/repetition', to: 'repetition#show', as: :repetition
     put 'piece_justificative/:champ_id', to: 'piece_justificative#update', as: :piece_justificative
   end
 
-  get 'attachments/:id', to: 'attachments#show', as: :attachment
-  delete 'attachments/:id', to: 'attachments#destroy'
+  resources :attachments, only: [:show, :destroy]
 
   get "patron" => "root#patron"
   get "accessibilite" => "root#accessibilite"
@@ -167,6 +174,8 @@ Rails.application.routes.draw do
   post 'admin/procedures' => 'new_administrateur/procedures#create'
   get 'admin/procedures/:id/monavis' => 'new_administrateur/procedures#monavis', as: :admin_procedure_monavis
   patch 'admin/procedures/:id/monavis' => 'new_administrateur/procedures#update_monavis', as: :update_monavis
+  get 'admin/procedures/:id/jeton' => 'new_administrateur/procedures#jeton', as: :admin_procedure_jeton
+  patch 'admin/procedures/:id/jeton' => 'new_administrateur/procedures#update_jeton', as: :update_jeton
 
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
@@ -225,7 +234,7 @@ Rails.application.routes.draw do
   #
 
   authenticated :user, lambda { |user| user.administrateur_id && Flipper.enabled?(:administrateur_graphql, user) } do
-    mount GraphiQL::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql", via: :get
+    mount GraphqlPlayground::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql"
   end
 
   namespace :api do
@@ -275,7 +284,7 @@ Rails.application.routes.draw do
       end
 
       collection do
-        post 'recherche'
+        get 'recherche'
       end
     end
     resource :feedback, only: [:create]
@@ -315,7 +324,9 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
             get 'attestation'
+            get 'geo_data'
             get 'apercu_attestation'
+            get 'bilans_bdf'
             get 'messagerie'
             get 'annotations-privees' => 'dossiers#annotations_privees'
             get 'avis'
@@ -344,6 +355,7 @@ Rails.application.routes.draw do
         get 'messagerie'
         post 'commentaire' => 'avis#create_commentaire'
         post 'avis' => 'avis#create_avis'
+        get 'bilans_bdf'
 
         get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
         post 'sign_up/email/:email' => 'avis#create_instructeur', constraints: { email: /.*/ }

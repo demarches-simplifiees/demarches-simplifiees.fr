@@ -1,69 +1,99 @@
 class Champs::CarteController < ApplicationController
   before_action :authenticate_logged_user!
 
-  EMPTY_GEO_JSON = '[]'
-  ERROR_GEO_JSON = ''
+  def index
+    @selector = ".carte-#{params[:champ_id]}"
+    @champ = policy_scope(Champ).find(params[:champ_id])
+    @update_cadastres = params[:cadastres]
 
-  def show
-    @selector = ".carte-#{params[:position]}"
-
-    if params[:dossier].key?(:champs_attributes)
-      coordinates = params[:dossier][:champs_attributes][params[:position]][:value]
-    else
-      coordinates = params[:dossier][:champs_private_attributes][params[:position]][:value]
+    if @champ.cadastres? && @update_cadastres
+      @champ.geo_areas.cadastres.destroy_all
+      @champ.geo_areas += GeoArea.from_feature_collection(cadastres_features_collection(@champ.to_feature_collection))
+      @champ.save!
     end
-
-    @champ = if params[:champ_id].present?
-      policy_scope(Champ).find(params[:champ_id])
-    else
-      policy_scope(TypeDeChamp).find(params[:type_de_champ_id]).champ.build
-    end
-
-    geo_areas = []
-
-    if coordinates == EMPTY_GEO_JSON
-      @champ.value = nil
-      @champ.geo_areas = []
-    elsif coordinates == ERROR_GEO_JSON
-      @error = true
-      @champ.value = nil
-      @champ.geo_areas = []
-    else
-      coordinates = JSON.parse(coordinates)
-
-      if @champ.cadastres?
-        cadastres = ApiCartoService.generate_cadastre(coordinates)
-        geo_areas += cadastres.map do |cadastre|
-          cadastre[:source] = GeoArea.sources.fetch(:cadastre)
-          cadastre
-        end
-      end
-
-      if @champ.quartiers_prioritaires?
-        quartiers_prioritaires = ApiCartoService.generate_qp(coordinates)
-        geo_areas += quartiers_prioritaires.map do |qp|
-          qp[:source] = GeoArea.sources.fetch(:quartier_prioritaire)
-          qp
-        end
-      end
-
-      selection_utilisateur = ApiCartoService.generate_selection_utilisateur(coordinates)
-      selection_utilisateur[:source] = GeoArea.sources.fetch(:selection_utilisateur)
-      geo_areas << selection_utilisateur
-
-      @champ.geo_areas = geo_areas.map do |geo_area|
-        GeoArea.new(geo_area)
-      end
-
-      @champ.value = coordinates.to_json
-    end
-
-    if @champ.persisted?
-      @champ.save
-    end
-
   rescue ApiCarto::API::ResourceNotFound
     flash.alert = 'Les données cartographiques sont temporairement indisponibles. Réessayez dans un instant.'
     response.status = 503
+  end
+
+  def create
+    champ = policy_scope(Champ).find(params[:champ_id])
+    geo_area = champ.geo_areas.selections_utilisateur.new
+    save_feature!(geo_area, params_feature)
+
+    render json: { feature: geo_area.to_feature }, status: :created
+  end
+
+  def update
+    champ = policy_scope(Champ).find(params[:champ_id])
+    geo_area = champ.geo_areas.selections_utilisateur.find(params[:id])
+    save_feature!(geo_area, params_feature)
+
+    head :no_content
+  end
+
+  def destroy
+    champ = policy_scope(Champ).find(params[:champ_id])
+    champ.geo_areas.selections_utilisateur.find(params[:id]).destroy!
+
+    head :no_content
+  end
+
+  def import
+    champ = policy_scope(Champ).find(params[:champ_id])
+    params_features.each do |feature|
+      geo_area = champ.geo_areas.selections_utilisateur.new
+      save_feature!(geo_area, feature)
+    end
+
+    render json: champ.to_feature_collection, status: :created
+  end
+
+  private
+
+  def params_feature
+    params[:feature]
+  end
+
+  def params_features
+    params[:features]
+  end
+
+  def save_feature!(geo_area, feature)
+    if feature[:geometry]
+      geo_area.geometry = feature[:geometry]
+    end
+    if feature[:properties] && feature[:properties][:description]
+      geo_area.description = feature[:properties][:description]
+    end
+    geo_area.save!
+  end
+
+  def cadastres_features_collection(feature_collection)
+    coordinates = feature_collection[:features].filter do |feature|
+      feature[:properties][:source] == GeoArea.sources.fetch(:selection_utilisateur) && feature[:geometry]['type'] == 'Polygon'
+    end.map do |feature|
+      feature[:geometry]['coordinates'][0].map { |(lng, lat)| { 'lng' => lng, 'lat' => lat } }
+    end
+
+    if coordinates.present?
+      cadastres = ApiCartoService.generate_cadastre(coordinates)
+
+      {
+        type: 'FeatureCollection',
+        features: cadastres.map do |cadastre|
+          {
+            type: 'Feature',
+            geometry: cadastre.delete(:geometry),
+            properties: cadastre.merge(source: GeoArea.sources.fetch(:cadastre))
+          }
+        end
+      }
+    else
+      {
+        type: 'FeatureCollection',
+        features: []
+      }
+    end
   end
 end

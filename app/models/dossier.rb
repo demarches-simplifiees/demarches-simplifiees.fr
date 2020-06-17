@@ -1,5 +1,5 @@
 class Dossier < ApplicationRecord
-  self.ignored_columns = ['json_latlngs']
+  self.ignored_columns = ['procedure_id']
   include DossierFilteringConcern
 
   include Discard::Model
@@ -20,7 +20,7 @@ class Dossier < ApplicationRecord
   INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
-  TAILLE_MAX_ZIP = 50.megabytes
+  TAILLE_MAX_ZIP = 100.megabytes
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
@@ -131,11 +131,19 @@ class Dossier < ApplicationRecord
         etablissement: :champ,
         champs: {
           etablissement: :champ,
-          type_de_champ: :drop_down_list
+          type_de_champ: :drop_down_list,
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
         },
         champs_private: {
           etablissement: :champ,
-          type_de_champ: :drop_down_list
+          type_de_champ: :drop_down_list,
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
         },
         procedure: :groupe_instructeurs
       ).order(en_construction_at: 'asc')
@@ -169,9 +177,10 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
-  scope :with_notifiable_procedure, -> do
+  scope :with_notifiable_procedure, -> (notify_on_closed: false) do
+    states = notify_on_closed ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
     joins(:procedure)
-      .where.not(procedures: { aasm_state: :brouillon })
+      .where(procedures: { aasm_state: states })
   end
 
   scope :brouillon_close_to_expiration, -> do
@@ -189,6 +198,11 @@ class Dossier < ApplicationRecord
       .joins(:procedure)
       .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
+  scope :termine_close_to_expiration, -> do
+    state_termine
+      .joins(:procedure)
+      .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
 
   scope :brouillon_expired, -> do
     state_brouillon
@@ -198,9 +212,14 @@ class Dossier < ApplicationRecord
     state_en_construction
       .where("en_construction_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
   end
+  scope :termine_expired, -> do
+    state_termine
+      .where("termine_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
+  end
 
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
+  scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
 
   scope :discarded_brouillon_expired, -> do
     with_discarded
@@ -223,7 +242,8 @@ class Dossier < ApplicationRecord
         .where("groupe_instructeurs.procedure_id = procedures.id")
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
-    brouillon.joins(:procedure)
+    state_brouillon
+      .with_notifiable_procedure
       .where("procedures.auto_archive_on - INTERVAL :before_closing = :now", { now: Time.zone.today, before_closing: INTERVAL_BEFORE_CLOSING })
       .where.not(user: users_who_submitted)
   end
@@ -346,16 +366,6 @@ class Dossier < ApplicationRecord
     !brouillon? && !archived
   end
 
-  def retention_end_date
-    if instruction_commencee?
-      en_instruction_at + procedure.duree_conservation_dossiers_dans_ds.months
-    end
-  end
-
-  def retention_expired?
-    instruction_commencee? && retention_end_date <= Time.zone.now
-  end
-
   def en_construction_close_to_expiration?
     Dossier.en_construction_close_to_expiration.where(id: self).present?
   end
@@ -435,8 +445,8 @@ class Dossier < ApplicationRecord
       point = Geocoder.search(etablissement.geo_adresse).first
     end
 
-    lon = "2.428462"
-    lat = "46.538192"
+    lon = Champs::CarteChamp::DEFAULT_LON.to_s
+    lat = Champs::CarteChamp::DEFAULT_LAT.to_s
     zoom = "13"
 
     if point.present?
@@ -516,6 +526,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_instruction(instructeur)
+    self.archived = false
     self.processed_at = nil
     self.motivation = nil
     attestation&.destroy
@@ -617,9 +628,11 @@ class Dossier < ApplicationRecord
       columns += [
         ['Civilité', individual&.gender],
         ['Nom', individual&.nom],
-        ['Prénom', individual&.prenom],
-        ['Date de naissance', individual&.birthdate]
+        ['Prénom', individual&.prenom]
       ]
+      if procedure.ask_birthday
+        columns += [['Date de naissance', individual&.birthdate]]
+      end
     elsif with_etablissement
       columns += [
         ['Établissement SIRET', etablissement&.siret],
@@ -700,7 +713,35 @@ class Dossier < ApplicationRecord
     { id: self.id, procedure_libelle: self.procedure.libelle }
   end
 
+  def geo_data?
+    geo_areas.present?
+  end
+
+  def to_feature_collection
+    {
+      type: 'FeatureCollection',
+      id: id,
+      bbox: bounding_box,
+      features: geo_areas.map(&:to_feature)
+    }
+  end
+
   private
+
+  def geo_areas
+    champs.includes(:geo_areas).flat_map(&:geo_areas) + champs_private.includes(:geo_areas).flat_map(&:geo_areas)
+  end
+
+  def bounding_box
+    factory = RGeo::Geographic.simple_mercator_factory
+    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
+
+    geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+      bounding_box.add(geometry)
+    end
+
+    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
+  end
 
   def log_dossier_operation(author, operation, subject = nil)
     if log_operations?

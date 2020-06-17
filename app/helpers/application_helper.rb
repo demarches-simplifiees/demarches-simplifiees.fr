@@ -122,12 +122,33 @@ module ApplicationHelper
     end
   end
 
+  def root_path_info_for_profile(nav_bar_profile)
+    case nav_bar_profile
+    when :administrateur
+      [admin_procedures_path, "Aller au panneau d'administration"]
+    when :instructeur
+      [instructeur_procedures_path, 'Aller à la liste des démarches']
+    when :user
+      [dossiers_path, 'Aller à la liste des dossiers']
+    else
+      [root_path, "Aller à la page d'accueil"]
+    end
+  end
+
   def try_format_date(date)
     date.present? ? I18n.l(date) : ''
   end
 
   def try_format_datetime(datetime)
     datetime.present? ? I18n.l(datetime) : ''
+  end
+
+  def try_format_mois_effectif(etablissement)
+    if etablissement.entreprise_effectif_mois.present? && etablissement.entreprise_effectif_annee.present?
+      [etablissement.entreprise_effectif_mois, etablissement.entreprise_effectif_annee].join('/')
+    else
+      ''
+    end
   end
 
   def dismiss_outdated_browser_banner

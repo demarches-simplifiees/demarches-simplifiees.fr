@@ -252,19 +252,8 @@ describe Procedure do
 
     shared_examples 'duree de conservation' do
       context 'duree_conservation_required it true, the field gets validated' do
-        before { subject.durees_conservation_required = true }
-
         it { is_expected.not_to allow_value(nil).for(field_name) }
         it { is_expected.not_to allow_value('').for(field_name) }
-        it { is_expected.not_to allow_value('trois').for(field_name) }
-        it { is_expected.to allow_value(3).for(field_name) }
-      end
-
-      context 'duree_conservation_required is false, the field doesn’t get validated' do
-        before { subject.durees_conservation_required = false }
-
-        it { is_expected.to allow_value(nil).for(field_name) }
-        it { is_expected.to allow_value('').for(field_name) }
         it { is_expected.not_to allow_value('trois').for(field_name) }
         it { is_expected.to allow_value(3).for(field_name) }
       end
@@ -280,31 +269,6 @@ describe Procedure do
       let(:field_name) { :duree_conservation_dossiers_hors_ds }
 
       it_behaves_like 'duree de conservation'
-    end
-  end
-
-  describe '#duree_de_conservation_required' do
-    it 'automatically jumps to true once both durees de conservation have been set' do
-      p = build(
-        :procedure,
-        durees_conservation_required: false,
-        duree_conservation_dossiers_dans_ds: nil,
-        duree_conservation_dossiers_hors_ds: nil
-      )
-      p.save
-      expect(p.durees_conservation_required).to be_falsey
-
-      p.duree_conservation_dossiers_hors_ds = 3
-      p.save
-      expect(p.durees_conservation_required).to be_falsey
-
-      p.duree_conservation_dossiers_dans_ds = 6
-      p.save
-      expect(p.durees_conservation_required).to be_truthy
-
-      p.duree_conservation_dossiers_dans_ds = nil
-      p.save
-      expect(p.durees_conservation_required).to be_truthy
     end
   end
 
@@ -370,6 +334,31 @@ describe Procedure do
     end
   end
 
+  describe 'api_entreprise_token_expired?' do
+    let(:token) { "mon-token" }
+    let(:procedure) { create(:procedure, api_entreprise_token: token) }
+    let(:payload) {
+      [
+        { "exp" => expiration_time }
+      ]
+    }
+    let(:subject) { procedure.api_entreprise_token_expired? }
+
+    before do
+      allow(JWT).to receive(:decode).with(token, nil, false).and_return(payload)
+    end
+
+    context "with token expired" do
+      let(:expiration_time) { (Time.zone.now - 1.day).to_i }
+      it { is_expected.to be_truthy }
+    end
+
+    context "with token not expired" do
+      let(:expiration_time) { (Time.zone.now + 1.day).to_i }
+      it { is_expected.to be_falsey }
+    end
+  end
+
   describe 'clone' do
     let!(:service) { create(:service) }
     let(:procedure) { create(:procedure, received_mail: received_mail, service: service) }
@@ -383,6 +372,12 @@ describe Procedure do
     let(:received_mail) { create(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
+
+    let!(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: "groupe_1") }
+    let!(:instructeur_1) { create(:instructeur) }
+    let!(:instructeur_2) { create(:instructeur) }
+    let!(:assign_to_1) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_1) }
+    let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
 
     before do
       @logo = File.open('spec/fixtures/files/white.png')
@@ -400,7 +395,18 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.defaut_groupe_instructeur.instructeurs.map(&:email)).to eq([administrateur.email]) }
+
+    describe "should keep groupe instructeurs " do
+      it "should clone groupe instructeurs" do
+        expect(subject.groupe_instructeurs.size).to eq(2)
+        expect(subject.groupe_instructeurs.size).to eq(procedure.groupe_instructeurs.size)
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first).not_to be nil
+      end
+
+      it "should clone instructeurs in the groupe" do
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first.instructeurs.map(&:email)).to eq(procedure.groupe_instructeurs.where(label: "groupe_1").first.instructeurs.map(&:email))
+      end
+    end
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
@@ -480,8 +486,23 @@ describe Procedure do
         end
       end
 
+      it 'should discard specific api_entreprise_token' do
+        expect(subject.read_attribute(:api_entreprise_token)).to be_nil
+      end
+
       it 'should have one administrateur' do
         expect(subject.administrateurs).to eq([administrateur])
+      end
+
+      it "should discard the existing groupe instructeurs" do
+        expect(subject.groupe_instructeurs.size).not_to eq(procedure.groupe_instructeurs.size)
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first).to be nil
+      end
+
+      it 'should have a default groupe instructeur' do
+        expect(subject.groupe_instructeurs.size).to eq(1)
+        expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL)
+        expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(0)
       end
     end
 

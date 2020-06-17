@@ -1,6 +1,6 @@
 import { ajax, delegate } from '@utils';
 
-addEventListener('turbolinks:load', () => {
+addEventListener('DOMContentLoaded', () => {
   attachementPoller.deactivate();
   exportPoller.deactivate();
 
@@ -24,7 +24,7 @@ addEventListener('export:update', ({ detail: { url } }) => {
   exportPoller.add(url);
 });
 
-delegate('click', '[data-attachment-refresh]', event => {
+delegate('click', '[data-attachment-refresh]', (event) => {
   event.preventDefault();
   attachementPoller.check();
 });
@@ -67,7 +67,9 @@ class RemotePoller {
     let urls = this.urls;
     this.reset();
     for (let url of urls) {
-      ajax({ url, type: 'get' });
+      // Start the request. The JS payload in the response will update the page.
+      // (Errors are ignored, because background tasks shouldn't report errors to the user.)
+      ajax({ url, type: 'get' }).catch(() => {});
     }
   }
 

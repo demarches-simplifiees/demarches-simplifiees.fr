@@ -1,38 +1,40 @@
-async function initialize() {
-  const elements = document.querySelectorAll('.carte');
+import { delegate, fire, debounce } from '@utils';
 
-  if (elements.length) {
-    for (let element of elements) {
-      loadAndDrawMap(element);
-    }
+const inputHandlers = new Map();
+
+addEventListener('ds:page:update', () => {
+  const inputs = document.querySelectorAll('.areas input[data-geo-area]');
+
+  for (const input of inputs) {
+    input.addEventListener('focus', (event) => {
+      const id = parseInt(event.target.dataset.geoArea);
+      fire(document, 'map:feature:focus', { id });
+    });
   }
-}
+});
 
-async function loadAndDrawMap(element) {
-  const data = JSON.parse(element.dataset.geo);
-  const editable = element.classList.contains('edit');
+delegate('click', '.areas a[data-geo-area]', (event) => {
+  event.preventDefault();
+  const id = parseInt(event.target.dataset.geoArea);
+  fire(document, 'map:feature:focus', { id });
+});
 
-  if (editable) {
-    const { drawEditableMap } = await import('../../shared/carte-editor');
+delegate('input', '.areas input[data-geo-area]', (event) => {
+  const id = parseInt(event.target.dataset.geoArea);
 
-    drawEditableMap(element, data);
-  } else {
-    const { drawMap } = await import('../../shared/carte');
-
-    drawMap(element, data);
+  let handler = inputHandlers.get(id);
+  if (!handler) {
+    handler = debounce(() => {
+      const input = document.querySelector(`input[data-geo-area="${id}"]`);
+      if (input) {
+        fire(document, 'map:feature:update', {
+          id,
+          properties: { description: input.value.trim() }
+        });
+      }
+    }, 200);
+    inputHandlers.set(id, handler);
   }
-}
 
-async function loadAndRedrawMap(element, data) {
-  const { redrawMap } = await import('../../shared/carte-editor');
-
-  redrawMap(element, data);
-}
-
-addEventListener('turbolinks:load', initialize);
-
-addEventListener('carte:update', ({ detail: { selector, data } }) => {
-  const element = document.querySelector(selector);
-
-  loadAndRedrawMap(element, data);
+  handler();
 });

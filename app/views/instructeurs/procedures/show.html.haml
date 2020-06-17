@@ -11,7 +11,7 @@
         %h1= procedure_libelle @procedure
         = link_to 'gestion des notifications', email_notifications_instructeur_procedure_path(@procedure), class: 'header-link'
         |
-        = link_to 'statistiques', stats_instructeur_procedure_path(@procedure), class: 'header-link', data: { turbolinks: false } # Turbolinks disabled for Chartkick. See Issue #350
+        = link_to 'statistiques', stats_instructeur_procedure_path(@procedure), class: 'header-link'
 
         - if @procedure.routee?
           |
@@ -60,9 +60,16 @@
     - if @statut == 'traites'
       %p.explication-onglet Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite.
     - if @statut == 'tous'
-      %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, sans aucun filtre.
+      %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
     - if @statut == 'archives'
-      %p.explication-onglet Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
+      %p.explication-onglet
+        Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
+        %br
+        Ces dossiers seront supprimés lorsque leur délai de conservation dans Démarches-simplifiées
+        - if @procedure.duree_conservation_dossiers_dans_ds
+          = "(#{@procedure.duree_conservation_dossiers_dans_ds} mois)"
+        sera expiré.
+        = link_to 'En savoir plus', ARCHIVAGE_DOC_URL
       .afficher-dossiers-supprimes
         = link_to deleted_dossiers_instructeur_procedure_path(@procedure) do
           %span.icon.delete
@@ -93,7 +100,7 @@
           %span.filter
             = link_to remove_filter_instructeur_procedure_path(@procedure, { statut: @statut, table: filter['table'], column: filter['column'], value: filter['value'] }) do
               %img.close-icon{ src: image_url("close.svg") }
-            = "#{filter['label'].truncate(50)} : #{filter['value']}"
+            = "#{filter['label'].truncate(50)} : #{@procedure_presentation.human_value_for_filter(filter)}"
       %table.table.dossiers-table.hoverable
         %thead
           %tr

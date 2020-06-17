@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_103836) do
+ActiveRecord::Schema.define(version: 2020_06_11_122406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,8 @@ ActiveRecord::Schema.define(version: 2020_03_19_103836) do
     t.bigint "groupe_instructeur_id"
     t.boolean "weekly_email_notifications_enabled", default: true, null: false
     t.boolean "daily_email_notifications_enabled", default: false, null: false
+    t.boolean "instant_email_message_notifications_enabled", default: false, null: false
+    t.boolean "instant_email_dossier_notifications_enabled", default: false, null: false
     t.index ["groupe_instructeur_id", "instructeur_id"], name: "unique_couple_groupe_instructeur_instructeur", unique: true
     t.index ["groupe_instructeur_id"], name: "index_assign_tos_on_groupe_instructeur_id"
     t.index ["instructeur_id", "procedure_id"], name: "index_assign_tos_on_instructeur_id_and_procedure_id", unique: true
@@ -236,7 +238,6 @@ ActiveRecord::Schema.define(version: 2020_03_19_103836) do
 
   create_table "dossiers", id: :serial, force: :cascade do |t|
     t.boolean "autorisation_donnees"
-    t.integer "procedure_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "state"
@@ -253,13 +254,13 @@ ActiveRecord::Schema.define(version: 2020_03_19_103836) do
     t.datetime "brouillon_close_to_expiration_notice_sent_at"
     t.datetime "groupe_instructeur_updated_at"
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
+    t.interval "en_construction_conservation_extension", default: "PT0S"
+    t.datetime "termine_close_to_expiration_notice_sent_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
-    t.interval "en_construction_conservation_extension", default: "00:00:00"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
-    t.index ["procedure_id"], name: "index_dossiers_on_procedure_id"
     t.index ["state"], name: "index_dossiers_on_state"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
   end
@@ -308,6 +309,13 @@ ActiveRecord::Schema.define(version: 2020_03_19_103836) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "diffusable_commercialement"
+    t.string "entreprise_effectif_mois"
+    t.string "entreprise_effectif_annee"
+    t.decimal "entreprise_effectif_mensuel"
+    t.decimal "entreprise_effectif_annuel"
+    t.string "entreprise_effectif_annuel_annee"
+    t.jsonb "entreprise_bilans_bdf"
+    t.string "entreprise_bilans_bdf_monnaie"
     t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
   end
 
@@ -507,6 +515,7 @@ ActiveRecord::Schema.define(version: 2020_03_19_103836) do
     t.datetime "closed_at"
     t.datetime "unpublished_at"
     t.bigint "canonical_procedure_id"
+    t.string "api_entreprise_token"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"

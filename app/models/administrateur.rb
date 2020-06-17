@@ -81,13 +81,14 @@ class Administrateur < ApplicationRecord
       fail "Impossible de supprimer cet administrateur car il a des démarches où il est le seul administrateur"
     end
 
-    procedures.each do |procedure|
+    procedures.with_discarded.each do |procedure|
       next_administrateur = procedure.administrateurs.where.not(id: self.id).first
       procedure.service.update(administrateur: next_administrateur)
     end
 
     services.each do |service|
-      service.destroy unless service.procedures.any?
+      # We can't destroy a service if it has procedures, even if those procedures are archived
+      service.destroy unless service.procedures.with_discarded.any?
     end
 
     destroy

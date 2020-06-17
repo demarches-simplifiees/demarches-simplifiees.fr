@@ -4,7 +4,7 @@ const PRIMARY_SELECTOR = 'select[data-secondary-options]';
 const SECONDARY_SELECTOR = 'select[data-secondary]';
 const CHAMP_SELECTOR = '.editable-champ';
 
-delegate('change', PRIMARY_SELECTOR, evt => {
+delegate('change', PRIMARY_SELECTOR, (evt) => {
   const primary = evt.target;
   const secondary = primary
     .closest(CHAMP_SELECTOR)

@@ -5,19 +5,19 @@ import { delegate } from '@utils';
 const autoUploadsControllers = new AutoUploadsControllers();
 
 function startUpload(input) {
-  Array.from(input.files).forEach(file => {
+  Array.from(input.files).forEach((file) => {
     autoUploadsControllers.upload(input, file);
   });
 }
 
 const fileInputSelector = `input[type=file][data-direct-upload-url][data-auto-attach-url]:not([disabled])`;
-delegate('change', fileInputSelector, event => {
+delegate('change', fileInputSelector, (event) => {
   startUpload(event.target);
 });
 
 const retryButtonSelector = `button.attachment-error-retry`;
-delegate('click', retryButtonSelector, event => {
-  const inputSelector = event.target.dataset.inputTarget;
+delegate('click', retryButtonSelector, function () {
+  const inputSelector = this.dataset.inputTarget;
   const input = document.querySelector(inputSelector);
   startUpload(input);
 });

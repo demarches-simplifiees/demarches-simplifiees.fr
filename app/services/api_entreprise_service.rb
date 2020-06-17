@@ -1,29 +1,28 @@
 class ApiEntrepriseService
-  # Retrieve all informations we can get about a SIRET.
+  # create etablissement with EtablissementAdapter
+  # enqueue api_entreprise jobs to retrieve
+  # all informations we can get about a SIRET.
   #
-  # Returns nil if the SIRET is unknown; and nested params
-  # suitable for being saved into a Etablissement object otherwise.
+  # Returns nil if the SIRET is unknown
   #
-  # Raises a ApiEntreprise::API::RequestFailed exception on transcient errors
+  # Raises a ApiEntreprise::API::RequestFailed exception on transient errors
   # (timeout, 5XX HTTP error code, etc.)
-  def self.get_etablissement_params_for_siret(siret, procedure_id)
-    etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
-    entreprise_params = ApiEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
+  def self.create_etablissement(dossier_or_champ, siret, user_id = nil)
+    etablissement_params = ApiEntreprise::EtablissementAdapter.new(siret, dossier_or_champ.procedure.id).to_params
+    return nil if etablissement_params.empty?
 
-    if etablissement_params.present? && entreprise_params.present?
-      begin
-        association_params = ApiEntreprise::RNAAdapter.new(siret, procedure_id).to_params
-        etablissement_params.merge!(association_params)
-      rescue ApiEntreprise::API::RequestFailed
-      end
+    etablissement = dossier_or_champ.build_etablissement(etablissement_params)
+    etablissement.save
 
-      begin
-        exercices_params = ApiEntreprise::ExercicesAdapter.new(siret, procedure_id).to_params
-        etablissement_params.merge!(exercices_params)
-      rescue ApiEntreprise::API::RequestFailed
-      end
-
-      etablissement_params.merge(entreprise_params)
+    [
+      ApiEntreprise::EntrepriseJob, ApiEntreprise::AssociationJob, ApiEntreprise::ExercicesJob,
+      ApiEntreprise::EffectifsJob, ApiEntreprise::EffectifsAnnuelsJob, ApiEntreprise::AttestationSocialeJob,
+      ApiEntreprise::BilansBdfJob
+    ].each do |job|
+      job.perform_later(etablissement.id, dossier_or_champ.procedure.id)
     end
+    ApiEntreprise::AttestationFiscaleJob.perform_later(etablissement.id, dossier_or_champ.procedure.id, user_id)
+
+    etablissement
   end
 end

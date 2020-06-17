@@ -8,6 +8,11 @@ class EntrepriseSerializer < ActiveModel::Serializer
     :raison_sociale,
     :siret_siege_social,
     :code_effectif_entreprise,
+    :effectif_mois,
+    :effectif_annee,
+    :effectif_mensuel,
+    :effectif_annuel,
+    :effectif_annuel_annee,
     :date_creation,
     :nom,
     :prenom
