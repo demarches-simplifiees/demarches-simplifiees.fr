@@ -19,9 +19,9 @@
         = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
       - else
         = link_to root_path_for_profile(nav_bar_profile), class: 'header-logo', title: "Aller à la page d'accueil de demarches-simplifiees.fr" do
-          = image_tag 'marianne.svg', alt: '', width: 65
-          %span.big.site-title> demarches-simplifiees.fr
-          %span.small.site-title> d-s.fr
+          = image_tag ENV['MAIN_LOGO_INSTANCE'], alt: '', width: 65
+          %span.big.site-title> ${ENV['FULL_INSTANCE_NAME']}
+          %span.small.site-title> ${ENV['SHORT_INSTANCE_NAME']}
 
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         - current_url = request.path_info
