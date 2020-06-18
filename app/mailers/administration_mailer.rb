@@ -32,7 +32,7 @@ class AdministrationMailer < ApplicationMailer
 
   def dubious_procedures(procedures_and_type_de_champs)
     @procedures_and_type_de_champs = procedures_and_type_de_champs
-    subject = "[RGS] De nouvelles démarches comportent des champs interdits"
+    subject = "[RGPD] De nouvelles démarches comportent des champs interdits"
 
     mail(to: EQUIPE_EMAIL,
       subject: subject)
