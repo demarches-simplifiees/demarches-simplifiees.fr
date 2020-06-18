@@ -1,6 +1,8 @@
 require 'uri'
 
 describe Admin::ProceduresController, type: :controller do
+  include ActiveJob::TestHelper
+
   let(:admin) { create(:administrateur) }
 
   let(:bad_procedure_id) { 100000 }
@@ -174,9 +176,11 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when admin is the owner of the procedure' do
       before do
-        put :publish, format: :js, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
-        procedure.reload
-        procedure2.reload
+        perform_enqueued_jobs do
+          put :publish, format: :js, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
+          procedure.reload
+          procedure2.reload
+        end
       end
 
       context 'procedure path does not exist' do
@@ -187,6 +191,11 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
+        end
+
+        it 'sends mail saying procedure is published' do
+          mail = ActionMailer::Base.deliveries.last
+          expect(mail.subject).to eq("Une nouvelle démarche vient d'être publiée")
         end
 
         it 'redirects to the procedures page' do

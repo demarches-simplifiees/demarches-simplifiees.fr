@@ -1,0 +1,18 @@
+%ul
+  %li
+    Libellé :
+    = procedure.libelle
+
+  %li
+    #{'Créateur'.pluralize(procedure.administrateurs.length)} :
+    %ul
+      - procedure.administrateurs.each do |administrateur|
+        %li
+          = link_to "#{administrateur.email}", "mailto:#{administrateur.email}"
+  %li
+    Liste des champs remplis par l'usager
+    = render partial: "field_table", locals: { champs: @procedure.types_de_champ }
+  %li
+    Liste des champs remplis par l'organisme
+    = @procedure.service&.nom
+    = render partial: "field_table", locals: { champs: @procedure.types_de_champ_private }

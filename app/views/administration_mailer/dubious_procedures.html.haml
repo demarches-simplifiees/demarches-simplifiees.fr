@@ -17,6 +17,6 @@
             État : #{procedure.aasm_state}
           %li
             Nombre de #{'dossier'.pluralize(procedure.dossiers.count)} : #{procedure.dossiers.count}
-        = render partial: "field_description", locals: { procedure: procedure }
+        = render partial: "procedure_description", locals: { procedure: procedure }
 - else
   Il n'y a aucune démarche douteuse aujourd'hui
