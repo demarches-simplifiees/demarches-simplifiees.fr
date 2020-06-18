@@ -89,9 +89,10 @@ feature 'The user' do
   end
 
   let(:procedure_with_repetition) do
-    tdc = create(:type_de_champ_repetition, libelle: 'repetition')
+    procedure = create(:procedure, :published, :for_individual)
+    tdc = create(:type_de_champ_repetition, libelle: 'repetition', procedure: procedure)
     tdc.types_de_champ << create(:type_de_champ_text, libelle: 'text')
-    create(:procedure, :published, :for_individual, types_de_champ: [tdc])
+    procedure
   end
 
   scenario 'fill a dossier with repetition', js: true do
@@ -124,8 +125,9 @@ feature 'The user' do
   end
 
   let(:simple_procedure) do
-    tdcs = [create(:type_de_champ, mandatory: true, libelle: 'texte obligatoire')]
-    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
+    procedure = create(:procedure, :published, :for_individual)
+    create(:type_de_champ, mandatory: true, libelle: 'texte obligatoire', procedure: procedure)
+    procedure
   end
 
   scenario 'save an incomplete dossier as draft but cannot not submit it', js: true do
@@ -153,16 +155,16 @@ feature 'The user' do
   end
 
   let(:procedure_with_pj) do
-    tdcs = [create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative')]
-    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
+    procedure = create(:procedure, :published, :for_individual)
+    create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative', procedure: procedure)
+    procedure
   end
 
   let(:procedure_with_pjs) do
-    tdcs = [
-      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', order_place: 1),
-      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 2', order_place: 2)
-    ]
-    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
+    procedure = create(:procedure, :published, :for_individual)
+    create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', position: 1, procedure: procedure)
+    create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 2', position: 2, procedure: procedure)
+    procedure
   end
 
   scenario 'add an attachment', js: true do

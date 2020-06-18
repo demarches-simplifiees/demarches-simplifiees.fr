@@ -11,6 +11,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'API'
   inflect.acronym 'RNA'
   inflect.irregular 'type_de_champ', 'types_de_champ'
+  inflect.irregular 'procedure_revision_type_de_champ', 'procedure_revision_types_de_champ'
   inflect.irregular 'type_de_champ_private', 'types_de_champ_private'
   inflect.irregular 'assign_to', 'assign_tos'
   inflect.uncountable(['avis', 'pays'])

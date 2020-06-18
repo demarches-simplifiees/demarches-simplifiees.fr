@@ -197,11 +197,11 @@ module TagsSubstitutionConcern
   end
 
   def champ_public_tags
-    types_de_champ_tags(procedure.types_de_champ, Dossier::SOUMIS)
+    types_de_champ_tags(procedure.current_revision.types_de_champ, Dossier::SOUMIS)
   end
 
   def champ_private_tags
-    types_de_champ_tags(procedure.types_de_champ_private, Dossier::INSTRUCTION_COMMENCEE)
+    types_de_champ_tags(procedure.current_revision.types_de_champ_private, Dossier::INSTRUCTION_COMMENCEE)
   end
 
   def types_de_champ_tags(types_de_champ, available_for_states)

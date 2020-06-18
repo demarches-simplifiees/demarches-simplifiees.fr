@@ -4,7 +4,7 @@ module NewAdministrateur
 
     def preview
       mail_template = find_mail_template_by_slug(params[:id])
-      dossier = Dossier.new(id: '1', procedure: procedure)
+      dossier = Dossier.new(id: '1', procedure_revision: procedure.draft_revision)
 
       @dossier = dossier
       @logo_url = procedure.logo_url

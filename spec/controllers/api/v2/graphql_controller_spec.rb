@@ -123,7 +123,7 @@ describe API::V2::GraphqlController do
             typeOrganisme: procedure.service.type_organisme,
             organisme: procedure.service.organisme
           },
-          champDescriptors: procedure.types_de_champ.map do |tdc|
+          champDescriptors: procedure.current_revision.types_de_champ.map do |tdc|
             {
               id: tdc.to_typed_id,
               label: tdc.libelle,

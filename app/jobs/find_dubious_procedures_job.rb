@@ -17,10 +17,10 @@ class FindDubiousProceduresJob < CronJob
     # ~* -> case insensitive regexp match
     # https://www.postgresql.org/docs/current/static/functions-matching.html#FUNCTIONS-POSIX-REGEXP
     forbidden_tdcs = TypeDeChamp
-      .joins(:procedure)
+      .joins(procedure_revision_types_de_champ: { procedure_revision: :procedure })
       .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", forbidden_regexp)
       .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
-      .where(procedures: { closed_at: nil, whitelisted_at: nil })
+      .where(procedure_revision_types_de_champ: { procedure_revisions: { procedures: { closed_at: nil, whitelisted_at: nil, hidden_at: nil } } })
 
     dubious_procedures_and_tdcs = forbidden_tdcs
       .group_by(&:procedure_id)

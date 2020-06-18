@@ -274,45 +274,11 @@ describe Procedure do
 
   describe '#types_de_champ (ordered)' do
     let(:procedure) { create(:procedure) }
-    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 1) }
-    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-    subject { procedure.types_de_champ }
+    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, position: 1) }
+    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, position: 0) }
+    subject { procedure.current_revision.types_de_champ }
     it { expect(subject.first).to eq(type_de_champ_1) }
     it { expect(subject.last).to eq(type_de_champ_0) }
-  end
-
-  describe '#switch_types_de_champ' do
-    let(:procedure) { create(:procedure) }
-    let(:index) { 0 }
-    subject { procedure.switch_types_de_champ(index) }
-
-    context 'when procedure has no types_de_champ' do
-      it { expect(subject).to eq(false) }
-    end
-    context 'when procedure has 3 types de champ' do
-      let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-      let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
-      let!(:type_de_champ_2) { create(:type_de_champ, procedure: procedure, order_place: 2) }
-      context 'when index is not the last element' do
-        it { expect(subject).to eq(true) }
-        it 'switches the position of the champ N and N+1' do
-          subject
-          expect(procedure.types_de_champ[0]).to eq(type_de_champ_1)
-          expect(procedure.types_de_champ[0].order_place).to eq(0)
-          expect(procedure.types_de_champ[1]).to eq(type_de_champ_0)
-          expect(procedure.types_de_champ[1].order_place).to eq(1)
-        end
-        it 'doesn’t move other types de champ' do
-          subject
-          expect(procedure.types_de_champ[2]).to eq(type_de_champ_2)
-          expect(procedure.types_de_champ[2].order_place).to eq(2)
-        end
-      end
-      context 'when index is the last element' do
-        let(:index) { 2 }
-        it { expect(subject).to eq(false) }
-      end
-    end
   end
 
   describe 'active' do
@@ -362,13 +328,14 @@ describe Procedure do
   describe 'clone' do
     let!(:service) { create(:service) }
     let(:procedure) { create(:procedure, received_mail: received_mail, service: service) }
-    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
-    let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, order_place: 2) }
-    let!(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, procedure: procedure, order_place: 3, old_pj: { stable_id: 2713 }) }
-    let!(:type_de_champ_private_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
-    let!(:type_de_champ_private_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
-    let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, order_place: 2) }
+    let(:revision) { procedure.current_revision }
+    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, position: 0) }
+    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, position: 1) }
+    let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, position: 2) }
+    let!(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, procedure: procedure, position: 3) }
+    let!(:type_de_champ_private_0) { create(:type_de_champ, :private, procedure: procedure, position: 0) }
+    let!(:type_de_champ_private_1) { create(:type_de_champ, :private, procedure: procedure, position: 1) }
+    let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, position: 2) }
     let(:received_mail) { create(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
@@ -384,7 +351,6 @@ describe Procedure do
       @signature = File.open('spec/fixtures/files/black.png')
       @attestation_template = create(:attestation_template, procedure: procedure, logo: @logo, signature: @signature)
       @procedure = procedure.clone(administrateur, from_library)
-      @procedure.save
     end
 
     after do
@@ -395,6 +361,9 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
+    it { expect(subject.current_revision.id).not_to eq(procedure.current_revision.id) }
+    it { expect(subject.revisions.size).to eq(1) }
+    it { expect(procedure.revisions.size).to eq(1) }
 
     describe "should keep groupe instructeurs " do
       it "should clone groupe instructeurs" do
@@ -411,16 +380,16 @@ describe Procedure do
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
 
-      expect(subject.types_de_champ.size).to eq(procedure.types_de_champ.size)
-      expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
-      expect(subject.types_de_champ.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ.map(&:drop_down_list).compact.size
-      expect(subject.types_de_champ_private.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_list).compact.size
+      expect(subject.draft_revision.types_de_champ.size).to eq(procedure.current_revision.types_de_champ.size)
+      expect(subject.draft_revision.types_de_champ_private.size).to eq procedure.current_revision.types_de_champ_private.size
+      expect(subject.draft_revision.types_de_champ.map(&:drop_down_list).compact.size).to eq procedure.current_revision.types_de_champ.map(&:drop_down_list).compact.size
+      expect(subject.draft_revision.types_de_champ_private.map(&:drop_down_list).compact.size).to eq procedure.current_revision.types_de_champ_private.map(&:drop_down_list).compact.size
 
-      procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
+      procedure.current_revision.types_de_champ.zip(subject.draft_revision.types_de_champ).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 
-      subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
+      subject.draft_revision.types_de_champ_private.zip(procedure.current_revision.types_de_champ_private).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
       end
 
@@ -430,7 +399,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path"])
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id"])
     end
 
     context 'when the procedure is cloned from the library' do
@@ -442,12 +411,6 @@ describe Procedure do
 
       it 'should set service_id to nil' do
         expect(subject.service).to eq(nil)
-      end
-
-      it 'should discard old pj information' do
-        subject.types_de_champ.each do |stc|
-          expect(stc.old_pj).to be_nil
-        end
       end
 
       it 'should have one administrateur' do
@@ -478,12 +441,6 @@ describe Procedure do
         expect(subject.service.id).not_to eq(service.id)
         expect(subject.service.administrateur_id).not_to eq(service.administrateur_id)
         expect(subject.service.attributes.except("id", "administrateur_id", "created_at", "updated_at")).to eq(service.attributes.except("id", "administrateur_id", "created_at", "updated_at"))
-      end
-
-      it 'should discard old pj information' do
-        subject.types_de_champ.each do |stc|
-          expect(stc.old_pj).to be_nil
-        end
       end
 
       it 'should discard specific api_entreprise_token' do
@@ -541,12 +498,12 @@ describe Procedure do
     end
 
     it 'should keep types_de_champ ids stable' do
-      expect(subject.types_de_champ.first.id).not_to eq(procedure.types_de_champ.first.id)
-      expect(subject.types_de_champ.first.stable_id).to eq(procedure.types_de_champ.first.id)
+      expect(subject.draft_revision.types_de_champ.first.id).not_to eq(procedure.current_revision.types_de_champ.first.id)
+      expect(subject.draft_revision.types_de_champ.first.stable_id).to eq(procedure.current_revision.types_de_champ.first.id)
     end
 
     it 'should duplicate piece_justificative_template on a type_de_champ' do
-      expect(subject.types_de_champ.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be true
+      expect(subject.draft_revision.types_de_champ.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be true
     end
 
     context 'with a notice attached' do
@@ -899,11 +856,11 @@ describe Procedure do
     let(:procedure) do
       procedure = create(:procedure)
 
-      create(:type_de_champ_text, procedure: procedure, order_place: 1)
-      create(:type_de_champ_number, procedure: procedure, order_place: 2)
+      create(:type_de_champ_text, procedure: procedure, position: 1)
+      create(:type_de_champ_number, procedure: procedure, position: 2)
       create(:type_de_champ_textarea, :private, procedure: procedure)
 
-      procedure
+      procedure.reload
     end
 
     let(:dossier) { procedure.new_dossier }
@@ -1011,82 +968,6 @@ describe Procedure do
     context 'where there is no processed dossier' do
       let(:delays) { [] }
       it { expect(procedure.usual_traitement_time).to be_nil }
-    end
-  end
-
-  describe '#move_type_de_champ' do
-    let(:procedure) { create(:procedure) }
-
-    context 'type_de_champ' do
-      let(:type_de_champ) { create(:type_de_champ_text, order_place: 0, procedure: procedure) }
-      let!(:type_de_champ1) { create(:type_de_champ_text, order_place: 1, procedure: procedure) }
-      let!(:type_de_champ2) { create(:type_de_champ_text, order_place: 2, procedure: procedure) }
-
-      it 'move down' do
-        procedure.move_type_de_champ(type_de_champ, 2)
-
-        type_de_champ.reload
-        procedure.reload
-
-        expect(procedure.types_de_champ.index(type_de_champ)).to eq(2)
-        expect(type_de_champ.order_place).to eq(2)
-      end
-
-      context 'repetition' do
-        let!(:type_de_champ_repetition) do
-          create(:type_de_champ_repetition, types_de_champ: [
-            type_de_champ,
-            type_de_champ1,
-            type_de_champ2
-          ], procedure: procedure)
-        end
-
-        it 'move down' do
-          procedure.move_type_de_champ(type_de_champ, 2)
-
-          type_de_champ.reload
-          procedure.reload
-
-          expect(type_de_champ.parent.types_de_champ.index(type_de_champ)).to eq(2)
-          expect(type_de_champ.order_place).to eq(2)
-        end
-
-        context 'private' do
-          let!(:type_de_champ_repetition) do
-            create(:type_de_champ_repetition, types_de_champ: [
-              type_de_champ,
-              type_de_champ1,
-              type_de_champ2
-            ], private: true, procedure: procedure)
-          end
-
-          it 'move down' do
-            procedure.move_type_de_champ(type_de_champ, 2)
-
-            type_de_champ.reload
-            procedure.reload
-
-            expect(type_de_champ.parent.types_de_champ.index(type_de_champ)).to eq(2)
-            expect(type_de_champ.order_place).to eq(2)
-          end
-        end
-      end
-    end
-
-    context 'private' do
-      let(:type_de_champ) { create(:type_de_champ_text, order_place: 0, private: true, procedure: procedure) }
-      let!(:type_de_champ1) { create(:type_de_champ_text, order_place: 1, private: true, procedure: procedure) }
-      let!(:type_de_champ2) { create(:type_de_champ_text, order_place: 2, private: true, procedure: procedure) }
-
-      it 'move down' do
-        procedure.move_type_de_champ(type_de_champ, 2)
-
-        type_de_champ.reload
-        procedure.reload
-
-        expect(procedure.types_de_champ_private.index(type_de_champ)).to eq(2)
-        expect(type_de_champ.order_place).to eq(2)
-      end
     end
   end
 

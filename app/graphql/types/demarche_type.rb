@@ -39,8 +39,8 @@ module Types
       argument :state, Types::DossierType::DossierState, required: false, description: "Dossiers avec statut."
     end
 
-    field :champ_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ
-    field :annotation_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ_private
+    field :champ_descriptors, [Types::ChampDescriptorType], null: false
+    field :annotation_descriptors, [Types::ChampDescriptorType], null: false
 
     def state
       object.aasm.current_state
@@ -52,6 +52,14 @@ module Types
 
     def service
       Loaders::Record.for(Service).load(object.service_id)
+    end
+
+    def champ_descriptors
+      object.current_revision.types_de_champ
+    end
+
+    def annotation_descriptors
+      object.current_revision.types_de_champ_private
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, order:)

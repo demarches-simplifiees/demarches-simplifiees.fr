@@ -9,6 +9,35 @@ FactoryBot.define do
     order_place { 1 }
     mandatory { false }
 
+    transient do
+      procedure { nil }
+      position { nil }
+    end
+
+    after(:build) do |type_de_champ, evaluator|
+      if evaluator.procedure
+        type_de_champ.procedure_revision = evaluator.procedure.current_revision
+      end
+    end
+
+    after(:create) do |type_de_champ, evaluator|
+      if evaluator.procedure
+        create(:procedure_revision_type_de_champ,
+          position: evaluator.position,
+          procedure_revision: evaluator.procedure.current_revision,
+          type_de_champ: type_de_champ)
+        evaluator.procedure.reload
+      end
+    end
+
+    trait :private do
+      private { true }
+
+      # Previous line is kept blank so that rubocop does not complain
+      sequence(:libelle) { |n| "Libelle champ privé #{n}" }
+      sequence(:description) { |n| "description du champ privé #{n}" }
+    end
+
     factory :type_de_champ_text do
       type_champ { TypeDeChamp.type_champs.fetch(:text) }
     end
@@ -90,8 +119,8 @@ FactoryBot.define do
     factory :type_de_champ_piece_justificative do
       type_champ { TypeDeChamp.type_champs.fetch(:piece_justificative) }
 
-      after(:create) do |tc, _evaluator|
-        tc.piece_justificative_template.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+      after(:create) do |type_de_champ, _evaluator|
+        type_de_champ.piece_justificative_template.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
       end
     end
     factory :type_de_champ_siret do
@@ -102,14 +131,6 @@ FactoryBot.define do
     end
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }
-    end
-
-    trait :private do
-      private { true }
-
-      # Previous line is kept blank so that rubocop does not complain
-      sequence(:libelle) { |n| "Libelle champ privé #{n}" }
-      sequence(:description) { |n| "description du champ privé #{n}" }
     end
   end
 end

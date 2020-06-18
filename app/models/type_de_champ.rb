@@ -30,10 +30,13 @@ class TypeDeChamp < ApplicationRecord
     repetition: 'repetition'
   }
 
-  belongs_to :procedure
+  belongs_to :procedure_revision
+  has_one :procedure, through: :procedure_revision
 
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
+
+  has_many :procedure_revision_types_de_champ, dependent: :destroy, inverse_of: :type_de_champ
 
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj
   delegate :tags_for_template, to: :dynamic_type
@@ -52,7 +55,6 @@ class TypeDeChamp < ApplicationRecord
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
-  before_save :setup_procedure
   before_validation :set_default_drop_down_list
 
   attr_reader :dynamic_type
@@ -61,6 +63,7 @@ class TypeDeChamp < ApplicationRecord
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { order(order_place: :asc) }
   scope :root, -> { where(parent_id: nil) }
+  scope :repetition, -> { where(type_champ: type_champs.fetch(:repetition)) }
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
@@ -194,10 +197,22 @@ class TypeDeChamp < ApplicationRecord
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
   end
 
+  def revise!
+    association = if private?
+      procedure_revision.procedure_revision_types_de_champ_private.find_by!(type_de_champ: self)
+    else
+      procedure_revision.procedure_revision_types_de_champ.find_by!(type_de_champ: self)
+    end
+    association.update!(type_de_champ: deep_clone(include: [:drop_down_list, types_de_champ: :drop_down_list], &method(:clone_attachments)))
+    association.type_de_champ.update!(procedure_revision: procedure_revision.procedure.draft_revision)
+    association.type_de_champ.types_de_champ.update_all(procedure_revision: procedure_revision.procedure.draft_revision)
+    association.type_de_champ
+  end
+
   FEATURE_FLAGS = {}
 
   def self.type_de_champ_types_for(procedure, user)
-    has_legacy_number = (procedure.types_de_champ + procedure.types_de_champ_private).any?(&:legacy_number?)
+    has_legacy_number = (procedure.current_revision.types_de_champ + procedure.current_revision.types_de_champ_private).any?(&:legacy_number?)
 
     type_champs.map do |type_champ|
       [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{type_champ.last}"), type_champ.first]
@@ -213,13 +228,13 @@ class TypeDeChamp < ApplicationRecord
 
   TYPES_DE_CHAMP_BASE = {
     except: [
+      :id,
       :created_at,
       :options,
       :order_place,
       :parent_id,
       :private,
       :procedure_id,
-      :stable_id,
       :type,
       :updated_at
     ],
@@ -239,7 +254,18 @@ class TypeDeChamp < ApplicationRecord
     includes(:drop_down_list,
       piece_justificative_template_attachment: :blob,
       types_de_champ: [:drop_down_list, piece_justificative_template_attachment: :blob])
-      .as_json(TYPES_DE_CHAMP)
+      .as_json(TYPES_DE_CHAMP).map do |hash|
+        hash[:id] = hash.delete('stable_id')
+
+        if hash[:types_de_champ].present?
+          hash[:types_de_champ] = hash[:types_de_champ].map do |hash|
+            hash[:id] = hash.delete('stable_id')
+            hash
+          end
+        end
+
+        hash
+      end
   end
 
   private
@@ -247,12 +273,6 @@ class TypeDeChamp < ApplicationRecord
   def set_default_drop_down_list
     if drop_down_list? && !drop_down_list
       self.drop_down_list_attributes = { value: '' }
-    end
-  end
-
-  def setup_procedure
-    types_de_champ.each do |type_de_champ|
-      type_de_champ.procedure = procedure
     end
   end
 
@@ -265,6 +285,25 @@ class TypeDeChamp < ApplicationRecord
   def remove_piece_justificative_template
     if type_champ != TypeDeChamp.type_champs.fetch(:piece_justificative) && piece_justificative_template.attached?
       piece_justificative_template.purge_later
+    end
+  end
+
+  def clone_attachments(original, kopy)
+    if original.is_a?(TypeDeChamp)
+      clone_attachment(:piece_justificative_template, original, kopy)
+    end
+  end
+
+  def clone_attachment(attribute, original, kopy)
+    original_attachment = original.send(attribute)
+    if original_attachment.attached?
+      kopy.send(attribute).attach({
+        io: StringIO.new(original_attachment.download),
+        filename: original_attachment.filename,
+        content_type: original_attachment.content_type,
+        # we don't want to run virus scanner on cloned file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      })
     end
   end
 end

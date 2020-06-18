@@ -259,6 +259,7 @@ module Users
       end
 
       dossier = Dossier.new(
+        procedure_revision: procedure.current_revision,
         groupe_instructeur: procedure.defaut_groupe_instructeur,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)

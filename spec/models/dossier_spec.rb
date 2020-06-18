@@ -30,7 +30,7 @@ describe Dossier do
 
   describe 'with_champs' do
     let(:procedure) { create(:procedure) }
-    let(:dossier) { Dossier.create(user: create(:user), groupe_instructeur: procedure.defaut_groupe_instructeur) }
+    let(:dossier) { create(:dossier, user: create(:user), procedure: procedure) }
 
     before do
       create(:type_de_champ, libelle: 'l1', order_place: 1, procedure: procedure)
@@ -248,12 +248,12 @@ describe Dossier do
 
   describe '#champs' do
     let(:procedure) { create(:procedure) }
-    let(:dossier) { Dossier.create(user: create(:user), groupe_instructeur: procedure.defaut_groupe_instructeur) }
+    let(:dossier) { create(:dossier, user: create(:user), procedure: procedure) }
 
     before do
-      create(:type_de_champ, libelle: 'l1', order_place: 1, procedure: procedure)
-      create(:type_de_champ, libelle: 'l3', order_place: 3, procedure: procedure)
-      create(:type_de_champ, libelle: 'l2', order_place: 2, procedure: procedure)
+      create(:type_de_champ, libelle: 'l1', position: 1, procedure: procedure)
+      create(:type_de_champ, libelle: 'l3', position: 3, procedure: procedure)
+      create(:type_de_champ, libelle: 'l2', position: 2, procedure: procedure)
     end
 
     it { expect(dossier.champs.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
@@ -261,12 +261,12 @@ describe Dossier do
 
   describe '#champs_private' do
     let(:procedure) { create :procedure }
-    let(:dossier) { Dossier.create(user: create(:user), groupe_instructeur: procedure.defaut_groupe_instructeur) }
+    let(:dossier) { create(:dossier, user: create(:user), procedure: procedure) }
 
     before do
-      create :type_de_champ, :private, libelle: 'l1', order_place: 1, procedure: procedure
-      create :type_de_champ, :private, libelle: 'l3', order_place: 3, procedure: procedure
-      create :type_de_champ, :private, libelle: 'l2', order_place: 2, procedure: procedure
+      create(:type_de_champ, :private, libelle: 'l1', position: 1, procedure: procedure)
+      create(:type_de_champ, :private, libelle: 'l3', position: 3, procedure: procedure)
+      create(:type_de_champ, :private, libelle: 'l2', position: 2, procedure: procedure)
     end
 
     it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
@@ -505,7 +505,7 @@ describe Dossier do
       dossier = nil
       expect do
         perform_enqueued_jobs do
-          dossier = Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:brouillon), user: user)
+          dossier = create(:dossier, procedure: procedure, user: user)
         end
       end.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
@@ -515,11 +515,11 @@ describe Dossier do
     end
 
     it "does not send an email when the dossier is created with a non brouillon state" do
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:en_construction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:en_instruction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:accepte), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:refuse), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:sans_suite), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:en_construction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:en_instruction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:accepte), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:refuse), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:sans_suite), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
     end
   end
 
@@ -1021,7 +1021,7 @@ describe Dossier do
       let(:type_de_champ_repetition) { create(:type_de_champ_repetition, mandatory: true) }
 
       before do
-        procedure.types_de_champ << type_de_champ_repetition
+        procedure.current_revision.types_de_champ << type_de_champ_repetition
         type_de_champ_repetition.types_de_champ << create(:type_de_champ_text, mandatory: true)
       end
 

@@ -7,8 +7,8 @@ describe TypeDeChamp do
     let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
 
     it 'partition public and private' do
-      expect(procedure.types_de_champ.count).to eq(1)
-      expect(procedure.types_de_champ_private.count).to eq(1)
+      expect(procedure.current_revision.types_de_champ.count).to eq(1)
+      expect(procedure.current_revision.types_de_champ_private.count).to eq(1)
     end
   end
 end

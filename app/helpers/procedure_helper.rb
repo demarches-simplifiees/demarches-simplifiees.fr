@@ -19,10 +19,11 @@ module ProcedureHelper
   end
 
   def types_de_champ_data(procedure)
+    procedure.ensure_draft_revision!
     {
       isAnnotation: false,
       typeDeChampsTypes: TypeDeChamp.type_de_champ_types_for(procedure, current_user),
-      typeDeChamps: procedure.types_de_champ.as_json_for_editor,
+      typeDeChamps: procedure.draft_revision.types_de_champ.as_json_for_editor,
       baseUrl: procedure_types_de_champ_path(procedure),
       directUploadUrl: rails_direct_uploads_url
     }
@@ -32,7 +33,7 @@ module ProcedureHelper
     {
       isAnnotation: true,
       typeDeChampsTypes: TypeDeChamp.type_de_champ_types_for(procedure, current_user),
-      typeDeChamps: procedure.types_de_champ_private.as_json_for_editor,
+      typeDeChamps: procedure.draft_revision.types_de_champ_private.as_json_for_editor,
       baseUrl: procedure_types_de_champ_path(procedure),
       directUploadUrl: rails_direct_uploads_url
     }

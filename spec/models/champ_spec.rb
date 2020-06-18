@@ -42,7 +42,7 @@ describe Champ do
   end
 
   describe '#siblings' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:public_champ) { dossier.champs.first }
     let(:private_champ) { dossier.champs_private.first }

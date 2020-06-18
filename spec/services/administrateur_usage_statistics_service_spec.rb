@@ -82,7 +82,7 @@ describe AdministrateurUsageStatisticsService do
       end
 
       context 'with a procedure close' do
-        let(:procedure) { create(:procedure, aasm_state: 'close') }
+        let(:procedure) { create(:procedure, :closed) }
         let!(:dossiers) do
           (1..7).flat_map do
             [
@@ -163,7 +163,7 @@ describe AdministrateurUsageStatisticsService do
       end
 
       context 'with a procedure en prod' do
-        let(:procedure) { create(:procedure, aasm_state: 'publiee') }
+        let(:procedure) { create(:procedure, :published) }
         let!(:dossiers) do
           [
             create(:dossier, :en_construction, procedure: procedure),
@@ -191,7 +191,7 @@ describe AdministrateurUsageStatisticsService do
       end
 
       context 'with a procedure en prod and more than 20 dossiers' do
-        let(:procedure) { create(:procedure, aasm_state: 'publiee') }
+        let(:procedure) { create(:procedure, :published) }
         let!(:dossiers) do
           (1..7).flat_map do
             [

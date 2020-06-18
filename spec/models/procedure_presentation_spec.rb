@@ -1,7 +1,7 @@
 describe ProcedurePresentation do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
   let(:assign_to) { create(:assign_to, procedure: procedure) }
-  let(:first_type_de_champ) { assign_to.procedure.types_de_champ.first }
+  let(:first_type_de_champ) { assign_to.procedure.current_revision.types_de_champ.first }
   let(:first_type_de_champ_id) { first_type_de_champ.id.to_s }
   let(:procedure_presentation) {
     ProcedurePresentation.create(
@@ -50,11 +50,11 @@ describe ProcedurePresentation do
 
   describe "#fields" do
     context 'when the procedure can have a SIRET number' do
-      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :types_de_champ_count => 4, :types_de_champ_private_count => 4) }
-      let(:tdc_1) { procedure.types_de_champ[0] }
-      let(:tdc_2) { procedure.types_de_champ[1] }
-      let(:tdc_private_1) { procedure.types_de_champ_private[0] }
-      let(:tdc_private_2) { procedure.types_de_champ_private[1] }
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, types_de_champ_count: 4, types_de_champ_private_count: 4) }
+      let(:tdc_1) { procedure.current_revision.types_de_champ[0] }
+      let(:tdc_2) { procedure.current_revision.types_de_champ[1] }
+      let(:tdc_private_1) { procedure.current_revision.types_de_champ_private[0] }
+      let(:tdc_private_2) { procedure.current_revision.types_de_champ_private[1] }
       let(:expected) {
         [
           { "label" => 'Créé le', "table" => 'self', "column" => 'created_at' },
@@ -80,10 +80,10 @@ describe ProcedurePresentation do
       }
 
       before do
-        procedure.types_de_champ[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.types_de_champ[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
-        procedure.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+        procedure.current_revision.types_de_champ[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+        procedure.current_revision.types_de_champ[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+        procedure.current_revision.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+        procedure.current_revision.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
       end
 
       subject { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure)) }
@@ -223,7 +223,7 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ table' do
       let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.id.to_s }
+      let(:column) { procedure.current_revision.types_de_champ.first.id.to_s }
 
       let(:dossier) { create(:dossier, procedure: procedure) }
 
@@ -234,7 +234,7 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ_private table' do
       let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.id.to_s }
+      let(:column) { procedure.current_revision.types_de_champ_private.first.id.to_s }
 
       let(:dossier) { create(:dossier, procedure: procedure) }
 
@@ -324,7 +324,7 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ table' do
       let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.id.to_s }
+      let(:column) { procedure.current_revision.types_de_champ.first.id.to_s }
       let(:order) { 'desc' } # Asc works the same, no extra test required
 
       let(:beurre_dossier) { create(:dossier, procedure: procedure) }
@@ -340,7 +340,7 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ_private table' do
       let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.id.to_s }
+      let(:column) { procedure.current_revision.types_de_champ_private.first.id.to_s }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       let(:biere_dossier) { create(:dossier, procedure: procedure) }
@@ -499,7 +499,7 @@ describe ProcedurePresentation do
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
-      let(:type_de_champ) { procedure.types_de_champ.first }
+      let(:type_de_champ) { procedure.current_revision.types_de_champ.first }
 
       context 'with single value' do
         before do
@@ -549,7 +549,7 @@ describe ProcedurePresentation do
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
-      let(:type_de_champ_private) { procedure.types_de_champ_private.first }
+      let(:type_de_champ_private) { procedure.current_revision.types_de_champ_private.first }
 
       before do
         kept_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'keep me')
@@ -761,7 +761,7 @@ describe ProcedurePresentation do
 
     context 'for type de champ' do
       let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.id }
+      let(:column) { procedure.current_revision.types_de_champ.first.id }
 
       it 'preloads the champs relation' do
         # Ideally, we would only preload the champs for the matching column
@@ -778,7 +778,7 @@ describe ProcedurePresentation do
 
     context 'for type de champ private' do
       let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.id }
+      let(:column) { procedure.current_revision.types_de_champ_private.first.id }
 
       it 'preloads the champs relation' do
         # Ideally, we would only preload the champs for the matching column

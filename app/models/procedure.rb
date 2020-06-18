@@ -12,8 +12,13 @@ class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
-  has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
-  has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
+  has_many :revisions, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
+  belongs_to :draft_revision, class_name: 'ProcedureRevision'
+  belongs_to :published_revision, class_name: 'ProcedureRevision'
+
+  # has_many :types_de_champ, through: :revisions
+  # has_many :types_de_champ_private, through: :revisions
+
   has_many :deleted_dossiers, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
@@ -22,6 +27,49 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure'
   belongs_to :canonical_procedure, class_name: 'Procedure'
   belongs_to :service
+
+  def current_revision
+    brouillon? ? draft_revision : published_revision
+  end
+
+  def ensure_draft_revision!
+    if !self.draft_revision_id
+      self.draft_revision = revisions.create
+
+      types_de_champ = TypeDeChamp.public_only.where(procedure_id: id)
+      types_de_champ.update_all(procedure_revision_id: self.draft_revision.id)
+
+      types_de_champ.each do |type_de_champ|
+        type_de_champ.types_de_champ.update_all(procedure_revision_id: self.draft_revision.id)
+        self.draft_revision.procedure_revision_types_de_champ.create!(
+          type_de_champ: type_de_champ,
+          position: type_de_champ.order_place
+        )
+      end
+
+      types_de_champ_private = TypeDeChamp.private_only.where(procedure_id: id)
+      types_de_champ_private.update_all(procedure_revision_id: self.draft_revision.id)
+
+      types_de_champ_private.each do |type_de_champ|
+        type_de_champ.types_de_champ.update_all(procedure_revision_id: self.draft_revision.id)
+        self.draft_revision.procedure_revision_types_de_champ_private.create!(
+          type_de_champ: type_de_champ,
+          position: type_de_champ.order_place
+        )
+      end
+
+      save!
+
+      if publiee?
+        revise!
+      end
+    end
+  end
+
+  def revise!
+    revision = draft_revision.deep_clone(include: [:procedure_revision_types_de_champ, :procedure_revision_types_de_champ_private])
+    update!(draft_revision: revision, published_revision: draft_revision)
+  end
 
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
@@ -42,9 +90,6 @@ class Procedure < ApplicationRecord
   has_one_attached :notice
   has_one_attached :deliberation
 
-  accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
-  accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
-
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
@@ -63,9 +108,15 @@ class Procedure < ApplicationRecord
   scope :for_api, -> {
     includes(
       :administrateurs,
-      :types_de_champ_private,
-      :types_de_champ,
-      :module_api_carto
+      :module_api_carto,
+      published_revision: [
+        :types_de_champ_private,
+        :types_de_champ
+      ],
+      draft_revision: [
+        :types_de_champ_private,
+        :types_de_champ
+      ]
     )
   }
 
@@ -236,19 +287,11 @@ class Procedure < ApplicationRecord
   # to save a dossier created from this method
   def new_dossier
     Dossier.new(
-      procedure: self,
-      champs: build_champs,
-      champs_private: build_champs_private,
+      procedure_revision: current_revision,
+      champs: current_revision.build_champs,
+      champs_private: current_revision.build_champs_private,
       groupe_instructeur: defaut_groupe_instructeur
     )
-  end
-
-  def build_champs
-    types_de_champ.map(&:build_champ)
-  end
-
-  def build_champs_private
-    types_de_champ_private.map(&:build_champ)
   end
 
   def path_customized?
@@ -263,40 +306,24 @@ class Procedure < ApplicationRecord
     publiees.find(id)
   end
 
-  def switch_types_de_champ(index_of_first_element)
-    switch_list_order(types_de_champ, index_of_first_element)
-  end
-
-  def switch_types_de_champ_private(index_of_first_element)
-    switch_list_order(types_de_champ_private, index_of_first_element)
-  end
-
-  def switch_list_order(list, index_of_first_element)
-    if index_of_first_element < 0 ||
-      index_of_first_element == list.count - 1 ||
-      list.count < 1
-
-      false
-    else
-      list[index_of_first_element].update(order_place: index_of_first_element + 1)
-      list[index_of_first_element + 1].update(order_place: index_of_first_element)
-      reload
-
-      true
-    end
-  end
-
   def clone(admin, from_library)
     is_different_admin = !admin.owns?(self)
 
     populate_champ_stable_ids
     include_list = {
-      attestation_template: nil,
-      types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
-      types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
+      attestation_template: [],
+      draft_revision: {
+        procedure_revision_types_de_champ: {
+          type_de_champ: [:drop_down_list, types_de_champ: :drop_down_list]
+        },
+        procedure_revision_types_de_champ_private: {
+          type_de_champ: [:drop_down_list, types_de_champ: :drop_down_list]
+        }
+      }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
     procedure = self.deep_clone(include: include_list, &method(:clone_attachments))
+    procedure.draft_revision.procedure = procedure
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
     procedure.closed_at = nil
@@ -304,9 +331,9 @@ class Procedure < ApplicationRecord
     procedure.published_at = nil
     procedure.lien_notice = nil
 
-    if is_different_admin || from_library
-      procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
-    end
+    # if is_different_admin || from_library
+    #   procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+    # end
 
     if is_different_admin
       procedure.administrateurs = [admin]
@@ -461,34 +488,6 @@ class Procedure < ApplicationRecord
     result
   end
 
-  def move_type_de_champ(type_de_champ, new_index)
-    types_de_champ, collection_attribute_name = if type_de_champ.parent&.repetition?
-      if type_de_champ.parent.private?
-        [type_de_champ.parent.types_de_champ, :types_de_champ_private_attributes]
-      else
-        [type_de_champ.parent.types_de_champ, :types_de_champ_attributes]
-      end
-    elsif type_de_champ.private?
-      [self.types_de_champ_private, :types_de_champ_private_attributes]
-    else
-      [self.types_de_champ, :types_de_champ_attributes]
-    end
-
-    attributes = move_type_de_champ_attributes(types_de_champ.to_a, type_de_champ, new_index)
-
-    if type_de_champ.parent&.repetition?
-      attributes = [
-        {
-          id: type_de_champ.parent.id,
-          libelle: type_de_champ.parent.libelle,
-          types_de_champ_attributes: attributes
-        }
-      ]
-    end
-
-    update!(collection_attribute_name => attributes)
-  end
-
   def process_dossiers!
     case declarative_with_state
     when Procedure.declarative_with_states.fetch(:en_instruction)
@@ -566,28 +565,13 @@ class Procedure < ApplicationRecord
 
   private
 
-  def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
-    old_index = types_de_champ.index(type_de_champ)
-    if types_de_champ.delete_at(old_index)
-      types_de_champ.insert(new_index, type_de_champ)
-        .map.with_index do |type_de_champ, index|
-          {
-            id: type_de_champ.id,
-            libelle: type_de_champ.libelle,
-            order_place: index
-          }
-        end
-    else
-      []
-    end
-  end
-
   def before_publish
     update!(closed_at: nil, unpublished_at: nil)
   end
 
   def after_publish(canonical_procedure = nil)
     update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure)
+    revise!
   end
 
   def after_close

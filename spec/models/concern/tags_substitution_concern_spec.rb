@@ -9,8 +9,6 @@ describe TagsSubstitutionConcern, type: :model do
   let(:procedure) do
     create(:procedure,
       libelle: 'Une magnifique démarche',
-      types_de_champ: types_de_champ,
-      types_de_champ_private: types_de_champ_private,
       for_individual: for_individual,
       service: service,
       organisation: nil)
@@ -29,6 +27,11 @@ describe TagsSubstitutionConcern, type: :model do
         @procedure
       end
     end).new(procedure, state)
+  end
+
+  before do
+    types_de_champ
+    types_de_champ_private
   end
 
   describe 'replace_tags' do
@@ -96,8 +99,8 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ, libelle: 'libelleA'),
-          create(:type_de_champ, libelle: 'libelleB')
+          create(:type_de_champ, libelle: 'libelleA', procedure: procedure),
+          create(:type_de_champ, libelle: 'libelleB', procedure: procedure)
         ]
       end
 
@@ -140,7 +143,7 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has a type de champ with apostrophes' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ, libelle: "Intitulé de l'‘«\"évènement\"»’")
+          create(:type_de_champ, libelle: "Intitulé de l'‘«\"évènement\"»’", procedure: procedure)
         ]
       end
 
@@ -164,7 +167,7 @@ describe TagsSubstitutionConcern, type: :model do
       let(:template) { '--Répétition--' }
       let(:types_de_champ) do
         [
-          create(:type_de_champ_repetition, libelle: 'Répétition', types_de_champ: [
+          create(:type_de_champ_repetition, libelle: 'Répétition', procedure: procedure, types_de_champ: [
             create(:type_de_champ_text, libelle: 'Nom', order_place: 1),
             create(:type_de_champ_text, libelle: 'Prénom', order_place: 2)
           ])
@@ -189,7 +192,7 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when the procedure has a linked drop down menus type de champ' do
       let(:type_de_champ) do
-        create(:type_de_champ_linked_drop_down_list, libelle: 'libelle')
+        create(:type_de_champ_linked_drop_down_list, libelle: 'libelle', procedure: procedure)
       end
       let(:types_de_champ) { [type_de_champ] }
       let(:template) { 'tout : --libelle--, primaire : --libelle/primaire--, secondaire : --libelle/secondaire--' }
@@ -218,7 +221,7 @@ describe TagsSubstitutionConcern, type: :model do
             let(:types_de_champ) do
               [
                 type_de_champ,
-                create(:type_de_champ_header_section, libelle: 'libelle')
+                create(:type_de_champ_header_section, libelle: 'libelle', procedure: procedure)
               ]
             end
 
@@ -252,7 +255,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when the procedure has a type de champ prive named libelleA' do
-      let(:types_de_champ_private) { [create(:type_de_champ, :private, libelle: 'libelleA')] }
+      let(:types_de_champ_private) { [create(:type_de_champ, :private, libelle: 'libelleA', procedure: procedure)] }
 
       context 'and it is used in the template' do
         let(:template) { '--libelleA--' }
@@ -279,7 +282,7 @@ describe TagsSubstitutionConcern, type: :model do
       end
 
       context 'champs publics are valid tags' do
-        let(:types_de_champ) { [create(:type_de_champ, libelle: 'libelleA')] }
+        let(:types_de_champ) { [create(:type_de_champ, libelle: 'libelleA', procedure: procedure)] }
 
         before { dossier.champs.first.update(value: 'libelle1') }
 
@@ -290,8 +293,8 @@ describe TagsSubstitutionConcern, type: :model do
     context 'when the procedure has 2 types de champ date and datetime' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ_date, libelle: TypeDeChamp.type_champs.fetch(:date)),
-          create(:type_de_champ_datetime, libelle: TypeDeChamp.type_champs.fetch(:datetime))
+          create(:type_de_champ_date, libelle: TypeDeChamp.type_champs.fetch(:date), procedure: procedure),
+          create(:type_de_champ_datetime, libelle: TypeDeChamp.type_champs.fetch(:datetime), procedure: procedure)
         ]
       end
 
@@ -353,13 +356,13 @@ describe TagsSubstitutionConcern, type: :model do
 
       shared_examples "treat all kinds of space as equivalent" do
         context 'and the champ has a non breaking space' do
-          let(:types_de_champ) { [create(:type_de_champ, libelle: 'mon tag')] }
+          let(:types_de_champ) { [create(:type_de_champ, libelle: 'mon tag', procedure: procedure)] }
 
           it { is_expected.to eq('valeur') }
         end
 
         context 'and the champ has an ordinary space' do
-          let(:types_de_champ) { [create(:type_de_champ, libelle: 'mon tag')] }
+          let(:types_de_champ) { [create(:type_de_champ, libelle: 'mon tag', procedure: procedure)] }
 
           it { is_expected.to eq('valeur') }
         end
@@ -396,12 +399,12 @@ describe TagsSubstitutionConcern, type: :model do
 
     let(:types_de_champ) do
       [
-        create(:type_de_champ, libelle: 'public'),
-        create(:type_de_champ_header_section, libelle: 'entête de section'),
-        create(:type_de_champ_explication, libelle: 'explication')
+        create(:type_de_champ, libelle: 'public', procedure: procedure),
+        create(:type_de_champ_header_section, libelle: 'entête de section', procedure: procedure),
+        create(:type_de_champ_explication, libelle: 'explication', procedure: procedure)
       ]
     end
-    let(:types_de_champ_private) { [create(:type_de_champ, :private, libelle: 'privé')] }
+    let(:types_de_champ_private) { [create(:type_de_champ, :private, libelle: 'privé', procedure: procedure)] }
 
     context 'do not generate tags for champs that cannot have usager content' do
       it { is_expected.not_to include(include({ libelle: 'entête de section' })) }

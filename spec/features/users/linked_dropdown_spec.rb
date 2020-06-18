@@ -14,14 +14,8 @@ feature 'linked dropdown lists' do
     END_OF_LIST
   end
   let(:drop_down_list) { create(:drop_down_list, value: list_items) }
-  let(:type_de_champ) { create(:type_de_champ_linked_drop_down_list, libelle: 'linked dropdown', drop_down_list: drop_down_list) }
-
-  let!(:procedure) do
-    p = create(:procedure, :published, :for_individual)
-    p.types_de_champ << type_de_champ
-    p
-  end
-
+  let!(:type_de_champ) { create(:type_de_champ_linked_drop_down_list, libelle: 'linked dropdown', drop_down_list: drop_down_list, procedure: procedure) }
+  let!(:procedure) { create(:procedure, :published, :for_individual) }
   let(:user_dossier) { user.dossiers.first }
 
   scenario 'change primary value, secondary options are updated', js: true do

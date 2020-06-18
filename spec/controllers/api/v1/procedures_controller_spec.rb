@@ -43,7 +43,7 @@ describe API::V1::ProceduresController, type: :controller do
         describe 'type_de_champ' do
           subject { super()[:types_de_champ][0] }
 
-          let(:champ) { procedure.types_de_champ.first }
+          let(:champ) { procedure.current_revision.types_de_champ.first }
 
           it { expect(subject[:id]).to eq(champ.id) }
           it { expect(subject[:libelle]).to eq(champ.libelle) }

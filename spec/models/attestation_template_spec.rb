@@ -107,18 +107,13 @@ describe AttestationTemplate, type: :model do
   end
 
   describe 'attestation_for' do
-    let(:procedure) do
-      create(:procedure,
-        types_de_champ: types_de_champ,
-        types_de_champ_private: types_de_champ_private,
-        for_individual: for_individual)
-    end
+    let(:procedure) { create(:procedure, for_individual: for_individual) }
     let(:for_individual) { false }
     let(:individual) { nil }
     let(:etablissement) { create(:etablissement) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
-    let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
+    let(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
     let(:template_title) { 'title' }
     let(:template_body) { 'body' }
     let(:attestation_template) do
@@ -131,6 +126,10 @@ describe AttestationTemplate, type: :model do
 
     before do
       Timecop.freeze(Time.zone.now)
+
+      types_de_champ
+      types_de_champ_private
+      dossier
     end
 
     after do
@@ -156,8 +155,8 @@ describe AttestationTemplate, type: :model do
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
         [
-          create(:type_de_champ, libelle: 'libelleA'),
-          create(:type_de_champ, libelle: 'libelleB')
+          create(:type_de_champ, libelle: 'libelleA', procedure: procedure),
+          create(:type_de_champ, libelle: 'libelleB', procedure: procedure)
         ]
       end
 

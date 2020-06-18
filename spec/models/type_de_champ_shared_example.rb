@@ -40,10 +40,12 @@ shared_examples 'type_de_champ_spec' do
     end
 
     context 'stable_id' do
+      let(:procedure) { create(:procedure) }
+      let(:type_de_champ) { create(:type_de_champ, procedure: procedure) }
+      let(:cloned_type_de_champ) { type_de_champ.clone }
+
       it {
-        type_de_champ = create(:type_de_champ_text)
         expect(type_de_champ.id).to eq(type_de_champ.stable_id)
-        cloned_type_de_champ = type_de_champ.clone
         expect(cloned_type_de_champ.stable_id).to eq(type_de_champ.stable_id)
       }
     end
@@ -115,27 +117,21 @@ shared_examples 'type_de_champ_spec' do
     let(:procedure) { create(:procedure) }
     let(:type_de_champ) { create(:type_de_champ_repetition, procedure: procedure) }
     let(:type_de_champ_text) { create(:type_de_champ_text) }
-    let(:type_de_champ_integer_number_attrs) { attributes_for(:type_de_champ_integer_number) }
+    let(:type_de_champ_integer_number) { create(:type_de_champ_integer_number) }
 
     it "associates nested types_de_champ to the parent procedure" do
       expect(type_de_champ.types_de_champ.size).to eq(0)
-      expect(procedure.types_de_champ.size).to eq(1)
+      expect(procedure.current_revision.types_de_champ.size).to eq(1)
 
-      procedure.update(types_de_champ_attributes: [
-        {
-          id: type_de_champ.id,
-          libelle: type_de_champ.libelle,
-          types_de_champ_attributes: [type_de_champ_integer_number_attrs]
-        }
-      ])
+      type_de_champ.types_de_champ << type_de_champ_integer_number
+
       procedure.reload
       type_de_champ.reload
 
-      expect(procedure.types_de_champ.size).to eq(1)
+      expect(procedure.current_revision.types_de_champ.size).to eq(1)
       expect(type_de_champ.types_de_champ.size).to eq(1)
 
       expect(type_de_champ.types_de_champ.first.parent).to eq(type_de_champ)
-      expect(type_de_champ.types_de_champ.first.procedure).to eq(procedure)
       expect(type_de_champ.types_de_champ.first.private?).to eq(false)
 
       type_de_champ.types_de_champ << type_de_champ_text
@@ -145,7 +141,7 @@ shared_examples 'type_de_champ_spec' do
       admin = create(:administrateur)
       cloned_procedure = procedure.clone(admin, false)
 
-      expect(cloned_procedure.types_de_champ.first.types_de_champ).not_to be_empty
+      expect(cloned_procedure.current_revision.types_de_champ.first.types_de_champ).not_to be_empty
     end
   end
 

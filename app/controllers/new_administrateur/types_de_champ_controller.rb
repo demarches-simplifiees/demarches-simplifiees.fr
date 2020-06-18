@@ -3,8 +3,10 @@ module NewAdministrateur
     before_action :retrieve_procedure, only: [:create, :update, :move, :destroy]
     before_action :procedure_locked?, only: [:create, :update, :move, :destroy]
 
+    before_action :ensure_draft_revision!
+
     def create
-      type_de_champ = TypeDeChamp.new(type_de_champ_create_params)
+      type_de_champ = @procedure.draft_revision.add_type_de_champ(type_de_champ_create_params)
 
       if type_de_champ.save
         reset_procedure
@@ -15,7 +17,7 @@ module NewAdministrateur
     end
 
     def update
-      type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
+      type_de_champ = @procedure.draft_revision.find_or_clone_type_de_champ(params[:id])
 
       if type_de_champ.update(type_de_champ_update_params)
         reset_procedure
@@ -26,24 +28,23 @@ module NewAdministrateur
     end
 
     def move
-      type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
-      new_index = params[:order_place].to_i
-
-      @procedure.move_type_de_champ(type_de_champ, new_index)
+      @procedure.draft_revision.move_type_de_champ(params[:id], params[:position].to_i)
 
       head :no_content
     end
 
     def destroy
-      type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
-
-      type_de_champ.destroy!
+      @procedure.draft_revision.remove_type_de_champ(params[:id])
       reset_procedure
 
       head :no_content
     end
 
     private
+
+    def ensure_draft_revision!
+      @procedure.ensure_draft_revision!
+    end
 
     def serialize_type_de_champ(type_de_champ)
       {
@@ -67,7 +68,7 @@ module NewAdministrateur
             :piece_justificative_template_url,
             :quartiers_prioritaires
           ]
-        )
+        ).merge(id: type_de_champ.stable_id)
       }
     end
 
@@ -78,12 +79,10 @@ module NewAdministrateur
         :libelle,
         :mandatory,
         :order_place,
-        :parcelles_agricoles,
         :parent_id,
         :piece_justificative_template,
         :private,
-        :quartiers_prioritaires,
-        :type_champ).merge(procedure: @procedure)
+        :type_champ)
     end
 
     def type_de_champ_update_params
@@ -92,9 +91,7 @@ module NewAdministrateur
         :drop_down_list_value,
         :libelle,
         :mandatory,
-        :parcelles_agricoles,
         :piece_justificative_template,
-        :quartiers_prioritaires,
         :type_champ)
     end
   end

@@ -1,7 +1,7 @@
 feature "procedure filters" do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, :with_type_de_champ, instructeurs: [instructeur]) }
-  let!(:type_de_champ) { procedure.types_de_champ.first }
+  let!(:type_de_champ) { procedure.current_revision.types_de_champ.first }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
   let!(:champ) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier.id) }
   let!(:new_unfollow_dossier_2) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }

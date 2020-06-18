@@ -2,22 +2,22 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
   describe 'perform' do
     let(:mailer_double) { double('mailer', deliver_later: true) }
     let(:procedure) { create(:procedure) }
-    let(:allowed_tdc) { create(:type_de_champ, libelle: 'fournir') }
+    let(:allowed_tdc) { create(:type_de_champ, libelle: 'fournir', procedure: procedure) }
 
     before do
       allow(AdministrationMailer).to receive(:dubious_procedures) do |arg|
         @dubious_procedures_args = arg
       end.and_return(mailer_double)
 
-      procedure.types_de_champ << tdcs
+      tdcs
       FindDubiousProceduresJob.new.perform
     end
 
     context 'with suspicious champs' do
       let(:forbidden_tdcs) do
         [
-          create(:type_de_champ, libelle: 'num de securite sociale, stp'),
-          create(:type_de_champ, libelle: "t'aurais une carte bancaire ?")
+          create(:type_de_champ, libelle: 'num de securite sociale, stp', procedure: procedure),
+          create(:type_de_champ, libelle: "t'aurais une carte bancaire ?", procedure: procedure)
         ]
       end
 
