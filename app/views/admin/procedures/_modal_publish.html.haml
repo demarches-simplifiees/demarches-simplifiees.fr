@@ -14,6 +14,11 @@
               = procedure_modal_text(procedure, :body)
               %b Elle ne pourra plus être modifiée à l’issue de cette publication.
           .form-group
+            %h4 Première fois ?
+            %p
+              Si vous publiez pour la première fois, pensez à nous demander un avis sur votre formulaire via l'icone de chat rouge en bas à droite ou via
+              = link_to CONTACT_EMAIL, "mailto:#{CONTACT_EMAIL}?body=Bonjour, pouvez vous me donner votre avis sur la démarche #{procedure.id} #{@procedure_lien}&subject=Avis demandé sur une démarche"
+          .form-group
             %h4 Adresse de la démarche
             %p Vous pouvez personnaliser le lien public de la démarche pour en faciliter l’accès.
             %p
