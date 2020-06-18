@@ -21,8 +21,10 @@
         - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
         = link_to root_profile_link, class: 'header-logo justify-center', title: root_profile_libelle do
           = image_tag ENV['MAIN_LOGO_INSTANCE'], alt: 'Liberté, égalité, fraternité', width: '65px'
-          %span.big.site-title> ${ENV['FULL_INSTANCE_NAME']}
-          %span.small.site-title> ${ENV['SHORT_INSTANCE_NAME']}
+          %span.big.site-title>
+            = ENV['FULL_INSTANCE_NAME']
+          %span.small.site-title>
+            = ENV['SHORT_INSTANCE_NAME']
 
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         - current_url = request.path_info
