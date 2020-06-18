@@ -173,7 +173,41 @@ class ProcedurePresentation < ApplicationRecord
     dossiers.includes(relations_to_include)
   end
 
+  def human_value_for_filter(filter)
+    if filter['table'] == 'type_de_champ'
+      type_de_champ = TypeDeChamp.find_by(id: filter['column'])
+      return type_de_champ.dynamic_type.filter_to_human(filter['value'])
+    end
+    filter['value']
+  end
+
+  def add_filter(statut, field, value)
+    if value.present?
+      updated_filters = self.filters
+      table, column = field.split('/')
+      label = find_field(table, column)['label']
+
+      if table == 'type_de_champ'
+        type_de_champ = TypeDeChamp.find_by(id: column)
+        value = type_de_champ.dynamic_type.human_to_filter(value)
+      end
+
+      updated_filters[statut] << {
+        'label' => label,
+        'table' => table,
+        'column' => column,
+        'value' => value
+      }
+
+      update(filters: updated_filters)
+    end
+  end
+
   private
+
+  def find_field(table, column)
+    fields.find { |c| c['table'] == table && c['column'] == column }
+  end
 
   def check_allowed_displayed_fields
     displayed_fields.each do |field|

@@ -6,11 +6,18 @@
   .container
     %h1.new-h1 Contact
 
-    .description
-      Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.
-      Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux
-
     = form_tag contact_path, method: :post, multipart: true, class: 'form' do |f|
+
+      .description
+        %p
+          Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.
+          Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux.
+        %br
+        %p.mandatory-explanation
+          Les champs suivis d’un astérisque (
+          %span.mandatory *
+          ) sont obligatoires.
+
       - if !user_signed_in?
         .contact-champ
           = label_tag :email do
@@ -28,7 +35,10 @@
         .card-title
           👉 Notre réponse
         .card-content
-          %p Avez-vous bien vérifié que tous les champs obligatoires (*) sont bien remplis ?
+          %p
+            Avez-vous bien vérifié que tous les champs obligatoires (
+            %span.mandatory *
+            ) sont bien remplis ?
           %p Si vous avez des questions sur les informations à saisir, contactez les services en charge de la démarche.
           %p
             %a{ href: "#{FR_FAQ_URL}/article/12-contacter-le-service-en-charge-de-ma-demarche" }
@@ -90,7 +100,7 @@
         = text_area_tag :text, params[:text], rows: 6, required: true
 
       .contact-champ
-        = label_tag :text do
+        = label_tag :piece_jointe do
           Pièce jointe
         %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
           Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
