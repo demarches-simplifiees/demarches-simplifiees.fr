@@ -11,6 +11,9 @@
             #{'Champ'.pluralize(type_de_champs.length)} douteux :
             %b= type_de_champs.map(&:libelle).join(', ')
           %li
+            - lien =  procedure.brouillon? ? commencer_test_url(path: procedure.path) : commencer_url(path: procedure.path)
+            = link_to 'Remplir un dossier', sanitize_url(lien), target: :blank, rel: :noopener
+          %li
             État : #{procedure.aasm_state}
           %li
             Nombre de #{'dossier'.pluralize(procedure.dossiers.count)} : #{procedure.dossiers.count}
