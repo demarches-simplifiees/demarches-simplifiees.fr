@@ -152,19 +152,20 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
         featureCollection,
         'post'
       );
-
       let inputs = [...importInputs];
       const setInputs = inputs.map((input) => {
         if (input.id === inputId) {
           input.disabled = true;
           input.hasValue = true;
-          resultFeatureCollection.features.forEach((feature) => {
-            if (
-              JSON.stringify(feature.geometry) ===
-              JSON.stringify(featureCollection.features[0].geometry)
-            ) {
-              input.featureId = feature.properties.id;
-            }
+          resultFeatureCollection.features.forEach((resultFeature) => {
+            featureCollection.features.forEach((feature) => {
+              if (
+                JSON.stringify(resultFeature.geometry) ===
+                JSON.stringify(feature.geometry)
+              ) {
+                input.featureIds.push(resultFeature.properties.id);
+              }
+            });
           });
         }
         return input;
@@ -189,7 +190,7 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
     inputs.push({
       id: generateId(),
       disabled: false,
-      featureId: null,
+      featureIds: [],
       hasValue: false
     });
     setImportInputs(inputs);
@@ -203,9 +204,9 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
     const inputToRemove = inputs.find((input) => input.id === inputId);
 
     for (const feature of featureCollection.features) {
-      if (inputToRemove.featureId === feature.properties.id) {
+      if (inputToRemove.featureIds.includes(feature.properties.id)) {
         const featureToRemove = draw.get(feature.id);
-        await getJSON(`${url}/${inputToRemove.featureId}`, null, 'delete');
+        await getJSON(`${url}/${feature.properties.id}`, null, 'delete');
         draw.delete(feature.id).getAll();
         updateFeaturesList([featureToRemove]);
       }
