@@ -36,4 +36,17 @@ class Service < ApplicationRecord
       "tel:#{telephone.gsub(/[[:blank:]]/, '')}"
     end
   end
+
+  PREPOSITIONS = Set['de', 'des', 'l', 'la', 'les', 'à', 'aux', 'le', 'et']
+
+  def suggested_path
+    # remove specialisation
+    result = nom&.gsub(/\s*[-:].*/, "")
+    puts "Service nom: #{result}"
+    # multiple words ==> remove prepositions and keep first letter of each word
+    # one word ==> return the word
+    result = result&.include?(' ') ? result.split(/[ ']+/).reject { |s| PREPOSITIONS.include?(s) }.map { |s| s[0] }.join() : result
+    puts "Service nom: #{result}"
+    result&.parameterize
+  end
 end

@@ -176,10 +176,12 @@ class Procedure < ApplicationRecord
     if path_customized?
       return path
     end
-    slug = libelle&.parameterize&.first(50)
+    prefix = service&.suggested_path
+    core = libelle&.parameterize || ''
+    slug = [prefix, core].compact.reject(&:empty?).join('-').first(50)
     suggestion = slug
     counter = 1
-    while !path_available?(administrateur, suggestion)
+    until path_available?(administrateur, suggestion)
       counter = counter + 1
       suggestion = "#{slug}-#{counter}"
     end

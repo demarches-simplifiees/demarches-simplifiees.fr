@@ -75,4 +75,27 @@ describe Service, type: :model do
       end
     end
   end
+
+  describe 'suggested_path' do
+    subject { service.suggested_path }
+    context 'service name with one word' do
+      let(:service) { create :service, nom: 'SEFI' }
+      it { is_expected.to eq 'sefi' }
+    end
+
+    context 'service name with multiple words & prepositions' do
+      let(:service) { create :service, nom: "Direction de la Jeunesse et des sports et de l'économie" }
+      it { is_expected.to eq 'djse' }
+    end
+
+    context 'service name with dash' do
+      let(:service) { create :service, nom: 'SEFI - Revenu Exceptionnel de Solidarité' }
+      it { is_expected.to eq 'sefi' }
+    end
+
+    context 'service name with colon' do
+      let(:service) { create :service, nom: 'SEFI: Revenu Exceptionnel de Solidarité' }
+      it { is_expected.to eq 'sefi' }
+    end
+  end
 end

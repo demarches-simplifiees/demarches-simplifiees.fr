@@ -105,7 +105,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       find('#publish-procedure').click
 
       within '#publish-modal' do
-        expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
+        expect(find_field('procedure_path').value).to eq 'service-libelle-de-la-procedure'
         fill_in 'lien_site_web', with: 'http://some.website'
         click_on 'publish'
       end
