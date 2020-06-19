@@ -1,0 +1,21 @@
+%table{ style: 'width: 80%;', align: 'center' }
+  %thead
+    %tr
+      %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
+        Champ
+      %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
+        Description
+  %tbody
+    - champs.each do |champ|
+      %tr
+        %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+          = champ.libelle
+        %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+          = champ.description
+      - if champ.types_de_champ.present? # only one level of recursion
+        - champ.types_de_champ.each do |subchamp|
+          %tr
+            %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+              = subchamp.libelle
+            %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+              = subchamp.description
