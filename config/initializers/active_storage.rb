@@ -45,7 +45,7 @@ require 'fog/openstack/auth/catalog/v3'
 module Fog::OpenStack::Auth::Catalog
   class V3
     def endpoint_url(endpoint, interface)
-      url = endpoint["#{interface}URL"]
+      url = endpoint["url"]
 
       if interface == 'public'
         publicize(url)
