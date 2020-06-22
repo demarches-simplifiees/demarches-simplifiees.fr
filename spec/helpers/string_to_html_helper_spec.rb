@@ -9,9 +9,20 @@ RSpec.describe StringToHtmlHelper, type: :helper do
     end
 
     context "with a link" do
-      let(:description) { "https://d-s.fr" }
+      context "using an authorized scheme" do
+        let(:description) { "Cliquez sur https://d-s.fr pour continuer." }
+        it { is_expected.to eq("<p>Cliquez sur <a href=\"https://d-s.fr\" target=\"_blank\" rel=\"noopener\">https://d-s.fr</a> pour continuer.</p>") }
+      end
 
-      it { is_expected.to eq("<p><a target=\"_blank\" rel=\"noopener\" href=\"https://d-s.fr\">https://d-s.fr</a></p>") }
+      context "using a non-authorized scheme" do
+        let(:description) { "Cliquez sur file://etc/password pour continuer." }
+        it { is_expected.to eq("<p>Cliquez sur file://etc/password pour continuer.</p>") }
+      end
+
+      context "not actually an URL" do
+        let(:description) { "Pour info: il ne devrait y avoir aucun lien." }
+        it { is_expected.to eq("<p>Pour info: il ne devrait y avoir aucun lien.</p>") }
+      end
     end
 
     context "with empty decription" do
