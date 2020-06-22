@@ -64,11 +64,5 @@ module TPS
 
     config.skylight.probes += [:graphql]
 
-    # Essay pour les variables d'environnement dans les tests
-
-    MAIN_LOGO_INSTANCE = ENV.fetch("MAIN_LOGO_INSTANCE", "marianne.svg")
-    FULL_INSTANCE_NAME = ENV.fetch("FULL_INSTANCE_NAME", "demarches-simplifiees.fr")
-    SHORT_INSTANCE_NAME = ENV.fetch("SHORT_INSTANCE_NAME", "d-s.fr")
-
   end
 end
