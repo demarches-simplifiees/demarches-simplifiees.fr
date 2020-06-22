@@ -25,6 +25,20 @@ class User < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
+  # Override of Devise::Models::Confirmable#send_confirmation_instructions
+  def send_confirmation_instructions
+    unless @raw_confirmation_token
+      generate_confirmation_token!
+    end
+
+    opts = pending_reconfirmation? ? { to: unconfirmed_email } : {}
+
+    # Make our procedure_after_confirmation available to the Mailer
+    opts[:procedure_after_confirmation] = CurrentConfirmation.procedure_after_confirmation
+
+    send_devise_notification(:confirmation_instructions, @raw_confirmation_token, opts)
+  end
+
   # Callback provided by Devise
   def after_confirmation
     link_invites!
@@ -82,7 +96,7 @@ class User < ApplicationRecord
     user = User.create_or_promote_to_instructeur(email, password)
 
     if user.valid? && user.administrateur_id.nil?
-      user.create_administrateur!(email: email)
+      user.create_administrateur!
     end
 
     user
@@ -94,6 +108,22 @@ class User < ApplicationRecord
 
   def active?
     last_sign_in_at.present?
+  end
+
+  def can_be_deleted?
+    administrateur.nil? && instructeur.nil? && dossiers.with_discarded.state_instruction_commencee.empty?
+  end
+
+  def delete_and_keep_track_dossiers(administration)
+    if !can_be_deleted?
+      raise "Cannot delete this user because instruction has started for some dossiers"
+    end
+
+    dossiers.each do |dossier|
+      dossier.discard_and_keep_track!(administration, :user_removed)
+    end
+    dossiers.with_discarded.destroy_all
+    destroy!
   end
 
   private

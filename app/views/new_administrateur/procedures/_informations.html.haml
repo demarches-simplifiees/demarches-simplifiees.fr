@@ -13,7 +13,7 @@
   %span.mandatory *
 = f.text_area :description, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
 
-%h2.header-section Logo de la démarche
+%h3.header-subsection Logo de la démarche
 = render 'shared/attachment/edit',
   { form: f,
     attached_file: @procedure.logo,
@@ -21,7 +21,7 @@
     user_can_destroy: true }
 
 - if !@procedure.locked?
-  %h2.header-section Conservation des données
+  %h3.header-subsection Conservation des données
   = f.label :duree_conservation_dossiers_dans_ds do
     Sur demarches-simplifiees.fr
     %span.mandatory *
@@ -39,7 +39,7 @@
     Où les usagers trouveront-ils le lien vers la démarche ?
   = f.text_field :lien_site_web, class: 'form-control', placeholder: 'https://exemple.gouv.fr/ma_demarche'
 
-%h2.header-section
+%h3.header-subsection
   Cadre juridique
   %span.mandatory *
 
@@ -64,12 +64,14 @@
     attached_file: @procedure.deliberation,
     user_can_destroy: true }
 
-%h2.header-section Notice explicative de la démarche
+%h3.header-subsection Notice explicative de la démarche
 
 %p.notice
   Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
 
 = f.label :notice, 'Notice'
+%p.notice
+  Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
 - notice = @procedure.notice
 = render 'shared/attachment/edit',
   { form: f,
@@ -77,26 +79,25 @@
     user_can_destroy: true }
 
 - if !@procedure.locked?
-  %h2.header-section À qui s’adresse ma démarche ?
-  .editable-champ.editable-champ-radio.vertical
+  %h3.header-subsection À qui s’adresse ma démarche ?
+  .radios.vertical
     = f.label :for_individual, value: true do
+      = f.radio_button :for_individual, true
       Ma démarche s’adresse à un particulier
-    %p.notice En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
-    = f.radio_button :for_individual, true
+      %p.notice En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
 
-  .editable-champ.editable-champ-radio.vertical
     = f.label :for_individual, value: false do
+      = f.radio_button :for_individual, false
       Ma démarche s’adresse à une personne morale
-    %p.notice
-      En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
-    = f.radio_button :for_individual, false
+      %p.notice
+        En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
 
   %p.explication
     Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ SIRET directement dans le formulaire.
 
 %details.procedure-form__options-details
   %summary.procedure-form__options-summary
-    %h2.header-section Options avancées
+    %h3.header-subsection Options avancées
 
   - if feature_enabled?(:administrateur_web_hook)
     = f.label :web_hook_url do
@@ -107,9 +108,19 @@
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 
   = f.label :auto_archive_on do
-    Clôture automatique à 00h01 le :
-  = f.date_field :auto_archive_on, id: 'auto_archive_on', value: @procedure.auto_archive_on
+    Date limite de dépôt des dossiers
+  %p.notice
+    Si une date est définie, aucun dossier ne pourra plus être déposé ou modifié après cette limite.
+  %p.notice
+    Le
+    - value = @procedure.auto_archive_on ? @procedure.auto_archive_on - 1.day : nil
+    = f.date_field :auto_archive_on, id: 'auto_archive_on', value: value
+    #{procedure_auto_archive_time(@procedure)}.
 
-  %p.explication
-    La clôture automatique suspend la publication de la démarche et entraîne le passage de tous les dossiers "en construction"
-    (c'est à dire ceux qui ont été déposés), au statut "en instruction", ce qui ne permet plus aux usagers de les modifier.
+  = f.label :declarative_with_state do
+    Démarche déclarative
+  %p.notice
+    Par défaut, un dossier déposé peut être complété ou corrigé par le demandeur jusqu'à sa mise en instruction.<br>
+    Dans une démarche déclarative, une fois déposé, un dossier ne peut plus être modifié.
+    Soit il passe immédiatement « en instruction » pour être traité soit il est immédiatement « accepté ».
+  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: 'Non' }, class: 'form-control'

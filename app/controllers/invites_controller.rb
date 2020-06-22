@@ -1,6 +1,4 @@
 class InvitesController < ApplicationController
-  include Devise::StoreLocationExtension
-
   before_action :authenticate_user!, only: [:create]
   before_action :store_user_location!, only: [:show]
 

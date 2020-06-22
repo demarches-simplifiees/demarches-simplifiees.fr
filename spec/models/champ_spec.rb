@@ -1,9 +1,28 @@
-require 'spec_helper'
-
 describe Champ do
   require 'models/champ_shared_example.rb'
 
   it_should_behave_like "champ_spec"
+
+  describe "associations" do
+    it { is_expected.to belong_to(:dossier) }
+
+    context 'when the parent dossier is discarded' do
+      let(:discarded_dossier) { create(:dossier, :discarded) }
+      subject(:champ) { discarded_dossier.champs.first }
+
+      it { expect(champ.reload.dossier).to eq discarded_dossier }
+    end
+  end
+
+  describe "validations" do
+    let(:row) { 1 }
+    let(:champ) { create(:champ, type_de_champ: create(:type_de_champ), row: row) }
+    let(:champ2) { build(:champ, type_de_champ: champ.type_de_champ, row: champ.row, dossier: champ.dossier) }
+
+    it "returns false when champ with same type_de_champ and row already exist" do
+      expect(champ2).not_to be_valid
+    end
+  end
 
   describe '#public?' do
     let(:type_de_champ) { build(:type_de_champ) }
@@ -19,6 +38,22 @@ describe Champ do
     it 'partition public and private' do
       expect(dossier.champs.count).to eq(1)
       expect(dossier.champs_private.count).to eq(1)
+    end
+  end
+
+  describe '#siblings' do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:public_champ) { dossier.champs.first }
+    let(:private_champ) { dossier.champs_private.first }
+    let(:champ_in_repetition) { dossier.champs.find(&:repetition?).champs.first }
+    let(:standalone_champ) { create(:champ, dossier: nil) }
+
+    it 'returns the sibling champs of a champ' do
+      expect(public_champ.siblings).to eq(dossier.champs)
+      expect(private_champ.siblings).to eq(dossier.champs_private)
+      expect(champ_in_repetition.siblings).to eq(champ_in_repetition.parent.champs)
+      expect(standalone_champ.siblings).to be_nil
     end
   end
 

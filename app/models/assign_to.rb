@@ -4,7 +4,7 @@ class AssignTo < ApplicationRecord
   has_one :procedure_presentation, dependent: :destroy
   has_one :procedure, through: :groupe_instructeur
 
-  scope :with_email_notifications, -> { where(email_notifications_enabled: true) }
+  scope :with_email_notifications, -> { where(daily_email_notifications_enabled: true) }
 
   def procedure_presentation_or_default_and_errors
     errors = reset_procedure_presentation_if_invalid

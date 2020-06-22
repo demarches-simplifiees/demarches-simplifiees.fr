@@ -4,7 +4,7 @@ class StatsController < ApplicationController
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
-    procedures = Procedure.publiees_ou_archivees
+    procedures = Procedure.publiees_ou_closes
     dossiers = Dossier.state_not_brouillon
 
     @procedures_numbers = procedures_numbers(procedures)
@@ -58,7 +58,6 @@ class StatsController < ApplicationController
       .includes(:procedure, :user)
       .in_batches
       .flat_map do |dossiers|
-
       dossiers
         .pluck(
           "dossiers.id",
@@ -163,8 +162,8 @@ class StatsController < ApplicationController
   def contact_percentage
     number_of_months = 13
 
-    from = Date.today.prev_month(number_of_months)
-    to = Date.today.prev_month
+    from = Time.zone.today.prev_month(number_of_months)
+    to = Time.zone.today.prev_month
 
     adapter = Helpscout::UserConversationsAdapter.new(from, to)
     if !adapter.can_fetch_reports?

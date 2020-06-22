@@ -1,4 +1,4 @@
-%footer.landing-footer
+%footer.landing-footer{ role: 'contentinfo' }
   .container
     %ul.footer-columns
 
@@ -6,15 +6,16 @@
         %ul.footer-logos
           %li.footer-text
             Un service fourni par la
-            = link_to "DINUM", "http://www.modernisation.gouv.fr/", title: "Direction Interministérielle au Numérique"
+            = link_to "DINUM", "https://numerique.gouv.fr/", title: "Direction Interministérielle au Numérique"
             %br
             et incubé par
             = link_to "beta.gouv.fr", "https://beta.gouv.fr", title: "le site de Beta.gouv.fr"
           %li
-            = link_to "http://www.modernisation.gouv.fr/", title: "DINUM" do
-              %span.footer-logo.footer-logo-dinsic{ role: 'img', 'aria-label': 'DINSIC' }
-            = link_to "https://beta.gouv.fr", title: "le site de Beta.gouv.fr" do
-              %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img', 'aria-label': 'beta.gouv.fr' }
+            = link_to "https://numerique.gouv.fr/", title: "DINUM", 'aria-label': 'DINUM' do
+              %span.footer-logo.footer-logo-dinum{ role: 'img' }
+            = link_to "https://beta.gouv.fr", title: "le site de Beta.gouv.fr", 'aria-label': 'beta.gouv.fr' do
+              %span.footer-logo.footer-logo-beta-gouv-fr{ role: 'img' }
+            %span.footer-logo.footer-logo-france{ role: 'img', 'aria-label': 'République Française' }
 
       %li.footer-column
         %ul.footer-links
@@ -23,7 +24,7 @@
           %li.footer-link
             = link_to "Nouveautés", "https://github.com/betagouv/demarches-simplifiees.fr/releases", :class => "footer-link", :title => "Nos nouveautés"
           %li.footer-link
-            = link_to "Statistiques", stats_path, :class => "footer-link", data: { turbolinks: false } # Turbolinks disabled for Chartkick. See Issue #350
+            = link_to "Statistiques", stats_path, :class => "footer-link"
           %li.footer-link
             = link_to "CGU", CGU_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link

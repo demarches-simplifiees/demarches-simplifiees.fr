@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'uri'
 
 describe Admin::ProceduresController, type: :controller do
@@ -96,51 +95,65 @@ describe Admin::ProceduresController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:procedure_draft)     { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], published_at: nil, archived_at: nil }
-    let(:procedure_published) { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], aasm_state: :publiee, published_at: Time.zone.now, archived_at: nil }
-    let(:procedure_archived)  { create :procedure_with_dossiers, administrateur: admin, instructeurs: [admin.instructeur], aasm_state: :archivee, published_at: nil, archived_at: Time.zone.now }
+    let(:procedure_draft)     { create(:procedure, administrateurs: [admin]) }
+    let(:procedure_published) { create(:procedure, :published, administrateurs: [admin]) }
+    let(:procedure_closed)    { create(:procedure, :closed, administrateurs: [admin]) }
+    let(:procedure) { dossier.procedure }
 
-    subject { delete :destroy, params: { id: procedure.id } }
+    subject { delete :destroy, params: { id: procedure } }
 
-    context 'when the procedure is a draft' do
-      let!(:procedure) { procedure_draft }
+    context 'when the procedure is a brouillon' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_draft) }
 
-      it 'destroys the procedure' do
-        expect { subject }.to change { Procedure.count }.by(-1)
+      before { subject }
+
+      it 'discard the procedure' do
+        expect(procedure.reload.discarded?).to be_truthy
       end
 
       it 'deletes associated dossiers' do
-        subject
-        expect(Dossier.find_by(procedure_id: procedure.id)).to be_blank
+        expect(procedure.dossiers.with_discarded.count).to eq(0)
       end
 
       it 'redirects to the procedure drafts page' do
-        subject
         expect(response).to redirect_to admin_procedures_draft_path
         expect(flash[:notice]).to be_present
       end
     end
 
     context 'when procedure is published' do
-      let!(:procedure) { procedure_published }
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_published) }
 
-      it { expect { subject }.not_to change { Procedure.count } }
-      it { expect { subject }.not_to change { Dossier.count } }
-      it { expect(subject.status).to eq 401 }
+      before { subject }
+
+      it { expect(response.status).to eq 403 }
+
+      context 'when dossier is en_construction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure_published) }
+
+        it { expect(procedure.reload.close?).to be_truthy }
+        it { expect(procedure.reload.discarded?).to be_truthy }
+        it { expect(dossier.reload.discarded?).to be_truthy }
+      end
     end
 
-    context 'when procedure is archived' do
-      let!(:procedure) { procedure_archived }
+    context 'when procedure is closed' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_closed) }
 
-      it { expect { subject }.not_to change { Procedure.count } }
-      it { expect { subject }.not_to change { Dossier.count } }
-      it { expect(subject.status).to eq 401 }
+      before { subject }
+
+      it { expect(response.status).to eq 403 }
+
+      context 'when dossier is en_construction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure_published) }
+
+        it { expect(procedure.reload.discarded?).to be_truthy }
+        it { expect(dossier.reload.discarded?).to be_truthy }
+      end
     end
 
     context "when administrateur does not own the procedure" do
-      let(:procedure_not_owned) { create :procedure, administrateur: create(:administrateur), published_at: nil, archived_at: nil }
-
-      subject { delete :destroy, params: { id: procedure_not_owned.id } }
+      let(:dossier) { create(:dossier) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
@@ -167,7 +180,11 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
-          expect(response.status).to eq 302
+        end
+
+        it 'redirects to the procedures page' do
+          expect(response.status).to eq 200
+          expect(response.body).to include(admin_procedures_path)
           expect(flash[:notice]).to have_content 'Démarche publiée'
         end
       end
@@ -180,12 +197,16 @@ describe Admin::ProceduresController, type: :controller do
           expect(procedure.publiee?).to be_truthy
           expect(procedure.path).to eq(path)
           expect(procedure.lien_site_web).to eq(lien_site_web)
-          expect(response.status).to eq 302
-          expect(flash[:notice]).to have_content 'Démarche publiée'
         end
 
-        it 'archive previous procedure' do
-          expect(procedure2.archivee?).to be_truthy
+        it 'depubliee previous procedure' do
+          expect(procedure2.depubliee?).to be_truthy
+        end
+
+        it 'redirects to the procedures page' do
+          expect(response.status).to eq 200
+          expect(response.body).to include(admin_procedures_path)
+          expect(flash[:notice]).to have_content 'Démarche publiée'
         end
       end
 
@@ -201,7 +222,7 @@ describe Admin::ProceduresController, type: :controller do
 
         it 'previous procedure remains published' do
           expect(procedure2.publiee?).to be_truthy
-          expect(procedure2.archivee?).to be_falsey
+          expect(procedure2.close?).to be_falsey
           expect(procedure2.path).to match(/fake_path/)
         end
       end
@@ -260,9 +281,9 @@ describe Admin::ProceduresController, type: :controller do
       end
 
       context 'when owner want archive procedure' do
-        it { expect(procedure.archivee?).to be_truthy }
+        it { expect(procedure.close?).to be_truthy }
         it { expect(response).to redirect_to :admin_procedures }
-        it { expect(flash[:notice]).to have_content 'Démarche archivée' }
+        it { expect(flash[:notice]).to have_content 'Démarche close' }
       end
 
       context 'when owner want to re-enable procedure' do
@@ -272,8 +293,12 @@ describe Admin::ProceduresController, type: :controller do
         end
 
         it { expect(procedure.publiee?).to be_truthy }
-        it { expect(response.status).to eq 302 }
-        it { expect(flash[:notice]).to have_content 'Démarche publiée' }
+
+        it 'redirects to the procedures page' do
+          expect(response.status).to eq 200
+          expect(response.body).to include(admin_procedures_path)
+          expect(flash[:notice]).to have_content 'Démarche publiée'
+        end
       end
     end
 
@@ -351,16 +376,16 @@ describe Admin::ProceduresController, type: :controller do
     describe 'selecting' do
       let!(:large_draft_procedure)     { create(:procedure_with_dossiers, dossiers_count: 2) }
       let!(:large_published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2) }
-      let!(:large_archived_procedure)  { create(:procedure_with_dossiers, :archived,  dossiers_count: 2) }
-      let!(:small_archived_procedure)  { create(:procedure_with_dossiers, :archived,  dossiers_count: 1) }
+      let!(:large_closed_procedure)  { create(:procedure_with_dossiers, :closed,  dossiers_count: 2) }
+      let!(:small_closed_procedure)  { create(:procedure_with_dossiers, :closed,  dossiers_count: 1) }
 
-      it 'displays published and archived procedures' do
+      it 'displays published and closed procedures' do
         expect(response_procedures).to include(large_published_procedure)
-        expect(response_procedures).to include(large_archived_procedure)
+        expect(response_procedures).to include(large_closed_procedure)
       end
 
       it 'doesn’t display procedures without a significant number of dossiers' do
-        expect(response_procedures).not_to include(small_archived_procedure)
+        expect(response_procedures).not_to include(small_closed_procedure)
       end
 
       it 'doesn’t display draft procedures' do

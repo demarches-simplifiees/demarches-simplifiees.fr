@@ -14,7 +14,7 @@ module CreateAvisConcern
     allowed_dossiers = [dossier]
 
     if create_avis_params[:invite_linked_dossiers].present?
-      allowed_dossiers += dossier.linked_dossiers
+      allowed_dossiers += dossier.linked_dossiers_for(current_instructeur)
     end
 
     create_results = Avis.create(
@@ -23,6 +23,7 @@ module CreateAvisConcern
           {
             email: email,
             introduction: create_avis_params[:introduction],
+            introduction_file: create_avis_params[:introduction_file],
             claimant: current_instructeur,
             dossier: dossier,
             confidentiel: confidentiel
@@ -43,7 +44,6 @@ module CreateAvisConcern
           sent_emails_addresses << avis.email_to_display
         end
       end
-
       flash.notice = "Une demande d'avis a été envoyée à #{sent_emails_addresses.uniq.join(", ")}"
     end
 
@@ -61,6 +61,6 @@ module CreateAvisConcern
   end
 
   def create_avis_params
-    params.require(:avis).permit(:introduction, :confidentiel, :invite_linked_dossiers, emails: [])
+    params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, emails: [])
   end
 end

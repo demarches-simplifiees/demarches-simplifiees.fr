@@ -1,6 +1,6 @@
 .sub-header
   .container
-    = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+    = status_badge(dossier.state)
 
     .title-container
       %span.icon.folder
@@ -15,6 +15,22 @@
         = render partial: 'invites/dropdown', locals: { dossier: dossier }
         - if dossier.can_be_updated_by_user? && !current_page?(modifier_dossier_path(dossier))
           = link_to "Modifier mon dossier", modifier_dossier_path(dossier), class: 'button accepted edit-form', 'title'=> "Vous pouvez modifier votre dossier tant qu'il n'est passé en instruction"
+        %span.dropdown.print-menu-opener
+          %button.button.dropdown-button.icon-only{ title: 'imprimer', 'aria-label': 'imprimer' }
+            %span.icon.printer
+          %ul.print-menu.dropdown-content
+            %li
+              = link_to "Tout le dossier", dossier_path(dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+
+    - if dossier.en_construction_close_to_expiration?
+      .card.warning
+        .card-title Votre dossier va expirer
+        %p
+          Votre dossier a été déposé, mais va bientôt expirer. Cela signifie qu'il va bientôt être supprimé sans avoir été traité par l’administration.
+          Si vous souhaitez le conserver afin de poursuivre la démarche, vous pouvez le conserver
+          un mois de plus en cliquant sur le bouton ci-dessous.
+        %br
+        = button_to 'Repousser sa suppression', users_dossier_repousser_expiration_path(dossier), class: 'button secondary'
 
     %ul.tabs
       = dynamic_tab_item('Résumé', dossier_path(dossier))

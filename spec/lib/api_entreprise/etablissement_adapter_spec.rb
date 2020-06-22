@@ -1,9 +1,12 @@
-require 'spec_helper'
-
 describe ApiEntreprise::EtablissementAdapter do
-  let(:procedure_id) { 33 }
+  let(:procedure) { create(:procedure) }
+  let(:procedure_id) { procedure.id }
 
-  context 'SIRET valide' do
+  before do
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+  end
+
+  context 'SIRET valide avec infos diffusables' do
     let(:siret) { '41816609600051' }
     subject { described_class.new(siret, procedure_id).to_params }
 
@@ -31,6 +34,10 @@ describe ApiEntreprise::EtablissementAdapter do
 
       it 'L\'entreprise contient bien un libelle_naf' do
         expect(subject[:libelle_naf]).to eq('Conseil en systèmes et logiciels informatiques')
+      end
+
+      it 'L\'entreprise contient bien un diffusable_commercialement qui vaut true' do
+        expect(subject[:diffusable_commercialement]).to eq(true)
       end
 
       context 'Concaténation lignes adresse' do
@@ -70,9 +77,23 @@ describe ApiEntreprise::EtablissementAdapter do
     end
   end
 
+  context 'SIRET valide avec infos non diffusables' do
+    let(:siret) { '41816609600051' }
+    subject { described_class.new(siret, procedure_id).to_params }
+
+    before do
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+        .to_return(body: File.read('spec/fixtures/files/api_entreprise/etablissements_private.json', status: 200))
+    end
+
+    it 'L\'entreprise contient bien un diffusable_commercialement qui vaut false' do
+      expect(subject[:diffusable_commercialement]).to eq(false)
+    end
+  end
+
   context 'when siret is not found' do
     let(:bad_siret) { 11_111_111_111_111 }
-    subject { described_class.new(bad_siret, 12).to_params }
+    subject { described_class.new(bad_siret, procedure_id).to_params }
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{bad_siret}?.*token=/)

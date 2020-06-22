@@ -18,17 +18,17 @@ describe '20190819142551_create_default_groupe_instructeur.rake' do
     end
   end
 
-  context 'with a procedure hidden without gi' do
-    let!(:procedure_hidden_without_gi) { create(:procedure, :hidden) }
+  context 'with a procedure discarded without gi' do
+    let!(:procedure_discarded_without_gi) { create(:procedure, :discarded) }
 
     before do
-      procedure_hidden_without_gi.groupe_instructeurs.destroy_all
+      procedure_discarded_without_gi.groupe_instructeurs.destroy_all
     end
 
     it do
-      expect(procedure_hidden_without_gi.groupe_instructeurs).to be_empty
+      expect(procedure_discarded_without_gi.groupe_instructeurs).to be_empty
       subject
-      expect(procedure_hidden_without_gi.reload.groupe_instructeurs.pluck(:label)).to eq(['défaut'])
+      expect(procedure_discarded_without_gi.reload.groupe_instructeurs.pluck(:label)).to eq(['défaut'])
     end
   end
 

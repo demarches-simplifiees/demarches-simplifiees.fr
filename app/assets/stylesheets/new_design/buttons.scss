@@ -195,7 +195,7 @@
 
     .attestation {
       margin: $default-padding 0;
-      color: $grey;
+      color: $dark-grey;
     }
   }
 }
@@ -204,7 +204,7 @@
   li {
     display: flex;
     padding: $default-padding;
-    color: $grey;
+    color: $dark-grey;
     border-bottom: 1px solid $border-grey;
     font-size: 12px;
     min-width: 300px;
@@ -246,7 +246,7 @@
     }
 
     a {
-      color: $grey;
+      color: $dark-grey;
     }
 
     // Make child links fill the whole clickable area

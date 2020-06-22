@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ApplicationController, type: :controller do
   describe 'before_action: set_raven_context' do
     it 'is present' do
@@ -21,6 +19,7 @@ describe ApplicationController, type: :controller do
     let(:payload) { {} }
 
     before do
+      allow(@controller).to receive(:content_type).and_return('')
       allow(@controller).to receive(:current_user).and_return(current_user)
       expect(@controller).to receive(:current_instructeur).and_return(current_instructeur)
       expect(@controller).to receive(:current_administrateur).and_return(current_administrateur)
@@ -42,6 +41,8 @@ describe ApplicationController, type: :controller do
           payload.delete(key)
         end
         expect(payload).to eq({
+          sk_rendered_format: nil,
+          sk_variant: [],
           user_agent: 'Rails Testing',
           user_roles: 'Guest'
         })
@@ -61,6 +62,8 @@ describe ApplicationController, type: :controller do
           payload.delete(key)
         end
         expect(payload).to eq({
+          sk_rendered_format: nil,
+          sk_variant: [],
           user_agent: 'Rails Testing',
           user_id: current_user.id,
           user_email: current_user.email,
@@ -85,6 +88,8 @@ describe ApplicationController, type: :controller do
           payload.delete(key)
         end
         expect(payload).to eq({
+          sk_rendered_format: nil,
+          sk_variant: [],
           user_agent: 'Rails Testing',
           user_id: current_user.id,
           user_email: current_user.email,
@@ -157,6 +162,7 @@ describe ApplicationController, type: :controller do
       allow(@controller).to receive(:instructeur_signed_in?).and_return(instructeur_signed_in)
       allow(@controller).to receive(:sensitive_path).and_return(sensitive_path)
       allow(@controller).to receive(:send_login_token_or_bufferize)
+      allow(@controller).to receive(:get_stored_location_for).and_return(nil)
       allow(@controller).to receive(:store_location_for)
       allow(IPService).to receive(:ip_trusted?).and_return(ip_trusted)
     end

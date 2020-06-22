@@ -48,8 +48,11 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
 
 Sous Ubuntu, certains packages doivent être installés au préalable :
 
-    sudo apt-get install libcurl3 libcurl3-gnutls libcurl4-openssl-dev libcurl4-gnutls-dev zlib1g-dev
+    sudo apt-get install libcurl3 libcurl3-gnutls libcurl4-openssl-dev libcurl4-gnutls-dev zlib1g-dev libgeos-dev
 
+Sous Mac, certains packages doivent être installés au préalable :
+
+    brew install geos
 
 Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 
@@ -65,18 +68,9 @@ L'application tourne à l'adresse `http://localhost:3000`.
 
 En local, un utilisateur de test est créé automatiquement, avec les identifiants `test@exemple.fr`/`this is a very complicated password !`. (voir [db/seeds.rb](https://github.com/betagouv/demarches-simplifiees.fr/blob/dev/db/seeds.rb))
 
-### Programmation des jobs
+### Programmation des tâches récurrentes
 
-    AutoArchiveProcedureJob.set(cron: "* * * * *").perform_later
-    WeeklyOverviewJob.set(cron: "0 7 * * 1").perform_later
-    DeclarativeProceduresJob.set(cron: "* * * * *").perform_later
-    UpdateAdministrateurUsageStatisticsJob.set(cron: "0 10 * * *").perform_later
-    FindDubiousProceduresJob.set(cron: "0 0 * * *").perform_later
-    Administrateurs::ActivateBeforeExpirationJob.set(cron: "0 8 * * *").perform_later
-    WarnExpiringDossiersJob.set(cron: "0 0 1 * *").perform_later
-    InstructeurEmailNotificationJob.set(cron: "0 10 * * 1,2,3,4,5,6").perform_later
-    PurgeUnattachedBlobsJob.set(cron: "0 0 * * *").perform_later
-    OperationsSignatureJob.set(cron: "0 6 * * *").perform_later
+    rails jobs:schedule
 
 ### Voir les emails envoyés en local
 
@@ -150,7 +144,7 @@ Pour les lister : `bin/rake -D support:`.
 
 ## Compatibilité navigateurs
 
-L'application supporte les navigateurs récents : Firefox, Chrome, Safari, Edge et Internet Explorer 11 (voir `config/initializers/browser.rb`).
+L'application gère les navigateurs récents, parmis lequels Firefox, Chrome, Safari et Edge (voir `config/initializers/browser.rb`).
 
 La compatibilité est testée par Browserstack.<br>[<img src="app/assets/images/browserstack-logo-600x315.png" width="200">](https://www.browserstack.com/)
 

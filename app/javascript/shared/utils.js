@@ -3,7 +3,7 @@ import $ from 'jquery';
 import debounce from 'debounce';
 
 export { debounce };
-export const { fire, ajax } = Rails;
+export const { fire } = Rails;
 
 export function show(el) {
   el && el.classList.remove('hidden');
@@ -13,8 +13,14 @@ export function hide(el) {
   el && el.classList.add('hidden');
 }
 
-export function toggle(el) {
-  el && el.classList.toggle('hidden');
+export function toggle(el, force) {
+  if (force == undefined) {
+    el & el.classList.toggle('hidden');
+  } else if (force) {
+    el && el.classList.remove('hidden');
+  } else {
+    el && el.classList.add('hidden');
+  }
 }
 
 export function enable(el) {
@@ -40,14 +46,29 @@ export function removeClass(el, cssClass) {
 export function delegate(eventNames, selector, callback) {
   eventNames
     .split(' ')
-    .forEach(eventName =>
+    .forEach((eventName) =>
       Rails.delegate(document, selector, eventName, callback)
     );
 }
 
+export function ajax(options) {
+  return new Promise((resolve, reject) => {
+    Object.assign(options, {
+      success: (response, statusText, xhr) => {
+        resolve({ response, statusText, xhr });
+      },
+      error: (response, statusText, xhr) => {
+        let error = new Error(`Erreur ${xhr.status} : ${statusText}`);
+        Object.assign(error, { response, statusText, xhr });
+        reject(error);
+      }
+    });
+    Rails.ajax(options);
+  });
+}
+
 export function getJSON(url, data, method = 'get') {
-  incrementActiveRequestsCount();
-  data = method !== 'get' ? JSON.stringify(data) : data;
+  data = method !== 'get' && data ? JSON.stringify(data) : data;
   return Promise.resolve(
     $.ajax({
       method,
@@ -56,7 +77,7 @@ export function getJSON(url, data, method = 'get') {
       contentType: 'application/json',
       dataType: 'json'
     })
-  ).finally(decrementActiveRequestsCount);
+  );
 }
 
 export function scrollTo(container, scrollTo) {
@@ -69,13 +90,17 @@ export function scrollToBottom(container) {
 }
 
 export function on(selector, eventName, fn) {
-  [...document.querySelectorAll(selector)].forEach(element =>
-    element.addEventListener(eventName, event => fn(event, event.detail))
+  [...document.querySelectorAll(selector)].forEach((element) =>
+    element.addEventListener(eventName, (event) => fn(event, event.detail))
   );
 }
 
 export function to(promise) {
-  return promise.then(result => [result]).catch(error => [null, error]);
+  return promise.then((result) => [result]).catch((error) => [null, error]);
+}
+
+export function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 function offset(element) {
@@ -94,16 +119,4 @@ export function timeoutable(promise, timeoutDelay) {
     }, timeoutDelay);
   });
   return Promise.race([promise, timeoutPromise]);
-}
-
-const DATA_ACTIVE_REQUESTS_COUNT = 'data-active-requests-count';
-
-function incrementActiveRequestsCount() {
-  const count = document.body.getAttribute(DATA_ACTIVE_REQUESTS_COUNT) || '0';
-  document.body.setAttribute(DATA_ACTIVE_REQUESTS_COUNT, parseInt(count) + 1);
-}
-
-function decrementActiveRequestsCount() {
-  const count = document.body.getAttribute(DATA_ACTIVE_REQUESTS_COUNT) || '0';
-  document.body.setAttribute(DATA_ACTIVE_REQUESTS_COUNT, parseInt(count) - 1);
 }

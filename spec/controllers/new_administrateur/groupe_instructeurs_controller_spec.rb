@@ -59,6 +59,111 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     end
   end
 
+  describe '#destroy' do
+    def delete_group(group)
+      delete :destroy,
+        params: {
+          procedure_id: procedure.id,
+          id: group.id
+        }
+    end
+
+    context 'with only one group' do
+      before { delete_group gi_1_1 }
+
+      it { expect(flash.alert).to be_present }
+      it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+    end
+
+    context 'with many groups' do
+      let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+
+      context 'of a group that can be deleted' do
+        before { delete_group gi_1_2 }
+        it { expect(flash.notice).to be_present }
+        it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+        it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      end
+
+      context 'of a group with dossiers, that cannot be deleted' do
+        let!(:dossier12) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), groupe_instructeur: gi_1_2) }
+        before { delete_group gi_1_2 }
+
+        it { expect(flash.alert).to be_present }
+        it { expect(procedure.groupe_instructeurs.count).to eq(2) }
+        it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      end
+    end
+  end
+
+  describe '#reaffecter_dossiers' do
+    let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+    let!(:gi_1_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
+
+    before do
+      get :reaffecter_dossiers,
+        params: {
+          procedure_id: procedure.id,
+          id: gi_1_2.id
+        }
+    end
+    def reaffecter_url(group)
+      reaffecter_procedure_groupe_instructeur_path(:id => gi_1_2,
+                                                    :target_group => group)
+    end
+
+    it { expect(response).to have_http_status(:ok) }
+    it { expect(response.body).to include(reaffecter_url(procedure.defaut_groupe_instructeur)) }
+    it { expect(response.body).not_to include(reaffecter_url(gi_1_2)) }
+    it { expect(response.body).to include(reaffecter_url(gi_1_3)) }
+  end
+
+  describe '#reaffecter' do
+    let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+    let!(:dossier12) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1_1) }
+    let!(:dossier_discarded) do
+      dossier = create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1_1)
+      dossier.discard!
+      dossier
+    end
+
+    describe 'when the new group is a group of the procedure' do
+      before do
+        post :reaffecter,
+          params: {
+            procedure_id: procedure.id,
+            id: gi_1_1.id,
+            target_group: gi_1_2.id
+          }
+        dossier12.reload
+      end
+
+      it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      it { expect(gi_1_1.dossiers.with_discarded.count).to be(0) }
+      it { expect(gi_1_2.dossiers.with_discarded.count).to be(2) }
+      it { expect(gi_1_2.dossiers.last.id).to be(dossier12.id) }
+      it { expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id) }
+    end
+
+    describe 'when the target group is not a possible group' do
+      subject {
+        post :reaffecter,
+          params:
+            {
+              procedure_id: procedure.id,
+              id: gi_1_1.id,
+              target_group: gi_2_2.id
+            }
+      }
+      before do
+        dossier12.reload
+      end
+
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+  end
+
   describe '#update' do
     let(:new_name) { 'nouveau nom du groupe' }
 
@@ -89,6 +194,9 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     before do
       gi_1_1.instructeurs << instructeur
 
+      allow(GroupeInstructeurMailer).to receive(:add_instructeurs)
+        .and_return(double(deliver_later: true))
+
       post :add_instructeur,
         params: {
           procedure_id: procedure.id,
@@ -103,6 +211,13 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(gi_1_1.instructeurs.pluck(:email)).to include(*new_instructeur_emails) }
       it { expect(flash.notice).to be_present }
       it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+      it "calls GroupeInstructeurMailer with the right groupe and instructeurs" do
+        expect(GroupeInstructeurMailer).to have_received(:add_instructeurs).with(
+          gi_1_1,
+          satisfy { |instructeurs| instructeurs.all? { |i| new_instructeur_emails.include?(i.email) } },
+          admin.email
+        )
+      end
     end
 
     context 'of an instructeur already in the group' do
@@ -115,6 +230,12 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       let(:new_instructeur_emails) { ['badly_formed_email'] }
 
       it { expect(flash.alert).to be_present }
+      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)) }
+    end
+
+    context 'of an empty string' do
+      let(:new_instructeur_emails) { '' }
+
       it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)) }
     end
   end

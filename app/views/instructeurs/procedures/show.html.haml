@@ -11,7 +11,7 @@
         %h1= procedure_libelle @procedure
         = link_to 'gestion des notifications', email_notifications_instructeur_procedure_path(@procedure), class: 'header-link'
         |
-        = link_to 'statistiques', stats_instructeur_procedure_path(@procedure), class: 'header-link', data: { turbolinks: false } # Turbolinks disabled for Chartkick. See Issue #350
+        = link_to 'statistiques', stats_instructeur_procedure_path(@procedure), class: 'header-link'
 
         - if @procedure.routee?
           |
@@ -24,32 +24,33 @@
           = tab_item('à suivre',
             instructeur_procedure_path(@procedure, statut: 'a-suivre'),
             active: @statut == 'a-suivre',
-            badge: @a_suivre_dossiers.count)
+            badge: number_with_html_delimiter(@a_suivre_dossiers.count))
 
           = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'suivis'),
             active: @statut == 'suivis',
-            badge: @followed_dossiers.count,
+            badge: number_with_html_delimiter(@followed_dossiers.count),
             notification: current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?)
 
           = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'traites'),
             active: @statut == 'traites',
-            badge: @termines_dossiers.count,
+            badge: number_with_html_delimiter(@termines_dossiers.count),
             notification: current_instructeur.notifications_for_procedure(@procedure, :termine).exists?)
 
           = tab_item('tous les dossiers',
             instructeur_procedure_path(@procedure, statut: 'tous'),
             active: @statut == 'tous',
-            badge: @all_state_dossiers.count)
+            badge: number_with_html_delimiter(@all_state_dossiers.count))
 
           = tab_item(t('pluralize.archived', count: @archived_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'archives'),
             active: @statut == 'archives',
-            badge: @archived_dossiers.count)
+            badge: number_with_html_delimiter(@archived_dossiers.count))
 
       .procedure-actions
-        = render partial: "download_dossiers", locals: { procedure: @procedure }
+        = render partial: "download_dossiers",
+          locals: { procedure: @procedure, xlsx_export: @xlsx_export, csv_export: @csv_export, ods_export: @ods_export }
 
   .container
     - if @statut == 'a-suivre'
@@ -59,11 +60,23 @@
     - if @statut == 'traites'
       %p.explication-onglet Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite.
     - if @statut == 'tous'
-      %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, sans aucun filtre.
+      %p.explication-onglet Tous les dossiers qui ont été déposés sur cette démarche, quel que soit le statut.
     - if @statut == 'archives'
-      %p.explication-onglet Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
+      %p.explication-onglet
+        Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier.
+        %br
+        Ces dossiers seront supprimés lorsque leur délai de conservation dans Démarches-simplifiées
+        - if @procedure.duree_conservation_dossiers_dans_ds
+          = "(#{@procedure.duree_conservation_dossiers_dans_ds} mois)"
+        sera expiré.
+        = link_to 'En savoir plus', ARCHIVAGE_DOC_URL
+      .afficher-dossiers-supprimes
+        = link_to deleted_dossiers_instructeur_procedure_path(@procedure) do
+          %span.icon.delete
+          Afficher les dossiers supprimés
 
     - if @dossiers.present? || @current_filters.count > 0
+      = paginate @dossiers
       %span.dropdown
         %button.button.dropdown-button
           Filtrer
@@ -87,7 +100,7 @@
           %span.filter
             = link_to remove_filter_instructeur_procedure_path(@procedure, { statut: @statut, table: filter['table'], column: filter['column'], value: filter['value'] }) do
               %img.close-icon{ src: image_url("close.svg") }
-            = "#{filter['label'].truncate(50)} : #{filter['value']}"
+            = "#{filter['label'].truncate(50)} : #{@procedure_presentation.human_value_for_filter(filter)}"
       %table.table.dossiers-table.hoverable
         %thead
           %tr
@@ -137,7 +150,7 @@
 
               %td.status-col
                 = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
-                  = render partial: 'shared/dossiers/status_badge', locals: { dossier: dossier }
+                  = status_badge(dossier.state)
               %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
       = paginate @dossiers
     - else

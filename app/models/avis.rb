@@ -6,9 +6,12 @@ class Avis < ApplicationRecord
   belongs_to :claimant, class_name: 'Instructeur'
 
   has_one_attached :piece_justificative_file
+  has_one_attached :introduction_file
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
   validates :claimant, presence: true
+  validates :piece_justificative_file, size: { less_than: 20.megabytes }
+  validates :introduction_file, size: { less_than: 20.megabytes }
 
   before_validation -> { sanitize_email(:email) }
   before_create :try_to_assign_instructeur
@@ -43,7 +46,9 @@ class Avis < ApplicationRecord
       ['Question / Introduction', :introduction],
       ['Réponse', :answer],
       ['Créé le', :created_at],
-      ['Répondu le', :updated_at]
+      ['Répondu le', :updated_at],
+      ['Instructeur', claimant&.email],
+      ['Expert', instructeur&.email]
     ]
   end
 

@@ -1,0 +1,9 @@
+fr:
+  dossier_mailer:
+    notify_automatic_deletion_to_administration:
+      subject:
+        one: "Un dossier a été supprimé automatiquement"
+        other: "Des dossiers ont été supprimés automatiquement"
+      header:
+        one: "Le délai maximum de conservation du dossier suivant a été atteint, il a donc été supprimé :"
+        other: "Le délai maximum de conservation des dossiers suivants a été atteint, ils ont donc été supprimés :"

@@ -72,6 +72,15 @@ module Instructeurs
       end
     end
 
+    def bilans_bdf
+      if avis.dossier.etablissement&.entreprise_bilans_bdf.present?
+        extension = params[:format]
+        render extension.to_sym => avis.dossier.etablissement.entreprise_bilans_bdf_to_sheet(extension)
+      else
+        redirect_to instructeur_avis_path(avis)
+      end
+    end
+
     def sign_up
       @email = params[:email]
       @dossier = Avis.includes(:dossier).find(params[:id]).dossier

@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'features/admin/procedure_spec_helper'
 
 feature 'As an administrateur I wanna create a new procedure', js: true do
@@ -69,14 +68,12 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       page.refresh
       expect(page).to have_current_path(champs_procedure_path(Procedure.last))
 
-      expect(page).to have_selector('#champ-0-libelle')
+      add_champ(remove_flash_message: true)
       fill_in 'champ-0-libelle', with: 'libelle de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')
 
-      within '.buttons' do
-        click_on 'Ajouter un champ'
-      end
+      add_champ
       expect(page).to have_selector('#champ-1-libelle')
 
       click_on Procedure.last.libelle
@@ -91,6 +88,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
     scenario 'After adding champ and file, make publication' do
       page.refresh
 
+      add_champ(remove_flash_message: true)
       fill_in 'champ-0-libelle', with: 'libelle de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')

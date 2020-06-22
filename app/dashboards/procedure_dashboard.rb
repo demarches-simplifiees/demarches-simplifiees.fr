@@ -12,7 +12,6 @@ class ProcedureDashboard < Administrate::BaseDashboard
     types_de_champ_private: TypesDeChampCollectionField,
     path: ProcedureLinkField,
     dossiers: Field::HasMany,
-    instructeurs: Field::HasMany,
     administrateurs: Field::HasMany,
     id: Field::Number.with_options(searchable: true),
     libelle: Field::String,
@@ -25,8 +24,9 @@ class ProcedureDashboard < Administrate::BaseDashboard
     for_individual: Field::Boolean,
     auto_archive_on: Field::DateTime,
     published_at: Field::DateTime,
+    unpublished_at: Field::DateTime,
     hidden_at: Field::DateTime,
-    archived_at: Field::DateTime,
+    closed_at: Field::DateTime,
     whitelisted_at: Field::DateTime,
     service: Field::BelongsTo,
     initiated_mail_template: MailTemplateField,
@@ -48,7 +48,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :libelle,
     :service,
     :dossiers,
-    :published_at
+    :published_at,
+    :unpublished_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -68,12 +69,11 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :published_at,
     :whitelisted_at,
     :hidden_at,
-    :archived_at,
+    :closed_at,
     :types_de_champ,
     :types_de_champ_private,
     :for_individual,
     :auto_archive_on,
-    :instructeurs,
     :initiated_mail_template,
     :received_mail_template,
     :closed_mail_template,

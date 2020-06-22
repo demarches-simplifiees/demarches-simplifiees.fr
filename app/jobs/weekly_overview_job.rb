@@ -1,5 +1,5 @@
-class WeeklyOverviewJob < ApplicationJob
-  queue_as :cron
+class WeeklyOverviewJob < CronJob
+  self.schedule_expression = "every monday at 7 am"
 
   def perform(*args)
     # Feature flipped to avoid mails in staging due to unprocessed dossier

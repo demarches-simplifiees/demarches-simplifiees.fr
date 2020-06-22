@@ -1,0 +1,22 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p
+  - if @state == Dossier.states.fetch(:en_construction)
+    = t('.header_en_construction', count: @dossiers.count)
+  - else
+    = t('.header_termine', count: @dossiers.count)
+  %ul
+    - @dossiers.each do |d|
+      %li
+        #{link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))}. Retrouvez le dossier au format #{link_to("PDF", instructeur_dossier_url(d.procedure, d, format: :pdf))}
+
+%p
+  - if @state == Dossier.states.fetch(:en_construction)
+    = sanitize(t('.footer_en_construction', count: @dossiers.count))
+  - else
+    = sanitize(t('.footer_termine', count: @dossiers.count))
+
+= render partial: "layouts/mailers/signature"

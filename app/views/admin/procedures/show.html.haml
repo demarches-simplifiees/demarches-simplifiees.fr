@@ -1,9 +1,9 @@
 = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
 .row.white-back
-  #procedure_show
-    = render 'modal_publish', procedure: @procedure, administrateur: @current_administrateur
-    = render partial: '/admin/procedures/modal_transfer'
+  = render 'modal_publish', procedure: @procedure, administrateur: @current_administrateur
+  = render 'modal_transfer'
 
+  #procedure_show
     - if @procedure.brouillon?
       - if @procedure.missing_steps.present?
         - missing_elements = []
@@ -12,20 +12,20 @@
         - if @procedure.service.nil?
           - missing_elements << 'un service'
         - message = "Affectez #{missing_elements.join(' et ')} à votre démarche."
-        %a.action_button.btn.btn-success#disabled-publish-procedure{ data: { toggle: :tooltip, placement: :bottom }, style: 'float: right; margin-top: 10px;', disabled: true, title: message }
+        %button.action_button.btn.btn-success#disabled-publish-procedure{ style: 'float: right; margin-top: 10px;', disabled: true, title: message }
           %i.fa.fa-eraser
           Publier
       - else
-        %a.btn.btn-success#publish-procedure{ data: { target: '#publish-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px;' }
+        %button.btn.btn-success#publish-procedure{ data: { target: '#publish-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px;' }
           %i.fa.fa-eraser
           Publier
 
-    %a.btn.btn-default#transfer-procedure{ data: { target: '#transfer-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px; margin-right: 10px;' }
+    %button.btn.btn-default#transfer-procedure{ data: { target: '#transfer-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px; margin-right: 10px;' }
       %i.fa.fa-exchange
       Envoyer une copie
 
-    - if @procedure.archivee?
-      %a.btn.btn-default#reopen-procedure{ data: { target: '#publish-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px; margin-right: 10px;' }
+    - if @procedure.close? || @procedure.depubliee?
+      %button.btn.btn-default#reopen-procedure{ data: { target: '#publish-modal', toggle: :modal }, type: 'button', style: 'float: right; margin-top: 10px; margin-right: 10px;' }
         %i.fa.fa-rocket
         Réactiver
 
@@ -49,8 +49,8 @@
         - else
           Publication
       %div{ style: 'margin-top: 30px;' }
-        - if @procedure.archivee?
-          Cette démarche est <strong>archivée</strong> et n’est donc plus accessible par le public.
+        - if @procedure.close?
+          Cette démarche est <strong>close</strong> et n’est donc plus accessible par le public.
         - elsif @procedure.publiee?
           Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
           Pour y accéder vous pouvez utiliser le lien :

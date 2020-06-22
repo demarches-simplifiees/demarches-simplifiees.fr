@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe User, type: :model do
   describe '#after_confirmation' do
     let(:email) { 'mail@beta.gouv.fr' }
@@ -207,6 +205,92 @@ describe User, type: :model do
       before { user.update(last_sign_in_at: Time.zone.now) }
 
       it { is_expected.to be true }
+    end
+  end
+
+  describe '#can_be_deleted?' do
+    let(:user) { create(:user) }
+
+    subject { user.can_be_deleted? }
+
+    context 'when the user has a dossier in instruction' do
+      let!(:dossier) { create(:dossier, :en_instruction, user: user) }
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the user has no dossier in instruction' do
+      it { is_expected.to be true }
+    end
+
+    context 'when the user is an administrateur' do
+      it 'cannot be deleted' do
+        administrateur = create(:administrateur)
+        user = administrateur.user
+
+        expect(user.can_be_deleted?).to be_falsy
+      end
+    end
+
+    context 'when the user is an instructeur' do
+      it 'cannot be deleted' do
+        instructeur = create(:instructeur)
+        user = instructeur.user
+
+        expect(user.can_be_deleted?).to be_falsy
+      end
+    end
+  end
+
+  describe '#delete_and_keep_track_dossiers' do
+    let(:administration) { create(:administration) }
+    let(:user) { create(:user) }
+
+    context 'with a dossier in instruction' do
+      let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
+      it 'raises' do
+        expect { user.delete_and_keep_track_dossiers(administration) }.to raise_error(RuntimeError)
+      end
+    end
+
+    context 'without a dossier in instruction' do
+      let!(:dossier_en_construction) { create(:dossier, :en_construction, user: user) }
+      let!(:dossier_brouillon) { create(:dossier, user: user) }
+
+      context 'without a discarded dossier' do
+        it "keep track of dossiers and delete user" do
+          user.delete_and_keep_track_dossiers(administration)
+
+          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
+          expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
+          expect(User.find_by(id: user.id)).to be_nil
+        end
+      end
+
+      context 'with a discarded dossier' do
+        let!(:dossier_cache) do
+          create(:dossier, :en_construction, user: user)
+        end
+        let!(:dossier_from_another_user) do
+          create(:dossier, :en_construction, user: create(:user))
+        end
+
+        it "keep track of dossiers and delete user" do
+          dossier_cache.discard_and_keep_track!(administration, :user_request)
+          user.delete_and_keep_track_dossiers(administration)
+
+          expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
+          expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
+          expect(User.find_by(id: user.id)).to be_nil
+        end
+
+        it "doesn't destroy dossiers of another user" do
+          dossier_cache.discard_and_keep_track!(administration, :user_request)
+          user.delete_and_keep_track_dossiers(administration)
+
+          expect(Dossier.find_by(id: dossier_from_another_user.id)).to be_present
+        end
+      end
     end
   end
 end

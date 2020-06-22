@@ -4,7 +4,7 @@
 .label {
   display: inline-block;
   padding: 4px $default-spacer;
-  background: $grey;
+  background: $dark-grey;
   border: 1px solid transparent;
   color: #FFFFFF;
   border-radius: 4px;
@@ -17,21 +17,41 @@
     border: 1px solid $blue;
   }
 
+  &.en-instruction {
+    @extend .instruction;
+  }
+
   &.construction {
     background-color: #FFFFFF;
     color: $black;
     border: 1px solid $black;
   }
 
+  &.en-construction {
+    @extend .construction;
+  }
+
   &.accepted {
     background-color: $green;
+  }
+
+  &.accepte {
+    @extend .accepted;
   }
 
   &.refused {
     background-color: $dark-red;
   }
 
+  &.refuse {
+    @extend .refused;
+  }
+
   &.without-continuation {
     background-color: $black;
+  }
+
+  &.sans-suite {
+    @extend .without-continuation;
   }
 }

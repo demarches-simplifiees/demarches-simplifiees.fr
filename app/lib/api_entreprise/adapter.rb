@@ -9,7 +9,7 @@ class ApiEntreprise::Adapter
   def data_source
     begin
       @data_source ||= get_resource
-    rescue RestClient::ResourceNotFound
+    rescue ApiEntreprise::API::ResourceNotFound
       @data_source = nil
     end
   end
@@ -24,5 +24,9 @@ class ApiEntreprise::Adapter
 
   def valid_params?(params)
     !params.has_value?(UNAVAILABLE)
+  end
+
+  def siren
+    @siret[0..8]
   end
 end

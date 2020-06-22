@@ -1,7 +1,6 @@
 %html
   %head
     %meta{ :content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type" }/
-    %meta{ name: "turbolinks-cache-control", content: "no-cache" }
     %title
       = t('dynamics.page_title')
     %meta{ 'http-equiv' => "X-UA-Compatible", :content => "IE=edge" }
@@ -10,17 +9,15 @@
     = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
     = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
 
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': "reload"
-    = stylesheet_link_tag    'print', media: 'print', 'data-turbolinks-track': "reload"
+    = stylesheet_link_tag    'application', media: 'all'
+    = stylesheet_link_tag    'print', media: 'print'
     - packs = ['application-old', 'track', administrateur_signed_in? ? 'track-admin' : nil].compact
-    = javascript_packs_with_chunks_tag *packs, defer: true, 'data-turbolinks-track': 'reload'
-    = javascript_include_tag 'application', defer: true, 'data-turbolinks-track': 'reload'
+    = javascript_packs_with_chunks_tag *packs, defer: true
+    = javascript_include_tag 'application', defer: true
     = csrf_meta_tags
     = Gon::Base.render_data(camel_case: true, init: true)
 
   %body{ class: browser.platform.ios? ? 'ios' : nil }
-    = render partial: 'layouts/outdated_browser_banner'
-    = render partial: 'layouts/pre_maintenance'
     - if staging?
       #beta
         Env Test

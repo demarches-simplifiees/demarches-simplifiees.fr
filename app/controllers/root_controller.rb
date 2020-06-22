@@ -1,4 +1,6 @@
 class RootController < ApplicationController
+  include ApplicationHelper
+
   def index
     if administrateur_signed_in?
       return redirect_to admin_procedures_path
@@ -68,5 +70,14 @@ class RootController < ApplicationController
   end
 
   def suivi
+  end
+
+  def dismiss_outdated_browser
+    dismiss_outdated_browser_banner
+
+    respond_to do |format|
+      format.html { redirect_back(fallback_location: root_path) }
+      format.js { render js: helpers.remove_element('#outdated-browser-banner') }
+    end
   end
 end

@@ -1,8 +1,7 @@
-require 'spec_helper'
-
 describe ApiEntreprise::RNAAdapter do
   let(:siret) { '50480511000013' }
-  let(:procedure_id) { 22 }
+  let(:procedure) { create(:procedure) }
+  let(:procedure_id) { procedure.id }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
   let(:status) { 200 }
   let(:adapter) { described_class.new(siret, procedure_id) }
@@ -12,6 +11,7 @@ describe ApiEntreprise::RNAAdapter do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/.*token=/)
       .to_return(body: body, status: status)
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context 'when siret is not valid' do

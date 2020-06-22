@@ -1,0 +1,6 @@
+<%= render_champ(@champ) %>
+
+<% attachment = @champ.piece_justificative_file.attachment %>
+<% if attachment.virus_scanner.pending? %>
+  <%= fire_event('attachment:update', { url: attachment_url(attachment.id, { signed_id: attachment.blob.signed_id, user_can_upload: true }) }.to_json ) %>
+<% end %>

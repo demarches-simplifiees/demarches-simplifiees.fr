@@ -48,19 +48,23 @@ module FeatureHelpers
     end
   end
 
-  def click_confirmation_link_for(email)
+  def click_confirmation_link_for(email, in_another_browser: false)
     confirmation_email = open_email(email)
-    token_params = confirmation_email.body.match(/confirmation_token=[^"]+/)
+    confirmation_link = confirmation_email.body.match(/href="[^"]*(\/users\/confirmation[^"]*)"/)[1]
 
-    visit "/users/confirmation?#{token_params}"
+    if in_another_browser
+      # Simulate the user opening the link in another browser, thus loosing the session cookie
+      Capybara.reset_session!
+    end
+
+    visit confirmation_link
   end
 
-  def expect_page_to_have_procedure_description(procedure)
-    # Procedure context on the page
-    expect(page).to have_content(procedure.libelle)
-    expect(page).to have_content(procedure.description)
-    # Procedure contact infos in the footer
-    expect(page).to have_content(procedure.service.email)
+  def click_procedure_sign_in_link_for(email)
+    confirmation_email = open_email(email)
+    procedure_sign_in_link = confirmation_email.body.match(/href="([^"]*\/commencer\/[^"]*)"/)[1]
+
+    visit procedure_sign_in_link
   end
 
   def click_reset_password_link_for(email)
@@ -68,6 +72,24 @@ module FeatureHelpers
     token_params = reset_password_email.body.match(/reset_password_token=[^"]+/)
 
     visit "/users/password/edit?#{token_params}"
+  end
+
+  # Add a new type de champ in the procedure editor
+  def add_champ(options = {})
+    add_champs(options)
+  end
+
+  # Add several new type de champ in the procedure editor
+  def add_champs(count: 1, remove_flash_message: false)
+    within '.buttons' do
+      count.times { click_on 'Ajouter un champ' }
+    end
+
+    if remove_flash_message
+      expect(page).to have_button('Ajouter un champ', disabled: false)
+      expect(page).to have_content('Formulaire enregistré')
+      execute_script("document.querySelector('#flash_message').remove();")
+    end
   end
 
   def blur
@@ -83,6 +105,32 @@ module FeatureHelpers
     Timeout.timeout(Capybara.default_max_wait_time) do
       sleep(0.1) until (value = yield)
       value
+    end
+  end
+
+  # Keep the brower window open after a test success of failure, to
+  # allow inspecting the page or the console.
+  #
+  # Usage:
+  #  1. Disable the 'headless' mode in `spec_helper.rb`
+  #  2. Call `leave_browser_open` at the beginning of your scenario
+  def leave_browser_open
+    Selenium::WebDriver::Chrome::Service.class_eval do
+      def stop
+        STDOUT.puts "#{self.class}#stop is a no-op, because leave_browser_open is enabled"
+      end
+    end
+
+    Selenium::WebDriver::Driver.class_eval do
+      def quit
+        STDOUT.puts "#{self.class}#quit is a no-op, because leave_browser_open is enabled"
+      end
+    end
+
+    Capybara::Selenium::Driver.class_eval do
+      def reset!
+        STDOUT.puts "#{self.class}#reset! is a no-op, because leave_browser_open is enabled"
+      end
     end
   end
 end

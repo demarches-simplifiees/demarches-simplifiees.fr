@@ -69,8 +69,8 @@ footer {
   opacity: 0.8;
 }
 
-.footer-logo-dinsic {
-  @include ie-compatible-background-image("footer/logo-dinsic.svg");
+.footer-logo-dinum {
+  @include ie-compatible-background-image("footer/logo-dinum.svg");
 
   height: 104px;
   width: 90px;
@@ -82,6 +82,13 @@ footer {
 
   width: 150px;
   height: 25px;
+}
+
+.footer-logo-france {
+  @include ie-compatible-background-image("republique-francaise-logo.svg");
+
+  width: 105px;
+  height: 90px;
 }
 
 .footer-link a,

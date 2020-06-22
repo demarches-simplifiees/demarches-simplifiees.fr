@@ -1,6 +1,10 @@
 class Dossier < ApplicationRecord
-  self.ignored_columns = ['json_latlngs']
+  self.ignored_columns = ['procedure_id']
   include DossierFilteringConcern
+
+  include Discard::Model
+  self.discard_column = :hidden_at
+  default_scope -> { kept }
 
   enum state: {
     brouillon:       'brouillon',
@@ -16,10 +20,15 @@ class Dossier < ApplicationRecord
   INSTRUCTION_COMMENCEE = TERMINE + [states.fetch(:en_instruction)]
   SOUMIS = EN_CONSTRUCTION_OU_INSTRUCTION + TERMINE
 
-  TAILLE_MAX_ZIP = 50.megabytes
+  TAILLE_MAX_ZIP = 100.megabytes
+
+  REMAINING_DAYS_BEFORE_CLOSING = 2
+  INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
+  INTERVAL_BEFORE_EXPIRATION = '1 month'
+  INTERVAL_EXPIRATION = '1 month 5 days'
 
   has_one :etablissement, dependent: :destroy
-  has_one :individual, dependent: :destroy
+  has_one :individual, validate: false, dependent: :destroy
   has_one :attestation, dependent: :destroy
 
   has_one_attached :justificatif_motivation
@@ -34,7 +43,7 @@ class Dossier < ApplicationRecord
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, inverse_of: :dossier, dependent: :destroy
 
-  has_many :dossier_operation_logs, dependent: :destroy
+  has_many :dossier_operation_logs, -> { order(:created_at) }, dependent: :nullify, inverse_of: :dossier
 
   belongs_to :groupe_instructeur
   has_one :procedure, through: :groupe_instructeur
@@ -92,7 +101,6 @@ class Dossier < ApplicationRecord
     end
   end
 
-  default_scope { where(hidden_at: nil) }
   scope :state_brouillon,                      -> { where(state: states.fetch(:brouillon)) }
   scope :state_not_brouillon,                  -> { where.not(state: states.fetch(:brouillon)) }
   scope :state_en_construction,                -> { where(state: states.fetch(:en_construction)) }
@@ -123,11 +131,19 @@ class Dossier < ApplicationRecord
         etablissement: :champ,
         champs: {
           etablissement: :champ,
-          type_de_champ: :drop_down_list
+          type_de_champ: :drop_down_list,
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
         },
         champs_private: {
           etablissement: :champ,
-          type_de_champ: :drop_down_list
+          type_de_champ: :drop_down_list,
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
         },
         procedure: :groupe_instructeurs
       ).order(en_construction_at: 'asc')
@@ -135,7 +151,6 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
   scope :with_champs,                 -> { includes(champs: :type_de_champ) }
-  scope :nearing_end_of_retention,    -> (duration = '1 month') { joins(:procedure).where("en_instruction_at + (duree_conservation_dossiers_dans_ds * interval '1 month') - now() < interval ?", duration) }
   scope :for_api, -> {
     includes(commentaires: { piece_jointe_attachment: :blob },
       champs: [
@@ -162,6 +177,77 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
+  scope :with_notifiable_procedure, -> (notify_on_closed: false) do
+    states = notify_on_closed ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
+    joins(:procedure)
+      .where(procedures: { aasm_state: states })
+  end
+
+  scope :brouillon_close_to_expiration, -> do
+    state_brouillon
+      .joins(:procedure)
+      .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+  scope :en_construction_close_to_expiration, -> do
+    state_en_construction
+      .joins(:procedure)
+      .where("dossiers.en_construction_at + dossiers.en_construction_conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+  scope :en_instruction_close_to_expiration, -> do
+    state_en_instruction
+      .joins(:procedure)
+      .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+  scope :termine_close_to_expiration, -> do
+    state_termine
+      .joins(:procedure)
+      .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+
+  scope :brouillon_expired, -> do
+    state_brouillon
+      .where("brouillon_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
+  end
+  scope :en_construction_expired, -> do
+    state_en_construction
+      .where("en_construction_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
+  end
+  scope :termine_expired, -> do
+    state_termine
+      .where("termine_close_to_expiration_notice_sent_at + INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_EXPIRATION })
+  end
+
+  scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
+  scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
+  scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
+
+  scope :discarded_brouillon_expired, -> do
+    with_discarded
+      .discarded
+      .state_brouillon
+      .where('hidden_at < ?', 1.month.ago)
+  end
+  scope :discarded_en_construction_expired, -> do
+    with_discarded
+      .discarded
+      .state_en_construction
+      .where('dossiers.hidden_at < ?', 1.month.ago)
+  end
+
+  scope :brouillon_near_procedure_closing_date, -> do
+    # select users who have submitted dossier for the given 'procedures.id'
+    users_who_submitted =
+      state_not_brouillon
+        .joins(:groupe_instructeur)
+        .where("groupe_instructeurs.procedure_id = procedures.id")
+        .select(:user_id)
+    # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
+    state_brouillon
+      .with_notifiable_procedure
+      .where("procedures.auto_archive_on - INTERVAL :before_closing = :now", { now: Time.zone.today, before_closing: INTERVAL_BEFORE_CLOSING })
+      .where.not(user: users_who_submitted)
+  end
+
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
 
@@ -174,7 +260,7 @@ class Dossier < ApplicationRecord
       .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'contact@demarches-simplifiees.fr\'')
 
     updated_demandes = joined_dossiers
-      .where('champs.updated_at > follows.demande_seen_at')
+      .where('champs.updated_at > follows.demande_seen_at OR groupe_instructeur_updated_at > follows.demande_seen_at')
 
     updated_annotations = joined_dossiers
       .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
@@ -197,9 +283,7 @@ class Dossier < ApplicationRecord
   delegate :france_connect_information, to: :user
 
   before_validation :update_state_dates, if: -> { state_changed? }
-
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
-  before_save :build_default_individual, if: Proc.new { procedure.for_individual? }
   before_save :update_search_terms
 
   after_save :send_dossier_received
@@ -207,6 +291,8 @@ class Dossier < ApplicationRecord
   after_create :send_draft_notification_email
 
   validates :user, presence: true
+  validates :individual, presence: true, if: -> { procedure.for_individual? }
+  validates :groupe_instructeur, presence: true
 
   def update_search_terms
     self.search_terms = [
@@ -229,8 +315,12 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_individual
-    if Individual.where(dossier_id: self.id).count == 0
-      build_individual
+    if procedure.for_individual? && individual.blank?
+      self.individual = if france_connect_information.present?
+        Individual.from_france_connect(france_connect_information)
+      else
+        Individual.new
+      end
     end
   end
 
@@ -257,7 +347,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_transition_to_en_construction?
-    !procedure.archivee? && brouillon?
+    brouillon? && procedure.dossier_can_transition_to_en_construction?
   end
 
   def can_be_updated_by_user?
@@ -268,18 +358,32 @@ class Dossier < ApplicationRecord
     brouillon? || en_construction?
   end
 
+  def can_be_deleted_by_manager?
+    kept? && can_be_deleted_by_user?
+  end
+
   def messagerie_available?
     !brouillon? && !archived
   end
 
-  def retention_end_date
-    if instruction_commencee?
-      en_instruction_at + procedure.duree_conservation_dossiers_dans_ds.months
-    end
+  def en_construction_close_to_expiration?
+    Dossier.en_construction_close_to_expiration.where(id: self).present?
   end
 
-  def retention_expired?
-    instruction_commencee? && retention_end_date <= Time.zone.now
+  def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
+    if groupe_instructeur.procedure == procedure && groupe_instructeur != self.groupe_instructeur
+      if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
+        unfollow_stale_instructeurs
+
+        if author.present?
+          log_dossier_operation(author, :changer_groupe_instructeur, self)
+        end
+
+        true
+      end
+    else
+      false
+    end
   end
 
   def text_summary
@@ -324,22 +428,29 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def log_operations?
+    !procedure.brouillon?
+  end
+
+  def keep_track_on_deletion?
+    !procedure.brouillon?
+  end
+
   def expose_legacy_carto_api?
     procedure.expose_legacy_carto_api?
   end
 
   def geo_position
     if etablissement.present?
-      point = ApiAdresse::PointAdapter.new(etablissement.geo_adresse).geocode
+      point = Geocoder.search(etablissement.geo_adresse).first
     end
 
-    lon = "2.428462"
-    lat = "46.538192"
+    lon = Champs::CarteChamp::DEFAULT_LON.to_s
+    lat = Champs::CarteChamp::DEFAULT_LAT.to_s
     zoom = "13"
 
     if point.present?
-      lon = point.x.to_s
-      lat = point.y.to_s
+      lat, lon = point.coordinates.map(&:to_s)
     end
 
     { lon: lon, lat: lat, zoom: zoom }
@@ -361,19 +472,40 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def delete_and_keep_track(author)
-    deleted_dossier = DeletedDossier.create_from_dossier(self)
-    update(hidden_at: deleted_dossier.deleted_at)
+  def expired_keep_track!
+    if keep_track_on_deletion?
+      DeletedDossier.create_from_dossier(self, :expired)
+      log_automatic_dossier_operation(:supprimer, self)
+    end
+  end
 
-    if en_construction?
-      administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.pluck(:email)
+  def discard_and_keep_track!(author, reason)
+    if keep_track_on_deletion? && en_construction?
+      deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+
+      administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
       administration_emails.each do |email|
         DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
       end
-    end
-    DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
+      DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
 
-    log_dossier_operation(author, :supprimer, self)
+      log_dossier_operation(author, :supprimer, self)
+    end
+
+    discard!
+  end
+
+  def restore(author, only_discarded_with_procedure = false)
+    if discarded?
+      deleted_dossier = DeletedDossier.find_by(dossier_id: id)
+
+      if !only_discarded_with_procedure || deleted_dossier&.procedure_removed?
+        if undiscard && keep_track_on_deletion? && en_construction?
+          deleted_dossier&.destroy
+          log_dossier_operation(author, :restaurer, self)
+        end
+      end
+    end
   end
 
   def after_passer_en_instruction(instructeur)
@@ -394,6 +526,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_instruction(instructeur)
+    self.archived = false
     self.processed_at = nil
     self.motivation = nil
     attestation&.destroy
@@ -495,9 +628,11 @@ class Dossier < ApplicationRecord
       columns += [
         ['Civilité', individual&.gender],
         ['Nom', individual&.nom],
-        ['Prénom', individual&.prenom],
-        ['Date de naissance', individual&.birthdate]
+        ['Prénom', individual&.prenom]
       ]
+      if procedure.ask_birthday
+        columns += [['Date de naissance', individual&.birthdate]]
+      end
     elsif with_etablissement
       columns += [
         ['Établissement SIRET', etablissement&.siret],
@@ -569,32 +704,65 @@ class Dossier < ApplicationRecord
     !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
-  def update_with_france_connect(fc_information)
-    self.individual = Individual.create_from_france_connect(fc_information)
+  def linked_dossiers_for(instructeur)
+    dossier_ids = champs.filter(&:dossier_link?).map(&:value).compact
+    (instructeur.dossiers.where(id: dossier_ids) + instructeur.dossiers_from_avis.where(id: dossier_ids)).uniq
   end
 
-  def linked_dossiers
-    Dossier.where(id: champs.filter(&:dossier_link?).map(&:value).compact)
+  def hash_for_deletion_mail
+    { id: self.id, procedure_libelle: self.procedure.libelle }
+  end
+
+  def geo_data?
+    geo_areas.present?
+  end
+
+  def to_feature_collection
+    {
+      type: 'FeatureCollection',
+      id: id,
+      bbox: bounding_box,
+      features: geo_areas.map(&:to_feature)
+    }
   end
 
   private
 
+  def geo_areas
+    champs.includes(:geo_areas).flat_map(&:geo_areas) + champs_private.includes(:geo_areas).flat_map(&:geo_areas)
+  end
+
+  def bounding_box
+    factory = RGeo::Geographic.simple_mercator_factory
+    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
+
+    geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+      bounding_box.add(geometry)
+    end
+
+    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
+  end
+
   def log_dossier_operation(author, operation, subject = nil)
-    DossierOperationLog.create_and_serialize(
-      dossier: self,
-      operation: DossierOperationLog.operations.fetch(operation),
-      author: author,
-      subject: subject
-    )
+    if log_operations?
+      DossierOperationLog.create_and_serialize(
+        dossier: self,
+        operation: DossierOperationLog.operations.fetch(operation),
+        author: author,
+        subject: subject
+      )
+    end
   end
 
   def log_automatic_dossier_operation(operation, subject = nil)
-    DossierOperationLog.create_and_serialize(
-      dossier: self,
-      operation: DossierOperationLog.operations.fetch(operation),
-      automatic_operation: true,
-      subject: subject
-    )
+    if log_operations?
+      DossierOperationLog.create_and_serialize(
+        dossier: self,
+        operation: DossierOperationLog.operations.fetch(operation),
+        automatic_operation: true,
+        subject: subject
+      )
+    end
   end
 
   def update_state_dates
@@ -602,7 +770,7 @@ class Dossier < ApplicationRecord
       self.en_construction_at = Time.zone.now
     elsif en_instruction? && !self.en_instruction_at
       self.en_instruction_at = Time.zone.now
-    elsif TERMINE.include?(state)
+    elsif TERMINE.include?(state) && !self.processed_at
       self.processed_at = Time.zone.now
     end
   end
@@ -626,5 +794,24 @@ class Dossier < ApplicationRecord
         self
       )
     end
+  end
+
+  def unfollow_stale_instructeurs
+    followers_instructeurs.each do |instructeur|
+      if instructeur.groupe_instructeurs.exclude?(groupe_instructeur)
+        instructeur.unfollow(self)
+        if kept?
+          DossierMailer.notify_groupe_instructeur_changed(instructeur, self).deliver_later
+        end
+      end
+    end
+  end
+
+  def self.notify_draft_not_submitted
+    brouillon_near_procedure_closing_date
+      .includes(:user)
+      .find_each do |dossier|
+        DossierMailer.notify_brouillon_not_submitted(dossier).deliver_later
+      end
   end
 end

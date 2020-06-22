@@ -8,11 +8,11 @@ module Manager
     # this will be used to set the records shown on the `index` action.
     def scoped_resource
       if unfiltered_list?
-        # Don't display deleted dossiers in the unfiltered list…
-        Dossier
+        # Don't display discarded dossiers in the unfiltered list…
+        Dossier.kept
       else
         # … but allow them to be searched and displayed.
-        Dossier.unscope(:where)
+        Dossier.with_discarded
       end
     end
 
@@ -20,12 +20,21 @@ module Manager
     # Custom actions
     #
 
-    def hide
+    def discard
       dossier = Dossier.find(params[:id])
-      dossier.delete_and_keep_track(current_administration)
+      dossier.discard_and_keep_track!(current_administration, :manager_request)
 
       logger.info("Le dossier #{dossier.id} est supprimé par #{current_administration.email}")
       flash[:notice] = "Le dossier #{dossier.id} a été supprimé."
+
+      redirect_to manager_dossier_path(dossier)
+    end
+
+    def restore
+      dossier = Dossier.with_discarded.find(params[:id])
+      dossier.restore(current_administration)
+
+      flash[:notice] = "Le dossier #{dossier.id} a été restauré."
 
       redirect_to manager_dossier_path(dossier)
     end

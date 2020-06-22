@@ -3,7 +3,7 @@ class Pipedrive::PersonAdapter
   PIPEDRIVE_SOURCE_ATTRIBUTE_ID = '2fa7864f467ffa97721cbcd08df5a3d591b15f50'
   PIPEDRIVE_NB_DOSSIERS_ATTRIBUTE_ID = '2734a3ff19f4b88bd0d7b4cf02c47c7545617207'
   PIPEDRIVE_DEADLINE_ATTRIBUTE_ID = 'ef766dd14de7da246fb5fc1704f45d1f1830f6c9'
-  PIPEDRIVE_ROBOT_ID = '2748449'
+  PIPEDRIVE_ROBOT_ID = '11381160'
 
   def self.get_demandes_from_persons_owned_by_robot
     Pipedrive::API.get_persons_owned_by_user(PIPEDRIVE_ROBOT_ID).map do |datum|

@@ -1,20 +1,25 @@
 class Administrateur < ApplicationRecord
-  self.ignored_columns = ['features', 'encrypted_password', 'reset_password_token', 'reset_password_sent_at', 'remember_created_at', 'sign_in_count', 'current_sign_in_at', 'last_sign_in_at', 'current_sign_in_ip', 'last_sign_in_ip', 'failed_attempts', 'unlock_token', 'locked_at']
-  include EmailSanitizableConcern
   include ActiveRecord::SecureToken
 
   has_and_belongs_to_many :instructeurs
   has_many :administrateurs_procedures
   has_many :procedures, through: :administrateurs_procedures
   has_many :services
-  has_many :dossiers, -> { state_not_brouillon }, through: :procedures
 
   has_one :user, dependent: :nullify
 
-  before_validation -> { sanitize_email(:email) }
+  default_scope { eager_load(:user) }
 
   scope :inactive, -> { joins(:user).where(users: { last_sign_in_at: nil }) }
-  scope :with_publiees_ou_archivees, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :archivee] }) }
+  scope :with_publiees_ou_closes, -> { joins(:procedures).where(procedures: { aasm_state: [:publiee, :close, :depubliee] }) }
+
+  def self.by_email(email)
+    Administrateur.find_by(users: { email: email })
+  end
+
+  def email
+    user&.email
+  end
 
   # validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
 
@@ -68,6 +73,28 @@ class Administrateur < ApplicationRecord
   end
 
   def can_be_deleted?
-    dossiers.state_instruction_commencee.none? && procedures.none?
+    procedures.all? { |p| p.administrateurs.count > 1 }
+  end
+
+  def delete_and_transfer_services
+    if !can_be_deleted?
+      fail "Impossible de supprimer cet administrateur car il a des démarches où il est le seul administrateur"
+    end
+
+    procedures.with_discarded.each do |procedure|
+      next_administrateur = procedure.administrateurs.where.not(id: self.id).first
+      procedure.service.update(administrateur: next_administrateur)
+    end
+
+    services.each do |service|
+      # We can't destroy a service if it has procedures, even if those procedures are archived
+      service.destroy unless service.procedures.with_discarded.any?
+    end
+
+    destroy
+  end
+
+  # required to display feature flags field in manager
+  def features
   end
 end

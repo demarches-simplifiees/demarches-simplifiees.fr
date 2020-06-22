@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Commentaire do
   it { is_expected.to have_db_column(:email) }
   it { is_expected.to have_db_column(:body) }
@@ -46,11 +44,22 @@ describe Commentaire do
   describe "#redacted_email" do
     subject { commentaire.redacted_email }
 
+    let(:procedure) { create(:procedure) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
     context 'with a commentaire created by a instructeur' do
-      let(:commentaire) { build :commentaire, instructeur: instructeur }
+      let(:commentaire) { build :commentaire, instructeur: instructeur, dossier: dossier }
       let(:instructeur) { build :instructeur, email: 'some_user@exemple.fr' }
 
-      it { is_expected.to eq 'some_user' }
+      context 'when the procedure shows instructeurs email' do
+        before { Flipper.disable(:hide_instructeur_email, procedure) }
+        it { is_expected.to eq 'some_user' }
+      end
+
+      context 'when the procedure hides instructeurs email' do
+        before { Flipper.enable(:hide_instructeur_email, procedure) }
+        it { is_expected.to eq "Instructeur n° #{instructeur.id}" }
+      end
     end
 
     context 'with a commentaire created by a user' do

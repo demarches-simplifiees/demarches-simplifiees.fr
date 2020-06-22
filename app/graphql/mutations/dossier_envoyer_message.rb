@@ -20,7 +20,7 @@ module Mutations
       end
     end
 
-    def authorized?(dossier:, instructeur:, body:)
+    def authorized?(dossier:, instructeur:, body:, attachment: nil)
       instructeur.is_a?(Instructeur) && instructeur.dossiers.exists?(id: dossier.id)
     end
   end

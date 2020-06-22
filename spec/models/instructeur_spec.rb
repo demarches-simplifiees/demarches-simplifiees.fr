@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Instructeur, type: :model do
   let(:admin) { create :administrateur }
   let!(:procedure) { create :procedure, :published, administrateur: admin }
@@ -147,6 +145,21 @@ describe Instructeur, type: :model do
       it { expect(instructeur2.last_week_overview[:procedure_overviews]).to match([procedure_overview]) }
     end
 
+    context 'when a procedure published was active and weekly notifications is disable' do
+      let!(:procedure) { create(:procedure, :published, libelle: 'procedure') }
+      let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
+
+      before :each do
+        instructeur2.assign_to_procedure(procedure)
+        AssignTo
+          .where(instructeur: instructeur2, groupe_instructeur: procedure.groupe_instructeurs.first)
+          .update(weekly_email_notifications_enabled: false)
+        allow_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
+      end
+
+      it { expect(instructeur2.last_week_overview).to be_nil }
+    end
+
     context 'when a procedure not published was active with no notifications' do
       let!(:procedure) { create(:procedure, libelle: 'procedure') }
       let(:procedure_overview) { double('procedure_overview', 'had_some_activities?'.to_sym => true) }
@@ -204,6 +217,13 @@ describe Instructeur, type: :model do
 
     context 'when there is a modification on public champs' do
       before { dossier.champs.first.update_attribute('value', 'toto') }
+
+      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
+    end
+
+    context 'when there is a modification on groupe instructeur' do
+      let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure: dossier.procedure) }
+      before { dossier.assign_to_groupe_instructeur(groupe_instructeur) }
 
       it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
@@ -369,7 +389,7 @@ describe Instructeur, type: :model do
     let(:procedure_to_assign) { create(:procedure) }
 
     before do
-      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, email_notifications_enabled: true, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur)
+      create(:assign_to, instructeur: instructeur, procedure: procedure_to_assign, daily_email_notifications_enabled: true, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur)
     end
 
     context 'when a dossier in construction exists' do
@@ -379,6 +399,8 @@ describe Instructeur, type: :model do
         expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 1,
+            nb_en_instruction: 0,
+            nb_accepted: 0,
             nb_notification: 0,
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle
@@ -398,7 +420,78 @@ describe Instructeur, type: :model do
         expect(instructeur.email_notification_data).to eq([
           {
             nb_en_construction: 0,
+            nb_en_instruction: 0,
+            nb_accepted: 0,
             nb_notification: 3,
+            procedure_id: procedure_to_assign.id,
+            procedure_libelle: procedure_to_assign.libelle
+          }
+        ])
+      end
+    end
+
+    context 'when a declarated dossier in instruction exists' do
+      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+
+      before do
+        procedure_to_assign.update(declarative_with_state: "en_instruction")
+        DeclarativeProceduresJob.new.perform
+        dossier.reload
+      end
+
+      it { expect(procedure_to_assign.declarative_with_state).to eq("en_instruction") }
+      it { expect(dossier.state).to eq("en_instruction") }
+      it do
+        expect(instructeur.email_notification_data).to eq([
+          {
+            nb_en_construction: 0,
+            nb_en_instruction: 1,
+            nb_accepted: 0,
+            nb_notification: 0,
+            procedure_id: procedure_to_assign.id,
+            procedure_libelle: procedure_to_assign.libelle
+          }
+        ])
+      end
+    end
+
+    context 'when a declarated dossier in accepte processed at today exists' do
+      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+
+      before do
+        procedure_to_assign.update(declarative_with_state: "accepte")
+        DeclarativeProceduresJob.new.perform
+        dossier.reload
+      end
+
+      it { expect(procedure_to_assign.declarative_with_state).to eq("accepte") }
+      it { expect(dossier.state).to eq("accepte") }
+
+      it do
+        expect(instructeur.email_notification_data).to eq([])
+      end
+    end
+
+    context 'when a declarated dossier in accepte processed at yesterday exists' do
+      let!(:dossier) { create(:dossier, procedure: procedure_to_assign, state: Dossier.states.fetch(:en_construction)) }
+
+      before do
+        procedure_to_assign.update(declarative_with_state: "accepte")
+        DeclarativeProceduresJob.new.perform
+        dossier.update(processed_at: Time.zone.yesterday.beginning_of_day)
+        dossier.reload
+      end
+
+      it { expect(procedure_to_assign.declarative_with_state).to eq("accepte") }
+      it { expect(dossier.state).to eq("accepte") }
+
+      it do
+        expect(instructeur.email_notification_data).to eq([
+          {
+            nb_en_construction: 0,
+            nb_en_instruction: 0,
+            nb_accepted: 1,
+            nb_notification: 0,
             procedure_id: procedure_to_assign.id,
             procedure_libelle: procedure_to_assign.libelle
           }
@@ -424,9 +517,40 @@ describe Instructeur, type: :model do
     it { expect(instructeur_a.procedures.all.to_ary).to eq([procedure_a]) }
   end
 
+  describe "#can_be_deleted?" do
+    subject { instructeur.can_be_deleted? }
+
+    context 'when the instructeur is an administrateur' do
+      let!(:administrateur) { create(:administrateur) }
+      let(:instructeur) { administrateur.instructeur }
+
+      it { is_expected.to be false }
+    end
+
+    context "when the instructeur's procedures have other instructeurs" do
+      let(:instructeur_not_admin) { create(:instructeur) }
+      let(:autre_instructeur) { create(:instructeur) }
+
+      it "can be deleted" do
+        assign(procedure, instructeur_assigne: instructeur_not_admin)
+        assign(procedure, instructeur_assigne: autre_instructeur)
+        expect(autre_instructeur.can_be_deleted?).to be_truthy
+      end
+    end
+
+    context "when the instructeur's procedures is the only one" do
+      let(:instructeur_not_admin) { create :instructeur }
+      let(:autre_procedure) { create :procedure }
+      it "can be deleted" do
+        assign(autre_procedure, instructeur_assigne: instructeur_not_admin)
+        expect(instructeur_not_admin.can_be_deleted?).to be_falsy
+      end
+    end
+  end
+
   private
 
-  def assign(procedure_to_assign)
-    create :assign_to, instructeur: instructeur, procedure: procedure_to_assign, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur
+  def assign(procedure_to_assign, instructeur_assigne: instructeur)
+    create :assign_to, instructeur: instructeur_assigne, procedure: procedure_to_assign, groupe_instructeur: procedure_to_assign.defaut_groupe_instructeur
   end
 end

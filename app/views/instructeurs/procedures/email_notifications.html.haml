@@ -11,6 +11,38 @@
     .explication
       Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
 
+    = form.label :email_notification, "Recevoir une notification à chaque dossier déposé"
+
+    %p.notice
+      Cet email vous signale le dépôt d'un nouveau dossier.
+    %p.notice
+      Il est envoyé à chaque fois qu'un usager dépose un dossier.
+
+    .radios
+      %label
+        = form.radio_button :instant_email_dossier_notifications_enabled, true
+        Oui
+
+      %label
+        = form.radio_button :instant_email_dossier_notifications_enabled, false
+        Non
+
+    = form.label :email_notification, "Recevoir une notification à chaque message déposé"
+
+    %p.notice
+      Cet email vous signale le dépôt d'un nouveau message sur vos dossiers suivis.
+    %p.notice
+      Il est envoyé à chaque fois qu'un usager dépose un message.
+
+    .radios
+      %label
+        = form.radio_button :instant_email_message_notifications_enabled, true
+        Oui
+
+      %label
+        = form.radio_button :instant_email_message_notifications_enabled, false
+        Non
+
     = form.label :email_notification, "Recevoir une notification quotidienne"
 
     %p.notice
@@ -20,25 +52,25 @@
 
     .radios
       %label
-        = form.radio_button :email_notifications_enabled, true
+        = form.radio_button :daily_email_notifications_enabled, true
         Oui
 
       %label
-        = form.radio_button :email_notifications_enabled, false
+        = form.radio_button :daily_email_notifications_enabled, false
         Non
 
-    = form.label nil, "Recevoir un récapitulatif hebdomadaire"
+    = form.label :email_notification, "Recevoir un récapitulatif hebdomadaire"
     %p.notice
       Cet email récapitule l’activité de la semaine sur l’ensemble de vos démarches.
     %p.notice
-      Il est envoyé chaque semaine le lundi matin, et n’est pas désactivable.
+      Il est envoyé chaque semaine le lundi matin.
 
     .radios
       %label
-        = radio_button_tag "not_implemented", "Oui", true, disabled: true
+        = form.radio_button :weekly_email_notifications_enabled, true
         Oui
       %label
-        = radio_button_tag "not_implemented", "Non", false, disabled: true
+        = form.radio_button :weekly_email_notifications_enabled, false
         Non
 
     .send-wrapper

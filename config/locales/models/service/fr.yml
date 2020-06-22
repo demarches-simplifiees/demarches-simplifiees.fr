@@ -4,6 +4,6 @@ fr:
     association: 'Association'
     collectivite_territoriale: 'Collectivité territoriale'
     etablissement_enseignement: 'Établissement d’enseignement'
-    operateur_d_etat: "Opérateur d'État"
-    service_deconcentre_de_l_etat: "Service déconcentré de l'État"
+    operateur_d_etat: "Opérateur d’État"
+    service_deconcentre_de_l_etat: "Service déconcentré de l’État"
     autre: 'Autre'

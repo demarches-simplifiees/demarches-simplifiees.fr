@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Champs::LinkedDropDownListChamp do
   describe '#unpack_value' do
     let(:champ) { described_class.new(value: '["tata", "tutu"]') }
@@ -91,7 +89,14 @@ describe Champs::LinkedDropDownListChamp do
         end
 
         context 'when there is a secondary value' do
-          before { subject.secondary_value = 'Primary' }
+          before { subject.secondary_value = 'Secondary' }
+
+          it { is_expected.not_to be_mandatory_and_blank }
+        end
+
+        context 'when there is nothing to select for the secondary value' do
+          let(:drop_down_list) { build(:drop_down_list, value: "--A--\nAbbott\nAbelard\n--B--\n--C--\nCynthia") }
+          before { subject.primary_value = 'B' }
 
           it { is_expected.not_to be_mandatory_and_blank }
         end

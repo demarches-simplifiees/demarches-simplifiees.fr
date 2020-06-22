@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'Signin in:' do
   let!(:user) { create(:user, password: password) }
   let(:password) { 'démarches-simplifiées-pwd' }
@@ -34,7 +32,7 @@ feature 'Signin in:' do
     scenario 'an existing user can sign-in and fill the procedure' do
       click_on 'J’ai déjà un compte'
       expect(page).to have_current_path new_user_session_path
-      expect_page_to_have_procedure_description(procedure)
+      expect(page).to have_procedure_description(procedure)
 
       sign_in_with user.email, password
 
@@ -42,7 +40,7 @@ feature 'Signin in:' do
       click_on 'Commencer la démarche'
 
       expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
-      expect_page_to_have_procedure_description(procedure)
+      expect(page).to have_procedure_description(procedure)
       expect(page).to have_content "Données d'identité"
     end
   end

@@ -1,10 +1,8 @@
-require 'rails_helper'
-
 RSpec.describe AutoArchiveProcedureJob, type: :job do
   let!(:procedure) { create(:procedure, :published, :with_instructeur, auto_archive_on: nil) }
-  let!(:procedure_hier) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago) }
-  let!(:procedure_aujourdhui) { create(:procedure, :published, :with_instructeur, auto_archive_on: Date.today) }
-  let!(:procedure_demain) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.from_now) }
+  let!(:procedure_hier) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago.to_date) }
+  let!(:procedure_aujourdhui) { create(:procedure, :published, :with_instructeur, auto_archive_on: Time.zone.today) }
+  let!(:procedure_demain) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.from_now.to_date) }
 
   subject { AutoArchiveProcedureJob.new.perform }
 
@@ -14,7 +12,7 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
       procedure.reload
     end
 
-    it { expect(procedure.archivee?).to eq false }
+    it { expect(procedure.close?).to eq false }
   end
 
   context "when procedures have auto_archive_on set on yesterday or today" do
@@ -53,8 +51,8 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
     }
 
     it {
-      expect(procedure_hier.archivee?).to eq true
-      expect(procedure_aujourdhui.archivee?).to eq true
+      expect(procedure_hier.close?).to eq true
+      expect(procedure_aujourdhui.close?).to eq true
     }
   end
 
@@ -63,6 +61,6 @@ RSpec.describe AutoArchiveProcedureJob, type: :job do
       subject
     end
 
-    it { expect(procedure_demain.archivee?).to eq false }
+    it { expect(procedure_demain.close?).to eq false }
   end
 end

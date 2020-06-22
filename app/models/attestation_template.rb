@@ -10,6 +10,8 @@ class AttestationTemplate < ApplicationRecord
   has_one_attached :signature
 
   validates :footer, length: { maximum: 190 }
+  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 1.megabytes }
+  validates :signature, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 1.megabytes }
 
   DOSSIER_STATE = Dossier.states.fetch(:accepte)
 

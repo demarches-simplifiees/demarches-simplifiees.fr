@@ -1,22 +1,46 @@
-require 'spec_helper'
-
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :with_all_champs, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, administrateurs: [admin]) }
   let(:dossier) do
     dossier = create(:dossier,
       :en_construction,
       :with_all_champs,
+      :with_individual,
       procedure: procedure)
-    create(:commentaire, dossier: dossier, email: 'test@test.com')
+    create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
     dossier
   end
-  let(:dossier1) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 1.day.ago) }
-  let(:dossier2) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: 3.days.ago) }
-  let!(:dossier_brouillon) { create(:dossier, procedure: procedure) }
+  let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
+  let(:dossier2) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 3.days.ago) }
+  let(:dossier_brouillon) { create(:dossier, :with_individual, procedure: procedure) }
   let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
+
+  def compute_checksum_in_chunks(io)
+    Digest::MD5.new.tap do |checksum|
+      while (chunk = io.read(5.megabytes))
+        checksum << chunk
+      end
+
+      io.rewind
+    end.base64digest
+  end
+
+  let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
+  let(:blob_info) do
+    {
+      filename: file.original_filename,
+      byte_size: file.size,
+      checksum: compute_checksum_in_chunks(file),
+      content_type: file.content_type
+    }
+  end
+  let(:blob) do
+    blob = ActiveStorage::Blob.create_before_direct_upload!(blob_info)
+    blob.upload(file)
+    blob
+  end
 
   before do
     instructeur.assign_to_procedure(procedure)
@@ -30,14 +54,19 @@ describe API::V2::GraphqlController do
         title
         description
         state
-        createdAt
-        updatedAt
-        archivedAt
+        dateCreation
+        dateDerniereModification
+        dateFermeture
         groupeInstructeurs {
           label
           instructeurs {
             email
           }
+        }
+        service {
+          nom
+          typeOrganisme
+          organisme
         }
         champDescriptors {
           id
@@ -79,16 +108,21 @@ describe API::V2::GraphqlController do
           number: procedure.id,
           title: procedure.libelle,
           description: procedure.description,
-          state: 'brouillon',
-          archivedAt: nil,
-          createdAt: procedure.created_at.iso8601,
-          updatedAt: procedure.updated_at.iso8601,
+          state: 'publiee',
+          dateFermeture: nil,
+          dateCreation: procedure.created_at.iso8601,
+          dateDerniereModification: procedure.updated_at.iso8601,
           groupeInstructeurs: [
             {
               instructeurs: [{ email: instructeur.email }],
               label: "défaut"
             }
           ],
+          service: {
+            nom: procedure.service.nom,
+            typeOrganisme: procedure.service.type_organisme,
+            organisme: procedure.service.organisme
+          },
           champDescriptors: procedure.types_de_champ.map do |tdc|
             {
               id: tdc.to_typed_id,
@@ -133,41 +167,199 @@ describe API::V2::GraphqlController do
     end
 
     context "dossier" do
+      context "with individual" do
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
+              id
+              number
+              state
+              dateDerniereModification
+              datePassageEnConstruction
+              datePassageEnInstruction
+              dateTraitement
+              motivation
+              motivationAttachment {
+                url
+              }
+              usager {
+                id
+                email
+              }
+              demandeur {
+                id
+                ... on PersonnePhysique {
+                  nom
+                  prenom
+                  civilite
+                  dateDeNaissance
+                }
+              }
+              instructeurs {
+                id
+                email
+              }
+              groupeInstructeur {
+                id
+                number
+                label
+              }
+              messages {
+                email
+                body
+                attachment {
+                  filename
+                  checksum
+                  byteSize
+                  contentType
+                }
+              }
+              avis {
+                expert {
+                  email
+                }
+                question
+                reponse
+                dateQuestion
+                dateReponse
+                attachment {
+                  url
+                  filename
+                }
+              }
+              champs {
+                id
+                label
+                stringValue
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(dossier: {
+            id: dossier.to_typed_id,
+            number: dossier.id,
+            state: 'en_construction',
+            dateDerniereModification: dossier.updated_at.iso8601,
+            datePassageEnConstruction: dossier.en_construction_at.iso8601,
+            datePassageEnInstruction: nil,
+            dateTraitement: nil,
+            motivation: nil,
+            motivationAttachment: nil,
+            usager: {
+              id: dossier.user.to_typed_id,
+              email: dossier.user.email
+            },
+            instructeurs: [
+              {
+                id: instructeur.to_typed_id,
+                email: instructeur.email
+              }
+            ],
+            groupeInstructeur: {
+              id: dossier.groupe_instructeur.to_typed_id,
+              number: dossier.groupe_instructeur.id,
+              label: dossier.groupe_instructeur.label
+            },
+            demandeur: {
+              id: dossier.individual.to_typed_id,
+              nom: dossier.individual.nom,
+              prenom: dossier.individual.prenom,
+              civilite: 'M',
+              dateDeNaissance: '1991-11-01'
+            },
+            messages: dossier.commentaires.map do |commentaire|
+              {
+                body: commentaire.body,
+                attachment: {
+                  filename: commentaire.piece_jointe.filename.to_s,
+                  contentType: commentaire.piece_jointe.content_type,
+                  checksum: commentaire.piece_jointe.checksum,
+                  byteSize: commentaire.piece_jointe.byte_size
+                },
+                email: commentaire.email
+              }
+            end,
+            avis: [],
+            champs: dossier.champs.map do |champ|
+              {
+                id: champ.to_typed_id,
+                label: champ.libelle,
+                stringValue: champ.for_api_v2
+              }
+            end
+          })
+          expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs[0].type_de_champ.to_typed_id)
+        end
+      end
+
+      context "with entreprise" do
+        let(:procedure_for_entreprise) { create(:procedure, :published, administrateurs: [admin]) }
+        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure_for_entreprise) }
+
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
+              id
+              number
+              usager {
+                id
+                email
+              }
+              demandeur {
+                id
+                ... on PersonneMorale {
+                  siret
+                  siegeSocial
+                  entreprise {
+                    siren
+                    dateCreation
+                    capitalSocial
+                  }
+                }
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(dossier: {
+            id: dossier.to_typed_id,
+            number: dossier.id,
+            usager: {
+              id: dossier.user.to_typed_id,
+              email: dossier.user.email
+            },
+            demandeur: {
+              id: dossier.etablissement.to_typed_id,
+              siret: dossier.etablissement.siret,
+              siegeSocial: dossier.etablissement.siege_social,
+              entreprise: {
+                siren: dossier.etablissement.entreprise_siren,
+                dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
+                capitalSocial: dossier.etablissement.entreprise_capital_social.to_s
+              }
+            }
+          })
+        end
+      end
+    end
+
+    context "groupeInstructeur" do
+      let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
       let(:query) do
         "{
-          dossier(number: #{dossier.id}) {
+          groupeInstructeur(number: #{groupe_instructeur.id}) {
             id
             number
-            state
-            updatedAt
-            datePassageEnConstruction
-            datePassageEnInstruction
-            dateTraitement
-            motivation
-            motivationAttachmentUrl
-            usager {
-              id
-              email
-            }
-            instructeurs {
-              id
-              email
-            }
-            messages {
-              email
-              body
-              attachmentUrl
-            }
-            avis {
-              email
-              question
-              answer
-              attachmentUrl
-            }
-            champs {
-              id
-              label
-              stringValue
+            label
+            dossiers {
+              nodes {
+                id
+              }
             }
           }
         }"
@@ -175,43 +367,14 @@ describe API::V2::GraphqlController do
 
       it "should be returned" do
         expect(gql_errors).to eq(nil)
-        expect(gql_data).to eq(dossier: {
-          id: dossier.to_typed_id,
-          number: dossier.id,
-          state: 'en_construction',
-          updatedAt: dossier.updated_at.iso8601,
-          datePassageEnConstruction: dossier.en_construction_at.iso8601,
-          datePassageEnInstruction: nil,
-          dateTraitement: nil,
-          motivation: nil,
-          motivationAttachmentUrl: nil,
-          usager: {
-            id: dossier.user.to_typed_id,
-            email: dossier.user.email
-          },
-          instructeurs: [
-            {
-              id: instructeur.to_typed_id,
-              email: instructeur.email
-            }
-          ],
-          messages: dossier.commentaires.map do |commentaire|
-            {
-              body: commentaire.body,
-              attachmentUrl: nil,
-              email: commentaire.email
-            }
-          end,
-          avis: [],
-          champs: dossier.champs.map do |champ|
-            {
-              id: champ.to_typed_id,
-              label: champ.libelle,
-              stringValue: champ.for_api_v2
-            }
-          end
+        expect(gql_data).to eq(groupeInstructeur: {
+          id: groupe_instructeur.to_typed_id,
+          number: groupe_instructeur.id,
+          label: groupe_instructeur.label,
+          dossiers: {
+            nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
+          }
         })
-        expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs[0].type_de_champ.to_typed_id)
       end
     end
 
@@ -223,7 +386,8 @@ describe API::V2::GraphqlController do
               dossierEnvoyerMessage(input: {
                 dossierId: \"#{dossier.to_typed_id}\",
                 instructeurId: \"#{instructeur.to_typed_id}\",
-                body: \"Bonjour\"
+                body: \"Bonjour\",
+                attachment: \"#{blob.signed_id}\"
               }) {
                 message {
                   body
@@ -292,7 +456,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierPasserEnInstruction' do
-        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierPasserEnInstruction(input: {
@@ -327,7 +491,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -340,13 +504,14 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierClasserSansSuite' do
-        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierClasserSansSuite(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -376,7 +541,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+          let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -389,13 +554,14 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierRefuser' do
-        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierRefuser(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -425,7 +591,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :sans_suite, procedure: procedure) }
+          let(:dossier) { create(:dossier, :sans_suite, :with_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -438,13 +604,14 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierAccepter' do
-        let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
         let(:query) do
           "mutation {
             dossierAccepter(input: {
               dossierId: \"#{dossier.to_typed_id}\",
               instructeurId: \"#{instructeur.to_typed_id}\",
-              motivation: \"Parce que\"
+              motivation: \"Parce que\",
+              justificatif: \"#{blob.signed_id}\"
             }) {
               dossier {
                 id
@@ -507,7 +674,7 @@ describe API::V2::GraphqlController do
         end
 
         context 'validation error' do
-          let(:dossier) { create(:dossier, :refuse, procedure: procedure) }
+          let(:dossier) { create(:dossier, :refuse, :with_individual, procedure: procedure) }
 
           it "should fail" do
             expect(gql_errors).to eq(nil)
@@ -524,10 +691,10 @@ describe API::V2::GraphqlController do
           "mutation {
             createDirectUpload(input: {
               dossierId: \"#{dossier.to_typed_id}\",
-              filename: \"hello.png\",
-              byteSize: 1234,
-              checksum: \"qwerty1234\",
-              contentType: \"image/png\"
+              filename: \"#{blob_info[:filename]}\",
+              byteSize: #{blob_info[:byte_size]},
+              checksum: \"#{blob_info[:checksum]}\",
+              contentType: \"#{blob_info[:content_type]}\"
             }) {
               directUpload {
                 url
@@ -547,6 +714,53 @@ describe API::V2::GraphqlController do
           expect(data[:headers]).not_to be_nil
           expect(data[:blobId]).not_to be_nil
           expect(data[:signedBlobId]).not_to be_nil
+        end
+      end
+
+      describe 'dossierChangerGroupeInstructeur' do
+        let(:query) do
+          "mutation {
+            dossierChangerGroupeInstructeur(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              groupeInstructeurId: \"#{dossier.groupe_instructeur.to_typed_id}\"
+            }) {
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        it "validation error" do
+          expect(gql_errors).to eq(nil)
+
+          expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
+            errors: [{ message: "Le dossier est déjà avec le grope instructeur: 'défaut'" }]
+          })
+        end
+
+        context "should changer groupe instructeur" do
+          let!(:new_groupe_instructeur) { procedure.groupe_instructeurs.create(label: 'new groupe instructeur') }
+          let(:query) do
+            "mutation {
+            dossierChangerGroupeInstructeur(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              groupeInstructeurId: \"#{new_groupe_instructeur.to_typed_id}\"
+            }) {
+              errors {
+                message
+              }
+            }
+          }"
+          end
+
+          it "change made" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
+              errors: nil
+            })
+          end
         end
       end
     end

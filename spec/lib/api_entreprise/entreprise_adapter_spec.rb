@@ -1,14 +1,14 @@
-require 'spec_helper'
-
 describe ApiEntreprise::EntrepriseAdapter do
   let(:siren) { '418166096' }
-  let(:procedure_id) { 22 }
+  let(:procedure) { create(:procedure) }
+  let(:procedure_id) { procedure.id }
   let(:adapter) { described_class.new(siren, procedure_id) }
   subject { adapter.to_params }
 
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
       .to_return(body: body, status: status)
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context "when the SIRET is valid" do
@@ -84,7 +84,7 @@ describe ApiEntreprise::EntrepriseAdapter do
     let(:status) { 502 }
 
     it 'raises an exception' do
-      expect { subject }.to raise_error(RestClient::RequestFailed)
+      expect { subject }.to raise_error(ApiEntreprise::API::RequestFailed)
     end
   end
 end

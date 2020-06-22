@@ -12,7 +12,7 @@
 
     .prologue
       %p.mandatory-explanation
-        Les champs avec un astérisque (
+        Les champs suivis d’un astérisque (
         %span.mandatory> *
         ) sont obligatoires.
       - if dossier.brouillon?
@@ -30,11 +30,22 @@
     %hr
 
     - if dossier.procedure.routee?
-      = f.label :groupe_instructeur_id, dossier.procedure.routing_criteria_name
+      = f.label :groupe_instructeur_id do
+        = dossier.procedure.routing_criteria_name
+        %span.mandatory *
+      -# The routing dropdown has 'include_blank: false', because otherwise a blank
+      -# value may nullify the groupe_instructeur – and thus the link between the dossier
+      -# and its procedure.
+      -#
+      -# If, one day, we need to make clearer to the user that they must actually choose an
+      -# option, THINK TWICE before adding a blank option, and what would happen if the form is
+      -# saved when the blank option is selected.
+      -# Instead please consider other possibilities; like using CSS to gray out the default option,
+      -# or adding some "(please select an option)" wording aside the label of the default group.
+      -# CSS
       = f.select :groupe_instructeur_id,
         dossier.procedure.groupe_instructeurs.order(:label).map { |gi| [gi.label, gi.id] },
-        {},
-        required: true
+        { include_blank: false }
 
     = f.fields_for :champs, dossier.champs do |champ_form|
       - champ = champ_form.object
@@ -42,31 +53,32 @@
         locals: { champ: champ, form: champ_form }
 
     - if !apercu
-      .send-dossier-actions-bar
-        - if dossier.brouillon?
-          - if autosave_available?(dossier)
-            = render partial: 'users/dossiers/autosave'
+      .dossier-edit-sticky-footer
+        .send-dossier-actions-bar
+          - if dossier.brouillon?
+            - if autosave_available?(dossier)
+              = render partial: 'users/dossiers/autosave'
+            - else
+              = f.button 'Enregistrer le brouillon',
+                formnovalidate: true,
+                class: 'button send secondary',
+                data: { 'disable-with': "Envoi en cours…" }
+
+            - if dossier.can_transition_to_en_construction?
+              = f.button 'Déposer le dossier',
+                name: :submit_draft,
+                value: true,
+                class: 'button send primary',
+                disabled: !current_user.owns?(dossier),
+                data: { 'disable-with': "Envoi en cours…" }
+
           - else
-            = f.button 'Enregistrer le brouillon',
-              formnovalidate: true,
-              class: 'button send secondary',
-              data: { 'disable-with': "Envoi en cours…" }
-
-          - if dossier.can_transition_to_en_construction?
-            = f.button 'Déposer le dossier',
-              name: :submit_draft,
-              value: true,
+            = f.button 'Enregistrer les modifications du dossier',
               class: 'button send primary',
-              disabled: !current_user.owns?(dossier),
               data: { 'disable-with': "Envoi en cours…" }
 
-        - else
-          = f.button 'Enregistrer les modifications du dossier',
-            class: 'button send primary',
-            data: { 'disable-with': "Envoi en cours…" }
+        - if dossier.brouillon? && !current_user.owns?(dossier)
+          .send-notice.invite-cannot-submit
+            En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le déposer lui-même.
 
-      - if dossier.brouillon? && !current_user.owns?(dossier)
-        .send-notice.invite-cannot-submit
-          En tant qu’invité, vous pouvez remplir ce formulaire – mais le titulaire du dossier doit le déposer lui-même.
-
-      = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
+        = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }

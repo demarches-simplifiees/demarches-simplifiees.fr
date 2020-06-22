@@ -11,6 +11,7 @@ class Commentaire < ApplicationRecord
   has_one_attached :piece_jointe
 
   validates :body, presence: { message: "ne peut être vide" }
+  validates :piece_jointe, size: { less_than: 20.megabytes }
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
@@ -33,7 +34,11 @@ class Commentaire < ApplicationRecord
 
   def redacted_email
     if instructeur.present?
-      instructeur.email.split('@').first
+      if Flipper.enabled?(:hide_instructeur_email, dossier.procedure)
+        "Instructeur n° #{instructeur.id}"
+      else
+        instructeur.email.split('@').first
+      end
     else
       email
     end

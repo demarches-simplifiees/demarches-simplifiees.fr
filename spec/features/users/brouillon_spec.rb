@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 feature 'The user' do
   let(:password) { 'démarches-simplifiées-pwd' }
   let!(:user) { create(:user, password: password) }
@@ -7,13 +5,7 @@ feature 'The user' do
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }
   let(:user_dossier) { user.dossiers.first }
 
-  # TODO: check
-  # the order
-  # there are no extraneous input
-  scenario 'fill a dossier', js: true do
-    allow(Champs::RegionChamp).to receive(:regions).and_return(['region1', 'region2']).at_least(:once)
-    allow(Champs::DepartementChamp).to receive(:departements).and_return(['dep1', 'dep2']).at_least(:once)
-
+  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'api_geo_departements_regions_et_communes' } do
     log_in(user, procedure)
 
     fill_individual
@@ -22,7 +14,7 @@ feature 'The user' do
     fill_in('text', with: 'super texte')
     fill_in('textarea', with: 'super textarea')
     fill_in('date', with: '12-12-2012')
-    select_date_and_time(Time.zone.parse('06/01/1985 7h05'), form_id_for('datetime'))
+    select_date_and_time(Time.zone.parse('06/01/1985 7h05'), form_id_for_datetime('datetime'))
     fill_in('number', with: '42')
     check('checkbox')
     choose('Madame')
@@ -33,8 +25,16 @@ feature 'The user' do
     select('val1', from: form_id_for('multiple_drop_down_list'))
     select('val3', from: form_id_for('multiple_drop_down_list'))
     select('AUSTRALIE', from: 'pays')
-    select('region2', from: 'regions')
-    select('dep2', from: 'departements')
+
+    select_champ_geo('regions', 'Ma', 'Martinique')
+    select('Martinique', from: 'regions')
+
+    select_champ_geo('departements', 'Ai', '02 - Aisne')
+    select('02 - Aisne', from: 'departements')
+
+    select_champ_geo('communes', 'Am', 'Ambléon')
+    select('Ambléon', from: 'communes')
+
     check('engagement')
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
@@ -57,8 +57,9 @@ feature 'The user' do
     expect(champ_value_for('simple_drop_down_list')).to eq('val2')
     expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
     expect(champ_value_for('pays')).to eq('AUSTRALIE')
-    expect(champ_value_for('regions')).to eq('region2')
-    expect(champ_value_for('departements')).to eq('dep2')
+    expect(champ_value_for('regions')).to eq('Martinique')
+    expect(champ_value_for('departements')).to eq('02 - Aisne')
+    expect(champ_value_for('communes')).to eq('Ambléon')
     expect(champ_value_for('engagement')).to eq('on')
     expect(champ_value_for('dossier_link')).to eq('123')
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
@@ -68,7 +69,7 @@ feature 'The user' do
     expect(page).to have_field('text', with: 'super texte')
     expect(page).to have_field('textarea', with: 'super textarea')
     expect(page).to have_field('date', with: '2012-12-12')
-    check_date_and_time(Time.zone.parse('06/01/1985 7:05'), form_id_for('datetime'))
+    check_date_and_time(Time.zone.parse('06/01/1985 7:05'), form_id_for_datetime('datetime'))
     expect(page).to have_field('number', with: '42')
     expect(page).to have_checked_field('checkbox')
     expect(page).to have_checked_field('Madame')
@@ -78,8 +79,9 @@ feature 'The user' do
     expect(page).to have_selected_value('simple_drop_down_list', selected: 'val2')
     expect(page).to have_selected_value('multiple_drop_down_list', selected: ['val1', 'val3'])
     expect(page).to have_selected_value('pays', selected: 'AUSTRALIE')
-    expect(page).to have_selected_value('regions', selected: 'region2')
-    expect(page).to have_selected_value('departement', selected: 'dep2')
+    expect(page).to have_selected_value('regions', selected: 'Martinique')
+    expect(page).to have_selected_value('departements', selected: '02 - Aisne')
+    expect(page).to have_selected_value('communes', selected: 'Ambléon')
     expect(page).to have_checked_field('engagement')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
@@ -100,7 +102,7 @@ feature 'The user' do
     fill_in('text', with: 'super texte')
     expect(page).to have_field('text', with: 'super texte')
 
-    click_on 'Ajouter une ligne pour'
+    click_on 'Ajouter un élément pour'
 
     within '.row-1' do
       fill_in('text', with: 'un autre texte')
@@ -113,7 +115,7 @@ feature 'The user' do
     expect(page).to have_content('Supprimer', count: 2)
 
     within '.row-1' do
-      click_on 'Supprimer'
+      click_on 'Supprimer l’élément'
     end
 
     click_on 'Enregistrer le brouillon'
@@ -155,35 +157,85 @@ feature 'The user' do
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
 
-  scenario 'adding, replacing and removing attachments', js: true do
-    log_in(user, procedure_with_pj)
+  let(:procedure_with_pjs) do
+    tdcs = [
+      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', order_place: 1),
+      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 2', order_place: 2)
+    ]
+    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
+  end
+
+  scenario 'add an attachment', js: true do
+    log_in(user, procedure_with_pjs)
     fill_individual
 
-    # Add an attachment
-    find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
-    click_on 'Enregistrer le brouillon'
-    expect(page).to have_content('Votre brouillon a bien été sauvegardé')
+    # Add attachments
+    find_field('Pièce justificative 1').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
+    find_field('Pièce justificative 2').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
+
+    # Expect the files to be uploaded immediately
+    expect(page).to have_text('analyse antivirus en cours', count: 2)
     expect(page).to have_text('file.pdf')
-    expect(page).to have_text('analyse antivirus en cours')
-
-    # Mark file as scanned and clean
-    attachment = ActiveStorage::Attachment.last
-    attachment.blob.update(metadata: attachment.blob.metadata.merge(scanned_at: Time.zone.now, virus_scan_result: ActiveStorage::VirusScanner::SAFE))
-    within('.attachment') { click_on 'rafraichir' }
-    expect(page).to have_link('file.pdf')
-    expect(page).to have_no_content('analyse antivirus en cours')
-
-    # Replace the attachment
-    within('.attachment') { click_on 'Remplacer' }
-    find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
-    click_on 'Enregistrer le brouillon'
-    expect(page).to have_no_text('file.pdf')
     expect(page).to have_text('RIB.pdf')
 
-    # Remove the attachment
-    within('.attachment') { click_on 'Supprimer' }
-    expect(page).to have_content('La pièce jointe a bien été supprimée')
-    expect(page).to have_no_text('RIB.pdf')
+    # Expect the submit buttons to be enabled
+    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
+    expect(page).to have_button('Déposer le dossier', disabled: false)
+
+    # Reload the current page
+    visit current_path
+
+    # Expect the files to have been saved on the dossier
+    expect(page).to have_text('file.pdf')
+    expect(page).to have_text('RIB.pdf')
+  end
+
+  # TODO: once we're running on Rails 6, re-enable the validator on PieceJustificativeChamp,
+  # and unmark this spec as pending.
+  #
+  # See piece_justificative_champ.rb
+  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
+  scenario 'add an invalid attachment', js: true, pending: true do
+    log_in(user, procedure_with_pjs)
+    fill_individual
+
+    # Test invalid file type
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
+    expect(page).to have_text('La pièce justificative n’est pas d’un type accepté')
+    expect(page).to have_no_button('Ré-essayer', visible: true)
+
+    # Replace the file by another with a valid type
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/piece_justificative_0.pdf')
+    expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
+    expect(page).to have_text('analyse antivirus en cours')
+    expect(page).to have_text('piece_justificative_0.pdf')
+  end
+
+  scenario 'retry on transcient upload error', js: true do
+    log_in(user, procedure_with_pjs)
+    fill_individual
+
+    # Test auto-upload failure
+    logout(:user) # Make the subsequent auto-upload request fail
+    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
+    expect(page).to have_text('Une erreur s’est produite pendant l’envoi du fichier')
+    expect(page).to have_button('Ré-essayer', visible: true)
+    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
+    expect(page).to have_button('Déposer le dossier', disabled: false)
+
+    # Test that retrying after a failure works
+    login_as(user, scope: :user) # Make the auto-upload request work again
+    click_on('Ré-essayer', visible: true)
+    expect(page).to have_text('analyse antivirus en cours')
+    expect(page).to have_text('file.pdf')
+    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
+    expect(page).to have_button('Déposer le dossier', disabled: false)
+
+    # Reload the current page
+    visit current_path
+
+    # Expect the file to have been saved on the dossier
+    expect(page).to have_text('file.pdf')
   end
 
   context 'when the draft autosave is enabled' do
@@ -243,12 +295,39 @@ feature 'The user' do
     find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
   end
 
+  def form_id_for_datetime(libelle)
+    # The HTML for datetime is a bit specific since it has 5 selects, below here is a sample HTML
+    # So, we want to find the partial id of a datetime (partial because there are 5 ids:
+    # dossier_champs_attributes_3_value_1i, 2i, ... 5i) ; we are interested in the 'dossier_champs_attributes_3_value' part
+    # which is then completed in select_date_and_time and check_date_and_time
+    #
+    # We find the H2, find the first select in the next .datetime div, then strip the last 3 characters
+    #
+    # <h4 class="form-label">
+    #   libelle
+    # </h4>
+    # <div class="datetime">
+    #     <span class="hidden">
+    #         <label for="dossier_champs_attributes_3_value_3i">Jour</label></span>
+    #     <select id="dossier_champs_attributes_3_value_3i" name="dossier[champs_attributes][3][value(3i)]">
+    #     <option value=""></option>
+    #     <option value="1">1</option>
+    #     <option value="2">2</option>
+    #     <!-- … -->
+    #     </select>
+    #     <!-- … 4 other selects for month, year, minute and seconds -->
+    # </div>
+    e = find(:xpath, ".//h4[contains(text()[normalize-space()], '#{libelle}')]")
+    e.sibling('.datetime').first('select')[:id][0..-4]
+  end
+
   def champ_value_for(libelle)
     champs = user_dossier.champs
     champs.find { |c| c.libelle == libelle }.value
   end
 
   def fill_individual
+    choose 'M.'
     fill_in('individual_prenom', with: 'prenom')
     fill_in('individual_nom', with: 'nom')
     click_on 'Continuer'
@@ -269,5 +348,13 @@ feature 'The user' do
     expect(page).to have_selected_value("#{field}_3i", selected: date.strftime('%-d'))
     expect(page).to have_selected_value("#{field}_4i", selected: date.strftime('%H'))
     expect(page).to have_selected_value("#{field}_5i", selected: date.strftime('%M'))
+  end
+
+  def select_champ_geo(champ, fill_with, value)
+    find(".editable-champ-#{champ} .select2-container").click
+    id = find('.select2-container--open [role=listbox]')[:id]
+    find("[aria-controls=#{id}]").fill_in with: fill_with
+    expect(page).to have_content(value)
+    find('li', text: value).click
   end
 end

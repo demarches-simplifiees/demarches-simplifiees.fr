@@ -49,6 +49,15 @@ module ApplicationHelper
     end
   end
 
+  def render_champ(champ)
+    champ_selector = ".editable-champ[data-champ-id=\"#{champ.id}\"]"
+    form_html = render 'shared/dossiers/edit', dossier: champ.dossier, apercu: false
+    champ_html = Nokogiri::HTML.fragment(form_html).at_css(champ_selector).to_s
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{champ_selector}').outerHTML = \"#{escape_javascript(champ_html)}\";")
+    # rubocop:enable Rails/OutputSafety
+  end
+
   def remove_element(selector, timeout: 0, inner: false)
     script = "(function() {";
     script << "var el = document.querySelector('#{selector}');"
@@ -113,11 +122,51 @@ module ApplicationHelper
     end
   end
 
+  def root_path_info_for_profile(nav_bar_profile)
+    case nav_bar_profile
+    when :administrateur
+      [admin_procedures_path, "Aller au panneau d'administration"]
+    when :instructeur
+      [instructeur_procedures_path, 'Aller à la liste des démarches']
+    when :user
+      [dossiers_path, 'Aller à la liste des dossiers']
+    else
+      [root_path, "Aller à la page d'accueil"]
+    end
+  end
+
   def try_format_date(date)
     date.present? ? I18n.l(date) : ''
   end
 
   def try_format_datetime(datetime)
     datetime.present? ? I18n.l(datetime) : ''
+  end
+
+  def try_format_mois_effectif(etablissement)
+    if etablissement.entreprise_effectif_mois.present? && etablissement.entreprise_effectif_annee.present?
+      [etablissement.entreprise_effectif_mois, etablissement.entreprise_effectif_annee].join('/')
+    else
+      ''
+    end
+  end
+
+  def dismiss_outdated_browser_banner
+    cookies[:dismissed_outdated_browser_banner] = {
+      value: 'true',
+      expires: 1.week.from_now
+    }
+  end
+
+  def has_dismissed_outdated_browser_banner?
+    cookies[:dismissed_outdated_browser_banner] == 'true'
+  end
+
+  def supported_browser?
+    BrowserSupport.supported?(browser)
+  end
+
+  def show_outdated_browser_banner?
+    !supported_browser? && !has_dismissed_outdated_browser_banner?
   end
 end

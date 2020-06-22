@@ -1,0 +1,35 @@
+@import "colors";
+@import "constants";
+
+.site-banner {
+  width: 100%;
+  margin: 0;
+  padding: $default-padding;
+  color: $black;
+  background-color: $yellow;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.6);
+
+  &.warning {
+    background-color: $orange-bg;
+  }
+
+  .container {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.site-banner-icon {
+  margin-right: $default-padding;
+  font-size: 30px;
+  opacity: 0.7;
+}
+
+.site-banner-actions {
+  display: flex;
+  margin-left: auto;
+
+  .button {
+    margin-left: $default-spacer;
+  }
+}

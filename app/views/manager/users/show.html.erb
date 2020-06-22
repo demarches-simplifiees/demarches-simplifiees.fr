@@ -25,13 +25,11 @@ as well as a link to its edit page.
   </h1>
 
   <div>
-    <%= link_to(
-      t("administrate.actions.edit_resource", name: page.page_title),
-      [:edit, namespace, page.resource],
-      class: "button",
-    ) if valid_action?(:edit) && show_action?(:edit, page.resource) %>
+    <%= button_to "modifier", edit_manager_user_path(page.resource), method: :get, class: "button" %>
   </div>
-
+  <div>
+    <%= button_to "supprimer", delete_manager_user_path(page.resource), method: :delete, disabled: !page.resource.can_be_deleted?, class: "button", data: { confirm: "Confirmez-vous la suppression de l'utilisateur ?" }, title: page.resource.can_be_deleted? ? "Supprimer" : "Cet utilisateur ne peut être supprimé. Il a des dossiers dont l'instruction a commencé ou il est administrateur ou instructeur" %>
+  </div>
   <div>
     <% if !user.confirmed? %>
       <%= link_to('Renvoyer l’email de confirmation', [:resend_confirmation_instructions, namespace, page.resource], method: :post, class: 'button') %>

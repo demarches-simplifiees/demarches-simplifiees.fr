@@ -4,11 +4,11 @@ gem 'aasm'
 gem 'actiontext', git: 'https://github.com/kobaltz/actiontext.git', branch: 'archive', require: 'action_text' # Port of ActionText to Rails 5
 gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
+gem 'active_storage_validations'
 gem 'activestorage-openstack'
 gem 'administrate'
 gem 'after_party'
 gem 'anchored'
-gem 'axlsx', '~> 3.0.0.pre' # https://github.com/randym/axlsx/issues/501#issuecomment-373640365
 gem 'bcrypt'
 gem 'bootstrap-sass', '>= 3.4.1'
 gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
@@ -23,52 +23,54 @@ gem 'delayed_job_active_record'
 gem 'delayed_job_web'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
+gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
+gem 'ffi-geos', require: false
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
-gem 'fog-openstack'
 gem 'font-awesome-rails'
+gem 'fugit'
+gem 'geo_coord', require: "geo/coord"
+gem 'geocoder'
 gem 'gon'
-gem 'graphiql-rails'
 gem 'graphql'
 gem 'graphql-batch'
 gem 'graphql-rails_logger'
+gem 'graphql_playground-rails'
 gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
 gem 'jquery-rails' # Use jquery as the JavaScript library
-gem 'kaminari' # Pagination
+gem 'jwt'
+gem 'kaminari', '1.2.1' # Pagination
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
 gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem 'openid_connect'
-gem 'openstack'
 gem 'pg'
-gem 'prawn' # PDF Generation
-gem 'prawn_rails'
+gem 'phonelib'
+gem 'prawn-rails' # PDF Generation
+gem 'prawn-svg'
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'
 gem 'rack-mini-profiler'
-gem 'rails'
+gem 'rails', '= 5.2.4.2'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'react-rails'
-gem 'rest-client'
 gem 'rgeo-geojson'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
-gem 'scenic'
-gem 'select2-rails'
 gem 'sentry-raven'
 gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
-gem 'turbolinks' # Turbolinks makes following links in your web application faster
+gem 'sprockets', '< 4'
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'
@@ -76,7 +78,7 @@ gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 group :test do
-  gem 'capybara', '3.13.2' # Integration testing
+  gem 'capybara' # Integration testing
   gem 'capybara-email' # Access emails during integration tests
   gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
   gem 'capybara-selenium'
@@ -99,6 +101,7 @@ group :development do
   gem 'haml-lint'
   gem 'letter_opener_web'
   gem 'rubocop', require: false
+  gem 'rubocop-rails_config'
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
   gem 'web-console'
@@ -110,7 +113,7 @@ group :development, :test do
   gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
   gem 'pry-byebug'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 4.0.0.beta'
   gem 'rspec_junit_formatter', require: false
   gem 'ruby-debug-ide', require: false
   gem 'simple_xlsx_reader'

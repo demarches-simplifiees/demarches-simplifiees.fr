@@ -1,8 +1,13 @@
-/ See config/browser.rb
-- if !browser.modern?
-  #outdated-browser-banner
+- if show_outdated_browser_banner?
+  #outdated-browser-banner.site-banner
     .container
-      Attention, votre navigateur (#{browser.name} #{browser.version}) est trop ancien pour utiliser demarches-simplifiees.fr : certaines parties du site ne fonctionneront pas correctement. Nous vous recommendons fortement de
-      %a{ href: "https://browser-update.org/fr/update.html", target: "_blank", rel: "noopener" }mettre à jour votre navigateur
-      %span<>
-        \.
+      .site-banner-icon ⚠️
+      .site-banner-text
+        %strong
+          #{browser.name} #{browser.version} est trop ancien pour utiliser demarches-simplifiees.fr.
+        %br
+        Certaines parties du site ne fonctionneront pas correctement.
+      .site-banner-actions
+        = button_to 'Ignorer', dismiss_outdated_browser_path, method: :post, remote: true, class: 'button btn', title: 'Ne plus afficher cet avertissement pendant une semaine'
+        %a.btn.button.primary{ href: "https://browser-update.org/fr/update.html", target: "_blank", rel: "noopener" }
+          Mettre à jour mon navigateur

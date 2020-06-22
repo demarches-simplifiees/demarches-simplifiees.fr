@@ -1,13 +1,12 @@
-require 'spec_helper'
-
 describe ApiEntreprise::ExercicesAdapter do
   let(:siret) { '41816609600051' }
-  let(:procedure_id) { 11 }
-  subject { described_class.new(siret, procedure_id).to_params }
+  let(:procedure) { create(:procedure) }
+  subject { described_class.new(siret, procedure.id).to_params }
 
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
       .to_return(body: File.read('spec/fixtures/files/api_entreprise/exercices.json', status: 200))
+    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   it { is_expected.to be_an_instance_of(Hash) }

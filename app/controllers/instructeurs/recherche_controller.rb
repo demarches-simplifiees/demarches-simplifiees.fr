@@ -5,7 +5,7 @@ module Instructeurs
       @dossiers = DossierSearchService.matching_dossiers_for_instructeur(@search_terms, current_instructeur)
       @followed_dossiers_id = current_instructeur
         .followed_dossiers
-        .where(procedure_id: @dossiers.pluck(:procedure_id))
+        .where(groupe_instructeur_id: @dossiers.pluck(:groupe_instructeur_id))
         .pluck(:id)
     end
   end

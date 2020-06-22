@@ -1,5 +1,5 @@
-class FindDubiousProceduresJob < ApplicationJob
-  queue_as :cron
+class FindDubiousProceduresJob < CronJob
+  self.schedule_expression = "every day at midnight"
 
   FORBIDDEN_KEYWORDS = [
     'NIR', 'NIRPP', 'race', 'religion',
@@ -20,7 +20,7 @@ class FindDubiousProceduresJob < ApplicationJob
       .joins(:procedure)
       .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", forbidden_regexp)
       .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
-      .where(procedures: { archived_at: nil, whitelisted_at: nil })
+      .where(procedures: { closed_at: nil, whitelisted_at: nil })
 
     dubious_procedures_and_tdcs = forbidden_tdcs
       .group_by(&:procedure_id)

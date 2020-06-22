@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'csv'
 
 describe ProcedureExportService do
@@ -26,14 +25,14 @@ describe ProcedureExportService do
       procedure.reload
     end
 
-    context 'dossiers' do
-      it 'should have sheets' do
+    describe 'sheets' do
+      it 'should have a sheet for each record type' do
         expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis'])
       end
     end
 
-    context 'with dossier' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+    describe 'Dossiers sheet' do
+      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
 
       let(:nominal_headers) do
         [
@@ -42,7 +41,6 @@ describe ProcedureExportService do
           "Civilité",
           "Nom",
           "Prénom",
-          "Date de naissance",
           "Archivé",
           "État du dossier",
           "Dernière mise à jour le",
@@ -69,6 +67,7 @@ describe ProcedureExportService do
           "pays",
           "regions",
           "departements",
+          "communes",
           "engagement",
           "dossier_link",
           "piece_justificative",
@@ -88,23 +87,32 @@ describe ProcedureExportService do
 
         # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
         offset = dossier.en_construction_at.utc_offset
-        en_construction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
-        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][10] - offset.seconds)
+        en_construction_at = Time.zone.at(dossiers_sheet.data[0][8] - offset.seconds)
+        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
         expect(en_construction_at).to eq(dossier.en_construction_at.round)
         expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
+      end
+
+      context 'with a birthdate' do
+        before { procedure.update(ask_birthday: true) }
+
+        let(:birthdate_headers) { nominal_headers.insert(nominal_headers.index('Archivé'), 'Date de naissance') }
+
+        it { expect(dossiers_sheet.headers).to match(birthdate_headers) }
+        it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Date de naissance')]).to be_a(Date) }
       end
 
       context 'with a procedure routee' do
         before { procedure.groupe_instructeurs.create(label: '2') }
 
-        let(:routee_header) { nominal_headers.insert(nominal_headers.index('textarea'), 'Groupe instructeur') }
+        let(:routee_headers) { nominal_headers.insert(nominal_headers.index('textarea'), 'Groupe instructeur') }
 
-        it { expect(dossiers_sheet.headers).to match(routee_header) }
+        it { expect(dossiers_sheet.headers).to match(routee_headers) }
         it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Groupe instructeur')]).to eq('défaut') }
       end
     end
 
-    context 'with etablissement' do
+    describe 'Etablissement sheet' do
       let(:procedure) { create(:procedure, :published, :with_all_champs) }
       let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_entreprise, procedure: procedure) }
 
@@ -142,6 +150,7 @@ describe ProcedureExportService do
           "pays",
           "regions",
           "departements",
+          "communes",
           "engagement",
           "dossier_link",
           "piece_justificative",
@@ -220,6 +229,7 @@ describe ProcedureExportService do
             "pays",
             "regions",
             "departements",
+            "communes",
             "engagement",
             "dossier_link",
             "piece_justificative",
@@ -282,8 +292,8 @@ describe ProcedureExportService do
       end
     end
 
-    context 'with avis' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+    describe 'Avis sheet' do
+      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
       let!(:avis) { create(:avis, :with_answer, dossier: dossier) }
 
       it 'should have headers' do
@@ -292,7 +302,9 @@ describe ProcedureExportService do
           "Question / Introduction",
           "Réponse",
           "Créé le",
-          "Répondu le"
+          "Répondu le",
+          "Instructeur",
+          "Expert"
         ])
       end
 
@@ -301,11 +313,11 @@ describe ProcedureExportService do
       end
     end
 
-    context 'with repetitions' do
+    describe 'Repetitions sheet' do
       let!(:dossiers) do
         [
-          create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure),
-          create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure)
+          create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure),
+          create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure)
         ]
       end
       let(:champ_repetition) { dossiers.first.champs.find { |champ| champ.type_champ == 'repetition' } }
@@ -329,7 +341,7 @@ describe ProcedureExportService do
 
       context 'with invalid characters' do
         before do
-          champ_repetition.type_de_champ.update(libelle: 'A / B \ C')
+          champ_repetition.type_de_champ.update(libelle: 'A / B \ C *[]?')
         end
 
         it 'should have valid sheet name' do
@@ -338,7 +350,7 @@ describe ProcedureExportService do
       end
 
       context 'with non unique labels' do
-        let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :for_individual, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
         let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
         let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: procedure, libelle: champ_repetition.libelle) }
         let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }

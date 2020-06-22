@@ -21,11 +21,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    # We may need the confirmation mailer to access the current procedure.
+    # But there's no easy way to pass an argument to the mailer through
+    # all Devise code.
+    # So instead we use a per-request global variable.
+    CurrentConfirmation.procedure_after_confirmation = @procedure
+
     # Handle existing user trying to sign up again
     existing_user = User.find_by(email: params[:user][:email])
     if existing_user.present?
       if existing_user.confirmed?
-        UserMailer.new_account_warning(existing_user).deliver_later
+        UserMailer.new_account_warning(existing_user, @procedure).deliver_later
       else
         existing_user.resend_confirmation_instructions
       end

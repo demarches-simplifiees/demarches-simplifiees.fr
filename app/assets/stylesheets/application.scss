@@ -9,10 +9,8 @@
 // defined in the other CSS/SCSS files in this directory. It is generally better to create a new
 // file per style scope.
 //
-// = require _maintenance
 // = require _card
 // = require _helpers
-// = require _turbolinks
 // = require admin_type_de_champ
 // = require carte
 // = require custom_mails
@@ -28,15 +26,14 @@
 // = require print
 // = require procedure
 // = require search
-// = require outdated_browser_banner
+// = require site_banner
 // = require switch_menu
-// = require autocomplete
 // = require users
 // = require attestation_template_edit
 
 // = require_self
-// = require leaflet
 // = require font-awesome
+// = require leaflet
 // = require franceconnect
 // = require bootstrap-wysihtml5
 

@@ -15,13 +15,19 @@ FactoryBot.define do
         procedure = create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private)
       end
 
+      # Assign the procedure to the dossier through the groupe_instructeur
       if dossier.groupe_instructeur.nil?
         dossier.groupe_instructeur = procedure.defaut_groupe_instructeur
       end
+
+      dossier.build_default_individual
     end
 
     trait :with_entreprise do
       after(:build) do |dossier, _evaluator|
+        if dossier.procedure.for_individual?
+          raise 'Inconsistent factory: attempting to create a dossier :with_entreprise on a procedure that is `for_individual?`'
+        end
         etablissement = create(:etablissement)
         dossier.etablissement = etablissement
       end
@@ -33,10 +39,17 @@ FactoryBot.define do
       end
     end
 
-    trait :for_individual do
-      after(:build) do |dossier, _evaluator|
+    trait :with_individual do
+      after(:build) do |dossier, evaluator|
+        # If the procedure was implicitely created by the factory,
+        # mark it automatically as for_individual.
+        if evaluator.procedure.nil?
+          dossier.procedure.update(for_individual: true)
+        end
+        if !dossier.procedure.for_individual?
+          raise 'Inconsistent factory: attempting to create a dossier :with_individual on a procedure that is not `for_individual?`'
+        end
         dossier.individual = create(:individual)
-        dossier.save
       end
     end
 
@@ -48,14 +61,14 @@ FactoryBot.define do
       archived { false }
     end
 
-    trait :hidden do
+    trait :discarded do
       hidden_at { Time.zone.now }
     end
 
     trait :with_dossier_link do
       after(:create) do |dossier, _evaluator|
         # create linked dossier
-        linked_dossier = create(:dossier)
+        linked_dossier = create(:dossier, :en_construction)
 
         # find first type de champ dossier_link
         type_de_champ = dossier.procedure.types_de_champ.find do |t|

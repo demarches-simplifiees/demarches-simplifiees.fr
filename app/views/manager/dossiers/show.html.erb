@@ -22,7 +22,7 @@ as well as a link to its edit page.
 <header class="main-content__header" role="banner">
   <h1 class="main-content__page-title">
     <%= content_for(:title) %>
-    <% if dossier.hidden_at %>
+    <% if dossier.discarded? %>
       (Supprimé)
     <% end %>
   </h1>
@@ -31,8 +31,10 @@ as well as a link to its edit page.
     <% if dossier.accepte? %>
       <%= link_to 'Repasser en instruction', repasser_en_instruction_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous le passage en instruction du dossier ?" } %>
     <% end %>
-    <% if dossier.hidden_at.nil? %>
-      <%= link_to 'Supprimer le dossier', hide_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous la suppression du dossier ?" } %>
+    <% if dossier.can_be_deleted_by_manager? %>
+      <%= link_to 'Supprimer le dossier', discard_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous la suppression du dossier ?" } %>
+    <% elsif dossier.discarded? && !dossier.procedure.discarded? %>
+      <%= link_to 'Restaurer le dossier', restore_manager_dossier_path(dossier), method: :post, class: 'button', data: { confirm: "Confirmez vous la restauration du dossier ?" } %>
     <% end %>
   </div>
 </header>

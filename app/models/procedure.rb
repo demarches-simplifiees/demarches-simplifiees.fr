@@ -1,9 +1,13 @@
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['logo', 'logo_secure_token']
+  self.ignored_columns = ['archived_at', 'csv_export_queued', 'xlsx_export_queued', 'ods_export_queued']
 
   include ProcedureStatsConcern
+
+  include Discard::Model
+  self.discard_column = :hidden_at
+  default_scope -> { kept }
 
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
@@ -16,11 +20,13 @@ class Procedure < ApplicationRecord
   has_one :attestation_template, dependent: :destroy
 
   belongs_to :parent_procedure, class_name: 'Procedure'
+  belongs_to :canonical_procedure, class_name: 'Procedure'
   belongs_to :service
 
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, dependent: :destroy
+  has_many :instructeurs, through: :groupe_instructeurs
 
   has_many :dossiers, through: :groupe_instructeurs, dependent: :restrict_with_exception
 
@@ -36,22 +42,23 @@ class Procedure < ApplicationRecord
   has_one_attached :notice
   has_one_attached :deliberation
 
-  has_one_attached :csv_export_file
-  has_one_attached :xlsx_export_file
-  has_one_attached :ods_export_file
-
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
-  default_scope { where(hidden_at: nil) }
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
-  scope :archivees,             -> { where(aasm_state: :archivee) }
-  scope :publiees_ou_archivees, -> { where(aasm_state: [:publiee, :archivee]) }
+  scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
+  scope :publiees_ou_closes,    -> { where(aasm_state: [:publiee, :close, :depubliee]) }
   scope :by_libelle,            -> { order(libelle: :asc) }
   scope :created_during,        -> (range) { where(created_at: range) }
   scope :cloned_from_library,   -> { where(cloned_from_library: true) }
   scope :declarative,           -> { where.not(declarative_with_state: nil) }
+
+  scope :discarded_expired, -> do
+    with_discarded
+      .discarded
+      .where('hidden_at < ?', 1.month.ago)
+  end
 
   scope :for_api, -> {
     includes(
@@ -77,15 +84,31 @@ class Procedure < ApplicationRecord
   validates :lien_site_web, presence: true, if: :publiee?
   validate :validate_for_publication, on: :publication
   validate :check_juridique
-  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :archived_at, :hidden_at], case_sensitive: false }
-  # FIXME: remove duree_conservation_required flag once all procedures are converted to the new style
-  validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, if: :durees_conservation_required
-  validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: :durees_conservation_required
-  validates :duree_conservation_dossiers_dans_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }, unless: :durees_conservation_required
-  validates :duree_conservation_dossiers_hors_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, unless: :durees_conservation_required
+  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
+  validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
+  validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates_with MonAvisEmbedValidator
+  validates :notice, content_type: [
+    "application/msword",
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.oasis.opendocument.text",
+    "application/vnd.oasis.opendocument.presentation",
+    "text/plain"
+  ], size: { less_than: 20.megabytes }
+
+  validates :deliberation, content_type: [
+    "application/msword",
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+    "application/vnd.oasis.opendocument.text"
+  ], size: { less_than: 20.megabytes }
+
+  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
   before_save :update_juridique_required
-  before_save :update_durees_conservation_required
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
   after_create :ensure_default_groupe_instructeur
@@ -95,26 +118,21 @@ class Procedure < ApplicationRecord
   aasm whiny_persistence: true do
     state :brouillon, initial: true
     state :publiee
-    state :archivee
-    state :hidden
+    state :close
+    state :depubliee
 
     event :publish, before: :before_publish, after: :after_publish do
       transitions from: :brouillon, to: :publiee
-      transitions from: :archivee, to: :publiee
+      transitions from: :close, to: :publiee
+      transitions from: :depubliee, to: :publiee
     end
 
-    event :archive, after: :after_archive do
-      transitions from: :publiee, to: :archivee
+    event :close, after: :after_close do
+      transitions from: :publiee, to: :close
     end
 
-    event :hide, after: :after_hide do
-      transitions from: :brouillon, to: :hidden
-      transitions from: :publiee, to: :hidden
-      transitions from: :archivee, to: :hidden
-    end
-
-    event :draft, after: :after_draft do
-      transitions from: :publiee, to: :brouillon
+    event :unpublish, after: :after_unpublish do
+      transitions from: :publiee, to: :depubliee
     end
   end
 
@@ -126,98 +144,11 @@ class Procedure < ApplicationRecord
 
       other_procedure = other_procedure_with_path(path)
       if other_procedure.present? && administrateur.owns?(other_procedure)
-        other_procedure.archive!
+        other_procedure.unpublish!
+        publish!(other_procedure.canonical_procedure || other_procedure)
+      else
+        publish!
       end
-
-      publish!
-    end
-  end
-
-  def csv_export_stale?
-    !csv_export_file.attached? || csv_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
-  end
-
-  def xlsx_export_stale?
-    !xlsx_export_file.attached? || xlsx_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
-  end
-
-  def ods_export_stale?
-    !ods_export_file.attached? || ods_export_file.created_at < MAX_DUREE_CONSERVATION_EXPORT.ago
-  end
-
-  def export_queued?(format)
-    case format.to_sym
-    when :csv
-      return csv_export_queued?
-    when :xlsx
-      return xlsx_export_queued?
-    when :ods
-      return ods_export_queued?
-    end
-    false
-  end
-
-  def should_generate_export?(format)
-    case format.to_sym
-    when :csv
-      return csv_export_stale? && !csv_export_queued?
-    when :xlsx
-      return xlsx_export_stale? && !xlsx_export_queued?
-    when :ods
-      return ods_export_stale? && !ods_export_queued?
-    end
-    false
-  end
-
-  def export_file(export_format)
-    case export_format.to_sym
-    when :csv
-      csv_export_file
-    when :xlsx
-      xlsx_export_file
-    when :ods
-      ods_export_file
-    end
-  end
-
-  def queue_export(instructeur, export_format)
-    case export_format.to_sym
-    when :csv
-      update(csv_export_queued: true)
-    when :xlsx
-      update(xlsx_export_queued: true)
-    when :ods
-      update(ods_export_queued: true)
-    end
-    ExportProcedureJob.perform_later(self, instructeur, export_format)
-  end
-
-  def prepare_export_download(format)
-    service = ProcedureExportService.new(self, self.dossiers)
-    filename = export_filename(format)
-
-    case format.to_sym
-    when :csv
-      csv_export_file.attach(
-        io: StringIO.new(service.to_csv),
-        filename: filename,
-        content_type: 'text/csv'
-      )
-      update(csv_export_queued: false)
-    when :xlsx
-      xlsx_export_file.attach(
-        io: StringIO.new(service.to_xlsx),
-        filename: filename,
-        content_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      )
-      update(xlsx_export_queued: false)
-    when :ods
-      ods_export_file.attach(
-        io: StringIO.new(service.to_ods),
-        filename: filename,
-        content_type: 'application/vnd.oasis.opendocument.spreadsheet'
-      )
-      update(ods_export_queued: false)
     end
   end
 
@@ -226,14 +157,13 @@ class Procedure < ApplicationRecord
       raise "Can not reset a locked procedure."
     else
       groupe_instructeurs.each { |gi| gi.dossiers.destroy_all }
-      purge_export_files
     end
   end
 
   def validate_for_publication
-    old_attributes = self.slice(:aasm_state, :archived_at)
+    old_attributes = self.slice(:aasm_state, :closed_at)
     self.aasm_state = :publiee
-    self.archived_at = nil
+    self.closed_at = nil
 
     is_valid = validate
 
@@ -265,27 +195,23 @@ class Procedure < ApplicationRecord
   def path_available?(administrateur, path)
     procedure = other_procedure_with_path(path)
 
-    procedure.blank? || administrateur.owns?(procedure)
+    procedure.blank? || (administrateur.owns?(procedure) && canonical_procedure_child?(procedure))
   end
 
-  def purge_export_files
-    xlsx_export_file.purge_later
-    ods_export_file.purge_later
-    csv_export_file.purge_later
-
-    update(csv_export_queued: false, xlsx_export_queued: false, ods_export_queued: false)
+  def canonical_procedure_child?(procedure)
+    !canonical_procedure || canonical_procedure == procedure || canonical_procedure == procedure.canonical_procedure
   end
 
   def locked?
-    publiee_ou_archivee?
+    publiee? || close? || depubliee?
   end
 
   def accepts_new_dossiers?
-    !archivee?
+    publiee? || brouillon?
   end
 
-  def publiee_ou_archivee?
-    publiee? || archivee?
+  def dossier_can_transition_to_en_construction?
+    accepts_new_dossiers? || depubliee?
   end
 
   def expose_legacy_carto_api?
@@ -298,6 +224,12 @@ class Procedure < ApplicationRecord
 
   def declarative_accepte?
     declarative_with_state == Procedure.declarative_with_states.fetch(:accepte)
+  end
+
+  def self.declarative_attributes_for_select
+    declarative_with_states.map do |state, _|
+      [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
+    end
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -358,16 +290,17 @@ class Procedure < ApplicationRecord
     is_different_admin = !admin.owns?(self)
 
     populate_champ_stable_ids
-    procedure = self.deep_clone(include:
-      {
-        attestation_template: nil,
-        types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
-        types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
-      }, &method(:clone_attachments))
+    include_list = {
+      attestation_template: nil,
+      types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
+      types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
+    }
+    include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
+    procedure = self.deep_clone(include: include_list, &method(:clone_attachments))
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
-    procedure.test_started_at = nil
-    procedure.archived_at = nil
+    procedure.closed_at = nil
+    procedure.unpublished_at = nil
     procedure.published_at = nil
     procedure.lien_notice = nil
 
@@ -377,6 +310,7 @@ class Procedure < ApplicationRecord
 
     if is_different_admin
       procedure.administrateurs = [admin]
+      procedure.api_entreprise_token = nil
     else
       procedure.administrateurs = administrateurs
     end
@@ -390,6 +324,7 @@ class Procedure < ApplicationRecord
 
     procedure.cloned_from_library = from_library
     procedure.parent_procedure = self
+    procedure.canonical_procedure = nil
 
     if from_library
       procedure.service = nil
@@ -398,8 +333,6 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
-
-    admin.instructeur.assign_to_procedure(procedure)
 
     procedure
   end
@@ -456,8 +389,8 @@ class Procedure < ApplicationRecord
     export(dossiers).to_ods
   end
 
-  def procedure_overview(start_date)
-    ProcedureOverview.new(self, start_date)
+  def procedure_overview(start_date, groups)
+    ProcedureOverview.new(self, start_date, groups)
   end
 
   def initiated_mail_template
@@ -573,7 +506,7 @@ class Procedure < ApplicationRecord
     if logo.attached?
       Rails.application.routes.url_helpers.url_for(logo)
     else
-      ActionController::Base.helpers.image_url("marianne.svg")
+      ActionController::Base.helpers.image_url("republique-francaise-logo.svg")
     end
   end
 
@@ -583,6 +516,52 @@ class Procedure < ApplicationRecord
 
   def routee?
     groupe_instructeurs.count > 1
+  end
+
+  def can_be_deleted_by_administrateur?
+    brouillon? || dossiers.state_instruction_commencee.empty?
+  end
+
+  def can_be_deleted_by_manager?
+    kept? && can_be_deleted_by_administrateur?
+  end
+
+  def discard_and_keep_track!(author)
+    if brouillon?
+      reset!
+    elsif publiee?
+      close!
+    end
+
+    dossiers.each do |dossier|
+      dossier.discard_and_keep_track!(author, :procedure_removed)
+    end
+
+    discard!
+  end
+
+  def restore(author)
+    if discarded? && undiscard
+      dossiers.with_discarded.discarded.find_each do |dossier|
+        dossier.restore(author, true)
+      end
+    end
+  end
+
+  def flipper_id
+    "Procedure;#{id}"
+  end
+
+  def api_entreprise_role?(role)
+    ApiEntrepriseToken.new(api_entreprise_token).role?(role)
+  end
+
+  def api_entreprise_token
+    self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
+  end
+
+  def api_entreprise_token_expired?
+    ApiEntrepriseToken.new(api_entreprise_token).expired?
   end
 
   private
@@ -604,27 +583,20 @@ class Procedure < ApplicationRecord
   end
 
   def before_publish
-    update!(archived_at: nil)
+    update!(closed_at: nil, unpublished_at: nil)
   end
 
-  def after_publish
-    update!(published_at: Time.zone.now)
+  def after_publish(canonical_procedure = nil)
+    update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure)
   end
 
-  def after_archive
-    update!(archived_at: Time.zone.now)
-    purge_export_files
-  end
-
-  def after_hide
+  def after_close
     now = Time.zone.now
-    update!(hidden_at: now)
-    dossiers.update_all(hidden_at: now)
-    purge_export_files
+    update!(closed_at: now)
   end
 
-  def after_draft
-    update!(published_at: nil)
+  def after_unpublish
+    update!(unpublished_at: Time.zone.now)
   end
 
   def update_juridique_required
@@ -636,11 +608,6 @@ class Procedure < ApplicationRecord
     if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
       errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
     end
-  end
-
-  def update_durees_conservation_required
-    self.durees_conservation_required ||= duree_conservation_dossiers_hors_ds.present? && duree_conservation_dossiers_dans_ds.present?
-    true
   end
 
   def percentile_time(start_attribute, end_attribute, p)

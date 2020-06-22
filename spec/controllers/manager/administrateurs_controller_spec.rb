@@ -1,13 +1,32 @@
 describe Manager::AdministrateursController, type: :controller do
   let(:administration) { create(:administration) }
+  let(:administrateur) { create(:administrateur) }
+
+  before do
+    sign_in administration
+  end
+
+  describe '#show' do
+    render_views
+
+    before do
+      get :show, params: { id: administrateur.id }
+    end
+
+    it { expect(response.body).to include(administrateur.email) }
+  end
+
+  describe 'GET #new' do
+    render_views
+    it 'displays form to create a new admin' do
+      get :new
+      expect(response).to be_success
+    end
+  end
 
   describe 'POST #create' do
     let(:email) { 'plop@plop.com' }
     let(:password) { 'démarches-simplifiées-pwd' }
-
-    before do
-      sign_in administration
-    end
 
     subject { post :create, params: { administrateur: { email: email } } }
 
@@ -33,16 +52,21 @@ describe Manager::AdministrateursController, type: :controller do
   end
 
   describe '#delete' do
-    let!(:admin) { create(:administrateur) }
-
-    before { sign_in administration }
-
-    subject { delete :delete, params: { id: admin.id } }
+    subject { delete :delete, params: { id: administrateur.id } }
 
     it 'deletes the admin' do
       subject
 
-      expect(Administrateur.find_by(id: admin.id)).to be_nil
+      expect(Administrateur.find_by(id: administrateur.id)).to be_nil
+    end
+  end
+
+  describe '#index' do
+    render_views
+
+    it 'searches admin by email' do
+      get :index, params: { search: administrateur.email }
+      expect(response).to be_success
     end
   end
 end

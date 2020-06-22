@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'features/users/dossier_shared_examples.rb'
 
 feature 'Invitations' do
@@ -8,7 +7,7 @@ feature 'Invitations' do
   let(:invite) { create(:invite, user: invited_user, dossier: dossier) }
 
   context 'when the dossier is a brouillon' do
-    let!(:dossier) { create(:dossier, :for_individual, state: Dossier.states.fetch(:brouillon), user: owner, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :with_individual, state: Dossier.states.fetch(:brouillon), user: owner, procedure: procedure) }
 
     scenario 'on the form, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
       log_in(owner)
@@ -69,7 +68,7 @@ feature 'Invitations' do
   end
 
   context 'when the dossier is en_construction' do
-    let!(:dossier) { create(:dossier, :for_individual, :en_construction, user: owner, procedure: procedure) }
+    let!(:dossier) { create(:dossier, :with_individual, :en_construction, user: owner, procedure: procedure) }
 
     scenario 'on dossier details, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
       log_in(owner)
@@ -104,13 +103,13 @@ feature 'Invitations' do
 
   def navigate_to_brouillon(dossier)
     expect(page).to have_current_path(dossiers_path)
-    click_on(dossier.id)
+    click_on(dossier.id.to_s)
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
   end
 
   def navigate_to_dossier(dossier)
     expect(page).to have_current_path(dossiers_path)
-    click_on(dossier.id)
+    click_on(dossier.id.to_s)
     expect(page).to have_current_path(dossier_path(dossier))
   end
 

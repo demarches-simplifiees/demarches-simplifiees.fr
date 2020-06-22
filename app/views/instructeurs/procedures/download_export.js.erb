@@ -1,2 +1,10 @@
-<%= render_to_element('.procedure-actions', partial: "download_dossiers", locals: { procedure: @procedure }) %>
+<%= render_to_element('.procedure-actions', partial: "download_dossiers", 
+                      locals: { procedure: @procedure, xlsx_export: @xlsx_export, csv_export: @csv_export, ods_export: @ods_export }) %>
+
+<% [[@xlsx_export, :xlsx], [@csv_export, :csv], [@ods_export, :ods]].each do |(export, format)| %>
+  <% if export && !export.ready? %>
+    <%= fire_event('export:update', { url: download_export_instructeur_procedure_path(@procedure, export_format: format, no_progress_notification: true) }.to_json ) %>
+  <% end %>
+<% end %>
+
 <%= render_flash %>

@@ -70,6 +70,29 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context 'when the template use the groupe instructeur tags' do
+      let(:template) { '--groupe instructeur--' }
+      let(:state) { Dossier.states.fetch(:en_instruction) }
+      let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement, state: state) }
+      context 'and the dossier has a groupe instructeur' do
+        label = 'Ville de Bordeaux'
+        before do
+          gi = procedure.groupe_instructeurs.create(label: label)
+          gi.dossiers << dossier
+          dossier.update(groupe_instructeur: gi)
+          dossier.reload
+        end
+
+        it { expect(procedure.routee?).to eq(true) }
+        it { is_expected.to eq(label) }
+      end
+
+      context 'and the dossier has no groupe instructeur' do
+        it { expect(procedure.routee?).to eq(false) }
+        it { is_expected.to eq('défaut') }
+      end
+    end
+
     context 'when the procedure has a type de champ named libelleA et libelleB' do
       let(:types_de_champ) do
         [
@@ -110,6 +133,29 @@ describe TagsSubstitutionConcern, type: :model do
           end
 
           it { is_expected.to eq('libelle1 libelle2') }
+        end
+      end
+    end
+
+    context 'when the procedure has a type de champ with apostrophes' do
+      let(:types_de_champ) do
+        [
+          create(:type_de_champ, libelle: "Intitulé de l'‘«\"évènement\"»’")
+        ]
+      end
+
+      context 'and they are used in the template' do
+        let(:template) { "--Intitulé de l'‘«\"évènement\"»’--" }
+
+        context 'and their value in the dossier are not nil' do
+          before do
+            dossier.champs
+              .filter { |champ| champ.libelle == "Intitulé de l'‘«\"évènement\"»’" }
+              .first
+              .update(value: 'ceci est mon évènement')
+          end
+
+          it { is_expected.to eq('ceci est mon évènement') }
         end
       end
     end

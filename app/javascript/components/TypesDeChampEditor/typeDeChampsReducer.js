@@ -11,8 +11,6 @@ export default function typeDeChampsReducer(state, { type, params, done }) {
   switch (type) {
     case 'addNewTypeDeChamp':
       return addNewTypeDeChamp(state, state.typeDeChamps, done);
-    case 'addFirstTypeDeChamp':
-      return addFirstTypeDeChamp(state, state.typeDeChamps, done);
     case 'addNewRepetitionTypeDeChamp':
       return addNewRepetitionTypeDeChamp(
         state,
@@ -61,7 +59,7 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
         });
       }
     })
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   let newTypeDeChamps = [...typeDeChamps, typeDeChamp];
   if (insertAfter) {
@@ -98,19 +96,6 @@ function addNewRepetitionTypeDeChamp(state, typeDeChamps, typeDeChamp, done) {
   );
 }
 
-function addFirstTypeDeChamp(state, typeDeChamps, done) {
-  const typeDeChamp = { ...state.defaultTypeDeChampAttributes, order_place: 0 };
-
-  createTypeDeChampOperation(typeDeChamp, state.queue)
-    .then(() => done())
-    .catch(message => state.flash.error(message));
-
-  return {
-    ...state,
-    typeDeChamps: [...typeDeChamps, typeDeChamp]
-  };
-}
-
 function updateTypeDeChamp(
   state,
   typeDeChamps,
@@ -142,7 +127,7 @@ function updateTypeDeChamp(
 function removeTypeDeChamp(state, typeDeChamps, { typeDeChamp }) {
   destroyTypeDeChampOperation(typeDeChamp, state.queue)
     .then(() => state.flash.success())
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   return {
     ...state,
@@ -156,7 +141,7 @@ function moveTypeDeChampUp(state, typeDeChamps, { typeDeChamp }) {
 
   moveTypeDeChampOperation(typeDeChamp, newIndex, state.queue)
     .then(() => state.flash.success())
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   return {
     ...state,
@@ -170,7 +155,7 @@ function moveTypeDeChampDown(state, typeDeChamps, { typeDeChamp }) {
 
   moveTypeDeChampOperation(typeDeChamp, newIndex, state.queue)
     .then(() => state.flash.success())
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   return {
     ...state,
@@ -181,7 +166,7 @@ function moveTypeDeChampDown(state, typeDeChamps, { typeDeChamp }) {
 function onSortTypeDeChamps(state, typeDeChamps, { oldIndex, newIndex }) {
   moveTypeDeChampOperation(typeDeChamps[oldIndex], newIndex, state.queue)
     .then(() => state.flash.success())
-    .catch(message => state.flash.error(message));
+    .catch((message) => state.flash.error(message));
 
   return {
     ...state,
@@ -206,13 +191,13 @@ function getUpdateHandler(typeDeChamp, { queue, flash }) {
   let handler = updateHandlers.get(typeDeChamp);
   if (!handler) {
     handler = debounce(
-      done =>
+      (done) =>
         updateTypeDeChampOperation(typeDeChamp, queue)
           .then(() => {
             flash.success();
             done();
           })
-          .catch(message => flash.error(message)),
+          .catch((message) => flash.error(message)),
       200
     );
     updateHandlers.set(typeDeChamp, handler);
@@ -223,10 +208,14 @@ function getUpdateHandler(typeDeChamp, { queue, flash }) {
 function findItemToInsertAfter() {
   const target = getLastVisibleTypeDeChamp();
 
-  return {
-    target,
-    index: parseInt(target.dataset.index) + 1
-  };
+  if (target) {
+    return {
+      target,
+      index: parseInt(target.dataset.index) + 1
+    };
+  } else {
+    return null;
+  }
 }
 
 function getLastVisibleTypeDeChamp() {

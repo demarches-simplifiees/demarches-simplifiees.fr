@@ -16,6 +16,20 @@ module Users
       render 'commencer/show'
     end
 
+    def dossier_vide_pdf
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank? || @procedure.brouillon?
+
+      generate_empty_pdf(@procedure)
+    end
+
+    def dossier_vide_pdf_test
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank? || @procedure.publiee?
+
+      generate_empty_pdf(@procedure)
+    end
+
     def sign_in
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank?
@@ -53,7 +67,7 @@ module Users
     def procedure_not_found
       procedure = Procedure.find_by(path: params[:path])
 
-      if procedure&.archivee?
+      if procedure&.close?
         flash.alert = t('errors.messages.procedure_archived')
       else
         flash.alert = t('errors.messages.procedure_not_found')
@@ -64,6 +78,12 @@ module Users
 
     def store_user_location!(procedure)
       store_location_for(:user, helpers.procedure_lien(procedure))
+    end
+
+    def generate_empty_pdf(procedure)
+      @dossier = procedure.new_dossier
+      s = render_to_string(file: 'dossiers/dossier_vide', formats: [:pdf])
+      send_data(s, :filename => "#{procedure.libelle}.pdf")
     end
   end
 end

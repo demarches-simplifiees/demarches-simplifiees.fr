@@ -1,47 +1,40 @@
-import { initMap, drawPolygons, addFreeDrawEvents } from '../../shared/carte';
+import { delegate, fire, debounce } from '@utils';
 
-async function initialize() {
-  const elements = document.querySelectorAll('.carte');
+const inputHandlers = new Map();
 
-  if (elements.length) {
-    const editable = [...elements].find(element =>
-      element.classList.contains('edit')
-    );
-    await loadLeaflet(editable);
+addEventListener('ds:page:update', () => {
+  const inputs = document.querySelectorAll('.areas input[data-geo-area]');
 
-    for (let element of elements) {
-      diplayMap(element, null, true);
-    }
+  for (const input of inputs) {
+    input.addEventListener('focus', (event) => {
+      const id = parseInt(event.target.dataset.geoArea);
+      fire(document, 'map:feature:focus', { id });
+    });
   }
-}
+});
 
-// We load leaflet dynamically, ramda and freedraw and assign them to globals.
-// Latest freedraw version build needs globals.
-async function loadLeaflet(editable) {
-  window.L = await import('leaflet').then(({ default: L }) => L);
+delegate('click', '.areas a[data-geo-area]', (event) => {
+  event.preventDefault();
+  const id = parseInt(event.target.dataset.geoArea);
+  fire(document, 'map:feature:focus', { id });
+});
 
-  if (editable) {
-    window.R = await import('ramda').then(({ default: R }) => R);
-    await import('leaflet-freedraw/dist/leaflet-freedraw.web.js');
+delegate('input', '.areas input[data-geo-area]', (event) => {
+  const id = parseInt(event.target.dataset.geoArea);
+
+  let handler = inputHandlers.get(id);
+  if (!handler) {
+    handler = debounce(() => {
+      const input = document.querySelector(`input[data-geo-area="${id}"]`);
+      if (input) {
+        fire(document, 'map:feature:update', {
+          id,
+          properties: { description: input.value.trim() }
+        });
+      }
+    }, 200);
+    inputHandlers.set(id, handler);
   }
-}
 
-function diplayMap(element, data, initial = false) {
-  data = data || JSON.parse(element.dataset.geo);
-  const editable = element.classList.contains('edit');
-  const map = initMap(element, data.position, editable);
-
-  drawPolygons(map, data, { initial, editable });
-
-  if (initial && editable) {
-    const input = element.parentElement.querySelector('input[data-remote]');
-    addFreeDrawEvents(map, input);
-  }
-}
-
-addEventListener('turbolinks:load', initialize);
-
-addEventListener('carte:update', ({ detail: { selector, data } }) => {
-  const element = document.querySelector(selector);
-  diplayMap(element, data);
+  handler();
 });

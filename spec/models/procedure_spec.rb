@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Procedure do
   describe 'mail templates' do
     subject { create(:procedure) }
@@ -151,6 +149,16 @@ describe Procedure do
     end
   end
 
+  describe 'scopes' do
+    let!(:procedure) { create(:procedure) }
+    let!(:discarded_procedure) { create(:procedure, :discarded) }
+
+    describe 'default_scope' do
+      subject { Procedure.all }
+      it { is_expected.to match_array([procedure]) }
+    end
+  end
+
   describe 'validation' do
     context 'libelle' do
       it { is_expected.not_to allow_value(nil).for(:libelle) }
@@ -183,11 +191,18 @@ describe Procedure do
 
         context 'when the deliberation is uploaded ' do
           before do
-            allow(procedure).to receive(:deliberation)
-              .and_return(double('attached?': true))
+            procedure.deliberation = Rack::Test::UploadedFile.new('spec/fixtures/files/file.pdf', 'application/pdf')
           end
 
           it { expect(procedure.valid?).to eq(true) }
+        end
+
+        context 'when the deliberation is uploaded with an unauthorized format' do
+          before do
+            procedure.deliberation = Rack::Test::UploadedFile.new('spec/fixtures/files/french-flag.gif', 'image/gif')
+          end
+
+          it { expect(procedure.valid?).to eq(false) }
         end
       end
     end
@@ -237,19 +252,8 @@ describe Procedure do
 
     shared_examples 'duree de conservation' do
       context 'duree_conservation_required it true, the field gets validated' do
-        before { subject.durees_conservation_required = true }
-
         it { is_expected.not_to allow_value(nil).for(field_name) }
         it { is_expected.not_to allow_value('').for(field_name) }
-        it { is_expected.not_to allow_value('trois').for(field_name) }
-        it { is_expected.to allow_value(3).for(field_name) }
-      end
-
-      context 'duree_conservation_required is false, the field doesn’t get validated' do
-        before { subject.durees_conservation_required = false }
-
-        it { is_expected.to allow_value(nil).for(field_name) }
-        it { is_expected.to allow_value('').for(field_name) }
         it { is_expected.not_to allow_value('trois').for(field_name) }
         it { is_expected.to allow_value(3).for(field_name) }
       end
@@ -265,31 +269,6 @@ describe Procedure do
       let(:field_name) { :duree_conservation_dossiers_hors_ds }
 
       it_behaves_like 'duree de conservation'
-    end
-  end
-
-  describe '#duree_de_conservation_required' do
-    it 'automatically jumps to true once both durees de conservation have been set' do
-      p = build(
-        :procedure,
-        durees_conservation_required: false,
-        duree_conservation_dossiers_dans_ds: nil,
-        duree_conservation_dossiers_hors_ds: nil
-      )
-      p.save
-      expect(p.durees_conservation_required).to be_falsey
-
-      p.duree_conservation_dossiers_hors_ds = 3
-      p.save
-      expect(p.durees_conservation_required).to be_falsey
-
-      p.duree_conservation_dossiers_dans_ds = 6
-      p.save
-      expect(p.durees_conservation_required).to be_truthy
-
-      p.duree_conservation_dossiers_dans_ds = nil
-      p.save
-      expect(p.durees_conservation_required).to be_truthy
     end
   end
 
@@ -336,38 +315,47 @@ describe Procedure do
     end
   end
 
-  describe 'locked?' do
-    let(:procedure) { create(:procedure, aasm_state: aasm_state) }
-
-    subject { procedure.locked? }
-
-    context 'when procedure is in brouillon status' do
-      let(:aasm_state) { :brouillon }
-      it { is_expected.to be_falsey }
-    end
-
-    context 'when procedure is in publiee status' do
-      let(:aasm_state) { :publiee }
-      it { is_expected.to be_truthy }
-    end
-  end
-
   describe 'active' do
     let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
 
-    context 'when procedure is in draft status and not archived' do
+    context 'when procedure is in draft status and not closed' do
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
-    context 'when procedure is published and not archived' do
+    context 'when procedure is published and not closed' do
       let(:procedure) { create(:procedure, :published) }
       it { is_expected.to be_truthy }
     end
 
-    context 'when procedure is published and archived' do
-      let(:procedure) { create(:procedure, :archived) }
+    context 'when procedure is published and closed' do
+      let(:procedure) { create(:procedure, :closed) }
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+  end
+
+  describe 'api_entreprise_token_expired?' do
+    let(:token) { "mon-token" }
+    let(:procedure) { create(:procedure, api_entreprise_token: token) }
+    let(:payload) {
+      [
+        { "exp" => expiration_time }
+      ]
+    }
+    let(:subject) { procedure.api_entreprise_token_expired? }
+
+    before do
+      allow(JWT).to receive(:decode).with(token, nil, false).and_return(payload)
+    end
+
+    context "with token expired" do
+      let(:expiration_time) { (Time.zone.now - 1.day).to_i }
+      it { is_expected.to be_truthy }
+    end
+
+    context "with token not expired" do
+      let(:expiration_time) { (Time.zone.now + 1.day).to_i }
+      it { is_expected.to be_falsey }
     end
   end
 
@@ -385,6 +373,12 @@ describe Procedure do
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
 
+    let!(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: "groupe_1") }
+    let!(:instructeur_1) { create(:instructeur) }
+    let!(:instructeur_2) { create(:instructeur) }
+    let!(:assign_to_1) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_1) }
+    let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
+
     before do
       @logo = File.open('spec/fixtures/files/white.png')
       @signature = File.open('spec/fixtures/files/black.png')
@@ -401,7 +395,18 @@ describe Procedure do
     subject { @procedure }
 
     it { expect(subject.parent_procedure).to eq(procedure) }
-    it { expect(subject.defaut_groupe_instructeur.instructeurs.map(&:email)).to eq([administrateur.email]) }
+
+    describe "should keep groupe instructeurs " do
+      it "should clone groupe instructeurs" do
+        expect(subject.groupe_instructeurs.size).to eq(2)
+        expect(subject.groupe_instructeurs.size).to eq(procedure.groupe_instructeurs.size)
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first).not_to be nil
+      end
+
+      it "should clone instructeurs in the groupe" do
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first.instructeurs.map(&:email)).to eq(procedure.groupe_instructeurs.where(label: "groupe_1").first.instructeurs.map(&:email))
+      end
+    end
 
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
@@ -481,8 +486,23 @@ describe Procedure do
         end
       end
 
+      it 'should discard specific api_entreprise_token' do
+        expect(subject.read_attribute(:api_entreprise_token)).to be_nil
+      end
+
       it 'should have one administrateur' do
         expect(subject.administrateurs).to eq([administrateur])
+      end
+
+      it "should discard the existing groupe instructeurs" do
+        expect(subject.groupe_instructeurs.size).not_to eq(procedure.groupe_instructeurs.size)
+        expect(subject.groupe_instructeurs.where(label: "groupe_1").first).to be nil
+      end
+
+      it 'should have a default groupe instructeur' do
+        expect(subject.groupe_instructeurs.size).to eq(1)
+        expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL)
+        expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(0)
       end
     end
 
@@ -509,12 +529,12 @@ describe Procedure do
     end
 
     describe 'procedure status is reset' do
-      let(:procedure) { create(:procedure, :archived, received_mail: received_mail, service: service) }
+      let(:procedure) { create(:procedure, :closed, received_mail: received_mail, service: service) }
 
-      it 'Not published nor archived' do
-        expect(subject.archived_at).to be_nil
+      it 'Not published nor closed' do
+        expect(subject.closed_at).to be_nil
         expect(subject.published_at).to be_nil
-        expect(subject.test_started_at).to be_nil
+        expect(subject.unpublished_at).to be_nil
         expect(subject.aasm_state).to eq "brouillon"
         expect(subject.path).not_to be_nil
       end
@@ -544,76 +564,208 @@ describe Procedure do
         expect(subject.deliberation.attached?).to be true
       end
     end
+
+    context 'with canonical procedure' do
+      let(:canonical_procedure) { create(:procedure) }
+      let(:procedure) { create(:procedure, canonical_procedure: canonical_procedure, received_mail: received_mail, service: service) }
+
+      it 'do not clone canonical procedure' do
+        expect(subject.canonical_procedure).to be_nil
+      end
+    end
   end
 
   describe '#publish!' do
     let(:procedure) { create(:procedure, path: 'example-path') }
     let(:now) { Time.zone.now.beginning_of_minute }
 
-    before do
-      Timecop.freeze(now)
-      procedure.publish!
-    end
-    after { Timecop.return }
+    context 'when publishing a new procedure' do
+      before do
+        Timecop.freeze(now) do
+          procedure.publish!
+        end
+      end
 
-    it { expect(procedure.archived_at).to eq(nil) }
-    it { expect(procedure.published_at).to eq(now) }
-    it { expect(Procedure.find_by(path: "example-path")).to eq(procedure) }
-    it { expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs) }
+      it 'no reference to the canonical procedure on the published procedure' do
+        expect(procedure.canonical_procedure).to be_nil
+      end
+
+      it 'changes the procedure state to published' do
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+        expect(Procedure.find_by(path: "example-path")).to eq(procedure)
+        expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs)
+      end
+    end
+
+    context 'when publishing over a previous canonical procedure' do
+      let(:canonical_procedure) { create(:procedure, :published) }
+
+      before do
+        Timecop.freeze(now) do
+          procedure.publish!(canonical_procedure)
+        end
+      end
+
+      it 'references the canonical procedure on the published procedure' do
+        expect(procedure.canonical_procedure).to eq(canonical_procedure)
+      end
+
+      it 'changes the procedure state to published' do
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+      end
+    end
+  end
+
+  describe "#publish_or_reopen!" do
+    let(:canonical_procedure) { create(:procedure, :published) }
+    let(:administrateur) { canonical_procedure.administrateurs.first }
+
+    let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
+    let(:now) { Time.zone.now.beginning_of_minute }
+
+    context 'when publishing over a previous canonical procedure' do
+      before do
+        procedure.path = canonical_procedure.path
+        Timecop.freeze(now) do
+          procedure.publish_or_reopen!(administrateur)
+        end
+        canonical_procedure.reload
+      end
+
+      it 'references the canonical procedure on the published procedure' do
+        expect(procedure.canonical_procedure).to eq(canonical_procedure)
+      end
+
+      it 'changes the procedure state to published' do
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+      end
+
+      it 'unpublishes the canonical procedure' do
+        expect(canonical_procedure.unpublished_at).to eq(now)
+      end
+    end
+
+    context 'when publishing over a previous procedure with canonical procedure' do
+      let(:canonical_procedure) { create(:procedure, :closed) }
+      let(:parent_procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
+
+      before do
+        parent_procedure.update!(path: canonical_procedure.path, canonical_procedure: canonical_procedure)
+        procedure.path = canonical_procedure.path
+        Timecop.freeze(now) do
+          procedure.publish_or_reopen!(administrateur)
+        end
+        parent_procedure.reload
+      end
+
+      it 'references the canonical procedure on the published procedure' do
+        expect(procedure.canonical_procedure).to eq(canonical_procedure)
+      end
+
+      it 'changes the procedure state to published' do
+        expect(procedure.canonical_procedure).to eq(canonical_procedure)
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+      end
+
+      it 'unpublishes parent procedure' do
+        expect(parent_procedure.unpublished_at).to eq(now)
+      end
+    end
+  end
+
+  describe "#unpublish!" do
+    let(:procedure) { create(:procedure, :published) }
+    let(:now) { Time.zone.now.beginning_of_minute }
+
+    before do
+      Timecop.freeze(now) do
+        procedure.unpublish!
+      end
+    end
+
+    it {
+      expect(procedure.closed_at).to eq(nil)
+      expect(procedure.published_at).not_to be_nil
+      expect(procedure.unpublished_at).to eq(now)
+    }
   end
 
   describe "#brouillon?" do
-    let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
     it { expect(procedure_brouillon.brouillon?).to be_truthy }
     it { expect(procedure_publiee.brouillon?).to be_falsey }
-    it { expect(procedure_archivee.brouillon?).to be_falsey }
+    it { expect(procedure_close.brouillon?).to be_falsey }
+    it { expect(procedure_depubliee.brouillon?).to be_falsey }
   end
 
   describe "#publiee?" do
-    let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
     it { expect(procedure_brouillon.publiee?).to be_falsey }
     it { expect(procedure_publiee.publiee?).to be_truthy }
-    it { expect(procedure_archivee.publiee?).to be_falsey }
+    it { expect(procedure_close.publiee?).to be_falsey }
+    it { expect(procedure_depubliee.publiee?).to be_falsey }
   end
 
-  describe "#archivee?" do
-    let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
+  describe "#close?" do
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
-    it { expect(procedure_brouillon.archivee?).to be_falsey }
-    it { expect(procedure_publiee.archivee?).to be_falsey }
-    it { expect(procedure_archivee.archivee?).to be_truthy }
+    it { expect(procedure_brouillon.close?).to be_falsey }
+    it { expect(procedure_publiee.close?).to be_falsey }
+    it { expect(procedure_close.close?).to be_truthy }
+    it { expect(procedure_depubliee.close?).to be_falsey }
   end
 
-  describe "#publiee_ou_archivee?" do
-    let(:procedure_brouillon) { Procedure.new() }
-    let(:procedure_publiee) { Procedure.new(aasm_state: :publiee, published_at: Time.zone.now) }
-    let(:procedure_archivee) { Procedure.new(aasm_state: :archivee, published_at: Time.zone.now, archived_at: Time.zone.now) }
+  describe "#depubliee?" do
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
 
-    it { expect(procedure_brouillon.publiee_ou_archivee?).to be_falsey }
-    it { expect(procedure_publiee.publiee_ou_archivee?).to be_truthy }
-    it { expect(procedure_archivee.publiee_ou_archivee?).to be_truthy }
+    it { expect(procedure_brouillon.depubliee?).to be_falsey }
+    it { expect(procedure_publiee.depubliee?).to be_falsey }
+    it { expect(procedure_close.depubliee?).to be_falsey }
+    it { expect(procedure_depubliee.depubliee?).to be_truthy }
   end
 
-  describe 'archive' do
+  describe "#locked?" do
+    let(:procedure_brouillon) { build(:procedure) }
+    let(:procedure_publiee) { build(:procedure, :published) }
+    let(:procedure_close) { build(:procedure, :closed) }
+    let(:procedure_depubliee) { build(:procedure, :unpublished) }
+
+    it { expect(procedure_brouillon.locked?).to be_falsey }
+    it { expect(procedure_publiee.locked?).to be_truthy }
+    it { expect(procedure_close.locked?).to be_truthy }
+    it { expect(procedure_depubliee.locked?).to be_truthy }
+  end
+
+  describe 'close' do
     let(:procedure) { create(:procedure, :published) }
     let(:now) { Time.zone.now.beginning_of_minute }
     before do
-      Timecop.freeze(now)
-      procedure.archive!
+      Timecop.freeze(now) do
+        procedure.close!
+      end
       procedure.reload
     end
-    after { Timecop.return }
 
-    it { expect(procedure.archivee?).to be_truthy }
-    it { expect(procedure.archived_at).to eq(now) }
+    it { expect(procedure.close?).to be_truthy }
+    it { expect(procedure.closed_at).to eq(now) }
   end
 
   describe 'path_customized?' do
@@ -705,7 +857,8 @@ describe Procedure do
     end
   end
 
-  describe "#hide!" do
+  describe "#discard_and_keep_track!" do
+    let(:administration) { create(:administration) }
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, procedure: procedure) }
     let!(:dossier2) { create(:dossier, procedure: procedure) }
@@ -714,10 +867,10 @@ describe Procedure do
     it { expect(Dossier.count).to eq(2) }
     it { expect(Dossier.all).to include(dossier, dossier2) }
 
-    context "when hidding procedure" do
+    context "when discarding procedure" do
       before do
         instructeur.followed_dossiers << dossier
-        procedure.hide!
+        procedure.discard_and_keep_track!(administration)
         instructeur.reload
       end
 
@@ -799,8 +952,9 @@ describe Procedure do
       p.reload
       expect(p.juridique_required).to be_falsey
 
-      allow(p).to receive(:deliberation).and_return(double('attached?': true))
-      p.save
+      @deliberation = Rack::Test::UploadedFile.new('spec/fixtures/files/file.pdf', 'application/pdf')
+      p.update(deliberation: @deliberation)
+      p.reload
       expect(p.juridique_required).to be_truthy
     end
   end
@@ -956,167 +1110,6 @@ describe Procedure do
       before { instructeur.assign_to_procedure(procedure) }
 
       it { is_expected.to be false }
-    end
-  end
-
-  describe '.ods_export_stale?' do
-    subject { procedure.ods_export_stale? }
-
-    context 'with no ods export' do
-      let(:procedure) { create(:procedure) }
-      it { is_expected.to be true }
-    end
-
-    context 'with a recent ods export' do
-      let(:procedure) { create(:procedure, :with_ods_export_file) }
-      it { is_expected.to be false }
-    end
-
-    context 'with an old ods export' do
-      let(:procedure) { create(:procedure, :with_stale_ods_export_file) }
-      it { is_expected.to be true }
-    end
-  end
-
-  describe '.csv_export_stale?' do
-    subject { procedure.csv_export_stale? }
-
-    context 'with no csv export' do
-      let(:procedure) { create(:procedure) }
-      it { is_expected.to be true }
-    end
-
-    context 'with a recent csv export' do
-      let(:procedure) { create(:procedure, :with_csv_export_file) }
-      it { is_expected.to be false }
-    end
-
-    context 'with an old csv export' do
-      let(:procedure) { create(:procedure, :with_stale_csv_export_file) }
-      it { is_expected.to be true }
-    end
-  end
-
-  describe '.xlsx_export_stale?' do
-    subject { procedure.xlsx_export_stale? }
-
-    context 'with no xlsx export' do
-      let(:procedure) { create(:procedure) }
-      it { is_expected.to be true }
-    end
-
-    context 'with a recent xlsx export' do
-      let(:procedure) { create(:procedure, :with_xlsx_export_file) }
-      it { is_expected.to be false }
-    end
-
-    context 'with an old xlsx export' do
-      let(:procedure) { create(:procedure, :with_stale_xlsx_export_file) }
-      it { is_expected.to be true }
-    end
-  end
-
-  describe '.should_generate_export?' do
-    context 'xlsx' do
-      subject { procedure.should_generate_export?('xlsx') }
-      context 'with no export' do
-        let(:procedure) { create(:procedure) }
-        it { is_expected.to be true }
-      end
-
-      context 'with a recent export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_xlsx_export_file, xlsx_export_queued: false) }
-          it { is_expected.to be false }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_xlsx_export_file, xlsx_export_queued: true) }
-          it { expect(procedure.xlsx_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-
-      context 'with an old export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_stale_xlsx_export_file, xlsx_export_queued: false) }
-          it { is_expected.to be true }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_stale_xlsx_export_file, xlsx_export_queued: true) }
-          it { expect(procedure.xlsx_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-    end
-
-    context 'csv' do
-      subject { procedure.should_generate_export?('csv') }
-      context 'with no export' do
-        let(:procedure) { create(:procedure) }
-        it { is_expected.to be true }
-      end
-
-      context 'with a recent export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_csv_export_file, csv_export_queued: false) }
-          it { is_expected.to be false }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_csv_export_file, csv_export_queued: true) }
-          it { expect(procedure.csv_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-
-      context 'with an old export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_stale_csv_export_file, csv_export_queued: false) }
-          it { is_expected.to be true }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_stale_csv_export_file, csv_export_queued: true) }
-          it { expect(procedure.csv_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-    end
-
-    context 'ods' do
-      subject { procedure.should_generate_export?('ods') }
-      context 'with no export' do
-        let(:procedure) { create(:procedure) }
-        it { is_expected.to be true }
-      end
-
-      context 'with a recent export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_ods_export_file, ods_export_queued: false) }
-          it { is_expected.to be false }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_ods_export_file, ods_export_queued: true) }
-          it { expect(procedure.ods_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
-
-      context 'with an old export' do
-        context 'when its not queued' do
-          let(:procedure) { create(:procedure, :with_stale_ods_export_file, ods_export_queued: false) }
-          it { is_expected.to be true }
-        end
-
-        context 'when its already queued' do
-          let(:procedure) { create(:procedure, :with_stale_ods_export_file, ods_export_queued: true) }
-          it { expect(procedure.ods_export_queued).to be true }
-          it { is_expected.to be false }
-        end
-      end
     end
   end
 end

@@ -4,7 +4,7 @@ defaults: &defaults
   working_directory: ~/tps
   docker:
     - image: circleci/ruby:2.6.5-node-browsers
-    - image: circleci/postgres:9.5
+    - image: circleci/postgres:10.12
       environment:
         POSTGRES_USER: tps_test
         POSTGRES_PASSWORD: tps_test
@@ -13,14 +13,22 @@ defaults: &defaults
 bundle_restore_cache: &bundle_restore_cache
   restore_cache:
     name: Restore Bundler Package Cache
-    key: bundle-install-v9-{{ arch }}-{{ checksum "Gemfile.lock" }}
+    keys:
+      - bundle-install-v10-{{ arch }}-{{ checksum "Gemfile.lock" }}
+      - bundle-install-v10-{{ arch }}
+      - bundle-install-v10
 
 bundle_save_cache: &bundle_save_cache
   save_cache:
     name: Save Bundler Package Cache
-    key: bundle-install-v9-{{ arch }}-{{ checksum "Gemfile.lock" }}
+    key: bundle-install-v10-{{ arch }}-{{ checksum "Gemfile.lock" }}
     paths:
       - ~/vendor/bundle
+
+aptget_install: &aptget_install
+  run:
+    name: Install GEOS
+    command: sudo apt-get install libgeos-dev
 
 bundle_install: &bundle_install
   run:
@@ -30,50 +38,77 @@ bundle_install: &bundle_install
 yarn_restore_cache: &yarn_restore_cache
   restore_cache:
     name: Restore Yarn Package Cache
-    key: yarn-install-v1-{{ arch }}-{{ checksum "yarn.lock" }}
+    keys:
+      - yarn-install-v3-{{ arch }}-{{ checksum "yarn.lock" }}
+      - yarn-install-v3-{{ arch }}
+      - yarn-install-v3
 
 yarn_save_cache: &yarn_save_cache
   save_cache:
     name: Save Yarn Package Cache
-    key: yarn-install-v1-{{ arch }}-{{ checksum "yarn.lock" }}
+    key: yarn-install-v3-{{ arch }}-{{ checksum "yarn.lock" }}
     paths:
       - ~/.cache/yarn
 
 yarn_install: &yarn_install
   run:
     name: Install JS Dependencies
-    command: yarn install --non-interactive || yarn install --non-interactive
+    command: yarn install --frozen-lockfile --non-interactive || yarn install --frozen-lockfile --non-interactive
+
+webpacker_restore_cache: &webpacker_restore_cache
+  restore_cache:
+    name: Restore Webpacker Cache
+    keys:
+      - webpacker-v1-{{ .Branch }}-{{ .Revision }}
+      - webpacker-v1-{{ .Branch }}
+      - webpacker-v1
+
+webpacker_save_cache: &webpacker_save_cache
+  save_cache:
+    name: Save Webpacker Cache
+    key: webpacker-v1-{{ .Branch }}-{{ .Revision }}
+    paths:
+      - public/packs-test
+      - tmp/cache/webpacker
+
+webpacker_precompile: &webpacker_precompile
+  run:
+    environment:
+      RAILS_ENV: test
+    name: Precompile Webpack assets
+    command: bin/webpack
 
 jobs:
   build:
     <<: *defaults
     steps:
       - checkout
+      - *aptget_install
       - *bundle_restore_cache
       - *bundle_install
       - *bundle_save_cache
       - *yarn_restore_cache
-      - *yarn_save_cache
       - *yarn_install
+      - *yarn_save_cache
   test:
     <<: *defaults
     parallelism: 3
     steps:
       - checkout
+      - *aptget_install
       - *bundle_restore_cache
       - *bundle_install
       - *yarn_restore_cache
       - *yarn_install
+      - *webpacker_restore_cache
+      - *webpacker_precompile
+      - *webpacker_save_cache
       - run:
           environment:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
-          name: Create DB
+          name: Create Database
           command: bundle exec rake db:create db:schema:load db:migrate RAILS_ENV=test
-      - run:
-          environment:
-            RAILS_ENV: test
-          name: Precompile Webpack assets
-          command: bin/webpack
+
       - run:
           environment:
             DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
@@ -87,11 +122,15 @@ jobs:
             echo $COMMAND
             eval $COMMAND
       - store_test_results:
-          path: ~/test_results/rspec.xml
+          path: ~/test_results
+      - store_artifacts:
+          path: tmp/capybara
+          destination: screenshots
   lint:
     <<: *defaults
     steps:
       - checkout
+      - *aptget_install
       - *bundle_restore_cache
       - *bundle_install
       - *yarn_restore_cache

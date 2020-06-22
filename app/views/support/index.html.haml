@@ -1,14 +1,23 @@
 - content_for(:title, 'Contact')
+- content_for :footer do
+  = render partial: "root/footer"
 
 #contact-form
   .container
     %h1.new-h1 Contact
 
-    .description
-      Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.
-      Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux
-
     = form_tag contact_path, method: :post, multipart: true, class: 'form' do |f|
+
+      .description
+        %p
+          Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.
+          Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux.
+        %br
+        %p.mandatory-explanation
+          Les champs suivis d’un astérisque (
+          %span.mandatory *
+          ) sont obligatoires.
+
       - if !user_signed_in?
         .contact-champ
           = label_tag :email do
@@ -18,15 +27,18 @@
 
       .contact-champ
         = label_tag :type do
-          Votre problème
+          Votre question
           %span.mandatory *
-        = select_tag :type, options_for_select(@options, params[:type]), include_blank: "Choisir un problème", required: true
+        = select_tag :type, options_for_select(@options, params[:type]), include_blank: "Choisir une question", required: true
 
       .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INFO } }
         .card-title
           👉 Notre réponse
         .card-content
-          %p Avez-vous bien vérifié que tous les champs obligatoires (*) sont bien remplis ?
+          %p
+            Avez-vous bien vérifié que tous les champs obligatoires (
+            %span.mandatory *
+            ) sont bien remplis ?
           %p Si vous avez des questions sur les informations à saisir, contactez les services en charge de la démarche.
           %p
             %a{ href: 'https://faq.demarches-simplifiees.fr/article/12-contacter-le-service-en-charge-de-ma-demarche' }
@@ -53,6 +65,24 @@
         %br
         %p Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l'instruction de votre dossier.
 
+      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
+        .card-title
+          👉 Notre réponse
+        %p
+          Une idée ? Pensez à consulter notre
+          = succeed ' !' do
+            %strong
+              tableau de bord des améliorations
+        %p
+          %ul
+            %li • Votez pour vos améliorations prioritaires ;
+            %li • Proposez votre propre idée.
+
+        %p
+          %strong
+            %a{ href: 'https://demarches-simplifiees.featureupvote.com' }
+              ➡ Accéder au tableau des améliorations
+
       .contact-champ
         = label_tag :dossier_id, 'Numéro du dossier concerné'
         = text_field_tag :dossier_id, @dossier_id
@@ -70,12 +100,12 @@
         = text_area_tag :text, params[:text], rows: 6, required: true
 
       .contact-champ
-        = label_tag :text do
+        = label_tag :piece_jointe do
           Pièce jointe
-          .notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
-            Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
-          .notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AUTRE } }
-            Une capture d’écran peut nous aider à identifier plus facilement le problème.
+        %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
+          Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
+        %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AUTRE } }
+          Une capture d’écran peut nous aider à identifier plus facilement le problème.
         = file_field_tag :piece_jointe
 
       = hidden_field_tag :tags, @tags&.join(',')

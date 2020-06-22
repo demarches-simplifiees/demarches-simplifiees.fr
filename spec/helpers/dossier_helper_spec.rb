@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe DossierHelper, type: :helper do
   describe ".highlight_if_unseen_class" do
     let(:seen_at) { Time.zone.now }
@@ -40,6 +38,40 @@ RSpec.describe DossierHelper, type: :helper do
     end
   end
 
+  describe ".demandeur_dossier" do
+    subject { demandeur_dossier(dossier) }
+
+    let(:individual) { create(:individual) }
+    let(:etablissement) { create(:etablissement) }
+    let(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
+
+    context "when the dossier is for an individual" do
+      let(:procedure) { create(:simple_procedure, :for_individual) }
+
+      context "when the individual is not provided" do
+        let(:individual) { nil }
+        it { is_expected.to be_blank }
+      end
+
+      context "when the individual has name information" do
+        it { is_expected.to eq "#{individual.nom} #{individual.prenom}" }
+      end
+    end
+
+    context "when the dossier is for a company" do
+      let(:procedure) { create(:procedure, for_individual: false) }
+
+      context "when the company is not provided" do
+        let(:etablissement) { nil }
+        it { is_expected.to be_blank }
+      end
+
+      context "when the company has name information" do
+        it { is_expected.to eq raison_sociale_or_name(etablissement) }
+      end
+    end
+  end
+
   describe ".dossier_submission_is_closed?" do
     let(:dossier) { create(:dossier, state: state) }
     let(:state) { Dossier.states.fetch(:brouillon) }
@@ -49,8 +81,8 @@ RSpec.describe DossierHelper, type: :helper do
     context "when dossier state is brouillon" do
       it { is_expected.to be false }
 
-      context "when dossier state is brouillon and procedure is archivee" do
-        before { dossier.procedure.archive }
+      context "when dossier state is brouillon and procedure is close" do
+        before { dossier.procedure.close }
 
         it { is_expected.to be true }
       end
@@ -59,8 +91,8 @@ RSpec.describe DossierHelper, type: :helper do
     shared_examples_for "returns false" do
       it { is_expected.to be false }
 
-      context "and procedure is archivee" do
-        before { dossier.procedure.archive }
+      context "and procedure is close" do
+        before { dossier.procedure.close }
 
         it { is_expected.to be false }
       end
@@ -132,37 +164,20 @@ RSpec.describe DossierHelper, type: :helper do
       expect(subject).to eq('Refusé')
     end
 
-    context "lower: true" do
+    context 'when requesting lowercase' do
       subject { dossier_display_state(dossier, lower: true) }
 
-      it 'brouillon is brouillon' do
+      it 'lowercases the display name' do
         dossier.brouillon!
         expect(subject).to eq('brouillon')
       end
+    end
 
-      it 'en_construction is En construction' do
-        dossier.en_construction!
-        expect(subject).to eq('en construction')
-      end
+    context 'when providing directly a state name' do
+      subject { dossier_display_state(:brouillon) }
 
-      it 'accepte is traité' do
-        dossier.accepte!
-        expect(subject).to eq('accepté')
-      end
-
-      it 'en_instruction is reçu' do
-        dossier.en_instruction!
-        expect(subject).to eq('en instruction')
-      end
-
-      it 'sans_suite is traité' do
-        dossier.sans_suite!
-        expect(subject).to eq('sans suite')
-      end
-
-      it 'refuse is traité' do
-        dossier.refuse!
-        expect(subject).to eq('refusé')
+      it 'generates a display name for the given state' do
+        expect(subject).to eq('Brouillon')
       end
     end
   end
@@ -198,6 +213,35 @@ RSpec.describe DossierHelper, type: :helper do
       let(:dossier) { create(:dossier, state: Dossier.states.fetch(:sans_suite)) }
 
       it { is_expected.to eq('without_continuation') }
+    end
+  end
+
+  describe '.has_lost_attachments' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:dossier_with_lost_attachments)    { create(:dossier, procedure: procedure) }
+    let(:dossier_without_lost_attachments) { create(:dossier, procedure: procedure) }
+
+    before do
+      expect(ENV).to receive(:[]).with('APP_HOST').at_least(:once).and_return(app_host)
+      allow(helper).to receive(:dossiers_with_lost_attachments_ids).and_return([dossier_with_lost_attachments.id])
+    end
+
+    context 'on the DINUM instance' do
+      let(:app_host) { 'demarches-simplifiees.fr' }
+
+      it 'returns true for dossiers that lost attachments' do
+        expect(helper.has_lost_attachments(dossier_with_lost_attachments)).to be(true)
+        expect(helper.has_lost_attachments(dossier_without_lost_attachments)).to be(false)
+      end
+    end
+
+    context 'on another instance' do
+      let(:app_host) { 'polynesie-francaise.pref.gouv.fr' }
+
+      it 'returns false for all dossiers' do
+        expect(helper.has_lost_attachments(dossier_with_lost_attachments)).to be(false)
+        expect(helper.has_lost_attachments(dossier_without_lost_attachments)).to be(false)
+      end
     end
   end
 end

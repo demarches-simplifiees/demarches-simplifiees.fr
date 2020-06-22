@@ -20,7 +20,7 @@ class ProcedureSerializer < ActiveModel::Serializer
   belongs_to :service, serializer: ServiceSerializer
 
   def archived_at
-    object.archived_at&.in_time_zone('UTC')
+    object.closed_at&.in_time_zone('UTC')
   end
 
   def link

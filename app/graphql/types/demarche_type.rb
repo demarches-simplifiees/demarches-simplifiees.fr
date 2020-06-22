@@ -6,19 +6,31 @@ module Types
       end
     end
 
+    class DossierDeclarativeState < Types::BaseEnum
+      Procedure.declarative_with_states.each do |symbol_name, string_name|
+        value(string_name,
+          I18n.t("declarative_with_state/#{string_name}", scope: [:activerecord, :attributes, :procedure]),
+          value: symbol_name)
+      end
+    end
+
     description "Une demarche"
 
     global_id_field :id
     field :number, Int, "Le numero de la démarche.", null: false, method: :id
-    field :title, String, null: false, method: :libelle
-    field :description, String, "Déscription de la démarche.", null: false
+    field :title, String, "Le titre de la démarche.", null: false, method: :libelle
+    field :description, String, "Description de la démarche.", null: false
     field :state, DemarcheState, "L'état de la démarche.", null: false
+    field :declarative, DossierDeclarativeState, "L'état de dossier pour une démarche déclarative", null: true, method: :declarative_with_state
 
-    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :archived_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
+    field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: false, method: :published_at
+    field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
+    field :date_depublication, GraphQL::Types::ISO8601DateTime, "Date de la dépublication.", null: true, method: :unpublished_at
+    field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :closed_at
 
     field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
+    field :service, Types::ServiceType, null: false
 
     field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d'une démarche.", null: false do
       argument :order, Types::Order, default_value: :asc, required: false, description: "L'ordre des dossiers."
@@ -36,6 +48,10 @@ module Types
 
     def groupe_instructeurs
       Loaders::Association.for(object.class, groupe_instructeurs: { procedure: [:administrateurs] }).load(object)
+    end
+
+    def service
+      Loaders::Record.for(Service).load(object.service_id)
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, order:)

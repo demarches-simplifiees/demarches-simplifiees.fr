@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe FindDubiousProceduresJob, type: :job do
   describe 'perform' do
     let(:mailer_double) { double('mailer', deliver_later: true) }
@@ -40,14 +38,14 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
         it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
 
-      context 'and a archived procedure' do
-        let(:procedure) { create(:procedure, :archived) }
+      context 'and a closed procedure' do
+        let(:procedure) { create(:procedure, :closed) }
 
         it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end
 
-      context 'and a hidden procedure' do
-        let(:procedure) { create(:procedure, :hidden) }
+      context 'and a discarded procedure' do
+        let(:procedure) { create(:procedure, :discarded) }
 
         it { expect(AdministrationMailer).to have_received(:dubious_procedures).with([]) }
       end

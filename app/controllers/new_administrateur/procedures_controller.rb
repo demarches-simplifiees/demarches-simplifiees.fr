@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     def apercu
@@ -57,6 +57,18 @@ module NewAdministrateur
       render 'monavis'
     end
 
+    def jeton
+    end
+
+    def update_jeton
+      if !@procedure.update(procedure_params)
+        flash.now.alert = @procedure.errors.full_messages
+      else
+        flash.notice = 'Le jeton a bien été mis à jour'
+      end
+      render 'jeton'
+    end
+
     private
 
     def apercu_tab
@@ -68,11 +80,14 @@ module NewAdministrateur
     end
 
     def procedure_params
-      editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :euro_flag, :logo, :auto_archive_on, :monavis_embed]
+      editable_params = [:libelle, :description, :organisation, :direction, :lien_site_web, :cadre_juridique, :deliberation, :notice, :web_hook_url, :declarative_with_state, :euro_flag, :logo, :auto_archive_on, :monavis_embed, :api_entreprise_token]
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
       else
         params.require(:procedure).permit(*editable_params, :duree_conservation_dossiers_dans_ds, :duree_conservation_dossiers_hors_ds, :for_individual, :path)
+      end
+      if permited_params[:auto_archive_on].present?
+        permited_params[:auto_archive_on] = Date.parse(permited_params[:auto_archive_on]) + 1.day
       end
       permited_params
     end

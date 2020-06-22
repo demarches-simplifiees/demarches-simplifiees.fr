@@ -1,97 +1,44 @@
-require 'spec_helper'
-
 describe Champs::CarteChamp do
-  let(:champ) { Champs::CarteChamp.new(value: value) }
+  let(:champ) { Champs::CarteChamp.new(geo_areas: geo_areas, type_de_champ: create(:type_de_champ_carte)) }
   let(:value) { '' }
-  let(:coordinates) { [[{ "lat" => 48.87442541960633, "lng" => 2.3859214782714844 }, { "lat" => 48.87273183590832, "lng" => 2.3850631713867183 }, { "lat" => 48.87081237174292, "lng" => 2.3809432983398438 }, { "lat" => 48.8712640169951, "lng" => 2.377510070800781 }, { "lat" => 48.87510283703279, "lng" => 2.3778533935546875 }, { "lat" => 48.87544154230615, "lng" => 2.382831573486328 }, { "lat" => 48.87442541960633, "lng" => 2.3859214782714844 }]] }
-  let(:geo_json_as_string) { GeojsonService.to_json_polygon_for_selection_utilisateur(coordinates) }
-  let(:geo_json) { JSON.parse(geo_json_as_string) }
+  let(:coordinates) { [[2.3859214782714844, 48.87442541960633], [2.3850631713867183, 48.87273183590832], [2.3809432983398438, 48.87081237174292], [2.3859214782714844, 48.87442541960633]] }
+  let(:geo_json) do
+    {
+      "type" => 'Polygon',
+      "coordinates" => coordinates
+    }
+  end
+  let(:legacy_geo_json) do
+    {
+      type: 'MultiPolygon',
+      coordinates: [coordinates]
+    }
+  end
 
-  describe '#to_render_data' do
-    subject { champ.to_render_data }
+  describe '#to_feature_collection' do
+    subject { champ.to_feature_collection }
 
-    let(:render_data) {
+    let(:feature_collection) {
       {
-        position: champ.position,
-        selection: selection,
-        cadastres: [],
-        parcellesAgricoles: [],
-        quartiersPrioritaires: []
+        type: 'FeatureCollection',
+        id: champ.type_de_champ.stable_id,
+        bbox: champ.bounding_box,
+        features: features
       }
     }
 
-    context 'when the value is nil' do
-      let(:value) { nil }
+    context 'when has no geo_areas' do
+      let(:geo_areas) { [] }
+      let(:features) { [] }
 
-      let(:selection) { nil }
-
-      it { is_expected.to eq(render_data) }
+      it { is_expected.to eq(feature_collection) }
     end
 
-    context 'when the value is blank' do
-      let(:value) { '' }
+    context 'when has one geo_area' do
+      let(:geo_areas) { [build(:geo_area, :selection_utilisateur, geometry: geo_json)] }
+      let(:features) { geo_areas.map(&:to_feature) }
 
-      let(:selection) { nil }
-
-      it { is_expected.to eq(render_data) }
-    end
-
-    context 'when the value is empty array' do
-      let(:value) { '[]' }
-
-      let(:selection) { nil }
-
-      it { is_expected.to eq(render_data) }
-    end
-
-    context 'when the value is coordinates' do
-      let(:value) { coordinates.to_json }
-
-      let(:selection) { geo_json }
-
-      it { is_expected.to eq(render_data) }
-    end
-
-    context 'when the value is geojson' do
-      let(:value) { geo_json.to_json }
-
-      let(:selection) { geo_json }
-
-      it { is_expected.to eq(render_data) }
-    end
-  end
-
-  describe '#selection_utilisateur_size' do
-    subject { champ.selection_utilisateur_size }
-
-    context 'when the value is nil' do
-      let(:value) { nil }
-
-      it { is_expected.to eq(0) }
-    end
-
-    context 'when the value is blank' do
-      let(:value) { '' }
-
-      it { is_expected.to eq(0) }
-    end
-
-    context 'when the value is empty array' do
-      let(:value) { '[]' }
-
-      it { is_expected.to eq(0) }
-    end
-
-    context 'when the value is coordinates' do
-      let(:value) { coordinates.to_json }
-
-      it { is_expected.to eq(1) }
-    end
-
-    context 'when the value is geojson' do
-      let(:value) { geo_json.to_json }
-
-      it { is_expected.to eq(1) }
+      it { is_expected.to eq(feature_collection) }
     end
   end
 end

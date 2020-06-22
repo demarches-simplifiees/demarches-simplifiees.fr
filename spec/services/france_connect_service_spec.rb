@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe FranceConnectService do
   describe '.retrieve_user_informations_particulier' do
     let(:code) { 'plop' }
@@ -33,7 +31,7 @@ describe FranceConnectService do
       expect(subject).to have_attributes({
         given_name: given_name,
         family_name: family_name,
-        birthdate: Date.parse(birthdate),
+        birthdate: Time.zone.parse(birthdate).to_date,
         birthplace: birthplace,
         gender: gender,
         email_france_connect: email,

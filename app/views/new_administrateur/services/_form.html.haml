@@ -18,21 +18,32 @@
 
   %h2.header-section Informations de contact
 
-  %p.explication Ces informations seront visibles par les utilisateurs du formulaire.
+  %p.explication
+    Votre démarche sera hébergée par demarche-simplifiees.fr – mais nous ne pouvons pas assurer le support des démarches. Et malgré la dématérialisation, les usagers se poseront parfois des questions légitimes sur le processus administratif.
+    %br
+    Il est donc important que les usagers puissent vous contacter s'ils ont des questions sur votre démarche.
+    %br
+    Ces informations seront visibles par les utilisateurs de la démarche, affichées dans le menu "Aide", ainsi qu'en pied de page lors du dépot d'un dossier.
 
   = f.label :email do
     Adresse email
     %span.mandatory *
+  %p.explication
+    Indiquer une adresse email <strong>valide</strong> est indispensable pour publier votre démarche.
+    Cette adresse email doit permettre de recevoir les questions des usagers.
+
   = f.email_field :email, placeholder: 'contact@mon-service.fr', required: true
 
   = f.label :telephone do
     Numéro de téléphone
     %span.mandatory *
+  %p.explication Indiquez le numéro de téléphone du service <strong>valide</strong> le plus à même de fournir des réponses pertinentes à vos usagers aux horaires où vous êtes joignables.
   = f.telephone_field :telephone, placeholder: '04 12 24 42 37', required: true
 
   = f.label :horaires do
     Horaires
     %span.mandatory *
+  %p.explication Indiquez les horaires où les usagers peuvent vous joindre.
   = f.text_area :horaires, placeholder: "Du lundi au vendredi de 9 h 30 à 17 h 30. Le samedi de 9 h 30 à 12 h.", required: true
 
   = f.label :adresse do

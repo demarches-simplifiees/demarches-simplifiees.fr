@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
   let(:drop_down_list) { build(:drop_down_list, value: menu_options) }
   let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, drop_down_list: drop_down_list) }

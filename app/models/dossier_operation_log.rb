@@ -1,5 +1,6 @@
 class DossierOperationLog < ApplicationRecord
   enum operation: {
+    changer_groupe_instructeur: 'changer_groupe_instructeur',
     passer_en_instruction: 'passer_en_instruction',
     repasser_en_construction: 'repasser_en_construction',
     repasser_en_instruction: 'repasser_en_instruction',
@@ -7,12 +8,14 @@ class DossierOperationLog < ApplicationRecord
     refuser: 'refuser',
     classer_sans_suite: 'classer_sans_suite',
     supprimer: 'supprimer',
+    restaurer: 'restaurer',
     modifier_annotation: 'modifier_annotation',
     demander_un_avis: 'demander_un_avis'
   }
 
-  belongs_to :dossier
   has_one_attached :serialized
+
+  belongs_to :dossier, optional: true
   belongs_to :bill_signature, optional: true
 
   def self.create_and_serialize(params)

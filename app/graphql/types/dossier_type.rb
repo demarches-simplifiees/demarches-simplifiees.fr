@@ -11,18 +11,20 @@ module Types
     global_id_field :id
     field :number, Int, "Le numero du dossier.", null: false, method: :id
     field :state, DossierState, "L'état du dossier.", null: false
-    field :updated_at, GraphQL::Types::ISO8601DateTime, "Date de dernière mise à jour.", null: false
 
     field :date_passage_en_construction, GraphQL::Types::ISO8601DateTime, "Date de dépôt.", null: false, method: :en_construction_at
     field :date_passage_en_instruction, GraphQL::Types::ISO8601DateTime, "Date de passage en instruction.", null: true, method: :en_instruction_at
     field :date_traitement, GraphQL::Types::ISO8601DateTime, "Date de traitement.", null: true, method: :processed_at
+    field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
 
     field :archived, Boolean, null: false
 
     field :motivation, String, null: true
-    field :motivation_attachment_url, Types::URL, null: true, extensions: [
+    field :motivation_attachment, Types::File, null: true, extensions: [
       { Extensions::Attachment => { attachment: :justificatif_motivation } }
     ]
+
+    field :demandeur, Types::DemandeurType, null: false
 
     field :usager, Types::ProfileType, null: false
     field :instructeurs, [Types::ProfileType], null: false
@@ -32,6 +34,8 @@ module Types
 
     field :messages, [Types::MessageType], null: false
     field :avis, [Types::AvisType], null: false
+
+    field :groupe_instructeur, Types::GroupeInstructeurType, null: false
 
     def state
       object.state
@@ -43,6 +47,10 @@ module Types
 
     def instructeurs
       Loaders::Association.for(object.class, :followers_instructeurs).load(object)
+    end
+
+    def groupe_instructeur
+      Loaders::Record.for(GroupeInstructeur).load(object.groupe_instructeur_id)
     end
 
     def messages
@@ -59,6 +67,14 @@ module Types
 
     def annotations
       Loaders::Association.for(object.class, :champs_private).load(object)
+    end
+
+    def demandeur
+      if object.procedure.for_individual
+        Loaders::Association.for(object.class, :individual).load(object)
+      else
+        Loaders::Association.for(object.class, :etablissement).load(object)
+      end
     end
 
     def self.authorized?(object, context)

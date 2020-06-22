@@ -6,8 +6,9 @@
     Bonjour,
 
   %p
-    Pour activer votre compte sur demarches-simplifiees.fr, veuillez cliquer sur le lien suivant :
-    = link_to(confirmation_url(@user, confirmation_token: @token), confirmation_url(@user, confirmation_token: @token))
+    Pour activer votre compte sur demarches-simplifiees.fr, veuillez cliquer sur le lien suivant :
+    - link = confirmation_url(@user, confirmation_token: @token, procedure_id: @procedure&.id)
+    = link_to(link, link)
 
 - else
   - content_for(:title, "Changement d'adresse email")
@@ -16,7 +17,7 @@
     Bonjour,
 
   %p
-    Pour confirmer votre changement d'adresse email, veuillez cliquer sur le lien suivant :
+    Pour confirmer votre changement d'adresse email, veuillez cliquer sur le lien suivant :
     = link_to(confirmation_url(@user, confirmation_token: @token), confirmation_url(@user, confirmation_token: @token))
 
 = render partial: "layouts/mailers/signature"

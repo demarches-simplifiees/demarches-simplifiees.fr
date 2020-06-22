@@ -1,7 +1,5 @@
 class ApiCarto::API
-  def self.search_qp(geojson)
-    url = [API_CARTO_URL, "quartiers-prioritaires", "search"].join("/")
-    call(url, geojson)
+  class ResourceNotFound < StandardError
   end
 
   def self.search_cadastre(geojson)
@@ -19,7 +17,7 @@ class ApiCarto::API
     else
       message = response.code == 0 ? response.return_message : response.code.to_s
       Rails.logger.error "[ApiCarto] Error on #{url}: #{message}"
-      raise RestClient::ResourceNotFound
+      raise ResourceNotFound
     end
   end
 end

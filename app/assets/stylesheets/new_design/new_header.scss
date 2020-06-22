@@ -2,6 +2,7 @@
 @import "common";
 @import "constants";
 @import "mixins";
+@import "utils";
 
 $header-landing-breakpoint: 1040px;
 $header-mobile-breakpoint: 550px;
@@ -23,29 +24,29 @@ $header-mobile-breakpoint: 550px;
 }
 
 .header-logo {
-  display: inline-block;
-  height: 100%;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 
-  // Logo large
-  background-image: image-url("header/logo-ds-wide.svg");
-  width: 360px;
-  margin-right: 4 * $default-spacer;
-
-  // Logo normal
-  @media (max-width: $header-landing-breakpoint) {
-    background-image: image-url("header/logo-ds.svg");
-    width: 132px;
-    margin-right: $default-spacer;
+  img {
+    margin-right: 10px;
   }
 
-  // Logo narrow
-  @media (max-width: $header-mobile-breakpoint) {
-    background-image: image-url("header/logo-ds-narrow.svg");
-    width: 32px;
-    margin-right: 0;
+  .site-title {
+    font-size: 24px;
+    font-weight: bold;
+
+    &.small {
+      @media (min-width: $header-mobile-breakpoint) {
+        display: none;
+      }
+    }
+
+    &.big {
+      @media (max-width: $header-mobile-breakpoint) {
+        display: none;
+      }
+    }
   }
 }
 
@@ -149,6 +150,10 @@ $header-mobile-breakpoint: 550px;
     margin: 0;
   }
 
+  label.hidden {
+    @extend .hidden;
+  }
+
   button {
     @extend %outline;
 
@@ -219,7 +224,7 @@ $header-mobile-breakpoint: 550px;
     .menu-item {
       align-items: center;
       padding: 14px;
-      color: $grey;
+      color: $dark-grey;
       overflow: hidden;
       text-overflow: ellipsis;
 

@@ -1,5 +1,10 @@
 #main-container{ class: "col-xs-#{main_container_size}" }
   .row
+    - if feature_enabled?(:team_on_strike)
+      = render partial: 'layouts/strike_banner'
+    = render partial: 'layouts/outdated_browser_banner'
+    = render partial: 'layouts/pre_maintenance'
+  .row
     = render partial: 'layouts/flash_messages'
   .row
     = yield

@@ -1,5 +1,3 @@
-require "spec_helper"
-
 feature "procedure filters" do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, :with_type_de_champ, instructeurs: [instructeur]) }
@@ -25,10 +23,10 @@ feature "procedure filters" do
 
   scenario "should list all dossiers" do
     within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id)
+      expect(page).to have_link(new_unfollow_dossier.id.to_s)
       expect(page).to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).to have_link(new_unfollow_dossier_2.id)
+      expect(page).to have_link(new_unfollow_dossier_2.id.to_s)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
   end
@@ -61,20 +59,20 @@ feature "procedure filters" do
     expect(page).to have_content("#{type_de_champ.libelle} : #{champ.value}")
 
     within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id, exact: true)
+      expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).not_to have_link(new_unfollow_dossier_2.id, exact: true)
+      expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
       expect(page).not_to have_link(new_unfollow_dossier_2.user.email)
     end
 
     remove_filter(champ.value)
 
     within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id)
+      expect(page).to have_link(new_unfollow_dossier.id.to_s)
       expect(page).to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).to have_link(new_unfollow_dossier_2.id)
+      expect(page).to have_link(new_unfollow_dossier_2.id.to_s)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
   end
@@ -86,30 +84,30 @@ feature "procedure filters" do
     expect(page).to have_content("#{type_de_champ.libelle} : #{champ.value}")
 
     within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id, exact: true)
+      expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).to have_link(new_unfollow_dossier_2.id, exact: true)
+      expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
 
     remove_filter(champ.value)
 
     within ".dossiers-table" do
-      expect(page).not_to have_link(new_unfollow_dossier.id, exact: true)
+      expect(page).not_to have_link(new_unfollow_dossier.id.to_s, exact: true)
       expect(page).not_to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).to have_link(new_unfollow_dossier_2.id, exact: true)
+      expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
 
     remove_filter(champ_2.value)
 
     within ".dossiers-table" do
-      expect(page).to have_link(new_unfollow_dossier.id, exact: true)
+      expect(page).to have_link(new_unfollow_dossier.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier.user.email)
 
-      expect(page).to have_link(new_unfollow_dossier_2.id, exact: true)
+      expect(page).to have_link(new_unfollow_dossier_2.id.to_s, exact: true)
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
   end

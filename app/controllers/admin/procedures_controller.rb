@@ -19,7 +19,7 @@ class Admin::ProceduresController < AdminController
 
   def archived
     @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.archivees.order(published_at: :desc),
+      current_administrateur.procedures.closes.order(published_at: :desc),
       partial: "admin/procedures/list",
       array: true
 
@@ -52,15 +52,14 @@ class Admin::ProceduresController < AdminController
   def destroy
     procedure = current_administrateur.procedures.find(params[:id])
 
-    if procedure.publiee_ou_archivee?
-      return render json: {}, status: 401
+    if procedure.can_be_deleted_by_administrateur?
+      procedure.discard_and_keep_track!(current_administrateur)
+
+      flash.notice = 'Démarche supprimée'
+      redirect_to admin_procedures_draft_path
+    else
+      render json: {}, status: 403
     end
-
-    procedure.reset!
-    procedure.destroy
-
-    flash.notice = 'Démarche supprimée'
-    redirect_to admin_procedures_draft_path
   end
 
   def publish_validate
@@ -73,13 +72,13 @@ class Admin::ProceduresController < AdminController
     @procedure.publish_or_reopen!(current_administrateur)
 
     flash.notice = "Démarche publiée"
-    redirect_to admin_procedures_path
+    render js: "window.location='#{admin_procedures_path}'"
   rescue ActiveRecord::RecordInvalid
     render 'publish_validate', formats: :js
   end
 
   def transfer
-    admin = Administrateur.find_by(email: params[:email_admin].downcase)
+    admin = Administrateur.by_email(params[:email_admin].downcase)
 
     if admin.nil?
       render '/admin/procedures/transfer', formats: 'js', status: 404
@@ -95,9 +94,9 @@ class Admin::ProceduresController < AdminController
 
   def archive
     procedure = current_administrateur.procedures.find(params[:procedure_id])
-    procedure.archive!
+    procedure.close!
 
-    flash.notice = "Démarche archivée"
+    flash.notice = "Démarche close"
     redirect_to admin_procedures_path
 
   rescue ActiveRecord::RecordNotFound
@@ -131,7 +130,7 @@ class Admin::ProceduresController < AdminController
 
   def new_from_existing
     significant_procedure_ids = Procedure
-      .publiees_ou_archivees
+      .publiees_ou_closes
       .joins(:dossiers)
       .group("procedures.id")
       .having("count(dossiers.id) >= ?", SIGNIFICANT_DOSSIERS_THRESHOLD)

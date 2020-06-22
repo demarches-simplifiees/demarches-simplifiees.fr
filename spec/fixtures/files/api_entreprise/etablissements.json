@@ -26,7 +26,7 @@
       "code": null,
       "value": null
     },
-    "diffusable_commercialement": null,
+    "diffusable_commercialement": true,
     "adresse": {
       "l1": "OCTO TECHNOLOGY",
       "l2": null,

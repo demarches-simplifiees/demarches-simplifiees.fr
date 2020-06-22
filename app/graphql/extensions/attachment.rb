@@ -28,9 +28,9 @@ module Extensions
     # This method is called if the result of the `resolve`
     # is a lazy value (e.g., a Promise – like in our case)
     def after_resolve(value:, **_rest)
-      return if value.nil?
-
-      Rails.application.routes.url_helpers.url_for(value)
+      if value&.virus_scanner&.safe? || value&.virus_scanner&.pending?
+        value
+      end
     end
   end
 end

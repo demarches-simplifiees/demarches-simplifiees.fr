@@ -1,6 +1,5 @@
 module Users
   class DossiersController < UserController
-    include Devise::StoreLocationExtension
     include DossierHelper
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
@@ -33,9 +32,17 @@ module Users
     def show
       if dossier.brouillon?
         redirect_to brouillon_dossier_path(dossier)
+        return
       end
 
       @dossier = dossier
+      respond_to do |format|
+        format.pdf do
+          @include_infos_administration = false
+          render(file: 'dossiers/show', formats: [:pdf])
+        end
+        format.all
+      end
     end
 
     def demande
@@ -49,7 +56,7 @@ module Users
 
     def attestation
       if dossier.attestation&.pdf&.attached?
-        redirect_to url_for(dossier.attestation.pdf)
+        redirect_to dossier.attestation.pdf.service_url
       else
         flash.notice = "L'attestation n'est plus disponible sur ce dossier."
         redirect_to dossier_path(dossier)
@@ -97,16 +104,14 @@ module Users
 
       sanitized_siret = siret_model.siret
       begin
-        etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(sanitized_siret, @dossier.procedure.id)
-      rescue RestClient::RequestFailed
+        etablissement = ApiEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
+      rescue ApiEntreprise::API::RequestFailed
         return render_siret_error(t('errors.messages.siret_network_error'))
       end
-      if etablissement_attributes.blank?
+      if etablissement.nil?
         return render_siret_error(t('errors.messages.siret_unknown'))
       end
 
-      etablissement = @dossier.build_etablissement(etablissement_attributes)
-      etablissement.save!
       current_user.update!(siret: sanitized_siret)
       @dossier.update!(autorisation_donnees: true)
 
@@ -146,6 +151,9 @@ module Users
       if passage_en_construction? && errors.blank?
         @dossier.en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
+        @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
+          DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
+        end
         return redirect_to(merci_dossier_path(@dossier))
       elsif errors.present?
         flash.now.alert = errors
@@ -155,8 +163,14 @@ module Users
 
       respond_to do |format|
         format.html { render :brouillon }
-        format.json { head :ok }
+        format.json { render json: {}, status: :ok }
       end
+    end
+
+    def extend_conservation
+      dossier.update(en_construction_conservation_extension: dossier.en_construction_conservation_extension + 1.month)
+      flash[:notice] = 'Votre dossier sera conservé un mois supplémentaire'
+      redirect_to dossier_path(@dossier)
     end
 
     def modifier
@@ -184,6 +198,11 @@ module Users
       @commentaire = CommentaireService.build(current_user, dossier, commentaire_params)
 
       if @commentaire.save
+        dossier.followers_instructeurs
+          .with_instant_email_message_notifications
+          .each do |instructeur|
+          DossierMailer.notify_new_commentaire_to_instructeur(dossier, instructeur.email).deliver_later
+        end
         flash.notice = "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
         redirect_to messagerie_dossier_path(dossier)
       else
@@ -196,7 +215,7 @@ module Users
       dossier = current_user.dossiers.includes(:user, procedure: :administrateurs).find(params[:id])
 
       if dossier.can_be_deleted_by_user?
-        dossier.delete_and_keep_track(current_user)
+        dossier.discard_and_keep_track!(current_user, :user_request)
         flash.notice = 'Votre dossier a bien été supprimé.'
         redirect_to dossiers_path
       else
@@ -206,13 +225,21 @@ module Users
     end
 
     def recherche
-      @dossier_id = params[:dossier_id]
-      dossier = current_user.dossiers.find_by(id: @dossier_id)
+      @search_terms = params[:q]
+      return redirect_to dossiers_path if @search_terms.blank?
 
-      if dossier
-        redirect_to url_for_dossier(dossier)
+      @dossiers = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page(page)
+
+      if @dossiers.present?
+        # we need the page condition when accessing page n with n>1 when the page has only 1 result
+        # in order to avoid an unpleasant redirection when changing page
+        if @dossiers.count == 1 && page == 1
+          redirect_to url_for_dossier(@dossiers.first)
+        else
+          render :index
+        end
       else
-        flash.alert = "Vous n’avez pas de dossier avec le nº #{@dossier_id}."
+        flash.alert = "Vous n’avez pas de dossiers contenant « #{@search_terms} »."
         redirect_to dossiers_path
       end
     end
@@ -220,27 +247,30 @@ module Users
     def new
       erase_user_location!
 
-      if params[:brouillon]
-        procedure = Procedure.brouillon.find(params[:procedure_id])
-      else
-        procedure = Procedure.publiees.find(params[:procedure_id])
+      begin
+        if params[:brouillon]
+          procedure = Procedure.brouillon.find(params[:procedure_id])
+        else
+          procedure = Procedure.publiees.find(params[:procedure_id])
+        end
+      rescue ActiveRecord::RecordNotFound
+        flash.alert = t('errors.messages.procedure_not_found')
+        return redirect_to url_for dossiers_path
       end
 
-      dossier = Dossier.create!(groupe_instructeur: procedure.defaut_groupe_instructeur, user: current_user, state: Dossier.states.fetch(:brouillon))
+      dossier = Dossier.new(
+        groupe_instructeur: procedure.defaut_groupe_instructeur,
+        user: current_user,
+        state: Dossier.states.fetch(:brouillon)
+      )
+      dossier.build_default_individual
+      dossier.save!
 
       if dossier.procedure.for_individual
-        if current_user.france_connect_information.present?
-          dossier.update_with_france_connect(current_user.france_connect_information)
-        end
-
         redirect_to identite_dossier_path(dossier)
       else
         redirect_to siret_dossier_path(id: dossier.id)
       end
-    rescue ActiveRecord::RecordNotFound
-      flash.alert = t('errors.messages.procedure_not_found')
-
-      redirect_to url_for dossiers_path
     end
 
     def dossier_for_help
@@ -286,14 +316,13 @@ module Users
     end
 
     # FIXME: require(:dossier) when all the champs are united
-    def champs_and_groupe_instructeurs_params
-      params.permit(dossier: [
-        :groupe_instructeur_id,
+    def champs_params
+      params.permit(dossier: {
         champs_attributes: [
           :id, :value, :primary_value, :secondary_value, :piece_justificative_file, value: [],
           champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
         ]
-      ])
+      })
     end
 
     def dossier
@@ -304,11 +333,20 @@ module Users
       Dossier.with_champs.find(params[:id])
     end
 
+    def change_groupe_instructeur?
+      params[:dossier][:groupe_instructeur_id].present? && @dossier.groupe_instructeur_id != params[:dossier][:groupe_instructeur_id].to_i
+    end
+
     def update_dossier_and_compute_errors
       errors = []
 
-      if champs_and_groupe_instructeurs_params[:dossier] && !@dossier.update(champs_and_groupe_instructeurs_params[:dossier])
-        errors += @dossier.errors.full_messages
+      if champs_params[:dossier]
+        if !@dossier.update(champs_params[:dossier])
+          errors += @dossier.errors.full_messages
+        elsif change_groupe_instructeur?
+          groupe_instructeur = @dossier.procedure.groupe_instructeurs.find(params[:dossier][:groupe_instructeur_id])
+          @dossier.assign_to_groupe_instructeur(groupe_instructeur)
+        end
       end
 
       if !save_draft?

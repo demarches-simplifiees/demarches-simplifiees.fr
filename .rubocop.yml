@@ -1,5 +1,9 @@
 require:
   - rubocop/rspec/focused
+  - ./lib/cops/unscoped.rb
+inherit_gem:
+  rubocop-rails_config:
+    - config/rails.yml
 
 AllCops:
   Exclude:
@@ -29,13 +33,13 @@ Gemspec/RequiredRubyVersion:
 Layout/AccessModifierIndentation:
   Enabled: true
 
-Layout/AlignArray:
+Layout/ArrayAlignment:
   Enabled: true
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   Enabled: true
   EnforcedStyle: with_fixed_indentation
 
@@ -88,6 +92,7 @@ Layout/EmptyLineAfterGuardClause:
 # FIXME: private should not be a column name on TypeDeChamp
 Layout/EmptyLinesAroundAccessModifier:
   Enabled: true
+  EnforcedStyle: around
   Exclude:
     - "spec/factories/type_de_champ.rb"
 
@@ -140,22 +145,23 @@ Layout/FirstMethodParameterLineBreak:
 Layout/FirstParameterIndentation:
   Enabled: true
 
-Layout/IndentArray:
+Layout/FirstArrayElementIndentation:
   Enabled: true
   EnforcedStyle: consistent
 
-Layout/IndentAssignment:
+Layout/AssignmentIndentation:
   Enabled: true
 
-Layout/IndentHash:
+Layout/FirstHashElementIndentation:
   Enabled: true
   EnforcedStyle: consistent
 
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   Enabled: true
 
 Layout/IndentationConsistency:
   Enabled: true
+  EnforcedStyle: normal
 
 Layout/IndentationWidth:
   Enabled: true
@@ -274,7 +280,7 @@ Layout/SpaceInsideStringInterpolation:
 Layout/Tab:
   Enabled: true
 
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: true
 
 Layout/TrailingWhitespace:
@@ -313,7 +319,7 @@ Lint/DuplicateCaseCondition:
 Lint/DuplicateMethods:
   Enabled: true
 
-Lint/DuplicatedKey:
+Lint/DuplicateHashKey:
   Enabled: true
 
 Lint/EachWithObjectArgument:
@@ -346,7 +352,7 @@ Lint/FloatOutOfRange:
 Lint/FormatParameterMismatch:
   Enabled: true
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
 
 Lint/ImplicitStringConcatenation:
@@ -373,7 +379,7 @@ Lint/Loop:
 Lint/MissingCopEnableDirective:
   Enabled: true
 
-Lint/MultipleCompare:
+Lint/MultipleComparison:
   Enabled: true
 
 Lint/NestedMethodDefinition:
@@ -444,7 +450,7 @@ Lint/ShadowedException:
 Lint/ShadowingOuterLocalVariable:
   Enabled: false
 
-Lint/StringConversionInInterpolation:
+Lint/RedundantStringCoercion:
   Enabled: true
 
 Lint/Syntax:
@@ -456,16 +462,16 @@ Lint/UnderscorePrefixedVariableName:
 Lint/UnifiedInteger:
   Enabled: true
 
-Lint/UnneededCopDisableDirective:
+Lint/RedundantCopDisableDirective:
   Enabled: true
 
-Lint/UnneededCopEnableDirective:
+Lint/RedundantCopEnableDirective:
   Enabled: true
 
-Lint/UnneededRequireStatement:
+Lint/RedundantRequireStatement:
   Enabled: true
 
-Lint/UnneededSplatExpansion:
+Lint/RedundantSplatExpansion:
   Enabled: false
 
 Lint/UnreachableCode:
@@ -518,7 +524,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 
 Metrics/MethodLength:
@@ -566,10 +572,10 @@ Naming/MethodName:
 Naming/PredicateName:
   Enabled: false
 
-Naming/UncommunicativeBlockParamName:
+Naming/BlockParameterName:
   Enabled: true
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 
 Naming/VariableName:
@@ -592,6 +598,8 @@ Performance/CompareWithBlock:
 
 Performance/Count:
   Enabled: true
+  Exclude:
+    - "app/services/administrateur_usage_statistics_service.rb"
 
 Performance/Detect:
   Enabled: true
@@ -608,9 +616,6 @@ Performance/FixedSize:
 Performance/FlatMap:
   Enabled: true
 
-Performance/LstripRstrip:
-  Enabled: true
-
 Performance/RangeInclude:
   Enabled: true
 
@@ -623,7 +628,7 @@ Performance/RedundantMatch:
 Performance/RedundantMerge:
   Enabled: true
 
-Performance/RedundantSortBy:
+Style/RedundantSortBy:
   Enabled: true
 
 Performance/RegexpMatch:
@@ -632,7 +637,7 @@ Performance/RegexpMatch:
 Performance/ReverseEach:
   Enabled: true
 
-Performance/Sample:
+Style/Sample:
   Enabled: true
 
 Performance/Size:
@@ -667,6 +672,12 @@ Rails/ApplicationJob:
 
 Rails/ApplicationRecord:
   Enabled: true
+
+Rails/ApplicationController:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Enabled: false
 
 Rails/Blank:
   Enabled: true
@@ -706,7 +717,7 @@ Rails/Exit:
   Enabled: true
 
 Rails/FilePath:
-  Enabled: true
+  Enabled: false
 
 Rails/FindBy:
   Enabled: true
@@ -753,6 +764,9 @@ Rails/Present:
 Rails/ReadWriteAttribute:
   Enabled: false
 
+Rails/RedundantAllowNil:
+  Enabled: false
+
 Rails/RedundantReceiverInWithOptions:
   Enabled: true
 
@@ -764,9 +778,6 @@ Rails/RequestReferer:
 
 Rails/ReversibleMigration:
   Enabled: false
-
-Rails/SafeNavigation:
-  Enabled: true
 
 Rails/SaveBang:
   Enabled: false
@@ -844,9 +855,6 @@ Style/BlockDelimiters:
   Enabled: true
   Exclude:
     - "spec/**/*"
-
-Style/BracesAroundHashParameters:
-  Enabled: false
 
 Style/CaseEquality:
   Enabled: true
@@ -954,9 +962,6 @@ Style/EvenOdd:
 Style/ExpandPathArguments:
   Enabled: true
 
-Style/FlipFlop:
-  Enabled: true
-
 Style/For:
   Enabled: true
 
@@ -964,7 +969,7 @@ Style/FormatString:
   Enabled: true
 
 Style/FormatStringToken:
-  Enabled: true
+  Enabled: false
   EnforcedStyle: template
 
 Style/FrozenStringLiteralComment:
@@ -1266,13 +1271,13 @@ Style/TrivialAccessors:
 Style/UnlessElse:
   Enabled: true
 
-Style/UnneededCapitalW:
+Style/RedundantCapitalW:
   Enabled: true
 
-Style/UnneededInterpolation:
+Style/RedundantInterpolation:
   Enabled: true
 
-Style/UnneededPercentQ:
+Style/RedundantPercentQ:
   Enabled: true
 
 Style/VariableInterpolation:

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe AdministrateurUsageStatisticsService do
   describe '#administrateur_stats' do
     let(:service) { AdministrateurUsageStatisticsService.new }
@@ -83,8 +81,8 @@ describe AdministrateurUsageStatisticsService do
         end
       end
 
-      context 'with a procedure archivee' do
-        let(:procedure) { create(:procedure, aasm_state: 'archivee') }
+      context 'with a procedure close' do
+        let(:procedure) { create(:procedure, aasm_state: 'close') }
         let!(:dossiers) do
           (1..7).flat_map do
             [

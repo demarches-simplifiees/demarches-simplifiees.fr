@@ -1,5 +1,5 @@
 class Champ < ApplicationRecord
-  belongs_to :dossier, inverse_of: :champs, touch: true
+  belongs_to :dossier, -> { with_discarded }, inverse_of: :champs, touch: true
   belongs_to :type_de_champ, inverse_of: :champ
   belongs_to :parent, class_name: 'Champ'
   has_many :commentaires
@@ -11,7 +11,7 @@ class Champ < ApplicationRecord
   belongs_to :etablissement, dependent: :destroy
   has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
-  delegate :libelle, :type_champ, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, :repetition?, :dossier_link?, to: :type_de_champ
+  delegate :libelle, :type_champ, :procedure, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, :repetition?, :dossier_link?, to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
@@ -21,8 +21,20 @@ class Champ < ApplicationRecord
 
   before_create :set_dossier_id, if: :needs_dossier_id?
 
+  validates :type_de_champ_id, uniqueness: { scope: [:dossier_id, :row] }
+
   def public?
     !private?
+  end
+
+  def siblings
+    if parent
+      parent&.champs
+    elsif public?
+      dossier&.champs
+    else
+      dossier&.champs_private
+    end
   end
 
   def mandatory_and_blank?
@@ -32,7 +44,7 @@ class Champ < ApplicationRecord
   def blank?
     case type_de_champ.type_champ
     when TypeDeChamp.type_champs.fetch(:carte)
-      value.blank? || value == '[]'
+      geo_areas.blank? || value == '[]'
     else
       value.blank?
     end
@@ -68,6 +80,14 @@ class Champ < ApplicationRecord
 
   def to_typed_id
     type_de_champ.to_typed_id
+  end
+
+  def html_label?
+    true
+  end
+
+  def stable_id
+    type_de_champ.stable_id
   end
 
   private

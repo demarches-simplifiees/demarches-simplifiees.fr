@@ -1,4 +1,6 @@
 module DossierHelper
+  include EtablissementHelper
+
   def button_or_label_class(dossier)
     if dossier.accepte?
       'accepted'
@@ -10,7 +12,7 @@ module DossierHelper
   end
 
   def highlight_if_unseen_class(seen_at, updated_at)
-    if seen_at&.<(updated_at)
+    if updated_at.present? && seen_at&.<(updated_at)
       "highlighted"
     end
   end
@@ -44,12 +46,13 @@ module DossierHelper
   end
 
   def dossier_submission_is_closed?(dossier)
-    dossier.brouillon? && dossier.procedure.archivee?
+    dossier.brouillon? && dossier.procedure.close?
   end
 
-  def dossier_display_state(dossier, lower: false)
-    state = I18n.t(dossier.state, scope: [:activerecord, :attributes, :dossier, :state])
-    lower ? state.downcase : state
+  def dossier_display_state(dossier_or_state, lower: false)
+    state = dossier_or_state.is_a?(Dossier) ? dossier_or_state.state : dossier_or_state
+    display_state = I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])
+    lower ? display_state.downcase : display_state
   end
 
   def dossier_legacy_state(dossier)
@@ -67,5 +70,58 @@ module DossierHelper
     else
       dossier.state
     end
+  end
+
+  # On the 22/01/2020, a technical error on the demarches-simplifees.fr
+  # instance caused some files attached to some dossiers to be deleted.
+  #
+  # This method returns true if the dossier contained attachments
+  # whose files were deleted during this incident.
+  def has_lost_attachments(dossier)
+    if dinum_instance?
+      dossiers_with_lost_attachments_ids.include?(dossier.id)
+    else
+      false
+    end
+  end
+
+  def status_badge(state)
+    status_text = dossier_display_state(state, lower: true)
+    status_class = state.tr('_', '-')
+    content_tag(:span, status_text, class: "label #{status_class} ")
+  end
+
+  def deletion_reason_badge(reason)
+    if reason.present?
+      status_text = I18n.t(reason, scope: [:activerecord, :attributes, :deleted_dossier, :reason])
+      status_class = reason.tr('_', '-')
+    else
+      status_text = I18n.t(:unknown, scope: [:activerecord, :attributes, :deleted_dossier, :reason])
+      status_class = 'unknown'
+    end
+
+    content_tag(:span, status_text, class: "label #{status_class} ")
+  end
+
+  def demandeur_dossier(dossier)
+    if dossier.procedure.for_individual?
+      "#{dossier&.individual&.nom} #{dossier&.individual&.prenom}"
+    else
+      if dossier.etablissement.present?
+        raison_sociale_or_name(dossier.etablissement)
+      else
+        ""
+      end
+    end
+  end
+
+  private
+
+  def dinum_instance?
+    ENV['APP_HOST']&.ends_with?('demarches-simplifiees.fr')
+  end
+
+  def dossiers_with_lost_attachments_ids
+    @@ids ||= YAML.load_file(Rails.root.join('config', 'dossiers-with-lost-attachments.yml'))
   end
 end

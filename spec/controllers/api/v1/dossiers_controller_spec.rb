@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
@@ -199,6 +197,11 @@ describe API::V1::DossiersController do
               :raison_sociale,
               :siret_siege_social,
               :code_effectif_entreprise,
+              :effectif_mois,
+              :effectif_annee,
+              :effectif_mensuel,
+              :effectif_annuel,
+              :effectif_annuel_annee,
               :date_creation,
               :nom,
               :prenom

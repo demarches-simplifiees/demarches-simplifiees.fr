@@ -8,11 +8,11 @@ module Manager
     # this will be used to set the records shown on the `index` action.
     def scoped_resource
       if unfiltered_list?
-        # Don't display deleted dossiers in the unfiltered list…
-        Procedure
+        # Don't display discarded demarches in the unfiltered list…
+        Procedure.kept
       else
         # … but allow them to be searched and displayed.
-        Procedure.unscope(:where)
+        Procedure.with_discarded
       end
     end
 
@@ -22,24 +22,32 @@ module Manager
       redirect_to manager_procedure_path(procedure)
     end
 
-    def draft
-      if procedure.dossiers.empty?
-        procedure.draft!
-        flash[:notice] = "La démarche a bien été passée en brouillon."
-      else
-        flash[:alert] = "Impossible de repasser en brouillon une démarche à laquelle sont rattachés des dossiers."
-      end
+    def discard
+      procedure.discard_and_keep_track!(current_administration)
+
+      logger.info("La démarche #{procedure.id} est supprimée par #{current_administration.email}")
+      flash[:notice] = "La démarche #{procedure.id} a été supprimée."
+
       redirect_to manager_procedure_path(procedure)
     end
 
-    def hide
-      procedure.hide!
-      flash[:notice] = "La démarche a bien été supprimée, en cas d'erreur contactez un développeur."
-      redirect_to manager_procedures_path
+    def restore
+      procedure.restore(current_administration)
+
+      flash[:notice] = "La démarche #{procedure.id} a été restauré."
+
+      redirect_to manager_procedure_path(procedure)
+    end
+
+    def export_mail_brouillons
+      dossiers = procedure.dossiers.state_brouillon.includes(:user)
+      emails = dossiers.map { |d| d.user.email }.sort.uniq
+      date = Time.zone.now.strftime('%d-%m-%Y')
+      send_data(emails.join("\n"), :filename => "brouillons-#{procedure.id}-au-#{date}.csv")
     end
 
     def add_administrateur
-      administrateur = Administrateur.find_by(email: params[:email])
+      administrateur = Administrateur.by_email(params[:email])
       if administrateur
         procedure.administrateurs << administrateur
         flash[:notice] = "L'administrateur \"#{params[:email]}\" est ajouté à la démarche."
@@ -61,7 +69,7 @@ module Manager
     private
 
     def procedure
-      Procedure.find(params[:id])
+      @procedure ||= Procedure.with_discarded.find(params[:id])
     end
 
     def type_de_champ

@@ -1,0 +1,15 @@
+- content_for(:title, "#{@subject}")
+
+%p
+  Bonjour,
+
+%p
+  = t('.header', count: @deleted_dossiers.count)
+  %ul
+    - @deleted_dossiers.each do |d|
+      %li n° #{d.dossier_id} (#{d.procedure.libelle})
+
+- if @state == Dossier.states.fetch(:en_construction)
+  %p= t('.footer_en_construction', count: @deleted_dossiers.count)
+
+= render partial: "layouts/mailers/signature"

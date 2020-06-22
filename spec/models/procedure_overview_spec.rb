@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe ProcedureOverview, type: :model do
   let(:procedure) { create(:procedure, libelle: 'libelle') }
   let(:friday) { Time.zone.local(2017, 5, 12) } # vendredi 12 mai 2017, de la semaine du 8 mai
@@ -8,7 +6,7 @@ describe ProcedureOverview, type: :model do
   before { Timecop.freeze(friday) }
   after { Timecop.return }
 
-  let(:procedure_overview) { ProcedureOverview.new(procedure, monday) }
+  let(:procedure_overview) { ProcedureOverview.new(procedure, monday, [procedure.defaut_groupe_instructeur]) }
 
   describe 'dossiers_en_instruction_count' do
     let!(:en_instruction_dossier) do
@@ -54,6 +52,27 @@ describe ProcedureOverview, type: :model do
     end
 
     it { expect(procedure_overview.created_dossiers_count).to eq(1) }
+  end
+
+  describe 'with a procedure routee' do
+    let!(:gi_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
+    let!(:gi_3) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 3') }
+
+    def create_dossier_in_group(g)
+      create(:dossier, procedure: procedure, created_at: monday, state: Dossier.states.fetch(:en_instruction), groupe_instructeur: g)
+    end
+
+    let!(:created_dossier_during_the_week_on_group_2) { create_dossier_in_group(gi_2) }
+    let!(:created_dossier_during_the_week_on_group_3_a) { create_dossier_in_group(gi_3) }
+    let!(:created_dossier_during_the_week_on_group_3_b) { create_dossier_in_group(gi_3) }
+
+    let(:procedure_overview_gi_2) { ProcedureOverview.new(procedure, monday, [gi_2]) }
+    let(:procedure_overview_gi_3) { ProcedureOverview.new(procedure, monday, [gi_3]) }
+    let(:procedure_overview_default) { ProcedureOverview.new(procedure, monday, [procedure.defaut_groupe_instructeur]) }
+
+    it { expect(procedure_overview_gi_2.created_dossiers_count).to eq(1) }
+    it { expect(procedure_overview_gi_3.created_dossiers_count).to eq(2) }
+    it { expect(procedure_overview_default.created_dossiers_count).to eq(0) }
   end
 
   describe 'had_some_activities?' do

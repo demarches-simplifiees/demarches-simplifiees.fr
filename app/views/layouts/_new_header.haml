@@ -3,14 +3,26 @@
 - dossier = controller.try(:dossier_for_help)
 - procedure = controller.try(:procedure_for_help)
 
-%header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border" }
+-# only display the coronavirus to usagers (instructeurs know there are delays) when they are logged in, or on the public pages.
+- if user_signed_in?
+  - if dossier.present? && feature_enabled_for?(:coronavirus_banner, dossier.procedure)
+    = render partial: 'layouts/coronavirus_banner'
+- else
+  - if procedure.present? && feature_enabled_for?(:coronavirus_banner, procedure)
+    = render partial: 'layouts/coronavirus_banner'
+
+%header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: 'banner' }
   .header-inner-content
 
-    .flex.align-center
+    .flex.align-center.justify-center
       - if params[:controller] == 'users/commencer'
         = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
       - else
-        = link_to '', root_path_for_profile(nav_bar_profile), class: "header-logo", title: "Revenir à l’accueil"
+        - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
+        = link_to root_profile_link, class: 'header-logo justify-center', title: root_profile_libelle do
+          = image_tag 'marianne.svg', alt: 'Liberté, égalité, fraternité', width: '65px'
+          %span.big.site-title> demarches-simplifiees.fr
+          %span.small.site-title> d-s.fr
 
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         - current_url = request.path_info
@@ -34,19 +46,11 @@
     %ul.header-right-content
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         %li
-          .header-search
-            = form_tag instructeur_recherche_path, method: :get, class: "form" do
-              = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
-              %button{ title: "Rechercher" }
-                = image_tag "icons/search-blue.svg", alt: ''
+          = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: instructeur_recherche_path }
 
       - if nav_bar_profile == :user && user_signed_in? && current_user.dossiers.count > 2
         %li
-          .header-search
-            = form_tag recherche_dossiers_path, method: :post, class: "form" do
-              = text_field_tag :dossier_id, "", placeholder: "Numéro de dossier"
-              %button{ title: "Rechercher" }
-                = image_tag "icons/search-blue.svg", alt: ''
+          = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_dossiers_path }
 
       - if instructeur_signed_in? || user_signed_in?
         %li

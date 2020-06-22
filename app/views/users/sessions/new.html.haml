@@ -3,13 +3,13 @@
 .auth-form.sign-in-form
 
   = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
-    %h2.huge-title Connectez-vous
+    %h1.huge-title Connectez-vous
 
-    = f.label :email, "Email"
-    = f.text_field :email, autofocus: true
+    = f.label :email, "Email (nom@site.com)"
+    = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
 
-    = f.label :password, "Mot de passe"
-    = f.password_field :password, placeholder: "8 caractères minimum"
+    = f.label :password, "Mot de passe (#{PASSWORD_MIN_LENGTH} caractères minimum)"
+    = f.password_field :password, autocomplete: 'current-password'
 
     .auth-options
       %div

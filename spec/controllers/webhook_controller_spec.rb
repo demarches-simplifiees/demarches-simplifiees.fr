@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe WebhookController, type: :controller do
   describe '#helpscout' do
     before { allow(controller).to receive(:verify_signature!).and_return(true) }

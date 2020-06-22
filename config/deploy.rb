@@ -64,6 +64,16 @@ namespace :after_party do
   end
 end
 
+namespace :jobs_schedule do
+  desc "Run jobs_schedule tasks."
+  task :run do
+    command %{
+      echo "-----> Running jobs_schedule"
+      #{echo_cmd %[bundle exec rake jobs:schedule]}
+    }
+  end
+end
+
 namespace :service do
   desc "Restart puma"
   task :restart_puma do
@@ -123,4 +133,5 @@ task :post_deploy do
   command 'cd /home/ds/current'
 
   invoke :'after_party:run'
+  invoke :'jobs_schedule:run'
 end

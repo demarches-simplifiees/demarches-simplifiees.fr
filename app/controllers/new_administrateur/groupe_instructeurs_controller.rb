@@ -48,8 +48,40 @@ module NewAdministrateur
       end
     end
 
+    def destroy
+      if !groupe_instructeur.dossiers.empty?
+        flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
+      elsif procedure.groupe_instructeurs.one?
+        flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
+      else
+        label = groupe_instructeur.label
+        groupe_instructeur.destroy!
+        flash[:notice] = "le groupe « #{label} » a été supprimé."
+      end
+      redirect_to procedure_groupe_instructeurs_path(procedure)
+    end
+
+    def reaffecter_dossiers
+      @procedure = procedure
+      @groupe_instructeur = groupe_instructeur
+      @groupes_instructeurs = paginated_groupe_instructeurs
+        .without_group(@groupe_instructeur)
+    end
+
+    def reaffecter
+      target_group = procedure.groupe_instructeurs.find(params[:target_group])
+
+      groupe_instructeur.dossiers.with_discarded.find_each do |dossier|
+        dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
+      end
+
+      flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
+      redirect_to procedure_groupe_instructeurs_path(procedure)
+    end
+
     def add_instructeur
-      emails = params['emails'].map(&:strip).map(&:downcase)
+      emails = params['emails'].presence || []
+      emails = emails.map(&:strip).map(&:downcase)
 
       correct_emails, bad_emails = emails
         .partition { |email| URI::MailTo::EMAIL_REGEXP.match?(email) }
@@ -60,7 +92,7 @@ module NewAdministrateur
           value: bad_emails.join(', '))
       end
 
-      email_to_adds = correct_emails - groupe_instructeur.instructeurs.pluck(:email)
+      email_to_adds = correct_emails - groupe_instructeur.instructeurs.map(&:email)
 
       if email_to_adds.present?
         instructeurs = email_to_adds.map do |instructeur_email|
@@ -68,11 +100,11 @@ module NewAdministrateur
             create_instructeur(instructeur_email)
         end
 
+        groupe_instructeur.instructeurs << instructeurs
+
         GroupeInstructeurMailer
           .add_instructeurs(groupe_instructeur, instructeurs, current_user.email)
           .deliver_later
-
-        groupe_instructeur.instructeurs << instructeurs
 
         flash[:notice] = t('.assignment',
           count: email_to_adds.count,
@@ -158,8 +190,8 @@ module NewAdministrateur
     end
 
     def available_instructeur_emails
-      all = current_administrateur.instructeurs.pluck(:email)
-      assigned = groupe_instructeur.instructeurs.pluck(:email)
+      all = current_administrateur.instructeurs.map(&:email)
+      assigned = groupe_instructeur.instructeurs.map(&:email)
       (all - assigned).sort
     end
   end

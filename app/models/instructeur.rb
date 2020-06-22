@@ -1,6 +1,4 @@
 class Instructeur < ApplicationRecord
-  self.ignored_columns = ['email', 'features', 'encrypted_password', 'reset_password_token', 'reset_password_sent_at', 'remember_created_at', 'sign_in_count', 'current_sign_in_at', 'last_sign_in_at', 'current_sign_in_ip', 'last_sign_in_ip', 'failed_attempts', 'unlock_token', 'locked_at']
-
   has_and_belongs_to_many :administrateurs
 
   has_many :assign_to, dependent: :destroy
@@ -17,9 +15,17 @@ class Instructeur < ApplicationRecord
   has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
   has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
-  has_many :trusted_device_tokens
+  has_many :trusted_device_tokens, dependent: :destroy
 
-  has_one :user
+  has_one :user, dependent: :nullify
+
+  scope :with_instant_email_message_notifications, -> {
+    includes(:assign_to).where(assign_tos: { instant_email_message_notifications_enabled: true })
+  }
+
+  scope :with_instant_email_dossier_notifications, -> {
+    includes(:assign_to).where(assign_tos: { instant_email_dossier_notifications_enabled: true })
+  }
 
   default_scope { eager_load(:user) }
 
@@ -75,11 +81,12 @@ class Instructeur < ApplicationRecord
     start_date = Time.zone.now.beginning_of_week
 
     active_procedure_overviews = procedures
+      .where(assign_tos: { weekly_email_notifications_enabled: true })
       .publiees
-      .map { |procedure| procedure.procedure_overview(start_date) }
+      .map { |procedure| procedure.procedure_overview(start_date, groupe_instructeurs) }
       .filter(&:had_some_activities?)
 
-    if active_procedure_overviews.count == 0
+    if active_procedure_overviews.empty?
       nil
     else
       {
@@ -99,7 +106,8 @@ class Instructeur < ApplicationRecord
       .find_by(instructeur: self, dossier: dossier)
 
     if follow.present?
-      demande = follow.dossier.champs.updated_since?(follow.demande_seen_at).any?
+      demande = follow.dossier.champs.updated_since?(follow.demande_seen_at).any? || follow.dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at)
+      demande = false if demande.nil?
 
       annotations_privees = follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
 
@@ -148,11 +156,12 @@ class Instructeur < ApplicationRecord
   def email_notification_data
     groupe_instructeur_with_email_notifications
       .reduce([]) do |acc, groupe|
-
       procedure = groupe.procedure
 
       h = {
         nb_en_construction: groupe.dossiers.en_construction.count,
+        nb_en_instruction: groupe.dossiers.en_instruction.count,
+        nb_accepted: groupe.dossiers.accepte.where(processed_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count,
         nb_notification: notifications_for_procedure(procedure, :not_archived).count
       }
 
@@ -160,6 +169,16 @@ class Instructeur < ApplicationRecord
         h[:procedure_id] = procedure.id
         h[:procedure_libelle] = procedure.libelle
         acc << h
+      end
+
+      if h[:nb_en_instruction] > 0 || h[:nb_accepted] > 0
+        [["en_instruction", h[:nb_en_instruction]], ["accepte", h[:nb_accepted]]].each do |state, count|
+          if procedure&.declarative_with_state == state && count > 0
+            h[:procedure_id] = procedure.id
+            h[:procedure_libelle] = procedure.libelle
+            acc << h
+          end
+        end
       end
 
       acc
@@ -174,6 +193,14 @@ class Instructeur < ApplicationRecord
   def young_login_token?
     trusted_device_token = trusted_device_tokens.order(created_at: :desc).first
     trusted_device_token&.token_young?
+  end
+
+  def can_be_deleted?
+    user.administrateur.nil? && procedures.all? { |p| p.defaut_groupe_instructeur.instructeurs.count > 1 }
+  end
+
+  # required to display feature flags field in manager
+  def features
   end
 
   private

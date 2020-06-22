@@ -1,15 +1,31 @@
-require 'rails_helper'
-
 describe Dossier do
   include ActiveJob::TestHelper
 
   let(:user) { create(:user) }
 
-  describe "without_followers scope" do
-    let!(:dossier) { create(:dossier, :followed, :with_entreprise, user: user) }
-    let!(:dossier2) { create(:dossier, :with_entreprise, user: user) }
+  describe 'scopes' do
+    describe '.default_scope' do
+      let!(:dossier) { create(:dossier) }
+      let!(:discarded_dossier) { create(:dossier, :discarded) }
 
-    it { expect(Dossier.without_followers.to_a).to eq([dossier2]) }
+      subject { Dossier.all }
+
+      it { is_expected.to match_array([dossier]) }
+    end
+
+    describe '.without_followers' do
+      let!(:dossier_with_follower) { create(:dossier, :followed, :with_entreprise, user: user) }
+      let!(:dossier_without_follower) { create(:dossier, :with_entreprise, user: user) }
+
+      it { expect(Dossier.without_followers.to_a).to eq([dossier_without_follower]) }
+    end
+  end
+
+  describe 'validations' do
+    let(:procedure) { create(:procedure, :for_individual) }
+    subject(:dossier) { create(:dossier, procedure: procedure) }
+
+    it { is_expected.to validate_presence_of(:individual) }
   end
 
   describe 'with_champs' do
@@ -27,29 +43,63 @@ describe Dossier do
     end
   end
 
-  describe 'nearing_end_of_retention' do
-    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
+  describe 'brouillon_close_to_expiration' do
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, created_at: 170.days.ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, created_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, created_at: 1.year.ago, procedure: procedure) }
+
+    subject { Dossier.brouillon_close_to_expiration }
+
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
+    end
+  end
+
+  describe 'en_construction_close_to_expiration' do
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, :en_construction, en_construction_at: 170.days.ago, procedure: procedure) }
+    let!(:just_expired_dossier) { create(:dossier, :en_construction, en_construction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
+    let!(:long_expired_dossier) { create(:dossier, :en_construction, en_construction_at: 1.year.ago, procedure: procedure) }
+
+    subject { Dossier.en_construction_close_to_expiration }
+
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
+    end
+
+    context 'does not include an expiring dossier that has been postponed' do
+      before do
+        expiring_dossier.update(en_construction_conservation_extension: 1.month)
+        expiring_dossier.reload
+      end
+
+      it { is_expected.not_to include(expiring_dossier) }
+    end
+  end
+
+  describe 'en_instruction_close_to_expiration' do
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
     let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 170.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
 
-    context 'with default delay to end of retention' do
-      subject { Dossier.nearing_end_of_retention }
+    subject { Dossier.en_instruction_close_to_expiration }
 
-      it { is_expected.not_to include(young_dossier) }
-      it { is_expected.to include(expiring_dossier) }
-      it { is_expected.to include(just_expired_dossier) }
-      it { is_expected.to include(long_expired_dossier) }
-    end
-
-    context 'with custom delay to end of retention' do
-      subject { Dossier.nearing_end_of_retention('0') }
-
-      it { is_expected.not_to include(young_dossier) }
-      it { is_expected.not_to include(expiring_dossier) }
-      it { is_expected.to include(just_expired_dossier) }
-      it { is_expected.to include(long_expired_dossier) }
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
     end
   end
 
@@ -112,54 +162,42 @@ describe Dossier do
       end
     end
 
-    describe '#build_default_champs' do
-      context 'when dossier is linked to a procedure with type_de_champ_public and private' do
-        let(:dossier) { create(:dossier, user: user) }
+    describe '#create' do
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
+      let(:dossier) { create(:dossier, procedure: procedure, user: user) }
 
-        it 'build all champs needed' do
-          expect(dossier.champs.count).to eq(1)
+      it 'builds public and private champs' do
+        expect(dossier.champs.count).to eq(1)
+        expect(dossier.champs_private.count).to eq(1)
+      end
+
+      context 'when the dossier belongs to a procedure for individuals' do
+        let(:procedure) { create(:procedure, :with_type_de_champ, for_individual: true) }
+
+        it 'creates a default individual' do
+          expect(dossier.individual).to be_present
+          expect(dossier.individual.nom).to be_nil
+          expect(dossier.individual.prenom).to be_nil
+          expect(dossier.individual.gender).to be_nil
         end
 
-        it 'build all champs_private needed' do
-          expect(dossier.champs_private.count).to eq(1)
+        context 'and the user signs-in using France Connect' do
+          let(:france_connect_information) { build(:france_connect_information) }
+          let(:user) { build(:user, france_connect_information: france_connect_information) }
+
+          it 'fills the individual with the informations from France Connect' do
+            expect(dossier.individual.nom).to eq('DUBOIS')
+            expect(dossier.individual.prenom).to eq('Angela Claire Louise')
+            expect(dossier.individual.gender).to eq(Individual::GENDER_FEMALE)
+          end
         end
       end
-    end
 
-    describe '#build_default_individual' do
-      context 'when dossier is linked to a procedure with for_individual attr false' do
-        let(:dossier) { create(:dossier, user: user) }
+      context 'when the dossier belongs to a procedure for moral personas' do
+        let(:procedure) { create(:procedure, :with_type_de_champ, for_individual: false) }
 
-        it 'have no object created' do
+        it 'doesn’t create a individual' do
           expect(dossier.individual).to be_nil
-        end
-      end
-
-      context 'when dossier is linked to a procedure with for_individual attr true' do
-        let(:dossier) { create(:dossier, user: user, procedure: (create :procedure, for_individual: true)) }
-
-        it 'have no object created' do
-          expect(dossier.individual).not_to be_nil
-        end
-      end
-    end
-
-    describe '#save' do
-      subject { build(:dossier, procedure: procedure, user: user) }
-      let!(:procedure) { create(:procedure) }
-
-      context 'when is linked to a procedure' do
-        it 'creates default champs' do
-          expect(subject).to receive(:build_default_champs)
-          subject.save
-        end
-      end
-      context 'when is not linked to a procedure' do
-        subject { create(:dossier, procedure: nil, user: user) }
-
-        it 'does not create default champs' do
-          expect(subject).not_to receive(:build_default_champs)
-          subject.update(state: Dossier.states.fetch(:en_construction))
         end
       end
     end
@@ -392,6 +430,52 @@ describe Dossier do
     it { is_expected.to match([dossier3, dossier4, dossier2]) }
   end
 
+  describe "#assign_to_groupe_instructeur" do
+    let(:procedure) { create(:procedure) }
+    let(:new_groupe_instructeur_new_procedure) { create(:groupe_instructeur) }
+    let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+    it "can change groupe instructeur" do
+      expect(dossier.assign_to_groupe_instructeur(new_groupe_instructeur_new_procedure)).to be_falsey
+      expect(dossier.groupe_instructeur).not_to eq(new_groupe_instructeur_new_procedure)
+    end
+
+    it "can not change groupe instructeur if new groupe is from another procedure" do
+      expect(dossier.assign_to_groupe_instructeur(new_groupe_instructeur)).to be_truthy
+      expect(dossier.groupe_instructeur).to eq(new_groupe_instructeur)
+    end
+  end
+
+  describe "#unfollow_stale_instructeurs" do
+    let(:procedure) { create(:procedure, :published) }
+    let(:instructeur) { create(:instructeur) }
+    let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
+    let(:instructeur2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur, new_groupe_instructeur]) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:last_operation) { DossierOperationLog.last }
+
+    before do
+      allow(DossierMailer).to receive(:notify_groupe_instructeur_changed).and_return(double(deliver_later: nil))
+    end
+
+    it "unfollows stale instructeurs when groupe instructeur change" do
+      instructeur.follow(dossier)
+      instructeur2.follow(dossier)
+      dossier.reload.assign_to_groupe_instructeur(new_groupe_instructeur, procedure.administrateurs.first)
+
+      expect(dossier.reload.followers_instructeurs).not_to include(instructeur)
+      expect(dossier.reload.followers_instructeurs).to include(instructeur2)
+
+      expect(DossierMailer).to have_received(:notify_groupe_instructeur_changed).with(instructeur, dossier)
+      expect(DossierMailer).not_to have_received(:notify_groupe_instructeur_changed).with(instructeur2, dossier)
+
+      expect(last_operation.operation).to eq("changer_groupe_instructeur")
+      expect(last_operation.dossier).to eq(dossier)
+      expect(last_operation.automatic_operation?).to be_falsey
+    end
+  end
+
   describe "#send_dossier_received" do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
@@ -527,23 +611,6 @@ describe Dossier do
     end
   end
 
-  describe ".default_scope" do
-    let!(:dossier) { create(:dossier, hidden_at: hidden_at) }
-
-    context "when dossier is not hidden" do
-      let(:hidden_at) { nil }
-
-      it { expect(Dossier.count).to eq(1) }
-      it { expect(Dossier.all).to include(dossier) }
-    end
-
-    context "when dossier is hidden" do
-      let(:hidden_at) { 1.day.ago }
-
-      it { expect(Dossier.count).to eq(0) }
-    end
-  end
-
   describe 'updated_at' do
     let!(:dossier) { create(:dossier) }
     let(:modif_date) { Time.zone.parse('01/01/2100') }
@@ -578,7 +645,7 @@ describe Dossier do
   end
 
   describe '#owner_name' do
-    let!(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure) }
     subject { dossier.owner_name }
 
     context 'when there is no entreprise or individual' do
@@ -594,70 +661,117 @@ describe Dossier do
     end
 
     context 'when there is an individual' do
-      let(:dossier) { create(:dossier, :for_individual, procedure: procedure) }
+      let(:procedure) { create(:procedure, :for_individual) }
+      let(:dossier) { create(:dossier, :with_individual, procedure: procedure) }
 
       it { is_expected.to eq("#{dossier.individual.nom} #{dossier.individual.prenom}") }
     end
   end
 
-  describe "#delete_and_keep_track" do
-    let(:dossier) { create(:dossier) }
-    let(:deleted_dossier) { DeletedDossier.find_by!(dossier_id: dossier.id) }
+  describe "#discard_and_keep_track!" do
+    let(:dossier) { create(:dossier, :en_construction) }
+    let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
+    let(:reason) { :user_request }
 
     before do
       allow(DossierMailer).to receive(:notify_deletion_to_user).and_return(double(deliver_later: nil))
       allow(DossierMailer).to receive(:notify_deletion_to_administration).and_return(double(deliver_later: nil))
     end
 
-    subject! { dossier.delete_and_keep_track(dossier.user) }
+    subject! { dossier.discard_and_keep_track!(dossier.user, reason) }
 
-    it 'hides the dossier' do
-      expect(dossier.hidden_at).to be_present
-    end
-
-    it 'creates a DeletedDossier record' do
-      expect(deleted_dossier.dossier_id).to eq dossier.id
-      expect(deleted_dossier.procedure).to eq dossier.procedure
-      expect(deleted_dossier.state).to eq dossier.state
-      expect(deleted_dossier.deleted_at).to be_present
-    end
-
-    it 'notifies the user' do
-      expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
-    end
-
-    it 'records the operation in the log' do
-      expect(last_operation.operation).to eq("supprimer")
-      expect(last_operation.automatic_operation?).to be_falsey
-    end
-
-    context 'where instructeurs are following the dossier' do
-      let(:dossier) { create(:dossier, :en_construction, :followed) }
-      let!(:non_following_instructeur) do
-        non_following_instructeur = create(:instructeur)
-        non_following_instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
-        non_following_instructeur
-      end
-
-      it 'notifies the following instructeurs' do
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.followers_instructeurs.first.email)
-      end
-    end
-
-    context 'when there are no following instructeurs' do
-      let(:dossier) { create(:dossier, :en_construction) }
-      it 'notifies the procedure administrateur' do
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
-        expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateurs.first.email)
-      end
-    end
-
-    context 'when dossier is brouillon' do
+    context 'brouillon' do
       let(:dossier) { create(:dossier) }
-      it 'do not notifies the procedure administrateur' do
-        expect(DossierMailer).not_to have_received(:notify_deletion_to_administration)
+
+      it 'hides the dossier' do
+        expect(dossier.discarded?).to be_truthy
+      end
+
+      it 'do not creates a DeletedDossier record' do
+        expect(deleted_dossier).to be_nil
+      end
+
+      it 'do not records the operation in the log' do
+        expect(last_operation).to be_nil
+      end
+    end
+
+    context 'en_construction' do
+      it 'hides the dossier' do
+        expect(dossier.hidden_at).to be_present
+      end
+
+      it 'creates a DeletedDossier record' do
+        expect(deleted_dossier.reason).to eq DeletedDossier.reasons.fetch(reason)
+        expect(deleted_dossier.dossier_id).to eq dossier.id
+        expect(deleted_dossier.procedure).to eq dossier.procedure
+        expect(deleted_dossier.state).to eq dossier.state
+        expect(deleted_dossier.deleted_at).to be_present
+      end
+
+      it 'notifies the user' do
+        expect(DossierMailer).to have_received(:notify_deletion_to_user).with(deleted_dossier, dossier.user.email)
+      end
+
+      it 'records the operation in the log' do
+        expect(last_operation.operation).to eq("supprimer")
+        expect(last_operation.automatic_operation?).to be_falsey
+      end
+
+      context 'where instructeurs are following the dossier' do
+        let(:dossier) { create(:dossier, :en_construction, :followed) }
+        let!(:non_following_instructeur) do
+          non_following_instructeur = create(:instructeur)
+          non_following_instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
+          non_following_instructeur
+        end
+
+        it 'notifies the following instructeurs' do
+          expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
+          expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.followers_instructeurs.first.email)
+        end
+      end
+
+      context 'when there are no following instructeurs' do
+        let(:dossier) { create(:dossier, :en_construction) }
+        it 'notifies the procedure administrateur' do
+          expect(DossierMailer).to have_received(:notify_deletion_to_administration).once
+          expect(DossierMailer).to have_received(:notify_deletion_to_administration).with(deleted_dossier, dossier.procedure.administrateurs.first.email)
+        end
+      end
+
+      context 'when dossier is brouillon' do
+        let(:dossier) { create(:dossier) }
+        it 'do not notifies the procedure administrateur' do
+          expect(DossierMailer).not_to have_received(:notify_deletion_to_administration)
+        end
+      end
+
+      context 'with reason: manager_request' do
+        let(:reason) { :manager_request }
+
+        it 'hides the dossier' do
+          expect(dossier.discarded?).to be_truthy
+        end
+
+        it 'records the operation in the log' do
+          expect(last_operation.operation).to eq("supprimer")
+          expect(last_operation.automatic_operation?).to be_falsey
+        end
+      end
+
+      context 'with reason: user_removed' do
+        let(:reason) { :user_removed }
+
+        it 'hides the dossier' do
+          expect(dossier.discarded?).to be_truthy
+        end
+
+        it 'records the operation in the log' do
+          expect(last_operation.operation).to eq("supprimer")
+          expect(last_operation.automatic_operation?).to be_falsey
+        end
       end
     end
   end
@@ -702,8 +816,8 @@ describe Dossier do
       let(:state) { Dossier.states.fetch(:brouillon) }
       it { is_expected.to be true }
 
-      context "procedure is archived" do
-        before { procedure.archive }
+      context "procedure is closed" do
+        before { procedure.close! }
         it { is_expected.to be false }
       end
     end
@@ -756,32 +870,6 @@ describe Dossier do
       before { dossier.archived = true }
 
       it { is_expected.to be false }
-    end
-  end
-
-  context "retention date" do
-    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds: 6) }
-    let(:uninstructed_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:young_dossier) { create(:dossier, :en_instruction, en_instruction_at: Time.zone.now, procedure: procedure) }
-    let(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 6.months.ago, procedure: procedure) }
-    let(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
-    let(:modif_date) { Time.zone.parse('01/01/2100') }
-
-    before { Timecop.freeze(modif_date) }
-    after { Timecop.return }
-
-    describe "#retention_end_date" do
-      it { expect(uninstructed_dossier.retention_end_date).to be_nil }
-      it { expect(young_dossier.retention_end_date).to eq(6.months.from_now) }
-      it { expect(just_expired_dossier.retention_end_date).to eq(Time.zone.now) }
-      it { expect(long_expired_dossier.retention_end_date).to eq(6.months.ago) }
-    end
-
-    describe "#retention_expired?" do
-      it { expect(uninstructed_dossier).not_to be_retention_expired }
-      it { expect(young_dossier).not_to be_retention_expired }
-      it { expect(just_expired_dossier).to be_retention_expired }
-      it { expect(long_expired_dossier).to be_retention_expired }
     end
   end
 
@@ -968,7 +1056,7 @@ describe Dossier do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -981,6 +1069,7 @@ describe Dossier do
     end
 
     it { expect(dossier.state).to eq('en_instruction') }
+    it { expect(dossier.archived).to be_falsey }
     it { expect(dossier.processed_at).to be_nil }
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.attestation).to be_nil }
@@ -1019,18 +1108,6 @@ describe Dossier do
     end
   end
 
-  describe '#update_with_france_connect' do
-    let(:dossier) { create(:dossier, user: user) }
-    let(:user_info) { create(:france_connect_information) }
-
-    it {
-      dossier.update_with_france_connect(user_info)
-      expect(dossier.individual.gender).to eq 'Mme'
-      expect(dossier.individual.nom).to eq user_info.family_name
-      expect(dossier.individual.prenom).to eq user_info.given_name
-    }
-  end
-
   describe '#for_procedure' do
     let!(:procedure_1) { create(:procedure)  }
     let!(:procedure_2) { create(:procedure)  }
@@ -1046,5 +1123,173 @@ describe Dossier do
 
     it { expect(Dossier.for_procedure(procedure_1)).to contain_exactly(dossier_1_1, dossier_1_2) }
     it { expect(Dossier.for_procedure(procedure_2)).to contain_exactly(dossier_2_1) }
+  end
+
+  describe '#notify_draft_not_submitted' do
+    let!(:user1) { create(:user) }
+    let!(:user2) { create(:user) }
+    let!(:procedure_near_closing) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days) }
+    let!(:procedure_closed_later) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days + 1.day) }
+    let!(:procedure_closed_before) { create(:procedure, :published, auto_archive_on: Time.zone.today + Dossier::REMAINING_DAYS_BEFORE_CLOSING.days - 1.day) }
+
+    # user 1 has three draft dossiers where one is for procedure that closes in two days ==> should trigger one mail
+    let!(:draft_near_closing) { create(:dossier, user: user1, procedure: procedure_near_closing) }
+    let!(:draft_before) { create(:dossier, user: user1, procedure: procedure_closed_before) }
+    let!(:draft_later) { create(:dossier, user: user1, procedure: procedure_closed_later) }
+
+    # user 2 submitted a draft and en_construction dossier for the same procedure ==> should not trigger the mail
+    let!(:draft_near_closing_2) { create(:dossier, :en_construction, user: user2, procedure: procedure_near_closing) }
+    let!(:submitted_near_closing_2) { create(:dossier, user: user2, procedure: procedure_near_closing) }
+
+    before do
+      allow(DossierMailer).to receive(:notify_brouillon_not_submitted).and_return(double(deliver_later: nil))
+      Dossier.notify_draft_not_submitted
+    end
+
+    it 'notifies draft is not submitted' do
+      expect(DossierMailer).to have_received(:notify_brouillon_not_submitted).once
+      expect(DossierMailer).to have_received(:notify_brouillon_not_submitted).with(draft_near_closing)
+    end
+  end
+
+  describe '#geo_position' do
+    let(:lat) { "46.538192" }
+    let(:lon) { "2.428462" }
+    let(:zoom) { "13" }
+
+    let(:etablissement_geo_adresse_lat) { "40.7143528" }
+    let(:etablissement_geo_adresse_lon) { "-74.0059731" }
+
+    let(:result) { { lat: lat, lon: lon, zoom: zoom } }
+    let(:dossier) { create(:dossier) }
+
+    it 'should geolocate' do
+      expect(dossier.geo_position).to eq(result)
+    end
+
+    context 'with etablissement' do
+      before do
+        Geocoder::Lookup::Test.add_stub(
+          dossier.etablissement.geo_adresse, [
+            {
+              'coordinates' => [etablissement_geo_adresse_lat.to_f, etablissement_geo_adresse_lon.to_f]
+            }
+          ]
+        )
+      end
+
+      let(:dossier) { create(:dossier, :with_entreprise) }
+      let(:result) { { lat: etablissement_geo_adresse_lat, lon: etablissement_geo_adresse_lon, zoom: zoom } }
+
+      it 'should geolocate' do
+        expect(dossier.geo_position).to eq(result)
+      end
+    end
+  end
+
+  describe 'dossier_operation_log after dossier deletion' do
+    let(:dossier) { create(:dossier) }
+    let(:dossier_operation_log) { create(:dossier_operation_log, dossier: dossier) }
+
+    it 'should nullify dossier link' do
+      expect(dossier_operation_log.dossier).to eq(dossier)
+      expect(DossierOperationLog.count).to eq(1)
+      dossier.destroy
+      expect(dossier_operation_log.reload.dossier).to be_nil
+      expect(DossierOperationLog.count).to eq(1)
+    end
+  end
+
+  describe 'discarded_brouillon_expired and discarded_en_construction_expired' do
+    let(:administration) { create(:administration) }
+
+    before do
+      create(:dossier)
+      create(:dossier, :en_construction)
+      create(:dossier).discard!
+      create(:dossier, :en_construction).discard!
+
+      Timecop.travel(2.months.ago) do
+        create(:dossier).discard!
+        create(:dossier, :en_construction).discard!
+
+        create(:dossier).procedure.discard_and_keep_track!(administration)
+        create(:dossier, :en_construction).procedure.discard_and_keep_track!(administration)
+      end
+      Timecop.travel(1.week.ago) do
+        create(:dossier).discard!
+        create(:dossier, :en_construction).discard!
+      end
+    end
+
+    it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
+    it { expect(Dossier.discarded_en_construction_expired.count).to eq(2) }
+  end
+
+  describe "discarded procedure dossier should be able to access it's procedure" do
+    let(:dossier) { create(:dossier) }
+    let(:procedure) { dossier.reload.procedure }
+
+    before { dossier.procedure.discard! }
+
+    it { expect(procedure).not_to be_nil }
+    it { expect(procedure.discarded?).to be_truthy }
+  end
+
+  describe "to_feature_collection" do
+    let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
+    let(:champ) { create(:champ_carte, geo_areas: [geo_area]) }
+    let(:dossier) { create(:dossier, champs: [champ]) }
+
+    it 'should have all champs carto' do
+      expect(dossier.to_feature_collection).to eq({
+        type: 'FeatureCollection',
+        id: dossier.id,
+        bbox: [2.428439855575562, 46.538491597754714, 2.42824137210846, 46.53841410755813],
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              'coordinates' => [[[2.428439855575562, 46.538476837725796], [2.4284291267395024, 46.53842148758162], [2.4282521009445195, 46.53841410755813], [2.42824137210846, 46.53847314771794], [2.428284287452698, 46.53847314771794], [2.428364753723145, 46.538487907747864], [2.4284291267395024, 46.538491597754714], [2.428439855575562, 46.538476837725796]]],
+              'type' => 'Polygon'
+            },
+            properties: {
+              area: 219.0,
+              champ_id: champ.stable_id,
+              dossier_id: dossier.id,
+              id: geo_area.id,
+              source: 'selection_utilisateur'
+            }
+          }
+        ]
+      })
+    end
+  end
+
+  describe "with_notifiable_procedure" do
+    let(:test_procedure) { create(:procedure) }
+    let(:published_procedure) { create(:procedure, :published) }
+    let(:closed_procedure) { create(:procedure, :closed) }
+    let(:unpublished_procedure) { create(:procedure, :unpublished) }
+
+    let!(:dossier_on_test_procedure) { create(:dossier, procedure: test_procedure) }
+    let!(:dossier_on_published_procedure) { create(:dossier, procedure: published_procedure) }
+    let!(:dossier_on_closed_procedure) { create(:dossier, procedure: closed_procedure) }
+    let!(:dossier_on_unpublished_procedure) { create(:dossier, procedure: unpublished_procedure) }
+
+    let(:notify_on_closed) { false }
+    let(:dossiers) { Dossier.with_notifiable_procedure(notify_on_closed: notify_on_closed) }
+
+    it 'should find dossiers with notifiable procedure' do
+      expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_unpublished_procedure])
+    end
+
+    context 'when notify on closed is true' do
+      let(:notify_on_closed) { true }
+
+      it 'should find dossiers with notifiable procedure' do
+        expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_closed_procedure, dossier_on_unpublished_procedure])
+      end
+    end
   end
 end

@@ -28,7 +28,7 @@ describe NotificationService do
         create(:assign_to,
           instructeur: instructeur_with_email_notifications,
           procedure: procedure,
-          email_notifications_enabled: true)
+          daily_email_notifications_enabled: true)
       end
 
       context "when there is no activity on the instructeur's procedures" do
@@ -44,6 +44,49 @@ describe NotificationService do
         it do
           subject
           expect(InstructeurMailer).to have_received(:send_notifications)
+        end
+      end
+
+      context 'when a declarative dossier in instruction exists on this procedure' do
+        let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        before do
+          procedure.update(declarative_with_state: "en_instruction")
+          DeclarativeProceduresJob.new.perform
+          dossier.reload
+        end
+
+        it do
+          subject
+          expect(InstructeurMailer).to have_received(:send_notifications)
+        end
+      end
+
+      context 'when a declarative dossier in accepte on yesterday exists on this procedure' do
+        let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        before do
+          procedure.update(declarative_with_state: "accepte")
+          DeclarativeProceduresJob.new.perform
+          dossier.update(processed_at: Time.zone.yesterday.beginning_of_day)
+          dossier.reload
+        end
+
+        it do
+          subject
+          expect(InstructeurMailer).to have_received(:send_notifications)
+        end
+      end
+
+      context 'when a declarative dossier in accepte on today exists on this procedure' do
+        let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        before do
+          procedure.update(declarative_with_state: "accepte")
+          DeclarativeProceduresJob.new.perform
+          dossier.reload
+        end
+
+        it do
+          subject
+          expect(InstructeurMailer).not_to have_received(:send_notifications)
         end
       end
 
