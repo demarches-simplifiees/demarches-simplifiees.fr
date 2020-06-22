@@ -340,9 +340,6 @@ Lint/EmptyInterpolation:
 Lint/EmptyWhen:
   Enabled: true
 
-Lint/EndInMethod:
-  Enabled: true
-
 Lint/EnsureReturn:
   Enabled: false
 
@@ -793,6 +790,9 @@ Rails/TimeZone:
 
 Rails/UniqBeforePluck:
   Enabled: true
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
 
 Rails/UnknownEnv:
   Enabled: false

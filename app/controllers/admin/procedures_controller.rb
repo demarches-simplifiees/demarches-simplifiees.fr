@@ -92,9 +92,7 @@ class Admin::ProceduresController < AdminController
 
       flash.now.notice = "La démarche a correctement été clonée vers le nouvel administrateur."
 
-      respond_to do |format|
-        format.js
-      end
+      respond_to(&:js)
     end
   end
 
