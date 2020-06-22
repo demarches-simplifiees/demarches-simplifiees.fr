@@ -10,6 +10,7 @@ describe Admin::AttestationTemplatesController, type: :controller do
   let(:signature2) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
   let(:interlaced_logo) { fixture_file_upload('spec/fixtures/files/interlaced-black.png', 'image/png') }
   let(:uninterlaced_logo) { fixture_file_upload('spec/fixtures/files/uninterlaced-black.png', 'image/png') }
+  let(:invalid_logo) { fixture_file_upload('spec/fixtures/files/invalid_file_format.json', 'application/json') }
 
   before do
     sign_in(admin.user)
@@ -40,7 +41,20 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
     context 'with an interlaced png' do
       let(:upload_params) { { logo: interlaced_logo } }
-      it { expect(procedure.attestation_template.logo.download).to eq(uninterlaced_logo.read) }
+
+      it 'displays the logo' do
+        expect(assigns(:attestation)[:logo].read).to eq(uninterlaced_logo.read)
+      end
+
+      it 'doesn’t save the logo permanently yet' do
+        expect(procedure.attestation_template.logo.attached?).to be(false)
+      end
+    end
+
+    context 'with an invalid logo' do
+      let(:upload_params) { { logo: invalid_logo } }
+      it { expect(procedure.attestation_template.logo.attached?).to be false }
+      it { expect(flash.alert).to be_present }
     end
 
     context 'if an attestation template does not exist on the procedure' do
