@@ -69,7 +69,7 @@ Rails.application.routes.draw do
   # Monitoring
   #
 
-  get "/ping" => "ping#index", :constraints => { :ip => /127.0.0.1/ }
+  get "/ping" => "ping#index"
 
   #
   # Authentication
