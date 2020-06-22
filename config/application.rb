@@ -63,6 +63,5 @@ module TPS
     }
 
     config.skylight.probes += [:graphql]
-
   end
 end
