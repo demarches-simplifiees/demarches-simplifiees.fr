@@ -67,6 +67,7 @@
     .label {
       width: 110px;
       text-align: center;
+      margin: 0 4px;
     }
   }
 
@@ -83,4 +84,17 @@
   .follow-col {
     width: 200px;
   }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: none;
 }
