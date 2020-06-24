@@ -23,7 +23,7 @@
 
   @mixin notice-text-style {
     font-size: 16px;
-    color: $grey;
+    color: $dark-grey;
   }
 
   .mandatory {
@@ -413,7 +413,7 @@
   }
 
   input.aa-hint {
-    color: $grey;
+    color: $dark-grey;
   }
 
   .datetime {
