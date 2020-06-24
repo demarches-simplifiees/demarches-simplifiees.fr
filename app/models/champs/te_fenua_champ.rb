@@ -53,6 +53,33 @@ class Champs::TeFenuaChamp < Champ
     }
   end
 
+  def bounding_box
+    factory = RGeo::Geographic.simple_mercator_factory
+    bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
+
+    if geo_areas.present?
+      geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+        bounding_box.add(geometry)
+      end
+    elsif dossier.present?
+      point = dossier.geo_position
+      bounding_box.add(factory.point(point[:lon], point[:lat]))
+    else
+      bounding_box.add(factory.point(DEFAULT_LON, DEFAULT_LAT))
+    end
+
+    [bounding_box.max_point, bounding_box.min_point].compact.flat_map(&:coordinates)
+  end
+
+  def to_feature_collection
+    {
+      type: 'FeatureCollection',
+      id: stable_id,
+      bbox: bounding_box,
+      features: geo_areas.map(&:to_feature)
+    }
+  end
+
   def geo_json_from_value
     @geo_json_from_value ||= begin
       parsed_value = value.blank? ? nil : JSON.parse(value, symbolize_names: true)
