@@ -23,6 +23,10 @@ class Champs::MultipleDropDownListChamp < Champ
     value.present? ? selected_options.join(', ') : nil
   end
 
+  def render_as_checkboxes?
+    drop_down_list.enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_CHECKBOX
+  end
+
   private
 
   def format_before_save
