@@ -1,4 +1,8 @@
 class ChampPolicy < ApplicationPolicy
+  # Scope for WRITING to a champ.
+  #
+  # (If the need for a scope to READ a champ emerges, we can implement another scope
+  # in this file, following this example: https://github.com/varvet/pundit/issues/368#issuecomment-196111115)
   class Scope < ApplicationScope
     def resolve
       if user.blank?
