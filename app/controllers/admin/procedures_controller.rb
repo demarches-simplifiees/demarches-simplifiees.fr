@@ -71,6 +71,8 @@ class Admin::ProceduresController < AdminController
 
     @procedure.publish_or_reopen!(current_administrateur)
 
+    AdministrationMailer.procedure_published(@procedure).deliver_later
+
     flash.notice = "Démarche publiée"
     render js: "window.location='#{admin_procedures_path}'"
   rescue ActiveRecord::RecordInvalid

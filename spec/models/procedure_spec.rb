@@ -837,6 +837,13 @@ describe Procedure do
 
       it { is_expected.to eq 'inscription-au-college' }
     end
+
+    context 'when a service is given' do
+      let!(:service) { create :service, nom: "Direction Générale de l'éducation et de l'enseignement" }
+      let(:procedure) { create :procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', service: service }
+
+      it { is_expected.to eq 'dgee-inscription-au-college' }
+    end
   end
 
   describe ".default_scope" do
