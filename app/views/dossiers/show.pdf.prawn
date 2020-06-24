@@ -1,11 +1,11 @@
 require 'prawn/measurement_extensions'
 
 def format_in_2_lines(pdf, label, text)
-  pdf.font 'marianne', style: :bold, size: 12 do
+  pdf.font 'marianne', style: :bold, size: 10  do
     pdf.text label
   end
-  pdf.text text
-  pdf.text "\n"
+  pdf.text text, size: 9
+  pdf.text "\n", size: 9
 end
 
 def format_in_2_columns(pdf, label, text)
@@ -16,7 +16,7 @@ def format_in_2_columns(pdf, label, text)
 end
 
 def add_title(pdf, title)
-  title_style = {style: :bold, size: 24}
+  title_style = {style: :bold, size: 20}
   pdf.font 'marianne', title_style do
     pdf.text title
   end
@@ -83,7 +83,7 @@ def render_single_champ(pdf, champ)
   when 'Champs::PieceJustificativeChamp'
     return
   when 'Champs::HeaderSectionChamp'
-    pdf.font 'marianne', style: :bold, size: 18 do
+    pdf.font 'marianne', style: :bold, size: 14 do
       pdf.text champ.libelle
     end
     pdf.text "\n"
@@ -92,7 +92,7 @@ def render_single_champ(pdf, champ)
   when 'Champs::CarteChamp'
     format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
-    pdf.font 'marianne', style: :bold, size: 12 do
+    pdf.font 'marianne', style: :bold, size: 9 do
       pdf.text champ.libelle
     end
     pdf.text " - SIRET: #{champ.to_s}"
@@ -130,8 +130,8 @@ def add_message(pdf, message)
   end
 
   pdf.text "#{sender}, #{format_date(message.created_at)}", style: :bold
-  pdf.text ActionView::Base.full_sanitizer.sanitize(message.body)
-  pdf.text "\n"
+  pdf.text ActionView::Base.full_sanitizer.sanitize(message.body), size: 9
+  pdf.text "\n", size: 9
 end
 
 def add_avis(pdf, avis)
