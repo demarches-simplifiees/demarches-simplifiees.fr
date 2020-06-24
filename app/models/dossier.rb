@@ -700,9 +700,10 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def attachments_downloadable?
-    PiecesJustificativesService.liste_pieces_justificatives(self).present? \
-      && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
+  # FIXME: move to the PieceJustificativeService
+  def attachments_downloadable?(current_account)
+    PiecesJustificativesService.liste_pieces_justificatives(self, current_account).present? \
+      && PiecesJustificativesService.pieces_justificatives_total_size(self, current_account) < Dossier::TAILLE_MAX_ZIP
   end
 
   def linked_dossiers_for(instructeur)

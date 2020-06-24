@@ -1,14 +1,14 @@
 class PiecesJustificativesService
-  def self.liste_pieces_justificatives(dossier)
-    pjs_champs = pjs_for_champs(dossier)
+  def self.liste_pieces_justificatives(dossier, requesting_account)
+    pjs_champs = pjs_for_champs(dossier, requesting_account)
     pjs_commentaires = pjs_for_commentaires(dossier)
 
     (pjs_champs + pjs_commentaires)
       .filter(&:attached?)
   end
 
-  def self.pieces_justificatives_total_size(dossier)
-    liste_pieces_justificatives(dossier)
+  def self.pieces_justificatives_total_size(dossier, requesting_account)
+    liste_pieces_justificatives(dossier, requesting_account)
       .sum(&:byte_size)
   end
 
@@ -42,14 +42,8 @@ class PiecesJustificativesService
 
   private
 
-  def self.pjs_for_champs(dossier)
-    allowed_champs = dossier.champs
-
-    allowed_child_champs = allowed_champs
-      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .flat_map(&:champs)
-
-    (allowed_champs + allowed_child_champs)
+  def self.pjs_for_champs(dossier, requesting_account)
+    ChampPolicy::ReadScope.new(requesting_account, Champ).resolve.where(dossier: dossier)
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
       .map(&:piece_justificative_file)
   end

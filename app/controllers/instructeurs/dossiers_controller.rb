@@ -202,9 +202,9 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      return head(:forbidden) if !dossier.attachments_downloadable?
+      return head(:forbidden) if !dossier.attachments_downloadable?(current_account)
 
-      files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
+      files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier, current_account)
 
       zipline(files, "dossier-#{dossier.id}.zip")
     end
