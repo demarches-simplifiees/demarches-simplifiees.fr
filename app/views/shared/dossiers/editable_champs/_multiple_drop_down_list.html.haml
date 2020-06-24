@@ -1,7 +1,15 @@
 - if champ.drop_down_list && champ.drop_down_list.options.any?
-  = form.select :value,
-      champ.drop_down_list.options,
-      { selected: champ.selected_options,
-        disabled: champ.drop_down_list.disabled_options },
-      multiple: true,
-      class: 'select2'
+  - if champ.render_as_checkboxes?
+    - champ.drop_down_list.enabled_non_empty_options.each do |option|
+      .editable-champ.editable-champ-checkbox
+        %label
+          = form.check_box :value, { multiple: true, checked: champ&.value&.include?(option) }, option, nil
+          = option
+  - else
+    = form.select :value,
+        champ.drop_down_list.options,
+        { selected: champ.selected_options,
+          disabled: champ.drop_down_list.disabled_options },
+        multiple: true,
+        class: 'select2'
+

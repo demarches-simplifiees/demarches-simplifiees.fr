@@ -1,5 +1,14 @@
 - if champ.drop_down_list && champ.drop_down_list.options.any?
-  = form.select :value,
-    champ.drop_down_list.options,
-    disabled: champ.drop_down_list.disabled_options,
-    required: champ.mandatory?
+  - if champ.render_as_radios?
+    %fieldset.radios
+      %legend.mandatory-explanation
+        Sélectionnez une des valeurs
+      - champ.drop_down_list.enabled_non_empty_options.each do |option|
+        %label
+          = form.radio_button :value, option
+          = option
+  - else
+    = form.select :value,
+      champ.drop_down_list.options,
+      disabled: champ.drop_down_list.disabled_options,
+      required: champ.mandatory?
