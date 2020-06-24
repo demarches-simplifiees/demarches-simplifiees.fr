@@ -8,19 +8,32 @@ def format_in_2_lines(pdf, label, text)
   pdf.text "\n"
 end
 
+def render_box(pdf, text, x, width)
+  box = ::Prawn::Text::Box.new(text, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor] })
+  box.render
+  box.height
+end
+
 def format_in_2_columns(pdf, label, text)
-  pdf.text_box label, width: 200, height: 100, overflow: :expand, at: [0, pdf.cursor]
-      pdf.text_box ":", width: 10, height: 100, overflow: :expand, at: [100, pdf.cursor]
-  pdf.text_box text, width: 420, height: 100, overflow: :expand, at: [110, pdf.cursor]
-  pdf.text "\n"
+  h1 = render_box(pdf, label, 0, 100)
+  h2 = render_box(pdf, ':', 100, 10)
+  h3 = render_box(pdf, text, 110, pdf.bounds.width - 110)
+  pdf.move_down 5 + [h1,h2,h3].max
+  # pdf.text_box label, width: 100, overflow: :expand, at: [0, pdf.cursor]
+  # pdf.text_box ":", width: 10, height: 100, overflow: :expand, at: [100, pdf.cursor]
+  # pdf.text_box text, width: 420, height: 100, overflow: :expand, at: [110, pdf.cursor]
+  # pdf.move_down box.height + 5
 end
 
 def add_title(pdf, title)
   title_style = {style: :bold, size: 24}
+  pdf.fill_color "E11619"
+
   pdf.font 'liberation serif', title_style do
     pdf.text title
   end
   pdf.text "\n"
+  pdf.fill_color "000000"
 end
 
 def format_date(date)
@@ -47,33 +60,32 @@ def render_siret_info(pdf, etablissement)
 end
 
 def render_identite_etablissement(pdf, etablissement)
-  pdf.text " - SIRET : #{etablissement.siret}"
-  pdf.text " - SIRET du siège social: #{etablissement.entreprise.siret_siege_social}"
-  pdf.text " - Dénomination : #{raison_sociale_or_name(etablissement)}"
-  pdf.text " - Forme juridique : #{etablissement.entreprise_forme_juridique}"
+  format_in_2_columns(pdf, "Numéro TAHITI", etablissement.siret)
+  format_in_2_columns(pdf, "SIRET du siège social", etablissement.entreprise.siret_siege_social) if etablissement.entreprise.siret_siege_social.present?
+  format_in_2_columns(pdf, "Dénomination", raison_sociale_or_name(etablissement))
+  format_in_2_columns(pdf, "Forme juridique ", etablissement.entreprise_forme_juridique)
   if etablissement.entreprise_capital_social.present?
-    pdf.text " - Capital social : #{pretty_currency(etablissement.entreprise_capital_social)}"
+    format_in_2_columns(pdf, "Capital social ", pretty_currency(etablissement.entreprise_capital_social))
   end
-  pdf.text " - Libellé NAF : #{etablissement.libelle_naf}"
-  pdf.text " - Code NAF : #{etablissement.naf}"
-  pdf.text " - Date de création : #{try_format_date(etablissement.entreprise.date_creation)}"
+  format_in_2_columns(pdf, "Libellé NAF ", etablissement.libelle_naf)
+  format_in_2_columns(pdf, "Code NAF ", etablissement.naf)
+  format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.entreprise.date_creation))
   if @include_infos_administration
-    pdf.text " - Effectif mensuel #{try_format_mois_effectif(etablissement)} (URSSAF) : #{etablissement.entreprise_effectif_mensuel}"
-    pdf.text " - Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} (URSSAF) : #{etablissement.entreprise_effectif_annuel}"
+    format_in_2_columns(pdf, "Effectif mensuel #{try_format_mois_effectif(etablissement)} (URSSAF) ", etablissement.entreprise_effectif_mensuel)
+    format_in_2_columns(pdf, "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} (URSSAF) ", etablissement.entreprise_effectif_annuel)
   end
-  pdf.text " - Effectif de l'organisation (INSEE) : #{effectif(etablissement)}"
-  pdf.text " - Code effectif : #{etablissement.entreprise.code_effectif_entreprise}"
-  pdf.text " - Numéro de TVA intracommunautaire : #{etablissement.entreprise.numero_tva_intracommunautaire}"
-  pdf.text " - Adresse : #{etablissement.adresse}"
+  format_in_2_columns(pdf, "Effectif (ISPF) ", effectif(etablissement))
+  format_in_2_columns(pdf, "Code effectif ", etablissement.entreprise.code_effectif_entreprise)
+  format_in_2_columns(pdf, "Numéro de TVA intracommunautaire ", etablissement.entreprise.numero_tva_intracommunautaire) if etablissement.entreprise.numero_tva_intracommunautaire.present?
+  format_in_2_columns(pdf, "Adresse ", etablissement.adresse)
   if etablissement.association?
-    pdf.text " - Numéro RNA : #{etablissement.association_rna}"
-    pdf.text " - Titre : #{etablissement.association_titre}"
-    pdf.text " - Objet : #{etablissement.association_objet}"
-    pdf.text " - Date de création : #{try_format_date(etablissement.association_date_creation)}"
-    pdf.text " - Date de publication : #{try_format_date(etablissement.association_date_publication)}"
-    pdf.text " - Date de déclaration : #{try_format_date(etablissement.association_date_declaration)}"
+    format_in_2_columns(pdf, "Numéro RNA ", etablissement.association_rna)
+    format_in_2_columns(pdf, "Titre ", etablissement.association_titre)
+    format_in_2_columns(pdf, "Objet ", etablissement.association_objet)
+    format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.association_date_creation))
+    format_in_2_columns(pdf, "Date de publication ", try_format_date(etablissement.association_date_publication))
+    format_in_2_columns(pdf, "Date de déclaration ", try_format_date(etablissement.association_date_declaration))
   end
-  pdf.text "\n"
 end
 
 def render_single_champ(pdf, champ)
@@ -90,6 +102,8 @@ def render_single_champ(pdf, champ)
   when 'Champs::ExplicationChamp'
     format_in_2_lines(pdf, champ.libelle, champ.description)
   when 'Champs::CarteChamp'
+    format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
+  when 'Champs::TeFenuaChamp'
     format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
     pdf.font 'liberation serif', style: :bold, size: 12 do
@@ -130,7 +144,7 @@ def add_message(pdf, message)
   end
 
   pdf.text "#{sender}, #{format_date(message.created_at)}", style: :bold
-  pdf.text ActionView::Base.full_sanitizer.sanitize(message.body)
+  pdf.text ActionView::Base.full_sanitizer.sanitize(message.body.gsub(/<(br|\/(p|tr|td))>/, "\n").gsub(/<\/tr>/, "\n"))
   pdf.text "\n"
 end
 
@@ -165,7 +179,13 @@ prawn_document(page_size: "A4") do |pdf|
   })
   pdf.font 'liberation serif'
 
-  pdf.svg IO.read("app/assets/images/header/logo-ds-wide.svg"), width: 300, position: :center
+  pdf.bounding_box([0, pdf.cursor],:width => 523,:height => 40) do
+    pdf.fill_color "E11619"
+    pdf.fill_rectangle [0, 40], 523, 40
+    pdf.svg IO.read("app/assets/images/header/logo-md-wide.svg"), width: 300, position: :center, vposition: :center
+    pdf.fill_color "000000"
+  end
+
   pdf.move_down(40)
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
