@@ -43,7 +43,7 @@ class PiecesJustificativesService
   private
 
   def self.pjs_for_champs(dossier)
-    allowed_champs = dossier.champs
+    allowed_champs = dossier.champs + dossier.champs_private
 
     allowed_child_champs = allowed_champs
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
