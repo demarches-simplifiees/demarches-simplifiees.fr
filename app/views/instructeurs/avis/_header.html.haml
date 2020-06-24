@@ -2,7 +2,8 @@
   .container
     %ul.breadcrumbs
       %li= link_to('Avis', instructeur_all_avis_path)
-      %li= "#{dossier.procedure.libelle}, dossier nº #{dossier.id}"
+      %li= link_to(dossier.procedure.libelle, instructeur_avis_index_path(avis.procedure))
+      %li= link_to("Dossier nº #{dossier.id}", instructeur_avis_path(avis.procedure, avis))
 
     %ul.tabs
       = dynamic_tab_item('Demande', instructeur_avis_path(avis.procedure, avis))

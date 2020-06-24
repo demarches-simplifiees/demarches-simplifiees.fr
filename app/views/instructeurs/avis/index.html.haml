@@ -1,21 +1,27 @@
 - avis_statut = (@statut == Instructeurs::AvisController::A_DONNER_STATUS) ? 'à donner' : 'rendus'
 - content_for(:title, "Avis #{avis_statut}")
 
-.sub-header
-  .container.flex
-    .width-100
-      %h1.tab-title Avis
-      %ul.tabs
-        = tab_item('avis à donner',
-          instructeur_all_avis_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
-          active: @statut == Instructeurs::AvisController::A_DONNER_STATUS,
-          badge: @avis_a_donner.count,
-          notification: @avis_a_donner.any?)
+#procedure-show
+  .sub-header
+    .container.flex
 
-        = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
-          instructeur_all_avis_path(statut: Instructeurs::AvisController::DONNES_STATUS),
-          active: @statut == Instructeurs::AvisController::DONNES_STATUS,
-          badge: @avis_donnes.count)
+      .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
+        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
+
+      .procedure-header
+        %h1= procedure_libelle @procedure
+
+        %ul.tabs
+          = tab_item('avis à donner',
+            instructeur_avis_index_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
+            active: @statut == Instructeurs::AvisController::A_DONNER_STATUS,
+            badge: @avis_a_donner.count,
+            notification: @avis_a_donner.any?)
+
+          = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
+            instructeur_avis_index_path(statut: Instructeurs::AvisController::DONNES_STATUS),
+            active: @statut == Instructeurs::AvisController::DONNES_STATUS,
+            badge: @avis_donnes.count)
 
 .container
   - if @avis.present?

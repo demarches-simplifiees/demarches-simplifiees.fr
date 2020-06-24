@@ -14,15 +14,15 @@ describe Instructeurs::AvisController, type: :controller do
     describe '#index' do
       before { get :index, params: { procedure_id: procedure.id } }
 
-      xit { expect(response).to have_http_status(:success) }
-      xit { expect(assigns(:avis_a_donner)).to match([avis_without_answer]) }
-      xit { expect(assigns(:avis_donnes)).to match([avis_with_answer]) }
-      xit { expect(assigns(:statut)).to eq('a-donner') }
+      it { expect(response).to have_http_status(:success) }
+      it { expect(assigns(:avis_a_donner)).to match([avis_without_answer]) }
+      it { expect(assigns(:avis_donnes)).to match([avis_with_answer]) }
+      it { expect(assigns(:statut)).to eq('a-donner') }
 
       context 'with a statut equal to donnes' do
         before { get :index, params: { statut: 'donnes', procedure_id: procedure.id } }
 
-        xit { expect(assigns(:statut)).to eq('donnes') }
+        it { expect(assigns(:statut)).to eq('donnes') }
       end
     end
 
