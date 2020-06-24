@@ -16,6 +16,14 @@ describe ActiveStorage::DownloadableFile do
       it { expect(list.length).to eq 1 }
     end
 
+    context 'when there is a private piece_justificative' do
+      before do
+        dossier.champs_private << create(:champ, :piece_justificative, :with_piece_justificative_file, private: true)
+      end
+
+      it { expect(list.length).to eq 1 }
+    end
+
     context 'when there is a repetition bloc' do
       let(:champ) { build(:champ_repetition_with_piece_jointe) }
       let(:dossier) { create(:dossier, :en_construction, champs: [champ]) }
