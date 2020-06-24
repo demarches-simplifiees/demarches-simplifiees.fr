@@ -12,13 +12,13 @@
       %li
         = link_to "Export GeoJSON", geo_data_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
 
-- if !PiecesJustificativesService.liste_pieces_justificatives(dossier).empty?
+- if PiecesJustificativesService.liste_pieces_justificatives(dossier).present?
   %span.dropdown.print-menu-opener
     %button.button.dropdown-button.icon-only
       %span.icon.attached
     %ul.print-menu.dropdown-content
       %li
-        - if PiecesJustificativesService.pieces_justificatives_total_size(dossier) < Dossier::TAILLE_MAX_ZIP
+        - if dossier.attachments_downloadable?
           = link_to "Télécharger toutes les pièces jointes", telecharger_pjs_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
         - else
           %p.menu-item Le téléchargement des pièces jointes est désactivé pour les dossiers de plus de #{number_to_human_size Dossier::TAILLE_MAX_ZIP}.
