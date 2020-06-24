@@ -27,7 +27,7 @@ def format_in_2_columns(pdf, label)
 end
 
 def format_with_checkbox(pdf, label, offset = 0)
-  pdf.font 'liberation serif', size: 12 do
+  pdf.font 'marianne', size: 12 do
     pdf.stroke_rectangle [0 + offset, pdf.cursor], 10, 10
     pdf.text_box label, at: [15 + offset, pdf.cursor]
   end
@@ -71,7 +71,7 @@ def add_identite_etablissement(pdf, libelle)
 end
 
 def add_single_line(pdf, libelle, size, style)
-  pdf.font 'liberation serif', style: style, size: size do
+  pdf.font 'marianne', style: style, size: size do
     pdf.text libelle
   end
 end
@@ -175,12 +175,12 @@ def add_champs(pdf, champs)
 end
 
 prawn_document(page_size: "A4") do |pdf|
-  pdf.font_families.update( 'liberation serif' => {
-      normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' ),
-      bold: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Bold.ttf' ),
-      italic: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Italic.ttf' ),
+  pdf.font_families.update( 'marianne' => {
+      normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
+      bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
+      italic: Rails.root.join('lib/prawn/fonts/spectral/Spectral-Italic.ttf' ),
   })
-  pdf.font 'liberation serif'
+  pdf.font 'marianne'
   pdf.svg IO.read("app/assets/images/header/logo-ds-wide.svg"), width: 300, position: :center
   pdf.move_down(40)
 
