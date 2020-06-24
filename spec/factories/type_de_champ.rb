@@ -53,10 +53,16 @@ FactoryBot.define do
       libelle { 'Menu déroulant' }
       type_champ { TypeDeChamp.type_champs.fetch(:drop_down_list) }
       drop_down_list { create(:drop_down_list) }
+      trait :long do
+        drop_down_list { create(:drop_down_list, :long) }
+      end
     end
     factory :type_de_champ_multiple_drop_down_list do
       type_champ { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
       drop_down_list { create(:drop_down_list) }
+      trait :long do
+        drop_down_list { create(:drop_down_list, :long) }
+      end
     end
     factory :type_de_champ_linked_drop_down_list do
       type_champ { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
