@@ -13,7 +13,15 @@ describe ActiveStorage::DownloadableFile do
         dossier.champs << create(:champ, :piece_justificative, :with_piece_justificative_file)
       end
 
-      it { expect(list.length).to be 1 }
+      it { expect(list.length).to eq 1 }
+    end
+
+    context 'when there is a private piece_justificative' do
+      before do
+        dossier.champs_private << create(:champ, :piece_justificative, :with_piece_justificative_file, private: true)
+      end
+
+      it { expect(list.length).to eq 1 }
     end
 
     context 'when there is a repetition bloc' do
@@ -21,7 +29,7 @@ describe ActiveStorage::DownloadableFile do
       let(:dossier) { create(:dossier, :en_construction, champs: [champ]) }
 
       it 'should have 4 piece_justificatives' do
-        expect(list.size).to eq(4)
+        expect(list.size).to eq 4
       end
     end
 
@@ -29,14 +37,14 @@ describe ActiveStorage::DownloadableFile do
       let(:commentaire) { create(:commentaire) }
       let(:dossier) { commentaire.dossier }
 
-      it { expect(list.length).to be 0 }
+      it { expect(list.length).to eq 0 }
     end
 
     context 'when there is a message with an attachment' do
       let(:commentaire) { create(:commentaire, :with_file) }
       let(:dossier) { commentaire.dossier }
 
-      it { expect(list.length).to be 1 }
+      it { expect(list.length).to eq 1 }
     end
   end
 end

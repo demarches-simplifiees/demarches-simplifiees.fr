@@ -1,16 +1,10 @@
 class PiecesJustificativesService
   def self.liste_pieces_justificatives(dossier)
-    pjs_commentaires = dossier.commentaires
-      .map(&:piece_jointe)
+    pjs_champs = pjs_for_champs(dossier)
+    pjs_commentaires = pjs_for_commentaires(dossier)
+
+    (pjs_champs + pjs_commentaires)
       .filter(&:attached?)
-
-    champs_blocs_repetables = dossier.champs
-      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .flat_map(&:champs)
-
-    pjs_commentaires + champs_pieces_justificatives_with_attachments(
-      champs_blocs_repetables + dossier.champs
-    )
   end
 
   def self.pieces_justificatives_total_size(dossier)
@@ -48,10 +42,21 @@ class PiecesJustificativesService
 
   private
 
-  def self.champs_pieces_justificatives_with_attachments(champs)
-    champs
+  def self.pjs_for_champs(dossier)
+    allowed_champs = dossier.champs + dossier.champs_private
+
+    allowed_child_champs = allowed_champs
+      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
+      .flat_map(&:champs)
+
+    (allowed_champs + allowed_child_champs)
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
-      .filter { |pj| pj.piece_justificative_file.attached? }
       .map(&:piece_justificative_file)
+  end
+
+  def self.pjs_for_commentaires(dossier)
+    dossier
+      .commentaires
+      .map(&:piece_jointe)
   end
 end
