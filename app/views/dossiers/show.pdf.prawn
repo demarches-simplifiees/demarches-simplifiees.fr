@@ -1,7 +1,7 @@
 require 'prawn/measurement_extensions'
 
 def format_in_2_lines(pdf, label, text)
-  pdf.font 'liberation serif', style: :bold, size: 12 do
+  pdf.font 'marianne', style: :bold, size: 12 do
     pdf.text label
   end
   pdf.text text
@@ -17,7 +17,7 @@ end
 
 def add_title(pdf, title)
   title_style = {style: :bold, size: 24}
-  pdf.font 'liberation serif', title_style do
+  pdf.font 'marianne', title_style do
     pdf.text title
   end
   pdf.text "\n"
@@ -83,7 +83,7 @@ def render_single_champ(pdf, champ)
   when 'Champs::PieceJustificativeChamp'
     return
   when 'Champs::HeaderSectionChamp'
-    pdf.font 'liberation serif', style: :bold, size: 18 do
+    pdf.font 'marianne', style: :bold, size: 18 do
       pdf.text champ.libelle
     end
     pdf.text "\n"
@@ -92,7 +92,7 @@ def render_single_champ(pdf, champ)
   when 'Champs::CarteChamp'
     format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
-    pdf.font 'liberation serif', style: :bold, size: 12 do
+    pdf.font 'marianne', style: :bold, size: 12 do
       pdf.text champ.libelle
     end
     pdf.text " - SIRET: #{champ.to_s}"
@@ -159,11 +159,11 @@ def add_etats_dossier(pdf, dossier)
 end
 
 prawn_document(page_size: "A4") do |pdf|
-  pdf.font_families.update( 'liberation serif' => {
-    normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf' ),
-    bold: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Bold.ttf' ),
+  pdf.font_families.update( 'marianne' => {
+    normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
   })
-  pdf.font 'liberation serif'
+  pdf.font 'marianne'
 
   pdf.svg IO.read("app/assets/images/header/logo-ds-wide.svg"), width: 300, position: :center
   pdf.move_down(40)
