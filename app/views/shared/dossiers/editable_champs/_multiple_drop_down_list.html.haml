@@ -1,6 +1,6 @@
 - if champ.drop_down_list && champ.drop_down_list.options.any?
   - enabled_non_empty_options = champ.drop_down_list.enabled_non_empty_options
-  - if enabled_non_empty_options.size > Champs::MultipleDropDownListChamp::THRESHOLD_NB_OPTIONS_AS_RADIO
+  - if enabled_non_empty_options.size > Champs::MultipleDropDownListChamp::THRESHOLD_NB_OPTIONS_AS_CHECKBOX
     = form.select :value,
         champ.drop_down_list.options,
         { selected: champ.selected_options,

@@ -1,7 +1,7 @@
 class Champs::MultipleDropDownListChamp < Champ
   before_save :format_before_save
 
-  THRESHOLD_NB_OPTIONS_AS_RADIO = 3
+  THRESHOLD_NB_OPTIONS_AS_CHECKBOX = 5
 
   def search_terms
     selected_options
