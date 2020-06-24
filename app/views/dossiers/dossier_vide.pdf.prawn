@@ -178,7 +178,7 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.font_families.update( 'marianne' => {
       normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
       bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
-      italic: Rails.root.join('lib/prawn/fonts/spectral/Spectral-SemiBoldItalic.ttf' ),
+      italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-thin.ttf' ),
   })
   pdf.font 'marianne'
   pdf.svg IO.read("app/assets/images/header/logo-ds-wide.svg"), width: 300, position: :center
