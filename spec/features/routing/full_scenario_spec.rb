@@ -122,7 +122,9 @@ feature 'The routing', js: true do
 
     ## on the procedures list
     expect(page).to have_current_path(instructeur_procedures_path)
-    expect(find('.procedure-stats')).to have_css('span.notifications')
+    within find('.procedure-details') do
+      expect(find('.procedure-stats')).to have_css('span.notifications')
+    end
 
     ## on the dossiers list
     click_on procedure.libelle
@@ -142,7 +144,9 @@ feature 'The routing', js: true do
     sign_in_with marie.user.email, password
 
     expect(page).to have_current_path(instructeur_procedures_path)
-    expect(find('.procedure-stats')).not_to have_css('span.notifications')
+    within find('.procedure-details') do
+      expect(find('.procedure-stats')).not_to have_css('span.notifications')
+    end
     log_out
 
     # the instructeurs who belong to scientifique AND litteraire groups manage scientifique and litterraire dossiers
@@ -168,7 +172,9 @@ feature 'The routing', js: true do
     sign_in_with superwoman.user.email, password
 
     expect(page).to have_current_path(instructeur_procedures_path)
-    expect(find('.procedure-stats')).to have_css('span.notifications')
+    within find('.procedure-details') do
+      expect(find('.procedure-stats')).to have_css('span.notifications')
+    end
   end
 
   def publish_procedure(procedure)
