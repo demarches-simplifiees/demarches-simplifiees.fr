@@ -139,7 +139,7 @@ feature 'As an administrateur I can edit types de champ', js: true do
     fill_in 'champ-0-libelle', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
     fill_in 'champ-0-drop_down_list_value', with: 'Un menu', fill_options: { clear: :backspace }
 
-    wait_until { procedure.types_de_champ.first.drop_down_list&.value == 'Un menu' }
+    wait_until { procedure.types_de_champ.first.drop_down_list_options == ['', 'Un menu'] }
     expect(page).to have_content('Formulaire enregistré')
 
     page.refresh
