@@ -10,6 +10,11 @@ module Instructeurs
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
 
+    def all
+      avis = current_instructeur.avis.includes(dossier: [groupe_instructeur: :procedure])
+      @avis_by_procedure = avis.to_a.group_by(&:procedure)
+    end
+
     def index
       @procedure = Procedure.find(params[:procedure_id])
       instructeur_avis = current_instructeur.avis.includes(:dossier).where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure.id) })

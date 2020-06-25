@@ -77,8 +77,8 @@ feature 'Inviting an expert:' do
         fill_in 'Mot de passe', with: 'This is a very complicated password !'
         click_on 'Créer un compte'
 
-        expect(page).to have_current_path(instructeur_avis_index_path)
-        expect(page).to have_text('avis à donner 1')
+        expect(page).to have_current_path(instructeur_all_avis_path)
+        expect(page).to have_text('1 avis à donner')
       end
     end
 
@@ -91,8 +91,8 @@ feature 'Inviting an expert:' do
         expect(page).to have_current_path(new_user_session_path)
         sign_in_with(expert.email, expert_password)
 
-        expect(page).to have_current_path(instructeur_avis_index_path)
-        expect(page).to have_text('avis à donner 1')
+        expect(page).to have_current_path(instructeur_all_avis_path)
+        expect(page).to have_text('1 avis à donner')
       end
     end
 
@@ -100,10 +100,11 @@ feature 'Inviting an expert:' do
       avis # create avis
       login_as expert.user, scope: :user
 
-      visit instructeur_avis_index_path
-      expect(page).to have_text('avis à donner 1')
-      expect(page).to have_text('avis donnés 0')
+      visit instructeur_all_avis_path
+      expect(page).to have_text('1 avis à donner')
+      expect(page).to have_text('0 avis donnés')
 
+      click_on '1 avis à donner'
       click_on avis.dossier.user.email
 
       within('.tabs') { click_on 'Avis' }
@@ -119,8 +120,8 @@ feature 'Inviting an expert:' do
       expect(page).to have_content('RIB.pdf')
 
       within('.new-header') { click_on 'Avis' }
-      expect(page).to have_text('avis à donner 0')
-      expect(page).to have_text('avis donné 1')
+      expect(page).to have_text('0 avis à donner')
+      expect(page).to have_text('1 avis donné')
     end
 
     # TODO

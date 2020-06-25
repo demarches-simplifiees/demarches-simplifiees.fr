@@ -5,11 +5,20 @@ describe Instructeurs::AvisController, type: :controller do
     let(:claimant) { create(:instructeur) }
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published, instructeurs: [claimant]) }
+    let(:another_procedure) { create(:procedure, :published, instructeurs: [claimant]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur) }
     let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur, answer: 'yop') }
 
     before { sign_in(instructeur.user) }
+
+    describe '#all' do
+      before { get :all }
+
+      it { expect(response).to have_http_status(:success) }
+      it { expect(assigns(:avis_by_procedure).flatten).to include(procedure) }
+      it { expect(assigns(:avis_by_procedure).flatten).not_to include(another_procedure) }
+    end
 
     describe '#index' do
       before { get :index, params: { procedure_id: procedure.id } }
