@@ -3,6 +3,10 @@
 @import "mixins";
 
 .procedure-list {
+  &.synthese {
+    margin-top: 16px;
+  }
+
   .procedure-item {
     border-bottom: 1px solid $border-grey;
 
@@ -51,7 +55,7 @@
       width: 90px;
       position: relative;
 
-      &:hover {
+      &:not(.procedure-synthese):hover {
         background-color: rgba(0, 0, 0, 0.05);
       }
 

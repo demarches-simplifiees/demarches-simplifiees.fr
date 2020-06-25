@@ -1,0 +1,11 @@
+.tab-title
+  Synthèse des dossiers
+  .procedure-list.synthese
+    %ul.procedure-stats.flex
+      - all_dossiers_counts.each_with_index  do |(label, dossier_count)|
+        %li.procedure-synthese
+          %object
+            .stats-number
+              = number_with_html_delimiter(dossier_count)
+            .stats-legend
+              = label
