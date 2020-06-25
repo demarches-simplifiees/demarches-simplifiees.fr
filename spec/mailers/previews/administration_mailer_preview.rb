@@ -19,11 +19,6 @@ class AdministrationMailerPreview < ActionMailer::Preview
     AdministrationMailer.refuse_admin('bad_admin@pipo.com')
   end
 
-  def new_admin
-    administration = Administration.new(email: 'superadmin@demarches-simplifiees.fr')
-    AdministrationMailer.new_admin_email(administrateur, administration)
-  end
-
   def dossier_expiration_summary
     expiring_dossiers = [Dossier.new(id: 100, procedure: procedure_1)]
     expired_dossiers = [Dossier.new(id: 100, procedure: procedure_2)]
