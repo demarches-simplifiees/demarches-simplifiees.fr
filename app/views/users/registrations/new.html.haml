@@ -24,7 +24,7 @@
 
       = f.label :password, "Mot de passe", id: :user_password_label
 
-      = render partial: 'shared/password/edit_password', locals: { form: f, test_password_strength: test_password_strength_path(PASSWORD_COMPLEXITY_FOR_USER) }
+      = render partial: 'shared/password/edit_password', locals: { form: f, password: @user.password, test_password_strength: test_password_strength_path(PASSWORD_COMPLEXITY_FOR_USER) }
 
       = f.submit "Créer un compte", class: "button large primary expand", id: "submit-password", data: { disable_with: "Envoi..." }
 
