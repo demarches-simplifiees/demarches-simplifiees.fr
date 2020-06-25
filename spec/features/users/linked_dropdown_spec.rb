@@ -55,7 +55,7 @@ feature 'linked dropdown lists' do
     expect(page).to have_current_path(commencer_path(path: procedure.path))
     click_on 'Commencer la démarche'
 
-    expect(page).to have_content("Données d'identité")
+    expect(page).to have_content("Données d’identité")
     expect(page).to have_current_path(identite_dossier_path(user_dossier))
   end
 

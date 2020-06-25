@@ -41,7 +41,7 @@ feature 'Signin in:' do
 
       expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
       expect(page).to have_procedure_description(procedure)
-      expect(page).to have_content "Données d'identité"
+      expect(page).to have_content "Données d’identité"
     end
   end
 
