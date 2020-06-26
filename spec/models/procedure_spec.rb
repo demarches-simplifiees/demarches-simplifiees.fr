@@ -417,13 +417,21 @@ describe Procedure do
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
       expect(subject.types_de_champ.map(&:drop_down_options).compact.size).to eq procedure.types_de_champ.map(&:drop_down_options).compact.size
       expect(subject.types_de_champ_private.map(&:drop_down_options).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_options).compact.size
+      expect(subject.draft_revision.types_de_champ.size).to eq(procedure.draft_revision.types_de_champ.size)
+      expect(subject.draft_revision.types_de_champ_private.size).to eq(procedure.draft_revision.types_de_champ_private.size)
 
       procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
       end
+      procedure.types_de_champ.zip(procedure.draft_revision.types_de_champ).each do |ptc, rtc|
+        expect(ptc).to eq(rtc)
+      end
 
       subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
+      end
+      procedure.types_de_champ_private.zip(procedure.draft_revision.types_de_champ_private).each do |ptc, rtc|
+        expect(ptc).to eq(rtc)
       end
 
       expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
@@ -432,7 +440,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path"])
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id"])
     end
 
     context 'when the procedure is cloned from the library' do
