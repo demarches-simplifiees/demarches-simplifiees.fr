@@ -31,7 +31,7 @@ class TypeDeChamp < ApplicationRecord
   }
 
   belongs_to :procedure
-  belongs_to :revision, class_name: 'ProcedureRevision'
+  belongs_to :revision, class_name: 'ProcedureRevision', optional: true
 
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
@@ -63,6 +63,7 @@ class TypeDeChamp < ApplicationRecord
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { order(order_place: :asc) }
   scope :root, -> { where(parent_id: nil) }
+  scope :repetition, -> { where(type_champ: type_champs.fetch(:repetition)) }
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
@@ -228,6 +229,13 @@ class TypeDeChamp < ApplicationRecord
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
   end
 
+  def revise!
+    types_de_champ_association = private? ? :revision_types_de_champ_private : :revision_types_de_champ
+    association = revision.send(types_de_champ_association).find_by!(type_de_champ: self)
+    association.update!(type_de_champ: deep_clone(include: [:types_de_champ], &method(:clone_attachments)))
+    association.type_de_champ
+  end
+
   FEATURE_FLAGS = {}
 
   def self.type_de_champ_types_for(procedure, user)
@@ -310,6 +318,25 @@ class TypeDeChamp < ApplicationRecord
   def remove_repetition
     if !repetition?
       types_de_champ.destroy_all
+    end
+  end
+
+  def clone_attachments(original, kopy)
+    if original.is_a?(TypeDeChamp)
+      clone_attachment(:piece_justificative_template, original, kopy)
+    end
+  end
+
+  def clone_attachment(attribute, original, kopy)
+    original_attachment = original.send(attribute)
+    if original_attachment.attached?
+      kopy.send(attribute).attach({
+        io: StringIO.new(original_attachment.download),
+        filename: original_attachment.filename,
+        content_type: original_attachment.content_type,
+        # we don't want to run virus scanner on cloned file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      })
     end
   end
 end
