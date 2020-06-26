@@ -13,13 +13,13 @@
 
         %ul.tabs
           = tab_item('avis à donner',
-            instructeur_avis_index_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
+            procedure_instructeur_avis_index_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
             active: @statut == Instructeurs::AvisController::A_DONNER_STATUS,
             badge: @avis_a_donner.count,
             notification: @avis_a_donner.any?)
 
           = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
-            instructeur_avis_index_path(statut: Instructeurs::AvisController::DONNES_STATUS),
+            procedure_instructeur_avis_index_path(statut: Instructeurs::AvisController::DONNES_STATUS),
             active: @statut == Instructeurs::AvisController::DONNES_STATUS,
             badge: @avis_donnes.count)
 
