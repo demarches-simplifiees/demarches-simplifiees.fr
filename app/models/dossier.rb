@@ -48,6 +48,7 @@ class Dossier < ApplicationRecord
 
   belongs_to :groupe_instructeur
   has_one :procedure, through: :groupe_instructeur
+  belongs_to :revision, class_name: 'ProcedureRevision', optional: true
   belongs_to :user
 
   accepts_nested_attributes_for :champs
