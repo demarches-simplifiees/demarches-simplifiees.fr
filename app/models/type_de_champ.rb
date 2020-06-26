@@ -31,11 +31,14 @@ class TypeDeChamp < ApplicationRecord
   }
 
   belongs_to :procedure
+  belongs_to :revision, class_name: 'ProcedureRevision'
 
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj, :drop_down_options, :skip_pj_validation
+  has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
+
   delegate :tags_for_template, to: :dynamic_type
 
   class WithIndifferentAccess

@@ -14,6 +14,9 @@ class Procedure < ApplicationRecord
 
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
+  has_many :revisions, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
+  belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: true
+  belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
@@ -22,6 +25,10 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure'
   belongs_to :canonical_procedure, class_name: 'Procedure'
   belongs_to :service
+
+  def active_revision
+    brouillon? ? draft_revision : published_revision
+  end
 
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
