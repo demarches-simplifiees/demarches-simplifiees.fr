@@ -300,7 +300,7 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
-    get 'avis', to: 'avis#all', as: 'all_avis'
+    get 'avis', to: 'avis#index', as: 'all_avis'
 
     # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
     # TODO : they will be removed in September, 2020
