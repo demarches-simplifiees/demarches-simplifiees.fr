@@ -273,29 +273,6 @@ class Procedure < ApplicationRecord
     publiees.find(id)
   end
 
-  def switch_types_de_champ(index_of_first_element)
-    switch_list_order(types_de_champ, index_of_first_element)
-  end
-
-  def switch_types_de_champ_private(index_of_first_element)
-    switch_list_order(types_de_champ_private, index_of_first_element)
-  end
-
-  def switch_list_order(list, index_of_first_element)
-    if index_of_first_element < 0 ||
-      index_of_first_element == list.count - 1 ||
-      list.count < 1
-
-      false
-    else
-      list[index_of_first_element].update(order_place: index_of_first_element + 1)
-      list[index_of_first_element + 1].update(order_place: index_of_first_element)
-      reload
-
-      true
-    end
-  end
-
   def clone(admin, from_library)
     # FIXUP: needed during transition to revisions
     RevisionsMigration.add_revisions(self)
@@ -498,34 +475,6 @@ class Procedure < ApplicationRecord
     result
   end
 
-  def move_type_de_champ(type_de_champ, new_index)
-    types_de_champ, collection_attribute_name = if type_de_champ.parent&.repetition?
-      if type_de_champ.parent.private?
-        [type_de_champ.parent.types_de_champ, :types_de_champ_private_attributes]
-      else
-        [type_de_champ.parent.types_de_champ, :types_de_champ_attributes]
-      end
-    elsif type_de_champ.private?
-      [self.types_de_champ_private, :types_de_champ_private_attributes]
-    else
-      [self.types_de_champ, :types_de_champ_attributes]
-    end
-
-    attributes = move_type_de_champ_attributes(types_de_champ.to_a, type_de_champ, new_index)
-
-    if type_de_champ.parent&.repetition?
-      attributes = [
-        {
-          id: type_de_champ.parent.id,
-          libelle: type_de_champ.parent.libelle,
-          types_de_champ_attributes: attributes
-        }
-      ]
-    end
-
-    update!(collection_attribute_name => attributes)
-  end
-
   def process_dossiers!
     case declarative_with_state
     when Procedure.declarative_with_states.fetch(:en_instruction)
@@ -606,22 +555,6 @@ class Procedure < ApplicationRecord
   end
 
   private
-
-  def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
-    old_index = types_de_champ.index(type_de_champ)
-    if types_de_champ.delete_at(old_index)
-      types_de_champ.insert(new_index, type_de_champ)
-        .map.with_index do |type_de_champ, index|
-          {
-            id: type_de_champ.id,
-            libelle: type_de_champ.libelle,
-            order_place: index
-          }
-        end
-    else
-      []
-    end
-  end
 
   def before_publish
     update!(closed_at: nil, unpublished_at: nil)
