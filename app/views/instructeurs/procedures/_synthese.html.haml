@@ -1,11 +1,6 @@
-.tab-title
-  Synthèse des dossiers
-  .procedure-list.synthese
-    %ul.procedure-stats.flex
+- if procedures.length > 1
+  .tab-title
+    %span
+      Synthèse des dossiers
       - all_dossiers_counts.each_with_index  do |(label, dossier_count)|
-        %li.procedure-synthese
-          %object
-            .stats-number
-              = number_with_html_delimiter(dossier_count)
-            .stats-legend
-              = label
+        %span.badge.procedure-synthese-badge= number_with_html_delimiter(dossier_count) + ' ' + label
