@@ -18,7 +18,7 @@
         = render partial: "shared/attachment/show", locals: { attachment: attachment, user_can_upload: true }
       - if user_can_destroy
         .attachment-action
-          = link_to 'Supprimer', attachment_url(attachment.id, { signed_id: attachment.blob.signed_id }), remote: true, method: :delete, class: 'button small danger'
+          = link_to 'Supprimer', attachment_url(attachment.id, { signed_id: attachment.blob.signed_id }), remote: true, method: :delete, class: 'button small danger', data: { disable: true }
       .attachment-action
         = button_tag 'Remplacer', type: 'button', class: 'button small', data: { 'toggle-target': ".attachment-input-#{attachment_id}" }
 
