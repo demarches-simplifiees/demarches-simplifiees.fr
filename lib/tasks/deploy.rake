@@ -38,7 +38,6 @@ task :rollback do
   branch = ENV.fetch('BRANCH')
 
   domains.each do |domain|
-    sh "mina rollback domain=#{domain} branch=#{branch}"
-    sh "mina service:restart_puma domain=#{domain} branch=#{branch}"
+    sh "mina rollback service:restart_puma service:reload_nginx service:restart_delayed_job domain=#{domain} branch=#{branch}"
   end
 end

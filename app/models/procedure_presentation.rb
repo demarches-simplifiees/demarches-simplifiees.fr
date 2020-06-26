@@ -174,11 +174,13 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def human_value_for_filter(filter)
-    if filter['table'] == 'type_de_champ'
+    case filter['table']
+    when 'type_de_champ', 'type_de_champ_private'
       type_de_champ = TypeDeChamp.find_by(id: filter['column'])
-      return type_de_champ.dynamic_type.filter_to_human(filter['value'])
+      type_de_champ.dynamic_type.filter_to_human(filter['value'])
+    else
+      filter['value']
     end
-    filter['value']
   end
 
   def add_filter(statut, field, value)
@@ -187,7 +189,8 @@ class ProcedurePresentation < ApplicationRecord
       table, column = field.split('/')
       label = find_field(table, column)['label']
 
-      if table == 'type_de_champ'
+      case table
+      when 'type_de_champ', 'type_de_champ_private'
         type_de_champ = TypeDeChamp.find_by(id: column)
         value = type_de_champ.dynamic_type.human_to_filter(value)
       end

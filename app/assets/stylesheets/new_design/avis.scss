@@ -20,14 +20,14 @@
   }
 
   .confidentiel {
-    color: $grey;
+    color: $dark-grey;
     font-weight: normal;
     margin-bottom: 2 * $default-padding;
   }
 
   .date {
     font-size: 12px;
-    color: $grey;
+    color: $dark-grey;
     float: right;
   }
 }
@@ -37,7 +37,7 @@
 
   .avis-notice {
     font-size: 14px;
-    color: $grey;
+    color: $dark-grey;
     margin-bottom: 2 * $default-padding;
   }
 
@@ -50,7 +50,7 @@
   }
 
   .confidentiel {
-    color: $grey;
+    color: $dark-grey;
     font-weight: normal;
     margin-bottom: 2 * $default-padding;
   }
@@ -68,7 +68,7 @@
 
   .confidentiel-explanation {
     font-size: 14px;
-    color: $grey;
+    color: $dark-grey;
     margin-top: - $default-padding;
     margin-bottom: 2 * $default-padding;
   }
@@ -116,7 +116,7 @@
     }
 
     .confidentiel {
-      color: $grey;
+      color: $dark-grey;
       font-size: 12px;
 
       .lock {
@@ -131,7 +131,7 @@
   .date,
   .waiting {
     font-size: 12px;
-    color: $grey;
+    color: $dark-grey;
   }
 
   .date {
