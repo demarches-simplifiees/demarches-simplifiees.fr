@@ -167,18 +167,7 @@ module Instructeurs
 
     def add_filter
       if params[:value].present?
-        filters = procedure_presentation.filters
-        table, column = params[:field].split('/')
-        label = find_field(table, column)['label']
-
-        filters[statut] << {
-          'label' => label,
-          'table' => table,
-          'column' => column,
-          'value' => params[:value]
-        }
-
-        procedure_presentation.update(filters: filters)
+        procedure_presentation.add_filter(statut, params[:field], params[:value])
       end
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))

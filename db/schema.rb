@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_191305) do
+ActiveRecord::Schema.define(version: 2020_06_11_122406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -238,7 +238,6 @@ ActiveRecord::Schema.define(version: 2020_04_29_191305) do
 
   create_table "dossiers", id: :serial, force: :cascade do |t|
     t.boolean "autorisation_donnees"
-    t.integer "procedure_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "state"
@@ -262,7 +261,6 @@ ActiveRecord::Schema.define(version: 2020_04_29_191305) do
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
-    t.index ["procedure_id"], name: "index_dossiers_on_procedure_id"
     t.index ["state"], name: "index_dossiers_on_state"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
   end
