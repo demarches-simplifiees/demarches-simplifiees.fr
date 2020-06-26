@@ -12,8 +12,8 @@ describe Instructeurs::AvisController, type: :controller do
 
     before { sign_in(instructeur.user) }
 
-    describe '#all' do
-      before { get :all }
+    describe '#index' do
+      before { get :index }
 
       it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis_by_procedure).flatten).to include(procedure) }

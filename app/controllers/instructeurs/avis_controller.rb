@@ -10,7 +10,7 @@ module Instructeurs
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
 
-    def all
+    def index
       avis = current_instructeur.avis.includes(dossier: [groupe_instructeur: :procedure])
       @avis_by_procedure = avis.to_a.group_by(&:procedure)
     end
