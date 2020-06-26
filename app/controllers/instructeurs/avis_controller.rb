@@ -15,7 +15,7 @@ module Instructeurs
       @avis_by_procedure = avis.to_a.group_by(&:procedure)
     end
 
-    def index
+    def procedure
       @procedure = Procedure.find(params[:procedure_id])
       instructeur_avis = current_instructeur.avis.includes(:dossier).where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure.id) })
       @avis_a_donner = instructeur_avis.without_answer

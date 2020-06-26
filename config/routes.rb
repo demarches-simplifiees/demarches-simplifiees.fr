@@ -316,7 +316,8 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :avis, only: [:index, :show, :update] do
+        resources :avis, only: [:show, :update] do
+          get '', action: 'procedure', on: :collection, as: :procedure
           member do
             get 'instruction'
             get 'messagerie'

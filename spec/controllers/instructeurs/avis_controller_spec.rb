@@ -20,8 +20,8 @@ describe Instructeurs::AvisController, type: :controller do
       it { expect(assigns(:avis_by_procedure).flatten).not_to include(another_procedure) }
     end
 
-    describe '#index' do
-      before { get :index, params: { procedure_id: procedure.id } }
+    describe '#procedure' do
+      before { get :procedure, params: { procedure_id: procedure.id } }
 
       it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis_a_donner)).to match([avis_without_answer]) }
@@ -29,7 +29,7 @@ describe Instructeurs::AvisController, type: :controller do
       it { expect(assigns(:statut)).to eq('a-donner') }
 
       context 'with a statut equal to donnes' do
-        before { get :index, params: { statut: 'donnes', procedure_id: procedure.id } }
+        before { get :procedure, params: { statut: 'donnes', procedure_id: procedure.id } }
 
         it { expect(assigns(:statut)).to eq('donnes') }
       end
