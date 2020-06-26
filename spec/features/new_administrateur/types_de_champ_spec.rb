@@ -135,7 +135,7 @@ feature 'As an administrateur I can edit types de champ', js: true do
   it "Add dropdown champ" do
     add_champ
 
-    select('Menu déroulant', from: 'champ-0-type_champ')
+    select('Choix parmi une liste', from: 'champ-0-type_champ')
     fill_in 'champ-0-libelle', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
     fill_in 'champ-0-drop_down_list_value', with: 'Un menu', fill_options: { clear: :backspace }
 
