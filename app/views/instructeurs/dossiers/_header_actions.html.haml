@@ -12,7 +12,7 @@
       %li
         = link_to "Export GeoJSON", geo_data_instructeur_dossier_path(dossier.procedure, dossier), target: "_blank", rel: "noopener", class: "menu-item menu-link"
 
-- if !PiecesJustificativesService.liste_pieces_justificatives(dossier).empty?
+- if PiecesJustificativesService.liste_pieces_justificatives(dossier).present?
   %span.dropdown.print-menu-opener
     %button.button.dropdown-button.icon-only
       %span.icon.attached

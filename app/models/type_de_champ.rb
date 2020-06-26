@@ -35,7 +35,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
-  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj
+  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj, :drop_down_options
   delegate :tags_for_template, to: :dynamic_type
 
   class WithIndifferentAccess
@@ -53,7 +53,6 @@ class TypeDeChamp < ApplicationRecord
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
   before_save :setup_procedure
-  before_validation :set_default_drop_down_list
 
   attr_reader :dynamic_type
 
@@ -83,6 +82,7 @@ class TypeDeChamp < ApplicationRecord
 
   before_validation :check_mandatory
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
+  before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
 
   def valid?(context = nil)
     super
@@ -146,6 +146,10 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
+  def linked_drop_down_list?
+    type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+  end
+
   def exclude_from_view?
     type_champ == TypeDeChamp.type_champs.fetch(:explication)
   end
@@ -156,6 +160,10 @@ class TypeDeChamp < ApplicationRecord
 
   def dossier_link?
     type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
+  end
+
+  def piece_justificative?
+    type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)
   end
 
   def legacy_number?
@@ -183,11 +191,31 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def drop_down_list_value
-    drop_down_list&.value
+    if drop_down_list_options.present?
+      drop_down_list_options.reject(&:empty?).join("\r\n")
+    else
+      ''
+    end
   end
 
   def drop_down_list_value=(value)
-    self.drop_down_list_attributes = { value: value }
+    self.drop_down_options = parse_drop_down_list_value(value)
+  end
+
+  def drop_down_list_options?
+    drop_down_list_options.any?
+  end
+
+  def drop_down_list_options
+    drop_down_options.presence || drop_down_list&.options || []
+  end
+
+  def drop_down_list_disabled_options
+    drop_down_list_options.filter { |v| (v =~ /^--.*--$/).present? }
+  end
+
+  def drop_down_list_enabled_non_empty_options
+    (drop_down_list_options - drop_down_list_disabled_options).reject(&:empty?)
   end
 
   def to_typed_id
@@ -244,10 +272,10 @@ class TypeDeChamp < ApplicationRecord
 
   private
 
-  def set_default_drop_down_list
-    if drop_down_list? && !drop_down_list
-      self.drop_down_list_attributes = { value: '' }
-    end
+  def parse_drop_down_list_value(value)
+    value = value ? value.split("\r\n").map(&:strip).join("\r\n") : ''
+    result = value.split(/[\r\n]|[\r]|[\n]|[\n\r]/).reject(&:empty?)
+    result.blank? ? [] : [''] + result
   end
 
   def setup_procedure
@@ -263,8 +291,15 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def remove_piece_justificative_template
-    if type_champ != TypeDeChamp.type_champs.fetch(:piece_justificative) && piece_justificative_template.attached?
+    if !piece_justificative? && piece_justificative_template.attached?
       piece_justificative_template.purge_later
+    end
+  end
+
+  def remove_drop_down_list
+    if !drop_down_list?
+      self.drop_down_list = nil
+      self.drop_down_options = nil
     end
   end
 end

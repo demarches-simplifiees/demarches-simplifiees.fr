@@ -1,6 +1,24 @@
 class Champs::MultipleDropDownListChamp < Champ
   before_save :format_before_save
 
+  def options?
+    drop_down_list_options?
+  end
+
+  def options
+    drop_down_list_options
+  end
+
+  def disabled_options
+    drop_down_list_disabled_options
+  end
+
+  def enabled_non_empty_options
+    drop_down_list_enabled_non_empty_options
+  end
+
+  THRESHOLD_NB_OPTIONS_AS_CHECKBOX = 5
+
   def search_terms
     selected_options
   end
@@ -19,6 +37,10 @@ class Champs::MultipleDropDownListChamp < Champ
 
   def for_export
     value.present? ? selected_options.join(', ') : nil
+  end
+
+  def render_as_checkboxes?
+    enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_CHECKBOX
   end
 
   private

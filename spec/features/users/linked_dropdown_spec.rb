@@ -13,8 +13,7 @@ feature 'linked dropdown lists' do
       Secondary 2.3
     END_OF_LIST
   end
-  let(:drop_down_list) { create(:drop_down_list, value: list_items) }
-  let(:type_de_champ) { create(:type_de_champ_linked_drop_down_list, libelle: 'linked dropdown', drop_down_list: drop_down_list) }
+  let(:type_de_champ) { create(:type_de_champ_linked_drop_down_list, libelle: 'linked dropdown', drop_down_list_value: list_items) }
 
   let!(:procedure) do
     p = create(:procedure, :published, :for_individual)
