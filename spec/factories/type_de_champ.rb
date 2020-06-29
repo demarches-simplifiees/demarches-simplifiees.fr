@@ -50,7 +50,7 @@ FactoryBot.define do
       type_champ { TypeDeChamp.type_champs.fetch(:datetime) }
     end
     factory :type_de_champ_drop_down_list do
-      libelle { 'Menu déroulant' }
+      libelle { 'Choix parmi une liste' }
       type_champ { TypeDeChamp.type_champs.fetch(:drop_down_list) }
       drop_down_list_value { "val1\r\nval2\r\n--separateur--\r\nval3" }
       trait :long do
