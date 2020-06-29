@@ -138,6 +138,21 @@ jobs:
       - run:
           name: Run linters
           command: bundle exec rake lint
+  accessibility:
+    <<: *defaults
+    steps:
+      - checkout
+      - *aptget_install
+      - *bundle_restore_cache
+      - *bundle_install
+      - *yarn_restore_cache
+      - *yarn_install
+      - run:
+          name: Start W3C validator docker container
+          command: bundle exec rake accessibility:local_w3c_validator:start
+      - run:
+          name: Run automated accessibility tests
+          command: bundle exec rake accessibility:lint
 
 workflows:
   version: 2
