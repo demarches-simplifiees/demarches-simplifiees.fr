@@ -1,0 +1,5 @@
+status = [
+  "ci/circleci: build",
+  "ci/circleci: test",
+  "ci/circleci: lint"
+]
