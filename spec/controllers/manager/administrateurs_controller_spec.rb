@@ -20,7 +20,7 @@ describe Manager::AdministrateursController, type: :controller do
     render_views
     it 'displays form to create a new admin' do
       get :new
-      expect(response).to be_success
+      expect(response).to have_http_status(:success)
     end
   end
 
@@ -64,7 +64,7 @@ describe Manager::AdministrateursController, type: :controller do
 
     it 'searches admin by email' do
       get :index, params: { search: administrateur.email }
-      expect(response).to be_success
+      expect(response).to have_http_status(:success)
     end
   end
 end
