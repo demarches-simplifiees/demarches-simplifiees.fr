@@ -1,0 +1,9 @@
+%h1 Groupe « #{@groupe_instructeur.label} »
+.card.mt-2
+  = form_for @groupe_instructeur,
+    url: procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
+    html: { class: 'form' } do |f|
+
+    = f.label :label, 'Nom du groupe'
+    = f.text_field :label, placeholder: 'Ville de Bordeaux', required: true
+    = f.submit 'Renommer', class: 'button primary send'
