@@ -27,7 +27,8 @@
       %p Si vous n’avez pas reçu notre message (avez-vous vérifié les indésirables ?), nous pouvons vous le renvoyer.
 
       = form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { class: 'form' }) do |f|
-        = f.label :email, 'Email'
+        = f.label :email, 'Votre email'
+        %br
         = f.email_field :email, placeholder: 'Email', class: 'small', autofocus: true
         = f.submit 'Renvoyer un email de confirmation', class: 'button'
 
