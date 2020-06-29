@@ -22,7 +22,7 @@ feature 'wcag rules for usager', js: true do
 
       perform_enqueued_jobs do
         click_button 'Créer un compte'
-        expect(page).to be_accessible.skipping(:'role-img-alt')
+        expect(page).to be_accessible
       end
     end
 
