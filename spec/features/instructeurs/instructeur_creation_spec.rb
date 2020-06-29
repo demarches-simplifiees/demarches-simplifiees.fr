@@ -5,7 +5,7 @@ feature 'As an instructeur', js: true do
 
   before do
     login_as administrateur.user, scope: :user
-    visit admin_procedure_assigns_path(procedure)
+    visit admin_instructeurs_path
 
     fill_in :instructeur_email, with: instructeur_email
 
