@@ -22,7 +22,7 @@
       .form-group
         = f.label :logo, "Logo de l'attestation"
         - if @attestation_template.logo.attached?
-          = link_to 'Supprimer le logo', admin_procedure_attestation_template_logo_path(@procedure), method: :delete
+          = link_to 'Supprimer le logo', admin_procedure_attestation_template_logo_path(@procedure), method: :delete, role: 'button'
         = f.file_field :logo, accept: 'image/png,image/jpg,image/jpeg'
         %p.help-block
           Fichier accepté : JPG / JPEG / PNG
@@ -59,7 +59,7 @@
       .form-group
         = f.label :signature, "Tampon de l'attestation"
         - if @attestation_template.signature.attached?
-          = link_to 'Supprimer le tampon', admin_procedure_attestation_template_signature_path(@procedure), method: :delete
+          = link_to 'Supprimer le tampon', admin_procedure_attestation_template_signature_path(@procedure), method: :delete, role: 'button'
         = f.file_field :signature, accept: 'image/png, image/jpg, image/jpeg'
         %p.help-block
           Fichier accepté : JPG / JPEG / PNG

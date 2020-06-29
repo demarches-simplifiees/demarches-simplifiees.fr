@@ -36,4 +36,5 @@
             = link_to 'supprimer',
               service_path(service, procedure_id: @procedure.id),
               method: :delete,
-              data: { confirm: "Confirmez vous la suppression de #{service.nom}" }
+              data: { confirm: "Confirmez vous la suppression de #{service.nom}",
+              role: 'button' }

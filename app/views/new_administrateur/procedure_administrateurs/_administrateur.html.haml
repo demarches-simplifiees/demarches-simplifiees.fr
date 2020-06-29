@@ -10,4 +10,6 @@
         [@procedure, administrateur],
         method: :delete,
         'data-confirm': "Retirer « #{administrateur.email} » des administrateurs de « #{@procedure.libelle} » ?",
-        remote: true
+        remote: true,
+        role: 'button'
+
