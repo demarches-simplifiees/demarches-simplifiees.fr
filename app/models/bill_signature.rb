@@ -84,7 +84,7 @@ class BillSignature < ApplicationRecord
 
   def read_signature
     if attachment_changes['signature']
-      io = attachment_changes['signature'].attachable[:io]
+      io = io_for_changes(attachment_changes['signature'])
       io.read if io.present?
     elsif signature.attached?
       signature.download
@@ -93,10 +93,22 @@ class BillSignature < ApplicationRecord
 
   def read_serialized
     if attachment_changes['serialized']
-      io = attachment_changes['serialized'].attachable[:io]
+      io = io_for_changes(attachment_changes['serialized'])
       io.read if io.present?
     elsif serialized.attached?
       serialized.download
+    end
+  end
+
+  private
+
+  def io_for_changes(attachment_changes)
+    attachable = attachment_changes.attachable
+    case attachable
+    when ActionDispatch::Http::UploadedFile, Rack::Test::UploadedFile
+      attachable.open
+    when Hash
+      attachable.fetch(:io)
     end
   end
 end
