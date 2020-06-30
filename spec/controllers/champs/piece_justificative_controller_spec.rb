@@ -17,7 +17,7 @@ describe Champs::PieceJustificativeController, type: :controller do
     end
 
     context 'when the file is valid' do
-      let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
       it 'attach the file' do
         subject
@@ -34,7 +34,7 @@ describe Champs::PieceJustificativeController, type: :controller do
     end
 
     context 'when the file is invalid' do
-      let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/files/invalid_file_format.json', 'application/json') }
+      let(:file) { fixture_file_upload('spec/fixtures/files/invalid_file_format.json', 'application/json') }
 
       # TODO: for now there are no validators on the champ piece_justificative_file,
       # so we have to mock a failing validation.
