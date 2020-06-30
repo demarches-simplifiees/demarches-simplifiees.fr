@@ -300,12 +300,33 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
+    get 'avis', to: 'avis#index', as: 'all_avis'
+
+    # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
+    # TODO : they will be removed in September, 2020
+    get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
+    get 'avis/:id/sign_up/email/:email', to: redirect("/procedures/old/avis/%{id}/sign_up/email/%{email}"), constraints: { email: /.*/ }
+
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           member do
             post 'add_instructeur'
             delete 'remove_instructeur'
+          end
+        end
+
+        resources :avis, only: [:show, :update] do
+          get '', action: 'procedure', on: :collection, as: :procedure
+          member do
+            get 'instruction'
+            get 'messagerie'
+            post 'commentaire' => 'avis#create_commentaire'
+            post 'avis' => 'avis#create_avis'
+            get 'bilans_bdf'
+
+            get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
+            post 'sign_up/email/:email' => 'avis#create_instructeur', constraints: { email: /.*/ }
           end
         end
 
@@ -345,18 +366,6 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
-      end
-    end
-    resources :avis, only: [:index, :show, :update] do
-      member do
-        get 'instruction'
-        get 'messagerie'
-        post 'commentaire' => 'avis#create_commentaire'
-        post 'avis' => 'avis#create_avis'
-        get 'bilans_bdf'
-
-        get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
-        post 'sign_up/email/:email' => 'avis#create_instructeur', constraints: { email: /.*/ }
       end
     end
     get "recherche" => "recherche#index"

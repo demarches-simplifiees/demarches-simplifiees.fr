@@ -11,7 +11,13 @@ module Instructeurs
     DONNES_STATUS   = 'donnes'
 
     def index
-      instructeur_avis = current_instructeur.avis.includes(dossier: [:procedure, :user])
+      avis = current_instructeur.avis.includes(dossier: [groupe_instructeur: :procedure])
+      @avis_by_procedure = avis.to_a.group_by(&:procedure)
+    end
+
+    def procedure
+      @procedure = Procedure.find(params[:procedure_id])
+      instructeur_avis = current_instructeur.avis.includes(:dossier).where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure.id) })
       @avis_a_donner = instructeur_avis.without_answer
       @avis_donnes = instructeur_avis.with_answer
 
@@ -37,7 +43,7 @@ module Instructeurs
     def update
       if @avis.update(avis_params)
         flash.notice = 'Votre réponse est enregistrée.'
-        redirect_to instruction_instructeur_avis_path(@avis)
+        redirect_to instruction_instructeur_avis_path(@avis.procedure, @avis)
       else
         flash.now.alert = @avis.errors.full_messages
         @new_avis = Avis.new
@@ -54,7 +60,7 @@ module Instructeurs
 
       if @commentaire.save
         flash.notice = "Message envoyé"
-        redirect_to messagerie_instructeur_avis_path(avis)
+        redirect_to messagerie_instructeur_avis_path(avis.procedure, avis)
       else
         flash.alert = @commentaire.errors.full_messages
         render :messagerie
@@ -65,7 +71,7 @@ module Instructeurs
       @new_avis = create_avis_from_params(avis.dossier, avis.confidentiel)
 
       if @new_avis.nil?
-        redirect_to instruction_instructeur_avis_path(avis)
+        redirect_to instruction_instructeur_avis_path(avis.procedure, avis)
       else
         set_avis_and_dossier
         render :instruction
@@ -89,6 +95,8 @@ module Instructeurs
     end
 
     def create_instructeur
+      procedure_id = params[:procedure_id]
+      avis_id = params[:id]
       email = params[:email]
       password = params[:user][:password]
 
@@ -99,10 +107,10 @@ module Instructeurs
         sign_in(user)
 
         Avis.link_avis_to_instructeur(user.instructeur)
-        redirect_to url_for(instructeur_avis_index_path)
+        redirect_to url_for(instructeur_all_avis_path)
       else
         flash[:alert] = user.errors.full_messages
-        redirect_to url_for(sign_up_instructeur_avis_path(params[:id], email))
+        redirect_to url_for(sign_up_instructeur_avis_path(procedure_id, avis_id, email))
       end
     end
 
@@ -119,7 +127,7 @@ module Instructeurs
       if current_instructeur.present?
         # a instructeur is authenticated ... lets see if it can view the dossier
 
-        redirect_to instructeur_avis_url(avis)
+        redirect_to instructeur_avis_url(avis.procedure, avis)
       elsif avis.instructeur&.email == params[:email]
         # the avis instructeur has already signed up and it sould sign in
 
