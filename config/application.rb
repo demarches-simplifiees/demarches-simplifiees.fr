@@ -34,7 +34,13 @@ module TPS
 
     config.active_job.queue_adapter = :delayed_job
 
-    config.action_view.sanitized_allowed_tags = ['u']
+    # The default list used to be accessible through `ActionView::Base.sanitized_allowed_tags`,
+    # but a regression in Rails 6.0 makes it unavailable.
+    # It should be fixed in Rails 6.1.
+    # See https://github.com/rails/rails/issues/39586
+    # default_allowed_tags = ActionView::Base.sanitized_allowed_tags
+    default_allowed_tags = ['strong', 'em', 'b', 'i', 'p', 'code', 'pre', 'tt', 'samp', 'kbd', 'var', 'sub', 'sup', 'dfn', 'cite', 'big', 'small', 'address', 'hr', 'br', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'abbr', 'acronym', 'a', 'img', 'blockquote', 'del', 'ins']
+    config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u']
 
     config.active_record.belongs_to_required_by_default = false
 
