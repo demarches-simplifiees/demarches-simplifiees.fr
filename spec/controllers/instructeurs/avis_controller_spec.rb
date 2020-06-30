@@ -82,7 +82,7 @@ describe Instructeurs::AvisController, type: :controller do
 
       describe 'with attachment' do
         include ActiveJob::TestHelper
-        let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+        let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
         before do
           expect(ClamavService).to receive(:safe_file?).and_return(true)
@@ -119,7 +119,7 @@ describe Instructeurs::AvisController, type: :controller do
       end
 
       context "with a file" do
-        let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+        let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
         it do
           subject
@@ -139,7 +139,7 @@ describe Instructeurs::AvisController, type: :controller do
       let(:invite_linked_dossiers) { nil }
 
       before do
-        @introduction_file = Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf')
+        @introduction_file = fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf')
         post :create_avis, params: { id: previous_avis.id, procedure_id: procedure.id, avis: { emails: emails, introduction: intro, confidentiel: asked_confidentiel, invite_linked_dossiers: invite_linked_dossiers, introduction_file: @introduction_file } }
         created_avis.reload
       end
