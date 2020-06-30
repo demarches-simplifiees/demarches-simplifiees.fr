@@ -1,39 +1,41 @@
-- avis_statut = (@statut == Instructeurs::AvisController::A_DONNER_STATUS) ? 'à donner' : 'rendus'
-- content_for(:title, "Avis #{avis_statut}")
-
-.sub-header
-  .container.flex
-    .width-100
-      %h1.tab-title Avis
-      %ul.tabs
-        = tab_item('avis à donner',
-          instructeur_avis_index_path(statut: Instructeurs::AvisController::A_DONNER_STATUS),
-          active: @statut == Instructeurs::AvisController::A_DONNER_STATUS,
-          badge: @avis_a_donner.count,
-          notification: @avis_a_donner.any?)
-
-        = tab_item("avis #{'donné'.pluralize(@avis_donnes.count)}",
-          instructeur_avis_index_path(statut: Instructeurs::AvisController::DONNES_STATUS),
-          active: @statut == Instructeurs::AvisController::DONNES_STATUS,
-          badge: @avis_donnes.count)
+- content_for(:title, "Avis")
 
 .container
-  - if @avis.present?
-    %table.table.dossiers-table.hoverable
-      %thead
-        %tr
-          %th.number-col Nº dossier
-          %th Demandeur
-          %th Démarche
-      %tbody
-        - @avis.each do |avis|
-          %tr
-            %td.number-col
-              = link_to(instructeur_avis_path(avis), class: 'cell-link') do
-                %span.icon.folder
-                #{avis.dossier.id}
-            %td= link_to(avis.dossier.user.email, instructeur_avis_path(avis), class: 'cell-link')
-            %td= link_to(avis.dossier.procedure.libelle, instructeur_avis_path(avis), class: 'cell-link')
-    = paginate(@avis)
-  - else
-    %h2.empty-text Aucun avis
+  %h1.page-title Avis
+
+  %ul.procedure-list
+    - @avis_by_procedure.each do |p, procedure_avis|
+      %li.procedure-item.flex.align-start
+        = link_to(procedure_instructeur_avis_index_path(p)) do
+          .flex
+
+            .procedure-logo{ style: "background-image: url(#{p.logo_url})" }
+
+            .procedure-details
+              %p.procedure-title
+                = procedure_libelle p
+              %ul.procedure-stats.flex
+                %li
+                  %object
+                    = link_to(procedure_instructeur_avis_index_path(p, statut: Instructeurs::AvisController::A_DONNER_STATUS)) do
+                      - without_answer_count = procedure_avis.select { |a| a.answer.nil? }.size
+                      - if without_answer_count > 0
+                        %span.notifications{ 'aria-label': "notifications" }
+                      .stats-number
+                        = without_answer_count
+                      .stats-legend
+                        avis à donner
+                %li
+                  %object
+                    = link_to(procedure_instructeur_avis_index_path(p, statut: Instructeurs::AvisController::DONNES_STATUS)) do
+                      - with_answer_count = procedure_avis.select { |a| a.answer.present? }.size
+                      .stats-number= with_answer_count
+                      .stats-legend
+                        = pluralize(with_answer_count, "avis donné")
+
+            - if p.close?
+              .procedure-status
+                %span.label Close
+            - elsif p.depubliee?
+              .procedure-status
+                %span.label Dépubliée

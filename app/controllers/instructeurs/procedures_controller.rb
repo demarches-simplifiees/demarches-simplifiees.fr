@@ -284,7 +284,7 @@ module Instructeurs
 
     def redirect_to_avis_if_needed
       if current_instructeur.procedures.count == 0 && current_instructeur.avis.count > 0
-        redirect_to instructeur_avis_index_path
+        redirect_to instructeur_all_avis_path
       end
     end
 
