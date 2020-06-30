@@ -110,7 +110,7 @@ class AttestationTemplate < ApplicationRecord
   def build_pdf(dossier)
     attestation = render_attributes_for(dossier: dossier)
     action_view = ActionView::Base.new(ActionController::Base.view_paths, attestation: attestation)
-    attestation_view = action_view.render(file: 'admin/attestation_templates/show', formats: [:pdf])
+    attestation_view = action_view.render(file: 'admin/attestation_templates/show.pdf.prawn')
 
     StringIO.new(attestation_view)
   end
