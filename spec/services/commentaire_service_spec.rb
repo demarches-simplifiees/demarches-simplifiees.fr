@@ -27,7 +27,7 @@ describe CommentaireService do
     end
 
     context 'when it has a file' do
-      let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
       before do
         expect(ClamavService).to receive(:safe_file?).and_return(true)
