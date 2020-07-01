@@ -441,17 +441,17 @@ class Dossier < ApplicationRecord
   end
 
   def geo_position
-    if etablissement.present?
-      point = Geocoder.search(etablissement.geo_adresse).first
-    end
+    # if etablissement.present?
+    #   point = Geocoder.search(etablissement.geo_adresse).first
+    # end
 
     lon = Champs::CarteChamp::DEFAULT_LON.to_s
     lat = Champs::CarteChamp::DEFAULT_LAT.to_s
     zoom = "13"
 
-    if point.present?
-      lat, lon = point.coordinates.map(&:to_s)
-    end
+    # if point.present?
+    #   lat, lon = point.coordinates.map(&:to_s)
+    # end
 
     { lon: lon, lat: lat, zoom: zoom }
   end
