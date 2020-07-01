@@ -4,9 +4,7 @@
 
 .form-column.procedure-context-content
   .auth-form.sign-in-form
-    %p.center
-      %span Si vous avez un compte #{SITE_NAME}
-      %br
+    %h1.center Si vous avez un compte #{SITE_NAME}
     = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
 
       = f.label :email, "Email"

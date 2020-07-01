@@ -1,4 +1,4 @@
-- if champ.drop_down_list && champ.drop_down_list.options.any?
+- if champ.options?
   = form.select :primary_value,
     champ.primary_options,
     { required: champ.mandatory? },

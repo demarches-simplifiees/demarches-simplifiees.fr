@@ -32,14 +32,14 @@ feature 'The routing', js: true do
     # add victor to littéraire groupe
     find('input.select2-search__field').send_keys('victor@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("L’instructeur victor@inst.com a été affecté")
+    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
 
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
     # add superwoman to littéraire groupe
     find('input.select2-search__field').send_keys('superwoman@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
+    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
 
     superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
 

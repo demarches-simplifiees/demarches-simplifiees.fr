@@ -62,12 +62,12 @@ describe Champs::LinkedDropDownListChamp do
   end
 
   describe '#mandatory_and_blank' do
-    let(:drop_down_list) { build(:drop_down_list, value: "--Primary--\nSecondary") }
+    let(:value) { "--Primary--\nSecondary" }
 
     subject { described_class.new(type_de_champ: type_de_champ) }
 
     context 'when the champ is not mandatory' do
-      let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, drop_down_list: drop_down_list) }
+      let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, drop_down_list_value: value) }
 
       it 'blank is fine' do
         is_expected.not_to be_mandatory_and_blank
@@ -75,7 +75,7 @@ describe Champs::LinkedDropDownListChamp do
     end
 
     context 'when the champ is mandatory' do
-      let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, mandatory: true, drop_down_list: drop_down_list) }
+      let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, mandatory: true, drop_down_list_value: value) }
 
       context 'when there is no value' do
         it { is_expected.to be_mandatory_and_blank }
@@ -95,7 +95,7 @@ describe Champs::LinkedDropDownListChamp do
         end
 
         context 'when there is nothing to select for the secondary value' do
-          let(:drop_down_list) { build(:drop_down_list, value: "--A--\nAbbott\nAbelard\n--B--\n--C--\nCynthia") }
+          let(:value) { "--A--\nAbbott\nAbelard\n--B--\n--C--\nCynthia" }
           before { subject.primary_value = 'B' }
 
           it { is_expected.not_to be_mandatory_and_blank }

@@ -442,7 +442,11 @@ class Dossier < ApplicationRecord
 
   def geo_position
     if etablissement.present?
-      point = Geocoder.search(etablissement.geo_adresse).first
+      begin
+        geocoder_search = Geocoder.search(etablissement.geo_adresse)
+        point = geocoder_search&.first
+      rescue NoMethodError
+      end
     end
 
     lon = Champs::CarteChamp::DEFAULT_LON.to_s
@@ -716,7 +720,8 @@ class Dossier < ApplicationRecord
   end
 
   def attachments_downloadable?
-    !PiecesJustificativesService.liste_pieces_justificatives(self).empty? && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
+    PiecesJustificativesService.liste_pieces_justificatives(self).present? \
+      && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
   def linked_dossiers_for(instructeur)

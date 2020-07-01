@@ -1,11 +1,21 @@
-- if champ.drop_down_list && champ.drop_down_list.options.any?
-  - options = champ.drop_down_list.options
-  - if champ.drop_down_list.allows_other_value?
-    = form.text_field :value, placeholder: champ.libelle, required: champ.mandatory?, list: champ.object_id
-    %datalist{ id: champ.object_id }
-      = options_for_select options, disabled: champ.drop_down_list.disabled_options
+- if champ.options?
+  - if champ.allows_other_value?
+    = form.select :value,
+        champ.options,
+        { disabled: champ.disabled_options },
+        multiple: false,
+        class: 'select2',
+        'data-tags': true
+  - elsif champ.render_as_radios?
+    %fieldset.radios
+      %legend.mandatory-explanation
+        Sélectionnez une des valeurs
+      - champ.enabled_non_empty_options.each do |option|
+        %label
+          = form.radio_button :value, option
+          = option
   - else
     = form.select :value,
-      options,
-      disabled: champ.drop_down_list.disabled_options,
+      champ.options,
+      disabled: champ.disabled_options,
       required: champ.mandatory?
