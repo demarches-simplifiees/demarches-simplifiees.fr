@@ -11,6 +11,7 @@ class Administration < ApplicationRecord
     user = User.create_or_promote_to_administrateur(email, SecureRandom.hex)
 
     if user.valid?
+      AdministrationMailer.new_admin_email(user.administrateur, self).deliver_later
       user.invite_administrateur!(id)
     end
 
