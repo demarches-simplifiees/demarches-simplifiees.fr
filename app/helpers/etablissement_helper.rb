@@ -1,6 +1,6 @@
 module EtablissementHelper
   def pretty_currency(capital_social, unit: '€')
-    number_to_currency(capital_social, locale: :fr, unit: unit)
+    number_to_currency(capital_social, locale: :fr, unit: unit, precision: 0)
   end
 
   def pretty_currency_unit(unit)

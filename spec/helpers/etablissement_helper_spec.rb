@@ -49,13 +49,13 @@ RSpec.describe EtablissementHelper, type: :helper do
   describe '#pretty_currency' do
     subject { pretty_currency(etablissement.entreprise_capital_social) }
 
-    it { is_expected.to eq('123 000,00 €') }
+    it { is_expected.to eq('123 000 €') }
   end
 
   describe '#pretty_currency with special unit' do
     subject { pretty_currency(12345, unit: 'k€') }
 
-    it { is_expected.to eq('12 345,00 k€') }
+    it { is_expected.to eq('12 345 k€') }
   end
   describe '#pretty_date_exercice' do
     subject { pretty_date_exercice("201908") }
