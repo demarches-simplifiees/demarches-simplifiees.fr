@@ -4,7 +4,7 @@ class Champs::AutoCompletionChamp < Champ
   end
 
   def options
-    drop_down_list_options
+    drop_down_list_options | [value]
   end
 
   def disabled_options
