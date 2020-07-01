@@ -10,7 +10,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def options
-    drop_down_list_options.filter { |option| option.casecmp('autre') != 0 }
+    drop_down_list_options.filter { |option| option.casecmp('autre') != 0 }  | [value]
   end
 
   def disabled_options
