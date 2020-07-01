@@ -9,7 +9,7 @@ def format_in_2_lines(pdf, label, text)
 end
 
 def render_box(pdf, text, x, width)
-  box = ::Prawn::Text::Box.new(text, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor] })
+  box = ::Prawn::Text::Box.new(text, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor], size: 9 })
   box.render
   box.height
 end
@@ -143,7 +143,7 @@ def add_message(pdf, message)
   end
 
   pdf.text "#{sender}, #{format_date(message.created_at)}", style: :bold
-  pdf.text ActionView::Base.full_sanitizer.sanitize(message.body.gsub(/<(br|\/(p|tr|td))>/, "\n").gsub(/<\/tr>/, "\n")),, size: 9
+  pdf.text ActionView::Base.full_sanitizer.sanitize(message.body.gsub(/<(br|\/(p|tr|td))>/, "\n").gsub(/<\/tr>/, "\n")), size: 9
   pdf.text "\n", size: 9
 end
 
