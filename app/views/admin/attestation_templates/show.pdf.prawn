@@ -39,7 +39,6 @@ info = {
   :CreationDate => created_at
 }
 
-
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size, info: info) do |pdf|
   base = 'lib/prawn/fonts/liberation_serif'
   pdf.font_families.update('liberation serif' => {
@@ -66,7 +65,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     end
 
     pdf.fill_color grey
-    pdf.pad_top(40) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 10, align: :right, character_spacing: -0.5 }
+    pdf.pad_top(40) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 9, align: :right, character_spacing: -0.5 }
 
     pdf.fill_color black
     pdf.pad_top(40) { pdf.text title, size: 20, inline_format: true }

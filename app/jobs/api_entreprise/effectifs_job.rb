@@ -1,8 +1,8 @@
 class ApiEntreprise::EffectifsJob < ApiEntreprise::Job
   def perform(etablissement_id, procedure_id)
     etablissement = Etablissement.find(etablissement_id)
-    # april 2020 is at the moment the most actual info for effectifs endpoint
-    etablissement_params = ApiEntreprise::EffectifsAdapter.new(etablissement.siret, procedure_id, "2020", "04").to_params
+    # may 2020 is at the moment the most actual info for effectifs endpoint
+    etablissement_params = ApiEntreprise::EffectifsAdapter.new(etablissement.siret, procedure_id, "2020", "05").to_params
     etablissement.update!(etablissement_params)
   end
 

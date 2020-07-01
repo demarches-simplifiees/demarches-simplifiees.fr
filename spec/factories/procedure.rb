@@ -233,6 +233,8 @@ FactoryBot.define do
           end
           build(:"type_de_champ_#{type_champ}", mandatory: true, libelle: libelle, order_place: index)
         end
+        procedure.types_de_champ << build(:type_de_champ_drop_down_list, :long, mandatory: true, libelle: 'simple_choice_drop_down_list_long')
+        procedure.types_de_champ << build(:type_de_champ_multiple_drop_down_list, :long, mandatory: true, libelle: 'multiple_choice_drop_down_list_long')
       end
     end
 

@@ -7,8 +7,7 @@ class AdministrationMailer < ApplicationMailer
     @administration = administration
     subject = "Création d'un compte admininistrateur"
 
-    mail(to: TECH_EMAIL,
-      subject: subject)
+    mail(to: TECH_EMAIL, subject: subject)
   end
 
   def invite_admin(admin, reset_password_token, administration_id)

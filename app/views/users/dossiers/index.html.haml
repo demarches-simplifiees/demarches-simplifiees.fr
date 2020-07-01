@@ -29,36 +29,31 @@
     %table.table.dossiers-table.hoverable
       %thead
         %tr
-          %th.notification-col
           %th.number-col Nº dossier
           %th Démarche
           - if @dossiers.count > 1
             %th Demandeur
           %th.status-col Statut
           %th.updated-at-col Mis à jour
-          %th
+          %th.sr-only Actions
       %tbody
         - @dossiers.each do |dossier|
           %tr{ data: { 'dossier-id': dossier.id } }
-            %td.folder-col
-              = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                %span.icon.folder
             %td.number-col
-              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+              = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
+                %span.icon.folder
                 = dossier.id
             %td
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = procedure_libelle(dossier.procedure)
             - if @dossiers.count > 1
-              %td.number-col
+              %td.cell-link
                 = demandeur_dossier(dossier)
             %td.status-col
-              = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                = status_badge(dossier.state)
-            %td.updated-at-col
-              = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                = try_format_date(dossier.updated_at)
-            %td.action-col.action-col
+              = status_badge(dossier.state)
+            %td.updated-at-col.cell-link
+              = try_format_date(dossier.updated_at)
+            %td.action-col
               = render partial: 'dossier_actions', locals: { dossier: dossier }
     = paginate(@dossiers)
 

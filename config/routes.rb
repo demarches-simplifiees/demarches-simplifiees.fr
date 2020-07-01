@@ -210,8 +210,6 @@ Rails.application.routes.draw do
       post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
 
-      resource :assigns, only: [:show, :update], path: 'instructeurs'
-
       resource :attestation_template, only: [:edit, :update, :create]
 
       post 'attestation_template/disactivate' => 'attestation_templates#disactivate'

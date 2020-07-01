@@ -40,4 +40,7 @@ if (enabled) {
     'session:event',
     [[['PAGE_VIEW', { URL: window.location.pathname }]]]
   ]);
+
+  // Prevent Crisp to log warnings about Sentry overriding document.addEventListener
+  window.$crisp.push(['safe', true]);
 }

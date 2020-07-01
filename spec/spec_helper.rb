@@ -26,6 +26,7 @@ require 'webmock/rspec'
 require 'shoulda-matchers'
 require 'devise'
 require 'factory_bot'
+require 'axe/rspec'
 
 require 'selenium/webdriver'
 Capybara.javascript_driver      = ENV.fetch('CAPYBARA_DRIVER', 'headless_chrome').to_sym
