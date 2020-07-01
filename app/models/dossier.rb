@@ -282,7 +282,6 @@ class Dossier < ApplicationRecord
   delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
 
-  before_validation :update_state_dates, if: -> { state_changed? }
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
   before_save :update_search_terms
 
@@ -508,20 +507,23 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def after_passer_en_construction
+    update!(en_construction_at: Time.zone.now) if self.en_construction_at.nil?
+  end
+
   def after_passer_en_instruction(instructeur)
     instructeur.follow(self)
 
+    update!(en_instruction_at: Time.zone.now) if self.en_instruction_at.nil?
     log_dossier_operation(instructeur, :passer_en_instruction)
   end
 
   def after_passer_automatiquement_en_instruction
+    update!(en_instruction_at: Time.zone.now) if self.en_instruction_at.nil?
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
   def after_repasser_en_construction(instructeur)
-    self.en_instruction_at = nil
-
-    save!
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
@@ -529,6 +531,7 @@ class Dossier < ApplicationRecord
     self.archived = false
     self.processed_at = nil
     self.motivation = nil
+    self.en_instruction_at = Time.zone.now
     attestation&.destroy
 
     save!
@@ -542,6 +545,8 @@ class Dossier < ApplicationRecord
     if justificatif
       self.justificatif_motivation.attach(justificatif)
     end
+
+    self.processed_at = Time.zone.now
 
     if attestation.nil?
       self.attestation = build_attestation
@@ -559,6 +564,7 @@ class Dossier < ApplicationRecord
       self.attestation = build_attestation
     end
 
+    self.processed_at = Time.zone.now
     save!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
@@ -571,6 +577,7 @@ class Dossier < ApplicationRecord
       self.justificatif_motivation.attach(justificatif)
     end
 
+    self.processed_at = Time.zone.now
     save!
     NotificationMailer.send_refused_notification(self).deliver_later
     log_dossier_operation(instructeur, :refuser, self)
@@ -583,6 +590,7 @@ class Dossier < ApplicationRecord
       self.justificatif_motivation.attach(justificatif)
     end
 
+    self.processed_at = Time.zone.now
     save!
     NotificationMailer.send_without_continuation_notification(self).deliver_later
     log_dossier_operation(instructeur, :classer_sans_suite, self)
@@ -763,16 +771,6 @@ class Dossier < ApplicationRecord
         automatic_operation: true,
         subject: subject
       )
-    end
-  end
-
-  def update_state_dates
-    if en_construction? && !self.en_construction_at
-      self.en_construction_at = Time.zone.now
-    elsif en_instruction? && !self.en_instruction_at
-      self.en_instruction_at = Time.zone.now
-    elsif TERMINE.include?(state) && !self.processed_at
-      self.processed_at = Time.zone.now
     end
   end
 
