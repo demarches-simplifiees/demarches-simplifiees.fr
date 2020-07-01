@@ -11,7 +11,22 @@ class Champ < ApplicationRecord
   belongs_to :etablissement, dependent: :destroy
   has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
-  delegate :libelle, :type_champ, :procedure, :order_place, :mandatory?, :description, :drop_down_list, :exclude_from_export?, :exclude_from_view?, :repetition?, :dossier_link?, to: :type_de_champ
+  delegate :libelle,
+    :type_champ,
+    :procedure,
+    :order_place,
+    :mandatory?,
+    :description,
+    :drop_down_list,
+    :drop_down_list_options,
+    :drop_down_list_options?,
+    :drop_down_list_disabled_options,
+    :drop_down_list_enabled_non_empty_options,
+    :exclude_from_export?,
+    :exclude_from_view?,
+    :repetition?,
+    :dossier_link?,
+    to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }

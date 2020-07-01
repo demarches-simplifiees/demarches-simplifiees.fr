@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_tracking
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur,
-    :administrateur_signed_in?, :current_administrateur
+    :administrateur_signed_in?, :current_administrateur, :current_account
 
   def staging_authenticate
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
@@ -49,14 +49,6 @@ class ApplicationController < ActionController::Base
         user_signed_in? && administrateur_signed_in?
   end
 
-  def pundit_user
-    {
-      administrateur: current_administrateur,
-      instructeur: current_instructeur,
-      user: current_user
-    }.compact
-  end
-
   def current_instructeur
     current_user&.instructeur
   end
@@ -72,6 +64,16 @@ class ApplicationController < ActionController::Base
   def administrateur_signed_in?
     current_administrateur.present?
   end
+
+  def current_account
+    {
+      administrateur: current_administrateur,
+      instructeur: current_instructeur,
+      user: current_user
+    }.compact
+  end
+
+  alias_method :pundit_user, :current_account
 
   protected
 

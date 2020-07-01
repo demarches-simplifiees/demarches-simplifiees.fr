@@ -1215,7 +1215,7 @@ enum TypeDeChamp {
   dossier_link
 
   """
-  Menu déroulant
+  Choix parmi une liste
   """
   drop_down_list
 
@@ -1250,7 +1250,7 @@ enum TypeDeChamp {
   linked_drop_down_list
 
   """
-  Menu déroulant à choix multiples
+  Choix multiples
   """
   multiple_drop_down_list
 

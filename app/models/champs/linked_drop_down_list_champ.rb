@@ -1,6 +1,10 @@
 class Champs::LinkedDropDownListChamp < Champ
   delegate :primary_options, :secondary_options, to: 'type_de_champ.dynamic_type'
 
+  def options?
+    drop_down_list_options?
+  end
+
   def primary_value
     if value.present?
       JSON.parse(value)[0]

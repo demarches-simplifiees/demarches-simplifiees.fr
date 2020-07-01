@@ -42,9 +42,8 @@ describe Admin::InstructeursController, type: :controller do
       context 'when procedure_id params is not null' do
         let(:procedure) { create :procedure }
         let(:procedure_id) { procedure.id }
-
         it { expect(response.status).to eq(302) }
-        it { expect(response).to redirect_to admin_procedure_assigns_path(procedure_id: procedure_id) }
+        it { expect(response).to redirect_to procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
       end
 
       describe 'Instructeur attributs in database' do
