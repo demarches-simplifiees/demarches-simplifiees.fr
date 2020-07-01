@@ -191,7 +191,7 @@ describe Procedure do
 
         context 'when the deliberation is uploaded ' do
           before do
-            procedure.deliberation = Rack::Test::UploadedFile.new('spec/fixtures/files/file.pdf', 'application/pdf')
+            procedure.deliberation = fixture_file_upload('spec/fixtures/files/file.pdf', 'application/pdf')
           end
 
           it { expect(procedure.valid?).to eq(true) }
@@ -199,7 +199,7 @@ describe Procedure do
 
         context 'when the deliberation is uploaded with an unauthorized format' do
           before do
-            procedure.deliberation = Rack::Test::UploadedFile.new('spec/fixtures/files/french-flag.gif', 'image/gif')
+            procedure.deliberation = fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif')
           end
 
           it { expect(procedure.valid?).to eq(false) }
@@ -952,7 +952,7 @@ describe Procedure do
       p.reload
       expect(p.juridique_required).to be_falsey
 
-      @deliberation = Rack::Test::UploadedFile.new('spec/fixtures/files/file.pdf', 'application/pdf')
+      @deliberation = fixture_file_upload('spec/fixtures/files/file.pdf', 'application/pdf')
       p.update(deliberation: @deliberation)
       p.reload
       expect(p.juridique_required).to be_truthy
