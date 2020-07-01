@@ -7,7 +7,7 @@ describe Instructeurs::DossiersController, type: :controller do
   let(:instructeurs) { [instructeur] }
   let(:procedure) { create(:procedure, :published, instructeurs: instructeurs) }
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-  let(:fake_justificatif) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+  let(:fake_justificatif) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
   before { sign_in(instructeur.user) }
 
@@ -388,7 +388,7 @@ describe Instructeurs::DossiersController, type: :controller do
   describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
-    let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:scan_result) { true }
 
     subject {

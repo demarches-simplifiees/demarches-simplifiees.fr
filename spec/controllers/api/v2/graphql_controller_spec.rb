@@ -27,7 +27,7 @@ describe API::V2::GraphqlController do
     end.base64digest
   end
 
-  let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/logo_test_procedure.png", 'image/png') }
+  let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
   let(:blob_info) do
     {
       filename: file.original_filename,

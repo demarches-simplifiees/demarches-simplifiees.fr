@@ -3,7 +3,7 @@ describe MailTemplateConcern do
   let(:dossier) { create(:dossier, procedure: procedure) }
   let(:dossier2) { create(:dossier, procedure: procedure) }
   let(:initiated_mail) { create(:initiated_mail, procedure: procedure) }
-  let(:justificatif) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+  let(:justificatif) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
   shared_examples "can replace tokens in template" do
     describe 'with no token to replace' do
