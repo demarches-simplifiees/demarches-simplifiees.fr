@@ -57,8 +57,8 @@ describe AttestationTemplate, type: :model do
 
   describe 'dup' do
     before do
-      @logo = Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png')
-      @signature = Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')
+      @logo = fixture_file_upload('spec/fixtures/files/white.png', 'image/png')
+      @signature = fixture_file_upload('spec/fixtures/files/black.png', 'image/png')
     end
 
     after do
@@ -89,8 +89,8 @@ describe AttestationTemplate, type: :model do
 
   describe 'invalidate attestation if images attachments are not valid' do
     before do
-      @logo = Rack::Test::UploadedFile.new('spec/fixtures/files/french-flag.gif', 'image/gif')
-      @signature = Rack::Test::UploadedFile.new('spec/fixtures/files/beta-gouv.gif', 'image/gif')
+      @logo = fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif')
+      @signature = fixture_file_upload('spec/fixtures/files/beta-gouv.gif', 'image/gif')
     end
 
     after do
