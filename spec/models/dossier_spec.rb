@@ -209,8 +209,17 @@ describe Dossier do
     let(:date1) { 1.day.ago }
     let(:date2) { 1.hour.ago }
     let(:date3) { 1.minute.ago }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, en_construction_at: date1, en_instruction_at: date2, processed_at: date3, motivation: "Motivation") }
-    let!(:follow) { create(:follow, instructeur: instructeur, dossier: dossier) }
+    let(:dossier) do
+      d = create(:dossier, :with_entreprise, user: user, procedure: procedure)
+      Timecop.freeze(date1)
+      d.passer_en_construction!
+      Timecop.freeze(date2)
+      d.passer_en_instruction!(instructeur)
+      Timecop.freeze(date3)
+      d.accepter!(instructeur, "Motivation", nil)
+      Timecop.return
+      d
+    end
 
     describe "followers_instructeurs" do
       let(:non_following_instructeur) { create(:instructeur) }
@@ -399,8 +408,8 @@ describe Dossier do
       end
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:accepte)) }
+      it { expect(dossier.traitements.last.processed_at).to eq(beginning_of_day) }
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
-
     end
 
     context 'when dossier is refuse' do
@@ -801,7 +810,7 @@ describe Dossier do
       dossier.procedure.update_column(:web_hook_url, '/webhook.json')
 
       expect {
-        dossier.update_column(:motivation, 'bonjour')
+        dossier.update_column(:search_terms, 'bonjour')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
@@ -809,7 +818,7 @@ describe Dossier do
       }.to have_enqueued_job(WebHookJob)
 
       expect {
-        dossier.update_column(:motivation, 'bonjour2')
+        dossier.update_column(:search_terms, 'bonjour2')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
@@ -904,8 +913,11 @@ describe Dossier do
 
     after { Timecop.return }
 
+    it { expect(dossier.traitements.last.motivation).to eq('motivation') }
     it { expect(dossier.motivation).to eq('motivation') }
+    it { expect(dossier.traitements.last.instructeur).to eq(instructeur) }
     it { expect(dossier.en_instruction_at).to eq(dossier.en_instruction_at) }
+    it { expect(dossier.traitements.last.processed_at).to eq(now) }
     it { expect(dossier.processed_at).to eq(now) }
     it { expect(dossier.state).to eq('accepte') }
     it { expect(last_operation.operation).to eq('accepter') }
