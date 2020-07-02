@@ -478,7 +478,7 @@ describe Instructeur, type: :model do
       before do
         procedure_to_assign.update(declarative_with_state: "accepte")
         DeclarativeProceduresJob.new.perform
-        dossier.update(processed_at: Time.zone.yesterday.beginning_of_day)
+        dossier.traitements.last.update(processed_at: Time.zone.yesterday.beginning_of_day)
         dossier.reload
       end
 

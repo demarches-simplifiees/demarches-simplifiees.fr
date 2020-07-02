@@ -42,6 +42,7 @@ class Dossier < ApplicationRecord
   has_many :followers_instructeurs, through: :follows, source: :instructeur
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, inverse_of: :dossier, dependent: :destroy
+  has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, dependent: :nullify, inverse_of: :dossier
 
@@ -293,6 +294,16 @@ class Dossier < ApplicationRecord
   validates :individual, presence: true, if: -> { procedure.for_individual? }
   validates :groupe_instructeur, presence: true
 
+  def motivation
+    return nil if !termine?
+    traitements.any? ? traitements.last.motivation : read_attribute(:motivation)
+  end
+
+  def processed_at
+    return nil if !termine?
+    traitements.any? ? traitements.last.processed_at : read_attribute(:processed_at)
+  end
+
   def update_search_terms
     self.search_terms = [
       user&.email,
@@ -529,8 +540,6 @@ class Dossier < ApplicationRecord
 
   def after_repasser_en_instruction(instructeur)
     self.archived = false
-    self.processed_at = nil
-    self.motivation = nil
     self.en_instruction_at = Time.zone.now
     attestation&.destroy
 
@@ -540,13 +549,11 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter(instructeur, motivation, justificatif = nil)
-    self.motivation = motivation
+    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur: instructeur, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
     end
-
-    self.processed_at = Time.zone.now
 
     if attestation.nil?
       self.attestation = build_attestation
@@ -558,39 +565,37 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter_automatiquement
+    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur: nil, motivation: nil, processed_at: Time.zone.now)
     self.en_instruction_at ||= Time.zone.now
 
     if attestation.nil?
       self.attestation = build_attestation
     end
 
-    self.processed_at = Time.zone.now
     save!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
   end
 
   def after_refuser(instructeur, motivation, justificatif = nil)
-    self.motivation = motivation
+    self.traitements.build(state: Dossier.states.fetch(:refuse), instructeur: instructeur, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
     end
 
-    self.processed_at = Time.zone.now
     save!
     NotificationMailer.send_refused_notification(self).deliver_later
     log_dossier_operation(instructeur, :refuser, self)
   end
 
   def after_classer_sans_suite(instructeur, motivation, justificatif = nil)
-    self.motivation = motivation
+    self.traitements.build(state: Dossier.states.fetch(:sans_suite), instructeur: instructeur, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
     end
 
-    self.processed_at = Time.zone.now
     save!
     NotificationMailer.send_without_continuation_notification(self).deliver_later
     log_dossier_operation(instructeur, :classer_sans_suite, self)
