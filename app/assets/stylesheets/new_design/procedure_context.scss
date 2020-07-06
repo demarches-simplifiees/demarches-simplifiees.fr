@@ -51,7 +51,7 @@ $procedure-description-line-height: 22px;
     summary {
       font-size: 20px;
 
-      &:-webkit-details-marker {
+      &::-webkit-details-marker {
         display: none;
       }
     }
