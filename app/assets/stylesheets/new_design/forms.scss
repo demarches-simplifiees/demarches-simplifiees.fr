@@ -266,6 +266,7 @@
     background-size: 14px;
     background-position: right 10px center;
     padding-right: 4 * $default-spacer;
+    max-width: 100%;
 
     &.small {
       padding-right: 3 * $default-spacer;

@@ -6,5 +6,5 @@ Opera >= 40
 Safari >= 8
 iOS >= 8
 # Although IE 11 shows a deprecation banner, we still support the transpilation option.
-# IE 11 support may be removed starting from 01 / 06 / 2020.
+# IE 11 support will be removed on Jan. 31st, 2021.
 IE >= 11
