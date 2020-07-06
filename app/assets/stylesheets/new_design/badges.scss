@@ -18,7 +18,10 @@
 
   &.procedure-synthese-badge {
     color: $white;
-    background-color: #6C757D;
-    margin-right: 3px;
+    background-color: $dark-grey;
+    margin-left: 3px;
+    padding-left: $default-spacer;
+    padding-right: $default-spacer;
+    vertical-align: baseline;
   }
 }
