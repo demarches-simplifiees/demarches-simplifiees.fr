@@ -30,6 +30,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_effectif_mensuel do
+      entreprise_effectif_mensuel { 100.5 }
+      entreprise_effectif_mois { '03' }
+      entreprise_effectif_annee { '2020' }
+    end
+
     trait :non_diffusable do
       diffusable_commercialement { false }
     end
