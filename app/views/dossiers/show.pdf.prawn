@@ -9,7 +9,7 @@ def format_in_2_lines(pdf, label, text)
 end
 
 def render_box(pdf, text, x, width)
-  box = ::Prawn::Text::Box.new(text || '', { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor] })
+  box = ::Prawn::Text::Box.new(text.to_s, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor] })
   box.render
   box.height
 end
