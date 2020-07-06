@@ -526,16 +526,19 @@ describe Instructeurs::DossiersController, type: :controller do
   describe "#show" do
     context "when the dossier is exported as PDF" do
       let(:instructeur) { create(:instructeur) }
-      let(:dossier) {
-  create(:dossier,
-    :accepte,
-    :with_all_champs,
-    :with_all_annotations,
-    :with_motivation,
-    :with_commentaires, procedure: procedure)
-}
-      let!(:avis) { create(:avis, dossier: dossier, instructeur: instructeur) }
+      let(:dossier) do
+        create(:dossier,
+          :accepte,
+          :with_all_champs,
+          :with_all_annotations,
+          :with_motivation,
+          :with_entreprise,
+          :with_commentaires, procedure: procedure)
+      end
+      let(:avis) { create(:avis, dossier: dossier, instructeur: instructeur) }
+
       subject do
+        avis
         get :show, params: {
           procedure_id: procedure.id,
           dossier_id: dossier.id,
@@ -543,9 +546,8 @@ describe Instructeurs::DossiersController, type: :controller do
         }
       end
 
-      before do
-        subject
-      end
+      before { subject }
+
       it { expect(assigns(:include_infos_administration)).to eq(true) }
       it { expect(response).to render_template 'dossiers/show' }
     end
