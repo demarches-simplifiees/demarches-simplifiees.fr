@@ -5,6 +5,9 @@
 .personnes-impliquees.container
   = render partial: 'instructeurs/dossiers/envoyer_dossier_block', locals: { dossier: @dossier, potential_recipients: @potential_recipients }
 
+  - @dossier.traitements.each do |traitement|
+    = render partial: 'instructeurs/dossiers/personnes_impliquees_block', locals: { emails_collection: [traitement.instructeur.email], title: "Instructeur qui a #{t(traitement.state, scope: 'activerecord.attributes.traitement.state').downcase} le dossier (#{l(traitement.processed_at)})" }
+
   = render partial: 'instructeurs/dossiers/personnes_impliquees_block', locals: { emails_collection: @following_instructeurs_emails, title: "Instructeurs qui suivent actuellement le dossier", blank: "Aucun instructeur ne suit ce dossier" }
 
   - if @previous_following_instructeurs_emails.present?
