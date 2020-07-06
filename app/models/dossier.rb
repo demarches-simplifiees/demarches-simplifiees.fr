@@ -199,10 +199,9 @@ class Dossier < ApplicationRecord
       .joins(:procedure)
       .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
-  scope :termine_close_to_expiration, -> do
-    state_termine
-      .joins(:procedure)
-      .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  def self.termine_close_to_expiration
+    dossier_ids = Traitement.termine_close_to_expiration.pluck(:dossier_id).uniq
+    Dossier.where(id: dossier_ids)
   end
 
   scope :brouillon_expired, -> do
