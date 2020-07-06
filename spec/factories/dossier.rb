@@ -129,13 +129,21 @@ FactoryBot.define do
     trait :accepte do
       transient do
         motivation { nil }
+        processed_at { nil }
       end
 
       after(:create) do |dossier, evaluator|
         dossier.state = Dossier.states.fetch(:accepte)
-        dossier.en_construction_at ||= dossier.created_at + 1.minute
-        dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
-        dossier.traitements.build(state: Dossier.states.fetch(:accepte), processed_at: dossier.en_instruction_at + 1.minute, motivation: evaluator.motivation)
+        processed_at = evaluator.processed_at
+        if processed_at.present?
+          dossier.en_construction_at ||= processed_at - 2.minutes
+          dossier.en_instruction_at ||= processed_at - 1.minute
+          dossier.traitements.build(state: Dossier.states.fetch(:accepte), processed_at: processed_at, motivation: evaluator.motivation)
+        else
+          dossier.en_construction_at ||= dossier.created_at + 1.minute
+          dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
+          dossier.traitements.build(state: Dossier.states.fetch(:accepte), processed_at: dossier.en_instruction_at + 1.minute, motivation: evaluator.motivation)
+        end
         dossier.save!
       end
     end
