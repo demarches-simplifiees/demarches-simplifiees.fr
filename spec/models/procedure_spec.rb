@@ -958,8 +958,7 @@ describe Procedure do
     let(:procedure) { create(:procedure) }
 
     def create_dossier(construction_date:, instruction_date:, processed_date:)
-      dossier = create(:dossier, :accepte, procedure: procedure)
-      dossier.update!(en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
+      dossier = create(:dossier, :accepte, procedure: procedure, en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
     end
 
     before do
