@@ -1,11 +1,9 @@
 module Instructeurs
   class ArchivesController < InstructeurController
+    before_action :ensure_procedure_enabled
+
     def index
       @procedure = procedure
-      if !@procedure.publiee?
-        flash[:alert] = "L'accès aux archives n'est disponible que pour les démarches publiées"
-        return redirect_to url_for(@procedure)
-      end
 
       @list_of_months = list_of_months
       @dossiers_termines = @procedure.dossiers.state_termine
@@ -22,6 +20,13 @@ module Instructeurs
     end
 
     private
+
+    def ensure_procedure_enabled
+      if !Flipper.enabled?(:archive_zip_globale, procedure)
+        flash[:alert] = "L'accès aux archives n'est pas disponible pour cette démarche, merci d'en faire la demande à l'équipe de démarches simplifiees"
+        return redirect_to url_for(procedure)
+      end
+    end
 
     def list_of_months
       months = []
