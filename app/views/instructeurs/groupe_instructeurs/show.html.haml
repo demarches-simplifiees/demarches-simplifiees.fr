@@ -1,7 +1,7 @@
 - content_for(:title, "Instructeurs du groupe #{@groupe_instructeur.label}")
 
 = render partial: 'new_administrateur/breadcrumbs',
-  locals: { steps: [link_to(@procedure.libelle, procedure_path(@procedure)),
+  locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
                     link_to('Groupes d’instructeurs', instructeur_groupes_path(@procedure)),
                     @groupe_instructeur.label] }
 

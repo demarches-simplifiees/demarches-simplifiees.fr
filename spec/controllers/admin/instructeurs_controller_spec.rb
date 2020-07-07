@@ -43,7 +43,7 @@ describe Admin::InstructeursController, type: :controller do
         let(:procedure) { create :procedure }
         let(:procedure_id) { procedure.id }
         it { expect(response.status).to eq(302) }
-        it { expect(response).to redirect_to procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
+        it { expect(response).to redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
       end
 
       describe 'Instructeur attributs in database' do
