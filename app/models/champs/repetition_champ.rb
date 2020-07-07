@@ -1,4 +1,5 @@
 class Champs::RepetitionChamp < Champ
+  include ActionView::Helpers::TagHelper
   accepts_nested_attributes_for :champs, allow_destroy: true
 
   def rows
@@ -20,11 +21,22 @@ class Champs::RepetitionChamp < Champ
   end
 
   def for_tag
-    ([libelle] + rows.map do |champs|
-      champs.map do |champ|
-        "#{champ.libelle} : #{champ}"
-      end.join("\n")
-    end).join("\n\n")
+    # replace DS text value with table
+    # ([libelle] + rows.map do |champs|
+    #   champs.map do |champ|
+    #     "#{champ.libelle} : #{champ}"
+    #   end.join("\n")
+    # end).join("\n\n")
+
+    return "" if rows.empty?
+
+    header = content_tag(:tr, rows[0].map { |c| content_tag(:th, c.libelle) }.reduce(&:+))
+    lines = rows.map do |champs|
+      content_tag(:tr, champs.map do |champ|
+        content_tag(:td, champ)
+      end.reduce(&:+))
+    end.reduce(&:+)
+    content_tag(:table, header + lines)
   end
 
   def rows_for_export
