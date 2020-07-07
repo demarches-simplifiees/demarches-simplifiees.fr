@@ -15,7 +15,7 @@ module NewAdministrateur
       @service.administrateur = current_administrateur
 
       if @service.save
-        redirect_to services_path(procedure_id: params[:procedure_id]),
+        redirect_to admin_services_path(procedure_id: params[:procedure_id]),
           notice: "#{@service.nom} créé"
       else
         @procedure = procedure
@@ -33,7 +33,7 @@ module NewAdministrateur
       @service = service
 
       if @service.update(service_params)
-        redirect_to services_path(procedure_id: params[:procedure_id]),
+        redirect_to admin_services_path(procedure_id: params[:procedure_id]),
           notice: "#{@service.nom} modifié"
       else
         @procedure = procedure
@@ -62,10 +62,10 @@ module NewAdministrateur
           message = "les démarches #{service_to_destroy.procedures.map(&:libelle).join(', ')} utilisent encore le service #{service.nom}. Veuillez les affecter à un autre service avant de pouvoir le supprimer"
         end
         flash[:alert] = message
-        redirect_to services_path(procedure_id: params[:procedure_id])
+        redirect_to admin_services_path(procedure_id: params[:procedure_id])
       else
         service_to_destroy.destroy
-        redirect_to services_path(procedure_id: params[:procedure_id]),
+        redirect_to admin_services_path(procedure_id: params[:procedure_id]),
           notice: "#{service_to_destroy.nom} est supprimé"
       end
     end

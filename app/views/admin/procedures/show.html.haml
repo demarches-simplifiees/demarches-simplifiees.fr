@@ -111,13 +111,13 @@
               - if @procedure.missing_instructeurs? && @procedure.service.nil?
                 et
               - if @procedure.service.nil?
-                = link_to("un service", services_path(procedure_id: @procedure))
+                = link_to("un service", admin_services_path(procedure_id: @procedure))
               \.
         - else
           - if @procedure.missing_steps.include?(:service)
             %p.alert.alert-danger
               Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
-              = link_to 'Cliquez ici.', (@current_administrateur.services.present? ? url_for(services_path(procedure_id: @procedure.id)) : url_for(new_service_path(procedure_id: @procedure.id)))
+              = link_to 'Cliquez ici.', (@current_administrateur.services.present? ? url_for(admin_services_path(procedure_id: @procedure.id)) : url_for(new_admin_service_path(procedure_id: @procedure.id)))
 
           - if @procedure.missing_steps.include?(:instructeurs)
             %p.alert.alert-danger
