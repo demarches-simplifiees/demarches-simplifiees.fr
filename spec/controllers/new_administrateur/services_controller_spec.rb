@@ -33,7 +33,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(Service.last.telephone).to eq('1234') }
       it { expect(Service.last.horaires).to eq('horaires') }
       it { expect(Service.last.adresse).to eq('adresse') }
-      it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
+      it { expect(response).to redirect_to(admin_services_path(procedure_id: 12)) }
     end
 
     context 'when submitting an invalid service' do
@@ -64,7 +64,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(flash.notice).to eq('nom modifié') }
       it { expect(Service.last.nom).to eq('nom') }
       it { expect(Service.last.type_organisme).to eq(Service.type_organismes.fetch(:association)) }
-      it { expect(response).to redirect_to(services_path(procedure_id: procedure.id)) }
+      it { expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id)) }
     end
 
     context 'when updating a service with invalid data' do
@@ -119,7 +119,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect { service.reload }.to raise_error(ActiveRecord::RecordNotFound) }
       it { expect(flash.alert).to be_nil }
       it { expect(flash.notice).to eq("#{service.nom} est supprimé") }
-      it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
+      it { expect(response).to redirect_to(admin_services_path(procedure_id: 12)) }
     end
 
     context 'when a service still has some related procedures' do
@@ -133,7 +133,7 @@ describe NewAdministrateur::ServicesController, type: :controller do
       it { expect(service.reload).not_to be_nil }
       it { expect(flash.alert).to eq("la démarche #{procedure.libelle} utilise encore le service service. Veuillez l'affecter à un autre service avant de pouvoir le supprimer") }
       it { expect(flash.notice).to be_nil }
-      it { expect(response).to redirect_to(services_path(procedure_id: 12)) }
+      it { expect(response).to redirect_to(admin_services_path(procedure_id: 12)) }
     end
   end
 end

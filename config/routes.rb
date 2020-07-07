@@ -406,9 +406,7 @@ Rails.application.routes.draw do
         get 'preview', on: :member
       end
     end
-  end
 
-  scope module: 'new_administrateur' do
     resources :services, except: [:show] do
       collection do
         patch 'add_to_procedure'
