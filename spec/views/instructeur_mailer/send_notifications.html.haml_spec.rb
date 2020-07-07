@@ -21,7 +21,7 @@ describe 'instructeur_mailer/send_notifications.html.haml', type: :view do
       ]
     end
 
-    it { expect(rendered).to have_link('une superbe démarche', href: procedure_url(213)) }
+    it { expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213)) }
     it { expect(rendered).to have_text('une superbe démarche') }
     it { expect(rendered).to have_text('1 dossier en construction') }
     it { expect(rendered).not_to have_text('notification') }
@@ -41,7 +41,7 @@ describe 'instructeur_mailer/send_notifications.html.haml', type: :view do
       ]
     end
 
-    it { expect(rendered).to have_link('une superbe démarche', href: procedure_url(213)) }
+    it { expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213)) }
     it { expect(rendered).to have_text('une superbe démarche') }
     it { expect(rendered).to have_text('1 dossier') }
     it { expect(rendered).not_to have_text('notification') }
@@ -63,7 +63,7 @@ describe 'instructeur_mailer/send_notifications.html.haml', type: :view do
       ]
     end
 
-    it { expect(rendered).to have_link('une superbe démarche', href: procedure_url(213)) }
+    it { expect(rendered).to have_link('une superbe démarche', href: instructeur_procedure_url(213)) }
     it { expect(rendered).to have_text('une superbe démarche') }
     it { expect(rendered).to have_text('1 dossier') }
     it { expect(rendered).not_to have_text('notification') }

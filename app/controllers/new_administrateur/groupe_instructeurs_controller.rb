@@ -21,7 +21,7 @@ module NewAdministrateur
         .new(label: label, instructeurs: [current_administrateur.instructeur])
 
       if @groupe_instructeur.save
-        redirect_to procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
           notice: "Le groupe d’instructeurs « #{label} » a été créé."
       else
         @procedure = procedure
@@ -36,7 +36,7 @@ module NewAdministrateur
       @groupe_instructeur = groupe_instructeur
 
       if @groupe_instructeur.update(label: label)
-        redirect_to procedure_groupe_instructeur_path(procedure, groupe_instructeur),
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
           notice: "Le nom est à présent « #{label} »."
       else
         @procedure = procedure
@@ -58,7 +58,7 @@ module NewAdministrateur
         groupe_instructeur.destroy!
         flash[:notice] = "le groupe « #{label} » a été supprimé."
       end
-      redirect_to procedure_groupe_instructeurs_path(procedure)
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     def reaffecter_dossiers
@@ -76,7 +76,7 @@ module NewAdministrateur
       end
 
       flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
-      redirect_to procedure_groupe_instructeurs_path(procedure)
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     def add_instructeur
@@ -123,7 +123,7 @@ module NewAdministrateur
         end
       end
 
-      redirect_to procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+      redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
     end
 
     def remove_instructeur
@@ -148,13 +148,13 @@ module NewAdministrateur
           end
         end
       end
-      redirect_to procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+      redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
     end
 
     def update_routing_criteria_name
       procedure.update!(routing_criteria_name: routing_criteria_name)
 
-      redirect_to procedure_groupe_instructeurs_path(procedure),
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure),
         notice: "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
     end
 

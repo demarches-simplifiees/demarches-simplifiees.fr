@@ -1,7 +1,7 @@
 = render partial: 'new_administrateur/breadcrumbs',
   locals: { steps: [link_to('Démarches', admin_procedures_path),
                     link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    link_to('Groupes d’instructeurs', procedure_groupe_instructeurs_path(@procedure)),
+                    link_to('Groupes d’instructeurs', admin_procedure_groupe_instructeurs_path(@procedure)),
                     @groupe_instructeur.label] }
 
 .container.groupe-instructeur
@@ -20,7 +20,7 @@
           %tr
             %td= group.label
             %td.actions= button_to 'Réaffecter les dossiers à ce groupe',
-              reaffecter_procedure_groupe_instructeur_path(:target_group => group),
+              reaffecter_admin_procedure_groupe_instructeur_path(:target_group => group),
               { class: 'button',
                 data: { confirm: "Êtes-vous sûr de vouloir réaffecter les dossiers du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
 
