@@ -62,7 +62,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       let(:label) { "nouveau_groupe" }
 
       it { expect(flash.notice).to be_present }
-      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, procedure.groupe_instructeurs.last)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, procedure.groupe_instructeurs.last)) }
       it { expect(procedure.groupe_instructeurs.count).to eq(2) }
     end
 
@@ -88,7 +88,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       before { delete_group gi_1_1 }
 
       it { expect(flash.alert).to be_present }
-      it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
       it { expect(procedure.groupe_instructeurs.count).to eq(1) }
     end
 
@@ -99,7 +99,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
         before { delete_group gi_1_2 }
         it { expect(flash.notice).to be_present }
         it { expect(procedure.groupe_instructeurs.count).to eq(1) }
-        it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+        it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
       end
 
       context 'of a group with dossiers, that cannot be deleted' do
@@ -108,7 +108,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
         it { expect(flash.alert).to be_present }
         it { expect(procedure.groupe_instructeurs.count).to eq(2) }
-        it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+        it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
       end
     end
   end
@@ -125,7 +125,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
         }
     end
     def reaffecter_url(group)
-      reaffecter_procedure_groupe_instructeur_path(:id => gi_1_2,
+      reaffecter_admin_procedure_groupe_instructeur_path(:id => gi_1_2,
                                                     :target_group => group)
     end
 
@@ -155,7 +155,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
         dossier12.reload
       end
 
-      it { expect(response).to redirect_to(procedure_groupe_instructeurs_path(procedure)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
       it { expect(gi_1_1.dossiers.with_discarded.count).to be(0) }
       it { expect(gi_1_2.dossiers.with_discarded.count).to be(2) }
       it { expect(gi_1_2.dossiers.last.id).to be(dossier12.id) }
@@ -193,7 +193,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     end
 
     it { expect(gi_1_1.reload.label).to eq(new_name) }
-    it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+    it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1)) }
     it { expect(flash.notice).to be_present }
 
     context 'when the name is already taken' do
@@ -215,7 +215,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(response.status).to eq(200) }
       it { expect(subject.request.flash[:alert]).to be_nil }
       it { expect(subject.request.flash[:notice]).to be_present }
-      it { expect(subject).to redirect_to procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
     end
 
     context 'when there is at least one bad email' do
@@ -223,13 +223,13 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(response.status).to eq(200) }
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject.request.flash[:notice]).to be_present }
-      it { expect(subject).to redirect_to procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
     end
 
     context 'when the admin wants to assign an instructor who is already assigned on this procedure' do
       let(:emails) { ['instructeur_1@ministere_a.gouv.fr'] }
       it { expect(subject.request.flash[:alert]).to be_present }
-      it { expect(subject).to redirect_to procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
     end
   end
 
@@ -256,7 +256,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
       it { expect(gi_1_2.instructeurs.pluck(:email)).to include(*new_instructeur_emails) }
       it { expect(flash.notice).to be_present }
-      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_2)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
       it { expect(procedure.routee?).to be_truthy }
       it "calls GroupeInstructeurMailer with the right groupe and instructeurs" do
         expect(GroupeInstructeurMailer).to have_received(:add_instructeurs).with(
@@ -270,20 +270,20 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     context 'of an instructeur already in the group' do
       let(:new_instructeur_emails) { [instructeur.email] }
 
-      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_2)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
     end
 
     context 'of badly formed email' do
       let(:new_instructeur_emails) { ['badly_formed_email'] }
 
       it { expect(flash.alert).to be_present }
-      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_2)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
     end
 
     context 'of an empty string' do
       let(:new_instructeur_emails) { '' }
 
-      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_2)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
     end
   end
 
@@ -306,7 +306,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
       it { expect(gi_1_1.instructeurs).to include(instructeur) }
       it { expect(gi_1_1.reload.instructeurs.count).to eq(1) }
-      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1)) }
     end
 
     context 'when there is only one instructeur' do
@@ -318,7 +318,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(gi_1_1.instructeurs).to include(instructeur) }
       it { expect(gi_1_1.instructeurs.count).to eq(1) }
       it { expect(flash.alert).to eq('Suppression impossible : il doit y avoir au moins un instructeur dans le groupe') }
-      it { expect(response).to redirect_to(procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1)) }
     end
   end
 
@@ -337,7 +337,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(subject.request.flash[:notice]).to be_present }
       it { expect(subject.request.flash[:alert]).to be_nil }
       it { expect(response.status).to eq(302) }
-      it { expect(subject).to redirect_to procedure_groupe_instructeur_path(procedure, gi_1_1) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, gi_1_1) }
     end
 
     context 'when the instructor is not assigned to the procedure' do
@@ -345,7 +345,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject.request.flash[:notice]).to be_nil }
       it { expect(response.status).to eq(302) }
-      it { expect(subject).to redirect_to procedure_groupe_instructeur_path(procedure, gi_1_1) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, gi_1_1) }
     end
   end
 

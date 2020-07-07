@@ -1,4 +1,4 @@
-= form_for service, html: { class: 'form' } do |f|
+= form_with model: [ :admin, service] , html: { class: 'form' } do |f|
 
   = f.label :nom do
     Nom
