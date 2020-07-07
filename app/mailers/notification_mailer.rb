@@ -5,8 +5,10 @@
 #
 # The subject and body of a Notification can be customized by each demarche.
 #
+
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
+  include StringToHtmlHelper
 
   helper ServiceHelper
   helper MailerHelper
@@ -47,7 +49,7 @@ class NotificationMailer < ApplicationMailer
     @dossier = dossier
     @service = dossier.procedure.service
     @logo_url = attach_logo(dossier.procedure)
-    @rendered_template = sanitize(body)
+    @rendered_template = sanitize_html(body)
     @actions = mail_template.actions_for_dossier(dossier)
 
     mail(subject: subject, to: email, template_name: 'send_notification')
