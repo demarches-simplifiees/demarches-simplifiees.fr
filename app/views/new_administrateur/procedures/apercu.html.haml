@@ -4,11 +4,11 @@
 
     %ul.tabs
       = tab_item('le dossier',
-        apercu_procedure_path(@dossier.procedure, tab: 'dossier'),
+        apercu_admin_procedure_path(@dossier.procedure, tab: 'dossier'),
         active: @tab == 'dossier')
       - if @dossier.champs_private.size > 0
         = tab_item('les annotations privées',
-          apercu_procedure_path(@dossier.procedure, tab: 'annotations-privees'),
+          apercu_admin_procedure_path(@dossier.procedure, tab: 'annotations-privees'),
           active: @tab == 'annotations-privees')
 
 - if @tab == 'dossier'
