@@ -5,10 +5,6 @@
 .personnes-impliquees.container
   = render partial: 'instructeurs/dossiers/envoyer_dossier_block', locals: { dossier: @dossier, potential_recipients: @potential_recipients }
 
-  - @dossier.traitements.each do |traitement|
-    - if traitement.instructeur_email.present?
-      = render partial: 'instructeurs/dossiers/personnes_impliquees_block', locals: { emails_collection: [traitement.instructeur_email], title: "Instructeur qui a #{t(traitement.state, scope: 'activerecord.attributes.traitement.state').downcase} le dossier (#{l(traitement.processed_at)})" }
-
   = render partial: 'instructeurs/dossiers/personnes_impliquees_block', locals: { emails_collection: @following_instructeurs_emails, title: "Instructeurs qui suivent actuellement le dossier", blank: "Aucun instructeur ne suit ce dossier" }
 
   - if @previous_following_instructeurs_emails.present?
@@ -17,3 +13,5 @@
   = render partial: 'instructeurs/dossiers/personnes_impliquees_block', locals: { emails_collection: @avis_emails, title: "Personnes à qui un avis a été demandé", blank: "Aucun avis n'a été demandé" }
 
   = render partial: 'instructeurs/dossiers/personnes_impliquees_block', locals: { emails_collection: @invites_emails, title: "Personnes invitées à consulter ce dossier", blank: "Aucune personne n'a été invitée à consulter ce dossier" }
+
+  = render partial: 'instructeurs/dossiers/decisions_rendues_block', locals: { traitements: @dossier.traitements }

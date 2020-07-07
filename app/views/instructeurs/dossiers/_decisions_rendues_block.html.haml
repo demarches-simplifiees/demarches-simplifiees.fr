@@ -1,0 +1,19 @@
+.tab-title Décisions rendues
+- if traitements.any?
+  %ul.tab-list
+    - traitements.each do |traitement|
+      - if traitement.instructeur_email.present?
+        %li
+          = "Le #{l(traitement.processed_at, format: '%d %B %Y à %R')}, "
+          = traitement.instructeur_email
+          a
+          %strong= t(traitement.state, scope: 'activerecord.attributes.traitement.state').downcase
+          ce dossier
+      - else
+        %li
+          = "Le #{l(traitement.processed_at, format: '%d %B %Y à %R')}, "
+          ce dossier a été
+          %strong= t(traitement.state, scope: 'activerecord.attributes.traitement.state').downcase
+- else
+  %p.tab-paragraph Aucune décision n'a été rendue
+
