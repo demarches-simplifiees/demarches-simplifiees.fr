@@ -4,7 +4,7 @@ feature 'As an administrateur I can edit types de champ', js: true do
 
   before do
     login_as administrateur.user, scope: :user
-    visit champs_procedure_path(procedure)
+    visit champs_admin_procedure_path(procedure)
   end
 
   it "Add a new champ" do

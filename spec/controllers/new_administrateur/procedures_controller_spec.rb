@@ -102,7 +102,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
           it { expect(subject.duree_conservation_dossiers_hors_ds).to eq(duree_conservation_dossiers_hors_ds) }
         end
 
-        it { is_expected.to redirect_to(champs_procedure_path(Procedure.last)) }
+        it { is_expected.to redirect_to(champs_admin_procedure_path(Procedure.last)) }
         it { expect(flash[:notice]).to be_present }
       end
 

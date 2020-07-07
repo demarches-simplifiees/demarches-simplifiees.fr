@@ -19,4 +19,8 @@ class BillSignatureDashboard < Administrate::BaseDashboard
     :serialized,
     :signature
   ].freeze
+
+  # The show page is disabled, but administrate requires the constant
+  # to be defined
+  SHOW_PAGE_ATTRIBUTES = [].freeze
 end

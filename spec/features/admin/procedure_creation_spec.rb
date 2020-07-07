@@ -45,7 +45,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         fill_in_dummy_procedure_details
         click_on 'Créer la démarche'
 
-        expect(page).to have_current_path(champs_procedure_path(Procedure.last))
+        expect(page).to have_current_path(champs_admin_procedure_path(Procedure.last))
       end
     end
   end
@@ -66,7 +66,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
     scenario 'Add champ, add file, visualize them in procedure preview' do
       page.refresh
-      expect(page).to have_current_path(champs_procedure_path(Procedure.last))
+      expect(page).to have_current_path(champs_admin_procedure_path(Procedure.last))
 
       add_champ(remove_flash_message: true)
       fill_in 'champ-0-libelle', with: 'libelle de champ'
@@ -80,7 +80,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
       preview_window = window_opened_by { click_on 'onglet-preview' }
       within_window(preview_window) do
-        expect(page).to have_current_path(apercu_procedure_path(Procedure.last))
+        expect(page).to have_current_path(apercu_admin_procedure_path(Procedure.last))
         expect(page).to have_field('libelle de champ')
       end
     end

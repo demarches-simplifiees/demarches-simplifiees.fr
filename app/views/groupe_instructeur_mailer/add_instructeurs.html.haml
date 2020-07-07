@@ -6,6 +6,6 @@
 
 %p
   Cliquez sur le lien ci-dessous pour voir la liste des instructeurs de ce groupe :
-  = link_to(@group.label, procedure_groupe_instructeur_url(@group.procedure, @group))
+  = link_to(@group.label, admin_procedure_groupe_instructeur_url(@group.procedure, @group))
 
 = render partial: "layouts/mailers/signature"
