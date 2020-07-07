@@ -915,7 +915,7 @@ describe Dossier do
 
     it { expect(dossier.traitements.last.motivation).to eq('motivation') }
     it { expect(dossier.motivation).to eq('motivation') }
-    it { expect(dossier.traitements.last.instructeur).to eq(instructeur) }
+    it { expect(dossier.traitements.last.instructeur_email).to eq(instructeur.email) }
     it { expect(dossier.en_instruction_at).to eq(dossier.en_instruction_at) }
     it { expect(dossier.traitements.last.processed_at).to eq(now) }
     it { expect(dossier.processed_at).to eq(now) }

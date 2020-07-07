@@ -1,6 +1,5 @@
 class Traitement < ApplicationRecord
   belongs_to :dossier
-  belongs_to :instructeur
 
   scope :termine_close_to_expiration, -> do
     joins(dossier: :procedure)
