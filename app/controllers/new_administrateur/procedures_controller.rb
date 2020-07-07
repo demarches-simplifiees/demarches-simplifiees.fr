@@ -25,7 +25,7 @@ module NewAdministrateur
         flash.notice = 'Démarche enregistrée.'
         current_administrateur.instructeur.assign_to_procedure(@procedure)
 
-        redirect_to champs_procedure_path(@procedure)
+        redirect_to champs_admin_procedure_path(@procedure)
       end
     end
 

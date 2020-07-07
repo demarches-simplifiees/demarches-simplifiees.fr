@@ -170,12 +170,6 @@ Rails.application.routes.draw do
 
   # order matters: we don't want those routes to match /admin/procedures/:id
   get 'admin/procedures/new' => 'new_administrateur/procedures#new', as: :new_admin_procedure
-  get 'admin/procedures/:id/edit' => 'new_administrateur/procedures#edit', as: :edit_admin_procedure
-  post 'admin/procedures' => 'new_administrateur/procedures#create'
-  get 'admin/procedures/:id/monavis' => 'new_administrateur/procedures#monavis', as: :admin_procedure_monavis
-  patch 'admin/procedures/:id/monavis' => 'new_administrateur/procedures#update_monavis', as: :update_monavis
-  get 'admin/procedures/:id/jeton' => 'new_administrateur/procedures#jeton', as: :admin_procedure_jeton
-  patch 'admin/procedures/:id/jeton' => 'new_administrateur/procedures#update_jeton', as: :update_jeton
 
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
@@ -183,7 +177,7 @@ Rails.application.routes.draw do
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
 
-    resources :procedures, except: [:new, :edit, :update] do
+    resources :procedures, only: [:index, :show, :destroy] do
       collection do
         get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
       end
@@ -375,12 +369,16 @@ Rails.application.routes.draw do
   # Administrateur
   #
 
-  scope module: 'new_administrateur' do
-    resources :procedures, only: [:update, :new] do
+  namespace :admin, module: 'new_administrateur' do
+    resources :procedures, except: [:index, :show, :destroy] do
       member do
         get 'apercu'
         get 'champs'
         get 'annotations'
+        get 'monavis'
+        patch 'update_monavis'
+        get 'jeton'
+        patch 'update_jeton'
       end
 
       resources :groupe_instructeurs, only: [:index, :show, :create, :update, :destroy] do
@@ -408,7 +406,9 @@ Rails.application.routes.draw do
         get 'preview', on: :member
       end
     end
+  end
 
+  scope module: 'new_administrateur' do
     resources :services, except: [:show] do
       collection do
         patch 'add_to_procedure'

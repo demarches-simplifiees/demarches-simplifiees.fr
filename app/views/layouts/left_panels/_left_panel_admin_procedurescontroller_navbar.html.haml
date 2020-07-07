@@ -26,33 +26,33 @@
         - if @procedure.missing_steps.include?(:service)
           %p.missing-steps (à compléter)
 
-    %a#onglet-administrateurs{ href: url_for(procedure_administrateurs_path(@procedure)) }
+    %a#onglet-administrateurs{ href: url_for(admin_procedure_administrateurs_path(@procedure)) }
       .procedure-list-element
         Administrateurs
 
     - if !feature_enabled?(:administrateur_routage)
-      %a#onglet-instructeurs{ href: url_for(procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur)) }
+      %a#onglet-instructeurs{ href: url_for(admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur)) }
         .procedure-list-element{ class: ('active' if active == 'Instructeurs') }
           Instructeurs
           - if @procedure.missing_steps.include?(:instructeurs)
             %p.missing-steps (à compléter)
 
     - if feature_enabled?(:administrateur_routage)
-      %a#onglet-instructeurs{ href: url_for(procedure_groupe_instructeurs_path(@procedure)) }
+      %a#onglet-instructeurs{ href: url_for(admin_procedure_groupe_instructeurs_path(@procedure)) }
         .procedure-list-element
           Groupe d'instructeurs
 
     - if !@procedure.locked?
-      %a#onglet-champs{ href: champs_procedure_path(@procedure) }
+      %a#onglet-champs{ href: champs_admin_procedure_path(@procedure) }
         .procedure-list-element{ class: ('active' if active == 'Champs') }
           Champs
 
     - if !@procedure.locked?
-      %a#onglet-private-champs{ href: annotations_procedure_path(@procedure) }
+      %a#onglet-private-champs{ href: annotations_admin_procedure_path(@procedure) }
         .procedure-list-element{ class: ('active' if active == 'Annotations privées') }
           Annotations privées
 
-    %a#onglet-preview{ href: url_for(apercu_procedure_path(@procedure)), target: "_blank", rel: "noopener" }
+    %a#onglet-preview{ href: url_for(apercu_admin_procedure_path(@procedure)), target: "_blank", rel: "noopener" }
       .procedure-list-element{ class: ('active' if active == 'Prévisualisation') }
         Prévisualisation
 
@@ -64,11 +64,11 @@
       .procedure-list-element{ class: ('active' if active == 'Attestation') }
         Attestation
 
-    %a#onglet-description{ href: url_for(admin_procedure_monavis_path(@procedure)) }
+    %a#onglet-description{ href: url_for(monavis_admin_procedure_path(@procedure)) }
       .procedure-list-element{ class: ('active' if active == 'MonAvis') }
         MonAvis
 
-    %a#onglet-description{ href: url_for(admin_procedure_jeton_path(@procedure)) }
+    %a#onglet-description{ href: url_for(jeton_admin_procedure_path(@procedure)) }
       .procedure-list-element
         Jeton
 
