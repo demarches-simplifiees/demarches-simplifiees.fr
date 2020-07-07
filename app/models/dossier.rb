@@ -548,7 +548,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter(instructeur, motivation, justificatif = nil)
-    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur: instructeur, motivation: motivation, processed_at: Time.zone.now)
+    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -564,7 +564,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter_automatiquement
-    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur: nil, motivation: nil, processed_at: Time.zone.now)
+    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur_email: nil, motivation: nil, processed_at: Time.zone.now)
     self.en_instruction_at ||= Time.zone.now
 
     if attestation.nil?
@@ -577,7 +577,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_refuser(instructeur, motivation, justificatif = nil)
-    self.traitements.build(state: Dossier.states.fetch(:refuse), instructeur: instructeur, motivation: motivation, processed_at: Time.zone.now)
+    self.traitements.build(state: Dossier.states.fetch(:refuse), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -589,7 +589,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_classer_sans_suite(instructeur, motivation, justificatif = nil)
-    self.traitements.build(state: Dossier.states.fetch(:sans_suite), instructeur: instructeur, motivation: motivation, processed_at: Time.zone.now)
+    self.traitements.build(state: Dossier.states.fetch(:sans_suite), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
