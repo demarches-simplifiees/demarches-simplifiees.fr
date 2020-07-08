@@ -438,7 +438,15 @@ class Procedure < ApplicationRecord
   end
 
   def usual_traitement_time
-    percentile_time(:en_construction_at, :processed_at, 90)
+    times = Traitement.includes(:dossier)
+      .where(state: Dossier::TERMINE)
+      .where(processed_at: 1.month.ago..Time.zone.now)
+      .pluck('dossiers.en_construction_at', :processed_at)
+      .map { |(en_construction_at, processed_at)| processed_at - en_construction_at }
+
+    if times.present?
+      times.percentile(90).ceil
+    end
   end
 
   def populate_champ_stable_ids
@@ -607,18 +615,6 @@ class Procedure < ApplicationRecord
   def check_juridique
     if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
       errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
-    end
-  end
-
-  def percentile_time(start_attribute, end_attribute, p)
-    times = dossiers
-      .where.not(start_attribute => nil, end_attribute => nil)
-      .where(end_attribute => 1.month.ago..Time.zone.now)
-      .pluck(start_attribute, end_attribute)
-      .map { |(start_date, end_date)| end_date - start_date }
-
-    if times.present?
-      times.percentile(p).ceil
     end
   end
 

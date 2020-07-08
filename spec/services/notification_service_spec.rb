@@ -66,7 +66,7 @@ describe NotificationService do
         before do
           procedure.update(declarative_with_state: "accepte")
           DeclarativeProceduresJob.new.perform
-          dossier.update(processed_at: Time.zone.yesterday.beginning_of_day)
+          dossier.traitements.last.update!(processed_at: Time.zone.yesterday.beginning_of_day)
           dossier.reload
         end
 

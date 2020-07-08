@@ -249,9 +249,11 @@ class StatsController < ApplicationController
     min_date = 11.months.ago
     max_date = Time.zone.now.to_date
 
-    processed_dossiers = dossiers
+    processed_dossiers = Traitement.includes(:dossier)
+      .where(dossier_id: dossiers)
+      .where('dossiers.state' => Dossier::TERMINE)
       .where(:processed_at => min_date..max_date)
-      .pluck(:groupe_instructeur_id, :en_construction_at, :processed_at)
+      .pluck('dossiers.groupe_instructeur_id', 'dossiers.en_construction_at', :processed_at)
 
     # Group dossiers by month
     processed_dossiers_by_month = processed_dossiers
@@ -290,11 +292,13 @@ class StatsController < ApplicationController
     min_date = 11.months.ago
     max_date = Time.zone.now.to_date
 
-    processed_dossiers = dossiers
+    processed_dossiers = Traitement.includes(:dossier)
+      .where(dossier: dossiers)
+      .where('dossiers.state' => Dossier::TERMINE)
       .where(:processed_at => min_date..max_date)
       .pluck(
-        :groupe_instructeur_id,
-        Arel.sql('EXTRACT(EPOCH FROM (en_construction_at - created_at)) / 60 AS processing_time'),
+        'dossiers.groupe_instructeur_id',
+        Arel.sql('EXTRACT(EPOCH FROM (dossiers.en_construction_at - dossiers.created_at)) / 60 AS processing_time'),
         :processed_at
       )
 

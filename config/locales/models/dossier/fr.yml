@@ -9,13 +9,13 @@ fr:
         montant_projet: 'Le montant du projet'
         montant_aide_demande: "Le montant d’aide demandée"
         date_previsionnelle: "La date de début prévisionnelle"
-        state:
+        state: &state
           brouillon: "Brouillon"
           en_construction: "En construction"
           en_instruction: "En instruction"
           accepte: "Accepté"
           refuse: "Refusé"
-          sans_suite: "Sans suite"
+          sans_suite: "Classé sans suite"
         autorisation_donnees: Acceptation des CGU
         state/brouillon: Brouillon
         state/en_construction: En construction
@@ -23,3 +23,6 @@ fr:
         state/accepte: Accepté
         state/refuse: Refusé
         state/sans_suite: Sans suite
+      traitement:
+        state:
+          <<: *state

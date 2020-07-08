@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_11_122406) do
+ActiveRecord::Schema.define(version: 2020_07_07_082256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -560,6 +560,15 @@ ActiveRecord::Schema.define(version: 2020_06_11_122406) do
     t.string "version", null: false
   end
 
+  create_table "traitements", force: :cascade do |t|
+    t.bigint "dossier_id"
+    t.string "motivation"
+    t.string "state"
+    t.datetime "processed_at"
+    t.string "instructeur_email"
+    t.index ["dossier_id"], name: "index_traitements_on_dossier_id"
+  end
+
   create_table "trusted_device_tokens", force: :cascade do |t|
     t.string "token", null: false
     t.bigint "instructeur_id"
@@ -660,6 +669,7 @@ ActiveRecord::Schema.define(version: 2020_06_11_122406) do
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
+  add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
   add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "users", "administrateurs"
