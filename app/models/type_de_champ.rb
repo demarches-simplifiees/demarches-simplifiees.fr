@@ -85,6 +85,10 @@ class TypeDeChamp < ApplicationRecord
   before_save :remove_drop_down_list, if: -> { type_champ_changed? }
   before_save :remove_repetition, if: -> { type_champ_changed? }
 
+  after_save if: -> { @remove_piece_justificative_template } do
+    piece_justificative_template.purge_later
+  end
+
   def valid?(context = nil)
     super
     if dynamic_type.present?
@@ -293,7 +297,7 @@ class TypeDeChamp < ApplicationRecord
 
   def remove_piece_justificative_template
     if !piece_justificative? && piece_justificative_template.attached?
-      piece_justificative_template.purge_later
+      @remove_piece_justificative_template = true
     end
   end
 
