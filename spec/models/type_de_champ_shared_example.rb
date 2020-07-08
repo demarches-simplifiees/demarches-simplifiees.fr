@@ -103,7 +103,7 @@ shared_examples 'type_de_champ_spec' do
       end
     end
 
-    context 'remove drop_down_list' do
+    describe 'changing the type_champ from a drop_down_list' do
       let(:tdc) { create(:type_de_champ_drop_down_list) }
 
       before do
