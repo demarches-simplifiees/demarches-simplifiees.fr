@@ -89,6 +89,20 @@ shared_examples 'type_de_champ_spec' do
       end
     end
 
+    context 'remove repetition' do
+      let(:tdc) { create(:type_de_champ_repetition, :with_types_de_champ) }
+
+      before do
+        tdc.update_attribute('type_champ', target_type_champ)
+      end
+
+      context 'when the target type_champ is not repetition' do
+        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
+
+        it { expect(tdc.types_de_champ).to be_empty }
+      end
+    end
+
     context 'delegate validation to dynamic type' do
       subject { build(:type_de_champ_text) }
       let(:dynamic_type) do
