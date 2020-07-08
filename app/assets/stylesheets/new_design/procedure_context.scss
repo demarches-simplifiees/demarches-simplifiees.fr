@@ -52,7 +52,10 @@ $procedure-description-line-height: 22px;
     summary {
       font-size: 20px;
 
-      &:-webkit-details-marker {
+      // Hide the default triangle details marker
+      list-style: none;
+      // (using the non-standard way for Chrome.)
+      &::-webkit-details-marker {
         display: none;
       }
     }

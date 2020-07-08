@@ -223,7 +223,6 @@ describe Dossier do
 
   describe '#reset!' do
     let!(:dossier) { create :dossier, :with_entreprise, autorisation_donnees: true }
-    let!(:exercice) { create :exercice, etablissement: dossier.etablissement }
 
     subject { dossier.reset! }
 

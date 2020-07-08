@@ -52,6 +52,10 @@ class Avis < ApplicationRecord
     ]
   end
 
+  def procedure
+    dossier.procedure
+  end
+
   private
 
   def try_to_assign_instructeur

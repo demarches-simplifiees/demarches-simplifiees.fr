@@ -9,7 +9,7 @@
 %ul
   - @data.each do |datum|
     %li
-      = link_to(datum[:procedure_libelle], procedure_url(datum[:procedure_id]))
+      = link_to(datum[:procedure_libelle], instructeur_procedure_url(datum[:procedure_id]))
       - if datum[:nb_en_construction] > 0
         %br
         #{datum[:nb_en_construction]} #{'dossier'.pluralize(datum[:nb_en_construction])} en construction

@@ -6,7 +6,7 @@ module DossierLinkHelper
       else
         avis = dossier.avis.find_by(instructeur: user)
         if avis.present?
-          instructeur_avis_path(avis)
+          instructeur_avis_path(avis.procedure, avis)
         end
       end
     elsif user.owns_or_invite?(dossier)

@@ -9,7 +9,7 @@ def format_in_2_lines(pdf, label, text)
 end
 
 def render_box(pdf, text, x, width)
-  box = ::Prawn::Text::Box.new(text, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor], size: 9 })
+  box = ::Prawn::Text::Box.new((text || '').to_s, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor], size: 9 })
   box.render
   box.height
 end
@@ -19,10 +19,6 @@ def format_in_2_columns(pdf, label, text)
   h2 = render_box(pdf, ':', 100, 10)
   h3 = render_box(pdf, text, 110, pdf.bounds.width - 110)
   pdf.move_down 5 + [h1,h2,h3].max
-  # pdf.text_box label, width: 100, overflow: :expand, at: [0, pdf.cursor]
-  # pdf.text_box ":", width: 10, height: 100, overflow: :expand, at: [100, pdf.cursor]
-  # pdf.text_box text, width: 420, height: 100, overflow: :expand, at: [110, pdf.cursor]
-  # pdf.move_down box.height + 5
 end
 
 def add_title(pdf, title)
