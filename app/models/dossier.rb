@@ -129,6 +129,7 @@ class Dossier < ApplicationRecord
         :individual,
         :followers_instructeurs,
         :avis,
+        :traitements,
         etablissement: :champ,
         champs: {
           etablissement: :champ,
@@ -173,6 +174,7 @@ class Dossier < ApplicationRecord
       justificatif_motivation_attachment: :blob,
       attestation: [],
       avis: { piece_justificative_file_attachment: :blob },
+      traitements: [],
       etablissement: [],
       individual: [],
       user: [])
@@ -249,7 +251,7 @@ class Dossier < ApplicationRecord
   end
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
-  scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
+  scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: [], traitements: []) }
 
   scope :with_notifications, -> do
     # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
