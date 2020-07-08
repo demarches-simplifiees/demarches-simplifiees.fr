@@ -99,7 +99,9 @@ shared_examples 'type_de_champ_spec' do
       context 'when the target type_champ is not repetition' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
-        it { expect(tdc.types_de_champ).to be_empty }
+        it 'removes the children types de champ' do
+          expect(tdc.types_de_champ).to be_empty
+        end
       end
     end
 
