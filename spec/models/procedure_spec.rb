@@ -572,6 +572,13 @@ describe Procedure do
         expect(Procedure.find_by(path: "example-path")).to eq(procedure)
         expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs)
       end
+
+      it 'creates a new draft revision' do
+        expect(procedure.published_revision).not_to be_nil
+        expect(procedure.draft_revision).not_to be_nil
+        expect(procedure.revisions.count).to eq(2)
+        expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+      end
     end
 
     context 'when publishing over a previous canonical procedure' do
@@ -622,6 +629,13 @@ describe Procedure do
       it 'unpublishes the canonical procedure' do
         expect(canonical_procedure.unpublished_at).to eq(now)
       end
+
+      it 'creates a new draft revision' do
+        expect(procedure.published_revision).not_to be_nil
+        expect(procedure.draft_revision).not_to be_nil
+        expect(procedure.revisions.count).to eq(2)
+        expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+      end
     end
 
     context 'when publishing over a previous procedure with canonical procedure' do
@@ -668,6 +682,13 @@ describe Procedure do
       expect(procedure.published_at).not_to be_nil
       expect(procedure.unpublished_at).to eq(now)
     }
+
+    it 'sets published revision' do
+      expect(procedure.published_revision).not_to be_nil
+      expect(procedure.draft_revision).not_to be_nil
+      expect(procedure.revisions.count).to eq(2)
+      expect(procedure.revisions.last).to eq(procedure.draft_revision)
+    end
   end
 
   describe "#brouillon?" do
@@ -742,6 +763,13 @@ describe Procedure do
 
     it { expect(procedure.close?).to be_truthy }
     it { expect(procedure.closed_at).to eq(now) }
+
+    it 'sets published revision' do
+      expect(procedure.published_revision).not_to be_nil
+      expect(procedure.draft_revision).not_to be_nil
+      expect(procedure.revisions.count).to eq(2)
+      expect(procedure.revisions.last).to eq(procedure.draft_revision)
+    end
   end
 
   describe 'path_customized?' do
