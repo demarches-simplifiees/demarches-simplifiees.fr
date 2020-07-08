@@ -149,7 +149,7 @@ module Users
       errors = update_dossier_and_compute_errors
 
       if passage_en_construction? && errors.blank?
-        @dossier.en_construction!
+        @dossier.passer_en_construction!
         NotificationMailer.send_initiated_notification(@dossier).deliver_later
         @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
           DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later

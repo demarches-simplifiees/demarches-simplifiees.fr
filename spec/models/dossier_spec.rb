@@ -209,8 +209,17 @@ describe Dossier do
     let(:date1) { 1.day.ago }
     let(:date2) { 1.hour.ago }
     let(:date3) { 1.minute.ago }
-    let(:dossier) { create(:dossier, :with_entreprise, user: user, procedure: procedure, en_construction_at: date1, en_instruction_at: date2, processed_at: date3, motivation: "Motivation") }
-    let!(:follow) { create(:follow, instructeur: instructeur, dossier: dossier) }
+    let(:dossier) do
+      d = create(:dossier, :with_entreprise, user: user, procedure: procedure)
+      Timecop.freeze(date1)
+      d.passer_en_construction!
+      Timecop.freeze(date2)
+      d.passer_en_instruction!(instructeur)
+      Timecop.freeze(date3)
+      d.accepter!(instructeur, "Motivation", nil)
+      Timecop.return
+      d
+    end
 
     describe "followers_instructeurs" do
       let(:non_following_instructeur) { create(:instructeur) }
@@ -346,13 +355,14 @@ describe Dossier do
     let(:state) { Dossier.states.fetch(:brouillon) }
     let(:dossier) { create(:dossier, state: state) }
     let(:beginning_of_day) { Time.zone.now.beginning_of_day }
+    let(:instructeur) { create(:instructeur) }
 
     before { Timecop.freeze(beginning_of_day) }
     after { Timecop.return }
 
     context 'when dossier is en_construction' do
       before do
-        dossier.en_construction!
+        dossier.passer_en_construction!
         dossier.reload
       end
 
@@ -361,8 +371,8 @@ describe Dossier do
 
       it 'should keep first en_construction_at date' do
         Timecop.return
-        dossier.en_instruction!
-        dossier.en_construction!
+        dossier.passer_en_instruction!(instructeur)
+        dossier.repasser_en_construction!(instructeur)
 
         expect(dossier.en_construction_at).to eq(beginning_of_day)
       end
@@ -370,9 +380,10 @@ describe Dossier do
 
     context 'when dossier is en_instruction' do
       let(:state) { Dossier.states.fetch(:en_construction) }
+      let(:instructeur) { create(:instructeur) }
 
       before do
-        dossier.en_instruction!
+        dossier.passer_en_instruction!(instructeur)
         dossier.reload
       end
 
@@ -381,39 +392,48 @@ describe Dossier do
 
       it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
         Timecop.return
-        dossier.en_construction!
-        dossier.en_instruction!
+        dossier.repasser_en_construction!(instructeur)
+        dossier.passer_en_instruction!(instructeur)
 
         expect(dossier.en_instruction_at).to eq(beginning_of_day)
       end
     end
 
-    shared_examples 'dossier is processed' do |new_state|
-      before do
-        dossier.update(state: new_state)
-        dossier.reload
-      end
-
-      it { expect(dossier.state).to eq(new_state) }
-      it { expect(dossier.processed_at).to eq(beginning_of_day) }
-    end
-
     context 'when dossier is accepte' do
       let(:state) { Dossier.states.fetch(:en_instruction) }
 
-      it_behaves_like 'dossier is processed', Dossier.states.fetch(:accepte)
+      before do
+        dossier.accepter!(instructeur, nil, nil)
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq(Dossier.states.fetch(:accepte)) }
+      it { expect(dossier.traitements.last.processed_at).to eq(beginning_of_day) }
+      it { expect(dossier.processed_at).to eq(beginning_of_day) }
     end
 
     context 'when dossier is refuse' do
       let(:state) { Dossier.states.fetch(:en_instruction) }
 
-      it_behaves_like 'dossier is processed', Dossier.states.fetch(:refuse)
+      before do
+        dossier.refuser!(instructeur, nil, nil)
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq(Dossier.states.fetch(:refuse)) }
+      it { expect(dossier.processed_at).to eq(beginning_of_day) }
     end
 
     context 'when dossier is sans_suite' do
       let(:state) { Dossier.states.fetch(:en_instruction) }
 
-      it_behaves_like 'dossier is processed', Dossier.states.fetch(:sans_suite)
+      before do
+        dossier.classer_sans_suite!(instructeur, nil, nil)
+        dossier.reload
+      end
+
+      it { expect(dossier.state).to eq(Dossier.states.fetch(:sans_suite)) }
+      it { expect(dossier.processed_at).to eq(beginning_of_day) }
     end
   end
 
@@ -478,13 +498,14 @@ describe Dossier do
   describe "#send_dossier_received" do
     let(:procedure) { create(:procedure) }
     let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
+    let(:instructeur) { create(:instructeur) }
 
     before do
       allow(NotificationMailer).to receive(:send_dossier_received).and_return(double(deliver_later: nil))
     end
 
     it "sends an email when the dossier becomes en_instruction" do
-      dossier.en_instruction!
+      dossier.passer_en_instruction!(instructeur)
       expect(NotificationMailer).to have_received(:send_dossier_received).with(dossier)
     end
 
@@ -777,6 +798,7 @@ describe Dossier do
 
   describe 'webhook' do
     let(:dossier) { create(:dossier) }
+    let(:instructeur) { create(:instructeur) }
 
     it 'should not call webhook' do
       expect {
@@ -788,19 +810,19 @@ describe Dossier do
       dossier.procedure.update_column(:web_hook_url, '/webhook.json')
 
       expect {
-        dossier.update_column(:motivation, 'bonjour')
+        dossier.update_column(:search_terms, 'bonjour')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
-        dossier.en_construction!
+        dossier.passer_en_construction!
       }.to have_enqueued_job(WebHookJob)
 
       expect {
-        dossier.update_column(:motivation, 'bonjour2')
+        dossier.update_column(:search_terms, 'bonjour2')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
-        dossier.en_instruction!
+        dossier.passer_en_instruction!(instructeur)
       }.to have_enqueued_job(WebHookJob)
     end
   end
@@ -891,8 +913,11 @@ describe Dossier do
 
     after { Timecop.return }
 
+    it { expect(dossier.traitements.last.motivation).to eq('motivation') }
     it { expect(dossier.motivation).to eq('motivation') }
+    it { expect(dossier.traitements.last.instructeur_email).to eq(instructeur.email) }
     it { expect(dossier.en_instruction_at).to eq(dossier.en_instruction_at) }
+    it { expect(dossier.traitements.last.processed_at).to eq(now) }
     it { expect(dossier.processed_at).to eq(now) }
     it { expect(dossier.state).to eq('accepte') }
     it { expect(last_operation.operation).to eq('accepter') }
