@@ -200,12 +200,7 @@ feature 'The user' do
     expect(page).to have_text('RIB.pdf')
   end
 
-  # TODO: once we're running on Rails 6, re-enable the validator on PieceJustificativeChamp,
-  # and unmark this spec as pending.
-  #
-  # See piece_justificative_champ.rb
-  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
-  scenario 'add an invalid attachment', js: true, pending: true do
+  scenario 'add an invalid attachment', js: true do
     log_in(user, procedure_with_pjs)
     fill_individual
 
