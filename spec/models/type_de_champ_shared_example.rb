@@ -89,7 +89,7 @@ shared_examples 'type_de_champ_spec' do
       end
     end
 
-    context 'remove repetition' do
+    describe 'changing the type_champ from a repetition' do
       let(:tdc) { create(:type_de_champ_repetition, :with_types_de_champ) }
 
       before do
