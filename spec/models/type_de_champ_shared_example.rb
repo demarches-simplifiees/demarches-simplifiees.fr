@@ -48,7 +48,7 @@ shared_examples 'type_de_champ_spec' do
       }
     end
 
-    context 'remove piece_justificative_template' do
+    context 'changing the type_champ from a piece_justificative' do
       context 'when the tdc is piece_justificative' do
         let(:template_double) { double('template', attached?: attached, purge_later: true) }
         let(:tdc) { create(:type_de_champ_piece_justificative) }
@@ -86,6 +86,48 @@ shared_examples 'type_de_champ_spec' do
             it { is_expected.not_to have_received(:purge_later) }
           end
         end
+      end
+    end
+
+    describe 'changing the type_champ from a repetition' do
+      let(:tdc) { create(:type_de_champ_repetition, :with_types_de_champ) }
+
+      before do
+        tdc.update_attribute('type_champ', target_type_champ)
+      end
+
+      context 'when the target type_champ is not repetition' do
+        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
+
+        it 'removes the children types de champ' do
+          expect(tdc.types_de_champ).to be_empty
+        end
+      end
+    end
+
+    describe 'changing the type_champ from a drop_down_list' do
+      let(:tdc) { create(:type_de_champ_drop_down_list) }
+
+      before do
+        tdc.update_attribute('type_champ', target_type_champ)
+      end
+
+      context 'when the target type_champ is not drop_down_list' do
+        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
+
+        it { expect(tdc.drop_down_options).to be_nil }
+      end
+
+      context 'when the target type_champ is linked_drop_down_list' do
+        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
+
+        it { expect(tdc.drop_down_options).to be_present }
+      end
+
+      context 'when the target type_champ is multiple_drop_down_list' do
+        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
+
+        it { expect(tdc.drop_down_options).to be_present }
       end
     end
 
