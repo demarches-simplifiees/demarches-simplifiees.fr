@@ -16,7 +16,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
 
   context 'when there is no attached file' do
     before do
-      champ.piece_justificative_file.purge
+      champ.piece_justificative_file = nil
     end
 
     it 'renders a form field for uploading a file' do
