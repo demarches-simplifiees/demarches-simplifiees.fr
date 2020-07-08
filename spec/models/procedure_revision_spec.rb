@@ -130,4 +130,30 @@ describe ProcedureRevision do
       expect(procedure.types_de_champ.size).to eq(2)
     end
   end
+
+  describe '#create_new_revision' do
+    let(:new_revision) { procedure.create_new_revision }
+
+    before { new_revision.save }
+
+    it 'should be part of procedure' do
+      expect(new_revision.procedure).to eq(revision.procedure)
+      expect(procedure.revisions.count).to eq(2)
+      expect(procedure.revisions).to eq([revision, new_revision])
+    end
+
+    it 'should have types_de_champ' do
+      expect(new_revision.types_de_champ.count).to eq(2)
+      expect(new_revision.types_de_champ_private.count).to eq(1)
+      expect(new_revision.types_de_champ).to eq(revision.types_de_champ)
+      expect(new_revision.types_de_champ_private).to eq(revision.types_de_champ_private)
+
+      expect(new_revision.revision_types_de_champ.count).to eq(2)
+      expect(new_revision.revision_types_de_champ_private.count).to eq(1)
+      expect(new_revision.revision_types_de_champ.count).to eq(revision.revision_types_de_champ.count)
+      expect(new_revision.revision_types_de_champ_private.count).to eq(revision.revision_types_de_champ_private.count)
+      expect(new_revision.revision_types_de_champ).not_to eq(revision.revision_types_de_champ)
+      expect(new_revision.revision_types_de_champ_private).not_to eq(revision.revision_types_de_champ_private)
+    end
+  end
 end
