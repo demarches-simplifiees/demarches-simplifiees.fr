@@ -82,7 +82,7 @@ class TypeDeChamp < ApplicationRecord
 
   before_validation :check_mandatory
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
-  before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
+  before_save :remove_drop_down_list, if: -> { type_champ_changed? }
   before_save :remove_repetition, if: -> { type_champ_changed? }
 
   def valid?(context = nil)
