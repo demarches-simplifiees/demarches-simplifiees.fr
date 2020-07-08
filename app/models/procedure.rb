@@ -108,6 +108,8 @@ class Procedure < ApplicationRecord
   ], size: { less_than: 20.megabytes }
 
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
+  validates :api_entreprise_token, jwt_token: true, allow_blank: true
+
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
