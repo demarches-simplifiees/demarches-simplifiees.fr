@@ -33,12 +33,9 @@ class Champs::PieceJustificativeChamp < Champ
     "image/jpeg"
   ]
 
-  # TODO: once we're running on Rails 6, re-enable this validation.
-  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
-  #
-  # validates :piece_justificative_file,
-  #   content_type: ACCEPTED_FORMATS,
-  #   size: { less_than: MAX_SIZE }
+  validates :piece_justificative_file,
+    content_type: ACCEPTED_FORMATS,
+    size: { less_than: MAX_SIZE }
 
   before_save :update_skip_pj_validation
 
@@ -56,6 +53,28 @@ class Champs::PieceJustificativeChamp < Champ
 
   def for_export
     piece_justificative_file.filename.to_s if piece_justificative_file.attached?
+  end
+
+  def piece_justificative_file_errors
+    errors = []
+
+    if piece_justificative_file.attached? && piece_justificative_file.previous_changes.present?
+      if piece_justificative_file.blob.byte_size > MAX_SIZE
+        errors << "Le fichier #{piece_justificative_file.filename} est trop lourd, il doit faire au plus #{MAX_SIZE.to_s(:human_size, precision: 2)}"
+      end
+
+      if !piece_justificative_file.blob.content_type.in?(ACCEPTED_FORMATS)
+        errors << "Le fichier #{piece_justificative_file.filename} est dans un format que nous n'acceptons pas"
+      end
+
+      # FIXME: add Clamav check
+    end
+
+    if errors.present?
+      piece_justificative_file.purge_later
+    end
+
+    errors
   end
 
   def for_api

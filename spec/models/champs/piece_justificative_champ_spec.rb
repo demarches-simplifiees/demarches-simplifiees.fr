@@ -16,11 +16,7 @@ describe Champs::PieceJustificativeChamp do
     end
   end
 
-  # TODO: once we're running on Rails 6, re-enable the PieceJustificativeChamp validator,
-  # and re-enable this spec.
-  #
-  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
-  describe "validations", pending: true do
+  describe "validations" do
     subject(:champ_pj) { build(:champ_piece_justificative) }
 
     it { is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::MAX_SIZE) }
