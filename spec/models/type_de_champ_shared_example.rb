@@ -48,7 +48,7 @@ shared_examples 'type_de_champ_spec' do
       }
     end
 
-    context 'remove piece_justificative_template' do
+    context 'changing the type_champ from a piece_justificative' do
       context 'when the tdc is piece_justificative' do
         let(:template_double) { double('template', attached?: attached, purge_later: true) }
         let(:tdc) { create(:type_de_champ_piece_justificative) }
