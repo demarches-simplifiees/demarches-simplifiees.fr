@@ -103,6 +103,32 @@ shared_examples 'type_de_champ_spec' do
       end
     end
 
+    context 'remove drop_down_list' do
+      let(:tdc) { create(:type_de_champ_drop_down_list) }
+
+      before do
+        tdc.update_attribute('type_champ', target_type_champ)
+      end
+
+      context 'when the target type_champ is not drop_down_list' do
+        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
+
+        it { expect(tdc.drop_down_options).to be_nil }
+      end
+
+      context 'when the target type_champ is linked_drop_down_list' do
+        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
+
+        it { expect(tdc.drop_down_options).not_to be_nil }
+      end
+
+      context 'when the target type_champ is multiple_drop_down_list' do
+        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
+
+        it { expect(tdc.drop_down_options).not_to be_nil }
+      end
+    end
+
     context 'delegate validation to dynamic type' do
       subject { build(:type_de_champ_text) }
       let(:dynamic_type) do
