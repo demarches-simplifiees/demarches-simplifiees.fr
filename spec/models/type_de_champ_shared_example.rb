@@ -125,7 +125,7 @@ shared_examples 'type_de_champ_spec' do
       context 'when the target type_champ is multiple_drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
 
-        it { expect(tdc.drop_down_options).not_to be_nil }
+        it { expect(tdc.drop_down_options).to be_present }
       end
     end
 
