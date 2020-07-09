@@ -113,12 +113,6 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
         rails generate after_party:task task_name
 
-### Debug
-
-Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il faut se connecter au process `server` dans un nouveau terminal afin d'intéragir avec byebug :
-
-    overmind connect server
-
 ### Linting
 
 Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
