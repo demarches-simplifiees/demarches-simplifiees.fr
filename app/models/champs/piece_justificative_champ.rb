@@ -49,6 +49,6 @@ class Champs::PieceJustificativeChamp < Champ
   end
 
   def update_skip_pj_validation
-    type_de_champ.update(options: type_de_champ.options&.merge({ :skip_pj_validation => true }) || { :skip_pj_validation => true })
+    type_de_champ.update(skip_pj_validation: true)
   end
 end

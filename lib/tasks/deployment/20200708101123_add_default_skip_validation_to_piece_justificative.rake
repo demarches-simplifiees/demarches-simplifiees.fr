@@ -6,7 +6,7 @@ namespace :after_party do
     tdcs = TypeDeChamp.where(type_champ: TypeDeChamp.type_champs.fetch(:piece_justificative))
     progress = ProgressReport.new(tdcs.count)
     tdcs.find_each do |tdc|
-      tdc.update(options: tdc.options&.merge({ :skip_pj_validation => true }) || { :skip_pj_validation => true })
+      tdc.update(skip_pj_validation: true)
       progress.inc
     end
     progress.finish
