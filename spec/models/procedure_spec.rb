@@ -205,6 +205,13 @@ describe Procedure do
           it { expect(procedure.valid?).to eq(false) }
         end
       end
+
+      context 'api_entreprise_token' do
+        let(:valid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
+        let(:invalid_token) { 'plouf' }
+        it { is_expected.to allow_value(valid_token).for(:api_entreprise_token) }
+        it { is_expected.not_to allow_value(invalid_token).for(:api_entreprise_token) }
+      end
     end
 
     context 'when juridique_required is false' do
@@ -335,7 +342,7 @@ describe Procedure do
   end
 
   describe 'api_entreprise_token_expired?' do
-    let(:token) { "mon-token" }
+    let(:token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
     let(:procedure) { create(:procedure, api_entreprise_token: token) }
     let(:payload) {
       [
@@ -958,8 +965,7 @@ describe Procedure do
     let(:procedure) { create(:procedure) }
 
     def create_dossier(construction_date:, instruction_date:, processed_date:)
-      dossier = create(:dossier, :accepte, procedure: procedure)
-      dossier.update!(en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
+      dossier = create(:dossier, :accepte, procedure: procedure, en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
     end
 
     before do

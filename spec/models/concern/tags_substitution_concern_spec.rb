@@ -35,6 +35,7 @@ describe TagsSubstitutionConcern, type: :model do
     let(:individual) { nil }
     let(:etablissement) { create(:etablissement) }
     let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
+    let(:instructeur) { create(:instructeur) }
 
     before { Timecop.freeze(Time.zone.now) }
 
@@ -242,7 +243,7 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when the dossier has a motivation' do
-      let(:dossier) { create(:dossier, motivation: 'motivation') }
+      let(:dossier) { create(:dossier, :accepte, motivation: 'motivation') }
 
       context 'and the template has some dossier tags' do
         let(:template) { '--motivation-- --numéro du dossier--' }
@@ -318,9 +319,13 @@ describe TagsSubstitutionConcern, type: :model do
 
     context "when using a date tag" do
       before do
-        dossier.en_construction_at = Time.zone.local(2001, 2, 3)
-        dossier.en_instruction_at = Time.zone.local(2004, 5, 6)
-        dossier.processed_at = Time.zone.local(2007, 8, 9)
+        Timecop.freeze(Time.zone.local(2001, 2, 3))
+        dossier.passer_en_construction!
+        Timecop.freeze(Time.zone.local(2004, 5, 6))
+        dossier.passer_en_instruction!(instructeur)
+        Timecop.freeze(Time.zone.local(2007, 8, 9))
+        dossier.accepter!(instructeur, nil, nil)
+        Timecop.return
       end
 
       context "with date de dépôt" do
