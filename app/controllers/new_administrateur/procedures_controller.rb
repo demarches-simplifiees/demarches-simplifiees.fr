@@ -12,6 +12,10 @@ module NewAdministrateur
       @procedure ||= Procedure.new(for_individual: true)
     end
 
+    def show
+      @procedure = current_administrateur.procedures.find(params[:id])
+    end
+
     def edit
     end
 
