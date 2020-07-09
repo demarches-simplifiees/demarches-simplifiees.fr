@@ -156,7 +156,7 @@ RSpec.describe DossierHelper, type: :helper do
 
     it 'sans_suite is traité' do
       dossier.sans_suite!
-      expect(subject).to eq('Sans suite')
+      expect(subject).to eq('Classé sans suite')
     end
 
     it 'refuse is traité' do

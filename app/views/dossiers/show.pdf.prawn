@@ -156,7 +156,7 @@ def add_etats_dossier(pdf, dossier)
   if dossier.en_instruction_at.present?
     format_in_2_columns(pdf, "En instruction le", try_format_date(dossier.en_instruction_at))
   end
-  if dossier.processed_at?.present?
+  if dossier.processed_at.present?
     format_in_2_columns(pdf, "Décision le", try_format_date(dossier.processed_at))
   end
 

@@ -36,7 +36,7 @@ Rails.application.configure do
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
-  config.assets.debug = false
+  config.assets.debug = true
 
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
@@ -83,10 +83,9 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # This is useful to run rails in development with :async queue adapter
-  if ENV['RAILS_QUEUE_ADAPTER']
-    config.active_job.queue_adapter = ENV['RAILS_QUEUE_ADAPTER'].to_sym
-  end
+  # We use the async adapter by default, but delayed_job can be set using
+  # RAILS_QUEUE_ADAPTER=delayed_job bin/rails server
+  config.active_job.queue_adapter = ENV.fetch('RAILS_QUEUE_ADAPTER', 'async').to_sym
 
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 end

@@ -657,7 +657,7 @@ describe Users::DossiersController, type: :controller do
       let!(:invite) { create(:invite, dossier: dossier, user: user) }
 
       before do
-        dossier.en_construction!
+        dossier.passer_en_construction!
         subject
       end
 
