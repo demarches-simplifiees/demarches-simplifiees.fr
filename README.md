@@ -66,7 +66,7 @@ C'est ce qu'on veut dans la plupart des cas. Une exception: ça ne joue pas les 
 
 Pour être une peu plus proche du comportement de production, et jouer les tâches cron, on peut lancer la message queue
 dans un service dédié, et indiquer à rails d'utiliser delayed_job:
-    
+
     bin/rake jobs:work
     RAILS_QUEUE_ADAPTER=delayed_job bin/rails server
 
