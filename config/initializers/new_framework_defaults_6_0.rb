@@ -23,8 +23,8 @@ Rails.application.config.action_dispatch.return_only_media_type_on_content_type 
 Rails.application.config.active_job.return_false_on_aborted_enqueue = true
 
 # Send Active Storage analysis and purge jobs to dedicated queues.
-# Rails.application.config.active_storage.queues.analysis = :active_storage_analysis
-# Rails.application.config.active_storage.queues.purge    = :active_storage_purge
+Rails.application.config.active_storage.queues.analysis = :active_storage_analysis
+Rails.application.config.active_storage.queues.purge    = :active_storage_purge
 
 # When assigning to a collection of attachments declared via `has_many_attached`, replace existing
 # attachments instead of appending. Use #attach to add new attachments without replacing existing ones.
