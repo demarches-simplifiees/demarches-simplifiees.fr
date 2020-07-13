@@ -35,4 +35,14 @@ RSpec.describe VirusScannerJob, type: :job do
 
     it { expect(champ.reload.piece_justificative_file.virus_scanner.infected?).to be_truthy }
   end
+
+  context "when the blob has been deleted" do
+    before do
+      Champ.find(champ.id).piece_justificative_file.purge
+    end
+
+    it "ignores the error" do
+      expect { subject }.not_to raise_error
+    end
+  end
 end
