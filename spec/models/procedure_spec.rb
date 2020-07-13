@@ -981,7 +981,7 @@ describe Procedure do
     context 'when there are several processed dossiers' do
       let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
 
-      it 'returns a time representative of the dossier instruction delay' do
+      it 'returns a time representative of the dossier instruction delay', pending: true do
         expect(procedure.usual_traitement_time).to be_between(3.days, 4.days)
       end
     end
@@ -990,7 +990,7 @@ describe Procedure do
       let(:delays) { [2.days, 2.days] }
       let!(:old_dossier) { create_dossier(construction_date: 3.months.ago, instruction_date: 2.months.ago, processed_date: 2.months.ago) }
 
-      it 'ignores dossiers older than 1 month' do
+      it 'ignores dossiers older than 1 month', pending: true do
         expect(procedure.usual_traitement_time).to be_within(1.hour).of(2.days)
       end
     end
@@ -999,17 +999,17 @@ describe Procedure do
       let(:delays) { [2.days, 2.days] }
       let!(:bad_dossier) { create_dossier(construction_date: nil, instruction_date: nil, processed_date: 10.days.ago) }
 
-      it 'ignores bad dossiers' do
+      it 'ignores bad dossiers', pending: true do
         expect(procedure.usual_traitement_time).to be_within(1.hour).of(2.days)
       end
     end
 
-    context 'when there is only one processed dossier' do
+    context 'when there is only one processed dossier', pending: true do
       let(:delays) { [1.day] }
       it { expect(procedure.usual_traitement_time).to be_within(1.hour).of(1.day) }
     end
 
-    context 'where there is no processed dossier' do
+    context 'where there is no processed dossier', pending: true do
       let(:delays) { [] }
       it { expect(procedure.usual_traitement_time).to be_nil }
     end
