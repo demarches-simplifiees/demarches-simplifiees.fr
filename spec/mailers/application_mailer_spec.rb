@@ -7,10 +7,18 @@ RSpec.describe ApplicationMailer, type: :mailer do
       before do
         allow_any_instance_of(DossierMailer)
           .to receive(:notify_new_draft)
-          .and_raise(Net::SMTPSyntaxError)
+          .and_raise(smtp_error)
       end
 
-      it { expect(subject.message).to be_an_instance_of(ActionMailer::Base::NullMail) }
+      context 'when the server handles invalid emails with Net::SMTPSyntaxError' do
+        let(:smtp_error) { Net::SMTPSyntaxError.new }
+        it { expect(subject.message).to be_an_instance_of(ActionMailer::Base::NullMail) }
+      end
+
+      context 'when the server handles invalid emails with Net::SMTPServerBusy' do
+        let(:smtp_error) { Net::SMTPServerBusy.new('400 unexpected recipients: want atleast 1, got 0') }
+        it { expect(subject.message).to be_an_instance_of(ActionMailer::Base::NullMail) }
+      end
     end
 
     describe 'valid emails are sent' do
