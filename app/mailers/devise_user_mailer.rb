@@ -9,6 +9,12 @@ class DeviseUserMailer < Devise::Mailer
     message.perform_deliveries = false
   end
 
+  rescue_from Net::SMTPServerBusy do |error|
+    if error.message =~ /unexpected recipients/
+      message.perform_deliveries = false
+    end
+  end
+
   def template_paths
     ['devise_mailer']
   end
