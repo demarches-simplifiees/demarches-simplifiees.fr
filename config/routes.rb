@@ -215,7 +215,7 @@ Rails.application.routes.draw do
     resources :instructeurs, only: [:index, :create, :destroy]
   end
 
-  resources :invites, only: [:show] do
+  resources :invites, only: [:show, :destroy] do
     collection do
       post 'dossier/:dossier_id', to: 'invites#create', as: :dossier
     end
