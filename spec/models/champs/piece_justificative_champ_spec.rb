@@ -3,7 +3,7 @@ require 'active_storage_validations/matchers'
 describe Champs::PieceJustificativeChamp do
   include ActiveStorageValidations::Matchers
 
-  describe "update_skip_validation" do
+  describe "skip_validation is not set anymore" do
     subject { champ_pj.type_de_champ.skip_pj_validation }
 
     context 'before_save' do
@@ -12,15 +12,26 @@ describe Champs::PieceJustificativeChamp do
     end
     context 'after_save' do
       let(:champ_pj) { create (:champ_piece_justificative) }
-      it { is_expected.to be_truthy }
+      it { is_expected.to be_falsy }
     end
   end
 
   describe "validations" do
-    subject(:champ_pj) { build(:champ_piece_justificative) }
+    let(:champ_pj) { create(:champ_piece_justificative) }
+    subject { champ_pj }
 
-    it { is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::MAX_SIZE) }
-    it { is_expected.to validate_content_type_of(:piece_justificative_file).allowing(Champs::PieceJustificativeChamp::ACCEPTED_FORMATS) }
+    context "by default" do
+      it { is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::MAX_SIZE) }
+      it { is_expected.to validate_content_type_of(:piece_justificative_file).allowing(Champs::PieceJustificativeChamp::ACCEPTED_FORMATS) }
+      it { expect(champ_pj.type_de_champ.skip_pj_validation).to be_falsy }
+    end
+
+    context "when validation is disabled" do
+      before { champ_pj.type_de_champ.update(skip_pj_validation: true) }
+
+      it { is_expected.not_to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::MAX_SIZE) }
+      it { is_expected.not_to validate_content_type_of(:piece_justificative_file).allowing(Champs::PieceJustificativeChamp::ACCEPTED_FORMATS) }
+    end
   end
 
   describe "#for_export" do
