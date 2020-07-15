@@ -3,6 +3,19 @@ require 'active_storage_validations/matchers'
 describe Champs::PieceJustificativeChamp do
   include ActiveStorageValidations::Matchers
 
+  describe "update_skip_validation" do
+    subject { champ_pj.type_de_champ.skip_pj_validation }
+
+    context 'before_save' do
+      let(:champ_pj) { build (:champ_piece_justificative) }
+      it { is_expected.to be_falsy }
+    end
+    context 'after_save' do
+      let(:champ_pj) { create (:champ_piece_justificative) }
+      it { is_expected.to be_truthy }
+    end
+  end
+
   # TODO: once we're running on Rails 6, re-enable the PieceJustificativeChamp validator,
   # and re-enable this spec.
   #

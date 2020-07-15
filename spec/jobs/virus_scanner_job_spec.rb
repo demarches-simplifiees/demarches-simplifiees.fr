@@ -1,11 +1,18 @@
 RSpec.describe VirusScannerJob, type: :job do
+  include ActiveJob::TestHelper
+
   let(:champ) do
     champ = create(:champ, :piece_justificative)
     champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+    champ.save
     champ
   end
 
-  subject { VirusScannerJob.new.perform(champ.piece_justificative_file.blob) }
+  subject do
+    perform_enqueued_jobs do
+      VirusScannerJob.perform_later(champ.piece_justificative_file.blob)
+    end
+  end
 
   context "when no virus is found" do
     let(:virus_found?) { true }
@@ -15,7 +22,7 @@ RSpec.describe VirusScannerJob, type: :job do
       subject
     end
 
-    it { expect(champ.piece_justificative_file.virus_scanner.safe?).to be_truthy }
+    it { expect(champ.reload.piece_justificative_file.virus_scanner.safe?).to be_truthy }
   end
 
   context "when a virus is found" do
@@ -26,6 +33,16 @@ RSpec.describe VirusScannerJob, type: :job do
       subject
     end
 
-    it { expect(champ.piece_justificative_file.virus_scanner.infected?).to be_truthy }
+    it { expect(champ.reload.piece_justificative_file.virus_scanner.infected?).to be_truthy }
+  end
+
+  context "when the blob has been deleted" do
+    before do
+      Champ.find(champ.id).piece_justificative_file.purge
+    end
+
+    it "ignores the error" do
+      expect { subject }.not_to raise_error
+    end
   end
 end
