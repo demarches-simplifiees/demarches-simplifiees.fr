@@ -142,6 +142,31 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(0) }
         end
 
+        context "with filter" do
+          let(:state) { Dossier.states.fetch(:en_construction) }
+          let(:filter) { [{ 'label' => 'Créé le', 'table' => 'self', 'column' => 'created_at', 'value' => '18/1/2020' }] }
+          let(:assign_to) { instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure }) }
+
+          before do
+            create(:dossier, procedure: procedure, state: state, created_at: '18/1/2020')
+            create(:procedure_presentation, assign_to: assign_to, filters: { "tous" => [], "suivis" => [], "a-suivre" => filter, "traites" => [], "archives" => [] })
+
+            subject
+          end
+
+          it { expect(assigns(:dossiers_a_suivre_count_per_procedure)[procedure.id]).to eq(2) }
+          it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(2) }
+          it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(nil) }
+
+          it { expect(assigns(:dossiers_filtered_a_suivre_count_per_procedure)[procedure.id]).to eq(1) }
+          it { expect(assigns(:dossiers_filtered_followed_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_filtered_termines_count_per_procedure)[procedure.id]).to eq(nil) }
+          it { expect(assigns(:dossiers_filtered_all_state_count_per_procedure)[procedure.id]).to eq(2) }
+          it { expect(assigns(:dossiers_filtered_archived_count_per_procedure)[procedure.id]).to eq(nil) }
+        end
+
         context "with not draft state on multiple procedures" do
           let(:procedure2) { create(:procedure, :published) }
           let(:state) { Dossier.states.fetch(:en_construction) }
@@ -379,6 +404,31 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier, archived_dossier_on_gi_2]) }
         end
+      end
+
+      context 'with a filter of dossier' do
+        let!(:state) { Dossier.states.fetch(:en_construction) }
+        let!(:dossier_out_filtered) { create(:dossier, procedure: procedure, state: state) }
+        let!(:dossier_in_filtered) { create(:dossier, procedure: procedure, state: state, created_at: '18/1/2020') }
+        let!(:filter) { [{ 'label' => 'Créé le', 'table' => 'self', 'column' => 'created_at', 'value' => '18/1/2020' }] }
+        let!(:assign_to) { instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure }) }
+
+        before do
+          create(:procedure_presentation, assign_to: assign_to, filters: { "tous" => [], "suivis" => [], "a-suivre" => filter, "traites" => [], "archives" => [] })
+          subject
+        end
+
+        it { expect(assigns(:a_suivre_dossiers)).to match_array([dossier_out_filtered, dossier_in_filtered]) }
+        it { expect(assigns(:followed_dossiers)).to be_empty }
+        it { expect(assigns(:termines_dossiers)).to be_empty }
+        it { expect(assigns(:all_state_dossiers)).to match_array([dossier_out_filtered, dossier_in_filtered]) }
+        it { expect(assigns(:archived_dossiers)).to be_empty }
+
+        it { expect(assigns(:dossiers_a_suivre_filtered_count)).to eq(1) }
+        it { expect(assigns(:dossiers_followed_filtered_count)).to eq(0) }
+        it { expect(assigns(:dossiers_termines_filtered_count)).to eq(0) }
+        it { expect(assigns(:dossiers_filtered_count)).to eq(2) }
+        it { expect(assigns(:dossiers_archived_filtered_count)).to eq(0) }
       end
 
       describe 'statut' do
