@@ -7,7 +7,7 @@
 
 .container
   %h2.explication-libelle{ style: "font-weight: bold; font-size: 20px; margin-bottom: 20px;" } Indispensable avant publication
-  .card-admin-list
+  .procedure-grid
     .card-admin
       %div
         %span.icon.accept
@@ -79,7 +79,7 @@
           = button_to 'Modifier', admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur), method: :get, class: 'card-admin-action-btn', id: "instructeurs"
 
   %h2.explication-libelle{ style: "font-weight: bold; font-size: 20px; margin-bottom: 20px;" } Pour aller plus loin
-  .card-admin-list
+  .procedure-grid
     .card-admin
       - if @procedure.attestation_template.present?
         %div
