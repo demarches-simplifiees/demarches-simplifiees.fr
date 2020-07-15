@@ -1,0 +1,6 @@
+- if badge.present?
+  - if filter.present?
+    %span.badge.border-solid{ 'title': filter }= badge
+  - else
+    %span.badge= badge
+

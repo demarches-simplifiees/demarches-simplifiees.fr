@@ -3,5 +3,4 @@
     %span.notifications{ 'aria-label': 'notifications' }
   = link_to(url) do
     = label
-    - if badge.present?
-      %span.badge= badge
+    = render partial: 'shared/badge_filter', locals: { badge: badge, filter: filter }

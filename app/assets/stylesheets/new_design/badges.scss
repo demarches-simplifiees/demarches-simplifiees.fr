@@ -24,4 +24,8 @@
     padding-right: $default-spacer;
     vertical-align: baseline;
   }
+
+  &.border-solid {
+    border: solid 2px;
+  }
 }
