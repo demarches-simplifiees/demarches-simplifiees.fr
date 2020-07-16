@@ -176,8 +176,9 @@ Rails.application.routes.draw do
     patch 'activate' => '/administrateurs/activate#create'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
+    get 'procedures/:id/publication' => 'procedures#show', as: :procedure_publication
 
-    resources :procedures, only: [:index, :show, :destroy] do
+    resources :procedures, only: [:index, :destroy] do
       collection do
         get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
       end
@@ -370,7 +371,7 @@ Rails.application.routes.draw do
   #
 
   namespace :admin, module: 'new_administrateur' do
-    resources :procedures, except: [:index, :show, :destroy] do
+    resources :procedures, except: [:index, :destroy] do
       member do
         get 'apercu'
         get 'champs'

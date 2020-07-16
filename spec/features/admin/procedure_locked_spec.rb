@@ -3,7 +3,7 @@ feature 'procedure locked' do
 
   before do
     login_as administrateur.user, scope: :user
-    visit admin_procedure_path(procedure)
+    visit admin_procedure_publication_path(procedure)
   end
 
   context 'when procedure is not published' do

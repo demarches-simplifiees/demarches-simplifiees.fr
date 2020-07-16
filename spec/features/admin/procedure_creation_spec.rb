@@ -77,6 +77,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       expect(page).to have_selector('#champ-1-libelle')
 
       click_on Procedure.last.libelle
+      find('#publish-procedure-link').click
 
       preview_window = window_opened_by { click_on 'onglet-preview' }
       within_window(preview_window) do
@@ -95,7 +96,7 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
       click_on Procedure.last.libelle
       expect(page).to have_current_path(admin_procedure_path(Procedure.last))
-
+      find('#publish-procedure-link').click
       expect(page).to have_content('en test')
       # Only check the path even though the link is the complete URL
       # (Capybara runs the app on an arbitrary host/port.)

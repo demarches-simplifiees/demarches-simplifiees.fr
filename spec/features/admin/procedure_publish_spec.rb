@@ -22,6 +22,7 @@ feature 'Publication de démarches', js: true do
     scenario 'un administrateur peut la publier' do
       visit admin_procedures_draft_path
       click_on procedure.libelle
+      find('#publish-procedure-link').click
       within "#procedure_show" do
         click_on "Publier"
       end
@@ -51,6 +52,7 @@ feature 'Publication de démarches', js: true do
     scenario 'un administrateur peut la publier' do
       visit admin_procedures_archived_path
       click_on procedure.libelle
+      find('#publish-procedure-link').click
       within "#procedure_show" do
         click_on "Réactiver"
       end
@@ -80,6 +82,7 @@ feature 'Publication de démarches', js: true do
     scenario 'un administrateur peut la publier' do
       visit admin_procedures_archived_path
       click_on procedure.libelle
+      find('#publish-procedure-link').click
       within "#procedure_show" do
         click_on "Réactiver"
       end
