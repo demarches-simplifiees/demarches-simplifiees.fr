@@ -17,7 +17,7 @@
 class Champs::PieceJustificativeChamp < Champ
   MAX_SIZE = 200.megabytes
 
-  ACCEPTED_FORMATS = [
+  ACCEPTED_CONTENT_TYPES = [
     "text/plain",
     "application/pdf",
     "application/msword",
@@ -34,7 +34,7 @@ class Champs::PieceJustificativeChamp < Champ
   ]
 
   validates :piece_justificative_file,
-    content_type: ACCEPTED_FORMATS,
+    content_type: ACCEPTED_CONTENT_TYPES,
     size: { less_than: MAX_SIZE },
     if: -> { !type_de_champ.skip_pj_validation }
 
