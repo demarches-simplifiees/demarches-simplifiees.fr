@@ -27,7 +27,7 @@ feature 'Administrateurs can edit procedures', js: true do
     scenario 'the administrator can edit the libelle' do
       visit admin_procedures_draft_path
       click_on procedure.libelle
-      click_on 'Description'
+      find('#presentation').click
 
       expect(page).to have_field('procedure_libelle', with: procedure.libelle)
 
@@ -46,7 +46,7 @@ feature 'Administrateurs can edit procedures', js: true do
     scenario 'the administrator can edit the libellé, but can‘t change the path' do
       visit root_path
       click_on procedure.libelle
-      click_on 'Description'
+      find('#presentation').click
 
       expect(page).to have_field('procedure_libelle', with: procedure.libelle)
       expect(page).not_to have_field('procedure_path')
@@ -62,7 +62,7 @@ feature 'Administrateurs can edit procedures', js: true do
   scenario 'the administrator can add another administrator' do
     another_administrateur = create(:administrateur)
     visit admin_procedure_path(procedure)
-    click_on 'Administrateurs'
+    find('#administrateurs').click
 
     fill_in('administrateur_email', with: another_administrateur.email)
 
