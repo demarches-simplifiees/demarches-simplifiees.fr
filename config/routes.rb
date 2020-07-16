@@ -318,6 +318,7 @@ Rails.application.routes.draw do
             get 'messagerie'
             post 'commentaire' => 'avis#create_commentaire'
             post 'avis' => 'avis#create_avis'
+            patch 'revoquer'
             get 'bilans_bdf'
 
             get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
