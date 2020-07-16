@@ -22,7 +22,7 @@ describe Champs::PieceJustificativeChamp do
 
     context "by default" do
       it { is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::MAX_SIZE) }
-      it { is_expected.to validate_content_type_of(:piece_justificative_file).allowing(Champs::PieceJustificativeChamp::ACCEPTED_FORMATS) }
+      it { is_expected.to validate_content_type_of(:piece_justificative_file).allowing(Champs::PieceJustificativeChamp::ACCEPTED_CONTENT_TYPES) }
       it { expect(champ_pj.type_de_champ.skip_pj_validation).to be_falsy }
     end
 
@@ -30,7 +30,7 @@ describe Champs::PieceJustificativeChamp do
       before { champ_pj.type_de_champ.update(skip_pj_validation: true) }
 
       it { is_expected.not_to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::MAX_SIZE) }
-      it { is_expected.not_to validate_content_type_of(:piece_justificative_file).allowing(Champs::PieceJustificativeChamp::ACCEPTED_FORMATS) }
+      it { is_expected.not_to validate_content_type_of(:piece_justificative_file).allowing(Champs::PieceJustificativeChamp::ACCEPTED_CONTENT_TYPES) }
     end
   end
 
