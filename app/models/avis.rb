@@ -60,7 +60,13 @@ class Avis < ApplicationRecord
     revoked_at.present?
   end
 
-  def revoke!
+  def revokable_by?(revocator)
+    revocator.dossiers.include?(dossier) || revocator == claimant
+  end
+
+  def revoke_by!(revocator)
+    return false if !revokable_by?(revocator)
+
     if answer.present?
       update!(revoked_at: Time.zone.now)
     else

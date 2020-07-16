@@ -117,7 +117,7 @@ module Instructeurs
 
     def revoquer
       avis = Avis.find(params[:id])
-      if avis.revoke!
+      if avis.revoke_by!(current_instructeur)
         flash.notice = "#{avis.email_to_display} ne peut plus donner son avis sur ce dossier."
         redirect_back(fallback_location: avis_instructeur_dossier_path(avis.procedure, avis.dossier))
       end

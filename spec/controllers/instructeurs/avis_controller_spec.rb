@@ -48,7 +48,7 @@ describe Instructeurs::AvisController, type: :controller do
 
       context 'with a revoked avis' do
         it "refuse l'accès au dossier" do
-          avis_with_answer.revoke!
+          avis_with_answer.update!(revoked_at: Time.zone.now)
           subject
           expect(flash.alert).to eq("Vous n'avez plus accès à ce dossier.")
           expect(response).to redirect_to(root_path)
@@ -273,7 +273,7 @@ describe Instructeurs::AvisController, type: :controller do
     end
 
     describe "#revoker" do
-      let(:avis) { create(:avis) }
+      let(:avis) { create(:avis, claimant: instructeur) }
       let(:procedure) { avis.procedure }
 
       it "revoke the dossier" do
