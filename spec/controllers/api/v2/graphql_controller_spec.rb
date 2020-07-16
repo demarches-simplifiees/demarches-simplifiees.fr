@@ -74,6 +74,11 @@ describe API::V2::GraphqlController do
           label
           description
           required
+          champDescriptors {
+            id
+            type
+          }
+          options
         }
         dossiers {
           nodes {
@@ -129,7 +134,9 @@ describe API::V2::GraphqlController do
               label: tdc.libelle,
               type: tdc.type_champ,
               description: tdc.description,
-              required: tdc.mandatory?
+              required: tdc.mandatory?,
+              champDescriptors: tdc.repetition? ? tdc.reload.types_de_champ.map { |tdc| { id: tdc.to_typed_id, type: tdc.type_champ } } : nil,
+              options: tdc.drop_down_list? ? tdc.drop_down_list_options.reject(&:empty?) : nil
             }
           end,
           dossiers: {
