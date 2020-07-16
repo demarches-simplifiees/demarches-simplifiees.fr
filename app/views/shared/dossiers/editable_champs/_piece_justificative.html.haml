@@ -1,4 +1,5 @@
 = render 'shared/attachment/edit',
   { form: form,
     attached_file: champ.piece_justificative_file,
-    template: champ.type_de_champ.piece_justificative_template, user_can_destroy: true }
+    template: champ.type_de_champ.piece_justificative_template, user_can_destroy: true,
+    allowed_content_types: Champs::PieceJustificativeChamp::ACCEPTED_CONTENT_TYPES }
