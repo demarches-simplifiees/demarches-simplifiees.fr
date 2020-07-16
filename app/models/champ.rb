@@ -17,7 +17,6 @@ class Champ < ApplicationRecord
     :order_place,
     :mandatory?,
     :description,
-    :drop_down_list,
     :drop_down_list_options,
     :drop_down_list_options?,
     :drop_down_list_disabled_options,
