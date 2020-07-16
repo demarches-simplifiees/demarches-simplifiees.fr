@@ -294,8 +294,8 @@ class Procedure < ApplicationRecord
     populate_champ_stable_ids
     include_list = {
       attestation_template: nil,
-      types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
-      types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
+      types_de_champ: [:types_de_champ],
+      types_de_champ_private: [:types_de_champ]
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
     procedure = self.deep_clone(include: include_list, &method(:clone_attachments))
