@@ -131,4 +131,26 @@ RSpec.describe Avis, type: :model do
       it { expect(subject.email).to eq("toto@tps.fr") }
     end
   end
+
+  describe ".revoke!" do
+    context "when no answer" do
+      let(:avis) { create(:avis) }
+
+      it "supprime l'avis" do
+        avis.revoke!
+        expect(avis).to be_destroyed
+        expect(Avis.count).to eq 0
+      end
+    end
+
+    context "with answer" do
+      let(:avis) { create(:avis, :with_answer) }
+
+      it "revoque l'avis" do
+        avis.revoke!
+        expect(avis).not_to be_destroyed
+        expect(avis).to be_revoked
+      end
+    end
+  end
 end

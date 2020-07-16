@@ -56,6 +56,18 @@ class Avis < ApplicationRecord
     dossier.procedure
   end
 
+  def revoked?
+    revoked_at.present?
+  end
+
+  def revoke!
+    if answer.present?
+      update!(revoked_at: Time.zone.now)
+    else
+      destroy!
+    end
+  end
+
   private
 
   def try_to_assign_instructeur

@@ -3,6 +3,7 @@ module Instructeurs
     include CreateAvisConcern
 
     before_action :authenticate_instructeur!, except: [:sign_up, :create_instructeur]
+    before_action :check_if_avis_revoked, only: [:show]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
     before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_instructeur]
     before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :update]
@@ -114,6 +115,14 @@ module Instructeurs
       end
     end
 
+    def revoquer
+      avis = Avis.find(params[:id])
+      if avis.revoke!
+        flash.notice = "#{avis.email_to_display} ne peut plus donner son avis sur ce dossier."
+        redirect_back(fallback_location: avis_instructeur_dossier_path(avis.procedure, avis.dossier))
+      end
+    end
+
     private
 
     def set_avis_and_dossier
@@ -132,6 +141,14 @@ module Instructeurs
         # the avis instructeur has already signed up and it sould sign in
 
         redirect_to new_user_session_url
+      end
+    end
+
+    def check_if_avis_revoked
+      avis = Avis.find(params[:id])
+      if avis.revoked?
+        flash.alert = "Vous n'avez plus accès à ce dossier."
+        redirect_to url_for(root_path)
       end
     end
 
