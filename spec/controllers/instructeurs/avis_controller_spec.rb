@@ -36,11 +36,24 @@ describe Instructeurs::AvisController, type: :controller do
     end
 
     describe '#show' do
-      before { get :show, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
+      subject { get :show, params: { id: avis_with_answer.id, procedure_id: procedure.id } }
 
-      it { expect(response).to have_http_status(:success) }
-      it { expect(assigns(:avis)).to eq(avis_without_answer) }
-      it { expect(assigns(:dossier)).to eq(dossier) }
+      context 'with a valid avis' do
+        before { subject }
+
+        it { expect(response).to have_http_status(:success) }
+        it { expect(assigns(:avis)).to eq(avis_with_answer) }
+        it { expect(assigns(:dossier)).to eq(dossier) }
+      end
+
+      context 'with a revoked avis' do
+        it "refuse l'accès au dossier" do
+          avis_with_answer.update!(revoked_at: Time.zone.now)
+          subject
+          expect(flash.alert).to eq("Vous n'avez plus accès à ce dossier.")
+          expect(response).to redirect_to(root_path)
+        end
+      end
     end
 
     describe '#instruction' do
@@ -256,6 +269,17 @@ describe Instructeurs::AvisController, type: :controller do
             end
           end
         end
+      end
+    end
+
+    describe "#revoker" do
+      let(:avis) { create(:avis, claimant: instructeur) }
+      let(:procedure) { avis.procedure }
+
+      it "revoke the dossier" do
+        patch :revoquer, params: { procedure_id: procedure.id, id: avis.id }
+
+        expect(flash.notice).to eq("#{avis.email} ne peut plus donner son avis sur ce dossier.")
       end
     end
   end
