@@ -2,8 +2,10 @@
   locals: { steps: [link_to('Démarches', admin_procedures_path),
                     "#{@procedure.libelle} (crée le #{@procedure.created_at.strftime('%d/%m/%Y')})"] }
 
-.container{ style: "text-align:right; margin-bottom: 20px" }
-  = button_to 'Publier la démarche', admin_procedure_publication_path(@procedure), method: :get, class: 'button primary',id: 'publish-procedure-link', disabled: @procedure.publiee? ? true : false
+.container{ style: "display: flex; justify-content: flex-end; margin-bottom: 20px" }
+  - if @procedure.brouillon?
+    = link_to "Tester la démarche", sanitize_url(@procedure_lien), target: :blank, rel: :noopener, class: 'button primary', id: 'test-procedure-link'
+  = button_to 'Publier la démarche', admin_procedure_publication_path(@procedure), method: :get, class: 'button primary', id: 'publish-procedure-link', disabled: @procedure.publiee? ? true : false
 
 .container
   %h2.explication-libelle{ style: "font-weight: bold; font-size: 20px; margin-bottom: 20px;" } Indispensable avant publication
@@ -69,14 +71,29 @@
       %div
         %p.card-admin-title
           = feature_enabled?(:administrateur_routage) ? "Groupe Instructeurs" : "Instructeurs"
-          %span.badge.baseline
-            = @procedure.instructeurs.count
+          - if feature_enabled?(:administrateur_routage)
+            %span.badge.baseline
+              = @procedure.groupe_instructeurs.count
+          - else
+            %span.badge.baseline
+              = @procedure.instructeurs.count
         %p.card-admin-subtitle Suivi des dossiers
       .card-admin-action
         - if feature_enabled?(:administrateur_routage)
           = button_to 'Modifier', admin_procedure_groupe_instructeurs_path(@procedure), method: :get, class: 'card-admin-action-btn', id: "groupe-instructeurs"
         - else
           = button_to 'Modifier', admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur), method: :get, class: 'card-admin-action-btn', id: "instructeurs"
+
+    .card-admin
+      %div
+        %span.icon.preview
+        %p.card-admin-status-todo À visualiser
+      %div
+        %p.card-admin-title
+          Prévisualisation
+        %p.card-admin-subtitle Apperçu de la démarche
+      .card-admin-action
+        = button_to 'Voir', apercu_admin_procedure_path(@procedure), method: :get, class: 'card-admin-action-btn'
 
   %h2.explication-libelle{ style: "font-weight: bold; font-size: 20px; margin-bottom: 20px;" } Pour aller plus loin
   .procedure-grid
