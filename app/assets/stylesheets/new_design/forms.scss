@@ -12,6 +12,46 @@
     }
   }
 
+  p {
+    margin-bottom: $default-spacer;
+  }
+
+  ul {
+    list-style-type: square;
+    list-style-position: outside;
+    padding-left: 30px;
+  }
+
+  ul ul {
+    list-style-type: circle;
+  }
+
+
+  ol {
+    list-style-type: decimal;
+    list-style-position: outside;
+    padding-left: 30px;
+  }
+
+  b {
+    font-weight: 900;
+    color: $black;
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  i {
+    text-decoration: underline;
+  }
+
+  table {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   hr {
     width: 100%;
     height: 0;
@@ -55,32 +95,6 @@
     margin-top: - $default-spacer;
     margin-bottom: $default-padding;
 
-    p {
-      margin-bottom: $default-spacer;
-    }
-
-    ul {
-      list-style-type: square;
-      list-style-position: outside;
-      padding-left: 20px;
-    }
-
-    ol {
-      list-style-type: decimal;
-      list-style-position: outside;
-      padding-left: 20px;
-    }
-
-    b {
-      font-weight: 900;
-      color: $black;
-    }
-
-    table {
-      width: 90%;
-      margin-left: auto;
-      margin-right: auto;
-    }
 
     input[type='date'] {
       display: inline;
@@ -454,25 +468,6 @@
     p:not(:last-child) {
       margin-bottom: $default-padding;
     }
-
-    ul {
-      list-style-type: square;
-      list-style-position: outside;
-      padding-left: 20px;
-    }
-
-    ol {
-      list-style-type: decimal;
-      list-style-position: outside;
-      padding-left: 20px;
-    }
-
-    table {
-      width: 90%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
   }
 
   .siret-info {
