@@ -2,6 +2,7 @@
 
 .container
   %h1.page-title Démarches
+  = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
 
   = render partial: 'instructeurs/procedures/list', locals: { procedures: @procedures,
     dossiers_count_per_procedure: @dossiers_count_per_procedure,

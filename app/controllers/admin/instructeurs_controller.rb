@@ -22,7 +22,7 @@ class Admin::InstructeursController < AdminController
     end
 
     if procedure_id.present?
-      redirect_to procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)
+      redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur)
     else
       redirect_to admin_instructeurs_path
     end

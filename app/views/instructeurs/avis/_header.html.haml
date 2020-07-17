@@ -1,10 +1,11 @@
 .sub-header
   .container
     %ul.breadcrumbs
-      %li= link_to('Avis', instructeur_avis_index_path)
-      %li= "#{dossier.procedure.libelle}, dossier nº #{dossier.id}"
+      %li= link_to('Avis', instructeur_all_avis_path)
+      %li= link_to(dossier.procedure.libelle, procedure_instructeur_avis_index_path(avis.procedure))
+      %li= link_to("Dossier nº #{dossier.id}", instructeur_avis_path(avis.procedure, avis))
 
     %ul.tabs
-      = dynamic_tab_item('Demande', instructeur_avis_path(avis))
-      = dynamic_tab_item('Avis', instruction_instructeur_avis_path(avis), notification: avis.answer.blank?)
-      = dynamic_tab_item('Messagerie', messagerie_instructeur_avis_path(avis))
+      = dynamic_tab_item('Demande', instructeur_avis_path(avis.procedure, avis))
+      = dynamic_tab_item('Avis', instruction_instructeur_avis_path(avis.procedure, avis), notification: avis.answer.blank?)
+      = dynamic_tab_item('Messagerie', messagerie_instructeur_avis_path(avis.procedure, avis))

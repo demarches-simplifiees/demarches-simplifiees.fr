@@ -6,17 +6,23 @@ class Pipedrive::PersonAdapter
   PIPEDRIVE_ROBOT_ID = '7945008'
 
   def self.get_demandes_from_persons_owned_by_robot
-    Pipedrive::API.get_persons_owned_by_user(PIPEDRIVE_ROBOT_ID).map do |datum|
-      {
-        person_id: datum['id'],
-        nom: datum['name'],
-        poste: datum[PIPEDRIVE_POSTE_ATTRIBUTE_ID],
-        email: datum.dig('email', 0, 'value'),
-        tel: datum.dig('phone', 0, 'value'),
-        organisation: datum['org_name'],
-        nb_dossiers: datum[PIPEDRIVE_NB_DOSSIERS_ATTRIBUTE_ID],
-        deadline: datum[PIPEDRIVE_DEADLINE_ATTRIBUTE_ID]
-      }
+    demandes = Pipedrive::API.get_persons_owned_by_user(PIPEDRIVE_ROBOT_ID)
+
+    if demandes.present?
+      demandes.map do |datum|
+        {
+          person_id: datum['id'],
+          nom: datum['name'],
+          poste: datum[PIPEDRIVE_POSTE_ATTRIBUTE_ID],
+          email: datum.dig('email', 0, 'value'),
+          tel: datum.dig('phone', 0, 'value'),
+          organisation: datum['org_name'],
+          nb_dossiers: datum[PIPEDRIVE_NB_DOSSIERS_ATTRIBUTE_ID],
+          deadline: datum[PIPEDRIVE_DEADLINE_ATTRIBUTE_ID]
+        }
+      end
+    else
+      []
     end
   end
 

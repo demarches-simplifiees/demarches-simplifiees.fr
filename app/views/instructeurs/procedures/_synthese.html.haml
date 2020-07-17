@@ -1,0 +1,6 @@
+- if procedures.length > 1
+  .tab-title
+    %span
+      Synthèse des dossiers
+      - all_dossiers_counts.each_with_index  do |(label, dossier_count)|
+        %span.badge.procedure-synthese-badge= number_with_html_delimiter(dossier_count) + ' ' + label

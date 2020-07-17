@@ -577,7 +577,7 @@ describe Users::DossiersController, type: :controller do
     let(:first_champ) { dossier.champs.first }
     let(:piece_justificative_champ) { dossier.champs.last }
     let(:value) { 'beautiful value' }
-    let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:now) { Time.zone.parse('01/01/2100') }
 
     let(:submit_payload) do
@@ -829,7 +829,7 @@ describe Users::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure, user: user) }
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
-    let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:scan_result) { true }
 
     subject {

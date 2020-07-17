@@ -4,7 +4,8 @@ describe Instructeurs::AvisController, type: :controller do
 
     let(:claimant) { create(:instructeur) }
     let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [claimant]) }
+    let(:another_procedure) { create(:procedure, :published, instructeurs: [claimant]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur) }
     let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, instructeur: instructeur, answer: 'yop') }
@@ -15,19 +16,27 @@ describe Instructeurs::AvisController, type: :controller do
       before { get :index }
 
       it { expect(response).to have_http_status(:success) }
+      it { expect(assigns(:avis_by_procedure).flatten).to include(procedure) }
+      it { expect(assigns(:avis_by_procedure).flatten).not_to include(another_procedure) }
+    end
+
+    describe '#procedure' do
+      before { get :procedure, params: { procedure_id: procedure.id } }
+
+      it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis_a_donner)).to match([avis_without_answer]) }
       it { expect(assigns(:avis_donnes)).to match([avis_with_answer]) }
       it { expect(assigns(:statut)).to eq('a-donner') }
 
       context 'with a statut equal to donnes' do
-        before { get :index, params: { statut: 'donnes' } }
+        before { get :procedure, params: { statut: 'donnes', procedure_id: procedure.id } }
 
         it { expect(assigns(:statut)).to eq('donnes') }
       end
     end
 
     describe '#show' do
-      before { get :show, params: { id: avis_without_answer.id } }
+      before { get :show, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
 
       it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis)).to eq(avis_without_answer) }
@@ -35,7 +44,7 @@ describe Instructeurs::AvisController, type: :controller do
     end
 
     describe '#instruction' do
-      before { get :instruction, params: { id: avis_without_answer.id } }
+      before { get :instruction, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
 
       it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis)).to eq(avis_without_answer) }
@@ -43,7 +52,7 @@ describe Instructeurs::AvisController, type: :controller do
     end
 
     describe '#messagerie' do
-      before { get :messagerie, params: { id: avis_without_answer.id } }
+      before { get :messagerie, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
 
       it { expect(response).to have_http_status(:success) }
       it { expect(assigns(:avis)).to eq(avis_without_answer) }
@@ -51,7 +60,7 @@ describe Instructeurs::AvisController, type: :controller do
     end
 
     describe '#bilans_bdf' do
-      before { get :bilans_bdf, params: { id: avis_without_answer.id } }
+      before { get :bilans_bdf, params: { id: avis_without_answer.id, procedure_id: procedure.id } }
 
       it { expect(response).to redirect_to(instructeur_avis_path(avis_without_answer)) }
     end
@@ -59,12 +68,12 @@ describe Instructeurs::AvisController, type: :controller do
     describe '#update' do
       describe 'without attachment' do
         before do
-          patch :update, params: { id: avis_without_answer.id, avis: { answer: 'answer' } }
+          patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
           avis_without_answer.reload
         end
 
         it 'should be ok' do
-          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer))
+          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer.procedure, avis_without_answer))
           expect(avis_without_answer.answer).to eq('answer')
           expect(avis_without_answer.piece_justificative_file).to_not be_attached
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
@@ -73,18 +82,18 @@ describe Instructeurs::AvisController, type: :controller do
 
       describe 'with attachment' do
         include ActiveJob::TestHelper
-        let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+        let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
         before do
           expect(ClamavService).to receive(:safe_file?).and_return(true)
           perform_enqueued_jobs do
-            post :update, params: { id: avis_without_answer.id, avis: { answer: 'answer', piece_justificative_file: file } }
+            post :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer', piece_justificative_file: file } }
           end
           avis_without_answer.reload
         end
 
         it 'should be ok' do
-          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer))
+          expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer.procedure, avis_without_answer))
           expect(avis_without_answer.answer).to eq('answer')
           expect(avis_without_answer.piece_justificative_file).to be_attached
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
@@ -96,7 +105,7 @@ describe Instructeurs::AvisController, type: :controller do
       let(:file) { nil }
       let(:scan_result) { true }
 
-      subject { post :create_commentaire, params: { id: avis_without_answer.id, commentaire: { body: 'commentaire body', piece_jointe: file } } }
+      subject { post :create_commentaire, params: { id: avis_without_answer.id, procedure_id: procedure.id, commentaire: { body: 'commentaire body', piece_jointe: file } } }
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
@@ -105,12 +114,12 @@ describe Instructeurs::AvisController, type: :controller do
       it do
         subject
 
-        expect(response).to redirect_to(messagerie_instructeur_avis_path(avis_without_answer))
+        expect(response).to redirect_to(messagerie_instructeur_avis_path(avis_without_answer.procedure, avis_without_answer))
         expect(dossier.commentaires.map(&:body)).to match(['commentaire body'])
       end
 
       context "with a file" do
-        let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+        let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
         it do
           subject
@@ -130,8 +139,8 @@ describe Instructeurs::AvisController, type: :controller do
       let(:invite_linked_dossiers) { nil }
 
       before do
-        @introduction_file = Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf')
-        post :create_avis, params: { id: previous_avis.id, avis: { emails: emails, introduction: intro, confidentiel: asked_confidentiel, invite_linked_dossiers: invite_linked_dossiers, introduction_file: @introduction_file } }
+        @introduction_file = fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf')
+        post :create_avis, params: { id: previous_avis.id, procedure_id: procedure.id, avis: { emails: emails, introduction: intro, confidentiel: asked_confidentiel, invite_linked_dossiers: invite_linked_dossiers, introduction_file: @introduction_file } }
         created_avis.reload
       end
 
@@ -178,7 +187,7 @@ describe Instructeurs::AvisController, type: :controller do
           it { expect(created_avis.introduction).to eq(intro) }
           it { expect(created_avis.dossier).to eq(previous_avis.dossier) }
           it { expect(created_avis.claimant).to eq(instructeur) }
-          it { expect(response).to redirect_to(instruction_instructeur_avis_path(previous_avis)) }
+          it { expect(response).to redirect_to(instruction_instructeur_avis_path(previous_avis.procedure, previous_avis)) }
         end
 
         context 'when the user asked for a confidentiel avis' do
@@ -255,6 +264,7 @@ describe Instructeurs::AvisController, type: :controller do
     describe '#sign_up' do
       let(:invited_email) { 'invited@avis.com' }
       let(:dossier) { create(:dossier) }
+      let(:procedure) { dossier.procedure }
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
       let(:invitations_email) { true }
 
@@ -263,7 +273,7 @@ describe Instructeurs::AvisController, type: :controller do
           expect(Avis).to receive(:avis_exists_and_email_belongs_to_avis?)
             .with(avis.id.to_s, invited_email)
             .and_return(invitations_email)
-          get :sign_up, params: { id: avis.id, email: invited_email }
+          get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: invited_email }
         end
 
         context 'when the email belongs to the invitation' do
@@ -286,15 +296,15 @@ describe Instructeurs::AvisController, type: :controller do
         context 'when the instructeur is authenticated' do
           before do
             sign_in(instructeur.user)
-            get :sign_up, params: { id: avis.id, email: invited_email }
+            get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: invited_email }
           end
 
-          it { is_expected.to redirect_to instructeur_avis_url(avis) }
+          it { is_expected.to redirect_to instructeur_avis_url(avis.procedure, avis) }
         end
 
         context 'when the instructeur is not authenticated' do
           before do
-            get :sign_up, params: { id: avis.id, email: invited_email }
+            get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: invited_email }
           end
 
           it { is_expected.to redirect_to new_user_session_url }
@@ -307,11 +317,11 @@ describe Instructeurs::AvisController, type: :controller do
 
         before do
           sign_in(instructeur.user)
-          get :sign_up, params: { id: avis.id, email: invited_email }
+          get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: invited_email }
         end
 
         # redirected to dossier but then the instructeur gonna be banished !
-        it { is_expected.to redirect_to instructeur_avis_url(avis) }
+        it { is_expected.to redirect_to instructeur_avis_url(avis.procedure, avis) }
       end
     end
 
@@ -320,6 +330,7 @@ describe Instructeurs::AvisController, type: :controller do
       let!(:existing_user) { create(:user, email: existing_user_mail) }
       let(:invited_email) { 'invited@avis.com' }
       let(:dossier) { create(:dossier) }
+      let(:procedure) { dossier.procedure }
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
       let(:avis_id) { avis.id }
       let(:password) { 'démarches-simplifiées-pwd' }
@@ -334,6 +345,7 @@ describe Instructeurs::AvisController, type: :controller do
 
         post :create_instructeur, params: {
           id: avis_id,
+          procedure_id: procedure.id,
           email: invited_email,
           user: {
             password: password
@@ -355,7 +367,7 @@ describe Instructeurs::AvisController, type: :controller do
           it { expect(Avis).to have_received(:link_avis_to_instructeur) }
 
           it { expect(subject.current_instructeur).to eq(created_instructeur) }
-          it { is_expected.to redirect_to instructeur_avis_index_path }
+          it { is_expected.to redirect_to instructeur_all_avis_path }
 
           it 'creates a corresponding user account for the email' do
             user = User.find_by(email: invited_email)
@@ -375,7 +387,7 @@ describe Instructeurs::AvisController, type: :controller do
           let(:password) { '' }
 
           it { expect(created_instructeur).to be_nil }
-          it { is_expected.to redirect_to sign_up_instructeur_avis_path(avis_id, invited_email) }
+          it { is_expected.to redirect_to sign_up_instructeur_avis_path(procedure.id, avis_id, invited_email) }
           it { expect(flash.alert).to eq(['Le mot de passe doit être rempli']) }
         end
       end

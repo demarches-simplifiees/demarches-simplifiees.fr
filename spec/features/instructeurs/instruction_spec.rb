@@ -159,12 +159,6 @@ feature 'Instructing a dossier:' do
     click_on 'Demander un avis'
   end
 
-  def test_mail(to, content)
-    mail = ActionMailer::Base.deliveries.last
-    expect(mail.to).to match([to])
-    expect(mail.body.parts.map(&:to_s)).to all(include(content))
-  end
-
   def test_statut_bar(a_suivre: 0, suivi: 0, traite: 0, tous_les_dossiers: 0, archive: 0)
     texts = [
       "à suivre #{a_suivre}",
@@ -175,13 +169,6 @@ feature 'Instructing a dossier:' do
     ]
 
     texts.each { |text| expect(page).to have_text(text) }
-  end
-
-  def avis_sign_up(avis, email)
-    visit sign_up_instructeur_avis_path(avis, email)
-    fill_in 'user_password', with: 'démarches-simplifiées-pwd'
-    click_on 'Créer un compte'
-    expect(page).to have_current_path(instructeur_avis_index_path)
   end
 
   def dossier_present?(id, statut)

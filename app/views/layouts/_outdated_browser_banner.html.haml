@@ -2,11 +2,19 @@
   #outdated-browser-banner.site-banner
     .container
       .site-banner-icon ⚠️
-      .site-banner-text
-        %strong
-          #{browser.name} #{browser.version} est trop ancien pour utiliser #{SITE_NAME}.
-        %br
-        Certaines parties du site ne fonctionneront pas correctement.
+      - if browser.ie?(11)
+        .site-banner-text
+          Internet Explorer 11 est un navigateur trop ancien. Nous cesserons de gérer son fonctionnement à partir du
+          %strong
+            31 janvier 2021.
+          %br
+          Merci de changer pour un navigateur plus récent avant cette date ; il peut être nécessaire de prendre contact avec un responsable informatique.
+      - else
+        .site-banner-text
+          %strong
+            #{browser.name} #{browser.version} est trop ancien pour utiliser demarches-simplifiees.fr.
+          %br
+          Certaines parties du site ne fonctionneront pas correctement.
       .site-banner-actions
         = button_to 'Ignorer', dismiss_outdated_browser_path, method: :post, remote: true, class: 'button btn', title: 'Ne plus afficher cet avertissement pendant une semaine'
         %a.btn.button.primary{ href: "https://browser-update.org/fr/update.html", target: "_blank", rel: "noopener" }

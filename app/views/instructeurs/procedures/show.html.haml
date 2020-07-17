@@ -16,7 +16,7 @@
         - if @procedure.routee?
           |
           - if current_administrateur.present? && current_administrateur.owns?(@procedure)
-            = link_to 'instructeurs', procedure_groupe_instructeurs_path(@procedure), class: 'header-link'
+            = link_to 'instructeurs', admin_procedure_groupe_instructeurs_path(@procedure), class: 'header-link'
           - else
             = link_to 'instructeurs', instructeur_groupes_path(@procedure), class: 'header-link'
 
