@@ -44,7 +44,7 @@ describe Champs::PieceJustificativeController, type: :controller do
       # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
       before do
         champ
-        expect_any_instance_of(Champs::PieceJustificativeChamp).to receive(:save).and_return(false)
+        expect_any_instance_of(Champs::PieceJustificativeChamp).to receive(:save).twice.and_return(false)
         expect_any_instance_of(Champs::PieceJustificativeChamp).to receive(:errors)
           .and_return(double(full_messages: ['La pièce justificative n’est pas d’un type accepté']))
       end

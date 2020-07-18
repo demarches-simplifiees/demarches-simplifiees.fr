@@ -262,7 +262,7 @@ describe Admin::ProceduresController, type: :controller do
         sign_out(admin.user)
         sign_in(admin_2.user)
 
-        put :publish, params: { procedure_id: procedure.id, path: 'fake_path' }
+        put :publish, params: { procedure_id: procedure.id, path: 'fake_path' }, format: 'js'
         procedure.reload
       end
 
@@ -273,7 +273,7 @@ describe Admin::ProceduresController, type: :controller do
 
     context 'when the admin does not provide a lien_site_web' do
       before do
-        put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
+        put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }, format: 'js'
         procedure.reload
       end
       context 'procedure path is valid but lien_site_web is missing' do
@@ -427,7 +427,9 @@ describe Admin::ProceduresController, type: :controller do
   describe 'POST #transfer' do
     let!(:procedure) { create :procedure, :with_service, administrateur: admin }
 
-    subject { post :transfer, params: { email_admin: email_admin, procedure_id: procedure.id } }
+    subject do
+      post :transfer, params: { email_admin: email_admin, procedure_id: procedure.id }, format: 'js'
+    end
 
     context 'when admin is unknow' do
       let(:email_admin) { 'plop' }
