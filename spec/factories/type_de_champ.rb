@@ -94,7 +94,7 @@ FactoryBot.define do
     factory :type_de_champ_piece_justificative do
       type_champ { TypeDeChamp.type_champs.fetch(:piece_justificative) }
 
-      after(:create) do |tc, _evaluator|
+      after(:build) do |tc, _evaluator|
         tc.piece_justificative_template.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
       end
     end
@@ -109,7 +109,7 @@ FactoryBot.define do
 
       trait :with_types_de_champ do
         after(:build) do |type_de_champ, _evaluator|
-          type_de_champ.types_de_champ << create(:type_de_champ, libelle: 'sub type de champ')
+          type_de_champ.types_de_champ << build(:type_de_champ, procedure: type_de_champ.procedure, libelle: 'sub type de champ')
         end
       end
     end

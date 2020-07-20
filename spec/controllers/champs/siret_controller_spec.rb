@@ -5,10 +5,11 @@ describe Champs::SiretController, type: :controller do
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
     let(:champ) do
-      d = dossier
       type_de_champ = create(:type_de_champ_siret, procedure: procedure)
-      type_de_champ.champ.create(dossier: d, value: nil, etablissement: nil)
+      # FIXME: this causes an "Type de champ n'est pas disponible" error
+      create(:champ, type_de_champ: type_de_champ, dossier: dossier, value: nil, etablissement: nil)
     end
+
     let(:params) do
       {
         champ_id: champ.id,
@@ -27,6 +28,7 @@ describe Champs::SiretController, type: :controller do
       let(:api_etablissement_status) { 200 }
       let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
       let(:token_expired) { false }
+
       before do
         sign_in user
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
@@ -112,7 +114,7 @@ describe Champs::SiretController, type: :controller do
           champ.reload
           expect(champ.value).to eq(siret)
           expect(champ.etablissement.siret).to eq(siret)
-          expect(champ.reload.etablissement.naf).to eq("6202A")
+          expect(champ.etablissement.naf).to eq("6202A")
           expect(dossier.reload.etablissement).to eq(nil)
         end
       end

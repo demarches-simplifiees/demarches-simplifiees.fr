@@ -232,10 +232,10 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", mandatory: true, libelle: libelle, order_place: index)
+          build(:"type_de_champ_#{type_champ}", procedure: procedure, mandatory: true, libelle: libelle, order_place: index)
         end
-        procedure.types_de_champ << build(:type_de_champ_drop_down_list, :long, mandatory: true, libelle: 'simple_choice_drop_down_list_long')
-        procedure.types_de_champ << build(:type_de_champ_multiple_drop_down_list, :long, mandatory: true, libelle: 'multiple_choice_drop_down_list_long')
+        procedure.types_de_champ << build(:type_de_champ_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'simple_choice_drop_down_list_long')
+        procedure.types_de_champ << build(:type_de_champ_multiple_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'multiple_choice_drop_down_list_long')
       end
     end
 
@@ -245,7 +245,7 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", libelle: libelle, order_place: index)
+          build(:"type_de_champ_#{type_champ}", procedure: procedure, libelle: libelle, order_place: index)
         end
       end
     end
@@ -256,7 +256,7 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", private: true, libelle: libelle, order_place: index)
+          build(:"type_de_champ_#{type_champ}", procedure: procedure, private: true, libelle: libelle, order_place: index)
         end
       end
     end
