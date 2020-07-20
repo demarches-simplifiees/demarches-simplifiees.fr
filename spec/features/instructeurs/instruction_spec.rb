@@ -138,6 +138,55 @@ feature 'Instructing a dossier:' do
     expect(page).to have_text("Dossier envoyé")
   end
 
+  context 'A instructeur can download a zip of the attachments of a dossier', js: true do
+    let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:champ) { dossier.champs.first }
+    let(:path) { 'spec/fixtures/files/piece_justificative_0.pdf' }
+    let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
+
+    before {
+      champ.piece_justificative_file.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
+
+      log_in(instructeur.email, password)
+      visit instructeur_dossier_path(procedure, dossier)
+    }
+
+    scenario 'it possible to open the zip file' do
+      find(:css, '.attached').click
+      click_on 'Télécharger toutes les pièces jointes'
+      # For some reason, clicking the download link does not trigger the download in the headless browser ;
+      # So we need to go to the download link directly
+      visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
+
+      DownloadHelpers.wait_for_download
+      files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
+
+      expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
+      expect(files.size).to be 1
+      expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
+      expect(files[0].uncompressed_size).to be File.size(path)
+    end
+
+    scenario 'it possible to open the zip file with multiple attachments' do
+      commentaire.piece_jointe.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
+
+      visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
+      DownloadHelpers.wait_for_download
+      files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
+
+      expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
+      expect(files.size).to be 2
+      expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
+      expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
+      expect(files[0].filename).not_to eq files[1].filename
+      expect(files[0].uncompressed_size).to be File.size(path)
+      expect(files[1].uncompressed_size).to be File.size(path)
+    end
+
+    after { DownloadHelpers.clear_downloads }
+  end
+
   def log_in(email, password, check_email: true)
     visit '/'
     click_on 'Connexion'
