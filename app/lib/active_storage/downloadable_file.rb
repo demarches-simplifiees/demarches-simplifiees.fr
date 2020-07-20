@@ -15,7 +15,7 @@ class ActiveStorage::DownloadableFile
     pjs = PiecesJustificativesService.liste_pieces_justificatives(dossier)
     pjs.map do |piece_justificative|
       [
-        ActiveStorage::DownloadableFile.new(piece_justificative),
+        piece_justificative,
         piece_justificative.filename.to_s
       ]
     end
