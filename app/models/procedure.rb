@@ -19,9 +19,9 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
 
-  belongs_to :parent_procedure, class_name: 'Procedure'
-  belongs_to :canonical_procedure, class_name: 'Procedure'
-  belongs_to :service
+  belongs_to :parent_procedure, class_name: 'Procedure', optional: true
+  belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
+  belongs_to :service, optional: true
 
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
