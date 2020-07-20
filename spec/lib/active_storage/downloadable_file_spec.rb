@@ -1,5 +1,5 @@
 describe ActiveStorage::DownloadableFile do
-  let(:dossier) { create(:dossier) }
+  let(:dossier) { build(:dossier) }
 
   subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossier(dossier) }
 
@@ -10,7 +10,7 @@ describe ActiveStorage::DownloadableFile do
 
     context 'when there is a piece_justificative' do
       before do
-        dossier.champs << create(:champ, :piece_justificative, :with_piece_justificative_file)
+        dossier.champs << build(:champ, :piece_justificative, :with_piece_justificative_file, dossier: dossier)
       end
 
       it { expect(list.length).to eq 1 }
@@ -18,15 +18,18 @@ describe ActiveStorage::DownloadableFile do
 
     context 'when there is a private piece_justificative' do
       before do
-        dossier.champs_private << create(:champ, :piece_justificative, :with_piece_justificative_file, private: true)
+        dossier.champs_private << build(:champ, :piece_justificative, :with_piece_justificative_file, private: true, dossier: dossier)
       end
 
       it { expect(list.length).to eq 1 }
     end
 
     context 'when there is a repetition bloc' do
-      let(:champ) { build(:champ_repetition_with_piece_jointe) }
-      let(:dossier) { create(:dossier, :en_construction, champs: [champ]) }
+      let(:dossier) { build(:dossier, :en_construction) }
+
+      before do
+        dossier.champs << build(:champ_repetition_with_piece_jointe, dossier: dossier)
+      end
 
       it 'should have 4 piece_justificatives' do
         expect(list.size).to eq 4
@@ -34,15 +37,17 @@ describe ActiveStorage::DownloadableFile do
     end
 
     context 'when there is a message with no attachment' do
-      let(:commentaire) { create(:commentaire) }
-      let(:dossier) { commentaire.dossier }
+      before do
+        dossier.commentaires << build(:commentaire, dossier: dossier)
+      end
 
       it { expect(list.length).to eq 0 }
     end
 
     context 'when there is a message with an attachment' do
-      let(:commentaire) { create(:commentaire, :with_file) }
-      let(:dossier) { commentaire.dossier }
+      before do
+        dossier.commentaires << build(:commentaire, :with_file, dossier: dossier)
+      end
 
       it { expect(list.length).to eq 1 }
     end

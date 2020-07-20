@@ -51,8 +51,8 @@ class TypeDeChamp < ApplicationRecord
   serialize :options, WithIndifferentAccess
 
   after_initialize :set_dynamic_type
+  before_validation :setup_procedure
   after_create :populate_stable_id
-  before_save :setup_procedure
 
   attr_reader :dynamic_type
 

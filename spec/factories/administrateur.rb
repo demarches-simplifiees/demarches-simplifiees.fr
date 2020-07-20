@@ -18,6 +18,7 @@ FactoryBot.define do
   end
 
   trait :with_procedure do
+    association :procedure, administrateur: admin
     after(:create) do |admin|
       create(:simple_procedure, administrateur: admin)
       admin.reload

@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :dossier do
     autorisation_donnees { true }
     state { Dossier.states.fetch(:brouillon) }
-    association :user, factory: [:user]
+    association :user
 
     transient do
       procedure { nil }
@@ -183,9 +183,9 @@ FactoryBot.define do
     end
 
     trait :with_attestation do
-      after(:create) do |dossier, _evaluator|
+      after(:build) do |dossier, _evaluator|
         if dossier.procedure.attestation_template.blank?
-          dossier.procedure.attestation_template = create(:attestation_template)
+          dossier.procedure.attestation_template = build(:attestation_template)
         end
         dossier.attestation = dossier.build_attestation
       end

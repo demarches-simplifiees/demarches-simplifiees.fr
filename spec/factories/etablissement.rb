@@ -27,9 +27,7 @@ FactoryBot.define do
     entreprise_date_creation { "1990-04-24" }
 
     trait :with_exercices do
-      after(:create) do |etablissement, _evaluator|
-        create(:exercice, etablissement: etablissement)
-      end
+      exercices { [association(:exercice)] }
     end
 
     trait :with_effectif_mensuel do

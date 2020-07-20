@@ -2,7 +2,7 @@ class Avis < ApplicationRecord
   include EmailSanitizableConcern
 
   belongs_to :dossier, inverse_of: :avis, touch: true
-  belongs_to :instructeur
+  belongs_to :instructeur, optional: true
   belongs_to :claimant, class_name: 'Instructeur'
 
   has_one_attached :piece_justificative_file
