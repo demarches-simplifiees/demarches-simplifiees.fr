@@ -13,7 +13,7 @@ module Mails
   class ReceivedMail < ApplicationRecord
     include MailTemplateConcern
 
-    belongs_to :procedure
+    belongs_to :procedure, optional: false
 
     SLUG = "received_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/received_mail"
