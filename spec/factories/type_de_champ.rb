@@ -7,6 +7,8 @@ FactoryBot.define do
     mandatory { false }
     add_attribute(:private) { false }
 
+    association :procedure
+
     factory :type_de_champ_text do
       type_champ { TypeDeChamp.type_champs.fetch(:text) }
     end
