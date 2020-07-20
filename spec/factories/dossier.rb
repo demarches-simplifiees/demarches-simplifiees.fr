@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :dossier do
     autorisation_donnees { true }
     state { Dossier.states.fetch(:brouillon) }
-    association :user, factory: [:user]
+    association :user
 
     transient do
       procedure { nil }
