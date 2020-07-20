@@ -193,7 +193,7 @@ describe ProcedurePresentation do
       let(:table) { 'etablissement' }
       let(:column) { 'code_postal' } # All other columns work the same, no extra test required
 
-      let!(:dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75008')) }
+      let!(:dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, code_postal: '75008')) }
 
       it { is_expected.to eq('75008') }
     end
@@ -408,8 +408,8 @@ describe ProcedurePresentation do
       let(:column) { 'code_postal' }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
-      let!(:huitieme_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75008')) }
-      let!(:vingtieme_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75020')) }
+      let!(:huitieme_dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, code_postal: '75008')) }
+      let!(:vingtieme_dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, code_postal: '75020')) }
 
       it { is_expected.to eq([huitieme_dossier, vingtieme_dossier].map(&:id)) }
     end
@@ -582,8 +582,8 @@ describe ProcedurePresentation do
       context 'for entreprise_date_creation column' do
         let(:filter) { [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }] }
 
-        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2018, 6, 21))) }
-        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, entreprise_date_creation: Time.zone.local(2018, 6, 21))) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
 
@@ -595,7 +595,7 @@ describe ProcedurePresentation do
             ]
           end
 
-          let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2016, 6, 21))) }
+          let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, entreprise_date_creation: Time.zone.local(2016, 6, 21))) }
 
           it 'returns every dossier that matches any of the search criteria for a given column' do
             is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
@@ -608,8 +608,8 @@ describe ProcedurePresentation do
 
         let(:filter) { [{ 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' }] }
 
-        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75017')) }
-        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '25000')) }
+        let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, code_postal: '75017')) }
+        let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, code_postal: '25000')) }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
 
@@ -621,7 +621,7 @@ describe ProcedurePresentation do
             ]
           end
 
-          let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '88100')) }
+          let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: build(:etablissement, code_postal: '88100')) }
 
           it 'returns every dossier that matches any of the search criteria for a given column' do
             is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)

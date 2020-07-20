@@ -1,5 +1,5 @@
 describe 'users/dossiers/etablissement.html.haml', type: :view do
-  let(:etablissement) { create(:etablissement, :with_exercices) }
+  let(:etablissement) { build(:etablissement, :with_exercices) }
   let(:dossier) { create(:dossier, etablissement: etablissement) }
   let(:footer) { view.content_for(:footer) }
 
@@ -17,8 +17,9 @@ describe 'users/dossiers/etablissement.html.haml', type: :view do
   end
 
   context 'etablissement avec infos non diffusables' do
-    let(:etablissement) { create(:etablissement, :with_exercices, :non_diffusable) }
-    it "affiche uniquement le nom de l'établissement si infos non diffusables" do
+    let(:etablissement) { build(:etablissement, :with_exercices, :non_diffusable) }
+
+    it 'affiche uniquement le nom de l\'établissement si infos non diffusables' do
       expect(rendered).to have_text(etablissement.entreprise_raison_sociale)
       expect(rendered).not_to have_text(etablissement.entreprise.forme_juridique)
     end

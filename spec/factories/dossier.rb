@@ -28,7 +28,7 @@ FactoryBot.define do
         if dossier.procedure.for_individual?
           raise 'Inconsistent factory: attempting to create a dossier :with_entreprise on a procedure that is `for_individual?`'
         end
-        etablissement = create(:etablissement, :with_exercices, :with_effectif_mensuel)
+        etablissement = build(:etablissement, :with_exercices, :with_effectif_mensuel, dossier: dossier)
         dossier.etablissement = etablissement
       end
     end

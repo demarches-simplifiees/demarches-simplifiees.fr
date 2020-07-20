@@ -1,8 +1,7 @@
 RSpec.describe ApiEntreprise::AssociationJob, type: :job do
   let(:siret) { '50480511000013' }
   let(:etablissement) { create(:etablissement, siret: siret) }
-  let(:procedure) { create(:procedure) }
-  let(:procedure_id) { procedure.id }
+  let(:procedure) { etablissement.dossier.procedure }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
   let(:status) { 200 }
 
@@ -12,7 +11,7 @@ RSpec.describe ApiEntreprise::AssociationJob, type: :job do
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
-  subject { ApiEntreprise::AssociationJob.new.perform(etablissement.id, procedure_id) }
+  subject { ApiEntreprise::AssociationJob.new.perform(etablissement.id, procedure.id) }
 
   it 'updates etablissement' do
     subject

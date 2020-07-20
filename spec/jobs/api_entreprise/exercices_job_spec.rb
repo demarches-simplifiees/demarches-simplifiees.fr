@@ -1,7 +1,7 @@
 RSpec.describe ApiEntreprise::ExercicesJob, type: :job do
   let(:siret) { '41816609600051' }
-  let(:procedure) { create(:procedure) }
   let(:etablissement) { create(:etablissement, siret: siret) }
+  let(:procedure) { etablissement.dossier.procedure }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/exercices.json') }
   let(:status) { 200 }
 

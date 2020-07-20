@@ -47,7 +47,7 @@
 #  entreprise_id                            :integer
 #
 class Etablissement < ApplicationRecord
-  belongs_to :dossier
+  belongs_to :dossier, optional: false
 
   has_one :champ, class_name: 'Champs::SiretChamp'
   has_many :exercices, dependent: :destroy

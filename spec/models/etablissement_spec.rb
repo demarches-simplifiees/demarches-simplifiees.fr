@@ -1,6 +1,6 @@
 describe Etablissement do
   describe '#geo_adresse' do
-    let(:etablissement) { create(:etablissement) }
+    let(:etablissement) { build(:etablissement) }
 
     subject { etablissement.geo_adresse }
 
@@ -8,7 +8,7 @@ describe Etablissement do
   end
 
   describe '#inline_adresse' do
-    let(:etablissement) { create(:etablissement, nom_voie: 'green    moon') }
+    let(:etablissement) { build(:etablissement, nom_voie: 'green    moon') }
 
     it { expect(etablissement.inline_adresse).to eq '6 RUE green moon, IMMEUBLE BORA, 92270 BOIS COLOMBES' }
 
@@ -17,19 +17,19 @@ describe Etablissement do
       subject { etablissement.inline_adresse }
 
       context 'when blank' do
-        let(:etablissement) { create(:etablissement, complement_adresse: '') }
+        let(:etablissement) { build(:etablissement, complement_adresse: '') }
 
         it { is_expected.to eq expected_adresse }
       end
 
       context 'when whitespace' do
-        let(:etablissement) { create(:etablissement, complement_adresse: '   ') }
+        let(:etablissement) { build(:etablissement, complement_adresse: '   ') }
 
         it { is_expected.to eq expected_adresse }
       end
 
       context 'when nil' do
-        let(:etablissement) { create(:etablissement, complement_adresse: nil) }
+        let(:etablissement) { build(:etablissement, complement_adresse: nil) }
 
         it { is_expected.to eq expected_adresse }
       end

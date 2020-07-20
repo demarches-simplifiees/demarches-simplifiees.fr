@@ -1,9 +1,9 @@
 RSpec.describe ApiEntreprise::AttestationFiscaleJob, type: :job do
   let(:etablissement) { create(:etablissement, siret: siret) }
+  let(:procedure) { etablissement.dossier.procedure }
+  let(:user) { etablissement.dossier.user }
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
-  let(:procedure) { create(:procedure) }
-  let(:user_id) { 1 }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/attestation_fiscale.json') }
   let(:status) { 200 }
 
@@ -16,7 +16,7 @@ RSpec.describe ApiEntreprise::AttestationFiscaleJob, type: :job do
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
-  subject { ApiEntreprise::AttestationFiscaleJob.new.perform(etablissement.id, procedure.id, user_id) }
+  subject { ApiEntreprise::AttestationFiscaleJob.new.perform(etablissement.id, procedure.id, user.id) }
 
   it 'updates etablissement' do
     subject

@@ -33,8 +33,8 @@ describe TagsSubstitutionConcern, type: :model do
 
   describe 'replace_tags' do
     let(:individual) { nil }
-    let(:etablissement) { create(:etablissement) }
-    let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
+    let(:etablissement) { build(:etablissement) }
+    let(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
     let(:instructeur) { create(:instructeur) }
 
     before { Timecop.freeze(Time.zone.now) }
@@ -61,7 +61,7 @@ describe TagsSubstitutionConcern, type: :model do
         let(:template) do
           '--SIREN-- --numéro de TVA intracommunautaire-- --SIRET du siège social-- --raison sociale-- --adresse--'
         end
-        let(:etablissement) { create(:etablissement) }
+        let(:etablissement) { build(:etablissement) }
 
         let(:expected_text) do
           "#{etablissement.entreprise_siren} #{etablissement.entreprise_numero_tva_intracommunautaire} #{etablissement.entreprise_siret_siege_social} #{etablissement.entreprise_raison_sociale} #{etablissement.inline_adresse}"
