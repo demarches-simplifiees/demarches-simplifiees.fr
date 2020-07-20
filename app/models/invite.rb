@@ -14,7 +14,7 @@
 class Invite < ApplicationRecord
   include EmailSanitizableConcern
 
-  belongs_to :dossier
+  belongs_to :dossier, optional: false
   belongs_to :user, optional: true
 
   before_validation -> { sanitize_email(:email) }
