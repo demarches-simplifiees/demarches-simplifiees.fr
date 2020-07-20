@@ -12,8 +12,7 @@ describe ProcedurePresentation do
         { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }
       ],
       sort: { "table" => "user", "column" => "email", "order" => "asc" },
-      filters: filters
-    )
+      filters: filters)
   }
   let(:procedure_presentation_id) { procedure_presentation.id }
   let(:filters) { { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] } }
@@ -763,7 +762,7 @@ describe ProcedurePresentation do
 
     context 'for type de champ' do
       let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.id }
+      let(:column) { procedure.types_de_champ.first.id.to_s }
 
       it 'preloads the champs relation' do
         # Ideally, we would only preload the champs for the matching column
@@ -780,7 +779,7 @@ describe ProcedurePresentation do
 
     context 'for type de champ private' do
       let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.id }
+      let(:column) { procedure.types_de_champ_private.first.id.to_s }
 
       it 'preloads the champs relation' do
         # Ideally, we would only preload the champs for the matching column
@@ -811,6 +810,7 @@ describe ProcedurePresentation do
     end
 
     context 'for individual' do
+      let(:procedure) { create(:procedure, :for_individual, :with_type_de_champ, :with_type_de_champ_private) }
       let(:table) { 'individual' }
       let(:column) { 'nom' }
 
@@ -857,9 +857,9 @@ describe ProcedurePresentation do
 
     context 'for groupe_instructeur' do
       let(:table) { 'groupe_instructeur' }
-      let(:column) { 'email' }
+      let(:column) { 'label' }
 
-      it 'preloads the followers_instructeurs relation' do
+      it 'preloads the groupe_instructeur relation' do
         expect(displayed_dossier.association(:champs)).not_to be_loaded
         expect(displayed_dossier.association(:champs_private)).not_to be_loaded
         expect(displayed_dossier.association(:user)).not_to be_loaded
