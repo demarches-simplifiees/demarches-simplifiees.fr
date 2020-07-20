@@ -87,7 +87,7 @@ RSpec.describe Avis, type: :model do
 
   describe '#try_to_assign_instructeur' do
     let!(:instructeur) { create(:instructeur) }
-    let(:avis) { Avis.create(claimant: claimant, email: email, dossier: create(:dossier)) }
+    let(:avis) { create(:avis, claimant: claimant, email: email, dossier: create(:dossier)) }
 
     context 'when the email belongs to a instructeur' do
       let(:email) { instructeur.email }
