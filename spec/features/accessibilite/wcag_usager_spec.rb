@@ -62,7 +62,7 @@ feature 'wcag rules for usager', js: true do
       fill_in('individual_nom', with: 'nom')
       click_on 'Continuer'
 
-      expect(page).to be_accessible.skipping :'aria-input-field-name', :label
+      expect(page).to be_accessible.skipping :'aria-input-field-name'
     end
   end
 
@@ -93,7 +93,7 @@ feature 'wcag rules for usager', js: true do
 
     scenario 'dossier' do
       visit dossier_path(dossier)
-      expect(page).to be_accessible.skipping :label, :'aria-input-field-name'
+      expect(page).to be_accessible.skipping :'aria-input-field-name'
     end
 
     scenario 'merci' do
@@ -113,12 +113,12 @@ feature 'wcag rules for usager', js: true do
 
     scenario 'modifier' do
       visit modifier_dossier_path(dossier)
-      expect(page).to be_accessible.skipping :'aria-input-field-name', :label
+      expect(page).to be_accessible.skipping :'aria-input-field-name'
     end
 
     scenario 'brouillon' do
       visit brouillon_dossier_path(dossier)
-      expect(page).to be_accessible.skipping :'aria-input-field-name', :label
+      expect(page).to be_accessible.skipping :'aria-input-field-name'
     end
   end
 end
