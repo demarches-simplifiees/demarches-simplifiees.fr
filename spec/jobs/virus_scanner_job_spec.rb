@@ -2,7 +2,7 @@ RSpec.describe VirusScannerJob, type: :job do
   include ActiveJob::TestHelper
 
   let(:champ) do
-    champ = create(:champ, :piece_justificative)
+    champ = create(:champ_piece_justificative)
     champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
     champ.save
     champ
