@@ -41,8 +41,8 @@ RSpec.describe DossierHelper, type: :helper do
   describe ".demandeur_dossier" do
     subject { demandeur_dossier(dossier) }
 
-    let(:individual) { create(:individual) }
-    let(:etablissement) { create(:etablissement) }
+    let(:individual) { build(:individual, dossier: nil) }
+    let(:etablissement) { build(:etablissement, dossier: nil) }
     let(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
 
     context "when the dossier is for an individual" do

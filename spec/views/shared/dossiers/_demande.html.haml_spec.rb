@@ -12,7 +12,7 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
   subject { render 'shared/dossiers/demande.html.haml', dossier: dossier, demande_seen_at: nil, profile: 'usager' }
 
   context 'when dossier was created by an etablissement' do
-    let(:etablissement) { create(:etablissement) }
+    let(:etablissement) { build(:etablissement) }
 
     it 'renders the etablissement infos' do
       expect(subject).to include(etablissement.entreprise_raison_sociale)
@@ -21,7 +21,7 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
     end
 
     context 'and entreprise is an association' do
-      let(:etablissement) { create(:etablissement, :is_association) }
+      let(:etablissement) { build(:etablissement, :is_association) }
 
       it 'renders the association infos' do
         expect(subject).to include(etablissement.association_rna)

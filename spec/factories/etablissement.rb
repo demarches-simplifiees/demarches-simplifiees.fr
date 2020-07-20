@@ -1,5 +1,7 @@
 FactoryBot.define do
   factory :etablissement do
+    dossier { association :dossier }
+
     siret { '44011762001530' }
     siege_social { true }
     naf { '4950Z' }

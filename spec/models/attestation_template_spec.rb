@@ -99,7 +99,7 @@ describe AttestationTemplate, type: :model do
     end
     let(:for_individual) { false }
     let(:individual) { nil }
-    let(:etablissement) { create(:etablissement) }
+    let(:etablissement) { build(:etablissement) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
     let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }

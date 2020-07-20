@@ -1,8 +1,8 @@
 RSpec.describe ApiEntreprise::AttestationSocialeJob, type: :job do
   let(:etablissement) { create(:etablissement, siret: siret) }
+  let(:procedure) { etablissement.dossier.procedure }
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
-  let(:procedure) { create(:procedure) }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/attestation_sociale.json') }
   let(:status) { 200 }
 
