@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :attestation do
     title { 'title' }
-    dossier { create(:dossier) }
+    association :dossier
   end
 
   trait :with_pdf do
