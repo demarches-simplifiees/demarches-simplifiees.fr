@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_07_082256) do
+ActiveRecord::Schema.define(version: 2020_07_15_143010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -141,6 +141,7 @@ ActiveRecord::Schema.define(version: 2020_07_07_082256) do
     t.datetime "updated_at", null: false
     t.integer "claimant_id", null: false
     t.boolean "confidentiel", default: false, null: false
+    t.datetime "revoked_at"
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
     t.index ["instructeur_id"], name: "index_avis_on_instructeur_id"
