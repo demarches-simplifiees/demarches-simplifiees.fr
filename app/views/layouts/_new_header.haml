@@ -29,10 +29,10 @@
         %ul.header-tabs
           - if current_instructeur.procedures.count > 0
             %li
-              = active_link_to "Démarches", instructeur_procedures_path, active: /^((?!avis).)*$/, class: 'tab-link'
+              = active_link_to "Démarches", instructeur_procedures_path, active: controller_name == 'dossiers', class: 'tab-link'
           - if current_instructeur.avis.count > 0
             %li
-              = active_link_to instructeur_all_avis_path, active: /avis/, class: 'tab-link' do
+              = active_link_to instructeur_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do
                 Avis
                 - avis_counter = current_instructeur.avis.without_answer.count
                 - if avis_counter > 0
