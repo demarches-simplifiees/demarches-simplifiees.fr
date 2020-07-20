@@ -14,8 +14,8 @@
 #  procedure_id                                :integer
 #
 class AssignTo < ApplicationRecord
-  belongs_to :instructeur
-  belongs_to :groupe_instructeur
+  belongs_to :instructeur, optional: false
+  belongs_to :groupe_instructeur, optional: false
   has_one :procedure_presentation, dependent: :destroy
   has_one :procedure, through: :groupe_instructeur
 
