@@ -282,6 +282,21 @@ describe Instructeurs::AvisController, type: :controller do
         expect(flash.notice).to eq("#{avis.email} ne peut plus donner son avis sur ce dossier.")
       end
     end
+
+    describe 'revive' do
+      let(:avis) { create(:avis, claimant: instructeur, email: 'expert@gouv.fr') }
+      let(:procedure) { avis.procedure }
+
+      before do
+        allow(AvisMailer).to receive(:avis_invitation).and_return(double(deliver_later: nil))
+      end
+
+      it 'revive the expert' do
+        get :revive, params: { procedure_id: procedure.id, id: avis.id }
+        expect(AvisMailer).to have_received(:avis_invitation).once.with(avis)
+        expect(flash.notice).to eq("Un mail de relance a été envoyé à #{avis.email}")
+      end
+    end
   end
 
   context 'without a instructeur signed in' do

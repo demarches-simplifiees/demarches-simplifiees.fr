@@ -35,7 +35,10 @@
                 - else
                   %span.waiting
                     En attente de réponse
+                    |
+                    %span.waiting= link_to("Relancer l'expert", revive_instructeur_avis_path(avis.procedure, avis), data: { confirm: "Souhaitez-vous relancer #{avis.email_to_display} ?"})
                     - if avis.revokable_by?(current_instructeur)
+                      |
                       = link_to(t('revoke', scope: 'helpers.label'), revoquer_instructeur_avis_path(avis.procedure, avis), data: { confirm: "Souhaitez-vous révoquer la demande d'avis à #{avis.email_to_display} ?" }, method: :patch)
               - if avis.piece_justificative_file.attached?
                 = render partial: 'shared/attachment/show', locals: { attachment: avis.piece_justificative_file.attachment }
