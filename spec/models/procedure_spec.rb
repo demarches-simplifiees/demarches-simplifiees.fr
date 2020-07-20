@@ -82,7 +82,7 @@ describe Procedure do
 
     context 'with a custom mail template' do
       context 'that contains a lien attestation tag' do
-        let(:closed_mail) { create(:closed_mail, body: '--lien attestation--') }
+        let(:closed_mail) { build(:closed_mail, body: '--lien attestation--') }
 
         context 'when the procedure doesn’t have an attestation' do
           let(:procedure) { procedure_without_attestation }
@@ -104,7 +104,7 @@ describe Procedure do
       end
 
       context 'that doesn’t contain a lien attestation tag' do
-        let(:closed_mail) { create(:closed_mail) }
+        let(:closed_mail) { build(:closed_mail) }
 
         context 'when the procedure doesn’t have an attestation' do
           let(:procedure) { procedure_without_attestation }
@@ -342,7 +342,7 @@ describe Procedure do
     let!(:type_de_champ_private_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
     let!(:type_de_champ_private_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
     let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, order_place: 2) }
-    let(:received_mail) { create(:received_mail) }
+    let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
 
