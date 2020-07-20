@@ -1,6 +1,6 @@
 RSpec.describe TrustedDeviceToken, type: :model do
   describe '#token_valid?' do
-    let(:token) { TrustedDeviceToken.create }
+    let(:token) { create(:trusted_device_token) }
 
     context 'when the token is create after login_token_validity' do
       it { expect(token.token_valid?).to be true }
@@ -14,7 +14,7 @@ RSpec.describe TrustedDeviceToken, type: :model do
   end
 
   describe '#token_young?' do
-    let(:token) { TrustedDeviceToken.create }
+    let(:token) { create(:trusted_device_token) }
 
     context 'when the token is create after login_token_youth' do
       it { expect(token.token_young?).to be true }
