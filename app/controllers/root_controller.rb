@@ -30,15 +30,23 @@ class RootController < ApplicationController
       .each { |champ| champ.type_de_champ.libelle = 'Un super titre de section' }
 
     all_champs
-      .filter { |champ| [TypeDeChamp.type_champs.fetch(:drop_down_list), TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)].include?(champ.type_champ) }
+      .filter { |champ| champ.type_de_champ.drop_down_list? }
       .each do |champ|
-        champ.type_de_champ.drop_down_list = DropDownList.new(type_de_champ: champ.type_de_champ)
-        champ.drop_down_list.value =
-          "option A
-          option B
-          -- avant l'option C --
-          option C"
-        champ.value = '["option B", "option C"]'
+        if champ.type_de_champ.linked_drop_down_list?
+          champ.type_de_champ.drop_down_list_value =
+            "-- section 1 --
+            option A
+            option B
+-- section 2 --
+            option C"
+        else
+          champ.type_de_champ.drop_down_list_value =
+            "option A
+            option B
+-- avant l'option C --
+            option C"
+          champ.value = '["option B", "option C"]'
+        end
       end
 
     all_champs
