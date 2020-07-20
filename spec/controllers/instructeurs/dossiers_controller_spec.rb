@@ -561,32 +561,35 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe "#update_annotations" do
     let(:champ_multiple_drop_down_list) do
-      create(:type_de_champ_multiple_drop_down_list, :private, libelle: 'libelle').champ.create
+      tdc = create(:type_de_champ_multiple_drop_down_list, :private, procedure: procedure, libelle: 'libelle')
+      create(:champ_multiple_drop_down_list, :private, type_de_champ: tdc, dossier: dossier)
     end
 
     let(:champ_linked_drop_down_list) do
-      create(:type_de_champ_linked_drop_down_list, :private, libelle: 'libelle').champ.create
+      tdc = create(:type_de_champ_linked_drop_down_list, :private, procedure: procedure, libelle: 'libelle')
+      create(:champ_linked_drop_down_list, :private, type_de_champ: tdc, dossier: dossier)
     end
 
     let(:champ_datetime) do
-      create(:type_de_champ_datetime, :private, libelle: 'libelle').champ.create
+      tdc = create(:type_de_champ_datetime, :private, procedure: procedure, libelle: 'libelle')
+      create(:champ_datetime, :private, type_de_champ: tdc, dossier: dossier)
     end
 
     let(:champ_repetition) do
-      tdc = create(:type_de_champ_repetition, :private, libelle: 'libelle')
-      tdc.types_de_champ << create(:type_de_champ_text, libelle: 'libelle')
-      champ = tdc.champ.create
+      tdc = create(:type_de_champ_repetition, :private, :with_types_de_champ, procedure: procedure, libelle: 'libelle')
+      tdc.types_de_champ << create(:type_de_champ_text, procedure: procedure, libelle: 'libelle')
+      champ = create(:champ_repetition, :private, type_de_champ: tdc, dossier: dossier)
       champ.add_row
       champ
     end
 
-    let(:dossier) do
-      create(:dossier, :en_construction, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime, champ_repetition])
-    end
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     let(:now) { Time.zone.parse('01/01/2100') }
 
     before do
+      dossier.champs_private << [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime, champ_repetition]
+
       Timecop.freeze(now)
       patch :update_annotations, params: params
 
