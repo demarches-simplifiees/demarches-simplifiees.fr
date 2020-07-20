@@ -12,7 +12,7 @@
 #  etablissement_id            :integer
 #
 class Exercice < ApplicationRecord
-  belongs_to :etablissement
+  belongs_to :etablissement, optional: false
 
   validates :ca, presence: true, allow_blank: false, allow_nil: false
 end
