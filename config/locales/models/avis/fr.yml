@@ -10,3 +10,4 @@ fr:
       invite_linked_dossiers:
         one: Inviter aussi l’expert sur le dossier lié n° %{ids}
         other: Inviter aussi l’expert sur les dossiers liés n° %{ids}
+      revoke: Révoquer la demande d'avis
