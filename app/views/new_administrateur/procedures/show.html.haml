@@ -35,12 +35,19 @@
 
     - if !@procedure.locked?
       .card-admin
+        - if @procedure.types_de_champ.count > 0
+          %div
+            %span.icon.accept
+            %p.card-admin-status-accept Validé
+        - else
+          %div
+            %span.icon.clock
+            %p.card-admin-status-todo À faire
         %div
-          %span.icon.clock
-          %p.card-admin-status-todo À faire
-        %div
-          %p.card-admin-title Formulaire
-          %p.card-admin-subtitle Champs à remplir par les usagers
+          %p.card-admin-title
+            %span.badge.baseline= @procedure.types_de_champ.count
+            Champs du formulaire
+          %p.card-admin-subtitle À remplir par les usagers
         .card-admin-action
           = link_to 'Modifier', champs_admin_procedure_path(@procedure), class: 'button'
 
