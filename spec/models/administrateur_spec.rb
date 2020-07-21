@@ -78,7 +78,7 @@ describe Administrateur, type: :model do
 
   # describe '#password_complexity' do
   #   let(:email) { 'mail@beta.gouv.fr' }
-  #   let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées-pwd'] }
+  #   let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'my-s3cure-p4ssword'] }
   #   let(:administrateur) { build(:administrateur, email: email, password: password) }
   #   let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_ADMIN }
 
