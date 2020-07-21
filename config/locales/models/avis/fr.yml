@@ -5,8 +5,17 @@ fr:
     attributes:
       avis:
         answer: "Réponse"
+        claimant: Demandeur
+        confidentiel: confidentiel
   helpers:
     label:
       invite_linked_dossiers:
         one: Inviter aussi l’expert sur le dossier lié n° %{ids}
         other: Inviter aussi l’expert sur les dossiers liés n° %{ids}
+      revoke: Révoquer la demande d'avis
+      revive: Relancer l'expert
+    hint:
+      confidentiel: "Cet avis n'est pas affiché avec les autres experts consultés"
+    confirmation:
+      revoke: "Souhaitez-vous révoquer la demande d'avis à %{email} ?"
+      revive: "Souhaitez-vous relancer %{email} ?"
