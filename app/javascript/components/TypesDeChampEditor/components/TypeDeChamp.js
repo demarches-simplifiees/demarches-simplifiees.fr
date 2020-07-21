@@ -14,12 +14,14 @@ import TypeDeChampTeFenuaOption from './TypeDeChampTeFenuaOption';
 import TypeDeChampTeFenuaOptions from './TypeDeChampTeFenuaOptions';
 import TypeDeChampIntegerOption from './TypeDeChampIntegerOption';
 import TypeDeChampIntegerOptions from './TypeDeChampIntegerOptions';
+import TypeDeChampLevelOption from './TypeDeChampLevelOption';
 import TypeDeChampDateOption from './TypeDeChampDateOption';
 import TypeDeChampDateOptions from './TypeDeChampDateOptions';
 import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
 import TypeDeChampTypesSelect from './TypeDeChampTypesSelect';
+import TypeDeChampHeaderSectionOptions from './TypeDeChampHeaderSectionOptions';
 
 const TypeDeChamp = sortableElement(
   ({ typeDeChamp, dispatch, idx: index, isFirstItem, isLastItem, state }) => {
@@ -92,7 +94,13 @@ const TypeDeChamp = sortableElement(
         </div>
         <div
           className={`flex justify-start section ${
-            isDropDown || isFile || isCarte || isTeFenua || isInteger || isDate
+            isDropDown ||
+            isFile ||
+            isCarte ||
+            isTeFenua ||
+            isInteger ||
+            isDate ||
+            isHeaderSection
               ? 'hr'
               : ''
           }`}
@@ -177,6 +185,12 @@ const TypeDeChamp = sortableElement(
               handler={updateHandlers.max}
             />
           </TypeDeChampIntegerOptions>
+          <TypeDeChampHeaderSectionOptions isVisible={isHeaderSection}>
+            <TypeDeChampLevelOption
+              label="Niveau"
+              handler={updateHandlers.level}
+            />
+          </TypeDeChampHeaderSectionOptions>
           <TypeDeChampDateOptions isVisible={isDate}>
             <TypeDeChampDateOption label="Début" handler={updateHandlers.min} />
             <TypeDeChampDateOption label="Fin" handler={updateHandlers.max} />
@@ -249,6 +263,7 @@ export const FIELDS = [
   'cadastres',
   'description',
   'drop_down_list_value',
+  'level',
   'libelle',
   'mandatory',
   'order_place',

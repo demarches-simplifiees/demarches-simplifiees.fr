@@ -441,12 +441,31 @@
     }
   }
 
-  .header-section {
+  h2.header-section {
     display: inline-block;
     color: $blue;
     font-size: 30px;
     margin-bottom: 3 * $default-padding;
     border-bottom: 3px solid $blue;
+  }
+
+  h3.header-section {
+    display: inline-block;
+    color: $blue;
+    font-size: 26px;
+    margin-bottom: $default-padding;
+  }
+
+  h4.header-section {
+    display: inline-block;
+    color: $blue;
+    font-size: 20px;
+    margin-bottom: $default-padding;
+  }
+
+  .header-section {
+    display: inline-block;
+    color: $blue;
   }
 
   .header-subsection {
@@ -456,9 +475,11 @@
   }
 
   .explication-libelle {
+    color: $black;
     font-weight: bold;
     font-size: 20px;
     margin-bottom: $default-padding;
+    border-bottom: none;
   }
 
   .explication {
