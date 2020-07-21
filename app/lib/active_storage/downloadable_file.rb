@@ -24,11 +24,14 @@ class ActiveStorage::DownloadableFile
   private
 
   def self.timestamped_filename(piece_justificative)
+    # we pad the original file name with a timestamp
+    # and a short id in order to help identify multiple versions and avoid name collisions
     extension = File.extname(piece_justificative.filename.to_s)
     basename = File.basename(piece_justificative.filename.to_s, extension)
-    timestamp = piece_justificative.created_at.strftime("%d-%m-%Y-%H-%S")
+    timestamp = piece_justificative.created_at.strftime("%d-%m-%Y-%H-%M")
+    id = piece_justificative.id % 10000
 
-    "#{basename}-#{timestamp}#{extension}"
+    "#{basename}-#{timestamp}-#{id}#{extension}"
   end
 
   def using_local_backend?
