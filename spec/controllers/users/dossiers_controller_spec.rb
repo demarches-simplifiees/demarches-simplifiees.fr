@@ -577,17 +577,23 @@ describe Users::DossiersController, type: :controller do
     let(:first_champ) { dossier.champs.first }
     let(:piece_justificative_champ) { dossier.champs.last }
     let(:value) { 'beautiful value' }
-    let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:now) { Time.zone.parse('01/01/2100') }
 
     let(:submit_payload) do
       {
         id: dossier.id,
         dossier: {
-          champs_attributes: {
-            id: first_champ.id,
-            value: value
-          }
+          champs_attributes: [
+            {
+              id: first_champ.id,
+              value: value
+            },
+            {
+              id: piece_justificative_champ.id,
+              piece_justificative_file: file
+            }
+          ]
         }
       }
     end
@@ -604,7 +610,6 @@ describe Users::DossiersController, type: :controller do
 
       it 'redirects to the dossiers list' do
         subject
-
         expect(response).to redirect_to(dossiers_path)
         expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
       end
@@ -613,12 +618,21 @@ describe Users::DossiersController, type: :controller do
     context 'when dossier can be updated by the owner' do
       it 'updates the champs' do
         subject
-
-        expect(response).to redirect_to(demande_dossier_path(dossier))
         expect(first_champ.reload.value).to eq('beautiful value')
+        expect(piece_justificative_champ.reload.piece_justificative_file).to be_attached
+      end
+
+      it 'updates the dossier modification date' do
+        subject
         expect(dossier.reload.updated_at.year).to eq(2100)
+      end
+
+      it 'updates the dossier state' do
+        subject
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
+
+      it { is_expected.to redirect_to(demande_dossier_path(dossier)) }
 
       context 'when only files champs are modified' do
         let(:submit_payload) do
@@ -829,7 +843,7 @@ describe Users::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure, user: user) }
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }
-    let(:file) { Rack::Test::UploadedFile.new("./spec/fixtures/files/piece_justificative_0.pdf", 'application/pdf') }
+    let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:scan_result) { true }
 
     subject {

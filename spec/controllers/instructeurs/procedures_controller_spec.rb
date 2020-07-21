@@ -76,7 +76,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       it "redirects avis" do
-        expect(@controller).to have_received(:redirect_to).with(instructeur_avis_index_path)
+        expect(@controller).to have_received(:redirect_to).with(instructeur_all_avis_path)
       end
     end
   end
@@ -134,6 +134,12 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(nil) }
           it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure.id]).to eq(nil) }
           it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(nil) }
+
+          it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(0) }
+          it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0) }
+          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(0) }
+          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(0) }
+          it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(0) }
         end
 
         context "with not draft state on multiple procedures" do
@@ -164,6 +170,12 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:followed_dossiers_count_per_procedure)[procedure2.id]).to eq(1) }
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure2.id]).to eq(nil) }
           it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1) }
+
+          it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(3 + 0) }
+          it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1) }
+          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(0 + 1) }
+          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(3 + 3) }
+          it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(1 + 0) }
         end
       end
 
@@ -198,6 +210,12 @@ describe Instructeurs::ProceduresController, type: :controller do
             it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(10) }
             it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(4 + 6 + 10) }
             it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(14) }
+
+            it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(4) }
+            it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(6) }
+            it { expect(assigns(:all_dossiers_counts)['traités']).to eq(10) }
+            it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(4 + 6 + 10) }
+            it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(14) }
           end
 
           context 'when an instructeur only belongs to one of them gi' do
@@ -213,6 +231,12 @@ describe Instructeurs::ProceduresController, type: :controller do
             it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure.id]).to eq(5) }
             it { expect(assigns(:dossiers_count_per_procedure)[procedure.id]).to eq(2 + 3 + 5) }
             it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(7) }
+
+            it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(2) }
+            it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(3) }
+            it { expect(assigns(:all_dossiers_counts)['traités']).to eq(5) }
+            it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(2 + 3 + 5) }
+            it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(7) }
           end
         end
       end

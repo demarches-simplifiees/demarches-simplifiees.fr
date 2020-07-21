@@ -6,12 +6,12 @@ feature 'wcag rules for usager', js: true do
   context 'pages without the need to be logged in' do
     scenario 'homepage' do
       visit root_path
-      expect(page).to be_accessible.excluding ".footer-logo"
+      expect(page).to be_accessible
     end
 
     scenario 'sign_up page' do
       visit new_user_registration_path
-      expect(page).to be_accessible.excluding ".footer-logo"
+      expect(page).to be_accessible
     end
 
     scenario 'account confirmation page' do
@@ -28,12 +28,12 @@ feature 'wcag rules for usager', js: true do
 
     scenario 'sign_in page' do
       visit new_user_session_path
-      expect(page).to be_accessible.excluding ".footer-logo", '#user_email'
+      expect(page).to be_accessible.excluding '#user_email'
     end
 
     scenario 'contact page' do
       visit contact_path
-      expect(page).to be_accessible.excluding ".footer-logo"
+      expect(page).to be_accessible
     end
 
     scenario 'commencer page' do

@@ -147,7 +147,7 @@ feature 'The routing', js: true do
 
     # the instructeurs who belong to scientifique AND litteraire groups manage scientifique and litterraire dossiers
     register_instructeur_and_log_in(superwoman.email)
-    visit procedure_path(procedure, params: { statut: 'tous' })
+    visit instructeur_procedure_path(procedure, params: { statut: 'tous' })
     expect(page).to have_text(litteraire_user.email)
     expect(page).to have_text(scientifique_user.email)
 
@@ -155,7 +155,7 @@ feature 'The routing', js: true do
     click_on scientifique_user.email
     click_on 'Suivre le dossier'
 
-    visit procedure_path(procedure, params: { statut: 'tous' })
+    visit instructeur_procedure_path(procedure, params: { statut: 'tous' })
     click_on litteraire_user.email
     click_on 'Suivre le dossier'
     log_out

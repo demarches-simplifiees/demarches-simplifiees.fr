@@ -7,7 +7,7 @@
       C’est vous !
     - else
       = link_to 'Retirer',
-        [@procedure, administrateur],
+        admin_procedure_administrateur_path(@procedure, administrateur),
         method: :delete,
         'data-confirm': "Retirer « #{administrateur.email} » des administrateurs de « #{@procedure.libelle} » ?",
         remote: true

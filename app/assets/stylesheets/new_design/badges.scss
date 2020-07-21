@@ -15,4 +15,13 @@
     background-color: $orange;
     color: #FFFFFF;
   }
+
+  &.procedure-synthese-badge {
+    color: $white;
+    background-color: $dark-grey;
+    margin-left: 3px;
+    padding-left: $default-spacer;
+    padding-right: $default-spacer;
+    vertical-align: baseline;
+  }
 }
