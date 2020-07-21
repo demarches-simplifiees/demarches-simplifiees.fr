@@ -2,11 +2,12 @@ module NewAdministrateur
   class TypesDeChampController < AdministrateurController
     before_action :retrieve_procedure, only: [:create, :update, :move, :destroy]
     before_action :procedure_locked?, only: [:create, :update, :move, :destroy]
+    before_action :revisions_migration
 
     def create
-      type_de_champ = TypeDeChamp.new(type_de_champ_create_params)
+      type_de_champ = @procedure.draft_revision.add_type_de_champ(type_de_champ_create_params)
 
-      if type_de_champ.save
+      if type_de_champ.valid?
         reset_procedure
         render json: serialize_type_de_champ(type_de_champ), status: :created
       else
@@ -15,7 +16,7 @@ module NewAdministrateur
     end
 
     def update
-      type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
+      type_de_champ = @procedure.draft_revision.find_or_clone_type_de_champ(type_de_champ_stable_id)
 
       if type_de_champ.update(type_de_champ_update_params)
         reset_procedure
@@ -26,24 +27,28 @@ module NewAdministrateur
     end
 
     def move
-      type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
-      new_index = params[:order_place].to_i
-
-      @procedure.move_type_de_champ(type_de_champ, new_index)
+      @procedure.draft_revision.move_type_de_champ(type_de_champ_stable_id, params[:position].to_i)
 
       head :no_content
     end
 
     def destroy
-      type_de_champ = TypeDeChamp.where(procedure: @procedure).find(params[:id])
-
-      type_de_champ.destroy!
+      @procedure.draft_revision.remove_type_de_champ(type_de_champ_stable_id)
       reset_procedure
 
       head :no_content
     end
 
     private
+
+    def type_de_champ_stable_id
+      TypeDeChamp.find(params[:id]).stable_id
+    end
+
+    def revisions_migration
+      # FIXUP: needed during transition to revisions
+      RevisionsMigration.add_revisions(@procedure)
+    end
 
     def serialize_type_de_champ(type_de_champ)
       {
@@ -55,6 +60,7 @@ module NewAdministrateur
             :parent_id,
             :private,
             :procedure_id,
+            :revision_id,
             :stable_id,
             :type,
             :updated_at
@@ -72,7 +78,7 @@ module NewAdministrateur
     end
 
     def type_de_champ_create_params
-      params.required(:type_de_champ).permit(:cadastres,
+      type_de_champ_params = params.required(:type_de_champ).permit(:cadastres,
         :description,
         :drop_down_list_value,
         :libelle,
@@ -83,7 +89,13 @@ module NewAdministrateur
         :piece_justificative_template,
         :private,
         :quartiers_prioritaires,
-        :type_champ).merge(procedure: @procedure)
+        :type_champ)
+
+      if type_de_champ_params[:parent_id].present?
+        type_de_champ_params[:parent_id] = TypeDeChamp.find(type_de_champ_params[:parent_id]).stable_id
+      end
+
+      type_de_champ_params
     end
 
     def type_de_champ_update_params
