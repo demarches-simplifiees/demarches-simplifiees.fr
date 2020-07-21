@@ -60,6 +60,10 @@ class Avis < ApplicationRecord
     revoked_at.present?
   end
 
+  def revivable_by?(reviver)
+    revokable_by?(reviver)
+  end
+
   def revokable_by?(revocator)
     revocator.dossiers.include?(dossier) || revocator == claimant
   end
