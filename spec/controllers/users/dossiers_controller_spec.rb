@@ -378,6 +378,22 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
+      context 'without new values for champs' do
+        let(:submit_payload) do
+          {
+            id: dossier.id,
+            dossier: {
+              champs_attributes: {}
+            }
+          }
+        end
+
+        it "doesn't set last_champ_updated_at" do
+          subject
+          expect(dossier.reload.last_champ_updated_at).to eq(nil)
+        end
+      end
+
       context 'with instructeurs ok to be notified instantly' do
         let!(:instructeur_with_instant_email_dossier) { create(:instructeur) }
         let!(:instructeur_without_instant_email_dossier) { create(:instructeur) }
@@ -576,6 +592,7 @@ describe Users::DossiersController, type: :controller do
       it 'updates the champs' do
         subject
         expect(first_champ.reload.value).to eq('beautiful value')
+        expect(first_champ.dossier.reload.last_champ_updated_at).to eq(now)
         expect(piece_justificative_champ.reload.piece_justificative_file).to be_attached
       end
 
