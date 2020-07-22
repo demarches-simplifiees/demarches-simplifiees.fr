@@ -29,7 +29,7 @@
         %ul.header-tabs
           - if current_instructeur.procedures.count > 0
             %li
-              = active_link_to "Démarches", instructeur_procedures_path, active: controller_name == 'dossiers', class: 'tab-link'
+              = active_link_to "Démarches", instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
           - if current_instructeur.avis.count > 0
             %li
               = active_link_to instructeur_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do
