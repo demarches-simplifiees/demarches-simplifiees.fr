@@ -27,7 +27,7 @@ module NewAdministrateur
     end
 
     def move
-      @procedure.draft_revision.move_type_de_champ(type_de_champ_stable_id, params[:position].to_i)
+      @procedure.draft_revision.move_type_de_champ(type_de_champ_stable_id, (params[:position] || params[:order_place]).to_i)
 
       head :no_content
     end
