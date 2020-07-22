@@ -6,7 +6,7 @@
     = link_to commencer_sign_up_path(path: @procedure.path), class: ['button large expand primary'] do
       Créer un compte
       %span.optional-on-small-screens
-        demarches-simplifiees.fr
+        #{APPLICATION_NAME}
     = link_to 'J’ai déjà un compte', commencer_sign_in_path(path: @procedure.path), class: ['button large expand']
     = render partial: 'shared/france_connect_login', locals: { url: commencer_france_connect_path(path: @procedure.path) }
 
