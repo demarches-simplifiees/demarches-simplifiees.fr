@@ -25,7 +25,7 @@ module ActionView
         end
         field_for = "#{prefix.join('_')}_#{@options[:field_name]}"
 
-        "<span class='hidden'><label for='#{field_for}_#{n}i'>#{label}</label></span>"
+        "<label class='screen-reader-text' for='#{field_for}_#{n}i'>#{label}</label>"
       end
 
       # Returns the separator for a given datetime component.
