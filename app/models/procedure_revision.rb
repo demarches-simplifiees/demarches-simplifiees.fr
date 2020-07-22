@@ -1,4 +1,5 @@
 class ProcedureRevision < ApplicationRecord
+  self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions
 
   has_many :revision_types_de_champ, -> { public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
@@ -14,12 +15,18 @@ class ProcedureRevision < ApplicationRecord
       find_or_clone_type_de_champ(params.delete(:parent_id))
         .types_de_champ
         .tap do |types_de_champ|
-          params[:order_place] = types_de_champ.size
+          params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
         end.create(params)
     elsif params[:private]
-      types_de_champ_private.create(params)
+      types_de_champ_private.tap do |types_de_champ|
+        # FIXUP: needed during transition to revisions
+        params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
+      end.create(params)
     else
-      types_de_champ.create(params)
+      types_de_champ.tap do |types_de_champ|
+        # FIXUP: needed during transition to revisions
+        params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
+      end.create(params)
     end
   end
 
