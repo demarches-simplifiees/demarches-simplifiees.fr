@@ -60,6 +60,7 @@ module Instructeurs
       @commentaire = CommentaireService.build(current_instructeur, avis.dossier, commentaire_params)
 
       if @commentaire.save
+        @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
         flash.notice = "Message envoyé"
         redirect_to messagerie_instructeur_avis_path(avis.procedure, avis)
       else

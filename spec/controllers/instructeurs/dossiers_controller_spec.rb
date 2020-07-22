@@ -390,6 +390,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:body) { "avant\napres" }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:scan_result) { true }
+    let(:now) { Timecop.freeze("09/11/1989") }
 
     subject {
       post :create_commentaire, params: {
@@ -404,7 +405,10 @@ describe Instructeurs::DossiersController, type: :controller do
 
     before do
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
+      Timecop.freeze(now)
     end
+
+    after { Timecop.return }
 
     it "creates a commentaire" do
       expect { subject }.to change(Commentaire, :count).by(1)
@@ -412,6 +416,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       expect(response).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
       expect(flash.notice).to be_present
+      expect(dossier.reload.last_commentaire_updated_at).to eq(now)
     end
 
     context "when the commentaire created with virus file" do

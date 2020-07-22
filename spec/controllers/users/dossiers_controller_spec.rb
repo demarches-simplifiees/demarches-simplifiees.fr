@@ -802,6 +802,7 @@ describe Users::DossiersController, type: :controller do
     let(:body) { "avant\napres" }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:scan_result) { true }
+    let(:now) { Time.zone.parse("18/09/1981") }
 
     subject {
       post :create_commentaire, params: {
@@ -814,6 +815,7 @@ describe Users::DossiersController, type: :controller do
     }
 
     before do
+      Timecop.freeze(now)
       sign_in(user)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
       allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
@@ -823,6 +825,8 @@ describe Users::DossiersController, type: :controller do
       create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false, groupe_instructeur: procedure.defaut_groupe_instructeur)
     end
 
+    after { Timecop.return }
+
     it "creates a commentaire" do
       expect { subject }.to change(Commentaire, :count).by(1)
 
@@ -830,6 +834,7 @@ describe Users::DossiersController, type: :controller do
       expect(DossierMailer).to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_with_instant_message.email)
       expect(DossierMailer).not_to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_without_instant_message.email)
       expect(flash.notice).to be_present
+      expect(dossier.reload.last_commentaire_updated_at).to eq(now)
     end
   end
 
