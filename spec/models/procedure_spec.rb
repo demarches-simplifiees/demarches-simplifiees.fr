@@ -687,7 +687,7 @@ describe Procedure do
       expect(procedure.published_revision).not_to be_nil
       expect(procedure.draft_revision).not_to be_nil
       expect(procedure.revisions.count).to eq(2)
-      expect(procedure.revisions.last).to eq(procedure.draft_revision)
+      expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
     end
   end
 
@@ -768,7 +768,7 @@ describe Procedure do
       expect(procedure.published_revision).not_to be_nil
       expect(procedure.draft_revision).not_to be_nil
       expect(procedure.revisions.count).to eq(2)
-      expect(procedure.revisions.last).to eq(procedure.draft_revision)
+      expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
     end
   end
 
