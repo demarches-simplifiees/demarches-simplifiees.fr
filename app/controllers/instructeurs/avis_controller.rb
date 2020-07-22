@@ -44,6 +44,7 @@ module Instructeurs
     def update
       if @avis.update(avis_params)
         flash.notice = 'Votre réponse est enregistrée.'
+        @avis.dossier.update!(last_avis_updated_at: Time.zone.now)
         redirect_to instruction_instructeur_avis_path(@avis.procedure, @avis)
       else
         flash.now.alert = @avis.errors.full_messages
