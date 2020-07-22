@@ -345,7 +345,11 @@ module Users
       errors = []
 
       if champs_params[:dossier]
-        if !@dossier.update(champs_params[:dossier])
+        @dossier.assign_attributes(champs_params[:dossier])
+        if @dossier.champs.any?(&:changed?)
+          @dossier.last_champ_updated_at = Time.zone.now
+        end
+        if !@dossier.save
           errors += @dossier.errors.full_messages
         elsif change_groupe_instructeur?
           groupe_instructeur = @dossier.procedure.groupe_instructeurs.find(params[:dossier][:groupe_instructeur_id])
