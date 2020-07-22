@@ -258,7 +258,10 @@ module Users
         return redirect_to url_for dossiers_path
       end
 
+      # FIXUP: needed during transition to revisions
+      RevisionsMigration.add_revisions(procedure)
       dossier = Dossier.new(
+        revision: procedure.active_revision,
         groupe_instructeur: procedure.defaut_groupe_instructeur,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
