@@ -16,9 +16,17 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
 
   def set_position
     self.position ||= if private?
-      revision.types_de_champ_private.size
+      if revision.types_de_champ_private.present?
+        revision.revision_types_de_champ_private.filter(&:persisted?).last.position + 1
+      else
+        0
+      end
     else
-      revision.types_de_champ.size
+      if revision.types_de_champ.present?
+        revision.revision_types_de_champ.filter(&:persisted?).last.position + 1
+      else
+        0
+      end
     end
   end
 end

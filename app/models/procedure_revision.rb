@@ -14,12 +14,18 @@ class ProcedureRevision < ApplicationRecord
       find_or_clone_type_de_champ(params.delete(:parent_id))
         .types_de_champ
         .tap do |types_de_champ|
-          params[:order_place] = types_de_champ.size
+          params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
         end.create(params)
     elsif params[:private]
-      types_de_champ_private.create(params)
+      types_de_champ_private.tap do |types_de_champ|
+        # FIXUP: needed during transition to revisions
+        params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
+      end.create(params)
     else
-      types_de_champ.create(params)
+      types_de_champ.tap do |types_de_champ|
+        # FIXUP: needed during transition to revisions
+        params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
+      end.create(params)
     end
   end
 
