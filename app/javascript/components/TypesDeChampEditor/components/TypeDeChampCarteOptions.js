@@ -15,7 +15,7 @@ function TypeDeChampCarteOptions({ isVisible, children }) {
 
 TypeDeChampCarteOptions.propTypes = {
   isVisible: PropTypes.bool,
-  children: PropTypes.array
+  children: PropTypes.node
 };
 
 export default TypeDeChampCarteOptions;
