@@ -198,6 +198,7 @@ module Users
       @commentaire = CommentaireService.build(current_user, dossier, commentaire_params)
 
       if @commentaire.save
+        @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
         dossier.followers_instructeurs
           .with_instant_email_message_notifications
           .each do |instructeur|

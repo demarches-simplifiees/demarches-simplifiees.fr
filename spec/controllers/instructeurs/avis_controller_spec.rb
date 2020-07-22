@@ -117,18 +117,23 @@ describe Instructeurs::AvisController, type: :controller do
     describe '#create_commentaire' do
       let(:file) { nil }
       let(:scan_result) { true }
+      let(:now) { Time.zone.parse("14/07/1789") }
 
       subject { post :create_commentaire, params: { id: avis_without_answer.id, procedure_id: procedure.id, commentaire: { body: 'commentaire body', piece_jointe: file } } }
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
+        Timecop.freeze(now)
       end
+
+      after { Timecop.return }
 
       it do
         subject
 
         expect(response).to redirect_to(messagerie_instructeur_avis_path(avis_without_answer.procedure, avis_without_answer))
         expect(dossier.commentaires.map(&:body)).to match(['commentaire body'])
+        expect(dossier.reload.last_commentaire_updated_at).to eq(now)
       end
 
       context "with a file" do
