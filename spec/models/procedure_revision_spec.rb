@@ -16,13 +16,18 @@ describe ProcedureRevision do
   describe '#add_type_de_champ' do
     it 'type_de_champ' do
       expect(revision.types_de_champ.size).to eq(2)
-      revision.add_type_de_champ({
+      new_type_de_champ = revision.add_type_de_champ({
         type_champ: TypeDeChamp.type_champs.fetch(:text),
         libelle: "Un champ text"
       })
       procedure.reload
       expect(revision.types_de_champ.size).to eq(3)
       expect(procedure.types_de_champ.size).to eq(3)
+
+      expect(procedure.types_de_champ.last).to eq(new_type_de_champ)
+      expect(revision.types_de_champ.last).to eq(new_type_de_champ)
+      expect(revision.revision_types_de_champ.last.position).to eq(2)
+      expect(revision.revision_types_de_champ.last.type_de_champ).to eq(new_type_de_champ)
     end
 
     it 'type_de_champ_private' do
