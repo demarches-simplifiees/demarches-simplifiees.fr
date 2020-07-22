@@ -261,6 +261,7 @@ class TypeDeChamp < ApplicationRecord
       :parent_id,
       :private,
       :procedure_id,
+      :revision_id,
       :stable_id,
       :type,
       :updated_at
