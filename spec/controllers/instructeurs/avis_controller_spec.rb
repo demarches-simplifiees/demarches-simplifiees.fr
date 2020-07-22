@@ -2,6 +2,7 @@ describe Instructeurs::AvisController, type: :controller do
   context 'with a instructeur signed in' do
     render_views
 
+    let(:now) { Time.zone.parse('01/02/2345') }
     let(:claimant) { create(:instructeur) }
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published, instructeurs: [claimant]) }
@@ -79,21 +80,24 @@ describe Instructeurs::AvisController, type: :controller do
     end
 
     describe '#update' do
-      describe 'without attachment' do
+      context 'without attachment' do
         before do
+          Timecop.freeze(now)
           patch :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer' } }
           avis_without_answer.reload
         end
+        after { Timecop.return }
 
         it 'should be ok' do
           expect(response).to redirect_to(instruction_instructeur_avis_path(avis_without_answer.procedure, avis_without_answer))
           expect(avis_without_answer.answer).to eq('answer')
           expect(avis_without_answer.piece_justificative_file).to_not be_attached
+          expect(dossier.reload.last_avis_updated_at).to eq(now)
           expect(flash.notice).to eq('Votre réponse est enregistrée.')
         end
       end
 
-      describe 'with attachment' do
+      context 'with attachment' do
         include ActiveJob::TestHelper
         let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
@@ -157,10 +161,12 @@ describe Instructeurs::AvisController, type: :controller do
       let(:invite_linked_dossiers) { nil }
 
       before do
+        Timecop.freeze(now)
         @introduction_file = fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf')
         post :create_avis, params: { id: previous_avis.id, procedure_id: procedure.id, avis: { emails: emails, introduction: intro, confidentiel: asked_confidentiel, invite_linked_dossiers: invite_linked_dossiers, introduction_file: @introduction_file } }
         created_avis.reload
       end
+      after { Timecop.return }
 
       context 'when an invalid email' do
         let(:previous_avis_confidentiel) { false }
@@ -170,6 +176,7 @@ describe Instructeurs::AvisController, type: :controller do
         it { expect(response).to render_template :instruction }
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
         it { expect(Avis.last).to eq(previous_avis) }
+        it { expect(dossier.last_avis_updated_at).to eq(nil) }
       end
 
       context 'ask review with attachment' do
@@ -179,6 +186,7 @@ describe Instructeurs::AvisController, type: :controller do
 
         it { expect(created_avis.introduction_file).to be_attached }
         it { expect(created_avis.introduction_file.filename).to eq("piece_justificative_0.pdf") }
+        it { expect(created_avis.dossier.reload.last_avis_updated_at).to eq(now) }
         it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à toto@totomail.com") }
       end
 

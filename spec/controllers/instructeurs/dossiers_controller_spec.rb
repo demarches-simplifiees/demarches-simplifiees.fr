@@ -464,6 +464,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(response).to render_template :avis }
       it { expect(flash.alert).to eq(["emaila.com : Email n'est pas valide"]) }
       it { expect { subject }.not_to change(Avis, :count) }
+      it { expect(dossier.last_avis_updated_at).to eq(nil) }
     end
 
     context 'with multiple emails' do
