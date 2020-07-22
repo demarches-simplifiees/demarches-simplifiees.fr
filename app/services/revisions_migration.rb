@@ -10,14 +10,11 @@ class RevisionsMigration
     add_types_de_champs_to_revision(procedure, :types_de_champ)
     add_types_de_champs_to_revision(procedure, :types_de_champ_private)
 
-    if procedure.publiee?
+    if !procedure.brouillon?
       published_revision = procedure.draft_revision
 
       procedure.draft_revision = procedure.create_new_revision
       procedure.published_revision = published_revision
-      procedure.save!(validate: false)
-    elsif procedure.close? || procedure.depubliee?
-      procedure.draft_revision = procedure.create_new_revision
       procedure.save!(validate: false)
     end
 
