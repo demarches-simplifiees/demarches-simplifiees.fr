@@ -1,1 +1,1 @@
-Typhoeus::Config.user_agent = "demarches-simplifiees.fr"
+Typhoeus::Config.user_agent = APPLICATION_NAME
