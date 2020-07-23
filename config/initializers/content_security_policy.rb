@@ -1,3 +1,4 @@
+# rubocop:disable DS/ApplicationName
 Rails.application.config.content_security_policy do |policy|
   # Whitelist image
   policy.img_src :self, "*.openstreetmap.org", "static.demarches-simplifiees.fr", "*.cloud.ovh.net", "stats.data.gouv.fr", "*", :data, :blob
@@ -20,3 +21,4 @@ Rails.application.config.content_security_policy do |policy|
     policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")
   end
 end
+# rubocop:enable DS/ApplicationName

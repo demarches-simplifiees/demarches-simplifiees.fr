@@ -1,3 +1,4 @@
+# rubocop:disable DS/ApplicationName
 # API URLs
 API_CARTO_URL = ENV.fetch("API_CARTO_URL", "https://sandbox.geo.api.gouv.fr/apicarto")
 API_ENTREPRISE_URL = ENV.fetch("API_ENTREPRISE_URL", "https://entreprise.api.gouv.fr/v2")
@@ -40,3 +41,5 @@ FAQ_ERREUR_SIRET_URL = [FAQ_URL, "article", "4-erreur-siret"].join("/")
 
 STATUS_PAGE_URL = ENV.fetch("STATUS_PAGE_URL", "https://status.demarches-simplifiees.fr")
 MATOMO_IFRAME_URL = "https://stats.data.gouv.fr/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli"
+
+# rubocop:enable DS/ApplicationName

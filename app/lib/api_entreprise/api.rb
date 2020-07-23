@@ -93,6 +93,7 @@ class ApiEntreprise::API
   end
 
   def self.params(siret_or_siren, procedure_id, user_id)
+    # rubocop:disable DS/ApplicationName
     params = {
       context: "demarches-simplifiees.fr",
       recipient: siret_or_siren,
@@ -100,6 +101,7 @@ class ApiEntreprise::API
       non_diffusables: true,
       token: token_for_procedure(procedure_id)
     }
+    # rubocop:enable DS/ApplicationName
     params[:user_id] = user_id if user_id.present?
     params
   end
