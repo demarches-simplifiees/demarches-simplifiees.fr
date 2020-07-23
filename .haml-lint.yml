@@ -1,4 +1,10 @@
+require:
+  - './lib/linters/application_name_linter.rb'
+
 linters:
+  ApplicationNameLinter:
+    enabled: true
+
   AlignmentTabs:
     enabled: true
 
