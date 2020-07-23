@@ -8,8 +8,7 @@ class TmpDossiersMigrateRevisionsJob < ApplicationJob
       .limit(2000)
       .find_each do |dossier|
         if dossier.procedure.present?
-          dossier.revision = dossier.procedure.active_revision
-          dossier.save!(validate: false)
+          dossier.update_column(:revision_id, dossier.procedure.active_revision_id)
         else
           except << dossier.id
         end
