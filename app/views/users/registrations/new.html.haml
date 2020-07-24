@@ -3,7 +3,7 @@
 .auth-form
   = devise_error_messages!
   = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
-    %h1 Créez-vous un compte demarches-simplifiees.fr
+    %h1 Créez-vous un compte #{APPLICATION_NAME}
 
     = f.label :email, "Email (nom@site.com)", id: :user_email_label
     = f.text_field :email, type: :email, autocomplete: 'email', autofocus: true, placeholder: "Votre adresse email", 'aria-describedby': :user_email_label

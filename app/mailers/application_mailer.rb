@@ -1,6 +1,6 @@
 class ApplicationMailer < ActionMailer::Base
   helper :application # gives access to all helpers defined within `application_helper`.
-  default from: "demarches-simplifiees.fr <#{CONTACT_EMAIL}>"
+  default from: "#{APPLICATION_NAME} <#{CONTACT_EMAIL}>"
   layout 'mailer'
 
   # Don’t retry to send a message if the server rejects the recipient address
