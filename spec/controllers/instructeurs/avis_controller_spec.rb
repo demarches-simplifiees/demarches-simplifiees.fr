@@ -372,7 +372,7 @@ describe Instructeurs::AvisController, type: :controller do
       let(:procedure) { dossier.procedure }
       let!(:avis) { create(:avis, email: invited_email, dossier: dossier) }
       let(:avis_id) { avis.id }
-      let(:password) { 'démarches-simplifiées-pwd' }
+      let(:password) { 'my-s3cure-p4ssword' }
       let(:created_instructeur) { Instructeur.by_email(invited_email) }
       let(:invitations_email) { true }
 

@@ -31,7 +31,7 @@ class InstructeurMailer < ApplicationMailer
   def send_login_token(instructeur, login_token)
     @instructeur_id = instructeur.id
     @login_token = login_token
-    subject = "Connexion sécurisée à demarches-simplifiees.fr"
+    subject = "Connexion sécurisée à #{APPLICATION_NAME}"
 
     mail(to: instructeur.email, subject: subject)
   end

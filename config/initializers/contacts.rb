@@ -1,3 +1,5 @@
+# rubocop:disable DS/ApplicationName
+# todo: will be externally configurable
 if !defined?(CONTACT_EMAIL)
   CONTACT_EMAIL = "contact@demarches-simplifiees.fr"
   EQUIPE_EMAIL = "equipe@demarches-simplifiees.fr"
@@ -7,3 +9,4 @@ if !defined?(CONTACT_EMAIL)
 
   OLD_CONTACT_EMAIL = "contact@tps.apientreprise.fr"
 end
+# rubocop:enable DS/ApplicationName

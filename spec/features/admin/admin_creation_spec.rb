@@ -16,7 +16,7 @@ feature 'As an administrateur', js: true do
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "admin/activate?#{token_params}"
-    fill_in :administrateur_password, with: 'démarches-simplifiées-pwd'
+    fill_in :administrateur_password, with: 'my-s3cure-p4ssword'
 
     click_button 'Continuer'
 

@@ -137,7 +137,7 @@
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel.numbers-panel
       .container
-        %h2.landing-panel-title demarches-simplifiees.fr en chiffres
+        %h2.landing-panel-title #{APPLICATION_NAME} en chiffres
         %ul.numbers
           %li.number
             .number-value
@@ -163,7 +163,7 @@
 
   .landing-panel.users-panel
     .container
-      %h2.landing-panel-title Ils utilisent déjà demarches-simplifiees.fr
+      %h2.landing-panel-title Ils utilisent déjà #{APPLICATION_NAME}
 
       %ul.users
         %li.user
@@ -211,10 +211,12 @@
       .half
         %h1.cta-panel-title Vous voulez en savoir plus ?
         %p.cta-panel-explanation Participez à notre prochain Webinaire
+        -# haml-lint:disable ApplicationNameLinter
         = link_to "Inscription à notre webinaire",
           "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr",
           target: "_blank",
           class: "cta-panel-button-blue"
+        -# haml-lint:enable ApplicationNameLinter
 
       .clearfix
 
