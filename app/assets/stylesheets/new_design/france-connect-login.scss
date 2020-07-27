@@ -1,6 +1,15 @@
 @import "colors";
+@import "constants";
 
 .france-connect-login {
+  h2 {
+    color: $black;
+    font-size: 24px;
+  }
+}
+
+.france-connect-login-buttons,
+.france-connect-help-link {
   text-align: center;
 }
 
@@ -22,7 +31,29 @@
 }
 
 .france-connect-login-separator {
-  margin: 24px 0;
-  font-size: 14px;
-  color: $dark-grey;
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  color: $black;
+  text-transform: uppercase;
+  padding-bottom: $default-padding;
+  padding-top: $default-padding;
+
+  &::before,
+  &::after {
+    content: "";
+    flex-grow: 1;
+    background: $dark-grey;
+    height: 1px;
+    font-size: 0;
+    line-height: 0;
+  }
+
+  &::before {
+    margin-right: $default-spacer;
+  }
+
+  &::after {
+    margin-left: $default-spacer;
+  }
 }

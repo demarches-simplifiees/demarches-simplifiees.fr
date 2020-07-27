@@ -5,6 +5,8 @@
   = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
     %h1.huge-title Connectez-vous
 
+    = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+
     = f.label :email, "Email (nom@site.com)"
     = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
 
@@ -20,8 +22,6 @@
         = link_to "Mot de passe oublié ?", new_user_password_path, class: "link"
 
     = f.submit "Se connecter", class: "button large primary expand"
-
-  = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
   %hr
   %p.center
