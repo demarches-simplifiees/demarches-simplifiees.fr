@@ -19,7 +19,7 @@ feature 'As an instructeur', js: true do
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "users/activate?#{token_params}"
-    fill_in :user_password, with: 'démarches-simplifiées-pwd'
+    fill_in :user_password, with: 'my-s3cure-p4ssword'
 
     click_button 'Définir le mot de passe'
 
