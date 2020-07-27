@@ -118,7 +118,9 @@ module DossierHelper
   private
 
   def dinum_instance?
+    # rubocop:disable DS/ApplicationName
     ENV['APP_HOST']&.ends_with?('demarches-simplifiees.fr')
+    # rubocop:enable DS/ApplicationName
   end
 
   def dossiers_with_lost_attachments_ids

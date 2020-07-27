@@ -21,15 +21,17 @@
         - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
         = link_to root_profile_link, class: 'header-logo justify-center', title: root_profile_libelle do
           = image_tag 'marianne.svg', alt: 'Liberté, égalité, fraternité', width: '65'
-          %span.big.site-title> demarches-simplifiees.fr
-          %span.small.site-title> d-s.fr
+          %span.big.site-title>
+            = APPLICATION_NAME
+          %span.small.site-title>
+            = APPLICATION_SHORTNAME
 
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         - current_url = request.path_info
         %ul.header-tabs
           - if current_instructeur.procedures.count > 0
             %li
-              = active_link_to "Démarches", instructeur_procedures_path, active: controller_name == 'dossiers', class: 'tab-link'
+              = active_link_to "Démarches", instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
           - if current_instructeur.avis.count > 0
             %li
               = active_link_to instructeur_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do

@@ -1,6 +1,7 @@
 require:
   - rubocop/rspec/focused
   - ./lib/cops/unscoped.rb
+  - ./lib/cops/application_name.rb
 inherit_gem:
   rubocop-rails_config:
     - config/rails.yml
@@ -11,6 +12,17 @@ AllCops:
     - "db/migrate/20190730153555_recreate_structure.rb"
     - "bin/*"
     - "node_modules/**/*"
+
+DS/Unscoped:
+  Enabled: true
+
+DS/ApplicationName:
+  Enabled: true
+  Exclude:
+    - './config/application_name.rb'
+    - './lib/cops/application_name.rb'
+    - './lib/linters/application_name_linter.rb'
+    - "./spec/**/*"
 
 Bundler/DuplicatedGem:
   Enabled: true
