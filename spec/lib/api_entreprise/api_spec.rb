@@ -62,13 +62,13 @@ describe ApiEntreprise::API do
       end
 
       context 'with specific token for procedure' do
-        let(:token) { 'token-for-demarche' }
+        let(:token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
         let(:procedure) { create(:procedure, api_entreprise_token: token) }
         let(:procedure_id) { procedure.id }
 
         it 'call api-entreprise with specfic token' do
           subject
-          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=token-for-demarche/)
+          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=#{token}/)
         end
       end
 

@@ -42,6 +42,7 @@ class Dossier < ApplicationRecord
   has_many :followers_instructeurs, through: :follows, source: :instructeur
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, inverse_of: :dossier, dependent: :destroy
+  has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, dependent: :nullify, inverse_of: :dossier
 
@@ -128,6 +129,7 @@ class Dossier < ApplicationRecord
         :individual,
         :followers_instructeurs,
         :avis,
+        :traitements,
         etablissement: :champ,
         champs: {
           etablissement: :champ,
@@ -172,6 +174,7 @@ class Dossier < ApplicationRecord
       justificatif_motivation_attachment: :blob,
       attestation: [],
       avis: { piece_justificative_file_attachment: :blob },
+      traitements: [],
       etablissement: [],
       individual: [],
       user: [])
@@ -198,10 +201,9 @@ class Dossier < ApplicationRecord
       .joins(:procedure)
       .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
-  scope :termine_close_to_expiration, -> do
-    state_termine
-      .joins(:procedure)
-      .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  def self.termine_close_to_expiration
+    dossier_ids = Traitement.termine_close_to_expiration.pluck(:dossier_id).uniq
+    Dossier.where(id: dossier_ids)
   end
 
   scope :brouillon_expired, -> do
@@ -249,7 +251,7 @@ class Dossier < ApplicationRecord
   end
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
-  scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: []) }
+  scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: [], traitements: []) }
 
   scope :with_notifications, -> do
     # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
@@ -282,7 +284,6 @@ class Dossier < ApplicationRecord
   delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
 
-  before_validation :update_state_dates, if: -> { state_changed? }
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
   before_save :update_search_terms
 
@@ -293,6 +294,16 @@ class Dossier < ApplicationRecord
   validates :user, presence: true
   validates :individual, presence: true, if: -> { procedure.for_individual? }
   validates :groupe_instructeur, presence: true
+
+  def motivation
+    return nil if !termine?
+    traitements.any? ? traitements.last.motivation : read_attribute(:motivation)
+  end
+
+  def processed_at
+    return nil if !termine?
+    traitements.any? ? traitements.last.processed_at : read_attribute(:processed_at)
+  end
 
   def update_search_terms
     self.search_terms = [
@@ -512,27 +523,29 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def after_passer_en_construction
+    update!(en_construction_at: Time.zone.now) if self.en_construction_at.nil?
+  end
+
   def after_passer_en_instruction(instructeur)
     instructeur.follow(self)
 
+    update!(en_instruction_at: Time.zone.now) if self.en_instruction_at.nil?
     log_dossier_operation(instructeur, :passer_en_instruction)
   end
 
   def after_passer_automatiquement_en_instruction
+    update!(en_instruction_at: Time.zone.now) if self.en_instruction_at.nil?
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
   def after_repasser_en_construction(instructeur)
-    self.en_instruction_at = nil
-
-    save!
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
   def after_repasser_en_instruction(instructeur)
     self.archived = false
-    self.processed_at = nil
-    self.motivation = nil
+    self.en_instruction_at = Time.zone.now
     attestation&.destroy
 
     save!
@@ -541,7 +554,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter(instructeur, motivation, justificatif = nil)
-    self.motivation = motivation
+    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -557,6 +570,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter_automatiquement
+    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur_email: nil, motivation: nil, processed_at: Time.zone.now)
     self.en_instruction_at ||= Time.zone.now
 
     if attestation.nil?
@@ -569,7 +583,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_refuser(instructeur, motivation, justificatif = nil)
-    self.motivation = motivation
+    self.traitements.build(state: Dossier.states.fetch(:refuse), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -581,7 +595,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_classer_sans_suite(instructeur, motivation, justificatif = nil)
-    self.motivation = motivation
+    self.traitements.build(state: Dossier.states.fetch(:sans_suite), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -782,16 +796,6 @@ class Dossier < ApplicationRecord
         automatic_operation: true,
         subject: subject
       )
-    end
-  end
-
-  def update_state_dates
-    if en_construction? && !self.en_construction_at
-      self.en_construction_at = Time.zone.now
-    elsif en_instruction? && !self.en_instruction_at
-      self.en_instruction_at = Time.zone.now
-    elsif TERMINE.include?(state) && !self.processed_at
-      self.processed_at = Time.zone.now
     end
   end
 

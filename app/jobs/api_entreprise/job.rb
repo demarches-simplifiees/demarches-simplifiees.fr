@@ -9,6 +9,10 @@ class ApiEntreprise::Job < ApplicationJob
     error(self, exception)
   end
 
+  def error(job, exception)
+    # override ApplicationJob#error to avoid reporting to sentry
+  end
+
   def max_attempts
     ENV.fetch("MAX_ATTEMPTS_API_ENTREPRISE_JOBS", DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS).to_i
   end

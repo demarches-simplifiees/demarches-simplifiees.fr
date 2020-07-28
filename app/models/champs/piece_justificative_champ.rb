@@ -24,6 +24,8 @@ class Champs::PieceJustificativeChamp < Champ
   #   content_type: ACCEPTED_FORMATS,
   #   size: { less_than: MAX_SIZE }
 
+  before_save :update_skip_pj_validation
+
   def main_value_name
     :piece_justificative_file
   end
@@ -44,5 +46,9 @@ class Champs::PieceJustificativeChamp < Champ
     if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
       piece_justificative_file.service_url
     end
+  end
+
+  def update_skip_pj_validation
+    type_de_champ.update(skip_pj_validation: true)
   end
 end

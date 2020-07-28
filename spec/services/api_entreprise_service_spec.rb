@@ -8,7 +8,8 @@ describe ApiEntrepriseService do
     let(:siret) { '41816609600051' }
     let(:etablissements_status) { 200 }
     let(:etablissements_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
-    let(:procedure) { create(:procedure, api_entreprise_token: 'un-jeton') }
+    let(:valid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
+    let(:procedure) { create(:procedure, api_entreprise_token: valid_token) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:subject) { ApiEntrepriseService.create_etablissement(dossier, siret, procedure.id) }
 
