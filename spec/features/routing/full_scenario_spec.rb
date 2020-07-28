@@ -14,7 +14,7 @@ feature 'The routing', js: true do
     login_as administrateur.user, scope: :user
 
     visit admin_procedure_path(procedure.id)
-    find('#groupe-instructeurs').click
+    click_on "Groupe d'instructeurs"
 
     # rename routing criteria to spécialité
     fill_in 'Libellé du routage', with: 'spécialité'
@@ -173,7 +173,6 @@ feature 'The routing', js: true do
 
   def publish_procedure(procedure)
     click_on procedure.libelle
-    find('#publish-procedure-link').click
     find('#publish-procedure').click
     within '#publish-modal' do
       fill_in 'lien_site_web', with: 'http://some.website'
