@@ -8,6 +8,12 @@ class ApplicationMailer < ActionMailer::Base
     message.perform_deliveries = false
   end
 
+  rescue_from Net::SMTPServerBusy do |error|
+    if error.message =~ /unexpected recipients/
+      message.perform_deliveries = false
+    end
+  end
+
   # Attach the procedure logo to the email (if any).
   # Returns the attachment url.
   def attach_logo(procedure)

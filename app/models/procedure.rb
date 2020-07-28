@@ -442,17 +442,16 @@ class Procedure < ApplicationRecord
   end
 
   def usual_traitement_time
-    # times = Traitement.includes(:dossier)
-    #   .where(state: Dossier::TERMINE)
-    #   .where(processed_at: 1.month.ago..Time.zone.now)
-    #   .pluck('dossiers.en_construction_at', :processed_at)
-    #   .map { |(en_construction_at, processed_at)| processed_at - en_construction_at }
+    times = Traitement.includes(:dossier)
+      .where(dossier: self.dossiers)
+      .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
+      .where(processed_at: 1.month.ago..Time.zone.now)
+      .pluck('dossiers.en_construction_at', :processed_at)
+      .map { |(en_construction_at, processed_at)| processed_at - en_construction_at }
 
-    # if times.present?
-    #   times.percentile(90).ceil
-    # end
-
-    false
+    if times.present?
+      times.percentile(90).ceil
+    end
   end
 
   def populate_champ_stable_ids
