@@ -1,11 +1,12 @@
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
   let(:dossier) do
     dossier = create(:dossier,
       :en_construction,
       :with_all_champs,
+      :with_all_annotations,
       :with_individual,
       procedure: procedure)
     create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
@@ -1114,6 +1115,240 @@ describe API::V2::GraphqlController do
               },
               errors: nil
             })
+          end
+        end
+      end
+
+      describe 'dossierModifierAnnotation' do
+        describe 'text' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationText(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.first.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: \"hello\"
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationText: {
+                annotation: {
+                  stringValue: 'hello'
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'checkbox' do
+          let(:value) { 'true' }
+
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationCheckbox(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'checkbox' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: #{value}
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success when true" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
+                annotation: {
+                  stringValue: 'true'
+                },
+                errors: nil
+              })
+            end
+          end
+
+          context "success when false" do
+            let(:value) { 'false' }
+
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
+                annotation: {
+                  stringValue: 'false'
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'yes_no' do
+          let(:value) { 'true' }
+
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationCheckbox(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'yes_no' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: #{value}
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success when true" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
+                annotation: {
+                  stringValue: 'true'
+                },
+                errors: nil
+              })
+            end
+          end
+
+          context "success when false" do
+            let(:value) { 'false' }
+
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
+                annotation: {
+                  stringValue: 'false'
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'date' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationDate(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'date' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: \"#{1.day.from_now.to_date.iso8601}\"
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationDate: {
+                annotation: {
+                  stringValue: dossier.reload.champs_private.find { |c| c.type_champ == 'date' }.to_s
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'datetime' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationDatetime(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'datetime' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: \"#{1.day.from_now.iso8601}\"
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationDatetime: {
+                annotation: {
+                  stringValue: dossier.reload.champs_private.find { |c| c.type_champ == 'datetime' }.to_s
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'integer_number' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationIntegerNumber(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'integer_number' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: 42
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationIntegerNumber: {
+                annotation: {
+                  stringValue: '42'
+                },
+                errors: nil
+              })
+            end
           end
         end
       end
