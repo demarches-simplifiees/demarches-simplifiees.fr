@@ -1,19 +1,22 @@
 .sub-header
-  .container.procedure-admin-listing-container
-    %ul.tabs
-      = tab_item(t('pluralize.published', count: @procedures_publiees.count), admin_procedures_path(statut: 'publiees'), active: @statut == 'publiees', badge: number_with_html_delimiter(@procedures_publiees.count))
-      = tab_item('En test', admin_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft.count))
-      = tab_item(t('pluralize.procedure_archived', count: @procedures_closed.count), admin_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closed.count))
-    
-    %div
-      =link_to "Nouvelle Démarche", new_admin_procedure_path, class: 'button primary'
+  .procedure-admin-listing-container
+    = link_to "Nouvelle Démarche", new_admin_procedure_path, id: 'new-procedure', class: 'button primary'
+  .container
 
-.container
+    %ul.tabs
+      = tab_item(t('pluralize.published', count: @procedures_publiees.count), admin_procedures_path(statut: 'publiees'), active: @statut == 'publiees', badge: number_with_html_delimiter(@procedures_publiees_count))
+      = tab_item('En test', admin_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft_count))
+      = tab_item(t('pluralize.closed', count: @procedures_closed.count), admin_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closed_count))
+
+.container#procedures{ data: { item_count: @statut === "publiees" ? @procedures_publiees_count : @statut === "brouillons" ? @procedures_draft_count : @procedures_closed_count } }
   - if @statut === "publiees"
     = render partial: "procedures_list", locals: { procedures: @procedures_publiees }
+    = paginate @procedures_publiees
 
   - if @statut === "brouillons"
     = render partial: "procedures_list", locals: { procedures: @procedures_draft }
-   
+    = paginate @procedures_draft
+
   - if @statut === "archivees"
     = render partial: "procedures_list", locals: { procedures: @procedures_closed }
+    = paginate @procedures_closed
