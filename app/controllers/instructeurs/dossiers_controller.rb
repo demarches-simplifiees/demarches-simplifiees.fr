@@ -197,7 +197,7 @@ module Instructeurs
         dossier.last_champ_private_updated_at = Time.zone.now
       end
       dossier.save
-      dossier.modifier_annotations!(current_instructeur)
+      dossier.log_modifier_annotations!(current_instructeur)
       redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier)
     end
 

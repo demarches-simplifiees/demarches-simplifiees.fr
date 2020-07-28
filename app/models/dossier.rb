@@ -615,7 +615,7 @@ class Dossier < ApplicationRecord
       end
   end
 
-  def modifier_annotations!(instructeur)
+  def log_modifier_annotations!(instructeur)
     champs_private.filter(&:value_previously_changed?).each do |champ|
       log_dossier_operation(instructeur, :modifier_annotation, champ)
     end
