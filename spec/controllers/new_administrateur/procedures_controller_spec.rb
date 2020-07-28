@@ -43,6 +43,27 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     sign_in(admin.user)
   end
 
+  describe 'GET #index' do
+    subject { get :index }
+
+    it { expect(response.status).to eq(200) }
+  end
+
+  describe 'GET #index with sorting and pagination' do
+    before do
+      create(:procedure, administrateur: admin)
+      admin.reload
+    end
+
+    subject {
+      get :index, params: {
+        'statut': 'publiees'
+      }
+    }
+
+    it { expect(subject.status).to eq(200) }
+  end
+
   describe 'GET #edit' do
     let(:published_at) { nil }
     let(:procedure) { create(:procedure, administrateur: admin, published_at: published_at) }
