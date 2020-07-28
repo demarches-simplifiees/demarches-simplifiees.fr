@@ -313,10 +313,11 @@ describe NewAdministrateur::ProceduresController, type: :controller do
 
   describe 'PATCH #jeton' do
     let(:procedure) { create(:procedure, administrateur: admin) }
+    let(:valid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
 
     it "update api_entreprise_token" do
-      patch :update_jeton, params: { id: procedure.id, procedure: { api_entreprise_token: 'ceci-est-un-jeton' } }
-      expect(procedure.reload.api_entreprise_token).to eq('ceci-est-un-jeton')
+      patch :update_jeton, params: { id: procedure.id, procedure: { api_entreprise_token: valid_token } }
+      expect(procedure.reload.api_entreprise_token).to eq(valid_token)
     end
   end
 end

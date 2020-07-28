@@ -22,9 +22,6 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 
 - rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
 - Yarn : voir https://yarnpkg.com/en/docs/install
-- Overmind :
-  * Mac : `brew install overmind`
-  * Linux : voir https://github.com/DarthSim/overmind#installation
 
 #### Tests
 
@@ -60,9 +57,18 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 
 ### Lancement de l'application
 
-    overmind start
+On lance le serveur d'application ainsi :
 
-L'application tourne à l'adresse `http://localhost:3000`.
+    bin/rails server
+
+L'application tourne alors à l'adresse `http://localhost:3000`, et utilise le mécanisme par défaut de rails pour les tâches asynchrones.
+C'est ce qu'on veut dans la plupart des cas. Une exception: ça ne joue pas les tâches cron.
+
+Pour être une peu plus proche du comportement de production, et jouer les tâches cron, on peut lancer la message queue
+dans un service dédié, et indiquer à rails d'utiliser delayed_job:
+
+    bin/rake jobs:work
+    RAILS_QUEUE_ADAPTER=delayed_job bin/rails server
 
 ### Utilisateurs de test
 
@@ -106,12 +112,6 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 ### Ajout de taches à exécuter au déploiement
 
         rails generate after_party:task task_name
-
-### Debug
-
-Une fois `overmind` lancé, et un breakpoint `byebug` inséré dans le code, il faut se connecter au process `server` dans un nouveau terminal afin d'intéragir avec byebug :
-
-    overmind connect server
 
 ### Linting
 

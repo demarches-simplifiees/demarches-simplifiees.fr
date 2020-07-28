@@ -106,25 +106,22 @@ describe StatsController, type: :controller do
     before do
       procedure_1 = FactoryBot.create(:procedure)
       procedure_2 = FactoryBot.create(:procedure)
-      dossier_p1_a = FactoryBot.create(:dossier,
+      dossier_p1_a = FactoryBot.create(:dossier, :accepte,
         :procedure          => procedure_1,
         :en_construction_at => 2.months.ago.beginning_of_month,
         :processed_at       => 2.months.ago.beginning_of_month + 3.days)
-      dossier_p1_b = FactoryBot.create(:dossier,
+      dossier_p1_b = FactoryBot.create(:dossier, :accepte,
         :procedure          => procedure_1,
         :en_construction_at => 2.months.ago.beginning_of_month,
         :processed_at       => 2.months.ago.beginning_of_month + 1.day)
-      dossier_p1_c = FactoryBot.create(:dossier,
+      dossier_p1_c = FactoryBot.create(:dossier, :accepte,
         :procedure          => procedure_1,
         :en_construction_at => 1.month.ago.beginning_of_month,
         :processed_at       => 1.month.ago.beginning_of_month + 5.days)
-      dossier_p2_a = FactoryBot.create(:dossier,
+      dossier_p2_a = FactoryBot.create(:dossier, :accepte,
         :procedure          => procedure_2,
         :en_construction_at => 2.months.ago.beginning_of_month,
         :processed_at       => 2.months.ago.beginning_of_month + 4.days)
-
-      # Write directly in the DB to avoid the before_validation hook
-      Dossier.update_all(state: Dossier.states.fetch(:accepte))
 
       @expected_hash = {
         (2.months.ago.beginning_of_month).to_s => 3.0,
@@ -154,29 +151,26 @@ describe StatsController, type: :controller do
     before do
       procedure_1 = FactoryBot.create(:procedure, :with_type_de_champ, :types_de_champ_count => 24)
       procedure_2 = FactoryBot.create(:procedure, :with_type_de_champ, :types_de_champ_count => 48)
-      dossier_p1_a = FactoryBot.create(:dossier,
+      dossier_p1_a = FactoryBot.create(:dossier, :accepte,
         :procedure    => procedure_1,
         :created_at   => 2.months.ago.beginning_of_month,
         :en_construction_at => 2.months.ago.beginning_of_month + 30.minutes,
         :processed_at => 2.months.ago.beginning_of_month + 1.day)
-      dossier_p1_b = FactoryBot.create(:dossier,
+      dossier_p1_b = FactoryBot.create(:dossier, :accepte,
         :procedure    => procedure_1,
         :created_at   => 2.months.ago.beginning_of_month,
         :en_construction_at => 2.months.ago.beginning_of_month + 10.minutes,
         :processed_at => 2.months.ago.beginning_of_month + 1.day)
-      dossier_p1_c = FactoryBot.create(:dossier,
+      dossier_p1_c = FactoryBot.create(:dossier, :accepte,
         :procedure    => procedure_1,
         :created_at   => 1.month.ago.beginning_of_month,
         :en_construction_at => 1.month.ago.beginning_of_month + 50.minutes,
         :processed_at => 1.month.ago.beginning_of_month + 1.day)
-      dossier_p2_a = FactoryBot.create(:dossier,
+      dossier_p2_a = FactoryBot.create(:dossier, :accepte,
         :procedure    => procedure_2,
         :created_at   => 2.months.ago.beginning_of_month,
         :en_construction_at => 2.months.ago.beginning_of_month + 80.minutes,
         :processed_at => 2.months.ago.beginning_of_month + 1.day)
-
-      # Write directly in the DB to avoid the before_validation hook
-      Dossier.update_all(state: Dossier.states.fetch(:accepte))
 
       @expected_hash = {
         (2.months.ago.beginning_of_month).to_s => 30.0,

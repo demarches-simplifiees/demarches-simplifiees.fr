@@ -41,7 +41,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
-  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles, :parcelles_agricoles, :old_pj, :drop_down_options, :batiments, :zones_manuelles, :min, :max, :level
+  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj, :drop_down_options, :skip_pj_validation, :parcelles, :batiments, :zones_manuelles, :min, :max, :level
   delegate :tags_for_template, to: :dynamic_type
 
   class WithIndifferentAccess
@@ -88,7 +88,12 @@ class TypeDeChamp < ApplicationRecord
 
   before_validation :check_mandatory
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
-  before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
+  before_save :remove_drop_down_list, if: -> { type_champ_changed? }
+  before_save :remove_repetition, if: -> { type_champ_changed? }
+
+  after_save if: -> { @remove_piece_justificative_template } do
+    piece_justificative_template.purge_later
+  end
 
   def valid?(context = nil)
     super
@@ -304,7 +309,7 @@ class TypeDeChamp < ApplicationRecord
 
   def remove_piece_justificative_template
     if !piece_justificative? && piece_justificative_template.attached?
-      piece_justificative_template.purge_later
+      @remove_piece_justificative_template = true
     end
   end
 
@@ -312,6 +317,12 @@ class TypeDeChamp < ApplicationRecord
     if !drop_down_list?
       self.drop_down_list = nil
       self.drop_down_options = nil
+    end
+  end
+
+  def remove_repetition
+    if !repetition?
+      types_de_champ.destroy_all
     end
   end
 end
