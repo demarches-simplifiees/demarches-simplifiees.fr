@@ -689,6 +689,7 @@ Rails/CreateTableWithTimestamps:
     - db/migrate/2016*.rb
     - db/migrate/2017*.rb
     - db/migrate/2018*.rb
+    - db/migrate/20200630140356_create_traitements.rb
 
 Rails/Date:
   Enabled: false

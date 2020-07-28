@@ -68,13 +68,20 @@
       .cta-panel-wrapper
         %div
           %h2.cta-panel-title Une question, un problème ?
-          %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
+          %p.cta-panel-explanation La réponse est dans l’aide en ligne
         %div
-          = contact_link "Contactez-nous",
-            tags: 'landing',
+          = link_to "Accéder à l’aide en ligne", FAQ_URL,
             class: "cta-panel-button-white",
             target: "_blank",
             rel: "noopener noreferrer"
+        -#   We temporarily disable the link to the contact page on the homepage
+        -#   %p.cta-panel-explanation Notre équipe est disponible pour vous renseigner et vous aider
+        -# %div
+        -#   = contact_link "Contactez-nous",
+        -#     tags: 'landing',
+        -#     class: "cta-panel-button-white",
+        -#     target: "_blank",
+        -#     rel: "noopener noreferrer"
 
   .landing-panel
     .container

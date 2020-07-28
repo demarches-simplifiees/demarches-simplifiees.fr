@@ -126,6 +126,12 @@ FactoryBot.define do
     end
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }
+
+      trait :with_types_de_champ do
+        after(:build) do |type_de_champ, _evaluator|
+          type_de_champ.types_de_champ << create(:type_de_champ, libelle: 'sub type de champ')
+        end
+      end
     end
 
     trait :private do

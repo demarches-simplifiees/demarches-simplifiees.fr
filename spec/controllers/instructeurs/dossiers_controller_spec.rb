@@ -194,7 +194,7 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#terminer' do
     context "with refuser" do
       before do
-        dossier.en_instruction!
+        dossier.passer_en_instruction!(instructeur)
         sign_in(instructeur.user)
       end
 
@@ -235,7 +235,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "with classer_sans_suite" do
       before do
-        dossier.en_instruction!
+        dossier.passer_en_instruction!(instructeur)
         sign_in(instructeur.user)
       end
       context 'without attachment' do
@@ -277,7 +277,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context "with accepter" do
       before do
-        dossier.en_instruction!
+        dossier.passer_en_instruction!(instructeur)
         sign_in(instructeur.user)
 
         expect(NotificationMailer).to receive(:send_closed_notification)
