@@ -387,14 +387,16 @@ describe Procedure do
       expect(subject.draft_revision.types_de_champ_private.size).to eq(procedure.draft_revision.types_de_champ_private.size)
 
       procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc)
+        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc.revision).to eq(subject.draft_revision)
       end
       procedure.types_de_champ.zip(procedure.draft_revision.types_de_champ).each do |ptc, rtc|
         expect(ptc).to eq(rtc)
       end
 
       subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
-        expect(stc).to have_same_attributes_as(ptc)
+        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc.revision).to eq(subject.draft_revision)
       end
       procedure.types_de_champ_private.zip(procedure.draft_revision.types_de_champ_private).each do |ptc, rtc|
         expect(ptc).to eq(rtc)
