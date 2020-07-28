@@ -13,6 +13,10 @@ module NewAdministrateur
       @terms_of_use_read = {}
     end
 
+    def show
+      @procedure = current_administrateur.procedures.find(params[:id])
+    end
+
     def edit
     end
 
