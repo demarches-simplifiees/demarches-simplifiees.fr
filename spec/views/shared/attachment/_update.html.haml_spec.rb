@@ -5,12 +5,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
 
   subject do
     form_for(champ.dossier) do |form|
-      render 'shared/attachment/edit', {
-        form: form,
-        attached_file: attached_file,
-        accept: 'image/png',
-        user_can_destroy: user_can_destroy
-      }
+      view.image_upload_and_render form, attached_file
     end
   end
 
