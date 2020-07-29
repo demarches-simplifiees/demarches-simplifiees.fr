@@ -88,4 +88,8 @@ Rails.application.configure do
   config.active_job.queue_adapter = ENV.fetch('RAILS_QUEUE_ADAPTER', 'async').to_sym
 
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  if ENV['IGN_CARTE_REFERER']
+    config.hosts << ENV['IGN_CARTE_REFERER']
+  end
 end
