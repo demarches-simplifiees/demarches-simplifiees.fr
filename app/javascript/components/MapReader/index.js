@@ -3,8 +3,7 @@ import ReactMapboxGl, { ZoomControl, GeoJSONLayer } from 'react-mapbox-gl';
 import mapboxgl, { Popup } from 'mapbox-gl';
 import PropTypes from 'prop-types';
 
-import SwitchMapStyle from './SwitchMapStyle';
-import { getMapStyle } from '../MapStyles';
+import { getMapStyle, SwitchMapStyle } from '../MapStyles';
 
 import {
   filterFeatureCollection,
@@ -52,10 +51,11 @@ const MapReader = ({ featureCollection }) => {
       ),
     [selectionsUtilisateurFeatureCollection]
   );
-  const mapStyle = useMemo(
-    () => getMapStyle(style, cadastresFeatureCollection.length),
-    [style, cadastresFeatureCollection]
-  );
+  const hasCadastres = !!cadastresFeatureCollection.length;
+  const mapStyle = useMemo(() => getMapStyle(style, hasCadastres), [
+    style,
+    cadastresFeatureCollection
+  ]);
   const popup = useMemo(
     () =>
       new Popup({
@@ -176,25 +176,15 @@ const MapReader = ({ featureCollection }) => {
         circleOnMouseEnter={onMouseEnter}
         circleOnMouseLeave={onMouseLeave}
       />
-      <GeoJSONLayer
-        data={cadastresFeatureCollection}
-        fillPaint={polygonCadastresFill}
-        linePaint={polygonCadastresLine}
-      />
+      {hasCadastres ? (
+        <GeoJSONLayer
+          data={cadastresFeatureCollection}
+          fillPaint={polygonCadastresFill}
+          linePaint={polygonCadastresLine}
+        />
+      ) : null}
 
-      <div
-        className="style-switch"
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0
-        }}
-        onClick={() =>
-          style === 'ortho' ? setStyle('vector') : setStyle('ortho')
-        }
-      >
-        <SwitchMapStyle isVector={style === 'vector' ? true : false} />
-      </div>
+      <SwitchMapStyle style={style} setStyle={setStyle} />
       <ZoomControl />
     </Map>
   );
