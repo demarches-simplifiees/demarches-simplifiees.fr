@@ -37,6 +37,7 @@ module Types
       argument :created_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers déposés depuis la date."
       argument :updated_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers mis à jour depuis la date."
       argument :state, Types::DossierType::DossierState, required: false, description: "Dossiers avec statut."
+      argument :archived, Boolean, required: false, description: "Si présent, permet de filtrer les dossiers archivés ou non"
     end
 
     field :champ_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ
@@ -54,11 +55,15 @@ module Types
       Loaders::Record.for(Service).load(object.service_id)
     end
 
-    def dossiers(updated_since: nil, created_since: nil, state: nil, order:)
+    def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, order:)
       dossiers = object.dossiers.state_not_brouillon.for_api_v2
 
       if state.present?
         dossiers = dossiers.where(state: state)
+      end
+
+      if !archived.nil?
+        dossiers = dossiers.where(archived: archived)
       end
 
       if updated_since.present?
