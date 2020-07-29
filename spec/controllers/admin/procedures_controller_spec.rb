@@ -41,23 +41,6 @@ describe Admin::ProceduresController, type: :controller do
     it { expect(response.status).to eq(200) }
   end
 
-  describe 'GET #index with sorting and pagination' do
-    before do
-      create(:procedure, administrateur: admin)
-      admin.reload
-    end
-
-    subject {
-      get :index, params: {
-        'procedures_smart_listing[page]': 1,
-        'procedures_smart_listing[per_page]': 10,
-        'procedures_smart_listing[sort][id]': 'asc'
-      }
-    }
-
-    it { expect(subject.status).to eq(200) }
-  end
-
   describe 'GET #archived' do
     subject { get :archived }
 
