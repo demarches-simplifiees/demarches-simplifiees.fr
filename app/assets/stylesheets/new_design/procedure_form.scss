@@ -51,6 +51,12 @@
   opacity: 0.5;
   margin-top: $default-spacer * 4;
   margin-bottom: $default-spacer * 8;
+
+  .notice {
+    color: $dark-grey;
+    font-size: 16px;
+    font-weight: normal;
+  }
 }
 
 .procedure-form__actions {
@@ -60,8 +66,18 @@
   padding: $default-spacer $default-padding;
   background: $light-grey;
   border-top: 1px solid $border-grey;
+  justify-content: space-between;
+  align-items: center;
 
   .button.send {
+    margin-left: auto;
+  }
+
+  .actions-left {
+    margin-right: auto;
+  }
+
+  .actions-right {
     margin-left: auto;
   }
 }
