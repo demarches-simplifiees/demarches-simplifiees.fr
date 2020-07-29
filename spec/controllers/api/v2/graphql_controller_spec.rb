@@ -12,7 +12,7 @@ describe API::V2::GraphqlController do
     dossier
   end
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
-  let(:dossier2) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 3.days.ago) }
+  let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
   let(:dossier_brouillon) { create(:dossier, :with_individual, procedure: procedure) }
   let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
@@ -169,6 +169,50 @@ describe API::V2::GraphqlController do
               nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }]
             }
           })
+        end
+      end
+
+      context "filter archived dossiers" do
+        let(:query) do
+          "{
+            demarche(number: #{procedure.id}) {
+              id
+              number
+              dossiers(archived: #{archived_filter}) {
+                nodes {
+                  id
+                }
+              }
+            }
+          }"
+        end
+
+        context 'with archived=true' do
+          let(:archived_filter) { 'true' }
+          it "only archived dossiers should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(demarche: {
+              id: procedure.to_typed_id,
+              number: procedure.id,
+              dossiers: {
+                nodes: [{ id: dossier2.to_typed_id }]
+              }
+            })
+          end
+        end
+
+        context 'with archived=false' do
+          let(:archived_filter) { 'false' }
+          it "only not archived dossiers should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(demarche: {
+              id: procedure.to_typed_id,
+              number: procedure.id,
+              dossiers: {
+                nodes: [{ id: dossier1.to_typed_id }, { id: dossier.to_typed_id }]
+              }
+            })
+          end
         end
       end
     end
