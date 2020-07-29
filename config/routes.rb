@@ -196,17 +196,6 @@ Rails.application.routes.draw do
       put 'publish' => 'procedures#publish', as: :publish
       post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
-
-      resource :attestation_template, only: [:edit, :update, :create]
-
-      post 'attestation_template/disactivate' => 'attestation_templates#disactivate'
-      patch 'attestation_template/disactivate' => 'attestation_templates#disactivate'
-
-      post 'attestation_template/preview' => 'attestation_templates#preview'
-      patch 'attestation_template/preview' => 'attestation_templates#preview'
-
-      delete 'attestation_template/logo' => 'attestation_templates#delete_logo'
-      delete 'attestation_template/signature' => 'attestation_templates#delete_signature'
     end
 
     namespace :assigns do
@@ -408,6 +397,12 @@ Rails.application.routes.draw do
       resources :mail_templates, only: [] do
         get 'preview', on: :member
       end
+
+      resource :attestation_template, only: [:edit, :update, :create] do
+        get 'preview', on: :member
+      end
+      # ADDED TO ACCESS IT FROM THE IFRAME
+      get 'attestation_template/preview' => 'attestation_templates#preview'
     end
 
     resources :services, except: [:show] do
