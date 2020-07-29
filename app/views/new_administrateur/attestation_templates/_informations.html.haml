@@ -1,0 +1,45 @@
+= f.label :title do
+  Titre de l'attestation
+  %span.mandatory *
+= f.text_field :title, class: 'form-control', placeholder: 'Titre de l‘attestation'
+
+= f.label :body do
+  Corps du document
+  %span.mandatory *
+= f.text_area :body, rows: '6', placeholder: 'Description de la démarche, destinataires, etc. ', class: 'form-control'
+
+#tags-table
+  %h2.add-tag-title
+    Insérer une balise
+  %p.notice
+    Copiez-collez les balises ci-dessous pour afficher automatiquement l’information souhaitée.
+  .head
+    .tag Balise
+    .description Description
+  .items
+    - @attestation_template.tags.each do |tag|
+      .item
+        %code.tag{ style: "white-space: pre-wrap;" }
+          = "--#{tag[:libelle]}--"
+        .description
+          = tag[:description]
+
+%h3.header-subsection Logo de l'attestation
+= image_upload_and_render f, @attestation_template.logo, false
+
+%p.notice
+  Formats acceptés : JPG / JPEG / PNG.
+  %br
+  Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
+
+%h3.header-subsection Tampon de l'attestation
+= image_upload_and_render f, @attestation_template.signature, false
+
+%p.notice
+  Formats acceptés : JPG / JPEG / PNG.
+  %br
+  Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
+
+= f.label :footer do
+  Pied de page
+= f.text_field :footer, class: 'form-control', maxlength: 190
