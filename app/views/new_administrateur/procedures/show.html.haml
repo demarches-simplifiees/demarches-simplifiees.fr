@@ -20,10 +20,10 @@
   - if !@procedure.publiee?
     = link_to 'Publier', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
-  - if @procedure.locked?
-    = link_to admin_procedure_archive_path(procedure_id: @procedure.id), method: :put, class: 'button', data: { confirm:  "Voulez-vous vraiment archiver la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
+  - if @procedure.locked? && !@procedure.close?
+    = link_to admin_procedure_archive_path(procedure_id: @procedure.id), method: :put, class: 'button', data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
       %span.icon.archive
-      Archiver
+      Clore
 
 .container
   %h2.procedure-admin-explanation Indispensable avant publication
