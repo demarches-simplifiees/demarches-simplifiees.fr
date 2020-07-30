@@ -44,27 +44,28 @@
                     %span.icon.in-progress
                     .dropdown-description
                       %h4 Tester
+
+              %li
+                = link_to admin_procedure_clone_path(procedure.id), class: 'clone-btn', data: { method: :put } do
+                  %span.icon.new-folder
+                  .dropdown-description
+                    %h4 Cloner
+
+              - if procedure.publiee?
                 %li
-                  = link_to admin_procedure_clone_path(procedure.id), class: 'clone-btn', data: { method: :put } do
-                    %span.icon.new-folder
+                  = link_to admin_procedure_archive_path(procedure_id: procedure.id), method: :put, data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
+                    %span.icon.archive
                     .dropdown-description
-                      %h4 Cloner
+                      %h4 Clore
 
-                - if procedure.publiee?
-                  %li
-                    = link_to admin_procedure_archive_path(procedure_id: procedure.id), method: :put, data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
-                      %span.icon.archive
-                      .dropdown-description
-                        %h4 Clore
+              - if procedure.brouillon?
+                %li
+                  = link_to admin_procedure_path(procedure), method: :delete, data: { confirm:  "Voulez-vous vraiment supprimer la démarche ? \nToute suppression est définitive et s'appliquera aux éventuels autres administrateurs de cette démarche !" } do
+                    %span.icon.refuse
+                    .dropdown-description
+                      %h4 Supprimer
 
-                - if procedure.brouillon?
-                  %li
-                    = link_to admin_procedure_path(procedure), method: :delete, data: { confirm:  "Voulez-vous vraiment supprimer la démarche ? \nToute suppression est définitive et s'appliquera aux éventuels autres administrateurs de cette démarche !" } do
-                      %span.icon.refuse
-                      .dropdown-description
-                        %h4 Supprimer
-
-              - else
+              - if procedure.close?
                 %li
                   = link_to admin_procedure_publication_path(procedure) do
                     %span.icon.unarchive

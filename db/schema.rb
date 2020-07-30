@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_143010) do
+ActiveRecord::Schema.define(version: 2020_07_22_135121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,6 +258,10 @@ ActiveRecord::Schema.define(version: 2020_07_15_143010) do
     t.interval "en_construction_conservation_extension", default: "PT0S"
     t.datetime "termine_close_to_expiration_notice_sent_at"
     t.bigint "revision_id"
+    t.datetime "last_champ_updated_at"
+    t.datetime "last_champ_private_updated_at"
+    t.datetime "last_avis_updated_at"
+    t.datetime "last_commentaire_updated_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"
