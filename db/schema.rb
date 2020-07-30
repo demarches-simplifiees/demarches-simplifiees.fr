@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_143010) do
+ActiveRecord::Schema.define(version: 2020_07_22_135121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -260,6 +260,10 @@ ActiveRecord::Schema.define(version: 2020_07_15_143010) do
     t.bigint "revision_id"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
+    t.datetime "last_champ_updated_at"
+    t.datetime "last_champ_private_updated_at"
+    t.datetime "last_avis_updated_at"
+    t.datetime "last_commentaire_updated_at"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
