@@ -23,7 +23,7 @@ import {
 
 const Map = ReactMapboxGl({});
 
-function MapEditor({ featureCollection, url, preview, hasCadastres }) {
+function MapEditor({ featureCollection, url, preview, hasCadastres, ign }) {
   const drawControl = useRef(null);
   const [currentMap, setCurrentMap] = useState(null);
 
@@ -313,7 +313,7 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
             trash: true
           }}
         />
-        <SwitchMapStyle style={style} setStyle={setStyle} />
+        <SwitchMapStyle style={style} setStyle={setStyle} ign={ign} />
         <ZoomControl />
       </Map>
     </>
@@ -328,7 +328,8 @@ MapEditor.propTypes = {
   }),
   url: PropTypes.string,
   preview: PropTypes.bool,
-  hasCadastres: PropTypes.bool
+  hasCadastres: PropTypes.bool,
+  ign: PropTypes.bool
 };
 
 export default MapEditor;

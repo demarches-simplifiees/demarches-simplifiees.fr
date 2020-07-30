@@ -13,7 +13,11 @@ const STYLES = {
     title: 'Vectoriel',
     preview: vector,
     color: '#000'
-  },
+  }
+};
+
+const IGN_STYLES = {
+  ...STYLES,
   ign: {
     title: 'Carte IGN',
     preview: vector,
@@ -21,8 +25,8 @@ const STYLES = {
   }
 };
 
-function getNextStyle(style) {
-  const styles = Object.keys(STYLES);
+function getNextStyle(style, ign) {
+  const styles = Object.keys(ign ? IGN_STYLES : STYLES);
   let index = styles.indexOf(style) + 1;
   if (index === styles.length) {
     return styles[0];
@@ -30,9 +34,9 @@ function getNextStyle(style) {
   return styles[index];
 }
 
-export const SwitchMapStyle = ({ style, setStyle }) => {
-  const nextStyle = getNextStyle(style);
-  const { title, preview, color } = STYLES[nextStyle];
+export const SwitchMapStyle = ({ style, setStyle, ign }) => {
+  const nextStyle = getNextStyle(style, ign);
+  const { title, preview, color } = (ign ? IGN_STYLES : STYLES)[nextStyle];
 
   const imgStyle = {
     width: '100%',
@@ -69,5 +73,6 @@ export const SwitchMapStyle = ({ style, setStyle }) => {
 
 SwitchMapStyle.propTypes = {
   style: PropTypes.string,
-  setStyle: PropTypes.func
+  setStyle: PropTypes.func,
+  ign: PropTypes.bool
 };
