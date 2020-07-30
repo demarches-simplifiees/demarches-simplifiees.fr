@@ -263,11 +263,19 @@ describe Instructeur, type: :model do
 
     let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let!(:instructeur_on_procedure_2) { dossier_on_procedure_2.follows.first.instructeur }
+    let(:now) { Time.zone.parse("14/09/1867") }
+    let(:follow) { instructeur.follows.find_by(dossier: dossier) }
+    let(:follow2) { instructeur_2.follows.find_by(dossier: dossier) }
+    let(:seen_at_instructeur) { now - 1.hour }
+    let(:seen_at_instructeur2) { now - 1.hour }
 
     before do
       procedure.groupe_instructeurs.last.instructeurs << instructeur
       instructeur_2.followed_dossiers << dossier
+      Timecop.freeze(now)
     end
+
+    after { Timecop.return }
 
     subject { instructeur.notifications_for_procedure(procedure, :en_cours) }
 
@@ -276,7 +284,11 @@ describe Instructeur, type: :model do
     end
 
     context 'when there is a modification on public champs' do
-      before { dossier.champs.first.update_attribute('value', 'toto') }
+      before do
+        dossier.update!(last_champ_updated_at: now)
+        follow.update_attribute('demande_seen_at', seen_at_instructeur)
+        follow2.update_attribute('demande_seen_at', seen_at_instructeur2)
+      end
 
       it { is_expected.to match([dossier]) }
       it { expect(instructeur_2.notifications_for_procedure(procedure, :en_cours)).to match([dossier]) }
@@ -289,9 +301,8 @@ describe Instructeur, type: :model do
       end
 
       context 'when instructeur update it s public champs last seen' do
-        let(:follow) { instructeur.follows.find_by(dossier: dossier) }
-
-        before { follow.update_attribute('demande_seen_at', Time.zone.now) }
+        let(:seen_at_instructeur) { now + 1.hour }
+        let(:seen_at_instructeur2) { now - 1.hour }
 
         it { is_expected.to match([]) }
         it { expect(instructeur_2.notifications_for_procedure(procedure, :en_cours)).to match([dossier]) }
@@ -305,20 +316,29 @@ describe Instructeur, type: :model do
     end
 
     context 'when there is a modification on private champs' do
-      before { dossier.champs_private.first.update_attribute('value', 'toto') }
+      before do
+        dossier.update!(last_champ_private_updated_at: now)
+        follow.update_attribute('annotations_privees_seen_at', seen_at_instructeur)
+      end
 
       it { is_expected.to match([dossier]) }
     end
 
     context 'when there is a modification on avis' do
-      before { create(:avis, dossier: dossier) }
+      before do
+        dossier.update!(last_avis_updated_at: Time.zone.now)
+        follow.update_attribute('avis_seen_at', seen_at_instructeur)
+      end
 
       it { is_expected.to match([dossier]) }
     end
 
     context 'the messagerie' do
       context 'when there is a new commentaire' do
-        before { create(:commentaire, dossier: dossier, email: 'a@b.com') }
+        before do
+          dossier.update!(last_commentaire_updated_at: Time.zone.now)
+          follow.update_attribute('messagerie_seen_at', seen_at_instructeur)
+        end
 
         it { is_expected.to match([dossier]) }
       end
@@ -339,7 +359,7 @@ describe Instructeur, type: :model do
     subject { instructeur.procedures_with_notifications(:en_cours) }
 
     context 'when there is a modification on public champs' do
-      before { dossier.champs.first.update_attribute('value', 'toto') }
+      before { dossier.update!(last_champ_updated_at: Time.zone.now) }
 
       it { is_expected.to match([procedure]) }
     end
