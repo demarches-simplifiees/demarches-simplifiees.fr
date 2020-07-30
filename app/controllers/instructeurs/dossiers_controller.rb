@@ -169,6 +169,7 @@ module Instructeurs
       @commentaire = CommentaireService.build(current_instructeur, dossier, commentaire_params)
 
       if @commentaire.save
+        @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
         current_instructeur.follow(dossier)
         flash.notice = "Message envoyé"
         redirect_to messagerie_instructeur_dossier_path(procedure, dossier)
@@ -191,8 +192,12 @@ module Instructeurs
 
     def update_annotations
       dossier = current_instructeur.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
-      dossier.update(champs_private_params)
-      dossier.modifier_annotations!(current_instructeur)
+      dossier.assign_attributes(champs_private_params)
+      if dossier.champs_private.any?(&:changed?)
+        dossier.last_champ_private_updated_at = Time.zone.now
+      end
+      dossier.save
+      dossier.log_modifier_annotations!(current_instructeur)
       redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier)
     end
 

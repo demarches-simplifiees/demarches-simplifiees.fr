@@ -33,7 +33,8 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         expect(page).to have_selector('#new-procedure')
         find('#new-procedure').click
 
-        expect(page).to have_current_path(new_admin_procedure_path)
+        expect(page).to have_current_path(new_from_existing_admin_procedures_path)
+        click_on 'Créer une nouvelle démarche de zéro'
         expect(find('#procedure_for_individual_true')).to be_checked
         expect(find('#procedure_for_individual_false')).not_to be_checked
         fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
@@ -54,7 +55,8 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       expect(page).to have_selector('#new-procedure')
       find('#new-procedure').click
 
-      expect(page).to have_current_path(new_admin_procedure_path)
+      expect(page).to have_current_path(new_from_existing_admin_procedures_path)
+      click_on 'Créer une nouvelle démarche de zéro'
       fill_in_dummy_procedure_details
       click_on 'Créer la démarche'
 
