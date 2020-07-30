@@ -112,9 +112,29 @@ describe Dossier do
     end
 
     context('with changes') do
-      before { dossier.commentaires << create(:commentaire, email: 'test@exemple.fr') }
+      context 'when there is a new commentaire' do
+        before { dossier.update!(last_commentaire_updated_at: Time.zone.now) }
 
-      it { is_expected.to match([dossier]) }
+        it { is_expected.to match([dossier]) }
+      end
+
+      context 'when there is a new avis' do
+        before { dossier.update!(last_avis_updated_at: Time.zone.now) }
+
+        it { is_expected.to match([dossier]) }
+      end
+
+      context 'when a public champ is updated' do
+        before { dossier.update!(last_champ_updated_at: Time.zone.now) }
+
+        it { is_expected.to match([dossier]) }
+      end
+
+      context 'when a private champ is updated' do
+        before { dossier.update!(last_champ_private_updated_at: Time.zone.now) }
+
+        it { is_expected.to match([dossier]) }
+      end
     end
   end
 

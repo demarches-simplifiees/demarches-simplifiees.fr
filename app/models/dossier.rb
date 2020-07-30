@@ -289,30 +289,13 @@ class Dossier < ApplicationRecord
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: [], traitements: []) }
 
   scope :with_notifications, -> do
-    # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
-    # it will fail otherwise
-    # rubocop:disable DS/ApplicationName
-    joined_dossiers = joins('LEFT OUTER JOIN "champs" ON "champs" . "dossier_id" = "dossiers" . "id" AND "champs" . "parent_id" IS NULL AND "champs" . "private" = FALSE AND "champs"."updated_at" > "follows"."demande_seen_at"')
-      .joins('LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON "champs_privates_dossiers" . "dossier_id" = "dossiers" . "id" AND "champs_privates_dossiers" . "parent_id" IS NULL AND "champs_privates_dossiers" . "private" = TRUE AND "champs_privates_dossiers"."updated_at" > "follows"."annotations_privees_seen_at"')
-      .joins('LEFT OUTER JOIN "avis" ON "avis" . "dossier_id" = "dossiers" . "id" AND avis.updated_at > follows.avis_seen_at')
-      .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'contact@demarches-simplifiees.fr\'')
-    # rubocop:enable DS/ApplicationName
-
-    updated_demandes = joined_dossiers
-      .where('champs.updated_at > follows.demande_seen_at OR groupe_instructeur_updated_at > follows.demande_seen_at')
-
-    updated_annotations = joined_dossiers
-      .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
-
-    updated_avis = joined_dossiers
-      .where('avis.updated_at > follows.avis_seen_at')
-
-    updated_messagerie = joined_dossiers
-      .where('commentaires.updated_at > follows.messagerie_seen_at')
-      .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
-      .where.not(commentaires: { email: CONTACT_EMAIL })
-
-    updated_demandes.or(updated_annotations).or(updated_avis).or(updated_messagerie).distinct
+    joins(:follows)
+      .where('last_champ_updated_at > follows.demande_seen_at' \
+      ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
+      ' OR last_champ_private_updated_at > follows.annotations_privees_seen_at' \
+      ' OR last_avis_updated_at > follows.avis_seen_at' \
+      ' OR last_commentaire_updated_at > follows.messagerie_seen_at')
+      .distinct
   end
 
   accepts_nested_attributes_for :individual
