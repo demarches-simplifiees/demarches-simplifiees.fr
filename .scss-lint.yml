@@ -132,7 +132,8 @@ linters:
 
   PropertySpelling:
     enabled: true
-    extra_properties: []
+    extra_properties:
+      - scroll-padding
     disabled_properties: []
 
   # To enable later
