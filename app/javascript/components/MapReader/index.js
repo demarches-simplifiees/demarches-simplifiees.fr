@@ -16,7 +16,7 @@ import {
 
 const Map = ReactMapboxGl({});
 
-const MapReader = ({ featureCollection }) => {
+const MapReader = ({ featureCollection, ign }) => {
   const [currentMap, setCurrentMap] = useState(null);
   const [style, setStyle] = useState('ortho');
   const cadastresFeatureCollection = useMemo(
@@ -184,7 +184,7 @@ const MapReader = ({ featureCollection }) => {
         />
       ) : null}
 
-      <SwitchMapStyle style={style} setStyle={setStyle} />
+      <SwitchMapStyle style={style} setStyle={setStyle} ign={ign} />
       <ZoomControl />
     </Map>
   );
@@ -195,7 +195,8 @@ MapReader.propTypes = {
     type: PropTypes.string,
     bbox: PropTypes.array,
     features: PropTypes.array
-  })
+  }),
+  ign: PropTypes.bool
 };
 
 export default MapReader;
