@@ -43,13 +43,51 @@ info = {
   :CreationDate => created_at
 }
 
+def print_text(pdf, text, size)
+  pdf.text text, size: size, character_spacing: -0.2, align: :justify, inline_format: true
+end
+
+def print_image(pdf, c)
+  attachment = ActiveStorage::Attachment.find_by_id(c.attributes['id'].to_s)
+  attachment.blob.open { |file| pdf.image file, width: 100, height: 100, position: :center }
+  url = c.attributes['src']
+  display = c.attributes['display']
+  text = content_tag :a, display, { href: url, target: '_blank', rel: 'noopener' }
+  pdf.pad_top(5) { pdf.text text, size: 8, color: '000055', align: :center, inline_format: true }
+end
+
+def print_table(pdf, c)
+  table = c.children.filter('tr').map { |line| line.children.filter('td').map { |cell| cell.children.to_s } }
+  pdf.table table, position: :center, row_colors: ["F0EFEF", "FFFFFF"] do
+    row(0).font_style = :bold
+  end
+end
+
+def print(pdf, text, size:)
+  fragment = Nokogiri::HTML.fragment(text).children.reduce('') do |fragment, c|
+    case (c.name)
+    when 'img'
+      print_text pdf, fragment, size
+      print_image(pdf, c)
+      ''
+    when 'table'
+      print_text pdf, fragment, size
+      print_table(pdf, c)
+      ''
+    else
+      fragment + c.to_s
+    end
+  end
+  print_text pdf, fragment, size
+end
+
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size, info: info) do |pdf|
   base = 'lib/prawn/fonts/liberation_serif'
   pdf.font_families.update('liberation serif' => {
-    normal: Rails.root.join(base,'LiberationSerif-Regular.ttf'),
-    bold: Rails.root.join(base,'LiberationSerif-Bold.ttf'),
-    bold_italic: Rails.root.join(base,'LiberationSerif-BoldItalic.ttf'),
-    italic: Rails.root.join(base,'LiberationSerif-Italic.ttf')
+    normal: Rails.root.join(base, 'LiberationSerif-Regular.ttf'),
+    bold: Rails.root.join(base, 'LiberationSerif-Bold.ttf'),
+    bold_italic: Rails.root.join(base, 'LiberationSerif-BoldItalic.ttf'),
+    italic: Rails.root.join(base, 'LiberationSerif-Italic.ttf')
   })
   pdf.font 'liberation serif'
 
@@ -61,31 +99,33 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   pdf.bounding_box([0, pdf.cursor], width: body_width, height: body_height) do
     if logo.present?
       logo_content = if logo.is_a?(ActiveStorage::Attached::One)
-        logo.download
-      else
-        logo.rewind && logo.read
-      end
-      pdf.image StringIO.new(logo_content), fit: [max_logo_width , max_logo_height], position: :center
+                       logo.download
+                     else
+                       logo.rewind && logo.read
+                     end
+      pdf.image StringIO.new(logo_content), fit: [max_logo_width, max_logo_height], position: :center
     end
 
     pdf.fill_color grey
     pdf.pad_top(40) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 12, align: :right, character_spacing: -0.5 }
 
     pdf.fill_color black
-    pdf.pad_top(40) { pdf.text title, size: 20, inline_format: true }
+    pdf.pad_top(40) { pdf.text title, character_spacing: -0.2, align: :center, inline_format: true, size: 20 }
 
     pdf.fill_color grey
-    pdf.pad_top(30) { pdf.text body, size: 12, character_spacing: -0.2, align: :justify, inline_format: true }
+    pdf.pad_top(30) do
+      print pdf, body, size: 12
+    end
 
     cpos = pdf.cursor - 40
     if signature.present?
       pdf.pad_top(40) do
         signature_content = if signature.is_a?(ActiveStorage::Attached::One)
-          signature.download
-        else
-          signature.rewind && signature.read
-        end
-        pdf.image StringIO.new(signature_content), fit: [max_signature_size , max_signature_size], position: :right
+                              signature.download
+                            else
+                              signature.rewind && signature.read
+                            end
+        pdf.image StringIO.new(signature_content), fit: [max_signature_size, max_signature_size], position: :right
       end
     end
   end
