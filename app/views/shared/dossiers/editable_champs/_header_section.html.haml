@@ -3,6 +3,6 @@
 - level = 3 if level > 3
 - haml_tag "h" + (1+level).to_s, {class: 'header-section'} do
   - libelle_starts_with_number = (champ.libelle =~ /^\d/)
-  - if !libelle_starts_with_number && level == 1
+  - if !libelle_starts_with_number
     = "#{champ.section_index}."
   = champ.libelle
