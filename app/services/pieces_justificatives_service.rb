@@ -12,6 +12,12 @@ class PiecesJustificativesService
       .sum(&:byte_size)
   end
 
+  def self.zip_entries(dossier)
+    entries = champs_zip_entries(dossier) + commentaires_zip_entries(dossier)
+    index = {}
+    entries.map { |pair| [pair[0], sanitize(index, pair[1])] }
+  end
+
   def self.serialize_types_de_champ_as_type_pj(procedure)
     tdcs = procedure.types_de_champ.filter { |type_champ| type_champ.old_pj.present? }
     tdcs.map.with_index do |type_champ, order_place|
@@ -43,6 +49,16 @@ class PiecesJustificativesService
   private
 
   def self.pjs_for_champs(dossier)
+    pjs_champs(dossier).map(&:piece_justificative_file)
+  end
+
+  def self.pjs_for_commentaires(dossier)
+    dossier
+      .commentaires
+      .map(&:piece_jointe)
+  end
+
+  def self.pjs_champs(dossier)
     allowed_champs = dossier.champs + dossier.champs_private
 
     allowed_child_champs = allowed_champs
@@ -51,12 +67,36 @@ class PiecesJustificativesService
 
     (allowed_champs + allowed_child_champs)
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
-      .map(&:piece_justificative_file)
   end
 
-  def self.pjs_for_commentaires(dossier)
+  def self.champs_zip_entries(dossier)
+    pjs_champs(dossier).map { |c| [c.piece_justificative_file, pieces_justificative_filename(c)] }
+  end
+
+  def self.pieces_justificative_filename(c)
+    if c.type_de_champ.parent
+      "#{c.type_de_champ.parent.libelle}-#{c.type_de_champ.libelle}-#{c.piece_justificative_file.filename}"
+    else
+      "#{c.type_de_champ.libelle}-#{c.piece_justificative_file.filename}"
+    end
+  end
+
+  def self.commentaires_zip_entries(dossier)
     dossier
       .commentaires
-      .map(&:piece_jointe)
+      .filter { |c| c.piece_jointe.attached? }
+      .map { |c| [c.piece_jointe, "Message-#{c.piece_jointe.filename}"] }
+  end
+
+  def self.sanitize(index, filename)
+    filename = ActiveStorage::Filename.new(filename).sanitized
+    i = index[filename]
+    if i.present?
+      i = (index[filename] += 1)
+      filename.sub(/(\.[^.]+)?$/, "-#{i}\\1")
+    else
+      index[filename] = 1
+      filename
+    end
   end
 end
