@@ -1,11 +1,44 @@
-import ortho from './ortho.json';
-import orthoCadastre from './orthoCadastre.json';
-import vector from './vector.json';
-import vectorCadastre from './vectorCadastre.json';
+import baseStyle from './base-style';
+import cadastre from './cadastre';
+import orthoStyle from './ortho-style';
+import vectorStyle from './vector-style';
+
+const ignStyle = [
+  {
+    id: 'carte-ign',
+    type: 'raster',
+    source: 'carte-ign',
+    paint: { 'raster-resampling': 'linear' }
+  }
+];
 
 export function getMapStyle(style, hasCadastres) {
-  if (hasCadastres) {
-    return style === 'ortho' ? orthoCadastre : vectorCadastre;
+  const mapStyle = { ...baseStyle };
+
+  switch (style) {
+    case 'ortho':
+      mapStyle.layers = orthoStyle;
+      mapStyle.id = 'ortho';
+      mapStyle.name = 'Photographies aériennes';
+      break;
+    case 'vector':
+      mapStyle.layers = vectorStyle;
+      mapStyle.id = 'vector';
+      mapStyle.name = 'Carte OSM';
+      break;
+    case 'ign':
+      mapStyle.layers = ignStyle;
+      mapStyle.id = 'ign';
+      mapStyle.name = 'Carte IGN';
+      break;
   }
-  return style === 'ortho' ? ortho : vector;
+
+  if (hasCadastres) {
+    mapStyle.layers = mapStyle.layers.concat(cadastre);
+    mapStyle.id += '-cadastre';
+  }
+
+  return mapStyle;
 }
+
+export { SwitchMapStyle } from './SwitchMapStyle';

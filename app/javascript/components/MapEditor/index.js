@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import ReactMapboxGl, { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
@@ -8,8 +8,7 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 import { getJSON, ajax, fire } from '@utils';
 
-import SwitchMapStyle from './SwitchMapStyle';
-import { getMapStyle } from '../MapStyles';
+import { getMapStyle, SwitchMapStyle } from '../MapStyles';
 
 import SearchInput from './SearchInput';
 import { polygonCadastresFill, polygonCadastresLine } from './utils';
@@ -24,7 +23,7 @@ import {
 
 const Map = ReactMapboxGl({});
 
-function MapEditor({ featureCollection, url, preview, hasCadastres }) {
+function MapEditor({ featureCollection, url, preview, hasCadastres, ign }) {
   const drawControl = useRef(null);
   const [currentMap, setCurrentMap] = useState(null);
 
@@ -36,7 +35,10 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
   const [cadastresFeatureCollection, setCadastresFeatureCollection] = useState(
     filterFeatureCollection(featureCollection, 'cadastre')
   );
-  const mapStyle = getMapStyle(style, hasCadastres);
+  const mapStyle = useMemo(() => getMapStyle(style, hasCadastres), [
+    style,
+    hasCadastres
+  ]);
 
   const onFeatureFocus = useCallback(
     ({ detail }) => {
@@ -291,12 +293,13 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
           height: '500px'
         }}
       >
-        <GeoJSONLayer
-          id="cadastres-layer"
-          data={cadastresFeatureCollection}
-          fillPaint={polygonCadastresFill}
-          linePaint={polygonCadastresLine}
-        />
+        {hasCadastres ? (
+          <GeoJSONLayer
+            data={cadastresFeatureCollection}
+            fillPaint={polygonCadastresFill}
+            linePaint={polygonCadastresLine}
+          />
+        ) : null}
         <DrawControl
           ref={drawControl}
           onDrawCreate={preview ? noop : onDrawCreate}
@@ -310,19 +313,7 @@ function MapEditor({ featureCollection, url, preview, hasCadastres }) {
             trash: true
           }}
         />
-        <div
-          className="style-switch"
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0
-          }}
-          onClick={() =>
-            style === 'ortho' ? setStyle('vector') : setStyle('ortho')
-          }
-        >
-          <SwitchMapStyle isVector={style === 'vector' ? true : false} />
-        </div>
+        <SwitchMapStyle style={style} setStyle={setStyle} ign={ign} />
         <ZoomControl />
       </Map>
     </>
@@ -337,7 +328,8 @@ MapEditor.propTypes = {
   }),
   url: PropTypes.string,
   preview: PropTypes.bool,
-  hasCadastres: PropTypes.bool
+  hasCadastres: PropTypes.bool,
+  ign: PropTypes.bool
 };
 
 export default MapEditor;

@@ -3,7 +3,7 @@
 @import "constants";
 
 .two-columns {
-  background-color: #FFFFFF;
+  background-color: $white;
 
   @media (min-width: $two-columns-breakpoint) {
     background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
