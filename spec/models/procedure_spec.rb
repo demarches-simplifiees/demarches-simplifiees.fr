@@ -415,8 +415,8 @@ describe Procedure do
 
       expect(subject.types_de_champ.size).to eq(procedure.types_de_champ.size)
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
-      expect(subject.types_de_champ.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ.map(&:drop_down_list).compact.size
-      expect(subject.types_de_champ_private.map(&:drop_down_list).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_list).compact.size
+      expect(subject.types_de_champ.map(&:drop_down_options).compact.size).to eq procedure.types_de_champ.map(&:drop_down_options).compact.size
+      expect(subject.types_de_champ_private.map(&:drop_down_options).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_options).compact.size
 
       procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)

@@ -132,18 +132,20 @@ class Dossier < ApplicationRecord
         :traitements,
         etablissement: :champ,
         champs: {
+          type_de_champ: [],
           etablissement: :champ,
-          type_de_champ: :drop_down_list,
           piece_justificative_file_attachment: :blob,
           champs: [
+            type_de_champ: [],
             piece_justificative_file_attachment: :blob
           ]
         },
         champs_private: {
+          type_de_champ: [],
           etablissement: :champ,
-          type_de_champ: :drop_down_list,
           piece_justificative_file_attachment: :blob,
           champs: [
+            type_de_champ: [],
             piece_justificative_file_attachment: :blob
           ]
         },

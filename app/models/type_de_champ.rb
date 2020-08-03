@@ -76,11 +76,9 @@ class TypeDeChamp < ApplicationRecord
       super(params.merge(proxy_association.owner.params_for_champ))
     end
   end
-  has_one :drop_down_list
 
   has_one_attached :piece_justificative_template
 
-  accepts_nested_attributes_for :drop_down_list, update_only: true
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
@@ -218,7 +216,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def drop_down_list_options
-    drop_down_options.presence || drop_down_list&.options || []
+    drop_down_options.presence || []
   end
 
   def drop_down_list_disabled_options
@@ -281,9 +279,8 @@ class TypeDeChamp < ApplicationRecord
     .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
 
   def self.as_json_for_editor
-    includes(:drop_down_list,
-      piece_justificative_template_attachment: :blob,
-      types_de_champ: [:drop_down_list, piece_justificative_template_attachment: :blob])
+    includes(piece_justificative_template_attachment: :blob,
+      types_de_champ: [piece_justificative_template_attachment: :blob])
       .as_json(TYPES_DE_CHAMP)
   end
 
@@ -315,7 +312,6 @@ class TypeDeChamp < ApplicationRecord
 
   def remove_drop_down_list
     if !drop_down_list?
-      self.drop_down_list = nil
       self.drop_down_options = nil
     end
   end
