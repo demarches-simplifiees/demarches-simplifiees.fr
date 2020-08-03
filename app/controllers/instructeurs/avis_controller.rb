@@ -123,6 +123,20 @@ module Instructeurs
       end
     end
 
+    def revive
+      avis = Avis.find(params[:id])
+      if avis.revivable_by?(current_instructeur)
+        if avis.answer.blank?
+          AvisMailer.avis_invitation(avis).deliver_later
+          flash.notice = "Un mail de relance a été envoyé à #{avis.email_to_display}"
+          redirect_back(fallback_location: avis_instructeur_dossier_path(avis.procedure, avis.dossier))
+        else
+          flash.alert = "#{avis.email} a déjà donné son avis"
+          redirect_back(fallback_location: avis_instructeur_dossier_path(avis.procedure, avis.dossier))
+        end
+      end
+    end
+
     private
 
     def set_avis_and_dossier
