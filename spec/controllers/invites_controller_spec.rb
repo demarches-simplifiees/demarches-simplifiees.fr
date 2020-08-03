@@ -249,4 +249,30 @@ describe InvitesController, type: :controller do
       end
     end
   end
+
+  describe '#DELETE destroy' do
+    let!(:invite) { create :invite, email: email, dossier: dossier }
+    let(:signed_in_profile) { dossier.user }
+
+    before do
+      sign_in signed_in_profile
+    end
+
+    subject { delete :destroy, params: { id: invite.id } }
+
+    context 'when user is signed in' do
+      it "destroy invites" do
+        expect { subject }.to change { Invite.count }.from(1).to(0)
+      end
+    end
+
+    context 'when dossier does not belong to user' do
+      let(:another_user) { create(:user) }
+
+      it 'does not destroy invite' do
+        sign_in another_user
+        expect { subject }.not_to change { Invite.count }
+      end
+    end
+  end
 end

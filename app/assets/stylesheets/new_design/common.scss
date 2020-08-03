@@ -59,6 +59,10 @@ sup {
   font-size: 0.83em;
 }
 
+small {
+  font-size: small;
+}
+
 .container {
   @include horizontal-padding($default-padding);
   max-width: 90%;

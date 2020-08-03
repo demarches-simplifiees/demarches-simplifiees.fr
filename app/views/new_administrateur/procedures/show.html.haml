@@ -1,0 +1,136 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    "#{@procedure.libelle} (crée le #{@procedure.created_at.strftime('%d/%m/%Y')})"] }
+
+.container{ style: "text-align:right; margin-bottom: 20px" }
+  = button_to 'Publier la démarche', admin_procedure_publication_path(@procedure), method: :get, class: 'button primary',id: 'publish-procedure-link', disabled: @procedure.publiee? ? true : false
+
+.container
+  %h2.explication-libelle{ style: "font-weight: bold; font-size: 20px; margin-bottom: 20px;" } Indispensable avant publication
+  .procedure-grid
+    .card-admin
+      %div
+        %span.icon.accept
+        %p.card-admin-status-accept Validé
+      %div
+        %p.card-admin-title Présentation
+        %p.card-admin-subtitle Logo, nom, description
+      .card-admin-action
+        = button_to 'Modifier', edit_admin_procedure_path(@procedure), method: :get, class: 'card-admin-action-btn', id: "presentation"
+
+    - if !@procedure.locked?
+      .card-admin
+        %div
+          %span.icon.clock
+          %p.card-admin-status-todo À faire
+        %div
+          %p.card-admin-title Formulaire
+          %p.card-admin-subtitle Champs à remplir par les usagers
+        .card-admin-action
+          = button_to 'Modifier', champs_admin_procedure_path(@procedure), method: :get, class: 'card-admin-action-btn'
+
+    .card-admin
+      - if @procedure.service_id.present?
+        %div
+          %span.icon.accept
+          %p.card-admin-status-accept Validé
+      - else
+        %div
+          %span.icon.clock
+          %p.card-admin-status-todo À faire
+      %div
+        %p.card-admin-title Service
+        %p.card-admin-subtitle Choix du service de la démarche
+      .card-admin-action
+        = button_to 'Modifier', new_admin_service_path, params: { procedure_id: @procedure.id }, method: :get, class: 'card-admin-action-btn'
+
+    .card-admin
+      %div
+        %span.icon.accept
+        %p.card-admin-status-accept Validé
+      %div
+        %p.card-admin-title
+          Administrateurs
+          %span.badge.baseline
+            = @procedure.administrateurs.count
+        %p.card-admin-subtitle Gestion de la démarche
+      .card-admin-action
+        = button_to 'Modifier', admin_procedure_administrateurs_path(@procedure), method: :get, class: 'card-admin-action-btn', id: "administrateurs"
+
+    .card-admin
+      - if @procedure.instructeurs.count > 1
+        %div
+          %span.icon.accept
+          %p.card-admin-status-accept Validé
+      - else
+        %div
+          %span.icon.clock
+          %p.card-admin-status-todo À faire
+      %div
+        %p.card-admin-title
+          = feature_enabled?(:administrateur_routage) ? "Groupe Instructeurs" : "Instructeurs"
+          %span.badge.baseline
+            = @procedure.instructeurs.count
+        %p.card-admin-subtitle Suivi des dossiers
+      .card-admin-action
+        - if feature_enabled?(:administrateur_routage)
+          = button_to 'Modifier', admin_procedure_groupe_instructeurs_path(@procedure), method: :get, class: 'card-admin-action-btn', id: "groupe-instructeurs"
+        - else
+          = button_to 'Modifier', admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur), method: :get, class: 'card-admin-action-btn', id: "instructeurs"
+
+  %h2.explication-libelle{ style: "font-weight: bold; font-size: 20px; margin-bottom: 20px;" } Pour aller plus loin
+  .procedure-grid
+    .card-admin
+      - if @procedure.attestation_template.present?
+        %div
+          %span.icon.accept
+          %p.card-admin-status-accept Activée
+      - else
+        %div
+          %span.icon.clock
+          %p.card-admin-status-todo À activer
+      %div
+        %p.card-admin-title Attestation
+        %p.card-admin-subtitle Délivrance automatique pour les dossiers acceptés
+      .card-admin-action
+        = button_to 'Modifier', edit_admin_procedure_attestation_template_path(@procedure), method: :get, class: 'card-admin-action-btn'
+
+    .card-admin
+      %div
+        %span.icon.clock
+        %p.card-admin-status-todo À configurer
+      %div
+        %p.card-admin-title Configuration des emails
+        %p.card-admin-subtitle Notifications automatiques
+      .card-admin-action
+        = button_to 'Modifier', admin_procedure_mail_templates_path(@procedure), method: :get, class: 'card-admin-action-btn'
+
+    .card-admin
+      - if @procedure.api_entreprise_token.present?
+        %div
+          %span.icon.accept
+          %p.card-admin-status-accept Validé
+      - else
+        %div
+          %span.icon.clock
+          %p.card-admin-status-todo À configurer
+      %div
+        %p.card-admin-title Jeton
+        %p.card-admin-subtitle Configurer le jeton API entreprise
+      .card-admin-action
+        = button_to 'Modifier', jeton_admin_procedure_path(@procedure), method: :get, class: 'card-admin-action-btn'
+
+    .card-admin
+      - if @procedure.monavis_embed.present?
+        %div
+          %span.icon.accept
+          %p.card-admin-status-accept Validé
+      - else
+        %div
+          %span.icon.clock
+          %p.card-admin-status-todo À configurer
+      %div
+        %p.card-admin-title MonAvis
+        %p.card-admin-subtitle Avis des usagers sur votre démarche
+      .card-admin-action
+        = button_to 'Modifier', monavis_admin_procedure_path(@procedure), method: :get, class: 'card-admin-action-btn'
