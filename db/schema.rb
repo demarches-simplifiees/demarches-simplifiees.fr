@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_143010) do
+ActiveRecord::Schema.define(version: 2020_07_16_143010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -259,9 +259,11 @@ ActiveRecord::Schema.define(version: 2020_07_15_143010) do
     t.datetime "termine_close_to_expiration_notice_sent_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
+    t.bigint "revision_id"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
+    t.index ["revision_id"], name: "index_dossiers_on_revision_id"
     t.index ["state"], name: "index_dossiers_on_state"
     t.index ["user_id"], name: "index_dossiers_on_user_id"
   end
@@ -476,6 +478,23 @@ ActiveRecord::Schema.define(version: 2020_07_15_143010) do
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true
   end
 
+  create_table "procedure_revision_types_de_champ", force: :cascade do |t|
+    t.bigint "revision_id", null: false
+    t.bigint "type_de_champ_id", null: false
+    t.integer "position", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["revision_id"], name: "index_procedure_revision_types_de_champ_on_revision_id"
+    t.index ["type_de_champ_id"], name: "index_procedure_revision_types_de_champ_on_type_de_champ_id"
+  end
+
+  create_table "procedure_revisions", force: :cascade do |t|
+    t.bigint "procedure_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"
+  end
+
   create_table "procedures", id: :serial, force: :cascade do |t|
     t.string "libelle"
     t.string "description"
@@ -517,10 +536,14 @@ ActiveRecord::Schema.define(version: 2020_07_15_143010) do
     t.datetime "unpublished_at"
     t.bigint "canonical_procedure_id"
     t.string "api_entreprise_token"
+    t.bigint "draft_revision_id"
+    t.bigint "published_revision_id"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
+    t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
     t.index ["path", "closed_at", "hidden_at"], name: "index_procedures_on_path_and_closed_at_and_hidden_at", unique: true
+    t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
   end
 
@@ -592,9 +615,11 @@ ActiveRecord::Schema.define(version: 2020_07_15_143010) do
     t.jsonb "options"
     t.bigint "stable_id"
     t.bigint "parent_id"
+    t.bigint "revision_id"
     t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
     t.index ["procedure_id"], name: "index_types_de_champ_on_procedure_id"
+    t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
@@ -660,18 +685,25 @@ ActiveRecord::Schema.define(version: 2020_07_15_143010) do
   add_foreign_key "dossier_operation_logs", "dossiers"
   add_foreign_key "dossier_operation_logs", "instructeurs"
   add_foreign_key "dossiers", "groupe_instructeurs"
+  add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "geo_areas", "champs"
   add_foreign_key "groupe_instructeurs", "procedures"
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
-  add_foreign_key "procedures", "services", name: "fk_procedures_services"
+  add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
+  add_foreign_key "procedure_revision_types_de_champ", "types_de_champ"
+  add_foreign_key "procedure_revisions", "procedures"
+  add_foreign_key "procedures", "procedure_revisions", column: "draft_revision_id"
+  add_foreign_key "procedures", "procedure_revisions", column: "published_revision_id"
+  add_foreign_key "procedures", "services"
   add_foreign_key "received_mails", "procedures"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
+  add_foreign_key "types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "users", "administrateurs"
   add_foreign_key "users", "instructeurs"

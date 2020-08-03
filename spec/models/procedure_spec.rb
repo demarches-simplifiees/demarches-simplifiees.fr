@@ -288,40 +288,6 @@ describe Procedure do
     it { expect(subject.last).to eq(type_de_champ_0) }
   end
 
-  describe '#switch_types_de_champ' do
-    let(:procedure) { create(:procedure) }
-    let(:index) { 0 }
-    subject { procedure.switch_types_de_champ(index) }
-
-    context 'when procedure has no types_de_champ' do
-      it { expect(subject).to eq(false) }
-    end
-    context 'when procedure has 3 types de champ' do
-      let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-      let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
-      let!(:type_de_champ_2) { create(:type_de_champ, procedure: procedure, order_place: 2) }
-      context 'when index is not the last element' do
-        it { expect(subject).to eq(true) }
-        it 'switches the position of the champ N and N+1' do
-          subject
-          expect(procedure.types_de_champ[0]).to eq(type_de_champ_1)
-          expect(procedure.types_de_champ[0].order_place).to eq(0)
-          expect(procedure.types_de_champ[1]).to eq(type_de_champ_0)
-          expect(procedure.types_de_champ[1].order_place).to eq(1)
-        end
-        it 'doesn’t move other types de champ' do
-          subject
-          expect(procedure.types_de_champ[2]).to eq(type_de_champ_2)
-          expect(procedure.types_de_champ[2].order_place).to eq(2)
-        end
-      end
-      context 'when index is the last element' do
-        let(:index) { 2 }
-        it { expect(subject).to eq(false) }
-      end
-    end
-  end
-
   describe 'active' do
     let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
@@ -417,13 +383,21 @@ describe Procedure do
       expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
       expect(subject.types_de_champ.map(&:drop_down_options).compact.size).to eq procedure.types_de_champ.map(&:drop_down_options).compact.size
       expect(subject.types_de_champ_private.map(&:drop_down_options).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_options).compact.size
+      expect(subject.draft_revision.types_de_champ.size).to eq(procedure.draft_revision.types_de_champ.size)
+      expect(subject.draft_revision.types_de_champ_private.size).to eq(procedure.draft_revision.types_de_champ_private.size)
 
       procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
       end
+      procedure.types_de_champ.zip(procedure.draft_revision.types_de_champ).each do |ptc, rtc|
+        expect(ptc).to eq(rtc)
+      end
 
       subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
         expect(stc).to have_same_attributes_as(ptc)
+      end
+      procedure.types_de_champ_private.zip(procedure.draft_revision.types_de_champ_private).each do |ptc, rtc|
+        expect(ptc).to eq(rtc)
       end
 
       expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
@@ -432,7 +406,7 @@ describe Procedure do
 
       cloned_procedure = subject
       cloned_procedure.parent_procedure_id = nil
-      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path"])
+      expect(cloned_procedure).to have_same_attributes_as(procedure, except: ["path", "draft_revision_id"])
     end
 
     context 'when the procedure is cloned from the library' do
@@ -598,6 +572,13 @@ describe Procedure do
         expect(Procedure.find_by(path: "example-path")).to eq(procedure)
         expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs)
       end
+
+      it 'creates a new draft revision' do
+        expect(procedure.published_revision).not_to be_nil
+        expect(procedure.draft_revision).not_to be_nil
+        expect(procedure.revisions.count).to eq(2)
+        expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+      end
     end
 
     context 'when publishing over a previous canonical procedure' do
@@ -648,6 +629,13 @@ describe Procedure do
       it 'unpublishes the canonical procedure' do
         expect(canonical_procedure.unpublished_at).to eq(now)
       end
+
+      it 'creates a new draft revision' do
+        expect(procedure.published_revision).not_to be_nil
+        expect(procedure.draft_revision).not_to be_nil
+        expect(procedure.revisions.count).to eq(2)
+        expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+      end
     end
 
     context 'when publishing over a previous procedure with canonical procedure' do
@@ -694,6 +682,13 @@ describe Procedure do
       expect(procedure.published_at).not_to be_nil
       expect(procedure.unpublished_at).to eq(now)
     }
+
+    it 'sets published revision' do
+      expect(procedure.published_revision).not_to be_nil
+      expect(procedure.draft_revision).not_to be_nil
+      expect(procedure.revisions.count).to eq(2)
+      expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+    end
   end
 
   describe "#brouillon?" do
@@ -768,6 +763,13 @@ describe Procedure do
 
     it { expect(procedure.close?).to be_truthy }
     it { expect(procedure.closed_at).to eq(now) }
+
+    it 'sets published revision' do
+      expect(procedure.published_revision).not_to be_nil
+      expect(procedure.draft_revision).not_to be_nil
+      expect(procedure.revisions.count).to eq(2)
+      expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+    end
   end
 
   describe 'path_customized?' do
@@ -1019,82 +1021,6 @@ describe Procedure do
     context 'where there is no processed dossier' do
       let(:delays) { [] }
       it { expect(procedure.usual_traitement_time).to be_nil }
-    end
-  end
-
-  describe '#move_type_de_champ' do
-    let(:procedure) { create(:procedure) }
-
-    context 'type_de_champ' do
-      let(:type_de_champ) { create(:type_de_champ_text, order_place: 0, procedure: procedure) }
-      let!(:type_de_champ1) { create(:type_de_champ_text, order_place: 1, procedure: procedure) }
-      let!(:type_de_champ2) { create(:type_de_champ_text, order_place: 2, procedure: procedure) }
-
-      it 'move down' do
-        procedure.move_type_de_champ(type_de_champ, 2)
-
-        type_de_champ.reload
-        procedure.reload
-
-        expect(procedure.types_de_champ.index(type_de_champ)).to eq(2)
-        expect(type_de_champ.order_place).to eq(2)
-      end
-
-      context 'repetition' do
-        let!(:type_de_champ_repetition) do
-          create(:type_de_champ_repetition, types_de_champ: [
-            type_de_champ,
-            type_de_champ1,
-            type_de_champ2
-          ], procedure: procedure)
-        end
-
-        it 'move down' do
-          procedure.move_type_de_champ(type_de_champ, 2)
-
-          type_de_champ.reload
-          procedure.reload
-
-          expect(type_de_champ.parent.types_de_champ.index(type_de_champ)).to eq(2)
-          expect(type_de_champ.order_place).to eq(2)
-        end
-
-        context 'private' do
-          let!(:type_de_champ_repetition) do
-            create(:type_de_champ_repetition, types_de_champ: [
-              type_de_champ,
-              type_de_champ1,
-              type_de_champ2
-            ], private: true, procedure: procedure)
-          end
-
-          it 'move down' do
-            procedure.move_type_de_champ(type_de_champ, 2)
-
-            type_de_champ.reload
-            procedure.reload
-
-            expect(type_de_champ.parent.types_de_champ.index(type_de_champ)).to eq(2)
-            expect(type_de_champ.order_place).to eq(2)
-          end
-        end
-      end
-    end
-
-    context 'private' do
-      let(:type_de_champ) { create(:type_de_champ_text, order_place: 0, private: true, procedure: procedure) }
-      let!(:type_de_champ1) { create(:type_de_champ_text, order_place: 1, private: true, procedure: procedure) }
-      let!(:type_de_champ2) { create(:type_de_champ_text, order_place: 2, private: true, procedure: procedure) }
-
-      it 'move down' do
-        procedure.move_type_de_champ(type_de_champ, 2)
-
-        type_de_champ.reload
-        procedure.reload
-
-        expect(procedure.types_de_champ_private.index(type_de_champ)).to eq(2)
-        expect(type_de_champ.order_place).to eq(2)
-      end
     end
   end
 

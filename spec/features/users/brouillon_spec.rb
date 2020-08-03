@@ -335,7 +335,7 @@ feature 'The user' do
     #     </select>
     #     <!-- … 4 other selects for month, year, minute and seconds -->
     # </div>
-    e = find(:xpath, ".//h4[contains(text()[normalize-space()], '#{libelle}')]")
+    e = find(:xpath, ".//div[contains(text()[normalize-space()], '#{libelle}')]")
     e.sibling('.datetime').first('select')[:id][0..-4]
   end
 

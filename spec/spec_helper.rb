@@ -45,14 +45,19 @@ Capybara.register_driver :headless_chrome do |app|
     chromeOptions: { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
   )
 
-  client = Selenium::WebDriver::Remote::Http::Default.new
-  client.read_timeout = 120
+  download_path = Capybara.save_path
+  # Chromedriver 77 requires setting this for headless mode on linux
+  # Different versions of Chrome/selenium-webdriver require setting differently - just set them all
+  options.add_preference('download.default_directory', download_path)
+  options.add_preference(:download, default_directory: download_path)
 
-  Capybara::Selenium::Driver.new app,
-    browser:              :chrome,
+  Capybara::Selenium::Driver.new(app,
+    browser: :chrome,
     desired_capabilities: capabilities,
-    options:              options,
-    http_client:          client
+    options: options).tap do |driver|
+    # Set download dir for Chrome < 77
+    driver.browser.download_path = download_path
+  end
 end
 
 #---- From https://gist.github.com/danwhitston/5cea26ae0861ce1520695cff3c2c3315#using-capybara-with-a-remote-selenium-server
@@ -69,7 +74,10 @@ Capybara.register_driver :wsl do |app|
     browser:              :remote,
     url:                  "http://localhost:4444/wd/hub",
     desired_capabilities: capabilities,
-    options:              options)
+    options:              options).tap do |driver|
+    # Set download dir for Chrome < 77
+    driver.browser.download_path = download_path
+  end
 end
 
 # FIXME: remove this line when https://github.com/rspec/rspec-rails/issues/1897 has been fixed
