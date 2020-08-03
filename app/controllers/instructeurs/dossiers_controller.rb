@@ -204,7 +204,7 @@ module Instructeurs
     def telecharger_pjs
       return head(:forbidden) if !dossier.attachments_downloadable?
 
-      files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
+      files = PiecesJustificativesService.zip_entries(dossier)
 
       zipline(files, "dossier-#{dossier.id}.zip")
     end
