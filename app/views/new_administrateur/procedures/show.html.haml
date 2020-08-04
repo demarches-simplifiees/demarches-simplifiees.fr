@@ -122,14 +122,14 @@
   %h2.procedure-admin-explanation Pour aller plus loin
   .procedure-grid
     .card-admin
-      - if @procedure.attestation_template.present?
+      - if @procedure.attestation_template.present? && @procedure.attestation_template.activated
         %div
           %span.icon.accept
           %p.card-admin-status-accept Activée
       - else
         %div
           %span.icon.clock
-          %p.card-admin-status-todo À activer
+          %p.card-admin-status-todo Désactivée
       %div
         %p.card-admin-title Attestation
         %p.card-admin-subtitle Délivrance automatique pour les dossiers acceptés
