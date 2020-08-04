@@ -1,0 +1,45 @@
+@import "colors";
+@import "constants";
+
+.card-admin {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 236px;
+  height: 200px;
+  border-radius: 4px;
+  border: solid 1px $border-grey;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  margin-right: 20px;
+
+  .card-admin-status-accept {
+    color: #50AA75;
+  }
+
+  .card-admin-status-todo {
+    color: #246AC5;
+  }
+
+  .card-admin-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: $default-spacer;
+  }
+
+  .card-admin-subtitle {
+    font-size: 14px;
+  }
+
+  .card-admin-action {
+    margin-top: auto;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .card-admin {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

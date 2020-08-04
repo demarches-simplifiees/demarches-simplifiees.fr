@@ -56,6 +56,28 @@ class Avis < ApplicationRecord
     dossier.procedure
   end
 
+  def revoked?
+    revoked_at.present?
+  end
+
+  def revivable_by?(reviver)
+    revokable_by?(reviver)
+  end
+
+  def revokable_by?(revocator)
+    revocator.dossiers.include?(dossier) || revocator == claimant
+  end
+
+  def revoke_by!(revocator)
+    return false if !revokable_by?(revocator)
+
+    if answer.present?
+      update!(revoked_at: Time.zone.now)
+    else
+      destroy!
+    end
+  end
+
   private
 
   def try_to_assign_instructeur

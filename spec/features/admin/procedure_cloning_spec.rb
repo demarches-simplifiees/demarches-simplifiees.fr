@@ -24,6 +24,7 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
       click_on Procedure.last.libelle
       expect(page).to have_current_path(admin_procedure_path(Procedure.last))
 
+      find('#publish-procedure-link').click
       find('#publish-procedure').click
 
       within '#publish-modal' do

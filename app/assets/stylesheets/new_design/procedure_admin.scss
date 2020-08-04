@@ -1,0 +1,21 @@
+
+.procedure-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.procedure-admin-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+
+  .button {
+    margin-right: 10px;
+  }
+}
+
+.procedure-admin-explanation {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 20px;
+}

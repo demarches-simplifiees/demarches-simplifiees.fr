@@ -54,6 +54,22 @@ class InvitesController < ApplicationController
     redirect_to dossiers_path
   end
 
+  def destroy
+    invite = Invite.find(params[:id])
+    dossier = invite.dossier
+    if dossier.user == current_user
+      invite.destroy!
+      flash.notice = "L'autorisation de #{invite.email} vient d'être révoquée."
+    else
+      flash.alert = "Vous ne pouvez pas révoquer cette autorisation"
+    end
+
+    respond_to do |format|
+      format.html { redirect_back(fallback_location: helpers.url_for_dossier(dossier)) }
+      format.js { @dossier = dossier }
+    end
+  end
+
   private
 
   def store_user_location!
