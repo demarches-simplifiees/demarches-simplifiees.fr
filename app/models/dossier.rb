@@ -48,6 +48,7 @@ class Dossier < ApplicationRecord
 
   belongs_to :groupe_instructeur
   has_one :procedure, through: :groupe_instructeur
+  belongs_to :revision, class_name: 'ProcedureRevision', optional: true
   belongs_to :user
 
   accepts_nested_attributes_for :champs
@@ -132,18 +133,20 @@ class Dossier < ApplicationRecord
         :traitements,
         etablissement: :champ,
         champs: {
+          type_de_champ: [],
           etablissement: :champ,
-          type_de_champ: :drop_down_list,
           piece_justificative_file_attachment: :blob,
           champs: [
+            type_de_champ: [],
             piece_justificative_file_attachment: :blob
           ]
         },
         champs_private: {
+          type_de_champ: [],
           etablissement: :champ,
-          type_de_champ: :drop_down_list,
           piece_justificative_file_attachment: :blob,
           champs: [
+            type_de_champ: [],
             piece_justificative_file_attachment: :blob
           ]
         },

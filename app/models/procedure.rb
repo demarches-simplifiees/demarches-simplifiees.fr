@@ -14,6 +14,9 @@ class Procedure < ApplicationRecord
 
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
+  has_many :revisions, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
+  belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: true
+  belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
 
   has_one :module_api_carto, dependent: :destroy
@@ -22,6 +25,10 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure'
   belongs_to :canonical_procedure, class_name: 'Procedure'
   belongs_to :service
+
+  def active_revision
+    brouillon? ? draft_revision : published_revision
+  end
 
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
@@ -241,6 +248,7 @@ class Procedure < ApplicationRecord
   def new_dossier
     Dossier.new(
       procedure: self,
+      revision: active_revision,
       champs: build_champs,
       champs_private: build_champs_private,
       groupe_instructeur: defaut_groupe_instructeur
@@ -267,37 +275,23 @@ class Procedure < ApplicationRecord
     publiees.find(id)
   end
 
-  def switch_types_de_champ(index_of_first_element)
-    switch_list_order(types_de_champ, index_of_first_element)
-  end
-
-  def switch_types_de_champ_private(index_of_first_element)
-    switch_list_order(types_de_champ_private, index_of_first_element)
-  end
-
-  def switch_list_order(list, index_of_first_element)
-    if index_of_first_element < 0 ||
-      index_of_first_element == list.count - 1 ||
-      list.count < 1
-
-      false
-    else
-      list[index_of_first_element].update(order_place: index_of_first_element + 1)
-      list[index_of_first_element + 1].update(order_place: index_of_first_element)
-      reload
-
-      true
-    end
-  end
-
   def clone(admin, from_library)
+    # FIXUP: needed during transition to revisions
+    RevisionsMigration.add_revisions(self)
+
     is_different_admin = !admin.owns?(self)
 
     populate_champ_stable_ids
     include_list = {
-      attestation_template: nil,
-      types_de_champ: [:drop_down_list, types_de_champ: :drop_down_list],
-      types_de_champ_private: [:drop_down_list, types_de_champ: :drop_down_list]
+      attestation_template: [],
+      draft_revision: {
+        revision_types_de_champ: {
+          type_de_champ: :types_de_champ
+        },
+        revision_types_de_champ_private: {
+          type_de_champ: :types_de_champ
+        }
+      }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
     procedure = self.deep_clone(include: include_list, &method(:clone_attachments))
@@ -307,10 +301,7 @@ class Procedure < ApplicationRecord
     procedure.unpublished_at = nil
     procedure.published_at = nil
     procedure.lien_notice = nil
-
-    if is_different_admin || from_library
-      procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
-    end
+    procedure.draft_revision.procedure = procedure
 
     if is_different_admin
       procedure.administrateurs = [admin]
@@ -337,6 +328,18 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
+
+    # FIXUP: needed during transition to revisions
+    procedure.draft_revision.types_de_champ.each do |type_de_champ|
+      procedure.types_de_champ << type_de_champ
+    end
+    procedure.draft_revision.types_de_champ_private.each do |type_de_champ|
+      procedure.types_de_champ_private << type_de_champ
+    end
+
+    if is_different_admin || from_library
+      procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+    end
 
     procedure
   end
@@ -474,34 +477,6 @@ class Procedure < ApplicationRecord
     result
   end
 
-  def move_type_de_champ(type_de_champ, new_index)
-    types_de_champ, collection_attribute_name = if type_de_champ.parent&.repetition?
-      if type_de_champ.parent.private?
-        [type_de_champ.parent.types_de_champ, :types_de_champ_private_attributes]
-      else
-        [type_de_champ.parent.types_de_champ, :types_de_champ_attributes]
-      end
-    elsif type_de_champ.private?
-      [self.types_de_champ_private, :types_de_champ_private_attributes]
-    else
-      [self.types_de_champ, :types_de_champ_attributes]
-    end
-
-    attributes = move_type_de_champ_attributes(types_de_champ.to_a, type_de_champ, new_index)
-
-    if type_de_champ.parent&.repetition?
-      attributes = [
-        {
-          id: type_de_champ.parent.id,
-          libelle: type_de_champ.parent.libelle,
-          types_de_champ_attributes: attributes
-        }
-      ]
-    end
-
-    update!(collection_attribute_name => attributes)
-  end
-
   def process_dossiers!
     case declarative_with_state
     when Procedure.declarative_with_states.fetch(:en_instruction)
@@ -577,38 +552,34 @@ class Procedure < ApplicationRecord
     ApiEntrepriseToken.new(api_entreprise_token).expired?
   end
 
-  private
-
-  def move_type_de_champ_attributes(types_de_champ, type_de_champ, new_index)
-    old_index = types_de_champ.index(type_de_champ)
-    if types_de_champ.delete_at(old_index)
-      types_de_champ.insert(new_index, type_de_champ)
-        .map.with_index do |type_de_champ, index|
-          {
-            id: type_de_champ.id,
-            libelle: type_de_champ.libelle,
-            order_place: index
-          }
-        end
-    else
-      []
-    end
+  def create_new_revision
+    draft_revision.deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
   end
+
+  private
 
   def before_publish
     update!(closed_at: nil, unpublished_at: nil)
   end
 
   def after_publish(canonical_procedure = nil)
-    update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure)
+    # FIXUP: needed during transition to revisions
+    if RevisionsMigration.add_revisions(self)
+      update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure)
+    else
+      update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
+    end
   end
 
   def after_close
-    now = Time.zone.now
-    update!(closed_at: now)
+    # FIXUP: needed during transition to revisions
+    RevisionsMigration.add_revisions(self)
+    update!(closed_at: Time.zone.now)
   end
 
   def after_unpublish
+    # FIXUP: needed during transition to revisions
+    RevisionsMigration.add_revisions(self)
     update!(unpublished_at: Time.zone.now)
   end
 

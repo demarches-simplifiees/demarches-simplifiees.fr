@@ -13,6 +13,15 @@ module NewAdministrateur
       @terms_of_use_read = {}
     end
 
+    def show
+      @procedure = current_administrateur.procedures.find(params[:id])
+      if @procedure.brouillon?
+        @procedure_lien = commencer_test_url(path: @procedure.path)
+      else
+        @procedure_lien = commencer_url(path: @procedure.path)
+      end
+    end
+
     def edit
     end
 
@@ -26,6 +35,8 @@ module NewAdministrateur
       else
         flash.notice = 'Démarche enregistrée.'
         current_administrateur.instructeur.assign_to_procedure(@procedure)
+        # FIXUP: needed during transition to revisions
+        RevisionsMigration.add_revisions(@procedure)
 
         redirect_to champs_admin_procedure_path(@procedure)
       end

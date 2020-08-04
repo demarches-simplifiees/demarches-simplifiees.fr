@@ -3,7 +3,7 @@
   = form.label champ.main_value_name do
     = render partial: 'shared/dossiers/editable_champs/champ_label_content', locals: { champ: champ, seen_at: seen_at }
 - else
-  %h4.form-label
+  .form-label.mb-4
     = render partial: 'shared/dossiers/editable_champs/champ_label_content', locals: { champ: champ, seen_at: seen_at }
 
 - if champ.description.present?

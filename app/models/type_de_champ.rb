@@ -37,11 +37,14 @@ class TypeDeChamp < ApplicationRecord
   }
 
   belongs_to :procedure
+  belongs_to :revision, class_name: 'ProcedureRevision', optional: true
 
   belongs_to :parent, class_name: 'TypeDeChamp'
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj, :drop_down_options, :skip_pj_validation, :parcelles, :batiments, :zones_manuelles, :min, :max, :level
+  has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
+
   delegate :tags_for_template, to: :dynamic_type
 
   class WithIndifferentAccess
@@ -66,6 +69,7 @@ class TypeDeChamp < ApplicationRecord
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { order(order_place: :asc) }
   scope :root, -> { where(parent_id: nil) }
+  scope :repetition, -> { where(type_champ: type_champs.fetch(:repetition)) }
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
@@ -76,11 +80,9 @@ class TypeDeChamp < ApplicationRecord
       super(params.merge(proxy_association.owner.params_for_champ))
     end
   end
-  has_one :drop_down_list
 
   has_one_attached :piece_justificative_template
 
-  accepts_nested_attributes_for :drop_down_list, update_only: true
   accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
@@ -218,7 +220,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def drop_down_list_options
-    drop_down_options.presence || drop_down_list&.options || []
+    drop_down_options.presence || []
   end
 
   def drop_down_list_disabled_options
@@ -231,6 +233,13 @@ class TypeDeChamp < ApplicationRecord
 
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
+  end
+
+  def revise!
+    types_de_champ_association = private? ? :revision_types_de_champ_private : :revision_types_de_champ
+    association = revision.send(types_de_champ_association).find_by!(type_de_champ: self)
+    association.update!(type_de_champ: deep_clone(include: [:types_de_champ], &method(:clone_attachments)))
+    association.type_de_champ
   end
 
   FEATURE_FLAGS = {}
@@ -258,6 +267,7 @@ class TypeDeChamp < ApplicationRecord
       :parent_id,
       :private,
       :procedure_id,
+      :revision_id,
       :stable_id,
       :type,
       :updated_at
@@ -281,9 +291,8 @@ class TypeDeChamp < ApplicationRecord
     .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
 
   def self.as_json_for_editor
-    includes(:drop_down_list,
-      piece_justificative_template_attachment: :blob,
-      types_de_champ: [:drop_down_list, piece_justificative_template_attachment: :blob])
+    includes(piece_justificative_template_attachment: :blob,
+      types_de_champ: [piece_justificative_template_attachment: :blob])
       .as_json(TYPES_DE_CHAMP)
   end
 
@@ -315,7 +324,6 @@ class TypeDeChamp < ApplicationRecord
 
   def remove_drop_down_list
     if !drop_down_list?
-      self.drop_down_list = nil
       self.drop_down_options = nil
     end
   end
@@ -323,6 +331,25 @@ class TypeDeChamp < ApplicationRecord
   def remove_repetition
     if !repetition?
       types_de_champ.destroy_all
+    end
+  end
+
+  def clone_attachments(original, kopy)
+    if original.is_a?(TypeDeChamp)
+      clone_attachment(:piece_justificative_template, original, kopy)
+    end
+  end
+
+  def clone_attachment(attribute, original, kopy)
+    original_attachment = original.send(attribute)
+    if original_attachment.attached?
+      kopy.send(attribute).attach({
+        io: StringIO.new(original_attachment.download),
+        filename: original_attachment.filename,
+        content_type: original_attachment.content_type,
+        # we don't want to run virus scanner on cloned file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      })
     end
   end
 end

@@ -184,8 +184,9 @@ Rails.application.routes.draw do
     get 'activate/test_strength' => '/administrateurs/activate#test_strength' # redirect to password
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
+    get 'procedures/:id/publication' => 'procedures#show', as: :procedure_publication
 
-    resources :procedures, only: [:index, :show, :destroy] do
+    resources :procedures, only: [:index, :destroy] do
       collection do
         get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
       end
@@ -228,7 +229,7 @@ Rails.application.routes.draw do
   #
   get 'te_fenua/suggestions' => 'te_fenua#suggestions'
 
-  resources :invites, only: [:show] do
+  resources :invites, only: [:show, :destroy] do
     collection do
       post 'dossier/:dossier_id', to: 'invites#create', as: :dossier
     end
@@ -332,6 +333,8 @@ Rails.application.routes.draw do
             get 'messagerie'
             post 'commentaire' => 'avis#create_commentaire'
             post 'avis' => 'avis#create_avis'
+            patch 'revoquer'
+            get 'revive'
             get 'bilans_bdf'
 
             get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
@@ -385,7 +388,7 @@ Rails.application.routes.draw do
   #
 
   namespace :admin, module: 'new_administrateur' do
-    resources :procedures, except: [:index, :show, :destroy] do
+    resources :procedures, except: [:index, :destroy] do
       member do
         get 'apercu'
         get 'champs'
