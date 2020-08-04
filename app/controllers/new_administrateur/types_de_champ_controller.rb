@@ -102,7 +102,8 @@ module NewAdministrateur
         :zones_manuelles,
         :min,
         :max,
-        :type_champ)
+        :type_champ
+      )
 
       if type_de_champ_params[:parent_id].present?
         type_de_champ_params[:parent_id] = TypeDeChamp.find(type_de_champ_params[:parent_id]).stable_id
