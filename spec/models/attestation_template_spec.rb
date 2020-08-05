@@ -122,12 +122,11 @@ describe AttestationTemplate, type: :model do
     end
 
     let(:view_args) do
-      original_new = ActionView::Base.method(:new)
       arguments = nil
 
-      allow(ActionView::Base).to receive(:new) do |paths, args|
-        arguments = args
-        original_new.call(paths, args)
+      allow(ApplicationController).to receive(:render).and_wrap_original do |m, *args|
+        arguments = args.first[:assigns]
+        m.call(*args)
       end
 
       attestation_template.attestation_for(dossier)
@@ -162,10 +161,14 @@ describe AttestationTemplate, type: :model do
               .update(value: 'libelle2')
           end
 
-          it do
+          it 'passes the correct parameters to the view' do
             expect(view_args[:attestation][:title]).to eq('title libelle1')
             expect(view_args[:attestation][:body]).to eq('body libelle2')
+          end
+
+          it 'generates an attestation' do
             expect(attestation.title).to eq('title libelle1')
+            expect(attestation.pdf).to be_attached
           end
         end
       end
