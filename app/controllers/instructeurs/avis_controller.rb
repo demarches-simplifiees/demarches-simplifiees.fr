@@ -44,6 +44,7 @@ module Instructeurs
     def update
       if @avis.update(avis_params)
         flash.notice = 'Votre réponse est enregistrée.'
+        @avis.dossier.update!(last_avis_updated_at: Time.zone.now)
         redirect_to instruction_instructeur_avis_path(@avis.procedure, @avis)
       else
         flash.now.alert = @avis.errors.full_messages
@@ -60,6 +61,7 @@ module Instructeurs
       @commentaire = CommentaireService.build(current_instructeur, avis.dossier, commentaire_params)
 
       if @commentaire.save
+        @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
         flash.notice = "Message envoyé"
         redirect_to messagerie_instructeur_avis_path(avis.procedure, avis)
       else

@@ -7,7 +7,7 @@
     %h1.center Si vous avez un compte #{APPLICATION_NAME}
     = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
 
-      = f.label :email, "Email"
+      = f.label :email, "Email (nom@site.com)"
       = f.text_field :email, type: :email, autocomplete: 'username', autofocus: false
 
       = f.label :password, "Mot de passe"
