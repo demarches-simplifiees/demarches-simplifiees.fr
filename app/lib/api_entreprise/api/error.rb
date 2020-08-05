@@ -1,4 +1,4 @@
-class ApiEntreprise::API::Error < ::StandardError
+class APIEntreprise::API::Error < ::StandardError
   def initialize(response)
     # use uri to avoid sending token
     uri = URI.parse(response.effective_url)

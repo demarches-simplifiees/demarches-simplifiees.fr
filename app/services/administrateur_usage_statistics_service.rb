@@ -18,7 +18,7 @@ class AdministrateurUsageStatisticsService
   private
 
   def api
-    @api ||= Sendinblue::Api.new_properly_configured!
+    @api ||= Sendinblue::API.new_properly_configured!
   end
 
   def administrateur_stats(administrateur)

@@ -1,4 +1,4 @@
-class ApiEntreprise::AttestationSocialeAdapter < ApiEntreprise::Adapter
+class APIEntreprise::AttestationSocialeAdapter < APIEntreprise::Adapter
   def initialize(siret, procedure_id)
     @siret = siret
     @procedure_id = procedure_id
@@ -7,7 +7,7 @@ class ApiEntreprise::AttestationSocialeAdapter < ApiEntreprise::Adapter
   private
 
   def get_resource
-    ApiEntreprise::API.attestation_sociale(siren, @procedure_id)
+    APIEntreprise::API.attestation_sociale(siren, @procedure_id)
   end
 
   def process_params

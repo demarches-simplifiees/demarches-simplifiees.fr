@@ -1,4 +1,4 @@
-class Cron::FixMissingAntivirusAnalysis < Cron::CronJob
+class Cron::FixMissingAntivirusAnalysisJob < Cron::CronJob
   self.schedule_expression = "every day at 2 am"
 
   def perform

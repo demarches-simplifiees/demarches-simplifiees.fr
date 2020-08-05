@@ -1,4 +1,2 @@
-class ApiEntreprise::API::Error
-  class BadFormatRequest < ApiEntreprise::API::Error
-  end
+class APIEntreprise::API::Error::BadFormatRequest < APIEntreprise::API::Error
 end

@@ -2,7 +2,7 @@ class API::V2::GraphqlController < API::V2::BaseController
   def execute
     variables = ensure_hash(params[:variables])
 
-    result = Api::V2::Schema.execute(params[:query],
+    result = API::V2::Schema.execute(params[:query],
       variables: variables,
       context: context,
       operation_name: params[:operationName])
