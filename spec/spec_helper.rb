@@ -65,6 +65,11 @@ end
 Capybara.register_driver :wsl do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--window-size=1440,900')
+  # Chromedriver 77 requires setting this for headless mode on linux
+  # Different versions of Chrome/selenium-webdriver require setting differently - just set them all
+  download_path = Capybara.save_path
+  options.add_preference('download.default_directory', download_path)
+  options.add_preference(:download, default_directory: download_path)
 
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: { args: ['disable-dev-shm-usage', 'disable-software-rasterizer', 'mute-audio', 'window-size=1440,900'] }
@@ -74,10 +79,7 @@ Capybara.register_driver :wsl do |app|
     browser:              :remote,
     url:                  "http://localhost:4444/wd/hub",
     desired_capabilities: capabilities,
-    options:              options).tap do |driver|
-    # Set download dir for Chrome < 77
-    driver.browser.download_path = download_path
-  end
+    options:              options)
 end
 
 # FIXME: remove this line when https://github.com/rspec/rspec-rails/issues/1897 has been fixed
