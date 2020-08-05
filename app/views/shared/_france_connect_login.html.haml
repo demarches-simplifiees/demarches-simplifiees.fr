@@ -1,11 +1,10 @@
 .france-connect-login
-  ou
-  %h2
-    = t('views.shared.france_connect_login.title')
-  %p
-    = t('views.shared.france_connect_login.description')
+  .france-connect-login-separator
+    ou
+  = t('views.shared.france_connect_login.title')
   .france-connect-login-buttons
     = link_to t('views.shared.france_connect_login.login_button'), url, class: "france-connect-login-button"
+  = t('views.shared.france_connect_login.description')
   .france-connect-help-link
     = link_to t('views.shared.france_connect_login.help_link'), "https://franceconnect.gouv.fr/", target: "_blank", rel: "noopener", class: "link"
   -# .france-connect-login-separator
