@@ -18,10 +18,10 @@ CALENDLY_URL = "https://calendly.com/demarches-simplifiees/accompagnement-admini
 
 FR_DOC_URL = "https://doc.#{FR_SITE}"
 DOC_URL = "https://mes-demarches.gitbook.io/documentation"
+DOC_NOUVEAUTES_URL = [DOC_URL, "nouveautes"].join("/")
 ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels", "dematerialiser-formulaire"].join("/")
 INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels"].join("/")
 CADRE_JURIDIQUE_URL = [ADMINISTRATEUR_TUTORIAL_URL, "cadre-juridique"].join("#") # TODO version polynésie
-WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
 LISTE_DES_DEMARCHES_URL = "https://www.service-public.pf/demarches-simplifiees"
 CGU_URL = [DOC_URL, "cgu"].join("/")
 RGPD_URL = [CGU_URL, "rgpd"].join("#")
