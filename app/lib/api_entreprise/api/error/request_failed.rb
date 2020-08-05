@@ -1,4 +1,2 @@
-class ApiEntreprise::API::Error
-  class RequestFailed < ApiEntreprise::API::Error
-  end
+class APIEntreprise::API::Error::RequestFailed < APIEntreprise::API::Error
 end

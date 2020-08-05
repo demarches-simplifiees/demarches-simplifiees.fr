@@ -208,9 +208,9 @@ describe Users::DossiersController, type: :controller do
       sign_in(user)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
-      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
+      allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
-      allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(token_expired)
+      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
     end
 
     subject! { post :update_siret, params: { id: dossier.id, user: { siret: params_siret } } }
