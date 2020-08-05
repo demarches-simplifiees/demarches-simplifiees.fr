@@ -265,6 +265,11 @@ type Demarche {
     after: String
 
     """
+    Si présent, permet de filtrer les dossiers archivés ou non
+    """
+    archived: Boolean
+
+    """
     Returns the elements in the list that come before the specified cursor.
     """
     before: String

@@ -336,3 +336,15 @@ fr:
       zero: 0 dossier trouvé
       one: 1 dossier trouvé
       other: "%{count} dossiers trouvés"
+    published:
+      zero: Publiée
+      one: Publiée
+      other: Publiées
+    closed:
+      zero: Close
+      one: Close
+      other: Closes
+    draft:
+      zero: Brouillon
+      one: Brouillon
+      other: Brouillons
