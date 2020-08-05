@@ -17,15 +17,13 @@ feature 'As an instructeur', js: true do
   scenario 'I can register' do
     confirmation_email = open_email(instructeur_email)
     token_params = confirmation_email.body.match(/token=[^"]+/)
-    expect(token_params).not_to be_nil
-    expect(token_params.length).to be > 0
 
     visit "users/activate?#{token_params}"
     expect(page).to have_content 'Choix du mot de passe'
-
-    fill_in :user_password, with: 'démarches-simplifiées-pwd'
+    fill_in :user_password, with: 'my-s3cure-p4ssword'
 
     click_button 'Définir le mot de passe'
+
     expect(page).to have_content 'Mot de passe enregistré'
   end
 end

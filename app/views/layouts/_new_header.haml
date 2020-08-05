@@ -18,7 +18,7 @@
       - if params[:controller] == 'users/commencer'
         = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
       - else
-        = link_to root_path_for_profile(nav_bar_profile), class: 'header-logo', title: "Aller à la page d'accueil de #{SITE_NAME}" do
+        = link_to root_path_for_profile(nav_bar_profile), class: 'header-logo', title: "Aller à la page d'accueil de #{APPLICATION_NAME}" do
           = image_tag 'header/logo-md-wide.svg', alt: '', class: 'site-title big'
           = image_tag 'header/logo-md-narrow.svg', alt: '', class: 'site-title small'
 
@@ -27,7 +27,7 @@
         %ul.header-tabs
           - if current_instructeur.procedures.count > 0
             %li
-              = active_link_to "Démarches", instructeur_procedures_path, active: controller_name == 'dossiers', class: 'tab-link'
+              = active_link_to "Démarches", instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
           - if current_instructeur.avis.count > 0
             %li
               = active_link_to instructeur_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do

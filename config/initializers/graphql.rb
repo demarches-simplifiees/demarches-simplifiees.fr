@@ -5,7 +5,7 @@ GraphQL::RailsLogger.configure do |config|
 end
 
 GraphqlPlayground::Rails.configure do |config|
-  config.title = "demarches-simplifiees.fr"
+  config.title = APPLICATION_NAME
   config.settings = {
     "schema.polling.enable": false
   }

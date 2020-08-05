@@ -21,7 +21,7 @@ class ResendAttestationMailer < ApplicationMailer
 
       Cordialement,
 
-      L’équipe #{SITE_NAME}
+      L’équipe #{APPLICATION_NAME}
     HEREDOC
   end
 end

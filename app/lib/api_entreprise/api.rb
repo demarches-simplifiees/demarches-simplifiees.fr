@@ -100,6 +100,7 @@ class ApiEntreprise::API
       non_diffusables: true,
       token: token_for_procedure(procedure_id)
     }
+
     params[:user_id] = user_id if user_id.present?
     params
   end

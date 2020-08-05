@@ -1,1 +1,1 @@
-Typhoeus::Config.user_agent = SITE_NAME
+Typhoeus::Config.user_agent = APPLICATION_NAME
