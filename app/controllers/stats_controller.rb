@@ -116,10 +116,10 @@ class StatsController < ApplicationController
 
   def dossiers_states
     {
-      'Brouilllon' => Dossier.state_brouillon.count,
+      'Brouilllon'      => Dossier.state_brouillon.count,
       'En construction' => Dossier.state_en_construction.count,
-      'En instruction' => Dossier.state_en_instruction.count,
-      'Terminé' => Dossier.state_termine.count
+      'En instruction'  => Dossier.state_en_instruction.count,
+      'Terminé'         => Dossier.state_termine.count
     }
   end
 
@@ -127,7 +127,7 @@ class StatsController < ApplicationController
     legend = {
       Feedback.ratings.fetch(:unhappy) => "Mécontents",
       Feedback.ratings.fetch(:neutral) => "Neutres",
-      Feedback.ratings.fetch(:happy) => "Satisfaits"
+      Feedback.ratings.fetch(:happy)   => "Satisfaits"
     }
 
     number_of_weeks = 12
@@ -141,16 +141,16 @@ class StatsController < ApplicationController
         .group_by_week(:created_at, last: number_of_weeks, current: false)
         .count
         .map do |week, count|
-        total = totals[week]
-        # By default a week is displayed by the first day of the week – but we'd rather display the last day
-        label = week.next_week
+          total = totals[week]
+          # By default a week is displayed by the first day of the week – but we'd rather display the last day
+          label = week.next_week
 
-        if total > 0
-          [label, (count.to_f / total * 100).round(2)]
-        else
-          [label, 0]
-        end
-      end.to_h
+          if total > 0
+            [label, (count.to_f / total * 100).round(2)]
+          else
+            [label, 0]
+          end
+        end.to_h
 
       {
         name: legend[rating],
@@ -258,8 +258,8 @@ class StatsController < ApplicationController
     # Group dossiers by month
     processed_dossiers_by_month = processed_dossiers
       .group_by do |dossier|
-      dossier[2].beginning_of_month.to_s
-    end
+        dossier[2].beginning_of_month.to_s
+      end
 
     processed_dossiers_by_month.map do |month, value|
       # Group the dossiers for this month by procedure
@@ -305,8 +305,8 @@ class StatsController < ApplicationController
     # Group dossiers by month
     processed_dossiers_by_month = processed_dossiers
       .group_by do |(*_, processed_at)|
-      processed_at.beginning_of_month.to_s
-    end
+        processed_at.beginning_of_month.to_s
+      end
 
     groupe_instructeur_ids = processed_dossiers.map { |gid, _, _| gid }.uniq
     groupe_instructeurs = GroupeInstructeur.where(id: groupe_instructeur_ids).pluck(:id, :procedure_id)
