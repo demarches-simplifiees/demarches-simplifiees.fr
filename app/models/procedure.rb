@@ -43,7 +43,6 @@
 #  published_revision_id               :bigint
 #  service_id                          :bigint
 #
-require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
   self.ignored_columns = ['archived_at', 'csv_export_queued', 'xlsx_export_queued', 'ods_export_queued']
