@@ -1,7 +1,23 @@
 describe NewAdministrateur::MailTemplatesController, type: :controller do
   render_views
+  let(:procedure) { create :procedure }
+  let(:initiated_mail) { Mails::InitiatedMail.default_for_procedure(procedure) }
 
   let(:admin) { create(:administrateur) }
+
+  before do
+    sign_in(procedure.administrateurs.first.user)
+  end
+
+  describe 'GET index' do
+    render_views
+
+    subject { get :index, params: { procedure_id: procedure.id } }
+
+    it { expect(subject.status).to eq 200 }
+    it { expect(subject.body).to include("Configuration des emails") }
+    it { expect(subject.body).to include(Mails::InitiatedMail::DISPLAYED_NAME) }
+  end
 
   describe '#preview' do
     let(:procedure) { create(:procedure, :with_logo, :with_service, administrateur: admin) }

@@ -6,16 +6,6 @@ describe Admin::MailTemplatesController, type: :controller do
     sign_in(procedure.administrateurs.first.user)
   end
 
-  describe 'GET index' do
-    render_views
-
-    subject { get :index, params: { procedure_id: procedure.id } }
-
-    it { expect(subject.status).to eq 200 }
-    it { expect(subject.body).to include("E-mails personnalisables") }
-    it { expect(subject.body).to include(Mails::InitiatedMail::DISPLAYED_NAME) }
-  end
-
   describe 'PATCH update' do
     let(:mail_subject) { 'plop modif' }
     let(:mail_body) { 'plip modif' }
