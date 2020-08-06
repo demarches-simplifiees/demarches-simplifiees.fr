@@ -23,7 +23,7 @@ describe NewAdministrateur::AttestationTemplatesController, type: :controller do
     render_views
     it 'renders a PDF' do
       expect(subject.status).to eq(200)
-      expect(subject.content_type).to eq('application/pdf')
+      expect(subject.media_type).to eq('application/pdf')
     end
   end
 
