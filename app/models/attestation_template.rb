@@ -86,8 +86,8 @@ class AttestationTemplate < ApplicationRecord
 
     {
       created_at: Time.zone.now,
-      title: dossier ? replace_tags(title, dossier) : params.fetch(:title, ''),
-      body: dossier ? replace_tags(body, dossier) : params.fetch(:body, ''),
+      title: dossier ? replace_tags(title, dossier) : params.fetch(:title, title),
+      body: dossier ? replace_tags(body, dossier) : params.fetch(:body, body),
       footer: params.fetch(:footer, footer),
       logo: params.fetch(:logo, logo.attached? ? logo : nil),
       signature: params.fetch(:signature, signature.attached? ? signature : nil),
@@ -111,7 +111,7 @@ class AttestationTemplate < ApplicationRecord
   def build_pdf(dossier)
     attestation = render_attributes_for(dossier: dossier)
     action_view = ActionView::Base.new(ActionController::Base.view_paths, attestation: attestation)
-    attestation_view = action_view.render(file: 'admin/attestation_templates/show.pdf.prawn')
+    attestation_view = action_view.render(file: 'new_administrateur/attestation_templates/show', formats: [:pdf])
 
     StringIO.new(attestation_view)
   end

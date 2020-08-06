@@ -5,6 +5,7 @@
 - persisted = attachment && attachment.persisted?
 - accept = defined?(accept) ? accept : nil
 - user_can_destroy = defined?(user_can_destroy) ? user_can_destroy : false
+- direct_upload = direct_upload != nil ? false : true
 
 .attachment
   - if defined?(template) && template.attached?
@@ -34,5 +35,5 @@
   = form.file_field attached_file.name,
     class: "attachment-input attachment-input-#{attachment_id} #{'hidden' if persisted}",
     accept: accept,
-    direct_upload: true,
+    direct_upload: direct_upload,
     data: { 'auto-attach-url': auto_attach_url(form, form.object) }
