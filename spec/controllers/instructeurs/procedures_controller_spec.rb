@@ -540,8 +540,8 @@ describe Instructeurs::ProceduresController, type: :controller do
           format: :js
       end
 
-      it "responses in the correct format" do
-        expect(response.content_type).to eq "text/javascript"
+      it 'responds in the correct format' do
+        expect(response.media_type).to eq('text/javascript')
         expect(response).to have_http_status(:ok)
       end
     end
