@@ -17,10 +17,7 @@
 
     = form_for @avis, url: instructeur_avis_path(@avis.procedure, @avis), html: { class: 'form' } do |f|
       = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
-      = render 'shared/attachment/edit',
-        { form: f,
-          attached_file: @avis.piece_justificative_file,
-          user_can_destroy: true }
+      = text_upload_and_render f, @avis.piece_justificative_file
 
       .flex.justify-between.align-baseline
         %p.confidentiel.flex

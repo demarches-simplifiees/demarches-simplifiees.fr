@@ -11,10 +11,15 @@ Dotenv::Railtie.load
 
 module TPS
   class Application < Rails::Application
-    config.load_defaults 5.0
+    config.load_defaults 6.0
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    # The default autoloader since Rails 6.0 defaults is zeitwerk.
+    # However, to split the work, we will move to zeitwerk only in a future PR.
+    config.autoloader = :classic
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.

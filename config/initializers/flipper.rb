@@ -36,7 +36,8 @@ features = [
   :mini_profiler,
   :operation_log_serialize_subject,
   :pre_maintenance_mode,
-  :xray
+  :xray,
+  :carte_ign
 ]
 
 def database_exists?

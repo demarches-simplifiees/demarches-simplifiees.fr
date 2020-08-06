@@ -1,6 +1,6 @@
 include ActionDispatch::TestProcess
 
-describe Admin::AttestationTemplatesController, type: :controller do
+describe NewAdministrateur::AttestationTemplatesController, type: :controller do
   let!(:attestation_template) { create(:attestation_template) }
   let(:admin) { create(:administrateur) }
   let!(:procedure) { create :procedure, administrateur: admin, attestation_template: attestation_template }
@@ -23,57 +23,21 @@ describe Admin::AttestationTemplatesController, type: :controller do
     render_views
     it 'renders a PDF' do
       expect(subject.status).to eq(200)
-      expect(subject.content_type).to eq('application/pdf')
+      expect(subject.media_type).to eq('application/pdf')
     end
   end
 
-  describe 'POST #preview' do
-    let(:upload_params) { { title: 't', body: 'b', footer: 'f' } }
+  describe 'GET #preview' do
+    let(:attestation_params) do
+      { title: 't', body: 'b', footer: 'f' }
+    end
 
     before do
-      post :preview,
+      get :preview,
         params: {
-          procedure_id: procedure.id,
-          attestation_template: upload_params
+          procedure_id: procedure.id
         }
       procedure.reload
-    end
-
-    context 'with an interlaced png' do
-      let(:upload_params) { { logo: interlaced_logo } }
-
-      it 'displays the logo' do
-        expect(assigns(:attestation)[:logo].read).to eq(uninterlaced_logo.read)
-      end
-
-      it 'doesn’t save the logo permanently yet' do
-        expect(procedure.attestation_template.logo.attached?).to be(false)
-      end
-    end
-
-    context 'with an invalid logo' do
-      let(:upload_params) { { logo: invalid_logo } }
-      it { expect(procedure.attestation_template.logo.attached?).to be false }
-      it { expect(flash.alert).to be_present }
-    end
-
-    context 'if an attestation template does not exist on the procedure' do
-      let(:attestation_template) { nil }
-
-      context 'with images' do
-        let(:upload_params) { { title: 't', body: 'b', footer: 'f', logo: interlaced_logo } }
-
-        it { expect(assigns(:attestation)).to include({ title: 't', body: 'b', footer: 'f' }) }
-        it { expect(assigns(:attestation)[:logo]).to be_present }
-        it_behaves_like 'rendering a PDF successfully'
-      end
-
-      context 'without images' do
-        let(:upload_params) { { title: 't', body: 'b', footer: 'f' } }
-
-        it { expect(assigns(:attestation)).to include(upload_params) }
-        it_behaves_like 'rendering a PDF successfully'
-      end
     end
 
     context 'if an attestation template exists on the procedure' do
@@ -81,10 +45,10 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
       context 'with images' do
         let!(:attestation_template) do
-          create(:attestation_template, logo: logo, signature: signature)
+          create(:attestation_template, attestation_params.merge(logo: logo, signature: signature))
         end
 
-        it { expect(assigns(:attestation)).to include(upload_params) }
+        it { expect(assigns(:attestation)).to include(attestation_params) }
         it { expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now) }
         it { expect(assigns(:attestation)[:logo].download).to eq(logo2.read) }
         it { expect(assigns(:attestation)[:signature].download).to eq(signature2.read) }
@@ -92,7 +56,11 @@ describe Admin::AttestationTemplatesController, type: :controller do
       end
 
       context 'without images' do
-        it { expect(assigns(:attestation)).to include(upload_params) }
+        let!(:attestation_template) do
+          create(:attestation_template, attestation_params)
+        end
+
+        it { expect(assigns(:attestation)).to include(attestation_params) }
         it { expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now) }
         it { expect(assigns(:attestation)[:logo]).to eq(nil) }
         it { expect(assigns(:attestation)[:signature]).to eq(nil) }
@@ -119,7 +87,7 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
   describe 'POST #create' do
     let(:attestation_template) { nil }
-    let(:attestation_params) { { title: 't', body: 'b', footer: 'f' } }
+    let(:attestation_params) { { title: 't', body: 'b', footer: 'f', activated: true } }
 
     context 'nominal' do
       before do
@@ -142,12 +110,10 @@ describe Admin::AttestationTemplatesController, type: :controller do
     end
 
     context 'when something wrong happens in the attestation template creation' do
-      before do
-        expect_any_instance_of(AttestationTemplate).to receive(:save)
-          .and_return(false)
-        expect_any_instance_of(AttestationTemplate).to receive(:errors)
-          .and_return(double(full_messages: ['nop']))
+      let(:invalid_footer) { 'f' * 200 }
+      let(:attestation_params) { { title: 't', body: 'b', footer: invalid_footer, activated: true } }
 
+      before do
         post :create,
           params: {
             procedure_id: procedure.id,
@@ -157,7 +123,8 @@ describe Admin::AttestationTemplatesController, type: :controller do
       end
 
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
-      it { expect(flash.alert).to eq('nop') }
+      it { expect(flash.alert).to be_present }
+      it { expect(procedure.attestation_template).to be nil }
     end
   end
 
@@ -200,20 +167,6 @@ describe Admin::AttestationTemplatesController, type: :controller do
 
       it { expect(response).to redirect_to edit_admin_procedure_attestation_template_path(procedure) }
       it { expect(flash.alert).to eq('nop') }
-    end
-  end
-
-  describe 'post #disactivate' do
-    context 'when the attestation_template is activated' do
-      let(:attestation_template) { create(:attestation_template, activated: true) }
-
-      before do
-        post :disactivate, params: { procedure_id: procedure.id }
-        attestation_template.reload
-      end
-
-      it { expect(attestation_template.activated).to be false }
-      it { expect(flash.notice).to eq("L'attestation a bien été désactivée") }
     end
   end
 end
