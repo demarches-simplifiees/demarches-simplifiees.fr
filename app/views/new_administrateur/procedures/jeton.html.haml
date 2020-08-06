@@ -9,7 +9,7 @@
 
 .container
   %h1
-  = form_with model: @procedure, url: url_for({ controller: 'new_administrateur/procedures', action: :update_jeton }), html: { class: 'form' } do |f|
+  = form_with model: @procedure, url: url_for({ controller: 'new_administrateur/procedures', action: :update_jeton }), local: true, html: { class: 'form' } do |f|
     %p.explication
       Démarches Simplifiées utilise
       = link_to 'API Entreprise', "https://entreprise.api.gouv.fr/"
