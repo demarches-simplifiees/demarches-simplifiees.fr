@@ -29,6 +29,9 @@ require 'factory_bot'
 require 'axe/rspec'
 
 require 'selenium/webdriver'
+
+TEST_PASSWORD = 'PARAU TAHITI ‘OE'
+
 Capybara.javascript_driver      = ENV.fetch('CAPYBARA_DRIVER', 'headless_chrome').to_sym
 Capybara.ignore_hidden_elements = false
 

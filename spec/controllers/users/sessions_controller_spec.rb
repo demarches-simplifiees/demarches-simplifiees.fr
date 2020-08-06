@@ -1,6 +1,6 @@
 describe Users::SessionsController, type: :controller do
   let(:email) { 'unique@plop.com' }
-  let(:password) { 'my-s3cure-p4ssword' }
+  let(:password) { TEST_PASSWORD }
   let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
   let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
 

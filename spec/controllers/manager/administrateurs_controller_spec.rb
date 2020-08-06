@@ -26,7 +26,7 @@ describe Manager::AdministrateursController, type: :controller do
 
   describe 'POST #create' do
     let(:email) { 'plop@plop.com' }
-    let(:password) { 'my-s3cure-p4ssword' }
+    let(:password) { TEST_PASSWORD }
 
     subject { post :create, params: { administrateur: { email: email } } }
 

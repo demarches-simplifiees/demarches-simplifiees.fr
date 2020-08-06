@@ -1,6 +1,6 @@
 feature 'Signing up:' do
   let(:user_email) { generate :user_email }
-  let(:user_password) { 'my-s3cure-p4ssword' }
+  let(:user_password) { TEST_PASSWORD }
   let(:procedure) { create :simple_procedure, :with_service }
 
   scenario 'a new user can sign-up from scratch' do

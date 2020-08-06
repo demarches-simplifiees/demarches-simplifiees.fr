@@ -39,7 +39,7 @@ module FeatureHelpers
     end
   end
 
-  def sign_up_with(email, password = 'my-s3cure-p4ssword')
+  def sign_up_with(email, password = TEST_PASSWORD)
     fill_in :user_email, with: email
     fill_in :user_password, with: password
 

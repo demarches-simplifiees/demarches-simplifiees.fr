@@ -20,7 +20,7 @@ feature 'As an instructeur', js: true do
 
     visit "users/activate?#{token_params}"
     expect(page).to have_content 'Choix du mot de passe'
-    fill_in :user_password, with: 'my-s3cure-p4ssword'
+    fill_in :user_password, with: TEST_PASSWORD
 
     click_button 'Définir le mot de passe'
 

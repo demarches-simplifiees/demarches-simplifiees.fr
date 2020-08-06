@@ -1,5 +1,5 @@
 feature 'linked dropdown lists' do
-  let(:password) { 'my-s3cure-p4ssword' }
+  let(:password) { TEST_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
   let(:list_items) do
