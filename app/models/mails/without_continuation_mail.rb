@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: without_continuation_mails
+#
+#  id           :integer          not null, primary key
+#  body         :text
+#  subject      :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  procedure_id :integer
+#
 module Mails
   class WithoutContinuationMail < ApplicationRecord
     include MailTemplateConcern

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: attestation_templates
+#
+#  id           :integer          not null, primary key
+#  activated    :boolean
+#  body         :text
+#  footer       :text
+#  title        :text
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  procedure_id :integer
+#
 class AttestationTemplate < ApplicationRecord
   self.ignored_columns = ['logo', 'signature', 'logo_secure_token', 'signature_secure_token']
 
