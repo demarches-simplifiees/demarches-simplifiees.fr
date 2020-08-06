@@ -12,8 +12,6 @@
 #  procedure_id :integer
 #
 class AttestationTemplate < ApplicationRecord
-  self.ignored_columns = ['logo', 'signature', 'logo_secure_token', 'signature_secure_token']
-
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
