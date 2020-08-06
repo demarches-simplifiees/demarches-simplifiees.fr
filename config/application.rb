@@ -31,8 +31,6 @@ module TPS
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.i18n.available_locales = [:fr]
 
-    config.paths.add "#{config.root}/lib", eager_load: true
-
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript')
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.precompile += ['.woff']
