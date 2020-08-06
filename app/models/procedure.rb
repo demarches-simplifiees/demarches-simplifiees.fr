@@ -1,3 +1,47 @@
+# == Schema Information
+#
+# Table name: procedures
+#
+#  id                                  :integer          not null, primary key
+#  aasm_state                          :string           default("brouillon")
+#  api_entreprise_token                :string
+#  ask_birthday                        :boolean          default(FALSE), not null
+#  auto_archive_on                     :date
+#  cadre_juridique                     :string
+#  cerfa_flag                          :boolean          default(FALSE)
+#  cloned_from_library                 :boolean          default(FALSE)
+#  closed_at                           :datetime
+#  declarative_with_state              :string
+#  description                         :string
+#  direction                           :string
+#  duree_conservation_dossiers_dans_ds :integer
+#  duree_conservation_dossiers_hors_ds :integer
+#  durees_conservation_required        :boolean          default(TRUE)
+#  euro_flag                           :boolean          default(FALSE)
+#  for_individual                      :boolean          default(FALSE)
+#  hidden_at                           :datetime
+#  juridique_required                  :boolean          default(TRUE)
+#  libelle                             :string
+#  lien_demarche                       :string
+#  lien_notice                         :string
+#  lien_site_web                       :string
+#  monavis_embed                       :text
+#  organisation                        :string
+#  path                                :string           not null
+#  published_at                        :datetime
+#  routing_criteria_name               :text             default("Votre ville")
+#  test_started_at                     :datetime
+#  unpublished_at                      :datetime
+#  web_hook_url                        :string
+#  whitelisted_at                      :datetime
+#  created_at                          :datetime         not null
+#  updated_at                          :datetime         not null
+#  canonical_procedure_id              :bigint
+#  draft_revision_id                   :bigint
+#  parent_procedure_id                 :bigint
+#  published_revision_id               :bigint
+#  service_id                          :bigint
+#
 require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord

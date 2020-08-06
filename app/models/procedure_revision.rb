@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: procedure_revisions
+#
+#  id           :bigint           not null, primary key
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  procedure_id :bigint           not null
+#
 class ProcedureRevision < ApplicationRecord
   self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions
