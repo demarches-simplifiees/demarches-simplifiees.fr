@@ -59,7 +59,7 @@ describe TagsSubstitutionConcern, type: :model do
 
       context 'and the template use the entreprise tags' do
         let(:template) do
-          '--SIREN-- --numéro de TVA intracommunautaire-- --SIRET du siège social-- --raison sociale-- --adresse--'
+          '--SIREN-- --numéro de TVA intracommunautaire-- --Numéro TAHITI du siège social-- --raison sociale-- --adresse--'
         end
         let(:etablissement) { create(:etablissement) }
 

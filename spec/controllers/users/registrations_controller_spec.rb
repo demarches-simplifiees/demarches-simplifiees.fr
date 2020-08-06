@@ -1,6 +1,6 @@
 describe Users::RegistrationsController, type: :controller do
   let(:email) { 'test@octo.com' }
-  let(:password) { 'démarches-simplifiées-pwd' }
+  let(:password) { TEST_PASSWORD }
 
   let(:user) { { email: email, password: password } }
 

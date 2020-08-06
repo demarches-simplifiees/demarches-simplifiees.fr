@@ -387,14 +387,16 @@ describe Procedure do
       expect(subject.draft_revision.types_de_champ_private.size).to eq(procedure.draft_revision.types_de_champ_private.size)
 
       procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
-        expect(stc).to have_same_attributes_as(ptc)
+        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc.revision).to eq(subject.draft_revision)
       end
       procedure.types_de_champ.zip(procedure.draft_revision.types_de_champ).each do |ptc, rtc|
         expect(ptc).to eq(rtc)
       end
 
       subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
-        expect(stc).to have_same_attributes_as(ptc)
+        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc.revision).to eq(subject.draft_revision)
       end
       procedure.types_de_champ_private.zip(procedure.draft_revision.types_de_champ_private).each do |ptc, rtc|
         expect(ptc).to eq(rtc)
@@ -577,7 +579,7 @@ describe Procedure do
         expect(procedure.published_revision).not_to be_nil
         expect(procedure.draft_revision).not_to be_nil
         expect(procedure.revisions.count).to eq(2)
-        expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+        expect(procedure.revisions.sort_by(&:id)).to eq([procedure.published_revision, procedure.draft_revision])
       end
     end
 
@@ -634,7 +636,7 @@ describe Procedure do
         expect(procedure.published_revision).not_to be_nil
         expect(procedure.draft_revision).not_to be_nil
         expect(procedure.revisions.count).to eq(2)
-        expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+        expect(procedure.revisions.sort_by(&:id)).to eq([procedure.published_revision, procedure.draft_revision])
       end
     end
 
@@ -687,7 +689,7 @@ describe Procedure do
       expect(procedure.published_revision).not_to be_nil
       expect(procedure.draft_revision).not_to be_nil
       expect(procedure.revisions.count).to eq(2)
-      expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+      expect(procedure.revisions.sort_by(&:id)).to eq([procedure.published_revision, procedure.draft_revision])
     end
   end
 
@@ -768,7 +770,7 @@ describe Procedure do
       expect(procedure.published_revision).not_to be_nil
       expect(procedure.draft_revision).not_to be_nil
       expect(procedure.revisions.count).to eq(2)
-      expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+      expect(procedure.revisions.sort_by(&:id)).to eq([procedure.published_revision, procedure.draft_revision])
     end
   end
 

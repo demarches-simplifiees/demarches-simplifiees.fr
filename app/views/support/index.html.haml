@@ -41,26 +41,26 @@
             ) sont bien remplis ?
           %p Si vous avez des questions sur les informations à saisir, contactez les services en charge de la démarche.
           %p
-            %a{ href: "#{FR_FAQ_URL}/article/12-contacter-le-service-en-charge-de-ma-demarche" }
+            %a{ href: FAQ_CONTACTER_SERVICE_EN_CHARGE_URL }
               En savoir plus
 
       .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_PERDU } }
         .card-title
           👉 Notre réponse
         .card-content
-          %p Nous vous invitons à contacter l’administration en charge de votre démarche pour qu’elle vous indique le lien à suivre. Celui-ci devrait ressembler à cela : #{SITE_NAME}/commencer/NOM_DE_LA_DEMARCHE .
+          %p Nous vous invitons à contacter l’administration en charge de votre démarche pour qu’elle vous indique le lien à suivre. Celui-ci devrait ressembler à cela : #{APPLICATION_BASE_URL}/commencer/NOM_DE_LA_DEMARCHE .
           %br
           %p Vous pouvez aussi consulter ici la liste de nos démarches les plus frequentes (permis, detr etc) :
           %p
             %a{ href: LISTE_DES_DEMARCHES_URL }
-              LISTE_DES_DEMARCHES_URL
+              = LISTE_DES_DEMARCHES_URL
 
       .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INSTRUCTION } }
         .card-title
           👉 Notre réponse
         %p Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie.
         %p
-          %a{ href: "#{FR_FAQ_URL}/article/11-je-veux-savoir-ou-en-est-linstruction-de-ma-demarche" }
+          %a{ href: FAQ_OU_EN_EST_MON_DOSSIER_URL }
             En savoir plus
         %br
         %p Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l'instruction de votre dossier.
@@ -80,7 +80,7 @@
 
         %p
           %strong
-            %a{ href: 'https://demarches-simplifiees.featureupvote.com' }
+            %a{ href: FEATURE_UPVOTE_URL }
               ➡ Accéder au tableau des améliorations
 
       .contact-champ

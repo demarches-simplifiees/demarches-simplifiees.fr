@@ -50,15 +50,5 @@ describe 'shared/dossiers/demande.html.haml', type: :view do
         expect(subject).to include(champ.libelle)
       end
     end
-
-    context 'when the dossier lost some attachments' do
-      before do
-        expect(view).to receive(:has_lost_attachments).and_return(true)
-      end
-
-      it 'displays a warning message' do
-        expect(subject).to include('Des pièces jointes de votre dossier peuvent être manquantes.')
-      end
-    end
   end
 end

@@ -34,7 +34,7 @@ footer_height = qrcode.present? ? qrcode_size + 40 : 30
 info = {
   :Title => title,
   :Subject => "Attestation pour un dossier",
-  :Creator => "#{SITE_NAME}",
+  :Creator => "#{APPLICATION_NAME}",
   :Producer => "Prawn",
   :CreationDate => created_at
 }

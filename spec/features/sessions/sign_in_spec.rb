@@ -1,6 +1,6 @@
 feature 'Signin in:' do
   let!(:user) { create(:user, password: password) }
-  let(:password) { 'démarches-simplifiées-pwd' }
+  let(:password) { TEST_PASSWORD }
 
   scenario 'an existing user can sign-in' do
     visit root_path

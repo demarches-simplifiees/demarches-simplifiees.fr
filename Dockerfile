@@ -59,6 +59,8 @@ ENV \
     API_ISPF_USER=""\
     APP_HOST="localhost:3000"\
     APP_NAME="tps_local"\
+    APPLICATION_NAME="Mes-Démarches"\
+    APPLICATION_BASE_URL="https://www.mes-demarches.gov.pf"\
     BASIC_AUTH_ENABLED="disabled"\
     BASIC_AUTH_PASSWORD=""\
     BASIC_AUTH_USERNAME=""\

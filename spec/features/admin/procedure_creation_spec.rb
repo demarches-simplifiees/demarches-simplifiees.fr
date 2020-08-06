@@ -12,18 +12,18 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
   context 'Right after sign_in I shall see all procedure states links' do
     scenario 'Finding draft procedures' do
-      click_on 'draft-procedures'
-      expect(page).to have_current_path(admin_procedures_draft_path)
+      page.all('.tabs li a')[1].click
+      expect(page).to have_current_path(admin_procedures_path(statut: 'brouillons'))
     end
 
     scenario 'Finding active procedures' do
-      click_on 'active-procedures'
-      expect(page).to have_current_path(admin_procedures_path)
+      page.all('.tabs li a').first.click
+      expect(page).to have_current_path(admin_procedures_path(statut: 'publiees'))
     end
 
     scenario 'Finding archived procedures' do
-      click_on 'archived-procedures'
-      expect(page).to have_current_path(admin_procedures_archived_path)
+      page.all('.tabs li a').last.click
+      expect(page).to have_current_path(admin_procedures_path(statut: 'archivees'))
     end
   end
 
@@ -32,9 +32,9 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       scenario 'Finding save button for new procedure, libelle, description and cadre_juridique required' do
         expect(page).to have_selector('#new-procedure')
         find('#new-procedure').click
-        click_on 'from-scratch'
 
-        expect(page).to have_current_path(new_admin_procedure_path)
+        expect(page).to have_current_path(new_from_existing_admin_procedures_path)
+        click_on 'Créer une nouvelle démarche de zéro'
         expect(find('#procedure_for_individual_true')).to be_checked
         expect(find('#procedure_for_individual_false')).not_to be_checked
         fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
@@ -54,9 +54,9 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
     before 'Create procedure' do
       expect(page).to have_selector('#new-procedure')
       find('#new-procedure').click
-      click_on 'from-scratch'
 
-      expect(page).to have_current_path(new_admin_procedure_path)
+      expect(page).to have_current_path(new_from_existing_admin_procedures_path)
+      click_on 'Créer une nouvelle démarche de zéro'
       fill_in_dummy_procedure_details
       click_on 'Créer la démarche'
 

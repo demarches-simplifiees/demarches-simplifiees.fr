@@ -57,7 +57,7 @@
           = link_to @procedure_lien, sanitize_url(@procedure_lien), target: :blank, rel: :noopener
           %br
           %br
-          Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{SITE_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{SITE_NAME}, donnez-leur toujours le lien complet.
+          Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
         - elsif @procedure.brouillon?
           - if @procedure.missing_steps.empty?
             %p
@@ -77,6 +77,10 @@
               À ce moment du processus de création, vous devez consulter votre Délégué à la Protection des Données personnelles (DPD ou DPO).
               Ce dernier pourra vous aider dans la finalisation de votre démarche, et vous inviter à vous interroger
               sur les données collectées, et sur la pertinence de ces dernières.
+              (
+              %a{ href:'https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes', target:'_blank' }
+                https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes
+              )
             %p
               Dans tous les cas,
               %b
@@ -84,7 +88,7 @@
               en lui envoyant par exemple le lien vers votre démarche en test.
             %p
               Si vous êtes dans un service de l'administration de la <b>Polynésie</b>, envoyez le lien de votre démarche à
-              - subject = "[#{SITE_NAME}] test de '#{@procedure.libelle}'".gsub(/&/,' ')
+              - subject = "[#{APPLICATION_NAME}] test de '#{@procedure.libelle}'".gsub(/&/,' ')
               - body = "Bonjour%0AQue pensez-vous de #{sanitize_url(procedure_lien(@procedure))}%0AD'avance merci.".gsub(/&/,' ')
               %a{ href:"mailto: #{EQUIPE_EMAIL}?subject=#{subject}&body=#{body}" }
                 l'équipe RGPD.

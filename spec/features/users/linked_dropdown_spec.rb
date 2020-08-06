@@ -1,5 +1,5 @@
 feature 'linked dropdown lists' do
-  let(:password) { 'démarches-simplifiées-pwd' }
+  let(:password) { TEST_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
   let(:list_items) do

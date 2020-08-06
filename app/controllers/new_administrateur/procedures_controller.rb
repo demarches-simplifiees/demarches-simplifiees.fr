@@ -3,6 +3,46 @@ module NewAdministrateur
     before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
+    ITEMS_PER_PAGE = 25
+
+    def index
+      @procedures_publiees = paginated_published_procedures
+      @procedures_draft = paginated_draft_procedures
+      @procedures_closed = paginated_closed_procedures
+      @procedures_publiees_count = current_administrateur.procedures.publiees.count
+      @procedures_draft_count = current_administrateur.procedures.brouillons.count
+      @procedures_closed_count = current_administrateur.procedures.closes.count
+      @statut = params[:statut]
+      @statut.blank? ? @statut = 'publiees' : @statut = params[:statut]
+    end
+
+    def paginated_published_procedures
+      current_administrateur
+        .procedures
+        .publiees
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(published_at: :desc)
+    end
+
+    def paginated_draft_procedures
+      current_administrateur
+        .procedures
+        .brouillons
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(created_at: :desc)
+    end
+
+    def paginated_closed_procedures
+      current_administrateur
+        .procedures
+        .closes
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(created_at: :desc)
+    end
+
     def apercu
       @dossier = procedure_without_control.new_dossier
       @tab = apercu_tab
@@ -56,6 +96,19 @@ module NewAdministrateur
       else
         flash.notice = 'Démarche modifiée.'
         redirect_to edit_admin_procedure_path(id: @procedure.id)
+      end
+    end
+
+    def destroy
+      procedure = current_administrateur.procedures.find(params[:id])
+
+      if procedure.can_be_deleted_by_administrateur?
+        procedure.discard_and_keep_track!(current_administrateur)
+
+        flash.notice = 'Démarche supprimée'
+        redirect_to admin_procedures_draft_path
+      else
+        render json: {}, status: 403
       end
     end
 

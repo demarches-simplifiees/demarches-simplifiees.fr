@@ -62,9 +62,9 @@ fr:
     usager perdu: Je ne trouve pas la démarche que je veux faire
     autre: Autre sujet
   supportadmin:
-    admin demande rdv: Demande de RDV pour une présentation à distance de #{SITE_NAME}
-    admin question: J’ai une question sur #{SITE_NAME}
-    admin soucis: J’ai un problème technique avec #{SITE_NAME}
+    admin demande rdv: Demande de RDV pour une présentation à distance de #{APPLICATION_NAME}
+    admin question: J’ai une question sur #{APPLICATION_NAME}
+    admin soucis: J’ai un problème technique avec #{APPLICATION_NAME}
     admin suggestion produit: J’ai une proposition d'évolution
     admin demande compte: Je souhaite ouvrir un compte administrateur avec un email Orange, Wanadoo, etc.
     admin autre: Autre sujet
@@ -336,3 +336,15 @@ fr:
       zero: 0 dossier trouvé
       one: 1 dossier trouvé
       other: "%{count} dossiers trouvés"
+    published:
+      zero: Publiée
+      one: Publiée
+      other: Publiées
+    closed:
+      zero: Close
+      one: Close
+      other: Closes
+    draft:
+      zero: Brouillon
+      one: Brouillon
+      other: Brouillons

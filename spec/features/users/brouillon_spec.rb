@@ -1,5 +1,5 @@
 feature 'The user' do
-  let(:password) { 'démarches-simplifiées-pwd' }
+  let(:password) { TEST_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }
