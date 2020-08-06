@@ -65,7 +65,7 @@ end
 def add_identite_etablissement(pdf, libelle)
   add_single_line(pdf, libelle, 9, :bold)
 
-  format_in_2_columns(pdf, "SIRET")
+  format_in_2_columns(pdf, "Numéro TAHITI")
   format_in_2_columns(pdf, "Dénomination")
   format_in_2_columns(pdf, "Forme juridique")
 end

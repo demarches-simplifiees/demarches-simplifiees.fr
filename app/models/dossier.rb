@@ -671,7 +671,7 @@ class Dossier < ApplicationRecord
       end
     elsif with_etablissement
       columns += [
-        ['Établissement SIRET', etablissement&.siret],
+        ['Établissement Numéro TAHITI', etablissement&.siret],
         ['Établissement siège social', etablissement&.siege_social],
         ['Établissement NAF', etablissement&.naf],
         ['Établissement libellé NAF', etablissement&.libelle_naf],
@@ -690,7 +690,7 @@ class Dossier < ApplicationRecord
         ['Entreprise forme juridique code', etablissement&.entreprise_forme_juridique_code],
         ['Entreprise nom commercial', etablissement&.entreprise_nom_commercial],
         ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale],
-        ['Entreprise SIRET siège social', etablissement&.entreprise_siret_siege_social],
+        ['Entreprise Numéro TAHITI siège social', etablissement&.entreprise_siret_siege_social],
         ['Entreprise code effectif entreprise', etablissement&.entreprise_code_effectif_entreprise],
         ['Entreprise date de création', etablissement&.entreprise_date_creation],
         ['Entreprise nom', etablissement&.entreprise_nom],
