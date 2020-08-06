@@ -58,6 +58,8 @@ services:
       - API_ISPF_PASSWORD
       - API_ISPF_USER
       - APP_HOST
+      - APPLICATION_NAME
+      - APPLICATION_BASE_URL
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
       - CRISP_CLIENT_KEY
@@ -110,6 +112,8 @@ services:
     restart: always
     environment:
       - APP_HOST
+      - APPLICATION_NAME
+      - APPLICATION_BASE_URL
       - DB_DATABASE
       - DB_HOST
       - DB_USERNAME

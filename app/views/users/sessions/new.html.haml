@@ -4,10 +4,10 @@
 
 .form-column.procedure-context-content
   .auth-form.sign-in-form
-    %h1.center Si vous avez un compte #{SITE_NAME}
+    %h1.center Si vous avez un compte #{APPLICATION_NAME}
     = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
 
-      = f.label :email, "Email"
+      = f.label :email, "Email (nom@site.com)"
       = f.text_field :email, type: :email, autocomplete: 'username', autofocus: false
 
       = f.label :password, "Mot de passe"
@@ -28,7 +28,7 @@
 
     %hr
     %p.center
-      %span Vous êtes nouveau sur #{SITE_NAME} ?
+      %span Vous êtes nouveau sur #{APPLICATION_NAME} ?
       %br
       %br
       = link_to "Trouvez votre démarche", COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button secondary"

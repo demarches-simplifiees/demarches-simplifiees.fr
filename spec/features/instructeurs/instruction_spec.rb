@@ -1,7 +1,7 @@
 feature 'Instructing a dossier:' do
   include ActiveJob::TestHelper
 
-  let(:password) { 'démarches-simplifiées-pwd' }
+  let(:password) { TEST_PASSWORD }
   let!(:instructeur) { create(:instructeur, password: password) }
 
   let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }

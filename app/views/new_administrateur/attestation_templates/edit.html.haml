@@ -1,0 +1,56 @@
+- content_for(:root_class, 'scroll-margins-for-sticky-footer')
+
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Attestation'] }
+
+.procedure-form#attestation-template-edit
+  .procedure-form__columns.container
+    = form_for @attestation_template,
+      url: url_for({ controller: 'new_administrateur/attestation_templates', action: :update, id: @procedure.id }),
+      multipart: true,
+      html: { class: 'form procedure-form__column--form' } do |f|
+
+      %h1.page-title
+        Délivrance d‘attestation
+        - if @attestation_template.activated?
+          %span.text-active activée
+        - else
+          %span.text-inactive désactivée
+
+      - if @attestation_template.activated && @procedure.locked?
+        .card.warning
+          %p L’attestation ne peut plus être désactivée car la démarche est publiée.
+
+      %p.notice
+        L’attestation, si elle est activée, est émise au moment où un dossier est accepté.
+        %br
+        L’email d’accusé d’acceptation envoyé à l’usager comporte alors un lien vers l’attestation ;
+        celle-ci est également disponible au téléchargement depuis l’espace personnel de l’usager.
+
+      = render partial: 'new_administrateur/attestation_templates/informations', locals: { f: f }
+
+      .procedure-form__actions.sticky--bottom
+        .actions-left
+          -# Admins cannot disactivate the Attestation if it is activated and the procedure is published
+          - if !(@attestation_template.activated && @procedure.locked?)
+            %label.toggle-switch
+              = f.check_box :activated, class: 'toggle-switch-checkbox'
+              %span.toggle-switch-control.round
+              %span.toggle-switch-label.on Attestation activée
+              %span.toggle-switch-label.off Attestation désactivée
+
+        .actions-right
+          = link_to 'Annuler', edit_admin_procedure_attestation_template_path(id: @procedure), class: 'button', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
+          = f.button 'Enregistrer', class: 'button primary send'
+
+    .procedure-form__column--preview
+      .procedure-form__preview.sticky--top
+        %h3
+          .procedure-form__preview-title
+            Aperçu
+            .notice
+              Cet aperçu est mis à jour après chaque sauvegarde.
+        .procedure-preview
+          = render partial: 'new_administrateur/attestation_templates/apercu', locals: { procedure: @procedure }

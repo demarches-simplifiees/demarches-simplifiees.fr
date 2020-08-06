@@ -11,7 +11,7 @@
             vos démarches administratives
 
         .hero-illustration
-          %img{ :src => image_path("landing/hero/dematerialiser.svg"), alt: "" }
+          %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: "" }
 
   -# .landing-panel.more-info
     .container
@@ -33,13 +33,13 @@
             class: "role-panel-button-secondary"
 
         .role-panel-30.role-more-info-image
-          %img.role-image{ :src => image_path("landing/roles/usagers.svg"), alt: "" }
+          %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "" }
 
 .landing-panel.usagers-panel
   .container
     .role-panel-wrapper.role-administrations-panel
       .role-panel-30.role-administrations-image
-        %img.role-image{ :src => image_path("landing/roles/administrations.svg"), alt: "" }
+        %img.role-image{ :src => image_url("landing/roles/administrations.svg"), alt: "" }
 
       .role-panel-70
         %h1.role-panel-title Votre administration est prête pour dématérialiser
@@ -62,21 +62,21 @@
     .container
       %ul.features
         %li.feature
-          %img.feature-image{ :src => image_path("landing/features/messagerie.svg"), alt: "" }
+          %img.feature-image{ :src => image_url("landing/features/messagerie.svg"), alt: "" }
           %p.feature-text
             %em.feature-text-em Dialogue
             %br
             simplifié entre usagers et services
 
         %li.feature
-          %img.feature-image{ :src => image_path("landing/features/collaborer.svg"), alt: "" }
+          %img.feature-image{ :src => image_url("landing/features/collaborer.svg"), alt: "" }
           %p.feature-text
             %em.feature-text-em Collaboration
             %br
             pour un traitement des dossiers plus fluide
 
         %li.feature
-          %img.feature-image{ :src => image_path("landing/features/gerer.svg"), alt: "" }
+          %img.feature-image{ :src => image_url("landing/features/gerer.svg"), alt: "" }
           %p.feature-text
             %em.feature-text-em Intégration
             %br
@@ -88,7 +88,7 @@
 
       %ul.quotes
         %li.quote
-          %img.quote-quotation-mark{ :src => image_path("landing/testimonials/quotation-mark.svg"), alt: "" }
+          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
           .quote-content-wrapper
             %p.quote-content
               Les échanges avec les usagers sont facilités, ce qui permet de réduire les délais d’instructions et de gagner en efficacité.
@@ -99,7 +99,7 @@
               Cheffe de bureau, DRIEA Ile-de-France
 
         %li.quote
-          %img.quote-quotation-mark{ :src => image_path("landing/testimonials/quotation-mark.svg"), alt: "" }
+          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
           .quote-content-wrapper
             %p.quote-content
               Un service qui garantit une économie de temps et beaucoup moins de manipulations des dossiers.
@@ -111,7 +111,7 @@
 
       %ul.quotes
         %li.quote
-          %img.quote-quotation-mark{ :src => image_path("landing/testimonials/quotation-mark.svg"), alt: "" }
+          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
           .quote-content-wrapper
             %p.quote-content
               Parfait, cela fonctionne très bien ! Merci encore pour votre réactivité.
@@ -122,7 +122,7 @@
               à notre service support
 
         %li.quote
-          %img.quote-quotation-mark{ :src => image_path("landing/testimonials/quotation-mark.svg"), alt: "" }
+          %img.quote-quotation-mark{ :src => image_url("landing/testimonials/quotation-mark.svg"), alt: "" }
           .quote-content-wrapper
             %p.quote-content
               ★★★★★
@@ -137,7 +137,7 @@
   - cache "numbers-panel", :expires_in => 3.hours do
     .landing-panel.numbers-panel
       .container
-        %h2.landing-panel-title #{SITE_NAME} en chiffres
+        %h2.landing-panel-title #{APPLICATION_NAME} en chiffres
         %ul.numbers
           %li.number
             .number-value
@@ -163,58 +163,58 @@
 
   .landing-panel.users-panel
     .container
-      %h2.landing-panel-title Ils utilisent déjà #{SITE_NAME}
+      %h2.landing-panel-title Ils utilisent déjà #{APPLICATION_NAME}
 
       %ul.users
         %li.user
           = link_to "http://artisanat.pf/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/artisanat.svg"), alt: "Service de l'artisanat" }
+            %img.user-image{ :src => image_url("landing/users/artisanat.svg"), alt: "Service de l'artisanat" }
         %li.user
           = link_to "https://www.service-public.pf/voir/annuaire/deq-direction-de-lequipement", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/gegdp.svg"), alt: "Groupement d'Etude et de Gestion du Domaine Public, Direction de l'Equipement" }
+            %img.user-image{ :src => image_url("landing/users/gegdp.svg"), alt: "Groupement d'Etude et de Gestion du Domaine Public, Direction de l'Equipement" }
         %li.user
           = link_to "http://www.fonction-publique.gov.pf", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/dgrh01.jpg"), alt: "Direction Générale des Ressources Humaines" }
+            %img.user-image{ :src => image_url("landing/users/dgrh01.jpg"), alt: "Direction Générale des Ressources Humaines" }
         %li.user
           = link_to "https://www.service-public.pf/djs/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/djs.png"), alt: "Direction de la Jeunesse et des Sports" }
+            %img.user-image{ :src => image_url("landing/users/djs.png"), alt: "Direction de la Jeunesse et des Sports" }
         %li.user
           = link_to "http://www.transports-terrestres.pf", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/dtt.jpg"), alt: "Chambres des Métiers et de l'Artisanat" }
+            %img.user-image{ :src => image_url("landing/users/dtt.jpg"), alt: "Chambres des Métiers et de l'Artisanat" }
 
       %ul.users
         %li.user
           = link_to "https://www.education.pf", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/dgee.svg"), alt: "Direction Générale de l'Education et des Enseignements" }
+            %img.user-image{ :src => image_url("landing/users/dgee.svg"), alt: "Direction Générale de l'Education et des Enseignements" }
         %li.user
           = link_to "https://www.service-public.pf/voir/annuaire/sio-service-imprimerie-officielle/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/sio.svg"), alt: "Service de l'Imprimerie Officielle" }
+            %img.user-image{ :src => image_url("landing/users/sio.svg"), alt: "Service de l'Imprimerie Officielle" }
         %li.user
           = link_to "https://www.ecologique-solidaire.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/mtes.jpg"), alt: "Ministère de la Transition Écologique et Solidaire" }
+            %img.user-image{ :src => image_url("landing/users/mtes.jpg"), alt: "Ministère de la Transition Écologique et Solidaire" }
         %li.user
           = link_to "http://www.artisanat.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/chambres-de-metiers.jpg"), alt: "Chambres des Métiers et de l'Artisanat" }
+            %img.user-image{ :src => image_url("landing/users/chambres-de-metiers.jpg"), alt: "Chambres des Métiers et de l'Artisanat" }
         %li.user
           = link_to "http://www.driea.ile-de-france.developpement-durable.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/driea-idf.jpg"), alt: "Direction Régionale et Interdépartementale de l'Équipement et de l'Aménagement" }
+            %img.user-image{ :src => image_url("landing/users/driea-idf.jpg"), alt: "Direction Régionale et Interdépartementale de l'Équipement et de l'Aménagement" }
 
       %ul.users
         %li.user
           = link_to "https://www.debatpublic.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/cndp.jpg"), alt: "Commission Nationale du Débat Public" }
+            %img.user-image{ :src => image_url("landing/users/cndp.jpg"), alt: "Commission Nationale du Débat Public" }
         %li.user
           = link_to "https://www.iledefrance.ars.sante.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/ars-idf.jpg"), alt: "Agence Régionale de Santé d'Île-de-France" }
+            %img.user-image{ :src => image_url("landing/users/ars-idf.jpg"), alt: "Agence Régionale de Santé d'Île-de-France" }
         %li.user
           = link_to "http://www.franceagrimer.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/france-agrimer.jpg"), alt: "FranceAgrimer" }
+            %img.user-image{ :src => image_url("landing/users/france-agrimer.jpg"), alt: "FranceAgrimer" }
         %li.user
           = link_to "http://www.rhone.gouv.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/prefecture-rhone.jpg"), alt: "Préfecture de la région Rhône-Alpes" }
+            %img.user-image{ :src => image_url("landing/users/prefecture-rhone.jpg"), alt: "Préfecture de la région Rhône-Alpes" }
         %li.user
           = link_to "http://www.lillemetropole.fr/", target: :blank, rel: "noopener noreferrer" do
-            %img.user-image{ :src => image_path("landing/users/mel.jpg"), alt: "Métropole Européenne de Lille" }
+            %img.user-image{ :src => image_url("landing/users/mel.jpg"), alt: "Métropole Européenne de Lille" }
 
   .landing-panel.cta-panel-2
     .container
@@ -229,10 +229,12 @@
       -# .half
         %h1.cta-panel-title Vous voulez en savoir plus ?
         %p.cta-panel-explanation Participez à notre prochain Webinaire
+        -# haml-lint:disable ApplicationNameLinter
         = link_to "Inscription à notre webinaire",
           "https://app.livestorm.co/demarches-simplifiees/presentation-general-de-demarches-simplifieesfr",
           target: "_blank",
           class: "cta-panel-button-blue"
+        -# haml-lint:enable ApplicationNameLinter
 
       .clearfix
 

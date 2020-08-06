@@ -421,6 +421,22 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
       end
 
+      context 'without new values for champs' do
+        let(:submit_payload) do
+          {
+            id: dossier.id,
+            dossier: {
+              champs_attributes: {}
+            }
+          }
+        end
+
+        it "doesn't set last_champ_updated_at" do
+          subject
+          expect(dossier.reload.last_champ_updated_at).to eq(nil)
+        end
+      end
+
       context 'with instructeurs ok to be notified instantly' do
         let!(:instructeur_with_instant_email_dossier) { create(:instructeur) }
         let!(:instructeur_without_instant_email_dossier) { create(:instructeur) }
@@ -619,6 +635,7 @@ describe Users::DossiersController, type: :controller do
       it 'updates the champs' do
         subject
         expect(first_champ.reload.value).to eq('beautiful value')
+        expect(first_champ.dossier.reload.last_champ_updated_at).to eq(now)
         expect(piece_justificative_champ.reload.piece_justificative_file).to be_attached
       end
 
@@ -845,6 +862,7 @@ describe Users::DossiersController, type: :controller do
     let(:body) { "avant\napres" }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:scan_result) { true }
+    let(:now) { Time.zone.parse("18/09/1981") }
 
     subject {
       post :create_commentaire, params: {
@@ -857,6 +875,7 @@ describe Users::DossiersController, type: :controller do
     }
 
     before do
+      Timecop.freeze(now)
       sign_in(user)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
       allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
@@ -866,6 +885,8 @@ describe Users::DossiersController, type: :controller do
       create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false, groupe_instructeur: procedure.defaut_groupe_instructeur)
     end
 
+    after { Timecop.return }
+
     it "creates a commentaire" do
       expect { subject }.to change(Commentaire, :count).by(1)
 
@@ -873,6 +894,7 @@ describe Users::DossiersController, type: :controller do
       expect(DossierMailer).to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_with_instant_message.email)
       expect(DossierMailer).not_to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_without_instant_message.email)
       expect(flash.notice).to be_present
+      expect(dossier.reload.last_commentaire_updated_at).to eq(now)
     end
   end
 

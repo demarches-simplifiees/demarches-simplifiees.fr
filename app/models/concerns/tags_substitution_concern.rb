@@ -111,7 +111,7 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::SOUMIS
     },
     {
-      libelle: 'SIRET du siège social',
+      libelle: 'Numéro TAHITI du siège social',
       description: '',
       target: :siret_siege_social,
       available_for_states: Dossier::SOUMIS

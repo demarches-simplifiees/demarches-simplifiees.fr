@@ -22,6 +22,7 @@ class FindDubiousProceduresJob < CronJob
       .joins(:procedure)
       .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", forbidden_regexp)
       .where(procedures: { closed_at: nil, whitelisted_at: nil })
+      .order('procedures.id desc')
     # .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
 
     dubious_procedures_and_tdcs = forbidden_tdcs

@@ -1,0 +1,11 @@
+%tr
+  %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+    = champ.libelle
+  %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+    = champ.type_champ
+    - if champ.drop_down_list_options?
+      %ul
+        - champ.drop_down_list_options.each do |o|
+          %li = o
+  %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+    = champ.description

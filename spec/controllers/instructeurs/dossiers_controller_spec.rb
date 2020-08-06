@@ -390,6 +390,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:body) { "avant\napres" }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:scan_result) { true }
+    let(:now) { Timecop.freeze("09/11/1989") }
 
     subject {
       post :create_commentaire, params: {
@@ -404,7 +405,10 @@ describe Instructeurs::DossiersController, type: :controller do
 
     before do
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
+      Timecop.freeze(now)
     end
+
+    after { Timecop.return }
 
     it "creates a commentaire" do
       expect { subject }.to change(Commentaire, :count).by(1)
@@ -412,6 +416,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       expect(response).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
       expect(flash.notice).to be_present
+      expect(dossier.reload.last_commentaire_updated_at).to eq(now)
     end
 
     context "when the commentaire created with virus file" do
@@ -459,6 +464,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(response).to render_template :avis }
       it { expect(flash.alert).to eq(["emaila.com : Email n'est pas valide"]) }
       it { expect { subject }.not_to change(Avis, :count) }
+      it { expect(dossier.last_avis_updated_at).to eq(nil) }
     end
 
     context 'with multiple emails' do
@@ -578,9 +584,26 @@ describe Instructeurs::DossiersController, type: :controller do
       create(:dossier, :en_construction, procedure: procedure, champs_private: [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime, champ_repetition])
     end
 
+    let(:now) { Time.zone.parse('01/01/2100') }
+
     before do
-      patch :update_annotations, params: {
-        procedure_id: procedure.id,
+      Timecop.freeze(now)
+      patch :update_annotations, params: params
+
+      champ_multiple_drop_down_list.reload
+      champ_linked_drop_down_list.reload
+      champ_datetime.reload
+      champ_repetition.reload
+    end
+
+    after do
+      Timecop.return
+    end
+
+    context "with new values for champs_private" do
+      let(:params) do
+        {
+          procedure_id: procedure.id,
         dossier_id: dossier.id,
         dossier: {
           champs_private_attributes: {
@@ -610,20 +633,36 @@ describe Instructeurs::DossiersController, type: :controller do
             }
           }
         }
-      }
-
-      champ_multiple_drop_down_list.reload
-      champ_linked_drop_down_list.reload
-      champ_datetime.reload
-      champ_repetition.reload
+        }
+      end
+      it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
+      it { expect(champ_linked_drop_down_list.primary_value).to eq('primary') }
+      it { expect(champ_linked_drop_down_list.secondary_value).to eq('secondary') }
+      it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
+      it { expect(champ_repetition.champs.first.value).to eq('text') }
+      it { expect(dossier.reload.last_champ_private_updated_at).to eq(now) }
+      it { expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)) }
     end
 
-    it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
-    it { expect(champ_linked_drop_down_list.primary_value).to eq('primary') }
-    it { expect(champ_linked_drop_down_list.secondary_value).to eq('secondary') }
-    it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
-    it { expect(champ_repetition.champs.first.value).to eq('text') }
-    it { expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)) }
+    context "without new values for champs_private" do
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+        dossier_id: dossier.id,
+        dossier: {
+          champs_private_attributes: {},
+          champs_attributes: {
+            '0': {
+              id: champ_multiple_drop_down_list.id,
+              value: ['', 'un', 'deux']
+            }
+          }
+        }
+        }
+      end
+      it { expect(dossier.reload.last_champ_private_updated_at).to eq(nil) }
+      it { expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)) }
+    end
   end
 
   describe "#telecharger_pjs" do

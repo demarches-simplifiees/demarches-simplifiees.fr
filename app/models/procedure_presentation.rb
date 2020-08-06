@@ -37,12 +37,12 @@ class ProcedurePresentation < ApplicationRecord
         field_hash('Forme juridique', 'etablissement', 'entreprise_forme_juridique'),
         field_hash('Nom commercial', 'etablissement', 'entreprise_nom_commercial'),
         field_hash('Raison sociale', 'etablissement', 'entreprise_raison_sociale'),
-        field_hash('SIRET siège social', 'etablissement', 'entreprise_siret_siege_social'),
+        field_hash('Numéro TAHITI siège social', 'etablissement', 'entreprise_siret_siege_social'),
         field_hash('Date de création', 'etablissement', 'entreprise_date_creation')
       )
 
       fields.push(
-        field_hash('SIRET', 'etablissement', 'siret'),
+        field_hash('Numéro TAHITI', 'etablissement', 'siret'),
         field_hash('Libellé NAF', 'etablissement', 'libelle_naf'),
         field_hash('Code postal', 'etablissement', 'code_postal')
       )

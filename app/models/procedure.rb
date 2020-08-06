@@ -301,6 +301,7 @@ class Procedure < ApplicationRecord
     procedure.unpublished_at = nil
     procedure.published_at = nil
     procedure.lien_notice = nil
+    procedure.published_revision = nil
     procedure.draft_revision.procedure = procedure
 
     if is_different_admin
@@ -328,6 +329,8 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
+    procedure.draft_revision.types_de_champ.update_all(revision_id: procedure.draft_revision.id)
+    procedure.draft_revision.types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
 
     # FIXUP: needed during transition to revisions
     procedure.draft_revision.types_de_champ.each do |type_de_champ|

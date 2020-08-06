@@ -56,7 +56,7 @@ end
 
 def render_identite_etablissement(pdf, etablissement)
   format_in_2_columns(pdf, "Numéro TAHITI", etablissement.siret)
-  format_in_2_columns(pdf, "SIRET du siège social", etablissement.entreprise.siret_siege_social) if etablissement.entreprise.siret_siege_social.present?
+  format_in_2_columns(pdf, "Numéro TAHITI du siège social", etablissement.entreprise.siret_siege_social) if etablissement.entreprise.siret_siege_social.present?
   format_in_2_columns(pdf, "Dénomination", raison_sociale_or_name(etablissement))
   format_in_2_columns(pdf, "Forme juridique ", etablissement.entreprise_forme_juridique)
   if etablissement.entreprise_capital_social.present?
@@ -104,7 +104,7 @@ def render_single_champ(pdf, champ)
     pdf.font 'marianne', style: :bold, size: 9 do
       pdf.text champ.libelle
     end
-    pdf.text " - SIRET: #{champ.to_s}"
+    pdf.text " - Numéro TAHITI: #{champ.to_s}"
     render_identite_etablissement(pdf, champ.etablissement) if champ.etablissement.present?
     pdf.text "\n"
   when 'Champs::NumberChamp'

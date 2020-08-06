@@ -23,13 +23,13 @@
 - if !@procedure.locked?
   %h3.header-subsection Conservation des données
   = f.label :duree_conservation_dossiers_dans_ds do
-    Sur #{SITE_NAME}
+    Sur #{APPLICATION_NAME}
     %span.mandatory *
   %p.notice (durée en mois après le début de l’instruction)
   = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
 
   = f.label :duree_conservation_dossiers_hors_ds do
-    Hors #{SITE_NAME}
+    Hors #{APPLICATION_NAME}
     %span.mandatory *
   %p.notice (durée en mois après la fin de l'instruction)
   = f.number_field :duree_conservation_dossiers_hors_ds, class: 'form-control', placeholder: '6', required: true
@@ -140,7 +140,7 @@
   .checkboxes
     .notice
       %p
-        La plateforme #{SITE_NAME} peut fournir des attestations vérifiables via un QR code et ne fournit pas de cachet ou signature électronique.
+        La plateforme #{APPLICATION_NAME} peut fournir des attestations vérifiables via un QR code et ne fournit pas de cachet ou signature électronique.
         Si votre démarche comporte une décision avec une signature ou un cachet, vous pouvez nous contacter pour évaluer les risques et les solutions via ce
         = link_to "formulaire.", contact_admin_path
     = check_box_tag 'rgs_stamp', '1', @terms_of_use_read ? @terms_of_use_read[:rgs_stamp].present? : @procedure.created_at.present?
@@ -162,7 +162,7 @@
     = f.label :web_hook_url do
       Lien de rappel HTTP (webhook)
     %p.notice
-      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur #{SITE_NAME}.
+      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour notifier un service tiers du changement de l'état d’un dossier de cette démarche sur #{APPLICATION_NAME}.
       = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
     = f.text_field :web_hook_url, class: 'form-control', placeholder: 'https://callback.exemple.fr/'
 

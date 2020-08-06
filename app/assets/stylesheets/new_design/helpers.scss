@@ -12,6 +12,14 @@
   margin-bottom: 4 * $default-spacer;
 }
 
+.ml-1 {
+  margin-left: $default-spacer;
+}
+
+.pl-0 {
+  padding-left: 0px !important;
+}
+
 .numbers-delimiter {
   display: inline-block;
   width: 5px;

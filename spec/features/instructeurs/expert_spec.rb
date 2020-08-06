@@ -2,7 +2,7 @@ feature 'Inviting an expert:' do
   include ActiveJob::TestHelper
   include ActionView::Helpers
 
-  let(:instructeur) { create(:instructeur, password: 'démarches-simplifiées-pwd') }
+  let(:instructeur) { create(:instructeur, password: TEST_PASSWORD) }
   let(:expert) { create(:instructeur, password: expert_password) }
   let(:expert_password) { 'mot de passe d’expert' }
   let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }

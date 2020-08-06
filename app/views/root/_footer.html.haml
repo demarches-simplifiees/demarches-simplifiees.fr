@@ -25,7 +25,9 @@
           -# %li.footer-link
             = link_to "Newsletter", "https://my.sendinblue.com/users/subscribe/js_id/3s2q1/id/1", :title => "Notre newsletter", :class => "footer-link", :target => "_blank", rel: "noopener"
           %li.footer-link
+            -# haml-lint:disable ApplicationNameLinter
             = link_to "Nouveautés", "https://github.com/maatinito/mes-demarches/releases", :class => "footer-link"
+            -# haml-lint:enable ApplicationNameLinter
           %li.footer-link
             = link_to "Statistiques", stats_path, :class => "footer-link"
           %li.footer-link
