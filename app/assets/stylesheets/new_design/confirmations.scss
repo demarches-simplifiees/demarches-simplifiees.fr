@@ -37,13 +37,18 @@
   }
 
   .confirmation-resend {
-    p {
+    p,
+    label {
       margin-bottom: $default-padding;
     }
 
     .form {
       display: flex;
       flex-wrap: wrap;
+
+      label {
+        flex-basis: 100%;
+      }
 
       input,
       button {
@@ -55,10 +60,6 @@
         flex-grow: 1;
         margin-right: $default-spacer;
       }
-    }
-
-    label {
-      display: none;
     }
   }
 }

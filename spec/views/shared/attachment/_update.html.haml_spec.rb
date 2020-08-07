@@ -5,12 +5,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
 
   subject do
     form_for(champ.dossier) do |form|
-      render 'shared/attachment/edit', {
-        form: form,
-        attached_file: attached_file,
-        accept: 'image/png',
-        user_can_destroy: user_can_destroy
-      }
+      view.image_upload_and_render form, attached_file
     end
   end
 
@@ -24,7 +19,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
     end
   end
 
-  context 'when there is a attached file' do
+  context 'when there is an attached file' do
     it 'renders a form field for uploading a file' do
       expect(subject).to have_selector('input[type=file]:not(.hidden)')
     end
@@ -33,7 +28,7 @@ describe 'shared/attachment/_update.html.haml', type: :view do
       expect(subject).not_to have_content(attached_file.filename.to_s)
     end
 
-    it 'doesn’t render action buttons' do
+    it 'does not render action buttons' do
       expect(subject).not_to have_link('Remplacer')
       expect(subject).not_to have_link('Supprimer')
     end
@@ -45,23 +40,30 @@ describe 'shared/attachment/_update.html.haml', type: :view do
         expect(subject).to have_content(attached_file.filename.to_s)
       end
 
-      it 'renders action buttons' do
-        expect(subject).to have_button('Remplacer')
-      end
-
       it 'hides the form field by default' do
         expect(subject).to have_selector('input[type=file].hidden')
       end
 
-      it 'hides the Delete button by default' do
-        is_expected.not_to have_link('Supprimer')
+      it 'shows the Delete button by default' do
+        is_expected.to have_link('Supprimer')
       end
+    end
+  end
 
-      context 'and the user can delete the attachment' do
-        let(:user_can_destroy) { true }
-
-        it { is_expected.to have_link('Supprimer') }
+  context 'when the user cannot destroy the attachment' do
+    subject do
+      form_for(champ.dossier) do |form|
+        render 'shared/attachment/edit', {
+          form: form,
+          attached_file: attached_file,
+          accept: 'image/png',
+          user_can_destroy: user_can_destroy
+        }
       end
+    end
+
+    it 'hides the Delete button' do
+      is_expected.not_to have_link('Supprimer')
     end
   end
 end
