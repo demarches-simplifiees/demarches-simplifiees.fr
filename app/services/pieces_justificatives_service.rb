@@ -70,7 +70,9 @@ class PiecesJustificativesService
   end
 
   def self.champs_zip_entries(dossier)
-    pjs_champs(dossier).map { |c| [c.piece_justificative_file, pieces_justificative_filename(c)] }
+    pjs_champs(dossier)
+      .filter { |c| c.piece_justificative_file.attached? }
+      .map { |c| [c.piece_justificative_file, pieces_justificative_filename(c)] }
   end
 
   def self.pieces_justificative_filename(c)

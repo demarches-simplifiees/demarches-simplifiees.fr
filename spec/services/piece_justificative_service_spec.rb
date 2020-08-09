@@ -9,24 +9,25 @@ describe PiecesJustificativesService do
       it { expect(list).to match([]) }
     end
 
-    context 'when there is a piece_justificative' do
-      let(:champ) { create(:champ, :piece_justificative, :with_piece_justificative_file) }
-
+    context 'dossier with champ' do
       before do
         dossier.champs << champ
       end
 
-      it { expect(names).to eq [libelle(champ)] }
-    end
-
-    context 'when there is a private piece_justificative' do
-      let(:champ) { create(:champ, :piece_justificative, :with_piece_justificative_file, private: true) }
-
-      before do
-        dossier.champs << champ
+      context 'piece_justificative with file' do
+        let(:champ) { create(:champ, :piece_justificative, :with_piece_justificative_file) }
+        it { expect(names).to eq [libelle(champ)] }
       end
 
-      it { expect(names).to eq [libelle(champ)] }
+      context 'piece_justificative without file' do
+        let(:champ) { create(:champ, :piece_justificative) }
+        it { expect(names).to eq [] }
+      end
+
+      context 'private piece_justificative with file' do
+        let(:champ) { create(:champ, :piece_justificative, :with_piece_justificative_file, private: true) }
+        it { expect(names).to eq [libelle(champ)] }
+      end
     end
 
     context 'when there is a repetition bloc' do
