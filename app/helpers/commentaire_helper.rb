@@ -24,7 +24,6 @@ module CommentaireHelper
   end
 
   def pretty_commentaire(commentaire)
-    body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
-    sanitize(body_formatted)
+    commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
   end
 end
