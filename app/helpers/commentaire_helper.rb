@@ -22,4 +22,9 @@ module CommentaireHelper
     template = is_current_year ? :message_date : :message_date_with_year
     I18n.l(commentaire.created_at, format: template)
   end
+
+  def pretty_commentaire(commentaire)
+    body_formatted = commentaire.sent_by_system? ? commentaire.body : simple_format(commentaire.body)
+    sanitize(body_formatted)
+  end
 end

@@ -1,10 +1,19 @@
 describe WebhookController, type: :controller do
   describe '#helpscout' do
-    before { allow(controller).to receive(:verify_signature!).and_return(true) }
+    before do
+      allow(controller).to receive(:verify_signature!).and_return(true)
+      allow(controller).to receive(:verify_authenticity_token)
+    end
 
     subject(:response) { get :helpscout, params: { customer: { email: customer_email } } }
 
     let(:payload) { JSON.parse(subject.body) }
+    let(:customer_email) { 'a-user@exemple.fr' }
+
+    it "doesn't verify authenticity token" do
+      subject
+      expect(controller).not_to have_received(:verify_authenticity_token)
+    end
 
     context 'when there is no matching user' do
       let(:customer_email) { 'not-a-user@exemple.fr' }
