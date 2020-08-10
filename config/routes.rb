@@ -197,7 +197,7 @@ Rails.application.routes.draw do
         delete :delete_notice
       end
 
-      resources :mail_templates, only: [:index, :edit, :update]
+      resources :mail_templates, only: [:edit, :update]
 
       put 'archive' => 'procedures#archive', as: :archive
       get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
@@ -409,7 +409,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :mail_templates, only: [] do
+      resources :mail_templates, only: [:index] do
         get 'preview', on: :member
       end
 

@@ -2,6 +2,10 @@ module NewAdministrateur
   class MailTemplatesController < AdministrateurController
     include ActionView::Helpers::SanitizeHelper
 
+    def index
+      @mail_templates = mail_templates
+    end
+
     def preview
       mail_template = find_mail_template_by_slug(params[:id])
       dossier = Dossier.new(id: '1', procedure: procedure)
