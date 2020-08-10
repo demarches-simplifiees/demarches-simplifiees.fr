@@ -1,5 +1,6 @@
 class WebhookController < ActionController::Base
   before_action :verify_signature!, only: :helpscout
+  skip_before_action :verify_authenticity_token
 
   def helpscout
     email = params[:customer][:email].downcase

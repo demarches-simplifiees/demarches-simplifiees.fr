@@ -22,4 +22,8 @@ module CommentaireHelper
     template = is_current_year ? :message_date : :message_date_with_year
     I18n.l(commentaire.created_at, format: template)
   end
+
+  def pretty_commentaire(commentaire)
+    commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
+  end
 end

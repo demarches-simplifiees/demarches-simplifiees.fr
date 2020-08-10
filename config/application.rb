@@ -45,7 +45,7 @@ module TPS
     # It should be fixed in Rails 6.1.
     # See https://github.com/rails/rails/issues/39586
     # default_allowed_tags = ActionView::Base.sanitized_allowed_tags
-    default_allowed_tags = ['strong', 'em', 'b', 'i', 'p', 'code', 'pre', 'tt', 'samp', 'kbd', 'var', 'sub', 'sup', 'dfn', 'cite', 'big', 'small', 'address', 'hr', 'br', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'abbr', 'acronym', 'a', 'img', 'blockquote', 'del', 'ins']
+    default_allowed_tags = ['strong', 'em', 'b', 'i', 'p', 'code', 'pre', 'tt', 'samp', 'kbd', 'var', 'sub', 'sup', 'dfn', 'cite', 'big', 'small', 'address', 'hr', 'br', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'abbr', 'acronym', 'a', 'img', 'blockquote', 'del', 'ins', 'table', 'th', 'td', 'tr']
     config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u']
 
     # Since Rails 5.0, this option is enabled by default.
