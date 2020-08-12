@@ -1,13 +1,13 @@
 describe Champs::SiretController, type: :controller do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :published) }
+  let(:procedure) { create(:procedure, :published, types_de_champ: [build(:type_de_champ_siret)]) }
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
     let(:champ) do
-      type_de_champ = create(:type_de_champ_siret, procedure: procedure)
-      # FIXME: this causes an "Type de champ n'est pas disponible" error
-      create(:champ, type_de_champ: type_de_champ, dossier: dossier, value: nil, etablissement: nil)
+      champ = create(:champ_siret, type_de_champ: procedure.types_de_champ.first, dossier: dossier)
+      dossier.champs << champ
+      champ
     end
 
     let(:params) do
