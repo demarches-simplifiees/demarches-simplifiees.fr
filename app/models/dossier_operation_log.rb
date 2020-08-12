@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: dossier_operation_logs
+#
+#  id                  :bigint           not null, primary key
+#  automatic_operation :boolean          default(FALSE), not null
+#  digest              :text
+#  executed_at         :datetime
+#  keep_until          :datetime
+#  operation           :string           not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  bill_signature_id   :bigint
+#  dossier_id          :bigint
+#  instructeur_id      :bigint
+#
 class DossierOperationLog < ApplicationRecord
   enum operation: {
     changer_groupe_instructeur: 'changer_groupe_instructeur',

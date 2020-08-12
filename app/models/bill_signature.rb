@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: bill_signatures
+#
+#  id         :bigint           not null, primary key
+#  digest     :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class BillSignature < ApplicationRecord
   has_many :dossier_operation_logs
 
