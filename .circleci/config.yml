@@ -6,9 +6,9 @@ defaults: &defaults
     - image: circleci/ruby:2.6.5-node-browsers
     - image: circleci/postgres:10.12
       environment:
-        POSTGRES_USER: tps_test
-        POSTGRES_PASSWORD: tps_test
-        POSTGRES_DB: tps_test
+        POSTGRES_USER: md_test
+        POSTGRES_PASSWORD: md_test
+        POSTGRES_DB: md_test
 
 bundle_restore_cache: &bundle_restore_cache
   restore_cache:
@@ -105,13 +105,13 @@ jobs:
       - *webpacker_save_cache
       - run:
           environment:
-            DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
+            DATABASE_URL: "postgres://md_test@localhost:5432/md_test"
           name: Create Database
           command: bundle exec rake db:create db:schema:load db:migrate RAILS_ENV=test
 
       - run:
           environment:
-            DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
+            DATABASE_URL: "postgres://md_test@localhost:5432/md_test"
           name: Run Tests, Splitted by Timings
           command: |
             COMMAND="bundle exec rspec --profile 10 \

@@ -1,11 +1,12 @@
-# demarches-simplifiees.fr
+# Mes-Démarches.gov.pf
 
 ## Contexte
 
-[demarches-simplifiees.fr](https://www.demarches-simplifiees.fr) est un site web conçu afin de répondre au besoin urgent de l'État d'appliquer la directive sur le 100 % dématérialisation pour les démarches administratives.
+[Mes-Démarches](https://www.mes-demarches.gov.pf) est un site web conçu afin de répondre au besoin urgent de l'État et de la Polynésie Française d'appliquer la directive sur le 100 % dématérialisation pour les démarches administratives.
 
 ## Comment contribuer ?
 
+Mes-Démarches est un fork (une copie tropicalisé) du site démarches-simplifiees.fr.
 demarches-simplifiees.fr est un [logiciel libre](https://fr.wikipedia.org/wiki/Logiciel_libre) sous licence AGPL.
 
 Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [guide de contribution](CONTRIBUTING.md).
@@ -36,8 +37,8 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
 
     su - postgres
     psql
-    > create user tps_development with password 'tps_development' superuser;
-    > create user tps_test with password 'tps_test' superuser;
+    > create user md with password 'md' superuser;
+    > create user md_test with password 'md_test' superuser;
     > \q
 
 
