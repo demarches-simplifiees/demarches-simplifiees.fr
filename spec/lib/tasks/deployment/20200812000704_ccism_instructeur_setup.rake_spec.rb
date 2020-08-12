@@ -25,4 +25,3 @@ describe '20200708101123_add_default_skip_validation_to_piece_justificative.rake
     end
   end
 end
-

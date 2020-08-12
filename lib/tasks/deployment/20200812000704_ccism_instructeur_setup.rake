@@ -5,14 +5,14 @@ namespace :after_party do
 
     # Put your task implementation HERE.
     ccism_instructeurs =
-      %w[ainea@ccism.pf bella@ccism.pf daniel.r@ccism.pf gilles@ccism.pf heitiare@ccism.pf jane@ccism.pf jenna@ccism.pf john@ccism.pf laura@ccism.pf marc@ccism.pf maroussia@ccism.pf mike@ccism.pf nelson@ccism.pf patricia@ccism.pf philomene@ccism.pf raitea@ccism.pf ruben@ccism.pf sandra.w@ccism.pf vanessa@ccism.pf venda@ccism.pf widric@ccism.pf winella@ccism.pf]
+      ['ainea@ccism.pf', 'bella@ccism.pf', 'daniel.r@ccism.pf', 'gilles@ccism.pf', 'heitiare@ccism.pf', 'jane@ccism.pf', 'jenna@ccism.pf', 'john@ccism.pf', 'laura@ccism.pf', 'marc@ccism.pf', 'maroussia@ccism.pf', 'mike@ccism.pf', 'nelson@ccism.pf', 'patricia@ccism.pf', 'philomene@ccism.pf', 'raitea@ccism.pf', 'ruben@ccism.pf', 'sandra.w@ccism.pf', 'vanessa@ccism.pf', 'venda@ccism.pf', 'widric@ccism.pf', 'winella@ccism.pf']
     ids_to_assign =
       [
         265, # DESETI
         256, # Demande d'aide au titre du second volet
         328, # Demande d'aide au titre du second volet v2
         365, # DESETI Téléphone
-        477, # Demande d’aide au titre du second volet du Fonds n
+        477 # Demande d’aide au titre du second volet du Fonds n
       ]
     ids_to_unassign =
       [
@@ -24,7 +24,7 @@ namespace :after_party do
         428, # DESETI - Déclaration de non reprise d'activité
         460, # DESETI - Renouvellement
         461, # DESETI - Téléphone - Déclaration de reprise d'acti
-        476, # Demande d’aide au titre du second volet du Fonds n
+        476 # Demande d’aide au titre du second volet du Fonds n
       ]
     progress = ProgressReport.new(ccism_instructeurs.size)
 
