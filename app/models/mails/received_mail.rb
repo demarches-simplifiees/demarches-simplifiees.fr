@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: received_mails
+#
+#  id           :integer          not null, primary key
+#  body         :text
+#  subject      :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  procedure_id :integer
+#
 module Mails
   class ReceivedMail < ApplicationRecord
     include MailTemplateConcern

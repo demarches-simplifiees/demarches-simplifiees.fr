@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: administrateurs
+#
+#  id              :integer          not null, primary key
+#  active          :boolean          default(FALSE)
+#  encrypted_token :string
+#  created_at      :datetime
+#  updated_at      :datetime
+#
 class Administrateur < ApplicationRecord
   include ActiveRecord::SecureToken
 
