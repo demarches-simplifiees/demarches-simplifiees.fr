@@ -97,6 +97,9 @@ GEM
     aes_key_wrap (1.1.0)
     after_party (1.11.2)
     anchored (1.1.0)
+    annotate (3.1.1)
+      activerecord (>= 3.2, < 7.0)
+      rake (>= 10.4, < 14.0)
     ast (2.4.1)
     attr_required (1.0.1)
     autoprefixer-rails (9.7.6)
@@ -752,6 +755,7 @@ DEPENDENCIES
   administrate
   after_party
   anchored
+  annotate
   axe-matchers
   bcrypt
   bootstrap-sass (>= 3.4.1)

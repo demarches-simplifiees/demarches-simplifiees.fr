@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: individuals
+#
+#  id         :integer          not null, primary key
+#  birthdate  :date
+#  gender     :string
+#  nom        :string
+#  prenom     :string
+#  created_at :datetime
+#  updated_at :datetime
+#  dossier_id :integer
+#
 class Individual < ApplicationRecord
   belongs_to :dossier
 

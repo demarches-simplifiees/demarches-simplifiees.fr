@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: procedure_presentations
+#
+#  id               :integer          not null, primary key
+#  displayed_fields :jsonb            not null
+#  filters          :jsonb            not null
+#  sort             :jsonb            not null
+#  created_at       :datetime
+#  updated_at       :datetime
+#  assign_to_id     :integer
+#
 class ProcedurePresentation < ApplicationRecord
   EXTRA_SORT_COLUMNS = {
     'notifications' => ['notifications'],

@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: services
+#
+#  id                :bigint           not null, primary key
+#  adresse           :text
+#  email             :string
+#  horaires          :text
+#  nom               :string           not null
+#  organisme         :string
+#  telephone         :string
+#  type_organisme    :string           not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  administrateur_id :bigint
+#
 class Service < ApplicationRecord
   self.ignored_columns = ['siret']
   has_many :procedures
