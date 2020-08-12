@@ -410,7 +410,7 @@ describe Champ do
   end
 
   describe '#enqueue_virus_check' do
-    let(:champ) { type_de_champ.champ.build(value: nil) }
+    let(:champ) { build(:champ_piece_justificative, type_de_champ: type_de_champ) }
 
     context 'when type_champ is type_de_champ_piece_justificative' do
       let(:type_de_champ) { create(:type_de_champ_piece_justificative) }
@@ -418,7 +418,7 @@ describe Champ do
       context 'and there is a blob' do
         before do
           champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
-          champ.save
+          champ.save!
         end
 
         it { expect(champ.piece_justificative_file.virus_scanner.started?).to be_truthy }
