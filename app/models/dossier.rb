@@ -1,3 +1,33 @@
+# == Schema Information
+#
+# Table name: dossiers
+#
+#  id                                                 :integer          not null, primary key
+#  archived                                           :boolean          default(FALSE)
+#  autorisation_donnees                               :boolean
+#  brouillon_close_to_expiration_notice_sent_at       :datetime
+#  en_construction_at                                 :datetime
+#  en_construction_close_to_expiration_notice_sent_at :datetime
+#  en_construction_conservation_extension             :interval         default(0 seconds)
+#  en_instruction_at                                  :datetime
+#  groupe_instructeur_updated_at                      :datetime
+#  hidden_at                                          :datetime
+#  last_avis_updated_at                               :datetime
+#  last_champ_private_updated_at                      :datetime
+#  last_champ_updated_at                              :datetime
+#  last_commentaire_updated_at                        :datetime
+#  motivation                                         :text
+#  private_search_terms                               :text
+#  processed_at                                       :datetime
+#  search_terms                                       :text
+#  state                                              :string
+#  termine_close_to_expiration_notice_sent_at         :datetime
+#  created_at                                         :datetime
+#  updated_at                                         :datetime
+#  groupe_instructeur_id                              :bigint
+#  revision_id                                        :bigint
+#  user_id                                            :integer
+#
 class Dossier < ApplicationRecord
   self.ignored_columns = ['procedure_id']
   include DossierFilteringConcern

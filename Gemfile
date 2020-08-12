@@ -96,6 +96,7 @@ group :test do
 end
 
 group :development do
+  gem 'annotate'
   gem 'brakeman', require: false
   gem 'haml-lint'
   gem 'letter_opener_web'

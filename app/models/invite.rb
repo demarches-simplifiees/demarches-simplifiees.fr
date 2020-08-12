@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: invites
+#
+#  id           :integer          not null, primary key
+#  email        :string
+#  email_sender :string
+#  message      :text
+#  created_at   :datetime
+#  updated_at   :datetime
+#  dossier_id   :integer
+#  user_id      :integer
+#
 class Invite < ApplicationRecord
   include EmailSanitizableConcern
 
