@@ -1,13 +1,11 @@
 FactoryBot.define do
   factory :type_de_champ do
-    private { false }
-
-    # Previous line is kept blank so that rubocop does not complain
     sequence(:libelle) { |n| "Libelle du champ #{n}" }
     sequence(:description) { |n| "description du champ #{n}" }
     type_champ { TypeDeChamp.type_champs.fetch(:text) }
     order_place { 1 }
     mandatory { false }
+    add_attribute(:private) { false }
 
     factory :type_de_champ_text do
       type_champ { TypeDeChamp.type_champs.fetch(:text) }
@@ -117,9 +115,7 @@ FactoryBot.define do
     end
 
     trait :private do
-      private { true }
-
-      # Previous line is kept blank so that rubocop does not complain
+      add_attribute(:private) { true }
       sequence(:libelle) { |n| "Libelle champ privé #{n}" }
       sequence(:description) { |n| "description du champ privé #{n}" }
     end
