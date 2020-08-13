@@ -6,23 +6,43 @@ namespace :after_party do
     geometry_collections = GeoArea.where("geometry -> 'type' = '\"GeometryCollection\"'")
     multi_polygons = GeoArea.where("geometry -> 'type' = '\"MultiPolygon\"'")
 
+    def valid_geometry?(geometry)
+      RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
+      true
+    rescue
+      false
+    end
+
+    progress = ProgressReport.new(geometry_collections.count)
     geometry_collections.find_each do |geometry_collection|
       geometry_collection.geometry['geometries'].each do |geometry|
-        geometry_collection.champ.geo_areas.create!(geometry: geometry, source: 'selection_utilisateur')
+        if valid_geometry?(geometry)
+          geometry_collection.champ.geo_areas.create!(geometry: geometry, source: 'selection_utilisateur')
+        end
       end
-    end
 
+      geometry_collection.destroy
+      progress.inc
+    end
+    progress.finish
+
+    progress = ProgressReport.new(multi_polygons.count)
     multi_polygons.find_each do |multi_polygon|
       multi_polygon.geometry['coordinates'].each do |coordinates|
-        multi_polygon.champ.geo_areas.create!(geometry: {
+        geometry = {
           type: 'Polygon',
           coordinates: coordinates
-        }, source: 'selection_utilisateur')
-      end
-    end
+        }
 
-    geometry_collections.destroy_all
-    multi_polygons.destroy_all
+        if valid_geometry?(geometry)
+          multi_polygon.champ.geo_areas.create!(geometry: geometry, source: 'selection_utilisateur')
+        end
+      end
+
+      multi_polygon.destroy
+      progress.inc
+    end
+    progress.finish
 
     # Update task as completed.  If you remove the line below, the task will
     # run with every deploy (or every time you call after_party:run).
