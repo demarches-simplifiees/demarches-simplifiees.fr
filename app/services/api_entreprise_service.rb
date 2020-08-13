@@ -12,7 +12,7 @@ class ApiEntrepriseService
     return nil if etablissement_params.empty?
 
     etablissement = dossier_or_champ.build_etablissement(etablissement_params)
-    etablissement.save
+    etablissement.save!
 
     [
       ApiEntreprise::EntrepriseJob, ApiEntreprise::AssociationJob, ApiEntreprise::ExercicesJob,
