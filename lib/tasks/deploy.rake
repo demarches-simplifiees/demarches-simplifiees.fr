@@ -1,16 +1,13 @@
-def domains_for_stage(stage)
-  case stage
-  when 'dev'
-    ['web1.dev', 'web2.dev']
-  when 'prod'
-    ['web1', 'web2', 'web3', 'web4']
+def domains_for_stage
+  if ENV['DOMAINS'].present?
+    ENV['DOMAINS'].split
   else
-    raise "STAGE #{stage} is unknown. It must be either dev or prod."
+    raise "DOMAINS is empty. It must be something like DOMAINS='web1.dev web2.dev'"
   end
 end
 
 task :setup do
-  domains = domains_for_stage(ENV.fetch('STAGE'))
+  domains = domains_for_stage
 
   domains.each do |domain|
     sh "mina setup domain=#{domain}"
@@ -18,7 +15,7 @@ task :setup do
 end
 
 task :deploy do
-  domains = domains_for_stage(ENV.fetch('STAGE'))
+  domains = domains_for_stage
   branch = ENV.fetch('BRANCH')
 
   domains.each do |domain|
@@ -27,14 +24,14 @@ task :deploy do
 end
 
 task :post_deploy do
-  domains = domains_for_stage(ENV.fetch('STAGE'))
+  domains = domains_for_stage
   branch = ENV.fetch('BRANCH')
 
   sh "mina post_deploy domain=#{domains.first} branch=#{branch}"
 end
 
 task :rollback do
-  domains = domains_for_stage(ENV.fetch('STAGE'))
+  domains = domains_for_stage
   branch = ENV.fetch('BRANCH')
 
   domains.each do |domain|
