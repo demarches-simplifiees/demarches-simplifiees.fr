@@ -21,11 +21,11 @@ describe DossierSerializer do
       let(:dossier) { create(:dossier, :en_construction, procedure: create(:procedure, :published, :with_type_de_champ)) }
 
       before do
-        dossier.champs << create(:champ_carte)
-        dossier.champs << create(:champ_siret)
-        dossier.champs << create(:champ_integer_number)
-        dossier.champs << create(:champ_decimal_number)
-        dossier.champs << create(:champ_linked_drop_down_list)
+        dossier.champs << build(:champ_carte)
+        dossier.champs << build(:champ_siret)
+        dossier.champs << build(:champ_integer_number)
+        dossier.champs << build(:champ_decimal_number)
+        dossier.champs << build(:champ_linked_drop_down_list)
       end
 
       it {
