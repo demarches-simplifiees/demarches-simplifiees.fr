@@ -9,7 +9,7 @@
 #  dossier_id :integer          not null
 #
 class Attestation < ApplicationRecord
-  belongs_to :dossier
+  belongs_to :dossier, optional: false
 
   has_one_attached :pdf
 

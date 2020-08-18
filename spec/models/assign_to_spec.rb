@@ -1,7 +1,7 @@
 describe AssignTo, type: :model do
   describe '#procedure_presentation_or_default_and_errors' do
     let(:procedure) { create(:procedure) }
-    let(:assign_to) { create(:assign_to, procedure: procedure) }
+    let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: create(:instructeur)) }
 
     let(:procedure_presentation_and_errors) { assign_to.procedure_presentation_or_default_and_errors }
     let(:procedure_presentation_or_default) { procedure_presentation_and_errors.first }
