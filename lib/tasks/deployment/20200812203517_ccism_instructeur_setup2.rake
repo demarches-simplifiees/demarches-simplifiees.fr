@@ -5,7 +5,7 @@ namespace :after_party do
 
     # Put your task implementation HERE.
     ccism_instructeurs =
-      ['aimeo@ccism.pf', 'audrey@ccism.pf', 'bella@ccism.pf', 'capucine@ccism.pf', 'daniel.r@ccism.pf', 'gilles@ccism.pf', 'heitiare@ccism.pf', 'jane@ccism.pf', 'jenna@ccism.pf', 'john@ccism.pf', 'laura@ccism.pf', 'lovina@ccism.pf', 'ludice@ccism.pf', 'magnolia.lo@ccism.pf', 'marc@ccism.pf', 'maroussia@ccism.pf', 'mathias@ccism.pf', 'mike@ccism.pf', 'nelson@ccism.pf', 'odilet@ccism.pf', 'orama@ccism.pf', 'raitea@ccism.pf', 'ruben@ccism.pf', 'sandra.w@ccism.pf', 'tahiarii@ccism.pf', 'tauraatua@ccism.pf', 'vaihei@ccism.pf', 'vanessa@ccism.pf', 'venda@ccism.pf', 'widric@ccism.pf', 'winella@ccism.pf']
+      ['aimeo#ccism.pf', 'audrey#ccism.pf', 'bella#ccism.pf', 'capucine#ccism.pf', 'daniel.r#ccism.pf', 'gilles#ccism.pf', 'heitiare#ccism.pf', 'jane#ccism.pf', 'jenna#ccism.pf', 'john#ccism.pf', 'laura#ccism.pf', 'lovina#ccism.pf', 'ludice#ccism.pf', 'magnolia.lo#ccism.pf', 'marc#ccism.pf', 'maroussia#ccism.pf', 'mathias#ccism.pf', 'mike#ccism.pf', 'nelson#ccism.pf', 'odilet#ccism.pf', 'orama#ccism.pf', 'raitea#ccism.pf', 'ruben#ccism.pf', 'sandra.w#ccism.pf', 'tahiarii#ccism.pf', 'tauraatua#ccism.pf', 'vaihei#ccism.pf', 'vanessa#ccism.pf', 'venda#ccism.pf', 'widric#ccism.pf', 'winella#ccism.pf']
     ids_to_assign =
       [
         265, # DESETI
@@ -35,6 +35,7 @@ namespace :after_party do
     ccism_instructeurs
       .map(&:strip)
       .map(&:downcase)
+      .map { |email| email.tr('#', '@') }
       .filter { |email| URI::MailTo::EMAIL_REGEXP.match?(email) }
       .each do |email|
       instructeur = Instructeur.by_email(email)

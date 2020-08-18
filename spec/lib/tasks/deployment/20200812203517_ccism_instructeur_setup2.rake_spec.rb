@@ -1,8 +1,8 @@
-describe '20200708101123_add_default_skip_validation_to_piece_justificative.rake' do
+describe '20200812203517_ccism_instructeur_setup2.rake' do
   let(:rake_task) { Rake::Task['after_party:ccism_instructeur_setup2'] }
   let!(:procedure_to_unassign) { create(:procedure, id: 406) }
   let!(:procedure_to_assign) { create(:procedure, id: 477) }
-  let!(:instructeur) { create(:instructeur, email: 'heitiare@ccism.pf') }
+  let!(:instructeur) { create(:instructeur, email: 'heitiare#ccism.pf'.tr('#', '@')) }
   let!(:instructeur_unchanged) { create(:instructeur, email: 'toto@ccism.pf') }
   let!(:dossier) { create(:dossier, procedure: procedure_to_unassign) }
 
