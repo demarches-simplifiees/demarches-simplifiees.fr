@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: follows
+#
+#  id                          :integer          not null, primary key
+#  annotations_privees_seen_at :datetime         not null
+#  avis_seen_at                :datetime         not null
+#  demande_seen_at             :datetime         not null
+#  messagerie_seen_at          :datetime         not null
+#  unfollowed_at               :datetime
+#  created_at                  :datetime
+#  updated_at                  :datetime
+#  dossier_id                  :integer          not null
+#  instructeur_id              :integer          not null
+#
 class Follow < ApplicationRecord
   belongs_to :instructeur
   belongs_to :dossier

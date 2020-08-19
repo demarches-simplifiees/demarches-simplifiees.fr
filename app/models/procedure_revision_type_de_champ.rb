@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: procedure_revision_types_de_champ
+#
+#  id               :bigint           not null, primary key
+#  position         :integer          not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  revision_id      :bigint           not null
+#  type_de_champ_id :bigint           not null
+#
 class ProcedureRevisionTypeDeChamp < ApplicationRecord
   belongs_to :revision, class_name: 'ProcedureRevision'
   belongs_to :type_de_champ

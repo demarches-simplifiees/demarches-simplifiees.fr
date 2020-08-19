@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: exports
+#
+#  id         :bigint           not null, primary key
+#  format     :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Export < ApplicationRecord
   MAX_DUREE_CONSERVATION_EXPORT = 15.minutes
 
