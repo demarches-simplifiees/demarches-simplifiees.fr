@@ -5,6 +5,11 @@
         %label
           = form.radio_button :value, option
           = option
+      - if !champ.mandatory?
+        %label.blank-radio
+          = form.radio_button :value, ''
+          Non renseigné
+
   - else
     = form.select :value,
       champ.options,
