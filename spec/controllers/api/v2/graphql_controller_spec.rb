@@ -885,6 +885,48 @@ describe API::V2::GraphqlController do
           end
         end
       end
+
+      describe 'dossierArchiver' do
+        let(:query) do
+          "mutation {
+            dossierArchiver(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur.to_typed_id}\"
+            }) {
+              dossier {
+                archived
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        it "validation error" do
+          expect(gql_errors).to eq(nil)
+
+          expect(gql_data).to eq(dossierArchiver: {
+            dossier: nil,
+            errors: [{ message: "Un dossier ne peut être archivé qu’une fois le traitement terminé" }]
+          })
+        end
+
+        context "should archive dossier" do
+          let(:dossier) { create(:dossier, :sans_suite, :with_individual, procedure: procedure) }
+
+          it "change made" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierArchiver: {
+              dossier: {
+                archived: true
+              },
+              errors: nil
+            })
+          end
+        end
+      end
     end
   end
 
