@@ -5,7 +5,7 @@ namespace :after_party do
 
     # Put your task implementation HERE.
     ccism_instructeurs =
-      ['ainea@ccism.pf', 'bella@ccism.pf', 'daniel.r@ccism.pf', 'gilles@ccism.pf', 'heitiare@ccism.pf', 'jane@ccism.pf', 'jenna@ccism.pf', 'john@ccism.pf', 'laura@ccism.pf', 'marc@ccism.pf', 'maroussia@ccism.pf', 'mike@ccism.pf', 'nelson@ccism.pf', 'patricia@ccism.pf', 'philomene@ccism.pf', 'raitea@ccism.pf', 'ruben@ccism.pf', 'sandra.w@ccism.pf', 'vanessa@ccism.pf', 'venda@ccism.pf', 'widric@ccism.pf', 'winella@ccism.pf']
+      ['ainea#ccism.pf', 'bella#ccism.pf', 'daniel.r#ccism.pf', 'gilles#ccism.pf', 'heitiare#ccism.pf', 'jane#ccism.pf', 'jenna#ccism.pf', 'john#ccism.pf', 'laura#ccism.pf', 'marc#ccism.pf', 'maroussia#ccism.pf', 'mike#ccism.pf', 'nelson#ccism.pf', 'patricia#ccism.pf', 'philomene#ccism.pf', 'raitea#ccism.pf', 'ruben#ccism.pf', 'sandra.w#ccism.pf', 'vanessa#ccism.pf', 'venda#ccism.pf', 'widric#ccism.pf', 'winella#ccism.pf']
     ids_to_assign =
       [
         265, # DESETI
@@ -33,7 +33,7 @@ namespace :after_party do
     procedures_to_unassign = Procedure.where(id: ids_to_unassign).to_a
 
     ccism_instructeurs.each do |email|
-      instructeur = Instructeur.by_email(email)
+      instructeur = Instructeur.by_email(email.tr('#', '@'))
       if instructeur
         instructeur.followed_dossiers.each do |dossier|
           instructeur.unfollow(dossier) if ids_to_unassign.include?(dossier.procedure.id)
