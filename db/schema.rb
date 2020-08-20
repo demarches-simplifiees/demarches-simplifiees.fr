@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_22_135121) do
+ActiveRecord::Schema.define(version: 2020_08_19_153016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -323,6 +323,7 @@ ActiveRecord::Schema.define(version: 2020_07_22_135121) do
     t.string "entreprise_effectif_annuel_annee"
     t.jsonb "entreprise_bilans_bdf"
     t.string "entreprise_bilans_bdf_monnaie"
+    t.string "enseigne"
     t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
   end
 

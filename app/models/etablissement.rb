@@ -14,6 +14,7 @@
 #  code_postal                              :string
 #  complement_adresse                       :string
 #  diffusable_commercialement               :boolean
+#  enseigne                                 :string
 #  entreprise_bilans_bdf                    :jsonb
 #  entreprise_bilans_bdf_monnaie            :string
 #  entreprise_capital_social                :bigint
@@ -47,7 +48,7 @@
 #  entreprise_id                            :integer
 #
 class Etablissement < ApplicationRecord
-  belongs_to :dossier
+  belongs_to :dossier, optional: true
 
   has_one :champ, class_name: 'Champs::SiretChamp'
   has_many :exercices, dependent: :destroy
@@ -75,6 +76,7 @@ class Etablissement < ApplicationRecord
       association_titre,
       association_objet,
       siret,
+      enseigne,
       naf,
       libelle_naf,
       adresse,
@@ -89,6 +91,7 @@ class Etablissement < ApplicationRecord
       ['Dossier ID', :dossier_id_for_export],
       ['Champ', :libelle_for_export],
       ['Établissement SIRET', :siret],
+      ['Etablissement enseigne', :enseigne],
       ['Établissement siège social', :siege_social],
       ['Établissement NAF', :naf],
       ['Établissement libellé NAF', :libelle_naf],

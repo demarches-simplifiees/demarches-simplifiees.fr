@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :feedback do
     rating { Feedback.ratings.fetch(:happy) }
+    association :user
 
     trait :happy do
       rating { Feedback.ratings.fetch(:happy) }

@@ -13,7 +13,7 @@ module Mails
   class RefusedMail < ApplicationRecord
     include MailTemplateConcern
 
-    belongs_to :procedure
+    belongs_to :procedure, optional: false
 
     SLUG = "refused_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/refused_mail"
