@@ -1,4 +1,4 @@
-import { fire, timeoutable } from '@utils';
+import { ajax, fire, timeoutable } from '@utils';
 
 // Manages a queue of Autosave operations,
 // and sends `autosave:*` events to indicate the state of the requests.
@@ -34,15 +34,15 @@ export default class AutoSaveController {
         return reject(formDataError);
       }
 
-      const fetchOptions = {
-        method: form.method,
-        body: formData,
-        credentials: 'same-origin',
-        headers: { Accept: 'application/json' }
+      const params = {
+        url: form.action,
+        type: form.method,
+        data: formData,
+        dataType: 'script'
       };
 
-      return window.fetch(form.action, fetchOptions).then((response) => {
-        if (response.ok) {
+      return ajax(params).then((response) => {
+        if (response.statusText == "OK") {
           resolve(response);
         } else {
           const message = `Network request failed (${response.status}, "${response.statusText}")`;
