@@ -358,7 +358,7 @@ describe Champ do
           end
           let(:champ) { type_de_champ.champ.build(value: etablissement.siret, etablissement: etablissement) }
 
-          it { is_expected.to eq([etablissement.entreprise_siren, etablissement.entreprise_numero_tva_intracommunautaire, etablissement.entreprise_forme_juridique, etablissement.entreprise_forme_juridique_code, etablissement.entreprise_nom_commercial, etablissement.entreprise_raison_sociale, etablissement.entreprise_siret_siege_social, etablissement.entreprise_nom, etablissement.entreprise_prenom, etablissement.association_rna, etablissement.association_titre, etablissement.association_objet, etablissement.siret, etablissement.naf, etablissement.libelle_naf, etablissement.adresse, etablissement.code_postal, etablissement.localite, etablissement.code_insee_localite]) }
+          it { is_expected.to eq([etablissement.entreprise_siren, etablissement.entreprise_numero_tva_intracommunautaire, etablissement.entreprise_forme_juridique, etablissement.entreprise_forme_juridique_code, etablissement.entreprise_nom_commercial, etablissement.entreprise_raison_sociale, etablissement.entreprise_siret_siege_social, etablissement.entreprise_nom, etablissement.entreprise_prenom, etablissement.association_rna, etablissement.association_titre, etablissement.association_objet, etablissement.siret, etablissement.enseigne, etablissement.naf, etablissement.libelle_naf, etablissement.adresse, etablissement.code_postal, etablissement.localite, etablissement.code_insee_localite]) }
         end
 
         context 'when there is no etablissement' do
