@@ -163,7 +163,7 @@ module Users
 
       respond_to do |format|
         format.html { render :brouillon }
-        format.json { render json: {}, status: :ok }
+        format.js { render :brouillon }
       end
     end
 
