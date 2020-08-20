@@ -16,26 +16,37 @@ const AUTOSAVE_STATUS_VISIBLE_DURATION = gon.autosave.status_visible_duration;
 // Create a controller responsible for queuing autosave operations.
 const autoSaveController = new AutoSaveController();
 
+function enqueueAutosaveRequest() {
+  const form = document.querySelector(FORM_SELECTOR);
+  autoSaveController.enqueueAutosaveRequest(form);
+}
+
+//
 // Whenever a 'change' event is triggered on one of the form inputs, try to autosave.
+//
 
-const formSelector = 'form#dossier-edit-form.autosave-enabled';
-const formInputsSelector = `${formSelector} input:not([type=file]), ${formSelector} select, ${formSelector} textarea`;
+const FORM_SELECTOR = 'form#dossier-edit-form.autosave-enabled';
+const INPUTS_SELECTOR = `${FORM_SELECTOR} input:not([type=file]), ${FORM_SELECTOR} select, ${FORM_SELECTOR} textarea`;
+const RETRY_BUTTON_SELECTOR = '.autosave-retry';
 
+// When an input changes, batches changes for N seconds, then auto-save the form
 delegate(
   'change',
-  formInputsSelector,
-  debounce(() => {
-    const form = document.querySelector(formSelector);
-    autoSaveController.enqueueAutosaveRequest(form);
-  }, AUTOSAVE_DEBOUNCE_DELAY)
+  INPUTS_SELECTOR,
+  debounce(enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY)
 );
 
-delegate('click', '.autosave-retry', () => {
-  const form = document.querySelector(formSelector);
-  autoSaveController.enqueueAutosaveRequest(form);
-});
 
+// When the "Retry" button is clicked, auto-save the form immediately
+delegate(
+  'click',
+  RETRY_BUTTON_SELECTOR,
+  enqueueAutosaveRequest
+);
+
+//
 // Display some UI during the autosave
+//
 
 addEventListener('autosave:enqueue', () => {
   disable(document.querySelector('button.autosave-retry'));
