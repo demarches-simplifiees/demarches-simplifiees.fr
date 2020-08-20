@@ -27,6 +27,7 @@ function enqueueAutosaveRequest() {
 
 const FORM_SELECTOR = 'form#dossier-edit-form.autosave-enabled';
 const INPUTS_SELECTOR = `${FORM_SELECTOR} input:not([type=file]), ${FORM_SELECTOR} select, ${FORM_SELECTOR} textarea`;
+const REMOVE_ROW_SELECTOR = `${FORM_SELECTOR} button.remove-row`;
 const RETRY_BUTTON_SELECTOR = '.autosave-retry';
 
 // When an input changes, batches changes for N seconds, then auto-save the form
@@ -36,6 +37,12 @@ delegate(
   debounce(enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY)
 );
 
+// When a repetition row is removed, wait for the row to be deleted, then auto-save the form
+delegate(
+  'click',
+  REMOVE_ROW_SELECTOR,
+  debounce(enqueueAutosaveRequest, 0)
+);
 
 // When the "Retry" button is clicked, auto-save the form immediately
 delegate(
