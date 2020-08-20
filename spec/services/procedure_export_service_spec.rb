@@ -253,6 +253,7 @@ describe ProcedureExportService do
           "Dossier ID",
           "Champ",
           "Établissement SIRET",
+          "Etablissement enseigne",
           "Établissement siège social",
           "Établissement NAF",
           "Établissement libellé NAF",
