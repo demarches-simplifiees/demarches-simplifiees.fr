@@ -129,6 +129,7 @@ fr:
         blank: "doit être rempli"
         not_a_number: 'doit être un nombre'
         not_an_integer: 'doit être un nombre entier (sans chiffres après la virgule)'
+        not_a_phone: 'Numéro de téléphone invalide'
         greater_than: "doit être supérieur à %{count}"
         greater_than_or_equal_to: "doit être supérieur ou égal à %{count}"
         less_than: "doit être inférieur à %{count}"

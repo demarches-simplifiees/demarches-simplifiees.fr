@@ -1,7 +1,7 @@
 shared_examples 'champ_spec' do
   describe 'mandatory_and_blank?' do
     let(:type_de_champ) { build(:type_de_champ, mandatory: mandatory) }
-    let(:champ) { type_de_champ.champ.build(value: value) }
+    let(:champ) { build(:champ, type_de_champ: type_de_champ, value: value) }
     let(:value) { '' }
     let(:mandatory) { true }
 
@@ -33,8 +33,7 @@ shared_examples 'champ_spec' do
   end
 
   context "when type_champ=date" do
-    let(:type_de_champ) { create(:type_de_champ_date) }
-    let(:champ) { type_de_champ.champ.create }
+    let(:champ) { build(:champ_date) }
 
     it "should convert %d/%m/%Y format to ISO" do
       champ.value = "31/12/2017"

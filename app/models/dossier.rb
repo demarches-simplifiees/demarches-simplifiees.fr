@@ -75,10 +75,10 @@ class Dossier < ApplicationRecord
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, dependent: :nullify, inverse_of: :dossier
 
-  belongs_to :groupe_instructeur
+  belongs_to :groupe_instructeur, optional: false
   has_one :procedure, through: :groupe_instructeur
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
-  belongs_to :user
+  belongs_to :user, optional: false
 
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_private

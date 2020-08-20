@@ -8,11 +8,12 @@ describe ApiEntreprise::EtablissementAdapter do
 
   context 'SIRET valide avec infos diffusables' do
     let(:siret) { '41816609600051' }
+    let(:fixture) { 'spec/fixtures/files/api_entreprise/etablissements.json' }
     subject { described_class.new(siret, procedure_id).to_params }
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
-        .to_return(body: File.read('spec/fixtures/files/api_entreprise/etablissements.json', status: 200))
+        .to_return(body: File.read(fixture, status: 200))
     end
 
     it '#to_params class est une Hash ?' do
@@ -73,6 +74,22 @@ describe ApiEntreprise::EtablissementAdapter do
         it 'L\'entreprise contient bien un code_insee_localite' do
           expect(subject[:code_insee_localite]).to eq('75108')
         end
+      end
+    end
+
+    context 'Attributs Etablissements pour etablissement non siege' do
+      let(:siret) { '17310120500719' }
+      let(:fixture) { 'spec/fixtures/files/api_entreprise/etablissements-non-siege.json' }
+      it 'L\'entreprise contient bien un siret' do
+        expect(subject[:siret]).to eq(siret)
+      end
+
+      it 'L\'etablissement contient bien un siege_social à false' do
+        expect(subject[:siege_social]).to eq(false)
+      end
+
+      it 'L\'etablissement contient bien une enseigne' do
+        expect(subject[:enseigne]).to eq("SERVICE PENITENTIAIRE D'INSERTION ET DE PROBATION, DE LA HAUTE-GARONNE")
       end
     end
   end

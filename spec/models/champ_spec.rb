@@ -47,7 +47,7 @@ describe Champ do
     let(:public_champ) { dossier.champs.first }
     let(:private_champ) { dossier.champs_private.first }
     let(:champ_in_repetition) { dossier.champs.find(&:repetition?).champs.first }
-    let(:standalone_champ) { create(:champ, dossier: nil) }
+    let(:standalone_champ) { build(:champ, type_de_champ: build(:type_de_champ), dossier: nil) }
 
     it 'returns the sibling champs of a champ' do
       expect(public_champ.siblings).to eq(dossier.champs)
@@ -58,10 +58,9 @@ describe Champ do
   end
 
   describe '#format_datetime' do
-    let(:type_de_champ) { build(:type_de_champ_datetime) }
-    let(:champ) { type_de_champ.champ.build(value: value) }
+    let(:champ) { build(:champ_datetime, value: value) }
 
-    before { champ.save }
+    before { champ.save! }
 
     context 'when the value is sent by a modern browser' do
       let(:value) { '2017-12-31 10:23' }
@@ -77,10 +76,9 @@ describe Champ do
   end
 
   describe '#multiple_select_to_string' do
-    let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list) }
-    let(:champ) { type_de_champ.champ.build(value: value) }
+    let(:champ) { build(:champ_multiple_drop_down_list, value: value) }
 
-    before { champ.save }
+    before { champ.save! }
 
     # when using the old form, and the ChampsService Class
     # TODO: to remove
@@ -360,7 +358,7 @@ describe Champ do
           end
           let(:champ) { type_de_champ.champ.build(value: etablissement.siret, etablissement: etablissement) }
 
-          it { is_expected.to eq([etablissement.entreprise_siren, etablissement.entreprise_numero_tva_intracommunautaire, etablissement.entreprise_forme_juridique, etablissement.entreprise_forme_juridique_code, etablissement.entreprise_nom_commercial, etablissement.entreprise_raison_sociale, etablissement.entreprise_siret_siege_social, etablissement.entreprise_nom, etablissement.entreprise_prenom, etablissement.association_rna, etablissement.association_titre, etablissement.association_objet, etablissement.siret, etablissement.naf, etablissement.libelle_naf, etablissement.adresse, etablissement.code_postal, etablissement.localite, etablissement.code_insee_localite]) }
+          it { is_expected.to eq([etablissement.entreprise_siren, etablissement.entreprise_numero_tva_intracommunautaire, etablissement.entreprise_forme_juridique, etablissement.entreprise_forme_juridique_code, etablissement.entreprise_nom_commercial, etablissement.entreprise_raison_sociale, etablissement.entreprise_siret_siege_social, etablissement.entreprise_nom, etablissement.entreprise_prenom, etablissement.association_rna, etablissement.association_titre, etablissement.association_objet, etablissement.siret, etablissement.enseigne, etablissement.naf, etablissement.libelle_naf, etablissement.adresse, etablissement.code_postal, etablissement.localite, etablissement.code_insee_localite]) }
         end
 
         context 'when there is no etablissement' do
@@ -412,7 +410,7 @@ describe Champ do
   end
 
   describe '#enqueue_virus_check' do
-    let(:champ) { type_de_champ.champ.build(value: nil) }
+    let(:champ) { build(:champ_piece_justificative, type_de_champ: type_de_champ) }
 
     context 'when type_champ is type_de_champ_piece_justificative' do
       let(:type_de_champ) { create(:type_de_champ_piece_justificative) }
@@ -420,7 +418,7 @@ describe Champ do
       context 'and there is a blob' do
         before do
           champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
-          champ.save
+          champ.save!
         end
 
         it { expect(champ.piece_justificative_file.virus_scanner.started?).to be_truthy }
@@ -428,50 +426,69 @@ describe Champ do
     end
   end
 
-  describe "repetition" do
-    let(:dossier) { create(:dossier) }
-    let(:champ) { Champs::RepetitionChamp.create(dossier: dossier) }
-    let(:champ_text) { create(:champ_text, row: 0) }
-    let(:champ_integer_number) { create(:champ_integer_number, row: 0) }
-    let(:champ_text_attrs) { attributes_for(:champ_text, row: 1) }
-    let(:champ_text_row_1) { create(:champ_text, row: 1, parent: champ) }
+  describe 'repetition' do
+    let(:procedure) { build(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private) }
+    let(:tdc_text) { build(:type_de_champ_text, procedure: procedure) }
+    let(:tdc_integer) { build(:type_de_champ_integer_number, procedure: procedure) }
+    let(:tdc_repetition) { build(:type_de_champ_repetition, procedure: procedure, types_de_champ: [tdc_text, tdc_integer]) }
 
-    it "associates nested champs to the parent dossier" do
-      expect(champ.rows.size).to eq(0)
-      dossier.reload
-      expect(dossier.champs.size).to eq(2)
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:champ) { dossier.champs.find(&:repetition?) }
+    let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
+    let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
+    let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
 
-      dossier.update(champs_attributes: [
-        {
-          id: champ.id,
-          champs_attributes: [champ_text_attrs]
-        }
-      ])
+    before do
+      procedure.types_de_champ << tdc_repetition
+      procedure.save!
+      procedure.reload
+    end
 
-      champ.reload
-      dossier.reload
-      expect(dossier.champs.size).to eq(2)
-      expect(champ.rows.size).to eq(1)
+    context 'when creating the model directly' do
+      let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row: 2, parent: champ, dossier: nil) }
 
-      expect(champ.champs.first.dossier).to eq(dossier)
+      it 'associates nested champs to the parent dossier' do
+        expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)
+      end
+    end
 
-      # Make champs ordered
-      champ_integer_number.type_de_champ.update(order_place: 0)
-      champ_text.type_de_champ.update(order_place: 1)
+    context 'when updating using nested attributes' do
+      subject do
+        dossier.update!(champs_attributes: [
+          {
+            id: champ.id,
+            champs_attributes: [champ_text_attrs]
+          }
+        ])
+        champ.reload
+        dossier.reload
+      end
 
-      champ.champs << champ_integer_number
-      row = champ.reload.rows.first
-      expect(row.size).to eq(1)
-      expect(row.first).to eq(champ_integer_number)
+      it 'associates nested champs to the parent dossier' do
+        subject
 
-      champ.champs << champ_text
-      row = champ.reload.rows.first
-      expect(row.size).to eq(2)
-      expect(row.second).to eq(champ_text)
+        expect(dossier.champs.size).to eq(2)
+        expect(champ.rows.size).to eq(2)
+        second_row = champ.rows.second
+        expect(second_row.size).to eq(1)
+        expect(second_row.first.dossier).to eq(dossier)
 
-      expect(champ.rows.size).to eq(2)
+        # Make champs ordered
+        champ_integer.type_de_champ.update(order_place: 0)
+        champ_text.type_de_champ.update(order_place: 1)
 
-      expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)
+        champ.champs << champ_integer
+        first_row = champ.reload.rows.first
+        expect(first_row.size).to eq(2)
+        expect(first_row.first).to eq(champ_integer)
+
+        champ.champs << champ_text
+        first_row = champ.reload.rows.first
+        expect(first_row.size).to eq(2)
+        expect(first_row.second).to eq(champ_text)
+
+        expect(champ.rows.size).to eq(2)
+      end
     end
   end
 end

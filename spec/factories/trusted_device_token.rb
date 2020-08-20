@@ -1,6 +1,5 @@
 FactoryBot.define do
-  factory :follow do
+  factory :trusted_device_token do
     association :instructeur
-    association :dossier
   end
 end

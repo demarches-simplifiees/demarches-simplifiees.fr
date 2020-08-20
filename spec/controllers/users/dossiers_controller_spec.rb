@@ -400,8 +400,8 @@ describe Users::DossiersController, type: :controller do
 
         before do
           allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
-          create(:assign_to, instructeur: instructeur_with_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier.procedure.defaut_groupe_instructeur)
-          create(:assign_to, instructeur: instructeur_without_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: false, groupe_instructeur: dossier.procedure.defaut_groupe_instructeur)
+          create(:assign_to, instructeur: instructeur_with_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true)
+          create(:assign_to, instructeur: instructeur_without_instant_email_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: false)
         end
 
         it "sends notification mail to instructeurs" do
@@ -838,8 +838,8 @@ describe Users::DossiersController, type: :controller do
       allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
       instructeur_with_instant_message.follow(dossier)
       instructeur_without_instant_message.follow(dossier)
-      create(:assign_to, instructeur: instructeur_with_instant_message, procedure: procedure, instant_email_message_notifications_enabled: true, groupe_instructeur: procedure.defaut_groupe_instructeur)
-      create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false, groupe_instructeur: procedure.defaut_groupe_instructeur)
+      create(:assign_to, instructeur: instructeur_with_instant_message, procedure: procedure, instant_email_message_notifications_enabled: true)
+      create(:assign_to, instructeur: instructeur_without_instant_message, procedure: procedure, instant_email_message_notifications_enabled: false)
     end
 
     after { Timecop.return }

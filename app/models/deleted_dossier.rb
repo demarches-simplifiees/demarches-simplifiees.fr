@@ -12,7 +12,7 @@
 #  procedure_id :bigint
 #
 class DeletedDossier < ApplicationRecord
-  belongs_to :procedure, -> { with_discarded }, inverse_of: :deleted_dossiers
+  belongs_to :procedure, -> { with_discarded }, inverse_of: :deleted_dossiers, optional: false
 
   validates :dossier_id, uniqueness: true
 
