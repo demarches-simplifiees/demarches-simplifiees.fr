@@ -1,16 +1,13 @@
-- champs = champ.rows.last
-- if champs.present?
-  - index = (champ.rows.size - 1) * champs.size
-  - row_dom_id = "row-#{SecureRandom.hex(4)}"
-  %div{ class: "row row-#{champs.first.row}", id: row_dom_id }
-    -# Tell the controller which DOM element should be removed once the row deletion is successful
-    = hidden_field_tag 'deleted_row_dom_ids[]', row_dom_id, disabled: true
+- row_to_render = champ.rows.last
+- if row_to_render.present?
+  - row_to_render_id = row_to_render.first.row
 
-    - champs.each.with_index(index) do |champ, index|
-      = fields_for "#{attribute}[#{index}]", champ do |form|
-        = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { champ: champ, form: form }
-        = form.hidden_field :id
-        = form.hidden_field :_destroy, disabled: true
-    .flex.row-reverse
-      %button.button.danger.remove-row
-        Supprimer l’élément
+  = fields_for attribute, champ, include_id: false do |champ_fields|
+    -# Enumerate all rows
+    - champ.rows.each do |row_champs|
+      -# If the row is the one we want, render its champs
+      - if row_champs.present? && row_champs.first.row == row_to_render_id
+        = render 'shared/dossiers/editable_champs/repetition_row', form: champ_fields, champs: row_champs
+      - else
+        -# consume the value, to advance the `champ_fields` form builder internal index
+        - champ_fields.fields_for :champs, row_champs do |_| end

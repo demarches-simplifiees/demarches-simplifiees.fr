@@ -41,6 +41,7 @@ export default class AutoSaveController {
         dataType: 'script'
       };
 
+      // FIXME: errors are not caught
       return ajax(params).then((response) => {
         if (response.statusText == "OK") {
           resolve(response);

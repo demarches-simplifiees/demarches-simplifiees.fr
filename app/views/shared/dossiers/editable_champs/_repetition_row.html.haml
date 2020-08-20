@@ -1,0 +1,18 @@
+- row_dom_id = "row-#{SecureRandom.hex(4)}"
+
+.row{ class: "row-#{champs.first.row}", id: row_dom_id }
+  -# Tell the controller which DOM element should be removed once the row deletion is successful
+  = hidden_field_tag 'deleted_row_dom_ids[]', row_dom_id, disabled: true
+
+  - champs.each do |champ|
+    = form.fields_for :champs, champ do |form|
+      = render 'shared/dossiers/editable_champs/editable_champ', champ: form.object, form: form
+      = form.hidden_field :_destroy, disabled: true
+
+  .flex.row-reverse
+    - if champs.first&.parent&.persisted?
+      %button.button.danger.remove-row{ type: :button }
+        Supprimer l’élément
+    - else
+      %button.button.danger{ type: :button }
+        Supprimer l’élément

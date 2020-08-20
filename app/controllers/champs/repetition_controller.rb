@@ -10,9 +10,9 @@ class Champs::RepetitionController < ApplicationController
     @champ.add_row(row)
 
     if @champ.private?
-      @attribute = "dossier[champs_private_attributes][#{@position}][champs_attributes]"
+      @attribute = "dossier[champs_private_attributes][#{@position}]"
     else
-      @attribute = "dossier[champs_attributes][#{@position}][champs_attributes]"
+      @attribute = "dossier[champs_attributes][#{@position}]"
     end
   end
 end
