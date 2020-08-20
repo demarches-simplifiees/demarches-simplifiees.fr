@@ -11,10 +11,7 @@
   = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: dossier_form_class(dossier), multipart: true } }) do |f|
 
     .prologue
-      %p.mandatory-explanation
-        Les champs suivis d’un astérisque (
-        %span.mandatory> *
-        ) sont obligatoires.
+      %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
       - if dossier.brouillon?
         %p.mandatory-explanation
           - if autosave_available?(dossier)

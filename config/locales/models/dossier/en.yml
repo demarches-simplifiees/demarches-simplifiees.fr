@@ -1,0 +1,28 @@
+en:
+  activerecord:
+    models:
+      dossier:
+        one: "File"
+        other: "Files"
+    attributes:
+      dossier:
+        montant_projet: 'Le montant du projet'
+        montant_aide_demande: "Le montant d’aide demandée"
+        date_previsionnelle: "La date de début prévisionnelle"
+        state: &state
+          brouillon: "Draft"
+          en_construction: "In progress"
+          en_instruction: "Being processed"
+          accepte: "Accepted"
+          refuse: "Refused"
+          sans_suite: "Dropped"
+        autorisation_donnees: Acceptation des CGU
+        state/brouillon: Draft
+        state/en_construction: In progress
+        state/en_instruction: Being processed
+        state/accepte: Accepted
+        state/refuse: Refused
+        state/sans_suite: Dropped
+      traitement:
+        state:
+          <<: *state

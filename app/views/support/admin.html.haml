@@ -35,7 +35,7 @@
 
       .contact-champ
         = label_tag :subject do
-          Sujet
+          = t('subject', scope: [:utils])
         = text_field_tag :subject, params[:subject], required: false
 
       .contact-champ
