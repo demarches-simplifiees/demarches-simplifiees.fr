@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: groupe_instructeurs
+#
+#  id           :bigint           not null, primary key
+#  label        :text             not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  procedure_id :bigint           not null
+#
 class GroupeInstructeur < ApplicationRecord
   DEFAULT_LABEL = 'défaut'
   belongs_to :procedure, -> { with_discarded }, inverse_of: :groupe_instructeurs
