@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: geo_areas
+#
+#  id               :bigint           not null, primary key
+#  geometry         :jsonb
+#  properties       :jsonb
+#  source           :string
+#  created_at       :datetime
+#  updated_at       :datetime
+#  champ_id         :bigint
+#  geo_reference_id :string
+#
 class GeoArea < ApplicationRecord
   belongs_to :champ
 

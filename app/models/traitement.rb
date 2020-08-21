@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: traitements
+#
+#  id                :bigint           not null, primary key
+#  instructeur_email :string
+#  motivation        :string
+#  processed_at      :datetime
+#  state             :string
+#  dossier_id        :bigint
+#
 class Traitement < ApplicationRecord
   belongs_to :dossier
 

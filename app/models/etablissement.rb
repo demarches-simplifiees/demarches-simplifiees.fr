@@ -1,3 +1,51 @@
+# == Schema Information
+#
+# Table name: etablissements
+#
+#  id                                       :integer          not null, primary key
+#  adresse                                  :string
+#  association_date_creation                :date
+#  association_date_declaration             :date
+#  association_date_publication             :date
+#  association_objet                        :text
+#  association_rna                          :string
+#  association_titre                        :string
+#  code_insee_localite                      :string
+#  code_postal                              :string
+#  complement_adresse                       :string
+#  diffusable_commercialement               :boolean
+#  entreprise_bilans_bdf                    :jsonb
+#  entreprise_bilans_bdf_monnaie            :string
+#  entreprise_capital_social                :bigint
+#  entreprise_code_effectif_entreprise      :string
+#  entreprise_date_creation                 :date
+#  entreprise_effectif_annee                :string
+#  entreprise_effectif_annuel               :decimal(, )
+#  entreprise_effectif_annuel_annee         :string
+#  entreprise_effectif_mensuel              :decimal(, )
+#  entreprise_effectif_mois                 :string
+#  entreprise_forme_juridique               :string
+#  entreprise_forme_juridique_code          :string
+#  entreprise_nom                           :string
+#  entreprise_nom_commercial                :string
+#  entreprise_numero_tva_intracommunautaire :string
+#  entreprise_prenom                        :string
+#  entreprise_raison_sociale                :string
+#  entreprise_siren                         :string
+#  entreprise_siret_siege_social            :string
+#  libelle_naf                              :string
+#  localite                                 :string
+#  naf                                      :string
+#  nom_voie                                 :string
+#  numero_voie                              :string
+#  siege_social                             :boolean
+#  siret                                    :string
+#  type_voie                                :string
+#  created_at                               :datetime
+#  updated_at                               :datetime
+#  dossier_id                               :integer
+#  entreprise_id                            :integer
+#
 class Etablissement < ApplicationRecord
   belongs_to :dossier
 

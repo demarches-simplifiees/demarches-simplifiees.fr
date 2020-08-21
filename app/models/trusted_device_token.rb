@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: trusted_device_tokens
+#
+#  id             :bigint           not null, primary key
+#  token          :string           not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  instructeur_id :bigint
+#
 class TrustedDeviceToken < ApplicationRecord
   LOGIN_TOKEN_VALIDITY = 1.week
   LOGIN_TOKEN_YOUTH = 15.minutes
