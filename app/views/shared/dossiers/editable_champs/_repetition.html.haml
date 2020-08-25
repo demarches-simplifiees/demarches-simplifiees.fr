@@ -1,6 +1,10 @@
 %div{ class: "repetition-#{form.index}" }
   - champ.rows.each do |champs|
-    %div{ class: "row row-#{champs.first.row}" }
+    - row_dom_id = "row-#{SecureRandom.hex(4)}"
+    %div{ class: "row row-#{champs.first.row}", id: row_dom_id }
+      -# Tell the controller which DOM element should be removed once the row deletion is successful
+      = hidden_field_tag 'deleted_row_dom_ids[]', row_dom_id, disabled: true
+
       - champs.each do |champ|
         = form.fields_for :champs, champ do |form|
           = render partial: 'shared/dossiers/editable_champs/editable_champ', locals: { champ: form.object, form: form }

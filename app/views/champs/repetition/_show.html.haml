@@ -1,7 +1,11 @@
 - champs = champ.rows.last
 - if champs.present?
   - index = (champ.rows.size - 1) * champs.size
-  %div{ class: "row row-#{champs.first.row}" }
+  - row_dom_id = "row-#{SecureRandom.hex(4)}"
+  %div{ class: "row row-#{champs.first.row}", id: row_dom_id }
+    -# Tell the controller which DOM element should be removed once the row deletion is successful
+    = hidden_field_tag 'deleted_row_dom_ids[]', row_dom_id, disabled: true
+
     - champs.each.with_index(index) do |champ, index|
       = fields_for "#{attribute}[#{index}]", champ do |form|
         = render partial: "shared/dossiers/editable_champs/editable_champ", locals: { champ: champ, form: form }
