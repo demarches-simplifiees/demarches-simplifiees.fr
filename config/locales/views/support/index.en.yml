@@ -1,0 +1,32 @@
+en:
+  support:
+    contact: Contact
+    intro_html: Contact us via this form and we will answer you as quickly as possible.<br>Make sure you provide all the required information so we can help you in the best way.
+    question:
+      your_question: Your question
+      choose_question: Choose your question
+      procedure_info: I've encountered a problem while completing my application
+      instruction_info: I have a question about the instruction of my application
+      product: I have an idea to improve the website
+      lost_user: I am having trouble finding the procedure I am looking for
+      other: Other topic
+    response:
+      our_answer: 👉 Our answer
+      procedure_info_html: "<p>Are you sure that all the mandatory fields (<span class= mandatory> * </span>) are properly filled?
+      <p>If you have questions about the information requested, contact the service in charge of the procedure.</p>
+      <p><a href=%{link_procedure_info}>Find more information</a></p>"
+      instruction_info_html: "<p>If you have questions about the instruction of your application (response delay for example), contact directly the instructor via our mail system.</p>
+      <p><a href=%{link_instruction}>Find more information</a></p>
+      <br>
+      <p>If you are facing technical issues on the website, use the form below. We will not be able to inform you about the instruction of your application.</p>"
+      product_html: "<p>Got an idea? Please check our <strong>enhancement dashboard</strong></p>
+      <p><ul><li>Vote for your priority improvements</li>
+      <li>Share your own ideas</li></ul></p>
+      <p><strong><a href=%{link_product}>➡ Access the enhancement dashboard</a></strong></p>"
+      lost_user_html: "<p>We invite you to contact the administration in charge of the procedure so they can provide you the link.
+      It should look like this: %{base_url}/commencer/NOM_DE_LA_DEMARCHE.</p>
+      <br>
+      <p>You can find here the most popular procedures (licence, detr, etc.) :</p>
+      <p><a href=%{link_lost_user}>%{link_lost_user}</a></p>"
+      notice_pj_product: A screenshot can help us identify the element to improve.
+      notice_pj_other: A screenshot can help us identify the issue.
