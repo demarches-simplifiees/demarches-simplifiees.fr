@@ -1,12 +1,15 @@
 - if champ.options?
   - if champ.render_as_radios?
     %fieldset.radios
-      %legend.mandatory-explanation
-        Sélectionnez une des valeurs
       - champ.enabled_non_empty_options.each do |option|
         %label
           = form.radio_button :value, option
           = option
+      - if !champ.mandatory?
+        %label.blank-radio
+          = form.radio_button :value, ''
+          Non renseigné
+
   - else
     = form.select :value,
       champ.options,
