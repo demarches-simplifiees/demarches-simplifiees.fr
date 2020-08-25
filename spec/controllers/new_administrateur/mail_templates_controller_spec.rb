@@ -42,4 +42,27 @@ describe NewAdministrateur::MailTemplatesController, type: :controller do
       expect(response.body).to include(procedure.service.telephone)
     end
   end
+
+  describe 'PATCH update' do
+    let(:mail_subject) { 'Mise à jour de votre démarche' }
+    let(:mail_body) { '<div>Une mise à jour a été effectuée sur votre démarche n° --demarche-id--.</div>' }
+
+    before :each do
+      patch :update,
+        params: {
+          procedure_id: procedure.id,
+          id: initiated_mail.class.const_get(:SLUG),
+          mails_initiated_mail: { subject: mail_subject, rich_body: mail_body }
+        }
+    end
+
+    it { expect(response).to redirect_to edit_admin_procedure_mail_template_path(procedure, initiated_mail.class.const_get(:SLUG)) }
+
+    context 'the mail template' do
+      subject { procedure.reload; procedure.initiated_mail_template }
+
+      it { expect(subject.subject).to eq(mail_subject) }
+      it { expect(subject.body).to eq(mail_body) }
+    end
+  end
 end
