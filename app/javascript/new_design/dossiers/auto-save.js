@@ -29,16 +29,23 @@ const FORM_SELECTOR = 'form#dossier-edit-form.autosave-enabled';
 const INPUTS_SELECTOR = `${FORM_SELECTOR} input:not([type=file]), ${FORM_SELECTOR} select, ${FORM_SELECTOR} textarea`;
 const RETRY_BUTTON_SELECTOR = '.autosave-retry';
 
+// When an autosave is requested programatically, auto-save the form immediately
+addEventListener('autosave:trigger', (event) => {
+  const form = event.target.closest('form');
+  if (form && form.classList.contains('autosave-enabled')) {
+    enqueueAutosaveRequest();
+  }
+});
+
+// When the "Retry" button is clicked, auto-save the form immediately
+delegate('click', RETRY_BUTTON_SELECTOR, enqueueAutosaveRequest);
+
 // When an input changes, batches changes for N seconds, then auto-save the form
 delegate(
   'change',
   INPUTS_SELECTOR,
   debounce(enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY)
 );
-
-
-// When the "Retry" button is clicked, auto-save the form immediately
-delegate('click', RETRY_BUTTON_SELECTOR, enqueueAutosaveRequest);
 
 //
 // Display some UI during the autosave
