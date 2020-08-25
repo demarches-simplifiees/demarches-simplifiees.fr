@@ -4,8 +4,9 @@ class FindDubiousProceduresJob < CronJob
   FORBIDDEN_KEYWORDS = [
     'NIR', 'NIRPP', 'race', 'religion',
     'carte bancaire', 'carte bleue', 'sécurité sociale',
-    'agdref', 'handicap', 'syndicat', 'syndical',
-    'parti politique', 'opinion politique', 'bord politique', 'courant politique'
+    'agdref', 'syndicat', 'syndical',
+    'parti politique', 'opinion politique', 'bord politique', 'courant politique',
+    'médical', 'handicap', 'maladie', 'allergie', 'hospitalisé', 'RQTH', 'vaccin'
   ]
 
   def perform(*args)
