@@ -42,7 +42,7 @@ describe Procedure do
   describe 'closed mail template body' do
     let(:procedure) { create(:procedure) }
 
-    subject { procedure.closed_mail_template.body }
+    subject { procedure.closed_mail_template.rich_body.body.to_html }
 
     context 'for procedures without an attestation' do
       it { is_expected.not_to include('lien attestation') }
