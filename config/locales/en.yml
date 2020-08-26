@@ -20,7 +20,6 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
   utils:
     deconnexion: "Log out"
     involved: "See concerned people"
@@ -64,36 +63,36 @@ en:
   supportadmin:
     # admin demande rdv: Demande de RDV pour une présentation à distance de demarches-simplifiees.fr
     admin question: I have a question about demarches-simplifiees.fr
-    admin soucis: I have a technical issue on demarches-simplifiees.fr
+    admin soucis: I am facing a technical issue on demarches-simplifiees.fr
     admin suggestion produit: I have a suggestion for an evolution
-    admin demande compte: I wish to open an admin account with an Orange, Wanadoo, etc. email
+    admin demande compte: I want to open an admin account with an Orange, Wanadoo, etc. email
     admin autre: Other topic
 
   number:
     currency:
       format:
-        delimiter: " "
-        format: "%n %u"
+        delimiter: ","
+        format: "%u%n"
         precision: 2
-        separator: ","
+        separator: "."
         significant: false
         strip_insignificant_zeros: false
         unit: "€"
     format:
-      delimiter: " "
+      delimiter: ","
       precision: 3
-      separator: ","
+      separator: "."
       significant: false
       strip_insignificant_zeros: false
     human:
       decimal_units:
         format: "%n %u"
         units:
-          billion: billion
-          million: million
-          quadrillion: quadrillion
-          thousand: thousand
-          trillion: trillion
+          billion: Billion
+          million: Million
+          quadrillion: Quadrillion
+          thousand: Thousand
+          trillion: Trillion
           unit: ''
       format:
         delimiter: ''
@@ -104,12 +103,13 @@ en:
         format: "%n %u"
         units:
           byte:
-            one: byte
-            other: bytes
-          gb: Gb
-          kb: kb
-          mb: Mb
-          tb: Tb
+            one: Byte
+            other: Bytes
+          gb: GB
+          kb: KB
+          mb: MB
+          pb: PB
+          tb: TB
     percentage:
       format:
         delimiter: ''
@@ -200,57 +200,57 @@ en:
 
   date:
     abbr_day_names:
-      - sun
-      - mon
-      - tue
-      - wed
-      - thu
-      - fri
-      - sat
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
     abbr_month_names:
       -
-      - jan.
-      - feb.
-      - mar.
-      - apr.
-      - may
-      - jun.
-      - jul.
-      - aug.
-      - sept.
-      - oct.
-      - nov.
-      - dec.
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
     month_names:
       -
-      - january
-      - february
-      - march
-      - april
-      - may
-      - june
-      - july
-      - august
-      - september
-      - october
-      - november
-      - december
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
     order:
-      - :day
-      - :month
       - :year
+      - :month
+      - :day
     day_names:
-      - sunday
-      - monday
-      - tuesday
-      - wednesday
-      - thursday
-      - friday
-      - saturday
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
     formats:
-      default: "%d %B %Y"
-      short: "%e %b"
-      long: "%e %B %Y"
+      default: "%Y-%m-%d"
+      long: "%B %d, %Y"
+      short: "%b %d"
   datetime:
     distance_in_words:
       about_x_hours:
@@ -291,7 +291,7 @@ en:
         other: "%{count} seconds"
   time:
     formats:
-      default: "%d %B %Y %R"
+      default: "%B %d %Y %R"
   pluralize:
     case:
       zero: file
