@@ -30,6 +30,7 @@ module TPS
     config.i18n.default_locale = :fr
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.i18n.available_locales = [:fr, :en]
+    config.i18n.fallbacks = [:fr]
 
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript')
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
