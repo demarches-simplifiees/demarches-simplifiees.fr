@@ -1,0 +1,3 @@
+<% (params['deleted_row_dom_ids'] || []).each do |deleted_row_dom_id| %>
+  <%= remove_element('#' + deleted_row_dom_id) %>
+<% end %>
