@@ -36,7 +36,8 @@ features = [
   :operation_log_serialize_subject,
   :pre_maintenance_mode,
   :xray,
-  :carte_ign
+  :carte_ign,
+  :localization
 ]
 
 def database_exists?
