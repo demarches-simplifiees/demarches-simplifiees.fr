@@ -1,10 +1,11 @@
 - if champ.options?
   - if champ.render_as_checkboxes?
-    - champ.enabled_non_empty_options.each do |option|
+    = form.collection_check_boxes(:value, champ.enabled_non_empty_options, :to_s, :to_s) do |b|
       .editable-champ.editable-champ-checkbox
-        %label
-          = form.check_box :value, { multiple: true, checked: champ&.value&.include?(option) }, option, nil
-          = option
+        = b.label do
+          = b.check_box({ multiple: true, checked: champ&.value&.include?(b.value) })
+          = b.text
+
   - else
     = form.select :value,
         champ.options,
