@@ -24,7 +24,7 @@ class FindDubiousProceduresJob < CronJob
       .where(procedures: { closed_at: nil, whitelisted_at: nil })
 
     dubious_procedures_and_tdcs = forbidden_tdcs
-      .group_by(&:procedure_id)
+      .group_by { |type_de_champ| type_de_champ.procedure.id }
       .map { |_procedure_id, tdcs| [tdcs[0].procedure, tdcs] }
 
     AdministrationMailer.dubious_procedures(dubious_procedures_and_tdcs).deliver_later
