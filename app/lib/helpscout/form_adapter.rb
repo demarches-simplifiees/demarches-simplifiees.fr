@@ -1,24 +1,37 @@
 class Helpscout::FormAdapter
   attr_reader :params
 
+  def self.options
+    [
+      [I18n.t(TYPE_INFO, scope: [:support, :question]), TYPE_INFO],
+      [I18n.t(TYPE_PERDU, scope: [:support, :question]), TYPE_PERDU],
+      [I18n.t(TYPE_INSTRUCTION, scope: [:support, :question]), TYPE_INSTRUCTION],
+      [I18n.t(TYPE_AMELIORATION, scope: [:support, :question]), TYPE_AMELIORATION],
+      [I18n.t(TYPE_AUTRE, scope: [:support, :question]), TYPE_AUTRE]
+    ]
+  end
+
+  def self.admin_options
+    [
+      [I18n.t(ADMIN_TYPE_QUESTION, scope: [:supportadmin]), ADMIN_TYPE_QUESTION],
+      [I18n.t(ADMIN_TYPE_RDV, scope: [:supportadmin]), ADMIN_TYPE_RDV],
+      [I18n.t(ADMIN_TYPE_SOUCIS, scope: [:supportadmin]), ADMIN_TYPE_SOUCIS],
+      [I18n.t(ADMIN_TYPE_PRODUIT, scope: [:supportadmin]), ADMIN_TYPE_PRODUIT],
+      [I18n.t(ADMIN_TYPE_DEMANDE_COMPTE, scope: [:supportadmin]), ADMIN_TYPE_DEMANDE_COMPTE],
+      [I18n.t(ADMIN_TYPE_AUTRE, scope: [:supportadmin]), ADMIN_TYPE_AUTRE]
+    ]
+  end
+
   def initialize(params = {}, api = nil)
     @params = params
     @api = api || Helpscout::API.new
   end
 
-  TYPE_INFO = 'info demarche'
-  TYPE_PERDU = 'usager perdu'
-  TYPE_INSTRUCTION = 'info instruction'
-  TYPE_AMELIORATION = 'produit'
-  TYPE_AUTRE = 'autre'
-
-  OPTIONS = [
-    [I18n.t(TYPE_INFO, scope: [:support]), TYPE_INFO],
-    [I18n.t(TYPE_PERDU, scope: [:support]), TYPE_PERDU],
-    [I18n.t(TYPE_INSTRUCTION, scope: [:support]), TYPE_INSTRUCTION],
-    [I18n.t(TYPE_AMELIORATION, scope: [:support]), TYPE_AMELIORATION],
-    [I18n.t(TYPE_AUTRE, scope: [:support]), TYPE_AUTRE]
-  ]
+  TYPE_INFO = 'procedure_info'
+  TYPE_PERDU = 'lost_user'
+  TYPE_INSTRUCTION = 'instruction_info'
+  TYPE_AMELIORATION = 'product'
+  TYPE_AUTRE = 'other'
 
   ADMIN_TYPE_RDV = 'admin demande rdv'
   ADMIN_TYPE_QUESTION = 'admin question'
@@ -26,15 +39,6 @@ class Helpscout::FormAdapter
   ADMIN_TYPE_PRODUIT = 'admin suggestion produit'
   ADMIN_TYPE_DEMANDE_COMPTE = 'admin demande compte'
   ADMIN_TYPE_AUTRE = 'admin autre'
-
-  ADMIN_OPTIONS = [
-    [I18n.t(ADMIN_TYPE_QUESTION, scope: [:supportadmin]), ADMIN_TYPE_QUESTION],
-    [I18n.t(ADMIN_TYPE_RDV, scope: [:supportadmin]), ADMIN_TYPE_RDV],
-    [I18n.t(ADMIN_TYPE_SOUCIS, scope: [:supportadmin]), ADMIN_TYPE_SOUCIS],
-    [I18n.t(ADMIN_TYPE_PRODUIT, scope: [:supportadmin]), ADMIN_TYPE_PRODUIT],
-    [I18n.t(ADMIN_TYPE_DEMANDE_COMPTE, scope: [:supportadmin]), ADMIN_TYPE_DEMANDE_COMPTE],
-    [I18n.t(ADMIN_TYPE_AUTRE, scope: [:supportadmin]), ADMIN_TYPE_AUTRE]
-  ]
 
   def send_form
     conversation_id = create_conversation
