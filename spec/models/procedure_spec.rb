@@ -279,15 +279,6 @@ describe Procedure do
     end
   end
 
-  describe '#types_de_champ (ordered)' do
-    let(:procedure) { create(:procedure) }
-    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 1) }
-    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-    subject { procedure.types_de_champ }
-    it { expect(subject.first).to eq(type_de_champ_1) }
-    it { expect(subject.last).to eq(type_de_champ_0) }
-  end
-
   describe 'active' do
     let(:procedure) { create(:procedure) }
     subject { Procedure.active(procedure.id) }
@@ -333,22 +324,22 @@ describe Procedure do
   end
 
   describe 'clone' do
-    let!(:service) { create(:service) }
-    let(:procedure) { create(:procedure, received_mail: received_mail, service: service) }
-    let!(:type_de_champ_0) { create(:type_de_champ, procedure: procedure, order_place: 0) }
-    let!(:type_de_champ_1) { create(:type_de_champ, procedure: procedure, order_place: 1) }
-    let!(:type_de_champ_2) { create(:type_de_champ_drop_down_list, procedure: procedure, order_place: 2) }
-    let!(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, procedure: procedure, order_place: 3, old_pj: { stable_id: 2713 }) }
-    let!(:type_de_champ_private_0) { create(:type_de_champ, :private, procedure: procedure, order_place: 0) }
-    let!(:type_de_champ_private_1) { create(:type_de_champ, :private, procedure: procedure, order_place: 1) }
-    let!(:type_de_champ_private_2) { create(:type_de_champ_drop_down_list, :private, procedure: procedure, order_place: 2) }
+    let(:service) { create(:service) }
+    let(:procedure) { create(:procedure, received_mail: received_mail, service: service, types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj], types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2]) }
+    let(:type_de_champ_0) { build(:type_de_champ, position: 0) }
+    let(:type_de_champ_1) { build(:type_de_champ, position: 1) }
+    let(:type_de_champ_2) { build(:type_de_champ_drop_down_list, position: 2) }
+    let(:type_de_champ_pj) { build(:type_de_champ_piece_justificative, position: 3, old_pj: { stable_id: 2713 }) }
+    let(:type_de_champ_private_0) { build(:type_de_champ, :private, position: 0) }
+    let(:type_de_champ_private_1) { build(:type_de_champ, :private, position: 1) }
+    let(:type_de_champ_private_2) { build(:type_de_champ_drop_down_list, :private, position: 2) }
     let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
 
-    let!(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: "groupe_1") }
-    let!(:instructeur_1) { create(:instructeur) }
-    let!(:instructeur_2) { create(:instructeur) }
+    let(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: "groupe_1") }
+    let(:instructeur_1) { create(:instructeur) }
+    let(:instructeur_2) { create(:instructeur) }
     let!(:assign_to_1) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_1) }
     let!(:assign_to_2) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_2) }
 
@@ -379,27 +370,17 @@ describe Procedure do
     it 'should duplicate specific objects with different id' do
       expect(subject.id).not_to eq(procedure.id)
 
-      expect(subject.types_de_champ.size).to eq(procedure.types_de_champ.size)
-      expect(subject.types_de_champ_private.size).to eq procedure.types_de_champ_private.size
-      expect(subject.types_de_champ.map(&:drop_down_options).compact.size).to eq procedure.types_de_champ.map(&:drop_down_options).compact.size
-      expect(subject.types_de_champ_private.map(&:drop_down_options).compact.size).to eq procedure.types_de_champ_private.map(&:drop_down_options).compact.size
-      expect(subject.draft_revision.types_de_champ.size).to eq(procedure.draft_revision.types_de_champ.size)
-      expect(subject.draft_revision.types_de_champ_private.size).to eq(procedure.draft_revision.types_de_champ_private.size)
+      expect(subject.draft_types_de_champ.size).to eq(procedure.draft_types_de_champ.size)
+      expect(subject.draft_types_de_champ_private.size).to eq(procedure.draft_types_de_champ_private.size)
 
-      procedure.types_de_champ.zip(subject.types_de_champ).each do |ptc, stc|
+      procedure.draft_types_de_champ.zip(subject.draft_types_de_champ).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
         expect(stc.revision).to eq(subject.draft_revision)
       end
-      procedure.types_de_champ.zip(procedure.draft_revision.types_de_champ).each do |ptc, rtc|
-        expect(ptc).to eq(rtc)
-      end
 
-      subject.types_de_champ_private.zip(procedure.types_de_champ_private).each do |stc, ptc|
+      procedure.draft_types_de_champ_private.zip(subject.draft_types_de_champ_private).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
         expect(stc.revision).to eq(subject.draft_revision)
-      end
-      procedure.types_de_champ_private.zip(procedure.draft_revision.types_de_champ_private).each do |ptc, rtc|
-        expect(ptc).to eq(rtc)
       end
 
       expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)
@@ -423,7 +404,7 @@ describe Procedure do
       end
 
       it 'should discard old pj information' do
-        subject.types_de_champ.each do |stc|
+        subject.draft_types_de_champ.each do |stc|
           expect(stc.old_pj).to be_nil
         end
       end
@@ -459,7 +440,7 @@ describe Procedure do
       end
 
       it 'should discard old pj information' do
-        subject.types_de_champ.each do |stc|
+        subject.draft_types_de_champ.each do |stc|
           expect(stc.old_pj).to be_nil
         end
       end
@@ -519,12 +500,12 @@ describe Procedure do
     end
 
     it 'should keep types_de_champ ids stable' do
-      expect(subject.types_de_champ.first.id).not_to eq(procedure.types_de_champ.first.id)
-      expect(subject.types_de_champ.first.stable_id).to eq(procedure.types_de_champ.first.id)
+      expect(subject.draft_types_de_champ.first.id).not_to eq(procedure.draft_types_de_champ.first.id)
+      expect(subject.draft_types_de_champ.first.stable_id).to eq(procedure.draft_types_de_champ.first.id)
     end
 
     it 'should duplicate piece_justificative_template on a type_de_champ' do
-      expect(subject.types_de_champ.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be true
+      expect(subject.draft_types_de_champ.where(type_champ: "piece_justificative").first.piece_justificative_template.attached?).to be true
     end
 
     context 'with a notice attached' do
@@ -805,7 +786,7 @@ describe Procedure do
   end
 
   describe 'suggested_path' do
-    let(:procedure) { create :procedure, aasm_state: :publiee, libelle: 'Inscription au Collège' }
+    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège') }
 
     subject { procedure.suggested_path(procedure.administrateurs.first) }
 
@@ -821,7 +802,7 @@ describe Procedure do
 
     context 'when the suggestion conflicts with one procedure' do
       before do
-        create :procedure, aasm_state: :publiee, path: 'inscription-au-college'
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college')
       end
 
       it { is_expected.to eq 'inscription-au-college-2' }
@@ -829,8 +810,8 @@ describe Procedure do
 
     context 'when the suggestion conflicts with several procedures' do
       before do
-        create :procedure, aasm_state: :publiee, path: 'inscription-au-college'
-        create :procedure, aasm_state: :publiee, path: 'inscription-au-college-2'
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college')
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college-2')
       end
 
       it { is_expected.to eq 'inscription-au-college-3' }
@@ -838,7 +819,7 @@ describe Procedure do
 
     context 'when the suggestion conflicts with another procedure of the same admin' do
       before do
-        create :procedure, aasm_state: :publiee, path: 'inscription-au-college', administrateurs: procedure.administrateurs
+        create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', administrateurs: procedure.administrateurs)
       end
 
       it { is_expected.to eq 'inscription-au-college' }
@@ -903,13 +884,14 @@ describe Procedure do
 
   describe '#new_dossier' do
     let(:procedure) do
-      procedure = create(:procedure)
-
-      create(:type_de_champ_text, procedure: procedure, order_place: 1)
-      create(:type_de_champ_number, procedure: procedure, order_place: 2)
-      create(:type_de_champ_textarea, :private, procedure: procedure)
-
-      procedure
+      create(:procedure,
+        types_de_champ: [
+          build(:type_de_champ_text, position: 0),
+          build(:type_de_champ_number, position: 1)
+        ],
+        types_de_champ_private: [
+          build(:type_de_champ_textarea, :private)
+        ])
     end
 
     let(:dossier) { procedure.new_dossier }
