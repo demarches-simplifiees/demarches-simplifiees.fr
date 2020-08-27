@@ -335,6 +335,7 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
+    http_accept_language (2.1.1)
     http_parser.rb (0.6.0)
     httpclient (2.8.3)
     i18n (1.8.3)
@@ -810,6 +811,7 @@ DEPENDENCIES
   haml-lint
   haml-rails
   hashie
+  http_accept_language
   jquery-rails
   jwt
   kaminari (= 1.2.1)
