@@ -22,10 +22,13 @@
 fr:
   utils:
     deconnexion: "Déconnexion"
-    involved: "Voir les personnes impliquées"
-    no-commentaires: "Il n’y a aucun message dans le fil de discussion, n’hésitez pas à initier le premier."
-    depositaire: "Dépositaire"
-    pieces: "Pièces jointes"
+    pj: "Pièces jointes"
+    asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
+    file_number: Numéro de dossier
+    subject: Sujet
+    message: Message
+    send_mail: Envoyer le message
+    help: Aide
   views:
     pagination:
       next: Suivant

@@ -40,6 +40,8 @@ gem 'graphql_playground-rails'
 gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
+gem 'http_accept_language'
+gem 'i18n-tasks', '~> 0.9.31'
 gem 'jquery-rails' # Use jquery as the JavaScript library
 gem 'jwt'
 gem 'kaminari', '1.2.1' # Pagination
