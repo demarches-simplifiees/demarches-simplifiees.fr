@@ -4,19 +4,15 @@
 
 #contact-form
   .container
-    %h1.new-h1 Contact
+    %h1.new-h1
+      = t('contact', scope: [:support])
 
     = form_tag contact_path, method: :post, multipart: true, class: 'form' do |f|
 
       .description
-        %p
-          Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.
-          Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux.
+        %p= t('intro_html', scope: [:support])
         %br
-        %p.mandatory-explanation
-          Les champs suivis d’un astérisque (
-          %span.mandatory *
-          ) sont obligatoires.
+        %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
       - if !user_signed_in?
         .contact-champ
@@ -27,88 +23,60 @@
 
       .contact-champ
         = label_tag :type do
-          Votre question
+          = t('your_question', scope: [:support, :question])
           %span.mandatory *
-        = select_tag :type, options_for_select(@options, params[:type]), include_blank: "Choisir une question", required: true
+        = select_tag :type, options_for_select(@options, params[:type]), include_blank: t('choose_question', scope: [:support, :question]), required: true
 
       .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INFO } }
         .card-title
-          👉 Notre réponse
+          = t('our_answer', scope: [:support, :response])
         .card-content
-          %p
-            Avez-vous bien vérifié que tous les champs obligatoires (
-            %span.mandatory *
-            ) sont bien remplis ?
-          %p Si vous avez des questions sur les informations à saisir, contactez les services en charge de la démarche.
-          %p
-            %a{ href: FAQ_CONTACTER_SERVICE_EN_CHARGE_URL }
-              En savoir plus
+          = t('procedure_info_html', scope: [:support, :response], link_procedure_info: FAQ_CONTACTER_SERVICE_EN_CHARGE_URL)
 
       .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_PERDU } }
         .card-title
-          👉 Notre réponse
+          = t('our_answer', scope: [:support, :response])
         .card-content
-          %p Nous vous invitons à contacter l’administration en charge de votre démarche pour qu’elle vous indique le lien à suivre. Celui-ci devrait ressembler à cela : #{APPLICATION_BASE_URL}/commencer/NOM_DE_LA_DEMARCHE .
-          %br
-          %p Vous pouvez aussi consulter ici la liste de nos démarches les plus frequentes (permis, detr etc) :
-          %p
-            %a{ href: LISTE_DES_DEMARCHES_URL }
-              = LISTE_DES_DEMARCHES_URL
+          = t('lost_user_html', scope: [:support, :response], base_url: APPLICATION_BASE_URL, link_lost_user: LISTE_DES_DEMARCHES_URL)
 
       .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INSTRUCTION } }
         .card-title
-          👉 Notre réponse
-        %p Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie.
-        %p
-          %a{ href: FAQ_OU_EN_EST_MON_DOSSIER_URL }
-            En savoir plus
-        %br
-        %p Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l'instruction de votre dossier.
+          = t('our_answer', scope: [:support, :response])
+        .card-content
+          = t('instruction_info_html', scope: [:support, :response], link_instruction: FAQ_OU_EN_EST_MON_DOSSIER_URL)
 
       .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
         .card-title
-          👉 Notre réponse
-        %p
-          Une idée ? Pensez à consulter notre
-          = succeed ' !' do
-            %strong
-              tableau de bord des améliorations
-        %p
-          %ul
-            %li • Votez pour vos améliorations prioritaires ;
-            %li • Proposez votre propre idée.
-
-        %p
-          %strong
-            %a{ href: FEATURE_UPVOTE_URL }
-              ➡ Accéder au tableau des améliorations
+          = t('our_answer', scope: [:support, :response])
+        .card-content
+          = t('product_html', scope: [:support, :response], link_product: FEATURE_UPVOTE_URL)
 
       .contact-champ
-        = label_tag :dossier_id, 'Numéro du dossier concerné'
+        = label_tag :dossier_id, t('file_number', scope: [:utils])
         = text_field_tag :dossier_id, @dossier_id
 
       .contact-champ
         = label_tag :subject do
-          Sujet
+          = t('subject', scope: [:utils])
           %span.mandatory *
         = text_field_tag :subject, params[:subject], required: true
 
       .contact-champ
         = label_tag :text do
-          Message
+          = t('message', scope: [:utils])
           %span.mandatory *
         = text_area_tag :text, params[:text], rows: 6, required: true
 
       .contact-champ
         = label_tag :piece_jointe do
-          Pièce jointe
+          = t('pj', scope: [:utils])
         %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
-          Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
+          = t('notice_pj_product', scope: [:support, :response])
         %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AUTRE } }
-          Une capture d’écran peut nous aider à identifier plus facilement le problème.
+          = t('notice_pj_other', scope: [:support, :response])
         = file_field_tag :piece_jointe
 
       = hidden_field_tag :tags, @tags&.join(',')
 
       .send-wrapper
-        = button_tag 'Envoyer le message', type: :submit, class: 'button send primary'
+        = button_tag t('send_mail', scope: [:utils]), type: :submit, class: 'button send primary'

@@ -1,0 +1,8 @@
+fr:
+  layouts:
+    go_superadmin: "Passer en super-admin"
+    go_user: "Passer en usager"
+    go_instructor: "Passer en instructeur"
+    go_admin: "Passer en administrateur"
+    profile: "Voir mon profil"
+    logout: "Se déconnecter"
