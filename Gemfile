@@ -100,6 +100,7 @@ group :development do
   gem 'brakeman', require: false
   gem 'haml-lint'
   gem 'letter_opener_web'
+  gem 'rails-erd', require: false # generates `doc/database_models.pdf`
   gem 'rubocop', require: false
   gem 'rubocop-rails_config'
   gem 'rubocop-rspec-focused', require: false
