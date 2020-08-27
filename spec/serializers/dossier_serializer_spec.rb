@@ -49,12 +49,11 @@ describe DossierSerializer do
   context 'when a type de champ PJ was cloned from a legacy PJ' do
     let(:original_pj_id) { 3 }
     let(:cloned_type_de_champ) do
-      tdc = create(:type_de_champ_piece_justificative,
+      build(:type_de_champ_piece_justificative,
         libelle: "Vidéo de votre demande de subvention",
         description: "Pour optimiser vos chances, soignez la chorégraphie et privilégiez le chant polyphonique.\r\nRécupérer le formulaire vierge pour mon dossier : https://www.dance-academy.gouv.fr",
-        order_place: 0)
-      tdc.old_pj = { stable_id: original_pj_id }
-      tdc
+        old_pj: { stable_id: original_pj_id },
+        position: 0)
     end
     let(:procedure) { create(:procedure, :published, types_de_champ: [cloned_type_de_champ]) }
     let(:dossier) { create(:dossier, procedure: procedure) }
