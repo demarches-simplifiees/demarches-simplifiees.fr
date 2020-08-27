@@ -560,36 +560,34 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe "#update_annotations" do
+    let(:procedure) do
+      create(:procedure, :published, types_de_champ_private: [
+        build(:type_de_champ_multiple_drop_down_list, position: 0),
+        build(:type_de_champ_linked_drop_down_list, position: 1),
+        build(:type_de_champ_datetime, position: 2),
+        build(:type_de_champ_repetition, :with_types_de_champ, position: 3)
+      ], instructeurs: instructeurs)
+    end
+    let(:dossier) { create(:dossier, :en_construction, :with_all_annotations, procedure: procedure) }
+    let(:now) { Time.zone.parse('01/01/2100') }
+
     let(:champ_multiple_drop_down_list) do
-      tdc = create(:type_de_champ_multiple_drop_down_list, :private, procedure: procedure, libelle: 'libelle')
-      create(:champ_multiple_drop_down_list, :private, type_de_champ: tdc, dossier: dossier)
+      dossier.champs_private.first
     end
 
     let(:champ_linked_drop_down_list) do
-      tdc = create(:type_de_champ_linked_drop_down_list, :private, procedure: procedure, libelle: 'libelle')
-      create(:champ_linked_drop_down_list, :private, type_de_champ: tdc, dossier: dossier)
+      dossier.champs_private.second
     end
 
     let(:champ_datetime) do
-      tdc = create(:type_de_champ_datetime, :private, procedure: procedure, libelle: 'libelle')
-      create(:champ_datetime, :private, type_de_champ: tdc, dossier: dossier)
+      dossier.champs_private.third
     end
 
     let(:champ_repetition) do
-      tdc = create(:type_de_champ_repetition, :private, :with_types_de_champ, procedure: procedure, libelle: 'libelle')
-      tdc.types_de_champ << create(:type_de_champ_text, procedure: procedure, libelle: 'libelle')
-      champ = create(:champ_repetition, :private, type_de_champ: tdc, dossier: dossier)
-      champ.add_row
-      champ
+      dossier.champs_private.fourth
     end
 
-    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-
-    let(:now) { Time.zone.parse('01/01/2100') }
-
     before do
-      dossier.champs_private << [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime, champ_repetition]
-
       Timecop.freeze(now)
       patch :update_annotations, params: params
 
@@ -607,64 +605,70 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:params) do
         {
           procedure_id: procedure.id,
-        dossier_id: dossier.id,
-        dossier: {
-          champs_private_attributes: {
-            '0': {
-              id: champ_multiple_drop_down_list.id,
-              value: ['', 'un', 'deux']
-            },
-            '1': {
-              id: champ_datetime.id,
-              'value(1i)': 2019,
-              'value(2i)': 12,
-              'value(3i)': 21,
-              'value(4i)': 13,
-              'value(5i)': 17
-            },
-            '2': {
-              id: champ_linked_drop_down_list.id,
-              primary_value: 'primary',
-              secondary_value: 'secondary'
-            },
-            '3': {
-              id: champ_repetition.id,
-              champs_attributes: {
-                id: champ_repetition.champs.first.id,
-                value: 'text'
+          dossier_id: dossier.id,
+          dossier: {
+            champs_private_attributes: {
+              '0': {
+                id: champ_multiple_drop_down_list.id,
+                value: ['', 'un', 'deux']
+              },
+              '1': {
+                id: champ_datetime.id,
+                'value(1i)': 2019,
+                'value(2i)': 12,
+                'value(3i)': 21,
+                'value(4i)': 13,
+                'value(5i)': 17
+              },
+              '2': {
+                id: champ_linked_drop_down_list.id,
+                primary_value: 'primary',
+                secondary_value: 'secondary'
+              },
+              '3': {
+                id: champ_repetition.id,
+                champs_attributes: {
+                  id: champ_repetition.champs.first.id,
+                  value: 'text'
+                }
               }
             }
           }
         }
-        }
       end
-      it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
-      it { expect(champ_linked_drop_down_list.primary_value).to eq('primary') }
-      it { expect(champ_linked_drop_down_list.secondary_value).to eq('secondary') }
-      it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
-      it { expect(champ_repetition.champs.first.value).to eq('text') }
-      it { expect(dossier.reload.last_champ_private_updated_at).to eq(now) }
-      it { expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)) }
+
+      it {
+        expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]')
+        expect(champ_linked_drop_down_list.primary_value).to eq('primary')
+        expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
+        expect(champ_datetime.value).to eq('21/12/2019 13:17')
+        expect(champ_repetition.champs.first.value).to eq('text')
+        expect(dossier.reload.last_champ_private_updated_at).to eq(now)
+        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
+      }
     end
 
     context "without new values for champs_private" do
       let(:params) do
         {
           procedure_id: procedure.id,
-        dossier_id: dossier.id,
-        dossier: {
-          champs_private_attributes: {},
-          champs_attributes: {
-            '0': {
-              id: champ_multiple_drop_down_list.id,
-              value: ['', 'un', 'deux']
+          dossier_id: dossier.id,
+          dossier: {
+            champs_private_attributes: {},
+            champs_attributes: {
+              '0': {
+                id: champ_multiple_drop_down_list.id,
+                value: ['', 'un', 'deux']
+              }
             }
           }
         }
-        }
       end
-      it { expect(dossier.reload.last_champ_private_updated_at).to eq(nil) }
-      it { expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)) }
+
+      it {
+        expect(dossier.reload.last_champ_private_updated_at).to eq(nil)
+        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
+      }
     end
   end
 
