@@ -2,17 +2,17 @@ describe StatsController, type: :controller do
   describe "#last_four_months_hash" do
     context "while a regular user is logged in" do
       before do
-        FactoryBot.create(:procedure, :created_at => 6.months.ago, :updated_at => 6.months.ago)
-        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
-        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 62.days.ago)
-        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => 31.days.ago)
-        FactoryBot.create(:procedure, :created_at => 2.months.ago, :updated_at => Time.zone.now)
+        create(:procedure, created_at: 6.months.ago, updated_at: 6.months.ago)
+        create(:procedure, created_at: 2.months.ago, updated_at: 62.days.ago)
+        create(:procedure, created_at: 2.months.ago, updated_at: 62.days.ago)
+        create(:procedure, created_at: 2.months.ago, updated_at: 31.days.ago)
+        create(:procedure, created_at: 2.months.ago, updated_at: Time.zone.now)
         @controller = StatsController.new
 
         allow(@controller).to receive(:administration_signed_in?).and_return(false)
       end
 
-      let (:association) { Procedure.all }
+      let(:association) { Procedure.all }
 
       subject { @controller.send(:last_four_months_hash, association, :updated_at) }
 
@@ -26,10 +26,10 @@ describe StatsController, type: :controller do
 
     context "while a super admin is logged in" do
       before do
-        FactoryBot.create(:procedure, :updated_at => 6.months.ago)
-        FactoryBot.create(:procedure, :updated_at => 45.days.ago)
-        FactoryBot.create(:procedure, :updated_at => 1.day.ago)
-        FactoryBot.create(:procedure, :updated_at => 1.day.ago)
+        create(:procedure, updated_at: 6.months.ago)
+        create(:procedure, updated_at: 45.days.ago)
+        create(:procedure, updated_at: 1.day.ago)
+        create(:procedure, updated_at: 1.day.ago)
 
         @controller = StatsController.new
 
@@ -52,11 +52,11 @@ describe StatsController, type: :controller do
   describe '#cumulative_hash' do
     before do
       Timecop.freeze(Time.zone.local(2016, 10, 2))
-      FactoryBot.create(:procedure, :created_at => 55.days.ago, :updated_at => 43.days.ago)
-      FactoryBot.create(:procedure, :created_at => 45.days.ago, :updated_at => 40.days.ago)
-      FactoryBot.create(:procedure, :created_at => 45.days.ago, :updated_at => 20.days.ago)
-      FactoryBot.create(:procedure, :created_at => 15.days.ago, :updated_at => 20.days.ago)
-      FactoryBot.create(:procedure, :created_at => 15.days.ago, :updated_at => 1.hour.ago)
+      create(:procedure, created_at: 55.days.ago, updated_at: 43.days.ago)
+      create(:procedure, created_at: 45.days.ago, updated_at: 40.days.ago)
+      create(:procedure, created_at: 45.days.ago, updated_at: 20.days.ago)
+      create(:procedure, created_at: 15.days.ago, updated_at: 20.days.ago)
+      create(:procedure, created_at: 15.days.ago, updated_at: 1.hour.ago)
     end
 
     after { Timecop.return }
@@ -104,24 +104,24 @@ describe StatsController, type: :controller do
     #     dossier_p1_c: 5 days
 
     before do
-      procedure_1 = FactoryBot.create(:procedure)
-      procedure_2 = FactoryBot.create(:procedure)
-      dossier_p1_a = FactoryBot.create(:dossier, :accepte,
-        :procedure          => procedure_1,
-        :en_construction_at => 2.months.ago.beginning_of_month,
-        :processed_at       => 2.months.ago.beginning_of_month + 3.days)
-      dossier_p1_b = FactoryBot.create(:dossier, :accepte,
-        :procedure          => procedure_1,
-        :en_construction_at => 2.months.ago.beginning_of_month,
-        :processed_at       => 2.months.ago.beginning_of_month + 1.day)
-      dossier_p1_c = FactoryBot.create(:dossier, :accepte,
-        :procedure          => procedure_1,
-        :en_construction_at => 1.month.ago.beginning_of_month,
-        :processed_at       => 1.month.ago.beginning_of_month + 5.days)
-      dossier_p2_a = FactoryBot.create(:dossier, :accepte,
-        :procedure          => procedure_2,
-        :en_construction_at => 2.months.ago.beginning_of_month,
-        :processed_at       => 2.months.ago.beginning_of_month + 4.days)
+      procedure_1 = create(:procedure)
+      procedure_2 = create(:procedure)
+      dossier_p1_a = create(:dossier, :accepte,
+        procedure: procedure_1,
+        en_construction_at: 2.months.ago.beginning_of_month,
+        processed_at: 2.months.ago.beginning_of_month + 3.days)
+      dossier_p1_b = create(:dossier, :accepte,
+        procedure: procedure_1,
+        en_construction_at: 2.months.ago.beginning_of_month,
+        processed_at: 2.months.ago.beginning_of_month + 1.day)
+      dossier_p1_c = create(:dossier, :accepte,
+        procedure: procedure_1,
+        en_construction_at: 1.month.ago.beginning_of_month,
+        processed_at: 1.month.ago.beginning_of_month + 5.days)
+      dossier_p2_a = create(:dossier, :accepte,
+        procedure: procedure_2,
+        en_construction_at: 2.months.ago.beginning_of_month,
+        processed_at: 2.months.ago.beginning_of_month + 4.days)
 
       @expected_hash = {
         (2.months.ago.beginning_of_month).to_s => 3.0,
@@ -149,28 +149,28 @@ describe StatsController, type: :controller do
     #     dossier_p1_c: 50 minutes
 
     before do
-      procedure_1 = FactoryBot.create(:procedure, :with_type_de_champ, :types_de_champ_count => 24)
-      procedure_2 = FactoryBot.create(:procedure, :with_type_de_champ, :types_de_champ_count => 48)
-      dossier_p1_a = FactoryBot.create(:dossier, :accepte,
-        :procedure    => procedure_1,
-        :created_at   => 2.months.ago.beginning_of_month,
-        :en_construction_at => 2.months.ago.beginning_of_month + 30.minutes,
-        :processed_at => 2.months.ago.beginning_of_month + 1.day)
-      dossier_p1_b = FactoryBot.create(:dossier, :accepte,
-        :procedure    => procedure_1,
-        :created_at   => 2.months.ago.beginning_of_month,
-        :en_construction_at => 2.months.ago.beginning_of_month + 10.minutes,
-        :processed_at => 2.months.ago.beginning_of_month + 1.day)
-      dossier_p1_c = FactoryBot.create(:dossier, :accepte,
-        :procedure    => procedure_1,
-        :created_at   => 1.month.ago.beginning_of_month,
-        :en_construction_at => 1.month.ago.beginning_of_month + 50.minutes,
-        :processed_at => 1.month.ago.beginning_of_month + 1.day)
-      dossier_p2_a = FactoryBot.create(:dossier, :accepte,
-        :procedure    => procedure_2,
-        :created_at   => 2.months.ago.beginning_of_month,
-        :en_construction_at => 2.months.ago.beginning_of_month + 80.minutes,
-        :processed_at => 2.months.ago.beginning_of_month + 1.day)
+      procedure_1 = create(:procedure, :with_type_de_champ, types_de_champ_count: 24)
+      procedure_2 = create(:procedure, :with_type_de_champ, types_de_champ_count: 48)
+      dossier_p1_a = create(:dossier, :accepte,
+        procedure: procedure_1,
+        created_at: 2.months.ago.beginning_of_month,
+        en_construction_at: 2.months.ago.beginning_of_month + 30.minutes,
+        processed_at: 2.months.ago.beginning_of_month + 1.day)
+      dossier_p1_b = create(:dossier, :accepte,
+        procedure: procedure_1,
+        created_at: 2.months.ago.beginning_of_month,
+        en_construction_at: 2.months.ago.beginning_of_month + 10.minutes,
+        processed_at: 2.months.ago.beginning_of_month + 1.day)
+      dossier_p1_c = create(:dossier, :accepte,
+        procedure: procedure_1,
+        created_at: 1.month.ago.beginning_of_month,
+        en_construction_at: 1.month.ago.beginning_of_month + 50.minutes,
+        processed_at: 1.month.ago.beginning_of_month + 1.day)
+      dossier_p2_a = create(:dossier, :accepte,
+        procedure: procedure_2,
+        created_at: 2.months.ago.beginning_of_month,
+        en_construction_at: 2.months.ago.beginning_of_month + 80.minutes,
+        processed_at: 2.months.ago.beginning_of_month + 1.day)
 
       @expected_hash = {
         (2.months.ago.beginning_of_month).to_s => 30.0,
