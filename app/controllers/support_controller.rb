@@ -38,12 +38,12 @@ class SupportController < ApplicationController
   def setup_context
     @dossier_id = dossier&.id
     @tags = tags
-    @options = Helpscout::FormAdapter::OPTIONS
+    @options = Helpscout::FormAdapter.options
   end
 
   def setup_context_admin
     @tags = tags
-    @options = Helpscout::FormAdapter::ADMIN_OPTIONS
+    @options = Helpscout::FormAdapter.admin_options
   end
 
   def create_conversation
