@@ -2,45 +2,41 @@
 
 #contact-form
   .container
-    %h1.new-h1 Contactez notre équipe
+    %h1.new-h1
+      = t('contact_team', scope: [:supportadmin])
 
     .description
-      En tant qu'administration, vous pouvez nous contactez via ce formulaire. Nous vous répondrons dans les plus brefs délais, par email ou par téléphone.
+      = t('admin_intro_html', scope: [:supportadmin], contact_path: contact_path)
       %br
-      %br
-      %strong
-        Attention, ce formulaire est réservée uniquement aux organismes publics.
-      Il ne concerne ni les particuliers, ni les entreprises, ni les associations (sauf celles reconnues d'utilité publique). Si c'est votre cas, rendez-vous sur notre
-      = link_to contact_path do
-        formulaire de contact public
-      \.
+      %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
     = form_tag contact_path, method: :post, class: 'form' do |f|
       - if !user_signed_in?
         .contact-champ
           = label_tag :email do
-            Adresse email professionnelle
+            = t('pro_mail', scope: [:supportadmin])
             %span.mandatory *
           = text_field_tag :email, params[:email], required: true
 
       .contact-champ
         = label_tag :type do
-          Catégorie
+          = t('your_question', scope: [:support, :question])
           %span.mandatory *
         = select_tag :type, options_for_select(@options, params[:type])
 
       .contact-champ
-        = label_tag :phone, 'Numéro de téléphone professionnel (ligne directe)'
+        = label_tag :phone do
+          = t('professional_phone_number', scope: [:supportadmin])
         = text_field_tag :phone
 
       .contact-champ
         = label_tag :subject do
-          Sujet
+          = t('subject', scope: [:utils])
         = text_field_tag :subject, params[:subject], required: false
 
       .contact-champ
         = label_tag :text do
-          Message
+          = t('message', scope: [:utils])
           %span.mandatory *
         = text_area_tag :text, params[:text], rows: 6, required: true
 
@@ -48,4 +44,4 @@
       = hidden_field_tag :admin, true
 
       .send-wrapper
-        = button_tag 'Envoyer le message', type: :submit, class: 'button send primary'
+        = button_tag t('send_mail', scope: [:utils]), type: :submit, class: 'button send primary'
