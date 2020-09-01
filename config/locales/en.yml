@@ -132,7 +132,7 @@ en:
       # parcelles_agricoles_empty:
       #   one: "Aucune parcelle agricole sur la zone sélectionnée"
       #   other: "Aucune parcelle agricole sur les zones sélectionnées"
-      not_an_integer: "must be an integer (without any digit after the comma)"
+      not_an_integer: "must be an integer (without decimal)"
       blank: "can't be blank"
 
   time:
