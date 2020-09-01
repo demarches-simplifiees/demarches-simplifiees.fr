@@ -10,7 +10,7 @@ feature 'Signing up:' do
     expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
 
     click_confirmation_link_for user_email
-    expect(page).to have_content 'Votre compte a été activé'
+    expect(page).to have_content('Votre compte a bien été confirmé.')
     expect(page).to have_current_path dossiers_path
   end
 
@@ -80,7 +80,7 @@ feature 'Signing up:' do
       # After confirmation, the user is redirected to the procedure they were initially starting
       # (even when confirming the account in another browser).
       expect(page).to have_current_path(commencer_path(path: procedure.path))
-      expect(page).to have_content 'Votre compte a été activé'
+      expect(page).to have_content I18n.t('devise.confirmations.confirmed')
       click_on 'Commencer la démarche'
 
       expect(page).to have_current_path identite_dossier_path(procedure.reload.dossiers.last)
@@ -112,7 +112,7 @@ feature 'Signing up:' do
       # After confirmation, the user is redirected to the procedure they were initially starting
       # (even when confirming the account in another browser).
       expect(page).to have_current_path(commencer_path(path: procedure.path))
-      expect(page).to have_content 'Votre compte a été activé'
+      expect(page).to have_content I18n.t('devise.confirmations.confirmed')
       expect(page).to have_content 'Commencer la démarche'
     end
   end
