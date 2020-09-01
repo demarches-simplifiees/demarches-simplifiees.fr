@@ -30,3 +30,17 @@ en:
       <p><a href=%{link_lost_user}>%{link_lost_user}</a></p>"
       notice_pj_product: A screenshot can help us identify the element to improve.
       notice_pj_other: A screenshot can help us identify the issue.
+  supportadmin:
+    admin_intro_html: "<p>As an administration, you can contact us through this form. We'll answer you as quickly as possibly by e-mail or phone.</p>
+    <br>
+    <p><strong>Caution, this form is dedicated to public bodies only.</strong>
+    It does not concern individuals, companies nor associations (except those recognised of public utility). If you belong to one of these categories, contact us <a href=%{contact_path}>here</a>.</p>"
+    contact_team: Contact our team
+    pro_phone_number: Professional phone number (direct line)
+    pro_mail: Professional email address
+    admin demande rdv: I request an appointment for an online presentation of demarches-simplifiees.fr
+    admin question: I have a question about demarches-simplifiees.fr
+    admin soucis: I am facing a technical issue on demarches-simplifiees.fr
+    admin suggestion produit: I have a suggestion for an evolution
+    admin demande compte: I want to open an admin account with an Orange, Wanadoo, etc. email
+    admin autre: Other topic

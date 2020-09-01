@@ -60,13 +60,6 @@ en:
       submit:
         publish: Publish
         reopen: Reopen
-  supportadmin:
-    # admin demande rdv: Demande de RDV pour une présentation à distance de demarches-simplifiees.fr
-    admin question: I have a question about demarches-simplifiees.fr
-    admin soucis: I am facing a technical issue on demarches-simplifiees.fr
-    admin suggestion produit: I have a suggestion for an evolution
-    admin demande compte: I want to open an admin account with an Orange, Wanadoo, etc. email
-    admin autre: Other topic
 
   number:
     currency:
