@@ -1,4 +1,8 @@
 class FranceConnectService
+  def self.enabled?
+    ENV.fetch("FRANCE_CONNECT_ENABLED", "enabled") == "enabled"
+  end
+
   def self.authorization_uri
     client = FranceConnectParticulierClient.new
 
