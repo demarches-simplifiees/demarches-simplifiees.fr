@@ -41,7 +41,7 @@ feature 'Invitations' do
         # Confirm the account
         # (The user should be redirected to the dossier they was invited on)
         click_confirmation_link_for invite.email
-        expect(page).to have_content('Votre compte a été activé')
+        expect(page).to have_content('Votre compte a bien été confirmé.')
         expect(page).to have_current_path(brouillon_dossier_path(dossier))
       end
     end
