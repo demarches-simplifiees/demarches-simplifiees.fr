@@ -18,7 +18,7 @@ describe Champs::DecimalNumberChamp do
       let(:value) { 'toto' }
 
       it { is_expected.to_not be_valid }
-      it { expect(subject.errors[:value]).to eq(["« #{subject.libelle} » doit être un nombre"]) }
+      it { expect(subject.errors[:value]).to eq(["« #{subject.libelle} » n'est pas un nombre"]) }
     end
 
     context 'when the value is blank' do
