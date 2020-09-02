@@ -161,23 +161,20 @@ FactoryBot.define do
         existing_type_de_champ_text = types_de_champ.find { |tdc| tdc.libelle == 'Nom' }
         type_de_champ_text = existing_type_de_champ_text || build(
           :type_de_champ_text,
-          order_place: 0,
-          procedure: champ_repetition.dossier.procedure,
+          position: 0,
           parent: champ_repetition.type_de_champ,
           libelle: 'Nom'
         )
 
-        types_de_champ << type_de_champ_text
         existing_type_de_champ_number = types_de_champ.find { |tdc| tdc.libelle == 'Age' }
         type_de_champ_number = existing_type_de_champ_number || build(
           :type_de_champ_number,
-          order_place: 1,
-          procedure: champ_repetition.dossier.procedure,
+          position: 1,
           parent: champ_repetition.type_de_champ,
           libelle: 'Age'
         )
-        types_de_champ << type_de_champ_number
 
+        champ_repetition.type_de_champ.types_de_champ << [type_de_champ_text, type_de_champ_number]
         champ_repetition.champs << [
           build(:champ_text, dossier: champ_repetition.dossier, row: 0, type_de_champ: type_de_champ_text, parent: champ_repetition),
           build(:champ_number, dossier: champ_repetition.dossier, row: 0, type_de_champ: type_de_champ_number, parent: champ_repetition),
@@ -198,13 +195,11 @@ FactoryBot.define do
 
       after(:build) do |champ_repetition, _evaluator|
         type_de_champ_pj0 = build(:type_de_champ_piece_justificative,
-          procedure: champ_repetition.dossier.procedure,
-          order_place: 0,
+          position: 0,
           parent: champ_repetition.type_de_champ,
           libelle: 'Justificatif de domicile')
         type_de_champ_pj1 = build(:type_de_champ_piece_justificative,
-          procedure: champ_repetition.dossier.procedure,
-          order_place: 1,
+          position: 1,
           parent: champ_repetition.type_de_champ,
           libelle: 'Carte d\'identité')
 

@@ -12,11 +12,6 @@ module FeatureHelpers
     login_as instructeur, scope: :instructeur
   end
 
-  def create_dossier
-    dossier = FactoryBot.create(:dossier)
-    dossier
-  end
-
   def sign_in_with(email, password, sign_in_by_link = false)
     fill_in :user_email, with: email
     fill_in :user_password, with: password

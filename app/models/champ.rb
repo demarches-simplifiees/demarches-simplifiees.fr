@@ -47,6 +47,9 @@ class Champ < ApplicationRecord
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
   scope :ordered, -> { includes(:type_de_champ).order(:row, 'types_de_champ.order_place') }
+  scope :public_ordered, -> { public_only.joins(dossier: { revision: :revision_types_de_champ }).where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id').order(:position) }
+  scope :private_ordered, -> { private_only.joins(dossier: { revision: :revision_types_de_champ_private }).where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id').order(:position) }
+
   scope :root, -> { where(parent_id: nil) }
 
   before_validation :set_dossier_id, if: :needs_dossier_id?

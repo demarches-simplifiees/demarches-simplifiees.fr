@@ -7,7 +7,40 @@ FactoryBot.define do
     mandatory { false }
     add_attribute(:private) { false }
 
-    association :procedure
+    transient do
+      procedure { nil }
+      position { nil }
+      parent { nil }
+    end
+
+    after(:build) do |type_de_champ, evaluator|
+      if evaluator.procedure
+        type_de_champ.revision = evaluator.procedure.active_revision
+
+        build(:procedure_revision_type_de_champ,
+          position: evaluator.position,
+          revision: evaluator.procedure.active_revision,
+          type_de_champ: type_de_champ)
+
+        if type_de_champ.private?
+          type_de_champ.revision.types_de_champ_private << type_de_champ
+        else
+          type_de_champ.revision.types_de_champ << type_de_champ
+        end
+      elsif evaluator.parent
+        type_de_champ.revision = evaluator.parent.revision
+        type_de_champ.order_place = evaluator.position || evaluator.parent.types_de_champ.size
+        evaluator.parent.types_de_champ << type_de_champ
+      else
+        type_de_champ.order_place = evaluator.position
+      end
+    end
+
+    trait :private do
+      add_attribute(:private) { true }
+      sequence(:libelle) { |n| "Libelle champ privé #{n}" }
+      sequence(:description) { |n| "description du champ privé #{n}" }
+    end
 
     factory :type_de_champ_text do
       type_champ { TypeDeChamp.type_champs.fetch(:text) }
@@ -96,8 +129,8 @@ FactoryBot.define do
     factory :type_de_champ_piece_justificative do
       type_champ { TypeDeChamp.type_champs.fetch(:piece_justificative) }
 
-      after(:build) do |tc, _evaluator|
-        tc.piece_justificative_template.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+      after(:build) do |type_de_champ, _evaluator|
+        type_de_champ.piece_justificative_template.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
       end
     end
     factory :type_de_champ_siret do
@@ -109,17 +142,23 @@ FactoryBot.define do
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }
 
-      trait :with_types_de_champ do
-        after(:build) do |type_de_champ, _evaluator|
-          type_de_champ.types_de_champ << build(:type_de_champ, procedure: type_de_champ.procedure, libelle: 'sub type de champ')
+      transient do
+        types_de_champ { [] }
+      end
+
+      after(:build) do |type_de_champ_repetition, evaluator|
+        evaluator.types_de_champ.each do |type_de_champ|
+          type_de_champ.revision = type_de_champ_repetition.revision
+          type_de_champ.order_place = type_de_champ_repetition.types_de_champ.size
+          type_de_champ_repetition.types_de_champ << type_de_champ
         end
       end
-    end
 
-    trait :private do
-      add_attribute(:private) { true }
-      sequence(:libelle) { |n| "Libelle champ privé #{n}" }
-      sequence(:description) { |n| "description du champ privé #{n}" }
+      trait :with_types_de_champ do
+        after(:build) do |type_de_champ, _evaluator|
+          build(:type_de_champ, libelle: 'sub type de champ', parent: type_de_champ)
+        end
+      end
     end
   end
 end

@@ -313,7 +313,8 @@ class StatsController < ApplicationController
 
     procedure_id_type_de_champs_count = TypeDeChamp
       .where(private: false)
-      .group(:procedure_id)
+      .joins(:revision)
+      .group('procedure_revisions.procedure_id')
       .count
 
     groupe_instructeur_id_type_de_champs_count = groupe_instructeurs.reduce({}) do |acc, (gi_id, procedure_id)|
