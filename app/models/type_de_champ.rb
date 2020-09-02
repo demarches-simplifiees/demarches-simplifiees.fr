@@ -2,20 +2,19 @@
 #
 # Table name: types_de_champ
 #
-#  id           :integer          not null, primary key
-#  description  :text
-#  libelle      :string
-#  mandatory    :boolean          default(FALSE)
-#  options      :jsonb
-#  order_place  :integer
-#  private      :boolean          default(FALSE), not null
-#  type_champ   :string
-#  created_at   :datetime
-#  updated_at   :datetime
-#  parent_id    :bigint
-#  procedure_id :integer
-#  revision_id  :bigint
-#  stable_id    :bigint
+#  id          :integer          not null, primary key
+#  description :text
+#  libelle     :string
+#  mandatory   :boolean          default(FALSE)
+#  options     :jsonb
+#  order_place :integer
+#  private     :boolean          default(FALSE), not null
+#  type_champ  :string
+#  created_at  :datetime
+#  updated_at  :datetime
+#  parent_id   :bigint
+#  revision_id :bigint
+#  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = ['procedure_id']
