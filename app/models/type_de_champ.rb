@@ -17,8 +17,6 @@
 #  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
-  self.ignored_columns = ['procedure_id']
-
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
