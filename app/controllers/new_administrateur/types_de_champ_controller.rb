@@ -56,30 +56,27 @@ module NewAdministrateur
             :updated_at
           ],
           methods: [
-            :cadastres,
             :drop_down_list_value,
-            :parcelles_agricoles,
             :piece_justificative_template_filename,
             :piece_justificative_template_url,
-            :quartiers_prioritaires
+            :cadastres,
+            :mnhn
           ]
         )
       }
     end
 
     def type_de_champ_create_params
-      type_de_champ_params = params.required(:type_de_champ).permit(:cadastres,
-        :description,
-        :drop_down_list_value,
+      type_de_champ_params = params.required(:type_de_champ).permit(:type_champ,
         :libelle,
+        :description,
         :mandatory,
-        :order_place,
-        :parcelles_agricoles,
         :parent_id,
-        :piece_justificative_template,
         :private,
-        :quartiers_prioritaires,
-        :type_champ)
+        :drop_down_list_value,
+        :piece_justificative_template,
+        :cadastres,
+        :mnhn)
 
       if type_de_champ_params[:parent_id].present?
         type_de_champ_params[:parent_id] = TypeDeChamp.to_stable_id(type_de_champ_params[:parent_id])
@@ -89,15 +86,14 @@ module NewAdministrateur
     end
 
     def type_de_champ_update_params
-      params.required(:type_de_champ).permit(:cadastres,
-        :description,
-        :drop_down_list_value,
+      params.required(:type_de_champ).permit(:type_champ,
         :libelle,
+        :description,
         :mandatory,
-        :parcelles_agricoles,
+        :drop_down_list_value,
         :piece_justificative_template,
-        :quartiers_prioritaires,
-        :type_champ)
+        :cadastres,
+        :mnhn)
     end
   end
 end

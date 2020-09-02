@@ -1,4 +1,4 @@
 - if champ.geometry?
-  = react_component("MapReader", { featureCollection: champ.to_feature_collection, ign: feature_enabled_for?(:carte_ign, champ.procedure) } )
+  = react_component("MapReader", { featureCollection: champ.to_feature_collection, options: champ.render_options } )
   .geo-areas
     = render partial: 'shared/champs/carte/geo_areas', locals: { champ: champ, editing: false }

@@ -57,6 +57,18 @@ class Champs::CarteChamp < Champ
     type_de_champ&.parcelles_agricoles && type_de_champ.parcelles_agricoles != '0'
   end
 
+  def mnhn?
+    type_de_champ&.mnhn && type_de_champ.mnhn != '0'
+  end
+
+  def render_options
+    {
+      ign: Flipper.enabled?(:carte_ign, procedure),
+      mnhn: mnhn?,
+      cadastres: cadastres?
+    }
+  end
+
   def position
     if dossier.present?
       dossier.geo_position

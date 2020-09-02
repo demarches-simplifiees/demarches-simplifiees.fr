@@ -56,7 +56,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp', optional: true
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
-  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :old_pj, :drop_down_options, :skip_pj_validation
+  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :mnhn, :old_pj, :drop_down_options, :skip_pj_validation
   has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
 
   delegate :tags_for_template, to: :dynamic_type
@@ -286,12 +286,11 @@ class TypeDeChamp < ApplicationRecord
       :updated_at
     ],
     methods: [
-      :cadastres,
       :drop_down_list_value,
-      :parcelles_agricoles,
       :piece_justificative_template_filename,
       :piece_justificative_template_url,
-      :quartiers_prioritaires
+      :cadastres,
+      :mnhn
     ]
   }
   TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE
