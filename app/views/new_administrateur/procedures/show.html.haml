@@ -40,7 +40,7 @@
 
     - if !@procedure.locked?
       .card-admin
-        - if @procedure.types_de_champ.count > 0
+        - if @procedure.draft_types_de_champ.count > 0
           %div
             %span.icon.accept
             %p.card-admin-status-accept Validé
@@ -50,7 +50,7 @@
             %p.card-admin-status-todo À faire
         %div
           %p.card-admin-title
-            %span.badge.baseline= @procedure.types_de_champ.count
+            %span.badge.baseline= @procedure.draft_types_de_champ.count
             Champs du formulaire
           %p.card-admin-subtitle À remplir par les usagers
         .card-admin-action
@@ -148,7 +148,7 @@
 
     - if !@procedure.locked?
       .card-admin
-        - if @procedure.types_de_champ_private.present?
+        - if @procedure.draft_types_de_champ_private.present?
           %div
             %span.icon.accept
             %p.card-admin-status-accept Validé

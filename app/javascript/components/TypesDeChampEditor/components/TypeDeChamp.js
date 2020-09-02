@@ -210,7 +210,6 @@ export const FIELDS = [
   'drop_down_list_value',
   'libelle',
   'mandatory',
-  'order_place',
   'parcelles_agricoles',
   'parent_id',
   'piece_justificative_template',
