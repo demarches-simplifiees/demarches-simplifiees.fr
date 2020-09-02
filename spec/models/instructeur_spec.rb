@@ -8,6 +8,7 @@ describe Instructeur, type: :model do
 
   before do
     assign(procedure_2)
+    Flipper.enable_actor(:cached_notifications, instructeur)
   end
 
   describe 'follow' do
