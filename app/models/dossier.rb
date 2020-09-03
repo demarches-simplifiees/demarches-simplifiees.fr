@@ -62,8 +62,8 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs, -> { root.public_only.ordered }, inverse_of: :dossier, dependent: :destroy
-  has_many :champs_private, -> { root.private_only.ordered }, class_name: 'Champ', inverse_of: :dossier, dependent: :destroy
+  has_many :champs, -> { root.public_ordered }, inverse_of: :dossier, dependent: :destroy
+  has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: :dossier, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
@@ -76,9 +76,12 @@ class Dossier < ApplicationRecord
   has_many :dossier_operation_logs, -> { order(:created_at) }, dependent: :nullify, inverse_of: :dossier
 
   belongs_to :groupe_instructeur, optional: false
-  has_one :procedure, through: :groupe_instructeur
-  belongs_to :revision, class_name: 'ProcedureRevision', optional: true
+  belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: false
+
+  has_one :procedure, through: :revision
+  has_many :types_de_champ, through: :revision
+  has_many :types_de_champ_private, through: :revision
 
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_private
@@ -315,7 +318,6 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
-  delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
 
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
@@ -326,7 +328,7 @@ class Dossier < ApplicationRecord
   after_create :send_draft_notification_email
 
   validates :user, presence: true
-  validates :individual, presence: true, if: -> { procedure.for_individual? }
+  validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true
 
   def motivation
@@ -351,10 +353,10 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs
-    procedure.build_champs.each do |champ|
+    revision.build_champs.each do |champ|
       champs << champ
     end
-    procedure.build_champs_private.each do |champ|
+    revision.build_champs_private.each do |champ|
       champs_private << champ
     end
   end

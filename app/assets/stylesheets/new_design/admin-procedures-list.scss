@@ -1,0 +1,11 @@
+// Push the timestamps column to the right of the row
+.admin-procedures-list-timestamps {
+  margin-left: auto;
+}
+
+// Fix a Safari flexbox bug where the inner procedure logo
+// would stretch the container vertically.
+// See https://stackoverflow.com/questions/57516373/image-stretching-in-flexbox-in-safari
+.admin-procedures-list-row.infos {
+  align-items: flex-start;
+}
