@@ -7,6 +7,12 @@ const COMPLETE_CLASS = 'direct-upload--complete';
   rendering upload progress bar. It is used to handle
   direct-upload form ujs events but also in the
   Uploader delegate used with uploads on json api.
+
+  As the associated DOM element may disappear for some
+  reason (a dynamic React list, an element being removed
+  and recreated again later, etc.), this class doesn't
+  raise any error if the associated DOM element cannot
+  be found.
   */
 export default class ProgressBar {
   static init(input, id, file) {
@@ -17,27 +23,31 @@ export default class ProgressBar {
 
   static start(id) {
     const element = getDirectUploadElement(id);
-
-    element.classList.remove(PENDING_CLASS);
+    if (element) {
+      element.classList.remove(PENDING_CLASS);
+    }
   }
 
   static progress(id, progress) {
     const element = getDirectUploadProgressElement(id);
-
-    element.style.width = `${progress}%`;
+    if (element) {
+      element.style.width = `${progress}%`;
+    }
   }
 
   static error(id, error) {
     const element = getDirectUploadElement(id);
-
-    element.classList.add(ERROR_CLASS);
-    element.setAttribute('title', error);
+    if (element) {
+      element.classList.add(ERROR_CLASS);
+      element.setAttribute('title', error);
+    }
   }
 
   static end(id) {
     const element = getDirectUploadElement(id);
-
-    element.classList.add(COMPLETE_CLASS);
+    if (element) {
+      element.classList.add(COMPLETE_CLASS);
+    }
   }
 
   static render(id, filename) {
