@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_19_153016) do
+ActiveRecord::Schema.define(version: 2020_09_02_103047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -611,7 +611,6 @@ ActiveRecord::Schema.define(version: 2020_08_19_153016) do
     t.string "libelle"
     t.string "type_champ"
     t.integer "order_place"
-    t.integer "procedure_id"
     t.text "description"
     t.boolean "mandatory", default: false
     t.boolean "private", default: false, null: false
@@ -623,7 +622,6 @@ ActiveRecord::Schema.define(version: 2020_08_19_153016) do
     t.bigint "revision_id"
     t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
-    t.index ["procedure_id"], name: "index_types_de_champ_on_procedure_id"
     t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
