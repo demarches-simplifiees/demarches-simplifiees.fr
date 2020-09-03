@@ -1,0 +1,47 @@
+
+= f.label :subject do
+  Objet de l'email
+  %span.mandatory *
+= f.text_field :subject, required: true
+
+= f.label :body do
+  Corps de l'email
+  %span.mandatory *
+= f.rich_text_area :rich_body, required: true, class: "mb-4"
+
+#tags-table
+  %h2.add-tag-title
+    Insérer une balise
+  %p.notice
+    Copiez-collez les balises ci-dessous pour afficher automatiquement l’information souhaitée.
+  .head
+    .tag Balise
+    .description Description
+  .items
+    - @mail_template.tags.each do |tag|
+      .item
+        %code.tag
+          = "--#{tag[:libelle]}--"
+        .description
+          = tag[:description]
+
+
+-# Disable accepting dropped images and traduce toolbar tooltips
+:javascript
+  addEventListener('trix-file-accept', function(e) { e.preventDefault(); });
+  addEventListener("trix-initialize", function(e) {
+    document.querySelector('button[data-trix-attribute="bold"]').setAttribute('title', 'Gras');
+    document.querySelector('button[data-trix-attribute="italic"]').setAttribute('title', 'Italique');
+    document.querySelector('button[data-trix-attribute="strike"]').setAttribute('title', 'Barrer');
+    document.querySelector('button[data-trix-attribute="href"]').setAttribute('title', 'Créer lien');
+    document.querySelector('button[data-trix-attribute="heading1"]').setAttribute('title', 'Titre');
+    document.querySelector('button[data-trix-attribute="quote"]').setAttribute('title', 'Citation');
+    document.querySelector('button[data-trix-attribute="bullet"]').setAttribute('title', 'Liste à puce');
+    document.querySelector('button[data-trix-attribute="number"]').setAttribute('title', 'Liste numérotée');
+    document.querySelector('button[data-trix-action="increaseNestingLevel"]').setAttribute('title', 'Indenter');
+    document.querySelector('button[data-trix-action="decreaseNestingLevel"]').setAttribute('title', 'Désindenter');
+    document.querySelector('button[data-trix-action="undo"]').setAttribute('title', 'Annuler la modification');
+    document.querySelector('button[data-trix-action="redo"]').setAttribute('title', 'Appliquer à nouveau la modification');
+    document.querySelector('.trix-button.trix-button--dialog[data-trix-method="setAttribute"]').value = "Créer lien";
+    document.querySelector('.trix-button.trix-button--dialog[data-trix-method="removeAttribute"]').value = "Effacer lien";
+  })
