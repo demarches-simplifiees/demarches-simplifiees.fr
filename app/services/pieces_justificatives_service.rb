@@ -12,8 +12,8 @@ class PiecesJustificativesService
       .sum(&:byte_size)
   end
 
-  def self.serialize_types_de_champ_as_type_pj(procedure)
-    tdcs = procedure.types_de_champ.filter { |type_champ| type_champ.old_pj.present? }
+  def self.serialize_types_de_champ_as_type_pj(revision)
+    tdcs = revision.types_de_champ.filter { |type_champ| type_champ.old_pj.present? }
     tdcs.map.with_index do |type_champ, order_place|
       description = type_champ.description
       if /^(?<original_description>.*?)(?:[\r\n]+)Récupérer le formulaire vierge pour mon dossier : (?<lien_demarche>http.*)$/m =~ description

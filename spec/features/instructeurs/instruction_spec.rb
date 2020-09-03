@@ -91,7 +91,7 @@ feature 'Instructing a dossier:' do
   end
 
   scenario 'A instructeur can see the personnes impliquées' do
-    instructeur2 = FactoryBot.create(:instructeur, password: password)
+    instructeur2 = create(:instructeur, password: password)
 
     log_in(instructeur.email, password)
 
@@ -113,8 +113,8 @@ feature 'Instructing a dossier:' do
   end
 
   scenario 'A instructeur can send a dossier to several instructeurs', js: true do
-    instructeur_2 = FactoryBot.create(:instructeur)
-    instructeur_3 = FactoryBot.create(:instructeur)
+    instructeur_2 = create(:instructeur)
+    instructeur_3 = create(:instructeur)
     procedure.defaut_groupe_instructeur.instructeurs << [instructeur_2, instructeur_3]
 
     send_dossier = double()

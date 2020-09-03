@@ -29,3 +29,18 @@ fr:
       <p><a href=%{link_lost_user}>%{link_lost_user}</a></p>"
       notice_pj_product: Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
       notice_pj_other: Une capture d’écran peut nous aider à identifier plus facilement le problème.
+  supportadmin:
+    admin_intro_html: "<p>En tant qu'administration, vous pouvez nous contactez via ce formulaire. Nous vous répondrons dans les plus brefs délais, par email ou par téléphone.</p>
+    <br>
+    <p><strong>Attention, ce formulaire est réservé uniquement aux organismes publics.</strong>
+    Il ne concerne ni les particuliers, ni les entreprises, ni les associations (sauf celles reconnues d'utilité publique). Si c'est votre cas, rendez-vous sur notre
+    <a href=%{contact_path}>formulaire de contact public</a>.</p>"
+    contact_team: Contactez notre équipe
+    pro_phone_number: Numéro de téléphone professionnel (ligne directe)
+    pro_mail: Adresse e-mail professionnelle
+    admin demande rdv: Demande de RDV pour une présentation à distance de demarches-simplifiees.fr
+    admin question: J’ai une question sur demarches-simplifiees.fr
+    admin soucis: J’ai un problème technique avec demarches-simplifiees.fr
+    admin suggestion produit: J’ai une proposition d’évolution
+    admin demande compte: Je souhaite ouvrir un compte administrateur avec un email Orange, Wanadoo, etc.
+    admin autre: Autre sujet

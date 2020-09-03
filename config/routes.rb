@@ -189,8 +189,6 @@ Rails.application.routes.draw do
         delete :delete_notice
       end
 
-      resources :mail_templates, only: [:edit, :update]
-
       put 'archive' => 'procedures#archive', as: :archive
       get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
       put 'publish' => 'procedures#publish', as: :publish
@@ -372,6 +370,8 @@ Rails.application.routes.draw do
         get 'jeton'
         patch 'update_jeton'
       end
+
+      resources :mail_templates, only: [:edit, :update]
 
       resources :groupe_instructeurs, only: [:index, :show, :create, :update, :destroy] do
         member do

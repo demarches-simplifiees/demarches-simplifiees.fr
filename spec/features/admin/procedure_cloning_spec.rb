@@ -6,11 +6,11 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
   let(:administrateur) { create(:administrateur) }
 
   before do
-    create :procedure, :with_service, :with_instructeur,
-      aasm_state: :publiee, published_at: Time.zone.now,
+    create(:procedure, :with_service, :with_instructeur,
+      aasm_state: :publiee,
       administrateurs: [administrateur],
       libelle: 'libellé de la procédure',
-      path: 'libelle-de-la-procedure'
+      path: 'libelle-de-la-procedure')
     login_as administrateur.user, scope: :user
   end
 

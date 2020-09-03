@@ -8,6 +8,10 @@
       .flex.justify-between
         %div
           .card-title= mail_template.class.const_get(:DISPLAYED_NAME)
-          %p.notice= mail_template.class.const_get(:DISPLAYED_NAME) === 'Accusé de réception' ? 'Personnalisé' : 'Modèle standard'
+          - if mail_template.updated_at.blank?
+            %p.notice= mail_template.class.const_get(:DISPLAYED_NAME) === 'Accusé de réception' ? 'Personnalisé' : 'Modèle standard'
+          - else
+            %span.badge.baseline modifié le #{mail_template.updated_at.strftime('%d-%m-%Y')}
+
         %div
           = link_to 'Modifier', edit_admin_procedure_mail_template_path(@procedure, mail_template.class.const_get(:SLUG)), class: 'button'

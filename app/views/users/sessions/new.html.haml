@@ -25,7 +25,7 @@
 
   %hr
   %p.center
-    %span Vous êtes nouveau sur demarches&#8209;simplifiees.fr ?
+    %span Vous êtes nouveau sur #{APPLICATION_NAME.gsub("-","&#8209;").html_safe} ?
     %br
     %br
     = link_to "Trouvez votre démarche", COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button expend secondary"
