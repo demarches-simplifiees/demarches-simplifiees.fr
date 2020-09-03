@@ -15,12 +15,14 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
+  FOOTER_MAX_LENGTH = 175
+
   belongs_to :procedure, optional: false
 
   has_one_attached :logo
   has_one_attached :signature
 
-  validates :footer, length: { maximum: 190 }
+  validates :footer, length: { maximum: FOOTER_MAX_LENGTH }
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 1.megabytes }
   validates :signature, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 1.megabytes }
 

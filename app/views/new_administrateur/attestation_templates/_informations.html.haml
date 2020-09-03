@@ -41,5 +41,5 @@
   Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
 
 = f.label :footer do
-  Pied de page
-= f.text_field :footer, class: 'form-control', maxlength: 190
+  Pied de page (#{AttestationTemplate::FOOTER_MAX_LENGTH} caractères max.)
+= f.text_field :footer, class: 'form-control', maxlength: AttestationTemplate::FOOTER_MAX_LENGTH

@@ -49,9 +49,9 @@ describe AttestationTemplate, type: :model do
     end
 
     context 'when the footer is too long' do
-      let(:footer) { 'a' * 191 }
+      let(:footer) { 'a' * 176 }
 
-      it { is_expected.to match({ footer: [{ error: :too_long, count: 190 }] }) }
+      it { is_expected.to match({ footer: [{ error: :too_long, count: 175 }] }) }
     end
   end
 
