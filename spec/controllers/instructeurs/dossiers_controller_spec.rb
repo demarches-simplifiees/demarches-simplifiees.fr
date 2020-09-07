@@ -569,6 +569,7 @@ describe Instructeurs::DossiersController, type: :controller do
       ], instructeurs: instructeurs)
     end
     let(:dossier) { create(:dossier, :en_construction, :with_all_annotations, procedure: procedure) }
+    let(:another_instructeur) { create(:instructeur) }
     let(:now) { Time.zone.parse('01/01/2100') }
 
     let(:champ_multiple_drop_down_list) do
@@ -588,6 +589,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     before do
+      another_instructeur.follow(dossier)
       Timecop.freeze(now)
       patch :update_annotations, params: params
 
@@ -646,6 +648,12 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(dossier.reload.last_champ_private_updated_at).to eq(now)
         expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
       }
+
+      it 'updates the annotations' do
+        Timecop.travel(now + 1.hour)
+        expect(instructeur.followed_dossiers.with_notifications(instructeur)).to eq([])
+        expect(another_instructeur.followed_dossiers.with_notifications(instructeur)).to eq([dossier.reload])
+      end
     end
 
     context "without new values for champs_private" do
