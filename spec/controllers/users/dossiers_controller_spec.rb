@@ -682,6 +682,22 @@ describe Users::DossiersController, type: :controller do
       it { expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(response).to redirect_to(demande_dossier_path(dossier)) }
     end
+
+    context 'when the dossier is followed by an instructeur' do
+      let(:dossier) { create(:dossier) }
+      let(:instructeur) { create(:instructeur) }
+      let!(:invite) { create(:invite, dossier: dossier, user: user) }
+
+      before do
+        instructeur.follow(dossier)
+      end
+
+      it 'the follower has a notification' do
+        expect(instructeur.reload.followed_dossiers.with_notifications(instructeur)).to eq([])
+        subject
+        expect(instructeur.reload.followed_dossiers.with_notifications(instructeur)).to eq([dossier.reload])
+      end
+    end
   end
 
   describe '#index' do
