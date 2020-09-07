@@ -834,6 +834,8 @@ describe Users::DossiersController, type: :controller do
     before do
       Timecop.freeze(now)
       sign_in(user)
+      # Flipper.enable(:cached_notifications, instructeur_with_instant_message)
+      # Flipper.enable(:cached_notifications, instructeur_without_instant_message)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
       allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
       instructeur_with_instant_message.follow(dossier)
@@ -844,14 +846,30 @@ describe Users::DossiersController, type: :controller do
 
     after { Timecop.return }
 
-    it "creates a commentaire" do
-      expect { subject }.to change(Commentaire, :count).by(1)
+    context 'commentaire creation' do
+      it "creates a commentaire" do
+        expect { subject }.to change(Commentaire, :count).by(1)
 
-      expect(response).to redirect_to(messagerie_dossier_path(dossier))
-      expect(DossierMailer).to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_with_instant_message.email)
-      expect(DossierMailer).not_to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_without_instant_message.email)
-      expect(flash.notice).to be_present
-      expect(dossier.reload.last_commentaire_updated_at).to eq(now)
+        expect(response).to redirect_to(messagerie_dossier_path(dossier))
+        expect(DossierMailer).to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_with_instant_message.email)
+        expect(DossierMailer).not_to have_received(:notify_new_commentaire_to_instructeur).with(dossier, instructeur_without_instant_message.email)
+        expect(flash.notice).to be_present
+        expect(dossier.reload.last_commentaire_updated_at).to eq(now)
+      end
+    end
+
+    context 'notification' do
+      before 'instructeurs have no notification before the message' do
+        expect(instructeur_with_instant_message.followed_dossiers.with_notifications(instructeur_with_instant_message)).to eq([])
+        expect(instructeur_without_instant_message.followed_dossiers.with_notifications(instructeur_without_instant_message)).to eq([])
+        Timecop.travel(now + 1.day)
+        subject
+      end
+
+      it 'adds them a notification' do
+        expect(instructeur_with_instant_message.reload.followed_dossiers.with_notifications(instructeur_with_instant_message)).to eq([dossier.reload])
+        expect(instructeur_without_instant_message.reload.followed_dossiers.with_notifications(instructeur_without_instant_message)).to eq([dossier.reload])
+      end
     end
   end
 
