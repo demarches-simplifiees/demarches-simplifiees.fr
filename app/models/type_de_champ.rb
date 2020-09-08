@@ -58,6 +58,7 @@ class TypeDeChamp < ApplicationRecord
 
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :mnhn, :old_pj, :drop_down_options, :skip_pj_validation
   has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
+  has_many :revisions, through: :revision_types_de_champ
 
   delegate :tags_for_template, to: :dynamic_type
 
@@ -200,6 +201,10 @@ class TypeDeChamp < ApplicationRecord
     !private?
   end
 
+  def active_revision?
+    revisions.include?(procedure.active_revision)
+  end
+
   def self.type_champ_to_class_name(type_champ)
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
@@ -246,13 +251,6 @@ class TypeDeChamp < ApplicationRecord
 
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
-  end
-
-  def revise!
-    types_de_champ_association = private? ? :revision_types_de_champ_private : :revision_types_de_champ
-    association = revision.send(types_de_champ_association).find_by!(type_de_champ: self)
-    association.update!(type_de_champ: deep_clone(include: [:types_de_champ], &method(:clone_attachments)))
-    association.type_de_champ
   end
 
   FEATURE_FLAGS = {}
