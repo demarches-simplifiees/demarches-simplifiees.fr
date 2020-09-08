@@ -1,9 +1,4 @@
-- if feature_enabled?(:pre_maintenance_mode)
+- if ENV['BANNER_MESSAGE'].present?
   .site-banner.warning
     .container
-      .site-banner-icon 🕚
-      .site-banner-text
-        %strong
-          Une opération de maintenance est prévue sur #{APPLICATION_NAME} à 23 h 00.
-        %br
-        La plateforme sera inaccessible pendant une vingtaine de minutes.
+      = sanitize(ENV['BANNER_MESSAGE'])
