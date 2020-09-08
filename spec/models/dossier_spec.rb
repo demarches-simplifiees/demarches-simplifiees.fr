@@ -1343,4 +1343,31 @@ describe Dossier do
       end
     end
   end
+
+  describe "champs_for_export" do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no) }
+    let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+    let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
+    let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
+
+    before do
+      procedure.publish!
+      dossier
+      procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
+      procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
+      procedure.draft_revision.find_or_clone_type_de_champ(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
+      procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
+      dossier.reload
+      procedure.reload
+    end
+
+    it "should have champs from all revisions" do
+      expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no"])
+      expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
+      expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
+      expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_export))
+    end
+  end
 end
