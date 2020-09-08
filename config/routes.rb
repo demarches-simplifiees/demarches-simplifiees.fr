@@ -176,7 +176,6 @@ Rails.application.routes.draw do
     patch 'activate' => '/administrateurs/activate#create'
     get 'procedures/archived' => 'procedures#archived'
     get 'procedures/draft' => 'procedures#draft'
-    get 'procedures/:id/publication' => 'procedures#show', as: :procedure_publication
 
     resources :procedures, only: [:destroy] do
       collection do
@@ -191,8 +190,6 @@ Rails.application.routes.draw do
 
       put 'archive' => 'procedures#archive', as: :archive
       get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
-      put 'publish' => 'procedures#publish', as: :publish
-      post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
     end
 
@@ -370,6 +367,10 @@ Rails.application.routes.draw do
         get 'jeton'
         patch 'update_jeton'
       end
+
+      get 'publication' => 'procedures#publication', as: :publication
+      put 'publish' => 'procedures#publish', as: :publish
+      post 'transfer' => 'procedures#transfer', as: :transfer
 
       resources :mail_templates, only: [:edit, :update]
 

@@ -25,6 +25,10 @@
     justify-content: flex-start;
   }
 
+  &.justify-end {
+    justify-content: flex-end;
+  }
+
   &.wrap {
     flex-wrap: wrap;
   }
