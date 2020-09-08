@@ -262,7 +262,8 @@ describe ProcedurePresentation do
       let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
       before do
-        notified_dossier.champs.first.touch(time: Time.zone.local(2018, 9, 20))
+        Flipper.enable_actor(:cached_notifications, instructeur)
+        notified_dossier.update!(last_champ_updated_at: Time.zone.local(2018, 9, 20))
         create(:follow, instructeur: instructeur, dossier: notified_dossier, demande_seen_at: Time.zone.local(2018, 9, 10))
         notified_dossier.touch(time: Time.zone.local(2018, 9, 20))
         recent_dossier.touch(time: Time.zone.local(2018, 9, 25))
