@@ -34,3 +34,7 @@ vendor/*
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+/docs
+
+# Local Netlify folder
+.netlify
