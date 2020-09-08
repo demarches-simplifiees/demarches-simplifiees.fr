@@ -1,10 +1,12 @@
 RSpec.describe EtablissementHelper, type: :helper do
   let(:code_effectif) { '00' }
   let(:raison_sociale) { 'GRTGaz' }
+  let(:enseigne) { "mon enseigne" }
   let(:nom) { 'mon nom' }
   let(:prenom) { 'mon prenom' }
-  let(:entreprise_params) do
+  let(:etablissement_params) do
     {
+      enseigne: enseigne,
       entreprise_capital_social: 123_000,
       entreprise_code_effectif_entreprise: code_effectif,
       entreprise_raison_sociale: raison_sociale,
@@ -12,13 +14,21 @@ RSpec.describe EtablissementHelper, type: :helper do
       entreprise_prenom: prenom
     }
   end
-  let(:etablissement) { create(:etablissement, entreprise_params) }
+  let(:etablissement) { create(:etablissement, etablissement_params) }
 
   describe '#raison_sociale_or_name' do
     subject { raison_sociale_or_name(etablissement) }
 
+    context 'when etablissement is not the siege and enseigne exist' do
+      let(:enseigne) { "mon enseigne" }
+      it 'display enseigne' do
+        expect(subject).to eq(enseigne)
+      end
+    end
+
     context 'when raison_sociale exist' do
       let(:raison_sociale) { 'ma super raison_sociale' }
+      let(:enseigne) { nil }
       it 'display raison_sociale' do
         expect(subject).to eq(raison_sociale)
       end
@@ -26,6 +36,7 @@ RSpec.describe EtablissementHelper, type: :helper do
 
     context 'when raison_sociale is nil' do
       let(:raison_sociale) { nil }
+      let(:enseigne) { nil }
       it 'display nom and prenom' do
         expect(subject).to eq("#{nom} #{prenom}")
       end

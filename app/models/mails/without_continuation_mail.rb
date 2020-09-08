@@ -13,7 +13,7 @@ module Mails
   class WithoutContinuationMail < ApplicationRecord
     include MailTemplateConcern
 
-    belongs_to :procedure
+    belongs_to :procedure, optional: false
 
     SLUG = "without_continuation"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/without_continuation_mail"

@@ -1,5 +1,7 @@
 FactoryBot.define do
   factory :geo_area do
+    association :champ
+
     trait :cadastre do
       source { GeoArea.sources.fetch(:cadastre) }
       numero { '42' }
