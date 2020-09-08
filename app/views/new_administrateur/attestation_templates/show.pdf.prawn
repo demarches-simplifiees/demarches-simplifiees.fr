@@ -20,7 +20,7 @@ max_logo_height = 50.mm
 max_signature_size = 50.mm
 
 def normalize_pdf_text(text)
-  text&.tr("\t", ' ')
+  text&.tr("\t", '  ')
 end
 
 title = normalize_pdf_text(@attestation.fetch(:title))
