@@ -20,6 +20,19 @@ describe Champs::PhoneChamp do
       expect(build(:champ_phone, value: "+1(0) - 123456789")).to be_valid
       expect(build(:champ_phone, value: "+49 2109 87654321")).to be_valid
       expect(build(:champ_phone, value: "012345678")).to be_valid
+      # polynesian numbers should not return errors in any way
+      ## landline numbers start with 40 or 45
+      expect(build(:champ_phone, value: "45187272")).to be_valid
+      expect(build(:champ_phone, value: "40 473 500")).to be_valid
+      expect(build(:champ_phone, value: "40473500")).to be_valid
+      expect(build(:champ_phone, value: "45473500")).to be_valid
+      ## +689 is the international indicator
+      expect(build(:champ_phone, value: "+689 45473500")).to be_valid
+      expect(build(:champ_phone, value: "0145473500")).to be_valid
+      ## polynesian mobile numbers start with 87, 88, 89
+      expect(build(:champ_phone, value: "87473500")).to be_valid
+      expect(build(:champ_phone, value: "88473500")).to be_valid
+      expect(build(:champ_phone, value: "89473500")).to be_valid
     end
   end
 end
