@@ -17,24 +17,7 @@
 class Champs::PieceJustificativeChamp < Champ
   MAX_SIZE = 200.megabytes
 
-  ACCEPTED_CONTENT_TYPES = [
-    "text/plain",
-    "application/pdf",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/vnd.oasis.opendocument.text",
-    "application/vnd.oasis.opendocument.presentation",
-    "application/vnd.oasis.opendocument.spreadsheet",
-    "image/png",
-    "image/jpeg"
-  ]
-
   validates :piece_justificative_file,
-    content_type: ACCEPTED_CONTENT_TYPES,
     size: { less_than: MAX_SIZE },
     if: -> { !type_de_champ.skip_pj_validation }
 
