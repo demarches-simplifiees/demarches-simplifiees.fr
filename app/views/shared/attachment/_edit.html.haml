@@ -31,11 +31,6 @@
     = button_tag type: 'button', class: 'button attachment-error-retry', data: { 'input-target': ".attachment-input-#{attachment_id}" } do
       %span.icon.retry
       Ré-essayer
-  - if defined?(allowed_content_types) && allowed_content_types.present?
-    %p.mb-1
-      Formats acceptés : #{file_descriptions_from_content_types(allowed_content_types)}
-      %sup
-        %span.icon.info{ :title => "Cela correspond aux fichiers ayant comme extension #{file_extensions_from_content_types(allowed_content_types)}" }
 
   = form.file_field attached_file.name,
     class: "attachment-input attachment-input-#{attachment_id} #{'hidden' if persisted}",

@@ -207,22 +207,6 @@ feature 'The user' do
     expect(page).to have_text('RIB.pdf')
   end
 
-  scenario 'add an invalid attachment', js: true do
-    log_in(user, procedure_with_pjs)
-    fill_individual
-
-    # Test invalid file type
-    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
-    expect(page).to have_text('La pièce justificative n’est pas d’un type accepté')
-    expect(page).to have_no_button('Ré-essayer', visible: true)
-
-    # Replace the file by another with a valid type
-    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/piece_justificative_0.pdf')
-    expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
-    expect(page).to have_text('analyse antivirus en cours')
-    expect(page).to have_text('piece_justificative_0.pdf')
-  end
-
   scenario 'add an invalid attachment on an old procedure where pj validation is disabled', js: true do
     log_in(user, old_procedure_with_disabled_pj_validation)
     fill_individual
