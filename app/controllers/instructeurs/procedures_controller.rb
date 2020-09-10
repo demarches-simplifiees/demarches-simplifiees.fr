@@ -37,6 +37,9 @@ module Instructeurs
         'dossiers' => @dossiers_count_per_procedure.sum { |_, v| v },
         'archivés' => @dossiers_archived_count_per_procedure.sum { |_, v| v }
       }
+
+      @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
+      @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
     end
 
     def show
