@@ -6,7 +6,7 @@ class FindDubiousProceduresJob < CronJob
     'carte bancaire', 'carte bleue', 'sécurité sociale',
     'agdref', 'syndicat', 'syndical',
     'parti politique', 'opinion politique', 'bord politique', 'courant politique',
-    'médical', 'handicap', 'maladie', 'allergie', 'hospitalisé', 'RQTH', 'vaccin'
+    'médical', 'handicap', 'maladie', 'allergie', 'hospitalisé', 'RQTH', 'vaccin',
     'CPS', 'DN', 'casier judiciaire', "transfert d'autorité parentale", 'parents? biologiques?',
     'régime de protection', 'revenu', 'salaire', 'cotorep'
   ]
