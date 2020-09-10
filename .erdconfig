@@ -1,0 +1,4 @@
+indirect: false
+disconnected: false
+filename: doc/database_models
+exclude: "ActionText::RichText,ActiveStorage::Blob,ActiveStorage::Attachment"

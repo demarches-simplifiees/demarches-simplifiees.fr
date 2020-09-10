@@ -72,6 +72,10 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
       it 'renders the list as checkboxes' do
         expect(subject).to have_selector('input[type=checkbox]', count: enabled_options.count)
       end
+
+      it 'adds an extra hidden input, to send a blank value even when all checkboxes are unchecked' do
+        expect(subject).to have_selector('input[type=hidden][value=""]')
+      end
     end
 
     context 'when the list is long' do
