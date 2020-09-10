@@ -4,8 +4,9 @@ class FindDubiousProceduresJob < CronJob
   FORBIDDEN_KEYWORDS = [
     'NIR', 'NIRPP', 'race', 'religion',
     'carte bancaire', 'carte bleue', 'sécurité sociale',
-    'agdref', 'handicap', 'syndicat', 'syndical',
+    'agdref', 'syndicat', 'syndical',
     'parti politique', 'opinion politique', 'bord politique', 'courant politique',
+    'médical', 'handicap', 'maladie', 'allergie', 'hospitalisé', 'RQTH', 'vaccin'
     'CPS', 'DN', 'casier judiciaire', "transfert d'autorité parentale", 'parents? biologiques?',
     'régime de protection', 'revenu', 'salaire', 'cotorep'
   ]
