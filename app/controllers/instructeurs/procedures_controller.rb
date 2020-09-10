@@ -30,17 +30,13 @@ module Instructeurs
         .reorder(nil)
         .count
 
-      @all_dossiers_counts = {}
-      @all_dossiers_counts['à suivre'] = dossiers.without_followers.en_cours.count
-      @all_dossiers_counts['suivis'] = current_instructeur
-        .followed_dossiers
-        .joins(:groupe_instructeur)
-        .en_cours
-        .where(groupe_instructeur_id: groupe_ids)
-        .count
-      @all_dossiers_counts['traités'] = dossiers.termine.count
-      @all_dossiers_counts['dossiers'] = dossiers.all_state.count
-      @all_dossiers_counts['archivés'] = dossiers.archived.count
+      @all_dossiers_counts = {
+        'à suivre': @dossiers_a_suivre_count_per_procedure.sum { |_, v| v },
+        'suivis': @followed_dossiers_count_per_procedure.sum { |_, v| v },
+        'traités': @dossiers_termines_count_per_procedure.sum { |_, v| v },
+        'dossiers': @dossiers_count_per_procedure.sum { |_, v| v },
+        'archivés': @dossiers_archived_count_per_procedure.sum { |_, v| v }
+      }
     end
 
     def show
