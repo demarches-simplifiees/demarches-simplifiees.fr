@@ -110,6 +110,11 @@ FactoryBot.define do
       value { '["1234567", null]' }
     end
 
+    factory :champ_multiple_drop_down_list, class: 'Champs::MultipleDropDownListChamp' do
+      type_de_champ { association :type_de_champ_multiple_drop_down_list, procedure: dossier.procedure }
+      value { '["choix 1", "choix 2"]' }
+    end
+
     factory :champ_linked_drop_down_list, class: 'Champs::LinkedDropDownListChamp' do
       type_de_champ { association :type_de_champ_linked_drop_down_list, procedure: dossier.procedure }
       value { '["categorie 1", "choix 1"]' }
