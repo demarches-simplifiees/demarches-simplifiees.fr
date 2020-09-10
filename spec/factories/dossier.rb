@@ -183,9 +183,9 @@ FactoryBot.define do
     end
 
     trait :with_attestation do
-      after(:build) do |dossier, _evaluator|
+      after(:create) do |dossier, _evaluator|
         if dossier.procedure.attestation_template.blank?
-          dossier.procedure.attestation_template = build(:attestation_template)
+          dossier.procedure.attestation_template = create(:attestation_template)
         end
         dossier.attestation = dossier.build_attestation
       end
