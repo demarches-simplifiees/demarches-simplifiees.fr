@@ -352,17 +352,17 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe '#notifications_per_procedure' do
+  describe '#procedure_ids_with_notifications' do
     let!(:dossier) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let(:instructeur) { dossier.follows.first.instructeur }
     let(:procedure) { dossier.procedure }
 
-    subject { instructeur.procedures_with_notifications(:en_cours) }
+    subject { instructeur.procedure_ids_with_notifications(:en_cours) }
 
     context 'when there is a modification on public champs' do
       before { dossier.update!(last_champ_updated_at: Time.zone.now) }
 
-      it { is_expected.to match([procedure]) }
+      it { is_expected.to match([procedure.id]) }
     end
   end
 
