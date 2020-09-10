@@ -29,7 +29,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     let(:dossier) { create(:dossier) }
     let(:type_de_champ) { create(:type_de_champ_drop_down_list, mandatory: mandatory, procedure: dossier.procedure) }
     let(:champ) { create(:champ_drop_down_list, dossier: dossier, type_de_champ: type_de_champ) }
-    let(:options) { type_de_champ.drop_down_list_options }
+    let(:options) { champ.options }
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
     let(:mandatory) { true }
 
@@ -54,6 +54,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
       let(:type_de_champ) { create(:type_de_champ_drop_down_list, :long, procedure: dossier.procedure) }
 
       it 'renders the list as a dropdown' do
+        pp subject
         expect(subject).to have_select(type_de_champ.libelle, options: options)
       end
     end
