@@ -144,17 +144,14 @@ class Instructeur < ApplicationRecord
       .with_notifications(self)
   end
 
-  def procedures_with_notifications(scope)
-    dossiers = Dossier
+  def procedure_ids_with_notifications(scope)
+    groupe_instructeur_ids = Dossier
       .send(scope) # :en_cours or :termine (or any other Dossier scope)
       .merge(followed_dossiers)
       .with_notifications(self)
+      .select(:groupe_instructeur_id)
 
-    Procedure
-      .where(id: dossiers.joins(:groupe_instructeur)
-        .select('groupe_instructeurs.procedure_id')
-        .distinct)
-      .distinct
+    GroupeInstructeur.where(id: groupe_instructeur_ids).pluck(:procedure_id)
   end
 
   def mark_tab_as_seen(dossier, tab)

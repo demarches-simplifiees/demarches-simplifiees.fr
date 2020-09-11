@@ -19,9 +19,13 @@ max_logo_width = body_width
 max_logo_height = 50.mm
 max_signature_size = 50.mm
 
-title = @attestation.fetch(:title)
-body = @attestation.fetch(:body)
-footer = @attestation.fetch(:footer)
+def normalize_pdf_text(text)
+  text&.tr("\t", '  ')
+end
+
+title = normalize_pdf_text(@attestation.fetch(:title))
+body = normalize_pdf_text(@attestation.fetch(:body))
+footer = normalize_pdf_text(@attestation.fetch(:footer))
 created_at = @attestation.fetch(:created_at)
 
 logo = @attestation[:logo]
