@@ -454,7 +454,7 @@ GEM
       ast (~> 2.4.1)
     pdf-core (0.7.0)
     pg (1.2.3)
-    phonelib (0.6.43)
+    phonelib (0.6.45)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
