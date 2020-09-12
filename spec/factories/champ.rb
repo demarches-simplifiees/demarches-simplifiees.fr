@@ -168,6 +168,10 @@ FactoryBot.define do
       end
     end
 
+    factory :champ_piece_justificative_empty, class: 'Champs::PieceJustificativeChamp' do
+      type_de_champ { association :type_de_champ_piece_justificative, procedure: dossier.procedure }
+    end
+
     factory :champ_carte, class: 'Champs::CarteChamp' do
       type_de_champ { association :type_de_champ_carte, procedure: dossier.procedure }
     end
