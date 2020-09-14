@@ -33,7 +33,6 @@ features = [
   :autosave_dossier_draft,
   :maintenance_mode,
   :mini_profiler,
-  :operation_log_serialize_subject,
   :xray,
   :carte_ign,
   :localization
