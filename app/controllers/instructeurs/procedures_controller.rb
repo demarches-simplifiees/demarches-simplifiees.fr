@@ -52,7 +52,7 @@ module Instructeurs
       @procedure_presentation = procedure_presentation
       @displayed_fields_values = displayed_fields_values
 
-      @a_suivre_dossiers = current_instructeur
+      a_suivre_dossiers = current_instructeur
         .dossiers
         .for_procedure(procedure)
         .without_followers
@@ -64,36 +64,40 @@ module Instructeurs
         .for_procedure(procedure)
         .en_cours
 
-      @followed_dossiers_count = followed_dossiers.count
-      @followed_dossiers_id = followed_dossiers.pluck(:id)
-
-      @termines_dossiers = current_instructeur
+      termines_dossiers = current_instructeur
         .dossiers
         .for_procedure(procedure)
         .termine
 
-      @all_state_dossiers = current_instructeur
+      all_state_dossiers = current_instructeur
         .dossiers
         .for_procedure(procedure)
         .all_state
 
-      @archived_dossiers = current_instructeur
+      archived_dossiers = current_instructeur
         .dossiers
         .for_procedure(procedure)
         .archived
 
       @dossiers = case statut
       when 'a-suivre'
-        @a_suivre_dossiers
+        a_suivre_dossiers
       when 'suivis'
         followed_dossiers
       when 'traites'
-        @termines_dossiers
+        termines_dossiers
       when 'tous'
-        @all_state_dossiers
+        all_state_dossiers
       when 'archives'
-        @archived_dossiers
+        archived_dossiers
       end
+
+      @a_suivre_dossiers_count = a_suivre_dossiers.count
+      @followed_dossiers_count = followed_dossiers.count
+      @followed_dossiers_id = followed_dossiers.pluck(:id)
+      @termines_dossiers_count = termines_dossiers.count
+      @all_state_dossiers_count = all_state_dossiers.count
+      @archived_dossiers_count = archived_dossiers.count
 
       @not_archived_notifications_dossier_ids = current_instructeur.notifications_for_procedure(@procedure, :not_archived).pluck(:id)
 
