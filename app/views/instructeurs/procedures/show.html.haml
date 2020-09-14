@@ -26,10 +26,10 @@
             active: @statut == 'a-suivre',
             badge: number_with_html_delimiter(@a_suivre_dossiers.count))
 
-          = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
+          = tab_item(t('pluralize.followed', count: @followed_dossiers_count),
             instructeur_procedure_path(@procedure, statut: 'suivis'),
             active: @statut == 'suivis',
-            badge: number_with_html_delimiter(@followed_dossiers.count),
+            badge: number_with_html_delimiter(@followed_dossiers_count),
             notification: current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?)
 
           = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
