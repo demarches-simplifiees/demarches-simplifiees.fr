@@ -20,7 +20,7 @@
 
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
-    - if feature_enabled?(:xray)
+    - if Rails.env.development? && feature_enabled?(:xray)
       = stylesheet_link_tag :xray
 
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
@@ -40,7 +40,7 @@
       - if content_for?(:footer)
         = content_for(:footer)
 
-      - if feature_enabled?(:xray)
+      - if Rails.env.development? && feature_enabled?(:xray)
         = javascript_include_tag :xray
 
       = yield :charts_js
