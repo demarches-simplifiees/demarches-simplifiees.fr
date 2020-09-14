@@ -244,11 +244,7 @@ feature 'The user' do
     expect(page).to have_text('file.pdf')
   end
 
-  context 'when the draft autosave is enabled' do
-    before do
-      Flipper.enable_actor(:autosave_dossier_draft, user)
-    end
-
+  context 'draft autosave' do
     scenario 'autosave a draft', js: true do
       log_in(user, simple_procedure)
       fill_individual
