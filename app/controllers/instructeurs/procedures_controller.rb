@@ -102,6 +102,8 @@ module Instructeurs
       @has_en_cours_notifications = current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?
       @has_termine_notifications = current_instructeur.notifications_for_procedure(@procedure, :termine).exists?
 
+      @has_dossiers_not_brouillon = @procedure.dossiers.state_not_brouillon.any?
+
       @not_archived_notifications_dossier_ids = current_instructeur.notifications_for_procedure(@procedure, :not_archived).pluck(:id)
 
       sorted_ids = procedure_presentation.sorted_ids(@dossiers, current_instructeur)
