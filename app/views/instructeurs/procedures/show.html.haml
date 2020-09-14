@@ -135,7 +135,7 @@
               %td.folder-col
                 = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
                   %span.icon.folder
-                    - if current_instructeur.notifications_for_procedure(@procedure, :not_archived).include?(dossier)
+                    - if @not_archived_notifications_dossier_ids.include?(dossier.id)
                       %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
