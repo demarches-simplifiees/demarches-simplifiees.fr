@@ -3,7 +3,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/tps
   docker:
-    - image: circleci/ruby:2.6.5-node-browsers
+    - image: circleci/ruby:2.7.1-node-browsers
     - image: circleci/postgres:10.12
       environment:
         POSTGRES_USER: tps_test
