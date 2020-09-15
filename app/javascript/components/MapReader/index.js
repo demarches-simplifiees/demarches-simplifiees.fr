@@ -16,7 +16,7 @@ import {
 
 const Map = ReactMapboxGl({});
 
-const MapReader = ({ featureCollection, ign }) => {
+const MapReader = ({ featureCollection, options }) => {
   const [currentMap, setCurrentMap] = useState(null);
   const [style, setStyle] = useState('ortho');
   const cadastresFeatureCollection = useMemo(
@@ -52,10 +52,10 @@ const MapReader = ({ featureCollection, ign }) => {
     [selectionsUtilisateurFeatureCollection]
   );
   const hasCadastres = !!cadastresFeatureCollection.length;
-  const mapStyle = useMemo(() => getMapStyle(style, hasCadastres), [
-    style,
-    cadastresFeatureCollection
-  ]);
+  const mapStyle = useMemo(
+    () => getMapStyle(style, hasCadastres, options.mnhn),
+    [style, options, cadastresFeatureCollection]
+  );
   const popup = useMemo(
     () =>
       new Popup({
@@ -184,7 +184,7 @@ const MapReader = ({ featureCollection, ign }) => {
         />
       ) : null}
 
-      <SwitchMapStyle style={style} setStyle={setStyle} ign={ign} />
+      <SwitchMapStyle style={style} setStyle={setStyle} ign={options.ign} />
       <ZoomControl />
     </Map>
   );
@@ -196,7 +196,10 @@ MapReader.propTypes = {
     bbox: PropTypes.array,
     features: PropTypes.array
   }),
-  ign: PropTypes.bool
+  options: PropTypes.shape({
+    ign: PropTypes.bool,
+    mnhn: PropTypes.bool
+  })
 };
 
 export default MapReader;
