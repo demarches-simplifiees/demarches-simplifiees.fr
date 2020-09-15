@@ -1,8 +1,8 @@
 - if procedure.dossiers.state_not_brouillon.any?
   %span.dropdown
-    %button.button.dropdown-button
+    %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'download-menu' }
       Télécharger tous les dossiers
-    .dropdown-content.fade-in-down{ style: 'width: 330px' }
+    #download-menu.dropdown-content.fade-in-down{ style: 'width: 330px' }
       %ul.dropdown-items
         - [[xlsx_export, :xlsx], [ods_export, :ods], [csv_export, :csv]].each do |(export, format)|
           %li
