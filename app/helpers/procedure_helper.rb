@@ -13,7 +13,7 @@ module ProcedureHelper
     safe_join(parts, ' ')
   end
 
-  def procedure_modal_text(procedure, key)
+  def procedure_publish_text(procedure, key)
     action = procedure.close? ? :reopen : :publish
     t(action, scope: [:modal, :publish, key])
   end

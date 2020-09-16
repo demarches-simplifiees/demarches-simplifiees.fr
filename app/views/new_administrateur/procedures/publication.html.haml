@@ -1,0 +1,90 @@
+
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Publication'] }
+.container
+  .lien-demarche
+    %h1
+      - if @procedure.brouillon?
+        Test et publication
+      - else
+        Publication
+    %div{ style: 'margin-top: 30px;' }
+      - if @procedure.close? || @procedure.depubliee?
+        %p.mb-4 Cette démarche est <strong>close</strong> et n’est donc plus accessible par le public. Vous pouvez la réactiver :
+        = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
+      - elsif @procedure.publiee?
+        %p Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
+        Pour y accéder vous pouvez utiliser le lien :
+        = link_to @procedure_lien, sanitize_url(@procedure_lien), target: :blank, rel: :noopener, class: "mb-4"
+
+        %p.mb-4 Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
+
+        = render partial: 'procedure_transfert'
+      - elsif @procedure.brouillon?
+        - if @procedure.missing_steps.empty?
+          %p
+            Cette démarche est actuellement <strong>en test</strong>,
+            pour y accéder vous pouvez utiliser le lien :
+            = link_to @procedure_lien, sanitize_url(@procedure_lien), target: :blank, rel: :noopener
+          %p.mb-4
+            Toute personne ayant la connaissance de ce lien pourra ainsi remplir des dossiers de test sur votre démarche.
+
+          .card.mb-4
+            %h2.card-title Ce que vous pouvez faire lorsque vous êtes en test
+            %p
+              Profitez de la phase de test pour tester la saisie de dossiers, ainsi que toutes les fonctionnalités associées (instruction, emails automatiques, attestations, etc.).
+            %p
+              Vous pouvez effectuer toutes les modifications que vous souhaitez sur votre démarche pendant cette phase de test.
+            %p.mb-4.bold
+              Les dossiers qui seront remplis pendant la phase de test seront automatiquement supprimés lors de la modification ou la publication de votre démarche.
+            %p.center
+              %iframe{ :src =>"https://player.vimeo.com/video/334463514?color=0069CC",:width =>"640",:height =>"360",:frameborder => "0" }
+
+
+          .card
+            %h2.card-title Prêt à publier ?
+            %p
+              À ce moment du processus de création, vous devez informer votre Délégué à la Protection des Données personnelles (DPD).
+            %p
+              (
+              %a{ href:'https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes', target:'_blank' }
+                https://www.cnil.fr/fr/protection-des-donnees-les-bons-reflexes
+              )
+            %p
+              Si votre démarche propose de collecter des données personnelles, vous devez informer votre DPD. Chaque organisme en a un.
+            %p
+              Ce dernier pourra vous aider dans la finalisation de votre démarche, et vous inviter à vous interroger sur les données collectées, et sur la pertinence de ces dernières.
+              N'oubliez pas : toutes les démarches qui contiennent des données personnelles doivent être consignées dans un registre des traitements :
+              %a{ href:'https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement', target:'_blank' }
+                https://www.cnil.fr/fr/RGDP-le-registre-des-activites-de-traitement
+            %p.mb-4
+              Comment faire :
+              vous pouvez soit lui communiquer par email le lien vers la démarche en test, ou bien le nommer « administrateur ». Dans tous les cas, ne publiez votre démarche qu’après avoir eu son avis.
+
+          = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
+
+        - else
+          .alert.alert-info
+            Pour pouvoir tester cette démarche, vous devez d’abord lui affecter
+            - if @procedure.missing_instructeurs?
+              = link_to("des instructeurs", admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur))
+            - if @procedure.missing_instructeurs? && @procedure.service.nil?
+              et
+            - if @procedure.service.nil?
+              = link_to("un service", admin_services_path(procedure_id: @procedure))
+            \.
+      - else
+        - if @procedure.missing_steps.include?(:service)
+          %p.alert.alert-danger
+            Vous devez renseigner les coordonnées de votre Service administratif avant de pouvoir publier votre démarche.
+            = link_to 'Cliquez ici.', (@current_administrateur.services.present? ? url_for(admin_services_path(procedure_id: @procedure.id)) : url_for(new_admin_service_path(procedure_id: @procedure.id)))
+
+        - if @procedure.missing_steps.include?(:instructeurs)
+          %p.alert.alert-danger
+            Vous devez affecter des instructeurs avant de pouvoir publier votre démarche.
+            = link_to 'Cliquez ici.', admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur)
+
+        %p.alert.alert-info
+          Cette démarche n’a pas encore de lien, et n’est pas accessible par le public.

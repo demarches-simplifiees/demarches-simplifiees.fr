@@ -62,40 +62,6 @@ class Admin::ProceduresController < AdminController
     end
   end
 
-  def publish_validate
-    @procedure.assign_attributes(publish_params)
-  end
-
-  def publish
-    @procedure.assign_attributes(publish_params)
-
-    @procedure.publish_or_reopen!(current_administrateur)
-
-    flash.notice = "Démarche publiée"
-    render js: "window.location='#{admin_procedures_path}'"
-  rescue ActiveRecord::RecordInvalid
-    respond_to do |format|
-      format.js { render :publish_validate }
-    end
-  end
-
-  def transfer
-    admin = Administrateur.by_email(params[:email_admin].downcase)
-
-    if admin.nil?
-      respond_to do |format|
-        format.js { render :transfer, status: :not_found }
-      end
-    else
-      procedure = current_administrateur.procedures.find(params[:procedure_id])
-      procedure.clone(admin, false)
-
-      flash.now.notice = "La démarche a correctement été clonée vers le nouvel administrateur."
-
-      respond_to(&:js)
-    end
-  end
-
   def archive
     procedure = current_administrateur.procedures.find(params[:procedure_id])
     procedure.close!
