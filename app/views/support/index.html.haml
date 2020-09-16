@@ -25,6 +25,7 @@
         = label_tag :type do
           = t('your_question', scope: [:support, :question])
           %span.mandatory *
+        = hidden_field_tag :type, params[:type]
       %dl
         - @options.each do |(question, question_type, link)|
           %dt
