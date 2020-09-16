@@ -140,6 +140,10 @@ const TypeDeChamp = sortableElement(
               label="Cadastres"
               handler={updateHandlers.cadastres}
             />
+            <TypeDeChampCarteOption
+              label="Zones naturelles protégées"
+              handler={updateHandlers.mnhn}
+            />
           </TypeDeChampCarteOptions>
           <TypeDeChampRepetitionOptions
             isVisible={isRepetition}
@@ -206,6 +210,7 @@ function createUpdateHandlers(dispatch, typeDeChamp, index, prefix) {
 
 export const FIELDS = [
   'cadastres',
+  'mnhn',
   'description',
   'drop_down_list_value',
   'libelle',

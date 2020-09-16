@@ -1,10 +1,10 @@
 .dropdown
   -# Dropdown button title
-  %button.button.primary.dropdown-button{ class: button_or_label_class(dossier) }
+  %button.button.primary.dropdown-button{ class: button_or_label_class(dossier), 'aria-expanded' => 'false', 'aria-controls' => 'state-menu' }
     = dossier_display_state dossier
 
   -# Dropdown content
-  .dropdown-content.fade-in-down
+  #state-menu.dropdown-content.fade-in-down
 
     - if dossier.en_construction?
       -# ------------------------------------------------------
