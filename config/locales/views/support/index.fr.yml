@@ -16,7 +16,7 @@ fr:
       <p>Si vous avez des questions sur les informations à saisir, contactez les services en charge de la démarche.</p>
       <p><a href=%{link_procedure_info}>En savoir plus</a></p>"
       instruction_info_html: "<p>Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie.</p>
-      <p><a href=%{link_instruction}>En savoir plus</a></p>
+      <p><a href=%{link_instruction_info}>En savoir plus</a></p>
       <br>
       <p>Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l'instruction de votre dossier.</p>"
       product_html: "<p>Une idée ? Pensez à consulter notre <strong>tableau de bord des améliorations</strong></p>
