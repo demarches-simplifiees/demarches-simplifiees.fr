@@ -41,6 +41,7 @@ ButtonExpand.prototype.showContent = function () {
     this.controlledNode.classList.remove('hidden');
 
   }
+  this.formInput.value = this.domNode.getAttribute('data-question-type');
 
   this.allButtons.forEach((b) => {
     if (b != this) {
@@ -73,6 +74,10 @@ ButtonExpand.prototype.toggleExpand = function () {
 
 ButtonExpand.prototype.setAllButtons = function(buttons) {
   this.allButtons = buttons;
+}
+
+ButtonExpand.prototype.setFormInput = function(formInput) {
+  this.formInput = formInput;
 }
 
 /* EVENT HANDLERS */
@@ -115,6 +120,7 @@ window.addEventListener('load', function (event) {
 
   var buttons =  document.querySelectorAll('button[aria-expanded][aria-controls], button.button-without-hint');
   var expandButtons = [];
+  var formInput = document.querySelector('form input#type');
 
   buttons.forEach((button) => {
     var be = new ButtonExpand(button);
@@ -122,5 +128,6 @@ window.addEventListener('load', function (event) {
     expandButtons.push(be);
   });
   expandButtons.forEach((button) => button.setAllButtons(expandButtons));
+  expandButtons.forEach((button) => button.setFormInput(formInput));
 
 }, false);
