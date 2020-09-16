@@ -3,16 +3,16 @@ import cadastre from './cadastre';
 import orthoStyle from './ortho-style';
 import vectorStyle from './vector-style';
 
-const ignStyle = [
-  {
-    id: 'carte-ign',
+function rasterStyle(source) {
+  return {
+    id: source,
+    source,
     type: 'raster',
-    source: 'carte-ign',
     paint: { 'raster-resampling': 'linear' }
-  }
-];
+  };
+}
 
-export function getMapStyle(style, hasCadastres) {
+export function getMapStyle(style, hasCadastres, hasMNHN) {
   const mapStyle = { ...baseStyle };
 
   switch (style) {
@@ -27,7 +27,7 @@ export function getMapStyle(style, hasCadastres) {
       mapStyle.name = 'Carte OSM';
       break;
     case 'ign':
-      mapStyle.layers = ignStyle;
+      mapStyle.layers = [rasterStyle('plan-ign')];
       mapStyle.id = 'ign';
       mapStyle.name = 'Carte IGN';
       break;
@@ -36,6 +36,17 @@ export function getMapStyle(style, hasCadastres) {
   if (hasCadastres) {
     mapStyle.layers = mapStyle.layers.concat(cadastre);
     mapStyle.id += '-cadastre';
+  }
+
+  if (hasMNHN) {
+    mapStyle.layers = mapStyle.layers.concat([
+      rasterStyle('protectedareas-gp'),
+      rasterStyle('protectedareas-pn'),
+      rasterStyle('protectedareas-pnr'),
+      rasterStyle('protectedareas-sic'),
+      rasterStyle('protectedareas-zps')
+    ]);
+    mapStyle.id += '-mnhn';
   }
 
   return mapStyle;

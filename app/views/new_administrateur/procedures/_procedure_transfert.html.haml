@@ -1,0 +1,13 @@
+= form_tag admin_procedure_transfer_path(procedure_id: @procedure.id), method: :post, class: 'form' do
+  .card
+    %h2.card-title
+      Envoyer une copie de cette démarche à un autre administrateur
+    %p.mb-4
+      Cette fonctionnalité vous permet de d'envoyer une copie de votre démarche à un autre administrateur.
+
+    %div
+      = text_field_tag :email_admin, '', { class: 'form-control',
+            type: 'email',
+            placeholder: 'Email administrateur cible' }
+
+      = submit_tag "Envoyer à l'administrateur", class: 'button primary'

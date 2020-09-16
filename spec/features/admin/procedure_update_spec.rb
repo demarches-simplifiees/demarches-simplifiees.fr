@@ -25,7 +25,7 @@ feature 'Administrateurs can edit procedures', js: true do
     end
 
     scenario 'the administrator can edit the libelle' do
-      visit admin_procedures_draft_path
+      visit admin_procedures_path(statut: "brouillons")
       click_on procedure.libelle
       find('#presentation').click
 

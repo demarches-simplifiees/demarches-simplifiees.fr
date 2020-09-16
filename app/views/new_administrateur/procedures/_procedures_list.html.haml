@@ -33,9 +33,9 @@
           %span.icon.edit
           Modifier
         .dropdown
-          .button.dropdown-button.procedures-actions-btn
+          .button.dropdown-button.procedures-actions-btn{ 'aria-expanded' => 'false', 'aria-controls' => 'actions-menu' }
             Actions
-          .dropdown-content.fade-in-down
+          #actions-menu.dropdown-content.fade-in-down
             %ul.dropdown-items.pl-0
               - if !procedure.close?
                 %li
@@ -63,11 +63,3 @@
                     %span.icon.refuse
                     .dropdown-description
                       %h4 Supprimer
-
-              - if procedure.close?
-                %li
-                  = link_to admin_procedure_publication_path(procedure) do
-                    %span.icon.unarchive
-                    .dropdown-description
-                      %h4 Réactiver
-
