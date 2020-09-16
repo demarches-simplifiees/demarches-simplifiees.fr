@@ -20,26 +20,21 @@ feature 'As an administrateur I wanna clone a procedure', js: true do
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
       page.all('.procedures-actions-btn').first.click
       page.all('.clone-btn').first.click
-      visit admin_procedures_draft_path
+      visit admin_procedures_path(statut: "brouillons")
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
       click_on Procedure.last.libelle
       expect(page).to have_current_path(admin_procedure_path(Procedure.last))
 
       find('#publish-procedure-link').click
-      find('#publish-procedure').click
-
-      within '#publish-modal' do
-        expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
-        expect(page).to have_text('ancienne sera dépubliée')
-        fill_in 'lien_site_web', with: 'http://some.website'
-        click_on 'publish'
-      end
+      expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
+      fill_in 'lien_site_web', with: 'http://some.website'
+      click_on 'publish'
 
       page.refresh
 
-      visit admin_procedures_archived_path
+      visit admin_procedures_path(statut: "archivees")
       expect(page.find_by_id('procedures')['data-item-count']).to eq('1')
-      visit admin_procedures_draft_path
+      visit admin_procedures_path(statut: "brouillons")
       expect(page.find_by_id('procedures')['data-item-count']).to eq('0')
     end
   end
