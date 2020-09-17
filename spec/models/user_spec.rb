@@ -186,7 +186,9 @@ describe User, type: :model do
         subject
       end
 
-      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, nil, administration.id) }
+      it 'receives an invitation to update its password' do
+        expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), administration.id)
+      end
     end
   end
 

@@ -90,13 +90,7 @@ class User < ApplicationRecord
   end
 
   def invite_administrateur!(administration_id)
-    reset_password_token = nil
-
-    if !active?
-      reset_password_token = set_reset_password_token
-    end
-
-    AdministrationMailer.invite_admin(self, reset_password_token, administration_id).deliver_later
+    AdministrationMailer.invite_admin(self, set_reset_password_token, administration_id).deliver_later
   end
 
   def remind_invitation!
