@@ -174,8 +174,8 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
-    get 'procedures/archived' => 'procedures#archived'
-    get 'procedures/draft' => 'procedures#draft'
+    get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
+    get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
     resources :procedures, only: [:destroy] do
       collection do
