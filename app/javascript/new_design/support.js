@@ -1,19 +1,17 @@
-/*
-*   This content is inspired by w3c aria example
-*   https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-faq.html
-*/
+//
+// This content is inspired by w3c aria example
+// https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-faq.html
+//
 
 var ButtonExpand = function (domNode) {
-
   this.domNode = domNode;
 
   this.keyCode = Object.freeze({
-    'RETURN': 13
+    RETURN: 13
   });
 };
 
 ButtonExpand.prototype.init = function () {
-
   this.allButtons = [];
   this.controlledNode = false;
 
@@ -26,20 +24,17 @@ ButtonExpand.prototype.init = function () {
   this.domNode.setAttribute('aria-expanded', 'false');
   this.hideContent();
 
-  this.domNode.addEventListener('keydown',    this.handleKeydown.bind(this));
-  this.domNode.addEventListener('click',      this.handleClick.bind(this));
-  this.domNode.addEventListener('focus',      this.handleFocus.bind(this));
-  this.domNode.addEventListener('blur',       this.handleBlur.bind(this));
-
+  this.domNode.addEventListener('keydown', this.handleKeydown.bind(this));
+  this.domNode.addEventListener('click', this.handleClick.bind(this));
+  this.domNode.addEventListener('focus', this.handleFocus.bind(this));
+  this.domNode.addEventListener('blur', this.handleBlur.bind(this));
 };
 
 ButtonExpand.prototype.showContent = function () {
-
   this.domNode.setAttribute('aria-expanded', 'true');
   this.domNode.classList.add('primary');
   if (this.controlledNode) {
     this.controlledNode.classList.remove('hidden');
-
   }
   this.formInput.value = this.domNode.getAttribute('data-question-type');
 
@@ -51,43 +46,34 @@ ButtonExpand.prototype.showContent = function () {
 };
 
 ButtonExpand.prototype.hideContent = function () {
-
   this.domNode.setAttribute('aria-expanded', 'false');
   this.domNode.classList.remove('primary');
   if (this.controlledNode) {
     this.controlledNode.classList.add('hidden');
   }
-
 };
 
 ButtonExpand.prototype.toggleExpand = function () {
-  console.log("toggleExpanding...");
-
   if (this.domNode.getAttribute('aria-expanded') === 'true') {
     this.hideContent();
-  }
-  else {
+  } else {
     this.showContent();
   }
-
 };
 
-ButtonExpand.prototype.setAllButtons = function(buttons) {
+ButtonExpand.prototype.setAllButtons = function (buttons) {
   this.allButtons = buttons;
-}
+};
 
-ButtonExpand.prototype.setFormInput = function(formInput) {
+ButtonExpand.prototype.setFormInput = function (formInput) {
   this.formInput = formInput;
-}
+};
 
 /* EVENT HANDLERS */
 
 ButtonExpand.prototype.handleKeydown = function (event) {
-
   switch (event.keyCode) {
-
     case this.keyCode.RETURN:
-
       this.toggleExpand();
 
       event.stopPropagation();
@@ -97,7 +83,6 @@ ButtonExpand.prototype.handleKeydown = function (event) {
     default:
       break;
   }
-
 };
 
 ButtonExpand.prototype.handleClick = function (event) {
@@ -106,28 +91,32 @@ ButtonExpand.prototype.handleClick = function (event) {
   this.toggleExpand();
 };
 
-ButtonExpand.prototype.handleFocus = function (event) {
+ButtonExpand.prototype.handleFocus = function () {
   this.domNode.classList.add('focus');
 };
 
-ButtonExpand.prototype.handleBlur = function (event) {
+ButtonExpand.prototype.handleBlur = function () {
   this.domNode.classList.remove('focus');
 };
 
 /* Initialize Hide/Show Buttons */
 
-window.addEventListener('load', function (event) {
+window.addEventListener(
+  'load',
+  function () {
+    var buttons = document.querySelectorAll(
+      'button[aria-expanded][aria-controls], button.button-without-hint'
+    );
+    var expandButtons = [];
+    var formInput = document.querySelector('form input#type');
 
-  var buttons =  document.querySelectorAll('button[aria-expanded][aria-controls], button.button-without-hint');
-  var expandButtons = [];
-  var formInput = document.querySelector('form input#type');
-
-  buttons.forEach((button) => {
-    var be = new ButtonExpand(button);
-    be.init();
-    expandButtons.push(be);
-  });
-  expandButtons.forEach((button) => button.setAllButtons(expandButtons));
-  expandButtons.forEach((button) => button.setFormInput(formInput));
-
-}, false);
+    buttons.forEach((button) => {
+      var be = new ButtonExpand(button);
+      be.init();
+      expandButtons.push(be);
+    });
+    expandButtons.forEach((button) => button.setAllButtons(expandButtons));
+    expandButtons.forEach((button) => button.setFormInput(formInput));
+  },
+  false
+);
