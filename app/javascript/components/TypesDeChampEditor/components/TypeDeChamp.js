@@ -26,6 +26,7 @@ const TypeDeChamp = sortableElement(
     const isCarte = typeDeChamp.type_champ === 'carte';
     const isExplication = typeDeChamp.type_champ === 'explication';
     const isHeaderSection = typeDeChamp.type_champ === 'header_section';
+    const isTitreIdentite = typeDeChamp.type_champ === 'titre_identite';
     const isRepetition = typeDeChamp.type_champ === 'repetition';
     const canBeMandatory =
       !isHeaderSection && !isExplication && !state.isAnnotation;
@@ -118,7 +119,7 @@ const TypeDeChamp = sortableElement(
           </div>
           <div className="flex justify-start">
             <DescriptionInput
-              isVisible={!isHeaderSection}
+              isVisible={!isHeaderSection && !isTitreIdentite}
               handler={updateHandlers.description}
             />
           </div>
