@@ -85,8 +85,6 @@ class DossierOperationLog < ApplicationRecord
   def self.serialize_subject(subject)
     if subject.nil?
       nil
-    elsif !Flipper.enabled?(:operation_log_serialize_subject)
-      { id: subject.id }
     else
       case subject
       when Dossier
