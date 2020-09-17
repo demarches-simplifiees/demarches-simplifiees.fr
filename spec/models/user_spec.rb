@@ -293,4 +293,16 @@ describe User, type: :model do
       end
     end
   end
+
+  describe '#discard_and_anonymize!' do
+    let(:user) { create(:user) }
+
+    before { user.discard_and_anonymize!('HS1234') }
+
+    it 'should discard user and make it anonymous' do
+      expect(user.discarded?).to be_truthy
+      expect(user.email).to end_with '@anonymous.org'
+      expect(user.discard_reason).to eq('HS1234')
+    end
+  end
 end
