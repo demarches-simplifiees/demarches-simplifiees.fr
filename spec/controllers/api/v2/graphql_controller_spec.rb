@@ -106,10 +106,6 @@ describe API::V2::GraphqlController do
 
   subject { post :execute, params: { query: query } }
 
-  before do
-    Flipper.enable(:administrateur_graphql, admin.user)
-  end
-
   context "when authenticated" do
     let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(token) }
 
