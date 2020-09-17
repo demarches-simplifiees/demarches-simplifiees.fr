@@ -101,22 +101,24 @@ ButtonExpand.prototype.handleBlur = function () {
 
 /* Initialize Hide/Show Buttons */
 
-window.addEventListener(
-  'load',
-  function () {
-    var buttons = document.querySelectorAll(
-      'button[aria-expanded][aria-controls], button.button-without-hint'
-    );
-    var expandButtons = [];
-    var formInput = document.querySelector('form input#type');
+if (document.querySelector('#contact-form')) {
+  window.addEventListener(
+    'load',
+    function () {
+      var buttons = document.querySelectorAll(
+        'button[aria-expanded][aria-controls], button.button-without-hint'
+      );
+      var expandButtons = [];
+      var formInput = document.querySelector('form input#type');
 
-    buttons.forEach((button) => {
-      var be = new ButtonExpand(button);
-      be.init();
-      expandButtons.push(be);
-    });
-    expandButtons.forEach((button) => button.setAllButtons(expandButtons));
-    expandButtons.forEach((button) => button.setFormInput(formInput));
-  },
-  false
-);
+      buttons.forEach((button) => {
+        var be = new ButtonExpand(button);
+        be.init();
+        expandButtons.push(be);
+      });
+      expandButtons.forEach((button) => button.setAllButtons(expandButtons));
+      expandButtons.forEach((button) => button.setFormInput(formInput));
+    },
+    false
+  );
+}
