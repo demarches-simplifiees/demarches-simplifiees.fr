@@ -8,6 +8,8 @@
 #  confirmed_at                 :datetime
 #  current_sign_in_at           :datetime
 #  current_sign_in_ip           :string
+#  discard_reason               :string
+#  discarded_at                 :datetime
 #  email                        :string           default(""), not null
 #  encrypted_password           :string           default(""), not null
 #  failed_attempts              :integer          default(0), not null
@@ -29,6 +31,7 @@
 #
 class User < ApplicationRecord
   include EmailSanitizableConcern
+  include Discard::Model
 
   enum loged_in_with_france_connect: {
     particulier: 'particulier',
@@ -56,6 +59,10 @@ class User < ApplicationRecord
 
   # Override of Devise::Models::Confirmable#send_confirmation_instructions
   def send_confirmation_instructions
+    if discarded?
+      return
+    end
+
     unless @raw_confirmation_token
       generate_confirmation_token!
     end
@@ -139,8 +146,12 @@ class User < ApplicationRecord
     last_sign_in_at.present?
   end
 
+  def can_be_discarded?
+    administrateur.nil? && instructeur.nil?
+  end
+
   def can_be_deleted?
-    administrateur.nil? && instructeur.nil? && dossiers.with_discarded.state_instruction_commencee.empty?
+    can_be_discarded? && dossiers.with_discarded.state_instruction_commencee.empty?
   end
 
   def delete_and_keep_track_dossiers(administration)
@@ -153,6 +164,32 @@ class User < ApplicationRecord
     end
     dossiers.with_discarded.destroy_all
     destroy!
+  end
+
+  def discard_and_anonymize!(reason)
+    if !can_be_discarded?
+      raise "Cannot discard this user because they are also instructeur or administrateur"
+    end
+
+    discard!
+    update_columns(
+      discard_reason: reason,
+      email: "#{SecureRandom.hex}@anonymous.org",
+      encrypted_password: SecureRandom.hex,
+      unconfirmed_email: nil,
+      current_sign_in_at: nil,
+      current_sign_in_ip: nil,
+      last_sign_in_at: nil,
+      last_sign_in_ip: nil
+    )
+  end
+
+  def delete_or_discard!(administration)
+    if can_be_deleted?
+      delete_and_keep_track_dossiers(administration)
+    else
+      discard_and_anonymize!("Discarded by Manager##{administration.id}")
+    end
   end
 
   private

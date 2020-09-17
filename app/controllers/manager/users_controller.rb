@@ -1,5 +1,10 @@
 module Manager
   class UsersController < Manager::ApplicationController
+    def scoped_resource
+      # Don't display discarded users
+      User.kept
+    end
+
     def update
       user = User.find(params[:id])
       new_email = params[:user][:email]
@@ -36,10 +41,10 @@ module Manager
 
     def delete
       user = User.find(params[:id])
-      if !user.can_be_deleted?
-        fail "Impossible de supprimer cet utilisateur. Il a des dossiers en instruction ou il est administrateur."
+      if !user.can_be_discarded?
+        fail "Impossible de supprimer cet utilisateur. Il est instructeur ou administrateur."
       end
-      user.delete_and_keep_track_dossiers(current_administration)
+      user.delete_or_discard!(current_administration)
 
       logger.info("L'utilisateur #{user.id} est supprimé par #{current_administration.id}")
       flash[:notice] = "L'utilisateur #{user.id} est supprimé"
