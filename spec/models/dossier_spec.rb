@@ -105,7 +105,7 @@ describe Dossier do
       create(:follow, dossier: dossier, instructeur: instructeur, messagerie_seen_at: 2.hours.ago)
     end
 
-    subject { instructeur.followed_dossiers.with_notifications(instructeur) }
+    subject { instructeur.followed_dossiers.with_notifications }
 
     context('without changes') do
       it { is_expected.to eq [] }

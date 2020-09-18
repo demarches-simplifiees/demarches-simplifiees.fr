@@ -288,7 +288,7 @@ class Dossier < ApplicationRecord
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: [], traitements: []) }
 
-  scope :with_notifications, -> (instructeur) do
+  scope :with_notifications, -> do
     joins(:follows)
       .where('last_champ_updated_at > follows.demande_seen_at' \
       ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
