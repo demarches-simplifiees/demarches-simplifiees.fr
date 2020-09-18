@@ -17,28 +17,6 @@ class Admin::ProceduresController < AdminController
     end
   end
 
-  def archived
-    @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.closes.order(published_at: :desc),
-      partial: "admin/procedures/list",
-      array: true
-
-    archived_class
-
-    render 'index'
-  end
-
-  def draft
-    @procedures = smart_listing_create :procedures,
-      current_administrateur.procedures.brouillons.order(created_at: :desc),
-      partial: "admin/procedures/list",
-      array: true
-
-    draft_class
-
-    render 'index'
-  end
-
   def show
     if @procedure.brouillon?
       @procedure_lien = commencer_test_url(path: @procedure.path)

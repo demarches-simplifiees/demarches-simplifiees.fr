@@ -307,6 +307,7 @@ describe Instructeurs::DossiersController, type: :controller do
         before do
           attestation = Attestation.new
           allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes))
+          allow(attestation).to receive(:pdf_url).and_return('http://some_document_url')
 
           allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
         end

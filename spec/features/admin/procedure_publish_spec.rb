@@ -18,6 +18,18 @@ feature 'Publication de démarches', js: true do
     login_as administrateur.user, scope: :user
   end
 
+  context "lorsqu'on essaie d'accéder au backoffice déprécié" do
+    scenario "on est redirigé pour les démarches brouillon" do
+      visit admin_procedures_draft_path
+      expect(page).to have_current_path(admin_procedures_path(statut: "brouillons"))
+    end
+
+    scenario "on est redirigé pour les démarches archivées" do
+      visit admin_procedures_archived_path
+      expect(page).to have_current_path(admin_procedures_path(statut: "archivees"))
+    end
+  end
+
   context 'lorsqu’une démarche est en test' do
     scenario 'un administrateur peut la publier' do
       visit admin_procedures_path(statut: "brouillons")
