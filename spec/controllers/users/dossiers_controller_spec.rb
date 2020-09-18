@@ -887,8 +887,6 @@ describe Users::DossiersController, type: :controller do
     before do
       Timecop.freeze(now)
       sign_in(user)
-      # Flipper.enable(:cached_notifications, instructeur_with_instant_message)
-      # Flipper.enable(:cached_notifications, instructeur_without_instant_message)
       allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
       allow(DossierMailer).to receive(:notify_new_commentaire_to_instructeur).and_return(double(deliver_later: nil))
       instructeur_with_instant_message.follow(dossier)
