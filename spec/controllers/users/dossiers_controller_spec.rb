@@ -693,9 +693,9 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'the follower has a notification' do
-        expect(instructeur.reload.followed_dossiers.with_notifications(instructeur)).to eq([])
+        expect(instructeur.reload.followed_dossiers.with_notifications).to eq([])
         subject
-        expect(instructeur.reload.followed_dossiers.with_notifications(instructeur)).to eq([dossier.reload])
+        expect(instructeur.reload.followed_dossiers.with_notifications).to eq([dossier.reload])
       end
     end
 
@@ -911,15 +911,15 @@ describe Users::DossiersController, type: :controller do
 
     context 'notification' do
       before 'instructeurs have no notification before the message' do
-        expect(instructeur_with_instant_message.followed_dossiers.with_notifications(instructeur_with_instant_message)).to eq([])
-        expect(instructeur_without_instant_message.followed_dossiers.with_notifications(instructeur_without_instant_message)).to eq([])
+        expect(instructeur_with_instant_message.followed_dossiers.with_notifications).to eq([])
+        expect(instructeur_without_instant_message.followed_dossiers.with_notifications).to eq([])
         Timecop.travel(now + 1.day)
         subject
       end
 
       it 'adds them a notification' do
-        expect(instructeur_with_instant_message.reload.followed_dossiers.with_notifications(instructeur_with_instant_message)).to eq([dossier.reload])
-        expect(instructeur_without_instant_message.reload.followed_dossiers.with_notifications(instructeur_without_instant_message)).to eq([dossier.reload])
+        expect(instructeur_with_instant_message.reload.followed_dossiers.with_notifications).to eq([dossier.reload])
+        expect(instructeur_without_instant_message.reload.followed_dossiers.with_notifications).to eq([dossier.reload])
       end
     end
   end
