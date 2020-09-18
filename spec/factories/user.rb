@@ -8,5 +8,9 @@ FactoryBot.define do
     trait :unconfirmed do
       confirmed_at { nil }
     end
+
+    trait :with_strong_password do
+      password { '{my-%s3cure[]-p4$$w0rd' }
+    end
   end
 end
