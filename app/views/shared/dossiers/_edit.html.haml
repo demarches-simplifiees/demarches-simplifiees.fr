@@ -44,8 +44,9 @@
       -# or adding some "(please select an option)" wording aside the label of the default group.
       -# CSS
       = f.select :groupe_instructeur_id,
-        dossier.procedure.groupe_instructeurs.order(:label).map { |gi| [gi.label, gi.id] },
-        { include_blank: false }
+        options_for_select(dossier.procedure.groupe_instructeurs.order(:label).map { |gi| [gi.label, gi.id] }),
+        { include_blank: true },
+        required: true
 
     = f.fields_for :champs, dossier.champs do |champ_form|
       - champ = champ_form.object
