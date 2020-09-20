@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import ReactMapboxGl, { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
 import DrawControl from 'react-mapbox-gl-draw';
-import { gpx, kml } from '@tmcw/togeojson/dist/togeojson.es.js';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 import { getJSON, ajax, fire } from '@utils';
@@ -11,7 +10,11 @@ import { getJSON, ajax, fire } from '@utils';
 import { getMapStyle, SwitchMapStyle } from '../MapStyles';
 
 import SearchInput from './SearchInput';
-import { polygonCadastresFill, polygonCadastresLine } from './utils';
+import {
+  polygonCadastresFill,
+  polygonCadastresLine,
+  readGeoFile
+} from './utils';
 import {
   noop,
   filterFeatureCollection,
@@ -149,19 +152,7 @@ function MapEditor({ featureCollection, url, preview, options }) {
   }
 
   const onFileImport = (e, inputId) => {
-    const isGpxFile = e.target.files[0].name.includes('.gpx');
-    let reader = new FileReader();
-    reader.readAsText(e.target.files[0], 'UTF-8');
-    reader.onload = async (event) => {
-      let featureCollection;
-      isGpxFile
-        ? (featureCollection = gpx(
-            new DOMParser().parseFromString(event.target.result, 'text/xml')
-          ))
-        : (featureCollection = kml(
-            new DOMParser().parseFromString(event.target.result, 'text/xml')
-          ));
-
+    readGeoFile(e.target.files[0]).then(async (featureCollection) => {
       const resultFeatureCollection = await getJSON(
         `${url}/import`,
         featureCollection,
@@ -196,7 +187,7 @@ function MapEditor({ featureCollection, url, preview, options }) {
       updateFeaturesList(resultFeatureCollection.features);
       setImportInputs(setInputs);
       setBbox(resultFeatureCollection.bbox);
-    };
+    });
   };
 
   const addInputFile = (e) => {
