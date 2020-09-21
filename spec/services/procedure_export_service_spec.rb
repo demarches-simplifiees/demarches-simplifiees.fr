@@ -73,6 +73,7 @@ describe ProcedureExportService do
           "piece_justificative",
           "siret",
           "carte",
+          "titre_identite",
           "text"
         ]
       end
@@ -156,6 +157,7 @@ describe ProcedureExportService do
           "piece_justificative",
           "siret",
           "carte",
+          "titre_identite",
           "text"
         ]
       end
@@ -235,6 +237,7 @@ describe ProcedureExportService do
             "piece_justificative",
             "siret",
             "carte",
+            "titre_identite",
             "text"
           ]
         end
