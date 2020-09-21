@@ -75,34 +75,4 @@ describe Administrateur, type: :model do
       expect(Administrateur.find_by(id: administrateur.id)).to be_nil
     end
   end
-
-  # describe '#password_complexity' do
-  #   let(:email) { 'mail@beta.gouv.fr' }
-  #   let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'my-s3cure-p4ssword'] }
-  #   let(:administrateur) { build(:administrateur, email: email, password: password) }
-  #   let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_ADMIN }
-
-  #   subject do
-  #     administrateur.save
-  #     administrateur.errors.full_messages
-  #   end
-
-  #   context 'when password is too short' do
-  #     let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
-
-  #     it { expect(subject).to eq(["Le mot de passe est trop court"]) }
-  #   end
-
-  #   context 'when password is too simple' do
-  #     let(:password) { passwords[min_complexity - 1] }
-
-  #     it { expect(subject).to eq(["Le mot de passe n'est pas assez complexe"]) }
-  #   end
-
-  #   context 'when password is acceptable' do
-  #     let(:password) { passwords[min_complexity] }
-
-  #     it { expect(subject).to eq([]) }
-  #   end
-  # end
 end
