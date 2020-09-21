@@ -42,7 +42,7 @@ module DossierHelper
   end
 
   def autosave_available?(dossier)
-    dossier.brouillon? && Flipper.enabled?(:autosave_dossier_draft, dossier.user)
+    dossier.brouillon?
   end
 
   def dossier_submission_is_closed?(dossier)
