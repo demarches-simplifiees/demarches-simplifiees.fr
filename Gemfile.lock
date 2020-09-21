@@ -83,7 +83,7 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    administrate (0.13.0)
+    administrate (0.14.0)
       actionpack (>= 4.2)
       actionview (>= 4.2)
       activerecord (>= 4.2)
