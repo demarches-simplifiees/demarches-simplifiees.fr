@@ -453,7 +453,7 @@ describe API::V2::GraphqlController do
                 entreprise: {
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
-                  capitalSocial: '',
+                  capitalSocial: '-1',
                   codeEffectifEntreprise: ''
                 }
               }
