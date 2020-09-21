@@ -14,7 +14,7 @@ module Types
       field :nom_commercial, String, null: false
       field :raison_sociale, String, null: false
       field :siret_siege_social, String, null: false
-      field :code_effectif_entreprise, String, null: false
+      field :code_effectif_entreprise, String, null: true
       field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
       field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d'une année"
       field :date_creation, GraphQL::Types::ISO8601Date, null: false
@@ -39,6 +39,16 @@ module Types
             nb: object.effectif_mensuel
           }
         end
+      end
+
+      def capital_social
+        # capital_social is defined as a BigInt, so we can't return an empty string when value is unknown
+        # 0 could appear to be a legitimate value, so a negative value helps to ensure the value is not known
+        object.capital_social || '-1'
+      end
+
+      def code_effectif_entreprise
+        object.code_effectif_entreprise || ''
       end
 
       def effectif_annuel
