@@ -28,7 +28,6 @@ features = [
   :administrateur_web_hook,
   :insee_api_v3,
   :instructeur_bypass_email_login_token,
-  :autosave_dossier_draft,
   :maintenance_mode,
   :mini_profiler,
   :xray,
