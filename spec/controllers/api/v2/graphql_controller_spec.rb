@@ -407,28 +407,58 @@ describe API::V2::GraphqlController do
             }
           }"
         end
-
-        it "should be returned" do
-          expect(gql_errors).to eq(nil)
-          expect(gql_data).to eq(dossier: {
-            id: dossier.to_typed_id,
-            number: dossier.id,
-            usager: {
-              id: dossier.user.to_typed_id,
-              email: dossier.user.email
-            },
-            demandeur: {
-              id: dossier.etablissement.to_typed_id,
-              siret: dossier.etablissement.siret,
-              siegeSocial: dossier.etablissement.siege_social,
-              entreprise: {
-                siren: dossier.etablissement.entreprise_siren,
-                dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
-                capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
-                codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s
+        context "in the nominal case" do
+          it "should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossier: {
+              id: dossier.to_typed_id,
+              number: dossier.id,
+              usager: {
+                id: dossier.user.to_typed_id,
+                email: dossier.user.email
+              },
+              demandeur: {
+                id: dossier.etablissement.to_typed_id,
+                siret: dossier.etablissement.siret,
+                siegeSocial: dossier.etablissement.siege_social,
+                entreprise: {
+                  siren: dossier.etablissement.entreprise_siren,
+                  dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
+                  capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
+                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s
+                }
               }
-            }
-          })
+            })
+          end
+        end
+
+        context "when there are missing data" do
+          before do
+            dossier.etablissement.update!(entreprise_code_effectif_entreprise: nil, entreprise_capital_social: nil)
+          end
+
+          it "should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossier: {
+              id: dossier.to_typed_id,
+              number: dossier.id,
+              usager: {
+                id: dossier.user.to_typed_id,
+                email: dossier.user.email
+              },
+              demandeur: {
+                id: dossier.etablissement.to_typed_id,
+                siret: dossier.etablissement.siret,
+                siegeSocial: dossier.etablissement.siege_social,
+                entreprise: {
+                  siren: dossier.etablissement.entreprise_siren,
+                  dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
+                  capitalSocial: '',
+                  codeEffectifEntreprise: ''
+                }
+              }
+            })
+          end
         end
       end
     end
