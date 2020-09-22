@@ -17,8 +17,6 @@
 #  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
-  self.ignored_columns = ['procedure_id']
-
   enum type_champs: {
     text: 'text',
     textarea: 'textarea',
@@ -306,21 +304,6 @@ class TypeDeChamp < ApplicationRecord
       stable_id
     else
       super
-    end
-  end
-
-  # FIXME: We are changing how id is exposed to the editor.
-  # We used to expose type_de_champ.id as primary key to the editor. With revisions
-  # we need primary key to be type_de_champ.stable_id because any update can create
-  # a new version but we do not want editor to know about this.
-  # This is only needed for a clean migration without downtime. We want to ensure
-  # that if editor send a simple id because it was loaded before deployment
-  # we would still do the right thing.
-  def self.to_stable_id(id_or_stable_id)
-    if id_or_stable_id.to_s =~ /^stable:/
-      id_or_stable_id.to_s.gsub(/^stable:/, '')
-    else
-      id_or_stable_id
     end
   end
 
