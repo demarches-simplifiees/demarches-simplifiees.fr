@@ -26,7 +26,9 @@ class DossierOperationLog < ApplicationRecord
     supprimer: 'supprimer',
     restaurer: 'restaurer',
     modifier_annotation: 'modifier_annotation',
-    demander_un_avis: 'demander_un_avis'
+    demander_un_avis: 'demander_un_avis',
+    archiver: 'archiver',
+    desarchiver: 'desarchiver'
   }
 
   has_one_attached :serialized
