@@ -822,7 +822,7 @@ class Dossier < ApplicationRecord
   end
 
   def send_web_hook
-    if saved_change_to_state? && !brouillon? && procedure.web_hook_url
+    if saved_change_to_state? && !brouillon? && procedure.web_hook_url.present?
       WebHookJob.perform_later(
         procedure,
         self
