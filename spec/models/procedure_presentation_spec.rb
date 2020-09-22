@@ -734,7 +734,7 @@ describe ProcedurePresentation do
       let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
 
       let!(:kept_dossier) { create(:dossier, procedure: procedure) }
-      let!(:discarded_dossier) { create(:dossier, groupe_instructeur: gi_2) }
+      let!(:discarded_dossier) { create(:dossier, procedure: procedure, groupe_instructeur: gi_2) }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
 
@@ -746,7 +746,7 @@ describe ProcedurePresentation do
           ]
         end
 
-        let!(:other_kept_dossier) { create(:dossier, groupe_instructeur: gi_3) }
+        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, groupe_instructeur: gi_3) }
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
