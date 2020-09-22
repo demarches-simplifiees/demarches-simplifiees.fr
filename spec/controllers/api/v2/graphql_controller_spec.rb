@@ -429,7 +429,7 @@ describe API::V2::GraphqlController do
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
-                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s,
+                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s
                 }
               }
             })
