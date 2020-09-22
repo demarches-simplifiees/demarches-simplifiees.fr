@@ -74,6 +74,7 @@ describe ProcedureExportService do
           "siret",
           "carte",
           "titre_identite",
+          "iban",
           "text"
         ]
       end
@@ -158,6 +159,7 @@ describe ProcedureExportService do
           "siret",
           "carte",
           "titre_identite",
+          "iban",
           "text"
         ]
       end
@@ -238,6 +240,7 @@ describe ProcedureExportService do
             "siret",
             "carte",
             "titre_identite",
+            "iban",
             "text"
           ]
         end
