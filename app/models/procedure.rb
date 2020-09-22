@@ -56,7 +56,7 @@ class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
-  has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
+  has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
@@ -90,7 +90,10 @@ class Procedure < ApplicationRecord
   has_many :groupe_instructeurs, dependent: :destroy
   has_many :instructeurs, through: :groupe_instructeurs
 
-  has_many :dossiers, through: :groupe_instructeurs, dependent: :restrict_with_exception
+  # This relationship is used in following dossiers through. We can not use revisions relationship
+  # as order scope introduces invalid sql in some combinations.
+  has_many :unordered_revisions, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
+  has_many :dossiers, through: :unordered_revisions, dependent: :restrict_with_exception
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy

@@ -11,6 +11,8 @@ class ProcedureRevision < ApplicationRecord
   self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
 
+  has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
+
   has_many :revision_types_de_champ, -> { public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :revision_types_de_champ_private, -> { private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ

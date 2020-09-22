@@ -416,6 +416,16 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def archiver!(author)
+    update!(archived: true)
+    log_dossier_operation(author, :archiver)
+  end
+
+  def desarchiver!(author)
+    update!(archived: false)
+    log_dossier_operation(author, :desarchiver)
+  end
+
   def text_summary
     if brouillon?
       parts = [
@@ -812,7 +822,7 @@ class Dossier < ApplicationRecord
   end
 
   def send_web_hook
-    if saved_change_to_state? && !brouillon? && procedure.web_hook_url
+    if saved_change_to_state? && !brouillon? && procedure.web_hook_url.present?
       WebHookJob.perform_later(
         procedure,
         self
