@@ -713,8 +713,12 @@ type Effectif {
 type Entreprise {
   attestationFiscaleAttachment: File
   attestationSocialeAttachment: File
+
+  """
+  capital social de l’entreprise. -1 si inconnu.
+  """
   capitalSocial: BigInt!
-  codeEffectifEntreprise: String!
+  codeEffectifEntreprise: String
   dateCreation: ISO8601Date!
 
   """
@@ -1011,10 +1015,10 @@ type PersonneMorale implements Demandeur {
   localite: String!
   naf: String!
   nomVoie: String!
-  numeroVoie: String!
+  numeroVoie: String
   siegeSocial: Boolean!
   siret: String!
-  typeVoie: String!
+  typeVoie: String
 }
 
 type PersonnePhysique implements Demandeur {
