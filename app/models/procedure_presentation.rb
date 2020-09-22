@@ -160,7 +160,7 @@ class ProcedurePresentation < ApplicationRecord
           .filter_ilike(table, column, values)
       when 'groupe_instructeur'
         dossiers
-          .includes(table)
+          .joins(:groupe_instructeur)
           .filter_ilike(table, column, values)
       end.pluck(:id)
     end.reduce(:&)
