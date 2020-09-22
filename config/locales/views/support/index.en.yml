@@ -16,7 +16,7 @@ en:
       <p>If you have questions about the information requested, contact the service in charge of the procedure.</p>
       <p><a href=%{link_procedure_info}>Find more information</a></p>"
       instruction_info_html: "<p>If you have questions about the instruction of your application (response delay for example), contact directly the instructor via our mail system.</p>
-      <p><a href=%{link_instruction}>Find more information</a></p>
+      <p><a href=%{link_instruction_info}>Find more information</a></p>
       <br>
       <p>If you are facing technical issues on the website, use the form below. We will not be able to inform you about the instruction of your application.</p>"
       product_html: "<p>Got an idea? Please check our <strong>enhancement dashboard</strong></p>
