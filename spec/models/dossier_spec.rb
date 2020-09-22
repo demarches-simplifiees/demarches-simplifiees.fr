@@ -813,6 +813,22 @@ describe Dossier do
       }.to_not have_enqueued_job(WebHookJob)
     end
 
+    it 'should not call webhook with empty value' do
+      dossier.procedure.update_column(:web_hook_url, '')
+
+      expect {
+        dossier.accepte!
+      }.to_not have_enqueued_job(WebHookJob)
+    end
+
+    it 'should not call webhook with blank value' do
+      dossier.procedure.update_column(:web_hook_url, '   ')
+
+      expect {
+        dossier.accepte!
+      }.to_not have_enqueued_job(WebHookJob)
+    end
+
     it 'should call webhook' do
       dossier.procedure.update_column(:web_hook_url, '/webhook.json')
 
