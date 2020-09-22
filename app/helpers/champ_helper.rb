@@ -45,12 +45,20 @@ module ChampHelper
       "Culture : #{geo_area.culture} - Surface : #{geo_area.surface} ha"
     when GeoArea.sources.fetch(:selection_utilisateur)
       if geo_area.polygon?
-        capture do
-          concat "Une aire de surface #{geo_area.area} m"
-          concat content_tag(:sup, "2")
+        if geo_area.area.present?
+          capture do
+            concat "Une aire de surface #{geo_area.area} m"
+            concat content_tag(:sup, "2")
+          end
+        else
+          "Une aire de surface inconnue"
         end
       elsif geo_area.line?
-        "Une ligne longue de #{geo_area.length} m"
+        if geo_area.length.present?
+          "Une ligne longue de #{geo_area.length} m"
+        else
+          "Une ligne de longueur inconnue"
+        end
       elsif geo_area.point?
         "Un point situé à #{geo_area.location}"
       end
