@@ -396,6 +396,8 @@ describe API::V2::GraphqlController do
                 ... on PersonneMorale {
                   siret
                   siegeSocial
+                  numeroVoie
+                  typeVoie
                   entreprise {
                     siren
                     dateCreation
@@ -421,11 +423,13 @@ describe API::V2::GraphqlController do
                 id: dossier.etablissement.to_typed_id,
                 siret: dossier.etablissement.siret,
                 siegeSocial: dossier.etablissement.siege_social,
+                numeroVoie: dossier.etablissement.numero_voie.to_s,
+                typeVoie: dossier.etablissement.type_voie.to_s,
                 entreprise: {
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
-                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s
+                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s,
                 }
               }
             })
@@ -434,7 +438,8 @@ describe API::V2::GraphqlController do
 
         context "when there are missing data" do
           before do
-            dossier.etablissement.update!(entreprise_code_effectif_entreprise: nil, entreprise_capital_social: nil)
+            dossier.etablissement.update!(entreprise_code_effectif_entreprise: nil, entreprise_capital_social: nil,
+                                          numero_voie: nil, type_voie: nil)
           end
 
           it "should be returned" do
@@ -450,6 +455,8 @@ describe API::V2::GraphqlController do
                 id: dossier.etablissement.to_typed_id,
                 siret: dossier.etablissement.siret,
                 siegeSocial: dossier.etablissement.siege_social,
+                numeroVoie: nil,
+                typeVoie: nil,
                 entreprise: {
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,

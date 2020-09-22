@@ -7,7 +7,7 @@ module Types
       end
 
       field :siren, String, null: false
-      field :capital_social, GraphQL::Types::BigInt, null: false
+      field :capital_social, GraphQL::Types::BigInt, null: false, description: "capital social de l’entreprise. -1 si inconnu."
       field :numero_tva_intracommunautaire, String, null: false
       field :forme_juridique, String, null: false
       field :forme_juridique_code, String, null: false
@@ -48,7 +48,8 @@ module Types
       end
 
       def code_effectif_entreprise
-        object.code_effectif_entreprise || ''
+        # we need this in order to bypass Hashie::Dash deserialization issue on nil values
+        object.code_effectif_entreprise
       end
 
       def effectif_annuel
@@ -86,8 +87,8 @@ module Types
     field :naf, String, null: false
     field :libelle_naf, String, null: false
     field :adresse, String, null: false
-    field :numero_voie, String, null: false
-    field :type_voie, String, null: false
+    field :numero_voie, String, null: true
+    field :type_voie, String, null: true
     field :nom_voie, String, null: false
     field :complement_adresse, String, null: false
     field :code_postal, String, null: false
