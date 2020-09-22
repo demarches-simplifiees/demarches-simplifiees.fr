@@ -5,6 +5,7 @@ namespace :after_party do
 
     geometry_collections = GeoArea.where("geometry -> 'type' = '\"GeometryCollection\"'")
     multi_polygons = GeoArea.where("geometry -> 'type' = '\"MultiPolygon\"'")
+    multi_line_strings = GeoArea.where("geometry -> 'type' = '\"MultiLineString\"'")
 
     def valid_geometry?(geometry)
       RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
@@ -22,6 +23,24 @@ namespace :after_party do
       end
 
       geometry_collection.destroy
+      progress.inc
+    end
+    progress.finish
+
+    progress = ProgressReport.new(multi_line_strings.count)
+    multi_line_strings.find_each do |multi_line_string|
+      multi_line_string.geometry['coordinates'].each do |coordinates|
+        geometry = {
+          type: 'LineString',
+          coordinates: coordinates
+        }
+
+        if valid_geometry?(geometry)
+          multi_line_string.champ.geo_areas.create!(geometry: geometry, source: 'selection_utilisateur')
+        end
+      end
+
+      multi_line_string.destroy
       progress.inc
     end
     progress.finish

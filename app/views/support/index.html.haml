@@ -25,31 +25,21 @@
         = label_tag :type do
           = t('your_question', scope: [:support, :question])
           %span.mandatory *
-        = select_tag :type, options_for_select(@options, params[:type]), include_blank: t('choose_question', scope: [:support, :question]), required: true
-
-      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INFO } }
-        .card-title
-          = t('our_answer', scope: [:support, :response])
-        .card-content
-          = t('procedure_info_html', scope: [:support, :response], link_procedure_info: FAQ_CONTACTER_SERVICE_EN_CHARGE_URL)
-
-      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_PERDU } }
-        .card-title
-          = t('our_answer', scope: [:support, :response])
-        .card-content
-          = t('lost_user_html', scope: [:support, :response], base_url: APPLICATION_BASE_URL, link_lost_user: LISTE_DES_DEMARCHES_URL)
-
-      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_INSTRUCTION } }
-        .card-title
-          = t('our_answer', scope: [:support, :response])
-        .card-content
-          = t('instruction_info_html', scope: [:support, :response], link_instruction: FAQ_OU_EN_EST_MON_DOSSIER_URL)
-
-      .support.card.featured.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
-        .card-title
-          = t('our_answer', scope: [:support, :response])
-        .card-content
-          = t('product_html', scope: [:support, :response], link_product: FEATURE_UPVOTE_URL)
+        = hidden_field_tag :type, params[:type]
+      %dl
+        - @options.each do |(question, question_type, link)|
+          %dt
+            - if link.present?
+              %button.button{ 'aria-expanded': 'false', 'aria-controls': question_type, data: { 'question-type': question_type } }= question
+            - else
+              %button.button.button-without-hint{ data: { 'question-type': question_type } }= question
+          - if link.present?
+            %dd
+              .support.card.featured.hidden{ id: question_type }
+                .card-title
+                  = t('our_answer', scope: [:support, :response])
+                .card-content
+                  = t("#{question_type}_html", scope: [:support, :response], base_url: APPLICATION_BASE_URL, "link_#{question_type}": link)
 
       .contact-champ
         = label_tag :dossier_id, t('file_number', scope: [:utils])
