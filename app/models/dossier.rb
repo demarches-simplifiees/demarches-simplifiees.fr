@@ -416,6 +416,16 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def archiver!(author)
+    update!(archived: true)
+    log_dossier_operation(author, :archiver)
+  end
+
+  def desarchiver!(author)
+    update!(archived: false)
+    log_dossier_operation(author, :desarchiver)
+  end
+
   def text_summary
     if brouillon?
       parts = [
