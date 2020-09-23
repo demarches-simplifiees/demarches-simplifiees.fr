@@ -1,4 +1,6 @@
 class ApiEntreprise::Job < ApplicationJob
+  queue_as :api_entreprise
+
   DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS = 5
 
   rescue_from(ApiEntreprise::API::ResourceNotFound) do |exception|
