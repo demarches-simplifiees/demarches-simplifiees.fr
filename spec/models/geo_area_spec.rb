@@ -14,7 +14,7 @@ RSpec.describe GeoArea, type: :model do
   describe '#location' do
     let(:geo_area) { build(:geo_area, :point) }
 
-    it { expect(geo_area.location).to eq("2°25'42\"N 46°32'19\"E") }
+    it { expect(geo_area.location).to eq("46°32'19\"N 2°25'42\"E") }
   end
 
   describe '#rgeo_geometry' do
