@@ -1273,6 +1273,11 @@ enum TypeDeChamp {
   header_section
 
   """
+  Iban
+  """
+  iban
+
+  """
   Nombre entier
   """
   integer_number
