@@ -24,7 +24,7 @@ class Export < ApplicationRecord
 
   scope :stale, -> { where('updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
 
-  after_create :compute_async
+  after_save_commit :compute_async
 
   def compute_async
     ExportJob.perform_later(self)
