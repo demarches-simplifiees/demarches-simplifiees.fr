@@ -1197,6 +1197,33 @@ type TextChamp implements Champ {
   value: String
 }
 
+type TitreIdentiteChamp implements Champ {
+  grantType: TitreIdentiteGrantType!
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
+enum TitreIdentiteGrantType {
+  """
+  Françe Connect
+  """
+  france_connect
+
+  """
+  Pièce justificative
+  """
+  piece_justificative
+}
+
 enum TypeDeChamp {
   """
   Adresse
