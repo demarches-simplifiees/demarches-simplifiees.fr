@@ -289,7 +289,7 @@ Layout/SpaceInsideReferenceBrackets:
 Layout/SpaceInsideStringInterpolation:
   Enabled: true
 
-Layout/Tab:
+Layout/IndentationStyle:
   Enabled: true
 
 Layout/TrailingEmptyLines:
@@ -506,7 +506,7 @@ Lint/UselessAssignment:
   Exclude:
     - "spec/**/*"
 
-Lint/UselessComparison:
+Lint/BinaryOperatorWithIdenticalOperands:
   Enabled: true
 
 Lint/UselessElseWithoutRescue:
@@ -1045,7 +1045,7 @@ Style/MethodCalledOnDoEndBlock:
 Style/MethodDefParentheses:
   Enabled: true
 
-Style/MethodMissingSuper:
+Lint/MissingSuper:
   Enabled: false
 
 Style/MinMax:
