@@ -123,13 +123,11 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and their value in the dossier are not nil' do
           before do
             dossier.champs
-              .filter { |champ| champ.libelle == 'libelleA' }
-              .first
+              .find { |champ| champ.libelle == 'libelleA' }
               .update(value: 'libelle1')
 
             dossier.champs
-              .filter { |champ| champ.libelle == 'libelleB' }
-              .first
+              .find { |champ| champ.libelle == 'libelleB' }
               .update(value: 'libelle2')
           end
 
@@ -151,8 +149,7 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and their value in the dossier are not nil' do
           before do
             dossier.champs
-              .filter { |champ| champ.libelle == "Intitulé de l'‘«\"évènement\"»’" }
-              .first
+              .find { |champ| champ.libelle == "Intitulé de l'‘«\"évènement\"»’" }
               .update(value: 'ceci est mon évènement')
           end
 
@@ -302,13 +299,11 @@ describe TagsSubstitutionConcern, type: :model do
         context 'and its value in the dossier are not nil' do
           before do
             dossier.champs
-              .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
-              .first
+              .find { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:date) }
               .update(value: '2017-04-15')
 
             dossier.champs
-              .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
-              .first
+              .find { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) }
               .update(value: '2017-09-13 09:00')
           end
 
