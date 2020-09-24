@@ -1319,30 +1319,30 @@ Style/ZeroLengthPredicate:
 Rails/ActiveRecordCallbacksOrder:
   Enabled: false
 Rails/AfterCommitOverride:
-  Enabled: false
+  Enabled: true
 Rails/FindById:
-  Enabled: false
+  Enabled: true
 Rails/Inquiry:
-  Enabled: false
+  Enabled: true
 Rails/MailerName:
-  Enabled: false
+  Enabled: true
 Rails/MatchRoute:
-  Enabled: false
+  Enabled: true
 Rails/NegateInclude:
   Enabled: false
 Rails/Pluck:
   Enabled: false
 Rails/PluckInWhere:
-  Enabled: false
+  Enabled: true
 Rails/RenderInline:
-  Enabled: false
+  Enabled: true
 Rails/RenderPlainText:
-  Enabled: false
+  Enabled: true
 Rails/ShortI18n:
-  Enabled: false
+  Enabled: true
 Rails/SquishedSQLHeredocs:
-  Enabled: false
+  Enabled: true
 Rails/WhereExists:
-  Enabled: false
+  Enabled: true
 Rails/WhereNot:
-  Enabled: false
+  Enabled: true
