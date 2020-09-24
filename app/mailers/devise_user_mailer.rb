@@ -10,7 +10,7 @@ class DeviseUserMailer < Devise::Mailer
   end
 
   rescue_from Net::SMTPServerBusy do |error|
-    if error.message =~ /unexpected recipients/
+    if /unexpected recipients/.match?(error.message)
       message.perform_deliveries = false
     end
   end
