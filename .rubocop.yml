@@ -1315,3 +1315,34 @@ Style/YodaCondition:
 
 Style/ZeroLengthPredicate:
   Enabled: true
+
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: false
+Rails/AfterCommitOverride:
+  Enabled: false
+Rails/FindById:
+  Enabled: false
+Rails/Inquiry:
+  Enabled: false
+Rails/MailerName:
+  Enabled: false
+Rails/MatchRoute:
+  Enabled: false
+Rails/NegateInclude:
+  Enabled: false
+Rails/Pluck:
+  Enabled: false
+Rails/PluckInWhere:
+  Enabled: false
+Rails/RenderInline:
+  Enabled: false
+Rails/RenderPlainText:
+  Enabled: false
+Rails/ShortI18n:
+  Enabled: false
+Rails/SquishedSQLHeredocs:
+  Enabled: false
+Rails/WhereExists:
+  Enabled: false
+Rails/WhereNot:
+  Enabled: false
