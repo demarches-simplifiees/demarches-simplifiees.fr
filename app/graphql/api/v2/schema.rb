@@ -50,6 +50,7 @@ class Api::V2::Schema < GraphQL::Schema
     Types::Champs::RepetitionChampType,
     Types::Champs::SiretChampType,
     Types::Champs::TextChampType,
+    Types::Champs::TitreIdentiteChampType,
     Types::GeoAreas::ParcelleCadastraleType,
     Types::GeoAreas::SelectionUtilisateurType,
     Types::PersonneMoraleType,
