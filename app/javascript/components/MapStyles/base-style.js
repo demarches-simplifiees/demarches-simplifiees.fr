@@ -3,13 +3,13 @@ export default {
   metadat: {
     'mapbox:autocomposite': false,
     'mapbox:groups': {
-      '1444849242106.713': { collapsed: false, name: 'Places' },
-      '1444849334699.1902': { collapsed: true, name: 'Bridges' },
-      '1444849345966.4436': { collapsed: false, name: 'Roads' },
-      '1444849354174.1904': { collapsed: true, name: 'Tunnels' },
-      '1444849364238.8171': { collapsed: false, name: 'Buildings' },
-      '1444849382550.77': { collapsed: false, name: 'Water' },
-      '1444849388993.3071': { collapsed: false, name: 'Land' }
+      1444849242106.713: { collapsed: false, name: 'Places' },
+      1444849334699.1902: { collapsed: true, name: 'Bridges' },
+      1444849345966.4436: { collapsed: false, name: 'Roads' },
+      1444849354174.1904: { collapsed: true, name: 'Tunnels' },
+      1444849364238.8171: { collapsed: false, name: 'Buildings' },
+      1444849382550.77: { collapsed: false, name: 'Water' },
+      1444849388993.3071: { collapsed: false, name: 'Land' }
     },
     'mapbox:type': 'template',
     'openmaptiles:mapbox:owner': 'openmaptiles',
