@@ -40,6 +40,19 @@ function MapEditor({ featureCollection, url, preview, hasCadastres, ign }) {
     hasCadastres
   ]);
 
+  const translations = [
+    ['.mapbox-gl-draw_line', 'Tracer une ligne'],
+    ['.mapbox-gl-draw_polygon', 'Dessiner un polygone'],
+    ['.mapbox-gl-draw_point', 'Ajouter un point'],
+    ['.mapbox-gl-draw_trash', 'Supprimer']
+  ];
+  for (const [selector, translation] of translations) {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.setAttribute('title', translation);
+    }
+  }
+
   const onFeatureFocus = useCallback(
     ({ detail }) => {
       const { id } = detail;

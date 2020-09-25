@@ -17,7 +17,7 @@ describe Manager::ProceduresController, type: :controller do
   describe '#show' do
     render_views
 
-    let(:procedure) { create(:procedure, :with_repetition) }
+    let(:procedure) { create(:procedure, :published, :with_repetition) }
 
     before do
       get :show, params: { id: procedure.id }

@@ -15,6 +15,8 @@ FactoryBot.define do
         procedure = create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private)
       end
 
+      dossier.revision = procedure.active_revision
+
       # Assign the procedure to the dossier through the groupe_instructeur
       if dossier.groupe_instructeur.nil?
         dossier.groupe_instructeur = procedure.defaut_groupe_instructeur
@@ -71,7 +73,7 @@ FactoryBot.define do
         linked_dossier = create(:dossier, :en_construction)
 
         # find first type de champ dossier_link
-        type_de_champ = dossier.procedure.types_de_champ.find do |t|
+        type_de_champ = dossier.types_de_champ.find do |t|
           t.type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
         end
 
@@ -202,7 +204,7 @@ FactoryBot.define do
 
     trait :with_all_champs do
       after(:create) do |dossier, _evaluator|
-        dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|
+        dossier.champs = dossier.types_de_champ.map do |type_de_champ|
           build(:"champ_#{type_de_champ.type_champ}", dossier: dossier, type_de_champ: type_de_champ)
         end
         dossier.save!
@@ -211,7 +213,7 @@ FactoryBot.define do
 
     trait :with_all_annotations do
       after(:create) do |dossier, _evaluator|
-        dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|
+        dossier.champs = dossier.types_de_champ.map do |type_de_champ|
           build(:"champ_#{type_de_champ.type_champ}", dossier: dossier, type_de_champ: type_de_champ)
         end
         dossier.save!

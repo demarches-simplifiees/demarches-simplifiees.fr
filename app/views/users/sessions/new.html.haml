@@ -4,7 +4,7 @@
 
 .form-column.procedure-context-content
   .auth-form.sign-in-form
-    %h1.center Si vous avez un compte #{APPLICATION_NAME}
+    %h1.center Si vous avez un compte #{APPLICATION_NAME.gsub("-","&#8209;").html_safe}
     = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
 
       = f.label :email, "Email (nom@site.com)"
@@ -23,12 +23,9 @@
 
       = f.submit "Se connecter", class: "button large primary expand"
 
-    -# - if ENV['FC_PARTICULIER_ID'].present?
-      = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
-
     %hr
     %p.center
-      %span Vous êtes nouveau sur #{APPLICATION_NAME} ?
+      %span Vous êtes nouveau sur #{APPLICATION_NAME.gsub("-","&#8209;").html_safe} ?
       %br
       %br
       = link_to "Trouvez votre démarche", COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button secondary"

@@ -29,14 +29,8 @@ describe Dossier do
   end
 
   describe 'with_champs' do
-    let(:procedure) { create(:procedure) }
-    let(:dossier) { Dossier.create(user: create(:user), groupe_instructeur: procedure.defaut_groupe_instructeur) }
-
-    before do
-      create(:type_de_champ, libelle: 'l1', order_place: 1, procedure: procedure)
-      create(:type_de_champ, libelle: 'l3', order_place: 3, procedure: procedure)
-      create(:type_de_champ, libelle: 'l2', order_place: 2, procedure: procedure)
-    end
+    let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ, libelle: 'l1', position: 1), build(:type_de_champ, libelle: 'l3', position: 3), build(:type_de_champ, libelle: 'l2', position: 2)]) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
 
     it do
       expect(Dossier.with_champs.find(dossier.id).champs.map(&:libelle)).to match(['l1', 'l2', 'l3'])
@@ -255,27 +249,15 @@ describe Dossier do
   end
 
   describe '#champs' do
-    let(:procedure) { create(:procedure) }
-    let(:dossier) { Dossier.create(user: create(:user), groupe_instructeur: procedure.defaut_groupe_instructeur) }
-
-    before do
-      create(:type_de_champ, libelle: 'l1', order_place: 1, procedure: procedure)
-      create(:type_de_champ, libelle: 'l3', order_place: 3, procedure: procedure)
-      create(:type_de_champ, libelle: 'l2', order_place: 2, procedure: procedure)
-    end
+    let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ, :private, libelle: 'l1', position: 1), build(:type_de_champ, :private, libelle: 'l3', position: 3), build(:type_de_champ, :private, libelle: 'l2', position: 2)]) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
 
     it { expect(dossier.champs.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
   end
 
   describe '#champs_private' do
-    let(:procedure) { create :procedure }
-    let(:dossier) { Dossier.create(user: create(:user), groupe_instructeur: procedure.defaut_groupe_instructeur) }
-
-    before do
-      create :type_de_champ, :private, libelle: 'l1', order_place: 1, procedure: procedure
-      create :type_de_champ, :private, libelle: 'l3', order_place: 3, procedure: procedure
-      create :type_de_champ, :private, libelle: 'l2', order_place: 2, procedure: procedure
-    end
+    let(:procedure) { create(:procedure, types_de_champ_private: [build(:type_de_champ, :private, libelle: 'l1', position: 1), build(:type_de_champ, :private, libelle: 'l3', position: 3), build(:type_de_champ, :private, libelle: 'l2', position: 2)]) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
 
     it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
   end
@@ -525,7 +507,7 @@ describe Dossier do
       dossier = nil
       expect do
         perform_enqueued_jobs do
-          dossier = Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:brouillon), user: user)
+          dossier = create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon), user: user)
         end
       end.to change(ActionMailer::Base.deliveries, :size).from(0).to(1)
 
@@ -535,17 +517,19 @@ describe Dossier do
     end
 
     it "does not send an email when the dossier is created with a non brouillon state" do
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:en_construction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:en_instruction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:accepte), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:refuse), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
-      expect { Dossier.create(groupe_instructeur: procedure.defaut_groupe_instructeur, state: Dossier.states.fetch(:sans_suite), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:refuse), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:sans_suite), user: user) }.not_to change(ActionMailer::Base.deliveries, :size)
     end
   end
 
   describe "#unspecified_attestation_champs" do
-    let(:procedure) { create(:procedure, attestation_template: attestation_template) }
+    let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private) }
     let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+    let(:types_de_champ) { [] }
+    let(:types_de_champ_private) { [] }
 
     subject { dossier.unspecified_attestation_champs.map(&:libelle) }
 
@@ -574,14 +558,17 @@ describe Dossier do
       context "wich is enabled" do
         let(:activated) { true }
 
-        let!(:tdc_1) { create(:type_de_champ, libelle: "specified champ-in-title", procedure: procedure) }
-        let!(:tdc_2) { create(:type_de_champ, libelle: "unspecified champ-in-title", procedure: procedure) }
-        let!(:tdc_3) { create(:type_de_champ, libelle: "specified champ-in-body", procedure: procedure) }
-        let!(:tdc_4) { create(:type_de_champ, libelle: "unspecified champ-in-body", procedure: procedure) }
-        let!(:tdc_5) { create(:type_de_champ, private: true, libelle: "specified annotation privée-in-title", procedure: procedure) }
-        let!(:tdc_6) { create(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-title", procedure: procedure) }
-        let!(:tdc_7) { create(:type_de_champ, private: true, libelle: "specified annotation privée-in-body", procedure: procedure) }
-        let!(:tdc_8) { create(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-body", procedure: procedure) }
+        let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
+        let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
+
+        let(:tdc_1) { build(:type_de_champ, libelle: "specified champ-in-title") }
+        let(:tdc_2) { build(:type_de_champ, libelle: "unspecified champ-in-title") }
+        let(:tdc_3) { build(:type_de_champ, libelle: "specified champ-in-body") }
+        let(:tdc_4) { build(:type_de_champ, libelle: "unspecified champ-in-body") }
+        let(:tdc_5) { build(:type_de_champ, private: true, libelle: "specified annotation privée-in-title") }
+        let(:tdc_6) { build(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-title") }
+        let(:tdc_7) { build(:type_de_champ, private: true, libelle: "specified annotation privée-in-body") }
+        let(:tdc_8) { build(:type_de_champ, private: true, libelle: "unspecified annotation privée-in-body") }
 
         before do
           (dossier.champs + dossier.champs_private)
@@ -1014,7 +1001,7 @@ describe Dossier do
     end
 
     context "with mandatory SIRET champ" do
-      let(:type_de_champ) { create(:type_de_champ_siret, mandatory: true) }
+      let(:type_de_champ) { create(:type_de_champ_siret, mandatory: true, procedure: procedure) }
       let(:champ_siret) { create(:champ_siret, type_de_champ: type_de_champ) }
 
       before do
@@ -1041,12 +1028,11 @@ describe Dossier do
     end
 
     context "with champ repetition" do
-      let(:procedure) { create(:procedure) }
-      let(:type_de_champ_repetition) { create(:type_de_champ_repetition, mandatory: true) }
+      let(:procedure) { create(:procedure, types_de_champ: [type_de_champ_repetition]) }
+      let(:type_de_champ_repetition) { build(:type_de_champ_repetition, mandatory: true) }
 
       before do
-        procedure.types_de_champ << type_de_champ_repetition
-        type_de_champ_repetition.types_de_champ << create(:type_de_champ_text, mandatory: true)
+        create(:type_de_champ_text, mandatory: true, parent: type_de_champ_repetition)
       end
 
       context "when no champs" do
@@ -1261,9 +1247,14 @@ describe Dossier do
   end
 
   describe "to_feature_collection" do
+    let(:dossier) { create(:dossier) }
+    let(:type_de_champ_carte) { create(:type_de_champ_carte, procedure: dossier.procedure) }
     let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
-    let(:champ) { create(:champ_carte, geo_areas: [geo_area]) }
-    let(:dossier) { create(:dossier, champs: [champ]) }
+    let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
+
+    before do
+      dossier.champs << champ_carte
+    end
 
     it 'should have all champs carto' do
       expect(dossier.to_feature_collection).to eq({
@@ -1279,7 +1270,7 @@ describe Dossier do
             },
             properties: {
               area: 219.0,
-              champ_id: champ.stable_id,
+              champ_id: champ_carte.stable_id,
               dossier_id: dossier.id,
               id: geo_area.id,
               source: 'selection_utilisateur'

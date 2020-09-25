@@ -107,9 +107,7 @@ feature 'The user' do
   end
 
   let(:procedure_with_repetition) do
-    tdc = create(:type_de_champ_repetition, libelle: 'repetition')
-    tdc.types_de_champ << create(:type_de_champ_text, libelle: 'text')
-    create(:procedure, :published, :for_individual, types_de_champ: [tdc])
+    create(:procedure, :published, :for_individual, :with_repetition)
   end
 
   scenario 'fill a dossier with repetition', js: true do
@@ -117,13 +115,13 @@ feature 'The user' do
 
     fill_individual
 
-    fill_in('text', with: 'super texte')
-    expect(page).to have_field('text', with: 'super texte')
+    fill_in('sub type de champ', with: 'super texte')
+    expect(page).to have_field('sub type de champ', with: 'super texte')
 
     click_on 'Ajouter un élément pour'
 
     within '.row-1' do
-      fill_in('text', with: 'un autre texte')
+      fill_in('sub type de champ', with: 'un autre texte')
     end
 
     expect(page).to have_content('Supprimer', count: 2)
@@ -142,7 +140,7 @@ feature 'The user' do
   end
 
   let(:simple_procedure) do
-    tdcs = [create(:type_de_champ, mandatory: true, libelle: 'texte obligatoire')]
+    tdcs = [build(:type_de_champ, mandatory: true, libelle: 'texte obligatoire')]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
 
@@ -171,14 +169,14 @@ feature 'The user' do
   end
 
   let(:procedure_with_pj) do
-    tdcs = [create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative')]
+    tdcs = [build(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative')]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
 
   let(:procedure_with_pjs) do
     tdcs = [
-      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', order_place: 1),
-      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 2', order_place: 2)
+      build(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', position: 1),
+      build(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 2', position: 2)
     ]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end

@@ -56,12 +56,15 @@ class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
-  has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
-  has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
   has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
-  belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: true
+  belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
+
+  has_many :published_types_de_champ, through: :published_revision, source: :types_de_champ
+  has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
+  has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ
+  has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
@@ -72,6 +75,14 @@ class Procedure < ApplicationRecord
 
   def active_revision
     brouillon? ? draft_revision : published_revision
+  end
+
+  def types_de_champ
+    brouillon? ? draft_types_de_champ : published_types_de_champ
+  end
+
+  def types_de_champ_private
+    brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
   has_many :administrateurs_procedures
@@ -93,9 +104,6 @@ class Procedure < ApplicationRecord
   has_one_attached :notice
   has_one_attached :deliberation
 
-  accepts_nested_attributes_for :types_de_champ, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
-  accepts_nested_attributes_for :types_de_champ_private, reject_if: proc { |attributes| attributes['libelle'].blank? }, allow_destroy: true
-
   scope :brouillons,            -> { where(aasm_state: :brouillon) }
   scope :publiees,              -> { where(aasm_state: :publiee) }
   scope :closes,                -> { where(aasm_state: [:close, :depubliee]) }
@@ -114,9 +122,15 @@ class Procedure < ApplicationRecord
   scope :for_api, -> {
     includes(
       :administrateurs,
-      :types_de_champ_private,
-      :types_de_champ,
-      :module_api_carto
+      :module_api_carto,
+      published_revision: [
+        :types_de_champ_private,
+        :types_de_champ
+      ],
+      draft_revision: [
+        :types_de_champ_private,
+        :types_de_champ
+      ]
     )
   }
 
@@ -291,20 +305,11 @@ class Procedure < ApplicationRecord
   # to save a dossier created from this method
   def new_dossier
     Dossier.new(
-      procedure: self,
       revision: active_revision,
-      champs: build_champs,
-      champs_private: build_champs_private,
+      champs: active_revision.build_champs,
+      champs_private: active_revision.build_champs_private,
       groupe_instructeur: defaut_groupe_instructeur
     )
-  end
-
-  def build_champs
-    types_de_champ.map(&:build_champ)
-  end
-
-  def build_champs_private
-    types_de_champ_private.map(&:build_champ)
   end
 
   def path_customized?
@@ -320,9 +325,6 @@ class Procedure < ApplicationRecord
   end
 
   def clone(admin, from_library)
-    # FIXUP: needed during transition to revisions
-    RevisionsMigration.add_revisions(self)
-
     is_different_admin = !admin.owns?(self)
 
     populate_champ_stable_ids
@@ -373,19 +375,11 @@ class Procedure < ApplicationRecord
     end
 
     procedure.save
-    procedure.draft_revision.types_de_champ.update_all(revision_id: procedure.draft_revision.id)
-    procedure.draft_revision.types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
-
-    # FIXUP: needed during transition to revisions
-    procedure.draft_revision.types_de_champ.each do |type_de_champ|
-      procedure.types_de_champ << type_de_champ
-    end
-    procedure.draft_revision.types_de_champ_private.each do |type_de_champ|
-      procedure.types_de_champ_private << type_de_champ
-    end
+    procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
+    procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
 
     if is_different_admin || from_library
-      procedure.types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
+      procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
     end
 
     procedure
@@ -482,7 +476,7 @@ class Procedure < ApplicationRecord
   def closed_mail_template_attestation_inconsistency_state
     # As an optimization, don’t check the predefined templates (they are presumed correct)
     if closed_mail.present?
-      tag_present = closed_mail.body.include?("--lien attestation--")
+      tag_present = closed_mail.body.to_s.include?("--lien attestation--")
       if attestation_template&.activated? && !tag_present
         :missing_tag
       elsif !attestation_template&.activated? && tag_present
@@ -610,23 +604,14 @@ class Procedure < ApplicationRecord
   end
 
   def after_publish(canonical_procedure = nil)
-    # FIXUP: needed during transition to revisions
-    if RevisionsMigration.add_revisions(self)
-      update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure)
-    else
-      update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
-    end
+    update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
   end
 
   def after_close
-    # FIXUP: needed during transition to revisions
-    RevisionsMigration.add_revisions(self)
     update!(closed_at: Time.zone.now)
   end
 
   def after_unpublish
-    # FIXUP: needed during transition to revisions
-    RevisionsMigration.add_revisions(self)
     update!(unpublished_at: Time.zone.now)
   end
 

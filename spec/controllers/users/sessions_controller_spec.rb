@@ -62,7 +62,7 @@ describe Users::SessionsController, type: :controller do
           subject
 
           expect(response).to render_template(:new)
-          expect(flash.alert).to eq(I18n.t('devise.failure.invalid'))
+          expect(flash.alert).to eq('Courriel ou mot de passe incorrect.')
         end
       end
     end

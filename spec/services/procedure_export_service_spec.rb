@@ -18,10 +18,10 @@ describe ProcedureExportService do
 
     before do
       # change one tdc place to check if the header is ordered
-      tdc_first = procedure.types_de_champ.first
-      tdc_last = procedure.types_de_champ.last
+      tdc_first = procedure.active_revision.revision_types_de_champ.first
+      tdc_last = procedure.active_revision.revision_types_de_champ.last
 
-      tdc_first.update(order_place: tdc_last.order_place + 1)
+      tdc_first.update(position: tdc_last.position + 1)
       procedure.reload
     end
 

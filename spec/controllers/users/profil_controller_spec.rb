@@ -56,7 +56,7 @@ describe Users::ProfilController, type: :controller do
       end
 
       it { expect(response).to redirect_to(profil_path) }
-      it { expect(flash.alert).to eq(['Email invalide']) }
+      it { expect(flash.alert).to eq(['Courriel invalide']) }
     end
 
     context 'when the user has an instructeur role' do

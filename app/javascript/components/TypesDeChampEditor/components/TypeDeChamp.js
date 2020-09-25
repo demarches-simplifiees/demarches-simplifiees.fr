@@ -266,7 +266,6 @@ export const FIELDS = [
   'level',
   'libelle',
   'mandatory',
-  'order_place',
   'parcelles',
   'parcelles_agricoles',
   'parent_id',

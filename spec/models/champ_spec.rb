@@ -476,22 +476,15 @@ describe Champ do
   end
 
   describe 'repetition' do
-    let(:procedure) { build(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private) }
-    let(:tdc_text) { build(:type_de_champ_text, procedure: procedure) }
-    let(:tdc_integer) { build(:type_de_champ_integer_number, procedure: procedure) }
-    let(:tdc_repetition) { build(:type_de_champ_repetition, procedure: procedure, types_de_champ: [tdc_text, tdc_integer]) }
+    let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, types_de_champ: [build(:type_de_champ_repetition, types_de_champ: [tdc_text, tdc_integer])]) }
+    let(:tdc_text) { build(:type_de_champ_text) }
+    let(:tdc_integer) { build(:type_de_champ_integer_number) }
 
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:champ) { dossier.champs.find(&:repetition?) }
     let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
     let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row: 1) }
-
-    before do
-      procedure.types_de_champ << tdc_repetition
-      procedure.save!
-      procedure.reload
-    end
 
     context 'when creating the model directly' do
       let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row: 2, parent: champ, dossier: nil) }

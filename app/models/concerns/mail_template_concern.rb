@@ -33,8 +33,9 @@ module MailTemplateConcern
   module ClassMethods
     def default_for_procedure(procedure)
       template_name = default_template_name_for_procedure(procedure)
-      body = ActionController::Base.new.render_to_string(template: template_name)
-      new(subject: const_get(:DEFAULT_SUBJECT), body: body, procedure: procedure)
+      rich_body = ActionController::Base.new.render_to_string(template: template_name)
+      trix_rich_body = rich_body.gsub(/(?<!^|[.-])(?<!<\/strong>)\n/, '')
+      new(subject: const_get(:DEFAULT_SUBJECT), rich_body: trix_rich_body, procedure: procedure)
     end
 
     def default_template_name_for_procedure(procedure)

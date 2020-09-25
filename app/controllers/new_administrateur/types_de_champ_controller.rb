@@ -2,7 +2,6 @@ module NewAdministrateur
   class TypesDeChampController < AdministrateurController
     before_action :retrieve_procedure, only: [:create, :update, :move, :destroy]
     before_action :procedure_locked?, only: [:create, :update, :move, :destroy]
-    before_action :revisions_migration
 
     def create
       type_de_champ = @procedure.draft_revision.add_type_de_champ(type_de_champ_create_params)
@@ -16,7 +15,7 @@ module NewAdministrateur
     end
 
     def update
-      type_de_champ = @procedure.draft_revision.find_or_clone_type_de_champ(type_de_champ_stable_id)
+      type_de_champ = @procedure.draft_revision.find_or_clone_type_de_champ(TypeDeChamp.to_stable_id(params[:id]))
 
       if type_de_champ.update(type_de_champ_update_params)
         reset_procedure
@@ -27,13 +26,13 @@ module NewAdministrateur
     end
 
     def move
-      @procedure.draft_revision.move_type_de_champ(type_de_champ_stable_id, (params[:position] || params[:order_place]).to_i)
+      @procedure.draft_revision.move_type_de_champ(TypeDeChamp.to_stable_id(params[:id]), (params[:position] || params[:order_place]).to_i)
 
       head :no_content
     end
 
     def destroy
-      @procedure.draft_revision.remove_type_de_champ(type_de_champ_stable_id)
+      @procedure.draft_revision.remove_type_de_champ(TypeDeChamp.to_stable_id(params[:id]))
       reset_procedure
 
       head :no_content
@@ -41,19 +40,11 @@ module NewAdministrateur
 
     private
 
-    def type_de_champ_stable_id
-      TypeDeChamp.find(params[:id]).stable_id
-    end
-
-    def revisions_migration
-      # FIXUP: needed during transition to revisions
-      RevisionsMigration.add_revisions(@procedure)
-    end
-
     def serialize_type_de_champ(type_de_champ)
       {
         type_de_champ: type_de_champ.as_json(
           except: [
+            :id,
             :created_at,
             :options,
             :order_place,
@@ -79,7 +70,7 @@ module NewAdministrateur
             :min,
             :max
           ]
-        )
+        ).merge(id: TypeDeChamp.format_stable_id(type_de_champ.stable_id))
       }
     end
 
@@ -106,7 +97,7 @@ module NewAdministrateur
       )
 
       if type_de_champ_params[:parent_id].present?
-        type_de_champ_params[:parent_id] = TypeDeChamp.find(type_de_champ_params[:parent_id]).stable_id
+        type_de_champ_params[:parent_id] = TypeDeChamp.to_stable_id(type_de_champ_params[:parent_id])
       end
 
       type_de_champ_params
