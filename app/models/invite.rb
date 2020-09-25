@@ -19,6 +19,8 @@ class Invite < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
+  after_save_commit :send_notification
+
   validates :email, presence: true
   validates :email, uniqueness: { scope: :dossier_id }
 
@@ -32,4 +34,12 @@ class Invite < ApplicationRecord
   scope :kept, -> { joins(:dossier).merge(Dossier.kept) }
 
   default_scope { kept }
+
+  def send_notification
+    if self.user.present?
+      InviteMailer.invite_user(self).deliver_later
+    else
+      InviteMailer.invite_guest(self).deliver_later
+    end
+  end
 end
