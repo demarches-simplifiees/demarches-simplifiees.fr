@@ -353,7 +353,7 @@ GEM
       aes_key_wrap
       bindata
     jsonapi-renderer (0.2.2)
-    jwt (2.2.1)
+    jwt (2.2.2)
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.1)
