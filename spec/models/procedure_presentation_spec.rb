@@ -1,18 +1,18 @@
 describe ProcedurePresentation do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
-  let(:assign_to) { create(:assign_to, procedure: procedure) }
+  let(:instructeur) { create(:instructeur) }
+  let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
   let(:first_type_de_champ) { assign_to.procedure.types_de_champ.first }
   let(:first_type_de_champ_id) { first_type_de_champ.id.to_s }
   let(:procedure_presentation) {
-    ProcedurePresentation.create(
+    create(:procedure_presentation,
       assign_to: assign_to,
       displayed_fields: [
         { "label" => "test1", "table" => "user", "column" => "email" },
         { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }
       ],
       sort: { "table" => "user", "column" => "email", "order" => "asc" },
-      filters: filters
-    )
+      filters: filters)
   }
   let(:procedure_presentation_id) { procedure_presentation.id }
   let(:filters) { { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] } }
@@ -86,7 +86,7 @@ describe ProcedurePresentation do
         procedure.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
       end
 
-      subject { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure)) }
+      subject { create(:procedure_presentation, assign_to: assign_to) }
 
       it { expect(subject.fields).to eq(expected) }
     end
@@ -96,7 +96,7 @@ describe ProcedurePresentation do
       let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom" } }
       let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender" } }
       let(:procedure) { create(:procedure, :for_individual) }
-      let(:procedure_presentation) { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure)) }
+      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
       subject { procedure_presentation.fields }
 
@@ -105,7 +105,7 @@ describe ProcedurePresentation do
   end
 
   describe "#fields_for_select" do
-    subject { create(:procedure_presentation) }
+    subject { create(:procedure_presentation, assign_to: assign_to) }
 
     before do
       allow(subject).to receive(:fields).and_return([
@@ -126,7 +126,7 @@ describe ProcedurePresentation do
   end
 
   describe '#get_value' do
-    let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
+    let(:procedure_presentation) { create(:procedure_presentation, procedure: procedure, assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
 
     subject { procedure_presentation.displayed_field_values(dossier).first }
 
@@ -168,6 +168,7 @@ describe ProcedurePresentation do
 
     context 'for individual table' do
       let(:table) { 'individual' }
+      let(:procedure) { create(:procedure, :for_individual, :with_type_de_champ, :with_type_de_champ_private) }
       let(:dossier) { create(:dossier, procedure: procedure, individual: create(:individual, nom: 'Martin', prenom: 'Jacques', gender: 'M.')) }
 
       context 'for prenom column' do
@@ -248,7 +249,7 @@ describe ProcedurePresentation do
     let(:instructeur) { create(:instructeur) }
     let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
     let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
-    let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to, sort: sort) }
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, sort: sort) }
 
     subject { procedure_presentation.sorted_ids(procedure.dossiers, instructeur) }
 
@@ -416,7 +417,7 @@ describe ProcedurePresentation do
   end
 
   describe '#filtered_ids' do
-    let(:procedure_presentation) { create(:procedure_presentation, assign_to: create(:assign_to, procedure: procedure), filters: { "suivis" => filter }) }
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, filters: { "suivis" => filter }) }
 
     subject { procedure_presentation.filtered_ids(procedure.dossiers.joins(:user), 'suivis') }
 
@@ -755,13 +756,13 @@ describe ProcedurePresentation do
   end
 
   describe '#eager_load_displayed_fields' do
-    let(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
+    let(:procedure_presentation) { create(:procedure_presentation, procedure: procedure, assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
     let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:displayed_dossier) { procedure_presentation.eager_load_displayed_fields(procedure.dossiers).first }
 
     context 'for type de champ' do
       let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.id }
+      let(:column) { procedure.types_de_champ.first.id.to_s }
 
       it 'preloads the champs relation' do
         # Ideally, we would only preload the champs for the matching column
@@ -778,7 +779,7 @@ describe ProcedurePresentation do
 
     context 'for type de champ private' do
       let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.id }
+      let(:column) { procedure.types_de_champ_private.first.id.to_s }
 
       it 'preloads the champs relation' do
         # Ideally, we would only preload the champs for the matching column
@@ -809,6 +810,7 @@ describe ProcedurePresentation do
     end
 
     context 'for individual' do
+      let(:procedure) { create(:procedure, :for_individual, :with_type_de_champ, :with_type_de_champ_private) }
       let(:table) { 'individual' }
       let(:column) { 'nom' }
 
@@ -855,9 +857,9 @@ describe ProcedurePresentation do
 
     context 'for groupe_instructeur' do
       let(:table) { 'groupe_instructeur' }
-      let(:column) { 'email' }
+      let(:column) { 'label' }
 
-      it 'preloads the followers_instructeurs relation' do
+      it 'preloads the groupe_instructeur relation' do
         expect(displayed_dossier.association(:champs)).not_to be_loaded
         expect(displayed_dossier.association(:champs_private)).not_to be_loaded
         expect(displayed_dossier.association(:user)).not_to be_loaded

@@ -272,6 +272,7 @@ describe ProcedureExportService do
           "Dossier ID",
           "Champ",
           "Établissement Numéro TAHITI",
+          "Etablissement enseigne",
           "Établissement siège social",
           "Établissement NAF",
           "Établissement libellé NAF",

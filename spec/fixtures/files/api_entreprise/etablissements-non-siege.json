@@ -1,0 +1,53 @@
+{
+  "etablissement": {
+    "adresse": {
+      "cedex": null,
+      "code_insee_localite": "31555",
+      "code_postal": "31400",
+      "complement_adresse": null,
+      "l1": "DIRECTION INTERREGIONALE DES SERVICES PENITENTIAIRES TOULOUSE - SUD",
+      "l2": "SERVICE PENITENTIAIRE D'INSERTION ET DE PROBATION, DE LA HAUTE-GARONNE",
+      "l3": null,
+      "l4": "109 AV DE LESPINET",
+      "l5": "BP 4087",
+      "l6": "31400 TOULOUSE",
+      "l7": "FRANCE",
+      "localite": "TOULOUSE",
+      "nom_voie": "DE LESPINET",
+      "numero_voie": "109",
+      "type_voie": "AV"
+    },
+    "commune_implantation": {
+      "code": "31555",
+      "value": "Toulouse"
+    },
+    "date_creation_etablissement": 1458946800,
+    "date_mise_a_jour": 1533648919,
+    "diffusable_commercialement": true,
+    "enseigne": "SERVICE PENITENTIAIRE D'INSERTION ET DE PROBATION, DE LA HAUTE-GARONNE",
+    "etat_administratif": {
+      "date_fermeture": null,
+      "value": "A"
+    },
+    "libelle_naf": "Justice",
+    "naf": "8423Z",
+    "pays_implantation": {
+      "code": "FR",
+      "value": "FRANCE"
+    },
+    "region_implantation": {
+      "code": "76",
+      "value": "Occitanie"
+    },
+    "siege_social": false,
+    "siret": "17310120500719",
+    "tranche_effectif_salarie_etablissement": {
+      "a": null,
+      "code": null,
+      "date_reference": null,
+      "de": null,
+      "intitule": null
+    }
+  },
+  "gateway_error": false
+}

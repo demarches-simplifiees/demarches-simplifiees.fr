@@ -25,7 +25,12 @@ fr:
     involved: "Voir les personnes impliquées"
     no-commentaires: "Il n’y a aucun message dans le fil de discussion, n’hésitez pas à initier le premier."
     depositaire: "Dépositaire"
-    pieces: "Pièces jointes"
+    pj: "Pièces jointes"
+    asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
+    file_number: Numéro de dossier
+    subject: Sujet
+    message: Message
+    send_mail: Envoyer le message
   views:
     pagination:
       next: Suivant
@@ -55,12 +60,6 @@ fr:
       submit:
         publish: Publier
         reopen: Réactiver
-  support:
-    info demarche: J’ai un problème lors du remplissage de mon dossier
-    info instruction: J’ai une question sur l’instruction de mon dossier
-    produit: J’ai une idée d’amélioration pour votre site
-    usager perdu: Je ne trouve pas la démarche que je veux faire
-    autre: Autre sujet
   supportadmin:
     admin demande rdv: Demande de RDV pour une présentation à distance de #{APPLICATION_NAME}
     admin question: J’ai une question sur #{APPLICATION_NAME}
@@ -137,6 +136,7 @@ fr:
         blank: "doit être rempli"
         not_a_number: 'doit être un nombre'
         not_an_integer: 'doit être un nombre entier (sans chiffres après la virgule)'
+        not_a_phone: 'Numéro de téléphone invalide'
         greater_than: "doit être supérieur à %{count}"
         greater_than_or_equal_to: "doit être supérieur ou égal à %{count}"
         less_than: "doit être inférieur à %{count}"

@@ -14,7 +14,7 @@
 class Individual < ApplicationRecord
   include SanitizeConcern
 
-  belongs_to :dossier
+  belongs_to :dossier, optional: false
 
   validates :dossier_id, uniqueness: true
   validates :gender, presence: true, allow_nil: false, on: :update

@@ -12,10 +12,10 @@
 #  user_id        :bigint
 #
 class Commentaire < ApplicationRecord
-  belongs_to :dossier, inverse_of: :commentaires, touch: true
+  belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
 
-  belongs_to :user
-  belongs_to :instructeur
+  belongs_to :user, optional: true
+  belongs_to :instructeur, optional: true
 
   validate :messagerie_available?, on: :create
 

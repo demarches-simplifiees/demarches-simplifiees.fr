@@ -15,17 +15,17 @@ describe PiecesJustificativesService do
       end
 
       context 'piece_justificative with file' do
-        let(:champ) { create(:champ, :piece_justificative, :with_piece_justificative_file) }
+        let(:champ) { create(:champ_piece_justificative, :with_piece_justificative_file) }
         it { expect(names).to eq [libelle(champ)] }
       end
 
       context 'piece_justificative without file' do
-        let(:champ) { create(:champ, :piece_justificative) }
+        let(:champ) { create(:champ_piece_justificative_empty) }
         it { expect(names).to eq [] }
       end
 
       context 'private piece_justificative with file' do
-        let(:champ) { create(:champ, :piece_justificative, :with_piece_justificative_file, private: true) }
+        let(:champ) { create(:champ_piece_justificative, :with_piece_justificative_file, private: true) }
         it { expect(names).to eq [libelle(champ)] }
       end
     end
