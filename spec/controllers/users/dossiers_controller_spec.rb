@@ -741,6 +741,43 @@ describe Users::DossiersController, type: :controller do
         expect(instructeur.reload.followed_dossiers.with_notifications(instructeur)).to eq([dossier.reload])
       end
     end
+
+    context 'when the champ is a phone number' do
+      let(:procedure) { create(:procedure, :published, :with_phone) }
+      let!(:dossier) { create(:dossier, :en_construction, user: user, procedure: procedure) }
+      let(:first_champ) { dossier.champs.first }
+      let(:now) { Time.zone.parse('01/01/2100') }
+
+      let(:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            champs_attributes: [
+              {
+                id: first_champ.id,
+                value: value
+              }
+            ]
+          }
+        }
+      end
+
+      context 'with a valid value sent as string' do
+        let(:value) { '0612345678' }
+        it 'updates the value' do
+          subject
+          expect(first_champ.reload.value).to eq('0612345678')
+        end
+      end
+
+      context 'with a valid value sent as number' do
+        let(:value) { '45187272'.to_i }
+        it 'updates the value' do
+          subject
+          expect(first_champ.reload.value).to eq('45187272')
+        end
+      end
+    end
   end
 
   describe '#index' do
