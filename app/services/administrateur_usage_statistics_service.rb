@@ -81,16 +81,12 @@ class AdministrateurUsageStatisticsService
     with_default(
       0,
       nb_dossiers_by_administrateur_id_and_procedure_id_and_synthetic_state[administrateur_id]
-        .map do |procedure_id, nb_dossiers_by_synthetic_state|
-          [
-            procedure_id,
-            nb_dossiers_by_synthetic_state
+        .transform_values do |nb_dossiers_by_synthetic_state|
+          nb_dossiers_by_synthetic_state
               .reject { |synthetic_state, _count| ['brouillon', 'archive'].include?(synthetic_state) }
               .map { |_synthetic_state, count| count }
               .sum
-          ]
         end
-        .to_h
     )
   end
 
@@ -105,8 +101,7 @@ class AdministrateurUsageStatisticsService
         .reject { |procedure_id, _nb_dossiers_by_synthetic_state| is_brouillon(procedure_id) }
         .flat_map { |_procedure_id, nb_dossiers_by_synthetic_state| nb_dossiers_by_synthetic_state.to_a }
         .group_by { |synthetic_state, _count| synthetic_state }
-        .map { |synthetic_state, synthetic_states_and_counts| [synthetic_state, synthetic_states_and_counts.map { |_synthetic_state, count| count }.sum] }
-        .to_h
+        .transform_values { |synthetic_states_and_counts| synthetic_states_and_counts.map { |_synthetic_state, count| count }.sum }
     )
   end
 
