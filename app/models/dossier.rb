@@ -308,7 +308,7 @@ class Dossier < ApplicationRecord
 
   after_save :send_dossier_received
   after_save :send_web_hook
-  after_create :send_draft_notification_email
+  after_save_commit :send_draft_notification_email
 
   validates :user, presence: true
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
