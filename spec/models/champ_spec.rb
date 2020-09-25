@@ -41,6 +41,32 @@ describe Champ do
     end
   end
 
+  describe '#public_ordered' do
+    let(:procedure) { create(:simple_procedure) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
+    context 'when a procedure has 2 revisions' do
+      it 'does not duplicate the champs' do
+        expect(dossier.champs.count).to eq(1)
+        expect(procedure.revisions.count).to eq(2)
+      end
+    end
+  end
+
+  describe '#private_ordered' do
+    let(:procedure) { create(:procedure, :with_type_de_champ_private) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
+    context 'when a procedure has 2 revisions' do
+      before { procedure.publish }
+
+      it 'does not duplicate the champs private' do
+        expect(dossier.champs_private.count).to eq(1)
+        expect(procedure.revisions.count).to eq(2)
+      end
+    end
+  end
+
   describe '#siblings' do
     let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition, types_de_champ_count: 1, types_de_champ_private_count: 1) }
     let(:dossier) { create(:dossier, procedure: procedure) }

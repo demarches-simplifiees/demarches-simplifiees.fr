@@ -44,7 +44,6 @@ module NewAdministrateur
       {
         type_de_champ: type_de_champ.as_json(
           except: [
-            :id,
             :created_at,
             :options,
             :order_place,
@@ -70,7 +69,7 @@ module NewAdministrateur
             :min,
             :max
           ]
-        ).merge(id: TypeDeChamp.format_stable_id(type_de_champ.stable_id))
+        )
       }
     end
 

@@ -2,20 +2,19 @@
 #
 # Table name: types_de_champ
 #
-#  id           :integer          not null, primary key
-#  description  :text
-#  libelle      :string
-#  mandatory    :boolean          default(FALSE)
-#  options      :jsonb
-#  order_place  :integer
-#  private      :boolean          default(FALSE), not null
-#  type_champ   :string
-#  created_at   :datetime
-#  updated_at   :datetime
-#  parent_id    :bigint
-#  procedure_id :integer
-#  revision_id  :bigint
-#  stable_id    :bigint
+#  id          :integer          not null, primary key
+#  description :text
+#  libelle     :string
+#  mandatory   :boolean          default(FALSE)
+#  options     :jsonb
+#  order_place :integer
+#  private     :boolean          default(FALSE), not null
+#  type_champ  :string
+#  created_at  :datetime
+#  updated_at  :datetime
+#  parent_id   :bigint
+#  revision_id :bigint
+#  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns = ['procedure_id']
@@ -316,7 +315,7 @@ class TypeDeChamp < ApplicationRecord
 
   def read_attribute_for_serialization(name)
     if name == 'id'
-      self.class.format_stable_id(stable_id)
+      stable_id
     else
       super
     end
@@ -329,15 +328,11 @@ class TypeDeChamp < ApplicationRecord
   # This is only needed for a clean migration without downtime. We want to ensure
   # that if editor send a simple id because it was loaded before deployment
   # we would still do the right thing.
-  def self.format_stable_id(stable_id)
-    "stable:#{stable_id}"
-  end
-
   def self.to_stable_id(id_or_stable_id)
     if id_or_stable_id.to_s =~ /^stable:/
       id_or_stable_id.to_s.gsub(/^stable:/, '')
     else
-      find(id_or_stable_id).stable_id
+      id_or_stable_id
     end
   end
 
