@@ -140,7 +140,7 @@ class Procedure < ApplicationRecord
   }
 
   scope :for_api_v2, -> {
-    includes(administrateurs: :user)
+    includes(:draft_revision, :published_revision, administrateurs: :user)
   }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false

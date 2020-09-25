@@ -288,7 +288,27 @@ class Dossier < ApplicationRecord
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: [], traitements: []) }
 
-  scope :with_notifications, -> do
+  # todo: once we are sure with_cached_notifications does not introduce regressions, remove with_unoptimized_notifications
+  # and use with_cached_notifications instead
+  scope :with_notifications, -> (instructeur) do
+    if Flipper.enabled?(:cached_notifications, instructeur)
+      return with_cached_notifications
+    else
+      return with_unoptimized_notifications
+    end
+  end
+
+  scope :with_cached_notifications, -> do
+    joins(:follows)
+      .where('last_champ_updated_at > follows.demande_seen_at' \
+      ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
+      ' OR last_champ_private_updated_at > follows.annotations_privees_seen_at' \
+      ' OR last_avis_updated_at > follows.avis_seen_at' \
+      ' OR last_commentaire_updated_at > follows.messagerie_seen_at')
+      .distinct
+  end
+
+  scope :with_unoptimized_notifications, -> do
     # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
     # it will fail otherwise
     joined_dossiers = joins('LEFT OUTER JOIN "champs" ON "champs" . "dossier_id" = "dossiers" . "id" AND "champs" . "parent_id" IS NULL AND "champs" . "private" = FALSE AND "champs"."updated_at" > "follows"."demande_seen_at"')
