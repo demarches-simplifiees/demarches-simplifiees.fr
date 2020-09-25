@@ -15,4 +15,10 @@
 #  type_de_champ_id :integer
 #
 class Champs::PhoneChamp < Champs::TextChamp
+  validates :value,
+    phone: {
+      possible: true,
+      allow_blank: true,
+      message: I18n.t(:not_a_phone, scope: 'activerecord.errors.messages')
+    }
 end

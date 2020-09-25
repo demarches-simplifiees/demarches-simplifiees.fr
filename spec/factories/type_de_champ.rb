@@ -1,13 +1,13 @@
 FactoryBot.define do
   factory :type_de_champ do
-    private { false }
-
-    # Previous line is kept blank so that rubocop does not complain
     sequence(:libelle) { |n| "Libelle du champ #{n}" }
     sequence(:description) { |n| "description du champ #{n}" }
     type_champ { TypeDeChamp.type_champs.fetch(:text) }
     order_place { 1 }
     mandatory { false }
+    add_attribute(:private) { false }
+
+    association :procedure
 
     factory :type_de_champ_text do
       type_champ { TypeDeChamp.type_champs.fetch(:text) }
@@ -111,7 +111,7 @@ FactoryBot.define do
     factory :type_de_champ_piece_justificative do
       type_champ { TypeDeChamp.type_champs.fetch(:piece_justificative) }
 
-      after(:create) do |tc, _evaluator|
+      after(:build) do |tc, _evaluator|
         tc.piece_justificative_template.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
       end
     end
@@ -129,15 +129,13 @@ FactoryBot.define do
 
       trait :with_types_de_champ do
         after(:build) do |type_de_champ, _evaluator|
-          type_de_champ.types_de_champ << create(:type_de_champ, libelle: 'sub type de champ')
+          type_de_champ.types_de_champ << build(:type_de_champ, procedure: type_de_champ.procedure, libelle: 'sub type de champ')
         end
       end
     end
 
     trait :private do
-      private { true }
-
-      # Previous line is kept blank so that rubocop does not complain
+      add_attribute(:private) { true }
       sequence(:libelle) { |n| "Libelle champ privé #{n}" }
       sequence(:description) { |n| "description du champ privé #{n}" }
     end

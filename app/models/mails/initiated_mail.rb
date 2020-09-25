@@ -13,7 +13,7 @@ module Mails
   class InitiatedMail < ApplicationRecord
     include MailTemplateConcern
 
-    belongs_to :procedure
+    belongs_to :procedure, optional: false
 
     SLUG = "initiated_mail"
     DEFAULT_TEMPLATE_NAME = "notification_mailer/default_templates/initiated_mail"

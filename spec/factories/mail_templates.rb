@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :closed_mail, class: Mails::ClosedMail do
     subject { "Subject, voila voila" }
     body { "Blabla ceci est mon body" }
+    association :procedure
 
     factory :received_mail, class: Mails::ReceivedMail
 

@@ -25,14 +25,12 @@ module TPS
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Pacific/Tahiti'
 
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
+    # The default locale is :fr and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :fr
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-    config.i18n.available_locales = [:fr]
-
-    config.paths.add "#{config.root}/lib", eager_load: true
-    config.paths.add "#{config.root}/app/controllers/concerns", eager_load: true
+    config.i18n.available_locales = [:fr, :en]
+    config.i18n.fallbacks = [:fr]
 
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript')
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
@@ -47,12 +45,6 @@ module TPS
     # default_allowed_tags = ActionView::Base.sanitized_allowed_tags
     default_allowed_tags = ['strong', 'em', 'b', 'i', 'p', 'code', 'pre', 'tt', 'samp', 'kbd', 'var', 'sub', 'sup', 'dfn', 'cite', 'big', 'small', 'address', 'hr', 'br', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'abbr', 'acronym', 'a', 'img', 'blockquote', 'del', 'ins', 'table', 'th', 'td', 'tr']
     config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u']
-
-    # Since Rails 5.0, this option is enabled by default.
-    # However we keep it disabled for now, because many of our specs and fatories
-    # do not build the required associations properly.
-    # TODO: fix the specs, and enable this option.
-    config.active_record.belongs_to_required_by_default = false
 
     # Some mobile browsers have a behaviour where, although they will delete the session
     # cookie when the browser shutdowns, they will still serve a cached version

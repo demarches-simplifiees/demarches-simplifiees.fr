@@ -13,7 +13,7 @@ module Mails
   class ClosedMail < ApplicationRecord
     include MailTemplateConcern
 
-    belongs_to :procedure
+    belongs_to :procedure, optional: false
 
     SLUG = "closed_mail"
     DISPLAYED_NAME = "Accusé d'acceptation"

@@ -222,6 +222,11 @@
         margin-left: 0;
       }
 
+      &.blank-radio {
+        color: $dark-grey;
+        font-style: italic;
+      }
+
       input[type=radio] {
         margin-bottom: 0;
       }

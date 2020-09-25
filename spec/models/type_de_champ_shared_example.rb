@@ -156,14 +156,14 @@ shared_examples 'type_de_champ_spec' do
   describe "repetition" do
     let(:procedure) { create(:procedure) }
     let(:type_de_champ) { create(:type_de_champ_repetition, procedure: procedure) }
-    let(:type_de_champ_text) { create(:type_de_champ_text) }
+    let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
     let(:type_de_champ_integer_number_attrs) { attributes_for(:type_de_champ_integer_number) }
 
     it "associates nested types_de_champ to the parent procedure" do
       expect(type_de_champ.types_de_champ.size).to eq(0)
       expect(procedure.types_de_champ.size).to eq(1)
 
-      procedure.update(types_de_champ_attributes: [
+      procedure.update!(types_de_champ_attributes: [
         {
           id: type_de_champ.id,
           libelle: type_de_champ.libelle,

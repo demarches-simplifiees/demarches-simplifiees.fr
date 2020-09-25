@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :dossier do
     autorisation_donnees { true }
     state { Dossier.states.fetch(:brouillon) }
-    association :user, factory: [:user]
+    association :user
 
     transient do
       procedure { nil }
@@ -49,7 +49,7 @@ FactoryBot.define do
         if !dossier.procedure.for_individual?
           raise 'Inconsistent factory: attempting to create a dossier :with_individual on a procedure that is not `for_individual?`'
         end
-        dossier.individual = create(:individual)
+        dossier.individual = build(:individual, dossier: dossier)
       end
     end
 
@@ -203,7 +203,7 @@ FactoryBot.define do
     trait :with_all_champs do
       after(:create) do |dossier, _evaluator|
         dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|
-          build(:"champ_#{type_de_champ.type_champ}", type_de_champ: type_de_champ)
+          build(:"champ_#{type_de_champ.type_champ}", dossier: dossier, type_de_champ: type_de_champ)
         end
         dossier.save!
       end
@@ -212,7 +212,7 @@ FactoryBot.define do
     trait :with_all_annotations do
       after(:create) do |dossier, _evaluator|
         dossier.champs = dossier.procedure.types_de_champ.map do |type_de_champ|
-          build(:"champ_#{type_de_champ.type_champ}", type_de_champ: type_de_champ)
+          build(:"champ_#{type_de_champ.type_champ}", dossier: dossier, type_de_champ: type_de_champ)
         end
         dossier.save!
       end

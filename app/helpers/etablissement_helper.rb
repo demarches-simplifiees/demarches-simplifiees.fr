@@ -9,13 +9,10 @@ module EtablissementHelper
   end
 
   def raison_sociale_or_name(etablissement)
-    if etablissement.association?
-      etablissement.association_titre
-    elsif etablissement.entreprise_raison_sociale.present?
-      etablissement.entreprise_raison_sociale
-    else
+    etablissement.association_titre.presence ||
+      etablissement.enseigne.presence ||
+      etablissement.entreprise_raison_sociale.presence ||
       "#{etablissement.entreprise_nom} #{etablissement.entreprise_prenom}"
-    end
   end
 
   def effectif(etablissement)

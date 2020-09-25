@@ -58,7 +58,7 @@ class Procedure < ApplicationRecord
 
   has_many :types_de_champ, -> { root.public_only.ordered }, inverse_of: :procedure, dependent: :destroy
   has_many :types_de_champ_private, -> { root.private_only.ordered }, class_name: 'TypeDeChamp', inverse_of: :procedure, dependent: :destroy
-  has_many :revisions, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
+  has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: true
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
@@ -66,9 +66,9 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
 
-  belongs_to :parent_procedure, class_name: 'Procedure'
-  belongs_to :canonical_procedure, class_name: 'Procedure'
-  belongs_to :service
+  belongs_to :parent_procedure, class_name: 'Procedure', optional: true
+  belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
+  belongs_to :service, optional: true
 
   def active_revision
     brouillon? ? draft_revision : published_revision

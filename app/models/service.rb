@@ -16,7 +16,7 @@
 #
 class Service < ApplicationRecord
   has_many :procedures
-  belongs_to :administrateur
+  belongs_to :administrateur, optional: false
 
   scope :ordered, -> { order(nom: :asc) }
 

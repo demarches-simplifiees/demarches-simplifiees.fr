@@ -48,7 +48,7 @@ FactoryBot.define do
     factory :simple_procedure do
       after(:build) do |procedure, _evaluator|
         procedure.for_individual = true
-        procedure.types_de_champ << create(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true)
+        procedure.types_de_champ << build(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true)
         procedure.path = generate(:published_path)
         procedure.publish!
       end
@@ -70,7 +70,7 @@ FactoryBot.define do
 
     trait :with_instructeur do
       after(:create) do |procedure, _evaluator|
-        procedure.defaut_groupe_instructeur.instructeurs << create(:instructeur)
+        procedure.defaut_groupe_instructeur.instructeurs << build(:instructeur)
       end
     end
 
@@ -97,7 +97,7 @@ FactoryBot.define do
 
       after(:build) do |procedure, evaluator|
         evaluator.types_de_champ_count.times do
-          type_de_champ = create(:type_de_champ)
+          type_de_champ = build(:type_de_champ)
 
           procedure.types_de_champ << type_de_champ
         end
@@ -111,7 +111,7 @@ FactoryBot.define do
 
       after(:build) do |procedure, evaluator|
         evaluator.types_de_champ_private_count.times do
-          type_de_champ = create(:type_de_champ, :private)
+          type_de_champ = build(:type_de_champ, :private)
 
           procedure.types_de_champ_private << type_de_champ
         end
@@ -120,7 +120,7 @@ FactoryBot.define do
 
     trait :with_type_de_champ_mandatory do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ, mandatory: true)
+        type_de_champ = build(:type_de_champ, mandatory: true)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -128,7 +128,7 @@ FactoryBot.define do
 
     trait :with_datetime do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_datetime, mandatory: true)
+        type_de_champ = build(:type_de_champ_datetime, mandatory: true)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -136,7 +136,7 @@ FactoryBot.define do
 
     trait :with_dossier_link do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_dossier_link)
+        type_de_champ = build(:type_de_champ_dossier_link)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -144,7 +144,7 @@ FactoryBot.define do
 
     trait :with_yes_no do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_yes_no)
+        type_de_champ = build(:type_de_champ_yes_no)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -152,23 +152,24 @@ FactoryBot.define do
 
     trait :with_piece_justificative do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_piece_justificative)
+        type_de_champ = build(:type_de_champ_piece_justificative)
+
         procedure.types_de_champ << type_de_champ
       end
     end
 
     trait :with_repetition do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_repetition)
+        type_de_champ = build(:type_de_champ_repetition)
         procedure.types_de_champ << type_de_champ
 
-        type_de_champ.types_de_champ << create(:type_de_champ, libelle: 'sub type de champ')
+        type_de_champ.types_de_champ << build(:type_de_champ, libelle: 'sub type de champ')
       end
     end
 
     trait :with_number do
       after(:build) do |procedure, _evaluator|
-        type_de_champ = create(:type_de_champ_number)
+        type_de_champ = build(:type_de_champ_number)
 
         procedure.types_de_champ << type_de_champ
       end
@@ -231,10 +232,10 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", mandatory: true, libelle: libelle, order_place: index)
+          build(:"type_de_champ_#{type_champ}", procedure: procedure, mandatory: true, libelle: libelle, order_place: index)
         end
-        procedure.types_de_champ << build(:type_de_champ_drop_down_list, :long, mandatory: true, libelle: 'simple_choice_drop_down_list_long')
-        procedure.types_de_champ << build(:type_de_champ_multiple_drop_down_list, :long, mandatory: true, libelle: 'multiple_choice_drop_down_list_long')
+        procedure.types_de_champ << build(:type_de_champ_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'simple_choice_drop_down_list_long')
+        procedure.types_de_champ << build(:type_de_champ_multiple_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'multiple_choice_drop_down_list_long')
       end
     end
 
@@ -244,7 +245,7 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", libelle: libelle, order_place: index)
+          build(:"type_de_champ_#{type_champ}", procedure: procedure, libelle: libelle, order_place: index)
         end
       end
     end
@@ -255,7 +256,7 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", private: true, libelle: libelle, order_place: index)
+          build(:"type_de_champ_#{type_champ}", procedure: procedure, private: true, libelle: libelle, order_place: index)
         end
       end
     end

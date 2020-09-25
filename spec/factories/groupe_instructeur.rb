@@ -3,6 +3,6 @@ FactoryBot.define do
 
   factory :groupe_instructeur do
     label { generate(:groupe_label) }
-    procedure { create(:procedure) }
+    association :procedure
   end
 end
