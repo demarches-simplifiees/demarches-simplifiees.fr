@@ -66,6 +66,22 @@ describe NewAdministrateur::AttestationTemplatesController, type: :controller do
         it { expect(assigns(:attestation)[:signature]).to eq(nil) }
         it_behaves_like 'rendering a PDF successfully'
       end
+
+      context 'with empty footer' do
+        let!(:attestation_template) do
+          create(:attestation_template, { title: 't', body: 'b', footer: nil })
+        end
+
+        it_behaves_like 'rendering a PDF successfully'
+      end
+
+      context 'with large footer' do
+        let!(:attestation_params) do
+          create(:attestation_template, { title: 't', body: 'b', footer: ' ' * 190 })
+        end
+
+        it_behaves_like 'rendering a PDF successfully'
+      end
     end
   end
 
