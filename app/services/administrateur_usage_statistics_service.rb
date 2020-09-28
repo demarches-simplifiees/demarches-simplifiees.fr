@@ -27,7 +27,7 @@ class AdministrateurUsageStatisticsService
     nb_dossiers_roi = nb_dossiers_by_procedure_id.reject { |procedure_id, _count| is_brouillon(procedure_id) }.map { |_procedure_id, count| count }.sum
 
     result = {
-      ds_sign_in_count: administrateur.user.sign_in_count,
+      ds_sign_in_count: administrateur&.user&.sign_in_count,
       ds_created_at: administrateur.created_at,
       ds_active: administrateur.user.active?,
       ds_id: administrateur.id,
@@ -62,11 +62,11 @@ class AdministrateurUsageStatisticsService
       admin_roi_high: nb_dossiers_roi * 17
     }
 
-    if administrateur.user.current_sign_in_at.present?
+    if administrateur&.user&.current_sign_in_at.present?
       result[:ds_current_sign_in_at] = administrateur.user.current_sign_in_at
     end
 
-    if administrateur.user.last_sign_in_at.present?
+    if administrateur&.user&.last_sign_in_at.present?
       result[:ds_last_sign_in_at] = administrateur.user.last_sign_in_at
     end
 
