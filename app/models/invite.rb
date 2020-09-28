@@ -19,7 +19,7 @@ class Invite < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
-  after_save_commit :send_notification
+  after_create_commit :send_notification
 
   validates :email, presence: true
   validates :email, uniqueness: { scope: :dossier_id }
