@@ -18,4 +18,14 @@ RSpec.describe ApiEntreprise::AssociationJob, type: :job do
     subject
     expect(Etablissement.find(etablissement.id).association_rna).to eq('W595001988')
   end
+
+  context "when the etablissement has been deleted" do
+    before do
+      allow_any_instance_of(Etablissement).to receive(:find) { raise ActiveRecord::RecordNotFound }
+    end
+
+    it "ignores the error" do
+      expect { subject }.not_to raise_error
+    end
+  end
 end
