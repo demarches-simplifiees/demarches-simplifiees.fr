@@ -5,6 +5,7 @@ describe 'new_administrateur/procedures/show.html.haml', type: :view do
   before do
     assign(:procedure, procedure)
     assign(:procedure_lien, commencer_url(path: procedure.path))
+    allow(view).to receive(:current_administrateur).and_return(procedure.administrateurs.first)
   end
 
   describe 'procedure is draft' do
