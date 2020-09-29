@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 class Export < ApplicationRecord
-  MAX_DUREE_CONSERVATION_EXPORT = 15.minutes
+  MAX_DUREE_CONSERVATION_EXPORT = 1.hour
 
   enum format: {
     csv: 'csv',
@@ -24,7 +24,7 @@ class Export < ApplicationRecord
 
   scope :stale, -> { where('updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
 
-  after_save_commit :compute_async
+  after_create_commit :compute_async
 
   def compute_async
     ExportJob.perform_later(self)
