@@ -37,7 +37,7 @@ module ChampHelper
     when GeoArea.sources.fetch(:cadastre)
       capture do
         concat "Parcelle n° #{geo_area.numero} - Feuille #{geo_area.code_arr} #{geo_area.section} #{geo_area.feuille} - #{geo_area.surface_parcelle.round} m"
-        concat content_tag(:sup, "2")
+        concat tag.sup("2")
       end
     when GeoArea.sources.fetch(:quartier_prioritaire)
       "#{geo_area.commune} : #{geo_area.nom}"
@@ -48,7 +48,7 @@ module ChampHelper
         if geo_area.area.present?
           capture do
             concat "Une aire de surface #{geo_area.area} m"
-            concat content_tag(:sup, "2")
+            concat tag.sup("2")
           end
         else
           "Une aire de surface inconnue"
