@@ -73,10 +73,12 @@ class ProcedureExportService
       { instances: table.last, sheet_name: table.first }
     end.merge(DEFAULT_STYLES)
 
-    # transliterate: convert to ASCII characteres
+    # transliterate: convert to ASCII characters
     # to ensure truncate respects 30 bytes
-    options[:sheet_name] = I18n.transliterate(options[:sheet_name], '')
-      .truncate(30, omission: '')
+    # /\*?[] are invalid Excel worksheet characters
+    options[:sheet_name] = I18n.transliterate(
+      ActiveStorage::Filename.new(options[:sheet_name].delete('[]*?')).sanitized, '', locale: :en
+    ).truncate(30, omission: '')
 
     options
   end
