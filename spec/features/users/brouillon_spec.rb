@@ -176,6 +176,13 @@ feature 'The user' do
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
 
+  let(:old_procedure_with_disabled_pj_validation) do
+    tdcs = [
+      create(:type_de_champ_piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', order_place: 1, skip_pj_validation: true)
+    ]
+    create(:procedure, :published, :for_individual, types_de_champ: tdcs)
+  end
+
   scenario 'add an attachment', js: true do
     log_in(user, procedure_with_pjs)
     fill_individual
@@ -200,25 +207,14 @@ feature 'The user' do
     expect(page).to have_text('RIB.pdf')
   end
 
-  # TODO: once we're running on Rails 6, re-enable the validator on PieceJustificativeChamp,
-  # and unmark this spec as pending.
-  #
-  # See piece_justificative_champ.rb
-  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
-  scenario 'add an invalid attachment', js: true, pending: true do
-    log_in(user, procedure_with_pjs)
+  scenario 'add an invalid attachment on an old procedure where pj validation is disabled', js: true do
+    log_in(user, old_procedure_with_disabled_pj_validation)
     fill_individual
 
     # Test invalid file type
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
-    expect(page).to have_text('La pièce justificative n’est pas d’un type accepté')
-    expect(page).to have_no_button('Ré-essayer', visible: true)
-
-    # Replace the file by another with a valid type
-    attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/piece_justificative_0.pdf')
     expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
-    expect(page).to have_text('analyse antivirus en cours')
-    expect(page).to have_text('piece_justificative_0.pdf')
+    expect(page).to have_text('analyse antivirus en cours', count: 1)
   end
 
   scenario 'retry on transcient upload error', js: true do

@@ -3,6 +3,10 @@ class ApiEntreprise::Job < ApplicationJob
 
   DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS = 5
 
+  # If by the time the job runs the Etablissement has been deleted
+  # (it can happen through EtablissementUpdateJob for instance), ignore the job
+  discard_on ActiveRecord::RecordNotFound
+
   rescue_from(ApiEntreprise::API::ResourceNotFound) do |exception|
     error(self, exception)
   end
