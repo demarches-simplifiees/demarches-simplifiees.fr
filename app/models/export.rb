@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 class Export < ApplicationRecord
-  MAX_DUREE_CONSERVATION_EXPORT = 15.minutes
+  MAX_DUREE_CONSERVATION_EXPORT = 1.hour
 
   enum format: {
     csv: 'csv',
