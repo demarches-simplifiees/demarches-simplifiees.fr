@@ -24,18 +24,18 @@ module Types
       { Extensions::Attachment => { attachment: :justificatif_motivation } }
     ]
 
+    field :usager, Types::ProfileType, null: false
+    field :groupe_instructeur, Types::GroupeInstructeurType, null: false
+    field :revision, Types::RevisionType, null: false
+
     field :demandeur, Types::DemandeurType, null: false
 
-    field :usager, Types::ProfileType, null: false
     field :instructeurs, [Types::ProfileType], null: false
-
-    field :champs, [Types::ChampType], null: false
-    field :annotations, [Types::ChampType], null: false
-
     field :messages, [Types::MessageType], null: false
     field :avis, [Types::AvisType], null: false
 
-    field :groupe_instructeur, Types::GroupeInstructeurType, null: false
+    field :champs, [Types::ChampType], null: false
+    field :annotations, [Types::ChampType], null: false
 
     def state
       object.state
@@ -45,12 +45,24 @@ module Types
       Loaders::Record.for(User).load(object.user_id)
     end
 
-    def instructeurs
-      Loaders::Association.for(object.class, :followers_instructeurs).load(object)
-    end
-
     def groupe_instructeur
       Loaders::Record.for(GroupeInstructeur).load(object.groupe_instructeur_id)
+    end
+
+    def revision
+      Loaders::Record.for(ProcedureRevision).load(object.revision_id)
+    end
+
+    def demandeur
+      if object.procedure.for_individual
+        Loaders::Association.for(object.class, :individual).load(object)
+      else
+        Loaders::Association.for(object.class, :etablissement).load(object)
+      end
+    end
+
+    def instructeurs
+      Loaders::Association.for(object.class, :followers_instructeurs).load(object)
     end
 
     def messages
@@ -67,14 +79,6 @@ module Types
 
     def annotations
       Loaders::Association.for(object.class, :champs_private).load(object)
-    end
-
-    def demandeur
-      if object.procedure.for_individual
-        Loaders::Association.for(object.class, :individual).load(object)
-      else
-        Loaders::Association.for(object.class, :etablissement).load(object)
-      end
     end
 
     def self.authorized?(object, context)

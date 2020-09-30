@@ -22,7 +22,7 @@ export function moveTypeDeChampOperation(typeDeChamp, index, queue) {
   return queue.enqueue({
     path: `/${typeDeChamp.id}/move`,
     method: 'patch',
-    payload: { order_place: index }
+    payload: { position: index }
   });
 }
 

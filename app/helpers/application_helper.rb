@@ -140,7 +140,7 @@ module ApplicationHelper
   end
 
   def try_format_date(date)
-    date.present? ? I18n.l(date) : ''
+    date.present? ? I18n.l(date, format: :long) : ''
   end
 
   def try_format_datetime(datetime)

@@ -4,9 +4,14 @@
   %h1.page-title Démarches
   = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
 
-  = render partial: 'instructeurs/procedures/list', locals: { procedures: @procedures,
-    dossiers_count_per_procedure: @dossiers_count_per_procedure,
-    dossiers_a_suivre_count_per_procedure: @dossiers_a_suivre_count_per_procedure,
-    dossiers_archived_count_per_procedure: @dossiers_archived_count_per_procedure,
-    dossiers_termines_count_per_procedure: @dossiers_termines_count_per_procedure,
-    followed_dossiers_count_per_procedure: @followed_dossiers_count_per_procedure }
+  %ul.procedure-list
+    = render partial: 'instructeurs/procedures/list',
+      collection: @procedures,
+      as: :p,
+      locals: { dossiers_count_per_procedure: @dossiers_count_per_procedure,
+        dossiers_a_suivre_count_per_procedure: @dossiers_a_suivre_count_per_procedure,
+        dossiers_archived_count_per_procedure: @dossiers_archived_count_per_procedure,
+        dossiers_termines_count_per_procedure: @dossiers_termines_count_per_procedure,
+        followed_dossiers_count_per_procedure: @followed_dossiers_count_per_procedure,
+        procedure_ids_en_cours_with_notifications: @procedure_ids_en_cours_with_notifications,
+        procedure_ids_termines_with_notifications: @procedure_ids_termines_with_notifications }

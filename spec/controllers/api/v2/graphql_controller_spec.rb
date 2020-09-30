@@ -63,6 +63,18 @@ describe API::V2::GraphqlController do
             email
           }
         }
+        revisions {
+          id
+        }
+        draftRevision {
+          id
+        }
+        publishedRevision {
+          id
+          champDescriptors {
+            type
+          }
+        }
         service {
           nom
           typeOrganisme
@@ -123,6 +135,16 @@ describe API::V2::GraphqlController do
               label: "défaut"
             }
           ],
+          revisions: procedure.revisions.map { |revision| { id: revision.to_typed_id } },
+          draftRevision: { id: procedure.draft_revision.to_typed_id },
+          publishedRevision: {
+            id: procedure.published_revision.to_typed_id,
+            champDescriptors: procedure.published_types_de_champ.map do |tdc|
+              {
+                type: tdc.type_champ
+              }
+            end
+          },
           service: {
             nom: procedure.service.nom,
             typeOrganisme: procedure.service.type_organisme,
@@ -255,6 +277,12 @@ describe API::V2::GraphqlController do
                 number
                 label
               }
+              revision {
+                id
+                champDescriptors {
+                  type
+                }
+              }
               messages {
                 email
                 body
@@ -313,6 +341,14 @@ describe API::V2::GraphqlController do
               id: dossier.groupe_instructeur.to_typed_id,
               number: dossier.groupe_instructeur.id,
               label: dossier.groupe_instructeur.label
+            },
+            revision: {
+              id: dossier.revision.to_typed_id,
+              champDescriptors: dossier.types_de_champ.map do |tdc|
+                {
+                  type: tdc.type_champ
+                }
+              end
             },
             demandeur: {
               id: dossier.individual.to_typed_id,

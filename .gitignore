@@ -29,5 +29,11 @@ yarn-debug.log*
 /.idea
 vendor/*
 /public/tmp/
-/yarn-error.log
 /public/assets/
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+/docs
+
+# Local Netlify folder
+.netlify

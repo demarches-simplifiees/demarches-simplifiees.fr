@@ -13,7 +13,7 @@ feature 'Managing password:' do
       perform_enqueued_jobs do
         click_on 'Réinitialiser'
       end
-      expect(page).to have_content 'vous allez recevoir un lien de réinitialisation par email'
+      expect(page).to have_content('Si votre courriel existe dans notre base de données, vous recevrez un lien vous permettant de récupérer votre mot de passe.')
 
       click_reset_password_link_for user.email
       expect(page).to have_content 'Changement de mot de passe'
@@ -21,7 +21,7 @@ feature 'Managing password:' do
       fill_in 'user_password', with: new_password
       # fill_in 'user_password_confirmation', with: new_password
       click_on 'Changer le mot de passe'
-      expect(page).to have_content('Votre mot de passe a été changé avec succès')
+      expect(page).to have_content('Votre mot de passe a bien été modifié.')
     end
   end
 
@@ -40,7 +40,7 @@ feature 'Managing password:' do
       perform_enqueued_jobs do
         click_on 'Réinitialiser'
       end
-      expect(page).to have_content 'vous allez recevoir un lien de réinitialisation par email'
+      expect(page).to have_content('Si votre courriel existe dans notre base de données, vous recevrez un lien vous permettant de récupérer votre mot de passe.')
 
       click_reset_password_link_for user.email
 
@@ -49,7 +49,7 @@ feature 'Managing password:' do
       fill_in 'user_password', with: new_password
       # fill_in 'user_password_confirmation', with: new_password
       click_on 'Changer le mot de passe'
-      expect(page).to have_content('Votre mot de passe a été changé avec succès')
+      expect(page).to have_content('Votre mot de passe a bien été modifié.')
     end
   end
 end

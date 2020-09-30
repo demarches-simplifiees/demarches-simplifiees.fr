@@ -62,8 +62,8 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs, -> { root.public_only.ordered }, inverse_of: :dossier, dependent: :destroy
-  has_many :champs_private, -> { root.private_only.ordered }, class_name: 'Champ', inverse_of: :dossier, dependent: :destroy
+  has_many :champs, -> { root.public_ordered }, inverse_of: :dossier, dependent: :destroy
+  has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: :dossier, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
@@ -76,9 +76,12 @@ class Dossier < ApplicationRecord
   has_many :dossier_operation_logs, -> { order(:created_at) }, dependent: :nullify, inverse_of: :dossier
 
   belongs_to :groupe_instructeur, optional: false
-  has_one :procedure, through: :groupe_instructeur
-  belongs_to :revision, class_name: 'ProcedureRevision', optional: true
+  belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: false
+
+  has_one :procedure, through: :revision
+  has_many :types_de_champ, through: :revision
+  has_many :types_de_champ_private, through: :revision
 
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_private
@@ -285,7 +288,27 @@ class Dossier < ApplicationRecord
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: [], traitements: []) }
 
-  scope :with_notifications, -> do
+  # todo: once we are sure with_cached_notifications does not introduce regressions, remove with_unoptimized_notifications
+  # and use with_cached_notifications instead
+  scope :with_notifications, -> (instructeur) do
+    if Flipper.enabled?(:cached_notifications, instructeur)
+      return with_cached_notifications
+    else
+      return with_unoptimized_notifications
+    end
+  end
+
+  scope :with_cached_notifications, -> do
+    joins(:follows)
+      .where('last_champ_updated_at > follows.demande_seen_at' \
+      ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
+      ' OR last_champ_private_updated_at > follows.annotations_privees_seen_at' \
+      ' OR last_avis_updated_at > follows.avis_seen_at' \
+      ' OR last_commentaire_updated_at > follows.messagerie_seen_at')
+      .distinct
+  end
+
+  scope :with_unoptimized_notifications, -> do
     # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
     # it will fail otherwise
     joined_dossiers = joins('LEFT OUTER JOIN "champs" ON "champs" . "dossier_id" = "dossiers" . "id" AND "champs" . "parent_id" IS NULL AND "champs" . "private" = FALSE AND "champs"."updated_at" > "follows"."demande_seen_at"')
@@ -313,7 +336,6 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
-  delegate :types_de_champ, to: :procedure
   delegate :france_connect_information, to: :user
 
   before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
@@ -324,7 +346,7 @@ class Dossier < ApplicationRecord
   after_create :send_draft_notification_email
 
   validates :user, presence: true
-  validates :individual, presence: true, if: -> { procedure.for_individual? }
+  validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true
 
   def motivation
@@ -349,10 +371,10 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs
-    procedure.build_champs.each do |champ|
+    revision.build_champs.each do |champ|
       champs << champ
     end
-    procedure.build_champs_private.each do |champ|
+    revision.build_champs_private.each do |champ|
       champs_private << champ
     end
   end

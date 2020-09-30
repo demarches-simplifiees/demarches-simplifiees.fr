@@ -18,8 +18,8 @@ class PiecesJustificativesService
     entries.map { |pair| [pair[0], sanitize(index, pair[1])] }
   end
 
-  def self.serialize_types_de_champ_as_type_pj(procedure)
-    tdcs = procedure.types_de_champ.filter { |type_champ| type_champ.old_pj.present? }
+  def self.serialize_types_de_champ_as_type_pj(revision)
+    tdcs = revision.types_de_champ.filter { |type_champ| type_champ.old_pj.present? }
     tdcs.map.with_index do |type_champ, order_place|
       description = type_champ.description
       if /^(?<original_description>.*?)(?:[\r\n]+)Récupérer le formulaire vierge pour mon dossier : (?<lien_demarche>http.*)$/m =~ description
@@ -48,16 +48,6 @@ class PiecesJustificativesService
 
   private
 
-  def self.pjs_for_champs(dossier)
-    pjs_champs(dossier).map(&:piece_justificative_file)
-  end
-
-  def self.pjs_for_commentaires(dossier)
-    dossier
-      .commentaires
-      .map(&:piece_jointe)
-  end
-
   def self.pjs_champs(dossier)
     allowed_champs = dossier.champs + dossier.champs_private
 
@@ -67,6 +57,16 @@ class PiecesJustificativesService
 
     (allowed_champs + allowed_child_champs)
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
+  end
+
+  def self.pjs_for_champs(dossier)
+    pjs_champs(dossier).map(&:piece_justificative_file)
+  end
+
+  def self.pjs_for_commentaires(dossier)
+    dossier
+      .commentaires
+      .map(&:piece_jointe)
   end
 
   def self.champs_zip_entries(dossier)

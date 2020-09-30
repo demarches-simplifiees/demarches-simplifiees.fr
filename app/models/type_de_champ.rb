@@ -2,22 +2,23 @@
 #
 # Table name: types_de_champ
 #
-#  id           :integer          not null, primary key
-#  description  :text
-#  libelle      :string
-#  mandatory    :boolean          default(FALSE)
-#  options      :jsonb
-#  order_place  :integer
-#  private      :boolean          default(FALSE), not null
-#  type_champ   :string
-#  created_at   :datetime
-#  updated_at   :datetime
-#  parent_id    :bigint
-#  procedure_id :integer
-#  revision_id  :bigint
-#  stable_id    :bigint
+#  id          :integer          not null, primary key
+#  description :text
+#  libelle     :string
+#  mandatory   :boolean          default(FALSE)
+#  options     :jsonb
+#  order_place :integer
+#  private     :boolean          default(FALSE), not null
+#  type_champ  :string
+#  created_at  :datetime
+#  updated_at  :datetime
+#  parent_id   :bigint
+#  revision_id :bigint
+#  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
+  self.ignored_columns = ['procedure_id']
+
   enum type_champs: {
     text: 'text',
     auto_completion: 'auto_completion',
@@ -55,8 +56,8 @@ class TypeDeChamp < ApplicationRecord
     repetition: 'repetition'
   }
 
-  belongs_to :procedure, optional: false
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
+  has_one :procedure, through: :revision
 
   belongs_to :parent, class_name: 'TypeDeChamp', optional: true
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
@@ -79,7 +80,6 @@ class TypeDeChamp < ApplicationRecord
   serialize :options, WithIndifferentAccess
 
   after_initialize :set_dynamic_type
-  before_validation :setup_procedure
   after_create :populate_stable_id
 
   attr_reader :dynamic_type
@@ -310,9 +310,30 @@ class TypeDeChamp < ApplicationRecord
     .merge(include: { types_de_champ: TYPES_DE_CHAMP_BASE })
 
   def self.as_json_for_editor
-    includes(piece_justificative_template_attachment: :blob,
-      types_de_champ: [piece_justificative_template_attachment: :blob])
-      .as_json(TYPES_DE_CHAMP)
+    includes(piece_justificative_template_attachment: :blob, types_de_champ: [piece_justificative_template_attachment: :blob]).as_json(TYPES_DE_CHAMP)
+  end
+
+  def read_attribute_for_serialization(name)
+    if name == 'id'
+      stable_id
+    else
+      super
+    end
+  end
+
+  # FIXME: We are changing how id is exposed to the editor.
+  # We used to expose type_de_champ.id as primary key to the editor. With revisions
+  # we need primary key to be type_de_champ.stable_id because any update can create
+  # a new version but we do not want editor to know about this.
+  # This is only needed for a clean migration without downtime. We want to ensure
+  # that if editor send a simple id because it was loaded before deployment
+  # we would still do the right thing.
+  def self.to_stable_id(id_or_stable_id)
+    if id_or_stable_id.to_s =~ /^stable:/
+      id_or_stable_id.to_s.gsub(/^stable:/, '')
+    else
+      id_or_stable_id
+    end
   end
 
   private
@@ -321,12 +342,6 @@ class TypeDeChamp < ApplicationRecord
     value = value ? value.split("\r\n").map(&:strip).join("\r\n") : ''
     result = value.split(/[\r\n]|[\r]|[\n]|[\n\r]/).reject(&:empty?)
     result.blank? ? [] : [''] + result
-  end
-
-  def setup_procedure
-    types_de_champ.each do |type_de_champ|
-      type_de_champ.procedure = procedure
-    end
   end
 
   def populate_stable_id

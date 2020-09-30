@@ -60,7 +60,7 @@ feature 'Signin in:' do
       click_on 'Connexion'
 
       sign_in_with user.email, password
-      expect(page).to have_content 'Vous devez confirmer votre adresse email pour continuer'
+      expect(page).to have_content('Vous devez confirmer votre compte par courriel.')
     end
   end
 end
