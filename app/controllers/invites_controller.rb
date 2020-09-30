@@ -15,12 +15,7 @@ class InvitesController < ApplicationController
     )
 
     if invite.valid?
-      if invite.user.present?
-        InviteMailer.invite_user(invite).deliver_later
-      else
-        InviteMailer.invite_guest(invite).deliver_later
-      end
-
+      # The notification is sent through an after commit hook in order to avoir concurrency issues
       flash.notice = "Une invitation a été envoyée à #{invite.email}."
     else
       flash.alert = invite.errors.full_messages
