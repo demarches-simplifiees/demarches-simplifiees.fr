@@ -43,6 +43,10 @@ module Types
     field :champ_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ
     field :annotation_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ_private
 
+    field :draft_revision, Types::RevisionType, null: false
+    field :published_revision, Types::RevisionType, null: true
+    field :revisions, [Types::RevisionType], null: false
+
     def state
       object.aasm.current_state
     end
@@ -53,6 +57,10 @@ module Types
 
     def service
       Loaders::Record.for(Service).load(object.service_id)
+    end
+
+    def revisions
+      Loaders::Association.for(object.class, :revisions).load(object)
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, order:)

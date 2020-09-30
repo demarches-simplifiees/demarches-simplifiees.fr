@@ -445,84 +445,103 @@ describe Instructeurs::DossiersController, type: :controller do
       }
     end
 
-    before do
-      subject
-    end
-
     let(:emails) { ['email@a.com'] }
 
-    it { expect(saved_avis.email).to eq('email@a.com') }
-    it { expect(saved_avis.introduction).to eq('intro') }
-    it { expect(saved_avis.confidentiel).to eq(true) }
-    it { expect(saved_avis.dossier).to eq(dossier) }
-    it { expect(saved_avis.claimant).to eq(instructeur) }
-    it { expect(response).to redirect_to(avis_instructeur_dossier_path(dossier.procedure, dossier)) }
+    context "notifications updates" do
+      context 'when an instructeur follows the dossier' do
+        let(:follower) { create(:instructeur) }
+        before { follower.follow(dossier) }
 
-    context "with an invalid email" do
-      let(:emails) { ['emaila.com'] }
-
-      it { expect(response).to render_template :avis }
-      it { expect(flash.alert).to eq(["emaila.com : Email n'est pas valide"]) }
-      it { expect { subject }.not_to change(Avis, :count) }
-      it { expect(dossier.last_avis_updated_at).to eq(nil) }
-    end
-
-    context 'with multiple emails' do
-      let(:emails) { ["toto.fr,titi@titimail.com"] }
-
-      it { expect(response).to render_template :avis }
-      it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
-      it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
-      it { expect(Avis.count).to eq(old_avis_count + 1) }
-      it { expect(saved_avis.email).to eq("titi@titimail.com") }
-    end
-
-    context 'with linked dossiers' do
-      let(:asked_confidentiel) { false }
-      let(:previous_avis_confidentiel) { false }
-      let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
-
-      context 'when the expert doesn’t share linked dossiers' do
-        let(:invite_linked_dossiers) { false }
-
-        it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-          expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
-          expect(Avis.count).to eq(old_avis_count + 1)
-          expect(saved_avis.email).to eq("email@a.com")
-          expect(saved_avis.dossier).to eq(dossier)
+        it 'the follower has a notification' do
+          expect(follower.followed_dossiers.with_notifications(follower)).to eq([])
+          subject
+          expect(follower.followed_dossiers.with_notifications(follower)).to eq([dossier.reload])
         end
       end
+    end
 
-      context 'when the expert also shares the linked dossiers' do
-        let(:invite_linked_dossiers) { true }
+    context 'email sending' do
+      before do
+        subject
+      end
 
-        context 'and the expert can access the linked dossiers' do
-          let(:saved_avis) { Avis.last(2).first }
-          let(:linked_avis) { Avis.last }
-          let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
-          let(:invite_linked_dossiers) do
-            instructeur.assign_to_procedure(linked_dossier.procedure)
-            true
-          end
+      it { expect(saved_avis.email).to eq('email@a.com') }
+      it { expect(saved_avis.introduction).to eq('intro') }
+      it { expect(saved_avis.confidentiel).to eq(true) }
+      it { expect(saved_avis.dossier).to eq(dossier) }
+      it { expect(saved_avis.claimant).to eq(instructeur) }
+      it { expect(response).to redirect_to(avis_instructeur_dossier_path(dossier.procedure, dossier)) }
 
-          it 'sends one avis for the main dossier' do
-            expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
-            expect(saved_avis.email).to eq("email@a.com")
-            expect(saved_avis.dossier).to eq(dossier)
-          end
+      context "with an invalid email" do
+        let(:emails) { ['emaila.com'] }
 
-          it 'sends another avis for the linked dossiers' do
-            expect(Avis.count).to eq(old_avis_count + 2)
-            expect(linked_avis.dossier).to eq(linked_dossier)
-          end
-        end
+        before { subject }
 
-        context 'but the expert can’t access the linked dossier' do
+        it { expect(response).to render_template :avis }
+        it { expect(flash.alert).to eq(["emaila.com : Email n'est pas valide"]) }
+        it { expect { subject }.not_to change(Avis, :count) }
+        it { expect(dossier.last_avis_updated_at).to eq(nil) }
+      end
+
+      context 'with multiple emails' do
+        let(:emails) { ["toto.fr,titi@titimail.com"] }
+
+        before { subject }
+
+        it { expect(response).to render_template :avis }
+        it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
+        it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
+        it { expect(Avis.count).to eq(old_avis_count + 1) }
+        it { expect(saved_avis.email).to eq("titi@titimail.com") }
+      end
+
+      context 'with linked dossiers' do
+        let(:asked_confidentiel) { false }
+        let(:previous_avis_confidentiel) { false }
+        let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
+        before { subject }
+        context 'when the expert doesn’t share linked dossiers' do
+          let(:invite_linked_dossiers) { false }
+
           it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
             expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
             expect(Avis.count).to eq(old_avis_count + 1)
             expect(saved_avis.email).to eq("email@a.com")
             expect(saved_avis.dossier).to eq(dossier)
+          end
+        end
+
+        context 'when the expert also shares the linked dossiers' do
+          let(:invite_linked_dossiers) { true }
+
+          context 'and the expert can access the linked dossiers' do
+            let(:saved_avis) { Avis.last(2).first }
+            let(:linked_avis) { Avis.last }
+            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
+            let(:invite_linked_dossiers) do
+              instructeur.assign_to_procedure(linked_dossier.procedure)
+              true
+            end
+
+            it 'sends one avis for the main dossier' do
+              expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
+              expect(saved_avis.email).to eq("email@a.com")
+              expect(saved_avis.dossier).to eq(dossier)
+            end
+
+            it 'sends another avis for the linked dossiers' do
+              expect(Avis.count).to eq(old_avis_count + 2)
+              expect(linked_avis.dossier).to eq(linked_dossier)
+            end
+          end
+
+          context 'but the expert can’t access the linked dossier' do
+            it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
+              expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
+              expect(Avis.count).to eq(old_avis_count + 1)
+              expect(saved_avis.email).to eq("email@a.com")
+              expect(saved_avis.dossier).to eq(dossier)
+            end
           end
         end
       end
@@ -560,36 +579,36 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe "#update_annotations" do
+    let(:procedure) do
+      create(:procedure, :published, types_de_champ_private: [
+        build(:type_de_champ_multiple_drop_down_list, position: 0),
+        build(:type_de_champ_linked_drop_down_list, position: 1),
+        build(:type_de_champ_datetime, position: 2),
+        build(:type_de_champ_repetition, :with_types_de_champ, position: 3)
+      ], instructeurs: instructeurs)
+    end
+    let(:dossier) { create(:dossier, :en_construction, :with_all_annotations, procedure: procedure) }
+    let(:another_instructeur) { create(:instructeur) }
+    let(:now) { Time.zone.parse('01/01/2100') }
+
     let(:champ_multiple_drop_down_list) do
-      tdc = create(:type_de_champ_multiple_drop_down_list, :private, procedure: procedure, libelle: 'libelle')
-      create(:champ_multiple_drop_down_list, :private, type_de_champ: tdc, dossier: dossier)
+      dossier.champs_private.first
     end
 
     let(:champ_linked_drop_down_list) do
-      tdc = create(:type_de_champ_linked_drop_down_list, :private, procedure: procedure, libelle: 'libelle')
-      create(:champ_linked_drop_down_list, :private, type_de_champ: tdc, dossier: dossier)
+      dossier.champs_private.second
     end
 
     let(:champ_datetime) do
-      tdc = create(:type_de_champ_datetime, :private, procedure: procedure, libelle: 'libelle')
-      create(:champ_datetime, :private, type_de_champ: tdc, dossier: dossier)
+      dossier.champs_private.third
     end
 
     let(:champ_repetition) do
-      tdc = create(:type_de_champ_repetition, :private, :with_types_de_champ, procedure: procedure, libelle: 'libelle')
-      tdc.types_de_champ << create(:type_de_champ_text, procedure: procedure, libelle: 'libelle')
-      champ = create(:champ_repetition, :private, type_de_champ: tdc, dossier: dossier)
-      champ.add_row
-      champ
+      dossier.champs_private.fourth
     end
 
-    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-
-    let(:now) { Time.zone.parse('01/01/2100') }
-
     before do
-      dossier.champs_private << [champ_multiple_drop_down_list, champ_linked_drop_down_list, champ_datetime, champ_repetition]
-
+      another_instructeur.follow(dossier)
       Timecop.freeze(now)
       patch :update_annotations, params: params
 
@@ -607,64 +626,76 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:params) do
         {
           procedure_id: procedure.id,
-        dossier_id: dossier.id,
-        dossier: {
-          champs_private_attributes: {
-            '0': {
-              id: champ_multiple_drop_down_list.id,
-              value: ['', 'un', 'deux']
-            },
-            '1': {
-              id: champ_datetime.id,
-              'value(1i)': 2019,
-              'value(2i)': 12,
-              'value(3i)': 21,
-              'value(4i)': 13,
-              'value(5i)': 17
-            },
-            '2': {
-              id: champ_linked_drop_down_list.id,
-              primary_value: 'primary',
-              secondary_value: 'secondary'
-            },
-            '3': {
-              id: champ_repetition.id,
-              champs_attributes: {
-                id: champ_repetition.champs.first.id,
-                value: 'text'
+          dossier_id: dossier.id,
+          dossier: {
+            champs_private_attributes: {
+              '0': {
+                id: champ_multiple_drop_down_list.id,
+                value: ['', 'un', 'deux']
+              },
+              '1': {
+                id: champ_datetime.id,
+                'value(1i)': 2019,
+                'value(2i)': 12,
+                'value(3i)': 21,
+                'value(4i)': 13,
+                'value(5i)': 17
+              },
+              '2': {
+                id: champ_linked_drop_down_list.id,
+                primary_value: 'primary',
+                secondary_value: 'secondary'
+              },
+              '3': {
+                id: champ_repetition.id,
+                champs_attributes: {
+                  id: champ_repetition.champs.first.id,
+                  value: 'text'
+                }
               }
             }
           }
         }
-        }
       end
-      it { expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]') }
-      it { expect(champ_linked_drop_down_list.primary_value).to eq('primary') }
-      it { expect(champ_linked_drop_down_list.secondary_value).to eq('secondary') }
-      it { expect(champ_datetime.value).to eq('21/12/2019 13:17') }
-      it { expect(champ_repetition.champs.first.value).to eq('text') }
-      it { expect(dossier.reload.last_champ_private_updated_at).to eq(now) }
-      it { expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)) }
+
+      it {
+        expect(champ_multiple_drop_down_list.value).to eq('["un", "deux"]')
+        expect(champ_linked_drop_down_list.primary_value).to eq('primary')
+        expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
+        expect(champ_datetime.value).to eq('21/12/2019 13:17')
+        expect(champ_repetition.champs.first.value).to eq('text')
+        expect(dossier.reload.last_champ_private_updated_at).to eq(now)
+        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
+      }
+
+      it 'updates the annotations' do
+        Timecop.travel(now + 1.hour)
+        expect(instructeur.followed_dossiers.with_notifications(instructeur)).to eq([])
+        expect(another_instructeur.followed_dossiers.with_notifications(instructeur)).to eq([dossier.reload])
+      end
     end
 
     context "without new values for champs_private" do
       let(:params) do
         {
           procedure_id: procedure.id,
-        dossier_id: dossier.id,
-        dossier: {
-          champs_private_attributes: {},
-          champs_attributes: {
-            '0': {
-              id: champ_multiple_drop_down_list.id,
-              value: ['', 'un', 'deux']
+          dossier_id: dossier.id,
+          dossier: {
+            champs_private_attributes: {},
+            champs_attributes: {
+              '0': {
+                id: champ_multiple_drop_down_list.id,
+                value: ['', 'un', 'deux']
+              }
             }
           }
         }
-        }
       end
-      it { expect(dossier.reload.last_champ_private_updated_at).to eq(nil) }
-      it { expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier)) }
+
+      it {
+        expect(dossier.reload.last_champ_private_updated_at).to eq(nil)
+        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
+      }
     end
   end
 

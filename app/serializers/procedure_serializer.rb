@@ -48,6 +48,6 @@ class ProcedureSerializer < ActiveModel::Serializer
   end
 
   def types_de_piece_justificative
-    PiecesJustificativesService.serialize_types_de_champ_as_type_pj(object)
+    PiecesJustificativesService.serialize_types_de_champ_as_type_pj(object.active_revision)
   end
 end

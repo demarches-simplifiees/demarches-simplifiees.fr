@@ -50,7 +50,7 @@ describe ProcedurePresentation do
 
   describe "#fields" do
     context 'when the procedure can have a SIRET number' do
-      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :types_de_champ_count => 4, :types_de_champ_private_count => 4) }
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, types_de_champ_count: 4, types_de_champ_private_count: 4) }
       let(:tdc_1) { procedure.types_de_champ[0] }
       let(:tdc_2) { procedure.types_de_champ[1] }
       let(:tdc_private_1) { procedure.types_de_champ_private[0] }
@@ -262,7 +262,8 @@ describe ProcedurePresentation do
       let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
       before do
-        notified_dossier.champs.first.touch(time: Time.zone.local(2018, 9, 20))
+        Flipper.enable_actor(:cached_notifications, instructeur)
+        notified_dossier.update!(last_champ_updated_at: Time.zone.local(2018, 9, 20))
         create(:follow, instructeur: instructeur, dossier: notified_dossier, demande_seen_at: Time.zone.local(2018, 9, 10))
         notified_dossier.touch(time: Time.zone.local(2018, 9, 20))
         recent_dossier.touch(time: Time.zone.local(2018, 9, 25))

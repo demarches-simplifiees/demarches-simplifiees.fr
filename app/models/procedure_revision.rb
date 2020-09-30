@@ -9,15 +9,22 @@
 #
 class ProcedureRevision < ApplicationRecord
   self.implicit_order_column = :created_at
-  belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions
+  belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
 
   has_many :revision_types_de_champ, -> { public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :revision_types_de_champ_private, -> { private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
   has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
 
+  def build_champs
+    types_de_champ.map(&:build_champ)
+  end
+
+  def build_champs_private
+    types_de_champ_private.map(&:build_champ)
+  end
+
   def add_type_de_champ(params)
-    params[:procedure] = procedure
     params[:revision] = self
 
     if params[:parent_id]
@@ -27,15 +34,9 @@ class ProcedureRevision < ApplicationRecord
           params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
         end.create(params)
     elsif params[:private]
-      types_de_champ_private.tap do |types_de_champ|
-        # FIXUP: needed during transition to revisions
-        params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
-      end.create(params)
+      types_de_champ_private.create(params)
     else
-      types_de_champ.tap do |types_de_champ|
-        # FIXUP: needed during transition to revisions
-        params[:order_place] = types_de_champ.present? ? types_de_champ.last.order_place + 1 : 0
-      end.create(params)
+      types_de_champ.create(params)
     end
   end
 
@@ -112,8 +113,6 @@ class ProcedureRevision < ApplicationRecord
     if types_de_champ.delete_at(old_index)
       types_de_champ.insert(new_index, type_de_champ)
         .map.with_index do |type_de_champ, index|
-          # FIXUP: needed during transition to revisions
-          type_de_champ.update!(order_place: index)
           [type_de_champ.id, index]
         end
     else

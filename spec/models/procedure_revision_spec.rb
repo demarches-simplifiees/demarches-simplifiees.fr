@@ -9,10 +9,6 @@ describe ProcedureRevision do
     type_de_champ
   end
 
-  before do
-    RevisionsMigration.add_revisions(procedure)
-  end
-
   describe '#add_type_de_champ' do
     it 'type_de_champ' do
       expect(revision.types_de_champ.size).to eq(2)
@@ -20,11 +16,8 @@ describe ProcedureRevision do
         type_champ: TypeDeChamp.type_champs.fetch(:text),
         libelle: "Un champ text"
       })
-      procedure.reload
+      revision.reload
       expect(revision.types_de_champ.size).to eq(3)
-      expect(procedure.types_de_champ.size).to eq(3)
-
-      expect(procedure.types_de_champ.last).to eq(new_type_de_champ)
       expect(revision.types_de_champ.last).to eq(new_type_de_champ)
       expect(revision.revision_types_de_champ.last.position).to eq(2)
       expect(revision.revision_types_de_champ.last.type_de_champ).to eq(new_type_de_champ)
@@ -37,9 +30,8 @@ describe ProcedureRevision do
         libelle: "Un champ text",
         private: true
       })
-      procedure.reload
+      revision.reload
       expect(revision.types_de_champ_private.size).to eq(2)
-      expect(procedure.types_de_champ_private.size).to eq(2)
     end
 
     it 'type_de_champ_repetition' do
@@ -49,7 +41,6 @@ describe ProcedureRevision do
         libelle: "Un champ text",
         parent_id: type_de_champ_repetition.stable_id
       })
-      type_de_champ_repetition.reload
       expect(type_de_champ_repetition.types_de_champ.size).to eq(2)
     end
   end
@@ -113,26 +104,21 @@ describe ProcedureRevision do
       revision.remove_type_de_champ(type_de_champ.stable_id)
       procedure.reload
       expect(revision.types_de_champ.size).to eq(1)
-      expect(procedure.types_de_champ.size).to eq(1)
     end
 
     it 'type_de_champ_private' do
       expect(revision.types_de_champ_private.size).to eq(1)
       revision.remove_type_de_champ(type_de_champ_private.stable_id)
-      procedure.reload
       expect(revision.types_de_champ_private.size).to eq(0)
-      expect(procedure.types_de_champ_private.size).to eq(0)
     end
 
     it 'type_de_champ_repetition' do
       expect(type_de_champ_repetition.types_de_champ.size).to eq(1)
       expect(revision.types_de_champ.size).to eq(2)
       revision.remove_type_de_champ(type_de_champ_repetition.types_de_champ.first.stable_id)
-      procedure.reload
       type_de_champ_repetition.reload
       expect(type_de_champ_repetition.types_de_champ.size).to eq(0)
       expect(revision.types_de_champ.size).to eq(2)
-      expect(procedure.types_de_champ.size).to eq(2)
     end
   end
 

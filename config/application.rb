@@ -1,13 +1,13 @@
 require File.expand_path('boot', __dir__)
 
 require 'rails/all'
-require_relative 'application_name'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 Dotenv::Railtie.load
+require_relative 'application_name'
 
 module TPS
   class Application < Rails::Application

@@ -37,8 +37,7 @@ export default function typeDeChampsReducer(state, { type, params, done }) {
 
 function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
   const typeDeChamp = {
-    ...state.defaultTypeDeChampAttributes,
-    order_place: typeDeChamps.length
+    ...state.defaultTypeDeChampAttributes
   };
 
   createTypeDeChampOperation(typeDeChamp, state.queue)

@@ -27,7 +27,7 @@ class FindDubiousProceduresJob < CronJob
     # .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
 
     dubious_procedures_and_tdcs = forbidden_tdcs
-      .group_by(&:procedure_id)
+      .group_by { |type_de_champ| type_de_champ.procedure.id }
       .map { |_procedure_id, tdcs| [tdcs[0].procedure, tdcs] }
 
     if dubious_procedures_and_tdcs.present?

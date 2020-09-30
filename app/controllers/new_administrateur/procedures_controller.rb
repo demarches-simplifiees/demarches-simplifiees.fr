@@ -67,6 +67,7 @@ module NewAdministrateur
 
     def create
       @procedure = Procedure.new(procedure_params.merge(administrateurs: [current_administrateur]))
+      @procedure.draft_revision = @procedure.revisions.build
 
       check_terms_of_use
       if !@procedure.errors.empty? || !@procedure.save
@@ -75,8 +76,6 @@ module NewAdministrateur
       else
         flash.notice = 'Démarche enregistrée.'
         current_administrateur.instructeur.assign_to_procedure(@procedure)
-        # FIXUP: needed during transition to revisions
-        RevisionsMigration.add_revisions(@procedure)
 
         redirect_to champs_admin_procedure_path(@procedure)
       end

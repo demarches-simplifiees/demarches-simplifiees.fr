@@ -1,4 +1,4 @@
-FROM ruby:2.6.5-alpine AS base
+FROM ruby:2.7.1-alpine AS base
 
 #------------ intermediate container with specific dev tools
 FROM base AS builder
@@ -12,7 +12,7 @@ RUN apk add --update --virtual build-dependencies \
         curl-dev \
         postgresql-dev \
         yarn \
-        python
+        python3
 ENV INSTALL_PATH /app
 RUN mkdir -p ${INSTALL_PATH}
 COPY Gemfile Gemfile.lock package.json yarn.lock  ${INSTALL_PATH}/

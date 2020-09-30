@@ -304,6 +304,7 @@ type Demarche {
     """
     updatedSince: ISO8601DateTime
   ): DossierConnection!
+  draftRevision: Revision!
   groupeInstructeurs: [GroupeInstructeur!]!
   id: ID!
 
@@ -311,6 +312,8 @@ type Demarche {
   Le numero de la démarche.
   """
   number: Int!
+  publishedRevision: Revision
+  revisions: [Revision!]!
   service: Service!
 
   """
@@ -411,6 +414,7 @@ type Dossier {
   Le numero du dossier.
   """
   number: Int!
+  revision: Revision!
 
   """
   L'état du dossier.
@@ -1118,6 +1122,17 @@ type RepetitionChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+}
+
+type Revision {
+  annotationDescriptors: [ChampDescriptor!]!
+  champDescriptors: [ChampDescriptor!]!
+
+  """
+  Date de la création.
+  """
+  dateCreation: ISO8601DateTime!
+  id: ID!
 }
 
 type SelectionUtilisateur implements GeoArea {

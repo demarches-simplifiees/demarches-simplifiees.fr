@@ -13,12 +13,10 @@ feature 'linked dropdown lists' do
       Secondary 2.3
     END_OF_LIST
   end
-  let(:type_de_champ) { create(:type_de_champ_linked_drop_down_list, libelle: 'linked dropdown', drop_down_list_value: list_items) }
+  let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, libelle: 'linked dropdown', drop_down_list_value: list_items) }
 
   let!(:procedure) do
-    p = create(:procedure, :published, :for_individual)
-    p.types_de_champ << type_de_champ
-    p
+    create(:procedure, :published, :for_individual, types_de_champ: [type_de_champ])
   end
 
   let(:user_dossier) { user.dossiers.first }

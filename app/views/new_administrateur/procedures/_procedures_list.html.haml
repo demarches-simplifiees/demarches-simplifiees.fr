@@ -1,15 +1,14 @@
 - procedures.each do |procedure|
   .card
-    .flex.justify-between
-      .flex
-        - if procedure.logo.present?
-          = image_tag procedure.logo, alt: procedure.libelle, width: '100'
-        .flex.column.ml-1
-          .card-title
-            = link_to procedure.libelle, admin_procedure_path(procedure), style: 'color: black;'
-          = link_to(procedure_lien(procedure), procedure_lien(procedure), class: 'procedure-lien mb-1')
+    .admin-procedures-list-row.infos.flex
+      - if procedure.logo.present?
+        = image_tag procedure.logo, alt: procedure.libelle, width: '100'
+      .flex.column.ml-1
+        .card-title
+          = link_to procedure.libelle, admin_procedure_path(procedure), style: 'color: black;'
+        = link_to(procedure_lien(procedure), procedure_lien(procedure), class: 'procedure-lien mb-1')
 
-      %div
+      .admin-procedures-list-timestamps
         %p.notice N° #{procedure.id}
         %p.notice créée le #{procedure.created_at.strftime('%d/%m/%Y')}
         - if procedure.published_at.present?
@@ -17,7 +16,7 @@
         - if procedure.closed_at.present?
           %p.notice archivée le #{procedure.closed_at.strftime('%d/%m/%Y')}
 
-    .flex.justify-between
+    .admin-procedures-list-row.actions.flex.justify-between
       %div
         - if feature_enabled?(:administrateur_routage)
           %span.icon.person
