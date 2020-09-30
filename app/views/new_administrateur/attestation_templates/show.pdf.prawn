@@ -74,6 +74,11 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   pdf.repeat(:all) do
     pdf.move_cursor_to footer_height - 10
     pdf.fill_color grey
-    pdf.text footer, align: :center, size: 8
+    if footer.present?
+      # We reduce the size of large footer so they can be drawn in the corresponding area.
+      # This is due to a font change, the replacing font is slightly bigger than the previous one
+      footer_font_size = footer.length > 170 ? 7 : 8
+      pdf.text footer, align: :center, size: footer_font_size
+    end
   end
 end

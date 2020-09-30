@@ -61,10 +61,13 @@ class Procedure < ApplicationRecord
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
 
-  has_many :published_types_de_champ, through: :published_revision, source: :types_de_champ
-  has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
-  has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ
-  has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
+  has_many :published_types_de_champ, -> { ordered }, through: :published_revision, source: :types_de_champ
+  has_many :published_types_de_champ_private, -> { ordered }, through: :published_revision, source: :types_de_champ_private
+  has_many :draft_types_de_champ, -> { ordered }, through: :draft_revision, source: :types_de_champ
+  has_many :draft_types_de_champ_private, -> { ordered }, through: :draft_revision, source: :types_de_champ_private
+
+  has_many :all_types_de_champ, -> { joins(:procedure).where('types_de_champ.revision_id != procedures.draft_revision_id').ordered }, through: :revisions, source: :types_de_champ
+  has_many :all_types_de_champ_private, -> { joins(:procedure).where('types_de_champ.revision_id != procedures.draft_revision_id').ordered }, through: :revisions, source: :types_de_champ_private
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
@@ -83,6 +86,34 @@ class Procedure < ApplicationRecord
 
   def types_de_champ_private
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
+  end
+
+  def types_de_champ_for_export
+    if brouillon?
+      draft_types_de_champ
+    else
+      all_types_de_champ
+        .uniq
+        .reject(&:exclude_from_export?)
+        .filter(&:active_revision?)
+        .group_by(&:stable_id).values.map do |types_de_champ|
+          types_de_champ.sort_by(&:created_at).last
+        end
+    end
+  end
+
+  def types_de_champ_private_for_export
+    if brouillon?
+      draft_types_de_champ_private
+    else
+      all_types_de_champ_private
+        .uniq
+        .reject(&:exclude_from_export?)
+        .filter(&:active_revision?)
+        .group_by(&:stable_id).values.map do |types_de_champ|
+          types_de_champ.sort_by(&:created_at).last
+        end
+    end
   end
 
   has_many :administrateurs_procedures
