@@ -4,6 +4,7 @@
 #
 #  id                                  :integer          not null, primary key
 #  aasm_state                          :string           default("brouillon")
+#  allow_expert_review                 :boolean          default(TRUE), not null
 #  api_entreprise_token                :string
 #  ask_birthday                        :boolean          default(FALSE), not null
 #  auto_archive_on                     :date
