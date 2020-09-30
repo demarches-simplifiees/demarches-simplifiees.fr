@@ -54,6 +54,7 @@ module NewAdministrateur
 
     def show
       @procedure = current_administrateur.procedures.find(params[:id])
+      @current_administrateur = current_administrateur
       if @procedure.brouillon?
         @procedure_lien = commencer_test_url(path: @procedure.path)
       else
