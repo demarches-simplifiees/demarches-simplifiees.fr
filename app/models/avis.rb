@@ -3,7 +3,7 @@
 # Table name: avis
 #
 #  id             :integer          not null, primary key
-#  answer         :text
+#  answer         :string
 #  confidentiel   :boolean          default(FALSE), not null
 #  email          :string
 #  introduction   :text

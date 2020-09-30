@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_02_103047) do
+ActiveRecord::Schema.define(version: 2020_09_30_143755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,7 +134,6 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
   create_table "avis", id: :serial, force: :cascade do |t|
     t.string "email"
     t.text "introduction"
-    t.text "answer"
     t.integer "instructeur_id"
     t.integer "dossier_id"
     t.datetime "created_at", null: false
@@ -142,6 +141,7 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
     t.integer "claimant_id", null: false
     t.boolean "confidentiel", default: false, null: false
     t.datetime "revoked_at"
+    t.string "answer"
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
     t.index ["instructeur_id"], name: "index_avis_on_instructeur_id"
@@ -154,7 +154,6 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
   end
 
   create_table "champs", id: :serial, force: :cascade do |t|
-    t.string "value"
     t.integer "type_de_champ_id"
     t.integer "dossier_id"
     t.string "type"
@@ -164,6 +163,7 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
     t.integer "etablissement_id"
     t.bigint "parent_id"
     t.integer "row"
+    t.string "value"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
@@ -183,11 +183,11 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
   create_table "commentaires", id: :serial, force: :cascade do |t|
     t.string "email"
     t.datetime "created_at", null: false
-    t.string "body"
     t.integer "dossier_id"
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "instructeur_id"
+    t.string "body"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
     t.index ["user_id"], name: "index_commentaires_on_user_id"
@@ -249,8 +249,6 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
     t.datetime "processed_at"
     t.text "motivation"
     t.datetime "hidden_at"
-    t.text "search_terms"
-    t.text "private_search_terms"
     t.bigint "groupe_instructeur_id"
     t.datetime "brouillon_close_to_expiration_notice_sent_at"
     t.datetime "groupe_instructeur_updated_at"
@@ -262,8 +260,8 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
     t.datetime "last_champ_private_updated_at"
     t.datetime "last_avis_updated_at"
     t.datetime "last_commentaire_updated_at"
-    t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
-    t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
+    t.string "search_terms"
+    t.string "private_search_terms"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
@@ -543,6 +541,7 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
     t.string "api_entreprise_token"
     t.bigint "draft_revision_id"
     t.bigint "published_revision_id"
+    t.boolean "allow_expert_review", default: true, null: false
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
