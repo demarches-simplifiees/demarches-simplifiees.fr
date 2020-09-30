@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
@@ -156,6 +156,12 @@ module NewAdministrateur
     end
 
     def transfert
+    end
+
+    def allow_expert_review
+      @procedure.update!(allow_expert_review: !@procedure.allow_expert_review)
+      flash.notice = @procedure.allow_expert_review? ? "Avis externes activés" : "Avis externes désactivés"
+      redirect_to admin_procedure_path(@procedure)
     end
 
     def transfer
