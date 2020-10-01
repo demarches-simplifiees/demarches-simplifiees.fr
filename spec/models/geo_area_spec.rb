@@ -14,7 +14,7 @@ RSpec.describe GeoArea, type: :model do
   describe '#length' do
     let(:geo_area) { build(:geo_area, :line_string) }
 
-    it { expect(geo_area.length).to eq(30.8) }
+    it { expect(geo_area.length).to eq(21.2) }
   end
 
   describe '#location' do

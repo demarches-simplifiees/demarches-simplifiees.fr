@@ -84,8 +84,8 @@ class GeoArea < ApplicationRecord
   end
 
   def length
-    if line? && RGeo::Geos.supported?
-      rgeo_geometry.length.round(1)
+    if line?
+      GeojsonService.length(geometry.deep_symbolize_keys).round(1)
     end
   end
 
