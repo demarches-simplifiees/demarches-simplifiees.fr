@@ -10,7 +10,7 @@ module Types
 
     global_id_field :id
     field :number, Int, "Le numero du dossier.", null: false, method: :id
-    field :state, DossierState, "L'état du dossier.", null: false
+    field :state, DossierState, "L’état du dossier.", null: false
 
     field :date_passage_en_construction, GraphQL::Types::ISO8601DateTime, "Date de dépôt.", null: false, method: :en_construction_at
     field :date_passage_en_instruction, GraphQL::Types::ISO8601DateTime, "Date de passage en instruction.", null: true, method: :en_instruction_at

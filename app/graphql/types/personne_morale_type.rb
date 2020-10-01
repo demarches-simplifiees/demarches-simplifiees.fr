@@ -16,7 +16,7 @@ module Types
       field :siret_siege_social, String, null: false
       field :code_effectif_entreprise, String, null: true
       field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
-      field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d'une année"
+      field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d’une année"
       field :date_creation, GraphQL::Types::ISO8601Date, null: false
       field :nom, String, null: false
       field :prenom, String, null: false
