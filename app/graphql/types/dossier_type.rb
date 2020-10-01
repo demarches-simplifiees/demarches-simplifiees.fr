@@ -24,6 +24,10 @@ module Types
       { Extensions::Attachment => { attachment: :justificatif_motivation } }
     ]
 
+    field :pdf, Types::File, "L’URL du dossier au format PDF.", null: true
+    field :geojson, Types::File, "L’URL du GeoJSON contenant les données cartographiques du dossier.", null: true
+    field :attestation, Types::File, "L’URL de l’attestation au format PDF.", null: true
+
     field :usager, Types::ProfileType, null: false
     field :groupe_instructeur, Types::GroupeInstructeurType, null: false
     field :revision, Types::RevisionType, null: false
@@ -79,6 +83,30 @@ module Types
 
     def annotations
       Loaders::Association.for(object.class, :champs_private).load(object)
+    end
+
+    def pdf
+      sgid = object.to_sgid(expires_in: 1.hour, for: 'api_v2')
+      {
+        filename: "dossier-#{object.id}.pdf",
+        content_type: 'application/pdf',
+        url: Rails.application.routes.url_helpers.api_v2_dossier_pdf_url(id: sgid)
+      }
+    end
+
+    def geojson
+      sgid = object.to_sgid(expires_in: 1.hour, for: 'api_v2')
+      {
+        filename: "dossier-#{object.id}-features.json",
+        content_type: 'application/json',
+        url: Rails.application.routes.url_helpers.api_v2_dossier_geojson_url(id: sgid)
+      }
+    end
+
+    def attestation
+      if object.termine? && object.procedure.attestation_template&.activated?
+        Loaders::Association.for(object.class, attestation: { pdf_attachment: :blob }).load(object).then(&:pdf)
+      end
     end
 
     def self.authorized?(object, context)
