@@ -1305,7 +1305,7 @@ describe Dossier do
               'type' => 'Polygon'
             },
             properties: {
-              area: 219.0,
+              area: 103.6,
               champ_id: champ_carte.stable_id,
               dossier_id: dossier.id,
               id: geo_area.id,
