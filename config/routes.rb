@@ -222,6 +222,8 @@ Rails.application.routes.draw do
 
     namespace :v2 do
       post :graphql, to: "graphql#execute"
+      get 'dossiers/pdf/:id', format: :pdf, to: "dossiers#pdf", as: :dossier_pdf
+      get 'dossiers/geojson/:id', to: "dossiers#geojson", as: :dossier_geojson
     end
   end
 
