@@ -20,8 +20,8 @@ module Types
     field :number, Int, "Le numero de la démarche.", null: false, method: :id
     field :title, String, "Le titre de la démarche.", null: false, method: :libelle
     field :description, String, "Description de la démarche.", null: false
-    field :state, DemarcheState, "L'état de la démarche.", null: false
-    field :declarative, DossierDeclarativeState, "L'état de dossier pour une démarche déclarative", null: true, method: :declarative_with_state
+    field :state, DemarcheState, "L’état de la démarche.", null: false
+    field :declarative, DossierDeclarativeState, "L’état de dossier pour une démarche déclarative", null: true, method: :declarative_with_state
 
     field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
     field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: false, method: :published_at
@@ -32,8 +32,8 @@ module Types
     field :groupe_instructeurs, [Types::GroupeInstructeurType], null: false
     field :service, Types::ServiceType, null: false
 
-    field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d'une démarche.", null: false do
-      argument :order, Types::Order, default_value: :asc, required: false, description: "L'ordre des dossiers."
+    field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d’une démarche.", null: false do
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers."
       argument :created_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers déposés depuis la date."
       argument :updated_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers mis à jour depuis la date."
       argument :state, Types::DossierType::DossierState, required: false, description: "Dossiers avec statut."
