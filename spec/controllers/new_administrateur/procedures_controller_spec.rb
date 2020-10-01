@@ -488,4 +488,21 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe 'PUT #allow_expert_review' do
+    let!(:procedure) { create :procedure, :with_service, administrateur: admin }
+
+    context 'when admin refuse to invite experts on this procedure' do
+      before do
+        procedure.update!(allow_expert_review: false)
+        procedure.reload
+      end
+
+      it { expect(procedure.allow_expert_review).to be_falsy }
+    end
+
+    context 'when admin accept to invite experts on this procedure (true by default)' do
+      it { expect(procedure.allow_expert_review).to be_truthy }
+    end
+  end
 end
