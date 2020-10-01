@@ -291,7 +291,8 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def check_allowed_filter_columns
-    filters.each do |_, columns|
+    filters.each do |key, columns|
+      return true if key == 'migrated'
       columns.each do |column|
         check_allowed_field(:filters, column)
       end
