@@ -24,6 +24,27 @@ class GeojsonService
     calculate_area(geojson)
   end
 
+  def self.length(geojson)
+    segment_reduce(geojson, 0) do |previous_value, segment|
+      coordinates = segment[:geometry][:coordinates]
+      previous_value + distance(coordinates[0], coordinates[1])
+    end
+  end
+
+  def self.distance(from, to)
+    coordinates1 = from
+    coordinates2 = to
+    d_lat = degrees_to_radians(coordinates2[1] - coordinates1[1])
+    d_lon = degrees_to_radians(coordinates2[0] - coordinates1[0])
+    lat1 = degrees_to_radians(coordinates1[1])
+    lat2 = degrees_to_radians(coordinates2[1])
+
+    a = (Math.sin(d_lat / 2)**2) + (Math.sin(d_lon / 2)**2) * Math.cos(lat1) * Math.cos(lat2)
+
+    radians = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    radians * EQUATORIAL_RADIUS
+  end
+
   def self.calculate_area(geom)
     total = 0
     case geom[:type]
@@ -81,7 +102,29 @@ class GeojsonService
     total
   end
 
+  def self.segment_reduce(geojson, initial_value)
+    previous_value = initial_value
+    started = false
+    coordinates = geojson[:coordinates].dup
+    from = coordinates.shift
+    coordinates.each do |to|
+      current_segment = { type: 'Feature', geometry: { type: 'LineString', coordinates: [from, to] } }
+      from = to
+      if started == false && initial_value.blank?
+        previous_value = current_segment
+      else
+        previous_value = yield previous_value, current_segment
+      end
+      started = true
+    end
+    previous_value
+  end
+
   def self.rad(num)
     num * Math::PI / 180
+  end
+
+  def self.degrees_to_radians(degrees)
+    rad(degrees % 360)
   end
 end
