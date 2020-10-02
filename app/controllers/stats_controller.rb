@@ -115,12 +115,16 @@ class StatsController < ApplicationController
   end
 
   def dossiers_states
-    {
-      'Brouilllon'      => Dossier.state_brouillon.count,
-      'En construction' => Dossier.state_en_construction.count,
-      'En instruction'  => Dossier.state_en_instruction.count,
-      'Terminé'         => Dossier.state_termine.count
-    }
+    query = <<-EOF
+      SELECT
+        COUNT(*) FILTER ( WHERE state = 'brouillon' ) AS "Brouillon",
+        COUNT(*) FILTER ( WHERE state = 'en_construction' ) AS "En construction",
+        COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "En instruction",
+        COUNT(*) FILTER ( WHERE state in ('accepte', 'refuse', 'sans_suite') ) AS "Terminé"
+      FROM dossiers
+      WHERE hidden_at IS NULL
+    EOF
+    Dossier.connection.select_all(query).first
   end
 
   def satisfaction_usagers
