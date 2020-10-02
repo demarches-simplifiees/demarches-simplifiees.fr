@@ -4,7 +4,7 @@ class StatsController < ApplicationController
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
-    @dossiers_states = dossiers_states
+    stat = Stat.first
 
     procedures = Procedure.publiees_ou_closes
     dossiers = Dossier.state_not_brouillon
@@ -12,22 +12,27 @@ class StatsController < ApplicationController
     @procedures_numbers = procedures_numbers(procedures)
 
     @dossiers_numbers = dossiers_numbers(
-      @dossiers_states['not_brouillon'],
-      @dossiers_states['last_30_days_count'],
-      @dossiers_states['previous_count']
+      stat.dossiers_not_brouillon,
+      stat.dossiers_depose_avant_30_jours,
+      stat.dossiers_deposes_entre_60_et_30_jours
     )
 
     @satisfaction_usagers = satisfaction_usagers
 
     @contact_percentage = contact_percentage
 
-    @dossiers_states_for_pie = @dossiers_states.slice("Brouillon", "En construction", "En instruction", "Terminé")
+    @dossiers_states_for_pie = {
+      "Brouillon" => stat.dossiers_brouillon,
+      "En construction" => stat.dossiers_en_construction,
+      "En instruction" => stat.dossiers_en_instruction,
+      "Terminé" => stat.dossiers_termines
+    }
 
     @procedures_cumulative = cumulative_hash(procedures, :published_at)
     @procedures_in_the_last_4_months = last_four_months_hash(procedures, :published_at)
 
-    @dossiers_cumulative = cumulative_hash(dossiers, :en_construction_at)
-    @dossiers_in_the_last_4_months = last_four_months_hash(dossiers, :en_construction_at)
+    @dossiers_cumulative = stat.dossiers_cumulative
+    @dossiers_in_the_last_4_months = stat.dossiers_in_the_last_4_months
 
     if administration_signed_in?
       @dossier_instruction_mean_time = Rails.cache.fetch("dossier_instruction_mean_time", expires_in: 1.day) do
@@ -116,25 +121,6 @@ class StatsController < ApplicationController
       last_30_days_count: last_30_days_count.to_s,
       evolution: formatted_evolution
     }
-  end
-
-  def dossiers_states
-    query = <<-EOF
-      SELECT
-        COUNT(*) FILTER ( WHERE state != 'brouillon' ) AS "not_brouillon",
-        COUNT(*) FILTER ( WHERE state != 'brouillon' and en_construction_at BETWEEN :one_month_ago AND :now ) AS "last_30_days_count",
-        COUNT(*) FILTER ( WHERE state != 'brouillon' and en_construction_at BETWEEN :two_months_ago AND :one_month_ago ) AS "previous_count",
-        COUNT(*) FILTER ( WHERE state = 'brouillon' ) AS "Brouillon",
-        COUNT(*) FILTER ( WHERE state = 'en_construction' ) AS "En construction",
-        COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "En instruction",
-        COUNT(*) FILTER ( WHERE state in ('accepte', 'refuse', 'sans_suite') ) AS "Terminé"
-      FROM dossiers
-      WHERE hidden_at IS NULL
-    EOF
-
-    sanitized_query = ActiveRecord::Base.sanitize_sql([query, now: Time.zone.now, one_month_ago: 1.month.ago, two_months_ago: 2.months.ago])
-
-    Dossier.connection.select_all(sanitized_query).first
   end
 
   def satisfaction_usagers
