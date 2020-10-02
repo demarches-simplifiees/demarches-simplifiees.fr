@@ -4,6 +4,8 @@ class StatsController < ApplicationController
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
+    @dossiers_states = dossiers_states
+
     procedures = Procedure.publiees_ou_closes
     dossiers = Dossier.state_not_brouillon
 
@@ -14,7 +16,7 @@ class StatsController < ApplicationController
 
     @contact_percentage = contact_percentage
 
-    @dossiers_states = dossiers_states
+    @dossiers_states_for_pie = @dossiers_states.slice("Brouillon", "En construction", "En instruction", "Terminé")
 
     @procedures_cumulative = cumulative_hash(procedures, :published_at)
     @procedures_in_the_last_4_months = last_four_months_hash(procedures, :published_at)
