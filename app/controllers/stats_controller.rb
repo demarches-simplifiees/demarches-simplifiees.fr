@@ -10,7 +10,12 @@ class StatsController < ApplicationController
     dossiers = Dossier.state_not_brouillon
 
     @procedures_numbers = procedures_numbers(procedures)
-    @dossiers_numbers = dossiers_numbers(dossiers)
+
+    @dossiers_numbers = dossiers_numbers(
+      @dossiers_states['not_brouillon'],
+      @dossiers_states['last_30_days_count'],
+      @dossiers_states['previous_count']
+    )
 
     @satisfaction_usagers = satisfaction_usagers
 
@@ -98,10 +103,7 @@ class StatsController < ApplicationController
     }
   end
 
-  def dossiers_numbers(dossiers)
-    total = dossiers.count
-    last_30_days_count = dossiers.where(en_construction_at: 1.month.ago..Time.zone.now).count
-    previous_count = dossiers.where(en_construction_at: 2.months.ago..1.month.ago).count
+  def dossiers_numbers(total, last_30_days_count, previous_count)
     if previous_count != 0
       evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
     else
@@ -119,6 +121,9 @@ class StatsController < ApplicationController
   def dossiers_states
     query = <<-EOF
       SELECT
+        COUNT(*) FILTER ( WHERE state != 'brouillon' ) AS "not_brouillon",
+        COUNT(*) FILTER ( WHERE state != 'brouillon' and en_construction_at BETWEEN :one_month_ago AND :now ) AS "last_30_days_count",
+        COUNT(*) FILTER ( WHERE state != 'brouillon' and en_construction_at BETWEEN :two_months_ago AND :one_month_ago ) AS "previous_count",
         COUNT(*) FILTER ( WHERE state = 'brouillon' ) AS "Brouillon",
         COUNT(*) FILTER ( WHERE state = 'en_construction' ) AS "En construction",
         COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "En instruction",
@@ -126,7 +131,10 @@ class StatsController < ApplicationController
       FROM dossiers
       WHERE hidden_at IS NULL
     EOF
-    Dossier.connection.select_all(query).first
+
+    sanitized_query = ActiveRecord::Base.sanitize_sql([query, now: Time.zone.now, one_month_ago: 1.month.ago, two_months_ago: 2.months.ago])
+
+    Dossier.connection.select_all(sanitized_query).first
   end
 
   def satisfaction_usagers
