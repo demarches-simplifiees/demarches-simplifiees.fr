@@ -52,7 +52,7 @@ class Champs::PieceJustificativeChamp < Champ
       if piece_justificative_file.image?
         tag.img('', { src: url, width: '100', id: piece_justificative_file.id, display: display })
       else
-        tag.a(name, { href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe" })
+        tag.a(display, { href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe" })
       end
     end
   end

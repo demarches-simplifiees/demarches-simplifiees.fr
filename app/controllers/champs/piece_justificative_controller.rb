@@ -18,7 +18,7 @@ class Champs::PieceJustificativeController < ApplicationController
     if @champ&.is_a? Champs::PieceJustificativeChamp
       redirect_to @champ.piece_justificative_file.service_url, status: :found
     else
-      render :json => { errors: "Il n'y a pas de piece justificative #{params[:champ_id]}"  }, :status => 404
+      render :json => { errors: "Il n'y a pas de piece justificative #{params[:champ_id]}" }, :status => 404
     end
   end
 end
