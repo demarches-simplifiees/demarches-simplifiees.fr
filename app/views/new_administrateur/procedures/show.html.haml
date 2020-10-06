@@ -76,8 +76,10 @@
           - else
             Choix du service administratif
       .card-admin-action
-        - if @procedure.service_id.blank? && current_administrateur.services.present?
-          = link_to 'Modifier', admin_services_path(procedure_id: @procedure.id), class: 'button'
+        - if @procedure.service.present?
+          = link_to 'Modifier', edit_admin_service_path(@procedure.service), class: 'button'
+        - elsif current_administrateur.services.present?
+          = link_to 'Choisir', admin_services_path(procedure_id: @procedure.id), class: 'button'
         - else
           = link_to 'Remplir', new_admin_service_path(procedure_id: @procedure.id), class: 'button'
 
