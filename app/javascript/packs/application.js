@@ -13,6 +13,7 @@ import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
 
+import '../new_design/chartkick';
 import '../new_design/dropdown';
 import '../new_design/form-validation';
 import '../new_design/procedure-context';

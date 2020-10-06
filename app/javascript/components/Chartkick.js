@@ -1,6 +1,6 @@
 import Chartkick from 'chartkick';
 import Highcharts from 'highcharts';
-import { toggle, delegate } from '@utils';
+import { toggle, delegate, fire } from '@utils';
 
 export default function () {
   return null;
@@ -34,3 +34,4 @@ delegate('click', '[data-toggle-chart]', toggleChart);
 
 Chartkick.use(Highcharts);
 window.Chartkick = Chartkick;
+fire(window, 'chartkick:ready');
