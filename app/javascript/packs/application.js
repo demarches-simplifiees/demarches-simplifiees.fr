@@ -1,8 +1,6 @@
 import '../shared/polyfills';
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
-import 'trix';
-import '@rails/actiontext';
 import 'whatwg-fetch'; // window.fetch polyfill
 import ReactRailsUJS from 'react_ujs';
 
