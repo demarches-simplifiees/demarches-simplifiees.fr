@@ -46,5 +46,10 @@ module Manager
 
       redirect_to manager_users_path
     end
+
+    def emails
+      @user = User.find(params[:id])
+
+    end
   end
 end
