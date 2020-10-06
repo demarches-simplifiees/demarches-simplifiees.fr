@@ -594,6 +594,7 @@ ActiveRecord::Schema.define(version: 2020_10_02_124154) do
     t.bigint "dossiers_termines", default: 0
     t.bigint "dossiers_depose_avant_30_jours", default: 0
     t.bigint "dossiers_deposes_entre_60_et_30_jours", default: 0
+    t.bigint "administrations_partenaires", default: 0
     t.jsonb "dossiers_cumulative", default: "{}", null: false
     t.jsonb "dossiers_in_the_last_4_months", default: "{}", null: false
     t.datetime "created_at", precision: 6, null: false

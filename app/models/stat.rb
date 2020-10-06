@@ -3,6 +3,7 @@
 # Table name: stats
 #
 #  id                                    :bigint           not null, primary key
+#  administrations_partenaires           :bigint           default(0)
 #  dossiers_brouillon                    :bigint           default(0)
 #  dossiers_cumulative                   :jsonb            not null
 #  dossiers_depose_avant_30_jours        :bigint           default(0)
@@ -30,7 +31,8 @@ class Stat < ApplicationRecord
         dossiers_not_brouillon: states['not_brouillon'],
         dossiers_termines: states['termines'],
         dossiers_cumulative: cumulative_hash(Dossier.state_not_brouillon, :en_construction_at),
-        dossiers_in_the_last_4_months: last_four_months_hash(Dossier.state_not_brouillon, :en_construction_at)
+        dossiers_in_the_last_4_months: last_four_months_hash(Dossier.state_not_brouillon, :en_construction_at),
+        administrations_partenaires: AdministrateursProcedure.joins(:procedure).merge(Procedure.publiees_ou_closes).select('distinct administrateur_id').count
       )
     end
 
