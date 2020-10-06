@@ -2,21 +2,19 @@ RSpec.describe GeoArea, type: :model do
   describe '#area' do
     let(:geo_area) { build(:geo_area, :polygon) }
 
-    it { expect(geo_area.area).to eq(219.0) }
+    it { expect(geo_area.area).to eq(103.6) }
   end
 
   describe '#area (hourglass polygon)' do
     let(:geo_area) { build(:geo_area, :hourglass_polygon) }
 
-    # This test fails in my local environement end the problem exists in production.
-    # Must be some mismatch between CI/production. I still want this fix in production.
-    it.pending { expect(geo_area.area).to be_nil }
+    it { expect(geo_area.area).to eq(32.4) }
   end
 
   describe '#length' do
     let(:geo_area) { build(:geo_area, :line_string) }
 
-    it { expect(geo_area.length).to eq(30.8) }
+    it { expect(geo_area.length).to eq(21.2) }
   end
 
   describe '#location' do
