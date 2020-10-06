@@ -8,6 +8,7 @@ class CreateStats < ActiveRecord::Migration[6.0]
       t.bigint :dossiers_termines, default: 0
       t.bigint :dossiers_depose_avant_30_jours, default: 0
       t.bigint :dossiers_deposes_entre_60_et_30_jours, default: 0
+      t.bigint :administrations_partenaires, default: 0
 
       t.jsonb :dossiers_cumulative, null: false, default: '{}'
       t.jsonb :dossiers_in_the_last_4_months, null: false, default: '{}'
