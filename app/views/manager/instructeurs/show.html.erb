@@ -41,6 +41,7 @@ as well as a link to its edit page.
 </header>
 
 <section class="main-content__body">
+  <%= render partial: 'manager/application/user_meta', locals: {user: page.resource&.user} %>
   <dl>
     <% page.attributes.each do |attribute| %>
       <dt class="attribute-label" id="<%= attribute.name %>">

@@ -1,0 +1,35 @@
+<dl>
+  <dt class="attribute-label" id="meta-usager">
+    Usager
+  </dt>
+  <dd class="attribute-data attribute-data--meta-usager">
+    <%= link_to('Voir son compte utilisateur', manager_user_path(user)) %>
+  </dd>
+</dl>
+
+<dl>
+  <dt class="attribute-label" id="meta-usager">
+    Instructeur
+  </dt>
+  <dd class="attribute-data attribute-data--meta-usager">
+    <% if user.instructeur.present? %>
+      <%= link_to('Voir son compte instructeur', manager_instructeur_path(user.instructeur)) %>
+    <% else %>
+      Pas instructeur !
+    <% end %>
+  </dd>
+</dl>
+
+<dl>
+  <dt class="attribute-label" id="meta-usager">
+    Administrateur
+  </dt>
+  <dd class="attribute-data attribute-data--meta-usager">
+    <% if user.administrateur.present? %>
+      <%= link_to('Voir son compte administrateur', manager_administrateur_path(user.administrateur)) %>
+    <% else %>
+      Pas administrateur !
+    <% end %>
+  </dd>
+</dl>
+<hr />
