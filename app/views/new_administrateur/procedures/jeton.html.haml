@@ -19,6 +19,6 @@
       propre à votre démarche.
 
     = f.label :api_entreprise_token, "Jeton"
-    = f.password_field :api_entreprise_token, class: 'form-control'
+    = f.password_field :api_entreprise_token, value: @procedure.read_attribute(:api_entreprise_token), class: 'form-control'
     .text-right
       = f.button 'Enregistrer', class: 'button primary send'
