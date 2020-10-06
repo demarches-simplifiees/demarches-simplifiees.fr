@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
       post 'resend_confirmation_instructions', on: :member
       put 'enable_feature', on: :member
+      get 'emails', on: :member
     end
 
     resources :instructeurs, only: [:index, :show] do
