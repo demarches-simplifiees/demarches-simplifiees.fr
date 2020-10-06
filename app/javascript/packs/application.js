@@ -29,14 +29,15 @@ import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/repetition';
 
-import { toggleCondidentielExplanation } from '../new_design/avis';
-import { scrollMessagerie } from '../new_design/messagerie';
+import {
+  toggleCondidentielExplanation,
+  replaceSemicolonByComma
+} from '../new_design/avis';
 import {
   showMotivation,
   motivationCancel,
   showImportJustificatif
 } from '../new_design/state-button';
-import { replaceSemicolonByComma } from '../new_design/avis';
 import {
   acceptEmailSuggestion,
   discardEmailSuggestionBox
@@ -46,7 +47,6 @@ import {
 const DS = {
   fire: (eventName, data) => Rails.fire(document, eventName, data),
   toggleCondidentielExplanation,
-  scrollMessagerie,
   showMotivation,
   motivationCancel,
   showImportJustificatif,
