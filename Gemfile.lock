@@ -102,7 +102,7 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.1)
     attr_required (1.0.1)
-    autoprefixer-rails (10.0.0.2)
+    autoprefixer-rails (10.0.1.0)
       execjs
     axe-matchers (2.6.1)
       dumb_delegator (~> 0.8)
