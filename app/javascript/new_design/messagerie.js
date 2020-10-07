@@ -1,6 +1,6 @@
 import { scrollTo, scrollToBottom } from '@utils';
 
-export function scrollMessagerie() {
+function scrollMessagerie() {
   const ul = document.querySelector('.messagerie ul');
 
   if (ul) {
