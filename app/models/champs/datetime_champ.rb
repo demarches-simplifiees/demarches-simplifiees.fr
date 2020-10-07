@@ -33,6 +33,10 @@ class Champs::DatetimeChamp < Champ
     false
   end
 
+  def for_export
+    value.present? ? Time.zone.parse(value) : ""
+  end
+
   private
 
   def format_before_save

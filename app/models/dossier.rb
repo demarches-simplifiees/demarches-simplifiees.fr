@@ -706,6 +706,7 @@ class Dossier < ApplicationRecord
   end
 
   def spreadsheet_columns(with_etablissement: false)
+    # any modification in this method must be reflected in procedure fixed_column_offset
     columns = [
       ['ID', id.to_s],
       ['Email', user.email]
