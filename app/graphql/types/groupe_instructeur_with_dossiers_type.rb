@@ -2,8 +2,8 @@ module Types
   class GroupeInstructeurWithDossiersType < GroupeInstructeurType
     description "Un groupe instructeur avec ces dossiers"
 
-    field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d'une démarche.", null: false do
-      argument :order, Types::Order, default_value: :asc, required: false, description: "L'ordre des dossiers."
+    field :dossiers, Types::DossierType.connection_type, "Liste de tous les dossiers d’une démarche.", null: false do
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers."
       argument :created_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers déposés depuis la date."
       argument :updated_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers mis à jour depuis la date."
       argument :state, Types::DossierType::DossierState, required: false, description: "Dossiers avec statut."
