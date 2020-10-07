@@ -98,6 +98,8 @@ describe ProcedureExportService do
         en_instruction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
         expect(en_construction_at).to eq(dossier.en_construction_at.round)
         expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
+        expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('date')]).to be_a(Date)
+        expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('datetime')]).to be_a(Time)
       end
 
       context 'with a birthdate' do
