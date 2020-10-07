@@ -8,6 +8,6 @@ class APIGeoTestController < ActionController::Base
   end
 
   def communes
-    render json: [{ nom: 'Ambléon' }]
+    render json: [{ nom: 'Ambléon', code: '01006', codesPostaux: ['01300'] }]
   end
 end
