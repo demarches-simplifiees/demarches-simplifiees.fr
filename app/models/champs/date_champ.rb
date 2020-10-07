@@ -29,6 +29,10 @@ class Champs::DateChamp < Champ
     value.present? ? I18n.l(Time.zone.parse(value), format: '%d %B %Y') : ""
   end
 
+  def for_export
+    value.present? ? Date.parse(value) : ""
+  end
+
   private
 
   def format_before_save

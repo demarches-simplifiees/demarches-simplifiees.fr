@@ -202,6 +202,14 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:number)
   end
 
+  def date?
+    type_champ == TypeDeChamp.type_champs.fetch(:date)
+  end
+
+  def datetime?
+    type_champ == TypeDeChamp.type_champs.fetch(:datetime)
+  end
+
   def public?
     !private?
   end
