@@ -436,6 +436,35 @@ describe API::V2::GraphqlController do
           end
         end
 
+        context "with links" do
+          let(:dossier) { create(:dossier, :accepte, :with_attestation, procedure: procedure) }
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                id
+                number
+                pdf {
+                  url
+                }
+                geojson {
+                  url
+                }
+                attestation {
+                  url
+                }
+              }
+            }"
+          end
+
+          it "urls should be returned" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data[:dossier][:pdf][:url]).not_to be_nil
+            expect(gql_data[:dossier][:geojson][:url]).not_to be_nil
+            expect(gql_data[:dossier][:attestation][:url]).not_to be_nil
+          end
+        end
+
         context "when there are missing data" do
           before do
             dossier.etablissement.update!(entreprise_code_effectif_entreprise: nil, entreprise_capital_social: nil,
