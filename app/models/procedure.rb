@@ -597,7 +597,70 @@ class Procedure < ApplicationRecord
     draft_revision.deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
   end
 
+  def column_styles(table)
+    styles =
+      case table
+      when :dossiers
+        dossier_column_styles
+      when :etablissements
+        etablissement_column_styles
+      when :avis
+        []
+      when Array
+        table_column_styles(table)
+      end
+    { column_styles: styles }
+  end
+
   private
+
+  def dossier_column_styles
+    date_index = index_of_dates
+    exported_champs = types_de_champ.reject(&:exclude_from_export?)
+    exported_annotations = types_de_champ_private.reject(&:exclude_from_export?)
+    champ_start = fixed_column_offset
+    private_champ_start = champ_start + exported_champs.length
+    [{ columns: (date_index..date_index + 3), styles: { format_code: 'dd/mm/yyyy hh:mm:ss' } }] +
+      exported_champs.filter_map.with_index(champ_start, &method(:column_style)) +
+      exported_annotations.filter_map.with_index(private_champ_start, &method(:column_style))
+  end
+
+  def etablissement_column_styles
+    [{ columns: ['Y', 'AE', 'AF', 'AG'], styles: { format_code: 'dd-mm-yyyy' } }]
+  end
+
+  def table_column_styles(table)
+    offset = 2 # ID & line number
+    # compute column_style on type de champs of the first line of champs
+    table.last.first[:champs].map(&:type_de_champ).filter_map.with_index(offset, &method(:column_style))
+  end
+
+  def fixed_column_offset
+    size = index_of_dates
+    size += 6 # Dernière mise à jour le, Déposé le, Passé en instruction le, Traité le, Motivation de la décision, Instructeurs
+    size += 1 if routee? # groupe instructeur
+    size
+  end
+
+  def index_of_dates
+    size = 2 # ID, Email
+    if for_individual?
+      size += 3 # Civilité, Nom, Prénom
+      size += 1 if ask_birthday # Date de naissance
+    else
+      size += 1 # Entreprise raison sociale
+    end
+    size += 2 # Archivé, État du dossier
+    size
+  end
+
+  def column_style(type_de_champ, i)
+    if type_de_champ.date?
+      { columns: i, styles: { format_code: 'dd/mm/yyyy' } }
+    elsif type_de_champ.datetime?
+      { columns: i, styles: { format_code: 'dd/mm/yyyy hh::mm' } }
+    end
+  end
 
   def before_publish
     update!(closed_at: nil, unpublished_at: nil)
