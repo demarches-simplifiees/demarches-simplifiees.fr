@@ -32,6 +32,7 @@ Rails.application.routes.draw do
       post 'resend_confirmation_instructions', on: :member
       put 'enable_feature', on: :member
       get 'emails', on: :member
+      put 'unblock_email'
     end
 
     resources :instructeurs, only: [:index, :show] do
