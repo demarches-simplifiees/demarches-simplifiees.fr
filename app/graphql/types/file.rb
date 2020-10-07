@@ -7,7 +7,11 @@ module Types
     field :content_type, String, null: false
 
     def url
-      object.service_url
+      if object.is_a?(Hash)
+        object[:url]
+      else
+        object.service_url
+      end
     end
   end
 end
