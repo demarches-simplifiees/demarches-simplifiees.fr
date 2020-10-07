@@ -43,14 +43,14 @@
         %ul.numbers
           %li.number
             .number-value
-              = number_with_delimiter(AdministrateursProcedure.joins(:procedure).merge(Procedure.publiees_ou_closes).select('distinct administrateur_id').count, :locale => :fr)
+              = number_with_delimiter(@stat&.administrations_partenaires, :locale => :fr)
             .number-label<
               administrations
               %br<>
               partenaires
           %li.number
             .number-value
-              = number_with_delimiter(Dossier.state_not_brouillon.count, :locale => :fr)
+              = number_with_delimiter(@stat&.dossiers_not_brouillon, :locale => :fr)
             .number-label<
               dossiers
               %br<>
