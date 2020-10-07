@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
@@ -135,6 +135,41 @@ module NewAdministrateur
       render 'jeton'
     end
 
+    def publication
+      if @procedure.brouillon?
+        @procedure_lien = commencer_test_url(path: @procedure.path)
+      else
+        @procedure_lien = commencer_url(path: @procedure.path)
+      end
+      @procedure.path = @procedure.suggested_path(current_administrateur)
+      @current_administrateur = current_administrateur
+    end
+
+    def publish
+      @procedure.assign_attributes(publish_params)
+
+      if @procedure.publish_or_reopen!(current_administrateur)
+        redirect_to admin_procedure_path(@procedure)
+        flash.notice = "Démarche publiée"
+      else
+        redirect_to admin_procedure_path(@procedure)
+        flash.alert = @procedure.errors.full_messages
+      end
+    end
+
+    def transfer
+      admin = Administrateur.by_email(params[:email_admin].downcase)
+      if admin.nil?
+        redirect_to admin_procedure_publication_path(params[:procedure_id])
+        flash.alert = "Envoi vers #{params[:email_admin]} impossible : cet administrateur n'existe pas"
+      else
+        procedure = current_administrateur.procedures.find(params[:procedure_id])
+        procedure.clone(admin, false)
+        redirect_to admin_procedure_path(params[:procedure_id])
+        flash.notice = "La démarche a correctement été clonée vers le nouvel administrateur."
+      end
+    end
+
     private
 
     def apercu_tab
@@ -164,6 +199,10 @@ module NewAdministrateur
         @procedure.errors.add(:base, :rgpd_rgs_not_checked, message: 'Toutes les cases concernant le RGPD et le RGS doivent être cochées')
       end
       @terms_of_use_read = params.slice(*terms_of_use)
+    end
+
+    def publish_params
+      params.permit(:path, :lien_site_web)
     end
   end
 end

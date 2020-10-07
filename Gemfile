@@ -62,7 +62,7 @@ gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'
 gem 'rack-mini-profiler'
-gem 'rails', '6.0.3.2'
+gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'react-rails'
