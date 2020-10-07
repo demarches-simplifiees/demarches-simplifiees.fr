@@ -9,7 +9,7 @@ import { getJSON, ajax, fire } from '@utils';
 
 import { getMapStyle, SwitchMapStyle } from '../MapStyles';
 
-import SearchInput from './SearchInput';
+import ComboAdresseSearch from '../ComboAdresseSearch';
 import {
   polygonCadastresFill,
   polygonCadastresLine,
@@ -279,9 +279,11 @@ function MapEditor({ featureCollection, url, preview, options }) {
           marginBottom: '50px'
         }}
       >
-        <SearchInput
-          getCoords={(searchTerm) => {
-            setCoords(searchTerm);
+        <ComboAdresseSearch
+          placeholder="Rechercher une adresse : saisissez au moins 2 caractères"
+          allowInputValues={false}
+          onChange={(_, { geometry: { coordinates } }) => {
+            setCoords(coordinates);
             setZoom([17]);
           }}
         />
