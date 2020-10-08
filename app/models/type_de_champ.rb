@@ -53,7 +53,8 @@ class TypeDeChamp < ApplicationRecord
     siret: 'siret',
     carte: 'carte',
     te_fenua: 'te_fenua',
-    repetition: 'repetition'
+    repetition: 'repetition',
+    titre_identite: 'titre_identite'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
@@ -195,7 +196,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def piece_justificative?
-    type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative)
+    type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) || type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
   end
 
   def legacy_number?

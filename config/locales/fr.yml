@@ -88,6 +88,7 @@ fr:
               taken: déjà utilisé
             password:
               too_short: 'est trop court'
+              not_strong: 'n’est pas assez complexe'
             password_confirmation:
               confirmation: ': Les deux mots de passe ne correspondent pas'
         invite:

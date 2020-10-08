@@ -31,14 +31,6 @@ class Administrateur < ApplicationRecord
     user&.email
   end
 
-  # validate :password_complexity, if: Proc.new { |a| Devise.password_length.include?(a.password.try(:size)) }
-
-  def password_complexity
-    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_ADMIN
-      errors.add(:password, :not_strong)
-    end
-  end
-
   def self.find_inactive_by_token(reset_password_token)
     self.inactive.with_reset_password_token(reset_password_token)
   end

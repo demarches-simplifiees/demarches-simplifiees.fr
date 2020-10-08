@@ -3,7 +3,7 @@ FactoryBot.define do
   factory :administrateur do
     transient do
       email { generate(:administrateur_email) }
-      password { 'mon chien aime les bananes' }
+      password { 'Mon [hien 4im3 {es banane$' }
     end
 
     initialize_with do
