@@ -49,7 +49,7 @@ class GeoArea < ApplicationRecord
   def to_feature
     {
       type: 'Feature',
-      geometry: geometry,
+      geometry: safe_geometry,
       properties: properties.symbolize_keys.merge(
         source: source,
         area: area,
@@ -59,6 +59,10 @@ class GeoArea < ApplicationRecord
         dossier_id: champ.dossier_id
       ).compact
     }
+  end
+
+  def safe_geometry
+    RGeo::GeoJSON.encode(rgeo_geometry)
   end
 
   def rgeo_geometry
