@@ -62,6 +62,12 @@
             %p.mb-4
               Comment faire :
               vous pouvez soit lui communiquer par email le lien vers la démarche en test, ou bien le nommer « administrateur ». Dans tous les cas, ne publiez votre démarche qu’après avoir eu son avis.
+            %p
+              Si vous êtes dans un service de l'administration de la <b>Polynésie</b>, envoyez le lien de votre démarche à
+              - subject = "[#{APPLICATION_NAME}] test de '#{@procedure.libelle}'".gsub(/&/,' ')
+              - body = "Bonjour%0AQue pensez-vous de #{sanitize_url(@procedure_lien)}%0AD'avance merci.".gsub(/&/,' ')
+              %a{ href:"mailto: #{EQUIPE_EMAIL}?subject=#{subject}&body=#{body}" }
+                l'équipe RGPD.
 
           = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
 
