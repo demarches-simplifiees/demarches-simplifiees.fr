@@ -13,7 +13,7 @@ class ChampSerializer < ActiveModel::Serializer
   def value
     case object
     when GeoArea
-      object.geometry
+      object.safe_geometry
     else
       object.for_api
     end
