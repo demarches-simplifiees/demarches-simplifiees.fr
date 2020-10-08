@@ -182,8 +182,8 @@ Rails.application.routes.draw do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
     get 'activate/test_strength' => '/administrateurs/activate#test_strength' # redirect to password
-    get 'procedures/archived' => 'procedures#archived'
-    get 'procedures/draft' => 'procedures#draft'
+    get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
+    get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
     resources :procedures, only: [:destroy] do
       collection do
@@ -223,7 +223,7 @@ Rails.application.routes.draw do
   # API
   #
 
-  authenticated :user, lambda { |user| user.administrateur_id && Flipper.enabled?(:administrateur_graphql, user) } do
+  authenticated :user, lambda { |user| user.administrateur_id } do
     mount GraphqlPlayground::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql"
   end
 

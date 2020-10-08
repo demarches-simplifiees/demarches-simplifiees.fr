@@ -25,8 +25,6 @@ end
 
 # A list of features to be deployed on first push
 features = [
-  :administrateur_champ_integer_number,
-  :administrateur_graphql,
   :administrateur_web_hook,
   :down_time,
   :insee_api_v3,
@@ -34,7 +32,6 @@ features = [
   :autosave_dossier_draft,
   :maintenance_mode,
   :mini_profiler,
-  :operation_log_serialize_subject,
   :xray,
   :carte_ign,
   :localization
