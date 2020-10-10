@@ -49,36 +49,6 @@ describe User, type: :model do
     end
   end
 
-  describe '#password_complexity' do
-    let(:email) { 'mail@beta.gouv.fr' }
-    let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées pwd'] }
-    let(:user) { build(:user, email: email, password: password, confirmation_token: '123', confirmed_at: nil) }
-    let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_USER }
-
-    subject do
-      user.save
-      user.errors.full_messages
-    end
-
-    context 'when password is too short' do
-      let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
-
-      it { expect(subject).to eq(["Le mot de passe est trop court"]) }
-    end
-
-    context 'when password is too simple' do
-      let(:password) { passwords[min_complexity - 1] }
-
-      it { expect(subject).to eq(["Le mot de passe n’est pas assez complexe"]) }
-    end
-
-    context 'when password is acceptable' do
-      let(:password) { passwords[min_complexity] }
-
-      it { expect(subject).to eq([]) }
-    end
-  end
-
   describe '#invite?' do
     let(:dossier) { create :dossier }
     let(:user) { dossier.user }
