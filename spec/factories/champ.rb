@@ -172,6 +172,14 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_piece_justificative, procedure: dossier.procedure }
     end
 
+    factory :champ_titre_identite, class: 'Champs::TitreIdentiteChamp' do
+      type_de_champ { association :type_de_champ_titre_identite, procedure: dossier.procedure }
+
+      after(:build) do |champ, _evaluator|
+        champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.png", content_type: "image/png")
+      end
+    end
+
     factory :champ_carte, class: 'Champs::CarteChamp' do
       type_de_champ { association :type_de_champ_carte, procedure: dossier.procedure }
     end

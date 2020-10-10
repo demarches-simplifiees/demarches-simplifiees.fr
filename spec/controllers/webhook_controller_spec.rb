@@ -25,7 +25,7 @@ describe WebhookController, type: :controller do
     end
 
     context 'when there is a matching user' do
-      let(:user) { create(:user) }
+      let(:user) { create(:user, :with_strong_password) }
       let(:customer_email) { user.email }
 
       it 'returns a 200 response' do

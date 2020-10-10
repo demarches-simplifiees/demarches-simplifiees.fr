@@ -56,44 +56,43 @@ module NewAdministrateur
             :updated_at
           ],
           methods: [
+            # polynesian fields
             :batiments,
-            :cadastres,
-            :drop_down_list_value,
             :level,
             :parcelles,
-            :parcelles_agricoles,
+            :min,
+            :max,
+            :zones_manuelles,
+            # base fields
+            :drop_down_list_value,
             :piece_justificative_template_filename,
             :piece_justificative_template_url,
-            :quartiers_prioritaires,
-            :zones_manuelles,
-            :min,
-            :max
+            :cadastres,
+            :mnhn
           ]
         )
       }
     end
 
     def type_de_champ_create_params
-      type_de_champ_params = params.required(:type_de_champ).permit(
+      type_de_champ_params = params.required(:type_de_champ).permit(:type_champ,
+        # polynesian
         :batiments,
-        :cadastres,
-        :description,
-        :drop_down_list_value,
         :level,
-        :libelle,
-        :mandatory,
-        :order_place,
         :parcelles,
-        :parcelles_agricoles,
-        :parent_id,
-        :piece_justificative_template,
-        :private,
-        :quartiers_prioritaires,
         :zones_manuelles,
         :min,
         :max,
-        :type_champ
-      )
+        # base
+        :libelle,
+        :description,
+        :mandatory,
+        :parent_id,
+        :private,
+        :drop_down_list_value,
+        :piece_justificative_template,
+        :cadastres,
+        :mnhn)
 
       if type_de_champ_params[:parent_id].present?
         type_de_champ_params[:parent_id] = TypeDeChamp.to_stable_id(type_de_champ_params[:parent_id])
@@ -103,23 +102,23 @@ module NewAdministrateur
     end
 
     def type_de_champ_update_params
-      params.required(:type_de_champ).permit(
+      params.required(:type_de_champ).permit(:type_champ,
+        # polynesian
         :cadastres,
-        :description,
-        :drop_down_list_value,
         :level,
-        :libelle,
-        :mandatory,
-        :parcelles_agricoles,
         :parcelles,
-        :piece_justificative_template,
-        :quartiers_prioritaires,
         :batiments,
         :zones_manuelles,
         :min,
         :max,
-        :type_champ
-      )
+        # base
+        :libelle,
+        :description,
+        :mandatory,
+        :drop_down_list_value,
+        :piece_justificative_template,
+        :cadastres,
+        :mnhn)
     end
   end
 end

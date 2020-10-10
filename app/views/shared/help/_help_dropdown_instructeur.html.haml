@@ -1,6 +1,6 @@
 .dropdown.help-dropdown
-  %button.button.primary.dropdown-button Aide
-  .dropdown-content.fade-in-down
+  %button.button.primary.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'help-menu' } Aide
+  #help-menu.dropdown-content.fade-in-down
     %ul.dropdown-items
       = render partial: 'shared/help/dropdown_items/faq_item'
       = render partial: 'shared/help/dropdown_items/email_item'

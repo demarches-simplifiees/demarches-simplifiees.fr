@@ -16,7 +16,7 @@ module Types
         end
       end
 
-      if administrateur && Flipper.enabled?(:administrateur_graphql, administrateur.user)
+      if administrateur
         context[:authorized][demarche.id] = true
         true
       end

@@ -23,7 +23,7 @@ import {
 
 const Map = ReactMapboxGl({});
 
-function MapEditor({ featureCollection, url, preview, hasCadastres, ign }) {
+function MapEditor({ featureCollection, url, preview, options }) {
   const drawControl = useRef(null);
   const [currentMap, setCurrentMap] = useState(null);
 
@@ -35,10 +35,10 @@ function MapEditor({ featureCollection, url, preview, hasCadastres, ign }) {
   const [cadastresFeatureCollection, setCadastresFeatureCollection] = useState(
     filterFeatureCollection(featureCollection, 'cadastre')
   );
-  const mapStyle = useMemo(() => getMapStyle(style, hasCadastres), [
-    style,
-    hasCadastres
-  ]);
+  const mapStyle = useMemo(
+    () => getMapStyle(style, options.cadastres, options.mnhn),
+    [style, options]
+  );
 
   const translations = [
     ['.mapbox-gl-draw_line', 'Tracer une ligne'],
@@ -306,7 +306,7 @@ function MapEditor({ featureCollection, url, preview, hasCadastres, ign }) {
           height: '500px'
         }}
       >
-        {hasCadastres ? (
+        {options.cadastres ? (
           <GeoJSONLayer
             data={cadastresFeatureCollection}
             fillPaint={polygonCadastresFill}
@@ -326,7 +326,7 @@ function MapEditor({ featureCollection, url, preview, hasCadastres, ign }) {
             trash: true
           }}
         />
-        <SwitchMapStyle style={style} setStyle={setStyle} ign={ign} />
+        <SwitchMapStyle style={style} setStyle={setStyle} ign={options.ign} />
         <ZoomControl />
       </Map>
     </>
@@ -341,8 +341,11 @@ MapEditor.propTypes = {
   }),
   url: PropTypes.string,
   preview: PropTypes.bool,
-  hasCadastres: PropTypes.bool,
-  ign: PropTypes.bool
+  options: PropTypes.shape({
+    cadastres: PropTypes.bool,
+    mnhn: PropTypes.bool,
+    ign: PropTypes.bool
+  })
 };
 
 export default MapEditor;

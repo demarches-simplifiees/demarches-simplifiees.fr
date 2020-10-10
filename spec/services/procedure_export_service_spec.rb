@@ -80,6 +80,7 @@ describe ProcedureExportService do
           "siret",
           "carte",
           "te_fenua",
+          "titre_identite",
           "text"
         ]
       end
@@ -171,6 +172,7 @@ describe ProcedureExportService do
           "siret",
           "carte",
           "te_fenua",
+          "titre_identite",
           "text"
         ]
       end
@@ -256,6 +258,7 @@ describe ProcedureExportService do
             "siret",
             "carte",
             "te_fenua",
+            "titre_identite",
             "text"
           ]
         end

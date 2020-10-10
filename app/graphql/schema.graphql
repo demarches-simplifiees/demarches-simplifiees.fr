@@ -1345,6 +1345,11 @@ enum TypeDeChamp {
   textarea
 
   """
+  Titre identité
+  """
+  titre_identite
+
+  """
   Oui/Non
   """
   yes_no

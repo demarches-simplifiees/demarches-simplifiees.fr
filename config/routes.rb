@@ -182,9 +182,8 @@ Rails.application.routes.draw do
     get 'activate' => '/administrateurs/activate#new'
     patch 'activate' => '/administrateurs/activate#create'
     get 'activate/test_strength' => '/administrateurs/activate#test_strength' # redirect to password
-    get 'procedures/archived' => 'procedures#archived'
-    get 'procedures/draft' => 'procedures#draft'
-    get 'procedures/:id/publication' => 'procedures#show', as: :procedure_publication
+    get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
+    get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
     resources :procedures, only: [:destroy] do
       collection do
@@ -199,8 +198,6 @@ Rails.application.routes.draw do
 
       put 'archive' => 'procedures#archive', as: :archive
       get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
-      put 'publish' => 'procedures#publish', as: :publish
-      post 'transfer' => 'procedures#transfer', as: :transfer
       put 'clone' => 'procedures#clone', as: :clone
     end
 
@@ -226,7 +223,7 @@ Rails.application.routes.draw do
   # API
   #
 
-  authenticated :user, lambda { |user| user.administrateur_id && Flipper.enabled?(:administrateur_graphql, user) } do
+  authenticated :user, lambda { |user| user.administrateur_id } do
     mount GraphqlPlayground::Rails::Engine, at: "/graphql", graphql_path: "/api/v2/graphql"
   end
 
@@ -385,6 +382,10 @@ Rails.application.routes.draw do
         get 'jeton'
         patch 'update_jeton'
       end
+
+      get 'publication' => 'procedures#publication', as: :publication
+      put 'publish' => 'procedures#publish', as: :publish
+      post 'transfer' => 'procedures#transfer', as: :transfer
 
       resources :mail_templates, only: [:edit, :update]
 

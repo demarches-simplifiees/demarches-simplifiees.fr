@@ -7,17 +7,18 @@
   Je vous remercie de l’intérêt que vous portez à notre outil de dématérialisation de démarches.
 
 %p
-  Votre compte administrateur a été créé pour l'adresse email #{@admin.email}.
+  Votre compte administrateur a été créé pour l'adresse email #{@user.email}.
 
-- if @reset_password_token.present?
+- if !@user.active?
   %p
     %b
       Pour l’activer, cliquez sur le lien suivant :
       = link_to(admin_activate_url(token: @reset_password_token), admin_activate_url(token: @reset_password_token))
 - else
   %p
-    Pour vous connecter, cliquez sur le lien suivant :
-    = link_to(new_user_session_url, new_user_session_url)
+    %b
+      Pour vous connecter, cliquez sur le lien suivant :
+      = link_to edit_user_password_url(@user, reset_password_token: @reset_password_token), edit_user_password_url(@user, reset_password_token: @reset_password_token)
 
 %p
   = render partial: "layouts/mailers/bizdev_signature", locals: { author_name: @author_name }

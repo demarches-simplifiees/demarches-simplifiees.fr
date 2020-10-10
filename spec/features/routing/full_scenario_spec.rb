@@ -174,11 +174,8 @@ feature 'The routing', js: true do
   def publish_procedure(procedure)
     click_on procedure.libelle
     find('#publish-procedure-link').click
-    find('#publish-procedure').click
-    within '#publish-modal' do
-      fill_in 'lien_site_web', with: 'http://some.website'
-      click_on 'Publier'
-    end
+    fill_in 'lien_site_web', with: 'http://some.website'
+    click_on 'Publier'
 
     expect(page).to have_text('Démarche publiée')
   end

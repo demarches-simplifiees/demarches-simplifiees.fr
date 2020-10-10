@@ -1,5 +1,5 @@
 .dropdown.invite-user-action
-  %button.button.dropdown-button
+  %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'invite-content' }
     %span.icon.person
     - if dossier.invites.count > 0
       Voir les personnes invitées
@@ -10,5 +10,5 @@
       - else
         Inviter une personne à modifier ce dossier
 
-  .dropdown-content.fade-in-down
+  #invite-content.dropdown-content.fade-in-down
     = render partial: "invites/form", locals: { dossier: dossier }

@@ -77,13 +77,11 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       expect(page).to have_selector('#champ-1-libelle')
 
       click_on Procedure.last.libelle
-      find('#publish-procedure-link').click
 
-      preview_window = window_opened_by { click_on 'onglet-preview' }
-      within_window(preview_window) do
-        expect(page).to have_current_path(apercu_admin_procedure_path(Procedure.last))
-        expect(page).to have_field('libelle de champ')
-      end
+      find('#preview-procedure').click
+
+      expect(page).to have_current_path(apercu_admin_procedure_path(Procedure.last))
+      expect(page).to have_field('libelle de champ')
     end
 
     scenario 'After adding champ and file, make publication' do
@@ -102,17 +100,12 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
       # (Capybara runs the app on an arbitrary host/port.)
       expect(page).to have_link(nil, href: /#{commencer_test_path(Procedure.last.path)}/)
 
-      expect(page).to have_selector('#publish-procedure', visible: true)
-      find('#publish-procedure').click
-
-      within '#publish-modal' do
-        expect(find_field('procedure_path').value).to eq 'service-libelle-de-la-procedure'
-        fill_in 'lien_site_web', with: 'http://some.website'
-        click_on 'publish'
-      end
+      expect(page).to have_selector('#procedure_path', visible: true)
+      expect(find_field('procedure_path').value).to eq 'service-libelle-de-la-procedure'
+      fill_in 'lien_site_web', with: 'http://some.website'
+      click_on 'publish'
 
       expect(page).to have_text('Démarche publiée')
-      expect(page).to have_selector('.procedure-lien')
     end
   end
 end
