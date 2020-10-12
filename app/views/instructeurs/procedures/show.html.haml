@@ -78,9 +78,9 @@
     - if @dossiers.present? || @current_filters.count > 0
       = paginate @dossiers
       %span.dropdown
-        %button.button.dropdown-button
+        %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'filter-menu' }
           Filtrer
-        .dropdown-content.left-aligned.fade-in-down
+        #filter-menu.dropdown-content.left-aligned.fade-in-down
           = form_tag add_filter_instructeur_procedure_path(@procedure), method: :post, class: 'dropdown-form large' do
             = label_tag :field,  "Colonne"
             = select_tag :field, options_for_select(@available_fields_to_filters)
@@ -118,9 +118,9 @@
 
             %th.action-col.follow-col
               %span.dropdown
-                %button.button.dropdown-button
+                %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'custom-menu' }
                   Personnaliser
-                .dropdown-content.fade-in-down
+                #custom-menu.dropdown-content.fade-in-down
                   = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
                     = select_tag :values,
                       options_for_select(@procedure_presentation.fields_for_select,

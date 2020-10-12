@@ -1,3 +1,24 @@
+const IGN_TOKEN = 'rc1egnbeoss72hxvd143tbyk';
+
+function ignServiceURL(layer, format = 'image/png') {
+  const url = `https://wxs.ign.fr/${IGN_TOKEN}/geoportail/wmts`;
+  const query =
+    'service=WMTS&request=GetTile&version=1.0.0&tilematrixset=PM&tilematrix={z}&tilecol={x}&tilerow={y}&style=normal';
+
+  return `${url}?${query}&layer=${layer}&format=${format}`;
+}
+
+function rasterSource(tiles, attribution) {
+  return {
+    type: 'raster',
+    tiles,
+    tileSize: 256,
+    attribution,
+    minzoom: 0,
+    maxzoom: 18
+  };
+}
+
 export default {
   version: 8,
   metadat: {
@@ -41,20 +62,34 @@ export default {
       minzoom: 0,
       maxzoom: 19
     },
-    'carte-ign': {
-      type: 'raster',
-      tiles: [
-        'https://wxs.ign.fr/rc1egnbeoss72hxvd143tbyk/geoportail/wmts?service=WMTS&request=GetTile&version=1.0.0&tilematrixset=PM&tilematrix={z}&tilecol={x}&tilerow={y}&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS&format=image/jpeg&style=normal'
-      ],
-      tileSize: 256,
-      attribution: 'IGN-F/Géoportail',
-      minzoom: 0,
-      maxzoom: 18
-    },
     cadastre: {
       type: 'vector',
       url: 'https://openmaptiles.geo.data.gouv.fr/data/cadastre.json'
-    }
+    },
+    'plan-ign': rasterSource(
+      [ignServiceURL('GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2')],
+      'IGN-F/Géoportail'
+    ),
+    'protectedareas-gp': rasterSource(
+      [ignServiceURL('PROTECTEDAREAS.GP')],
+      'IGN-F/Géoportail/MNHN'
+    ),
+    'protectedareas-pn': rasterSource(
+      [ignServiceURL('PROTECTEDAREAS.PN')],
+      'IGN-F/Géoportail/MNHN'
+    ),
+    'protectedareas-pnr': rasterSource(
+      [ignServiceURL('PROTECTEDAREAS.PNR')],
+      'IGN-F/Géoportail/MNHN'
+    ),
+    'protectedareas-sic': rasterSource(
+      [ignServiceURL('PROTECTEDAREAS.SIC')],
+      'IGN-F/Géoportail/MNHN'
+    ),
+    'protectedareas-zps': rasterSource(
+      [ignServiceURL('PROTECTEDAREAS.ZPS')],
+      'IGN-F/Géoportail/MNHN'
+    )
   },
   sprite: 'https://openmaptiles.github.io/osm-bright-gl-style/sprite',
   glyphs: 'https://openmaptiles.geo.data.gouv.fr/fonts/{fontstack}/{range}.pbf'

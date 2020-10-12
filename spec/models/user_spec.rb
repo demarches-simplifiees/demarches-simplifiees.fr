@@ -49,36 +49,6 @@ describe User, type: :model do
     end
   end
 
-  describe '#password_complexity' do
-    let(:email) { 'mail@beta.gouv.fr' }
-    let(:passwords) { ['pass', '12pass23', 'démarches ', 'démarches-simple', 'démarches-simplifiées pwd'] }
-    let(:user) { build(:user, email: email, password: password, confirmation_token: '123', confirmed_at: nil) }
-    let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_USER }
-
-    subject do
-      user.save
-      user.errors.full_messages
-    end
-
-    context 'when password is too short' do
-      let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
-
-      it { expect(subject).to eq(["Le mot de passe est trop court"]) }
-    end
-
-    context 'when password is too simple' do
-      let(:password) { passwords[min_complexity - 1] }
-
-      it { expect(subject).to eq(["Le mot de passe n’est pas assez complexe"]) }
-    end
-
-    context 'when password is acceptable' do
-      let(:password) { passwords[min_complexity] }
-
-      it { expect(subject).to eq([]) }
-    end
-  end
-
   describe '#invite?' do
     let(:dossier) { create :dossier }
     let(:user) { dossier.user }
@@ -216,7 +186,9 @@ describe User, type: :model do
         subject
       end
 
-      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, nil, administration.id) }
+      it 'receives an invitation to update its password' do
+        expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), administration.id)
+      end
     end
   end
 
@@ -319,6 +291,57 @@ describe User, type: :model do
           user.delete_and_keep_track_dossiers(administration)
 
           expect(Dossier.find_by(id: dossier_from_another_user.id)).to be_present
+        end
+      end
+    end
+  end
+
+  describe '#password_complexity' do
+    # This password list is sorted by password complexity, according to zxcvbn (used for complexity evaluation)
+    # 0 - too guessable: risky password. (guesses < 10^3)
+    # 1 - very guessable: protection from throttled online attacks. (guesses < 10^6)
+    # 2 - somewhat guessable: protection from unthrottled online attacks. (guesses < 10^8)
+    # 3 - safely unguessable: moderate protection from offline slow-hash scenario. (guesses < 10^10)
+    # 4 - very unguessable: strong protection from offline slow-hash scenario. (guesses >= 10^10)
+    passwords = ['pass', '12pass23', 'démarches ', 'démarches-simple', '{My-$3cure-p4ssWord}']
+    min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
+
+    context 'administrateurs' do
+      let(:email) { 'mail@beta.gouv.fr' }
+      let(:administrateur) { build(:user, email: email, password: password, administrateur: build(:administrateur)) }
+
+      subject do
+        administrateur.save
+        administrateur.errors.full_messages
+      end
+
+      context 'when password is too short' do
+        let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
+
+        it { expect(subject).to eq(["Le mot de passe est trop court"]) }
+      end
+
+      context 'when password is too simple' do
+        passwords[0..(min_complexity - 1)].each do |password|
+          let(:password) { password }
+
+          it { expect(subject).to eq(["Le mot de passe n’est pas assez complexe"]) }
+        end
+      end
+
+      context 'when password is acceptable' do
+        let(:password) { passwords[min_complexity] }
+
+        it { expect(subject).to eq([]) }
+      end
+    end
+
+    context 'simple users' do
+      passwords.each do |password|
+        let(:user) { build(:user, email: 'some@email.fr', password: password) }
+        it 'has no complexity validation' do
+          user.save
+          expect(user.errors.full_messages).to eq([])
         end
       end
     end

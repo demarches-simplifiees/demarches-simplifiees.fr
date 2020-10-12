@@ -1,6 +1,6 @@
 .dropdown.help-dropdown
-  %button.button.dropdown-button Aide
-  .dropdown-content.fade-in-down
+  %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'help-menu' } Aide
+  #help-menu.dropdown-content.fade-in-down
     %ul.dropdown-items
       - title = dossier.brouillon? ? "Besoin d’aide pour remplir votre dossier ?" : "Une question sur votre dossier ?"
 
