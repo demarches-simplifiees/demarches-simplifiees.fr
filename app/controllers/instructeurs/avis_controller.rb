@@ -6,7 +6,7 @@ module Instructeurs
     before_action :check_if_avis_revoked, only: [:show]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
     before_action :check_avis_exists_and_email_belongs_to_avis, only: [:sign_up, :create_instructeur]
-    before_action :set_avis_and_dossier, only: [:show, :instruction, :update]
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :update]
 
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
@@ -50,6 +50,23 @@ module Instructeurs
         flash.now.alert = @avis.errors.full_messages
         @new_avis = Avis.new
         render :instruction
+      end
+    end
+
+    def messagerie
+      @commentaire = Commentaire.new
+    end
+
+    def create_commentaire
+      @commentaire = CommentaireService.build(current_instructeur, avis.dossier, commentaire_params)
+
+      if @commentaire.save
+        @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        flash.notice = "Message envoyé"
+        redirect_to messagerie_instructeur_avis_path(avis.procedure, avis)
+      else
+        flash.alert = @commentaire.errors.full_messages
+        render :messagerie
       end
     end
 
