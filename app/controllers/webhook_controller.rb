@@ -26,6 +26,8 @@ class WebhookController < ActionController::Base
         html << link_to_manager(administrateur, url)
       end
 
+      html << email_link_to_manager(user)
+
       render json: { html: html.join('<br>') }
     end
   end
@@ -34,6 +36,11 @@ class WebhookController < ActionController::Base
 
   def link_to_manager(model, url)
     "<a target='_blank' href='#{url}' rel='noopener'>#{model.model_name.human}##{model.id}</a>"
+  end
+
+  def email_link_to_manager(user)
+    url = emails_manager_user_url(user)
+    "<a target='_blank' href='#{url}' rel='noopener'>Emails##{user.id}</a>"
   end
 
   def verify_signature!
