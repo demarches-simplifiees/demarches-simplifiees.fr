@@ -45,8 +45,8 @@ feature 'The user' do
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
-    click_on 'Enregistrer le brouillon'
-    expect(page).to have_content('Votre brouillon a bien été sauvegardé')
+    blur
+    expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
     # check data on the dossier
     expect(user_dossier.brouillon?).to be true
@@ -126,7 +126,8 @@ feature 'The user' do
 
     expect(page).to have_content('Supprimer', count: 2)
 
-    click_on 'Enregistrer le brouillon'
+    blur
+    expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
     expect(page).to have_content('Supprimer', count: 2)
 
@@ -134,13 +135,17 @@ feature 'The user' do
       click_on 'Supprimer l’élément'
     end
 
-    click_on 'Enregistrer le brouillon'
+    blur
+    expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
     expect(page).to have_content('Supprimer', count: 1)
   end
 
   let(:simple_procedure) do
-    tdcs = [build(:type_de_champ, mandatory: true, libelle: 'texte obligatoire')]
+    tdcs = [
+      build(:type_de_champ, mandatory: true, libelle: 'texte obligatoire'),
+      build(:type_de_champ, mandatory: false, libelle: 'texte optionnel')
+    ]
     create(:procedure, :published, :for_individual, types_de_champ: tdcs)
   end
 
@@ -149,9 +154,9 @@ feature 'The user' do
     fill_individual
 
     # Check an incomplete dossier can be saved as a draft, even when mandatory fields are missing
-    click_on 'Enregistrer le brouillon'
-    expect(user_dossier.reload.brouillon?).to be(true)
-    expect(page).to have_content('Votre brouillon a bien été sauvegardé')
+    fill_in('texte optionnel', with: 'ça ne suffira pas')
+    blur
+    expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
 
     # Check an incomplete dossier cannot be submitted when mandatory fields are missing
@@ -195,7 +200,6 @@ feature 'The user' do
     expect(page).to have_text('RIB.pdf')
 
     # Expect the submit buttons to be enabled
-    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
     # Reload the current page
@@ -236,7 +240,6 @@ feature 'The user' do
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
     expect(page).to have_text('Une erreur s’est produite pendant l’envoi du fichier')
     expect(page).to have_button('Ré-essayer', visible: true)
-    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
     # Test that retrying after a failure works
@@ -244,7 +247,6 @@ feature 'The user' do
     click_on('Ré-essayer', visible: true)
     expect(page).to have_text('analyse antivirus en cours')
     expect(page).to have_text('file.pdf')
-    expect(page).to have_button('Enregistrer le brouillon', disabled: false)
     expect(page).to have_button('Déposer le dossier', disabled: false)
 
     # Reload the current page
@@ -254,11 +256,7 @@ feature 'The user' do
     expect(page).to have_text('file.pdf')
   end
 
-  context 'when the draft autosave is enabled' do
-    before do
-      Flipper.enable_actor(:autosave_dossier_draft, user)
-    end
-
+  context 'draft autosave' do
     scenario 'autosave a draft', js: true do
       log_in(user, simple_procedure)
       fill_individual

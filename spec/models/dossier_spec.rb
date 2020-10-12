@@ -103,10 +103,9 @@ describe Dossier do
 
     before do
       create(:follow, dossier: dossier, instructeur: instructeur, messagerie_seen_at: 2.hours.ago)
-      Flipper.enable_actor(:cached_notifications, instructeur)
     end
 
-    subject { instructeur.followed_dossiers.with_notifications(instructeur) }
+    subject { instructeur.followed_dossiers.with_notifications }
 
     context('without changes') do
       it { is_expected.to eq [] }
@@ -809,6 +808,22 @@ describe Dossier do
     let(:instructeur) { create(:instructeur) }
 
     it 'should not call webhook' do
+      expect {
+        dossier.accepte!
+      }.to_not have_enqueued_job(WebHookJob)
+    end
+
+    it 'should not call webhook with empty value' do
+      dossier.procedure.update_column(:web_hook_url, '')
+
+      expect {
+        dossier.accepte!
+      }.to_not have_enqueued_job(WebHookJob)
+    end
+
+    it 'should not call webhook with blank value' do
+      dossier.procedure.update_column(:web_hook_url, '   ')
+
       expect {
         dossier.accepte!
       }.to_not have_enqueued_job(WebHookJob)

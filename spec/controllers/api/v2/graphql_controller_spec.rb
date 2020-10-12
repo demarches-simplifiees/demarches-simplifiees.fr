@@ -396,37 +396,76 @@ describe API::V2::GraphqlController do
                 ... on PersonneMorale {
                   siret
                   siegeSocial
+                  numeroVoie
+                  typeVoie
                   entreprise {
                     siren
                     dateCreation
                     capitalSocial
+                    codeEffectifEntreprise
                   }
                 }
               }
             }
           }"
         end
-
-        it "should be returned" do
-          expect(gql_errors).to eq(nil)
-          expect(gql_data).to eq(dossier: {
-            id: dossier.to_typed_id,
-            number: dossier.id,
-            usager: {
-              id: dossier.user.to_typed_id,
-              email: dossier.user.email
-            },
-            demandeur: {
-              id: dossier.etablissement.to_typed_id,
-              siret: dossier.etablissement.siret,
-              siegeSocial: dossier.etablissement.siege_social,
-              entreprise: {
-                siren: dossier.etablissement.entreprise_siren,
-                dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
-                capitalSocial: dossier.etablissement.entreprise_capital_social.to_s
+        context "in the nominal case" do
+          it "should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossier: {
+              id: dossier.to_typed_id,
+              number: dossier.id,
+              usager: {
+                id: dossier.user.to_typed_id,
+                email: dossier.user.email
+              },
+              demandeur: {
+                id: dossier.etablissement.to_typed_id,
+                siret: dossier.etablissement.siret,
+                siegeSocial: dossier.etablissement.siege_social,
+                numeroVoie: dossier.etablissement.numero_voie.to_s,
+                typeVoie: dossier.etablissement.type_voie.to_s,
+                entreprise: {
+                  siren: dossier.etablissement.entreprise_siren,
+                  dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
+                  capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
+                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s
+                }
               }
-            }
-          })
+            })
+          end
+        end
+
+        context "when there are missing data" do
+          before do
+            dossier.etablissement.update!(entreprise_code_effectif_entreprise: nil, entreprise_capital_social: nil,
+                                          numero_voie: nil, type_voie: nil)
+          end
+
+          it "should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossier: {
+              id: dossier.to_typed_id,
+              number: dossier.id,
+              usager: {
+                id: dossier.user.to_typed_id,
+                email: dossier.user.email
+              },
+              demandeur: {
+                id: dossier.etablissement.to_typed_id,
+                siret: dossier.etablissement.siret,
+                siegeSocial: dossier.etablissement.siege_social,
+                numeroVoie: nil,
+                typeVoie: nil,
+                entreprise: {
+                  siren: dossier.etablissement.entreprise_siren,
+                  dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
+                  capitalSocial: '-1',
+                  codeEffectifEntreprise: nil
+                }
+              }
+            })
+          end
         end
       end
     end
@@ -841,6 +880,48 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to eq(nil)
 
             expect(gql_data).to eq(dossierChangerGroupeInstructeur: {
+              errors: nil
+            })
+          end
+        end
+      end
+
+      describe 'dossierArchiver' do
+        let(:query) do
+          "mutation {
+            dossierArchiver(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur.to_typed_id}\"
+            }) {
+              dossier {
+                archived
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        it "validation error" do
+          expect(gql_errors).to eq(nil)
+
+          expect(gql_data).to eq(dossierArchiver: {
+            dossier: nil,
+            errors: [{ message: "Un dossier ne peut être archivé qu’une fois le traitement terminé" }]
+          })
+        end
+
+        context "should archive dossier" do
+          let(:dossier) { create(:dossier, :sans_suite, :with_individual, procedure: procedure) }
+
+          it "change made" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierArchiver: {
+              dossier: {
+                archived: true
+              },
               errors: nil
             })
           end

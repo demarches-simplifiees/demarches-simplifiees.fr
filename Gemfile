@@ -119,7 +119,7 @@ group :development, :test do
   gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
   gem 'pry-byebug'
-  gem 'rspec-rails', '~> 4.0.0.beta'
+  gem 'rspec-rails'
   gem 'rspec_junit_formatter', require: false
   gem 'ruby-debug-ide', require: false
   gem 'simple_xlsx_reader'
