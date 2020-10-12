@@ -300,6 +300,7 @@ Rails.application.routes.draw do
           get '', action: 'procedure', on: :collection, as: :procedure
           member do
             get 'instruction'
+            get 'messagerie'
             post 'commentaire' => 'avis#create_commentaire'
             post 'avis' => 'avis#create_avis'
             patch 'revoquer'
