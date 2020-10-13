@@ -50,7 +50,7 @@ class ProcedureRevision < ApplicationRecord
     elsif type_de_champ.parent.present?
       find_or_clone_type_de_champ(type_de_champ.parent.stable_id).types_de_champ.find_by!(stable_id: id)
     else
-      type_de_champ.revise!
+      revise_type_de_champ(type_de_champ)
     end
   end
 
@@ -97,6 +97,15 @@ class ProcedureRevision < ApplicationRecord
   end
 
   private
+
+  def revise_type_de_champ(type_de_champ)
+    types_de_champ_association = type_de_champ.private? ? :revision_types_de_champ_private : :revision_types_de_champ
+    association = send(types_de_champ_association).find_by!(type_de_champ: type_de_champ)
+    cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ], &type_de_champ.method(:clone_attachments))
+    cloned_type_de_champ.revision = self
+    association.update!(type_de_champ: cloned_type_de_champ)
+    cloned_type_de_champ
+  end
 
   def find_type_de_champ_by_id(id)
     types_de_champ.find_by(stable_id: id) ||

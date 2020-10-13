@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
@@ -158,10 +158,13 @@ module NewAdministrateur
       end
     end
 
+    def transfert
+    end
+
     def transfer
       admin = Administrateur.by_email(params[:email_admin].downcase)
       if admin.nil?
-        redirect_to admin_procedure_publication_path(params[:procedure_id])
+        redirect_to admin_procedure_transfert_path(params[:procedure_id])
         flash.alert = "Envoi vers #{params[:email_admin]} impossible : cet administrateur n'existe pas"
       else
         procedure = current_administrateur.procedures.find(params[:procedure_id])

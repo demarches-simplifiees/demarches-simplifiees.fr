@@ -20,8 +20,6 @@
         = link_to @procedure_lien, sanitize_url(@procedure_lien), target: :blank, rel: :noopener, class: "mb-4"
 
         %p.mb-4 Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
-
-        = render partial: 'procedure_transfert'
       - elsif @procedure.brouillon?
         - if @procedure.missing_steps.empty?
           %p

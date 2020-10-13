@@ -384,6 +384,7 @@ Rails.application.routes.draw do
 
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
+      get 'transfert' => 'procedures#transfert', as: :transfert
       post 'transfer' => 'procedures#transfer', as: :transfer
 
       resources :mail_templates, only: [:edit, :update]

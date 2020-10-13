@@ -64,7 +64,7 @@ class ProcedureExportService
   def options_for(table, format)
     options = case table
     when :dossiers
-      { instances: dossiers.to_a, sheet_name: 'Dossiers', spreadsheet_columns: :"spreadsheet_columns_#{format}" }
+      { instances: dossiers.to_a, sheet_name: 'Dossiers', spreadsheet_columns: spreadsheet_columns(format) }
     when :etablissements
       { instances: etablissements.to_a, sheet_name: 'Etablissements' }
     when :avis
@@ -81,5 +81,14 @@ class ProcedureExportService
       .truncate(30, omission: '')
 
     options
+  end
+
+  def spreadsheet_columns(format)
+    types_de_champ = @procedure.types_de_champ_for_export
+    types_de_champ_private = @procedure.types_de_champ_private_for_export
+
+    Proc.new do |instance|
+      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
+    end
   end
 end

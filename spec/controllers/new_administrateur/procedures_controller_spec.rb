@@ -451,7 +451,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       let(:email_admin) { 'plop' }
 
       it { expect(subject.status).to eq 302 }
-      it { expect(response.body).to include(admin_procedure_publication_path(procedure.id)) }
+      it { expect(response.body).to include(admin_procedure_transfert_path(procedure.id)) }
       it { expect(flash[:alert]).to be_present }
       it { expect(flash[:alert]).to eq("Envoi vers #{email_admin} impossible : cet administrateur n'existe pas") }
     end
