@@ -62,7 +62,7 @@ class ProcedureExportService
   }
 
   def options_for(table, format)
-    case table
+    options = case table
     when :dossiers
       { instances: dossiers.to_a, sheet_name: 'Dossiers', spreadsheet_columns: :"spreadsheet_columns_#{format}" }
     when :etablissements
@@ -72,5 +72,7 @@ class ProcedureExportService
     when Array
       { instances: table.last, sheet_name: table.first }
     end.merge(DEFAULT_STYLES).merge(@procedure.column_styles(table))
+    options[:sheet_name] = options[:sheet_name].truncate(30)
+    options
   end
 end

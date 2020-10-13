@@ -65,7 +65,7 @@ class Champs::RepetitionChamp < Champ
   def libelle_for_export
     str = "(#{stable_id}) #{libelle}"
     # /\*?[] are invalid Excel worksheet characters
-    ActiveStorage::Filename.new(str.delete('[]*?')).sanitized.truncate(30)
+    ActiveStorage::Filename.new(str.delete('[]*?')).sanitized
   end
 
   class Row < Hashie::Dash

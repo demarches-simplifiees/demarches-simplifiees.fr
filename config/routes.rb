@@ -438,6 +438,7 @@ Rails.application.routes.draw do
   #
   # Legacy routes
   #
+  get 'demandes/new' => redirect(DEMANDE_INSCRIPTION_ADMIN_PAGE_URL)
 
   get 'backoffice' => redirect('/procedures')
   get 'backoffice/sign_in' => redirect('/users/sign_in')

@@ -377,6 +377,21 @@ describe ProcedureExportService do
         end
       end
 
+      context 'with long libelle' do
+        before do
+          procedure.types_de_champ.each do |c|
+            c.update!(libelle: "#{c.id} - Quam rem nam maiores numquam dolorem nesciunt. Cum et possimus et aut. Fugit voluptas qui qui.")
+          end
+          champ_repetition.champs.each do |c|
+            c.type_de_champ.update!(libelle: "#{c.id} - Quam rem nam maiores numquam dolorem nesciunt. Cum et possimus et aut. Fugit voluptas qui qui.")
+          end
+        end
+
+        it 'should have valid sheet name' do
+          expect { subject }.not_to raise_error(ArgumentError)
+        end
+      end
+
       context 'with non unique labels' do
         let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
         let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }

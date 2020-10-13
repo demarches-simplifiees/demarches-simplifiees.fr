@@ -274,7 +274,7 @@ GEM
       multi_json
       request_store (>= 1.0)
     graphql (1.10.9)
-    graphql-batch (0.4.2)
+    graphql-batch (0.4.3)
       graphql (>= 1.3, < 2)
       promise.rb (~> 0.7.2)
     graphql-rails_logger (1.2.2)
