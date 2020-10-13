@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_02_103047) do
+ActiveRecord::Schema.define(version: 2020_09_30_143755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -543,6 +543,7 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
     t.string "api_entreprise_token"
     t.bigint "draft_revision_id"
     t.bigint "published_revision_id"
+    t.boolean "allow_expert_review", default: true, null: false
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"

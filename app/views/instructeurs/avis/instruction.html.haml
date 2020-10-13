@@ -31,7 +31,7 @@
         .send-wrapper
           = f.submit 'Envoyer votre avis', class: 'button send'
 
-  - if !@dossier.termine?
+  - if !@dossier.termine? && !feature_enabled_for?(:expert_not_allowed_to_invite, @avis.procedure)
     = render partial: "instructeurs/shared/avis/form", locals: { url: avis_instructeur_avis_path(@avis.procedure, @avis), linked_dossiers: @dossier.linked_dossiers_for(current_instructeur), must_be_confidentiel: @avis.confidentiel?, avis: @new_avis }
 
   - if @dossier.avis_for(current_instructeur).present?

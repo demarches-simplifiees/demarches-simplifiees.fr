@@ -380,6 +380,7 @@ Rails.application.routes.draw do
         patch 'update_monavis'
         get 'jeton'
         patch 'update_jeton'
+        put :allow_expert_review
       end
 
       get 'publication' => 'procedures#publication', as: :publication
