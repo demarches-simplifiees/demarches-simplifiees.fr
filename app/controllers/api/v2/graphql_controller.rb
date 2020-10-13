@@ -18,6 +18,12 @@ class API::V2::GraphqlController < API::V2::BaseController
 
   private
 
+  def process_action(*args)
+    super
+  rescue ActionDispatch::Http::Parameters::ParseError => exception
+    render status: 400, json: { errors: [{ message: exception.cause.message }] }
+  end
+
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)
     case ambiguous_param

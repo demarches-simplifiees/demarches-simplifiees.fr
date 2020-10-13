@@ -97,12 +97,12 @@ module Instructeurs
     end
 
     def archive
-      dossier.update(archived: true)
+      dossier.archiver!(current_instructeur)
       redirect_back(fallback_location: instructeur_procedures_url)
     end
 
     def unarchive
-      dossier.update(archived: false)
+      dossier.desarchiver!(current_instructeur)
       redirect_back(fallback_location: instructeur_procedures_url)
     end
 

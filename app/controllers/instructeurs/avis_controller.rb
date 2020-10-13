@@ -71,13 +71,19 @@ module Instructeurs
     end
 
     def create_avis
-      @new_avis = create_avis_from_params(avis.dossier, avis.confidentiel)
+      @procedure = Procedure.find(params[:procedure_id])
+      if !feature_enabled_for?(:expert_not_allowed_to_invite, @procedure)
+        @new_avis = create_avis_from_params(avis.dossier, avis.confidentiel)
 
-      if @new_avis.nil?
-        redirect_to instruction_instructeur_avis_path(avis.procedure, avis)
+        if @new_avis.nil?
+          redirect_to instruction_instructeur_avis_path(avis.procedure, avis)
+        else
+          set_avis_and_dossier
+          render :instruction
+        end
       else
-        set_avis_and_dossier
-        render :instruction
+        flash.alert = "Cette démarche ne vous permet pas de demander un avis externe"
+        redirect_to instruction_instructeur_avis_path(avis.procedure, avis)
       end
     end
 

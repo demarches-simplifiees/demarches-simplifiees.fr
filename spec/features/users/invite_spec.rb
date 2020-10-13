@@ -53,8 +53,7 @@ feature 'Invitations' do
       expect(page).to have_no_selector('.button.invite-user-action')
 
       fill_in 'Texte obligatoire', with: 'Some edited value'
-      click_button 'Enregistrer le brouillon'
-      expect(page).to have_text('Votre brouillon a bien été sauvegardé')
+      blur
       expect(page).to have_field('Texte obligatoire', with: 'Some edited value')
     end
 

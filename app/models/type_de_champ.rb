@@ -17,8 +17,6 @@
 #  stable_id   :bigint
 #
 class TypeDeChamp < ApplicationRecord
-  self.ignored_columns = ['procedure_id']
-
   enum type_champs: {
     text: 'text',
     auto_completion: 'auto_completion',
@@ -54,7 +52,8 @@ class TypeDeChamp < ApplicationRecord
     carte: 'carte',
     te_fenua: 'te_fenua',
     repetition: 'repetition',
-    titre_identite: 'titre_identite'
+    titre_identite: 'titre_identite',
+    iban: 'iban'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
@@ -65,6 +64,7 @@ class TypeDeChamp < ApplicationRecord
 
   store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :mnhn, :old_pj, :drop_down_options, :skip_pj_validation, :parcelles, :batiments, :zones_manuelles, :min, :max, :level
   has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
+  has_many :revisions, through: :revision_types_de_champ
 
   delegate :tags_for_template, to: :dynamic_type
 
@@ -215,6 +215,10 @@ class TypeDeChamp < ApplicationRecord
     !private?
   end
 
+  def active_revision?
+    revisions.include?(procedure.active_revision)
+  end
+
   def self.type_champ_to_class_name(type_champ)
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
@@ -261,13 +265,6 @@ class TypeDeChamp < ApplicationRecord
 
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
-  end
-
-  def revise!
-    types_de_champ_association = private? ? :revision_types_de_champ_private : :revision_types_de_champ
-    association = revision.send(types_de_champ_association).find_by!(type_de_champ: self)
-    association.update!(type_de_champ: deep_clone(include: [:types_de_champ], &method(:clone_attachments)))
-    association.type_de_champ
   end
 
   FEATURE_FLAGS = {}
@@ -328,21 +325,6 @@ class TypeDeChamp < ApplicationRecord
       stable_id
     else
       super
-    end
-  end
-
-  # FIXME: We are changing how id is exposed to the editor.
-  # We used to expose type_de_champ.id as primary key to the editor. With revisions
-  # we need primary key to be type_de_champ.stable_id because any update can create
-  # a new version but we do not want editor to know about this.
-  # This is only needed for a clean migration without downtime. We want to ensure
-  # that if editor send a simple id because it was loaded before deployment
-  # we would still do the right thing.
-  def self.to_stable_id(id_or_stable_id)
-    if id_or_stable_id.to_s =~ /^stable:/
-      id_or_stable_id.to_s.gsub(/^stable:/, '')
-    else
-      id_or_stable_id
     end
   end
 

@@ -13,7 +13,7 @@
       Tester
 
   - if @procedure.publiee? || @procedure.brouillon?
-    = link_to admin_procedure_publication_path(@procedure), class: 'button' do
+    = link_to admin_procedure_transfert_path(@procedure), class: 'button' do
       %span.icon.reply
       Envoyer une copie
 
@@ -76,8 +76,10 @@
           - else
             Choix du service administratif
       .card-admin-action
-        - if @procedure.service_id.present?
+        - if @procedure.service.present?
           = link_to 'Modifier', edit_admin_service_path(@procedure.service, procedure_id: @procedure.id), class: 'button'
+        - elsif current_administrateur.services.present?
+          = link_to 'Choisir', admin_services_path(procedure_id: @procedure.id), class: 'button'
         - else
           = link_to 'Remplir', new_admin_service_path(procedure_id: @procedure.id), class: 'button'
 
@@ -138,6 +140,21 @@
         %p.card-admin-subtitle Délivrance automatique pour les dossiers acceptés
       .card-admin-action
         = link_to 'Modifier', edit_admin_procedure_attestation_template_path(@procedure), class: 'button'
+
+    .card-admin
+      - if @procedure.allow_expert_review?
+        %div
+          %span.icon.accept
+          %p.card-admin-status-accept Activé
+      - else
+        %div
+          %span.icon.clock
+          %p.card-admin-status-todo Désactivée
+      %div
+        %p.card-admin-title Avis externes
+        %p.card-admin-subtitle Demander des avis aux experts invités
+      .card-admin-action
+        = link_to "#{@procedure.allow_expert_review? ? 'Désactiver' : 'Activer'}", allow_expert_review_admin_procedure_path(@procedure), method: :put,  class: 'button'
 
     .card-admin
       %div

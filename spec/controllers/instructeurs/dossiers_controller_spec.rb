@@ -454,9 +454,9 @@ describe Instructeurs::DossiersController, type: :controller do
         before { follower.follow(dossier) }
 
         it 'the follower has a notification' do
-          expect(follower.followed_dossiers.with_notifications(follower)).to eq([])
+          expect(follower.followed_dossiers.with_notifications).to eq([])
           subject
-          expect(follower.followed_dossiers.with_notifications(follower)).to eq([dossier.reload])
+          expect(follower.followed_dossiers.with_notifications).to eq([dossier.reload])
         end
       end
     end
@@ -671,8 +671,8 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'updates the annotations' do
         Timecop.travel(now + 1.hour)
-        expect(instructeur.followed_dossiers.with_notifications(instructeur)).to eq([])
-        expect(another_instructeur.followed_dossiers.with_notifications(instructeur)).to eq([dossier.reload])
+        expect(instructeur.followed_dossiers.with_notifications).to eq([])
+        expect(another_instructeur.followed_dossiers.with_notifications).to eq([dossier.reload])
       end
     end
 

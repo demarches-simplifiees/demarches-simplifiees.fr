@@ -62,9 +62,9 @@ class ProcedureExportService
   }
 
   def options_for(table, format)
-    case table
+    options = case table
     when :dossiers
-      { instances: dossiers.to_a, sheet_name: 'Dossiers', spreadsheet_columns: :"spreadsheet_columns_#{format}" }
+      { instances: dossiers.to_a, sheet_name: 'Dossiers', spreadsheet_columns: spreadsheet_columns(format) }
     when :etablissements
       { instances: etablissements.to_a, sheet_name: 'Etablissements' }
     when :avis
@@ -72,5 +72,23 @@ class ProcedureExportService
     when Array
       { instances: table.last, sheet_name: table.first }
     end.merge(DEFAULT_STYLES).merge(@procedure.column_styles(table))
+
+    # transliterate: convert to ASCII characters
+    # to ensure truncate respects 30 bytes
+    # /\*?[] are invalid Excel worksheet characters
+    options[:sheet_name] = I18n.transliterate(options[:sheet_name], '', locale: :en)
+      .delete('/\*?[]')
+      .truncate(30, omission: '')
+
+    options
+  end
+
+  def spreadsheet_columns(format)
+    types_de_champ = @procedure.types_de_champ_for_export
+    types_de_champ_private = @procedure.types_de_champ_private_for_export
+
+    Proc.new do |instance|
+      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
+    end
   end
 end

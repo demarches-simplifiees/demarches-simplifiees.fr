@@ -78,20 +78,20 @@ class GeoArea < ApplicationRecord
   end
 
   def area
-    if polygon? && RGeo::Geos.supported?
-      rgeo_geometry.area.round(1)
+    if polygon?
+      GeojsonService.area(geometry.deep_symbolize_keys).round(1)
     end
   end
 
   def length
-    if line? && RGeo::Geos.supported?
-      rgeo_geometry.length.round(1)
+    if line?
+      GeojsonService.length(geometry.deep_symbolize_keys).round(1)
     end
   end
 
   def location
     if point?
-      Geo::Coord.new(*rgeo_geometry.coordinates).to_s
+      Geo::Coord.new(*rgeo_geometry.coordinates.reverse).to_s
     end
   end
 

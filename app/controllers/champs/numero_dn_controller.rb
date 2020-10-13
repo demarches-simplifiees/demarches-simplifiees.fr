@@ -6,7 +6,7 @@ class Champs::NumeroDnController < ApplicationController
     if @dn.empty?
       return @status = :empty
     end
-    if @dn !~ /\d{6,7}/
+    if !/\d{6,7}/.match?(@dn)
       return @status = :bad_dn_format
     end
     begin

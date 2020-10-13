@@ -286,19 +286,9 @@ class Dossier < ApplicationRecord
   end
 
   scope :for_procedure, -> (procedure) { includes(:user, :groupe_instructeur).where(groupe_instructeurs: { procedure: procedure }) }
-  scope :for_api_v2, -> { includes(procedure: [:administrateurs], etablissement: [], individual: [], traitements: []) }
+  scope :for_api_v2, -> { includes(procedure: [:administrateurs, :attestation_template], etablissement: [], individual: [], traitements: []) }
 
-  # todo: once we are sure with_cached_notifications does not introduce regressions, remove with_unoptimized_notifications
-  # and use with_cached_notifications instead
-  scope :with_notifications, -> (instructeur) do
-    if Flipper.enabled?(:cached_notifications, instructeur)
-      return with_cached_notifications
-    else
-      return with_unoptimized_notifications
-    end
-  end
-
-  scope :with_cached_notifications, -> do
+  scope :with_notifications, -> do
     joins(:follows)
       .where('last_champ_updated_at > follows.demande_seen_at' \
       ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
@@ -306,31 +296,6 @@ class Dossier < ApplicationRecord
       ' OR last_avis_updated_at > follows.avis_seen_at' \
       ' OR last_commentaire_updated_at > follows.messagerie_seen_at')
       .distinct
-  end
-
-  scope :with_unoptimized_notifications, -> do
-    # This scope is meant to be composed, typically with Instructeur.followed_dossiers, which means that the :follows table is already INNER JOINed;
-    # it will fail otherwise
-    joined_dossiers = joins('LEFT OUTER JOIN "champs" ON "champs" . "dossier_id" = "dossiers" . "id" AND "champs" . "parent_id" IS NULL AND "champs" . "private" = FALSE AND "champs"."updated_at" > "follows"."demande_seen_at"')
-      .joins('LEFT OUTER JOIN "champs" "champs_privates_dossiers" ON "champs_privates_dossiers" . "dossier_id" = "dossiers" . "id" AND "champs_privates_dossiers" . "parent_id" IS NULL AND "champs_privates_dossiers" . "private" = TRUE AND "champs_privates_dossiers"."updated_at" > "follows"."annotations_privees_seen_at"')
-      .joins('LEFT OUTER JOIN "avis" ON "avis" . "dossier_id" = "dossiers" . "id" AND avis.updated_at > follows.avis_seen_at')
-      .joins('LEFT OUTER JOIN "commentaires" ON "commentaires" . "dossier_id" = "dossiers" . "id" and commentaires.updated_at > follows.messagerie_seen_at and "commentaires"."email" != \'contact@tps.apientreprise.fr\' AND "commentaires"."email" != \'mes-demarches@modernisation.gov.pf\'')
-
-    updated_demandes = joined_dossiers
-      .where('champs.updated_at > follows.demande_seen_at OR groupe_instructeur_updated_at > follows.demande_seen_at')
-
-    updated_annotations = joined_dossiers
-      .where('champs_privates_dossiers.updated_at > follows.annotations_privees_seen_at')
-
-    updated_avis = joined_dossiers
-      .where('avis.updated_at > follows.avis_seen_at')
-
-    updated_messagerie = joined_dossiers
-      .where('commentaires.updated_at > follows.messagerie_seen_at')
-      .where.not(commentaires: { email: OLD_CONTACT_EMAIL })
-      .where.not(commentaires: { email: CONTACT_EMAIL })
-
-    updated_demandes.or(updated_annotations).or(updated_avis).or(updated_messagerie).distinct
   end
 
   accepts_nested_attributes_for :individual
@@ -343,7 +308,7 @@ class Dossier < ApplicationRecord
 
   after_save :send_dossier_received
   after_save :send_web_hook
-  after_create :send_draft_notification_email
+  after_create_commit :send_draft_notification_email
 
   validates :user, presence: true
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
@@ -449,6 +414,16 @@ class Dossier < ApplicationRecord
     else
       false
     end
+  end
+
+  def archiver!(author)
+    update!(archived: true)
+    log_dossier_operation(author, :archiver)
+  end
+
+  def desarchiver!(author)
+    update!(archived: false)
+    log_dossier_operation(author, :desarchiver)
   end
 
   def text_summary
@@ -693,19 +668,19 @@ class Dossier < ApplicationRecord
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
   end
 
-  def spreadsheet_columns_csv
-    spreadsheet_columns(with_etablissement: true)
+  def spreadsheet_columns_csv(types_de_champ:, types_de_champ_private:)
+    spreadsheet_columns(with_etablissement: true, types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
   end
 
-  def spreadsheet_columns_xlsx
-    spreadsheet_columns
+  def spreadsheet_columns_xlsx(types_de_champ:, types_de_champ_private:)
+    spreadsheet_columns(types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
   end
 
-  def spreadsheet_columns_ods
-    spreadsheet_columns
+  def spreadsheet_columns_ods(types_de_champ:, types_de_champ_private:)
+    spreadsheet_columns(types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
   end
 
-  def spreadsheet_columns(with_etablissement: false)
+  def spreadsheet_columns(with_etablissement: false, types_de_champ:, types_de_champ_private:)
     # any modification in this method must be reflected in procedure fixed_column_offset
     columns = [
       ['ID', id.to_s],
@@ -773,18 +748,34 @@ class Dossier < ApplicationRecord
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
 
-    columns + champs_for_export + annotations_for_export
+    columns + champs_for_export(types_de_champ) + champs_private_for_export(types_de_champ_private)
   end
 
-  def champs_for_export
-    champs.reject(&:exclude_from_export?).map do |champ|
-      [champ.libelle, champ.for_export]
+  def champs_for_export(types_de_champ)
+    # Index values by stable_id
+    values = champs.reject(&:exclude_from_export?).reduce({}) do |champs, champ|
+      champs[champ.stable_id] = champ.for_export
+      champs
+    end
+
+    # Get all the champs values for the types de champ in the final list.
+    # Dossier might not have corresponding champ – display nil.
+    types_de_champ.map do |type_de_champ|
+      [type_de_champ.libelle, values[type_de_champ.stable_id]]
     end
   end
 
-  def annotations_for_export
-    champs_private.reject(&:exclude_from_export?).map do |champ|
-      [champ.libelle, champ.for_export]
+  def champs_private_for_export(types_de_champ)
+    # Index values by stable_id
+    values = champs_private.reject(&:exclude_from_export?).reduce({}) do |champs, champ|
+      champs[champ.stable_id] = champ.for_export
+      champs
+    end
+
+    # Get all the champs values for the types de champ in the final list.
+    # Dossier might not have corresponding champ – display nil.
+    types_de_champ.map do |type_de_champ|
+      [type_de_champ.libelle, values[type_de_champ.stable_id]]
     end
   end
 
@@ -867,7 +858,7 @@ class Dossier < ApplicationRecord
   end
 
   def send_web_hook
-    if saved_change_to_state? && !brouillon? && procedure.web_hook_url
+    if saved_change_to_state? && !brouillon? && procedure.web_hook_url.present?
       WebHookJob.perform_later(
         procedure,
         self

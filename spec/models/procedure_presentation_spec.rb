@@ -262,7 +262,6 @@ describe ProcedurePresentation do
       let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
       before do
-        Flipper.enable_actor(:cached_notifications, instructeur)
         notified_dossier.update!(last_champ_updated_at: Time.zone.local(2018, 9, 20))
         create(:follow, instructeur: instructeur, dossier: notified_dossier, demande_seen_at: Time.zone.local(2018, 9, 10))
         notified_dossier.touch(time: Time.zone.local(2018, 9, 20))
@@ -735,7 +734,7 @@ describe ProcedurePresentation do
       let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
 
       let!(:kept_dossier) { create(:dossier, procedure: procedure) }
-      let!(:discarded_dossier) { create(:dossier, groupe_instructeur: gi_2) }
+      let!(:discarded_dossier) { create(:dossier, procedure: procedure, groupe_instructeur: gi_2) }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
 
@@ -747,7 +746,7 @@ describe ProcedurePresentation do
           ]
         end
 
-        let!(:other_kept_dossier) { create(:dossier, groupe_instructeur: gi_3) }
+        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, groupe_instructeur: gi_3) }
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)

@@ -27,7 +27,7 @@ class AdministrateurUsageStatisticsService
     nb_dossiers_roi = nb_dossiers_by_procedure_id.reject { |procedure_id, _count| is_brouillon(procedure_id) }.map { |_procedure_id, count| count }.sum
 
     result = {
-      ds_sign_in_count: administrateur.user.sign_in_count,
+      ds_sign_in_count: administrateur&.user&.sign_in_count,
       ds_created_at: administrateur.created_at,
       ds_active: administrateur.user.active?,
       ds_id: administrateur.id,
@@ -62,11 +62,11 @@ class AdministrateurUsageStatisticsService
       admin_roi_high: nb_dossiers_roi * 17
     }
 
-    if administrateur.user.current_sign_in_at.present?
+    if administrateur&.user&.current_sign_in_at.present?
       result[:ds_current_sign_in_at] = administrateur.user.current_sign_in_at
     end
 
-    if administrateur.user.last_sign_in_at.present?
+    if administrateur&.user&.last_sign_in_at.present?
       result[:ds_last_sign_in_at] = administrateur.user.last_sign_in_at
     end
 
@@ -81,16 +81,12 @@ class AdministrateurUsageStatisticsService
     with_default(
       0,
       nb_dossiers_by_administrateur_id_and_procedure_id_and_synthetic_state[administrateur_id]
-        .map do |procedure_id, nb_dossiers_by_synthetic_state|
-          [
-            procedure_id,
-            nb_dossiers_by_synthetic_state
+        .transform_values do |nb_dossiers_by_synthetic_state|
+          nb_dossiers_by_synthetic_state
               .reject { |synthetic_state, _count| ['brouillon', 'archive'].include?(synthetic_state) }
               .map { |_synthetic_state, count| count }
               .sum
-          ]
         end
-        .to_h
     )
   end
 
@@ -105,8 +101,7 @@ class AdministrateurUsageStatisticsService
         .reject { |procedure_id, _nb_dossiers_by_synthetic_state| is_brouillon(procedure_id) }
         .flat_map { |_procedure_id, nb_dossiers_by_synthetic_state| nb_dossiers_by_synthetic_state.to_a }
         .group_by { |synthetic_state, _count| synthetic_state }
-        .map { |synthetic_state, synthetic_states_and_counts| [synthetic_state, synthetic_states_and_counts.map { |_synthetic_state, count| count }.sum] }
-        .to_h
+        .transform_values { |synthetic_states_and_counts| synthetic_states_and_counts.map { |_synthetic_state, count| count }.sum }
     )
   end
 

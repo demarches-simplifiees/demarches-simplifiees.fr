@@ -103,10 +103,9 @@ describe Dossier do
 
     before do
       create(:follow, dossier: dossier, instructeur: instructeur, messagerie_seen_at: 2.hours.ago)
-      Flipper.enable_actor(:cached_notifications, instructeur)
     end
 
-    subject { instructeur.followed_dossiers.with_notifications(instructeur) }
+    subject { instructeur.followed_dossiers.with_notifications }
 
     context('without changes') do
       it { is_expected.to eq [] }
@@ -814,6 +813,22 @@ describe Dossier do
       }.to_not have_enqueued_job(WebHookJob)
     end
 
+    it 'should not call webhook with empty value' do
+      dossier.procedure.update_column(:web_hook_url, '')
+
+      expect {
+        dossier.accepte!
+      }.to_not have_enqueued_job(WebHookJob)
+    end
+
+    it 'should not call webhook with blank value' do
+      dossier.procedure.update_column(:web_hook_url, '   ')
+
+      expect {
+        dossier.accepte!
+      }.to_not have_enqueued_job(WebHookJob)
+    end
+
     it 'should call webhook' do
       dossier.procedure.update_column(:web_hook_url, '/webhook.json')
 
@@ -1290,7 +1305,7 @@ describe Dossier do
               'type' => 'Polygon'
             },
             properties: {
-              area: 219.0,
+              area: 103.6,
               champ_id: champ_carte.stable_id,
               dossier_id: dossier.id,
               id: geo_area.id,
@@ -1326,6 +1341,33 @@ describe Dossier do
       it 'should find dossiers with notifiable procedure' do
         expect(dossiers).to match_array([dossier_on_published_procedure, dossier_on_closed_procedure, dossier_on_unpublished_procedure])
       end
+    end
+  end
+
+  describe "champs_for_export" do
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no) }
+    let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+    let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
+    let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
+
+    before do
+      procedure.publish!
+      dossier
+      procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
+      procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
+      procedure.draft_revision.find_or_clone_type_de_champ(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
+      procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
+      dossier.reload
+      procedure.reload
+    end
+
+    it "should have champs from all revisions" do
+      expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no"])
+      expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
+      expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
+      expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_export))
     end
   end
 end

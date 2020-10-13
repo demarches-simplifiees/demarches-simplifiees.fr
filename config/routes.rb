@@ -113,7 +113,6 @@ Rails.application.routes.draw do
 
   get '/stats' => 'stats#index'
   get '/stats/download' => 'stats#download'
-  resources :demandes, only: [:new, :create]
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
@@ -236,6 +235,8 @@ Rails.application.routes.draw do
 
     namespace :v2 do
       post :graphql, to: "graphql#execute"
+      get 'dossiers/pdf/:id', format: :pdf, to: "dossiers#pdf", as: :dossier_pdf
+      get 'dossiers/geojson/:id', to: "dossiers#geojson", as: :dossier_geojson
     end
   end
 
@@ -381,10 +382,12 @@ Rails.application.routes.draw do
         patch 'update_monavis'
         get 'jeton'
         patch 'update_jeton'
+        put :allow_expert_review
       end
 
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
+      get 'transfert' => 'procedures#transfert', as: :transfert
       post 'transfer' => 'procedures#transfer', as: :transfer
 
       resources :mail_templates, only: [:edit, :update]
@@ -439,6 +442,7 @@ Rails.application.routes.draw do
   #
   # Legacy routes
   #
+  get 'demandes/new' => redirect(DEMANDE_INSCRIPTION_ADMIN_PAGE_URL)
 
   get 'backoffice' => redirect('/procedures')
   get 'backoffice/sign_in' => redirect('/users/sign_in')
