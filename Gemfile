@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 gem 'aasm'
 gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
-gem 'active_storage_validations'
 gem 'activestorage-openstack'
+gem 'active_storage_validations'
 gem 'administrate'
 gem 'after_party'
 gem 'anchored'
@@ -31,13 +31,13 @@ gem 'flipper-active_record'
 gem 'flipper-ui'
 gem 'font-awesome-rails'
 gem 'fugit'
-gem 'geo_coord', require: "geo/coord"
 gem 'geocoder'
+gem 'geo_coord', require: "geo/coord"
 gem 'gon'
 gem 'graphql'
 gem 'graphql-batch'
-gem 'graphql-rails_logger'
 gem 'graphql_playground-rails'
+gem 'graphql-rails_logger'
 gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
@@ -120,8 +120,8 @@ group :development, :test do
   gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
   gem 'pry-byebug'
-  gem 'rspec-rails'
   gem 'rspec_junit_formatter', require: false
+  gem 'rspec-rails'
   gem 'ruby-debug-ide', require: false
   gem 'simple_xlsx_reader'
   gem 'spring' # Spring speeds up development by keeping your application running in the background

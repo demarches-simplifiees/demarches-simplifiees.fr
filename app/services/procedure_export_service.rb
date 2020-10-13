@@ -72,7 +72,12 @@ class ProcedureExportService
     when Array
       { instances: table.last, sheet_name: table.first }
     end.merge(DEFAULT_STYLES).merge(@procedure.column_styles(table))
-    options[:sheet_name] = options[:sheet_name].truncate(30)
+
+    # transliterate: convert to ASCII characteres
+    # to ensure truncate respects 30 bytes
+    options[:sheet_name] = I18n.transliterate(options[:sheet_name], '')
+      .truncate(30, omission: '')
+
     options
   end
 end

@@ -295,8 +295,7 @@ class ProcedurePresentation < ApplicationRecord
   def valid_columns_for_table(table)
     @column_whitelist ||= fields
       .group_by { |field| field['table'] }
-      .map { |table, fields| [table, Set.new(fields.pluck('column'))] }
-      .to_h
+      .transform_values { |fields| Set.new(fields.pluck('column')) }
 
     @column_whitelist[table] || []
   end

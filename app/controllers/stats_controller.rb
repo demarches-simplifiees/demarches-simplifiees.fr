@@ -360,7 +360,7 @@ class StatsController < ApplicationController
       if weekly_dossiers_count == 0
         result = 0
       else
-        weekly_dossier_with_avis_count = weekly_dossiers.filter { |dossier| dossier.avis.present? }.count
+        weekly_dossier_with_avis_count = weekly_dossiers.count { |dossier| dossier.avis.present? }
         result = percentage(weekly_dossier_with_avis_count, weekly_dossiers_count)
       end
 

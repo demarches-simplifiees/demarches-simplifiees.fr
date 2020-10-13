@@ -46,13 +46,13 @@ class Champs::RepetitionChamp < Champ
 
     return "" if rows.empty?
 
-    header = content_tag(:tr, rows[0].map { |c| content_tag(:th, c.libelle) }.reduce(&:+))
+    header = tag.tr(rows[0].map { |c| tag.th(c.libelle) }.reduce(&:+))
     lines = rows.map do |champs|
-      content_tag(:tr, champs.map do |champ|
-        content_tag(:td, champ)
+      tag.tr(champs.map do |champ|
+        tag.td(champ)
       end.reduce(&:+))
     end.reduce(&:+)
-    content_tag(:table, header + lines)
+    tag.table(header + lines)
   end
 
   def rows_for_export

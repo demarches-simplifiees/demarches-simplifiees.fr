@@ -17,30 +17,9 @@
 class Champs::PieceJustificativeChamp < Champ
   MAX_SIZE = 200.megabytes
 
-  ACCEPTED_FORMATS = [
-    "text/plain",
-    "application/pdf",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/vnd.oasis.opendocument.text",
-    "application/vnd.oasis.opendocument.presentation",
-    "application/vnd.oasis.opendocument.spreadsheet",
-    "image/png",
-    "image/jpeg"
-  ]
-
-  # TODO: once we're running on Rails 6, re-enable this validation.
-  # See https://github.com/betagouv/demarches-simplifiees.fr/issues/4926
-  #
-  # validates :piece_justificative_file,
-  #   content_type: ACCEPTED_FORMATS,
-  #   size: { less_than: MAX_SIZE }
-
-  before_save :update_skip_pj_validation
+  validates :piece_justificative_file,
+    size: { less_than: MAX_SIZE },
+    if: -> { !type_de_champ.skip_pj_validation }
 
   def main_value_name
     :piece_justificative_file
@@ -62,9 +41,5 @@ class Champs::PieceJustificativeChamp < Champ
     if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
       piece_justificative_file.service_url
     end
-  end
-
-  def update_skip_pj_validation
-    type_de_champ.update(skip_pj_validation: true)
   end
 end
