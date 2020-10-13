@@ -4,23 +4,35 @@ class StatsController < ApplicationController
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
+    stat = Stat.first
+
     procedures = Procedure.publiees_ou_closes
     dossiers = Dossier.state_not_brouillon
 
     @procedures_numbers = procedures_numbers(procedures)
-    @dossiers_numbers = dossiers_numbers(dossiers)
+
+    @dossiers_numbers = dossiers_numbers(
+      stat.dossiers_not_brouillon,
+      stat.dossiers_depose_avant_30_jours,
+      stat.dossiers_deposes_entre_60_et_30_jours
+    )
 
     @satisfaction_usagers = satisfaction_usagers
 
     @contact_percentage = contact_percentage
 
-    @dossiers_states = dossiers_states
+    @dossiers_states_for_pie = {
+      "Brouillon" => stat.dossiers_brouillon,
+      "En construction" => stat.dossiers_en_construction,
+      "En instruction" => stat.dossiers_en_instruction,
+      "Terminé" => stat.dossiers_termines
+    }
 
     @procedures_cumulative = cumulative_hash(procedures, :published_at)
     @procedures_in_the_last_4_months = last_four_months_hash(procedures, :published_at)
 
-    @dossiers_cumulative = cumulative_hash(dossiers, :en_construction_at)
-    @dossiers_in_the_last_4_months = last_four_months_hash(dossiers, :en_construction_at)
+    @dossiers_cumulative = stat.dossiers_cumulative
+    @dossiers_in_the_last_4_months = stat.dossiers_in_the_last_4_months
 
     if administration_signed_in?
       @dossier_instruction_mean_time = Rails.cache.fetch("dossier_instruction_mean_time", expires_in: 1.day) do
@@ -96,10 +108,7 @@ class StatsController < ApplicationController
     }
   end
 
-  def dossiers_numbers(dossiers)
-    total = dossiers.count
-    last_30_days_count = dossiers.where(en_construction_at: 1.month.ago..Time.zone.now).count
-    previous_count = dossiers.where(en_construction_at: 2.months.ago..1.month.ago).count
+  def dossiers_numbers(total, last_30_days_count, previous_count)
     if previous_count != 0
       evolution = (((last_30_days_count.to_f / previous_count) - 1) * 100).round(0)
     else
@@ -111,15 +120,6 @@ class StatsController < ApplicationController
       total: total.to_s,
       last_30_days_count: last_30_days_count.to_s,
       evolution: formatted_evolution
-    }
-  end
-
-  def dossiers_states
-    {
-      'Brouilllon'      => Dossier.state_brouillon.count,
-      'En construction' => Dossier.state_en_construction.count,
-      'En instruction'  => Dossier.state_en_instruction.count,
-      'Terminé'         => Dossier.state_termine.count
     }
   end
 

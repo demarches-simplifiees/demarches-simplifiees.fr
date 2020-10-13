@@ -55,7 +55,7 @@ interface Champ {
 
 type ChampDescriptor {
   """
-  Description des champs d'un bloc répétable.
+  Description des champs d’un bloc répétable.
   """
   champDescriptors: [ChampDescriptor!]
 
@@ -71,7 +71,7 @@ type ChampDescriptor {
   label: String!
 
   """
-  List des options d'un champ avec selection.
+  List des options d’un champ avec selection.
   """
   options: [String!]
 
@@ -246,7 +246,7 @@ type Demarche {
   datePublication: ISO8601DateTime!
 
   """
-  L'état de dossier pour une démarche déclarative
+  L’état de dossier pour une démarche déclarative
   """
   declarative: DossierDeclarativeState
 
@@ -256,7 +256,7 @@ type Demarche {
   description: String!
 
   """
-  Liste de tous les dossiers d'une démarche.
+  Liste de tous les dossiers d’une démarche.
   """
   dossiers(
     """
@@ -290,7 +290,7 @@ type Demarche {
     last: Int
 
     """
-    L'ordre des dossiers.
+    L’ordre des dossiers.
     """
     order: Order = ASC
 
@@ -317,7 +317,7 @@ type Demarche {
   service: Service!
 
   """
-  L'état de la démarche.
+  L’état de la démarche.
   """
   state: DemarcheState!
 
@@ -380,6 +380,11 @@ Un dossier
 type Dossier {
   annotations: [Champ!]!
   archived: Boolean!
+
+  """
+  L’URL de l’attestation au format PDF.
+  """
+  attestation: File
   avis: [Avis!]!
   champs: [Champ!]!
 
@@ -403,6 +408,11 @@ type Dossier {
   """
   dateTraitement: ISO8601DateTime
   demandeur: Demandeur!
+
+  """
+  L’URL du GeoJSON contenant les données cartographiques du dossier.
+  """
+  geojson: File
   groupeInstructeur: GroupeInstructeur!
   id: ID!
   instructeurs: [Profile!]!
@@ -414,10 +424,15 @@ type Dossier {
   Le numero du dossier.
   """
   number: Int!
+
+  """
+  L’URL du dossier au format PDF.
+  """
+  pdf: File
   revision: Revision!
 
   """
-  L'état du dossier.
+  L’état du dossier.
   """
   state: DossierState!
   usager: Profile!
@@ -754,7 +769,7 @@ type Entreprise {
   dateCreation: ISO8601Date!
 
   """
-  effectif moyen d'une année
+  effectif moyen d’une année
   """
   effectifAnnuel: Effectif
 
@@ -829,7 +844,7 @@ Un groupe instructeur avec ces dossiers
 """
 type GroupeInstructeurWithDossiers {
   """
-  Liste de tous les dossiers d'une démarche.
+  Liste de tous les dossiers d’une démarche.
   """
   dossiers(
     """
@@ -858,7 +873,7 @@ type GroupeInstructeurWithDossiers {
     last: Int
 
     """
-    L'ordre des dossiers.
+    L’ordre des dossiers.
     """
     order: Order = ASC
 
@@ -1130,7 +1145,7 @@ type Query {
   ): Demarche!
 
   """
-  Informations sur un dossier d'une démarche.
+  Informations sur un dossier d’une démarche.
   """
   dossier(
     """
