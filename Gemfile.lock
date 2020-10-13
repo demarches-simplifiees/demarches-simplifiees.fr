@@ -341,6 +341,7 @@ GEM
     httpclient (2.8.3)
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
+    iban-tools (1.1.0)
     ice_nine (0.11.2)
     ipaddress (0.8.3)
     jaro_winkler (1.5.4)
@@ -818,6 +819,7 @@ DEPENDENCIES
   haml-rails
   hashie
   http_accept_language
+  iban-tools
   jquery-rails
   jwt
   kaminari (= 1.2.1)

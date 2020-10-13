@@ -52,7 +52,8 @@ class TypeDeChamp < ApplicationRecord
     carte: 'carte',
     te_fenua: 'te_fenua',
     repetition: 'repetition',
-    titre_identite: 'titre_identite'
+    titre_identite: 'titre_identite',
+    iban: 'iban'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true

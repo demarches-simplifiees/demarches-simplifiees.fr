@@ -113,7 +113,6 @@ Rails.application.routes.draw do
 
   get '/stats' => 'stats#index'
   get '/stats/download' => 'stats#download'
-  resources :demandes, only: [:new, :create]
 
   namespace :france_connect do
     get 'particulier' => 'particulier#login'

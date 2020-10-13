@@ -187,6 +187,10 @@ FactoryBot.define do
     factory :champ_te_fenua, class: 'Champs::TeFenuaChamp' do
       type_de_champ { association :type_de_champ_te_fenua, procedure: dossier.procedure }
     end
+    
+    factory :champ_iban, class: 'Champs::IbanChamp' do
+      type_de_champ { association :type_de_champ_iban, procedure: dossier.procedure }
+    end
 
     factory :champ_siret, class: 'Champs::SiretChamp' do
       association :type_de_champ, factory: [:type_de_champ_siret]

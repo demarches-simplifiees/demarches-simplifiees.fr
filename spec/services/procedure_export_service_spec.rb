@@ -81,6 +81,7 @@ describe ProcedureExportService do
           "carte",
           "te_fenua",
           "titre_identite",
+          "iban",
           "text"
         ]
       end
@@ -173,6 +174,7 @@ describe ProcedureExportService do
           "carte",
           "te_fenua",
           "titre_identite",
+          "iban",
           "text"
         ]
       end
@@ -259,6 +261,7 @@ describe ProcedureExportService do
             "carte",
             "te_fenua",
             "titre_identite",
+            "iban",
             "text"
           ]
         end
