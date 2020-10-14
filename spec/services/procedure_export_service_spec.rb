@@ -81,6 +81,7 @@ describe ProcedureExportService do
           "carte",
           "te_fenua",
           "titre_identite",
+          "iban",
           "text"
         ]
       end
@@ -173,6 +174,7 @@ describe ProcedureExportService do
           "carte",
           "te_fenua",
           "titre_identite",
+          "iban",
           "text"
         ]
       end
@@ -259,6 +261,7 @@ describe ProcedureExportService do
             "carte",
             "te_fenua",
             "titre_identite",
+            "iban",
             "text"
           ]
         end
@@ -371,6 +374,21 @@ describe ProcedureExportService do
 
         it 'should have valid sheet name' do
           expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', "(#{champ_repetition.type_de_champ.stable_id}) A - B - C"])
+        end
+      end
+
+      context 'with long libelle composed of utf8 characteres' do
+        before do
+          procedure.types_de_champ.each do |c|
+            c.update!(libelle: "#{c.id} - ?/[] ééé ééé ééééééé ééééééé éééééééé. ééé éé éééééééé éé ééé. ééééé éééééééé ééé ééé.")
+          end
+          champ_repetition.champs.each do |c|
+            c.type_de_champ.update!(libelle: "#{c.id} - Quam rem nam maiores numquam dolorem nesciunt. Cum et possimus et aut. Fugit voluptas qui qui.")
+          end
+        end
+
+        it 'should have valid sheet name' do
+          expect { subject }.not_to raise_error(ArgumentError)
         end
       end
 

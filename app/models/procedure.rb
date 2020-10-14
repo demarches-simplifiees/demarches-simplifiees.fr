@@ -4,6 +4,7 @@
 #
 #  id                                  :integer          not null, primary key
 #  aasm_state                          :string           default("brouillon")
+#  allow_expert_review                 :boolean          default(TRUE), not null
 #  api_entreprise_token                :string
 #  ask_birthday                        :boolean          default(FALSE), not null
 #  auto_archive_on                     :date
@@ -56,15 +57,18 @@ class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
-  has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
+  has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
 
-  has_many :published_types_de_champ, through: :published_revision, source: :types_de_champ
-  has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
-  has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ
-  has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
+  has_many :published_types_de_champ, -> { ordered }, through: :published_revision, source: :types_de_champ
+  has_many :published_types_de_champ_private, -> { ordered }, through: :published_revision, source: :types_de_champ_private
+  has_many :draft_types_de_champ, -> { ordered }, through: :draft_revision, source: :types_de_champ
+  has_many :draft_types_de_champ_private, -> { ordered }, through: :draft_revision, source: :types_de_champ_private
+
+  has_many :all_types_de_champ, -> { joins(:procedure).where('types_de_champ.revision_id != procedures.draft_revision_id').ordered }, through: :revisions, source: :types_de_champ
+  has_many :all_types_de_champ_private, -> { joins(:procedure).where('types_de_champ.revision_id != procedures.draft_revision_id').ordered }, through: :revisions, source: :types_de_champ_private
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
@@ -85,12 +89,43 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
+  def types_de_champ_for_export
+    if brouillon?
+      draft_types_de_champ
+    else
+      all_types_de_champ
+        .uniq
+        .reject(&:exclude_from_export?)
+        .filter(&:active_revision?)
+        .group_by(&:stable_id).values.map do |types_de_champ|
+          types_de_champ.sort_by(&:created_at).last
+        end
+    end
+  end
+
+  def types_de_champ_private_for_export
+    if brouillon?
+      draft_types_de_champ_private
+    else
+      all_types_de_champ_private
+        .uniq
+        .reject(&:exclude_from_export?)
+        .filter(&:active_revision?)
+        .group_by(&:stable_id).values.map do |types_de_champ|
+          types_de_champ.sort_by(&:created_at).last
+        end
+    end
+  end
+
   has_many :administrateurs_procedures
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, dependent: :destroy
   has_many :instructeurs, through: :groupe_instructeurs
 
-  has_many :dossiers, through: :groupe_instructeurs, dependent: :restrict_with_exception
+  # This relationship is used in following dossiers through. We can not use revisions relationship
+  # as order scope introduces invalid sql in some combinations.
+  has_many :unordered_revisions, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
+  has_many :dossiers, through: :unordered_revisions, dependent: :restrict_with_exception
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy
@@ -149,7 +184,7 @@ class Procedure < ApplicationRecord
   validates :lien_site_web, presence: true, if: :publiee?
   validate :validate_for_publication, on: :publication
   validate :check_juridique
-  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,50}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
+  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
   validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates_with MonAvisEmbedValidator

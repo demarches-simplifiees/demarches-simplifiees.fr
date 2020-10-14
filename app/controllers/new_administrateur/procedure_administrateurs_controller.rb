@@ -11,7 +11,7 @@ module NewAdministrateur
       # Find the admin
       administrateur = Administrateur.by_email(email)
       if administrateur.nil?
-        flash.alert = "L’administrateur « #{email} » n’existe pas. Invitez-le à demander un compte administrateur à l’addresse <a href=#{new_demande_url}>#{new_demande_url}</a>."
+        flash.alert = "L’administrateur « #{email} » n’existe pas. Invitez-le à demander un compte administrateur à l’addresse <a href=#{DEMANDE_INSCRIPTION_ADMIN_PAGE_URL}>#{DEMANDE_INSCRIPTION_ADMIN_PAGE_URL}</a>."
         return
       end
 

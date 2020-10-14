@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_02_103047) do
+ActiveRecord::Schema.define(version: 2020_10_02_124154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -543,6 +543,7 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
     t.string "api_entreprise_token"
     t.bigint "draft_revision_id"
     t.bigint "published_revision_id"
+    t.boolean "allow_expert_review", default: true, null: false
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
@@ -583,6 +584,21 @@ ActiveRecord::Schema.define(version: 2020_09_02_103047) do
     t.text "adresse"
     t.index ["administrateur_id", "nom"], name: "index_services_on_administrateur_id_and_nom", unique: true
     t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
+  end
+
+  create_table "stats", force: :cascade do |t|
+    t.bigint "dossiers_not_brouillon", default: 0
+    t.bigint "dossiers_brouillon", default: 0
+    t.bigint "dossiers_en_construction", default: 0
+    t.bigint "dossiers_en_instruction", default: 0
+    t.bigint "dossiers_termines", default: 0
+    t.bigint "dossiers_depose_avant_30_jours", default: 0
+    t.bigint "dossiers_deposes_entre_60_et_30_jours", default: 0
+    t.bigint "administrations_partenaires", default: 0
+    t.jsonb "dossiers_cumulative", default: "{}", null: false
+    t.jsonb "dossiers_in_the_last_4_months", default: "{}", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "task_records", id: false, force: :cascade do |t|

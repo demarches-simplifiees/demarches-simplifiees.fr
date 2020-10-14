@@ -2,19 +2,25 @@ RSpec.describe GeoArea, type: :model do
   describe '#area' do
     let(:geo_area) { build(:geo_area, :polygon) }
 
-    it { expect(geo_area.area).to eq(219.0) }
+    it { expect(geo_area.area).to eq(103.6) }
+  end
+
+  describe '#area (hourglass polygon)' do
+    let(:geo_area) { build(:geo_area, :hourglass_polygon) }
+
+    it { expect(geo_area.area).to eq(32.4) }
   end
 
   describe '#length' do
     let(:geo_area) { build(:geo_area, :line_string) }
 
-    it { expect(geo_area.length).to eq(30.8) }
+    it { expect(geo_area.length).to eq(21.2) }
   end
 
   describe '#location' do
     let(:geo_area) { build(:geo_area, :point) }
 
-    it { expect(geo_area.location).to eq("2°25'42\"N 46°32'19\"E") }
+    it { expect(geo_area.location).to eq("46°32'19\"N 2°25'42\"E") }
   end
 
   describe '#rgeo_geometry' do

@@ -12,6 +12,8 @@ class RootController < ApplicationController
       return redirect_to manager_root_path
     end
 
+    @stat = Stat.first
+
     render 'landing'
   end
 

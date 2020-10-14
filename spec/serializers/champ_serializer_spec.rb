@@ -4,15 +4,7 @@ describe ChampSerializer do
     let(:serializable_object) { champ }
 
     context 'when type champ is piece justificative' do
-      include Rails.application.routes.url_helpers
-
       let(:champ) { create(:champ_piece_justificative) }
-
-      before do
-        champ.piece_justificative_file.attach({ filename: __FILE__, io: File.open(__FILE__) })
-        champ.piece_justificative_file.blob.send(:enqueue_virus_scan)
-      end
-      after { champ.piece_justificative_file.purge }
 
       it { expect(subject[:value]).to match('/rails/active_storage/disk/') }
     end

@@ -213,8 +213,7 @@ feature 'The routing', js: true do
 
   def register_instructeur_and_log_in(email)
     confirmation_email = emails_sent_to(email)
-      .filter { |m| m.subject == 'Activez votre compte instructeur' }
-      .first
+      .find { |m| m.subject == 'Activez votre compte instructeur' }
     token_params = confirmation_email.body.match(/token=[^"]+/)
     expect(token_params).not_to be_nil
     expect(token_params.length).to be > 0

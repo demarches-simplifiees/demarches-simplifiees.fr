@@ -141,14 +141,14 @@ class Instructeur < ApplicationRecord
       .where(groupe_instructeur: target_groupes)
       .send(scope) # :en_cours or :termine or :not_archived (or any other Dossier scope)
       .merge(followed_dossiers)
-      .with_notifications(self)
+      .with_notifications
   end
 
   def procedure_ids_with_notifications(scope)
     groupe_instructeur_ids = Dossier
       .send(scope) # :en_cours or :termine (or any other Dossier scope)
       .merge(followed_dossiers)
-      .with_notifications(self)
+      .with_notifications
       .select(:groupe_instructeur_id)
 
     GroupeInstructeur.where(id: groupe_instructeur_ids).pluck(:procedure_id)

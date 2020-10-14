@@ -91,7 +91,7 @@ class ProcedurePresentation < ApplicationRecord
 
     case table
     when 'notifications'
-      dossiers_id_with_notification = dossiers.merge(instructeur.followed_dossiers).with_notifications(instructeur).ids
+      dossiers_id_with_notification = dossiers.merge(instructeur.followed_dossiers).with_notifications.ids
       if order == 'desc'
         return dossiers_id_with_notification +
             (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
@@ -160,7 +160,7 @@ class ProcedurePresentation < ApplicationRecord
           .filter_ilike(table, column, values)
       when 'groupe_instructeur'
         dossiers
-          .includes(table)
+          .joins(:groupe_instructeur)
           .filter_ilike(table, column, values)
       end.pluck(:id)
     end.reduce(:&)
@@ -295,8 +295,7 @@ class ProcedurePresentation < ApplicationRecord
   def valid_columns_for_table(table)
     @column_whitelist ||= fields
       .group_by { |field| field['table'] }
-      .map { |table, fields| [table, Set.new(fields.pluck('column'))] }
-      .to_h
+      .transform_values { |fields| Set.new(fields.pluck('column')) }
 
     @column_whitelist[table] || []
   end

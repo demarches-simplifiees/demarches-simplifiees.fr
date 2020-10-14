@@ -69,7 +69,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     end
 
     pdf.fill_color grey
-    pdf.pad_top(40) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 9, align: :right, character_spacing: -0.5 }
+    pdf.pad_top(40) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 12, align: :right, character_spacing: -0.5 }
 
     pdf.fill_color black
     pdf.pad_top(40) { pdf.text title, size: 20, inline_format: true }
@@ -100,6 +100,11 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
       pdf.text "<u><link href='#{qrcode}'>#{title}</link></u>", :inline_format => true, size: 9, align: :center, color: "0000FF"
     end
     pdf.move_cursor_to 20
-    pdf.text footer, align: :center, size: 8
+    if footer.present?
+      # We reduce the size of large footer so they can be drawn in the corresponding area.
+      # This is due to a font change, the replacing font is slightly bigger than the previous one
+      footer_font_size = footer.length > 170 ? 7 : 8
+      pdf.text footer, align: :center, size: footer_font_size
+    end
   end
 end

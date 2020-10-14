@@ -7,16 +7,16 @@ module Types
       end
 
       field :siren, String, null: false
-      field :capital_social, GraphQL::Types::BigInt, null: false
+      field :capital_social, GraphQL::Types::BigInt, null: false, description: "capital social de l’entreprise. -1 si inconnu."
       field :numero_tva_intracommunautaire, String, null: false
       field :forme_juridique, String, null: false
       field :forme_juridique_code, String, null: false
       field :nom_commercial, String, null: false
       field :raison_sociale, String, null: false
       field :siret_siege_social, String, null: false
-      field :code_effectif_entreprise, String, null: false
+      field :code_effectif_entreprise, String, null: true
       field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
-      field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d'une année"
+      field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d’une année"
       field :date_creation, GraphQL::Types::ISO8601Date, null: false
       field :nom, String, null: false
       field :prenom, String, null: false
@@ -39,6 +39,17 @@ module Types
             nb: object.effectif_mensuel
           }
         end
+      end
+
+      def capital_social
+        # capital_social is defined as a BigInt, so we can't return an empty string when value is unknown
+        # 0 could appear to be a legitimate value, so a negative value helps to ensure the value is not known
+        object.capital_social || '-1'
+      end
+
+      def code_effectif_entreprise
+        # we need this in order to bypass Hashie::Dash deserialization issue on nil values
+        object.code_effectif_entreprise
       end
 
       def effectif_annuel
@@ -76,8 +87,8 @@ module Types
     field :naf, String, null: false
     field :libelle_naf, String, null: false
     field :adresse, String, null: false
-    field :numero_voie, String, null: false
-    field :type_voie, String, null: false
+    field :numero_voie, String, null: true
+    field :type_voie, String, null: true
     field :nom_voie, String, null: false
     field :complement_adresse, String, null: false
     field :code_postal, String, null: false

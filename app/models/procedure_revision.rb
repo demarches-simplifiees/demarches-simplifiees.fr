@@ -11,6 +11,8 @@ class ProcedureRevision < ApplicationRecord
   self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
 
+  has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
+
   has_many :revision_types_de_champ, -> { public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :revision_types_de_champ_private, -> { private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
@@ -48,7 +50,7 @@ class ProcedureRevision < ApplicationRecord
     elsif type_de_champ.parent.present?
       find_or_clone_type_de_champ(type_de_champ.parent.stable_id).types_de_champ.find_by!(stable_id: id)
     else
-      type_de_champ.revise!
+      revise_type_de_champ(type_de_champ)
     end
   end
 
@@ -95,6 +97,15 @@ class ProcedureRevision < ApplicationRecord
   end
 
   private
+
+  def revise_type_de_champ(type_de_champ)
+    types_de_champ_association = type_de_champ.private? ? :revision_types_de_champ_private : :revision_types_de_champ
+    association = send(types_de_champ_association).find_by!(type_de_champ: type_de_champ)
+    cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ], &type_de_champ.method(:clone_attachments))
+    cloned_type_de_champ.revision = self
+    association.update!(type_de_champ: cloned_type_de_champ)
+    cloned_type_de_champ
+  end
 
   def find_type_de_champ_by_id(id)
     types_de_champ.find_by(stable_id: id) ||

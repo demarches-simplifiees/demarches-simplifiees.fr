@@ -42,7 +42,7 @@ module DossierHelper
   end
 
   def autosave_available?(dossier)
-    dossier.brouillon? && Flipper.enabled?(:autosave_dossier_draft, dossier.user)
+    dossier.brouillon?
   end
 
   def dossier_submission_is_closed?(dossier)
@@ -75,7 +75,7 @@ module DossierHelper
   def status_badge(state)
     status_text = dossier_display_state(state, lower: true)
     status_class = state.tr('_', '-')
-    content_tag(:span, status_text, class: "label #{status_class} ")
+    tag.span(status_text, class: "label #{status_class} ")
   end
 
   def deletion_reason_badge(reason)
@@ -87,7 +87,7 @@ module DossierHelper
       status_class = 'unknown'
     end
 
-    content_tag(:span, status_text, class: "label #{status_class} ")
+    tag.span(status_text, class: "label #{status_class} ")
   end
 
   def demandeur_dossier(dossier)
