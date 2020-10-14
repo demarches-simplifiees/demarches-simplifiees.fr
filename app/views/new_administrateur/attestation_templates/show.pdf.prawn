@@ -17,8 +17,8 @@ left_margin = right_margin
 
 #----- size of images
 max_logo_width = body_width
-max_logo_height = 50.mm
-max_signature_size = 50.mm
+max_logo_height = 40.mm
+max_signature_size = 40.mm
 qrcode_size = 35.mm
 
 def normalize_pdf_text(text)
