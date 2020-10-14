@@ -46,5 +46,27 @@ module Manager
 
       redirect_to manager_users_path
     end
+
+    def emails
+      @user = User.find(params[:id])
+
+      transactionnal_api = ::SibApiV3Sdk::TransactionalEmailsApi.new
+
+      @transactionnal_emails = transactionnal_api.get_transac_emails_list(email: @user.email)
+      @events = transactionnal_api.get_email_event_report(email: @user.email, days: 30)
+
+    rescue ::SibApiV3Sdk::ApiError => e
+      flash.alert = "Impossible de récupérer les emails de cet utilisateur chez Sendinblue : #{e.message}"
+    end
+
+    def unblock_user
+      @user = User.find(params[:id])
+
+      transactionnal_api = ::SibApiV3Sdk::TransactionalEmailsApi.new
+      transactionnal_api.smtp_blocked_contacts_email_delete(@user.email)
+
+    rescue ::SibApiV3Sdk::ApiError => e
+      flash.alert = "Impossible de débloquer cet email auprès de Sendinblue : #{e.message}"
+    end
   end
 end
