@@ -34,10 +34,11 @@ as well as a link to its edit page.
     <% if !user.confirmed? %>
       <%= link_to('Renvoyer l’email de confirmation', [:resend_confirmation_instructions, namespace, page.resource], method: :post, class: 'button') %>
     <% end %>
-  <div>
+  </div>
 </header>
 
 <section class="main-content__body">
+  <%= render partial: 'manager/application/user_meta', locals: {user: user} %>
   <dl>
     <% page.attributes.each do |attribute| %>
       <dt class="attribute-label" id="<%= attribute.name %>">
