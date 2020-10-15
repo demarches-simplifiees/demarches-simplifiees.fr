@@ -1,7 +1,8 @@
 import React from 'react';
-import ortho from './images/preview-ortho.png';
-import vector from './images/preview-vector.png';
 import PropTypes from 'prop-types';
+
+import ortho from './styles/images/preview-ortho.png';
+import vector from './styles/images/preview-vector.png';
 
 const STYLES = {
   ortho: {
@@ -34,7 +35,7 @@ function getNextStyle(style, ign) {
   return styles[index];
 }
 
-export const SwitchMapStyle = ({ style, setStyle, ign }) => {
+function SwitchMapStyle({ style, setStyle, ign }) {
   const nextStyle = getNextStyle(style, ign);
   const { title, preview, color } = (ign ? IGN_STYLES : STYLES)[nextStyle];
 
@@ -69,10 +70,12 @@ export const SwitchMapStyle = ({ style, setStyle, ign }) => {
       </div>
     </div>
   );
-};
+}
 
 SwitchMapStyle.propTypes = {
   style: PropTypes.string,
   setStyle: PropTypes.func,
   ign: PropTypes.bool
 };
+
+export default SwitchMapStyle;
