@@ -27,34 +27,18 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def quartiers_prioritaires
-    geo_areas.filter do |area|
-      area.source == GeoArea.sources.fetch(:quartier_prioritaire)
-    end
-  end
-
-  def parcelles_agricoles
-    geo_areas.filter do |area|
-      area.source == GeoArea.sources.fetch(:parcelle_agricole)
-    end
-  end
-
   def selections_utilisateur
     geo_areas.filter do |area|
       area.source == GeoArea.sources.fetch(:selection_utilisateur)
     end
   end
 
+  def layer_enabled?(layer)
+    type_de_champ.options[layer] && type_de_champ.options[layer] != '0'
+  end
+
   def cadastres?
-    type_de_champ&.cadastres && type_de_champ.cadastres != '0'
-  end
-
-  def quartiers_prioritaires?
-    type_de_champ&.quartiers_prioritaires && type_de_champ.quartiers_prioritaires != '0'
-  end
-
-  def parcelles_agricoles?
-    type_de_champ&.parcelles_agricoles && type_de_champ.parcelles_agricoles != '0'
+    layer_enabled?(:cadastres)
   end
 
   def mnhn?
