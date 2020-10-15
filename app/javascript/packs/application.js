@@ -62,3 +62,4 @@ window.DS = window.DS || DS;
 
 // eslint-disable-next-line no-undef, react-hooks/rules-of-hooks
 ReactRailsUJS.useContext(require.context('loaders', true));
+addEventListener('ds:page:update', ReactRailsUJS.handleMount);
