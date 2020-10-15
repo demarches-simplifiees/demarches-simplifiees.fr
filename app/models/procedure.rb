@@ -633,8 +633,8 @@ class Procedure < ApplicationRecord
   def dossiers_count_for_instructeur(instructeur)
     query = <<-EOF
   SELECT
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."id" IS NULL and not "dossiers"."archived" ) AS a_suivre,
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."instructeur_id" = :instructeur_id and not "dossiers"."archived" ) AS suivis,
+      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and (("follows"."id" IS NULL) or ("follows"."instructeur_id" = :instructeur_id and "follows"."unfollowed_at" < :now)) and not "dossiers"."archived") AS a_suivre,
+      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."instructeur_id" = :instructeur_id and not "dossiers"."archived" and "follows"."unfollowed_at" IS NULL) AS suivis,
       COUNT(*) FILTER ( WHERE "dossiers"."state" in ('accepte', 'refuse', 'sans_suite') and not "dossiers"."archived" ) AS termines,
       COUNT(*) FILTER ( WHERE "dossiers"."state" != 'brouillon' and not "dossiers"."archived" ) AS total,
       COUNT(*) FILTER ( WHERE "dossiers"."archived" ) AS archived
@@ -663,7 +663,8 @@ class Procedure < ApplicationRecord
     sanitized_query = ActiveRecord::Base.sanitize_sql([
       query,
       instructeur_id: instructeur.id,
-      procedure_id: self.id
+      procedure_id: self.id,
+      now: Time.zone.now
     ])
 
     Procedure.connection.select_all(sanitized_query).first || { "a_suivre" => 0, "suivis" => 0, "termines" => 0, "total" => 0, "archived" => 0 }
