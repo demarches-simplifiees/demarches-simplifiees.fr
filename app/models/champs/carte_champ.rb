@@ -41,15 +41,27 @@ class Champs::CarteChamp < Champ
     layer_enabled?(:cadastres)
   end
 
-  def mnhn?
-    type_de_champ&.mnhn && type_de_champ.mnhn != '0'
+  def optional_layers
+    [
+      :unesco,
+      :arretes_protection,
+      :conservatoire_littoral,
+      :reserves_chasse_faune_sauvage,
+      :reserves_biologiques,
+      :reserves_naturelles,
+      :natura_2000,
+      :zones_humides,
+      :znieff,
+      :cadastres
+    ].map do |layer|
+      layer_enabled?(layer) ? layer : nil
+    end.compact
   end
 
   def render_options
     {
       ign: Flipper.enabled?(:carte_ign, procedure),
-      mnhn: mnhn?,
-      cadastres: cadastres?
+      layers: optional_layers
     }
   end
 
