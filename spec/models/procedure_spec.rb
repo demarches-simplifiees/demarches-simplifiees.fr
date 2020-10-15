@@ -1102,6 +1102,16 @@ describe Procedure do
           it { expect(subject['suivis']).to eq(2) }
           it { expect(subject['total']).to eq(2) }
         end
+
+        context 'and dossier with a follower is unfollowed' do
+          before do
+            instructeur.unfollow(new_followed_dossier)
+          end
+
+          it { expect(subject['a_suivre']).to eq(1) }
+          it { expect(subject['suivis']).to eq(0) }
+          it { expect(subject['total']).to eq(1) }
+        end
       end
 
       context 'with a termine dossier' do
