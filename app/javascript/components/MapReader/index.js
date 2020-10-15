@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import ReactMapboxGl, { ZoomControl, GeoJSONLayer } from 'react-mapbox-gl';
+import { ZoomControl, GeoJSONLayer } from 'react-mapbox-gl';
 import mapboxgl, { Popup } from 'mapbox-gl';
 import PropTypes from 'prop-types';
 
-import { getMapStyle, SwitchMapStyle } from '../MapStyles';
-
+import Mapbox from '../shared/mapbox/Mapbox';
+import { getMapStyle } from '../shared/mapbox/styles';
+import SwitchMapStyle from '../shared/mapbox/SwitchMapStyle';
 import {
   filterFeatureCollection,
   filterFeatureCollectionByGeometryType,
@@ -12,9 +13,7 @@ import {
   findFeature,
   fitBounds,
   getCenter
-} from '../shared/map';
-
-const Map = ReactMapboxGl({});
+} from '../shared/mapbox/utils';
 
 const MapReader = ({ featureCollection, options }) => {
   const [currentMap, setCurrentMap] = useState(null);
@@ -51,11 +50,11 @@ const MapReader = ({ featureCollection, options }) => {
       ),
     [selectionsUtilisateurFeatureCollection]
   );
-  const hasCadastres = !!cadastresFeatureCollection.length;
-  const mapStyle = useMemo(
-    () => getMapStyle(style, hasCadastres, options.mnhn),
-    [style, options, cadastresFeatureCollection]
-  );
+  const hasCadastres = useMemo(() => options.layers.includes('cadastres'));
+  const mapStyle = useMemo(() => getMapStyle(style, options.layers), [
+    style,
+    options
+  ]);
   const popup = useMemo(
     () =>
       new Popup({
@@ -147,7 +146,7 @@ const MapReader = ({ featureCollection, options }) => {
   }
 
   return (
-    <Map
+    <Mapbox
       onStyleLoad={(map) => onMapLoad(map)}
       fitBounds={boundData}
       fitBoundsOptions={{ padding: 100 }}
@@ -186,7 +185,7 @@ const MapReader = ({ featureCollection, options }) => {
 
       <SwitchMapStyle style={style} setStyle={setStyle} ign={options.ign} />
       <ZoomControl />
-    </Map>
+    </Mapbox>
   );
 };
 
@@ -197,8 +196,8 @@ MapReader.propTypes = {
     features: PropTypes.array
   }),
   options: PropTypes.shape({
-    ign: PropTypes.bool,
-    mnhn: PropTypes.bool
+    layers: PropTypes.array,
+    ign: PropTypes.bool
   })
 };
 
