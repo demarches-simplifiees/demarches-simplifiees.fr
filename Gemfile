@@ -71,6 +71,7 @@ gem 'rgeo-geojson'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'sentry-raven'
+gem 'sib-api-v3-sdk'
 gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
