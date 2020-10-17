@@ -20,6 +20,10 @@ class GeoAreaSerializer < ActiveModel::Serializer
   attribute :surface, if: :include_parcelle_agricole?
   attribute :bio, if: :include_parcelle_agricole?
 
+  def geometry
+    object.safe_geometry
+  end
+
   def include_cadastre?
     object.source == GeoArea.sources.fetch(:cadastre)
   end

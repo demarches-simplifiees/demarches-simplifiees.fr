@@ -1,9 +1,8 @@
 import Rails from '@rails/ujs';
-import $ from 'jquery';
 import debounce from 'debounce';
 
 export { debounce };
-export const { fire } = Rails;
+export const { fire, csrfToken } = Rails;
 
 export function show(el) {
   el && el.classList.remove('hidden');
@@ -67,17 +66,20 @@ export function ajax(options) {
   });
 }
 
-export function getJSON(url, data, method = 'get') {
-  data = method !== 'get' && data ? JSON.stringify(data) : data;
-  return Promise.resolve(
-    $.ajax({
-      method,
-      url,
-      data,
-      contentType: 'application/json',
-      dataType: 'json'
-    })
-  );
+export function getJSON(url, data, method = 'GET') {
+  const { query, ...options } = fetchOptions(data, method);
+
+  return fetch(`${url}${query}`, options).then((response) => {
+    if (response.ok) {
+      if (response.status === 204) {
+        return null;
+      }
+      return response.json();
+    }
+    const error = new Error(response.statusText || response.status);
+    error.response = response;
+    throw error;
+  });
 }
 
 export function scrollTo(container, scrollTo) {
@@ -93,10 +95,6 @@ export function on(selector, eventName, fn) {
   [...document.querySelectorAll(selector)].forEach((element) =>
     element.addEventListener(eventName, (event) => fn(event, event.detail))
   );
-}
-
-export function to(promise) {
-  return promise.then((result) => [result]).catch((error) => [null, error]);
 }
 
 export function isNumeric(n) {
@@ -119,4 +117,51 @@ export function timeoutable(promise, timeoutDelay) {
     }, timeoutDelay);
   });
   return Promise.race([promise, timeoutPromise]);
+}
+
+const FETCH_TIMEOUT = 30 * 1000; // 30 sec
+
+function fetchOptions(data, method = 'GET') {
+  const options = {
+    query: '',
+    method: method.toUpperCase(),
+    headers: {
+      accept: 'application/json',
+      'x-csrf-token': csrfToken(),
+      'x-requested-with': 'XMLHttpRequest'
+    },
+    credentials: 'same-origin'
+  };
+
+  if (data) {
+    if (options.method === 'GET') {
+      options.query = objectToQuerystring(data);
+    } else {
+      options.headers['content-type'] = 'application/json';
+      options.body = JSON.stringify(data);
+    }
+  }
+
+  if (window.AbortController) {
+    const controller = new AbortController();
+    options.signal = controller.signal;
+
+    setTimeout(() => {
+      controller.abort();
+    }, FETCH_TIMEOUT);
+  }
+
+  return options;
+}
+
+function objectToQuerystring(obj) {
+  return Object.keys(obj).reduce(function (query, key, i) {
+    return [
+      query,
+      i === 0 ? '?' : '&',
+      encodeURIComponent(key),
+      '=',
+      encodeURIComponent(obj[key])
+    ].join('');
+  }, '');
 }
