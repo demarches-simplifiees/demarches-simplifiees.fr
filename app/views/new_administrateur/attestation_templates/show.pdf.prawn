@@ -32,7 +32,12 @@ logo = @attestation[:logo]
 signature = @attestation[:signature]
 
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size) do |pdf|
-  pdf.font_families.update( 'marianne' => { normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' )})
+  pdf.font_families.update( 'marianne' => {
+    normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
+    bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
+    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
+  })
   pdf.font 'marianne'
 
   grey = '555555'
@@ -57,7 +62,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     pdf.pad_top(40) { pdf.text title, size: 14, character_spacing: -0.2 }
 
     pdf.fill_color grey
-    pdf.pad_top(30) { pdf.text body, size: 9, character_spacing: -0.2, align: :justify }
+    pdf.pad_top(30) { pdf.text body, size: 9, character_spacing: -0.2, align: :justify, inline_format: true }
 
     if signature.present?
       pdf.pad_top(40) do
