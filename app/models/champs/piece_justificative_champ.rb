@@ -15,6 +15,8 @@
 #  type_de_champ_id :integer
 #
 class Champs::PieceJustificativeChamp < Champ
+  include ActionView::Helpers::TagHelper
+
   MAX_SIZE = 200.megabytes
 
   validates :piece_justificative_file,
@@ -40,6 +42,14 @@ class Champs::PieceJustificativeChamp < Champ
   def for_api
     if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
       piece_justificative_file.service_url
+    end
+  end
+
+  def for_tag
+    if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
+      url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: id })
+      name = piece_justificative_file.filename.to_s
+      tag.a(name, { href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe" })
     end
   end
 end
