@@ -34,9 +34,9 @@ feature 'The user' do
 
     select_champ_geo('regions', 'Ma', 'Martinique')
 
-    select_champ_geo('departements', 'Ai', '02 - Aisne')
-
     select_champ_geo('communes', 'Ambl', 'Ambléon (01300)')
+
+    select_champ_geo('departements', 'Ai', '02 - Aisne')
 
     check('engagement')
     fill_in('dossier_link', with: '123')
