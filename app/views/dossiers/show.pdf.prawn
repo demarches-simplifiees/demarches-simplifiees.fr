@@ -1,15 +1,22 @@
 require 'prawn/measurement_extensions'
 
+def prawn_text(message)
+  tags = ['a', 'b', 'br', 'color', 'font', 'i', 'strong', 'sub', 'sup', 'u']
+  atts = ['alt', 'character_spacing', 'href', 'name', 'rel', 'rgb', 'size', 'src', 'target']
+  text = ActionView::Base.safe_list_sanitizer.sanitize(message.to_s, tags: tags, attributes: atts)
+end
+
 def format_in_2_lines(pdf, label, text)
   pdf.font 'marianne', style: :bold, size: 10  do
     pdf.text label
   end
-  pdf.text text, size: 9
+  pdf.text prawn_text(text), size: 9, inline_format: true
   pdf.text "\n", size: 9
 end
 
 def render_box(pdf, text, x, width)
-  box = ::Prawn::Text::Box.new(text.to_s, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor] })
+  blocks = ::Prawn::Text::Formatted::Parser.format(prawn_text(text))
+  box = ::Prawn::Text::Formatted::Box.new(blocks, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor] })
   box.render
   box.height
 end
@@ -86,7 +93,10 @@ def render_single_champ(pdf, champ)
   when 'Champs::RepetitionChamp'
     raise 'There should not be a RepetitionChamp here !'
   when 'Champs::PieceJustificativeChamp'
-    return
+    url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: champ.id })
+    display = champ.piece_justificative_file.filename
+    link = content_tag :a, display, { href: url, target: '_blank', rel: 'noopener' }
+    format_in_2_columns(pdf, champ.libelle, link)
   when 'Champs::HeaderSectionChamp'
     pdf.font 'marianne', style: :bold, size: 14 do
       pdf.text champ.libelle
@@ -135,7 +145,7 @@ def add_message(pdf, message)
   end
 
   pdf.text "#{sender}, #{format_date(message.created_at)}", style: :bold
-  pdf.text ActionView::Base.full_sanitizer.sanitize(message.body), size: 9
+  pdf.text prawn_text(message.body), size: 9, inline_format: true
   pdf.text "\n", size: 9
 end
 
@@ -145,7 +155,7 @@ def add_avis(pdf, avis)
     pdf.text "(confidentiel)", style: :bold
   end
   text = avis.answer || 'En attente de réponse'
-  pdf.text text
+  pdf.text prawn_text(text), inline_format: true
   pdf.text "\n"
 end
 
@@ -167,6 +177,8 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.font_families.update( 'marianne' => {
     normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
     bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
+    bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
+    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
   })
   pdf.font 'marianne'
 
