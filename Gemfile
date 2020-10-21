@@ -124,7 +124,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec_junit_formatter', require: false
   gem 'rspec-rails'
-  gem 'ruby-debug-ide', require: false
+  gem 'ruby-debug-ide', '~> 0.7.2', require: false
   gem 'simple_xlsx_reader'
   gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'
