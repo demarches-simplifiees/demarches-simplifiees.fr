@@ -26,6 +26,7 @@ def format_in_2_columns(pdf, label, text)
   h2 = render_box(pdf, ':', 100, 10)
   h3 = render_box(pdf, text, 110, pdf.bounds.width - 110)
   pdf.move_down 5 + [h1,h2,h3].max
+  pp "#{label}:#{text}"
 end
 
 def add_title(pdf, title)
@@ -89,6 +90,7 @@ def render_identite_etablissement(pdf, etablissement)
 end
 
 def render_single_champ(pdf, champ)
+  pp "single champ : #{champ.libelle}:#{champ.value}"
   case champ.type
   when 'Champs::RepetitionChamp'
     raise 'There should not be a RepetitionChamp here !'
@@ -103,9 +105,9 @@ def render_single_champ(pdf, champ)
     end
     pdf.text "\n"
   when 'Champs::ExplicationChamp'
-    format_in_2_lines(pdf, champ.libelle, champ.description)
+    format_in_2_columns(pdf, champ.libelle, champ.description)
   when 'Champs::CarteChamp'
-    format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
+    format_in_2_columns(pdf, champ.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
     pdf.font 'marianne', style: :bold, size: 9 do
       pdf.text champ.libelle
@@ -115,10 +117,10 @@ def render_single_champ(pdf, champ)
     pdf.text "\n"
   when 'Champs::NumberChamp'
     value = number_with_delimiter(champ.to_s)
-    format_in_2_lines(pdf, champ.libelle, value)
+    format_in_2_columns(pdf, champ.libelle, value)
   else
     value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
-    format_in_2_lines(pdf, champ.libelle, value)
+    format_in_2_columns(pdf, champ.libelle, value)
   end
 end
 
@@ -193,7 +195,7 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.text "Ce dossier est <b>#{dossier_display_state(@dossier, lower: true)}</b>.", inline_format: true
   pdf.text "\n"
   if @dossier.motivation.present?
-    format_in_2_lines(pdf, "Motif de la décision", @dossier.motivation)
+    format_in_2_columns(pdf, "Motif de la décision", @dossier.motivation)
   end
   add_title(pdf, 'Historique')
   add_etats_dossier(pdf, @dossier)
