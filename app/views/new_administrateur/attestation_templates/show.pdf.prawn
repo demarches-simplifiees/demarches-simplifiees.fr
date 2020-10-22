@@ -19,7 +19,7 @@ left_margin = right_margin
 max_logo_width = body_width
 max_logo_height = 40.mm
 max_signature_size = 40.mm
-qrcode_size = 35.mm
+qrcode_size = 30.mm
 
 def normalize_pdf_text(text)
   text&.tr("\t", '  ')
@@ -87,7 +87,7 @@ def cell_image(pdf, c)
 end
 
 def cell_text(pdf, c)
-  ::Prawn::Table::Cell::Text.new(pdf, [], { content: prawn_text(c.to_s), inline_format: true })
+  ::Prawn::Table::Cell::Text.new(pdf, [], { content: prawn_text(c.to_s), inline_format: true, size: 10 })
 end
 
 def print_table(pdf, data)
@@ -148,19 +148,19 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     end
 
     pdf.fill_color grey
-    pdf.pad_top(40) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 12, align: :right, character_spacing: -0.5 }
+    pdf.pad_top(10) { pdf.text "le #{l(created_at, format: '%e %B %Y')}", size: 11, align: :right, character_spacing: -0.5 }
 
     pdf.fill_color black
-    pdf.pad_top(40) { pdf.text title, character_spacing: -0.2, align: :center, inline_format: true, size: 20 }
+    pdf.pad_top(30) { pdf.text title, character_spacing: -0.2, align: :center, inline_format: true, size: 18 }
 
     pdf.fill_color grey
     pdf.pad_top(30) do
-      print pdf, body, size: 12
+      print pdf, body, size: 11
     end
 
     cpos = pdf.cursor - 40
     if signature.present?
-      pdf.pad_top(40) do
+      pdf.pad_top(20) do
         signature_content = if signature.is_a?(ActiveStorage::Attached::One)
                               signature.download
                             else
