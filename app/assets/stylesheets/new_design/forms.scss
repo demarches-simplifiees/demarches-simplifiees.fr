@@ -371,6 +371,20 @@
     }
   }
 
+
+  [data-reach-combobox-input] {
+    padding: 16px;
+    width: 100%;
+    min-width: 50%;
+    max-width: 100%;
+    min-height: 62px;
+    margin-bottom: 40px;
+  }
+
+  [data-reach-combobox-input]:focus {
+    border-color: $blue;
+  }
+
   .select2 {
     min-width: 50%;
   }
@@ -566,4 +580,13 @@
       margin-right: 0;
     }
   }
+}
+
+[data-reach-combobox-option] {
+  font-size: 16px;
+}
+
+[data-reach-combobox-option][aria-selected="true"] {
+  background: $light-blue !important;
+  color: $white;
 }

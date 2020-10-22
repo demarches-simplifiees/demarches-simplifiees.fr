@@ -31,6 +31,8 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
       post 'resend_confirmation_instructions', on: :member
       put 'enable_feature', on: :member
+      get 'emails', on: :member
+      put 'unblock_email'
     end
 
     resources :instructeurs, only: [:index, :show] do
@@ -136,6 +138,7 @@ Rails.application.routes.draw do
 
     post ':position/repetition', to: 'repetition#show', as: :repetition
     put 'piece_justificative/:champ_id', to: 'piece_justificative#update', as: :piece_justificative
+    get 'piece_justificative/:champ_id', to: 'piece_justificative#download', as: :piece_justificative_download
   end
 
   resources :attachments, only: [:show, :destroy]

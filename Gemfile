@@ -58,6 +58,7 @@ gem 'prawn' # PDF Generation
 gem 'prawn-qrcode' # to generate qrcode in pdfs
 gem 'prawn-rails' # PDF Generation
 gem 'prawn-svg'
+gem 'prawn-table'
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
@@ -71,6 +72,7 @@ gem 'rgeo-geojson'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'sentry-raven'
+gem 'sib-api-v3-sdk'
 gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
@@ -122,7 +124,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec_junit_formatter', require: false
   gem 'rspec-rails'
-  gem 'ruby-debug-ide', require: false
+  gem 'ruby-debug-ide', '~> 0.7.2', require: false
   gem 'simple_xlsx_reader'
   gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'

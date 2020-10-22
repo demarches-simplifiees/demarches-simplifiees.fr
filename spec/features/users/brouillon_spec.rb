@@ -5,7 +5,7 @@ feature 'The user' do
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }
   let(:user_dossier) { user.dossiers.first }
 
-  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'api_geo_departements_regions_et_communes' } do
+  scenario 'fill a dossier', js: true do
     log_in(user, procedure)
 
     fill_individual
@@ -33,13 +33,10 @@ feature 'The user' do
     select('98709 - Mahina - Tahiti', from: 'code_postal_de_polynesie')
 
     select_champ_geo('regions', 'Ma', 'Martinique')
-    select('Martinique', from: 'regions')
+
+    select_champ_geo('communes', 'Ambl', 'Ambléon (01300)')
 
     select_champ_geo('departements', 'Ai', '02 - Aisne')
-    select('02 - Aisne', from: 'departements')
-
-    select_champ_geo('communes', 'Am', 'Ambléon')
-    select('Ambléon', from: 'communes')
 
     check('engagement')
     fill_in('dossier_link', with: '123')
@@ -71,7 +68,7 @@ feature 'The user' do
 
     expect(champ_value_for('regions')).to eq('Martinique')
     expect(champ_value_for('departements')).to eq('02 - Aisne')
-    expect(champ_value_for('communes')).to eq('Ambléon')
+    expect(champ_value_for('communes')).to eq('Ambléon (01300)')
     expect(champ_value_for('engagement')).to eq('on')
     expect(champ_value_for('dossier_link')).to eq('123')
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
@@ -97,9 +94,9 @@ feature 'The user' do
     expect(page).to have_selected_value('nationalites', selected: 'Australienne')
     expect(page).to have_selected_value('commune_de_polynesie', selected: 'Mahina - Tahiti - 98709')
     expect(page).to have_selected_value('code_postal_de_polynesie', selected: '98709 - Mahina - Tahiti')
-    expect(page).to have_selected_value('regions', selected: 'Martinique')
-    expect(page).to have_selected_value('departements', selected: '02 - Aisne')
-    expect(page).to have_selected_value('communes', selected: 'Ambléon')
+    expect(page).to have_hidden_field('regions', with: 'Martinique')
+    expect(page).to have_hidden_field('departements', with: '02 - Aisne')
+    # expect(page).to have_hidden_field('communes', with: 'Ambléon (01300)')
     expect(page).to have_checked_field('engagement')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
@@ -331,6 +328,10 @@ feature 'The user' do
     e.sibling('.datetime').first('select')[:id][0..-4]
   end
 
+  def have_hidden_field(libelle, with:)
+    have_css("##{form_id_for(libelle)}[value=\"#{with}\"]")
+  end
+
   def champ_value_for(libelle)
     champs = user_dossier.champs
     champs.find { |c| c.libelle == libelle }.value
@@ -361,10 +362,12 @@ feature 'The user' do
   end
 
   def select_champ_geo(champ, fill_with, value)
-    find(".editable-champ-#{champ} .select2-container").click
-    id = find('.select2-container--open [role=listbox]')[:id]
-    find("[aria-controls=#{id}]").fill_in with: fill_with
-    expect(page).to have_content(value)
-    find('li', text: value).click
+    input = find("input[aria-label=#{champ}")
+    input.click
+    input.fill_in with: fill_with
+    selector = "li[data-option-value=\"#{value}\"]"
+    find(selector).click
+    expect(page).to have_css(selector)
+    expect(page).to have_hidden_field(champ, with: value)
   end
 end

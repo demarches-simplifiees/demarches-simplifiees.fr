@@ -1,4 +1,4 @@
-import { to, getJSON } from '@utils';
+import { getJSON } from '@utils';
 
 export default class OperationsQueue {
   constructor(baseUrl) {
@@ -30,23 +30,27 @@ export default class OperationsQueue {
   async exec(operation) {
     const { path, method, payload, resolve, reject } = operation;
     const url = `${this.baseUrl}${path}`;
-    const [data, xhr] = await to(getJSON(url, payload, method));
 
-    if (xhr) {
-      handleError(xhr, reject);
-    } else {
+    try {
+      const data = await getJSON(url, payload, method);
       resolve(data);
+    } catch (e) {
+      handleError(e, reject);
     }
   }
 }
 
-function handleError(xhr, reject) {
-  try {
-    const {
-      errors: [message]
-    } = JSON.parse(xhr.responseText);
+async function handleError({ response, message }, reject) {
+  if (response) {
+    try {
+      const {
+        errors: [message]
+      } = await response.json();
+      reject(message);
+    } catch {
+      reject(await response.text());
+    }
+  } else {
     reject(message);
-  } catch (e) {
-    reject(xhr.responseText);
   }
 }
