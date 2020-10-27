@@ -20,6 +20,9 @@ class ApiEntreprise::API
   class BadFormatRequest < StandardError
   end
 
+  class ServiceUnavailable < StandardError
+  end
+
   def self.entreprise(siren, procedure_id)
     call(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
   end
@@ -76,7 +79,9 @@ class ApiEntreprise::API
     elsif response.code&.between?(401, 499)
       raise ResourceNotFound, "url: #{url}"
     elsif response.code == 400
-      raise BadFormatRequest, "url:  #{url}"
+      raise BadFormatRequest, "url: #{url}"
+    elsif response.code == 503
+      raise ServiceUnavailable, "url: #{url}"
     else
       raise RequestFailed, "HTTP Error Code: #{response.code} for #{url}\nheaders: #{response.headers}\nbody: #{response.body}"
     end
