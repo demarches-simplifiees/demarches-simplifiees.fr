@@ -69,10 +69,10 @@ footer {
 }
 
 .footer-logo-dinum {
-  @include ie-compatible-background-image("footer/logo-dinum.svg");
+  @include ie-compatible-background-image("footer/logo-dinum.png");
 
-  height: 104px;
-  width: 90px;
+  height: 150px;
+  width: 202px;
   margin-bottom: 14px;
 }
 
