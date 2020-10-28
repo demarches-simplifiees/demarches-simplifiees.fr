@@ -24,29 +24,29 @@
           = tab_item('à suivre',
             instructeur_procedure_path(@procedure, statut: 'a-suivre'),
             active: @statut == 'a-suivre',
-            badge: number_with_html_delimiter(@a_suivre_dossiers.count))
+            badge: number_with_html_delimiter(@counters['a_suivre']))
 
-          = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
+          = tab_item(t('pluralize.followed', count: @counters['suivis']),
             instructeur_procedure_path(@procedure, statut: 'suivis'),
             active: @statut == 'suivis',
-            badge: number_with_html_delimiter(@followed_dossiers.count),
-            notification: current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?)
+            badge: number_with_html_delimiter(@counters['suivis']),
+            notification: @has_en_cours_notifications)
 
-          = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
+          = tab_item(t('pluralize.processed', count: @counters['termines']),
             instructeur_procedure_path(@procedure, statut: 'traites'),
             active: @statut == 'traites',
-            badge: number_with_html_delimiter(@termines_dossiers.count),
-            notification: current_instructeur.notifications_for_procedure(@procedure, :termine).exists?)
+            badge: number_with_html_delimiter(@counters['termines']),
+            notification: @has_termine_notifications)
 
           = tab_item('tous les dossiers',
             instructeur_procedure_path(@procedure, statut: 'tous'),
             active: @statut == 'tous',
-            badge: number_with_html_delimiter(@all_state_dossiers.count))
+            badge: number_with_html_delimiter(@counters['total']))
 
           = tab_item(t('pluralize.archived', count: @archived_dossiers.count),
             instructeur_procedure_path(@procedure, statut: 'archives'),
             active: @statut == 'archives',
-            badge: number_with_html_delimiter(@archived_dossiers.count))
+            badge: number_with_html_delimiter(@counters['archived']))
 
       .procedure-actions
         = render partial: "download_dossiers",
@@ -135,7 +135,7 @@
               %td.folder-col
                 = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
                   %span.icon.folder
-                    - if current_instructeur.notifications_for_procedure(@procedure, :not_archived).include?(dossier)
+                    - if @not_archived_notifications_dossier_ids.include?(dossier.id)
                       %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
