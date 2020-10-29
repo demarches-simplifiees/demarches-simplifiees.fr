@@ -1,4 +1,6 @@
 describe NewAdministrateur::ProceduresController, type: :controller do
+  include ActiveJob::TestHelper
+
   let(:admin) { create(:administrateur) }
   let!(:bad_procedure_id) { 100000 }
 
@@ -354,8 +356,10 @@ describe NewAdministrateur::ProceduresController, type: :controller do
         let(:lien_site_web) { 'http://mon-site.gouv.fr' }
 
         before do
-          put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
-          procedure.reload
+          perform_enqueued_jobs do
+            put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web }
+            procedure.reload
+          end
         end
 
         it 'publish the given procedure' do
@@ -368,6 +372,12 @@ describe NewAdministrateur::ProceduresController, type: :controller do
           expect(response.status).to eq 302
           expect(response.body).to include(admin_procedure_path(procedure.id))
           expect(flash[:notice]).to have_content 'Démarche publiée'
+        end
+        #----- PF
+        it 'sends a published email to team' do
+          mail = ActionMailer::Base.deliveries.last
+          expect(mail.subject).to eq("Une nouvelle démarche vient d'être publiée")
+          expect(mail.html_part.body).to include(procedure.libelle)
         end
       end
 

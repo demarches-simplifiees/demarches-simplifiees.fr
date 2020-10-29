@@ -150,6 +150,7 @@ module NewAdministrateur
       @procedure.assign_attributes(publish_params)
 
       if @procedure.publish_or_reopen!(current_administrateur)
+        AdministrationMailer.procedure_published(@procedure).deliver_later
         redirect_to admin_procedure_path(@procedure)
         flash.notice = "Démarche publiée"
       else
