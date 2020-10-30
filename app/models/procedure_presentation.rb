@@ -75,13 +75,14 @@ class ProcedurePresentation < ApplicationRecord
     fields
   end
 
-  def fields_for_select
-    fields.map do |field|
-      [field['label'], "#{field['table']}/#{field['column']}"]
-    end
+  def displayed_fields_for_select
+    [
+      fields.map { |field| [field['label'], field_id(field)] },
+      displayed_fields.map { |field| field_id(field) }
+    ]
   end
 
-  def displayed_field_values(dossier)
+  def displayed_fields_values(dossier)
     displayed_fields.map { |field| get_value(dossier, field['table'], field['column']) }
   end
 
@@ -218,6 +219,10 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   private
+
+  def field_id(field)
+    field.values_at('table', 'column').join('/')
+  end
 
   def find_field(table, column)
     fields.find { |c| c['table'] == table && c['column'] == column }

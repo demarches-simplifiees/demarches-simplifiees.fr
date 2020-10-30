@@ -44,13 +44,12 @@ module Instructeurs
 
     def show
       @procedure = procedure
-      @available_fields_to_filters = available_fields_to_filters
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
-      @displayed_fields_values = displayed_fields_values
 
       @current_filters = current_filters
+      @displayed_fields_options, @displayed_fields_selected = procedure_presentation.displayed_fields_for_select
 
       @a_suivre_dossiers = current_instructeur
         .dossiers
@@ -275,10 +274,6 @@ module Instructeurs
       procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }
     end
 
-    def field_id(field)
-      field.values_at('table', 'column').join('/')
-    end
-
     def assign_to
       current_instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure })
     end
@@ -316,16 +311,8 @@ module Instructeurs
       procedure_presentation
     end
 
-    def displayed_fields_values
-      procedure_presentation.displayed_fields.map { |field| field_id(field) }
-    end
-
     def current_filters
       @current_filters ||= procedure_presentation.filters[statut]
-    end
-
-    def available_fields_to_filters
-      procedure_presentation.fields_for_select
     end
 
     def kaminarize(current_page, total)
