@@ -93,10 +93,10 @@ class ProcedurePresentation < ApplicationRecord
     when 'notifications'
       dossiers_id_with_notification = dossiers.merge(instructeur.followed_dossiers).with_notifications.ids
       if order == 'desc'
-        return dossiers_id_with_notification +
+        dossiers_id_with_notification +
             (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
       else
-        return (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
+        (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
             dossiers_id_with_notification
       end
     when 'type_de_champ', 'type_de_champ_private'
@@ -108,15 +108,15 @@ class ProcedurePresentation < ApplicationRecord
     when 'followers_instructeurs'
       assert_supported_column(table, column)
       # LEFT OUTER JOIN allows to keep dossiers without assignated instructeurs yet
-      return dossiers
-          .includes(:followers_instructeurs)
-          .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
-          .order("instructeurs_users.email #{order}")
-          .pluck(:id)
+      dossiers
+        .includes(:followers_instructeurs)
+        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
+        .order("instructeurs_users.email #{order}")
+        .pluck(:id)
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
-      return (table == 'self' ? dossiers : dossiers.includes(table))
-          .order("#{self.class.sanitized_column(table, column)} #{order}")
-          .pluck(:id)
+      (table == 'self' ? dossiers : dossiers.includes(table))
+        .order("#{self.class.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
     end
   end
 
