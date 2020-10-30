@@ -156,12 +156,7 @@ module Instructeurs
     end
 
     def remove_filter
-      filters = procedure_presentation.filters
-
-      to_remove = params.values_at(:table, :column, :value)
-      filters[statut].reject! { |filter| filter.values_at('table', 'column', 'value') == to_remove }
-
-      procedure_presentation.update(filters: filters)
+      procedure_presentation.remove_filter(statut, params[:field], params[:value])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
