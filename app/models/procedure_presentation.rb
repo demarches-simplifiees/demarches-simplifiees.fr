@@ -309,10 +309,6 @@ class ProcedurePresentation < ApplicationRecord
       .join('.')
   end
 
-  def dossier_field_service
-    @dossier_field_service ||= DossierFieldService.new
-  end
-
   def assert_supported_column(table, column)
     if table == 'followers_instructeurs' && column != 'email'
       raise ArgumentError, 'Table `followers_instructeurs` only supports the `email` column.'
