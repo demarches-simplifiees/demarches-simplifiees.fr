@@ -144,23 +144,7 @@ module Instructeurs
     end
 
     def update_sort
-      current_sort = procedure_presentation.sort
-      table = params[:table]
-      column = params[:column]
-
-      if table == current_sort['table'] && column == current_sort['column']
-        order = current_sort['order'] == 'asc' ? 'desc' : 'asc'
-      else
-        order = 'asc'
-      end
-
-      sort = {
-        'table' => table,
-        'column' => column,
-        'order' => order
-      }
-
-      procedure_presentation.update(sort: sort)
+      procedure_presentation.update_sort(params[:table], params[:column])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
