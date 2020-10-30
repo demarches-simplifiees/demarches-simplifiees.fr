@@ -218,6 +218,20 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
+
+  def update_displayed_fields(values)
+    if values.nil?
+      values = []
+    end
+
+    fields = values.map { |value| find_field(*value.split('/')) }
+
+    update!(displayed_fields: fields)
+
+    if !values.include?(field_id(sort))
+      update!(sort: Procedure.default_sort)
+    end
+  end
   private
 
   def field_id(field)
