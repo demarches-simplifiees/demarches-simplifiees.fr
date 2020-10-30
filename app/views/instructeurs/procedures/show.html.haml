@@ -83,7 +83,7 @@
         #filter-menu.dropdown-content.left-aligned.fade-in-down
           = form_tag add_filter_instructeur_procedure_path(@procedure), method: :post, class: 'dropdown-form large' do
             = label_tag :field,  "Colonne"
-            = select_tag :field, options_for_select(@available_fields_to_filters)
+            = select_tag :field, options_for_select(@displayed_fields_options)
             %br
             = label_tag :value, "Valeur"
             = text_field_tag :value
@@ -123,8 +123,7 @@
                 #custom-menu.dropdown-content.fade-in-down
                   = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
                     = select_tag :values,
-                      options_for_select(@procedure_presentation.fields_for_select,
-                        selected: @displayed_fields_values),
+                      options_for_select(@displayed_fields_options, selected: @displayed_fields_selected),
                       multiple: true,
                       class: 'select2-limited'
                     = submit_tag "Enregistrer", class: 'button'
@@ -142,7 +141,7 @@
                 = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
                   = dossier.id
 
-              - @procedure_presentation.displayed_field_values(dossier).each do |value|
+              - @procedure_presentation.displayed_fields_values(dossier).each do |value|
                 %td
                   / FIXME: value should automatically fallback to `""` instead of nil
                   / #get_value should call to_s on the champ

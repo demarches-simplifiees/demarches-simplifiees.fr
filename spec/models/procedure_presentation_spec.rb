@@ -104,7 +104,7 @@ describe ProcedurePresentation do
     end
   end
 
-  describe "#fields_for_select" do
+  describe "#displayed_fields_for_select" do
     subject { create(:procedure_presentation, assign_to: assign_to) }
 
     before do
@@ -122,13 +122,13 @@ describe ProcedurePresentation do
       ])
     end
 
-    it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }
+    it { expect(subject.displayed_fields_for_select).to eq([[["label1", "table1/column1"], ["label2", "table2/column2"]], ["user/email"]]) }
   end
 
   describe '#get_value' do
     let(:procedure_presentation) { create(:procedure_presentation, procedure: procedure, assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
 
-    subject { procedure_presentation.displayed_field_values(dossier).first }
+    subject { procedure_presentation.displayed_fields_values(dossier).first }
 
     context 'for self table' do
       let(:table) { 'self' }
@@ -217,7 +217,7 @@ describe ProcedurePresentation do
       let!(:follow2) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'user2@host')) }
 
       it "return emails of followers instructeurs" do
-        emails_to_display = procedure_presentation.displayed_field_values(dossier).first.split(', ').sort
+        emails_to_display = procedure_presentation.displayed_fields_values(dossier).first.split(', ').sort
         expect(emails_to_display).to eq ["user1@host", "user2@host"]
       end
     end
