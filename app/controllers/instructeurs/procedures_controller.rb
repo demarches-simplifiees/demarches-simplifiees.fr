@@ -150,9 +150,7 @@ module Instructeurs
     end
 
     def add_filter
-      if params[:value].present?
-        procedure_presentation.add_filter(statut, params[:field], params[:value])
-      end
+      procedure_presentation.add_filter(statut, params[:field], params[:value])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
