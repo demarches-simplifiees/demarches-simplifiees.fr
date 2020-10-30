@@ -192,8 +192,7 @@ class ProcedurePresentation < ApplicationRecord
   def human_value_for_filter(filter)
     case filter['table']
     when 'type_de_champ', 'type_de_champ_private'
-      type_de_champ = TypeDeChamp.find_by(id: filter['column'])
-      type_de_champ.dynamic_type.filter_to_human(filter['value'])
+      find_type_de_champ(filter['column']).dynamic_type.filter_to_human(filter['value'])
     else
       filter['value']
     end
@@ -268,6 +267,10 @@ class ProcedurePresentation < ApplicationRecord
 
   def find_field(table, column)
     fields.find { |field| field.values_at('table', 'column') == [table, column] }
+  end
+
+  def find_type_de_champ(column)
+    TypeDeChamp.order(:revision_id).find_by(stable_id: column)
   end
 
   def check_allowed_displayed_fields
