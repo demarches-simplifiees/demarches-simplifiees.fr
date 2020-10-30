@@ -44,13 +44,13 @@ module Instructeurs
 
     def show
       @procedure = procedure
-
-      @current_filters = current_filters
       @available_fields_to_filters = available_fields_to_filters
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
       @displayed_fields_values = displayed_fields_values
+
+      @current_filters = current_filters
 
       @a_suivre_dossiers = current_instructeur
         .dossiers
