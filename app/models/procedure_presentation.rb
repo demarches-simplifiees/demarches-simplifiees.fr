@@ -232,6 +232,21 @@ class ProcedurePresentation < ApplicationRecord
       update!(sort: Procedure.default_sort)
     end
   end
+
+  def update_sort(table, column)
+    order = if sort.values_at('table', 'column') == [table, column]
+      sort['order'] == 'asc' ? 'desc' : 'asc'
+    else
+      'asc'
+    end
+
+    update!(sort: {
+      'table' => table,
+      'column' => column,
+      'order' => order
+    })
+  end
+
   private
 
   def field_id(field)
