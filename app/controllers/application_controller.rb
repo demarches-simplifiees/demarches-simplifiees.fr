@@ -12,7 +12,6 @@ class ApplicationController < ActionController::Base
   before_action :load_navbar_left_pannel_partial_url
   before_action :set_raven_context
   before_action :redirect_if_untrusted
-  before_action :authorize_request_for_profiler
   before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
 
   before_action :staging_authenticate
@@ -27,12 +26,6 @@ class ApplicationController < ActionController::Base
   def staging_authenticate
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
       request_http_basic_authentication
-    end
-  end
-
-  def authorize_request_for_profiler
-    if feature_enabled?(:mini_profiler)
-      Rack::MiniProfiler.authorize_request
     end
   end
 
