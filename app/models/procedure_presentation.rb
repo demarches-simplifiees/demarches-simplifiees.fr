@@ -263,7 +263,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def find_field(table, column)
-    fields.find { |c| c['table'] == table && c['column'] == column }
+    fields.find { |field| field.values_at('table', 'column') == [table, column] }
   end
 
   def check_allowed_displayed_fields
