@@ -197,16 +197,15 @@ class ProcedurePresentation < ApplicationRecord
 
   def add_filter(statut, field, value)
     if value.present?
-      updated_filters = self.filters
       table, column = field.split('/')
       label = find_field(table, column)['label']
 
       case table
       when 'type_de_champ', 'type_de_champ_private'
-        type_de_champ = TypeDeChamp.find_by(id: column)
-        value = type_de_champ.dynamic_type.human_to_filter(value)
+        value = find_type_de_champ(column).dynamic_type.human_to_filter(value)
       end
 
+      updated_filters = filters.dup
       updated_filters[statut] << {
         'label' => label,
         'table' => table,
@@ -214,7 +213,7 @@ class ProcedurePresentation < ApplicationRecord
         'value' => value
       }
 
-      update(filters: updated_filters)
+      update!(filters: updated_filters)
     end
   end
 
