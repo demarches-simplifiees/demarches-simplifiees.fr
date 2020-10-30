@@ -1,20 +1,23 @@
 @font-face {
   font-family: "Muli";
-  src: asset-url("Muli-Regular.woff") format("woff");
+  src: asset-url("Muli-Regular.woff2") format("woff2"),
+        asset-url("Muli-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Muli";
-  src: asset-url("Muli-Bold.woff") format("woff");
+  src: asset-url("Muli-Bold.woff2") format("woff2"),
+        asset-url("Muli-Bold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Muli";
-  src: asset-url("Muli-Italic.woff") format("woff");
+  src: asset-url("Muli-Italic.woff2") format("woff2"),
+        asset-url("Muli-Italic.woff") format("woff");
   font-weight: normal;
   font-style: italic;
 }
