@@ -138,22 +138,7 @@ module Instructeurs
     end
 
     def update_displayed_fields
-      values = params[:values]
-
-      if values.nil?
-        values = []
-      end
-
-      fields = values.map do |value|
-        find_field(*value.split('/'))
-      end
-
-      procedure_presentation.update(displayed_fields: fields)
-
-      current_sort = procedure_presentation.sort
-      if !values.include?(field_id(current_sort))
-        procedure_presentation.update(sort: Procedure.default_sort)
-      end
+      procedure_presentation.update_displayed_fields(params[:values])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
@@ -268,10 +253,6 @@ module Instructeurs
       @xlsx_export = Export.find_for_format_and_groupe_instructeurs(:xlsx, groupe_instructeurs_for_procedure)
       @csv_export = Export.find_for_format_and_groupe_instructeurs(:csv, groupe_instructeurs_for_procedure)
       @ods_export = Export.find_for_format_and_groupe_instructeurs(:ods, groupe_instructeurs_for_procedure)
-    end
-
-    def find_field(table, column)
-      procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }
     end
 
     def assign_to
