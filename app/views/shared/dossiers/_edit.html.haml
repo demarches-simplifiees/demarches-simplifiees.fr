@@ -21,7 +21,8 @@
             Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           - else
             Pour enregistrer votre dossier et le reprendre plus tard, cliquez sur le bouton « Enregistrer le brouillon » en bas à gauche du formulaire.
-
+      - if !apercu && dossier.user.france_connect_information.present?
+        = render partial: "shared/dossiers/france_connect_informations", locals: { individual: dossier.individual }
       - if notice_url(dossier.procedure).present?
         = link_to notice_url(dossier.procedure), target: '_blank', rel: 'noopener', class: 'button notice', title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche." do
           %span.icon.info>

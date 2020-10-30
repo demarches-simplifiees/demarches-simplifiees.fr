@@ -16,9 +16,8 @@
     - packs = ['application', 'track', administrateur_signed_in? ? 'track-admin' : nil].compact
     = javascript_packs_with_chunks_tag *packs, defer: true
 
-    = preload_link_tag(asset_url("Muli-Regular.woff"))
-    = preload_link_tag(asset_url("Muli-Bold.woff"))
-    = preload_link_tag(asset_url("Muli-Italic.woff"))
+    = preload_link_tag(asset_url("Muli-Regular.woff2"))
+    = preload_link_tag(asset_url("Muli-Bold.woff2"))
 
     = stylesheet_link_tag 'new_design/new_application', media: 'all'
     = stylesheet_link_tag 'new_design/print', media: 'print'
