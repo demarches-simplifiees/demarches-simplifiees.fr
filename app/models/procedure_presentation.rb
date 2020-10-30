@@ -217,6 +217,16 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
+  def remove_filter(statut, field, value)
+    table, column = field.split('/')
+
+    updated_filters = filters.dup
+    updated_filters[statut] = filters[statut].reject do |filter|
+      filter.values_at('table', 'column', 'value') == [table, column, value]
+    end
+
+    update!(filters: updated_filters)
+  end
 
   def update_displayed_fields(values)
     if values.nil?
