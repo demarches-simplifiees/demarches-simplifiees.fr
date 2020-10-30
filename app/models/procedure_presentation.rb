@@ -65,12 +65,12 @@ class ProcedurePresentation < ApplicationRecord
     fields.concat procedure.types_de_champ
       .where.not(type_champ: explanatory_types_de_champ)
       .order(:id)
-      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s) }
+      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.stable_id.to_s) }
 
     fields.concat procedure.types_de_champ_private
       .where.not(type_champ: explanatory_types_de_champ)
       .order(:id)
-      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s) }
+      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.stable_id.to_s) }
 
     fields
   end
@@ -99,12 +99,16 @@ class ProcedurePresentation < ApplicationRecord
         (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
             dossiers_id_with_notification
       end
-    when 'type_de_champ', 'type_de_champ_private'
-      return dossiers
-          .includes(table == 'type_de_champ' ? :champs : :champs_private)
-          .where("champs.type_de_champ_id = #{column.to_i}")
-          .order("champs.value #{order}")
-          .pluck(:id)
+    when 'type_de_champ'
+      dossiers
+        .with_type_de_champ(column)
+        .order("champs.value #{order}")
+        .pluck(:id)
+    when 'type_de_champ_private'
+      dossiers
+        .with_type_de_champ_private(column)
+        .order("champs.value #{order}")
+        .pluck(:id)
     when 'followers_instructeurs'
       assert_supported_column(table, column)
       # LEFT OUTER JOIN allows to keep dossiers without assignated instructeurs yet
@@ -129,12 +133,12 @@ class ProcedurePresentation < ApplicationRecord
           .map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
           .compact
         dossiers.filter_by_datetimes(column, dates)
-      when 'type_de_champ', 'type_de_champ_private'
-        relation = table == 'type_de_champ' ? :champs : :champs_private
-        dossiers
-          .includes(relation)
-          .where("champs.type_de_champ_id = ?", column.to_i)
-          .filter_ilike(relation, :value, values)
+      when 'type_de_champ'
+        dossiers.with_type_de_champ(column)
+          .filter_ilike(:champs, :value, values)
+      when 'type_de_champ_private'
+        dossiers.with_type_de_champ_private(column)
+          .filter_ilike(:champs_private, :value, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values
@@ -307,9 +311,9 @@ class ProcedurePresentation < ApplicationRecord
     when 'followers_instructeurs'
       dossier.send(table)&.map { |g| g.send(column) }&.join(', ')
     when 'type_de_champ'
-      dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value
+      dossier.champs.find { |c| c.stable_id == column.to_i }.to_s
     when 'type_de_champ_private'
-      dossier.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
+      dossier.champs_private.find { |c| c.stable_id == column.to_i }.to_s
     when 'groupe_instructeur'
       dossier.groupe_instructeur.label
     end
