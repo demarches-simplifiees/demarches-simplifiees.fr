@@ -98,7 +98,7 @@
           - if i > 0
             ou
           %span.filter
-            = link_to remove_filter_instructeur_procedure_path(@procedure, { statut: @statut, table: filter['table'], column: filter['column'], value: filter['value'] }) do
+            = link_to remove_filter_instructeur_procedure_path(@procedure, { statut: @statut, field: "#{filter['table']}/#{filter['column']}", value: filter['value'] }) do
               %img.close-icon{ src: image_url("close.svg") }
             = "#{filter['label'].truncate(50)} : #{@procedure_presentation.human_value_for_filter(filter)}"
       %table.table.dossiers-table.hoverable
@@ -143,9 +143,7 @@
 
               - @procedure_presentation.displayed_fields_values(dossier).each do |value|
                 %td
-                  / FIXME: value should automatically fallback to `""` instead of nil
-                  / #get_value should call to_s on the champ
-                  = link_to(value || "", instructeur_dossier_path(@procedure, dossier), class: 'cell-link')
+                  = link_to(value, instructeur_dossier_path(@procedure, dossier), class: 'cell-link')
 
               %td.status-col
                 = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
