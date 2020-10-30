@@ -33,19 +33,4 @@ describe 'users/dossiers/demande.html.haml', type: :view do
 
     it { expect(rendered).not_to have_text('Déposé le') }
   end
-
-  context 'when the user is logged in with france connect' do
-    let(:france_connect_information) { build(:france_connect_information) }
-    let(:user) { build(:user, france_connect_information: france_connect_information) }
-    let(:procedure1) { create(:procedure, :with_type_de_champ, for_individual: true) }
-    let(:dossier) { create(:dossier, procedure: procedure1, user: user) }
-
-    before do
-      render
-    end
-
-    it 'fills the individual with the informations from France Connect' do
-      expect(rendered).to have_text("Le dossier a été déposé par le compte de #{dossier.individual.prenom} #{dossier.individual.nom}, authentifié par France Connect le #{dossier.individual.updated_at.strftime('%d/%m/%Y')}")
-    end
-  end
 end
