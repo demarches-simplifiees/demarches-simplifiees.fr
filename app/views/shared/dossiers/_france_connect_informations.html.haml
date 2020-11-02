@@ -1,4 +1,4 @@
 .card.featured
   .flex.justify-center
     = image_tag "logo-france-connect.png", alt: "France Connect logo", width: 200, class: "mb-2"
-  .card-title Le dossier a été déposé par le compte de #{individual.prenom} #{individual.nom}, authentifié par France Connect le #{individual.updated_at.strftime('%d/%m/%Y')}.
+  .card-title Le dossier a été déposé par le compte de #{user_information.given_name} #{user_information.family_name}, authentifié par France Connect le #{user_information.updated_at.strftime('%d/%m/%Y')}.
