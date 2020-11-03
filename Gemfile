@@ -49,8 +49,6 @@ gem 'kaminari', '1.2.1' # Pagination
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
-gem 'omniauth-github'
-gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem 'openid_connect'
 gem 'pg'
 gem 'phonelib'
