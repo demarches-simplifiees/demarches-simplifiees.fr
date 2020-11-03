@@ -3,5 +3,6 @@ FactoryBot.define do
   factory :administration do
     email { generate(:administration_email) }
     password { 'my-s3cure-p4ssword' }
+    otp_required_for_login { false }
   end
 end
