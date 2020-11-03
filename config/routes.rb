@@ -80,7 +80,6 @@ Rails.application.routes.draw do
   devise_for :administrations,
     skip: [:password, :registrations, :sessions],
     controllers: {
-      omniauth_callbacks: 'administrations/omniauth_callbacks'
     }
 
   devise_for :users, controllers: {
