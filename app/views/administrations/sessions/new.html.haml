@@ -15,4 +15,7 @@
         = f.label :otp_attempt, 'Code OTP (uniquement si vous avez déjà activé 2FA)'
         = f.text_field :otp_attempt
 
+        .auth-options
+          .text-right
+            = link_to "Mot de passe oublié ou réinitialisation 2FA ?", new_administration_password_path, class: "link"
         = f.submit "Se connecter", class: "button large primary expand"
