@@ -86,6 +86,13 @@ ActiveRecord::Schema.define(version: 2020_11_05_131443) do
     t.index ["procedure_id"], name: "index_archives_on_procedure_id"
   end
 
+  create_table "archives_groupe_instructeurs", force: :cascade do |t|
+    t.bigint "archive_id", null: false
+    t.bigint "groupe_instructeur_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "assign_tos", id: :serial, force: :cascade do |t|
     t.integer "instructeur_id"
     t.integer "procedure_id"
@@ -710,8 +717,6 @@ ActiveRecord::Schema.define(version: 2020_11_05_131443) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
   end
 
-  add_foreign_key "archives", "instructeurs"
-  add_foreign_key "archives", "procedures"
   add_foreign_key "assign_tos", "groupe_instructeurs"
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
