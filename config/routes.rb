@@ -3,8 +3,6 @@ Rails.application.routes.draw do
   # Manager
   #
 
-  get 'manager/sign_in' => 'administrations/sessions#new'
-  delete 'manager/sign_out' => 'administrations/sessions#destroy'
   namespace :manager do
     resources :procedures, only: [:index, :show] do
       post 'whitelist', on: :member
@@ -77,7 +75,9 @@ Rails.application.routes.draw do
   # Authentication
   #
 
-  devise_for :administrations, skip: [:registrations]
+  devise_for :administrations,
+    skip: [:registrations],
+    controllers: { sessions: 'administrations/sessions' }
 
   get 'administrations/edit_otp', to: 'administrations#edit_otp', as: 'edit_administration_otp'
   put 'administrations/enable_otp', to: 'administrations#enable_otp', as: 'enable_administration_otp'
