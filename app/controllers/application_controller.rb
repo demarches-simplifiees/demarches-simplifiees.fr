@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
   before_action :redirect_if_untrusted
   before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   before_action :staging_authenticate
   before_action :set_active_storage_host
@@ -103,6 +104,10 @@ class ApplicationController < ActionController::Base
 
   def after_sign_out_path_for(_resource_or_scope)
     stored_location_for(:user) || super
+  end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:otp_attempt])
   end
 
   private
