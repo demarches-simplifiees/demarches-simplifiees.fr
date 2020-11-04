@@ -77,8 +77,10 @@ Rails.application.routes.draw do
   # Authentication
   #
 
-  devise_for :administrations,
-    skip: [:registrations]
+  devise_for :administrations, skip: [:registrations]
+
+  get 'administrations/edit_otp', to: 'administrations#edit_otp', as: 'edit_administration_otp'
+  put 'administrations/enable_otp', to: 'administrations#enable_otp', as: 'enable_administration_otp'
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',

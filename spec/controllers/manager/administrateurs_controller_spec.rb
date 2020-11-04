@@ -7,13 +7,23 @@ describe Manager::AdministrateursController, type: :controller do
   end
 
   describe '#show' do
-    render_views
+    let(:subject) { get :show, params: { id: administrateur.id } }
 
-    before do
-      get :show, params: { id: administrateur.id }
+    context 'with 2FA not enabled' do
+      let(:administration) { create(:administration, otp_required_for_login: false) }
+      it { expect(subject).to redirect_to(edit_administration_otp_path) }
     end
 
-    it { expect(response.body).to include(administrateur.email) }
+    context 'with 2FA enabled' do
+      render_views
+      let(:administration) { create(:administration, otp_required_for_login: true) }
+
+      before do
+        subject
+      end
+
+      it { expect(response.body).to include(administrateur.email) }
+    end
   end
 
   describe 'GET #new' do

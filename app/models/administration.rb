@@ -28,6 +28,24 @@ class Administration < ApplicationRecord
   devise :rememberable, :trackable, :validatable, :lockable, :async, :recoverable,
     :two_factor_authenticatable, :otp_secret_encryption_key => ENV['OTP_SECRET_KEY']
 
+  def enable_otp!
+    self.otp_secret = Administration.generate_otp_secret
+    self.otp_required_for_login = true
+    save!
+  end
+
+  def disable_otp!
+    self.assign_attributes(
+      {
+        encrypted_otp_secret: nil,
+        encrypted_otp_secret_iv: nil,
+        encrypted_otp_secret_salt: nil,
+        consumed_timestep: nil,
+        otp_required_for_login: false
+      }
+    )
+    save!
+  end
 
   def invite_admin(email)
     user = User.create_or_promote_to_administrateur(email, SecureRandom.hex)

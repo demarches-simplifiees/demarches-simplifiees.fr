@@ -13,8 +13,10 @@ module Manager
     protected
 
     def authenticate_administration!
-      if administration_signed_in?
+      if administration_signed_in? && current_administration.otp_required_for_login?
         super
+      elsif administration_signed_in?
+        redirect_to edit_administration_otp_path
       else
         redirect_to manager_sign_in_path
       end
