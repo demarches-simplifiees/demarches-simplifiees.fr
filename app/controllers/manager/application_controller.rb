@@ -18,7 +18,7 @@ module Manager
       elsif administration_signed_in?
         redirect_to edit_administration_otp_path
       else
-        redirect_to manager_sign_in_path
+        redirect_to new_administration_session_path
       end
     end
 
