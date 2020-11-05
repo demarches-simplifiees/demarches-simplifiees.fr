@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
   before_action :redirect_if_untrusted
   before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   before_action :staging_authenticate
   before_action :set_active_storage_host
@@ -105,6 +106,10 @@ class ApplicationController < ActionController::Base
     stored_location_for(:user) || super
   end
 
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:otp_attempt])
+  end
+
   private
 
   def set_current_roles
@@ -137,7 +142,7 @@ class ApplicationController < ActionController::Base
         current_user,
         current_instructeur,
         current_administrateur,
-        current_administration
+        current_super_admin
       ].compact.map { |role| role.class.name }
 
       roles.any? ? roles.join(', ') : 'Guest'
@@ -175,11 +180,11 @@ class ApplicationController < ActionController::Base
     authorized_request =
       request.path_info == '/' ||
       request.path_info.start_with?('/manager') ||
-      request.path_info.start_with?('/administrations')
+      request.path_info.start_with?('/super_admins')
 
     api_request = request.path_info.start_with?('/api/')
 
-    if administration_signed_in? || authorized_request
+    if super_admin_signed_in? || authorized_request
       flash.now.alert = MAINTENANCE_MESSAGE
     elsif api_request
       render json: { error: MAINTENANCE_MESSAGE }.to_json, status: :service_unavailable
