@@ -26,7 +26,7 @@
 #
 class Administration < ApplicationRecord
   devise :rememberable, :trackable, :validatable, :lockable, :async, :recoverable,
-    :two_factor_authenticatable, :otp_secret_encryption_key => ENV['OTP_SECRET_KEY']
+    :two_factor_authenticatable, :otp_secret_encryption_key => Rails.application.secrets.otp_secret_key
 
   def enable_otp!
     self.otp_secret = Administration.generate_otp_secret
