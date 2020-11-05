@@ -19,6 +19,12 @@ class Archive < ApplicationRecord
   has_one_attached :file
 
   scope :stale, -> { where('updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_ARCHIVE)) }
+  scope :for_instructeur, -> (instructeur) {
+    joins(:archives_groupe_instructeurs)
+      .where(
+        archives_groupe_instructeurs: { groupe_instructeur: instructeur.groupe_instructeurs }
+      )
+  }
 
   enum content_type: {
     everything: 'everything',

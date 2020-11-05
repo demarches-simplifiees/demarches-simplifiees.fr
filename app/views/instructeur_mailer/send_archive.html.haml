@@ -4,11 +4,13 @@
   Bonjour,
 
 %p
-  Votre archive pour la procédure #{@archive.procedure.id} est disponible.
+  Votre archive pour la démarche
+  = link_to("#{@procedure.id} − #{@procedure.libelle}", instructeur_procedure_url(@procedure.id))
+  est disponible.
   Vous pouvez la télécharger dans votre espace de gestion des archives.
 
 %p
-  = round_button('Consulter mes archives', instructeur_archives_url(@archive.procedure), :primary)
+  = round_button('Consulter mes archives', instructeur_archives_url(@procedure), :primary)
 
 %p
   Ce fichier est

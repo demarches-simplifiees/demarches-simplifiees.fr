@@ -6,6 +6,10 @@ class ProcedureArchiveService
   end
 
   def create_archive(instructeur, type, month = nil)
+    groupe_instructeurs = instructeur
+      .groupe_instructeurs
+      .where(procedure: @procedure)
+
     if type == 'everything'
       dossiers = @procedure.dossiers.state_termine
       filename = "procedure-#{@procedure.id}.zip"
@@ -13,14 +17,15 @@ class ProcedureArchiveService
       dossiers = @procedure.dossiers.termine_durant(month)
       filename = "procedure-#{@procedure.id}-mois-#{I18n.l(month, format: '%Y-%m')}.zip"
     end
+
     files = create_list_of_attachments(dossiers)
 
     archive = Archive.create(
       content_type: type,
       month: month,
-      procedure: @procedure,
-      instructeur: instructeur
+      groupe_instructeurs: groupe_instructeurs
     )
+
     tmp_file = Tempfile.new(['tc', '.zip'])
 
     Zip::OutputStream.open(tmp_file) do |zipfile|
@@ -45,7 +50,7 @@ class ProcedureArchiveService
     archive.file.attach(io: File.open(tmp_file), filename: filename)
     tmp_file.delete
     archive.make_available!
-    InstructeurMailer.send_archive(instructeur, archive).deliver_now
+    InstructeurMailer.send_archive(instructeur, @procedure, archive).deliver_now
   end
 
   def self.poids_total_procedure(procedure)
@@ -54,9 +59,11 @@ class ProcedureArchiveService
 
   def self.poids_total_dossiers(dossiers)
     dossiers.map do |dossier|
-      liste_pieces_justificatives(dossier).sum(&:byte_size)
+      liste_pieces_justificatives_for_archive(dossier).sum(&:byte_size)
     end.sum
   end
+
+  private
 
   def create_list_of_attachments(dossiers)
     dossiers.flat_map do |dossier|
@@ -64,32 +71,18 @@ class ProcedureArchiveService
     end
   end
 
-  private
-
-  def self.champs_pieces_justificatives_with_attachments(champs)
+  def self.attachments_from_champs_piece_justificative(champs)
     champs
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
       .filter { |pj| pj.piece_justificative_file.attached? }
       .map(&:piece_justificative_file)
   end
 
-  def self.liste_pieces_justificatives(dossier)
+  def self.liste_pieces_justificatives_for_archive(dossier)
     champs_blocs_repetables = dossier.champs
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
       .flat_map(&:champs)
 
-    champs_pieces_justificatives_with_attachments(champs_blocs_repetables + dossier.champs)
-  end
-
-  def dossier_pdf_link(dossier)
-    Rails.application.routes.url_helpers.instructeur_dossier_url(@procedure, dossier, format: :pdf)
-  end
-
-  def empty_procedure_pdf_link
-    if @procedure.brouillon?
-      Rails.application.routes.url_helpers.commencer_dossier_vide_test_url(path: @procedure.path, format: :pdf)
-    else
-      Rails.application.routes.url_helpers.commencer_dossier_vide_url(path: @procedure.path, format: :pdf)
-    end
+    attachments_from_champs_piece_justificative(champs_blocs_repetables + dossier.champs)
   end
 end
