@@ -5,12 +5,12 @@ module Manager
     end
 
     def create_administrateur
-      administrateur = current_administration.invite_admin(create_administrateur_params[:email])
+      administrateur = current_super_admin.invite_admin(create_administrateur_params[:email])
 
       if administrateur.errors.empty?
         PipedriveAcceptsDealsJob.perform_later(
           create_administrateur_params[:person_id],
-          current_administration.id,
+          current_super_admin.id,
           create_administrateur_params[:stage_id]
         )
 
@@ -26,7 +26,7 @@ module Manager
     def refuse_administrateur
       PipedriveRefusesDealsJob.perform_later(
         refuse_administrateur_params[:person_id],
-        current_administration.id
+        current_super_admin.id
       )
 
       AdministrationMailer
