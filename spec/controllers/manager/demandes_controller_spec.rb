@@ -1,9 +1,9 @@
 describe Manager::DemandesController, type: :controller do
-  let(:administration) { create(:administration) }
+  let(:super_admin) { create(:super_admin) }
 
   describe 'GET #index' do
     before do
-      sign_in administration
+      sign_in super_admin
     end
 
     it "display pending demandes" do

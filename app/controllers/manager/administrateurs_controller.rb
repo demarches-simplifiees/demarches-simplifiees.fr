@@ -1,7 +1,7 @@
 module Manager
   class AdministrateursController < Manager::ApplicationController
     def create
-      administrateur = current_administration.invite_admin(create_administrateur_params[:email])
+      administrateur = current_super_admin.invite_admin(create_administrateur_params[:email])
 
       if administrateur.errors.empty?
         flash.notice = "Administrateur créé"
@@ -14,7 +14,7 @@ module Manager
     end
 
     def reinvite
-      Administrateur.find_inactive_by_id(params[:id]).user.invite_administrateur!(current_administration.id)
+      Administrateur.find_inactive_by_id(params[:id]).user.invite_administrateur!(current_super_admin.id)
       flash.notice = "Invitation renvoyée"
       redirect_to manager_administrateur_path(params[:id])
     end
@@ -24,7 +24,7 @@ module Manager
 
       administrateur.delete_and_transfer_services
 
-      logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_administration.id}")
+      logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_super_admin.id}")
       flash[:notice] = "L'administrateur #{administrateur.id} est supprimé"
 
       redirect_to manager_administrateurs_path
