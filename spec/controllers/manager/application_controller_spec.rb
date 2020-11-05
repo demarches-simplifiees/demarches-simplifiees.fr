@@ -1,6 +1,6 @@
 describe Manager::ApplicationController, type: :controller do
   describe 'append_info_to_payload' do
-    let(:current_user) { create(:administration) }
+    let(:current_user) { create(:super_admin) }
     let(:payload) { {} }
 
     before do

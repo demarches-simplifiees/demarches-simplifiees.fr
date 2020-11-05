@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: administrations
+# Table name: super_admins
 #
 #  id                        :integer          not null, primary key
 #  consumed_timestep         :integer
@@ -24,12 +24,12 @@
 #  created_at                :datetime
 #  updated_at                :datetime
 #
-class Administration < ApplicationRecord
+class SuperAdmin < ApplicationRecord
   devise :rememberable, :trackable, :validatable, :lockable, :async, :recoverable,
     :two_factor_authenticatable, :otp_secret_encryption_key => Rails.application.secrets.otp_secret_key
 
   def enable_otp!
-    self.otp_secret = Administration.generate_otp_secret
+    self.otp_secret = SuperAdmin.generate_otp_secret
     self.otp_required_for_login = true
     save!
   end

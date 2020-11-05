@@ -1,6 +1,6 @@
 module Manager
   class ApplicationController < Administrate::ApplicationController
-    before_action :authenticate_administration!
+    before_action :authenticate_super_admin!
     before_action :default_params
 
     def default_params
@@ -12,13 +12,13 @@ module Manager
 
     protected
 
-    def authenticate_administration!
-      if administration_signed_in? && current_administration.otp_required_for_login?
+    def authenticate_super_admin!
+      if super_admin_signed_in? && current_super_admin.otp_required_for_login?
         super
-      elsif administration_signed_in?
-        redirect_to edit_administration_otp_path
+      elsif super_admin_signed_in?
+        redirect_to edit_super_admin_otp_path
       else
-        redirect_to new_administration_session_path
+        redirect_to new_super_admin_session_path
       end
     end
 
