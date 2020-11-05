@@ -3,8 +3,6 @@ Rails.application.routes.draw do
   # Manager
   #
 
-  get 'manager/sign_in' => 'administrations/sessions#new'
-  delete 'manager/sign_out' => 'administrations/sessions#destroy'
   namespace :manager do
     resources :procedures, only: [:index, :show] do
       post 'whitelist', on: :member
@@ -77,11 +75,13 @@ Rails.application.routes.draw do
   # Authentication
   #
 
-  devise_for :administrations,
-    skip: [:password, :registrations, :sessions],
-    controllers: {
-      omniauth_callbacks: 'administrations/omniauth_callbacks'
-    }
+  devise_for :super_admins, skip: [:registrations], controllers: {
+    sessions: 'super_admins/sessions',
+    passwords: 'super_admins/passwords'
+  }
+
+  get 'super_admins/edit_otp', to: 'super_admins#edit_otp', as: 'edit_super_admin_otp'
+  put 'super_admins/enable_otp', to: 'super_admins#enable_otp', as: 'enable_super_admin_otp'
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',

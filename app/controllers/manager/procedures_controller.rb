@@ -23,16 +23,16 @@ module Manager
     end
 
     def discard
-      procedure.discard_and_keep_track!(current_administration)
+      procedure.discard_and_keep_track!(current_super_admin)
 
-      logger.info("La démarche #{procedure.id} est supprimée par #{current_administration.email}")
+      logger.info("La démarche #{procedure.id} est supprimée par #{current_super_admin.email}")
       flash[:notice] = "La démarche #{procedure.id} a été supprimée."
 
       redirect_to manager_procedure_path(procedure)
     end
 
     def restore
-      procedure.restore(current_administration)
+      procedure.restore(current_super_admin)
 
       flash[:notice] = "La démarche #{procedure.id} a été restauré."
 

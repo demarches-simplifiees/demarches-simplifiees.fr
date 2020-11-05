@@ -1,6 +1,21 @@
 .super-admin.flex.justify-center
   %div
-    %h2 Espace Admin
-    = link_to administration_github_omniauth_authorize_path, method: :post, class: "button large" do
-      %span.icon.lock
-      Connexion avec GitHub
+    %h2.huge-title Espace Manager
+    .auth-form.sign-in-form
+
+      = form_for Administration.new, url: administration_session_path, html: { class: "form" } do |f|
+        %h1 Connectez-vous
+
+        = f.label :email, "Email (nom@site.com)"
+        = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
+
+        = f.label :password, "Mot de passe (#{PASSWORD_MIN_LENGTH} caractères minimum)"
+        = f.password_field :password, autocomplete: 'current-password'
+
+        = f.label :otp_attempt, 'Code OTP (uniquement si vous avez déjà activé 2FA)'
+        = f.text_field :otp_attempt
+
+        .auth-options
+          .text-right
+            = link_to "Mot de passe oublié ou réinitialisation 2FA ?", new_administration_password_path, class: "link"
+        = f.submit "Se connecter", class: "button large primary expand"
