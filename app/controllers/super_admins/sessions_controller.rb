@@ -1,2 +1,2 @@
-class Administrations::SessionsController < Devise::SessionsController
+class SuperAdmins::SessionsController < Devise::SessionsController
 end
