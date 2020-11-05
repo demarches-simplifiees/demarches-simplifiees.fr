@@ -1,4 +1,4 @@
-class Administrations::PasswordsController < Devise::PasswordsController
+class SuperAdmins::PasswordsController < Devise::PasswordsController
   def update
     super
     self.resource.disable_otp!
