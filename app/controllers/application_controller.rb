@@ -142,7 +142,7 @@ class ApplicationController < ActionController::Base
         current_user,
         current_instructeur,
         current_administrateur,
-        current_administration
+        current_super_admin
       ].compact.map { |role| role.class.name }
 
       roles.any? ? roles.join(', ') : 'Guest'
@@ -180,11 +180,11 @@ class ApplicationController < ActionController::Base
     authorized_request =
       request.path_info == '/' ||
       request.path_info.start_with?('/manager') ||
-      request.path_info.start_with?('/administrations')
+      request.path_info.start_with?('/super_admins')
 
     api_request = request.path_info.start_with?('/api/')
 
-    if administration_signed_in? || authorized_request
+    if super_admin_signed_in? || authorized_request
       flash.now.alert = MAINTENANCE_MESSAGE
     elsif api_request
       render json: { error: MAINTENANCE_MESSAGE }.to_json, status: :service_unavailable

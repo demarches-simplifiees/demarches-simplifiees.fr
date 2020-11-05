@@ -1,12 +1,12 @@
 describe Manager::InstructeursController, type: :controller do
-  let(:administration) { create(:administration) }
+  let(:super_admin) { create(:super_admin) }
   let(:instructeur) { create(:instructeur) }
 
   describe '#show' do
     render_views
 
     before do
-      sign_in(administration)
+      sign_in(super_admin)
       get :show, params: { id: instructeur.id }
     end
 
@@ -14,7 +14,7 @@ describe Manager::InstructeursController, type: :controller do
   end
 
   describe '#delete' do
-    before { sign_in administration }
+    before { sign_in super_admin }
 
     subject { delete :delete, params: { id: instructeur.id } }
 

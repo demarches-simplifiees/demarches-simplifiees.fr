@@ -1,9 +1,9 @@
-describe Administration, type: :model do
+describe SuperAdmin, type: :model do
   describe '#invite_admin' do
-    let(:administration) { create :administration }
+    let(:super_admin) { create :super_admin }
     let(:valid_email) { 'paul@tps.fr' }
 
-    subject { administration.invite_admin(valid_email) }
+    subject { super_admin.invite_admin(valid_email) }
 
     it {
       user = subject
@@ -11,8 +11,8 @@ describe Administration, type: :model do
       expect(user).to be_persisted
     }
 
-    it { expect(administration.invite_admin(nil).errors).not_to be_empty }
-    it { expect(administration.invite_admin('toto').errors).not_to be_empty }
+    it { expect(super_admin.invite_admin(nil).errors).not_to be_empty }
+    it { expect(super_admin.invite_admin('toto').errors).not_to be_empty }
 
     it 'creates a corresponding user account for the email' do
       subject
@@ -36,29 +36,29 @@ describe Administration, type: :model do
   end
 
   describe 'enable_otp!' do
-    let(:administration) { create(:administration, otp_required_for_login: false) }
-    let(:subject) { administration.enable_otp! }
+    let(:super_admin) { create(:super_admin, otp_required_for_login: false) }
+    let(:subject) { super_admin.enable_otp! }
 
     it 'updates otp_required_for_login' do
-      expect { subject }.to change { administration.otp_required_for_login? }.from(false).to(true)
+      expect { subject }.to change { super_admin.otp_required_for_login? }.from(false).to(true)
     end
 
     it 'updates otp_secret' do
-      expect { subject }.to change { administration.otp_secret }
+      expect { subject }.to change { super_admin.otp_secret }
     end
   end
 
   describe 'disable_otp!' do
-    let(:administration) { create(:administration, otp_required_for_login: true) }
-    let(:subject) { administration.disable_otp! }
+    let(:super_admin) { create(:super_admin, otp_required_for_login: true) }
+    let(:subject) { super_admin.disable_otp! }
 
     it 'updates otp_required_for_login' do
-      expect { subject }.to change { administration.otp_required_for_login? }.from(true).to(false)
+      expect { subject }.to change { super_admin.otp_required_for_login? }.from(true).to(false)
     end
 
     it 'nullifies otp_secret' do
-      administration.enable_otp!
-      expect { subject }.to change { administration.reload.otp_secret }.to(nil)
+      super_admin.enable_otp!
+      expect { subject }.to change { super_admin.reload.otp_secret }.to(nil)
     end
   end
 end
