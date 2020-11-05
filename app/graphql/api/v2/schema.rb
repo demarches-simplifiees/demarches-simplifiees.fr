@@ -63,7 +63,7 @@ class Api::V2::Schema < GraphQL::Schema
 
   use GraphQL::Execution::Interpreter
   use GraphQL::Analysis::AST
-  use GraphQL::Schema::Timeout, max_seconds: 5
+  use GraphQL::Schema::Timeout, max_seconds: 10
   use GraphQL::Batch
   use GraphQL::Backtrace
 
