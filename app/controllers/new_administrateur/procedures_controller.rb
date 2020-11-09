@@ -125,12 +125,20 @@ module NewAdministrateur
     end
 
     def update_jeton
-      if !@procedure.update(procedure_params)
-        flash.now.alert = @procedure.errors.full_messages
+      token = params[:procedure][:api_entreprise_token]
+      @procedure.api_entreprise_token = token
+
+      if @procedure.valid? &&
+          ApiEntreprise::PrivilegesAdapter.new(token).valid? &&
+          @procedure.save
+
+        redirect_to jeton_admin_procedure_path(procedure_id: params[:procedure_id]),
+          notice: 'Le jeton a bien été mis à jour'
       else
-        flash.notice = 'Le jeton a bien été mis à jour'
+
+        flash.now.alert = "Mise à jour impossible : le jeton n'est pas valide"
+        render 'jeton'
       end
-      render 'jeton'
     end
 
     def publication
