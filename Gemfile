@@ -63,7 +63,6 @@ gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'
-gem 'rack-mini-profiler'
 gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
@@ -107,6 +106,7 @@ group :development do
   gem 'brakeman', require: false
   gem 'haml-lint'
   gem 'letter_opener_web'
+  gem 'rack-mini-profiler'
   gem 'rails-erd', require: false # generates `doc/database_models.pdf`
   gem 'rubocop', require: false
   gem 'rubocop-rails_config'

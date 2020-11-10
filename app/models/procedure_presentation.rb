@@ -82,7 +82,6 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def displayed_field_values(dossier)
-    assert_matching_procedure(dossier)
     displayed_fields.map { |field| get_value(dossier, field['table'], field['column']) }
   end
 
@@ -253,12 +252,6 @@ class ProcedurePresentation < ApplicationRecord
     table, column = field.values_at('table', 'column')
     if !valid_column?(table, column, extra_columns)
       errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
-    end
-  end
-
-  def assert_matching_procedure(dossier)
-    if dossier.procedure != procedure
-      raise "Procedure mismatch (expected #{procedure.id}, got #{dossier.procedure.id})"
     end
   end
 

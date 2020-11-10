@@ -1,3 +1,5 @@
+include ActiveJob::TestHelper
+
 RSpec.describe ApiEntreprise::AttestationSocialeJob, type: :job do
   let(:etablissement) { create(:etablissement, siret: siret) }
   let(:siret) { '41816609600069' }
@@ -20,5 +22,21 @@ RSpec.describe ApiEntreprise::AttestationSocialeJob, type: :job do
   it 'updates etablissement' do
     subject
     expect(Etablissement.find(etablissement.id).entreprise_attestation_sociale).to be_attached
+  end
+
+  context 'when ApiEntreprise::API::ServiceUnavailable is raised' do
+    # https://api.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html#method-i-retry_on
+    # retry on will try 5 times and then bubble up the error
+    it 'makes 5 attempts' do
+      assert_performed_jobs 5 do
+        ServiceUnavailableJob.perform_later rescue ApiEntreprise::API::ServiceUnavailable
+      end
+    end
+  end
+
+  class ServiceUnavailableJob < ApiEntreprise::AttestationSocialeJob
+    def perform
+      raise ApiEntreprise::API::ServiceUnavailable
+    end
   end
 end

@@ -98,6 +98,12 @@ module Instructeurs
         @archived_dossiers
       end
 
+      @has_en_cours_notifications = current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?
+      @has_termine_notifications = current_instructeur.notifications_for_procedure(@procedure, :termine).exists?
+
+      @not_archived_notifications_dossier_ids = current_instructeur.notifications_for_procedure(@procedure, :not_archived).pluck(:id)
+      @counters = @procedure.dossiers_count_for_instructeur(current_instructeur)
+
       sorted_ids = procedure_presentation.sorted_ids(@dossiers, current_instructeur)
 
       if @current_filters.count > 0
