@@ -7,7 +7,7 @@ def prawn_text(message)
 end
 
 def format_in_2_lines(pdf, label, text)
-  pdf.font 'marianne', style: :bold, size: 10  do
+  pdf.font 'marianne', style: :bold, size: 10 do
     pdf.text label
   end
   pdf.text prawn_text(text), size: 9, inline_format: true
@@ -15,21 +15,28 @@ def format_in_2_lines(pdf, label, text)
 end
 
 def render_box(pdf, text, x, width)
-  blocks = ::Prawn::Text::Formatted::Parser.format(prawn_text(text))
-  box = ::Prawn::Text::Formatted::Box.new(blocks, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor] })
-  box.render
-  box.height
+  text = ::Prawn::Text::Formatted::Parser.format(prawn_text(text)) unless text.is_a? Array
+  box = ::Prawn::Text::Formatted::Box.new(text, {document: pdf, size: 11, width: width, overflow: :expand, at: [x, pdf.cursor]})
+  [box.render, box.height]
 end
 
 def format_in_2_columns(pdf, label, text)
-  h1 = render_box(pdf, label, 0, 100)
-  h2 = render_box(pdf, ':', 100, 10)
-  h3 = render_box(pdf, text, 110, pdf.bounds.width - 110)
-  pdf.move_down 5 + [h1,h2,h3].max
+  # enough space for label ?
+  label = ::Prawn::Text::Formatted::Parser.format(label)
+  box = ::Prawn::Text::Formatted::Box.new(label, {document: pdf, size: 11, width: 100, overflow: :expand, at: [0, pdf.cursor]})
+  remaining = box.render(dry_run: true)
+  pdf.start_new_page if remaining.present?
+  while text.present?
+    (_, h1) = render_box(pdf, label, 0, 100)
+    (_, h2) = render_box(pdf, ':', 100, 10)
+    (text, h3) = render_box(pdf, text, 110, pdf.bounds.width - 110)
+    pdf.move_down 5 + [h1, h2, h3].max
+    pdf.start_new_page if text.present?
+  end
 end
 
 def add_title(pdf, title)
-  title_style = {style: :bold, size: 20}
+  title_style = {style: :bold, size: 16}
   pdf.fill_color "E11619"
   pdf.font 'marianne', title_style do
     pdf.text title
@@ -95,9 +102,9 @@ def render_single_champ(pdf, champ)
   when 'Champs::RepetitionChamp'
     raise 'There should not be a RepetitionChamp here !'
   when 'Champs::PieceJustificativeChamp'
-    url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: champ.id })
+    url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({champ_id: champ.id})
     display = champ.piece_justificative_file.filename
-    link = content_tag :a, display, { href: url, target: '_blank', rel: 'noopener' }
+    link = content_tag :a, display, {href: url, target: '_blank', rel: 'noopener'}
     format_in_2_columns(pdf, champ.libelle, link)
   when 'Champs::HeaderSectionChamp'
     pdf.font 'marianne', style: :bold, size: 14 do
@@ -119,7 +126,7 @@ def render_single_champ(pdf, champ)
     value = number_with_delimiter(champ.to_s)
     format_in_2_columns(pdf, champ.libelle, value)
   else
-    value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
+    value = champ.to_s.empty? ? 'Non communiqué' : champ.for_tag
     format_in_2_columns(pdf, champ.libelle, value)
   end
 end
@@ -176,15 +183,15 @@ def add_etats_dossier(pdf, dossier)
 end
 
 prawn_document(page_size: "A4") do |pdf|
-  pdf.font_families.update( 'marianne' => {
-    normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf' ),
-    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
-    bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
-    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf' ),
+  pdf.font_families.update('marianne' => {
+      normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
+      bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+      bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+      italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
   })
   pdf.font 'marianne'
 
-  pdf.bounding_box([0, pdf.cursor],:width => 523,:height => 40) do
+  pdf.bounding_box([0, pdf.cursor], :width => 523, :height => 40) do
     pdf.fill_color "E11619"
     pdf.fill_rectangle [0, 40], 523, 40
     pdf.svg IO.read("app/assets/images/header/logo-md-wide.svg"), width: 300, position: :center, vposition: :center
