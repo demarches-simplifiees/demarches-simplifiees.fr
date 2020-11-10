@@ -114,7 +114,7 @@ class Champ < ApplicationRecord
   end
 
   def for_tag
-    value.present? ? value.to_s : ''
+    value.present? ? value.to_s.gsub(/ (\S{15})/,' \1') : ''
   end
 
   def main_value_name
