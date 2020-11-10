@@ -13,11 +13,11 @@ module ChampHelper
   end
 
   def format_text_value(text)
-    text.gsub!(/ (\S{15})/, ' \1') # unbreakable space breaks layout
     sanitized_text = sanitize(text)
     auto_linked_text = Anchored::Linker.auto_link(sanitized_text, target: '_blank', rel: 'noopener') do |link_href|
       truncate(link_href, length: 60)
     end
+    sanitized_text.gsub!(/ (\S{15})/, ' \1') if sanitized_text.present? # unbreakable space breaks layout
     simple_format(auto_linked_text, {}, sanitize: false)
   end
 
