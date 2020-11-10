@@ -18,7 +18,8 @@
       - if params[:controller] == 'users/commencer'
         = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
       - else
-        = link_to root_path_for_profile(nav_bar_profile), class: 'header-logo', title: "Aller à la page d'accueil de #{APPLICATION_NAME}" do
+        - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
+        = link_to root_profile_link, class: 'header-logo', title: root_profile_libelle  do
           = image_tag 'header/logo-md-wide.svg', alt: '', class: 'site-title big'
           = image_tag 'header/logo-md-narrow.svg', alt: '', class: 'site-title small'
 
