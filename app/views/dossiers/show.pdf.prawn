@@ -103,8 +103,12 @@ def render_single_champ(pdf, champ)
     raise 'There should not be a RepetitionChamp here !'
   when 'Champs::PieceJustificativeChamp'
     url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({champ_id: champ.id})
-    display = champ.piece_justificative_file.filename
-    link = content_tag :a, display, {href: url, target: '_blank', rel: 'noopener'}
+    link = if champ.piece_justificative_file.present?
+      display = champ.piece_justificative_file.filename
+      content_tag :a, display, {href: url, target: '_blank', rel: 'noopener'}
+    else
+      "Non renseigné"
+    end
     format_in_2_columns(pdf, champ.libelle, link)
   when 'Champs::HeaderSectionChamp'
     pdf.font 'marianne', style: :bold, size: 14 do
@@ -126,7 +130,7 @@ def render_single_champ(pdf, champ)
     value = number_with_delimiter(champ.to_s)
     format_in_2_columns(pdf, champ.libelle, value)
   else
-    value = champ.to_s.empty? ? 'Non communiqué' : champ.for_tag
+    value = champ.to_s.empty? ? 'Non renseigné' : champ.for_tag
     format_in_2_columns(pdf, champ.libelle, value)
   end
 end
