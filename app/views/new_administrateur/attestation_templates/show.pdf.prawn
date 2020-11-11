@@ -94,7 +94,7 @@ def print_table(pdf, data)
   table = data.children.filter('tr').map do |line|
     line.children.filter('th,td').map do |cells|
       c = cells.children[0] # only one element per cell
-      if c.name == 'img' # prawn doesn't handle img
+      if c.present? && c.name == 'img' # prawn doesn't handle img
         cell_image(pdf, c)
       else
         cell_text(pdf, c)
