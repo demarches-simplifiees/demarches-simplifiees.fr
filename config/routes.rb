@@ -49,7 +49,7 @@ Rails.application.routes.draw do
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
 
-    authenticate :administration do
+    authenticate :super_admin do
       mount Flipper::UI.app(-> { Flipper.instance }) => "/features", as: :flipper
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
     end

@@ -59,6 +59,7 @@ class Dossier < ApplicationRecord
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
   has_one :attestation, dependent: :destroy
+  has_one :france_connect_information, through: :user
 
   has_one_attached :justificatif_motivation
 
