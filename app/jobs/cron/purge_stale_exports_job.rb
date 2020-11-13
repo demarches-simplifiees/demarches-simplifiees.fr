@@ -1,4 +1,4 @@
-class PurgeStaleExportsJob < CronJob
+class Cron::PurgeStaleExportsJob < Cron::CronJob
   self.schedule_expression = "every 5 minutes"
 
   def perform

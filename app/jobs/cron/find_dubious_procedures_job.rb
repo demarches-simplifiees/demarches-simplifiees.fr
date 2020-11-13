@@ -1,4 +1,4 @@
-class FindDubiousProceduresJob < CronJob
+class Cron::FindDubiousProceduresJob < Cron::CronJob
   self.schedule_expression = "every day at midnight"
 
   FORBIDDEN_KEYWORDS = [

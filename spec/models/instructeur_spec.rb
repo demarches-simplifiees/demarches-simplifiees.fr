@@ -455,7 +455,7 @@ describe Instructeur, type: :model do
 
       before do
         procedure_to_assign.update(declarative_with_state: "en_instruction")
-        DeclarativeProceduresJob.new.perform
+        Cron::DeclarativeProceduresJob.new.perform
         dossier.reload
       end
 
@@ -480,7 +480,7 @@ describe Instructeur, type: :model do
 
       before do
         procedure_to_assign.update(declarative_with_state: "accepte")
-        DeclarativeProceduresJob.new.perform
+        Cron::DeclarativeProceduresJob.new.perform
         dossier.reload
       end
 
@@ -497,7 +497,7 @@ describe Instructeur, type: :model do
 
       before do
         procedure_to_assign.update(declarative_with_state: "accepte")
-        DeclarativeProceduresJob.new.perform
+        Cron::DeclarativeProceduresJob.new.perform
         dossier.traitements.last.update(processed_at: Time.zone.yesterday.beginning_of_day)
         dossier.reload
       end
