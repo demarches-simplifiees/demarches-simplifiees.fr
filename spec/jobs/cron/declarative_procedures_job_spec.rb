@@ -1,4 +1,4 @@
-RSpec.describe DeclarativeProceduresJob, type: :job do
+RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
   describe "perform" do
     let(:date) { Time.utc(2017, 9, 1, 10, 5, 0) }
     let(:instruction_date) { date + 120 }
@@ -20,7 +20,7 @@ RSpec.describe DeclarativeProceduresJob, type: :job do
       ]
 
       create(:attestation_template, procedure: procedure)
-      DeclarativeProceduresJob.new.perform
+      Cron::DeclarativeProceduresJob.new.perform
 
       dossiers.each(&:reload)
     end

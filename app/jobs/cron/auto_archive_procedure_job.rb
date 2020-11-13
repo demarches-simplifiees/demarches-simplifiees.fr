@@ -1,4 +1,4 @@
-class AutoArchiveProcedureJob < CronJob
+class Cron::AutoArchiveProcedureJob < Cron::CronJob
   self.schedule_expression = "every 1 minute"
 
   def perform(*args)
