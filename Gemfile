@@ -65,6 +65,7 @@ gem 'rake-progressbar', require: false
 gem 'react-rails'
 gem 'rgeo-geojson'
 gem 'rqrcode'
+gem 'ruby-saml-idp'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'sentry-raven'
