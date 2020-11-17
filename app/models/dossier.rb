@@ -520,6 +520,16 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def deleted_by_instructeur_and_keep_track!(author)
+    if keep_track_on_deletion?
+      deleted_dossier = DeletedDossier.create_from_dossier(self, :instructeur_request)
+      self.delete_operations_logs
+      log_dossier_operation(author, :supprime_par_instructeur, self)
+      DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user.email).deliver_later
+      self.destroy
+    end
+  end
+
   def discard_and_keep_track!(author, reason)
     if keep_track_on_deletion? && en_construction?
       deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
@@ -796,6 +806,10 @@ class Dossier < ApplicationRecord
   end
 
   private
+
+  def delete_operations_logs
+    DossierOperationLog.where(dossier: self).destroy_all
+  end
 
   def geo_areas
     champs.includes(:geo_areas).flat_map(&:geo_areas) + champs_private.includes(:geo_areas).flat_map(&:geo_areas)

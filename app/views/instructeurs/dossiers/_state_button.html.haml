@@ -105,3 +105,11 @@
             .dropdown-description
               %h4 Repasser en instruction
               L’usager sera notifié que son dossier est réexaminé.
+        - if dossier.termine?
+          %li
+            = link_to supprimer_dossier_instructeur_dossier_path(dossier.procedure, dossier), method: :patch, data: { confirm: "Voulez vous vraiment supprimer le dossier #{dossier.id} ? Cette action est irréversible. \nNous vous suggérons de télécharger le dossier au format PDF au préalable." } do
+              %span.icon.refuse
+              .dropdown-description
+                %h4 Supprimer le dossier
+                L’usager sera notifié que son dossier sera supprimé.
+
