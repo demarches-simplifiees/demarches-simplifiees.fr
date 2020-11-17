@@ -84,6 +84,10 @@ Rails.application.routes.draw do
     passwords: 'super_admins/passwords'
   }
 
+  devise_scope :super_admin do
+    get '/super_admins/password/test_strength' => 'super_admins/passwords#test_strength'
+  end
+
   get 'super_admins/edit_otp', to: 'super_admins#edit_otp', as: 'edit_super_admin_otp'
   put 'super_admins/enable_otp', to: 'super_admins#enable_otp', as: 'enable_super_admin_otp'
 
