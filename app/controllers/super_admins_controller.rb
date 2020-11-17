@@ -22,6 +22,7 @@ class SuperAdminsController < ApplicationController
 
   def generate_qr_code
     issuer = 'DSManager'
+    issuer += "-dev" if Rails.env.development?
     label = "#{issuer}:#{current_super_admin.email}"
     RQRCode::QRCode.new(current_super_admin.otp_provisioning_uri(label, issuer: issuer))
   end
