@@ -14,19 +14,12 @@ module Users
     before_action :forbid_closed_submission!, only: [:update_brouillon]
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
+    before_action :statut, only: :index
 
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
       @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
-
-      @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
-
-      @dossiers = case @current_tab
-      when 'mes-dossiers'
-        @user_dossiers
-      when 'dossiers-invites'
-        @dossiers_invites
-      end
+      @dossiers_supprimes = DeletedDossier.where(user_id: current_user.id).order_by_updated_at.page(page)
     end
 
     def show
@@ -282,6 +275,10 @@ module Users
 
     private
 
+    def statut
+      @statut = params[:statut].blank? ? 'mes-dossiers' : params[:statut]
+    end
+
     def store_user_location!
       store_location_for(:user, request.fullpath)
     end
@@ -305,16 +302,6 @@ module Users
 
     def page
       [params[:page].to_i, 1].max
-    end
-
-    def current_tab(mes_dossiers_count, dossiers_invites_count)
-      if dossiers_invites_count == 0
-        'mes-dossiers'
-      elsif mes_dossiers_count == 0
-        'dossiers-invites'
-      else
-        params[:current_tab].presence || 'mes-dossiers'
-      end
     end
 
     # FIXME: require(:dossier) when all the champs are united
