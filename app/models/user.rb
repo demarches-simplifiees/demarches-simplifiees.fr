@@ -54,13 +54,7 @@ class User < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
-  validate :password_complexity, if: -> (u) { u.administrateur.present? && Devise.password_length.include?(u.password.try(:size)) }
-
-  def password_complexity
-    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_ADMIN
-      errors.add(:password, :not_strong)
-    end
-  end
+  validates :password, password_complexity: true, if: -> (u) { u.administrateur.present? && Devise.password_length.include?(u.password.try(:size)) }
 
   # Override of Devise::Models::Confirmable#send_confirmation_instructions
   def send_confirmation_instructions
