@@ -74,7 +74,7 @@ class Dossier < ApplicationRecord
   has_many :avis, inverse_of: :dossier, dependent: :destroy
   has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy
 
-  has_many :dossier_operation_logs, -> { order(:created_at) }, dependent: :nullify, inverse_of: :dossier
+  has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
 
   belongs_to :groupe_instructeur, optional: false
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
