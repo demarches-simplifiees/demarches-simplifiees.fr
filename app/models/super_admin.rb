@@ -28,6 +28,14 @@ class SuperAdmin < ApplicationRecord
   devise :rememberable, :trackable, :validatable, :lockable, :async, :recoverable,
     :two_factor_authenticatable, :otp_secret_encryption_key => Rails.application.secrets.otp_secret_key
 
+  validate :password_complexity, if: -> (u) { Devise.password_length.include?(u.password.try(:size)) }
+
+  def password_complexity
+    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_ADMIN
+      errors.add(:password, :not_strong)
+    end
+  end
+
   def enable_otp!
     self.otp_secret = SuperAdmin.generate_otp_secret
     self.otp_required_for_login = true
