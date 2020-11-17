@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_10_155516) do
+ActiveRecord::Schema.define(version: 2020_11_17_122923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -709,7 +709,6 @@ ActiveRecord::Schema.define(version: 2020_11_10_155516) do
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
-  add_foreign_key "dossier_operation_logs", "dossiers"
   add_foreign_key "dossier_operation_logs", "instructeurs"
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
