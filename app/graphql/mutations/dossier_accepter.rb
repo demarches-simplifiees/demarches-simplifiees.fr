@@ -14,6 +14,10 @@ module Mutations
 
     def resolve(dossier:, instructeur:, motivation: nil, justificatif: nil)
       if dossier.en_instruction?
+        errors = validate_blob(justificatif)
+        if errors
+          return errors
+        end
         dossier.accepter!(instructeur, motivation, justificatif)
 
         { dossier: dossier }
