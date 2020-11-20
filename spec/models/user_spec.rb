@@ -164,7 +164,7 @@ describe User, type: :model do
   end
 
   describe 'invite_administrateur!' do
-    let(:administration) { create(:administration) }
+    let(:super_admin) { create(:super_admin) }
     let(:administrateur) { create(:administrateur) }
     let(:user) { administrateur.user }
 
@@ -172,12 +172,12 @@ describe User, type: :model do
 
     before { allow(AdministrationMailer).to receive(:invite_admin).and_return(mailer_double) }
 
-    subject { user.invite_administrateur!(administration.id) }
+    subject { user.invite_administrateur!(super_admin.id) }
 
     context 'when the user is inactif' do
       before { subject }
 
-      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), administration.id) }
+      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), super_admin.id) }
     end
 
     context 'when the user is actif' do
@@ -187,7 +187,7 @@ describe User, type: :model do
       end
 
       it 'receives an invitation to update its password' do
-        expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), administration.id)
+        expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), super_admin.id)
       end
     end
   end
@@ -245,13 +245,13 @@ describe User, type: :model do
   end
 
   describe '#delete_and_keep_track_dossiers' do
-    let(:administration) { create(:administration) }
+    let(:super_admin) { create(:super_admin) }
     let(:user) { create(:user) }
 
     context 'with a dossier in instruction' do
       let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
       it 'raises' do
-        expect { user.delete_and_keep_track_dossiers(administration) }.to raise_error(RuntimeError)
+        expect { user.delete_and_keep_track_dossiers(super_admin) }.to raise_error(RuntimeError)
       end
     end
 
@@ -261,7 +261,7 @@ describe User, type: :model do
 
       context 'without a discarded dossier' do
         it "keep track of dossiers and delete user" do
-          user.delete_and_keep_track_dossiers(administration)
+          user.delete_and_keep_track_dossiers(super_admin)
 
           expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
           expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
@@ -278,8 +278,8 @@ describe User, type: :model do
         end
 
         it "keep track of dossiers and delete user" do
-          dossier_cache.discard_and_keep_track!(administration, :user_request)
-          user.delete_and_keep_track_dossiers(administration)
+          dossier_cache.discard_and_keep_track!(super_admin, :user_request)
+          user.delete_and_keep_track_dossiers(super_admin)
 
           expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
           expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
@@ -287,8 +287,8 @@ describe User, type: :model do
         end
 
         it "doesn't destroy dossiers of another user" do
-          dossier_cache.discard_and_keep_track!(administration, :user_request)
-          user.delete_and_keep_track_dossiers(administration)
+          dossier_cache.discard_and_keep_track!(super_admin, :user_request)
+          user.delete_and_keep_track_dossiers(super_admin)
 
           expect(Dossier.find_by(id: dossier_from_another_user.id)).to be_present
         end
