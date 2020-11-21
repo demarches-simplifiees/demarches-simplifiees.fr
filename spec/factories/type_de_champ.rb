@@ -165,6 +165,7 @@ FactoryBot.define do
     end
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }
+      mandatory { true }
 
       transient do
         types_de_champ { [] }

@@ -262,6 +262,14 @@
 
   .add-row {
     margin-bottom: $default-fields-spacer;
+    color: #FFFFFF;
+    border-color: $green;
+    background-color: $green;
+
+    &:hover:not(:disabled) {
+      color: $green;
+      background-color: #FFFFFF;
+    }
   }
 
   input[type=checkbox] {
