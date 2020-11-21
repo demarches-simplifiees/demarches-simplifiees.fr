@@ -109,6 +109,7 @@ ENV \
     MATOMO_ID="73"\
     MICROSOFT_CLIENT_ID=""\
     MICROSOFT_CLIENT_SECRET=""\
+    OTP_SECRET_KEY="" \
     PIPEDRIVE_KEY=""\
     RAILS_ENV="production"\
     RAILS_LOG_TO_STDOUT=true\

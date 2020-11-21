@@ -88,6 +88,7 @@ services:
       - MATOMO_ID
       - MICROSOFT_CLIENT_ID
       - MICROSOFT_CLIENT_SECRET
+      - OTP_SECRET_KEY
       - SENTRY_CURRENT_ENV
       - SENTRY_DSN_JS
       - SENTRY_DSN_RAILS
