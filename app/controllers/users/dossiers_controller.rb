@@ -276,7 +276,7 @@ module Users
     private
 
     def statut
-      @statut = params[:statut].blank? ? 'mes-dossiers' : params[:statut]
+      @statut = params[:statut].presence || 'mes-dossiers'
     end
 
     def store_user_location!

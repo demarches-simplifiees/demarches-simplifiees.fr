@@ -751,7 +751,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       it 'send an email to the user' do
-        expect(DossierMailer).to have_received(:notify_instructeur_deletion_to_user).with(DeletedDossier.find(dossier.id), dossier.user.email)
+        expect(DossierMailer).to have_received(:notify_instructeur_deletion_to_user).with(DeletedDossier.where(dossier_id: dossier.id).first, dossier.user.email)
       end
 
       it 'add a record into deleted_dossiers table' do
