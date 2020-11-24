@@ -16,7 +16,7 @@ module BlobTitreIdentiteWatermarkConcern
   end
 
   def enqueue_watermark_job
-    if titre_identite? && !watermarked? && analyzed? && virus_scanner.done?
+    if titre_identite? && !watermarked? && analyzed? && virus_scanner.done? && Flipper.enabled?(:titre_identite_watermark)
       TitreIdentiteWatermarkJob.perform_later(self)
     end
   end
