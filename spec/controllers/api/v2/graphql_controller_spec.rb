@@ -37,7 +37,7 @@ describe API::V2::GraphqlController do
     }
   end
   let(:blob) do
-    blob = ActiveStorage::Blob.create_before_direct_upload!(blob_info)
+    blob = ActiveStorage::Blob.create_before_direct_upload!(**blob_info)
     blob.upload(file)
     blob
   end

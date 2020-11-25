@@ -5,6 +5,7 @@ module Mutations
         begin
           blob = ActiveStorage::Blob.find_signed(blob_id)
           blob.identify
+          nil
         rescue ActiveStorage::FileNotFoundError
           return { errors: ['Le fichier n’a pas été correctement téléversé sur le serveur de stockage'] }
         rescue ActiveSupport::MessageVerifier::InvalidSignature
