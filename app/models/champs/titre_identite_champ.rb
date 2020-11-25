@@ -42,16 +42,10 @@ class Champs::TitreIdentiteChamp < Champ
   end
 
   def for_export
-    piece_justificative_file.filename.to_s if piece_justificative_file.attached?
+    nil
   end
 
   def for_api
-    if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
-      piece_justificative_file.service_url
-    end
-  end
-
-  def update_skip_pj_validation
-    type_de_champ.update(skip_pj_validation: true)
+    nil
   end
 end
