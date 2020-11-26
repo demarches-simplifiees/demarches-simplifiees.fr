@@ -759,7 +759,7 @@ describe Users::DossiersController, type: :controller do
 
       before { get(:index) }
 
-      it { expect(assigns(:statut)).to eq('mes-dossiers') }
+      it { expect(assigns(:statut)).to eq('dossiers-invites') }
       it { expect(assigns(:dossiers_invites)).to match([invite.dossier]) }
     end
 

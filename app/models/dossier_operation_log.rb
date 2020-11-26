@@ -28,8 +28,7 @@ class DossierOperationLog < ApplicationRecord
     modifier_annotation: 'modifier_annotation',
     demander_un_avis: 'demander_un_avis',
     archiver: 'archiver',
-    desarchiver: 'desarchiver',
-    supprime_par_instructeur: 'supprime_par_instructeur'
+    desarchiver: 'desarchiver'
   }
 
   has_one_attached :serialized
@@ -88,11 +87,11 @@ class DossierOperationLog < ApplicationRecord
   def self.serialize_subject(subject, operation = nil)
     if subject.nil?
       nil
-    elsif operation == "supprime_par_instructeur"
+    elsif operation == operations.fetch(:supprimer)
       {
         date_de_depot: subject.en_construction_at,
         date_de_mise_en_instruction: subject.en_instruction_at,
-        date_de_decision: subject.traitements.last.processed_at
+        date_de_decision: subject.termine? ? subject.traitements.last.processed_at : nil
       }.as_json
     else
       case subject
