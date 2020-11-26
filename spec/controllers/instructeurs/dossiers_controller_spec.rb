@@ -746,8 +746,8 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       it 'deletes previous logs and add a suppression log' do
-        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(1)
-        expect(DossierOperationLog.where(dossier_id: dossier.id).first.operation).to eq('supprime_par_instructeur')
+        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(3)
+        expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).to eq('supprimer')
       end
 
       it 'send an email to the user' do
@@ -761,8 +761,8 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(DeletedDossier.where(dossier_id: dossier.id).first.groupe_instructeur_id).to eq(dossier.groupe_instructeur_id)
       end
 
-      it 'delete the dossier' do
-        expect { dossier.reload }.to raise_error ActiveRecord::RecordNotFound
+      it 'discard the dossier' do
+        expect(dossier.reload.hidden_at).not_to eq(nil)
       end
     end
 
