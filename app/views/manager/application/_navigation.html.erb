@@ -25,7 +25,7 @@ as defined by the routes in the `admin/` namespace
 
   <%= link_to "Delayed Jobs", manager_delayed_job_path, class: "navigation__link" %>
   <%= link_to "Features", manager_flipper_path, class: "navigation__link" %>
-  <% if Rails.env.production? %>
+  <% if Rails.env.production? && ENV.has_key?("SENDINBLUE_LOGIN_URL") %>
     <%= link_to "Sendinblue", ENV.fetch("SENDINBLUE_LOGIN_URL"), class: "navigation__link", target: '_blank' %>
   <% end %>
 </nav>
