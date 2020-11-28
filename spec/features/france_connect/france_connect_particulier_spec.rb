@@ -68,10 +68,6 @@ feature 'France Connect Particulier Connexion' do
           scenario 'he is redirected to user dossiers page' do
             expect(page).to have_content('Dossiers')
           end
-
-          scenario 'the updated_at date is well updated' do
-            expect(france_connect_information.updated_at).not_to eq(france_connect_information.created_at)
-          end
         end
       end
 

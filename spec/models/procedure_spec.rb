@@ -852,7 +852,7 @@ describe Procedure do
   end
 
   describe "#discard_and_keep_track!" do
-    let(:super_admin) { create(:super_admin) }
+    let(:administration) { create(:administration) }
     let(:procedure) { create(:procedure) }
     let!(:dossier) { create(:dossier, procedure: procedure) }
     let!(:dossier2) { create(:dossier, procedure: procedure) }
@@ -864,7 +864,7 @@ describe Procedure do
     context "when discarding procedure" do
       before do
         instructeur.followed_dossiers << dossier
-        procedure.discard_and_keep_track!(super_admin)
+        procedure.discard_and_keep_track!(administration)
         instructeur.reload
       end
 

@@ -32,7 +32,7 @@ describe RootController, type: :controller do
 
   context 'when Administration is connected' do
     before do
-      sign_in create(:super_admin)
+      sign_in create(:administration)
     end
 
     it { expect(subject).to redirect_to(manager_root_path) }

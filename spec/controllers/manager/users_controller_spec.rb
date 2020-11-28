@@ -1,14 +1,14 @@
 describe Manager::UsersController, type: :controller do
-  let(:super_admin) { create(:super_admin) }
+  let(:administration) { create(:administration) }
 
   describe '#show' do
     render_views
 
-    let(:super_admin) { create(:super_admin) }
+    let(:administration) { create(:administration) }
     let(:user) { create(:user) }
 
     before do
-      sign_in(super_admin)
+      sign_in(administration)
       get :show, params: { id: user.id }
     end
 
@@ -19,7 +19,7 @@ describe Manager::UsersController, type: :controller do
     let!(:user) { create(:user, email: 'ancien.email@domaine.fr') }
 
     before {
-      sign_in super_admin
+      sign_in administration
     }
     subject { patch :update, params: { id: user.id, user: { email: nouvel_email } } }
 
@@ -48,7 +48,7 @@ describe Manager::UsersController, type: :controller do
   describe '#delete' do
     let!(:user) { create(:user) }
 
-    before { sign_in super_admin }
+    before { sign_in administration }
 
     subject { delete :delete, params: { id: user.id } }
 

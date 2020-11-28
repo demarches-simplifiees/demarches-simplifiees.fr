@@ -1,5 +1,5 @@
 class StatsController < ApplicationController
-  before_action :authenticate_super_admin!, only: [:download]
+  before_action :authenticate_administration!, only: [:download]
 
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
@@ -34,7 +34,7 @@ class StatsController < ApplicationController
     @dossiers_cumulative = stat.dossiers_cumulative
     @dossiers_in_the_last_4_months = stat.dossiers_in_the_last_4_months
 
-    if super_admin_signed_in?
+    if administration_signed_in?
       @dossier_instruction_mean_time = Rails.cache.fetch("dossier_instruction_mean_time", expires_in: 1.day) do
         dossier_instruction_mean_time(dossiers)
       end
@@ -201,7 +201,7 @@ class StatsController < ApplicationController
   end
 
   def max_date
-    if super_admin_signed_in?
+    if administration_signed_in?
       Time.zone.now
     else
       Time.zone.now.beginning_of_month - 1.second

@@ -23,7 +23,6 @@ gem 'delayed_job_web'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'devise-i18n'
-gem 'devise-two-factor', github: 'bryanfagan/devise-two-factor'
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
 gem 'ffi-geos', require: false
@@ -50,6 +49,8 @@ gem 'kaminari', '1.2.1' # Pagination
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
+gem 'omniauth-github'
+gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem 'openid_connect'
 gem 'pg'
 gem 'phonelib'
@@ -67,8 +68,6 @@ gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'react-rails'
 gem 'rgeo-geojson'
-gem 'rqrcode'
-gem 'ruby-saml-idp'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'sentry-raven'

@@ -1,29 +1,19 @@
 describe Manager::AdministrateursController, type: :controller do
-  let(:super_admin) { create(:super_admin) }
+  let(:administration) { create(:administration) }
   let(:administrateur) { create(:administrateur) }
 
   before do
-    sign_in super_admin
+    sign_in administration
   end
 
   describe '#show' do
-    let(:subject) { get :show, params: { id: administrateur.id } }
+    render_views
 
-    context 'with 2FA not enabled' do
-      let(:super_admin) { create(:super_admin, otp_required_for_login: false) }
-      it { expect(subject).to redirect_to(edit_super_admin_otp_path) }
+    before do
+      get :show, params: { id: administrateur.id }
     end
 
-    context 'with 2FA enabled' do
-      render_views
-      let(:super_admin) { create(:super_admin, otp_required_for_login: true) }
-
-      before do
-        subject
-      end
-
-      it { expect(response.body).to include(administrateur.email) }
-    end
+    it { expect(response.body).to include(administrateur.email) }
   end
 
   describe 'GET #new' do

@@ -1,11 +1,11 @@
 feature 'As an administrateur', js: true do
-  let(:super_admin) { create(:super_admin) }
+  let(:administration) { create(:administration) }
   let(:admin_email) { 'new_admin@gouv.fr' }
   let(:new_admin) { Administrateur.by_email(admin_email) }
 
   before do
     perform_enqueued_jobs do
-      super_admin.invite_admin(admin_email)
+      administration.invite_admin(admin_email)
     end
   end
 

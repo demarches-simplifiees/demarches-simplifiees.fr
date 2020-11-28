@@ -8,7 +8,7 @@ class RootController < ApplicationController
       return redirect_to instructeur_procedures_path
     elsif user_signed_in?
       return redirect_to dossiers_path
-    elsif super_admin_signed_in?
+    elsif administration_signed_in?
       return redirect_to manager_root_path
     end
 

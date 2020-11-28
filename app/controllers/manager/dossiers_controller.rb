@@ -22,9 +22,9 @@ module Manager
 
     def discard
       dossier = Dossier.find(params[:id])
-      dossier.discard_and_keep_track!(current_super_admin, :manager_request)
+      dossier.discard_and_keep_track!(current_administration, :manager_request)
 
-      logger.info("Le dossier #{dossier.id} est supprimé par #{current_super_admin.email}")
+      logger.info("Le dossier #{dossier.id} est supprimé par #{current_administration.email}")
       flash[:notice] = "Le dossier #{dossier.id} a été supprimé."
 
       redirect_to manager_dossier_path(dossier)
@@ -32,7 +32,7 @@ module Manager
 
     def restore
       dossier = Dossier.with_discarded.find(params[:id])
-      dossier.restore(current_super_admin)
+      dossier.restore(current_administration)
 
       flash[:notice] = "Le dossier #{dossier.id} a été restauré."
 
@@ -41,9 +41,9 @@ module Manager
 
     def repasser_en_instruction
       dossier = Dossier.find(params[:id])
-      dossier.repasser_en_instruction(current_super_admin)
+      dossier.repasser_en_instruction(current_administration)
 
-      logger.info("Le dossier #{dossier.id} est repassé en instruction par #{current_super_admin.email}")
+      logger.info("Le dossier #{dossier.id} est repassé en instruction par #{current_administration.email}")
       flash[:notice] = "Le dossier #{dossier.id} est repassé en instruction."
 
       redirect_to manager_dossier_path(dossier)

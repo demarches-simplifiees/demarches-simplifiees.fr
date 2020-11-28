@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_17_122923) do
+ActiveRecord::Schema.define(version: 2020_10_02_124154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,27 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.index ["administrateur_id", "procedure_id"], name: "index_unique_admin_proc_couple", unique: true
     t.index ["administrateur_id"], name: "index_administrateurs_procedures_on_administrateur_id"
     t.index ["procedure_id"], name: "index_administrateurs_procedures_on_procedure_id"
+  end
+
+  create_table "administrations", id: :serial, force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
+    t.index ["email"], name: "index_administrations_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_administrations_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_administrations_on_unlock_token", unique: true
   end
 
   create_table "assign_tos", id: :serial, force: :cascade do |t|
@@ -196,9 +217,6 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "reason"
-    t.bigint "user_id"
-    t.bigint "groupe_instructeur_id"
-    t.bigint "revision_id"
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
   end
 
@@ -583,32 +601,6 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "super_admins", id: :serial, force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "failed_attempts", default: 0, null: false
-    t.string "unlock_token"
-    t.datetime "locked_at"
-    t.string "encrypted_otp_secret"
-    t.string "encrypted_otp_secret_iv"
-    t.string "encrypted_otp_secret_salt"
-    t.integer "consumed_timestep"
-    t.boolean "otp_required_for_login"
-    t.index ["email"], name: "index_super_admins_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_super_admins_on_reset_password_token", unique: true
-    t.index ["unlock_token"], name: "index_super_admins_on_unlock_token", unique: true
-  end
-
   create_table "task_records", id: false, force: :cascade do |t|
     t.string "version", null: false
   end
@@ -709,6 +701,7 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
+  add_foreign_key "dossier_operation_logs", "dossiers"
   add_foreign_key "dossier_operation_logs", "instructeurs"
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"

@@ -6,7 +6,7 @@
     %li
       .menu-item{ title: current_email }
         = current_email
-    - if super_admin_signed_in?
+    - if administration_signed_in?
       %li
         = link_to manager_root_path, class: "menu-item menu-link" do
           = image_tag "icons/super-admin.svg", alt: ''

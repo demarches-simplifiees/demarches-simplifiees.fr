@@ -39,9 +39,9 @@ module Manager
       if !user.can_be_deleted?
         fail "Impossible de supprimer cet utilisateur. Il a des dossiers en instruction ou il est administrateur."
       end
-      user.delete_and_keep_track_dossiers(current_super_admin)
+      user.delete_and_keep_track_dossiers(current_administration)
 
-      logger.info("L'utilisateur #{user.id} est supprimé par #{current_super_admin.id}")
+      logger.info("L'utilisateur #{user.id} est supprimé par #{current_administration.id}")
       flash[:notice] = "L'utilisateur #{user.id} est supprimé"
 
       redirect_to manager_users_path

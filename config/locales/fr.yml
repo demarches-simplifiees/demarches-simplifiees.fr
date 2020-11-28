@@ -111,7 +111,6 @@ fr:
 
   errors:
     messages:
-      saml_not_authorized: "Vous n'êtes pas autorisé à accéder à ce service."
       already_confirmed: "a déjà été validé(e), veuillez essayer de vous connecter"
       confirmation_period_expired: "à confirmer dans les %{period}, merci de faire une nouvelle demande"
       expired: "a expiré, merci d’en faire une nouvelle demande"

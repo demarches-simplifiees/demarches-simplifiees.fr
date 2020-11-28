@@ -15,7 +15,7 @@ describe ApplicationController, type: :controller do
     let(:current_user) { nil }
     let(:current_instructeur) { nil }
     let(:current_administrateur) { nil }
-    let(:current_super_admin) { nil }
+    let(:current_administration) { nil }
     let(:payload) { {} }
 
     before do
@@ -23,7 +23,7 @@ describe ApplicationController, type: :controller do
       allow(@controller).to receive(:current_user).and_return(current_user)
       expect(@controller).to receive(:current_instructeur).and_return(current_instructeur)
       expect(@controller).to receive(:current_administrateur).and_return(current_administrateur)
-      expect(@controller).to receive(:current_super_admin).and_return(current_super_admin)
+      expect(@controller).to receive(:current_administration).and_return(current_administration)
       allow(Raven).to receive(:user_context)
 
       @controller.send(:set_raven_context)
@@ -72,11 +72,11 @@ describe ApplicationController, type: :controller do
       end
     end
 
-    context 'when someone is logged as a user, instructeur, administrateur and super_admin' do
+    context 'when someone is logged as a user, instructeur, administrateur and administration' do
       let(:current_user) { create(:user) }
       let(:current_instructeur) { create(:instructeur) }
       let(:current_administrateur) { create(:administrateur) }
-      let(:current_super_admin) { create(:super_admin) }
+      let(:current_administration) { create(:administration) }
 
       it do
         expect(Raven).to have_received(:user_context)
@@ -93,7 +93,7 @@ describe ApplicationController, type: :controller do
           user_agent: 'Rails Testing',
           user_id: current_user.id,
           user_email: current_user.email,
-          user_roles: 'User, Instructeur, Administrateur, SuperAdmin'
+          user_roles: 'User, Instructeur, Administrateur, Administration'
         })
       end
     end
@@ -109,7 +109,7 @@ describe ApplicationController, type: :controller do
       @request.path_info = path_info
     end
 
-    context 'when no super_admin is logged in' do
+    context 'when no administration is logged in' do
       before { @controller.send(:reject) }
 
       it { expect(@controller).to have_received(:sign_out).with(:user) }
@@ -119,7 +119,7 @@ describe ApplicationController, type: :controller do
       it { expect(@controller).to have_received(:redirect_to).with(root_path) }
 
       context 'when the path is safe' do
-        ['/', '/manager', '/super_admins'].each do |path|
+        ['/', '/manager', '/administrations'].each do |path|
           let(:path_info) { path }
 
           it { expect(@controller).not_to have_received(:sign_out) }
@@ -138,11 +138,11 @@ describe ApplicationController, type: :controller do
       end
     end
 
-    context 'when a super_admin is logged in' do
-      let(:current_super_admin) { create(:super_admin) }
+    context 'when a administration is logged in' do
+      let(:current_administration) { create(:administration) }
 
       before do
-        sign_in(current_super_admin)
+        sign_in(current_administration)
         @controller.send(:reject)
       end
 

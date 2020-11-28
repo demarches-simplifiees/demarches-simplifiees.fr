@@ -9,7 +9,7 @@ class OperationAuthorSerializer < ActiveModel::Serializer
       "Instructeur##{object.id}"
     when Administrateur
       "Administrateur##{object.id}"
-    when SuperAdmin
+    when Administration
       "Manager##{object.id}"
     else
       nil

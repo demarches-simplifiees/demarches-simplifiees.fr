@@ -1,7 +1,7 @@
 describe Manager::ProceduresController, type: :controller do
-  let(:super_admin) { create :super_admin }
+  let(:administration) { create :administration }
 
-  before { sign_in super_admin }
+  before { sign_in administration }
 
   describe '#whitelist' do
     let(:procedure) { create(:procedure) }
@@ -52,7 +52,7 @@ describe Manager::ProceduresController, type: :controller do
     let(:operations) { dossier.dossier_operation_logs.map(&:operation).map(&:to_sym) }
 
     before do
-      procedure.discard_and_keep_track!(super_admin)
+      procedure.discard_and_keep_track!(administration)
 
       post :restore, params: { id: procedure.id }
       procedure.reload

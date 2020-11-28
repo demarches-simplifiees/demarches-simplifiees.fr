@@ -1247,7 +1247,7 @@ describe Dossier do
   end
 
   describe 'discarded_brouillon_expired and discarded_en_construction_expired' do
-    let(:super_admin) { create(:super_admin) }
+    let(:administration) { create(:administration) }
 
     before do
       create(:dossier)
@@ -1259,8 +1259,8 @@ describe Dossier do
         create(:dossier).discard!
         create(:dossier, :en_construction).discard!
 
-        create(:dossier).procedure.discard_and_keep_track!(super_admin)
-        create(:dossier, :en_construction).procedure.discard_and_keep_track!(super_admin)
+        create(:dossier).procedure.discard_and_keep_track!(administration)
+        create(:dossier, :en_construction).procedure.discard_and_keep_track!(administration)
       end
       Timecop.travel(1.week.ago) do
         create(:dossier).discard!

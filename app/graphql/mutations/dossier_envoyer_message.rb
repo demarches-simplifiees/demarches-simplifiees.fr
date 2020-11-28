@@ -11,10 +11,6 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:, body:, attachment: nil)
-      errors = validate_blob(attachment)
-      if errors
-        return errors
-      end
       message = CommentaireService.build(instructeur, dossier, body: body, piece_jointe: attachment)
 
       if message.save

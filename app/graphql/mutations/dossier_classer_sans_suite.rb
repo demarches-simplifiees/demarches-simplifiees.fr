@@ -14,10 +14,6 @@ module Mutations
 
     def resolve(dossier:, instructeur:, motivation:, justificatif: nil)
       if dossier.en_instruction?
-        errors = validate_blob(justificatif)
-        if errors
-          return errors
-        end
         dossier.classer_sans_suite!(instructeur, motivation, justificatif)
 
         { dossier: dossier }
