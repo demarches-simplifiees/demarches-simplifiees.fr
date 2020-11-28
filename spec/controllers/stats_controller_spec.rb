@@ -9,7 +9,7 @@ describe StatsController, type: :controller do
         create(:procedure, created_at: 2.months.ago, updated_at: Time.zone.now)
         @controller = StatsController.new
 
-        allow(@controller).to receive(:administration_signed_in?).and_return(false)
+        allow(@controller).to receive(:super_admin_signed_in?).and_return(false)
       end
 
       let(:association) { Procedure.all }
@@ -33,7 +33,7 @@ describe StatsController, type: :controller do
 
         @controller = StatsController.new
 
-        allow(@controller).to receive(:administration_signed_in?).and_return(true)
+        allow(@controller).to receive(:super_admin_signed_in?).and_return(true)
       end
 
       let (:association) { Procedure.all }
@@ -64,7 +64,7 @@ describe StatsController, type: :controller do
     let (:association) { Procedure.all }
 
     context "while a super admin is logged in" do
-      before { allow(@controller).to receive(:administration_signed_in?).and_return(true) }
+      before { allow(@controller).to receive(:super_admin_signed_in?).and_return(true) }
 
       subject { @controller.send(:cumulative_hash, association, :updated_at) }
 
@@ -78,7 +78,7 @@ describe StatsController, type: :controller do
     end
 
     context "while a super admin is not logged in" do
-      before { allow(@controller).to receive(:administration_signed_in?).and_return(false) }
+      before { allow(@controller).to receive(:super_admin_signed_in?).and_return(false) }
 
       subject { @controller.send(:cumulative_hash, association, :updated_at) }
 

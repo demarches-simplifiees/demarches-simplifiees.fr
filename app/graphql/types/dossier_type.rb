@@ -78,7 +78,7 @@ module Types
     end
 
     def champs
-      Loaders::Association.for(object.class, :champs).load(object)
+      Loaders::Association.for(object.class, champs: [:type_de_champ]).load(object)
     end
 
     def annotations
