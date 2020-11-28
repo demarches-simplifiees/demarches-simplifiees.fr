@@ -336,11 +336,38 @@ describe NewAdministrateur::ProceduresController, type: :controller do
 
   describe 'PATCH #jeton' do
     let(:procedure) { create(:procedure, administrateur: admin) }
-    let(:valid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
+    let(:token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
 
-    it "update api_entreprise_token" do
-      patch :update_jeton, params: { id: procedure.id, procedure: { api_entreprise_token: valid_token } }
-      expect(procedure.reload.api_entreprise_token).to eq(valid_token)
+    subject { patch :update_jeton, params: { id: procedure.id, procedure: { api_entreprise_token: token } } }
+
+    before do
+      allow_any_instance_of(ApiEntreprise::PrivilegesAdapter).to receive(:valid?).and_return(token_is_valid)
+      subject
+    end
+
+    context 'when jeton is valid' do
+      let(:token_is_valid) { true }
+
+      it { expect(flash.alert).to be_nil }
+      it { expect(flash.notice).to eq('Le jeton a bien été mis à jour') }
+      it { expect(procedure.reload.api_entreprise_token).to eq(token) }
+    end
+
+    context 'when jeton is invalid' do
+      let(:token_is_valid) { false }
+
+      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n'est pas valide") }
+      it { expect(flash.notice).to be_nil }
+      it { expect(procedure.reload.api_entreprise_token).not_to eq(token) }
+    end
+
+    context 'when jeton is not a jwt' do
+      let(:token) { "invalid" }
+      let(:token_is_valid) { true } # just to check jwt format by procedure model
+
+      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n'est pas valide") }
+      it { expect(flash.notice).to be_nil }
+      it { expect(procedure.reload.api_entreprise_token).not_to eq(token) }
     end
   end
 

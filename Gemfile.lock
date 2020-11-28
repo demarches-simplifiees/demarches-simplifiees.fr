@@ -1,4 +1,15 @@
 GIT
+  remote: https://github.com/bryanfagan/devise-two-factor.git
+  revision: 60038a699b1847266f6ce0a3457fdc2cd24715be
+  specs:
+    devise-two-factor (3.1.1)
+      activesupport (< 6.1)
+      attr_encrypted (>= 1.3, < 4, != 2)
+      devise (~> 4.0)
+      railties (< 6.1)
+      rotp (~> 4.0)
+
+GIT
   remote: https://github.com/mina-deploy/mina.git
   revision: 84fa84c7f7f94f9518ef9b7099396ab6676b5881
   specs:
@@ -101,6 +112,8 @@ GEM
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.1)
+    attr_encrypted (3.1.0)
+      encryptor (~> 3.0.0)
     attr_required (1.0.1)
     autoprefixer-rails (10.0.1.0)
       execjs
@@ -220,6 +233,7 @@ GEM
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
+    encryptor (3.0.0)
     equalizer (0.0.11)
     erubi (1.9.0)
     erubis (2.7.0)
@@ -407,7 +421,6 @@ GEM
     momentjs-rails (2.20.1)
       railties (>= 3.1)
     multi_json (1.15.0)
-    multi_xml (0.6.0)
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
@@ -419,24 +432,6 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    oauth2 (1.4.4)
-      faraday (>= 0.8, < 2.0)
-      jwt (>= 1.0, < 3.0)
-      multi_json (~> 1.3)
-      multi_xml (~> 0.5)
-      rack (>= 1.2, < 3)
-    omniauth (1.9.1)
-      hashie (>= 3.4.6)
-      rack (>= 1.6.2, < 3)
-    omniauth-github (1.4.0)
-      omniauth (~> 1.5)
-      omniauth-oauth2 (>= 1.4.0, < 2.0)
-    omniauth-oauth2 (1.6.0)
-      oauth2 (~> 1.1)
-      omniauth (~> 1.9)
-    omniauth-rails_csrf_protection (0.1.2)
-      actionpack (>= 4.2)
-      omniauth (>= 1.3.1)
     open4 (1.3.4)
     openid_connect (1.1.8)
       activemodel
@@ -576,6 +571,8 @@ GEM
       builder (>= 3.0)
       dry-inflector (~> 0.1)
       rubyzip (>= 1.0)
+    rotp (4.1.0)
+      addressable (~> 2.5)
     rouge (3.17.0)
     rqrcode (1.1.2)
       chunky_png (~> 1.0)
@@ -635,6 +632,7 @@ GEM
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.10.1)
+    ruby-saml-idp (0.3.5)
     ruby2_keywords (0.0.2)
     ruby_parser (3.15.0)
       sexp_processor (~> 4.9)
@@ -805,6 +803,7 @@ DEPENDENCIES
   devise
   devise-async
   devise-i18n
+  devise-two-factor!
   discard
   dotenv-rails
   factory_bot
@@ -840,8 +839,6 @@ DEPENDENCIES
   logstash-event
   mailjet
   mina!
-  omniauth-github
-  omniauth-rails_csrf_protection (~> 0.1)
   openid_connect
   pg
   phonelib
@@ -863,12 +860,14 @@ DEPENDENCIES
   rake-progressbar
   react-rails
   rgeo-geojson
+  rqrcode
   rspec-rails
   rspec_junit_formatter
   rubocop
   rubocop-rails_config
   rubocop-rspec-focused
   ruby-debug-ide (~> 0.7.2)
+  ruby-saml-idp
   sanitize-url
   sassc-rails
   scss_lint

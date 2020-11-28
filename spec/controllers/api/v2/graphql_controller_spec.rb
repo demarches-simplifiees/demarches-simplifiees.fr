@@ -604,6 +604,34 @@ describe API::V2::GraphqlController do
             })
           end
         end
+
+        context 'upload error' do
+          let(:query) do
+            "mutation {
+              dossierEnvoyerMessage(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                body: \"Hello world\",
+                attachment: \"fake\"
+              }) {
+                message {
+                  body
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierEnvoyerMessage: {
+              errors: [{ message: "L’identifiant du fichier téléversé est invalide" }],
+              message: nil
+            })
+          end
+        end
       end
 
       describe 'dossierPasserEnInstruction' do
