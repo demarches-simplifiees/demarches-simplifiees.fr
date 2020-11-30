@@ -1,9 +1,9 @@
 describe Manager::DossiersController, type: :controller do
-  let(:administration) { create :administration }
+  let(:super_admin) { create :super_admin }
   let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier) }
   let(:operations) { dossier.dossier_operation_logs.map(&:operation).map(&:to_sym) }
 
-  before { sign_in administration }
+  before { sign_in super_admin }
 
   describe '#discard' do
     let(:dossier) { create(:dossier, :en_construction) }
@@ -23,7 +23,7 @@ describe Manager::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, :en_construction) }
 
     before do
-      dossier.discard_and_keep_track!(administration, :manager_request)
+      dossier.discard_and_keep_track!(super_admin, :manager_request)
 
       post :restore, params: { id: dossier.id }
       dossier.reload

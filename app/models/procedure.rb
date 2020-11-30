@@ -650,7 +650,7 @@ class Procedure < ApplicationRecord
   def dossiers_count_for_instructeur(instructeur)
     query = <<-EOF
   SELECT
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and (("follows"."id" IS NULL) or ("follows"."instructeur_id" = :instructeur_id and "follows"."unfollowed_at" < :now)) and not "dossiers"."archived") AS a_suivre,
+      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."id" IS NULL and not "dossiers"."archived") AS a_suivre,
       COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."instructeur_id" = :instructeur_id and not "dossiers"."archived" and "follows"."unfollowed_at" IS NULL) AS suivis,
       COUNT(*) FILTER ( WHERE "dossiers"."state" in ('accepte', 'refuse', 'sans_suite') and not "dossiers"."archived" ) AS termines,
       COUNT(*) FILTER ( WHERE "dossiers"."state" != 'brouillon' and not "dossiers"."archived" ) AS total,
@@ -669,6 +669,7 @@ class Procedure < ApplicationRecord
   LEFT OUTER JOIN
       "follows"
           ON "follows"."dossier_id" = "dossiers"."id"
+          AND "follows"."unfollowed_at" IS NULL
   WHERE
       "dossiers"."hidden_at" IS NULL
       AND "assign_tos"."instructeur_id" = :instructeur_id

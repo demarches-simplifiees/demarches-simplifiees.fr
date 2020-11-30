@@ -88,7 +88,7 @@
         .chart.cumulative-dossiers-chart.hidden
           = area_chart @dossiers_cumulative
 
-    - if administration_signed_in?
+    - if super_admin_signed_in?
       .stat-card.stat-card-half.pull-left
         %span.stat-card-title Temps de traitement moyen d'un dossier
 
@@ -107,7 +107,7 @@
 
     .clearfix
 
-  - if administration_signed_in?
+  - if super_admin_signed_in?
     %h2.new-h2 Téléchargement
 
     = link_to "Télécharger les statistiques (CSV)", stats_download_path(format: :csv), class: 'button secondary'

@@ -1,7 +1,7 @@
 RSpec.describe AdministrationMailer, type: :mailer do
   describe '#new_admin_email' do
     let(:admin) { create(:administrateur) }
-    let(:administration) { create(:administration) }
+    let(:administration) { create(:super_admin) }
 
     subject { described_class.new_admin_email(admin, administration) }
 
