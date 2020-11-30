@@ -33,8 +33,7 @@ function buildOptions() {
 
 async function defaultQueryFn(scope, term) {
   if (scope == 'pays') {
-    const pays = await fetch('/pays.json').then((response) => response.json());
-    return matchSorter(pays, term, { keys: ['nom'] });
+    return matchSorter(await getPays(), term, { keys: ['nom'] });
   }
 
   const url = buildURL(scope, term);
@@ -42,4 +41,12 @@ async function defaultQueryFn(scope, term) {
   const promise = fetch(url, options).then((response) => response.json());
   promise.cancel = () => controller && controller.abort();
   return promise;
+}
+
+let paysCache;
+async function getPays() {
+  if (!paysCache) {
+    paysCache = await fetch('/pays.json').then((response) => response.json());
+  }
+  return paysCache;
 }
