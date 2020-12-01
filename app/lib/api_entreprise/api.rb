@@ -100,7 +100,14 @@ class ApiEntreprise::API
     elsif response.code == 503
       raise ServiceUnavailable, "url: #{url}"
     else
-      raise RequestFailed, "HTTP Error Code: #{response.code} for #{url}\nheaders: #{response.headers}\nbody: #{response.body}"
+      raise RequestFailed,
+        <<~TEXT
+          HTTP Error Code: #{response.code} for #{url}
+          headers: #{response.headers}
+          body: #{response.body}
+          curl message: #{response.return_message}
+          timeout: #{response.timed_out?}
+        TEXT
     end
   end
 
