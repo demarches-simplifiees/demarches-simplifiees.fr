@@ -81,7 +81,7 @@ describe ApiEntreprise::EntrepriseAdapter do
 
   context "when the service is unavailable" do
     let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_unavailable.json') }
-    let(:status) { 502 }
+    let(:status) { 500 }
 
     it 'raises an exception' do
       expect { subject }.to raise_error(ApiEntreprise::API::RequestFailed)
