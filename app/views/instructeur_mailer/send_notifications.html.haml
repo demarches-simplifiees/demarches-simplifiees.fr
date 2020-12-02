@@ -4,7 +4,8 @@
   Bonjour,
 
 %p
-  Vous avez du nouveau sur #{APPLICATION_NAME} depuis hier.
+  Vous avez du nouveau sur #{APPLICATION_NAME} depuis
+  = Date.today.monday? ? "vendredi dernier" : "hier"
 
 %ul
   - @data.each do |datum|
