@@ -6,6 +6,7 @@ Rails.application.config.active_storage.analyzers.delete ActiveStorage::Analyzer
 ActiveSupport.on_load(:active_storage_blob) do
   include BlobSignedIdConcern
   include BlobVirusScannerConcern
+  include BlobTitreIdentiteWatermarkConcern
 end
 
 # When an OpenStack service is initialized it makes a request to fetch
