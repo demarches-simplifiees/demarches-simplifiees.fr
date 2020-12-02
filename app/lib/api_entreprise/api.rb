@@ -21,6 +21,9 @@ class ApiEntreprise::API
   class BadFormatRequest < StandardError
   end
 
+  class BadGateway < StandardError
+  end
+
   class ServiceUnavailable < StandardError
   end
 
@@ -97,6 +100,8 @@ class ApiEntreprise::API
       raise ResourceNotFound, "url: #{url}"
     elsif response.code == 400
       raise BadFormatRequest, "url: #{url}"
+    elsif response.code == 502
+      raise	BadGateway, "url: #{url}"
     elsif response.code == 503
       raise ServiceUnavailable, "url: #{url}"
     else
