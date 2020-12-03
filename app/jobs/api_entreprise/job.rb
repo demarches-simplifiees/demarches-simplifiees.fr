@@ -1,6 +1,10 @@
 class ApiEntreprise::Job < ApplicationJob
   queue_as :api_entreprise
 
+  retry_on ApiEntreprise::API::ServiceUnavailable,
+    ApiEntreprise::API::BadGateway,
+    wait: 1.day
+
   DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS = 5
 
   # If by the time the job runs the Etablissement has been deleted
