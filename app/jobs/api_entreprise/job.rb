@@ -1,13 +1,21 @@
 class ApiEntreprise::Job < ApplicationJob
+  DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS = 5
+
   queue_as :api_entreprise
 
+  # BadGateway could mean
+  # - acoss: réessayer ultérieurement
+  # - bdf: erreur interne
+  # so we retry every day for 5 days
+  # same logic for ServiceUnavailable
   retry_on ApiEntreprise::API::ServiceUnavailable,
     ApiEntreprise::API::BadGateway,
     wait: 1.day
 
+  # We guess the backend is slow but not broken
+  # and the information we are looking for is available
+  # so we retry few seconds later (exponentially to avoid overload)
   retry_on ApiEntreprise::API::TimedOut, wait: :exponentially_longer
-
-  DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS = 5
 
   # If by the time the job runs the Etablissement has been deleted
   # (it can happen through EtablissementUpdateJob for instance), ignore the job
