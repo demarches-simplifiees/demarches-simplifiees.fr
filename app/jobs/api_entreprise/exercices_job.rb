@@ -1,5 +1,5 @@
 class ApiEntreprise::ExercicesJob < ApiEntreprise::Job
-  rescue_from(ApiEntreprise::API::BadFormatRequest) do |exception|
+  rescue_from(ApiEntreprise::API::Error::BadFormatRequest) do |exception|
   end
 
   def perform(etablissement_id, procedure_id)
