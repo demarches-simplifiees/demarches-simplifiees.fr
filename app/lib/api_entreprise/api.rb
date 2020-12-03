@@ -10,7 +10,7 @@ class ApiEntreprise::API
   BILANS_BDF_RESOURCE_NAME = "bilans_entreprises_bdf"
   PRIVILEGES_RESOURCE_NAME = "privileges"
 
-  TIMEOUT = 15
+  TIMEOUT = 20
 
   class ResourceNotFound < StandardError
   end
