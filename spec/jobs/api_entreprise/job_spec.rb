@@ -29,6 +29,13 @@ RSpec.describe ApiEntreprise::Job, type: :job do
 
       it { subject }
     end
+
+    context 'when it is timed out' do
+      let(:error) { :timed_out }
+      let(:try) { 5 }
+
+      it { subject }
+    end
   end
 
   class ExceptionJob < ApiEntreprise::Job
@@ -38,6 +45,8 @@ RSpec.describe ApiEntreprise::Job, type: :job do
         raise ApiEntreprise::API::ServiceUnavailable
       when :bad_gateway
         raise ApiEntreprise::API::BadGateway
+      when :timed_out
+        raise ApiEntreprise::API::TimedOut
       else
         raise StandardError
       end

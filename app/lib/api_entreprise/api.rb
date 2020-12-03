@@ -27,6 +27,9 @@ class ApiEntreprise::API
   class ServiceUnavailable < StandardError
   end
 
+  class TimedOut < StandardError
+  end
+
   def self.entreprise(siren, procedure_id)
     call_with_siret(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
   end
@@ -104,6 +107,8 @@ class ApiEntreprise::API
       raise	BadGateway, "url: #{url}"
     elsif response.code == 503
       raise ServiceUnavailable, "url: #{url}"
+    elsif response.timed_out?
+      raise TimedOut, "url: #{url}"
     else
       raise RequestFailed,
         <<~TEXT
@@ -111,7 +116,6 @@ class ApiEntreprise::API
           headers: #{response.headers}
           body: #{response.body}
           curl message: #{response.return_message}
-          timeout: #{response.timed_out?}
         TEXT
     end
   end
