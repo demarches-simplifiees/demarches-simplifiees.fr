@@ -18,8 +18,8 @@ module Users
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
       @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
-      @dossiers_supprimes = DeletedDossier.where(user_id: current_user.id).order_by_updated_at.page(page)
-      @statut = statut(@user_dossiers.count, @dossiers_invites.count, @dossiers_supprimes.count)
+      @dossiers_supprimes = current_user.deleted_dossiers.order_by_updated_at.page(page)
+      @statut = statut(@user_dossiers, @dossiers_invites, @dossiers_supprimes, params[:statut])
     end
 
     def show
@@ -275,15 +275,22 @@ module Users
 
     private
 
-    def statut(mes_dossiers_count, dossiers_invites_count, dossiers_supprimes_count)
-      if dossiers_invites_count == 0 && dossiers_supprimes_count == 0
-        'mes-dossiers'
-      elsif mes_dossiers_count == 0 && dossiers_invites_count > 0
-        'dossiers-invites'
-      elsif dossiers_invites_count == 0 && mes_dossiers_count == 0 && dossiers_supprimes_count > 0
-        'dossiers-supprimes'
+    # if the status tab is filled, then this tab
+    # else first filled tab
+    # else mes-dossiers
+    def statut(mes_dossiers, dossiers_invites, dossiers_supprimes, params_statut)
+      tabs = {
+        'mes-dossiers' => mes_dossiers.present?,
+        'dossiers-invites' => dossiers_invites.present?,
+        'dossiers-supprimes' => dossiers_supprimes.present?
+      }
+      if tabs[params_statut]
+        params_statut
       else
-        @statut = params[:statut].presence || 'mes-dossiers'
+        tabs
+          .filter { |_tab, filled| filled }
+          .map { |tab, _| tab }
+          .first || 'mes-dossiers'
       end
     end
 

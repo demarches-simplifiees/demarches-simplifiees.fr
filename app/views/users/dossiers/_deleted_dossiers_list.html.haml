@@ -1,35 +1,26 @@
-- if dossiers.present?
+- if deleted_dossiers.present?
   %table.table.dossiers-table.hoverable
     %thead
       %tr
         %th.number-col Nº dossier
         %th Démarche
-        - if dossiers.present?
-          %th Demandeur
-        %th.status-col Statut
-        %th.updated-at-col Mis à jour
-        %th.sr-only Actions
+        %th Raison de suppression
+        %th Date de suppression
     %tbody
-      - dossiers.each do |dossier|
-        %tr{ data: { 'dossier-id': dossier.id } }
+      - deleted_dossiers.each do |dossier|
+        - libelle_demarche = Procedure.find(dossier.procedure_id).libelle
+        %tr{ data: { 'dossier-id': dossier.dossier_id } }
           %td.number-col
-            = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
-              %span.icon.folder
-              = dossier.id
+            = dossier.dossier_id
           %td
-            = link_to(url_for_dossier(dossier), class: 'cell-link') do
-              = procedure_libelle(dossier.procedure)
-          - if dossiers.present?
-            %td.cell-link
-              = demandeur_dossier(dossier)
-          %td.status-col
-            = status_badge(dossier.state)
-          %td.updated-at-col.cell-link
-            = try_format_date(dossier.updated_at)
-          %td.action-col
-            = render partial: 'dossier_actions', locals: { dossier: dossier }
+            = libelle_demarche
 
-  = paginate(dossiers)
+          %td.cell-link
+            = deletion_reason_badge(dossier.reason)
+          %td
+            = dossier.updated_at.strftime('%d/%m/%Y')
+
+  = paginate(deleted_dossiers)
 
   - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago
     #user-satisfaction

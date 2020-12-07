@@ -76,7 +76,7 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_instructeur_deletion_to_user(deleted_dossier, to_email)
-    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
+    @subject = default_i18n_subject(libelle_demarche: deleted_dossier.procedure.libelle)
     @deleted_dossier = deleted_dossier
 
     mail(to: to_email, subject: @subject)
