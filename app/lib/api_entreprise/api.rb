@@ -10,22 +10,7 @@ class ApiEntreprise::API
   BILANS_BDF_RESOURCE_NAME = "bilans_entreprises_bdf"
   PRIVILEGES_RESOURCE_NAME = "privileges"
 
-  TIMEOUT = 15
-
-  class ResourceNotFound < StandardError
-  end
-
-  class RequestFailed < StandardError
-  end
-
-  class BadFormatRequest < StandardError
-  end
-
-  class BadGateway < StandardError
-  end
-
-  class ServiceUnavailable < StandardError
-  end
+  TIMEOUT = 20
 
   def self.entreprise(siren, procedure_id)
     call_with_siret(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
@@ -81,7 +66,7 @@ class ApiEntreprise::API
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     else
-      raise RequestFailed, "HTTP Error Code: #{response.code} for #{url}\nheaders: #{response.headers}\nbody: #{response.body}"
+      raise RequestFailed.new(response)
     end
   end
 
@@ -97,22 +82,17 @@ class ApiEntreprise::API
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     elsif response.code&.between?(401, 499)
-      raise ResourceNotFound, "url: #{url}"
+      raise Error::ResourceNotFound.new(response)
     elsif response.code == 400
-      raise BadFormatRequest, "url: #{url}"
+      raise Error::BadFormatRequest.new(response)
     elsif response.code == 502
-      raise	BadGateway, "url: #{url}"
+      raise	Error::BadGateway.new(response)
     elsif response.code == 503
-      raise ServiceUnavailable, "url: #{url}"
+      raise Error::ServiceUnavailable.new(response)
+    elsif response.timed_out?
+      raise Error::TimedOut.new(response)
     else
-      raise RequestFailed,
-        <<~TEXT
-          HTTP Error Code: #{response.code} for #{url}
-          headers: #{response.headers}
-          body: #{response.body}
-          curl message: #{response.return_message}
-          timeout: #{response.timed_out?}
-        TEXT
+      raise Error::RequestFailed.new(response)
     end
   end
 
