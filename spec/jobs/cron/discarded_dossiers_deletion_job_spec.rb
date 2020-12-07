@@ -1,4 +1,4 @@
-RSpec.describe DiscardedDossiersDeletionJob, type: :job do
+RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
   include ActiveJob::TestHelper
 
   let(:instructeur) { create(:instructeur) }
@@ -14,7 +14,6 @@ RSpec.describe DiscardedDossiersDeletionJob, type: :job do
     discarded_dossier_en_construction.send(:log_dossier_operation, instructeur, :passer_en_instruction, discarded_dossier_en_construction)
     discarded_dossier_termine.send(:log_dossier_operation, instructeur, :passer_en_instruction, discarded_dossier_termine)
     discarded_dossier_termine_today.send(:log_dossier_operation, instructeur, :passer_en_instruction, discarded_dossier_termine_today)
-
     discarded_dossier_en_construction.send(:log_dossier_operation, instructeur, :supprimer, discarded_dossier_en_construction)
     discarded_dossier_termine.send(:log_dossier_operation, instructeur, :supprimer, discarded_dossier_termine)
     discarded_dossier_termine_today.send(:log_dossier_operation, instructeur, :supprimer, discarded_dossier_termine_today)
@@ -25,7 +24,7 @@ RSpec.describe DiscardedDossiersDeletionJob, type: :job do
       expect(Dossier.with_discarded.count).to eq(6)
       expect(DossierOperationLog.count).to eq(6)
 
-      DiscardedDossiersDeletionJob.perform_now
+      Cron::DiscardedDossiersDeletionJob.perform_now
 
       expect(Dossier.with_discarded.count).to eq(3)
       expect(DossierOperationLog.count).to eq(4)
