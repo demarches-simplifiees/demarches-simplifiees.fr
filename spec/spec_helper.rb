@@ -94,17 +94,6 @@ Rake.application.options.trace = false
 
 include Warden::Test::Helpers
 
-include SmartListing::Helper
-include SmartListing::Helper::ControllerExtensions
-
-module SmartListing
-  module Helper
-    def view_context
-      'mock'
-    end
-  end
-end
-
 WebMock.disable_net_connect!(allow_localhost: true)
 
 RSpec.configure do |config|
