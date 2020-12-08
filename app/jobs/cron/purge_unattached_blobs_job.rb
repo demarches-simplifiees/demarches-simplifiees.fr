@@ -1,4 +1,4 @@
-class PurgeUnattachedBlobsJob < CronJob
+class Cron::PurgeUnattachedBlobsJob < Cron::CronJob
   self.schedule_expression = "every day at midnight"
 
   def perform(*args)

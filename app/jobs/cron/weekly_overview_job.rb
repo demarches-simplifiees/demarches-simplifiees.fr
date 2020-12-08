@@ -1,4 +1,4 @@
-class WeeklyOverviewJob < CronJob
+class Cron::WeeklyOverviewJob < Cron::CronJob
   self.schedule_expression = "every monday at 7 am"
 
   def perform(*args)

@@ -1,10 +1,10 @@
-RSpec.describe AutoArchiveProcedureJob, type: :job do
+RSpec.describe Cron::AutoArchiveProcedureJob, type: :job do
   let!(:procedure) { create(:procedure, :published, :with_instructeur, auto_archive_on: nil) }
   let!(:procedure_hier) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago.to_date) }
   let!(:procedure_aujourdhui) { create(:procedure, :published, :with_instructeur, auto_archive_on: Time.zone.today) }
   let!(:procedure_demain) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.from_now.to_date) }
 
-  subject { AutoArchiveProcedureJob.new.perform }
+  subject { Cron::AutoArchiveProcedureJob.new.perform }
 
   context "when procedures have no auto_archive_on" do
     before do

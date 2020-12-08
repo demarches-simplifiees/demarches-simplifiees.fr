@@ -1,4 +1,4 @@
-class CronJob < ApplicationJob
+class Cron::CronJob < ApplicationJob
   queue_as :cron
   class_attribute :schedule_expression
 
