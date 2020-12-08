@@ -1,4 +1,4 @@
-RSpec.describe WeeklyOverviewJob, type: :job do
+RSpec.describe Cron::WeeklyOverviewJob, type: :job do
   describe 'perform' do
     let!(:instructeur) { create(:instructeur) }
     let(:overview) { double('overview') }
@@ -16,7 +16,7 @@ RSpec.describe WeeklyOverviewJob, type: :job do
         before do
           expect_any_instance_of(Instructeur).to receive(:last_week_overview).and_return(overview)
           allow(InstructeurMailer).to receive(:last_week_overview).and_return(mailer_double)
-          WeeklyOverviewJob.new.perform
+          Cron::WeeklyOverviewJob.new.perform
         end
 
         it { expect(InstructeurMailer).to have_received(:last_week_overview).with(instructeur) }
@@ -27,7 +27,7 @@ RSpec.describe WeeklyOverviewJob, type: :job do
         before do
           expect_any_instance_of(Instructeur).to receive(:last_week_overview).and_return(nil)
           allow(InstructeurMailer).to receive(:last_week_overview)
-          WeeklyOverviewJob.new.perform
+          Cron::WeeklyOverviewJob.new.perform
         end
 
         it { expect(InstructeurMailer).not_to have_received(:last_week_overview) }
@@ -37,7 +37,7 @@ RSpec.describe WeeklyOverviewJob, type: :job do
     context 'if the feature is disabled' do
       before do
         allow(Instructeur).to receive(:all)
-        WeeklyOverviewJob.new.perform
+        Cron::WeeklyOverviewJob.new.perform
       end
 
       it { expect(Instructeur).not_to receive(:all) }

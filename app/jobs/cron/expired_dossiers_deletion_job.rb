@@ -1,4 +1,4 @@
-class ExpiredDossiersDeletionJob < CronJob
+class Cron::ExpiredDossiersDeletionJob < Cron::CronJob
   self.schedule_expression = "every day at 7 am"
 
   def perform(*args)
