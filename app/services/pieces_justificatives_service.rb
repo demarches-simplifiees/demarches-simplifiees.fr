@@ -2,8 +2,9 @@ class PiecesJustificativesService
   def self.liste_pieces_justificatives(dossier)
     pjs_champs = pjs_for_champs(dossier)
     pjs_commentaires = pjs_for_commentaires(dossier)
+    pjs_dossier = pjs_for_dossier(dossier)
 
-    (pjs_champs + pjs_commentaires)
+    (pjs_champs + pjs_commentaires + pjs_dossier)
       .filter(&:attached?)
   end
 
@@ -58,5 +59,19 @@ class PiecesJustificativesService
     dossier
       .commentaires
       .map(&:piece_jointe)
+  end
+
+  def self.pjs_for_dossier(dossier)
+    bill_signatures = dossier.dossier_operation_logs.map(&:bill_signature).compact.uniq
+
+    [
+      dossier.justificatif_motivation,
+      dossier.attestation&.pdf,
+      dossier.etablissement&.entreprise_attestation_sociale,
+      dossier.etablissement&.entreprise_attestation_fiscale,
+      dossier.dossier_operation_logs.map(&:serialized),
+      bill_signatures.map(&:serialized),
+      bill_signatures.map(&:signature)
+    ].flatten.compact
   end
 end
