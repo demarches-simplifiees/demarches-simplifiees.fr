@@ -51,7 +51,7 @@ describe NotificationService do
         let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
         before do
           procedure.update(declarative_with_state: "en_instruction")
-          DeclarativeProceduresJob.new.perform
+          Cron::DeclarativeProceduresJob.new.perform
           dossier.reload
         end
 
@@ -65,7 +65,7 @@ describe NotificationService do
         let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
         before do
           procedure.update(declarative_with_state: "accepte")
-          DeclarativeProceduresJob.new.perform
+          Cron::DeclarativeProceduresJob.new.perform
           dossier.traitements.last.update!(processed_at: Time.zone.yesterday.beginning_of_day)
           dossier.reload
         end
@@ -80,7 +80,7 @@ describe NotificationService do
         let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
         before do
           procedure.update(declarative_with_state: "accepte")
-          DeclarativeProceduresJob.new.perform
+          Cron::DeclarativeProceduresJob.new.perform
           dossier.reload
         end
 

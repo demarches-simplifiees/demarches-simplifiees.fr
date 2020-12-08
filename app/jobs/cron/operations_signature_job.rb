@@ -1,4 +1,4 @@
-class OperationsSignatureJob < CronJob
+class Cron::OperationsSignatureJob < Cron::CronJob
   self.schedule_expression = "every day at 6 am"
 
   def perform(*args)

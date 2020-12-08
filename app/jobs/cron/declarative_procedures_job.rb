@@ -1,4 +1,4 @@
-class DeclarativeProceduresJob < CronJob
+class Cron::DeclarativeProceduresJob < Cron::CronJob
   self.schedule_expression = "every 1 minute"
 
   def perform(*args)

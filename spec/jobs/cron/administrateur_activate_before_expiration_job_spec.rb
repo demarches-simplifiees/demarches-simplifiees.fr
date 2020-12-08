@@ -1,10 +1,10 @@
-RSpec.describe AdministrateurActivateBeforeExpirationJob, type: :job do
+RSpec.describe Cron::AdministrateurActivateBeforeExpirationJob, type: :job do
   describe 'perform' do
     let(:administrateur) { create(:administrateur) }
     let(:user) { administrateur.user }
     let(:mailer_double) { double('mailer', deliver_later: true) }
 
-    subject { AdministrateurActivateBeforeExpirationJob.perform_now }
+    subject { Cron::AdministrateurActivateBeforeExpirationJob.perform_now }
 
     before do
       Timecop.freeze(Time.zone.local(2018, 03, 20))
