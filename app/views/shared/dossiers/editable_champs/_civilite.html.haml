@@ -2,9 +2,9 @@
   %legend.mandatory-explanation
     Sélectionnez une des valeurs
   %label
-    = form.radio_button :value, Individual::GENDER_MALE
-    Monsieur
+    = form.radio_button :value, Individual::GENDER_FEMALE
+    = Individual::GENDER_FEMALE
 
   %label
-    = form.radio_button :value, Individual::GENDER_FEMALE
-    Madame
+    = form.radio_button :value, Individual::GENDER_MALE
+    = Individual::GENDER_MALE

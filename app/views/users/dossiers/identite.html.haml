@@ -13,11 +13,11 @@
         = f.label :gender
       .radios
         %label
-          = f.radio_button :gender, Individual::GENDER_MALE, required: true
-          = Individual::GENDER_MALE
-        %label
           = f.radio_button :gender, Individual::GENDER_FEMALE, required: true
           = Individual::GENDER_FEMALE
+        %label
+          = f.radio_button :gender, Individual::GENDER_MALE, required: true
+          = Individual::GENDER_MALE
 
     .flex
       .inline-champ
