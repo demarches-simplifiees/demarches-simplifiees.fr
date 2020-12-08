@@ -84,7 +84,7 @@ describe ApiEntreprise::EntrepriseAdapter do
     let(:status) { 500 }
 
     it 'raises an exception' do
-      expect { subject }.to raise_error(ApiEntreprise::API::RequestFailed)
+      expect { subject }.to raise_error(ApiEntreprise::API::Error::RequestFailed)
     end
   end
 end

@@ -9,7 +9,7 @@ class ApiEntreprise::Adapter
   def data_source
     begin
       @data_source ||= get_resource
-    rescue ApiEntreprise::API::ResourceNotFound
+    rescue ApiEntreprise::API::Error::ResourceNotFound
       @data_source = nil
     end
   end
