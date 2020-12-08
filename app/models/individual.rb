@@ -19,8 +19,8 @@ class Individual < ApplicationRecord
   validates :nom, presence: true, allow_blank: false, allow_nil: false, on: :update
   validates :prenom, presence: true, allow_blank: false, allow_nil: false, on: :update
 
-  GENDER_MALE = 'Monsieur'
-  GENDER_FEMALE = 'Madame'
+  GENDER_MALE = "M."
+  GENDER_FEMALE = 'Mme'
 
   def self.from_france_connect(fc_information)
     new(

@@ -51,7 +51,7 @@ feature 'The user' do
     expect(champ_value_for('datetime')).to eq('06/01/2030 07:05')
     expect(champ_value_for('number')).to eq('42')
     expect(champ_value_for('checkbox')).to eq('on')
-    expect(champ_value_for('civilite')).to eq('Madame')
+    expect(champ_value_for('civilite')).to eq('Mme')
     expect(champ_value_for('email')).to eq('loulou@yopmail.com')
     expect(champ_value_for('phone')).to eq('0123456789')
     expect(champ_value_for('yes_no')).to eq('false')
