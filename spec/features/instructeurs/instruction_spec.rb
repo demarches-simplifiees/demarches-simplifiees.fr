@@ -146,6 +146,7 @@ feature 'Instructing a dossier:' do
     let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
 
     before do
+      dossier.passer_en_instruction!(instructeur)
       champ.piece_justificative_file.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
 
       log_in(instructeur.email, password)
@@ -163,9 +164,10 @@ feature 'Instructing a dossier:' do
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
-      expect(files.size).to be 1
+      expect(files.size).to be 2
       expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[0].uncompressed_size).to be File.size(path)
+      expect(files[1].filename.include?('horodatage/operation')).to be_truthy
     end
 
     scenario 'A instructeur can download an archive containing several identical attachments' do
@@ -176,12 +178,13 @@ feature 'Instructing a dossier:' do
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
-      expect(files.size).to be 2
+      expect(files.size).to be 3
       expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[0].filename).not_to eq files[1].filename
       expect(files[0].uncompressed_size).to be File.size(path)
       expect(files[1].uncompressed_size).to be File.size(path)
+      expect(files[2].filename.include?('horodatage/operation')).to be_truthy
     end
 
     after { DownloadHelpers.clear_downloads }
