@@ -57,7 +57,7 @@ feature 'wcag rules for usager', js: true do
     scenario "dépot d'un dossier" do
       click_on 'Commencer la démarche'
 
-      choose 'M.'
+      choose 'Monsieur'
       fill_in('individual_prenom', with: 'prenom')
       fill_in('individual_nom', with: 'nom')
       click_on 'Continuer'

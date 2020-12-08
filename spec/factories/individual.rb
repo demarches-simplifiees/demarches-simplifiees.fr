@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :individual do
-    gender { 'M.' }
+    gender { 'Monsieur' }
     nom { 'Julien' }
     prenom { 'Xavier' }
     birthdate { Date.new(1991, 11, 01) }
