@@ -11,16 +11,19 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, groupe_instructeur:)
-      if dossier.groupe_instructeur == groupe_instructeur
-        { errors: ["Le dossier est déjà avec le grope instructeur: '#{groupe_instructeur.label}'"] }
-      else
-        dossier.update!(groupe_instructeur: groupe_instructeur)
-        { dossier: dossier }
-      end
+      dossier.update!(groupe_instructeur: groupe_instructeur)
+
+      { dossier: dossier }
     end
 
     def authorized?(dossier:, groupe_instructeur:)
-      dossier.groupe_instructeur.procedure == groupe_instructeur.procedure
+      if dossier.groupe_instructeur == groupe_instructeur
+        return false, { errors: ["Le dossier est déjà avec le grope instructeur: '#{groupe_instructeur.label}'"] }
+      elsif dossier.groupe_instructeur.procedure != groupe_instructeur.procedure
+        return false, { errors: ["Le groupe instructeur '#{groupe_instructeur.label}' n’appartient pas à la même démarche que le dossier"] }
+      else
+        true
+      end
     end
   end
 end
