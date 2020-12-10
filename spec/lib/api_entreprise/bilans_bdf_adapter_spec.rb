@@ -7,7 +7,7 @@ describe ApiEntreprise::BilansBdfAdapter do
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}\?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}/)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(["bilans_entreprise_bdf"])
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
