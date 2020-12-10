@@ -7,7 +7,7 @@ describe ApiEntreprise::AttestationFiscaleAdapter do
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}\?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}/)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(["attestations_fiscales"])
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
