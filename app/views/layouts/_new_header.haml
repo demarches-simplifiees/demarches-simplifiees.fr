@@ -20,7 +20,7 @@
       - else
         - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
         = link_to root_profile_link, class: 'header-logo justify-center', title: root_profile_libelle do
-          = image_tag 'marianne.png', alt: 'Liberté, égalité, fraternité', width: '65', height: 56, loading: 'lazy'
+          = image_tag HEADER_LOGO_SRC, alt: HEADER_LOGO_ALT, width: HEADER_LOGO_WIDTH, height: HEADER_LOGO_HEIGHT, loading: 'lazy'
           %span.big.site-title>
             = APPLICATION_NAME
           %span.small.site-title>

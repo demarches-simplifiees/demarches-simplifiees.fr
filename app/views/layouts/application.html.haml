@@ -9,9 +9,9 @@
     %title
       = content_for?(:title) ? "#{yield(:title)} · #{APPLICATION_NAME}" : APPLICATION_NAME
 
-    = favicon_link_tag(image_url("favicons/16x16.png"), type: "image/png", sizes: "16x16")
-    = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
-    = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
+    = favicon_link_tag(image_url("#{FAVICON_16PX_SRC}"), type: "image/png", sizes: "16x16")
+    = favicon_link_tag(image_url("#{FAVICON_32PX_SRC}"), type: "image/png", sizes: "32x32")
+    = favicon_link_tag(image_url("#{FAVICON_96PX_SRC}"), type: "image/png", sizes: "96x96")
 
     - packs = ['application', 'track', administrateur_signed_in? ? 'track-admin' : nil].compact
     = javascript_packs_with_chunks_tag *packs, defer: true
