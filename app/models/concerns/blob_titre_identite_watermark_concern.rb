@@ -5,18 +5,22 @@ module BlobTitreIdentiteWatermarkConcern
     after_update_commit :enqueue_watermark_job
   end
 
+  def watermark_pending?
+    watermark_required? && !watermark_done?
+  end
+
   private
 
-  def titre_identite?
+  def watermark_required?
     attachments.find { |attachment| attachment.record.class.name == 'Champs::TitreIdentiteChamp' }
   end
 
-  def watermarked?
+  def watermark_done?
     metadata[:watermark]
   end
 
   def enqueue_watermark_job
-    if titre_identite? && !watermarked? && analyzed? && virus_scanner.done? && Flipper.enabled?(:titre_identite_watermark)
+    if analyzed? && virus_scanner.done? && watermark_pending?
       TitreIdentiteWatermarkJob.perform_later(self)
     end
   end

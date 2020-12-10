@@ -3,6 +3,6 @@
   outer: true,
   locals: { attachment: @attachment, user_can_upload: @user_can_upload }) %>
 
-<% if @attachment.virus_scanner.pending? %>
+<% if @attachment.virus_scanner.pending? || @attachment.watermark_pending? %>
   <%= fire_event('attachment:update', { url: attachment_url(@attachment.id, { signed_id: @attachment.blob.signed_id, user_can_upload: @user_can_upload }) }.to_json ) %>
 <% end %>
