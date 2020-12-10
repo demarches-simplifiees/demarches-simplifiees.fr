@@ -8,7 +8,7 @@ RSpec.describe ApiEntreprise::EntrepriseJob, type: :job do
   let(:status) { 200 }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end

@@ -206,7 +206,7 @@ describe Users::DossiersController, type: :controller do
 
     before do
       sign_in(user)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
       allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
