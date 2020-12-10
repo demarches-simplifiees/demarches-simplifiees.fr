@@ -5,11 +5,14 @@ module Mutations
     def validate_blob(blob_id)
       begin
         blob = ActiveStorage::Blob.find_signed(blob_id)
-        blob.identify
+        # open downloads the file and checks its hash
+        blob.open { |f| }
         true
       rescue ActiveStorage::FileNotFoundError
         return false, { errors: ['Le fichier n’a pas été correctement téléversé sur le serveur de stockage'] }
       rescue ActiveSupport::MessageVerifier::InvalidSignature
+        return false, { errors: ['L’identifiant du fichier téléversé est invalide'] }
+      rescue ActiveStorage::IntegrityError
         return false, { errors: ['Le hash du fichier téléversé est invalide'] }
       end
     end
