@@ -810,11 +810,6 @@ enum GeoAreaSource {
   cadastre
 
   """
-  Quartier prioritaire
-  """
-  quartier_prioritaire
-
-  """
   Sélection utilisateur
   """
   selection_utilisateur
@@ -1099,15 +1094,6 @@ type PieceJustificativeChamp implements Champ {
 type Profile {
   email: String!
   id: ID!
-}
-
-type QuartierPrioritaire implements GeoArea {
-  code: String!
-  commune: String!
-  geometry: GeoJSON!
-  id: ID!
-  nom: String!
-  source: GeoAreaSource!
 }
 
 type Query {

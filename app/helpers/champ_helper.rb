@@ -39,10 +39,6 @@ module ChampHelper
         concat "Parcelle n° #{geo_area.numero} - Feuille #{geo_area.code_arr} #{geo_area.section} #{geo_area.feuille} - #{geo_area.surface_parcelle.round} m"
         concat tag.sup("2")
       end
-    when GeoArea.sources.fetch(:quartier_prioritaire)
-      "#{geo_area.commune} : #{geo_area.nom}"
-    when GeoArea.sources.fetch(:parcelle_agricole)
-      "Culture : #{geo_area.culture} - Surface : #{geo_area.surface} ha"
     when GeoArea.sources.fetch(:selection_utilisateur)
       if geo_area.polygon?
         if geo_area.area.present?
