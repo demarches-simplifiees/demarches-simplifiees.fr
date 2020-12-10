@@ -197,6 +197,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:number)
   end
 
+  def titre_identite?
+    type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
+  end
+
   def public?
     !private?
   end
