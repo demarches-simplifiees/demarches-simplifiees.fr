@@ -11,10 +11,6 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:, body:, attachment: nil)
-      errors = validate_blob(attachment)
-      if errors
-        return errors
-      end
       message = CommentaireService.build(instructeur, dossier, body: body, piece_jointe: attachment)
 
       if message.save
@@ -24,8 +20,16 @@ module Mutations
       end
     end
 
-    def authorized?(dossier:, instructeur:, body:, attachment: nil)
-      instructeur.is_a?(Instructeur) && instructeur.dossiers.exists?(id: dossier.id)
+    def ready?(attachment: nil, **args)
+      if attachment.present?
+        validate_blob(attachment)
+      else
+        true
+      end
+    end
+
+    def authorized?(dossier:, instructeur:, **args)
+      dossier_authorized_for?(dossier, instructeur)
     end
   end
 end

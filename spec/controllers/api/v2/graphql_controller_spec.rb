@@ -627,7 +627,7 @@ describe API::V2::GraphqlController do
           it "should fail" do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierEnvoyerMessage: {
-              errors: [{ message: "L’identifiant du fichier téléversé est invalide" }],
+              errors: [{ message: "Le hash du fichier téléversé est invalide" }],
               message: nil
             })
           end
@@ -636,11 +636,12 @@ describe API::V2::GraphqlController do
 
       describe 'dossierPasserEnInstruction' do
         let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+        let(:instructeur_id) { instructeur.to_typed_id }
         let(:query) do
           "mutation {
             dossierPasserEnInstruction(input: {
               dossierId: \"#{dossier.to_typed_id}\",
-              instructeurId: \"#{instructeur.to_typed_id}\"
+              instructeurId: \"#{instructeur_id}\"
             }) {
               dossier {
                 id
@@ -676,6 +677,18 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierPasserEnInstruction: {
               errors: [{ message: "Le dossier est déjà en instruction" }],
+              dossier: nil
+            })
+          end
+        end
+
+        context 'instructeur error' do
+          let(:instructeur_id) { create(:instructeur).to_typed_id }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierPasserEnInstruction: {
+              errors: [{ message: 'L’instructeur n’a pas les droits d’accès à ce dossier' }],
               dossier: nil
             })
           end
