@@ -11,28 +11,11 @@ class GeoAreaSerializer < ActiveModel::Serializer
   attribute :code_com, if: :include_cadastre?
   attribute :code_arr, if: :include_cadastre?
 
-  attribute :code, if: :include_quartier_prioritaire?
-  attribute :nom, if: :include_quartier_prioritaire?
-  attribute :commune, if: :include_quartier_prioritaire?
-
-  attribute :culture, if: :include_parcelle_agricole?
-  attribute :code_culture, if: :include_parcelle_agricole?
-  attribute :surface, if: :include_parcelle_agricole?
-  attribute :bio, if: :include_parcelle_agricole?
-
   def geometry
     object.safe_geometry
   end
 
   def include_cadastre?
     object.source == GeoArea.sources.fetch(:cadastre)
-  end
-
-  def include_quartier_prioritaire?
-    object.source == GeoArea.sources.fetch(:quartier_prioritaire)
-  end
-
-  def include_parcelle_agricole?
-    object.source == GeoArea.sources.fetch(:parcelle_agricole)
   end
 end

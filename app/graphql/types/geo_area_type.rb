@@ -4,11 +4,9 @@ module Types
 
     class GeoAreaSource < Types::BaseEnum
       GeoArea.sources.each do |symbol_name, string_name|
-        if string_name != "parcelle_agricole"
-          value(string_name,
-            I18n.t(symbol_name, scope: [:activerecord, :attributes, :geo_area, :source]),
-            value: symbol_name)
-        end
+        value(string_name,
+          I18n.t(symbol_name, scope: [:activerecord, :attributes, :geo_area, :source]),
+          value: symbol_name)
       end
     end
 
@@ -21,8 +19,6 @@ module Types
         case object.source
         when GeoArea.sources.fetch(:cadastre)
           Types::GeoAreas::ParcelleCadastraleType
-        when GeoArea.sources.fetch(:quartier_prioritaire)
-          Types::GeoAreas::QuartierPrioritaireType
         when GeoArea.sources.fetch(:selection_utilisateur)
           Types::GeoAreas::SelectionUtilisateurType
         end

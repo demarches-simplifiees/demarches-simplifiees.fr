@@ -591,6 +591,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_dossier_operation(instructeur, :accepter, self)
   end
@@ -604,6 +605,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
   end
@@ -616,6 +618,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_refused_notification(self).deliver_later
     log_dossier_operation(instructeur, :refuser, self)
   end
@@ -628,8 +631,13 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_without_continuation_notification(self).deliver_later
     log_dossier_operation(instructeur, :classer_sans_suite, self)
+  end
+
+  def remove_titres_identite!
+    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def check_mandatory_champs

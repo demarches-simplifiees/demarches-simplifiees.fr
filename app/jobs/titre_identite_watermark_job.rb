@@ -1,6 +1,4 @@
 class TitreIdentiteWatermarkJob < ApplicationJob
-  queue_as :active_storage_watermark
-
   MAX_IMAGE_SIZE = 1500
   SCALE = 0.9
   WATERMARK = Rails.root.join("app/assets/images/#{WATERMARK_FILE}")

@@ -113,7 +113,13 @@ function updateTypeDeChamp(
     }
   }
 
-  typeDeChamp[field] = value;
+  if (field.startsWith('options.')) {
+    const [, optionsField] = field.split('.');
+    typeDeChamp.editable_options = typeDeChamp.editable_options || {};
+    typeDeChamp.editable_options[optionsField] = value;
+  } else {
+    typeDeChamp[field] = value;
+  }
 
   getUpdateHandler(typeDeChamp, state)(done);
 
