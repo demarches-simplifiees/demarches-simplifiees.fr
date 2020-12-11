@@ -13,8 +13,7 @@ SHARED_WORKER_FILE_NAME = 'i_am_a_worker'
 # Advanced settings:
 #   forward_agent - SSH forward_agent
 #   user          - Username in the server to SSH to
-#   shared_dirs, shared_files:
-#                 - Manually create these paths in shared/ on your server.
+#   shared_dirs   - Manually create these paths in shared/ on your server.
 #                   They will be linked in the 'deploy:link_shared_paths' step.
 
 deploy_to = '/var/www/ds'
@@ -24,9 +23,6 @@ shared_dirs = [
   'tmp/cache',
   'tmp/pids',
   'vendor/bundle'
-]
-shared_files = [
-  SHARED_WORKER_FILE_NAME
 ]
 
 set :domain, ENV.fetch('domain')
@@ -38,16 +34,9 @@ set :branch, ENV.fetch('branch')
 set :forward_agent, true
 set :user, 'ds'
 set :shared_dirs, shared_dirs
-set :shared_files, shared_files
 set :rbenv_path, "/home/ds/.rbenv/bin/rbenv"
 
 puts "Deploy to #{ENV.fetch('domain')}, branch: #{ENV.fetch('branch')}"
-
-def is_worker_machine?
-  # The presence of a file identify if a machine is a worker or not.
-  # This is useful in order to know whether or not to restart delayed_job
-  File.file?(Rails.root.join(SHARED_WORKER_FILE_NAME))
-end
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
@@ -107,12 +96,14 @@ namespace :service do
 
   desc "Restart delayed_job"
   task :restart_delayed_job do
-    if is_worker_machine?
-      command %{
+    worker_file_path = File.join(deploy_to, 'shared', SHARED_WORKER_FILE_NAME)
+
+    command %{
         echo "-----> Restarting delayed_job service"
-        #{echo_cmd %[sudo systemctl restart delayed_job]}
-      }
-    end
+        #{echo_cmd %[test -f #{worker_file_path} && echo 'it is a worker marchine, restarting delayed_job']}
+        #{echo_cmd %[test -f #{worker_file_path} && sudo systemctl restart delayed_job]}
+        #{echo_cmd %[test -f #{worker_file_path} || echo "it is not a worker marchine, #{worker_file_path} is absent"]}
+    }
   end
 end
 
