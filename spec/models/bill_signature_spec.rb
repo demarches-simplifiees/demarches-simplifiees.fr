@@ -161,4 +161,16 @@ RSpec.describe BillSignature, type: :model do
       it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
     end
   end
+
+  describe '#set_signature' do
+    let(:bill_signature) { BillSignature.new }
+    let(:signature) { 'une belle signature' }
+    let(:day) { Time.zone.parse('12/12/2012') }
+
+    before { bill_signature.set_signature(signature, day) }
+
+    it { expect(bill_signature.signature.attached?).to be(true) }
+    it { expect(bill_signature.signature.filename.to_s).to eq('demarches-simplifiees-signature-2012-12-12.der') }
+    it { expect(bill_signature.signature.content_type).to eq('application/x-x509-ca-cert') }
+  end
 end
