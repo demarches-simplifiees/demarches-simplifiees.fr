@@ -49,7 +49,7 @@ class BillSignature < ApplicationRecord
   end
 
   def set_signature(signature, day)
-    signature.attach(
+    self.signature.attach(
       io: StringIO.new(signature),
       filename: "demarches-simplifiees-signature-#{day.to_date.iso8601}.der",
       content_type: 'application/x-x509-ca-cert'
