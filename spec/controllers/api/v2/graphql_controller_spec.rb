@@ -636,11 +636,12 @@ describe API::V2::GraphqlController do
 
       describe 'dossierPasserEnInstruction' do
         let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+        let(:instructeur_id) { instructeur.to_typed_id }
         let(:query) do
           "mutation {
             dossierPasserEnInstruction(input: {
               dossierId: \"#{dossier.to_typed_id}\",
-              instructeurId: \"#{instructeur.to_typed_id}\"
+              instructeurId: \"#{instructeur_id}\"
             }) {
               dossier {
                 id
@@ -676,6 +677,18 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierPasserEnInstruction: {
               errors: [{ message: "Le dossier est déjà en instruction" }],
+              dossier: nil
+            })
+          end
+        end
+
+        context 'instructeur error' do
+          let(:instructeur_id) { create(:instructeur).to_typed_id }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierPasserEnInstruction: {
+              errors: [{ message: 'L’instructeur n’a pas les droits d’accès à ce dossier' }],
               dossier: nil
             })
           end
@@ -885,6 +898,29 @@ describe API::V2::GraphqlController do
           }"
         end
 
+        let(:attach_query) do
+          "mutation {
+            dossierEnvoyerMessage(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur.to_typed_id}\",
+              body: \"Hello world\",
+              attachment: \"#{direct_upload_blob_id}\"
+            }) {
+              message {
+                body
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+        let(:attach_query_exec) { post :execute, params: { query: attach_query } }
+        let(:attach_query_body) { JSON.parse(attach_query_exec.body, symbolize_names: true) }
+        let(:attach_query_data) { attach_query_body[:data] }
+        let(:direct_upload_data) { gql_data[:createDirectUpload][:directUpload] }
+        let(:direct_upload_blob_id) { direct_upload_data[:signedBlobId] }
+
         it "should initiate a direct upload" do
           expect(gql_errors).to eq(nil)
 
@@ -893,6 +929,15 @@ describe API::V2::GraphqlController do
           expect(data[:headers]).not_to be_nil
           expect(data[:blobId]).not_to be_nil
           expect(data[:signedBlobId]).not_to be_nil
+        end
+
+        it "wrong hash error" do
+          blob = ActiveStorage::Blob.find direct_upload_data[:blobId]
+          blob.service.upload blob.key, StringIO.new('toto')
+          expect(attach_query_data).to eq(dossierEnvoyerMessage: {
+            errors: [{ message: "Le hash du fichier téléversé est invalide" }],
+            message: nil
+          })
         end
       end
 

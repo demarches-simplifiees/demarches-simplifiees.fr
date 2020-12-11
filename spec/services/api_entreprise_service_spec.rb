@@ -1,7 +1,7 @@
 describe ApiEntrepriseService do
   describe '#create_etablissement' do
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(body: etablissements_body, status: etablissements_status)
     end
 

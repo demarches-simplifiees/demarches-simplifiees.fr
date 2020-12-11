@@ -9,17 +9,17 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:)
-      if dossier.termine?
-        dossier.archiver!(instructeur)
+      dossier.archiver!(instructeur)
 
-        { dossier: dossier }
-      else
-        { errors: ["Un dossier ne peut être archivé qu’une fois le traitement terminé"] }
-      end
+      { dossier: dossier }
     end
 
     def authorized?(dossier:, instructeur:)
-      instructeur.is_a?(Instructeur) && instructeur.dossiers.exists?(id: dossier.id)
+      if !dossier.termine?
+        return false, { errors: ["Un dossier ne peut être archivé qu’une fois le traitement terminé"] }
+      end
+
+      dossier_authorized_for?(dossier, instructeur)
     end
   end
 end
