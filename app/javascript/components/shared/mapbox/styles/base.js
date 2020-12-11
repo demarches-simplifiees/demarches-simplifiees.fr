@@ -118,10 +118,12 @@ const OPTIONAL_LAYERS = [
 
 function buildSources() {
   return Object.fromEntries(
-    OPTIONAL_LAYERS.flatMap(({ layers }) => layers).map(([, code]) => [
-      code.toLowerCase().replace(/\./g, '-'),
-      rasterSource([ignServiceURL(code)], 'IGN-F/Géoportail/MNHN')
-    ])
+    OPTIONAL_LAYERS.filter(({ id }) => id !== 'cadastres')
+      .flatMap(({ layers }) => layers)
+      .map(([, code]) => [
+        code.toLowerCase().replace(/\./g, '-'),
+        rasterSource([ignServiceURL(code)], 'IGN-F/Géoportail/MNHN')
+      ])
   );
 }
 
@@ -139,10 +141,10 @@ function rasterSource(tiles, attribution) {
 export function buildLayers(ids) {
   return OPTIONAL_LAYERS.filter(({ id }) => ids.includes(id))
     .flatMap(({ layers }) => layers)
-    .map(([, code]) =>
+    .flatMap(([, code]) =>
       code === 'CADASTRE'
         ? cadastreLayers
-        : rasterLayer(code.toLowerCase().replace(/\./g, '-'))
+        : [rasterLayer(code.toLowerCase().replace(/\./g, '-'))]
     );
 }
 
