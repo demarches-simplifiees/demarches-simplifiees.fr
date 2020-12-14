@@ -94,7 +94,10 @@ class BillSignature < ApplicationRecord
   def read_signature
     if attachment_changes['signature']
       io = io_for_changes(attachment_changes['signature'])
-      io.read if io.present?
+      if io.present?
+        io.rewind
+        io.read
+      end
     elsif signature.attached?
       signature.download
     end
@@ -103,7 +106,10 @@ class BillSignature < ApplicationRecord
   def read_serialized
     if attachment_changes['serialized']
       io = io_for_changes(attachment_changes['serialized'])
-      io.read if io.present?
+      if io.present?
+        io.rewind
+        io.read
+      end
     elsif serialized.attached?
       serialized.download
     end
