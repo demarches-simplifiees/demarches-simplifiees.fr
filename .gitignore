@@ -27,6 +27,7 @@ yarn-debug.log*
 .yarn-integrity
 /.vscode
 /.idea
+/public/assets
 /public/packs
 /public/packs-test
 /node_modules
