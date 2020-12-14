@@ -568,7 +568,7 @@ class Procedure < ApplicationRecord
     if logo.attached?
       Rails.application.routes.url_helpers.url_for(logo)
     else
-      ActionController::Base.helpers.image_url("republique-francaise-logo.svg")
+      ActionController::Base.helpers.image_url(PROCEDURE_DEFAULT_LOGO_SRC)
     end
   end
 
