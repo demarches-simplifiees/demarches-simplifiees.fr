@@ -76,6 +76,7 @@ module Instructeurs
 
       recipients.each do |recipient|
         recipient.follow(dossier)
+        recipient.follow(dossier)
         InstructeurMailer.send_dossier(current_instructeur, dossier, recipient).deliver_later
       end
 
@@ -195,6 +196,9 @@ module Instructeurs
       dossier.assign_attributes(champs_private_params)
       if dossier.champs_private.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
+        flash.notice = 'Modifications sauvegardées'
+      else
+        flash.notice = 'Aucune modification à sauvegarder'
       end
       dossier.save
       dossier.log_modifier_annotations!(current_instructeur)
