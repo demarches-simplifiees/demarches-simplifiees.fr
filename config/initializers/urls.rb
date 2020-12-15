@@ -16,7 +16,7 @@ FOG_BASE_URL = "https://static.demarches-simplifiees.fr"
 WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
 CALENDLY_URL = "https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr"
 
-DOC_URL = "https://doc.demarches-simplifiees.fr"
+DOC_URL = ENV.fetch("DOC_URL", "https://doc.demarches-simplifiees.fr")
 DOC_NOUVEAUTES_URL = [DOC_URL, "nouveautes"].join("/")
 ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-administrateur"].join("/")
 INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "tutoriels", "tutoriel-accompagnateur"].join("/")
@@ -29,7 +29,7 @@ WEBHOOK_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 ARCHIVAGE_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")
 DOC_INTEGRATION_MONAVIS_URL = [DOC_URL, "tutoriels", "integration-du-bouton-mon-avis"].join("/")
 
-FAQ_URL = "https://faq.demarches-simplifiees.fr"
+FAQ_URL = ENV.fetch("FAQ_URL", "https://faq.demarches-simplifiees.fr")
 FAQ_ADMIN_URL = [FAQ_URL, "collection", "1-administrateur-creation-dun-formulaire"].join("/")
 FAQ_AUTOSAVE_URL = [FAQ_URL, "article", "77-enregistrer-mon-formulaire-pour-le-reprendre-plus-tard?preview=5ec28ca1042863474d1aee00"].join("/")
 COMMENT_TROUVER_MA_DEMARCHE_URL = [FAQ_URL, "article", "59-comment-trouver-ma-demarche"].join("/")
