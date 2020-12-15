@@ -1055,13 +1055,13 @@ type PersonneMorale implements Demandeur {
   association: Association
   codeInseeLocalite: String!
   codePostal: String!
-  complementAdresse: String!
+  complementAdresse: String
   entreprise: Entreprise
   id: ID!
   libelleNaf: String!
   localite: String!
   naf: String!
-  nomVoie: String!
+  nomVoie: String
   numeroVoie: String
   siegeSocial: Boolean!
   siret: String!
