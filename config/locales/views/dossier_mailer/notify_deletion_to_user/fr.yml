@@ -4,8 +4,8 @@ fr:
       subject: Votre dossier nº %{dossier_id} a bien été supprimé
       body: Votre dossier n° %{dossier_id} (%{procedure}) a bien été supprimé. Une trace de ce traitement sera conservée pour l’administration.
     notify_instructeur_deletion_to_user:
-      subject: Votre dossier concernant %{libelle_demarche} est supprimé
-      body: |
-        Afin de limiter la conservation de vos données personnelles, votre dossier n° %{dossier_id} concernant %{libelle_demarche} a été supprimé.
-        Cette suppression ne modifie pas le statut final (accepté, refusé ou sans suite) de votre dossier.
-        Une trace de ce dossier restera cependant visible dans votre interface demarches-simplifiees.fr.
+      subject: Votre dossier sur la démarche « %{libelle_demarche} » est supprimé
+      body_html: |
+        Afin de limiter la conservation de vos données personnelles, votre dossier n° %{dossier_id} concernant la démarche <b>« %{libelle_demarche} »</b> est <b>supprimé</b>.<br><br>
+        Cette suppression ne modifie pas le statut final (accepté, refusé ou sans suite) de votre dossier.<br><br>
+        Une trace de ce dossier est visible dans votre interface : <a href='%{deleted_dossiers_link}'>%{deleted_dossiers_link}</a>.
