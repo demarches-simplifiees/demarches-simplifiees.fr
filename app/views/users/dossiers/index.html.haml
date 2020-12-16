@@ -10,68 +10,36 @@
   .container
     - if @search_terms.present?
       %h1.page-title Résultat de la recherche pour « #{@search_terms} »
-    - elsif @dossiers_invites.count == 0
-      %h1.page-title Mes dossiers
+      = render partial: "dossiers_list", locals: { dossiers: @dossiers }
 
     - else
       %h1.page-title Dossiers
       %ul.tabs
-        = tab_item('mes dossiers',
-          dossiers_path(current_tab: 'mes-dossiers'),
-          active: @current_tab == 'mes-dossiers')
+        - if @user_dossiers.count > 0
+          = tab_item(t('pluralize.mes_dossiers', count: @user_dossiers.count),
+            dossiers_path(statut: 'mes-dossiers'),
+            active: @statut == 'mes-dossiers',
+            badge: number_with_html_delimiter(@user_dossiers.count))
 
-        = tab_item('dossiers invités',
-          dossiers_path(current_tab: 'dossiers-invites'),
-          active: @current_tab == 'dossiers-invites')
+        - if @dossiers_invites.count > 0
+          = tab_item(t('pluralize.dossiers_invites', count: @dossiers_invites.count),
+            dossiers_path(statut: 'dossiers-invites'),
+            active: @statut == 'dossiers-invites',
+            badge: number_with_html_delimiter(@dossiers_invites.count))
+
+        - if @dossiers_supprimes.count > 0
+          = tab_item(t('pluralize.dossiers_supprimes', count: @dossiers_supprimes.count),
+            dossiers_path(statut: 'dossiers-supprimes'),
+            active: @statut == 'dossiers-supprimes',
+            badge: number_with_html_delimiter(@dossiers_supprimes.count))
+
 
 .container
-  - if @dossiers.present?
-    %table.table.dossiers-table.hoverable
-      %thead
-        %tr
-          %th.number-col Nº dossier
-          %th Démarche
-          - if @dossiers.count > 1
-            %th Demandeur
-          %th.status-col Statut
-          %th.updated-at-col Mis à jour
-          %th.sr-only Actions
-      %tbody
-        - @dossiers.each do |dossier|
-          %tr{ data: { 'dossier-id': dossier.id } }
-            %td.number-col
-              = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
-                %span.icon.folder
-                = dossier.id
-            %td
-              = link_to(url_for_dossier(dossier), class: 'cell-link') do
-                = procedure_libelle(dossier.procedure)
-            - if @dossiers.count > 1
-              %td.cell-link
-                = demandeur_dossier(dossier)
-            %td.status-col
-              = status_badge(dossier.state)
-            %td.updated-at-col.cell-link
-              = try_format_date(dossier.updated_at)
-            %td.action-col
-              = render partial: 'dossier_actions', locals: { dossier: dossier }
-    = paginate(@dossiers)
+  - if @statut == "mes-dossiers"
+    = render partial: "dossiers_list", locals: { dossiers: @user_dossiers }
 
-    - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago
-      #user-satisfaction
-        %h3 Que pensez-vous de la facilité d'utilisation de ce service ?
-        .icons
-          = link_to feedback_path(rating: Feedback.ratings.fetch(:unhappy)), data: { remote: true, method: :post } do
-            %span.icon.frown
-          = link_to feedback_path(rating: Feedback.ratings.fetch(:neutral)), data: { remote: true, method: :post } do
-            %span.icon.meh
-          = link_to feedback_path(rating: Feedback.ratings.fetch(:happy)), data: { remote: true, method: :post } do
-            %span.icon.smile
+  - if @statut == "dossiers-invites"
+    = render partial: "dossiers_list", locals: { dossiers: @dossiers_invites }
 
-  - else
-    .blank-tab
-      %h2.empty-text Aucun dossier.
-      %p.empty-text-details
-        Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
-        %br
-        Celui ci doit ressembler à #{APPLICATION_BASE_URL}/commencer/xxx.
+  - if @statut == "dossiers-supprimes"
+    = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers_supprimes }

@@ -715,4 +715,69 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
   end
+
+  describe "#delete_dossier" do
+    subject do
+      patch :delete_dossier, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+
+    before do
+      dossier.passer_en_instruction(instructeur)
+    end
+
+    context 'just before delete the dossier, the operation must be equal to 2' do
+      before do
+        dossier.accepter!(instructeur, 'le dossier est correct')
+      end
+
+      it 'has 2 operations logs before deletion' do
+        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(2)
+      end
+    end
+
+    context 'when the instructeur want to delete a dossier with a decision' do
+      before do
+        dossier.accepter!(instructeur, "le dossier est correct")
+        allow(DossierMailer).to receive(:notify_instructeur_deletion_to_user).and_return(double(deliver_later: nil))
+        subject
+      end
+
+      it 'deletes previous logs and add a suppression log' do
+        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(3)
+        expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).to eq('supprimer')
+      end
+
+      it 'send an email to the user' do
+        expect(DossierMailer).to have_received(:notify_instructeur_deletion_to_user).with(DeletedDossier.where(dossier_id: dossier.id).first, dossier.user.email)
+      end
+
+      it 'add a record into deleted_dossiers table' do
+        expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(1)
+        expect(DeletedDossier.where(dossier_id: dossier.id).first.revision_id).to eq(dossier.revision_id)
+        expect(DeletedDossier.where(dossier_id: dossier.id).first.user_id).to eq(dossier.user_id)
+        expect(DeletedDossier.where(dossier_id: dossier.id).first.groupe_instructeur_id).to eq(dossier.groupe_instructeur_id)
+      end
+
+      it 'discard the dossier' do
+        expect(dossier.reload.hidden_at).not_to eq(nil)
+      end
+    end
+
+    context 'when the instructeur want to delete a dossier without a decision' do
+      before do
+        subject
+      end
+
+      it 'does not delete the dossier' do
+        expect { dossier.reload }.not_to raise_error ActiveRecord::RecordNotFound
+      end
+
+      it 'does not add a record into deleted_dossiers table' do
+        expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
+      end
+    end
+  end
 end
