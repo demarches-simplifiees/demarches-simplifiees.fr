@@ -186,9 +186,16 @@ module NewAdministrateur
     end
 
     def expert_list
-      redirect_to admin_procedure_path(@procedure) if !@procedure.allow_expert_review?
-      avis_list = @procedure.dossiers.includes(:avis).map(&:avis).reject(&:empty?)
-      @experts = avis_list.map { |avis| Instructeur.find(avis[0].instructeur_id).user }.uniq
+      if @procedure.allow_expert_review?
+        @expert_emails = Avis
+          .joins(dossier: :procedure)
+          .left_joins(instructeur: :user)
+          .where(dossiers: { revision: @procedure.revisions })
+          .map(&:email_to_display)
+          .uniq
+      else
+        redirect_to admin_procedure_path(@procedure)
+      end
     end
 
     private
