@@ -67,7 +67,7 @@ class Stat < ApplicationRecord
 
       association
         .where(date_attribute => min_date..max_date)
-        .group("DATE_TRUNC('month', #{date_attribute})")
+        .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.now.formatted_offset}'::INTERVAL)")
         .count
         .to_a
         .sort_by { |a| a[0] }
@@ -78,7 +78,7 @@ class Stat < ApplicationRecord
       sum = 0
       association
         .where("#{date_attribute} < ?", max_date)
-        .group("DATE_TRUNC('month', #{date_attribute})")
+        .group("DATE_TRUNC('month', #{date_attribute}::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.now.formatted_offset}'::INTERVAL)")
         .count
         .to_a
         .sort_by { |a| a[0] }
