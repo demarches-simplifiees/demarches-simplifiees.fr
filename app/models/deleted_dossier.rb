@@ -19,12 +19,15 @@ class DeletedDossier < ApplicationRecord
 
   validates :dossier_id, uniqueness: true
 
+  scope :order_by_updated_at, -> (order = :desc) { order(created_at: order) }
+
   enum reason: {
     user_request:      'user_request',
     manager_request:   'manager_request',
     user_removed:      'user_removed',
     procedure_removed: 'procedure_removed',
-    expired:           'expired'
+    expired:           'expired',
+    instructeur_request: 'instructeur_request'
   }
 
   def self.create_from_dossier(dossier, reason)
