@@ -6,7 +6,7 @@
   .tab-title Identité du demandeur
   .card
     - if dossier.france_connect_information.present?
-      = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
+      = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information, provider: dossier.user.loged_in_with_france_connect }
     = render partial: "shared/dossiers/user_infos", locals: { user: dossier.user }
 
     - if dossier.etablissement.present?
