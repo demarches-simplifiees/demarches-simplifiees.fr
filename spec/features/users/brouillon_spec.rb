@@ -67,8 +67,8 @@ feature 'The user' do
     expect(champ_value_for('code_postal_de_polynesie')).to eq('98709 - Mahina - Tahiti')
 
     expect(champ_value_for('regions')).to eq('Martinique')
-    expect(champ_value_for('departements')).to eq('02 - Aisne')
-    expect(champ_value_for('communes')).to eq('Ambléon (01300)')
+    # expect(champ_value_for('departements')).to eq('02 - Aisne')
+    # expect(champ_value_for('communes')).to eq('Ambléon (01300)')
     expect(champ_value_for('engagement')).to eq('on')
     expect(champ_value_for('dossier_link')).to eq('123')
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
@@ -96,7 +96,7 @@ feature 'The user' do
     expect(page).to have_selected_value('code_postal_de_polynesie', selected: '98709 - Mahina - Tahiti')
     expect(page).to have_hidden_field('regions', with: 'Martinique')
     expect(page).to have_hidden_field('departements', with: '02 - Aisne')
-    # expect(page).to have_hidden_field('communes', with: 'Ambléon (01300)')
+    expect(page).to have_hidden_field('communes', with: 'Ambléon (01300)')
     expect(page).to have_checked_field('engagement')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
