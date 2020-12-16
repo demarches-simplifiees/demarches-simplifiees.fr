@@ -170,6 +170,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_titre_identite do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_titre_identite, procedure: procedure)
+      end
+    end
+
     trait :with_repetition do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure)
