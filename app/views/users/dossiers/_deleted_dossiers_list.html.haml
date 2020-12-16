@@ -11,6 +11,7 @@
         - libelle_demarche = Procedure.find(dossier.procedure_id).libelle
         %tr{ data: { 'dossier-id': dossier.dossier_id } }
           %td.number-col
+            %span.icon.folder
             = dossier.dossier_id
           %td
             = libelle_demarche
