@@ -1,0 +1,10 @@
+.container
+  %h1.mt-2 Experts invités sur #{@procedure.libelle}
+  %table.table.mt-2
+    %thead
+      %tr
+        %th{ colspan: 2 } Liste des experts
+    %tbody
+      - @experts.each do |expert|
+        %tr
+          %td= expert.email
