@@ -169,6 +169,18 @@ fr:
       zero: archivé
       one: archivé
       other: archivés
+    mes_dossiers:
+      zero: mon dossier
+      one: mon dossier
+      other: mes dossiers
+    dossiers_invites:
+      zero: dossier invité
+      one: dossier invité
+      other: dossiers invités
+    dossiers_supprimes:
+      zero: dossier supprimé
+      one: dossier supprimé
+      other: dossiers supprimés
     dossier_trouve:
       zero: 0 dossier trouvé
       one: 1 dossier trouvé

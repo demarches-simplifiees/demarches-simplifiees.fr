@@ -346,6 +346,7 @@ Rails.application.routes.draw do
             patch 'unfollow'
             patch 'archive'
             patch 'unarchive'
+            patch 'supprimer-dossier' => 'dossiers#delete_dossier'
             patch 'annotations' => 'dossiers#update_annotations'
             post 'commentaire' => 'dossiers#create_commentaire'
             post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
