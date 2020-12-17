@@ -8,30 +8,36 @@ namespace :after_party do
     procedure_presentations.find_each do |procedure_presentation|
       filters = procedure_presentation.filters
       sort = procedure_presentation.sort
+      displayed_fields = procedure_presentation.displayed_fields
 
       ['tous', 'suivis', 'traites', 'a-suivre', 'archives'].each do |statut|
         filters[statut] = filters[statut].map do |filter|
-          table, column, value = filter.values_at('table', 'column', 'value')
+          table, column = filter.values_at('table', 'column')
           if table && (table == 'type_de_champ' || table == 'type_de_champ_private')
             type_de_champ = TypeDeChamp.find_by(id: column)
-            if type_de_champ
-              column = type_de_champ.stable_id
-            end
+            filter['column'] = type_de_champ&.stable_id&.to_s
           end
-          [table, column, value]
+          filter
         end
       end
 
       table, column = sort.values_at('table', 'column')
       if table && (table == 'type_de_champ' || table == 'type_de_champ_private')
         type_de_champ = TypeDeChamp.find_by(id: column)
-        if type_de_champ
-          sort['column'] = type_de_champ.stable_id
+        sort['column'] = type_de_champ&.stable_id&.to_s
+      end
+
+      displayed_fields = displayed_fields.map do |displayed_field|
+        table, column = displayed_field.values_at('table', 'column')
+        if table && (table == 'type_de_champ' || table == 'type_de_champ_private')
+          type_de_champ = TypeDeChamp.find_by(id: column)
+          displayed_field['column'] = type_de_champ&.stable_id&.to_s
         end
+        displayed_field
       end
 
       filters['migrated'] = true
-      procedure_presentation.update_columns(filters: filters, sort: sort)
+      procedure_presentation.update_columns(filters: filters, sort: sort, displayed_fields: displayed_fields)
       progress.inc
     end
     progress.finish
