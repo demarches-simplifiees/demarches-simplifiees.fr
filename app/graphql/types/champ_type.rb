@@ -33,6 +33,8 @@ module Types
           Types::Champs::LinkedDropDownListChampType
         when ::Champs::CiviliteChamp
           Types::Champs::CiviliteChampType
+        when ::Champs::TitreIdentiteChamp
+          Types::Champs::TitreIdentiteChampType
         else
           Types::Champs::TextChampType
         end
