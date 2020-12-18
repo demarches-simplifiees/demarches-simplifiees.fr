@@ -325,14 +325,16 @@ describe Procedure do
 
   describe 'clone' do
     let(:service) { create(:service) }
-    let(:procedure) { create(:procedure, received_mail: received_mail, service: service, types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj], types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2]) }
+    let(:procedure) { create(:procedure, received_mail: received_mail, service: service, types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj, type_de_champ_repetition], types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2, type_de_champ_private_repetition]) }
     let(:type_de_champ_0) { build(:type_de_champ, position: 0) }
     let(:type_de_champ_1) { build(:type_de_champ, position: 1) }
     let(:type_de_champ_2) { build(:type_de_champ_drop_down_list, position: 2) }
     let(:type_de_champ_pj) { build(:type_de_champ_piece_justificative, position: 3, old_pj: { stable_id: 2713 }) }
+    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, position: 4, types_de_champ: [build(:type_de_champ)]) }
     let(:type_de_champ_private_0) { build(:type_de_champ, :private, position: 0) }
     let(:type_de_champ_private_1) { build(:type_de_champ, :private, position: 1) }
     let(:type_de_champ_private_2) { build(:type_de_champ_drop_down_list, :private, position: 2) }
+    let(:type_de_champ_private_repetition) { build(:type_de_champ_repetition, :private, position: 3, types_de_champ: [build(:type_de_champ, :private)]) }
     let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
@@ -378,8 +380,18 @@ describe Procedure do
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
+      TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ.repetition)).each do |ptc, stc|
+        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id"])
+        expect(stc.revision).to eq(subject.draft_revision)
+      end
+
       procedure.draft_types_de_champ_private.zip(subject.draft_types_de_champ_private).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc.revision).to eq(subject.draft_revision)
+      end
+
+      TypeDeChamp.where(parent: procedure.draft_types_de_champ_private.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ_private.repetition)).each do |ptc, stc|
+        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id"])
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
