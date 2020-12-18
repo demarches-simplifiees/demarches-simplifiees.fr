@@ -43,6 +43,7 @@ class Api::V2::Schema < GraphQL::Schema
     Types::Champs::CheckboxChampType,
     Types::Champs::CiviliteChampType,
     Types::Champs::DateChampType,
+    Types::Champs::DatetimeChampType,
     Types::Champs::DecimalNumberChampType,
     Types::Champs::DossierLinkChampType,
     Types::Champs::IntegerNumberChampType,
