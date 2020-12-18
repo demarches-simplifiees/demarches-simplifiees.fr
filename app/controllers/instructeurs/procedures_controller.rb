@@ -44,13 +44,12 @@ module Instructeurs
 
     def show
       @procedure = procedure
-
-      @current_filters = current_filters
-      @available_fields_to_filters = available_fields_to_filters
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
-      @displayed_fields_values = displayed_fields_values
+
+      @current_filters = current_filters
+      @displayed_fields_options, @displayed_fields_selected = procedure_presentation.displayed_fields_for_select
 
       @a_suivre_dossiers = current_instructeur
         .dossiers
@@ -139,63 +138,25 @@ module Instructeurs
     end
 
     def update_displayed_fields
-      values = params[:values]
-
-      if values.nil?
-        values = []
-      end
-
-      fields = values.map do |value|
-        find_field(*value.split('/'))
-      end
-
-      procedure_presentation.update(displayed_fields: fields)
-
-      current_sort = procedure_presentation.sort
-      if !values.include?(field_id(current_sort))
-        procedure_presentation.update(sort: Procedure.default_sort)
-      end
+      procedure_presentation.update_displayed_fields(params[:values])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
     def update_sort
-      current_sort = procedure_presentation.sort
-      table = params[:table]
-      column = params[:column]
-
-      if table == current_sort['table'] && column == current_sort['column']
-        order = current_sort['order'] == 'asc' ? 'desc' : 'asc'
-      else
-        order = 'asc'
-      end
-
-      sort = {
-        'table' => table,
-        'column' => column,
-        'order' => order
-      }
-
-      procedure_presentation.update(sort: sort)
+      procedure_presentation.update_sort(params[:table], params[:column])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
     def add_filter
-      if params[:value].present?
-        procedure_presentation.add_filter(statut, params[:field], params[:value])
-      end
+      procedure_presentation.add_filter(statut, params[:field], params[:value])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
     def remove_filter
-      filters = procedure_presentation.filters
-
-      to_remove = params.values_at(:table, :column, :value)
-      filters[statut].reject! { |filter| filter.values_at('table', 'column', 'value') == to_remove }
-
-      procedure_presentation.update(filters: filters)
+      procedure_presentation.remove_filter(statut, params[:field], params[:value])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
@@ -271,14 +232,6 @@ module Instructeurs
       @ods_export = Export.find_for_format_and_groupe_instructeurs(:ods, groupe_instructeurs_for_procedure)
     end
 
-    def find_field(table, column)
-      procedure_presentation.fields.find { |c| c['table'] == table && c['column'] == column }
-    end
-
-    def field_id(field)
-      field.values_at('table', 'column').join('/')
-    end
-
     def assign_to
       current_instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure })
     end
@@ -316,16 +269,8 @@ module Instructeurs
       procedure_presentation
     end
 
-    def displayed_fields_values
-      procedure_presentation.displayed_fields.map { |field| field_id(field) }
-    end
-
     def current_filters
       @current_filters ||= procedure_presentation.filters[statut]
-    end
-
-    def available_fields_to_filters
-      procedure_presentation.fields_for_select
     end
 
     def kaminarize(current_page, total)

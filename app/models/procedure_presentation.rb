@@ -65,23 +65,24 @@ class ProcedurePresentation < ApplicationRecord
     fields.concat procedure.types_de_champ
       .where.not(type_champ: explanatory_types_de_champ)
       .order(:id)
-      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.id.to_s) }
+      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.stable_id.to_s) }
 
     fields.concat procedure.types_de_champ_private
       .where.not(type_champ: explanatory_types_de_champ)
       .order(:id)
-      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.id.to_s) }
+      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.stable_id.to_s) }
 
     fields
   end
 
-  def fields_for_select
-    fields.map do |field|
-      [field['label'], "#{field['table']}/#{field['column']}"]
-    end
+  def displayed_fields_for_select
+    [
+      fields.map { |field| [field['label'], field_id(field)] },
+      displayed_fields.map { |field| field_id(field) }
+    ]
   end
 
-  def displayed_field_values(dossier)
+  def displayed_fields_values(dossier)
     displayed_fields.map { |field| get_value(dossier, field['table'], field['column']) }
   end
 
@@ -92,30 +93,34 @@ class ProcedurePresentation < ApplicationRecord
     when 'notifications'
       dossiers_id_with_notification = dossiers.merge(instructeur.followed_dossiers).with_notifications.ids
       if order == 'desc'
-        return dossiers_id_with_notification +
+        dossiers_id_with_notification +
             (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
       else
-        return (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
+        (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
             dossiers_id_with_notification
       end
-    when 'type_de_champ', 'type_de_champ_private'
-      return dossiers
-          .includes(table == 'type_de_champ' ? :champs : :champs_private)
-          .where("champs.type_de_champ_id = #{column.to_i}")
-          .order("champs.value #{order}")
-          .pluck(:id)
+    when 'type_de_champ'
+      dossiers
+        .with_type_de_champ(column)
+        .order("champs.value #{order}")
+        .pluck(:id)
+    when 'type_de_champ_private'
+      dossiers
+        .with_type_de_champ_private(column)
+        .order("champs.value #{order}")
+        .pluck(:id)
     when 'followers_instructeurs'
       assert_supported_column(table, column)
       # LEFT OUTER JOIN allows to keep dossiers without assignated instructeurs yet
-      return dossiers
-          .includes(:followers_instructeurs)
-          .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
-          .order("instructeurs_users.email #{order}")
-          .pluck(:id)
+      dossiers
+        .includes(:followers_instructeurs)
+        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
+        .order("instructeurs_users.email #{order}")
+        .pluck(:id)
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
-      return (table == 'self' ? dossiers : dossiers.includes(table))
-          .order("#{self.class.sanitized_column(table, column)} #{order}")
-          .pluck(:id)
+      (table == 'self' ? dossiers : dossiers.includes(table))
+        .order("#{self.class.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
     end
   end
 
@@ -128,12 +133,12 @@ class ProcedurePresentation < ApplicationRecord
           .map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
           .compact
         dossiers.filter_by_datetimes(column, dates)
-      when 'type_de_champ', 'type_de_champ_private'
-        relation = table == 'type_de_champ' ? :champs : :champs_private
-        dossiers
-          .includes(relation)
-          .where("champs.type_de_champ_id = ?", column.to_i)
-          .filter_ilike(relation, :value, values)
+      when 'type_de_champ'
+        dossiers.with_type_de_champ(column)
+          .filter_ilike(:champs, :value, values)
+      when 'type_de_champ_private'
+        dossiers.with_type_de_champ_private(column)
+          .filter_ilike(:champs_private, :value, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values
@@ -187,8 +192,7 @@ class ProcedurePresentation < ApplicationRecord
   def human_value_for_filter(filter)
     case filter['table']
     when 'type_de_champ', 'type_de_champ_private'
-      type_de_champ = TypeDeChamp.find_by(id: filter['column'])
-      type_de_champ.dynamic_type.filter_to_human(filter['value'])
+      find_type_de_champ(filter['column']).dynamic_type.filter_to_human(filter['value'])
     else
       filter['value']
     end
@@ -196,16 +200,15 @@ class ProcedurePresentation < ApplicationRecord
 
   def add_filter(statut, field, value)
     if value.present?
-      updated_filters = self.filters
       table, column = field.split('/')
       label = find_field(table, column)['label']
 
       case table
       when 'type_de_champ', 'type_de_champ_private'
-        type_de_champ = TypeDeChamp.find_by(id: column)
-        value = type_de_champ.dynamic_type.human_to_filter(value)
+        value = find_type_de_champ(column).dynamic_type.human_to_filter(value)
       end
 
+      updated_filters = filters.dup
       updated_filters[statut] << {
         'label' => label,
         'table' => table,
@@ -213,14 +216,61 @@ class ProcedurePresentation < ApplicationRecord
         'value' => value
       }
 
-      update(filters: updated_filters)
+      update!(filters: updated_filters)
     end
+  end
+
+  def remove_filter(statut, field, value)
+    table, column = field.split('/')
+
+    updated_filters = filters.dup
+    updated_filters[statut] = filters[statut].reject do |filter|
+      filter.values_at('table', 'column', 'value') == [table, column, value]
+    end
+
+    update!(filters: updated_filters)
+  end
+
+  def update_displayed_fields(values)
+    if values.nil?
+      values = []
+    end
+
+    fields = values.map { |value| find_field(*value.split('/')) }
+
+    update!(displayed_fields: fields)
+
+    if !values.include?(field_id(sort))
+      update!(sort: Procedure.default_sort)
+    end
+  end
+
+  def update_sort(table, column)
+    order = if sort.values_at('table', 'column') == [table, column]
+      sort['order'] == 'asc' ? 'desc' : 'asc'
+    else
+      'asc'
+    end
+
+    update!(sort: {
+      'table' => table,
+      'column' => column,
+      'order' => order
+    })
   end
 
   private
 
+  def field_id(field)
+    field.values_at('table', 'column').join('/')
+  end
+
   def find_field(table, column)
-    fields.find { |c| c['table'] == table && c['column'] == column }
+    fields.find { |field| field.values_at('table', 'column') == [table, column] }
+  end
+
+  def find_type_de_champ(column)
+    TypeDeChamp.order(:revision_id).find_by(stable_id: column)
   end
 
   def check_allowed_displayed_fields
@@ -241,7 +291,8 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def check_allowed_filter_columns
-    filters.each do |_, columns|
+    filters.each do |key, columns|
+      return true if key == 'migrated'
       columns.each do |column|
         check_allowed_field(:filters, column)
       end
@@ -264,9 +315,9 @@ class ProcedurePresentation < ApplicationRecord
     when 'followers_instructeurs'
       dossier.send(table)&.map { |g| g.send(column) }&.join(', ')
     when 'type_de_champ'
-      dossier.champs.find { |c| c.type_de_champ_id == column.to_i }.value
+      dossier.champs.find { |c| c.stable_id == column.to_i }.to_s
     when 'type_de_champ_private'
-      dossier.champs_private.find { |c| c.type_de_champ_id == column.to_i }.value
+      dossier.champs_private.find { |c| c.stable_id == column.to_i }.to_s
     when 'groupe_instructeur'
       dossier.groupe_instructeur.label
     end
@@ -307,10 +358,6 @@ class ProcedurePresentation < ApplicationRecord
     [table, column]
       .map { |name| ActiveRecord::Base.connection.quote_column_name(name) }
       .join('.')
-  end
-
-  def dossier_field_service
-    @dossier_field_service ||= DossierFieldService.new
   end
 
   def assert_supported_column(table, column)
