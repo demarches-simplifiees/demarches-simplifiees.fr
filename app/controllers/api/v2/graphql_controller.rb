@@ -8,11 +8,11 @@ class API::V2::GraphqlController < API::V2::BaseController
       operation_name: params[:operationName])
 
     render json: result
-  rescue => e
+  rescue => exception
     if Rails.env.development?
-      handle_error_in_development e
+      handle_error_in_development(exception)
     else
-      raise e
+      handle_error_in_production(exception)
     end
   end
 
@@ -21,7 +21,12 @@ class API::V2::GraphqlController < API::V2::BaseController
   def process_action(*args)
     super
   rescue ActionDispatch::Http::Parameters::ParseError => exception
-    render status: 400, json: { errors: [{ message: exception.cause.message }] }
+    render json: {
+      errors: [
+        { message: exception.cause.message }
+      ],
+      data: nil
+    }, status: 400
   end
 
   # Handle form data, JSON body, or a blank value
@@ -42,10 +47,32 @@ class API::V2::GraphqlController < API::V2::BaseController
     end
   end
 
-  def handle_error_in_development(e)
-    logger.error e.message
-    logger.error e.backtrace.join("\n")
+  def handle_error_in_development(exception)
+    logger.error exception.message
+    logger.error exception.backtrace.join("\n")
 
-    render json: { error: { message: e.message, backtrace: e.backtrace }, data: {} }, status: 500
+    render json: {
+      errors: [
+        { message: exception.message, backtrace: exception.backtrace }
+      ],
+      data: nil
+    }, status: 500
+  end
+
+  def handle_error_in_production(exception)
+    id = SecureRandom.uuid
+    Raven.capture_exception(exception, extra: { exception_id: id })
+
+    render json: {
+      errors: [
+        {
+          message: "Internal Server Error",
+          extensions: {
+            exception: { id: id }
+          }
+        }
+      ],
+      data: nil
+    }, status: 500
   end
 end
