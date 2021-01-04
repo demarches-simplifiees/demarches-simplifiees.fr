@@ -1,10 +1,18 @@
 .container
   %h1.mt-2 Experts invités sur #{@procedure.libelle}
-  %table.table.mt-2
-    %thead
-      %tr
-        %th Liste des experts
-    %tbody
-      - @invited_expert_emails.each do |expert|
+  - if @invited_expert_emails.present?
+    %table.table.mt-2
+      %thead
         %tr
-          %td= expert
+          %th Liste des experts
+      %tbody
+        - @invited_expert_emails.each do |expert|
+          %tr
+            %td
+              %span.icon.person
+              = expert
+  - else
+    .blank-tab
+      %h2.empty-text Aucun expert invité pour le moment.
+      %p.empty-text-details Les instructeurs de cette démarche n'ont pas encore fait appel aux experts.
+
