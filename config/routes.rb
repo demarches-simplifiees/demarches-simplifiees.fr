@@ -379,6 +379,7 @@ Rails.application.routes.draw do
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review
+        get 'invited_expert_list'
       end
 
       get 'publication' => 'procedures#publication', as: :publication
