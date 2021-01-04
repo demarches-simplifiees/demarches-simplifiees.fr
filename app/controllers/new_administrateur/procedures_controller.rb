@@ -187,7 +187,6 @@ module NewAdministrateur
 
     def invited_expert_list
       @invited_expert_emails = Avis.invited_expert_emails(@procedure)
-      redirect_to admin_procedure_path(@procedure) if @invited_expert_emails.blank?
     end
 
     private
