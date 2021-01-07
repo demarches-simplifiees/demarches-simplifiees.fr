@@ -4,7 +4,7 @@ RSpec.describe 'active_storage initializer' do
   describe '#endpoint_url' do
     let(:url) { 'https://default.fr/toto' }
 
-    before { ENV['DS_PROXY_URL'] = 'https://proxy.fr' }
+    before { ENV['APPLICATION_BASE_URL'] = 'https://www.ds.fr' }
 
     subject { catalogue.endpoint_url({ "url" => url }, interface) }
 
@@ -17,7 +17,7 @@ RSpec.describe 'active_storage initializer' do
     context 'when the interface is public' do
       let(:interface) { 'public' }
 
-      it { is_expected.to eq('https://proxy.fr/toto') }
+      it { is_expected.to eq('https://www.ds.fr/storage/toto') }
     end
   end
 end

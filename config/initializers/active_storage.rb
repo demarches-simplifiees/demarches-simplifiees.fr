@@ -32,7 +32,7 @@ module Fog::OpenStack::Auth::Catalog
 
     def publicize(url)
       search = %r{^https://[^/]+/}
-      replace = "#{ENV['DS_PROXY_URL']}/"
+      replace = "#{ENV['APPLICATION_BASE_URL']}/storage/"
       url.gsub(search, replace)
     end
   end
