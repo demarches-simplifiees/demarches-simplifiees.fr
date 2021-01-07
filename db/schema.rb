@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_07_143938) do
+ActiveRecord::Schema.define(version: 2021_01_13_150013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -324,6 +324,16 @@ ActiveRecord::Schema.define(version: 2021_01_07_143938) do
   create_table "experts", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "experts_procedures", force: :cascade do |t|
+    t.bigint "expert_id", null: false
+    t.bigint "procedure_id", null: false
+    t.boolean "allow_decision_access", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["expert_id"], name: "index_experts_procedures_on_expert_id"
+    t.index ["procedure_id"], name: "index_experts_procedures_on_procedure_id"
   end
 
   create_table "exports", force: :cascade do |t|
@@ -722,6 +732,8 @@ ActiveRecord::Schema.define(version: 2021_01_07_143938) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
+  add_foreign_key "experts_procedures", "experts"
+  add_foreign_key "experts_procedures", "procedures"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "geo_areas", "champs"
   add_foreign_key "groupe_instructeurs", "procedures"
