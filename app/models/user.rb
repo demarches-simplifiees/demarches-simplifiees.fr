@@ -25,6 +25,7 @@
 #  created_at                   :datetime
 #  updated_at                   :datetime
 #  administrateur_id            :bigint
+#  expert_id                    :bigint
 #  instructeur_id               :bigint
 #
 class User < ApplicationRecord
@@ -48,6 +49,7 @@ class User < ApplicationRecord
   has_one :france_connect_information, dependent: :destroy
   belongs_to :instructeur, optional: true
   belongs_to :administrateur, optional: true
+  belongs_to :expert, optional: true
 
   accepts_nested_attributes_for :france_connect_information
 
