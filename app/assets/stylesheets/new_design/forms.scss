@@ -107,6 +107,7 @@
     // Horizontal layout (default)
     flex-direction: row;
     align-items: flex-start;
+    flex-wrap: wrap;
 
     label {
       margin-right: $default-padding;
