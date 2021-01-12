@@ -416,6 +416,7 @@ class Procedure < ApplicationRecord
     procedure.save
     procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
     procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
+    TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition).update_all(revision_id: procedure.draft_revision.id)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
