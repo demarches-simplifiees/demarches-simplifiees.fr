@@ -3,6 +3,7 @@
 # Table name: champs
 #
 #  id               :integer          not null, primary key
+#  data             :jsonb
 #  private          :boolean          default(FALSE), not null
 #  row              :integer
 #  type             :string
