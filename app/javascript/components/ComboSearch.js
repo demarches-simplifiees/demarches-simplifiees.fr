@@ -10,6 +10,7 @@ import {
   ComboboxOption
 } from '@reach/combobox';
 import '@reach/combobox/styles.css';
+import { fire } from '@utils';
 
 function defaultTransformResults(_, results) {
   return results;
@@ -39,6 +40,7 @@ function ComboSearch({
   const setExternalValue = useCallback((value) => {
     if (hiddenField) {
       hiddenField.setAttribute('value', value);
+      fire(hiddenField, 'autosave:trigger');
     }
     if (onChange) {
       const result = resultsMap.current[value];
