@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_13_150013) do
+ActiveRecord::Schema.define(version: 2021_01_14_224721) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(version: 2021_01_13_150013) do
     t.bigint "parent_id"
     t.integer "row"
     t.jsonb "data"
+    t.string "external_id"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
