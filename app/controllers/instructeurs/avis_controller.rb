@@ -110,7 +110,7 @@ module Instructeurs
       password = params[:user][:password]
 
       # Not perfect because the password will not be changed if the user already exists
-      user = User.create_or_promote_to_instructeur(email, password)
+      user = User.create_or_promote_to_expert(email, password)
 
       if user.valid?
         sign_in(user)
