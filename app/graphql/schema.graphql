@@ -1257,6 +1257,11 @@ enum TypeDeChamp {
   address
 
   """
+  Annuaire de l’éducation
+  """
+  annuaire_education
+
+  """
   Carte
   """
   carte
