@@ -2,7 +2,8 @@ import { QueryCache } from 'react-query';
 import { isNumeric } from '@utils';
 import matchSorter from 'match-sorter';
 
-const { api_geo_url, api_adresse_url } = gon.autocomplete || {};
+const { api_geo_url, api_adresse_url, api_education_url } =
+  gon.autocomplete || {};
 
 export const queryCache = new QueryCache({
   defaultConfig: {
@@ -13,8 +14,11 @@ export const queryCache = new QueryCache({
 });
 
 function buildURL(scope, term) {
+  term = encodeURIComponent(term);
   if (scope === 'adresse') {
     return `${api_adresse_url}/search?q=${term}&limit=5`;
+  } else if (scope === 'annuaire-education') {
+    return `${api_education_url}/search?dataset=fr-en-annuaire-education&q=${term}&rows=5`;
   } else if (isNumeric(term)) {
     const code = term.padStart(2, '0');
     return `${api_geo_url}/${scope}?code=${code}&limit=5`;
