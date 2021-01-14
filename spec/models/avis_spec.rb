@@ -56,6 +56,23 @@ RSpec.describe Avis, type: :model do
     end
   end
 
+  describe "an avis is linked to an expert_procedure" do
+    let(:procedure) { create(:procedure) }
+    let(:expert) { create(:expert) }
+    let(:experts_procedure) { ExpertsProcedure.create(procedure: procedure, expert: expert) }
+
+    context 'an avis is linked to an experts_procedure' do
+      let!(:avis) { create(:avis, email: nil, experts_procedure: experts_procedure) }
+
+      before do
+        avis.reload
+      end
+
+      it { expect(avis.email).to be_nil }
+      it { expect(avis.experts_procedure).to eq(experts_procedure) }
+    end
+  end
+
   describe '.avis_exists_and_email_belongs_to_avis?' do
     let(:dossier) { create(:dossier) }
     let(:invited_email) { 'invited@avis.com' }
