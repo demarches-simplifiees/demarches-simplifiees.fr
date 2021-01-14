@@ -46,6 +46,7 @@ gem 'http_accept_language'
 gem 'iban-tools'
 gem 'image_processing'
 gem 'jquery-rails' # Use jquery as the JavaScript library
+gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari', '1.2.1' # Pagination
 gem 'lograge'

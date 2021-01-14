@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/etablissement-annuaire-education.schema.json",
+  "title": "Établissement annuaire education",
+  "type": "object",
+  "properties": {
+    "date_ouverture": {
+      "type": "date"
+    },
+    "ministere_tutelle": {
+      "type": "string"
+    },
+    "statut_public_prive": {
+      "type": "string"
+    },
+    "libelle_region": {
+      "type": "string"
+    },
+    "telephone": {
+      "type": "string"
+    },
+    "date_maj_ligne": {
+      "type": "string"
+    },
+    "libelle_nature": {
+      "type": "string"
+    },
+    "etat": {
+      "type": "string"
+    },
+    "type_etablissement": {
+      "type": "string"
+    },
+    "identifiant_de_l_etablissement": {
+      "type": "string"
+    },
+    "code_region": {
+      "type": "string"
+    },
+    "siren_siret": {
+      "type": "string"
+    },
+    "mail": {
+      "type": "string"
+    },
+    "nom_circonscription": {
+      "type": "string"
+    },
+    "nom_commune": {
+      "type": "string"
+    },
+    "adresse_3": {
+      "type": "string"
+    },
+    "adresse_1": {
+      "type": "string"
+    },
+    "nombre_d_eleves": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "code_commune": {
+      "type": "string"
+    },
+    "code_departement": {
+      "type": "string"
+    },
+    "precision_localisation": {
+      "type": "string"
+    },
+    "type_contrat_prive": {
+      "type": "string"
+    },
+    "code_postal": {
+      "type": "string"
+    },
+    "libelle_departement": {
+      "type": "string"
+    },
+    "code_academie": {
+      "type": "string"
+    },
+    "libelle_academie": {
+      "type": "string"
+    },
+    "nom_etablissement": {
+      "type": "string"
+    },
+    "epsg_origine": {
+      "type": "string"
+    },
+    "pial": {
+      "type": "string"
+    },
+    "code_nature": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "code_type_contrat_prive": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ecole_elementaire": {
+      "enum": [0, 1]
+    },
+    "hebergement": {
+      "enum": [0, 1]
+    },
+    "rpi_concentre": {
+      "enum": [0, 1]
+    },
+    "ulis": {
+      "enum": [0, 1]
+    },
+    "restauration": {
+      "enum": [0, 1]
+    },
+    "ecole_maternelle": {
+      "enum": [0, 1]
+    },
+    "multi_uai": {
+      "enum": [0, 1]
+    },
+    "section_theatre": {
+      "enum": ["0", "1"]
+    },
+    "section_internationale": {
+      "enum": ["0", "1"]
+    },
+    "post_bac": {
+      "enum": ["0", "1"]
+    },
+    "section_cinema": {
+      "enum": ["0", "1"]
+    },
+    "section_europeenne": {
+      "enum": ["0", "1"]
+    },
+    "lycee_des_metiers": {
+      "enum": ["0", "1"]
+    },
+    "voie_professionnelle": {
+      "enum": ["0", "1"]
+    },
+    "lycee_militaire": {
+      "enum": ["0", "1"]
+    },
+    "section_sport": {
+      "enum": ["0", "1"]
+    },
+    "voie_technologique": {
+      "enum": ["0", "1"]
+    },
+    "section_arts": {
+      "enum": ["0", "1"]
+    },
+    "lycee_agricole": {
+      "enum": ["0", "1"]
+    },
+    "apprentissage": {
+      "enum": ["0", "1"]
+    },
+    "voie_generale": {
+      "enum": ["0", "1"]
+    }
+  },
+  "required": [
+    "identifiant_de_l_etablissement",
+    "nom_etablissement",
+    "statut_public_prive",
+    "type_contrat_prive",
+    "nom_commune",
+    "code_commune",
+    "nombre_d_eleves",
+    "siren_siret",
+    "libelle_academie",
+    "code_academie",
+    "libelle_nature",
+    "code_nature",
+    "adresse_1",
+    "code_postal",
+    "libelle_region",
+    "code_region"
+  ]
+}
