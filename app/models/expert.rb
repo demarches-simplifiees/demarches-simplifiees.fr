@@ -8,4 +8,5 @@
 #
 class Expert < ApplicationRecord
   has_one :user
+  has_many :avis
 end

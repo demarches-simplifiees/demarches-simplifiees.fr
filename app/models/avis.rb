@@ -12,6 +12,7 @@
 #  updated_at     :datetime         not null
 #  claimant_id    :integer          not null
 #  dossier_id     :integer
+#  expert_id      :bigint
 #  instructeur_id :integer
 #
 class Avis < ApplicationRecord
@@ -19,6 +20,7 @@ class Avis < ApplicationRecord
 
   belongs_to :dossier, inverse_of: :avis, touch: true, optional: false
   belongs_to :instructeur, optional: true
+  belongs_to :expert, optional: true
   belongs_to :claimant, class_name: 'Instructeur', optional: false
 
   has_one_attached :piece_justificative_file
