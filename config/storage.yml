@@ -13,11 +13,11 @@ openstack:
     openstack_username: "<%= ENV['FOG_OPENSTACK_USERNAME'] %>"
     openstack_region: "<%= ENV['FOG_OPENSTACK_REGION'] %>"
     openstack_temp_url_key: "<%= ENV['FOG_OPENSTACK_TEMP_URL_KEY'] %>"
-minio:
+s3:
   service: S3
   endpoint: "<%= ENV['S3_ENDPOINT'] %>"
   bucket: "<%= ENV['S3_BUCKET'] %>"
   access_key_id: "<%= ENV['S3_ACCESS_KEY'] %>"
   secret_access_key: "<%= ENV['S3_SECRET_KEY'] %>"
-  region: "us-east-1"
+  region: "<%= ENV['S3_REGION'] %>"
   force_path_style: true
