@@ -7,8 +7,8 @@ class ApiEducation::AnnuaireEducationAdapter
     end
   end
 
-  def initialize(search_term)
-    @search_term = search_term
+  def initialize(id)
+    @id = id
   end
 
   def to_params
@@ -27,7 +27,7 @@ class ApiEducation::AnnuaireEducationAdapter
   private
 
   def data_source
-    @data_source ||= JSON.parse(ApiEducation::API.search_annuaire_education(@search_term), symbolize_names: true)
+    @data_source ||= JSON.parse(ApiEducation::API.get_annuaire_education(@id), symbolize_names: true)
   end
 
   def schemer
