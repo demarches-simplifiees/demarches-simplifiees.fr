@@ -34,6 +34,8 @@
               = render partial: "shared/champs/iban/show", locals: { champ: c }
             - when TypeDeChamp.type_champs.fetch(:textarea)
               = render partial: "shared/champs/textarea/show", locals: { champ: c }
+            - when TypeDeChamp.type_champs.fetch(:annuaire_education)
+              = render partial: "shared/champs/annuaire_education/show", locals: { champ: c }
             - when TypeDeChamp.type_champs.fetch(:date)
               = c.to_s
             - when TypeDeChamp.type_champs.fetch(:datetime)

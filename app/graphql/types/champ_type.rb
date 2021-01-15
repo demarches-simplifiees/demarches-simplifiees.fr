@@ -11,8 +11,14 @@ module Types
         case object
         when ::Champs::EngagementChamp, ::Champs::YesNoChamp, ::Champs::CheckboxChamp
           Types::Champs::CheckboxChampType
-        when ::Champs::DateChamp, ::Champs::DatetimeChamp
+        when ::Champs::DateChamp
           Types::Champs::DateChampType
+        when ::Champs::DatetimeChamp
+          if context.has_fragment?(:DatetimeChamp)
+            Types::Champs::DatetimeChampType
+          else
+            Types::Champs::DateChampType
+          end
         when ::Champs::DossierLinkChamp
           Types::Champs::DossierLinkChampType
         when ::Champs::PieceJustificativeChamp
