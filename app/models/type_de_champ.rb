@@ -47,7 +47,8 @@ class TypeDeChamp < ApplicationRecord
     carte: 'carte',
     repetition: 'repetition',
     titre_identite: 'titre_identite',
-    iban: 'iban'
+    iban: 'iban',
+    annuaire_education: 'annuaire_education'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true

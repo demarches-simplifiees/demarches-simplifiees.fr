@@ -75,6 +75,7 @@ describe ProcedureExportService do
           "carte",
           "titre_identite",
           "iban",
+          "annuaire_education",
           "text"
         ]
       end
@@ -160,6 +161,7 @@ describe ProcedureExportService do
           "carte",
           "titre_identite",
           "iban",
+          "annuaire_education",
           "text"
         ]
       end
@@ -241,6 +243,7 @@ describe ProcedureExportService do
             "carte",
             "titre_identite",
             "iban",
+            "annuaire_education",
             "text"
           ]
         end
