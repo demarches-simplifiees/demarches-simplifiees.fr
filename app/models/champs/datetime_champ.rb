@@ -12,6 +12,7 @@
 #  updated_at       :datetime
 #  dossier_id       :integer
 #  etablissement_id :integer
+#  external_id      :string
 #  parent_id        :bigint
 #  type_de_champ_id :integer
 #

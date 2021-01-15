@@ -2,8 +2,8 @@ class ApiEducation::API
   class ResourceNotFound < StandardError
   end
 
-  def self.search_annuaire_education(search_term)
-    call([API_EDUCATION_URL, 'search'].join('/'), 'fr-en-annuaire-education', { q: search_term })
+  def self.get_annuaire_education(id)
+    call([API_EDUCATION_URL, 'search'].join('/'), 'fr-en-annuaire-education', { 'refine.identifiant_de_l_etablissement': id })
   end
 
   private

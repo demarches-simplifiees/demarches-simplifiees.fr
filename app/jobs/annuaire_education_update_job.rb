@@ -1,14 +1,14 @@
 class AnnuaireEducationUpdateJob < ApplicationJob
   def perform(champ)
-    search_term = champ.value
+    external_id = champ.external_id
 
-    if search_term.present?
-      data = ApiEducation::AnnuaireEducationAdapter.new(search_term).to_params
+    if external_id.present?
+      data = ApiEducation::AnnuaireEducationAdapter.new(external_id).to_params
 
       if data.present?
         champ.data = data
       else
-        champ.value = nil
+        champ.external_id = nil
       end
       champ.save!
     end
