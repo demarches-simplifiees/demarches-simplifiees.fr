@@ -163,6 +163,57 @@ describe User, type: :model do
     end
   end
 
+  describe '.create_or_promote_to_expert' do
+    let(:email) { 'exp1@gmail.com' }
+    let(:password) { 'un super expert !' }
+
+    subject { User.create_or_promote_to_expert(email, password) }
+
+    context 'with an invalid email' do
+      let(:email) { 'invalid' }
+
+      it 'does not build an expert' do
+        user = subject
+        expect(user.valid?).to be false
+        expect(user.expert).to be_nil
+      end
+    end
+
+    context 'without an existing user' do
+      it do
+        user = subject
+        expect(user.valid_password?(password)).to be true
+        expect(user.confirmed_at).to be_present
+        expect(user.expert).to be_present
+      end
+    end
+
+    context 'with an existing user' do
+      before { create(:user, email: email, password: 'my-s3cure-p4ssword') }
+
+      it 'keeps the previous password' do
+        user = subject
+        expect(user.valid_password?('my-s3cure-p4ssword')).to be true
+        expect(user.expert).to be_present
+      end
+
+      context 'with an existing expert' do
+        let!(:expert) { Expert.create }
+
+        before do
+          User
+            .find_by(email: email)
+            .update!(expert: expert)
+        end
+
+        it 'keeps the existing experts' do
+          user = subject
+          expect(user.expert).to eq(expert)
+        end
+      end
+    end
+  end
+
   describe 'invite_administrateur!' do
     let(:super_admin) { create(:super_admin) }
     let(:administrateur) { create(:administrateur) }

@@ -130,6 +130,20 @@ class User < ApplicationRecord
     user
   end
 
+  def self.create_or_promote_to_expert(email, password)
+    user = User
+      .create_with(password: password, confirmed_at: Time.zone.now)
+      .find_or_create_by(email: email)
+
+    if user.valid?
+      if user.expert_id.nil?
+        user.create_expert!
+      end
+    end
+
+    user
+  end
+
   def flipper_id
     "User:#{id}"
   end
