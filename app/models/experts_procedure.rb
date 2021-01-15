@@ -12,5 +12,6 @@
 class ExpertsProcedure < ApplicationRecord
   belongs_to :expert
   belongs_to :procedure
-  validates :expert, uniqueness: { scope: :procedure }
+
+  has_many :avis, dependent: :destroy
 end
