@@ -57,7 +57,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp', optional: true
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
-  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation
+  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation
   has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_many :revisions, through: :revision_types_de_champ
 
