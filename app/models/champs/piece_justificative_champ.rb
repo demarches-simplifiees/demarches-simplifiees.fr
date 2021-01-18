@@ -23,6 +23,10 @@ class Champs::PieceJustificativeChamp < Champ
     size: { less_than: MAX_SIZE },
     if: -> { !type_de_champ.skip_pj_validation }
 
+  validates :piece_justificative_file,
+    content_type: AUTHORIZED_CONTENT_TYPES,
+    if: -> { !type_de_champ.skip_content_type_pj_validation }
+
   def main_value_name
     :piece_justificative_file
   end
