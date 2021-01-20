@@ -226,6 +226,12 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def piece_justificative_template_checksum
+    if piece_justificative_template.attached?
+      piece_justificative_template.checksum
+    end
+  end
+
   def drop_down_list_value
     if drop_down_list_options.present?
       drop_down_list_options.reject(&:empty?).join("\r\n")
