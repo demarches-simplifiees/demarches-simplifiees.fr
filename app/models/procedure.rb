@@ -707,6 +707,9 @@ class Procedure < ApplicationRecord
 
   def table_column_styles(table)
     offset = 2 # ID & line number
+    first_row = table&.last&.first
+    return [] if first_row.blank? || first_row[:champs].blank?
+
     # compute column_style on type de champs of the first line of champs
     table.last.first[:champs].map(&:type_de_champ).filter_map.with_index(offset, &method(:column_style))
   end
