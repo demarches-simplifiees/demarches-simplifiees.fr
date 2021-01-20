@@ -51,16 +51,22 @@ describe ProcedureRevision do
 
     it 'move down' do
       expect(revision.types_de_champ.index(type_de_champ)).to eq(0)
+      type_de_champ.update(order_place: nil)
       revision.move_type_de_champ(type_de_champ.stable_id, 2)
       revision.reload
       expect(revision.types_de_champ.index(type_de_champ)).to eq(2)
+      expect(revision.procedure.types_de_champ.index(type_de_champ)).to eq(2)
+      expect(revision.procedure.types_de_champ_for_export.index(type_de_champ)).to eq(2)
     end
 
     it 'move up' do
       expect(revision.types_de_champ.index(last_type_de_champ)).to eq(3)
+      last_type_de_champ.update(order_place: nil)
       revision.move_type_de_champ(last_type_de_champ.stable_id, 0)
       revision.reload
       expect(revision.types_de_champ.index(last_type_de_champ)).to eq(0)
+      expect(revision.procedure.types_de_champ.index(last_type_de_champ)).to eq(0)
+      expect(revision.procedure.types_de_champ_for_export.index(last_type_de_champ)).to eq(0)
     end
 
     context 'repetition' do
