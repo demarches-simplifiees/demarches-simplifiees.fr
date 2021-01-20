@@ -3,8 +3,9 @@ RSpec.describe Cron::AutoArchiveProcedureJob, type: :job do
   let!(:procedure_hier) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago.to_date) }
   let!(:procedure_aujourdhui) { create(:procedure, :published, :with_instructeur, auto_archive_on: Time.zone.today) }
   let!(:procedure_demain) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.from_now.to_date) }
+  let!(:job) { Cron::AutoArchiveProcedureJob.new }
 
-  subject { Cron::AutoArchiveProcedureJob.new.perform }
+  subject { job.perform }
 
   context "when procedures have no auto_archive_on" do
     before do
@@ -62,5 +63,22 @@ RSpec.describe Cron::AutoArchiveProcedureJob, type: :job do
     end
 
     it { expect(procedure_demain.close?).to eq false }
+  end
+
+  context 'when an error occurs' do
+    let!(:buggy_procedure) { create(:procedure, :published, :with_instructeur, auto_archive_on: 1.day.ago.to_date) }
+
+    before do
+      error = StandardError.new('nop')
+      expect(buggy_procedure).to receive(:close!).and_raise(error)
+      expect(job).to receive(:procedures_to_close).and_return([buggy_procedure, procedure_hier])
+      expect(Raven).to receive(:capture_exception).with(error, extra: { procedure_id: buggy_procedure.id })
+
+      subject
+    end
+
+    it "should close all the procedure" do
+      expect(procedure_hier.reload.close?).to eq true
+    end
   end
 end
