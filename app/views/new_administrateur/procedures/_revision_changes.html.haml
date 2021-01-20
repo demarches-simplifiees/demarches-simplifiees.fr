@@ -1,0 +1,34 @@
+%ul
+  - changes.each do |change|
+    - case change[:op]
+    - when :add
+      %li.mb-1= "Le champ \"#{change[:label]}\" a été ajouté."
+    - when :remove
+      %li.mb-1= "Le champ \"#{change[:label]}\" a été supprimé."
+    - when :update
+      - case change[:attribute]
+      - when :libelle
+        %li.mb-1= "Le libellé du champ \"#{change[:label]}\" a changé en \"#{change[:to]}\"."
+      - when :type_champ
+        %li.mb-1= "Le type du champ \"#{change[:label]}\" a changé. Il est maintenant de type \"#{change[:to]}\"."
+      - when :description
+        %li.mb-1= "La description du champ \"#{change[:label]}\" a changé. La nouvelle description est \"#{change[:to]}\"."
+      - when :mandatory
+        - if change[:from] == false
+          %li.mb-1= "Le champ \"#{change[:label]}\" est maintenant obligatoire."
+        - else
+          %li.mb-1= "Le champ \"#{change[:label]}\" n'est plus obligatoire."
+      - when :piece_justificative_template
+        %li.mb-1= "Le champ \"#{change[:label]}\" a changé de modèle de pièce justificative."
+      - when :drop_down_options
+        - added = change[:to].sort - change[:from].sort
+        - removed = change[:from].sort - change[:to].sort
+        %li.mb-1
+          = "Les options de sélection du champ \"#{change[:label]}\" ont changé."
+          %ul
+            - if added.present?
+              %li= "Valeurs ajoutés : #{added.map{ |term| "\"#{term.strip}\"" }.join(", ")}."
+            - if removed.present?
+              %li= "Valeurs supprimés : #{removed.map{ |term| "\"#{term.strip}\"" }.join(", ")}."
+  - if changes.any? { |change| change[:op] == :move }
+    %li.mb-1 Des champs ont changé de position

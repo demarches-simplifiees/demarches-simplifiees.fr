@@ -29,6 +29,16 @@
       %span.icon.archive
       Clore
 
+  - if @procedure.draft_changed?
+    = link_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
+
+- if @procedure.draft_changed?
+  .container
+    .card.featured
+      .card-title
+        Des champs ont été changés
+      = render partial: 'revision_changes', locals: { changes: @procedure.revision_changes }
+
 .container
   %h2.procedure-admin-explanation Indispensable avant publication
   .procedure-grid
@@ -42,7 +52,7 @@
       .card-admin-action
         = link_to 'Modifier', edit_admin_procedure_path(@procedure), class: 'button', id: "presentation"
 
-    - if !@procedure.locked?
+    - if !@procedure.locked? || @procedure.feature_enabled?(:procedure_revisions)
       .card-admin
         - if @procedure.draft_types_de_champ.count > 0
           %div
@@ -165,7 +175,7 @@
       .card-admin-action
         = link_to 'Modifier', admin_procedure_mail_templates_path(@procedure), class: 'button'
 
-    - if !@procedure.locked?
+    - if !@procedure.locked? || @procedure.feature_enabled?(:procedure_revisions)
       .card-admin
         - if @procedure.draft_types_de_champ_private.present?
           %div
