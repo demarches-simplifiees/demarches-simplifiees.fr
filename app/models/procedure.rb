@@ -333,6 +333,14 @@ class Procedure < ApplicationRecord
     publiee? || close? || depubliee?
   end
 
+  def draft_changed?
+    publiee? && published_revision.changed?(draft_revision)
+  end
+
+  def revision_changes
+    published_revision.compare(draft_revision)
+  end
+
   def accepts_new_dossiers?
     publiee? || brouillon?
   end
