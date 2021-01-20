@@ -14,6 +14,7 @@ gem 'browser'
 gem 'chartkick'
 gem 'chunky_png'
 gem 'clamav-client', require: 'clamav/client'
+gem 'concurrent-ruby'
 gem 'daemons'
 gem 'deep_cloneable' # Enable deep clone of active record models
 gem 'delayed_cron_job' # Cron jobs

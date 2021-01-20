@@ -855,6 +855,7 @@ DEPENDENCIES
   chartkick
   chunky_png
   clamav-client
+  concurrent-ruby
   daemons
   database_cleaner
   deep_cloneable
