@@ -152,5 +152,149 @@ describe ProcedureRevision do
       expect(new_revision.revision_types_de_champ).not_to eq(revision.revision_types_de_champ)
       expect(new_revision.revision_types_de_champ_private).not_to eq(revision.revision_types_de_champ_private)
     end
+
+    describe '#compare' do
+      let(:type_de_champ_first) { revision.types_de_champ.first }
+      let(:type_de_champ_second) { revision.types_de_champ.second }
+
+      it 'type_de_champ' do
+        expect(new_revision.types_de_champ.size).to eq(2)
+        new_type_de_champ = new_revision.add_type_de_champ({
+          type_champ: TypeDeChamp.type_champs.fetch(:text),
+          libelle: "Un champ text"
+        })
+        revision.reload
+        expect(new_revision.types_de_champ.size).to eq(3)
+        expect(new_revision.types_de_champ.last).to eq(new_type_de_champ)
+        expect(new_revision.revision_types_de_champ.last.position).to eq(2)
+        expect(new_revision.revision_types_de_champ.last.type_de_champ).to eq(new_type_de_champ)
+        expect(new_revision.revision_types_de_champ.last.type_de_champ.revision).to eq(new_revision)
+        expect(procedure.active_revision.changed?(new_revision)).to be_truthy
+        expect(procedure.active_revision.compare(new_revision)).to eq([
+          {
+            op: :add,
+            label: "Un champ text"
+          }
+        ])
+
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.first.stable_id).update(libelle: 'modifier le libelle')
+        expect(procedure.active_revision.compare(new_revision.reload)).to eq([
+          {
+            op: :update,
+            attribute: :libelle,
+            label: type_de_champ_first.libelle,
+            from: type_de_champ_first.libelle,
+            to: "modifier le libelle"
+          },
+          {
+            op: :add,
+            label: "Un champ text"
+          }
+        ])
+        expect(new_revision.types_de_champ.first.revision).to eq(new_revision)
+
+        new_revision.move_type_de_champ(new_revision.types_de_champ.second.stable_id, 2)
+        expect(procedure.active_revision.compare(new_revision.reload)).to eq([
+          {
+            op: :update,
+            attribute: :libelle,
+            label: type_de_champ_first.libelle,
+            from: type_de_champ_first.libelle,
+            to: "modifier le libelle"
+          },
+          {
+            op: :add,
+            label: "Un champ text"
+          },
+          {
+            op: :move,
+            label: type_de_champ_second.libelle,
+            from: 1,
+            to: 2
+          }
+        ])
+        expect(new_revision.types_de_champ.last.revision).to eq(revision)
+
+        new_revision.remove_type_de_champ(new_revision.types_de_champ.first.stable_id)
+        expect(procedure.active_revision.compare(new_revision.reload)).to eq([
+          {
+            op: :remove,
+            label: type_de_champ_first.libelle
+          },
+          {
+            op: :add,
+            label: "Un champ text"
+          }
+        ])
+
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.stable_id).update(description: 'une description')
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.stable_id).update(mandatory: true)
+        expect(procedure.active_revision.compare(new_revision.reload)).to eq([
+          {
+            op: :remove,
+            label: type_de_champ_first.libelle
+          },
+          {
+            op: :add,
+            label: "Un champ text"
+          },
+          {
+            op: :update,
+            attribute: :description,
+            label: type_de_champ_second.libelle,
+            from: type_de_champ_second.description,
+            to: "une description"
+          },
+          {
+            op: :update,
+            attribute: :mandatory,
+            label: type_de_champ_second.libelle,
+            from: false,
+            to: true
+          }
+        ])
+
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(type_champ: :drop_down_list)
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(drop_down_options: ['one', 'two'])
+        expect(procedure.active_revision.compare(new_revision.reload)).to eq([
+          {
+            op: :remove,
+            label: type_de_champ_first.libelle
+          },
+          {
+            op: :add,
+            label: "Un champ text"
+          },
+          {
+            op: :update,
+            attribute: :description,
+            label: type_de_champ_second.libelle,
+            from: type_de_champ_second.description,
+            to: "une description"
+          },
+          {
+            op: :update,
+            attribute: :mandatory,
+            label: type_de_champ_second.libelle,
+            from: false,
+            to: true
+          },
+          {
+            op: :update,
+            attribute: :type_champ,
+            label: "sub type de champ",
+            from: "text",
+            to: "drop_down_list"
+          },
+          {
+            op: :update,
+            attribute: :drop_down_options,
+            label: "sub type de champ",
+            from: [],
+            to: ["one", "two"]
+          }
+        ])
+      end
+    end
   end
 end
