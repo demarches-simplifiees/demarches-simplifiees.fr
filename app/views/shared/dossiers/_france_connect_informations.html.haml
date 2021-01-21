@@ -1,8 +1,13 @@
 .card.featured
-  .flex.justify-center
-    = image_tag "logo-france-connect.png", alt: "France Connect logo", width: 200, class: "mb-2"
-  .card-title
-    - if user_information.updated_at.present?
-      Le dossier a été déposé par le compte de #{user_information&.given_name} #{user_information&.family_name}, authentifié par France Connect le #{user_information.updated_at.strftime('%d/%m/%Y')}.
-    - else
-      Le dossier a été déposé par le compte de #{user_information&.given_name} #{user_information&.family_name}.
+  .flex{ style: 'align-items: center' }
+    - case provider
+      - when 'particulier', 'entreprise'
+        = image_tag "icons/logo_france_connect.svg", alt: "France Connect logo", width: 120, class: "mb-2", style: 'padding-right: 16px'
+        - provider = 'France Connect'
+      - when 'microsoft',  'google', 'tatou', 'yahoo', 'sipf'
+        = image_tag "icons/logo_#{provider}.svg", alt: "#{provider} logo", width: 60, class: "mb-2", style: 'padding-right: 16px'
+    .card-title
+      - if user_information.updated_at.present?
+        Le dossier a été déposé par le compte de #{user_information&.given_name} #{user_information&.family_name}, authentifié par #{provider&.camelize} le #{user_information.updated_at.strftime('%d/%m/%Y')}.
+      - else
+        Le dossier a été déposé par le compte de #{user_information&.given_name} #{user_information&.family_name}.

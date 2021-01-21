@@ -19,9 +19,9 @@
 
 - if champ.persisted?
   = link_to champs_repetition_path(form.index), class: 'button add-row', data: { remote: true, method: 'POST', params: { champ_id: champ&.id }.to_query } do
-    %span.icon.add
+    %span{ style: "font-size: 20px" }= '+'
     Ajouter un élément pour « #{champ.libelle} »
 - else
   %a.button.add-row
-    %span.icon.add
+    %span{ style: "font-size: 20px" }= '+'
     Ajouter un élément pour « #{champ.libelle} »

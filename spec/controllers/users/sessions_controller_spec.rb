@@ -9,7 +9,7 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#create' do
-    let(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: 'particulier') }
+    let(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
     let(:send_password) { password }
     let(:remember_me) { '0' }
 

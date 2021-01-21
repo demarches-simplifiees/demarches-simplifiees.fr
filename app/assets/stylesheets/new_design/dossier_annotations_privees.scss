@@ -2,10 +2,65 @@
 @import "common";
 @import "constants";
 
+$dossier-actions-bar-border-width: 1px;
+
 #dossier-annotations-privees {
   h1 {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: $default-padding;
+  }
+
+  .dossier-edit-sticky-footer {
+    // scss-lint:disable VendorPrefix DuplicateProperty
+    position: fixed;           // Fallback for IE 11, and other browser that don't support sticky
+    position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
+    position: sticky;
+    // scss-lint:enable VendorPrefix DuplicateProperty
+
+    // IE 11 uses `position:fixed` – and thus needs an explicit width, content-box for better layout, etc.
+    width: 100%;
+    // max-width: $page-width + 2 * $default-padding;
+    box-sizing: content-box;
+
+    bottom: 0;
+
+    margin-top: $default-padding;
+    margin-left: -$default-padding;
+    margin-right: -$default-padding;
+    margin-bottom: 0;
+
+    padding-right: $default-padding - $dossier-actions-bar-border-width;
+    padding-left: $default-padding - $dossier-actions-bar-border-width;
+
+    background: #FFFFFF;
+
+    border: $dossier-actions-bar-border-width solid #CCCCCC;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: none;
+  }
+
+  .send-dossier-actions-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .button:not(:small) {
+      min-height: 38px;
+      line-height: 16px;
+    }
+
+    // Normal layout
+    @media (min-width: 620px) {
+      padding-top: $default-spacer * 2;
+      padding-bottom: $default-spacer * 2;
+    }
+
+    // Compact layout
+    @media (max-width: 620px) {
+      padding-top: $default-spacer;
+      padding-bottom: $default-spacer;
+    }
   }
 }

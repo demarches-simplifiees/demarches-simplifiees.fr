@@ -30,7 +30,7 @@
             #{prefix} votre numéro DN, Tatou
         - if sipf
           = link_to '/auth/sipf', class: "button expand "  do
-            = image_tag 'icons/logo_polynesie.svg', alt: 'icone Polynesie'
+            = image_tag 'icons/logo_sipf.svg', alt: 'icone Polynesie'
             Vous êtes agent de l'administration
         - if fc
           = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
