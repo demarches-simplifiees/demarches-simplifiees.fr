@@ -3,6 +3,6 @@ namespace :s3 do
   task sync: :environment do
     puts "Synchronizing local storage files to s3"
 
-    S3Synchronization.synchronize(nil) # (Time.zone.now() + 10.hours)
+    S3Synchronization.synchronize(nil)
   end
 end

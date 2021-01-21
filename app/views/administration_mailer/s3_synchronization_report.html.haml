@@ -1,0 +1,12 @@
+- content_for(:title, "Statistiques d'envoi des pièces jointes")
+
+%p= "Fichiers transférés: #{@total[:uploaded_count] }/#{@total[:blobs_count]}"
+%p= "Fichiers vérifiées: #{@total[:checked_count]}/#{@total[:blobs_count]}"
+%p= "Taille transférée: #{@total[:uploaded_size]}"
+
+%p
+  statistiques d'envoi des fichiers
+= render partial: "stat_table", locals: { stats: @uploaded_stats }
+%p
+  statistiques de vérification des fichiers transférés
+= render partial: "stat_table", locals: { stats: @checked_stats }

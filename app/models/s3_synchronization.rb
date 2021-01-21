@@ -8,15 +8,21 @@
 #  updated_at :datetime         not null
 #
 class S3Synchronization < ApplicationRecord
+  scope :uploaded_stats, -> {
+    joins('join active_storage_blobs on s3_synchronizations.id = active_storage_blobs.id')
+      .select('updated_at::date as date, count(updated_at) as count, sum(active_storage_blobs.byte_size) as size')
+      .group('date')
+      .order('date desc')
+  }
+
+  scope :checked_stats, -> { uploaded_stats.where('checked') }
 
   class << self
     POOL_SIZE = 10
 
     def synchronize(until_time)
       upload(:local, :s3, until_time)
-      # if dubious_procedures_and_tdcs.present?
-      #   AdministrationMailer.dubious_procedures(dubious_procedures_and_tdcs).deliver_later
-      # end
+      AdministrationMailer.s3_synchronization_report.deliver_now
     end
 
     def uploaded(to_service, blob)
@@ -51,11 +57,13 @@ class S3Synchronization < ApplicationRecord
       ActiveStorage::Blob.find_each do |blob|
         local_file = from_service.path_for blob.key
         pool.post do
-          next if until_time.present? && Time.zone.now > until_time
-          upload_blob(blob, local_file, configs, to, progress, &block)
-        rescue => e
-          puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
-          e.backtrace.each { |line| puts line }
+          begin
+            next if until_time.present? && Time.zone.now > until_time
+            upload_blob(blob, local_file, configs, to, progress, &block)
+          rescue => e
+            puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
+            e.backtrace.each { |line| puts line }
+          end
         end
       end
       pool.shutdown
@@ -105,6 +113,5 @@ class S3Synchronization < ApplicationRecord
       end
       progress.inc
     end
-
   end
 end
