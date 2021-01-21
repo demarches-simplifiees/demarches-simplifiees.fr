@@ -196,12 +196,14 @@ module TagsSubstitutionConcern
     tags.filter { |tag| tag[:available_for_states].include?(self.class::DOSSIER_STATE) }
   end
 
-  def champ_public_tags
-    types_de_champ_tags(procedure.types_de_champ, Dossier::SOUMIS)
+  def champ_public_tags(dossier: nil)
+    types_de_champ = (dossier ? dossier : procedure.active_revision).types_de_champ
+    types_de_champ_tags(types_de_champ, Dossier::SOUMIS)
   end
 
-  def champ_private_tags
-    types_de_champ_tags(procedure.types_de_champ_private, Dossier::INSTRUCTION_COMMENCEE)
+  def champ_private_tags(dossier: nil)
+    types_de_champ = (dossier ? dossier : procedure.active_revision).types_de_champ_private
+    types_de_champ_tags(types_de_champ, Dossier::INSTRUCTION_COMMENCEE)
   end
 
   def types_de_champ_tags(types_de_champ, available_for_states)
@@ -217,9 +219,11 @@ module TagsSubstitutionConcern
       return ''
     end
 
+    text = normalize_tags(text)
+
     tags_and_datas = [
-      [champ_public_tags, dossier.champs],
-      [champ_private_tags, dossier.champs_private],
+      [champ_public_tags(dossier: dossier), dossier.champs],
+      [champ_private_tags(dossier: dossier), dossier.champs_private],
       [dossier_tags, dossier],
       [ROUTAGE_TAGS, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],
@@ -242,7 +246,7 @@ module TagsSubstitutionConcern
   end
 
   def replace_tag(text, tag, data)
-    libelle = Regexp.quote(tag[:libelle])
+    libelle = Regexp.quote(tag[:id] ? tag[:id] : tag[:libelle])
 
     # allow any kind of space (non-breaking or other) in the tag’s libellé to match any kind of space in the template
     # (the '\\ |' is there because plain ASCII spaces were escaped by preceding Regexp.quote)
@@ -255,5 +259,20 @@ module TagsSubstitutionConcern
     end
 
     text.gsub(/--#{libelle}--/, value.to_s)
+  end
+
+  def normalize_tags(text)
+    tags = types_de_champ_tags(procedure.types_de_champ_for_tags, Dossier::SOUMIS) + types_de_champ_tags(procedure.types_de_champ_private_for_tags, Dossier::INSTRUCTION_COMMENCEE)
+    filter_tags(tags).reduce(text) { |text, tag| normalize_tag(text, tag) }
+  end
+
+  def normalize_tag(text, tag)
+    libelle = Regexp.quote(tag[:libelle])
+
+    # allow any kind of space (non-breaking or other) in the tag’s libellé to match any kind of space in the template
+    # (the '\\ |' is there because plain ASCII spaces were escaped by preceding Regexp.quote)
+    libelle.gsub!(/\\ |[[:blank:]]/, "[[:blank:]]")
+
+    text.gsub(/--#{libelle}--/, "--#{tag[:id]}--")
   end
 end
