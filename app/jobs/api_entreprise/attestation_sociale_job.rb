@@ -1,6 +1,4 @@
 class ApiEntreprise::AttestationSocialeJob < ApiEntreprise::Job
-  retry_on ApiEntreprise::API::ServiceUnavailable, wait: 1.day
-
   def perform(etablissement_id, procedure_id)
     etablissement = Etablissement.find(etablissement_id)
     etablissement_params = ApiEntreprise::AttestationSocialeAdapter.new(etablissement.siret, procedure_id).to_params

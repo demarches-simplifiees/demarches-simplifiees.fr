@@ -12,13 +12,13 @@ describe ApiEntreprise::API do
       allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
     end
 
-    context 'when the service is unavailable' do
+    context 'when the service throws a bad gateaway exception' do
       let(:siren) { '111111111' }
       let(:status) { 502 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_unavailable.json') }
 
       it 'raises ApiEntreprise::API::RequestFailed' do
-        expect { subject }.to raise_error(ApiEntreprise::API::RequestFailed)
+        expect { subject }.to raise_error(ApiEntreprise::API::BadGateway)
       end
     end
 

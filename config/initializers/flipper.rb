@@ -33,7 +33,8 @@ features = [
   :mini_profiler,
   :xray,
   :carte_ign,
-  :localization
+  :localization,
+  :titre_identite_watermark
 ]
 
 def database_exists?
