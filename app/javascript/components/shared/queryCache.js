@@ -1,5 +1,6 @@
 import { QueryCache } from 'react-query';
 import { isNumeric } from '@utils';
+import matchSorter from 'match-sorter';
 
 const { api_geo_url, api_adresse_url } = gon.autocomplete || {};
 
@@ -31,9 +32,21 @@ function buildOptions() {
 }
 
 async function defaultQueryFn(scope, term) {
+  if (scope == 'pays') {
+    return matchSorter(await getPays(), term, { keys: ['nom'] });
+  }
+
   const url = buildURL(scope, term);
   const [options, controller] = buildOptions();
   const promise = fetch(url, options).then((response) => response.json());
   promise.cancel = () => controller && controller.abort();
   return promise;
+}
+
+let paysCache;
+async function getPays() {
+  if (!paysCache) {
+    paysCache = await fetch('/pays.json').then((response) => response.json());
+  }
+  return paysCache;
 }

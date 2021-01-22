@@ -16,7 +16,7 @@ class Champs::SiretController < ApplicationController
 
     begin
       etablissement = find_etablissement_with_siret
-    rescue ApiEntreprise::API::RequestFailed, ApiEntreprise::API::ServiceUnavailable
+    rescue ApiEntreprise::API::Error::RequestFailed, ApiEntreprise::API::Error::ServiceUnavailable
       return siret_error(:network_error)
     end
     if etablissement.nil?

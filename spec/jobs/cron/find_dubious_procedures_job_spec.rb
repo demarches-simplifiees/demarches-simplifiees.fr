@@ -1,4 +1,4 @@
-RSpec.describe FindDubiousProceduresJob, type: :job do
+RSpec.describe Cron::FindDubiousProceduresJob, type: :job do
   describe 'perform' do
     let(:mailer_double) { double('mailer', deliver_later: true) }
     let(:procedure) { create(:procedure, types_de_champ: tdcs) }
@@ -11,7 +11,7 @@ RSpec.describe FindDubiousProceduresJob, type: :job do
         @dubious_procedures_args = arg
       end.and_return(mailer_double)
 
-      FindDubiousProceduresJob.new.perform
+      Cron::FindDubiousProceduresJob.new.perform
     end
 
     context 'with suspicious champs' do

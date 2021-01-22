@@ -5,7 +5,7 @@ class ApiEntrepriseService
   #
   # Returns nil if the SIRET is unknown
   #
-  # Raises a ApiEntreprise::API::RequestFailed exception on transient errors
+  # Raises a ApiEntreprise::API::Error::RequestFailed exception on transient errors
   # (timeout, 5XX HTTP error code, etc.)
   def self.create_etablissement(dossier_or_champ, siret, user_id = nil)
     etablissement_params =

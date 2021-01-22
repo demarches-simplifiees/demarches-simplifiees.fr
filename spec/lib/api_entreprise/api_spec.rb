@@ -17,8 +17,8 @@ describe ApiEntreprise::API do
       let(:status) { 502 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_unavailable.json') }
 
-      it 'raises ApiEntreprise::API::RequestFailed' do
-        expect { subject }.to raise_error(ApiEntreprise::API::BadGateway)
+      it 'raises ApiEntreprise::API::Error::RequestFailed' do
+        expect { subject }.to raise_error(ApiEntreprise::API::Error::BadGateway)
       end
     end
 
@@ -27,8 +27,8 @@ describe ApiEntreprise::API do
       let(:status) { 404 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_not_found.json') }
 
-      it 'raises ApiEntreprise::API::ResourceNotFound' do
-        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
+      it 'raises ApiEntreprise::API::Error::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::Error::ResourceNotFound)
       end
     end
 
@@ -37,8 +37,8 @@ describe ApiEntreprise::API do
       let(:status) { 400 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_not_found.json') }
 
-      it 'raises ApiEntreprise::API::BadFormatRequest' do
-        expect { subject }.to raise_error(ApiEntreprise::API::BadFormatRequest)
+      it 'raises ApiEntreprise::API::Error::BadFormatRequest' do
+        expect { subject }.to raise_error(ApiEntreprise::API::Error::BadFormatRequest)
       end
     end
 
@@ -47,8 +47,8 @@ describe ApiEntreprise::API do
       let(:status) { 403 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/entreprises_private.json') }
 
-      it 'raises ApiEntreprise::API::ResourceNotFound' do
-        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
+      it 'raises ApiEntreprise::API::Error::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::Error::ResourceNotFound)
       end
     end
 
@@ -97,8 +97,8 @@ describe ApiEntreprise::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises ApiEntreprise::API::ResourceNotFound' do
-        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
+      it 'raises ApiEntreprise::API::Error::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::Error::ResourceNotFound)
       end
     end
 
@@ -127,8 +127,8 @@ describe ApiEntreprise::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises ApiEntreprise::API::ResourceNotFound' do
-        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
+      it 'raises ApiEntreprise::API::Error::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::Error::ResourceNotFound)
       end
     end
 
@@ -159,8 +159,8 @@ describe ApiEntreprise::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises ApiEntreprise::API::ResourceNotFound' do
-        expect { subject }.to raise_error(ApiEntreprise::API::ResourceNotFound)
+      it 'raises ApiEntreprise::API::Error::ResourceNotFound' do
+        expect { subject }.to raise_error(ApiEntreprise::API::Error::ResourceNotFound)
       end
     end
 
