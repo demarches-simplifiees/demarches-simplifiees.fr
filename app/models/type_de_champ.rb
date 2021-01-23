@@ -62,7 +62,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp', optional: true
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
-  store_accessor :options, :cadastres, :quartiers_prioritaires, :parcelles_agricoles, :mnhn, :old_pj, :drop_down_options, :skip_pj_validation, :parcelles, :batiments, :zones_manuelles, :min, :max, :level
+  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :parcelles, :batiments, :zones_manuelles, :min, :max, :level
   has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_many :revisions, through: :revision_types_de_champ
 
@@ -210,6 +210,10 @@ class TypeDeChamp < ApplicationRecord
   def datetime?
     type_champ == TypeDeChamp.type_champs.fetch(:datetime)
   end
+  
+  def titre_identite?
+    type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
+  end
 
   def public?
     !private?
@@ -267,6 +271,23 @@ class TypeDeChamp < ApplicationRecord
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
   end
 
+  def editable_options=(options)
+    self.options.merge!(options)
+  end
+
+  def editable_options
+    options.slice(:cadastres,
+      :unesco,
+      :arretes_protection,
+      :conservatoire_littoral,
+      :reserves_chasse_faune_sauvage,
+      :reserves_biologiques,
+      :reserves_naturelles,
+      :natura_2000,
+      :zones_humides,
+      :znieff)
+  end
+
   FEATURE_FLAGS = {}
 
   def self.type_de_champ_types_for(procedure, user)
@@ -309,8 +330,7 @@ class TypeDeChamp < ApplicationRecord
       :drop_down_list_value,
       :piece_justificative_template_filename,
       :piece_justificative_template_url,
-      :cadastres,
-      :mnhn
+      :editable_options
     ]
   }
   TYPES_DE_CHAMP = TYPES_DE_CHAMP_BASE

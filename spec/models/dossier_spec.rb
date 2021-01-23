@@ -1370,4 +1370,58 @@ describe Dossier do
       expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_export))
     end
   end
+
+  describe "remove_titres_identite!" do
+    let(:dossier) { create(:dossier, :en_instruction, :followed) }
+    let(:type_de_champ_titre_identite) { create(:type_de_champ_titre_identite, procedure: dossier.procedure) }
+    let(:champ_titre_identite) { create(:champ_titre_identite, type_de_champ: type_de_champ_titre_identite) }
+    let(:type_de_champ_titre_identite_vide) { create(:type_de_champ_titre_identite, procedure: dossier.procedure) }
+    let(:champ_titre_identite_vide) { create(:champ_titre_identite, type_de_champ: type_de_champ_titre_identite_vide) }
+
+    before do
+      champ_titre_identite_vide.piece_justificative_file.purge
+      dossier.champs << champ_titre_identite
+      dossier.champs << champ_titre_identite_vide
+    end
+
+    it "clean up titres identite on accepter" do
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
+      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
+      perform_enqueued_jobs do
+        dossier.accepter!(dossier.followers_instructeurs.first, "yolo!")
+      end
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+    end
+
+    it "clean up titres identite on refuser" do
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
+      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
+      perform_enqueued_jobs do
+        dossier.refuser!(dossier.followers_instructeurs.first, "yolo!")
+      end
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+    end
+
+    it "clean up titres identite on classer_sans_suite" do
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
+      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
+      perform_enqueued_jobs do
+        dossier.classer_sans_suite!(dossier.followers_instructeurs.first, "yolo!")
+      end
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+    end
+
+    context 'en_construction' do
+      let(:dossier) { create(:dossier, :en_construction, :followed) }
+
+      it "clean up titres identite on accepter_automatiquement" do
+        expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
+        expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
+        perform_enqueued_jobs do
+          dossier.accepter_automatiquement!
+        end
+        expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+      end
+    end
+  end
 end

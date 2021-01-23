@@ -3,6 +3,7 @@ require 'mina/git'
 require 'mina/rails'
 require 'mina/rbenv'
 
+SHARED_WORKER_FILE_NAME = 'i_am_a_worker'
 # Basic settings:
 #   domain        - The hostname to SSH to.
 #   deploy_to     - Path to deploy into.
@@ -95,9 +96,13 @@ namespace :service do
 
   desc "Restart delayed_job"
   task :restart_delayed_job do
+    worker_file_path = File.join(deploy_to, 'shared', SHARED_WORKER_FILE_NAME)
+
     command %{
-      echo "-----> Restarting delayed_job service"
-      #{echo_cmd %[sudo systemctl restart delayed_job]}
+        echo "-----> Restarting delayed_job service"
+        #{echo_cmd %[test -f #{worker_file_path} && echo 'it is a worker marchine, restarting delayed_job']}
+        #{echo_cmd %[test -f #{worker_file_path} && sudo systemctl restart delayed_job]}
+        #{echo_cmd %[test -f #{worker_file_path} || echo "it is not a worker marchine, #{worker_file_path} is absent"]}
     }
   end
 end

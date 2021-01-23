@@ -13,21 +13,25 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:, motivation: nil, justificatif: nil)
-      if dossier.en_instruction?
-        errors = validate_blob(justificatif)
-        if errors
-          return errors
-        end
-        dossier.accepter!(instructeur, motivation, justificatif)
+      dossier.accepter!(instructeur, motivation, justificatif)
 
-        { dossier: dossier }
+      { dossier: dossier }
+    end
+
+    def ready?(justificatif: nil, **args)
+      if justificatif.present?
+        validate_blob(justificatif)
       else
-        { errors: ["Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"] }
+        true
       end
     end
 
-    def authorized?(dossier:, instructeur:, motivation: nil, justificatif: nil)
-      instructeur.is_a?(Instructeur) && instructeur.dossiers.exists?(id: dossier.id)
+    def authorized?(dossier:, instructeur:, **args)
+      if !dossier.en_instruction?
+        return false, { errors: ["Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"] }
+      end
+
+      dossier_authorized_for?(dossier, instructeur)
     end
   end
 end

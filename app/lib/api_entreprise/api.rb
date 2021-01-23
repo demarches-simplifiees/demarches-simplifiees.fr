@@ -59,8 +59,9 @@ class ApiEntreprise::API
   private
 
   def self.call_with_token(resource_name, token)
-    url = "#{API_ENTREPRISE_URL}/privileges?token=#{token}"
+    url = "#{API_ENTREPRISE_URL}/#{resource_name}"
     response = Typhoeus.get(url,
+      headers: { Authorization: "Bearer #{token}" },
       timeout: TIMEOUT)
 
     if response.success?
@@ -76,6 +77,7 @@ class ApiEntreprise::API
     params = params(siret_or_siren, procedure_id, user_id)
 
     response = Typhoeus.get(url,
+      headers: { Authorization: "Bearer #{token_for_procedure(procedure_id)}" },
       params: params,
       timeout: TIMEOUT)
 
@@ -111,8 +113,7 @@ class ApiEntreprise::API
       context: (FR_SITE).to_s,
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}",
-      non_diffusables: true,
-      token: token_for_procedure(procedure_id)
+      non_diffusables: true
     }
 
     params[:user_id] = user_id if user_id.present?

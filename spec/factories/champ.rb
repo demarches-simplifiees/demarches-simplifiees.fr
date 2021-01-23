@@ -62,7 +62,7 @@ FactoryBot.define do
 
     factory :champ_civilite, class: 'Champs::CiviliteChamp' do
       type_de_champ { association :type_de_champ_civilite, procedure: dossier.procedure }
-      value { 'M.' }
+      value { 'Monsieur' }
     end
 
     factory :champ_email, class: 'Champs::EmailChamp' do

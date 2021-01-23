@@ -185,7 +185,7 @@ feature 'The routing', js: true do
     visit commencer_path(path: procedure.reload.path)
     click_on 'Commencer la démarche'
 
-    choose 'M.'
+    choose 'Monsieur'
     fill_in 'individual_nom',    with: 'Nom'
     fill_in 'individual_prenom', with: 'Prenom'
     click_button('Continuer')

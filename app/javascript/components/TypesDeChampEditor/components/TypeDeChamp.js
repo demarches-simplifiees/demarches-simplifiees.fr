@@ -157,14 +157,13 @@ const TypeDeChamp = sortableElement(
             url={typeDeChamp.piece_justificative_template_url}
           />
           <TypeDeChampCarteOptions isVisible={isCarte}>
-            <TypeDeChampCarteOption
-              label="Cadastres"
-              handler={updateHandlers.cadastres}
-            />
-            <TypeDeChampCarteOption
-              label="Zones naturelles protégées"
-              handler={updateHandlers.mnhn}
-            />
+            {Object.entries(OPTIONS_FIELDS).map(([field, label]) => (
+              <TypeDeChampCarteOption
+                key={field}
+                label={label}
+                handler={updateHandlers[field]}
+              />
+            ))}
           </TypeDeChampCarteOptions>
           <TypeDeChampTeFenuaOptions isVisible={isTeFenua}>
             <TypeDeChampTeFenuaOption
@@ -236,7 +235,7 @@ function createUpdateHandler(dispatch, typeDeChamp, field, index, prefix) {
   return {
     id: `${prefix ? `${prefix}-` : ''}champ-${index}-${field}`,
     name: field,
-    value: typeDeChamp[field],
+    value: getValue(typeDeChamp, field),
     onChange: ({ target }) =>
       dispatch({
         type: 'updateTypeDeChamp',
@@ -248,6 +247,14 @@ function createUpdateHandler(dispatch, typeDeChamp, field, index, prefix) {
         done: () => dispatch({ type: 'refresh' })
       })
   };
+}
+
+function getValue(obj, path) {
+  const [, optionsPath] = path.split('.');
+  if (optionsPath) {
+    return (obj.editable_options || {})[optionsPath];
+  }
+  return obj[path];
 }
 
 function createUpdateHandlers(dispatch, typeDeChamp, index, prefix) {
@@ -263,25 +270,35 @@ function createUpdateHandlers(dispatch, typeDeChamp, index, prefix) {
   }, {});
 }
 
+const OPTIONS_FIELDS = {
+  'options.cadastres': 'Cadastres',
+  'options.unesco': 'UNESCO',
+  'options.arretes_protection': 'Arrêtés de protection',
+  'options.conservatoire_littoral': 'Conservatoire du Littoral',
+  'options.reserves_chasse_faune_sauvage':
+    'Réserves nationales de chasse et de faune sauvage',
+  'options.reserves_biologiques': 'Réserves biologiques',
+  'options.reserves_naturelles': 'Réserves naturelles',
+  'options.natura_2000': 'Natura 2000',
+  'options.zones_humides': 'Zones humides d’importance internationale',
+  'options.znieff': 'ZNIEFF'
+};
+
 export const FIELDS = [
-  'batiments',
-  'cadastres',
-  'mnhn',
   'description',
   'drop_down_list_value',
   'level',
   'libelle',
   'mandatory',
   'parcelles',
-  'parcelles_agricoles',
   'parent_id',
   'piece_justificative_template',
   'private',
-  'quartiers_prioritaires',
   'zones_manuelles',
   'min',
   'max',
-  'type_champ'
+  'type_champ',
+  ...Object.keys(OPTIONS_FIELDS)
 ];
 
 function readValue(input) {
