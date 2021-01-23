@@ -6,6 +6,8 @@ FROM base AS builder
 # RUN wget  --debug --verbose  http://dl-cdn.alpinelinux.org/alpine/v3.8/main/x86_64/APKINDEX.tar.gz
 RUN apk add --update --virtual build-dependencies \
         build-base \
+        imagemagick \
+        file \
         gcc \
         git \
         libcurl \
