@@ -210,7 +210,7 @@ class TypeDeChamp < ApplicationRecord
   def datetime?
     type_champ == TypeDeChamp.type_champs.fetch(:datetime)
   end
-  
+
   def titre_identite?
     type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
   end
