@@ -194,6 +194,10 @@ const TypeDeChamp = sortableElement(
               label="Niveau"
               handler={updateHandlers.level}
             />
+            <TypeDeChampLevelOption
+              label="Niveau2"
+              handler={updateHandlers.level}
+            />
           </TypeDeChampHeaderSectionOptions>
           <TypeDeChampDateOptions isVisible={isDate}>
             <TypeDeChampDateOption label="Début" handler={updateHandlers.min} />
@@ -285,6 +289,7 @@ const OPTIONS_FIELDS = {
 };
 
 export const FIELDS = [
+  'batiments',
   'description',
   'drop_down_list_value',
   'level',
