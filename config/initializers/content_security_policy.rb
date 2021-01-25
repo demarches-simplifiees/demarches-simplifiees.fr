@@ -1,10 +1,10 @@
 # rubocop:disable DS/ApplicationName
 Rails.application.config.content_security_policy do |policy|
   # Whitelist image
-  policy.img_src :self, "*.openstreetmap.org", "static.#{FR_SITE}", "*.cloud.ovh.net", "beta.mes-demarches.gov.pf", "*", :data, :blob
+  policy.img_src :self, "*.openstreetmap.org", "static.#{FR_SITE}", "*.cloud.ovh.net", "*", :data, :blob
   # Whitelist JS: nous, sendinblue et matomo
   # miniprofiler et nous avons quelques boutons inline :(
-  policy.script_src :self, "stats.data.gouv.fr", "*.sendinblue.com", "*.crisp.chat", "crisp.chat", "*.sibautomation.com", "sibautomation.com", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', :unsafe_eval, :unsafe_inline, :blob
+  policy.script_src :self, "stats.data.gouv.fr", "*.sendinblue.com", "*.crisp.chat", "crisp.chat", "beta.mes-demarches.gov.pf", "*.sibautomation.com", "sibautomation.com", 'cdn.jsdelivr.net', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', :unsafe_eval, :unsafe_inline, :blob
   # Pour les CSS, on a beaucoup de style inline et quelques balises <style>
   # c'est trop compliqué pour être rectifié immédiatement (et sans valeur ajoutée:
   # c'est hardcodé dans les vues, donc pas injectable).
