@@ -12,7 +12,7 @@ describe 'new_administrateur/procedures/invited_expert_list.html.haml', type: :v
   context 'when the procedure has 0 avis' do
     let!(:dossier) { create(:dossier, procedure: procedure) }
     before do
-      @invited_expert_emails = Avis.invited_expert_emails(procedure)
+      @invited_expert_emails = ExpertsProcedure.invited_expert_emails(procedure)
       subject
     end
 
@@ -24,18 +24,21 @@ describe 'new_administrateur/procedures/invited_expert_list.html.haml', type: :v
 
   context 'when the procedure has 3 avis from 2 experts and 1 unasigned' do
     let!(:dossier) { create(:dossier, procedure: procedure) }
-    let!(:avis) { create(:avis, dossier: dossier, instructeur: create(:instructeur, email: '1_expert@expert.com')) }
-    let!(:avis2) { create(:avis, dossier: dossier, instructeur: create(:instructeur, email: '2_expert@expert.com')) }
-    let!(:unasigned_avis) { create(:avis, dossier: dossier, email: 'expert@expert.com') }
+    let(:expert) { create(:expert) }
+    let(:expert2) { create(:expert) }
+    let(:experts_procedure) { ExpertsProcedure.create(procedure: procedure, expert: expert) }
+    let(:experts_procedure2) { ExpertsProcedure.create(procedure: procedure, expert: expert2) }
+    let!(:avis) { create(:avis, dossier: dossier, experts_procedure: experts_procedure) }
+    let!(:avis2) { create(:avis, dossier: dossier, experts_procedure: experts_procedure2) }
 
     before do
-      @invited_expert_emails = Avis.invited_expert_emails(procedure)
+      @invited_expert_emails = ExpertsProcedure.invited_expert_emails(procedure)
       subject
     end
 
-    it 'has 3 experts and match array' do
-      expect(@invited_expert_emails.count).to eq(3)
-      expect(@invited_expert_emails).to eq(['1_expert@expert.com', '2_expert@expert.com', 'expert@expert.com'])
+    it 'has 2 experts and match array' do
+      expect(@invited_expert_emails.count).to eq(2)
+      expect(@invited_expert_emails).to eq([expert.email, expert2.email])
     end
   end
 end
