@@ -8,4 +8,8 @@
 #
 class Expert < ApplicationRecord
   has_one :user
+
+  def email
+    user.email
+  end
 end
