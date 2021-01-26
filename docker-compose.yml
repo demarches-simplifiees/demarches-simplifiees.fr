@@ -69,6 +69,7 @@ services:
       - DB_PASSWORD
       - DB_USERNAME
       - DEMANDE_INSCRIPTION_ADMIN_PAGE_URL
+      - DOC_URL
       - DS_PROXY_URL
       - FAVICON_16PX_SRC
       - FAVICON_32PX_SRC

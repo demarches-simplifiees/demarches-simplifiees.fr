@@ -75,6 +75,7 @@ ENV \
     DB_POOL=""\
     DB_USERNAME="tps"\
     DEMANDE_INSCRIPTION_ADMIN_PAGE_URL="https://www.mes-demarches.gov.pf/commencer/dmra-devenir-administrateur-de-demarches-en-ligne"\
+    DOC_URL="https://mes-demarches.gitbook.io/documentation"\
     DS_PROXY_URL=""\
     FACEBOOK_CLIENT_ID=""\
     FACEBOOK_CLIENT_SECRET=""\
