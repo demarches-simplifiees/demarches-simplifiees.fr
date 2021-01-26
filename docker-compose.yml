@@ -57,9 +57,9 @@ services:
       - API_GEO_URL
       - API_ISPF_PASSWORD
       - API_ISPF_USER
-      - APP_HOST
-      - APPLICATION_NAME
       - APPLICATION_BASE_URL
+      - APPLICATION_NAME
+      - APP_HOST
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
       - CRISP_CLIENT_KEY
@@ -70,6 +70,9 @@ services:
       - DB_USERNAME
       - DEMANDE_INSCRIPTION_ADMIN_PAGE_URL
       - DS_PROXY_URL
+      - FAVICON_16PX_SRC
+      - FAVICON_32PX_SRC
+      - FAVICON_96PX_SRC
       - FC_PARTICULIER_BASE_URL
       - FC_PARTICULIER_ID
       - FC_PARTICULIER_SECRET
@@ -81,23 +84,25 @@ services:
       - HELPSCOUT_CLIENT_SECRET
       - HELPSCOUT_MAILBOX_ID
       - HELPSCOUT_WEBHOOK_SECRET
-      - SIPF_CLIENT_BASE_URL
-      - SIPF_CLIENT_ID
-      - SIPF_CLIENT_SECRET
       - MATOMO_ENABLED
       - MATOMO_ID
       - MICROSOFT_CLIENT_ID
       - MICROSOFT_CLIENT_SECRET
       - OTP_SECRET_KEY
+      - PROCEDURE_DEFAULT_LOGO_SRC
       - SAML_IDP_CERTIFICATE
       - SAML_IDP_SECRET_KEY
       - SENTRY_CURRENT_ENV
       - SENTRY_DSN_JS
       - SENTRY_DSN_RAILS
       - SENTRY_ENABLED
+      - SIPF_CLIENT_BASE_URL
+      - SIPF_CLIENT_ID
+      - SIPF_CLIENT_SECRET
       - TATOU_BASE_URL
       - TATOU_CLIENT_ID
       - TATOU_CLIENT_SECRET
+      - WATERMARK_FILE
       - YAHOO_CLIENT_ID
       - YAHOO_CLIENT_SECRET
     volumes:
@@ -115,22 +120,24 @@ services:
     container_name: worker-${ENV:-dev}
     restart: always
     environment:
-      - APP_HOST
-      - APPLICATION_NAME
       - APPLICATION_BASE_URL
-      - DB_DATABASE
-      - DB_HOST
-      - DB_USERNAME
-      - DB_PASSWORD
-      - MAILJET_API_KEY
-      - MAILJET_SECRET_KEY
+      - APPLICATION_NAME
+      - APP_HOST
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
-      - SENTRY_ENABLED
-      - SENTRY_DSN_RAILS
-      - SENTRY_DSN_JS
+      - DB_DATABASE
+      - DB_HOST
+      - DB_PASSWORD
+      - DB_USERNAME
+      - MAILJET_API_KEY
+      - MAILJET_SECRET_KEY
+      - PROCEDURE_DEFAULT_LOGO_SRC
       - SENTRY_CURRENT_ENV
+      - SENTRY_DSN_JS
+      - SENTRY_DSN_RAILS
+      - SENTRY_ENABLED
       - UNIVERSIGN_USERPWD
+      - WATERMARK_FILE
     volumes:
       - md-data-files:/app/storage
       - md-root-tmp:/tmp
