@@ -27,9 +27,12 @@ yarn-debug.log*
 .yarn-integrity
 /.vscode
 /.idea
-vendor/*
+/public/assets
+/public/packs
+/public/packs-test
 /public/tmp/
-/public/assets/
+/node_modules
+vendor/*
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
