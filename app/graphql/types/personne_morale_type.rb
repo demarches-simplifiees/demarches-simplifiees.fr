@@ -89,8 +89,8 @@ module Types
     field :adresse, String, null: false
     field :numero_voie, String, null: true
     field :type_voie, String, null: true
-    field :nom_voie, String, null: false
-    field :complement_adresse, String, null: false
+    field :nom_voie, String, null: true
+    field :complement_adresse, String, null: true
     field :code_postal, String, null: false
     field :localite, String, null: false
     field :code_insee_localite, String, null: false

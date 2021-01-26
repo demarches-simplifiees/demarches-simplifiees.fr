@@ -4,15 +4,15 @@ describe 'users/dossiers/index.html.haml', type: :view do
   let(:dossier_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), user: user) }
   let(:user_dossiers) { [dossier_brouillon, dossier_en_construction] }
   let(:dossiers_invites) { [] }
-  let(:current_tab) { 'mes-dossiers' }
+  let(:statut) { 'mes-dossiers' }
 
   before do
     allow(view).to receive(:new_demarche_url).and_return('#')
     allow(controller).to receive(:current_user) { user }
     assign(:user_dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_invites, Kaminari.paginate_array(dossiers_invites).page(1))
-    assign(:dossiers, Kaminari.paginate_array(user_dossiers).page(1))
-    assign(:current_tab, current_tab)
+    assign(:dossiers_supprimes, Kaminari.paginate_array(user_dossiers).page(1))
+    assign(:statut, statut)
     render
   end
 
@@ -48,11 +48,11 @@ describe 'users/dossiers/index.html.haml', type: :view do
     let(:dossiers_invites) { [] }
 
     it 'affiche un titre adapté' do
-      expect(rendered).to have_selector('h1', text: 'Mes dossiers')
+      expect(rendered).to have_selector('h1', text: 'Dossiers')
     end
 
-    it 'n’affiche pas la barre d’onglets' do
-      expect(rendered).not_to have_selector('ul.tabs')
+    it 'n’affiche la barre d’onglets' do
+      expect(rendered).to have_selector('ul.tabs')
     end
   end
 
@@ -65,7 +65,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
     it 'affiche la barre d’onglets' do
       expect(rendered).to have_selector('ul.tabs')
-      expect(rendered).to have_selector('ul.tabs li', count: 2)
+      expect(rendered).to have_selector('ul.tabs li', count: 3)
       expect(rendered).to have_selector('ul.tabs li.active', count: 1)
     end
   end

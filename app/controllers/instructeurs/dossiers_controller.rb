@@ -218,6 +218,17 @@ module Instructeurs
       zipline(files, "dossier-#{dossier.id}.zip")
     end
 
+    def delete_dossier
+      if dossier.termine?
+        dossier.discard_and_keep_track!(current_instructeur, :instructeur_request)
+        flash.notice = 'Le dossier a bien été supprimé'
+        redirect_to instructeur_procedure_path(procedure)
+      else
+        flash.alert = "Suppression impossible : le dossier n'est pas terminé"
+        redirect_back(fallback_location: instructeur_procedures_url)
+      end
+    end
+
     private
 
     def dossier

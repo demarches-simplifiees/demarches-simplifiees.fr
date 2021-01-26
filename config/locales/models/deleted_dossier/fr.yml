@@ -3,9 +3,10 @@ fr:
     attributes:
       deleted_dossier:
         reason:
-          user_request: Demande d’usager
+          user_request: Demande de l’usager
           manager_request: Demande d’administration
           user_removed: Suppression d’un compte usager
           procedure_removed: Suppression d’une démarche
           expired: Expiration
           unknown: Inconnue
+          instructeur_request: Suppression par l’instructeur

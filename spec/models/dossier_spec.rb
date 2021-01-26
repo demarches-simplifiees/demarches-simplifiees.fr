@@ -1268,8 +1268,8 @@ describe Dossier do
       end
     end
 
-    it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
-    it { expect(Dossier.discarded_en_construction_expired.count).to eq(2) }
+    it { expect(Dossier.discarded_brouillon_expired.count).to eq(3) }
+    it { expect(Dossier.discarded_en_construction_expired.count).to eq(3) }
   end
 
   describe "discarded procedure dossier should be able to access it's procedure" do

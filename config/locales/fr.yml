@@ -66,11 +66,15 @@ fr:
       good_dn: Le numéro DN et la date de naissance sont corrects.
   activerecord:
     attributes:
+      default_attributes: &default_attributes
+        password: 'Le mot de passe'
       user:
         siret: 'Numéro TAHITI'
-        password: 'Le mot de passe'
+        << : *default_attributes
       instructeur:
-        password: 'Le mot de passe'
+        << : *default_attributes
+      super_admin:
+        << : *default_attributes
     errors:
       messages:
         not_a_phone: 'Numéro de téléphone invalide'
@@ -86,7 +90,7 @@ fr:
             email:
               invalid: invalide
               taken: déjà utilisé
-            password:
+            password: &password
               too_short: 'est trop court'
               not_strong: 'n’est pas assez complexe'
             password_confirmation:
@@ -102,6 +106,10 @@ fr:
               taken: déjà utilisé
             password:
               too_short: 'est trop court'
+        super_admin:
+          attributes:
+            password:
+              << : *password
         procedure:
           attributes:
             path:
@@ -178,6 +186,18 @@ fr:
       zero: archivé
       one: archivé
       other: archivés
+    mes_dossiers:
+      zero: mon dossier
+      one: mon dossier
+      other: mes dossiers
+    dossiers_invites:
+      zero: dossier invité
+      one: dossier invité
+      other: dossiers invités
+    dossiers_supprimes:
+      zero: dossier supprimé
+      one: dossier supprimé
+      other: dossiers supprimés
     dossier_trouve:
       zero: 0 dossier trouvé
       one: 1 dossier trouvé
