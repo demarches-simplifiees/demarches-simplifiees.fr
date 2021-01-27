@@ -152,6 +152,16 @@ class Dossier < ApplicationRecord
   scope :updated_since,       -> (since) { where('dossiers.updated_at >= ?', since) }
   scope :created_since,       -> (since) { where('dossiers.en_construction_at >= ?', since) }
 
+  scope :with_type_de_champ, -> (stable_id) {
+    joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
+      .where('types_de_champ.private = FALSE AND types_de_champ.stable_id = ?', stable_id)
+  }
+
+  scope :with_type_de_champ_private, -> (stable_id) {
+    joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
+      .where('types_de_champ.private = TRUE AND types_de_champ.stable_id = ?', stable_id)
+  }
+
   scope :all_state,                   -> { not_archived.state_not_brouillon }
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
