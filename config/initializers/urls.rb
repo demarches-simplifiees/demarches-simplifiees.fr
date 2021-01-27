@@ -17,7 +17,7 @@ WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
 CALENDLY_URL = "https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr"
 
 FR_DOC_URL = "https://doc.#{FR_SITE}"
-DOC_URL = ENV.fetch("DOC_URL", "https://doc.demarches-simplifiees.fr")
+DOC_URL = ENV.fetch("DOC_URL", "https://mes-demarches.gitbook.io/documentation")
 DOC_NOUVEAUTES_URL = [DOC_URL, "nouveautes"].join("/")
 ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels", "dematerialiser-formulaire"].join("/")
 INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels"].join("/")
