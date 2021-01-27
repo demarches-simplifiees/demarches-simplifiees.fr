@@ -2,27 +2,30 @@
 #
 # Table name: avis
 #
-#  id             :integer          not null, primary key
-#  answer         :text
-#  confidentiel   :boolean          default(FALSE), not null
-#  email          :string
-#  introduction   :text
-#  revoked_at     :datetime
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  claimant_id    :integer          not null
-#  dossier_id     :integer
-#  instructeur_id :integer
+#  id                   :integer          not null, primary key
+#  answer               :text
+#  confidentiel         :boolean          default(FALSE), not null
+#  email                :string
+#  introduction         :text
+#  revoked_at           :datetime
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  claimant_id          :integer          not null
+#  dossier_id           :integer
+#  experts_procedure_id :bigint
+#  instructeur_id       :integer
 #
 class Avis < ApplicationRecord
   include EmailSanitizableConcern
 
   belongs_to :dossier, inverse_of: :avis, touch: true, optional: false
   belongs_to :instructeur, optional: true
+  belongs_to :experts_procedure, optional: true
   belongs_to :claimant, class_name: 'Instructeur', optional: false
 
   has_one_attached :piece_justificative_file
   has_one_attached :introduction_file
+  has_one :expert, through: :experts_procedure
 
   validates :piece_justificative_file,
     content_type: AUTHORIZED_CONTENT_TYPES,
@@ -62,16 +65,6 @@ class Avis < ApplicationRecord
 
   def self.avis_exists_and_email_belongs_to_avis?(avis_id, email)
     Avis.find_by(id: avis_id)&.email == email
-  end
-
-  def self.invited_expert_emails(procedure)
-    Avis
-      .joins(dossier: :revision)
-      .left_joins(instructeur: :user)
-      .where(procedure_revisions: { procedure_id: procedure })
-      .map(&:email_to_display)
-      .uniq
-      .sort
   end
 
   def spreadsheet_columns

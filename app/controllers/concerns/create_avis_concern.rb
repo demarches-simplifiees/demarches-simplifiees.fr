@@ -19,6 +19,8 @@ module CreateAvisConcern
 
     create_results = Avis.create(
       expert_emails.flat_map do |email|
+        expert = User.create_or_promote_to_expert(email, SecureRandom.hex).expert
+        experts_procedure = ExpertsProcedure.find_or_create_by(procedure: dossier.procedure, expert: expert)
         allowed_dossiers.map do |dossier|
           {
             email: email,
@@ -26,7 +28,8 @@ module CreateAvisConcern
             introduction_file: create_avis_params[:introduction_file],
             claimant: current_instructeur,
             dossier: dossier,
-            confidentiel: confidentiel
+            confidentiel: confidentiel,
+            experts_procedure: experts_procedure
           }
         end
       end
