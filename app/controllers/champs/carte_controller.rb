@@ -71,7 +71,7 @@ class Champs::CarteController < ApplicationController
 
   def cadastres_features_collection(feature_collection)
     coordinates = feature_collection[:features].filter do |feature|
-      feature[:properties][:source] == GeoArea.sources.fetch(:selection_utilisateur) && feature[:geometry]['type'] == 'Polygon'
+      feature[:properties][:source] == GeoArea.sources.fetch(:selection_utilisateur) && feature[:geometry] && feature[:geometry]['type'] == 'Polygon'
     end.map do |feature|
       feature[:geometry]['coordinates'][0].map { |(lng, lat)| { 'lng' => lng, 'lat' => lat } }
     end
