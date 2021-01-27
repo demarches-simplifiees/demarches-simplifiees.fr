@@ -34,7 +34,7 @@ class Champs::CarteChamp < Champ
   end
 
   def layer_enabled?(layer)
-    type_de_champ.options[layer] && type_de_champ.options[layer] != '0'
+    type_de_champ.options && type_de_champ.options[layer] && type_de_champ.options[layer] != '0'
   end
 
   def cadastres?
