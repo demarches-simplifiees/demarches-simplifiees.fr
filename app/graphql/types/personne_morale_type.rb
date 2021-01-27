@@ -9,8 +9,8 @@ module Types
       field :siren, String, null: false
       field :capital_social, GraphQL::Types::BigInt, null: false, description: "capital social de l’entreprise. -1 si inconnu."
       field :numero_tva_intracommunautaire, String, null: false
-      field :forme_juridique, String, null: false
-      field :forme_juridique_code, String, null: false
+      field :forme_juridique, String, null: true
+      field :forme_juridique_code, String, null: true
       field :nom_commercial, String, null: false
       field :raison_sociale, String, null: false
       field :siret_siege_social, String, null: false
@@ -18,8 +18,8 @@ module Types
       field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
       field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d’une année"
       field :date_creation, GraphQL::Types::ISO8601Date, null: false
-      field :nom, String, null: false
-      field :prenom, String, null: false
+      field :nom, String, null: true
+      field :prenom, String, null: true
       field :inline_adresse, String, null: false
       field :attestation_sociale_attachment, Types::File, null: true
       field :attestation_fiscale_attachment, Types::File, null: true

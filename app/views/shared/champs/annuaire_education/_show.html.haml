@@ -25,9 +25,11 @@
         %tr
           %th.libelle Type de contrat privé :
           %td= champ.data['type_contrat_prive']
-      %tr
-        %th.libelle Nombre d’élèves :
-        %td= champ.data['nombre_d_eleves']
+
+      - if champ.data['nombre_d_eleves'].present?
+        %tr
+          %th.libelle Nombre d’élèves :
+          %td= champ.data['nombre_d_eleves']
 
       %tr
         %th.libelle Adresse :
