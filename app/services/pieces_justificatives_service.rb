@@ -14,9 +14,9 @@ class PiecesJustificativesService
   end
 
   def self.zip_entries(dossier)
-    entries = champs_zip_entries(dossier) + commentaires_zip_entries(dossier)
+    entries = champs_zip_entries(dossier) + commentaires_zip_entries(dossier) + dossier_zip_entries(dossier)
     index = {}
-    entries.map { |pair| [pair[0], sanitize(index, pair[1])] }
+    entries.map { |blob, filename| [blob, sanitize(index, filename)] }
   end
 
   def self.serialize_types_de_champ_as_type_pj(revision)
@@ -70,6 +70,12 @@ class PiecesJustificativesService
       .map(&:piece_jointe)
   end
 
+  def self.dossier_zip_entries(dossier)
+    pjs_for_dossier(dossier)
+      .filter(&:attached?)
+      .map { |c| [c, c.filename] }
+  end
+
   def self.champs_zip_entries(dossier)
     pjs_champs(dossier)
       .filter { |c| c.piece_justificative_file.attached? }
@@ -78,7 +84,7 @@ class PiecesJustificativesService
 
   def self.pieces_justificative_filename(c)
     if c.type_de_champ.parent
-      "#{c.type_de_champ.parent.libelle}-#{c.type_de_champ.libelle}-#{c.piece_justificative_file.filename}"
+      "#{c.type_de_champ.parent.libelle}/#{c.type_de_champ.libelle}-#{c.piece_justificative_file.filename}"
     else
       "#{c.type_de_champ.libelle}-#{c.piece_justificative_file.filename}"
     end
@@ -92,7 +98,7 @@ class PiecesJustificativesService
   end
 
   def self.sanitize(index, filename)
-    filename = ActiveStorage::Filename.new(filename).sanitized
+    filename = filename.to_s.split('/').map { |f| ActiveStorage::Filename.new(f).sanitized }.join('/')
     i = index[filename]
     if i.present?
       i = (index[filename] += 1)
