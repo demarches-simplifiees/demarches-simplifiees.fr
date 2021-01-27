@@ -10,7 +10,7 @@ class Champs::SiretController < ApplicationController
       return clear_siret_and_etablissement
     end
 
-    if @siret.present? && @siret.length != 14
+    if !Siret.new(siret: @siret).valid?
       return siret_error(:invalid)
     end
 
