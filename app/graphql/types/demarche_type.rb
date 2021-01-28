@@ -88,7 +88,7 @@ module Types
     end
 
     def self.authorized?(object, context)
-      authorized_demarche?(object, context)
+      context.authorized_demarche?(object)
     end
   end
 end
