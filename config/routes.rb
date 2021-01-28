@@ -379,13 +379,14 @@ Rails.application.routes.draw do
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review
-        get 'invited_expert_list'
       end
 
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert
       post 'transfer' => 'procedures#transfer', as: :transfer
+      get 'invited_expert_list'
+      post 'toggle_allow_decision_access' => 'procedures#toggle_allow_decision_access', as: :toggle_allow_decision_access
 
       resources :mail_templates, only: [:edit, :update]
 

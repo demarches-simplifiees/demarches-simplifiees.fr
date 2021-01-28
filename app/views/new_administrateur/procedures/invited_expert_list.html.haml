@@ -1,18 +1,23 @@
 .container
   %h1.mt-2 Experts invités sur #{@procedure.libelle}
-  - if @invited_expert_emails.present?
+  - if @experts_procedure.present?
     %table.table.mt-2
       %thead
         %tr
           %th Liste des experts
+          %th Notifiable
       %tbody
-        - @invited_expert_emails.each do |expert|
+        - @experts_procedure.each do |expert_procedure|
           %tr
             %td
               %span.icon.person
-              = expert
+              = expert_procedure.expert.email
+            %td
+              = link_to admin_procedure_toggle_allow_decision_access_path(expert_procedure: expert_procedure), id: "expert-procedure-#{expert_procedure.id}", class: "toggle-switch-link#{expert_procedure.allow_decision_access ? ' on' : ''}", remote: true, method: :post do
+                %span.toggle-switch-control.round
+                %span.toggle-switch-label.on
+                %span.toggle-switch-label.off
   - else
     .blank-tab
       %h2.empty-text Aucun expert invité pour le moment.
       %p.empty-text-details Les instructeurs de cette démarche n'ont pas encore fait appel aux experts.
-

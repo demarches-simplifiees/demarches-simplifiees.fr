@@ -23,6 +23,10 @@
   flex: 10;
   padding: 0 $default-padding;
   background-color: $light-grey;
+
+  &.no-background {
+    background-color: transparent;
+  }
 }
 
 .procedure-form__column--preview {
