@@ -19,8 +19,8 @@
     = preload_link_tag(asset_url("Muli-Regular.woff2"))
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
 
-    = stylesheet_link_tag 'new_design/new_application', media: 'all'
-    = stylesheet_link_tag 'new_design/print', media: 'print'
+    = stylesheet_link_tag 'application', media: 'all'
+    = stylesheet_link_tag 'print', media: 'print'
 
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
@@ -36,7 +36,7 @@
         #beta
           Env Test
 
-      = render partial: "layouts/new_header"
+      = render partial: "layouts/header"
       %main
         = render partial: "layouts/flash_messages"
         = content_for?(:content) ? yield(:content) : yield
