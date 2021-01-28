@@ -19,10 +19,9 @@ class ExpertsProcedure < ApplicationRecord
     expert&.email
   end
 
-  def self.invited_expert_emails(procedure)
+  def self.invited_experts(procedure)
     joins(:expert)
       .where(procedure: procedure)
-      .map(&:email_to_display)
       .sort
   end
 end
