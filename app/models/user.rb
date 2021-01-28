@@ -152,6 +152,18 @@ class User < ApplicationRecord
     last_sign_in_at.present?
   end
 
+  def administrateur?
+    administrateur_id.present?
+  end
+
+  def instructeur?
+    instructeur_id.present?
+  end
+
+  def can_france_connect?
+    !administrateur? && !instructeur?
+  end
+
   def can_be_deleted?
     administrateur.nil? && instructeur.nil? && dossiers.with_discarded.state_instruction_commencee.empty?
   end
