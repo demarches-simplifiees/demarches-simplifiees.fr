@@ -49,11 +49,11 @@ end
 
 def print_image(pdf, c)
   attachment = ActiveStorage::Attachment.find_by_id(c.attributes['id'].to_s)
-  attachment.blob.open { |file| pdf.image file, width: 30.mm, height: 30.mm, position: :center }
-  url = c.attributes['src']
-  display = c.attributes['display']
-  text = content_tag :a, display, { href: url, target: '_blank', rel: 'noopener' }
-  pdf.pad_top(5) { pdf.text text, size: 8, color: '000055', align: :center, inline_format: true }
+  attachment.blob.open { |file| pdf.image file, fit: [30.mm, 40.mm], position: :center }
+  # url = c.attributes['src']
+  # display = c.attributes['display']
+  # text = content_tag :a, display, { href: url, target: '_blank', rel: 'noopener' }
+  # pdf.pad_top(5) { pdf.text text, size: 8, color: '000055', align: :center, inline_format: true }
 end
 
 def prawn_text(message)
