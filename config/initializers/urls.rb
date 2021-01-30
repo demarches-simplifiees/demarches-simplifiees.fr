@@ -17,7 +17,7 @@ WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
 CALENDLY_URL = "https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr"
 
 FR_DOC_URL = "https://doc.#{FR_SITE}"
-DOC_URL = "https://mes-demarches.gitbook.io/documentation"
+DOC_URL = ENV.fetch("DOC_URL", "https://mes-demarches.gitbook.io/documentation")
 DOC_NOUVEAUTES_URL = [DOC_URL, "nouveautes"].join("/")
 ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels", "dematerialiser-formulaire"].join("/")
 INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels"].join("/")
@@ -51,7 +51,7 @@ MATOMO_IFRAME_URL = 'https://beta.mes-demarches.gov.pf/matomo/index.php?module=C
 API_TE_FENUA_URL = ENV.fetch("API_TE_FENUA_URL", "https://www.tefenua.gov.pf/api")
 
 API_ENTREPRISE_PF_AUTH = ENV.fetch("API_ENTREPRISE_PF_AUTH", "https://auth.gov.pf/auth/realms/Itaiete/protocol/openid-connect/token")
-API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://ppr.api.i-taiete2.gov.pf/api/v2")
+API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://www.i-taiete.gov.pf/api/v2")
 
 API_CPS_AUTH = ENV.fetch("API_CPS_AUTH", "https://connect.cps.pf/auth/realms/TatouAssures/protocol/openid-connect/token")
 API_CPS_URL = ENV.fetch("API_CPS_URL", "https://tatouapi.cps.pf")

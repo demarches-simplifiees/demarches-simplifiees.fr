@@ -191,20 +191,26 @@ class Procedure < ApplicationRecord
   validates :notice, content_type: [
     "application/msword",
     "application/pdf",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/vnd.oasis.opendocument.text",
     "application/vnd.oasis.opendocument.presentation",
+    "application/vnd.oasis.opendocument.text",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
     "text/plain"
   ], size: { less_than: 20.megabytes }
 
   validates :deliberation, content_type: [
     "application/msword",
     "application/pdf",
+    "application/vnd.oasis.opendocument.text",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "text/plain",
-    "application/vnd.oasis.opendocument.text"
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "text/plain"
   ], size: { less_than: 20.megabytes }
 
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
@@ -412,6 +418,7 @@ class Procedure < ApplicationRecord
     procedure.save
     procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
     procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
+    TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition).update_all(revision_id: procedure.draft_revision.id)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -570,7 +577,7 @@ class Procedure < ApplicationRecord
     if logo.attached?
       Rails.application.routes.url_helpers.url_for(logo)
     else
-      ActionController::Base.helpers.image_url("polynesie.png")
+      ActionController::Base.helpers.image_url(PROCEDURE_DEFAULT_LOGO_SRC)
     end
   end
 

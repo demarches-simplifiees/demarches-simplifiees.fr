@@ -810,11 +810,6 @@ enum GeoAreaSource {
   cadastre
 
   """
-  Quartier prioritaire
-  """
-  quartier_prioritaire
-
-  """
   Sélection utilisateur
   """
   selection_utilisateur
@@ -1083,13 +1078,13 @@ type PersonneMorale implements Demandeur {
   association: Association
   codeInseeLocalite: String!
   codePostal: String!
-  complementAdresse: String!
+  complementAdresse: String
   entreprise: Entreprise
   id: ID!
   libelleNaf: String!
   localite: String!
   naf: String!
-  nomVoie: String!
+  nomVoie: String
   numeroVoie: String
   siegeSocial: Boolean!
   siret: String!
@@ -1122,15 +1117,6 @@ type PieceJustificativeChamp implements Champ {
 type Profile {
   email: String!
   id: ID!
-}
-
-type QuartierPrioritaire implements GeoArea {
-  code: String!
-  commune: String!
-  geometry: GeoJSON!
-  id: ID!
-  nom: String!
-  source: GeoAreaSource!
 }
 
 type Query {
@@ -1232,6 +1218,33 @@ type TextChamp implements Champ {
   """
   stringValue: String
   value: String
+}
+
+type TitreIdentiteChamp implements Champ {
+  grantType: TitreIdentiteGrantType!
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
+enum TitreIdentiteGrantType {
+  """
+  Françe Connect
+  """
+  france_connect
+
+  """
+  Pièce justificative
+  """
+  piece_justificative
 }
 
 enum TypeDeChamp {

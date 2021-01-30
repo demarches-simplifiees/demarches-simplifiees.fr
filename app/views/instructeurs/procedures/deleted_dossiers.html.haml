@@ -52,7 +52,6 @@
           %tr
             %th.notification-col
             %th.number-col N° dossier
-            %th.status-col Etat
             %th.status-col Raison de suppression
             %th.status-col Date de suppression
         %tbody
@@ -62,8 +61,6 @@
                 %span.icon.folder
               %td.number-col
                 = deleted_dossier.dossier_id
-              %td.status-col
-                = status_badge(deleted_dossier.state)
               %td.reason-col
                 = deletion_reason_badge(deleted_dossier.reason)
               %td.date-col.deleted-cell

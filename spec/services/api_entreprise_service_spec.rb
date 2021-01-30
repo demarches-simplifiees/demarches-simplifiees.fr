@@ -1,7 +1,7 @@
 describe ApiEntrepriseService do
   describe '#create_etablissement' do
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(body: etablissements_body, status: etablissements_status)
     end
 
@@ -38,8 +38,8 @@ describe ApiEntrepriseService do
       let(:etablissements_status) { 504 }
       let(:etablissements_body) { '' }
 
-      it 'should raise ApiEntreprise::API::RequestFailed' do
-        expect { subject }.to raise_error(ApiEntreprise::API::RequestFailed)
+      it 'should raise ApiEntreprise::API::Error::RequestFailed' do
+        expect { subject }.to raise_error(ApiEntreprise::API::Error::RequestFailed)
       end
     end
 

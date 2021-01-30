@@ -18,16 +18,8 @@ module Users
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
       @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
-
-      @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
-
-      @dossiers =
-        case @current_tab
-        when 'mes-dossiers'
-          @user_dossiers
-        when 'dossiers-invites'
-          @dossiers_invites
-        end
+      @dossiers_supprimes = current_user.deleted_dossiers.order_by_updated_at.page(page)
+      @statut = statut(@user_dossiers, @dossiers_invites, @dossiers_supprimes, params[:statut])
     end
 
     def show
@@ -122,7 +114,7 @@ module Users
       sanitized_siret = siret_model.siret
       begin
         etablissement = ApiEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
-      rescue ApiEntreprise::API::RequestFailed, ApiEntreprise::API::BadGateway
+      rescue ApiEntreprise::API::Error::RequestFailed, ApiEntreprise::API::Error::BadGateway, ApiEntreprise::API::Error::TimedOut
         return render_siret_error(t('errors.messages.siret_network_error'))
       end
       if etablissement.nil?
@@ -299,6 +291,25 @@ module Users
 
     private
 
+    # if the status tab is filled, then this tab
+    # else first filled tab
+    # else mes-dossiers
+    def statut(mes_dossiers, dossiers_invites, dossiers_supprimes, params_statut)
+      tabs = {
+        'mes-dossiers' => mes_dossiers.present?,
+        'dossiers-invites' => dossiers_invites.present?,
+        'dossiers-supprimes' => dossiers_supprimes.present?
+      }
+      if tabs[params_statut]
+        params_statut
+      else
+        tabs
+          .filter { |_tab, filled| filled }
+          .map { |tab, _| tab }
+          .first || 'mes-dossiers'
+      end
+    end
+
     def store_user_location!
       store_location_for(:user, request.fullpath)
     end
@@ -309,7 +320,7 @@ module Users
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.procedure.brouillon?
-        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entrainera sa suppression."
+        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
       end
     end
 
@@ -322,16 +333,6 @@ module Users
 
     def page
       [params[:page].to_i, 1].max
-    end
-
-    def current_tab(mes_dossiers_count, dossiers_invites_count)
-      if dossiers_invites_count == 0
-        'mes-dossiers'
-      elsif mes_dossiers_count == 0
-        'dossiers-invites'
-      else
-        params[:current_tab].presence || 'mes-dossiers'
-      end
     end
 
     # FIXME: require(:dossier) when all the champs are united

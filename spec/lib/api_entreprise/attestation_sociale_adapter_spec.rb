@@ -6,7 +6,7 @@ describe ApiEntreprise::AttestationSocialeAdapter do
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}\?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_sociales_acoss\/#{siren}/)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(["attestations_sociales"])
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)

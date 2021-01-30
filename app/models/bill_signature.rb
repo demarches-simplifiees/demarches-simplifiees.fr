@@ -49,7 +49,7 @@ class BillSignature < ApplicationRecord
   end
 
   def set_signature(signature, day)
-    signature.attach(
+    self.signature.attach(
       io: StringIO.new(signature),
       filename: "demarches-simplifiees-signature-#{day.to_date.iso8601}.der",
       content_type: 'application/x-x509-ca-cert'
@@ -92,24 +92,26 @@ class BillSignature < ApplicationRecord
   end
 
   def read_signature
-    if attachment_changes['signature']
-      io = io_for_changes(attachment_changes['signature'])
-      io.read if io.present?
-    elsif signature.attached?
-      signature.download
-    end
+    read_attachment('signature')
   end
 
   def read_serialized
-    if attachment_changes['serialized']
-      io = io_for_changes(attachment_changes['serialized'])
-      io.read if io.present?
+    read_attachment('serialized')
+  end
+
+  private
+
+  def read_attachment(attachment)
+    if attachment_changes[attachment]
+      io = io_for_changes(attachment_changes[attachment])
+      if io.present?
+        io.rewind
+        io.read
+      end
     elsif serialized.attached?
       serialized.download
     end
   end
-
-  private
 
   def io_for_changes(attachment_changes)
     attachable = attachment_changes.attachable

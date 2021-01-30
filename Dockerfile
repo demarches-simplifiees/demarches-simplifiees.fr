@@ -6,6 +6,8 @@ FROM base AS builder
 # RUN wget  --debug --verbose  http://dl-cdn.alpinelinux.org/alpine/v3.8/main/x86_64/APKINDEX.tar.gz
 RUN apk add --update --virtual build-dependencies \
         build-base \
+        imagemagick \
+        file \
         gcc \
         git \
         libcurl \
@@ -57,10 +59,10 @@ ENV \
     API_GEO_URL="https://geo.api.gouv.fr"\
     API_ISPF_PASSWORD=""\
     API_ISPF_USER=""\
+    APPLICATION_BASE_URL="https://www.mes-demarches.gov.pf"\
+    APPLICATION_NAME="Mes-Démarches"\
     APP_HOST="localhost:3000"\
     APP_NAME="tps_local"\
-    APPLICATION_NAME="Mes-Démarches"\
-    APPLICATION_BASE_URL="https://www.mes-demarches.gov.pf"\
     BASIC_AUTH_ENABLED="disabled"\
     BASIC_AUTH_PASSWORD=""\
     BASIC_AUTH_USERNAME=""\
@@ -73,9 +75,13 @@ ENV \
     DB_POOL=""\
     DB_USERNAME="tps"\
     DEMANDE_INSCRIPTION_ADMIN_PAGE_URL="https://www.mes-demarches.gov.pf/commencer/dmra-devenir-administrateur-de-demarches-en-ligne"\
+    DOC_URL="https://mes-demarches.gitbook.io/documentation"\
     DS_PROXY_URL=""\
     FACEBOOK_CLIENT_ID=""\
     FACEBOOK_CLIENT_SECRET=""\
+    FAVICON_16PX_SRC="favicons/pf16x16.png"\
+    FAVICON_32PX_SRC="favicons/pf32x32.png"\
+    FAVICON_96PX_SRC="favicons/pf96x96.png"\
     FC_PARTICULIER_BASE_URL=""\
     FC_PARTICULIER_ID=""\
     FC_PARTICULIER_SECRET=""\
@@ -96,9 +102,6 @@ ENV \
     HELPSCOUT_CLIENT_SECRET=""\
     HELPSCOUT_MAILBOX_ID=""\
     HELPSCOUT_WEBHOOK_SECRET=""\
-    SIPF_CLIENT_BASE_URL=""\
-    SIPF_CLIENT_ID=""\
-    SIPF_CLIENT_SECRET=""\
     LOGRAGE_ENABLED="disabled"\
     MAILJET_API_KEY=""\
     MAILJET_SECRET_KEY=""\
@@ -111,6 +114,7 @@ ENV \
     MICROSOFT_CLIENT_SECRET=""\
     OTP_SECRET_KEY="" \
     PIPEDRIVE_KEY=""\
+    PROCEDURE_DEFAULT_LOGO_SRC="polynesie.png"\
     RAILS_ENV="production"\
     RAILS_LOG_TO_STDOUT=true\
     RAILS_SERVE_STATIC_FILES=true\
@@ -128,6 +132,9 @@ ENV \
     SENTRY_DSN_RAILS=""\
     SENTRY_ENABLED="disabled"\
     SIGNING_KEY="aef3153a9829fa4ba10acb02927ac855df6b92795b1ad265d654443c4b14a017"\
+    SIPF_CLIENT_BASE_URL=""\
+    SIPF_CLIENT_ID=""\
+    SIPF_CLIENT_SECRET=""\
     SKYLIGHT_AUTHENTICATION_KEY=""\
     SKYLIGHT_DISABLE_AGENT="true"\
     SOURCE="tps_local"\
@@ -137,6 +144,7 @@ ENV \
     TRUSTED_NETWORKS=""\
     UNIVERSIGN_API_URL=""\
     UNIVERSIGN_USERPWD=""\
+    WATERMARK_FILE="watermark_pf.png"\
     YAHOO_CLIENT_ID=""\
     YAHOO_CLIENT_SECRET=""
 

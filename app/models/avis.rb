@@ -56,6 +56,16 @@ class Avis < ApplicationRecord
     Avis.find_by(id: avis_id)&.email == email
   end
 
+  def self.invited_expert_emails(procedure)
+    Avis
+      .joins(dossier: :revision)
+      .left_joins(instructeur: :user)
+      .where(procedure_revisions: { procedure_id: procedure })
+      .map(&:email_to_display)
+      .uniq
+      .sort
+  end
+
   def spreadsheet_columns
     [
       ['Dossier ID', dossier_id.to_s],

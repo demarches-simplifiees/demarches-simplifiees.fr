@@ -1,4 +1,4 @@
-- should_display_link = attachment.virus_scanner.safe? || !attachment.virus_scanner.started?
+- should_display_link = (attachment.virus_scanner.safe? || !attachment.virus_scanner.started?) && !attachment.watermark_pending?
 - user_can_upload = defined?(user_can_upload) ? user_can_upload : false
 - if should_display_link
   - attachment_check_url = false
@@ -17,6 +17,10 @@
     = attachment.filename.to_s
     - if attachment.virus_scanner.pending?
       (analyse antivirus en cours
+      = link_to "rafraichir", request.path, data: { 'attachment-refresh': true }
+      )
+    - elsif attachment.watermark_pending?
+      (traitement de la pièce en cours
       = link_to "rafraichir", request.path, data: { 'attachment-refresh': true }
       )
     - elsif attachment.virus_scanner.infected?

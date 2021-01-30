@@ -1,13 +1,15 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
-import ReactMapboxGl, { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
+import { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
 import DrawControl from 'react-mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 import { getJSON, ajax, fire } from '@utils';
 
-import { getMapStyle, SwitchMapStyle } from '../MapStyles';
+import Mapbox from '../shared/mapbox/Mapbox';
+import { getMapStyle } from '../shared/mapbox/styles';
+import SwitchMapStyle from '../shared/mapbox/SwitchMapStyle';
 
 import ComboAdresseSearch from '../ComboAdresseSearch';
 import {
@@ -22,9 +24,7 @@ import {
   generateId,
   useEvent,
   findFeature
-} from '../shared/map';
-
-const Map = ReactMapboxGl({});
+} from '../shared/mapbox/utils';
 
 function MapEditor({ featureCollection, url, preview, options }) {
   const drawControl = useRef(null);
@@ -38,10 +38,11 @@ function MapEditor({ featureCollection, url, preview, options }) {
   const [cadastresFeatureCollection, setCadastresFeatureCollection] = useState(
     filterFeatureCollection(featureCollection, 'cadastre')
   );
-  const mapStyle = useMemo(
-    () => getMapStyle(style, options.cadastres, options.mnhn),
-    [style, options]
-  );
+  const mapStyle = useMemo(() => getMapStyle(style, options.layers), [
+    style,
+    options
+  ]);
+  const hasCadastres = useMemo(() => options.layers.includes('cadastres'));
 
   const translations = [
     ['.mapbox-gl-draw_line', 'Tracer une ligne'],
@@ -288,7 +289,7 @@ function MapEditor({ featureCollection, url, preview, options }) {
           }}
         />
       </div>
-      <Map
+      <Mapbox
         onStyleLoad={(map) => onMapLoad(map)}
         fitBounds={bbox}
         fitBoundsOptions={{ padding: 100 }}
@@ -299,7 +300,7 @@ function MapEditor({ featureCollection, url, preview, options }) {
           height: '500px'
         }}
       >
-        {options.cadastres ? (
+        {hasCadastres ? (
           <GeoJSONLayer
             data={cadastresFeatureCollection}
             fillPaint={polygonCadastresFill}
@@ -321,7 +322,7 @@ function MapEditor({ featureCollection, url, preview, options }) {
         />
         <SwitchMapStyle style={style} setStyle={setStyle} ign={options.ign} />
         <ZoomControl />
-      </Map>
+      </Mapbox>
     </>
   );
 }
@@ -335,8 +336,7 @@ MapEditor.propTypes = {
   url: PropTypes.string,
   preview: PropTypes.bool,
   options: PropTypes.shape({
-    cadastres: PropTypes.bool,
-    mnhn: PropTypes.bool,
+    layers: PropTypes.array,
     ign: PropTypes.bool
   })
 };

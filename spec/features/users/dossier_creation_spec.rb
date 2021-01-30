@@ -20,7 +20,7 @@ feature 'Creating a new dossier:' do
         expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
         expect(page).to have_procedure_description(procedure)
 
-        choose 'M.'
+        choose 'Monsieur'
         fill_in 'individual_nom',    with: 'Nom'
         fill_in 'individual_prenom', with: 'Prenom'
       end
@@ -66,17 +66,17 @@ feature 'Creating a new dossier:' do
       let(:dossier) { procedure.dossiers.last }
 
       before do
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/etablissements.json'))
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}?.*token=/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/exercices.json'))
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}?.*token=/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\/#{siret}/)
           .to_return(status: 404, body: '')
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/2020\/02\/entreprise\/#{siren}?.*token=/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/2020\/02\/entreprise\/#{siren}/)
           .to_return(status: 404, body: '')
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}?.*token=/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_annuels_acoss_covid\/#{siren}/)
           .to_return(status: 404, body: '')
         allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return([])
         allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)

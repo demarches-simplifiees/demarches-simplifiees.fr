@@ -70,7 +70,7 @@ describe 'instructeurs/dossiers/state_button.html.haml', type: :view do
 
     it 'renders a dropdown' do
       expect(rendered).to have_dropdown_title(dossier_display_state(dossier))
-      expect(rendered).to have_dropdown_items(count: 1)
+      expect(rendered).to have_dropdown_items(count: 2)
       expect(rendered).to have_dropdown_item('Repasser en instruction', href: repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier))
     end
 

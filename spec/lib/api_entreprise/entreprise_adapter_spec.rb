@@ -6,7 +6,7 @@ describe ApiEntreprise::EntrepriseAdapter do
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}?.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
@@ -84,7 +84,7 @@ describe ApiEntreprise::EntrepriseAdapter do
     let(:status) { 500 }
 
     it 'raises an exception' do
-      expect { subject }.to raise_error(ApiEntreprise::API::RequestFailed)
+      expect { subject }.to raise_error(ApiEntreprise::API::Error::RequestFailed)
     end
   end
 end

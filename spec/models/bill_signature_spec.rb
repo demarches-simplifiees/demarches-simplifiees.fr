@@ -72,48 +72,41 @@ RSpec.describe BillSignature, type: :model do
     end
 
     describe 'check_signature_contents' do
+      let(:signature) { File.open('spec/fixtures/files/bill_signature/signature.der') }
+      let(:signature_date) { DateTime.parse('2019-04-30 15:30:20') }
+      let(:signature_digest) { Digest::SHA256.hexdigest('CECI EST UN BLOB') }
+      let(:current_date) { Time.zone.now }
+
       before do
-        bill_signature.signature.attach(io: StringIO.new(signature), filename: 'file') if signature.present?
-        allow(ASN1::Timestamp).to receive(:signature_time).and_return(signature_time)
-        allow(ASN1::Timestamp).to receive(:signed_digest).and_return(signed_digest)
-        bill_signature.digest = digest
+        Timecop.freeze(current_date)
+        bill_signature.signature.attach(io: signature, filename: 'file') if signature.present?
+        bill_signature.digest = signature_digest
         bill_signature.valid?
+        Timecop.return
       end
 
-      context 'when the signature is correct' do
-        let(:signature) { 'signature' }
-        let(:signature_time) { 1.day.ago }
-        let(:digest) { 'abcd' }
-        let(:signed_digest) { 'abcd' }
+      subject { bill_signature.errors.details[:signature] }
 
-        it { expect(bill_signature.errors.details[:signature]).to be_empty }
+      context 'when the signature is correct' do
+        it { is_expected.to be_empty }
       end
 
       context 'when the signature isn’t set' do
         let(:signature) { nil }
-        let(:signature_time) { 1.day.ago }
-        let(:digest) { 'abcd' }
-        let(:signed_digest) { 'abcd' }
 
-        it { expect(bill_signature.errors.details[:signature]).to eq [error: :blank] }
+        it { is_expected.to eq [error: :blank] }
       end
 
       context 'when the signature time is in the future' do
-        let(:signature) { 'signature' }
-        let(:signature_time) { 1.day.from_now }
-        let(:digest) { 'abcd' }
-        let(:signed_digest) { 'abcd' }
+        let(:current_date) { signature_date - 1.day }
 
-        it { expect(bill_signature.errors.details[:signature]).to eq [error: :invalid_date] }
+        it { is_expected.to eq [error: :invalid_date] }
       end
 
       context 'when the signature doesn’t match the digest' do
-        let(:signature) { 'signature' }
-        let(:signature_time) { 1.day.ago }
-        let(:digest) { 'abcd' }
-        let(:signed_digest) { 'dcba' }
+        let(:signature_digest) { 'dcba' }
 
-        it { expect(bill_signature.errors.details[:signature]).to eq [error: :invalid] }
+        it { is_expected.to eq [error: :invalid] }
       end
     end
   end
@@ -160,5 +153,17 @@ RSpec.describe BillSignature, type: :model do
       it { expect(bill_signature.read_serialized).to eq('{"1234":"abcd","5678":"dcba"}') }
       it { expect(bill_signature.serialized.filename).to eq('demarches-simplifiees-operations-1871-03-18.json') }
     end
+  end
+
+  describe '#set_signature' do
+    let(:bill_signature) { BillSignature.new }
+    let(:signature) { 'une belle signature' }
+    let(:day) { Time.zone.parse('12/12/2012') }
+
+    before { bill_signature.set_signature(signature, day) }
+
+    it { expect(bill_signature.signature.attached?).to be(true) }
+    it { expect(bill_signature.signature.filename.to_s).to eq('demarches-simplifiees-signature-2012-12-12.der') }
+    it { expect(bill_signature.signature.content_type).to eq('application/x-x509-ca-cert') }
   end
 end

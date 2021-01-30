@@ -6,7 +6,7 @@ RSpec.describe ApiEntreprise::ExercicesJob, type: :job do
   let(:status) { 200 }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/.*token=/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\//)
       .to_return(body: body, status: status)
     allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
   end
