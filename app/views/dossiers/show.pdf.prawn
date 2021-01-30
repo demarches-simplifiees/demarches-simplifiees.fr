@@ -170,7 +170,7 @@ prawn_document(page_size: "A4") do |pdf|
   })
   pdf.font 'marianne'
 
-  pdf.svg IO.read("app/assets/images/header/logo-ds-wide.svg"), width: 300, position: :center
+  pdf.svg IO.read(DOSSIER_PDF_EXPORT_LOGO_SRC), width: 300, position: :center
   pdf.move_down(40)
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
