@@ -14,3 +14,6 @@ MAILER_LOGO_SRC = ENV.fetch("MAILER_LOGO_SRC", "mailer/instructeur_mailer/logo.p
 
 # Default logo of a procedure
 PROCEDURE_DEFAULT_LOGO_SRC = ENV.fetch("PROCEDURE_DEFAULT_LOGO_SRC", "republique-francaise-logo.svg")
+
+# Logo in PDF export of a "Dossier"
+DOSSIER_PDF_EXPORT_LOGO_SRC = ENV.fetch("DOSSIER_PDF_EXPORT_LOGO_SRC", "app/assets/images/header/logo-ds-wide.svg")
