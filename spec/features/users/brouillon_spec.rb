@@ -94,7 +94,6 @@ feature 'The user' do
     expect(page).to have_selected_value('simple_choice_drop_down_list_long', selected: 'bravo')
     expect(page).to have_selected_value('multiple_choice_drop_down_list_long', selected: ['alpha', 'charly'])
 
-    expect(page).to have_selected_value('pays', selected: 'AUSTRALIE')
     expect(page).to have_selected_value('nationalites', selected: 'Australienne')
     expect(page).to have_selected_value('commune_de_polynesie', selected: 'Mahina - Tahiti - 98709')
     expect(page).to have_selected_value('code_postal_de_polynesie', selected: '98709 - Mahina - Tahiti')
