@@ -18,4 +18,18 @@ class FranceConnectInformation < ApplicationRecord
   belongs_to :user, optional: true
 
   validates :france_connect_particulier_id, presence: true, allow_blank: false, allow_nil: false
+
+  def associate_user!
+    user = User.find_by(email: email_france_connect.downcase)
+
+    if user.nil?
+      user = User.create!(
+        email: email_france_connect.downcase,
+        password: Devise.friendly_token[0, 20],
+        confirmed_at: Time.zone.now
+      )
+    end
+
+    update_attribute('user_id', user.id)
+  end
 end
