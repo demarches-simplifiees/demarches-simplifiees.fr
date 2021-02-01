@@ -19,7 +19,7 @@ module Types
     end
 
     def dossier(number:)
-      Dossier.for_api_v2.find(number)
+      Dossier.state_not_brouillon.for_api_v2.find(number)
     rescue => e
       raise GraphQL::ExecutionError.new(e.message, extensions: { code: :not_found })
     end

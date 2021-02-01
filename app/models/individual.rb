@@ -25,7 +25,7 @@ class Individual < ApplicationRecord
     sanitize_camelcase(:prenom)
   }
 
-  GENDER_MALE = 'M.'
+  GENDER_MALE = "M."
   GENDER_FEMALE = 'Mme'
 
   def self.from_france_connect(fc_information)

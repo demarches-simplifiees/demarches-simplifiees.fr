@@ -200,4 +200,46 @@ RSpec.describe Avis, type: :model do
       end
     end
   end
+
+  describe '#invited_expert_emails' do
+    let!(:procedure) { create(:procedure, :published) }
+
+    subject { Avis.invited_expert_emails(procedure) }
+
+    context 'when there is one dossier' do
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+
+      context 'when a procedure has one avis and unknown instructeur' do
+        let!(:avis) { create(:avis, dossier: dossier, email: 'expert@expert.com') }
+
+        it { is_expected.to eq(['expert@expert.com']) }
+      end
+
+      context 'when a procedure has one avis and known instructeur' do
+        let!(:avis) { create(:avis, dossier: dossier, instructeur: create(:instructeur, email: 'expert@expert.com')) }
+
+        it { is_expected.to eq(['expert@expert.com']) }
+      end
+
+      context 'when a dossier has 2 avis from the same expert' do
+        let!(:avis) { create(:avis, dossier: dossier, email: 'expert@expert.com') }
+        let!(:avis2) { create(:avis, dossier: dossier, email: 'expert@expert.com') }
+
+        it { is_expected.to eq(['expert@expert.com']) }
+      end
+    end
+
+    context 'when there are two dossiers' do
+      let!(:dossier) { create(:dossier, procedure: procedure) }
+      let!(:dossier2) { create(:dossier, procedure: procedure) }
+
+      context 'and each one has an avis from 3 different experts' do
+        let!(:avis) { create(:avis, dossier: dossier, instructeur: create(:instructeur, email: '2_expert@expert.com')) }
+        let!(:unaffected_avis) { create(:avis, dossier: dossier2, email: '3_expert@expert.com') }
+        let!(:unaffected_avis2) { create(:avis, dossier: dossier2, email: '1_expert@expert.com') }
+
+        it { is_expected.to eq(['1_expert@expert.com', '2_expert@expert.com', '3_expert@expert.com']) }
+      end
+    end
+  end
 end

@@ -17,15 +17,15 @@ WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"
 CALENDLY_URL = "https://calendly.com/demarches-simplifiees/accompagnement-administrateur-demarches-simplifiees-fr"
 
 FR_DOC_URL = "https://doc.#{FR_SITE}"
-DOC_URL = "https://mes-demarches.gitbook.io/documentation"
+DOC_URL = ENV.fetch("DOC_URL", "https://mes-demarches.gitbook.io/documentation")
 DOC_NOUVEAUTES_URL = [DOC_URL, "nouveautes"].join("/")
 ADMINISTRATEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels", "dematerialiser-formulaire"].join("/")
 INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriels"].join("/")
 CADRE_JURIDIQUE_URL = [ADMINISTRATEUR_TUTORIAL_URL, "cadre-juridique"].join("#") # TODO version polynésie
 LISTE_DES_DEMARCHES_URL = "https://www.service-public.pf/demarches-simplifiees"
-CGU_URL = [DOC_URL, "cgu"].join("/")
+CGU_URL = ENV.fetch("CGU_URL", [DOC_URL, "cgu"].join("/"))
 RGPD_URL = [CGU_URL, "rgpd"].join("#")
-MENTIONS_LEGALES_URL = [CGU_URL, "mentions-legales"].join("#")
+MENTIONS_LEGALES_URL = ENV.fetch("MENTIONS_LEGALES_URL", [CGU_URL, "mentions-legales"].join("#"))
 API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 ARCHIVAGE_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")
@@ -51,7 +51,7 @@ MATOMO_IFRAME_URL = 'https://beta.mes-demarches.gov.pf/matomo/index.php?module=C
 API_TE_FENUA_URL = ENV.fetch("API_TE_FENUA_URL", "https://www.tefenua.gov.pf/api")
 
 API_ENTREPRISE_PF_AUTH = ENV.fetch("API_ENTREPRISE_PF_AUTH", "https://auth.gov.pf/auth/realms/Itaiete/protocol/openid-connect/token")
-API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://ppr.api.i-taiete2.gov.pf/api/v2")
+API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://www.i-taiete.gov.pf/api/v2")
 
 API_CPS_AUTH = ENV.fetch("API_CPS_AUTH", "https://connect.cps.pf/auth/realms/TatouAssures/protocol/openid-connect/token")
 API_CPS_URL = ENV.fetch("API_CPS_URL", "https://tatouapi.cps.pf")

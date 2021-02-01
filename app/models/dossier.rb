@@ -152,6 +152,16 @@ class Dossier < ApplicationRecord
   scope :updated_since,       -> (since) { where('dossiers.updated_at >= ?', since) }
   scope :created_since,       -> (since) { where('dossiers.en_construction_at >= ?', since) }
 
+  scope :with_type_de_champ, -> (stable_id) {
+    joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
+      .where('types_de_champ.private = FALSE AND types_de_champ.stable_id = ?', stable_id)
+  }
+
+  scope :with_type_de_champ_private, -> (stable_id) {
+    joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
+      .where('types_de_champ.private = TRUE AND types_de_champ.stable_id = ?', stable_id)
+  }
+
   scope :all_state,                   -> { not_archived.state_not_brouillon }
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
@@ -263,13 +273,19 @@ class Dossier < ApplicationRecord
     with_discarded
       .discarded
       .state_brouillon
-      .where('hidden_at < ?', 1.month.ago)
+      .where('hidden_at < ?', 1.week.ago)
   end
   scope :discarded_en_construction_expired, -> do
     with_discarded
       .discarded
       .state_en_construction
-      .where('dossiers.hidden_at < ?', 1.month.ago)
+      .where('dossiers.hidden_at < ?', 1.week.ago)
+  end
+  scope :discarded_termine_expired, -> do
+    with_discarded
+      .discarded
+      .state_termine
+      .where('dossiers.hidden_at < ?', 1.week.ago)
   end
 
   scope :brouillon_near_procedure_closing_date, -> do
@@ -525,16 +541,24 @@ class Dossier < ApplicationRecord
   end
 
   def discard_and_keep_track!(author, reason)
-    if keep_track_on_deletion? && en_construction?
-      deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+    if keep_track_on_deletion?
+      if en_construction?
+        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
 
-      administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
-      administration_emails.each do |email|
-        DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
+        administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
+        administration_emails.each do |email|
+          DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
+        end
+        DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
+
+        log_dossier_operation(author, :supprimer, self)
+      elsif termine?
+        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+
+        DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user.email).deliver_later
+
+        log_dossier_operation(author, :supprimer, self)
       end
-      DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
-
-      log_dossier_operation(author, :supprimer, self)
     end
 
     discard!
@@ -595,6 +619,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_dossier_operation(instructeur, :accepter, self)
   end
@@ -608,6 +633,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
   end
@@ -620,6 +646,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_refused_notification(self).deliver_later
     log_dossier_operation(instructeur, :refuser, self)
   end
@@ -632,8 +659,13 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_without_continuation_notification(self).deliver_later
     log_dossier_operation(instructeur, :classer_sans_suite, self)
+  end
+
+  def remove_titres_identite!
+    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def check_mandatory_champs

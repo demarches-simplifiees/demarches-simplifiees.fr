@@ -12,7 +12,7 @@ describe ApiEntreprise::EtablissementAdapter do
     subject { described_class.new(siret, procedure_id).to_params }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(body: File.read(fixture, status: 200))
     end
 
@@ -99,7 +99,7 @@ describe ApiEntreprise::EtablissementAdapter do
     subject { described_class.new(siret, procedure_id).to_params }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(body: File.read('spec/fixtures/files/api_entreprise/etablissements_private.json', status: 200))
     end
 
@@ -113,7 +113,7 @@ describe ApiEntreprise::EtablissementAdapter do
     subject { described_class.new(bad_siret, procedure_id).to_params }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{bad_siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{bad_siret}/)
         .to_return(body: 'Fake body', status: 404)
     end
 

@@ -3,7 +3,7 @@ describe ProcedurePresentation do
   let(:instructeur) { create(:instructeur) }
   let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
   let(:first_type_de_champ) { assign_to.procedure.types_de_champ.first }
-  let(:first_type_de_champ_id) { first_type_de_champ.id.to_s }
+  let(:first_type_de_champ_id) { first_type_de_champ.stable_id.to_s }
   let(:procedure_presentation) {
     create(:procedure_presentation,
       assign_to: assign_to,
@@ -72,10 +72,10 @@ describe ProcedurePresentation do
           { "label" => 'Numéro TAHITI', "table" => 'etablissement', "column" => 'siret' },
           { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf' },
           { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal' },
-          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.id.to_s },
-          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.id.to_s },
-          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.id.to_s },
-          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.id.to_s }
+          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s },
+          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s },
+          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s },
+          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s }
         ]
       }
 
@@ -104,7 +104,7 @@ describe ProcedurePresentation do
     end
   end
 
-  describe "#fields_for_select" do
+  describe "#displayed_fields_for_select" do
     subject { create(:procedure_presentation, assign_to: assign_to) }
 
     before do
@@ -122,13 +122,13 @@ describe ProcedurePresentation do
       ])
     end
 
-    it { expect(subject.fields_for_select).to eq([["label1", "table1/column1"], ["label2", "table2/column2"]]) }
+    it { expect(subject.displayed_fields_for_select).to eq([[["label1", "table1/column1"], ["label2", "table2/column2"]], ["user/email"]]) }
   end
 
   describe '#get_value' do
     let(:procedure_presentation) { create(:procedure_presentation, procedure: procedure, assign_to: assign_to, displayed_fields: [{ 'table' => table, 'column' => column }]) }
 
-    subject { procedure_presentation.displayed_field_values(dossier).first }
+    subject { procedure_presentation.displayed_fields_values(dossier).first }
 
     context 'for self table' do
       let(:table) { 'self' }
@@ -217,14 +217,14 @@ describe ProcedurePresentation do
       let!(:follow2) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'user2@host')) }
 
       it "return emails of followers instructeurs" do
-        emails_to_display = procedure_presentation.displayed_field_values(dossier).first.split(', ').sort
+        emails_to_display = procedure_presentation.displayed_fields_values(dossier).first.split(', ').sort
         expect(emails_to_display).to eq ["user1@host", "user2@host"]
       end
     end
 
     context 'for type_de_champ table' do
       let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.id.to_s }
+      let(:column) { procedure.types_de_champ.first.stable_id.to_s }
 
       let(:dossier) { create(:dossier, procedure: procedure) }
 
@@ -235,7 +235,7 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ_private table' do
       let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.id.to_s }
+      let(:column) { procedure.types_de_champ_private.first.stable_id.to_s }
 
       let(:dossier) { create(:dossier, procedure: procedure) }
 
@@ -325,7 +325,7 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ table' do
       let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.id.to_s }
+      let(:column) { procedure.types_de_champ.first.stable_id.to_s }
       let(:order) { 'desc' } # Asc works the same, no extra test required
 
       let(:beurre_dossier) { create(:dossier, procedure: procedure) }
@@ -341,7 +341,7 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ_private table' do
       let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.id.to_s }
+      let(:column) { procedure.types_de_champ_private.first.stable_id.to_s }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       let(:biere_dossier) { create(:dossier, procedure: procedure) }
@@ -496,7 +496,7 @@ describe ProcedurePresentation do
     end
 
     context 'for type_de_champ table' do
-      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' }] }
+      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'keep' }] }
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
@@ -514,8 +514,8 @@ describe ProcedurePresentation do
       context 'with multiple search values' do
         let(:filter) do
           [
-            { 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'keep' },
-            { 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'and' }
+            { 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'keep' },
+            { 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'and' }
           ]
         end
 
@@ -533,7 +533,7 @@ describe ProcedurePresentation do
       end
 
       context 'with yes_no type_de_champ' do
-        let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.id.to_s, 'value' => 'true' }] }
+        let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'true' }] }
         let(:procedure) { create(:procedure, :with_yes_no) }
 
         before do
@@ -546,7 +546,7 @@ describe ProcedurePresentation do
     end
 
     context 'for type_de_champ_private table' do
-      let(:filter) { [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' }] }
+      let(:filter) { [{ 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'keep' }] }
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
@@ -562,8 +562,8 @@ describe ProcedurePresentation do
       context 'with multiple search values' do
         let(:filter) do
           [
-            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'keep' },
-            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.id.to_s, 'value' => 'and' }
+            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'keep' },
+            { 'table' => 'type_de_champ_private', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'and' }
           ]
         end
 
@@ -762,7 +762,7 @@ describe ProcedurePresentation do
 
     context 'for type de champ' do
       let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.id.to_s }
+      let(:column) { procedure.types_de_champ.first.stable_id.to_s }
 
       it 'preloads the champs relation' do
         # Ideally, we would only preload the champs for the matching column
@@ -779,7 +779,7 @@ describe ProcedurePresentation do
 
     context 'for type de champ private' do
       let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.id.to_s }
+      let(:column) { procedure.types_de_champ_private.first.stable_id.to_s }
 
       it 'preloads the champs relation' do
         # Ideally, we would only preload the champs for the matching column

@@ -11,17 +11,16 @@ module Mutations
     field :errors, [Types::ValidationErrorType], null: true
 
     def resolve(dossier:, instructeur:)
-      if dossier.en_construction?
-        dossier.passer_en_instruction!(instructeur)
+      dossier.passer_en_instruction!(instructeur)
 
-        { dossier: dossier }
-      else
-        { errors: ["Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"] }
-      end
+      { dossier: dossier }
     end
 
     def authorized?(dossier:, instructeur:)
-      instructeur.is_a?(Instructeur) && instructeur.dossiers.exists?(id: dossier.id)
+      if !dossier.en_construction?
+        return false, { errors: ["Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"] }
+      end
+      dossier_authorized_for?(dossier, instructeur)
     end
   end
 end

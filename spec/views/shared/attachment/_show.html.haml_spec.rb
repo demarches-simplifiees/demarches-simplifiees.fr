@@ -27,6 +27,17 @@ describe 'shared/attachment/_show.html.haml', type: :view do
     end
   end
 
+  context 'when watermark is pending' do
+    let(:champ) { create(:champ_titre_identite) }
+
+    it 'displays the filename, but doesn’t allow to download the file' do
+      pp champ.piece_justificative_file.attachment.watermark_pending?
+      expect(subject).to have_text(champ.piece_justificative_file.filename.to_s)
+      expect(subject).not_to have_link(champ.piece_justificative_file.filename.to_s)
+      expect(subject).to have_text('traitement de la pièce en cours')
+    end
+  end
+
   context 'when the file is scanned and safe' do
     let(:virus_scan_result) { ActiveStorage::VirusScanner::SAFE }
 

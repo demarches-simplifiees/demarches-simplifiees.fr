@@ -27,22 +27,24 @@ feature 'The user' do
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
     select('alpha', from: form_id_for('multiple_choice_drop_down_list_long'))
     select('charly', from: form_id_for('multiple_choice_drop_down_list_long'))
-    select('AUSTRALIE', from: 'pays')
-    select('Australienne', from: 'nationalites')
-    select('Mahina - Tahiti - 98709', from: 'commune_de_polynesie')
-    select('98709 - Mahina - Tahiti', from: 'code_postal_de_polynesie')
+    select_champ_geo('pays', 'aust', 'AUSTRALIE')
 
     select_champ_geo('regions', 'Ma', 'Martinique')
 
+    select_champ_geo('departements', 'Ai', '02 - Aisne')
+
     select_champ_geo('communes', 'Ambl', 'Ambléon (01300)')
 
-    select_champ_geo('departements', 'Ai', '02 - Aisne')
+    select('Australienne', from: 'nationalites')
+    select('Mahina - Tahiti - 98709', from: 'commune_de_polynesie')
+    select('98709 - Mahina - Tahiti', from: 'code_postal_de_polynesie')
 
     check('engagement')
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
     blur
+    sleep(0.7)
     expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
     # check data on the dossier
@@ -62,13 +64,14 @@ feature 'The user' do
     expect(JSON.parse(champ_value_for('multiple_choice_drop_down_list_long'))).to match(['alpha', 'charly'])
     expect(JSON.parse(champ_value_for('multiple_drop_down_list'))).to match(['val1', 'val3'])
     expect(champ_value_for('pays')).to eq('AUSTRALIE')
+    expect(champ_value_for('regions')).to eq('Martinique')
+    expect(champ_value_for('departements')).to eq('02 - Aisne')
+    expect(champ_value_for('communes')).to eq('Ambléon (01300)')
+
     expect(champ_value_for('nationalites')).to eq('Australienne')
     expect(champ_value_for('commune_de_polynesie')).to eq('Mahina - Tahiti - 98709')
     expect(champ_value_for('code_postal_de_polynesie')).to eq('98709 - Mahina - Tahiti')
 
-    expect(champ_value_for('regions')).to eq('Martinique')
-    # expect(champ_value_for('departements')).to eq('02 - Aisne')
-    # expect(champ_value_for('communes')).to eq('Ambléon (01300)')
     expect(champ_value_for('engagement')).to eq('on')
     expect(champ_value_for('dossier_link')).to eq('123')
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
@@ -90,10 +93,12 @@ feature 'The user' do
     expect(page).to have_checked_field('val3')
     expect(page).to have_selected_value('simple_choice_drop_down_list_long', selected: 'bravo')
     expect(page).to have_selected_value('multiple_choice_drop_down_list_long', selected: ['alpha', 'charly'])
-    expect(page).to have_selected_value('pays', selected: 'AUSTRALIE')
+
     expect(page).to have_selected_value('nationalites', selected: 'Australienne')
     expect(page).to have_selected_value('commune_de_polynesie', selected: 'Mahina - Tahiti - 98709')
     expect(page).to have_selected_value('code_postal_de_polynesie', selected: '98709 - Mahina - Tahiti')
+
+    expect(page).to have_hidden_field('pays', with: 'AUSTRALIE')
     expect(page).to have_hidden_field('regions', with: 'Martinique')
     expect(page).to have_hidden_field('departements', with: '02 - Aisne')
     expect(page).to have_hidden_field('communes', with: 'Ambléon (01300)')
@@ -338,7 +343,7 @@ feature 'The user' do
   end
 
   def fill_individual
-    choose 'M.'
+    choose 'Monsieur'
     fill_in('individual_prenom', with: 'prenom')
     fill_in('individual_nom', with: 'nom')
     click_on 'Continuer'

@@ -111,6 +111,9 @@ FactoryBot.define do
       end
     end
 
+    trait :brouillon do
+    end
+
     trait :en_construction do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:en_construction)
