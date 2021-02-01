@@ -32,7 +32,7 @@ RUN bundle config --global frozen 1 &&\
 FROM base
 ENV APP_PATH /app
 #----- minimum set of packages including PostgreSQL client, yarn
-RUN apk add --no-cache --update tzdata libcurl postgresql-libs yarn
+RUN apk add --no-cache --update tzdata libcurl postgresql-libs yarn imagemagick
 
 WORKDIR ${APP_PATH}
 RUN adduser -Dh ${APP_PATH} userapp
