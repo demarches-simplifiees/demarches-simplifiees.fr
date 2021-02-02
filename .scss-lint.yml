@@ -1,7 +1,6 @@
 exclude:
-  - 'app/assets/stylesheets/new_design/reset.scss'
+  - 'app/assets/stylesheets/reset.scss'
   - 'app/assets/stylesheets/direct_uploads.scss'
-  - 'app/assets/stylesheets/new_design/direct_uploads.scss'
 
 linters:
   BangFormat:

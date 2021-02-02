@@ -1,42 +1,63 @@
-@media print {
-  html,
-  body {
-    margin: 0;
-  }
+@import "colors";
+@import "fonts";
 
-  #infos-dossiers .row:last-child {
-    display: none;
-  }
+.new-header,
+.sub-header,
+footer {
+  display: none;
+}
 
-  #infos-dossiers {
-    margin-bottom: -70px;
-  }
+.print-header {
+  display: block;
+  margin-top: 30px;
+  font-size: 30px;
+  line-height: 50px;
+  font-weight: bold;
+}
 
-  #left-panel {
-    margin-top: 0;
-    height: auto;
-    position: relative;
-    width: 100%;
-  }
+body {
+  font-family: "Muli";
+}
 
-  #wrap {
-    overflow: visible;
-  }
+.subtitle {
+  margin-top: -20px;
+  color: $dark-grey;
+}
 
-  #main-container {
-    width: 100%;
-  }
+th,
+td {
+  vertical-align: top;
+}
 
-  .copyright {
-    width: 100%;
-    left: 0;
-  }
+th {
+  text-align: left;
 
-  .no-page-break-inside {
-    page-break-inside: avoid;
+  &.header-section {
+    padding-top: 1.2em;
+    font-size: 1.2em;
   }
+}
 
-  .display-block-on-print {
-    display: block !important;
+.messagerie {
+  .messages-list {
+    list-style: none;
+    padding-left: 0;
+    max-height: none;
+
+    h2 {
+      font-size: 110%;
+    }
+
+    .person-icon {
+      display: none;
+    }
   }
+}
+
+.message {
+  margin-bottom: 40px;
+}
+
+.updated-at {
+  display: none;
 }
