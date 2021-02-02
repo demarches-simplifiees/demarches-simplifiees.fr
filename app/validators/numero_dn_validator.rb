@@ -15,7 +15,7 @@ class NumeroDNValidator < ActiveModel::Validator
         else
           record.errors[record.type_de_champ.libelle] << "Le numéro de DN est inconnu de la CPS."
         end
-      rescue ApiEntreprise::API::RequestFailed => e
+      rescue => e
         # if CPS is not accessible, let user continue
         Rails.logger.error('Unable to contact CPS:' + e.message)
       end

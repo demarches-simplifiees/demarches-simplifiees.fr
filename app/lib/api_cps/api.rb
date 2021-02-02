@@ -20,10 +20,10 @@ class ApiCPS::API
     if response.success?
       JSON.parse(response.body)['datas']
     elsif response.code&.between?(401, 499)
-      raise ApiEntreprise::API::ResourceNotFound
+      raise ApiEntreprise::API::Error::ResourceNotFound.new(response)
     else
       Rails.logger.error("Unable to contact CPS API: response code #{response.code} url=#{url} called with #{json_dn}")
-      raise ApiEntreprise::API::RequestFailed
+      raise ApiEntreprise::API::Error::RequestFailed.new(response)
     end
   end
 
