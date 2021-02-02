@@ -13,7 +13,7 @@ class Cron::AutoArchiveProcedureJob < Cron::CronJob
 
         procedure.close!
       rescue StandardError => e
-        Raven.capture_exception(e, extra: { procedure_id: procedure.id })
+        Sentry.capture_exception(e, extra: { procedure_id: procedure.id })
       end
     end
   end

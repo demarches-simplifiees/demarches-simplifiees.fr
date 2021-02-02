@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, if: -> { !Rails.env.test? }
   before_action :set_current_roles
   before_action :load_navbar_left_pannel_partial_url
-  before_action :set_raven_context
+  before_action :set_sentry_user
   before_action :redirect_if_untrusted
   before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -149,8 +149,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_raven_context
-    Raven.user_context(sentry_user)
+  def set_sentry_user
+    Sentry.set_user(sentry_user)
   end
 
   # private method called by rails fwk
