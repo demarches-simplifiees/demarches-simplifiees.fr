@@ -96,6 +96,12 @@ search:
 
 ## Consider these keys used:
 ignore_unused:
+- 'activerecord.attributes.*'
+- 'activerecord.errors.*'
+- 'errors.messages.blank'
+- 'pluralize.*'
+- 'views.pagination.*'
+- 'time.formats.default'
 # - '{devise,kaminari,will_paginate}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'
