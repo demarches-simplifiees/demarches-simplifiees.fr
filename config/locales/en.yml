@@ -61,7 +61,7 @@ en:
   activerecord:
     attributes:
       user:
-        siret: 'Numéro SIRET'
+        siret: 'SIRET number'
         password: 'password'
       instructeur:
         password: 'password'
@@ -100,38 +100,25 @@ en:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               # taken_can_be_claimed: est identique à celui d’une autre de vos procedures publiées. Si vous publiez cette procedure, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
-              invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' et '-'.
+              invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
 
   errors:
     messages:
-      # already_confirmed: "a déjà été validé(e), veuillez essayer de vous connecter"
-      # confirmation_period_expired: "à confirmer dans les %{period}, merci de faire une nouvelle demande"
-      # expired: "a expiré, merci d’en faire une nouvelle demande"
-      not_found: "was not found"
-      not_locked: "was not locked"
-      not_saved:
-        one: "1 error prevented this %{resource} from being saved :"
-        other: "%{count} errors prevented this %{resource} from being saved :"
       dossier_not_found: "The file does not exist or you do not have access to it."
-      dossier_map_not_activated: "The file does not have access to the map."
+      # # dossier_map_not_activated: "The file does not have access to the map."
       invalid_siret: "The SIRET is incorrect"
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
-      # siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
-      # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
+      siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
+      siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
+      # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Error trying to connect to France Connect."
       procedure_archived: "This procedure has been closed, it is no longer possible to submit a file."
-      procedure_not_draft: "THis procedure is not a draft anymore."
+      # # procedure_not_draft: "This procedure is not a draft anymore."
       # cadastres_empty:
       #   one: "Aucune parcelle cadastrale sur la zone sélectionnée"
       #   other: "Aucune parcelle cadastrale sur les zones sélectionnées"
-      # quartiers_prioritaires_empty:
-      #   one: "Aucun quartier prioritaire sur la zone sélectionnée"
-      #   other: "Aucun quartier prioritaire sur les zones sélectionnées"
-      # parcelles_agricoles_empty:
-      #   one: "Aucune parcelle agricole sur la zone sélectionnée"
-      #   other: "Aucune parcelle agricole sur les zones sélectionnées"
       not_an_integer: "must be an integer (without decimal)"
       blank: "can't be blank"
 
