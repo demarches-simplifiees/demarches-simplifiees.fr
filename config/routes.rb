@@ -386,7 +386,7 @@ Rails.application.routes.draw do
       get 'transfert' => 'procedures#transfert', as: :transfert
       post 'transfer' => 'procedures#transfer', as: :transfer
       get 'invited_expert_list'
-      post 'toggle_allow_decision_access' => 'procedures#toggle_allow_decision_access', as: :toggle_allow_decision_access
+      put 'update_allow_decision_access' => 'procedures#update_allow_decision_access', as: :update_allow_decision_access
 
       resources :mail_templates, only: [:edit, :update]
 

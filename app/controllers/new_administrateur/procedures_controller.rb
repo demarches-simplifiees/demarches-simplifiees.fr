@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :invited_expert_list, :toggle_allow_decision_access]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :invited_expert_list, :update_allow_decision_access]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
@@ -189,13 +189,11 @@ module NewAdministrateur
       @experts_procedure = @procedure.experts_procedures.sort_by { |expert_procedure| expert_procedure.expert.email }
     end
 
-    def toggle_allow_decision_access
-      if @procedure.administrateurs.include?(current_administrateur)
-        @procedure
-          .experts_procedures
-          .find(params[:expert_procedure])
-          .toggle!(:allow_decision_access)
-      end
+    def update_allow_decision_access
+      @procedure
+        .experts_procedures
+        .find(params[:expert_procedure])
+        .update!(allow_decision_access: params[:experts_procedure][:allow_decision_access] == "1")
     end
 
     private
