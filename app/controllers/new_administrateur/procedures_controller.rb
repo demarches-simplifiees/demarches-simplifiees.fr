@@ -186,7 +186,7 @@ module NewAdministrateur
     end
 
     def invited_expert_list
-      @experts_procedure = ExpertsProcedure.invited_experts(@procedure)
+      @experts_procedure = @procedure.experts_procedures.sort_by { |expert_procedure| expert_procedure.expert.email }
     end
 
     def toggle_allow_decision_access
