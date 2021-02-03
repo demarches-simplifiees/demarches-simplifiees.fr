@@ -1,10 +1,7 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-<<<<<<< HEAD
     before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :invited_expert_list, :update_allow_decision_access]
-=======
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :invited_expert_list, :toggle_allow_decision_access]
->>>>>>> b99edd5d3... Expert is notifiable by an administrator
+
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
