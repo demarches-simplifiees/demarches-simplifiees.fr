@@ -4,7 +4,7 @@
                     'Liste des experts'] }
 
 .container
-  %h1.mt-2 Experts invités sur #{@procedure.libelle}
+  %h1.page-title.mt-2 Experts invités sur #{@procedure.libelle}
   - if @experts_procedure.present?
     %table.table.mt-2
       %thead
