@@ -22,6 +22,7 @@ class Champs::IntegerNumberChamp < Champ
     allow_nil: true,
     allow_blank: true,
     message: -> (object, _data) {
+      # i18n-tasks-use t('errors.messages.not_an_integer')
       "« #{object.libelle} » " + object.errors.generate_message(:value, :not_an_integer)
     }
   }
