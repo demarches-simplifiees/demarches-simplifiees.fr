@@ -14,14 +14,4 @@ class ExpertsProcedure < ApplicationRecord
   belongs_to :procedure
 
   has_many :avis, dependent: :destroy
-
-  def email_to_display
-    expert&.email
-  end
-
-  def self.invited_experts(procedure)
-    joins(:expert)
-      .where(procedure: procedure)
-      .sort
-  end
 end

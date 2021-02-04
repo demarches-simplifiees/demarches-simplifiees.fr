@@ -539,12 +539,21 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     let(:expert_procedure) { ExpertsProcedure.create(procedure: procedure, expert: expert) }
 
     subject do
-      put :update_allow_decision_access, params: { procedure_id: procedure.id, experts_procedure: { allow_decision_access: expert_procedure.allow_decision_access }, expert_procedure: expert_procedure }, format: :js
+      put :update_allow_decision_access, params: { procedure_id: procedure.id, experts_procedure: { allow_decision_access: !expert_procedure.allow_decision_access }, expert_procedure: expert_procedure }, format: :js
     end
 
     context 'when the experts_procedure is true' do
       let(:expert_procedure) { ExpertsProcedure.create(procedure: procedure, expert: expert, allow_decision_access: true) }
 
+      before do
+        subject
+        expert_procedure.reload
+      end
+
+      it { expect(expert_procedure.allow_decision_access).to be_falsy }
+    end
+
+    context 'when the experts_procedure is true' do
       before do
         subject
         expert_procedure.reload
