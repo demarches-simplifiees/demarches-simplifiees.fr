@@ -820,6 +820,12 @@ class Dossier < ApplicationRecord
     }
   end
 
+  def log_api_entreprise_job_exception(exception)
+    exceptions = self.api_entreprise_job_exceptions ||= []
+    exceptions << exception.inspect
+    update_column(:api_entreprise_job_exceptions, exceptions)
+  end
+
   private
 
   def geo_areas
