@@ -71,7 +71,7 @@ module FeatureHelpers
 
   # Add a new type de champ in the procedure editor
   def add_champ(options = {})
-    add_champs(options)
+    add_champs(**options)
   end
 
   # Add several new type de champ in the procedure editor
