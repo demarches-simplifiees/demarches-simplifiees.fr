@@ -227,8 +227,8 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
-  scope :with_notifiable_procedure, -> (notify_on_closed: false) do
-    states = notify_on_closed ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
+  scope :with_notifiable_procedure, -> (opts = { notify_on_closed: false }) do
+    states = opts[:notify_on_closed] ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
     joins(:procedure)
       .where(procedures: { aasm_state: states })
   end
