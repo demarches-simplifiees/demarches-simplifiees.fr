@@ -137,6 +137,12 @@ class Champ < ApplicationRecord
     type_de_champ.stable_id
   end
 
+  def log_fetch_external_data_exception(exception)
+    exceptions = self.fetch_external_data_exceptions ||= []
+    exceptions << exception.inspect
+    update_column(:fetch_external_data_exceptions, exceptions)
+  end
+
   private
 
   def needs_dossier_id?
