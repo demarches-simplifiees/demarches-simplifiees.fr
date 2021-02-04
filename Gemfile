@@ -115,10 +115,9 @@ end
 
 group :development, :test do
   gem 'axe-matchers' # accessibility rspec matchers
-  gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
-  gem 'pry-byebug'
+  gem 'pry-byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec_junit_formatter', require: false
   gem 'rspec-rails'
   gem 'ruby-debug-ide', require: false
