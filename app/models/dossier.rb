@@ -3,6 +3,7 @@
 # Table name: dossiers
 #
 #  id                                                 :integer          not null, primary key
+#  api_entreprise_job_exceptions                      :string           is an Array
 #  archived                                           :boolean          default(FALSE)
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
