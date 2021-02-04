@@ -125,7 +125,7 @@ $segmented-control-item-border-radius: 2 * $default-space;
 $big-number-card-padding: 2 * $segmented-control-item-border-radius;
 
 .big-number-card {
-  padding: $big-number-card-padding;
+  padding: $big-number-card-padding $segmented-control-item-horizontal-padding;
 }
 
 .big-number-card-title {
