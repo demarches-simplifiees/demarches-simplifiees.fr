@@ -8,9 +8,12 @@ class ApiEntreprise::Job < ApplicationJob
   # - bdf: erreur interne
   # so we retry every day for 5 days
   # same logic for ServiceUnavailable
-  retry_on ApiEntreprise::API::Error::ServiceUnavailable,
-    ApiEntreprise::API::Error::BadGateway,
-    wait: 1.day
+  rescue_from(ApiEntreprise::API::Error::ServiceUnavailable) do |exception|
+    retry_or_discard(exception)
+  end
+  rescue_from(ApiEntreprise::API::Error::BadGateway) do |exception|
+    retry_or_discard(exception)
+  end
 
   # We guess the backend is slow but not broken
   # and the information we are looking for is available
@@ -33,7 +36,31 @@ class ApiEntreprise::Job < ApplicationJob
     # override ApplicationJob#error to avoid reporting to sentry
   end
 
+  def log_job_exception(exception)
+    if etablissement.present?
+      if etablissement.dossier.present?
+        etablissement.dossier.log_api_entreprise_job_exception(exception)
+      elsif etablissement.champ.present?
+        etablissement.champ.log_fetch_external_data_exception(exception)
+      end
+    end
+  end
+
+  def retry_or_discard(exception)
+    if executions < max_attempts
+      retry_job wait: 1.day
+    else
+      log_job_exception(exception)
+    end
+  end
+
   def max_attempts
     ENV.fetch("MAX_ATTEMPTS_API_ENTREPRISE_JOBS", DEFAULT_MAX_ATTEMPTS_API_ENTREPRISE_JOBS).to_i
+  end
+
+  attr_reader :etablissement
+
+  def find_etablissement(etablissement_id)
+    @etablissement = Etablissement.find(etablissement_id)
   end
 end
