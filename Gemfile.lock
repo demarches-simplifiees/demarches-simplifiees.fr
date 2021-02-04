@@ -802,7 +802,6 @@ DEPENDENCIES
   bcrypt
   brakeman
   browser
-  byebug
   capybara
   capybara-email
   capybara-screenshot
