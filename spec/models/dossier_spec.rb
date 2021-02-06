@@ -1424,4 +1424,16 @@ describe Dossier do
       end
     end
   end
+
+  describe '#log_api_entreprise_job_exception' do
+    let(:dossier) { create(:dossier) }
+
+    context "add execption to the log" do
+      before do
+        dossier.log_api_entreprise_job_exception(StandardError.new('My special exception!'))
+      end
+
+      it { expect(dossier.api_entreprise_job_exceptions).to eq(['#<StandardError: My special exception!>']) }
+    end
+  end
 end
