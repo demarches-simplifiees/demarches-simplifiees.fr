@@ -7,34 +7,34 @@ describe ApiEntreprise::PfEtablissementAdapter do
     let(:siret) { '075390' }
     let!(:adresse) {
       [
-        "BP 130, 98713 PAPEETE BP,\n115,\nrue Dumont d'Urville,\nquartier Orovini,\nPapeete",
-        "BP 130, 98713 PAPEETE BP,\nCentre villeRaiatea,\nUturoa",
-        "BP 130, 98713 PAPEETE BP,\nrue Tihoni Tefaatau,\nimmeuble SCI Taaone,\nPirae",
-        "BP 130, 98713 PAPEETE BP,\nLotissement zone industrielle de PunaruuLot A,\nPunaauia",
-        "BP 130, 98713 PAPEETE BP,\nRoute de la pointe VénusDomaine Fritch,\nMahina",
-        "BP 130, 98713 PAPEETE BP,\nTerre domanialeNuku Hiva,\nTaiohae",
-        "BP 130, 98713 PAPEETE BP,\nHall du rez-de-chaussée de l'aéroport,\nFaaa",
-        "BP 130, 98713 PAPEETE BP,\n415,\nBoulevard Pomare,\nimmeuble Vaiete,\nPapeete",
-        "BP 130, 98713 PAPEETE BP,\nLots 1 et 2 de la Terre FareoaHuahine,\nFare",
-        "BP 130, 98713 PAPEETE BP,\nTerre Mataupuna n°2479Hiva Oa,\nAtuona",
-        "BP 130, 98713 PAPEETE BP,\nCentre commercial Temahame Nui de Taravao,\nAfaahiti",
-        "BP 130, 98713 PAPEETE BP,\nCentre commercial de MaharepaQrt Orovau,\nPaopao",
-        "BP 130, 98713 PAPEETE BP,\nFare UteImm Le Cail,\nPapeete",
-        "BP 130, 98713 PAPEETE BP,\nCentre communal de Ua Pou,\nHakahau",
-        "BP 130, 98713 PAPEETE BP,\nPk 36Centre commercial de Apatea,\nPapara",
-        "BP 130, 98713 PAPEETE BP,\nTerre Onanae 6Rurutu,\nMoerai",
-        "BP 130, 98713 PAPEETE BP,\nTerre Taamotu 1,\nNunue",
-        "BP 130, 98713 PAPEETE BP,\nComplexe municipalTubuai,\nMataura",
-        "BP 130, 98713 PAPEETE BP,\nBoulevard Pomare,\nquartier du Commerce,\nPapeete",
-        "BP 130, 98713 PAPEETE BP,\nLot communal de Tiputa,\nRangiroa",
-        "BP 130, 98713 PAPEETE BP,\nRte de l'ancienne mairieFace centre tavararo - Terre Tehorua 2 parcelle A,\nFaaa",
-        "BP 130, 98713 PAPEETE BP,\nRue Dumont d'Urville(Parking),\nPapeete",
-        "BP 130, 98713 PAPEETE BP,\nPatio - Terre MainanuiTahaa,\nIripau",
-        "BP 130, 98713 PAPEETE BP,\nRoute de TipaeruiImm Hachette Pacifique,\nPapeete",
-        "BP 130, 98713 PAPEETE BP,\nAéroport de Avatoru,\nRangiroa",
-        "BP 130, 98713 PAPEETE BP,\n10,\nAv Bruat,\nPapeete",
-        "BP 130, 98713 PAPEETE BP,\nPK 4.9,\nArue",
-        "BP 130, 98713 PAPEETE BP,\nPK 21,1,\nPaea"
+        "BP 130, 98713 PAPEETE BP, 115, rue Dumont d'Urville, quartier Orovini, Papeete",
+        "BP 130, 98713 PAPEETE BP, Centre villeRaiatea, Uturoa",
+        "BP 130, 98713 PAPEETE BP, rue Tihoni Tefaatau, immeuble SCI Taaone, Pirae",
+        "BP 130, 98713 PAPEETE BP, Lotissement zone industrielle de PunaruuLot A, Punaauia",
+        "BP 130, 98713 PAPEETE BP, Route de la pointe VénusDomaine Fritch, Mahina",
+        "BP 130, 98713 PAPEETE BP, Terre domanialeNuku Hiva, Taiohae",
+        "BP 130, 98713 PAPEETE BP, Hall du rez-de-chaussée de l'aéroport, Faaa",
+        "BP 130, 98713 PAPEETE BP, 415, Boulevard Pomare, immeuble Vaiete, Papeete",
+        "BP 130, 98713 PAPEETE BP, Lots 1 et 2 de la Terre FareoaHuahine, Fare",
+        "BP 130, 98713 PAPEETE BP, Terre Mataupuna n°2479Hiva Oa, Atuona",
+        "BP 130, 98713 PAPEETE BP, Centre commercial Temahame Nui de Taravao, Afaahiti",
+        "BP 130, 98713 PAPEETE BP, Centre commercial de MaharepaQrt Orovau, Paopao",
+        "BP 130, 98713 PAPEETE BP, Fare UteImm Le Cail, Papeete",
+        "BP 130, 98713 PAPEETE BP, Centre communal de Ua Pou, Hakahau",
+        "BP 130, 98713 PAPEETE BP, Pk 36Centre commercial de Apatea, Papara",
+        "BP 130, 98713 PAPEETE BP, Terre Onanae 6Rurutu, Moerai",
+        "BP 130, 98713 PAPEETE BP, Terre Taamotu 1, Nunue",
+        "BP 130, 98713 PAPEETE BP, Complexe municipalTubuai, Mataura",
+        "BP 130, 98713 PAPEETE BP, Boulevard Pomare, quartier du Commerce, Papeete",
+        "BP 130, 98713 PAPEETE BP, Lot communal de Tiputa, Rangiroa",
+        "BP 130, 98713 PAPEETE BP, Rte de l'ancienne mairieFace centre tavararo - Terre Tehorua 2 parcelle A, Faaa",
+        "BP 130, 98713 PAPEETE BP, Rue Dumont d'Urville(Parking), Papeete",
+        "BP 130, 98713 PAPEETE BP, Patio - Terre MainanuiTahaa, Iripau",
+        "BP 130, 98713 PAPEETE BP, Route de TipaeruiImm Hachette Pacifique, Papeete",
+        "BP 130, 98713 PAPEETE BP, Aéroport de Avatoru, Rangiroa",
+        "BP 130, 98713 PAPEETE BP, 10, Av Bruat, Papeete",
+        "BP 130, 98713 PAPEETE BP, PK 4.9, Arue",
+        "BP 130, 98713 PAPEETE BP, PK 21,1, Paea"
       ].join(' | ')
     }
     subject { described_class.new(siret, procedure_id).to_params }
@@ -52,6 +52,15 @@ describe ApiEntreprise::PfEtablissementAdapter do
       expect(subject[:nom_voie]).to eq("rue Dumont d'Urville | rue Tihoni Tefaatau | Boulevard Pomare | Av Bruat")
       expect(subject[:code_postal]).to eq('98713')
       expect(subject[:localite]).to eq('Papeete | Uturoa | Pirae | Punaauia | Mahina | Taiohae | Faaa | Fare | Atuona | Afaahiti | Paopao | Hakahau | Papara | Moerai | Nunue | Mataura | Rangiroa | Iripau | Arue | Paea')
+      expect(subject[:entreprise_siren]).to eq('075390')
+      expect(subject[:entreprise_siret_siege_social]).to eq('075390')
+      expect(subject[:entreprise_raison_sociale]).to eq('BANQUE SOCREDO')
+      expect(subject[:entreprise_forme_juridique]).to eq('Société Anonyme à Directoire (dont S.A.E.M.)')
+      expect(subject[:entreprise_forme_juridique_code]).to eq('560')
+      expect(subject[:entreprise_code_effectif_entreprise]).to eq('8')
+      expect(subject[:entreprise_nom]).to eq('')
+      expect(subject[:entreprise_prenom]).to eq('')
+      expect(subject[:entreprise_numero_tva_intracommunautaire]).to eq('')
     end
   end
 

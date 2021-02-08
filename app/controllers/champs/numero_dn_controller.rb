@@ -48,21 +48,4 @@ class Champs::NumeroDnController < ApplicationController
   rescue ApiEntreprise::API::Error::RequestFailed
     @status = :network_error
   end
-
-  def find_etablissement_with_siret
-    etablissement_attributes = ApiEntrepriseService.get_etablissement_params_for_siret(@siret, @procedure_id)
-    if etablissement_attributes.present?
-      Etablissement.new(etablissement_attributes)
-    end
-  end
-
-  def clear_siret_and_etablissement
-    @champ&.update!(value: '')
-    @etablissement&.destroy
-  end
-
-  def siret_error(error)
-    clear_siret_and_etablissement
-    @siret = error
-  end
 end
