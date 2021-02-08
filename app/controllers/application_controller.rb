@@ -9,8 +9,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception, if: -> { !Rails.env.test? }
   before_action :set_current_roles
-  before_action :load_navbar_left_pannel_partial_url
-  before_action :set_raven_context
+  before_action :set_sentry_user
   before_action :redirect_if_untrusted
   before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -28,14 +27,6 @@ class ApplicationController < ActionController::Base
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
       request_http_basic_authentication
     end
-  end
-
-  def load_navbar_left_pannel_partial_url
-    controller = request.controller_class
-    method = params[:action]
-    service = RenderPartialService.new(controller, method)
-    @navbar_url = service.navbar
-    @left_pannel_url = service.left_panel
   end
 
   def multiple_devise_profile_connect?
@@ -149,8 +140,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_raven_context
-    Raven.user_context(sentry_user)
+  def set_sentry_user
+    Sentry.set_user(sentry_user)
   end
 
   # private method called by rails fwk

@@ -1,4 +1,4 @@
-describe 'layouts/_new_header.html.haml', type: :view do
+describe 'layouts/_header.html.haml', type: :view do
   let(:current_instructeur) { nil }
 
   before do

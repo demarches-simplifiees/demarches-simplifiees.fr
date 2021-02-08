@@ -12,7 +12,7 @@ class ApplicationJob < ActiveJob::Base
   end
 
   def error(job, exception)
-    Raven.capture_exception(exception)
+    Sentry.capture_exception(exception)
   end
 
   def max_attempts

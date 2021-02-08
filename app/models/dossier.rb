@@ -3,6 +3,7 @@
 # Table name: dossiers
 #
 #  id                                                 :integer          not null, primary key
+#  api_entreprise_job_exceptions                      :string           is an Array
 #  archived                                           :boolean          default(FALSE)
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
@@ -817,6 +818,12 @@ class Dossier < ApplicationRecord
       bbox: bounding_box,
       features: geo_areas.map(&:to_feature)
     }
+  end
+
+  def log_api_entreprise_job_exception(exception)
+    exceptions = self.api_entreprise_job_exceptions ||= []
+    exceptions << exception.inspect
+    update_column(:api_entreprise_job_exceptions, exceptions)
   end
 
   private

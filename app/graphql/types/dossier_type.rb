@@ -82,7 +82,7 @@ module Types
     end
 
     def annotations
-      Loaders::Association.for(object.class, :champs_private).load(object)
+      Loaders::Association.for(object.class, champs_private: [:type_de_champ]).load(object)
     end
 
     def pdf
