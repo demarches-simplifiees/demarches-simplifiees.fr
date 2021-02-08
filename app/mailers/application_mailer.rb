@@ -25,8 +25,7 @@ class ApplicationMailer < ActionMailer::Base
 
   rescue StandardError => e
     # A problem occured when reading logo, maybe the logo is missing and we should clean the procedure to remove logo reference ?
-    Raven.extra_context(procedure_id: procedure.id)
-    Raven.capture_exception(e)
+    Sentry.capture_exception(e, extra: { procedure_id: procedure.id })
     nil
   end
 end

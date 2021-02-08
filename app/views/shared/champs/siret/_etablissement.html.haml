@@ -8,6 +8,7 @@
 
 - when :network_error
   = t('errors.messages.siret_network_error')
+  -# i18n-tasks-use t('errors.messages.siret_network_error')
 
 - else
   - if siret.present? && siret == etablissement&.siret

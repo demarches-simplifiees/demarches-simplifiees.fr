@@ -81,7 +81,7 @@ describe Champs::SiretController, type: :controller do
         end
 
         it 'displays a “API is unavailable” error message' do
-          expect(response.body).to include(I18n.t('errors.messages.siret_network_error'))
+          expect(response.body).to include('Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.')
         end
       end
 

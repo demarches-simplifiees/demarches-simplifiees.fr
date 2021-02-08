@@ -4,6 +4,8 @@ RSpec.describe ApiEntreprise::Job, type: :job do
   # https://api.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html
   # #method-i-retry_on
   describe '#perform' do
+    let(:dossier) { create(:dossier, :with_entreprise) }
+
     context 'when a un retryable error is raised' do
       let(:errors) { [:standard_error] }
 
@@ -17,20 +19,25 @@ RSpec.describe ApiEntreprise::Job, type: :job do
 
       it 'retries 5 times' do
         ensure_errors_force_n_retry(errors, 5)
+        expect(dossier.reload.api_entreprise_job_exceptions.first).to match('ApiEntreprise::API::Error::ServiceUnavailable')
       end
     end
 
     def ensure_errors_force_n_retry(errors, retry_nb)
+      etablissement = dossier.etablissement
+
       errors.each do |error|
         assert_performed_jobs(retry_nb) do
-          ErrorJob.perform_later(error) rescue StandardError
+          ErrorJob.perform_later(error, etablissement) rescue StandardError
         end
       end
     end
   end
 
   class ErrorJob < ApiEntreprise::Job
-    def perform(error)
+    def perform(error, etablissement)
+      @etablissement = etablissement
+
       response = OpenStruct.new(
         effective_url: 'http://host.com/path',
         code: '666',
