@@ -18,20 +18,11 @@
 #  type_de_champ_id               :integer
 #
 class Champs::AnnuaireEducationChamp < Champs::TextChamp
-  before_save :cleanup_if_empty
-  after_update_commit :fetch_data
-
-  private
-
-  def cleanup_if_empty
-    if external_id_changed?
-      self.data = nil
-    end
+  def fetch_external_data?
+    true
   end
 
-  def fetch_data
-    if external_id.present? && data.nil?
-      AnnuaireEducationUpdateJob.perform_later(self)
-    end
+  def fetch_external_data
+    ApiEducation::AnnuaireEducationAdapter.new(external_id).to_params
   end
 end

@@ -522,4 +522,31 @@ describe Champ do
       it { expect(champ.fetch_external_data_exceptions).to eq(['#<StandardError: My special exception!>']) }
     end
   end
+
+  describe "fetch_external_data" do
+    let(:champ) { create(:champ_text, data: 'some data') }
+
+    context "cleanup_if_empty" do
+      it "remove data if external_id changes" do
+        expect(champ.data).to_not be_nil
+        champ.update(external_id: 'external_id')
+        expect(champ.data).to be_nil
+      end
+    end
+
+    context "fetch_external_data_later" do
+      include ActiveJob::TestHelper
+      let(:data) { 'some other data' }
+
+      it "fill data from external source" do
+        expect(champ).to receive(:fetch_external_data?) { true }
+        expect_any_instance_of(Champs::TextChamp).to receive(:fetch_external_data) { data }
+
+        perform_enqueued_jobs do
+          champ.update(external_id: 'external_id')
+        end
+        expect(champ.reload.data).to eq data
+      end
+    end
+  end
 end
