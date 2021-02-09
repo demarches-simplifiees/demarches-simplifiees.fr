@@ -38,7 +38,7 @@ describe 'new_administrateur/procedures/invited_expert_list.html.haml', type: :v
 
     it 'has 2 experts and match array' do
       expect(@invited_expert_emails.count).to eq(2)
-      expect(@invited_expert_emails).to eq([expert.email, expert2.email])
+      expect(@invited_expert_emails).to eq([expert.email, expert2.email].sort)
     end
   end
 end
