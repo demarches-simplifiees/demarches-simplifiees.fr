@@ -9,6 +9,9 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   # inflect.irregular 'person', 'people'
   # inflect.uncountable %w( fish sheep )
   inflect.acronym 'API'
+  inflect.acronym 'ASN1'
+  inflect.acronym 'IP'
+  inflect.acronym 'JSON'
   inflect.acronym 'RNA'
   inflect.acronym 'URL'
   inflect.irregular 'type_de_champ', 'types_de_champ'
