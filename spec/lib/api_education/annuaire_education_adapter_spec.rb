@@ -1,4 +1,4 @@
-describe ApiEducation::AnnuaireEducationAdapter do
+describe APIEducation::AnnuaireEducationAdapter do
   let(:search_term) { '0050009H' }
   let(:adapter) { described_class.new(search_term) }
   subject { adapter.to_params }
@@ -23,7 +23,7 @@ describe ApiEducation::AnnuaireEducationAdapter do
     let(:status) { 200 }
 
     it '#to_params raise exception' do
-      expect { subject }.to raise_exception(ApiEducation::AnnuaireEducationAdapter::InvalidSchemaError)
+      expect { subject }.to raise_exception(APIEducation::AnnuaireEducationAdapter::InvalidSchemaError)
     end
   end
 end

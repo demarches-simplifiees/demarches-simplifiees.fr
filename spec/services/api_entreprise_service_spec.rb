@@ -1,4 +1,4 @@
-describe ApiEntrepriseService do
+describe APIEntrepriseService do
   describe '#create_etablissement' do
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
@@ -11,11 +11,11 @@ describe ApiEntrepriseService do
     let(:valid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
     let(:procedure) { create(:procedure, api_entreprise_token: valid_token) }
     let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:subject) { ApiEntrepriseService.create_etablissement(dossier, siret, procedure.id) }
+    let(:subject) { APIEntrepriseService.create_etablissement(dossier, siret, procedure.id) }
 
     before do
-      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return([])
-      allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+      allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return([])
+      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
 
     context 'when service is up' do
@@ -24,9 +24,9 @@ describe ApiEntrepriseService do
       end
 
       [
-        ApiEntreprise::EntrepriseJob, ApiEntreprise::AssociationJob, ApiEntreprise::ExercicesJob,
-        ApiEntreprise::EffectifsJob, ApiEntreprise::EffectifsAnnuelsJob, ApiEntreprise::AttestationSocialeJob,
-        ApiEntreprise::BilansBdfJob
+        APIEntreprise::EntrepriseJob, APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
+        APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
+        APIEntreprise::BilansBdfJob
       ].each do |job|
         it "should enqueue #{job.class.name}" do
           expect { subject }.to have_enqueued_job(job)
@@ -38,8 +38,8 @@ describe ApiEntrepriseService do
       let(:etablissements_status) { 504 }
       let(:etablissements_body) { '' }
 
-      it 'should raise ApiEntreprise::API::Error::RequestFailed' do
-        expect { subject }.to raise_error(ApiEntreprise::API::Error::RequestFailed)
+      it 'should raise APIEntreprise::API::Error::RequestFailed' do
+        expect { subject }.to raise_error(APIEntreprise::API::Error::RequestFailed)
       end
     end
 

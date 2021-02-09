@@ -1,7 +1,7 @@
-class ApiCartoService
+class APICartoService
   def self.generate_qp(coordinates)
     coordinates.flat_map do |coordinate|
-      ApiCarto::QuartiersPrioritairesAdapter.new(
+      APICarto::QuartiersPrioritairesAdapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
       ).results
     end
@@ -9,7 +9,7 @@ class ApiCartoService
 
   def self.generate_cadastre(coordinates)
     coordinates.flat_map do |coordinate|
-      ApiCarto::CadastreAdapter.new(
+      APICarto::CadastreAdapter.new(
         coordinate.map { |element| [element['lng'], element['lat']] }
       ).results
     end

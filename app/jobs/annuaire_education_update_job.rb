@@ -3,7 +3,7 @@ class AnnuaireEducationUpdateJob < ApplicationJob
     external_id = champ.external_id
 
     if external_id.present?
-      data = ApiEducation::AnnuaireEducationAdapter.new(external_id).to_params
+      data = APIEducation::AnnuaireEducationAdapter.new(external_id).to_params
 
       if data.present?
         champ.data = data

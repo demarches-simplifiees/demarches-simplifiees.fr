@@ -1,4 +1,4 @@
-class ApiEntreprise::PrivilegesAdapter < ApiEntreprise::Adapter
+class APIEntreprise::PrivilegesAdapter < APIEntreprise::Adapter
   def initialize(token)
     @token = token
   end
@@ -15,6 +15,6 @@ class ApiEntreprise::PrivilegesAdapter < ApiEntreprise::Adapter
   private
 
   def get_resource
-    ApiEntreprise::API.privileges(@token)
+    APIEntreprise::API.privileges(@token)
   end
 end
