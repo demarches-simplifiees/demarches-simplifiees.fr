@@ -1,4 +1,4 @@
-class ApiEducation::API
+class APIEducation::API
   class ResourceNotFound < StandardError
   end
 
@@ -15,7 +15,7 @@ class ApiEducation::API
       response.body
     else
       message = response.code == 0 ? response.return_message : response.code.to_s
-      Rails.logger.error "[ApiEducation] Error on #{url}: #{message}"
+      Rails.logger.error "[APIEducation] Error on #{url}: #{message}"
       raise ResourceNotFound
     end
   end

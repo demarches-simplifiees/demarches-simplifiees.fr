@@ -24,12 +24,12 @@ namespace :after_party do
 
   def fetch_api_entreprise_infos(etablissement_id, procedure_id, user_id)
     [
-      ApiEntreprise::EntrepriseJob, ApiEntreprise::AssociationJob, ApiEntreprise::ExercicesJob,
-      ApiEntreprise::EffectifsJob, ApiEntreprise::EffectifsAnnuelsJob, ApiEntreprise::AttestationSocialeJob,
-      ApiEntreprise::BilansBdfJob
+      APIEntreprise::EntrepriseJob, APIEntreprise::AssociationJob, APIEntreprise::ExercicesJob,
+      APIEntreprise::EffectifsJob, APIEntreprise::EffectifsAnnuelsJob, APIEntreprise::AttestationSocialeJob,
+      APIEntreprise::BilansBdfJob
     ].each do |job|
       job.perform_later(etablissement_id, procedure_id)
     end
-    ApiEntreprise::AttestationFiscaleJob.perform_later(etablissement_id, procedure_id, user_id)
+    APIEntreprise::AttestationFiscaleJob.perform_later(etablissement_id, procedure_id, user_id)
   end
 end

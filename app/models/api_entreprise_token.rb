@@ -1,4 +1,4 @@
-class ApiEntrepriseToken
+class APIEntrepriseToken
   attr_reader :token
 
   def initialize(token)

@@ -1,4 +1,4 @@
-class ApiEntreprise::BilansBdfAdapter < ApiEntreprise::Adapter
+class APIEntreprise::BilansBdfAdapter < APIEntreprise::Adapter
   def initialize(siret, procedure_id)
     @siret = siret
     @procedure_id = procedure_id
@@ -7,7 +7,7 @@ class ApiEntreprise::BilansBdfAdapter < ApiEntreprise::Adapter
   private
 
   def get_resource
-    ApiEntreprise::API.bilans_bdf(siren, @procedure_id)
+    APIEntreprise::API.bilans_bdf(siren, @procedure_id)
   end
 
   def process_params
