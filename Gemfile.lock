@@ -677,7 +677,6 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    semantic_range (2.3.0)
     sentry-delayed_job (4.2.0)
       sentry-ruby-core (~> 4.2.0)
     sentry-rails (4.2.1)
@@ -763,6 +762,11 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    vite_rails (1.0.12)
+      activesupport (>= 5.1)
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.1)
+      zeitwerk
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.0.4)
@@ -781,11 +785,6 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webpacker (5.2.1)
-      activesupport (>= 5.2)
-      rack-proxy (>= 0.6.1)
-      railties (>= 5.2)
-      semantic_range (>= 2.3.0)
     websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -914,11 +913,11 @@ DEPENDENCIES
   timecop
   typhoeus
   vcr
+  vite_rails
   warden
   web-console
   webdrivers (~> 4.0)
   webmock
-  webpacker
   xray-rails
   zipline
   zxcvbn-ruby

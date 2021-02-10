@@ -6,8 +6,8 @@ module.exports = {
     sourceType: 'module'
   },
   globals: {
-    'process': true,
-    'gon': true
+    process: true,
+    gon: true
   },
   plugins: ['prettier', 'react-hooks'],
   extends: ['eslint:recommended', 'prettier', 'plugin:react/recommended'],
@@ -26,7 +26,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['config/webpack/**/*.js', 'babel.config.js', 'postcss.config.js'],
+      files: ['.eslintrc.js', 'vite.config.ts'],
       env: {
         node: true
       }

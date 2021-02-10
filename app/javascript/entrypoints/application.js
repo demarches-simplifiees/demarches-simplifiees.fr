@@ -60,6 +60,10 @@ ActiveStorage.start();
 // Expose globals
 window.DS = window.DS || DS;
 
+const loaders = import.meta.glob('../loaders/*');
 // eslint-disable-next-line no-undef, react-hooks/rules-of-hooks
-ReactRailsUJS.useContext(require.context('loaders', true));
+ReactRailsUJS.useContext(loaders);
 addEventListener('ds:page:update', ReactRailsUJS.handleMount);
+
+import('../shared/track/matomo');
+import('../shared/track/sentry');
