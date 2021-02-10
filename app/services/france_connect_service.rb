@@ -14,6 +14,13 @@ class FranceConnectService
     )
   end
 
+  def self.find_or_retrieve_france_connect_information(code)
+    fetched_fci = FranceConnectService.retrieve_user_informations_particulier(code)
+    FranceConnectInformation.find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) || fetched_fci
+  end
+
+  private
+
   def self.retrieve_user_informations_particulier(code)
     client = FranceConnectParticulierClient.new(code)
 
