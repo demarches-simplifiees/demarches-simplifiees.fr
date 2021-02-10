@@ -1,6 +1,6 @@
 require 'json_schemer'
 
-class ApiEducation::AnnuaireEducationAdapter
+class APIEducation::AnnuaireEducationAdapter
   class InvalidSchemaError < ::StandardError
     def initialize(errors)
       super(errors.map(&:to_json).join("\n"))
@@ -27,7 +27,7 @@ class ApiEducation::AnnuaireEducationAdapter
   private
 
   def data_source
-    @data_source ||= JSON.parse(ApiEducation::API.get_annuaire_education(@id), symbolize_names: true)
+    @data_source ||= JSON.parse(APIEducation::API.get_annuaire_education(@id), symbolize_names: true)
   end
 
   def schemer

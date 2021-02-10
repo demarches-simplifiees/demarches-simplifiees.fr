@@ -1,4 +1,4 @@
-describe ApiCarto::API do
+describe APICarto::API do
   describe '.search_cadastre' do
     subject { described_class.search_cadastre(geojson) }
 
@@ -13,8 +13,8 @@ describe ApiCarto::API do
       let(:status) { 404 }
       let(:body) { '' }
 
-      it 'raises ApiCarto::API::ResourceNotFound' do
-        expect { subject }.to raise_error(ApiCarto::API::ResourceNotFound)
+      it 'raises APICarto::API::ResourceNotFound' do
+        expect { subject }.to raise_error(APICarto::API::ResourceNotFound)
       end
     end
 

@@ -1,4 +1,4 @@
-RSpec.describe ApiEntreprise::BilansBdfJob, type: :job do
+RSpec.describe APIEntreprise::BilansBdfJob, type: :job do
   let(:etablissement) { create(:etablissement, siret: siret) }
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
@@ -11,11 +11,11 @@ RSpec.describe ApiEntreprise::BilansBdfJob, type: :job do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}/)
       .to_return(body: body, status: status)
-    allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return(["bilans_entreprise_bdf"])
-    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+    allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["bilans_entreprise_bdf"])
+    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
-  subject { ApiEntreprise::BilansBdfJob.new.perform(etablissement.id, procedure_id) }
+  subject { APIEntreprise::BilansBdfJob.new.perform(etablissement.id, procedure_id) }
 
   it 'updates etablissement' do
     subject

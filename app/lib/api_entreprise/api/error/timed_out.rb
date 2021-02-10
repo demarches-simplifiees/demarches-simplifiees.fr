@@ -1,4 +1,2 @@
-class ApiEntreprise::API::Error
-  class TimedOut < ApiEntreprise::API::Error
-  end
+class APIEntreprise::API::Error::TimedOut < APIEntreprise::API::Error
 end

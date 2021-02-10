@@ -1,4 +1,2 @@
-class ApiEntreprise::API::Error
-  class ResourceNotFound < ApiEntreprise::API::Error
-  end
+class APIEntreprise::API::Error::ResourceNotFound < APIEntreprise::API::Error
 end

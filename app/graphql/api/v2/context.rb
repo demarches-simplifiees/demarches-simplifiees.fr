@@ -1,4 +1,4 @@
-class Api::V2::Context < GraphQL::Query::Context
+class API::V2::Context < GraphQL::Query::Context
   def has_fragment?(name)
     if self["has_fragment_#{name}"]
       true

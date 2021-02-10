@@ -1,6 +1,6 @@
 include ActiveJob::TestHelper
 
-RSpec.describe ApiEntreprise::Job, type: :job do
+RSpec.describe APIEntreprise::Job, type: :job do
   # https://api.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html
   # #method-i-retry_on
   describe '#perform' do
@@ -19,7 +19,7 @@ RSpec.describe ApiEntreprise::Job, type: :job do
 
       it 'retries 5 times' do
         ensure_errors_force_n_retry(errors, 5)
-        expect(dossier.reload.api_entreprise_job_exceptions.first).to match('ApiEntreprise::API::Error::ServiceUnavailable')
+        expect(dossier.reload.api_entreprise_job_exceptions.first).to match('APIEntreprise::API::Error::ServiceUnavailable')
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe ApiEntreprise::Job, type: :job do
     end
   end
 
-  class ErrorJob < ApiEntreprise::Job
+  class ErrorJob < APIEntreprise::Job
     def perform(error, etablissement)
       @etablissement = etablissement
 
@@ -50,11 +50,11 @@ RSpec.describe ApiEntreprise::Job, type: :job do
 
       case error
       when :service_unavaible
-        raise ApiEntreprise::API::Error::ServiceUnavailable.new(response)
+        raise APIEntreprise::API::Error::ServiceUnavailable.new(response)
       when :bad_gateway
-        raise ApiEntreprise::API::Error::BadGateway.new(response)
+        raise APIEntreprise::API::Error::BadGateway.new(response)
       when :timed_out
-        raise ApiEntreprise::API::Error::TimedOut.new(response)
+        raise APIEntreprise::API::Error::TimedOut.new(response)
       else
         raise StandardError
       end

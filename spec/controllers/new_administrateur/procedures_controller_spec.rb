@@ -338,7 +338,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     subject { patch :update_jeton, params: { id: procedure.id, procedure: { api_entreprise_token: token } } }
 
     before do
-      allow_any_instance_of(ApiEntreprise::PrivilegesAdapter).to receive(:valid?).and_return(token_is_valid)
+      allow_any_instance_of(APIEntreprise::PrivilegesAdapter).to receive(:valid?).and_return(token_is_valid)
       subject
     end
 
