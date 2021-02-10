@@ -150,7 +150,7 @@ class DossierMailer < ApplicationMailer
     if interpolations[:state]
       mailer_scope = self.class.mailer_name.tr('/', '.')
       state = interpolations[:state].in?(Dossier::TERMINE) ? 'termine' : interpolations[:state]
-      I18n.t("subject_#{state}", interpolations.merge(scope: [mailer_scope, action_name]))
+      I18n.t("subject_#{state}", **interpolations.merge(scope: [mailer_scope, action_name]))
     else
       super
     end

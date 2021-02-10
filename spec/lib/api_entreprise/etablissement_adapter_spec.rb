@@ -1,9 +1,9 @@
-describe ApiEntreprise::EtablissementAdapter do
+describe APIEntreprise::EtablissementAdapter do
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
 
   before do
-    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context 'SIRET valide avec infos diffusables' do

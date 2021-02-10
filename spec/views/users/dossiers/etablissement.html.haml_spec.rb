@@ -6,8 +6,8 @@ describe 'users/dossiers/etablissement.html.haml', type: :view do
   before do
     sign_in dossier.user
     assign(:dossier, dossier)
-    allow_any_instance_of(ApiEntrepriseToken).to receive(:roles).and_return([])
-    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+    allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return([])
+    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   subject! { render }

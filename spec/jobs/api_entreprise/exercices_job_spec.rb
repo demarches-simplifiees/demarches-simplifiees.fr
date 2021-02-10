@@ -1,4 +1,4 @@
-RSpec.describe ApiEntreprise::ExercicesJob, type: :job do
+RSpec.describe APIEntreprise::ExercicesJob, type: :job do
   let(:siret) { '41816609600051' }
   let(:procedure) { create(:procedure) }
   let(:etablissement) { create(:etablissement, siret: siret) }
@@ -8,10 +8,10 @@ RSpec.describe ApiEntreprise::ExercicesJob, type: :job do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\//)
       .to_return(body: body, status: status)
-    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
-  subject { ApiEntreprise::ExercicesJob.new.perform(etablissement.id, procedure.id) }
+  subject { APIEntreprise::ExercicesJob.new.perform(etablissement.id, procedure.id) }
 
   it 'updates etablissement' do
     subject
