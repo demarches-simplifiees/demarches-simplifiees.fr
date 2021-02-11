@@ -464,6 +464,7 @@ ActiveRecord::Schema.define(version: 2021_02_04_180955) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text "message"
+    t.index ["email", "dossier_id"], name: "index_invites_on_email_and_dossier_id", unique: true
   end
 
   create_table "module_api_cartos", id: :serial, force: :cascade do |t|
