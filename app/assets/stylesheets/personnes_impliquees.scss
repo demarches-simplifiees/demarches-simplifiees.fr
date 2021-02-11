@@ -1,7 +1,10 @@
+@import "constants";
+@import "colors";
+
 .personnes-impliquees {
   padding-bottom: 50px;
 
-  ul {
+  ul.tab-list {
     list-style-type: disc;
     margin-left: 16px;
   }
@@ -11,4 +14,42 @@
     padding: 12px;
   }
   // scss-lint:enable
+  [data-react-class="ComboMultipleDropdownList"] {
+    margin-bottom: $default-fields-spacer;
+
+    [data-reach-combobox-token-list] {
+      padding: 0.5 * $default-padding;
+      display: flex;
+    }
+
+    [data-reach-combobox-token] {
+      border: solid 1px $border-grey;
+      color: $black;
+      margin-top: 0.5 * $default-padding;
+      margin-bottom: 0.5 * $default-padding;
+      margin-right: 0.5 * $default-padding;
+      border-radius: 4px;
+      padding: 0.5 * $default-padding;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    [data-reach-combobox-token]:focus {
+      background-color: $black;
+      color: $white;
+    }
+
+
+    [data-reach-combobox-input] {
+      outline: none;
+      border: none;
+      flex-grow: 1;
+      margin: 0.25rem;
+    }
+
+    [data-reach-combobox-input]:focus {
+      outline: solid;
+      outline-color: $light-blue;
+    }
+  }
 }
