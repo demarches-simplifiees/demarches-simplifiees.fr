@@ -25,7 +25,7 @@ class SuperAdminsController < ApplicationController
 
     if Rails.env.development?
       issuer += " (local)"
-    elsif staging?
+    elsif helpers.staging?
       issuer += " (dev)"
     end
 
