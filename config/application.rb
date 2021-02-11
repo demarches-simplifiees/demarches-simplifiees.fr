@@ -17,9 +17,10 @@ module TPS
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    # The default autoloader since Rails 6.0 defaults is zeitwerk.
-    # However, to split the work, we will move to zeitwerk only in a future PR.
-    config.autoloader = :classic
+    Rails.autoloaders.main.ignore(Rails.root.join('lib/cops'))
+    Rails.autoloaders.main.ignore(Rails.root.join('lib/linters'))
+    Rails.autoloaders.main.ignore(Rails.root.join('lib/tasks/task_helper.rb'))
+    config.paths.add Rails.root.join('spec/mailers/previews').to_s, eager_load: true
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
