@@ -8,9 +8,8 @@
     Le destinataire suivra automatiquement le dossier
   = form_for dossier, url: send_to_instructeurs_instructeur_dossier_path(dossier.procedure, dossier), method: :post, html: { class: 'form recipients-form' } do |f|
     .flex.justify-start.align-start
-      = select_tag(:recipients,
-        options_from_collection_for_select(potential_recipients, :id, :email),
-        multiple: true,
-        class: 'select2-limited',
-        placeholder: '')
+      - hidden_field_id = SecureRandom.uuid
+      = hidden_field_tag :recipients, nil, data: { uuid: hidden_field_id }
+      = react_component("ComboMultipleDropdownList", options: potential_recipients.map{|r| [r.email, r.id]}, selected: [], disabled: [], hiddenFieldId: hidden_field_id, label: "email instructeur")
+
       = f.submit "Envoyer", class: "button large send gap-left"
