@@ -186,7 +186,7 @@ module NewAdministrateur
     end
 
     def invited_expert_list
-      @invited_expert_emails = ExpertsProcedure.invited_expert_emails(@procedure)
+      @experts_procedure = @procedure.experts_procedures.sort_by { |expert_procedure| expert_procedure.expert.email }
     end
 
     private
