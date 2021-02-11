@@ -313,7 +313,7 @@ ActiveRecord::Schema.define(version: 2021_02_04_180955) do
     t.jsonb "entreprise_bilans_bdf"
     t.string "entreprise_bilans_bdf_monnaie"
     t.string "enseigne"
-    t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
+    t.index ["dossier_id"], name: "index_etablissements_on_dossier_id", unique: true
   end
 
   create_table "exercices", id: :serial, force: :cascade do |t|
@@ -438,7 +438,7 @@ ActiveRecord::Schema.define(version: 2021_02_04_180955) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date "birthdate"
-    t.index ["dossier_id"], name: "index_individuals_on_dossier_id"
+    t.index ["dossier_id"], name: "index_individuals_on_dossier_id", unique: true
   end
 
   create_table "initiated_mails", id: :serial, force: :cascade do |t|
