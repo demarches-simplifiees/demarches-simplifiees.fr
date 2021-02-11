@@ -437,7 +437,7 @@ ActiveRecord::Schema.define(version: 2021_02_04_180955) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date "birthdate"
-    t.index ["dossier_id"], name: "index_individuals_on_dossier_id"
+    t.index ["dossier_id"], name: "index_individuals_on_dossier_id", unique: true
   end
 
   create_table "initiated_mails", id: :serial, force: :cascade do |t|
