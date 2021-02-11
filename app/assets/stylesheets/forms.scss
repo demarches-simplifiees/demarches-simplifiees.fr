@@ -305,6 +305,28 @@
     border-color: $blue;
   }
 
+  [data-reach-combobox-token-list] {
+    padding: $default-padding;
+    display: flex;
+  }
+
+  [data-reach-combobox-token] {
+    border: solid 1px $border-grey;
+    color: $black;
+    margin-top: $default-padding;
+    margin-bottom: $default-padding;
+    margin-right: 0.5 * $default-padding;
+    border-radius: 4px;
+    padding: $default-padding;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  [data-reach-combobox-token]:focus {
+    background-color: $black;
+    color: $white;
+  }
+
   .select2 {
     min-width: 50%;
   }
@@ -481,11 +503,55 @@
   }
 }
 
+[data-react-class="ComboMultipleDropdownList"] {
+  margin-bottom: $default-fields-spacer;
+
+  [data-reach-combobox-input] {
+    outline: none;
+    border: none;
+    flex-grow: 1;
+    margin: 0.25rem;
+    background-image: image-url("icons/chevron-down");
+    background-size: 14px;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+
+  [data-reach-combobox-input]:focus {
+    outline: solid;
+    outline-color: $light-blue;
+  }
+}
+
+[data-combobox-token-label] {
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 [data-reach-combobox-option] {
   font-size: 16px;
+  list-style-type: none;
 }
 
 [data-reach-combobox-option][aria-selected="true"] {
   background: $light-blue !important;
   color: $white;
+}
+
+[data-combobox-separator] {
+  font-size: 16px;
+  color: $dark-grey;
+  margin-top: 6px;
+}
+
+[data-combobox-remove-token] {
+  color: $dark-grey;
+  padding-right: 4px;
+}
+
+
+[data-reach-combobox-input]:focus {
+  outline-color: $light-blue;
 }
