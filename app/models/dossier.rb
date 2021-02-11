@@ -679,6 +679,10 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def log_modifier_annotation!(champ, instructeur)
+    log_dossier_operation(instructeur, :modifier_annotation, champ)
+  end
+
   def demander_un_avis!(avis)
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
   end
