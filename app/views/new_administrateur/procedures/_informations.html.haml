@@ -16,14 +16,15 @@
 %h3.header-subsection Logo de la démarche
 = image_upload_and_render f, @procedure.logo
 
-- if !@procedure.locked?
-  %h3.header-subsection Conservation des données
-  = f.label :duree_conservation_dossiers_dans_ds do
-    Sur #{APPLICATION_NAME}
-    %span.mandatory *
+%h3.header-subsection Conservation des données
+= f.label :duree_conservation_dossiers_dans_ds do
+  Sur #{APPLICATION_NAME}
+  %span.mandatory *
+
   %p.notice (durée en mois après le début de l’instruction)
   = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
 
+- if !@procedure.locked?
   = f.label :duree_conservation_dossiers_hors_ds do
     Hors #{APPLICATION_NAME}
     %span.mandatory *
