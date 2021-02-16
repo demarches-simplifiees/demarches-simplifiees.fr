@@ -21,7 +21,7 @@ gem 'delayed_job_web'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'devise-i18n'
-gem 'devise-two-factor', github: 'bryanfagan/devise-two-factor'
+gem 'devise-two-factor', github: 'jason-hobbs/devise-two-factor', branch: 'master' # Rails 6.1 compatibility: https://github.com/tinfoil/devise-two-factor/issues/183
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
 gem 'ffi-geos', require: false
