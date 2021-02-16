@@ -47,7 +47,7 @@ function ComboMultipleDropdownList({
           )
         : options
       ).filter((o) => o[0] && !selections.includes(o[1])),
-    [term, selections]
+    [term, selections.join(',')]
   );
   const hiddenField = useMemo(
     () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
