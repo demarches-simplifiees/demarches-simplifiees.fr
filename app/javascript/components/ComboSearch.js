@@ -10,6 +10,7 @@ import {
   ComboboxOption
 } from '@reach/combobox';
 import '@reach/combobox/styles.css';
+import { fire } from '@utils';
 
 function defaultTransformResults(_, results) {
   return results;
@@ -27,21 +28,38 @@ function ComboSearch({
   transformResults = defaultTransformResults
 }) {
   const label = scope;
-  const hiddenField = useMemo(
+  const hiddenValueField = useMemo(
     () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
     [hiddenFieldId]
   );
-  const initialValue = hiddenField && hiddenField.value;
+  const hiddenIdField = useMemo(
+    () =>
+      document.querySelector(
+        `input[data-uuid="${hiddenFieldId}"] + input[data-reference]`
+      ),
+    [hiddenFieldId]
+  );
+  const initialValue = hiddenValueField && hiddenValueField.value;
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [value, setValue] = useState(initialValue);
   const resultsMap = useRef({});
   const setExternalValue = useCallback((value) => {
-    if (hiddenField) {
-      hiddenField.setAttribute('value', value);
+    if (hiddenValueField) {
+      hiddenValueField.setAttribute('value', value);
+      fire(hiddenValueField, 'autosave:trigger');
     }
+  });
+  const setExternalId = useCallback((key) => {
+    if (hiddenIdField) {
+      hiddenIdField.setAttribute('value', key);
+    }
+  });
+  const setExternalValueAndId = useCallback((value) => {
+    const [key, result] = resultsMap.current[value];
+    setExternalId(key);
+    setExternalValue(value);
     if (onChange) {
-      const result = resultsMap.current[value];
       onChange(value, result);
     }
   });
@@ -60,6 +78,7 @@ function ComboSearch({
       if (value.length >= minimumInputLength) {
         setSearchTerm(value.trim());
         if (allowInputValues) {
+          setExternalId('');
           setExternalValue(value);
         }
       }
@@ -68,7 +87,7 @@ function ComboSearch({
   );
 
   const handleOnSelect = useCallback((value) => {
-    setExternalValue(value);
+    setExternalValueAndId(value);
     setValue(value);
   });
 
@@ -93,7 +112,7 @@ function ComboSearch({
             <ComboboxList>
               {results.map((result) => {
                 const [key, str] = transformResult(result);
-                resultsMap.current[str] = result;
+                resultsMap.current[str] = [key, result];
                 return (
                   <ComboboxOption
                     key={key}
