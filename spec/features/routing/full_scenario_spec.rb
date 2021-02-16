@@ -30,9 +30,7 @@ feature 'The routing', js: true do
     expect(page).to have_field('Nom du groupe', with: 'littéraire')
 
     # add victor to littéraire groupe
-    # find('input.select2-search__field').send_keys('victor@inst.com', :enter)
     find("input[aria-label='email instructeur'").send_keys('victor@inst.com', :enter)
-    click_on 'Affecter'
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
 

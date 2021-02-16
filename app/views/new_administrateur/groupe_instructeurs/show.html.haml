@@ -27,7 +27,11 @@
           %p.notice Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
         - hidden_field_id = SecureRandom.uuid
         = hidden_field_tag :emails, nil, data: { uuid: hidden_field_id }
-        = react_component("ComboMultipleDropdownList", options: @available_instructeur_emails, selected: [], disabled: [], hiddenFieldId: hidden_field_id, label: 'email instructeur')
+        = react_component("ComboMultipleDropdownList",
+          options: @available_instructeur_emails, selected: [], disabled: [],
+          hiddenFieldId: hidden_field_id,
+          label: 'email instructeur',
+          acceptNewValues: true)
 
         = f.submit 'Affecter', class: 'button primary send'
 

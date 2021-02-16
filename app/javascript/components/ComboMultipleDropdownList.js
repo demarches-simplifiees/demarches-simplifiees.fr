@@ -25,7 +25,8 @@ function ComboMultipleDropdownList({
   options,
   hiddenFieldId,
   selected,
-  label
+  label,
+  acceptNewValues = false
 }) {
   if (label == undefined) {
     label = 'Choisir une option';
@@ -36,6 +37,7 @@ function ComboMultipleDropdownList({
   const inputRef = useRef();
   const [term, setTerm] = useState('');
   const [selections, setSelections] = useState(selected);
+  const [newValues, setNewValues] = useState([]);
   const results = useMemo(
     () =>
       (term
@@ -56,6 +58,28 @@ function ComboMultipleDropdownList({
     setTerm(event.target.value);
   };
 
+  const onKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      if (term && options.map((o) => o[0]).includes(term)) {
+        event.preventDefault();
+        return onSelect(term);
+      }
+      if (
+        acceptNewValues &&
+        term &&
+        matchSorter(
+          options.map((o) => o[0]),
+          term
+        ).length == 0 // ignore when was pressed for selecting popover option
+      ) {
+        event.preventDefault();
+        setNewValues([...newValues, term]);
+        saveSelection([...selections, term]);
+        setTerm('');
+      }
+    }
+  };
+
   const saveSelection = (selections) => {
     setSelections(selections);
     if (hiddenField) {
@@ -72,7 +96,11 @@ function ComboMultipleDropdownList({
 
   const onRemove = (value) => {
     saveSelection(
-      selections.filter((s) => s !== options.find((o) => o[0] == value)[1])
+      selections.filter((s) =>
+        newValues.includes(value)
+          ? s != value
+          : s !== options.find((o) => o[0] == value)[1]
+      )
     );
     inputRef.current.focus();
   };
@@ -88,7 +116,10 @@ function ComboMultipleDropdownList({
           {selections.map((selection) => (
             <ComboboxToken
               key={selection}
-              value={options.find((o) => o[1] == selection)[0]}
+              value={
+                newValues.find((newValue) => newValue == selection) ||
+                options.find((o) => o[1] == selection)[0]
+              }
             />
           ))}
         </ul>
@@ -96,6 +127,7 @@ function ComboMultipleDropdownList({
           ref={inputRef}
           value={term}
           onChange={handleChange}
+          onKeyDown={onKeyDown}
           autocomplete={false}
         />
       </ComboboxTokenLabel>
@@ -211,7 +243,8 @@ ComboMultipleDropdownList.propTypes = {
   hiddenFieldId: PropTypes.string,
   selected: PropTypes.arrayOf(PropTypes.string),
   arraySelected: PropTypes.arrayOf(PropTypes.array),
-  label: PropTypes.string
+  label: PropTypes.string,
+  acceptNewValues: PropTypes.bool
 };
 
 export default ComboMultipleDropdownList;
