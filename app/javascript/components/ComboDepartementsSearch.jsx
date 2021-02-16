@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { ReactQueryCacheProvider } from 'react-query';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 
 import ComboSearch from './ComboSearch';
 import { queryCache } from './shared/queryCache';

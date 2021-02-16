@@ -1,6 +1,6 @@
 import { QueryCache } from 'react-query';
 import { isNumeric } from '@utils';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 
 const { api_geo_url, api_adresse_url, api_education_url } =
   gon.autocomplete || {};
