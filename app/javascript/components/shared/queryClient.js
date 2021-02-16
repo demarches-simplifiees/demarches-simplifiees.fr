@@ -1,12 +1,12 @@
-import { QueryCache } from 'react-query';
+import { QueryClient } from 'react-query';
 import { isNumeric } from '@utils';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 
 const { api_geo_url, api_adresse_url, api_education_url } =
   gon.autocomplete || {};
 
-export const queryCache = new QueryCache({
-  defaultConfig: {
+export const queryClient = new QueryClient({
+  defaultOptions: {
     queries: {
       queryFn: defaultQueryFn
     }
@@ -35,7 +35,7 @@ function buildOptions() {
   return [{}, null];
 }
 
-async function defaultQueryFn(scope, term) {
+async function defaultQueryFn({ queryKey: [scope, term] }) {
   if (scope == 'pays') {
     return matchSorter(await getPays(), term, { keys: ['nom'] });
   }
