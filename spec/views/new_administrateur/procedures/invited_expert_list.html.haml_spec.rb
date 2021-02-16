@@ -12,13 +12,13 @@ describe 'new_administrateur/procedures/invited_expert_list.html.haml', type: :v
   context 'when the procedure has 0 avis' do
     let!(:dossier) { create(:dossier, procedure: procedure) }
     before do
-      @invited_expert_emails = ExpertsProcedure.invited_expert_emails(procedure)
+      @invited_experts = procedure.experts_procedures
       subject
     end
 
     it 'has 0 experts into the page' do
-      expect(@invited_expert_emails.count).to eq(0)
-      expect(@invited_expert_emails).to eq([])
+      expect(@invited_experts.count).to eq(0)
+      expect(@invited_experts).to eq([])
     end
   end
 
@@ -32,13 +32,13 @@ describe 'new_administrateur/procedures/invited_expert_list.html.haml', type: :v
     let!(:avis2) { create(:avis, dossier: dossier, experts_procedure: experts_procedure2) }
 
     before do
-      @invited_expert_emails = ExpertsProcedure.invited_expert_emails(procedure)
+      @invited_experts = procedure.experts_procedures
       subject
     end
 
     it 'has 2 experts and match array' do
-      expect(@invited_expert_emails.count).to eq(2)
-      expect(@invited_expert_emails).to eq([expert.email, expert2.email].sort)
+      expect(@invited_experts.count).to eq(2)
+      expect(@invited_experts).to match_array([experts_procedure, experts_procedure2])
     end
   end
 end
