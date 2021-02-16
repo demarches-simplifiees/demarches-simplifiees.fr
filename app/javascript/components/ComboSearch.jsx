@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef } from 'react';
-import { useDebounce } from 'react-use';
+import { useDebounce } from 'use-debounce';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import {
@@ -41,7 +41,7 @@ function ComboSearch({
   );
   const initialValue = hiddenValueField && hiddenValueField.value;
   const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [value, setValue] = useState(initialValue);
   const resultsMap = useRef({});
   const setExternalValue = useCallback((value) => {
@@ -63,14 +63,6 @@ function ComboSearch({
       onChange(value, result);
     }
   });
-
-  useDebounce(
-    () => {
-      setDebouncedSearchTerm(searchTerm);
-    },
-    300,
-    [searchTerm]
-  );
 
   const handleOnChange = useCallback(
     ({ target: { value } }) => {

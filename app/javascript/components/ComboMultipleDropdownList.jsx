@@ -16,7 +16,7 @@ import {
   ComboboxPopover
 } from '@reach/combobox';
 import '@reach/combobox/styles.css';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 import { fire } from '@utils';
 
 const Context = createContext();
