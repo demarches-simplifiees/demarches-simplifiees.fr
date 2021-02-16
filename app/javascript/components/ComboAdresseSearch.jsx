@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
-import { ReactQueryCacheProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import PropTypes from 'prop-types';
 
 import ComboSearch from './ComboSearch';
-import { queryCache } from './shared/queryCache';
+import { queryClient } from './shared/queryClient';
 
 function ComboAdresseSearch({
   mandatory,
@@ -16,7 +16,7 @@ function ComboAdresseSearch({
   const transformResults = useCallback((_, { features }) => features);
 
   return (
-    <ReactQueryCacheProvider queryCache={queryCache}>
+    <QueryClientProvider client={queryClient}>
       <ComboSearch
         placeholder={placeholder}
         required={mandatory}
@@ -28,7 +28,7 @@ function ComboAdresseSearch({
         transformResult={transformResult}
         transformResults={transformResults}
       />
-    </ReactQueryCacheProvider>
+    </QueryClientProvider>
   );
 }
 
