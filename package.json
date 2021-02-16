@@ -32,10 +32,10 @@
     "react-mapbox-gl-draw": "^2.0.4",
     "react-query": "^2.23.1",
     "react-sortable-hoc": "^1.11.0",
-    "react-use": "^15.3.4",
     "react_ujs": "^2.6.1",
     "select2": "^4.0.13",
     "trix": "^1.2.3",
+    "use-debounce": "^5.2.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
