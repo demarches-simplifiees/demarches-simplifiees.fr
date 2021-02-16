@@ -9,11 +9,6 @@
     margin-left: 16px;
   }
 
-  // scss-lint:disable SelectorFormat
-  .form .select2-container .select2-selection__rendered {
-    padding: 12px;
-  }
-  // scss-lint:enable
   [data-react-class="ComboMultipleDropdownList"] {
     margin-bottom: $default-fields-spacer;
 
