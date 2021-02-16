@@ -1280,14 +1280,14 @@ enum TypeDeChamp {
   address
 
   """
-  Assistance à la saisie
-  """
-  auto_completion
-
-  """
   Annuaire de l’éducation
   """
   annuaire_education
+
+  """
+  Assistance à la saisie
+  """
+  auto_completion
 
   """
   Carte de France
