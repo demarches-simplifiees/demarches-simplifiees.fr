@@ -342,7 +342,6 @@ module Users
           :id, :value, :external_id, :primary_value, :secondary_value, :piece_justificative_file, :date_de_naissance, :numero_dn, value: [],
           champs_attributes: [:id, :_destroy, :value, :external_id, :primary_value, :secondary_value, :piece_justificative_file, :date_de_naissance, :numero_dn, value: []]
         ]
-        ]
       })
     end
 
