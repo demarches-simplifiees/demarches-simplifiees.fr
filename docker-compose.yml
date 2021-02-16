@@ -52,6 +52,7 @@ services:
       - API_CPS_PASSWORD
       - API_CPS_URL
       - API_CPS_USERNAME
+      - API_EDUCATION_URL
       - API_ENTREPRISE_PF_AUTH
       - API_ENTREPRISE_PF_URL
       - API_GEO_URL
