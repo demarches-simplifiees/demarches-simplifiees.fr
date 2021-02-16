@@ -506,10 +506,12 @@ describe API::V2::GraphqlController do
         let(:type_de_champ_datetime) { build(:type_de_champ_datetime) }
         let(:champ_date) { dossier.champs.first }
         let(:champ_datetime) { dossier.champs.second }
+        let(:date) { '2019-07-10' }
+        let(:datetime) { '15/09/1962 15:35' }
 
         before do
-          champ_date.update(value: '2019-07-10')
-          champ_datetime.update(value: '15/09/1962 15:35')
+          champ_date.update(value: date)
+          champ_datetime.update(value: datetime)
         end
 
         context "with Date" do
@@ -534,12 +536,12 @@ describe API::V2::GraphqlController do
                 {
                   id: champ_date.to_typed_id,
                   label: champ_date.libelle,
-                  value: '2019-07-10T00:00:00+02:00'
+                  value: Time.zone.parse(date).iso8601
                 },
                 {
                   id: champ_datetime.to_typed_id,
                   label: champ_datetime.libelle,
-                  value: '1962-09-15T15:35:00+01:00'
+                  value: Time.zone.parse(datetime).iso8601
                 }
               ]
             })
@@ -572,13 +574,13 @@ describe API::V2::GraphqlController do
                 {
                   id: champ_date.to_typed_id,
                   label: champ_date.libelle,
-                  value: '2019-07-10T00:00:00+02:00',
+                  value: '2019-07-10T00:00:00-10:00',
                   date: '2019-07-10'
                 },
                 {
                   id: champ_datetime.to_typed_id,
                   label: champ_datetime.libelle,
-                  datetime: '1962-09-15T15:35:00+01:00'
+                  datetime: '1962-09-15T15:35:00-10:00'
                 }
               ]
             })
