@@ -260,8 +260,7 @@
     max-width: 180px;
   }
 
-  select,
-  .select2-selection {
+  select {
     // hack found here: https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -305,39 +304,26 @@
     border-color: $blue;
   }
 
-  .select2 {
-    min-width: 50%;
+  [data-reach-combobox-token-list] {
+    padding: $default-padding;
+    display: flex;
   }
 
-  .select2-container {
-    display: block;
-    margin-bottom: $default-fields-spacer;
+  [data-reach-combobox-token] {
+    border: solid 1px $border-grey;
+    color: $black;
+    margin-top: $default-padding;
+    margin-bottom: $default-padding;
+    margin-right: 0.5 * $default-padding;
+    border-radius: 4px;
+    padding: $default-padding;
+    cursor: pointer;
+    list-style: none;
+  }
 
-    &.select2-container--focus {
-      .select2-selection {
-        border-color: $border-grey;
-      }
-    }
-
-    .select2-selection--single {
-      min-height: 62px;
-
-      // scss-lint:disable SelectorFormat
-      .select2-selection__arrow {
-        display: none;
-      }
-      // scss-lint:enable
-    }
-
-    // scss-lint:disable SelectorFormat
-    .select2-selection__rendered {
-      padding: $default-padding;
-    }
-
-    .select2-selection__choice {
-      background-color: #FFFFFF;
-    }
-    // scss-lint:enable
+  [data-reach-combobox-token]:focus {
+    background-color: $black;
+    color: $white;
   }
 
   .editable-champ {
@@ -481,11 +467,55 @@
   }
 }
 
+[data-react-class="ComboMultipleDropdownList"] {
+  margin-bottom: $default-fields-spacer;
+
+  [data-reach-combobox-input] {
+    outline: none;
+    border: none;
+    flex-grow: 1;
+    margin: 0.25rem;
+    background-image: image-url("icons/chevron-down");
+    background-size: 14px;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+
+  [data-reach-combobox-input]:focus {
+    outline: solid;
+    outline-color: $light-blue;
+  }
+}
+
+[data-combobox-token-label] {
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 [data-reach-combobox-option] {
   font-size: 16px;
+  list-style-type: none;
 }
 
 [data-reach-combobox-option][aria-selected="true"] {
   background: $light-blue !important;
   color: $white;
+}
+
+[data-combobox-separator] {
+  font-size: 16px;
+  color: $dark-grey;
+  margin-top: 6px;
+}
+
+[data-combobox-remove-token] {
+  color: $dark-grey;
+  padding-right: 4px;
+}
+
+
+[data-reach-combobox-input]:focus {
+  outline-color: $light-blue;
 }
