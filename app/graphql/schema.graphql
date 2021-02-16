@@ -1181,67 +1181,132 @@ type Mutation {
   """
   File information required to prepare a direct upload
   """
-  createDirectUpload(input: CreateDirectUploadInput!): CreateDirectUploadPayload
+  createDirectUpload(
+    """
+    Parameters for CreateDirectUpload
+    """
+    input: CreateDirectUploadInput!
+  ): CreateDirectUploadPayload
 
   """
   Accepter le dossier.
   """
-  dossierAccepter(input: DossierAccepterInput!): DossierAccepterPayload
+  dossierAccepter(
+    """
+    Parameters for DossierAccepter
+    """
+    input: DossierAccepterInput!
+  ): DossierAccepterPayload
 
   """
   Archiver le dossier.
   """
-  dossierArchiver(input: DossierArchiverInput!): DossierArchiverPayload
+  dossierArchiver(
+    """
+    Parameters for DossierArchiver
+    """
+    input: DossierArchiverInput!
+  ): DossierArchiverPayload
 
   """
   Changer le grope instructeur du dossier.
   """
-  dossierChangerGroupeInstructeur(input: DossierChangerGroupeInstructeurInput!): DossierChangerGroupeInstructeurPayload
+  dossierChangerGroupeInstructeur(
+    """
+    Parameters for DossierChangerGroupeInstructeur
+    """
+    input: DossierChangerGroupeInstructeurInput!
+  ): DossierChangerGroupeInstructeurPayload
 
   """
   Classer le dossier sans suite.
   """
-  dossierClasserSansSuite(input: DossierClasserSansSuiteInput!): DossierClasserSansSuitePayload
+  dossierClasserSansSuite(
+    """
+    Parameters for DossierClasserSansSuite
+    """
+    input: DossierClasserSansSuiteInput!
+  ): DossierClasserSansSuitePayload
 
   """
   Envoyer un message à l'usager du dossier.
   """
-  dossierEnvoyerMessage(input: DossierEnvoyerMessageInput!): DossierEnvoyerMessagePayload
+  dossierEnvoyerMessage(
+    """
+    Parameters for DossierEnvoyerMessage
+    """
+    input: DossierEnvoyerMessageInput!
+  ): DossierEnvoyerMessagePayload
 
   """
   Modifier l’annotation au format oui/non.
   """
-  dossierModifierAnnotationCheckbox(input: DossierModifierAnnotationCheckboxInput!): DossierModifierAnnotationCheckboxPayload
+  dossierModifierAnnotationCheckbox(
+    """
+    Parameters for DossierModifierAnnotationCheckbox
+    """
+    input: DossierModifierAnnotationCheckboxInput!
+  ): DossierModifierAnnotationCheckboxPayload
 
   """
   Modifier l’annotation au format date.
   """
-  dossierModifierAnnotationDate(input: DossierModifierAnnotationDateInput!): DossierModifierAnnotationDatePayload
+  dossierModifierAnnotationDate(
+    """
+    Parameters for DossierModifierAnnotationDate
+    """
+    input: DossierModifierAnnotationDateInput!
+  ): DossierModifierAnnotationDatePayload
 
   """
   Modifier l’annotation au format date et heure.
   """
-  dossierModifierAnnotationDatetime(input: DossierModifierAnnotationDatetimeInput!): DossierModifierAnnotationDatetimePayload
+  dossierModifierAnnotationDatetime(
+    """
+    Parameters for DossierModifierAnnotationDatetime
+    """
+    input: DossierModifierAnnotationDatetimeInput!
+  ): DossierModifierAnnotationDatetimePayload
 
   """
   Modifier l’annotation au format nombre entier.
   """
-  dossierModifierAnnotationIntegerNumber(input: DossierModifierAnnotationIntegerNumberInput!): DossierModifierAnnotationIntegerNumberPayload
+  dossierModifierAnnotationIntegerNumber(
+    """
+    Parameters for DossierModifierAnnotationIntegerNumber
+    """
+    input: DossierModifierAnnotationIntegerNumberInput!
+  ): DossierModifierAnnotationIntegerNumberPayload
 
   """
   Modifier l’annotation au format text.
   """
-  dossierModifierAnnotationText(input: DossierModifierAnnotationTextInput!): DossierModifierAnnotationTextPayload
+  dossierModifierAnnotationText(
+    """
+    Parameters for DossierModifierAnnotationText
+    """
+    input: DossierModifierAnnotationTextInput!
+  ): DossierModifierAnnotationTextPayload
 
   """
   Passer le dossier en instruction.
   """
-  dossierPasserEnInstruction(input: DossierPasserEnInstructionInput!): DossierPasserEnInstructionPayload
+  dossierPasserEnInstruction(
+    """
+    Parameters for DossierPasserEnInstruction
+    """
+    input: DossierPasserEnInstructionInput!
+  ): DossierPasserEnInstructionPayload
 
   """
   Refuser le dossier.
   """
-  dossierRefuser(input: DossierRefuserInput!): DossierRefuserPayload
+  dossierRefuser(
+    """
+    Parameters for DossierRefuser
+    """
+    input: DossierRefuserInput!
+  ): DossierRefuserPayload
 }
 
 enum Order {
