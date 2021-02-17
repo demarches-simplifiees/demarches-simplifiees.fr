@@ -1,0 +1,101 @@
+name: Continuous Integration
+on:
+  push:
+    branches: 'main'
+  pull_request:
+    branches: 'main'
+
+jobs:
+  linters:
+    name: Linters
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Find yarn cache location
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: JS package cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install packages
+        run: |
+          yarn install --pure-lockfile
+
+      - name: Run linters
+        run: |
+          bundle exec rake lint
+
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: tps_test
+          POSTGRES_DB: tps_test
+          POSTGRES_PASSWORD: tps_test
+        ports: ["5432:5432"]
+
+    strategy:
+      matrix:
+        pattern:
+          - spec/controllers
+          - spec/features
+          - spec/helpers spec/lib spec/middlewares
+          - spec/mailers spec/jobs spec/policies
+          - spec/models
+          - spec/serializers spec/services
+          - spec/views
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Find yarn cache location
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: JS package cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install packages
+        run: |
+          yarn install --pure-lockfile
+
+      - name: Setup test database
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
+        run: |
+          bundle exec rake db:create db:schema:load db:migrate
+
+      - name: Run tests
+        run: bundle exec rspec ${{ matrix.pattern }}
