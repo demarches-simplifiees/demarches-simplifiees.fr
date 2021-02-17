@@ -42,7 +42,7 @@ module Instructeurs
       respond_to do |format|
         format.pdf do
           @include_infos_administration = true
-          render(file: 'dossiers/show', formats: [:pdf])
+          render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all
       end
@@ -235,7 +235,7 @@ module Instructeurs
 
     def generate_pdf_for_instructeur_export
       @include_infos_administration = true
-      pdf = render_to_string(file: 'dossiers/show', formats: [:pdf])
+      pdf = render_to_string(template: 'dossiers/show', formats: [:pdf])
       dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
     end
 
