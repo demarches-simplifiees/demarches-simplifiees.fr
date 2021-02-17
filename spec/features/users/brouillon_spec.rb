@@ -25,8 +25,9 @@ feature 'The user' do
     check('val1')
     check('val3')
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
-    select('alpha', from: form_id_for('multiple_choice_drop_down_list_long'))
-    select('charly', from: form_id_for('multiple_choice_drop_down_list_long'))
+    select_multi('multiple_choice_drop_down_list_long', 'alpha')
+    select_multi('multiple_choice_drop_down_list_long', 'charly')
+
     select_champ_geo('pays', 'aust', 'AUSTRALIE')
 
     select_champ_geo('regions', 'Ma', 'Martinique')
@@ -83,7 +84,7 @@ feature 'The user' do
     expect(page).to have_checked_field('val1')
     expect(page).to have_checked_field('val3')
     expect(page).to have_selected_value('simple_choice_drop_down_list_long', selected: 'bravo')
-    expect(page).to have_selected_value('multiple_choice_drop_down_list_long', selected: ['alpha', 'charly'])
+    check_selected_values('multiple_choice_drop_down_list_long', ['alpha', 'charly'])
     expect(page).to have_hidden_field('pays', with: 'AUSTRALIE')
     expect(page).to have_hidden_field('regions', with: 'Martinique')
     expect(page).to have_hidden_field('departements', with: '02 - Aisne')

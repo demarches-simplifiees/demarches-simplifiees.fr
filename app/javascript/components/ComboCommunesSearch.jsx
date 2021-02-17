@@ -1,12 +1,12 @@
 import React from 'react';
-import { ReactQueryCacheProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 
 import ComboSearch from './ComboSearch';
-import { queryCache } from './shared/queryCache';
+import { queryClient } from './shared/queryClient';
 
 function ComboCommunesSearch(params) {
   return (
-    <ReactQueryCacheProvider queryCache={queryCache}>
+    <QueryClientProvider client={queryClient}>
       <ComboSearch
         required={params.mandatory}
         hiddenFieldId={params.hiddenFieldId}
@@ -17,7 +17,7 @@ function ComboCommunesSearch(params) {
           `${nom} (${codesPostaux[0]})`
         ]}
       />
-    </ReactQueryCacheProvider>
+    </QueryClientProvider>
   );
 }
 

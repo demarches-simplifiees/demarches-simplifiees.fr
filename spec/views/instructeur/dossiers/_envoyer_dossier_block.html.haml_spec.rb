@@ -13,7 +13,7 @@ describe 'instructeurs/dossiers/envoyer_dossier_block.html.haml', type: :view do
     let(:instructeur) { create(:instructeur, email: 'yop@totomail.fr') }
     let(:potential_recipients) { [instructeur] }
 
-    it { is_expected.to have_css("select > option[value='#{instructeur.id}']") }
+    it { is_expected.to match(/data-react-props.*#{instructeur.email}/) }
     it { is_expected.to have_css(".button.send") }
   end
 

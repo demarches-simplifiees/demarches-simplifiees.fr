@@ -38,7 +38,7 @@ describe Instructeurs::DossiersController, type: :controller do
       post(
         :send_to_instructeurs,
         params: {
-          recipients: [recipient],
+          recipients: [recipient.id].to_json,
           procedure_id: procedure.id,
           dossier_id: dossier.id
         }

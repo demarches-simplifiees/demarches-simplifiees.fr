@@ -62,7 +62,7 @@ class DossierSearchService
 
   def self.to_tsquery(search_terms)
     (search_terms || "")
-      .gsub(/['?\\:&|!<>\(\)]/, "") # drop disallowed characters
+      .gsub(/['?\\:&|!<>()]/, "") # drop disallowed characters
       .strip
       .split(/\s+/)           # split words
       .map { |x| "#{x}:*" }   # enable prefix matching

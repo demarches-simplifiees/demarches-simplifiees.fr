@@ -216,8 +216,8 @@ FactoryBot.define do
 
     trait :with_all_annotations do
       after(:create) do |dossier, _evaluator|
-        dossier.champs = dossier.types_de_champ.map do |type_de_champ|
-          build(:"champ_#{type_de_champ.type_champ}", dossier: dossier, type_de_champ: type_de_champ)
+        dossier.champs_private = dossier.types_de_champ_private.map do |type_de_champ|
+          build(:"champ_#{type_de_champ.type_champ}", private: true, dossier: dossier, type_de_champ: type_de_champ)
         end
         dossier.save!
       end
