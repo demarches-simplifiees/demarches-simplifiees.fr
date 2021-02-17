@@ -541,9 +541,12 @@ class Procedure < ApplicationRecord
   end
 
   def populate_champ_stable_ids
-    TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
-      type_de_champ.update_column(:stable_id, type_de_champ.id)
-    end
+    TypeDeChamp
+      .joins(:revisions)
+      .where(procedure_revisions: { procedure_id: id }, stable_id: nil)
+      .find_each do |type_de_champ|
+        type_de_champ.update_column(:stable_id, type_de_champ.id)
+      end
   end
 
   def missing_steps
