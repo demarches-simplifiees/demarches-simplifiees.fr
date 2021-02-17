@@ -6,11 +6,17 @@ class TitreIdentiteWatermarkJob < ApplicationJob
   def perform(blob)
     blob.open do |file|
       watermark = resize_watermark(file)
-      processed = watermark_image(file, watermark)
 
-      blob.metadata[:watermark] = true
-      blob.upload(processed)
-      blob.save
+      if watermark.present?
+        processed = watermark_image(file, watermark)
+
+        blob.metadata[:watermark] = true
+        blob.upload(processed)
+        blob.save
+      else
+        blob.metadata[:watermark_invalid] = true
+        blob.save
+      end
     end
   end
 
@@ -28,16 +34,18 @@ class TitreIdentiteWatermarkJob < ApplicationJob
   def resize_watermark(file)
     metadata = image_metadata(file)
 
-    width = [metadata[:width], MAX_IMAGE_SIZE].min * SCALE
-    height = [metadata[:height], MAX_IMAGE_SIZE].min * SCALE
-    diagonal = Math.sqrt(height**2 + width**2)
-    angle = Math.asin(height / diagonal) * 180 / Math::PI
+    if metadata[:width].present? && metadata[:height].present?
+      width = [metadata[:width], MAX_IMAGE_SIZE].min * SCALE
+      height = [metadata[:height], MAX_IMAGE_SIZE].min * SCALE
+      diagonal = Math.sqrt(height**2 + width**2)
+      angle = Math.asin(height / diagonal) * 180 / Math::PI
 
-    ImageProcessing::MiniMagick
-      .source(WATERMARK)
-      .resize_to_limit(diagonal, diagonal / 2)
-      .rotate(-angle, background: :transparent)
-      .call
+      ImageProcessing::MiniMagick
+        .source(WATERMARK)
+        .resize_to_limit(diagonal, diagonal / 2)
+        .rotate(-angle, background: :transparent)
+        .call
+    end
   end
 
   def image_metadata(file)

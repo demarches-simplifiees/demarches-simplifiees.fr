@@ -167,12 +167,9 @@
   "required": [
     "identifiant_de_l_etablissement",
     "nom_etablissement",
-    "statut_public_prive",
     "type_contrat_prive",
     "nom_commune",
     "code_commune",
-    "nombre_d_eleves",
-    "siren_siret",
     "libelle_academie",
     "code_academie",
     "libelle_nature",

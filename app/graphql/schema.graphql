@@ -803,13 +803,13 @@ type Entreprise {
   effectif pour un mois donné
   """
   effectifMensuel: Effectif
-  formeJuridique: String!
-  formeJuridiqueCode: String!
+  formeJuridique: String
+  formeJuridiqueCode: String
   inlineAdresse: String!
-  nom: String!
+  nom: String
   nomCommercial: String!
   numeroTvaIntracommunautaire: String!
-  prenom: String!
+  prenom: String
   raisonSociale: String!
   siren: String!
   siretSiegeSocial: String!
