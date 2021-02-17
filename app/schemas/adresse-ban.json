@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/adresse-ban.schema.json",
+  "title": "Adresse BAN",
+  "type": "object",
+  "properties": {
+    "properties": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "housenumber": { "type": "string" },
+        "name": { "type": "string" },
+        "postcode": { "type": "string" },
+        "citycode": { "type": "string" },
+        "city": { "type": "string" },
+        "district": { "type": "string" },
+        "context": { "type": "string" },
+        "type": {
+          "enum": ["housenumber", "street", "locality", "municipality"]
+        }
+      },
+      "required": ["label", "type", "name", "postcode", "citycode", "city"]
+    },
+    "geometry": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Point"
+        },
+        "coordinates": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    }
+  },
+  "required": ["properties"]
+}
