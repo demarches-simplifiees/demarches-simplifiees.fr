@@ -143,6 +143,8 @@ ActiveRecord::Schema.define(version: 2021_01_18_232126) do
     t.integer "etablissement_id"
     t.bigint "parent_id"
     t.integer "row"
+    t.jsonb "data"
+    t.string "external_id"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"

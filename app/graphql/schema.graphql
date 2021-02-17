@@ -180,6 +180,10 @@ type CreateDirectUploadPayload {
 }
 
 type DateChamp implements Champ {
+  """
+  La valeur du champ formaté en ISO8601 (Date).
+  """
+  date: ISO8601Date
   id: ID!
 
   """
@@ -191,7 +195,29 @@ type DateChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
-  value: ISO8601DateTime
+
+  """
+  La valeur du champ formaté en ISO8601 (DateTime).
+  """
+  value: ISO8601DateTime @deprecated(reason: "Utilisez le champ 'date' ou le fragment 'DatetimeChamp' à la place.")
+}
+
+type DatetimeChamp implements Champ {
+  """
+  La valeur du champ formaté en ISO8601 (DateTime).
+  """
+  datetime: ISO8601DateTime
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
 }
 
 type DecimalNumberChamp implements Champ {
@@ -1252,6 +1278,11 @@ enum TypeDeChamp {
   Adresse en France
   """
   address
+
+  """
+  Annuaire de l’éducation
+  """
+  annuaire_education
 
   """
   Assistance à la saisie

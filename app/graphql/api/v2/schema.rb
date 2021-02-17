@@ -6,6 +6,8 @@ class Api::V2::Schema < GraphQL::Schema
   query Types::QueryType
   mutation Types::MutationType
 
+  context_class Api::V2::Context
+
   def self.id_from_object(object, type_definition, ctx)
     object.to_typed_id
   end
@@ -41,6 +43,7 @@ class Api::V2::Schema < GraphQL::Schema
     Types::Champs::CheckboxChampType,
     Types::Champs::CiviliteChampType,
     Types::Champs::DateChampType,
+    Types::Champs::DatetimeChampType,
     Types::Champs::DecimalNumberChampType,
     Types::Champs::DossierLinkChampType,
     Types::Champs::IntegerNumberChampType,

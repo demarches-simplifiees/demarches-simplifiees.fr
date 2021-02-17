@@ -1,0 +1,58 @@
+{
+  "nhits": 1,
+  "parameters": {
+    "dataset": "fr-en-annuaire-education",
+    "q": "0050009H",
+    "timezone": "UTC",
+    "rows": 1,
+    "start": 0,
+    "format": "json"
+  },
+  "records": [
+    {
+      "datasetid": "fr-en-annuaire-education",
+      "recordid": "0fd6a58dc6c7e5346e3bd62ada6216f476ebeeac",
+      "fields": {
+        "section_arts": "0",
+        "lycee_agricole": "0",
+        "apprentissage": "1",
+        "voie_generale": "0",
+        "ministere_tutelle": "MINISTERE DE L'EDUCATION NATIONALE",
+        "statut_public_prive": "Public",
+        "libelle_region": "Provence-Alpes-Côte d'Azur",
+        "telephone": "04 92 56 56 10",
+        "date_maj_ligne": "2021-01-12",
+        "hebergement": 1,
+        "libelle_nature": "LYCEE PROFESSIONNEL",
+        "lycee_militaire": "0",
+        "section_sport": "0",
+        "voie_technologique": "0",
+        "fiche_onisep": "http://geolocalisation.onisep.fr/05-hautes-alpes/gap/lycee/lycee-professionnel-sevigne.html",
+        "etat": "OUVERT",
+        "web": "www.lyc-sevigne.ac-aix-marseille.fr",
+        "rpi_concentre": 0,
+        "code_region": "93",
+        "ulis": 1,
+        "restauration": 1,
+        "code_departement": "05",
+        "date_ouverture": "1965-05-01",
+        "voie_professionnelle": "1",
+        "greta": "1",
+        "coordy_origine": 6389542.2,
+        "siren_siret": "19050009000013",
+        "mail": "ce.0050009H@ac-aix-marseille.fr",
+        "type_contrat_prive": "SANS OBJET",
+        "nom_commune": "Gap",
+        "segpa": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.0746303437466915,
+          44.562179100043984
+        ]
+      },
+      "record_timestamp": "2021-01-12T18:03:00+00:00"
+    }
+  ]
+}

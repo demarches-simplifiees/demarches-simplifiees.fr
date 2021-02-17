@@ -82,6 +82,7 @@ describe ProcedureExportService do
           "te_fenua",
           "titre_identite",
           "iban",
+          "annuaire_education",
           "text"
         ]
       end
@@ -175,6 +176,7 @@ describe ProcedureExportService do
           "te_fenua",
           "titre_identite",
           "iban",
+          "annuaire_education",
           "text"
         ]
       end
@@ -262,6 +264,7 @@ describe ProcedureExportService do
             "te_fenua",
             "titre_identite",
             "iban",
+            "annuaire_education",
             "text"
           ]
         end

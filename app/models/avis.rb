@@ -24,6 +24,14 @@ class Avis < ApplicationRecord
   has_one_attached :piece_justificative_file
   has_one_attached :introduction_file
 
+  validates :piece_justificative_file,
+    content_type: AUTHORIZED_CONTENT_TYPES,
+    size: { less_than: 20.megabytes }
+
+  validates :introduction_file,
+    content_type: AUTHORIZED_CONTENT_TYPES,
+    size: { less_than: 20.megabytes }
+
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
   validates :claimant, presence: true
   validates :piece_justificative_file, size: { less_than: 20.megabytes }

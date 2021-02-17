@@ -409,6 +409,7 @@ describe API::V2::GraphqlController do
             }
           }"
         end
+
         context "in the nominal case" do
           it "should be returned" do
             expect(gql_errors).to eq(nil)
@@ -493,6 +494,95 @@ describe API::V2::GraphqlController do
                   codeEffectifEntreprise: nil
                 }
               }
+            })
+          end
+        end
+      end
+
+      context "champs" do
+        let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin], types_de_champ: [type_de_champ_date, type_de_champ_datetime]) }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:type_de_champ_date) { build(:type_de_champ_date) }
+        let(:type_de_champ_datetime) { build(:type_de_champ_datetime) }
+        let(:champ_date) { dossier.champs.first }
+        let(:champ_datetime) { dossier.champs.second }
+        let(:date) { '2019-07-10' }
+        let(:datetime) { '15/09/1962 15:35' }
+
+        before do
+          champ_date.update(value: date)
+          champ_datetime.update(value: datetime)
+        end
+
+        context "with Date" do
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                champs {
+                  id
+                  label
+                  ... on DateChamp {
+                    value
+                  }
+                }
+              }
+            }"
+          end
+
+          it "should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossier: {
+              champs: [
+                {
+                  id: champ_date.to_typed_id,
+                  label: champ_date.libelle,
+                  value: Time.zone.parse(date).iso8601
+                },
+                {
+                  id: champ_datetime.to_typed_id,
+                  label: champ_datetime.libelle,
+                  value: Time.zone.parse(datetime).iso8601
+                }
+              ]
+            })
+          end
+        end
+
+        context "with Datetime" do
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                champs {
+                  id
+                  label
+                  ... on DateChamp {
+                    value
+                    date
+                  }
+                  ... on DatetimeChamp {
+                    datetime
+                  }
+                }
+              }
+            }"
+          end
+
+          it "should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossier: {
+              champs: [
+                {
+                  id: champ_date.to_typed_id,
+                  label: champ_date.libelle,
+                  value: '2019-07-10T00:00:00-10:00',
+                  date: '2019-07-10'
+                },
+                {
+                  id: champ_datetime.to_typed_id,
+                  label: champ_datetime.libelle,
+                  datetime: '1962-09-15T15:35:00-10:00'
+                }
+              ]
             })
           end
         end

@@ -3,6 +3,7 @@
 # Table name: champs
 #
 #  id               :integer          not null, primary key
+#  data             :jsonb
 #  private          :boolean          default(FALSE), not null
 #  row              :integer
 #  type             :string
@@ -11,6 +12,7 @@
 #  updated_at       :datetime
 #  dossier_id       :integer
 #  etablissement_id :integer
+#  external_id      :string
 #  parent_id        :bigint
 #  type_de_champ_id :integer
 #
@@ -22,6 +24,10 @@ class Champs::PieceJustificativeChamp < Champ
   validates :piece_justificative_file,
             size: { less_than: MAX_SIZE },
             if: -> { !type_de_champ.skip_pj_validation }
+
+  validates :piece_justificative_file,
+    content_type: AUTHORIZED_CONTENT_TYPES,
+    if: -> { !type_de_champ.skip_content_type_pj_validation }
 
   def main_value_name
     :piece_justificative_file
