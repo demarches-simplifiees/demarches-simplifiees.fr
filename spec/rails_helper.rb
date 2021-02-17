@@ -33,6 +33,13 @@ ActiveRecord::Migration.maintain_test_schema!
 ActiveJob::Base.queue_adapter = :test
 
 RSpec.configure do |config|
+  # Work around an rspec error when using `file_fixture_path` on rail >= 6.1 and rspec < 4.1.0:
+  # > undefined method `file_fixture_path' for RSpec::Rails::FixtureFileUploadSupport::RailsFixtureFileWrapper:Class
+  #
+  # One we upgrade to rspec >= 4.1.0, this line can be removed.
+  # See https://github.com/rspec/rspec-rails/pull/2370
+  config.include ActionDispatch::TestProcess::FixtureFile
+
   # Since rspec 3.8.0, bisect uses fork to improve bisection speed.
   # This however fails as soon as we're running feature tests (which uses many processes).
   # Default to the :shell bisect runner, so that bisecting over feature tests works.
