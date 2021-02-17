@@ -86,16 +86,33 @@ module Types
     field :siege_social, Boolean, null: false
     field :naf, String, null: false
     field :libelle_naf, String, null: false
-    field :adresse, String, null: false
-    field :numero_voie, String, null: true
-    field :type_voie, String, null: true
-    field :nom_voie, String, null: true
-    field :complement_adresse, String, null: true
-    field :code_postal, String, null: false
-    field :localite, String, null: false
-    field :code_insee_localite, String, null: false
+
+    field :address, Types::AddressType, null: false
+
     field :entreprise, EntrepriseType, null: true
     field :association, AssociationType, null: true
+
+    field :adresse, String, null: false, deprecation_reason: "Utilisez le champ `address.label` à la place."
+    field :numero_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_number` à la place."
+    field :type_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_address` à la place."
+    field :nom_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_name` à la place."
+    field :code_postal, String, null: false, deprecation_reason: "Utilisez le champ `address.postal_code` à la place."
+    field :localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_name` à la place."
+    field :code_insee_localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_code` à la place."
+    field :complement_adresse, String, null: true, deprecation_reason: "Utilisez le champ `address` à la place."
+
+    def address
+      {
+        label: object.adresse,
+        type: :housenumber,
+        street_number: object.numero_voie,
+        street_name: object.nom_voie,
+        street_address: object.nom_voie.present? ? [object.numero_voie, object.type_voie, object.nom_voie].compact.join(' ') : nil,
+        postal_code: object.code_postal,
+        city_name: object.localite,
+        city_code: object.code_insee_localite
+      }
+    end
 
     def entreprise
       if object.entreprise_siren.present?
