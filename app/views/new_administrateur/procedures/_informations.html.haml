@@ -21,8 +21,8 @@
   Sur #{APPLICATION_NAME}
   %span.mandatory *
 
-  %p.notice (durée en mois après le début de l’instruction)
-  = f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
+%p.notice (durée en mois après le début de l’instruction)
+= f.number_field :duree_conservation_dossiers_dans_ds, class: 'form-control', placeholder: '6', required: true
 
 - if @procedure.created_at.present?
   = f.label :lien_site_web do
