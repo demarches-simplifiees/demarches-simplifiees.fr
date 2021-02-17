@@ -8,7 +8,6 @@ FactoryBot.define do
     cadre_juridique { "un cadre juridique important" }
     published_at { nil }
     duree_conservation_dossiers_dans_ds { 3 }
-    duree_conservation_dossiers_hors_ds { 6 }
     ask_birthday { false }
     lien_site_web { "https://mon-site.gouv" }
     path { SecureRandom.uuid }
