@@ -207,11 +207,11 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
   describe '#add_instructeur_procedure_non_routee' do
     let(:procedure) { create :procedure, administrateur: admin }
-    let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'] }
+    let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'].to_json }
     subject { post :add_instructeur, params: { emails: emails, procedure_id: procedure.id, id: gi_1_1.id } }
 
     context 'when all emails are valid' do
-      let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'] }
+      let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'].to_json }
       it { expect(response.status).to eq(200) }
       it { expect(subject.request.flash[:alert]).to be_nil }
       it { expect(subject.request.flash[:notice]).to be_present }
@@ -219,7 +219,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     end
 
     context 'when there is at least one bad email' do
-      let(:emails) { ['badmail', 'instructeur2@gmail.com'] }
+      let(:emails) { ['badmail', 'instructeur2@gmail.com'].to_json }
       it { expect(response.status).to eq(200) }
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject.request.flash[:notice]).to be_present }
@@ -227,7 +227,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     end
 
     context 'when the admin wants to assign an instructor who is already assigned on this procedure' do
-      let(:emails) { ['instructeur_1@ministere_a.gouv.fr'] }
+      let(:emails) { ['instructeur_1@ministere_a.gouv.fr'].to_json }
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
     end
@@ -247,7 +247,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: gi_1_2.id,
-          emails: new_instructeur_emails
+          emails: new_instructeur_emails.to_json
         }
     end
 
@@ -281,7 +281,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     end
 
     context 'of an empty string' do
-      let(:new_instructeur_emails) { '' }
+      let(:new_instructeur_emails) { [''] }
 
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
     end

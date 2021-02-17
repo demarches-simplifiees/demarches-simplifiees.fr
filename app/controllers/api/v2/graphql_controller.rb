@@ -9,10 +9,10 @@ class API::V2::GraphqlController < API::V2::BaseController
 
     render json: result
   rescue => exception
-    if Rails.env.development?
-      handle_error_in_development(exception)
-    else
+    if Rails.env.production?
       handle_error_in_production(exception)
+    else
+      handle_error_in_development(exception)
     end
   end
 
