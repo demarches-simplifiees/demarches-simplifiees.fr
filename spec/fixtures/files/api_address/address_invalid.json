@@ -1,0 +1,130 @@
+{
+  "type": "FeatureCollection",
+  "version": "draft",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.347,
+          48.859
+        ]
+      },
+      "properties": {
+        "label": "Paris",
+        "score": 0.9704590909090908,
+        "id": "75056",
+        "name": "Paris",
+        "postcode": "75001",
+        "citycode": "75056",
+        "x": 652089.7,
+        "y": 6862305.26,
+        "population": 2190327,
+        "city": "Paris",
+        "context": "75, Paris, Île-de-France",
+        "importance": 0.67505
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.551187,
+          48.357318
+        ]
+      },
+      "properties": {
+        "label": "Paris Foret 77760 Achères-la-Forêt",
+        "score": 0.8608,
+        "id": "77001_b064",
+        "name": "Paris Foret",
+        "postcode": "77760",
+        "citycode": "77001",
+        "x": 666753.6,
+        "y": 6806428.85,
+        "city": "Achères-la-Forêt",
+        "context": "77, Seine-et-Marne, Île-de-France",
+        "type": "street",
+        "importance": 0.4688
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.069561,
+          43.415211
+        ]
+      },
+      "properties": {
+        "label": "Paris 83170 Brignoles",
+        "score": 0.8607481818181817,
+        "id": "83023_05n1tm",
+        "name": "Paris",
+        "postcode": "83170",
+        "citycode": "83023",
+        "x": 948661.53,
+        "y": 6262177.77,
+        "city": "Brignoles",
+        "context": "83, Var, Provence-Alpes-Côte d'Azur",
+        "type": "street",
+        "importance": 0.46823
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.418837,
+          44.758777
+        ]
+      },
+      "properties": {
+        "label": "Paris 33880 Saint-Caprais-de-Bordeaux",
+        "score": 0.8593318181818181,
+        "id": "33381_sy62ut",
+        "name": "Paris",
+        "postcode": "33880",
+        "citycode": "33381",
+        "x": 429522.28,
+        "y": 6412482.95,
+        "city": "Saint-Caprais-de-Bordeaux",
+        "context": "33, Gironde, Nouvelle-Aquitaine",
+        "type": "street",
+        "importance": 0.45265
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.156876,
+          47.33671
+        ]
+      },
+      "properties": {
+        "label": "Paris Buton 37140 Bourgueil",
+        "score": 0.8570918181818181,
+        "id": "37031_b165",
+        "name": "Paris Buton",
+        "postcode": "37140",
+        "citycode": "37031",
+        "x": 485353.99,
+        "y": 6696795.92,
+        "city": "Bourgueil",
+        "context": "37, Indre-et-Loire, Centre-Val de Loire",
+        "type": "street",
+        "importance": 0.42801
+      }
+    }
+  ],
+  "attribution": "BAN",
+  "licence": "ETALAB-2.0",
+  "query": "Paris",
+  "limit": 5
+}
