@@ -195,13 +195,14 @@ prawn_document(page_size: "A4") do |pdf|
   })
   pdf.font 'marianne'
 
-  pdf.bounding_box([0, pdf.cursor], :width => 523, :height => 40) do
-    pdf.fill_color "E11619"
-    pdf.fill_rectangle [0, 40], 523, 40
-    pdf.svg IO.read("app/assets/images/header/logo-md-wide.svg"), width: 300, position: :center, vposition: :center
-    pdf.fill_color "000000"
-  end
+#  pdf.bounding_box([0, pdf.cursor], :width => 523, :height => 40) do
+#    pdf.fill_color "E11619"
+#    pdf.fill_rectangle [0, 40], 523, 40
+#    pdf.svg IO.read("app/assets/images/header/logo-md-wide.svg"), width: 300, position: :center, vposition: :center
+#    pdf.fill_color "000000"
+#  end
 
+  pdf.svg IO.read(DOSSIER_PDF_EXPORT_LOGO_SRC), width: 300, position: :center
   pdf.move_down(40)
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)

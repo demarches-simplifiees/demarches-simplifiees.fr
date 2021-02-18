@@ -1,4 +1,4 @@
-module NoticeUrlHelper
+module NoticeURLHelper
   def notice_url(procedure)
     if procedure.notice.attached?
       url_for(procedure.notice)

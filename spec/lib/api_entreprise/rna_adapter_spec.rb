@@ -1,4 +1,4 @@
-describe ApiEntreprise::RNAAdapter do
+describe APIEntreprise::RNAAdapter do
   let(:siret) { '50480511000013' }
   let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
@@ -11,7 +11,7 @@ describe ApiEntreprise::RNAAdapter do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\//)
       .to_return(body: body, status: status)
-    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   context 'when siret is not valid' do

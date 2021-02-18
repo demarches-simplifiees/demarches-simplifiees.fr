@@ -11,15 +11,18 @@ class Champs::SiretController < ApplicationController
     end
 
     if !Siret.new(siret: @siret).valid?
+      # i18n-tasks-use t('errors.messages.invalid_siret')
       return siret_error(:invalid)
     end
 
     begin
       etablissement = find_etablissement_with_siret
-    rescue ApiEntreprise::API::Error::RequestFailed, ApiEntreprise::API::Error::ServiceUnavailable
+    rescue APIEntreprise::API::Error::RequestFailed, APIEntreprise::API::Error::ServiceUnavailable
+      # i18n-tasks-use t('errors.siret_network_error')
       return siret_error(:network_error)
     end
     if etablissement.nil?
+      # i18n-tasks-use t('errors.messages.siret_not_found')
       return siret_error(:not_found)
     end
 
@@ -50,7 +53,7 @@ class Champs::SiretController < ApplicationController
   end
 
   def find_etablissement_with_siret
-    ApiEntrepriseService.create_etablissement(@champ, @siret, current_user.id)
+    APIEntrepriseService.create_etablissement(@champ, @siret, current_user.id)
   end
 
   def clear_siret_and_etablissement

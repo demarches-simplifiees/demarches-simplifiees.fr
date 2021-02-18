@@ -1,4 +1,4 @@
-class ApiEntreprise::Adapter
+class APIEntreprise::Adapter
   UNAVAILABLE = 'Donnée indisponible'
 
   def initialize(siret, procedure_id)
@@ -9,7 +9,7 @@ class ApiEntreprise::Adapter
   def data_source
     begin
       @data_source ||= get_resource
-    rescue ApiEntreprise::API::Error::ResourceNotFound
+    rescue APIEntreprise::API::Error::ResourceNotFound
       @data_source = nil
     end
   end

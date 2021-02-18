@@ -119,6 +119,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
 
 - Faire tourner tous les linters : `bin/rake lint`
+- Vérifier l'état des traductions : `bundle exec i18n-tasks health`
 - [AccessLint](http://accesslint.com/) tourne automatiquement sur les PRs
 
 ### Régénérer les binstubs

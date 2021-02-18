@@ -1,4 +1,4 @@
-RSpec.describe ApiEntreprise::EffectifsJob, type: :job do
+RSpec.describe APIEntreprise::EffectifsJob, type: :job do
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }
   let(:etablissement) { create(:etablissement, siret: siret) }
@@ -13,13 +13,13 @@ RSpec.describe ApiEntreprise::EffectifsJob, type: :job do
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/#{annee}\/#{mois}\/entreprise\/#{siren}/)
       .to_return(body: body, status: status)
-    allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(false)
+    allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
 
   before { Timecop.freeze(now) }
   after { Timecop.return }
 
-  subject { ApiEntreprise::EffectifsJob.new.perform(etablissement.id, procedure_id) }
+  subject { APIEntreprise::EffectifsJob.new.perform(etablissement.id, procedure_id) }
 
   it 'updates etablissement' do
     subject

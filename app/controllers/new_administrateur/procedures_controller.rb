@@ -132,7 +132,7 @@ module NewAdministrateur
       @procedure.api_entreprise_token = token
 
       if @procedure.valid? &&
-          ApiEntreprise::PrivilegesAdapter.new(token).valid? &&
+          APIEntreprise::PrivilegesAdapter.new(token).valid? &&
           @procedure.save
 
         redirect_to jeton_admin_procedure_path(procedure_id: params[:procedure_id]),

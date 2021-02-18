@@ -1,3 +1,3 @@
-class ModuleApiCartoSerializer < ActiveModel::Serializer
+class ModuleAPICartoSerializer < ActiveModel::Serializer
   attributes :use_api_carto, :cadastre
 end

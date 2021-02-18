@@ -391,7 +391,7 @@ describe ProcedureExportService do
         end
 
         it 'should have valid sheet name' do
-          expect { subject }.not_to raise_error(ArgumentError)
+          expect { subject }.not_to raise_error
         end
       end
 

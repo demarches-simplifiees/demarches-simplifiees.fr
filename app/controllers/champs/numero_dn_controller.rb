@@ -45,7 +45,7 @@ class Champs::NumeroDnController < ApplicationController
     else
       @status = :bad_dn
     end
-  rescue ApiEntreprise::API::Error::RequestFailed
+  rescue APIEntreprise::API::Error::RequestFailed
     @status = :network_error
   end
 end

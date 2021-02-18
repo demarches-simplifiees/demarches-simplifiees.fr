@@ -9,8 +9,6 @@ gem 'administrate'
 gem 'after_party'
 gem 'anchored'
 gem 'bcrypt'
-gem 'bootstrap-sass', '>= 3.4.1'
-gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
 gem 'browser'
 gem 'chartkick'
 gem 'chunky_png'
@@ -30,7 +28,6 @@ gem 'ffi-geos', require: false
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
-gem 'font-awesome-rails'
 gem 'fugit'
 gem 'geocoder'
 gem 'geo_coord', require: "geo/coord"
@@ -43,9 +40,9 @@ gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
 gem 'http_accept_language'
+gem 'i18n-tasks'
 gem 'iban-tools'
 gem 'image_processing'
-gem 'jquery-rails' # Use jquery as the JavaScript library
 gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari', '1.2.1' # Pagination
@@ -73,7 +70,8 @@ gem 'rqrcode'
 gem 'ruby-saml-idp'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
-gem 'sentry-raven'
+gem 'sentry-rails'
+gem 'sentry-ruby'
 gem 'sib-api-v3-sdk'
 gem 'skylight'
 gem 'smart_listing'
@@ -121,10 +119,9 @@ end
 
 group :development, :test do
   gem 'axe-matchers' # accessibility rspec matchers
-  gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
-  gem 'pry-byebug'
+  gem 'pry-byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec_junit_formatter', require: false
   gem 'rspec-rails'
   gem 'ruby-debug-ide', '~> 0.7.2', require: false

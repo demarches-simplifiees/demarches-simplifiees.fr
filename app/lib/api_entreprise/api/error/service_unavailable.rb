@@ -1,4 +1,2 @@
-class ApiEntreprise::API::Error
-  class ServiceUnavailable < ApiEntreprise::API::Error
-  end
+class APIEntreprise::API::Error::ServiceUnavailable < APIEntreprise::API::Error
 end

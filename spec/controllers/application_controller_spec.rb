@@ -1,17 +1,17 @@
 describe ApplicationController, type: :controller do
-  describe 'before_action: set_raven_context' do
+  describe 'before_action: set_sentry_user' do
     it 'is present' do
       before_actions = ApplicationController
         ._process_action_callbacks
         .filter { |process_action_callbacks| process_action_callbacks.kind == :before }
         .map(&:filter)
 
-      expect(before_actions).to include(:set_raven_context)
+      expect(before_actions).to include(:set_sentry_user)
       expect(before_actions).to include(:redirect_if_untrusted)
     end
   end
 
-  describe 'set_raven_context and append_info_to_payload' do
+  describe 'set_sentry_user and append_info_to_payload' do
     let(:current_user) { nil }
     let(:current_instructeur) { nil }
     let(:current_administrateur) { nil }
@@ -24,15 +24,15 @@ describe ApplicationController, type: :controller do
       expect(@controller).to receive(:current_instructeur).and_return(current_instructeur)
       expect(@controller).to receive(:current_administrateur).and_return(current_administrateur)
       expect(@controller).to receive(:current_super_admin).and_return(current_super_admin)
-      allow(Raven).to receive(:user_context)
+      allow(Sentry).to receive(:set_user)
 
-      @controller.send(:set_raven_context)
+      @controller.send(:set_sentry_user)
       @controller.send(:append_info_to_payload, payload)
     end
 
     context 'when no one is logged in' do
       it do
-        expect(Raven).to have_received(:user_context)
+        expect(Sentry).to have_received(:set_user)
           .with({ id: 'Guest' })
       end
 
@@ -53,7 +53,7 @@ describe ApplicationController, type: :controller do
       let(:current_user) { create(:user) }
 
       it do
-        expect(Raven).to have_received(:user_context)
+        expect(Sentry).to have_received(:set_user)
           .with({ id: "User##{current_user.id}" })
       end
 
@@ -79,7 +79,7 @@ describe ApplicationController, type: :controller do
       let(:current_super_admin) { create(:super_admin) }
 
       it do
-        expect(Raven).to have_received(:user_context)
+        expect(Sentry).to have_received(:set_user)
           .with({ id: "User##{current_user.id}" })
       end
 

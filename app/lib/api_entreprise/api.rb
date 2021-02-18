@@ -1,4 +1,4 @@
-class ApiEntreprise::API
+class APIEntreprise::API
   ENTREPRISE_RESOURCE_NAME = "entreprises"
   ETABLISSEMENT_RESOURCE_NAME = "etablissements"
   EXERCICES_RESOURCE_NAME = "exercices"
@@ -11,6 +11,7 @@ class ApiEntreprise::API
   PRIVILEGES_RESOURCE_NAME = "privileges"
 
   TIMEOUT = 20
+  DEFAULT_API_ENTREPRISE_DELAY = 0.0
 
   def self.entreprise(siren, procedure_id)
     call_with_siret(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
@@ -60,6 +61,15 @@ class ApiEntreprise::API
 
   def self.call_with_token(resource_name, token)
     url = "#{API_ENTREPRISE_URL}/#{resource_name}"
+
+    # this is a poor man throttling
+    # the idea is to queue api entreprise job on 1 worker
+    # and add a delay between each call
+    # example: API_ENTREPRISE_DELAY=1 => 60 rpm max
+    if api_entreprise_delay != 0.0
+      sleep api_entreprise_delay
+    end
+
     response = Typhoeus.get(url,
       headers: { Authorization: "Bearer #{token}" },
       timeout: TIMEOUT)
@@ -72,9 +82,13 @@ class ApiEntreprise::API
   end
 
   def self.call_with_siret(resource_name, siret_or_siren, procedure_id, user_id = nil)
-    return if ApiEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
+    return if APIEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
     url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id, user_id)
+
+    if api_entreprise_delay != 0.0
+      sleep api_entreprise_delay
+    end
 
     response = Typhoeus.get(url,
       headers: { Authorization: "Bearer #{token_for_procedure(procedure_id)}" },
@@ -123,5 +137,9 @@ class ApiEntreprise::API
   def self.token_for_procedure(procedure_id)
     procedure = Procedure.find(procedure_id)
     procedure.api_entreprise_token
+  end
+
+  def self.api_entreprise_delay
+    ENV.fetch("API_ENTREPRISE_DELAY", DEFAULT_API_ENTREPRISE_DELAY).to_f
   end
 end

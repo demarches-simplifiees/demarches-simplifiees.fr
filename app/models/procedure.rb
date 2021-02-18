@@ -627,7 +627,7 @@ class Procedure < ApplicationRecord
   end
 
   def api_entreprise_role?(role)
-    ApiEntrepriseToken.new(api_entreprise_token).role?(role)
+    APIEntrepriseToken.new(api_entreprise_token).role?(role)
   end
 
   def api_entreprise_token
@@ -635,7 +635,7 @@ class Procedure < ApplicationRecord
   end
 
   def api_entreprise_token_expired?
-    ApiEntrepriseToken.new(api_entreprise_token).expired?
+    APIEntrepriseToken.new(api_entreprise_token).expired?
   end
 
   def create_new_revision

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ApiEntreprise::PfEtablissementAdapter do
+describe APIEntreprise::PfEtablissementAdapter do
   let(:procedure_id) { 33 }
 
   context 'Numéro TAHITI valide', vcr: { cassette_name: 'pf_api_entreprise' } do

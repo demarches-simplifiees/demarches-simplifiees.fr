@@ -2,7 +2,7 @@ class API::V2::GraphqlController < API::V2::BaseController
   def execute
     variables = ensure_hash(params[:variables])
 
-    result = Api::V2::Schema.execute(params[:query],
+    result = API::V2::Schema.execute(params[:query],
       variables: variables,
       context: context,
       operation_name: params[:operationName])
@@ -61,7 +61,7 @@ class API::V2::GraphqlController < API::V2::BaseController
 
   def handle_error_in_production(exception)
     id = SecureRandom.uuid
-    Raven.capture_exception(exception, extra: { exception_id: id })
+    Sentry.capture_exception(exception, extra: { exception_id: id })
 
     render json: {
       errors: [
