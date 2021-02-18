@@ -16,14 +16,14 @@ end
 
 def render_box(pdf, text, x, width)
   text = ::Prawn::Text::Formatted::Parser.format(prawn_text(text)) unless text.is_a? Array
-  box = ::Prawn::Text::Formatted::Box.new(text, {document: pdf, size: 11, width: width, overflow: :expand, at: [x, pdf.cursor]})
+  box = ::Prawn::Text::Formatted::Box.new(text, { document: pdf, size: 11, width: width, overflow: :expand, at: [x, pdf.cursor] })
   [box.render, box.height]
 end
 
 def format_in_2_columns(pdf, label, text)
   # enough space for label ?
   label = ::Prawn::Text::Formatted::Parser.format(label)
-  box = ::Prawn::Text::Formatted::Box.new(label, {document: pdf, size: 11, width: 100, overflow: :expand, at: [0, pdf.cursor]})
+  box = ::Prawn::Text::Formatted::Box.new(label, { document: pdf, size: 11, width: 100, overflow: :expand, at: [0, pdf.cursor] })
   remaining = box.render(dry_run: true)
   pdf.start_new_page if remaining.present?
   while text.present?
@@ -36,7 +36,7 @@ def format_in_2_columns(pdf, label, text)
 end
 
 def add_title(pdf, title)
-  title_style = {style: :bold, size: 16}
+  title_style = { style: :bold, size: 16 }
   pdf.fill_color "E11619"
   pdf.font 'marianne', title_style do
     pdf.text title
@@ -102,10 +102,10 @@ def render_single_champ(pdf, champ)
   when 'Champs::RepetitionChamp'
     raise 'There should not be a RepetitionChamp here !'
   when 'Champs::PieceJustificativeChamp'
-    url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({champ_id: champ.id})
+    url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: champ.id })
     link = if champ.piece_justificative_file.present?
       display = champ.piece_justificative_file.filename
-      content_tag :a, display, {href: url, target: '_blank', rel: 'noopener'}
+      content_tag :a, display, { href: url, target: '_blank', rel: 'noopener' }
     else
       "Non renseigné"
     end
@@ -188,21 +188,20 @@ end
 
 prawn_document(page_size: "A4") do |pdf|
   pdf.font_families.update('marianne' => {
-      normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
-      bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
-      bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
-      italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+    normal: Rails.root.join('lib/prawn/fonts/marianne/marianne-regular.ttf'),
+    bold: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+    bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
+    italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
   })
   pdf.font 'marianne'
 
-#  pdf.bounding_box([0, pdf.cursor], :width => 523, :height => 40) do
-#    pdf.fill_color "E11619"
-#    pdf.fill_rectangle [0, 40], 523, 40
-#    pdf.svg IO.read("app/assets/images/header/logo-md-wide.svg"), width: 300, position: :center, vposition: :center
-#    pdf.fill_color "000000"
-#  end
+  pdf.bounding_box([0, pdf.cursor], :width => 523, :height => 40) do
+    pdf.fill_color "E11619"
+    pdf.fill_rectangle [0, 40], 523, 40
+    pdf.svg IO.read(DOSSIER_PDF_EXPORT_LOGO_SRC), width: 300, position: :center, vposition: :center
+    pdf.fill_color "000000"
+  end
 
-  pdf.svg IO.read(DOSSIER_PDF_EXPORT_LOGO_SRC), width: 300, position: :center
   pdf.move_down(40)
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
