@@ -9,6 +9,12 @@ module Types
     definition_methods do
       def resolve_type(object, context)
         case object
+        when ::Champs::AddressChamp
+          if context.has_fragment?(:AddressChamp)
+            Types::Champs::AddressChampType
+          else
+            Types::Champs::TextChampType
+          end
         when ::Champs::EngagementChamp, ::Champs::YesNoChamp, ::Champs::CheckboxChamp
           Types::Champs::CheckboxChampType
         when ::Champs::DateChamp

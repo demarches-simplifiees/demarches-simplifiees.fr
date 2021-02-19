@@ -1,1 +1,1 @@
-Geocoder.configure(lookup: :ban_data_gouv_fr)
+Geocoder.configure(lookup: :ban_data_gouv_fr, use_https: true)
