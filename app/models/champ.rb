@@ -67,6 +67,8 @@ class Champ < ApplicationRecord
 
   before_create :set_dossier_id, if: :needs_dossier_id?
   before_validation :set_dossier_id, if: :needs_dossier_id?
+  before_save :cleanup_if_empty
+  after_update_commit :fetch_external_data_later
 
   validates :type_de_champ_id, uniqueness: { scope: [:dossier_id, :row] }
 
@@ -143,6 +145,14 @@ class Champ < ApplicationRecord
     update_column(:fetch_external_data_exceptions, exceptions)
   end
 
+  def fetch_external_data?
+    false
+  end
+
+  def fetch_external_data
+    raise NotImplemented.new(:fetch_external_data)
+  end
+
   private
 
   def needs_dossier_id?
@@ -151,5 +161,23 @@ class Champ < ApplicationRecord
 
   def set_dossier_id
     self.dossier_id = parent.dossier_id
+  end
+
+  def cleanup_if_empty
+    if external_id_changed?
+      self.data = nil
+    end
+  end
+
+  def fetch_external_data_later
+    if fetch_external_data? && external_id.present? && data.nil?
+      ChampFetchExternalDataJob.perform_later(self)
+    end
+  end
+
+  class NotImplemented < ::StandardError
+    def initialize(method)
+      super(":#{method} not implemented")
+    end
   end
 end
