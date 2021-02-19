@@ -23,6 +23,6 @@ class Champs::AnnuaireEducationChamp < Champs::TextChamp
   end
 
   def fetch_external_data
-    ApiEducation::AnnuaireEducationAdapter.new(external_id).to_params
+    APIEducation::AnnuaireEducationAdapter.new(external_id).to_params
   end
 end
