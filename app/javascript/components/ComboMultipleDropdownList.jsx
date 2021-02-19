@@ -107,7 +107,13 @@ function ComboMultipleDropdownList({
     );
     const selectedValue = maybeValue && maybeValue[1];
     if (value) {
-      setNewValues([...newValues, selectedValue]);
+      if (
+        acceptNewValues &&
+        extraOptions[0] &&
+        extraOptions[0][0] == selectedValue
+      ) {
+        setNewValues([...newValues, selectedValue]);
+      }
       saveSelection([...selections, selectedValue]);
     }
     setTerm('');
