@@ -94,7 +94,7 @@ class S3Synchronization < ApplicationRecord
       S3Synchronization.all.count # load class before multi-threading
 
       msg = "First step: files not uploaded yet. #{ActiveStorage::Blob.count} Blobs to go..."
-      upload_blobs(msg, from, to, until_time) do |service_name, service, blob|
+      upload_blobs(msg, from, to, until_time) do |_service_name, service, blob|
         service.exist?(blob.key)
       end
 
