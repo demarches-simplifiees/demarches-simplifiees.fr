@@ -2,16 +2,18 @@
 #
 # Table name: s3_synchronizations
 #
-#  id         :bigint           not null, primary key
-#  checked    :boolean
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id                     :bigint           not null, primary key
+#  checked                :boolean
+#  target                 :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  active_storage_blob_id :bigint
 #
 class S3Synchronization < ApplicationRecord
   scope :uploaded_stats, -> {
-    joins('join active_storage_blobs on s3_synchronizations.id = active_storage_blobs.id')
-      .select('updated_at::date as date, count(updated_at) as count, sum(active_storage_blobs.byte_size) as size')
-      .group('date')
+    joins('join active_storage_blobs on  s3_synchronizations.active_storage_blob_id = active_storage_blobs.id')
+      .select('target, updated_at::date as date, count(updated_at) as count, sum(active_storage_blobs.byte_size) as size')
+      .group('target, date')
       .order('date desc')
   }
 
@@ -21,12 +23,16 @@ class S3Synchronization < ApplicationRecord
     POOL_SIZE = 10
 
     def synchronize(until_time)
-      upload(:local, :s3, until_time)
+      if Rails.configuration.active_storage.service == :local
+        upload(:local, :s3, until_time)
+      else
+        upload(:s3, :local, until_time)
+      end
       AdministrationMailer.s3_synchronization_report.deliver_now
     end
 
-    def uploaded(to_service, blob)
-      synchronization = S3Synchronization.find_or_create_by(id: blob.id)
+    def uploaded(to, to_service, blob)
+      synchronization = S3Synchronization.find_or_create_by(target: to, active_storage_blob_id: blob.id)
       return true if synchronization.checked
 
       return false unless to_service.exist?(blob.key)
@@ -43,7 +49,7 @@ class S3Synchronization < ApplicationRecord
       end
     rescue => e
       puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
-      e.backtrace.each { |line| puts line }
+      e.backtrace.each { |line| rake_print line }
       false
     end
 
@@ -54,16 +60,12 @@ class S3Synchronization < ApplicationRecord
       progress = ProgressReport.new(ActiveStorage::Blob.count)
       pool = Concurrent::FixedThreadPool.new(POOL_SIZE)
 
+      blob = ActiveStorage::Blob.first
+      process_blob(blob, block, configs, from, from_service, to, progress, until_time) if blob.present?
+
       ActiveStorage::Blob.find_each do |blob|
-        local_file = from_service.path_for blob.key
         pool.post do
-          begin
-            next if until_time.present? && Time.zone.now > until_time
-            upload_blob(blob, local_file, configs, to, progress, &block)
-          rescue => e
-            puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
-            e.backtrace.each { |line| puts line }
-          end
+          process_blob(blob, block, configs, from, from_service, to, progress, until_time)
         end
       end
       pool.shutdown
@@ -71,10 +73,10 @@ class S3Synchronization < ApplicationRecord
       progress.finish
     end
 
-    def upload_file(to_service, blob, local_file)
+    def upload_file(to_service, blob, file)
       begin
         puts "\nUploading file #{blob.id}\t#{blob.key} #{blob.byte_size}"
-        to_service.upload(blob.key, File.open(local_file), checksum: blob.checksum)
+        to_service.upload(blob.key, file, checksum: blob.checksum)
       rescue SystemExit, Interrupt
         puts "\nCanceling upload of #{blob.key}"
         to_service.delete blob.key
@@ -89,26 +91,42 @@ class S3Synchronization < ApplicationRecord
 
       ActiveStorage::Blob.service = from_service
 
-      S3Synchronization.all.count # load class
+      S3Synchronization.all.count # load class before multi-threading
 
       msg = "First step: files not uploaded yet. #{ActiveStorage::Blob.count} Blobs to go..."
-      upload_blobs(msg, from, to, until_time) do |service, blob|
+      upload_blobs(msg, from, to, until_time) do |service_name, service, blob|
         service.exist?(blob.key)
       end
 
       msg = "Second step: check integrity of files. #{ActiveStorage::Blob.count} Blobs to go..."
-      upload_blobs(msg, from, to, until_time) do |service, blob|
-        uploaded(service, blob)
+      upload_blobs(msg, from, to, until_time) do |service_name, service, blob|
+        uploaded(service_name, service, blob)
       end
     end
 
     private
 
-    def upload_blob(blob, local_file, configs, to, progress, &block)
-      if File.file?(local_file)
+    def process_blob(blob, block, configs, from, from_service, to, progress, until_time)
+      begin
+        return if until_time.present? && Time.zone.now > until_time
+        if from_service.exist?(blob.key)
+          blob.open do |file|
+            upload_blob(blob, file, configs, to, progress, &block)
+          end
+        else
+          puts "\nFichier non présent sur #{from}: #{blob.key}"
+        end
+      rescue => e
+        puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
+        e.backtrace.each { |line| puts line }
+      end
+    end
+
+    def upload_blob(blob, file, configs, to, progress, &block)
+      if File.file?(file)
         service = ActiveStorage::Service.configure to, configs
-        unless yield(service, blob) then
-          upload_file(service, blob, local_file)
+        unless yield(to, service, blob) then
+          upload_file(service, blob, file)
         end
       end
       progress.inc

@@ -4,14 +4,18 @@
       %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
         Date
       %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
+        Cible
+      %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
         Nombre de fichiers
       %th{ style: 'border: 1px solid #0069CC;padding: 5px' }
         Taille transférée
   %tbody
-    - stats.each do |date, count, size|
+    - stats.each do |target, date, count, size|
       %tr
         %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
           = date
+        %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
+          = target
         %td{ style: 'border: 1px solid #0069CC;padding: 5px' }
           = count
         %td{ style: 'border: 1px solid #0069CC;padding: 5px' }

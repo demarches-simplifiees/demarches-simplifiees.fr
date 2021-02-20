@@ -44,19 +44,37 @@ class AdministrationMailer < ApplicationMailer
     @uploaded_stats = to_array(uploaded_stats)
     checked_stats = S3Synchronization.checked_stats
     @checked_stats = to_array(checked_stats)
-    @total = {
-      blobs_count: ActiveStorage::Blob.count,
-      uploaded_count: uploaded_stats.reduce(0) { |sum, line| sum + line.count },
-      checked_count: checked_stats.reduce(0) { |sum, line| sum + line.count },
-      uploaded_size: size_to_string(uploaded_stats.reduce(0) { |sum, line| sum + line.size })
-    }
+
     mail(to: EQUIPE_EMAIL, subject: "Statistiques de synchronisation")
   end
 
   private
 
   def to_array(tuples)
-    tuples.map { |l| [l.date.strftime('%d %B'), l.count, size_to_string(l.size)] }
+    targets = targets(tuples)
+    sums = sums_by_target(targets, tuples)
+    rows = formated_rows(tuples)
+    sums + rows
+  end
+
+  def formated_rows(tuples)
+    tuples.map { |l| [l.target, l.date.strftime('%d %B'), l.count, size_to_string(l.size)] }
+  end
+
+  def sums_by_target(targets, tuples)
+    targets.map do |target|
+      tuples.filter { |l| l.target == target }.reduce([target, "total", 0, 0]) do |total, l|
+        total[2] += l.count
+        total[3] += l.size
+        total
+      end
+    end.map { |line| line[3] = size_to_string(line[3]); line }
+  end
+
+  def targets(tuples)
+    tuples.reduce(Set.new) do |targets, line|
+      targets.add(line.target)
+    end
   end
 
   def size_to_string(size)

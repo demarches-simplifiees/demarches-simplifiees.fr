@@ -576,9 +576,13 @@ ActiveRecord::Schema.define(version: 2021_02_04_180955) do
   end
 
   create_table "s3_synchronizations", force: :cascade do |t|
+    t.string "target"
+    t.bigint "active_storage_blob_id"
     t.boolean "checked"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["active_storage_blob_id"], name: "index_s3_synchronizations_on_active_storage_blob_id"
+    t.index ["target", "active_storage_blob_id"], name: "index_s3_synchronizations_on_target_and_active_storage_blob_id", unique: true
   end
 
   create_table "services", force: :cascade do |t|
