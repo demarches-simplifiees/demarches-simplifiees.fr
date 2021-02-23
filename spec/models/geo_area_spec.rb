@@ -45,12 +45,6 @@ RSpec.describe GeoArea, type: :model do
 
     it { expect(geo_area.geometry).to eq(polygon) }
 
-    context 'invalid' do
-      let(:geo_area) { build(:geo_area, :invalid_multi_polygon) }
-
-      it { expect(geo_area.rgeo_geometry).to be_nil }
-    end
-
     context 'polygon_with_extra_coordinate' do
       let(:geo_area) { build(:geo_area, :polygon_with_extra_coordinate) }
 
