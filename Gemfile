@@ -45,6 +45,7 @@ gem 'image_processing'
 gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari', '1.2.1' # Pagination
+gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
@@ -86,9 +87,6 @@ group :test do
   gem 'capybara-selenium'
   gem 'database_cleaner'
   gem 'factory_bot'
-  gem 'guard'
-  gem 'guard-livereload', require: false
-  gem 'guard-rspec', require: false
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers', require: false
