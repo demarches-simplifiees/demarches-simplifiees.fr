@@ -13,18 +13,20 @@
 
 require 'excon'
 
-module ApiEntreprise
-  Job = APIEntreprise::Job
-  AssociationJob = APIEntreprise::AssociationJob
-  AttestationFiscaleJob = APIEntreprise::AttestationFiscaleJob
-  AttestationSocialeJob = APIEntreprise::AttestationSocialeJob
-  BilansBdfJob = APIEntreprise::BilansBdfJob
-  EffectifsAnnuelsJob = APIEntreprise::EffectifsAnnuelsJob
-  EffectifsJob = APIEntreprise::EffectifsJob
-  EntrepriseJob = APIEntreprise::EntrepriseJob
-  ExercicesJob = APIEntreprise::ExercicesJob
-end
+Rails.application.reloader.to_prepare do
+  module ApiEntreprise
+    Job = APIEntreprise::Job
+    AssociationJob = APIEntreprise::AssociationJob
+    AttestationFiscaleJob = APIEntreprise::AttestationFiscaleJob
+    AttestationSocialeJob = APIEntreprise::AttestationSocialeJob
+    BilansBdfJob = APIEntreprise::BilansBdfJob
+    EffectifsAnnuelsJob = APIEntreprise::EffectifsAnnuelsJob
+    EffectifsJob = APIEntreprise::EffectifsJob
+    EntrepriseJob = APIEntreprise::EntrepriseJob
+    ExercicesJob = APIEntreprise::ExercicesJob
+  end
 
-module Cron
-  FixMissingAntivirusAnalysis = FixMissingAntivirusAnalysisJob
+  module Cron
+    FixMissingAntivirusAnalysis = FixMissingAntivirusAnalysisJob
+  end
 end
