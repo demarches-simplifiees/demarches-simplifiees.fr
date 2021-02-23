@@ -255,8 +255,6 @@ GEM
       ruby2_keywords
     faraday-net_http (1.0.1)
     ffi (1.14.2)
-    ffi-geos (2.1.0)
-      ffi (>= 1.0.0)
     flipper (0.20.3)
     flipper-active_record (0.20.3)
       activerecord (>= 5.0, < 7)
@@ -843,7 +841,6 @@ DEPENDENCIES
   discard
   dotenv-rails
   factory_bot
-  ffi-geos
   flipper
   flipper-active_record
   flipper-ui
