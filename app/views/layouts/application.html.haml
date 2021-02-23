@@ -20,7 +20,6 @@
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
 
     = stylesheet_link_tag 'application', media: 'all'
-    = stylesheet_link_tag 'print', media: 'print'
 
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
