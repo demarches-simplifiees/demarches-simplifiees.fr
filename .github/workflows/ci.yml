@@ -55,7 +55,9 @@ jobs:
     strategy:
       matrix:
         pattern:
-          - spec/controllers
+          - spec/controllers/*_spec.rb
+          - spec/controllers/[a-l]**/*_spec.rb
+          - spec/controllers/[m-z]**/*_spec.rb
           - spec/features
           - spec/helpers spec/lib spec/middlewares
           - spec/mailers spec/jobs spec/policies
