@@ -7,7 +7,6 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 Dotenv::Railtie.load
-require_relative 'application_name'
 
 module TPS
   class Application < Rails::Application
