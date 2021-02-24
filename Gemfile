@@ -74,7 +74,6 @@ gem 'sib-api-v3-sdk'
 gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
-gem 'sprockets', '< 4'
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'
@@ -112,7 +111,6 @@ group :development do
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
   gem 'web-console'
-  gem 'xray-rails'
 end
 
 group :development, :test do
