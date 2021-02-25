@@ -1,3 +1,9 @@
+# Note: this class is instanciated when being added as an interceptor
+# during the app initialization.
+#
+# If you edit this file in development env, you will need to restart
+# the app to see the changes.
+
 class DynamicSmtpSettingsInterceptor
   def self.delivering_email(message)
     if ENV['SENDINBLUE_BALANCING'] == 'enabled'
