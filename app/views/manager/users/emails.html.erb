@@ -47,7 +47,7 @@
         <%= email.subject %>
         </td>
         <td class="cell-data cell-data--string" style="text-align: center;">
-        <%= l(email.date, format: '%d/%m/%y à %H:%M') %>
+        <%= l(email.date.is_a?(String) ? Time.zone.parse(email.date) : email.date, format: '%d/%m/%y à %H:%M') %>
         </td>
         <td class="cell-data cell-data--string" style="text-align: center;">
           <ul>
