@@ -11,20 +11,24 @@
 # - but let's keep these for a while to make external integrators's life easier.
 # To keep some margin, let's say this file can be safely deleted in May 2021.)
 
-require 'excon'
+Rails.application.reloader.to_prepare do
+  if !defined?(ApiEntreprise)
+    require 'excon'
 
-module ApiEntreprise
-  Job = APIEntreprise::Job
-  AssociationJob = APIEntreprise::AssociationJob
-  AttestationFiscaleJob = APIEntreprise::AttestationFiscaleJob
-  AttestationSocialeJob = APIEntreprise::AttestationSocialeJob
-  BilansBdfJob = APIEntreprise::BilansBdfJob
-  EffectifsAnnuelsJob = APIEntreprise::EffectifsAnnuelsJob
-  EffectifsJob = APIEntreprise::EffectifsJob
-  EntrepriseJob = APIEntreprise::EntrepriseJob
-  ExercicesJob = APIEntreprise::ExercicesJob
-end
+    module ApiEntreprise
+      Job = APIEntreprise::Job
+      AssociationJob = APIEntreprise::AssociationJob
+      AttestationFiscaleJob = APIEntreprise::AttestationFiscaleJob
+      AttestationSocialeJob = APIEntreprise::AttestationSocialeJob
+      BilansBdfJob = APIEntreprise::BilansBdfJob
+      EffectifsAnnuelsJob = APIEntreprise::EffectifsAnnuelsJob
+      EffectifsJob = APIEntreprise::EffectifsJob
+      EntrepriseJob = APIEntreprise::EntrepriseJob
+      ExercicesJob = APIEntreprise::ExercicesJob
+    end
 
-module Cron
-  FixMissingAntivirusAnalysis = FixMissingAntivirusAnalysisJob
+    module Cron
+      FixMissingAntivirusAnalysis = FixMissingAntivirusAnalysisJob
+    end
+  end
 end
