@@ -98,6 +98,7 @@ services:
       - S3_BUCKET
       - S3_ACCESS_KEY
       - S3_SECRET_KEY
+      - S3_REGION
       - SENTRY_CURRENT_ENV
       - SENTRY_DSN_JS
       - SENTRY_DSN_RAILS
