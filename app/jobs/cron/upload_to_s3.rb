@@ -1,4 +1,4 @@
-class UploadToS3Job < CronJob
+class Cron::UploadToS3Job < Cron::CronJob
   self.schedule_expression = "every day at 1 pm"
 
   def perform(*args)
