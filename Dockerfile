@@ -73,7 +73,7 @@ ENV \
     DB_DATABASE="tps"\
     DB_HOST="localhost"\
     DB_PASSWORD="tps"\
-    DB_POOL=""\
+    DB_POOL="20"\
     DB_USERNAME="tps"\
     DEMANDE_INSCRIPTION_ADMIN_PAGE_URL="https://www.mes-demarches.gov.pf/commencer/dmra-devenir-administrateur-de-demarches-en-ligne"\
     DOC_URL="https://mes-demarches.gitbook.io/documentation"\
