@@ -1,11 +1,49 @@
 = render partial: 'new_administrateur/breadcrumbs',
   locals: { steps: [link_to('Démarches', admin_procedures_path),
                     link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    link_to('choix du service', admin_services_path(procedure_id: @procedure.id)),
-                    'nouveau service'] }
+                    link_to('Mode hors-ligne', admin_services_path(procedure_id: @procedure.id))] }
 
 .container
-  %h1 Nouveau Service
+  %h1 Déposer un dossier hors-ligne
 
-  = render partial: 'form',
-    locals: { service: @service, procedure_id: @procedure.id }
+  .form
+
+    %p{ style: 'margin-top: 20px'}
+    Toute démarche en ligne doit également pouvoir être effectuée par au moins un autre moyen hors-ligne
+    (
+    %a{href: "#"} Légifrance
+    ,
+    %a{href: "#"} Conseil d'État
+    ).
+
+    %p{ style: 'margin-top: 20px'} Demarches-simplifiees.fr vous aide à proposer aux usagers d'autres moyens d'effectuer votre démarche.
+
+
+    %h3.header-subsection{ style: 'margin-top: 16px'} Proposer aux usagers de :
+
+    .radios.vertical
+      %label
+        %input{ type: 'radio' }
+        Imprimer automatiquement votre formulaire
+        %p.notice Les usagers pourront automatiquement télécharger une version PDF de votre formulaire, et l'envoyer par courrier postal.
+      %label
+        %input{ type: 'radio' }
+        Imprimer un PDF spécifique
+        %p.notice Déposez une version PDF de votre formulaire (Cerfa, etc.) que les usagers pourront imprimer et poster.
+      %label
+        %input{ type: 'radio' }
+        Saisir votre administration différemment
+        %p.notice Indiquez aux usagers comment déposer un dossier par d'autres voies.
+      %label
+        %input{ type: 'radio' }
+        Ne rien proposer
+        %p.notice
+          Aucun autre moyen de saisie ne sera proposé aux usagers.
+        %p.notice
+          %input{ type: 'checkbox'}
+          %span{style: 'color: rgba(161, 0, 5, 0.9)'}
+            Je certifie que ma démarche bénéficie d'une exemption à l'article L. 284.XXXX.
+
+    %input{ class: 'button primary', type: 'submit', value: 'Configurer le mode hors-ligne'}
+
+    %hr

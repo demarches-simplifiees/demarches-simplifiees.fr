@@ -124,6 +124,17 @@
         - else
           = link_to 'Modifier', admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur), class: 'button', id: "instructeurs"
 
+    .card-admin
+      %div
+        %span.icon.clock
+        %p.card-admin-status-todo À faire
+      %div
+        %p.card-admin-title
+          Mode hors-ligne
+        %p.card-admin-subtitle Alternatives à la saisie sur Internet
+      .card-admin-action
+        = link_to 'Configurer', admin_procedure_administrateurs_path(@procedure), class: 'button', id: "administrateurs"
+
   %h2.procedure-admin-explanation Pour aller plus loin
   .procedure-grid
     .card-admin

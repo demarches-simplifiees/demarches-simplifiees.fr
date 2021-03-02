@@ -16,7 +16,7 @@
     - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 
     - if dossiers.count == 0
-      = link_to 'Commencer la démarche', url_for_new_dossier(@procedure), class: ['button large expand primary']
+      = link_to 'Commencer la démarche en ligne', url_for_new_dossier(@procedure), class: ['button large expand primary']
 
     - elsif drafts.count == 1 && not_drafts.count == 0
       - dossier = drafts.first
@@ -41,7 +41,7 @@
       = link_to 'Voir mes dossiers en cours', dossiers_path, class: ['button large expand primary']
       = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@procedure), class: ['button large expand']
 
-  - if feature_enabled_for?(:dossier_pdf_vide, @procedure)
+  - if feature_enabled_for?(:dossier_pdf_vide, @procedure) || true
     - pdf_link = commencer_dossier_vide_path(path: @procedure.path)
     - if @procedure.brouillon?
       - pdf_link = commencer_dossier_vide_test_path(path: @procedure.path)
@@ -49,6 +49,7 @@
     %p
       Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF,
       et l'envoyer à l’administration concernée :
-      #{@procedure&.service&.nom} - #{@procedure&.service&.adresse}
+    %p
+      Préfecture de la Haute-Comté - 12 rue de Bree, 00 231 Lézeau
     %br
-    = link_to 'Télécharger un dossier vide au format PDF', pdf_link, class: ['button large expand']
+    = link_to 'Imprimer le formulaire à remplir', pdf_link, class: ['button large expand']
