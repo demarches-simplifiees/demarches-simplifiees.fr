@@ -508,15 +508,15 @@ type DirectUpload {
 Un dossier
 """
 type Dossier {
-  annotations: [Champ!]!
+  annotations(id: ID): [Champ!]!
   archived: Boolean!
 
   """
   L’URL de l’attestation au format PDF.
   """
   attestation: File
-  avis: [Avis!]!
-  champs: [Champ!]!
+  avis(id: ID): [Avis!]!
+  champs(id: ID): [Champ!]!
 
   """
   Date de la dernière modification.
@@ -546,7 +546,7 @@ type Dossier {
   groupeInstructeur: GroupeInstructeur!
   id: ID!
   instructeurs: [Profile!]!
-  messages: [Message!]!
+  messages(id: ID): [Message!]!
   motivation: String
   motivationAttachment: File
 

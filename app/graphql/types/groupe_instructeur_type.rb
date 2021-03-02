@@ -12,7 +12,7 @@ module Types
     end
 
     def self.authorized?(object, context)
-      authorized_demarche?(object.procedure, context)
+      context.authorized_demarche?(object.procedure)
     end
   end
 end
