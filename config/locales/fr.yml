@@ -121,6 +121,7 @@ fr:
       cps_network_error: 'Désolé, la vérification du numéro DN auprès de la CPS est temporairement indisponible. Vérifiez bien vos informations'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
+        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu'instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
       sipf:
         connexion: "Erreur lors de la connexion au serveur d'authentification des agents de l'administration."
       facebook:

@@ -55,7 +55,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         it { expect { subject }.not_to change { FranceConnectInformation.count } }
 
         context 'when france_connect_particulier_id have an associate user' do
-          let!(:user) { create(:user, email: 'plop@plop.com', france_connect_information: france_connect_information) }
+          let!(:user) { create(:user, email: email, france_connect_information: france_connect_information) }
 
           it do
             subject
@@ -83,6 +83,17 @@ describe FranceConnect::ParticulierController, type: :controller do
               expect { subject }.not_to change(User, :count)
               expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
               expect(subject).to redirect_to(root_path)
+            end
+
+            context 'and the user is also instructeur' do
+              let(:instructeur) { create(:instructeur) }
+              let(:email) { instructeur.email }
+              let(:user) { instructeur.user }
+              before { subject }
+
+              it { expect(response).to redirect_to(new_user_session_path) }
+
+              it { expect(flash[:alert]).to be_present }
             end
           end
 

@@ -118,6 +118,7 @@ class User < ApplicationRecord
     if user.valid?
       if user.instructeur_id.nil?
         user.create_instructeur!
+        user.update(france_connect_information: nil)
       end
 
       user.instructeur.administrateurs << administrateurs
@@ -131,6 +132,7 @@ class User < ApplicationRecord
 
     if user.valid? && user.administrateur_id.nil?
       user.create_administrateur!
+      user.update(france_connect_information: nil)
     end
 
     user
@@ -156,6 +158,18 @@ class User < ApplicationRecord
 
   def active?
     last_sign_in_at.present?
+  end
+
+  def administrateur?
+    administrateur_id.present?
+  end
+
+  def instructeur?
+    instructeur_id.present?
+  end
+
+  def can_france_connect?
+    !administrateur? && !instructeur?
   end
 
   def can_be_deleted?
