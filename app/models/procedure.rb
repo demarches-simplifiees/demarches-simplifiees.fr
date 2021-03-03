@@ -221,7 +221,7 @@ class Procedure < ApplicationRecord
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
-  after_create :ensure_default_groupe_instructeur
+  after_create :ensure_defaut_groupe_instructeur
 
   include AASM
 
@@ -715,9 +715,9 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def ensure_default_groupe_instructeur
+  def ensure_defaut_groupe_instructeur
     if self.groupe_instructeurs.empty?
-      groupe_instructeurs.create(label: GroupeInstructeur::DEFAULT_LABEL)
+      groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
     end
   end
 end
