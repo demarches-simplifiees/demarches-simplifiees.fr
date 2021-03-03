@@ -266,7 +266,7 @@ class Procedure < ApplicationRecord
     if locked?
       raise "Can not reset a locked procedure."
     else
-      groupe_instructeurs.each { |gi| gi.dossiers.destroy_all }
+      draft_revision.dossiers.destroy_all
     end
   end
 
