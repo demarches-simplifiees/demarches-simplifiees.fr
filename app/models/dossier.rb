@@ -418,6 +418,14 @@ class Dossier < ApplicationRecord
     Dossier.en_construction_close_to_expiration.where(id: self).present?
   end
 
+  def show_groupe_instructeur_details?
+    procedure.routee? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
+  end
+
+  def show_groupe_instructeur_selector?
+    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api)
+  end
+
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
     if groupe_instructeur.procedure == procedure && groupe_instructeur != self.groupe_instructeur
       if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
@@ -831,6 +839,10 @@ class Dossier < ApplicationRecord
   end
 
   private
+
+  def defaut_groupe_instructeur?
+    groupe_instructeur == procedure.defaut_groupe_instructeur
+  end
 
   def geo_areas
     champs.includes(:geo_areas).flat_map(&:geo_areas) + champs_private.includes(:geo_areas).flat_map(&:geo_areas)
