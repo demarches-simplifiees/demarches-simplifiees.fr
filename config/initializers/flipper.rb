@@ -38,6 +38,7 @@ features = [
   :maintenance_mode,
   :make_experts_notifiable,
   :mini_profiler,
+  :procedure_routage_api,
   :xray
 ]
 
