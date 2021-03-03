@@ -98,8 +98,8 @@ en:
       # # dossier_map_not_activated: "The file does not have access to the map."
       invalid_siret: "The SIRET is incorrect"
       procedure_not_found: "The procedure does not exist"
-      siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
-      siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
+      siret_unknown: 'Sorry, we did not find any establishment registered under this TAHITI number.'
+      siret_network_error: 'Désolé, la récupération des informations des numéros TAHITI est temporairement indisponible. Veuillez réessayer dans quelques instants.'
       siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
       # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
