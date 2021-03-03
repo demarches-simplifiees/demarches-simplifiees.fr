@@ -45,7 +45,7 @@ class AdministrationMailer < ApplicationMailer
     checked_stats = S3Synchronization.checked_stats
     @checked_stats = to_array(checked_stats)
 
-    mail(to: EQUIPE_EMAIL, subject: "Statistiques de synchronisation")
+    mail(to: CONTACT_EMAIL, subject: "Statistiques de synchronisation")
   end
 
   private
