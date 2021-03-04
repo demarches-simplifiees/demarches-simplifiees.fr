@@ -46,7 +46,7 @@ describe Manager::ProceduresController, type: :controller do
   end
 
   describe '#restore' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual) }
     let(:procedure) { dossier.procedure }
     let(:deleted_dossier) { DeletedDossier.find_by(dossier_id: dossier.id) }
     let(:operations) { dossier.dossier_operation_logs.map(&:operation).map(&:to_sym) }

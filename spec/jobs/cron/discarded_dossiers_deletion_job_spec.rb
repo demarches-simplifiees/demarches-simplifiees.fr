@@ -1,12 +1,13 @@
 RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
   describe '#perform' do
     let(:instructeur) { create(:instructeur) }
-    let(:dossier) { create(:dossier, state, hidden_at: hidden_at) }
+    let(:dossier) { create(:dossier, :with_individual, state) }
 
     before do
       # hack to add passer_en_instruction and supprimer to dossier.dossier_operation_logs
       dossier.send(:log_dossier_operation, instructeur, :passer_en_instruction, dossier)
       dossier.send(:log_dossier_operation, instructeur, :supprimer, dossier)
+      dossier.update_column(:hidden_at, hidden_at)
 
       Cron::DiscardedDossiersDeletionJob.perform_now
     end
@@ -35,7 +36,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
       end
     end
 
-    [:brouillon, :en_construction, :en_instruction, :accepte, :refuse, :sans_suite].each do |state|
+    [:en_construction, :en_instruction, :accepte, :refuse, :sans_suite].each do |state|
       context "with a dossier #{state}" do
         let(:state) { state }
 

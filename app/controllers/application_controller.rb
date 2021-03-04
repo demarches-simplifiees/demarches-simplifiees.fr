@@ -67,10 +67,6 @@ class ApplicationController < ActionController::Base
     Flipper.enabled?(feature_name, current_user)
   end
 
-  def feature_enabled_for?(feature_name, item)
-    Flipper.enabled?(feature_name, item)
-  end
-
   def authenticate_logged_user!
     if instructeur_signed_in?
       authenticate_instructeur!

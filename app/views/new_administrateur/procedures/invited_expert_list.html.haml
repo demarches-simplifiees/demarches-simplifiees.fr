@@ -10,7 +10,7 @@
       %thead
         %tr
           %th Liste des experts
-          - if feature_enabled_for?(:make_experts_notifiable, @procedure)
+          - if @procedure.feature_enabled?(:make_experts_notifiable)
             %th Notifier des décisions sur les dossiers
       %tbody
         - @experts_procedure.each do |expert_procedure|
@@ -18,7 +18,7 @@
             %td
               %span.icon.person
               = expert_procedure.expert.email
-            - if feature_enabled_for?(:make_experts_notifiable, @procedure)
+            - if @procedure.feature_enabled?(:make_experts_notifiable)
               %td
                 = form_for expert_procedure,
                   url: admin_procedure_update_allow_decision_access_path(expert_procedure: expert_procedure),

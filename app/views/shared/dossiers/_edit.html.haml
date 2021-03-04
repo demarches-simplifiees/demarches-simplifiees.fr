@@ -30,7 +30,7 @@
 
     %hr
 
-    - if dossier.procedure.routee?
+    - if dossier.show_groupe_instructeur_selector?
       = f.label :groupe_instructeur_id do
         = dossier.procedure.routing_criteria_name
         %span.mandatory *
