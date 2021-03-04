@@ -1,4 +1,6 @@
 describe Champ do
+  include ActiveJob::TestHelper
+
   require 'models/champ_shared_example.rb'
 
   it_should_behave_like "champ_spec"
@@ -435,19 +437,56 @@ describe Champ do
     end
   end
 
-  describe '#enqueue_virus_check' do
-    let(:champ) { build(:champ_piece_justificative, type_de_champ: type_de_champ) }
-
+  describe '#enqueue_virus_scan' do
     context 'when type_champ is type_de_champ_piece_justificative' do
       let(:type_de_champ) { create(:type_de_champ_piece_justificative) }
+      let(:champ) { build(:champ_piece_justificative, type_de_champ: type_de_champ) }
 
       context 'and there is a blob' do
         before do
-          champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
-          champ.save!
+          allow(ClamavService).to receive(:safe_file?).and_return(true)
         end
 
-        it { expect(champ.piece_justificative_file.virus_scanner.started?).to be_truthy }
+        subject do
+          champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+          champ.save!
+          champ
+        end
+
+        it 'marks the file as pending virus scan' do
+          expect(subject.piece_justificative_file.virus_scanner.started?).to be_truthy
+        end
+
+        it 'marks the file as safe once the scan completes' do
+          perform_enqueued_jobs { subject }
+          expect(champ.reload.piece_justificative_file.virus_scanner.safe?).to be_truthy
+        end
+      end
+    end
+  end
+
+  describe '#enqueue_watermark_job' do
+    context 'when type_champ is type_de_champ_titre_identite' do
+      let(:type_de_champ) { create(:type_de_champ_titre_identite) }
+      let(:champ) { build(:champ_titre_identite, type_de_champ: type_de_champ) }
+
+      before do
+        allow(ClamavService).to receive(:safe_file?).and_return(true)
+      end
+
+      subject do
+        champ.piece_justificative_file.attach(fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png'))
+        champ.save!
+        champ
+      end
+
+      it 'enqueues a watermark job on file attachment' do
+        expect(subject.piece_justificative_file.watermark_pending?).to be_truthy
+      end
+
+      it 'watermarks the file' do
+        perform_enqueued_jobs { subject }
+        expect(champ.reload.piece_justificative_file.blob.metadata[:watermark]).to be_truthy
       end
     end
   end
@@ -535,7 +574,6 @@ describe Champ do
     end
 
     context "fetch_external_data_later" do
-      include ActiveJob::TestHelper
       let(:data) { 'some other data' }
 
       it "fill data from external source" do
