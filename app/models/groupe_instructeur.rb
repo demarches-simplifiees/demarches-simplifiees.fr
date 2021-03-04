@@ -9,7 +9,7 @@
 #  procedure_id :bigint           not null
 #
 class GroupeInstructeur < ApplicationRecord
-  DEFAULT_LABEL = 'défaut'
+  DEFAUT_LABEL = 'défaut'
   belongs_to :procedure, -> { with_discarded }, inverse_of: :groupe_instructeurs, optional: false
   has_many :assign_tos, dependent: :destroy
   has_many :instructeurs, through: :assign_tos

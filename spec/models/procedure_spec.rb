@@ -466,7 +466,7 @@ describe Procedure do
 
       it 'should have a default groupe instructeur' do
         expect(subject.groupe_instructeurs.size).to eq(1)
-        expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL)
+        expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL)
         expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(0)
       end
     end
@@ -1011,7 +1011,7 @@ describe Procedure do
     let!(:procedure) { create(:procedure) }
 
     it { expect(procedure.groupe_instructeurs.count).to eq(1) }
-    it { expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL) }
+    it { expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL) }
   end
 
   describe '.missing_instructeurs?' do
