@@ -1,13 +1,21 @@
-# TODO: once we're using Rails 6, use the hooks on attachments creation
-# (rather than on blob creation).
-# This will help to avoid cloberring metadata accidentally (as metadata
-# are more stable on attachment creation than on blob creation).
+# Run a virus scan on all blobs after they are analyzed.
+#
+# We're using a class extension to ensure that all blobs get scanned,
+# regardless on how they were created. This could be an ActiveStorage::Analyzer,
+# but as of Rails 6.1 only the first matching analyzer is ever run on
+# a blob (and we may want to analyze the dimension of a picture as well
+# as scanning it).
+#
+# The `after_commit` hook is triggered, among other cases, when
+# the analyzer updates the blob metadata. When the analyzer has run,
+# it is now safe to start our own scanning, without risking to have
+# two concurrent jobs overwriting the metadata of the blob.
 module BlobVirusScannerConcern
   extend ActiveSupport::Concern
 
   included do
     before_create :set_pending
-    after_update_commit :enqueue_virus_scan
+    after_commit :enqueue_virus_scan
   end
 
   def virus_scanner
