@@ -47,7 +47,7 @@ type Address {
   """
   numéro éventuel et nom de voie ou lieu dit
   """
-  streetAddress: String!
+  streetAddress: String
 
   """
   nom de voie ou lieu dit
