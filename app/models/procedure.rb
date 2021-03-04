@@ -342,6 +342,10 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def feature_enabled?(feature)
+    Flipper.enabled?(feature, self)
+  end
+
   # Warning: dossier after_save build_default_champs must be removed
   # to save a dossier created from this method
   def new_dossier
