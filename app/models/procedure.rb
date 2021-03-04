@@ -135,7 +135,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
-  has_one :defaut_groupe_instructeur, -> { order(:id) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
+  has_one :defaut_groupe_instructeur, -> { order(:label) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
 
   has_one_attached :logo
   has_one_attached :notice
@@ -221,7 +221,7 @@ class Procedure < ApplicationRecord
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
-  after_create :ensure_default_groupe_instructeur
+  after_create :ensure_defaut_groupe_instructeur
 
   include AASM
 
@@ -715,9 +715,9 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def ensure_default_groupe_instructeur
+  def ensure_defaut_groupe_instructeur
     if self.groupe_instructeurs.empty?
-      groupe_instructeurs.create(label: GroupeInstructeur::DEFAULT_LABEL)
+      groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
     end
   end
 end

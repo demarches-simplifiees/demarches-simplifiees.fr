@@ -529,7 +529,7 @@ describe Instructeur, type: :model do
     let(:instructeur_a) { create(:instructeur, groupe_instructeurs: [procedure_a.defaut_groupe_instructeur]) }
 
     before do
-      gi2 = procedure_a.groupe_instructeurs.create(label: '2')
+      gi2 = procedure_a.groupe_instructeurs.create(label: 'gi2')
 
       instructeur_a.groupe_instructeurs << gi2
     end
