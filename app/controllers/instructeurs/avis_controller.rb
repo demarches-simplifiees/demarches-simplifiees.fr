@@ -72,7 +72,7 @@ module Instructeurs
 
     def create_avis
       @procedure = Procedure.find(params[:procedure_id])
-      if !feature_enabled_for?(:expert_not_allowed_to_invite, @procedure)
+      if !@procedure.feature_enabled?(:expert_not_allowed_to_invite)
         @new_avis = create_avis_from_params(avis.dossier, avis.confidentiel)
 
         if @new_avis.nil?

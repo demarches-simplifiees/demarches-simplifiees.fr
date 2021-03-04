@@ -13,7 +13,7 @@ describe ExpiredDossiersDeletionService do
     let(:date_not_expired) { Date.today - procedure.duree_conservation_dossiers_dans_ds.months + 2.months }
 
     context 'send messages for dossiers expiring soon and delete expired' do
-      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired, brouillon_close_to_expiration_notice_sent_at: today - (warning_period + 1.day)) }
+      let!(:expired_brouillon) { create(:dossier, procedure: procedure, created_at: date_expired, brouillon_close_to_expiration_notice_sent_at: today - (warning_period + 3.days)) }
       let!(:brouillon_close_to_expiration) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration) }
       let!(:brouillon_close_but_with_notice_sent) { create(:dossier, procedure: procedure, created_at: date_close_to_expiration, brouillon_close_to_expiration_notice_sent_at: Time.zone.now) }
       let!(:valid_brouillon) { create(:dossier, procedure: procedure, created_at: date_not_expired) }

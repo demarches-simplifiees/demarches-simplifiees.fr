@@ -80,7 +80,25 @@ class DossierOperationLog < ApplicationRecord
     if author.nil?
       nil
     else
-      OperationAuthorSerializer.new(author).as_json
+      {
+        id: serialize_author_id(author),
+        email: author.email
+      }.as_json
+    end
+  end
+
+  def self.serialize_author_id(object)
+    case object
+    when User
+      "Usager##{object.id}"
+    when Instructeur
+      "Instructeur##{object.id}"
+    when Administrateur
+      "Administrateur##{object.id}"
+    when SuperAdmin
+      "Manager##{object.id}"
+    else
+      nil
     end
   end
 
@@ -96,11 +114,11 @@ class DossierOperationLog < ApplicationRecord
     else
       case subject
       when Dossier
-        DossierSerializer.new(subject).as_json
+        SerializerService.dossier(subject)
       when Champ
-        ChampSerializer.new(subject).as_json
+        SerializerService.champ(subject)
       when Avis
-        AvisSerializer.new(subject).as_json
+        SerializerService.avis(subject)
       end
     end
   end
