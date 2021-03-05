@@ -104,9 +104,9 @@ enum AddressType {
 
 type Association {
   dateCreation: ISO8601Date
-  dateDeclaration: ISO8601Date!
-  datePublication: ISO8601Date!
-  objet: String!
+  dateDeclaration: ISO8601Date
+  datePublication: ISO8601Date
+  objet: String
   rna: String!
   titre: String!
 }
