@@ -4,6 +4,7 @@
 #
 #  id                   :integer          not null, primary key
 #  answer               :text
+#  claimant_type        :string
 #  confidentiel         :boolean          default(FALSE), not null
 #  email                :string
 #  introduction         :text
