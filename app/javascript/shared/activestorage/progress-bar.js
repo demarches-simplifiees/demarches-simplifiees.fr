@@ -32,6 +32,7 @@ export default class ProgressBar {
     const element = getDirectUploadProgressElement(id);
     if (element) {
       element.style.width = `${progress}%`;
+      element.setAttribute('aria-valuenow', progress);
     }
   }
 
@@ -52,7 +53,7 @@ export default class ProgressBar {
 
   static render(id, filename) {
     return `<div id="direct-upload-${id}" class="direct-upload ${PENDING_CLASS}" data-direct-upload-id="${id}">
-      <div class="direct-upload__progress" style="width: 0%"></div>
+      <div role="progressbar" aria-valuemin="0" aria-valuemax="100" class="direct-upload__progress" style="width: 0%"></div>
       <span class="direct-upload__filename">${filename}</span>
     </div>`;
   }
