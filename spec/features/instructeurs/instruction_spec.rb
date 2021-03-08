@@ -153,7 +153,7 @@ feature 'Instructing a dossier:' do
 
     scenario 'A instructeur can download an archive containing a single attachment' do
       find(:css, '.attached').click
-      click_on 'Télécharger toutes les pièces jointes'
+      click_on 'Télécharger le dossier et toutes ses pièces jointes'
       # For some reason, clicking the download link does not trigger the download in the headless browser ;
       # So we need to go to the download link directly
       visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
