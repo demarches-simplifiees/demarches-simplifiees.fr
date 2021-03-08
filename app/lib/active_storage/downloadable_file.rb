@@ -13,12 +13,14 @@ class ActiveStorage::DownloadableFile
 
   def self.create_list_from_dossier(dossier)
     pjs = PiecesJustificativesService.liste_pieces_justificatives(dossier)
-    pjs.map do |piece_justificative|
+    files = pjs.map do |piece_justificative|
       [
         piece_justificative,
         self.timestamped_filename(piece_justificative)
       ]
     end
+    files << [dossier.pdf_export_for_instructeur, self.timestamped_filename(dossier.pdf_export_for_instructeur)]
+    files
   end
 
   private
