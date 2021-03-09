@@ -853,15 +853,16 @@ describe Users::DossiersController, type: :controller do
 
     context "with PDF output" do
       let(:procedure) { create(:procedure) }
-      let(:dossier) {
-  create(:dossier,
-    :accepte,
-    :with_all_champs,
-    :with_motivation,
-    :with_commentaires,
-    procedure: procedure,
-    user: user)
-}
+      let(:dossier) do
+        create(:dossier,
+          :accepte,
+          :with_all_champs,
+          :with_motivation,
+          :with_commentaires,
+          procedure: procedure,
+          user: user)
+      end
+
       subject! { get(:show, params: { id: dossier.id, format: :pdf }) }
 
       context 'when the dossier is a brouillon' do
