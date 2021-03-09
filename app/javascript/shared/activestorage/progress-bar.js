@@ -25,6 +25,7 @@ export default class ProgressBar {
     const element = getDirectUploadElement(id);
     if (element) {
       element.classList.remove(PENDING_CLASS);
+      element.focus();
     }
   }
 
