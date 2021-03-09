@@ -293,8 +293,8 @@ class Dossier < ApplicationRecord
     # select users who have submitted dossier for the given 'procedures.id'
     users_who_submitted =
       state_not_brouillon
-        .joins(:groupe_instructeur)
-        .where("groupe_instructeurs.procedure_id = procedures.id")
+        .joins(:revision)
+        .where("procedure_revisions.procedure_id = procedures.id")
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
     state_brouillon
@@ -321,7 +321,7 @@ class Dossier < ApplicationRecord
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user
 
-  before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
+  before_save :build_default_champs, if: Proc.new { revision_id_was.nil? }
   before_save :update_search_terms
 
   after_save :send_dossier_received
@@ -427,7 +427,7 @@ class Dossier < ApplicationRecord
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
-    if groupe_instructeur.procedure == procedure && groupe_instructeur != self.groupe_instructeur
+    if (groupe_instructeur.nil? || groupe_instructeur.procedure == procedure) && self.groupe_instructeur != groupe_instructeur
       if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
         unfollow_stale_instructeurs
 
