@@ -1,9 +1,24 @@
 class TitreIdentiteWatermarkJob < ApplicationJob
+  class FileNotScannedYetException < StandardError
+  end
+
+  # If by the time the job runs the blob has been deleted, ignore the error
+  discard_on ActiveRecord::RecordNotFound
+  # If the file is deleted during the scan, ignore the error
+  discard_on ActiveStorage::FileNotFoundError
+  
+  # If the file is not analyzed or scanned for viruses yet, retry later
+  # (to avoid modifying the file while it is being scanned).
+  retry_on FileNotScannedYetException
+
   MAX_IMAGE_SIZE = 1500
   SCALE = 0.9
   WATERMARK = Rails.root.join("app/assets/images/#{WATERMARK_FILE}")
 
   def perform(blob)
+    raise FileNotScannedYetException if !blob.virus_scanner.done?
+    return if blob.watermark_done?
+
     blob.open do |file|
       watermark = resize_watermark(file)
 
