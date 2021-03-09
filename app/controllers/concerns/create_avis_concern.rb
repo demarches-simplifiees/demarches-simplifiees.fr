@@ -27,6 +27,7 @@ module CreateAvisConcern
             introduction: create_avis_params[:introduction],
             introduction_file: create_avis_params[:introduction_file],
             claimant: current_instructeur,
+            claimant_type: current_instructeur.dossiers.present? ? 'Instructeur' : 'Expert',
             dossier: dossier,
             confidentiel: confidentiel,
             experts_procedure: experts_procedure
