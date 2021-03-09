@@ -599,6 +599,12 @@ class Procedure < ApplicationRecord
     groupe_instructeurs.count > 1
   end
 
+  def defaut_groupe_instructeur_for_new_dossier
+    if !routee? || feature_enabled?(:procedure_routage_api)
+      defaut_groupe_instructeur
+    end
+  end
+
   def can_be_deleted_by_administrateur?
     brouillon? || dossiers.state_instruction_commencee.empty?
   end

@@ -98,7 +98,17 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
 
     it 'renders the routing criteria name and its value' do
       expect(subject).to have_field(procedure.routing_criteria_name)
-      expect(subject).to include(dossier.groupe_instructeur.label)
+    end
+
+    context 'when groupe instructeur is selected' do
+      before do
+        dossier.groupe_instructeur = dossier.procedure.defaut_groupe_instructeur
+      end
+
+      it 'renders the routing criteria name and its value' do
+        expect(subject).to have_field(procedure.routing_criteria_name)
+        expect(subject).to include(dossier.groupe_instructeur.label)
+      end
     end
   end
 end
