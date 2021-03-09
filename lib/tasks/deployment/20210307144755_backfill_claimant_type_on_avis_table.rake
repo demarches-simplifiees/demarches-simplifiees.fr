@@ -3,13 +3,20 @@ namespace :after_party do
   task backfill_claimant_type_on_avis_table: :environment do
     puts "Running deploy task 'backfill_claimant_type_on_avis_table'"
 
+    BATCH_SIZE = 20000
+
     with_dossiers = Avis.where(claimant_type: nil).includes(claimant: :assign_to).where.not(claimant: { assign_tos: { id: nil } })
-    with_dossiers.update_all(claimant_type: 'Instructeur')
+
+    ((with_dossiers.count / BATCH_SIZE).ceil + 1).times do
+      with_dossiers
+        .limit(BATCH_SIZE)
+        .update_all(claimant_type: 'Instructeur')
+    end
 
     without_dossiers = Avis.where(claimant_type: nil).includes(claimant: :assign_to).where(claimant: { assign_tos: { id: nil } })
     without_dossiers.find_each do |avis|
-      claimant = Instructeur.find(avis.claimant_id).user
-      instructeur = Instructeur.find(avis.instructeur) if avis.instructeur
+      claimant = avis.claimant.user
+      instructeur = avis.instructeur
 
       if instructeur && avis.experts_procedure_id.blank?
         User.create_or_promote_to_expert(instructeur.user.email, SecureRandom.hex)
