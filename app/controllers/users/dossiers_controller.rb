@@ -254,7 +254,7 @@ module Users
 
       dossier = Dossier.new(
         revision: procedure.active_revision,
-        groupe_instructeur: procedure.defaut_groupe_instructeur,
+        groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
       )
@@ -338,7 +338,21 @@ module Users
     end
 
     def change_groupe_instructeur?
-      params[:dossier][:groupe_instructeur_id].present? && @dossier.groupe_instructeur_id != params[:dossier][:groupe_instructeur_id].to_i
+      if params[:dossier].key?(:groupe_instructeur_id)
+        groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
+        if groupe_instructeur_id.nil?
+          @dossier.groupe_instructeur_id.present?
+        else
+          @dossier.groupe_instructeur_id != groupe_instructeur_id.to_i
+        end
+      end
+    end
+
+    def groupe_instructeur_from_params
+      groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
+      if groupe_instructeur_id.present?
+        @dossier.procedure.groupe_instructeurs.find(groupe_instructeur_id)
+      end
     end
 
     def update_dossier_and_compute_errors
@@ -357,13 +371,16 @@ module Users
         if !@dossier.save
           errors += @dossier.errors.full_messages
         elsif change_groupe_instructeur?
-          groupe_instructeur = @dossier.procedure.groupe_instructeurs.find(params[:dossier][:groupe_instructeur_id])
-          @dossier.assign_to_groupe_instructeur(groupe_instructeur)
+          @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
         end
       end
 
       if !save_draft?
         errors += @dossier.check_mandatory_champs
+
+        if @dossier.groupe_instructeur.nil?
+          errors << "Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"
+        end
       end
 
       errors
