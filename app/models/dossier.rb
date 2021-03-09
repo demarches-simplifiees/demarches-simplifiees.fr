@@ -77,7 +77,7 @@ class Dossier < ApplicationRecord
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
 
-  belongs_to :groupe_instructeur, optional: false
+  belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: false
 
@@ -330,7 +330,7 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
-  validates :groupe_instructeur, presence: true
+  validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
   def motivation
     return nil if !termine?
@@ -419,7 +419,7 @@ class Dossier < ApplicationRecord
   end
 
   def show_groupe_instructeur_details?
-    procedure.routee? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
+    procedure.routee? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
   end
 
   def show_groupe_instructeur_selector?

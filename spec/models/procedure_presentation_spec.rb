@@ -733,8 +733,8 @@ describe ProcedurePresentation do
       let!(:gi_2) { procedure.groupe_instructeurs.create(label: 'gi2') }
       let!(:gi_3) { procedure.groupe_instructeurs.create(label: 'gi3') }
 
-      let!(:kept_dossier) { create(:dossier, procedure: procedure) }
-      let!(:discarded_dossier) { create(:dossier, procedure: procedure, groupe_instructeur: gi_2) }
+      let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure) }
+      let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_2) }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
 

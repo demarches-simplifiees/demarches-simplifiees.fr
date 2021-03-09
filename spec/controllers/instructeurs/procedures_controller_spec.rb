@@ -275,20 +275,8 @@ describe Instructeurs::ProceduresController, type: :controller do
         it { expect(assigns(:procedure)).to eq(procedure) }
       end
 
-      context 'with a new brouillon dossier' do
-        let!(:brouillon_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
-
-        before { subject }
-
-        it { expect(assigns(:a_suivre_dossiers)).to be_empty }
-        it { expect(assigns(:followed_dossiers)).to be_empty }
-        it { expect(assigns(:termines_dossiers)).to be_empty }
-        it { expect(assigns(:all_state_dossiers)).to be_empty }
-        it { expect(assigns(:archived_dossiers)).to be_empty }
-      end
-
       context 'with a new dossier without follower' do
-        let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+        let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         before { subject }
 
@@ -310,7 +298,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       context 'with a new dossier with a follower' do
-        let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+        let!(:new_followed_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         before do
           instructeur.followed_dossiers << new_followed_dossier
@@ -339,7 +327,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       context 'with a termine dossier with a follower' do
-        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) }
+        let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure) }
 
         before { subject }
 
@@ -361,7 +349,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       context 'with an archived dossier' do
-        let!(:archived_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) }
+        let!(:archived_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
 
         before { subject }
 
@@ -372,8 +360,8 @@ describe Instructeurs::ProceduresController, type: :controller do
         it { expect(assigns(:archived_dossiers)).to match_array([archived_dossier]) }
 
         context 'and terminer dossiers on each of the others groups' do
-          let!(:archived_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction), archived: true) }
-          let!(:archived_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction), archived: true) }
+          let!(:archived_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, archived: true) }
+          let!(:archived_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3, archived: true) }
 
           before { subject }
 
@@ -382,10 +370,10 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       describe 'statut' do
-        let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) } }
-        let!(:new_followed_dossier) { Timecop.freeze(2.days.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) } }
-        let!(:termine_dossier) { Timecop.freeze(3.days.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) } }
-        let!(:archived_dossier) { Timecop.freeze(4.days.ago) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) } }
+        let!(:a_suivre__dossier) { Timecop.freeze(1.day.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
+        let!(:new_followed_dossier) { Timecop.freeze(2.days.ago) { create(:dossier, :en_instruction, procedure: procedure) } }
+        let!(:termine_dossier) { Timecop.freeze(3.days.ago) { create(:dossier, :accepte, procedure: procedure) } }
+        let!(:archived_dossier) { Timecop.freeze(4.days.ago) { create(:dossier, :en_instruction, procedure: procedure, archived: true) } }
 
         before do
           instructeur.followed_dossiers << new_followed_dossier
