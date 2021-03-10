@@ -4,6 +4,7 @@
 #
 #  id                   :integer          not null, primary key
 #  answer               :text
+#  claimant_type        :string
 #  confidentiel         :boolean          default(FALSE), not null
 #  email                :string
 #  introduction         :text
@@ -22,6 +23,7 @@ class Avis < ApplicationRecord
   belongs_to :instructeur, optional: true
   belongs_to :experts_procedure, optional: true
   belongs_to :claimant, class_name: 'Instructeur', optional: false
+  has_one :procedure, through: :dossier
 
   has_one_attached :piece_justificative_file
   has_one_attached :introduction_file
@@ -77,10 +79,6 @@ class Avis < ApplicationRecord
       ['Instructeur', claimant&.email],
       ['Expert', instructeur&.email]
     ]
-  end
-
-  def procedure
-    dossier.procedure
   end
 
   def revoked?

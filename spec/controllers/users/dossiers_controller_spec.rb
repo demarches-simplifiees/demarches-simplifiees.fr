@@ -342,6 +342,7 @@ describe Users::DossiersController, type: :controller do
       {
         id: dossier.id,
         dossier: {
+          groupe_instructeur_id: dossier.groupe_instructeur_id,
           champs_attributes: {
             id: first_champ.id,
             value: value
@@ -418,19 +419,44 @@ describe Users::DossiersController, type: :controller do
         let(:another_group) { create(:groupe_instructeur, procedure: procedure) }
         let(:instructeur_of_dossier) { create(:instructeur) }
         let(:instructeur_in_another_group) { create(:instructeur) }
-        let!(:dossier) { create(:dossier, groupe_instructeur: dossier_group, user: user) }
 
-        before do
-          allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
-          create(:assign_to, instructeur: instructeur_of_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier_group)
-          create(:assign_to, instructeur: instructeur_in_another_group, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: another_group)
+        context "and grope instructeur is set" do
+          let!(:dossier) { create(:dossier, groupe_instructeur: dossier_group, user: user) }
+
+          before do
+            allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
+            create(:assign_to, instructeur: instructeur_of_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier_group)
+            create(:assign_to, instructeur: instructeur_in_another_group, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: another_group)
+          end
+
+          it "sends notification mail to instructeurs in the correct group instructeur" do
+            subject
+
+            expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_of_dossier.email)
+            expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_in_another_group.email)
+          end
         end
 
-        it "sends notification mail to instructeurs in the correct group instructeur" do
-          subject
+        context "and groupe instructeur is not set" do
+          let(:dossier) { create(:dossier, procedure: procedure, user: user) }
+          let(:submit_payload) do
+            {
+              id: dossier.id,
+              dossier: {
+                champs_attributes: {
+                  id: first_champ.id,
+                  value: value
+                }
+              },
+              submit_draft: false
+            }
+          end
 
-          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_of_dossier.email)
-          expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_in_another_group.email)
+          it "can not submit" do
+            subject
+
+            expect(flash.alert).to eq(['Le champ « Votre ville » doit être rempli'])
+          end
         end
       end
 
@@ -557,6 +583,7 @@ describe Users::DossiersController, type: :controller do
       {
         id: dossier.id,
         dossier: {
+          groupe_instructeur_id: dossier.groupe_instructeur_id,
           champs_attributes: [
             {
               id: first_champ.id,
@@ -826,15 +853,16 @@ describe Users::DossiersController, type: :controller do
 
     context "with PDF output" do
       let(:procedure) { create(:procedure) }
-      let(:dossier) {
-  create(:dossier,
-    :accepte,
-    :with_all_champs,
-    :with_motivation,
-    :with_commentaires,
-    procedure: procedure,
-    user: user)
-}
+      let(:dossier) do
+        create(:dossier,
+          :accepte,
+          :with_all_champs,
+          :with_motivation,
+          :with_commentaires,
+          procedure: procedure,
+          user: user)
+      end
+
       subject! { get(:show, params: { id: dossier.id, format: :pdf }) }
 
       context 'when the dossier is a brouillon' do

@@ -11,7 +11,7 @@
     = link_to 'J’ai déjà un compte', commencer_sign_in_path(path: @procedure.path), class: ['button large expand']
 
   - else
-    - dossiers = current_user.dossiers.where(groupe_instructeur: @procedure.groupe_instructeurs)
+    - dossiers = current_user.dossiers.where(revision: @procedure.revisions)
     - drafts = dossiers.merge(Dossier.state_brouillon)
     - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 
