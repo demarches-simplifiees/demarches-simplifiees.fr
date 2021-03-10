@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_04_180955) do
+ActiveRecord::Schema.define(version: 2021_03_07_143807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(version: 2021_02_04_180955) do
     t.boolean "confidentiel", default: false, null: false
     t.datetime "revoked_at"
     t.bigint "experts_procedure_id"
+    t.string "claimant_type"
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
     t.index ["experts_procedure_id"], name: "index_avis_on_experts_procedure_id"
@@ -729,7 +730,6 @@ ActiveRecord::Schema.define(version: 2021_02_04_180955) do
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "experts_procedures"
-  add_foreign_key "avis", "instructeurs", column: "claimant_id"
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
