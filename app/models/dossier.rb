@@ -77,7 +77,7 @@ class Dossier < ApplicationRecord
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
 
-  belongs_to :groupe_instructeur, optional: false
+  belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: false
 
@@ -293,8 +293,8 @@ class Dossier < ApplicationRecord
     # select users who have submitted dossier for the given 'procedures.id'
     users_who_submitted =
       state_not_brouillon
-        .joins(:groupe_instructeur)
-        .where("groupe_instructeurs.procedure_id = procedures.id")
+        .joins(:revision)
+        .where("procedure_revisions.procedure_id = procedures.id")
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
     state_brouillon
@@ -321,7 +321,7 @@ class Dossier < ApplicationRecord
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user
 
-  before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
+  before_save :build_default_champs, if: Proc.new { revision_id_was.nil? }
   before_save :update_search_terms
 
   after_save :send_dossier_received
@@ -330,7 +330,7 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
-  validates :groupe_instructeur, presence: true
+  validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
   def motivation
     return nil if !termine?
@@ -419,7 +419,7 @@ class Dossier < ApplicationRecord
   end
 
   def show_groupe_instructeur_details?
-    procedure.routee? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
+    procedure.routee? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
   end
 
   def show_groupe_instructeur_selector?
@@ -427,7 +427,7 @@ class Dossier < ApplicationRecord
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
-    if groupe_instructeur.procedure == procedure && groupe_instructeur != self.groupe_instructeur
+    if (groupe_instructeur.nil? || groupe_instructeur.procedure == procedure) && self.groupe_instructeur != groupe_instructeur
       if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
         unfollow_stale_instructeurs
 

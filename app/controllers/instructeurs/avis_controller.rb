@@ -12,13 +12,13 @@ module Instructeurs
     DONNES_STATUS   = 'donnes'
 
     def index
-      avis = current_instructeur.avis.includes(dossier: [groupe_instructeur: :procedure])
+      avis = current_instructeur.avis.includes(:procedure)
       @avis_by_procedure = avis.to_a.group_by(&:procedure)
     end
 
     def procedure
       @procedure = Procedure.find(params[:procedure_id])
-      instructeur_avis = current_instructeur.avis.includes(:dossier).where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure.id) })
+      instructeur_avis = current_instructeur.avis.includes(:dossier).where(dossiers: { revision: @procedure.revisions })
       @avis_a_donner = instructeur_avis.without_answer
       @avis_donnes = instructeur_avis.with_answer
 
