@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  useEffect
+} from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
@@ -10,6 +16,7 @@ import { getJSON, ajax, fire } from '@utils';
 import Mapbox from '../shared/mapbox/Mapbox';
 import { getMapStyle } from '../shared/mapbox/styles';
 import SwitchMapStyle from '../shared/mapbox/SwitchMapStyle';
+import { FlashMessage } from '../shared/FlashMessage';
 
 import ComboAdresseSearch from '../ComboAdresseSearch';
 import {
@@ -30,6 +37,7 @@ function MapEditor({ featureCollection, url, preview, options }) {
   const drawControl = useRef(null);
   const [currentMap, setCurrentMap] = useState(null);
 
+  const [errorMessage, setErrorMessage] = useState();
   const [style, setStyle] = useState('ortho');
   const [coords, setCoords] = useState([1.7, 46.9]);
   const [zoom, setZoom] = useState([5]);
@@ -43,6 +51,11 @@ function MapEditor({ featureCollection, url, preview, options }) {
     options
   ]);
   const hasCadastres = useMemo(() => options.layers.includes('cadastres'));
+
+  useEffect(() => {
+    const timer = setTimeout(() => setErrorMessage(null), 5000);
+    return () => clearTimeout(timer);
+  }, [errorMessage]);
 
   const translations = [
     ['.mapbox-gl-draw_line', 'Tracer une ligne'],
@@ -118,21 +131,34 @@ function MapEditor({ featureCollection, url, preview, options }) {
   }
 
   async function onDrawCreate({ features }) {
-    for (const feature of features) {
-      const data = await getJSON(url, { feature }, 'post');
-      setFeatureId(feature.id, data.feature);
-    }
+    try {
+      for (const feature of features) {
+        const data = await getJSON(url, { feature }, 'post');
+        setFeatureId(feature.id, data.feature);
+      }
 
-    updateFeaturesList(features);
+      updateFeaturesList(features);
+    } catch {
+      setErrorMessage('Le polygone dessiné n’est pas valide.');
+    }
   }
 
   async function onDrawUpdate({ features }) {
-    for (const feature of features) {
-      let { id } = feature.properties;
-      await getJSON(`${url}/${id}`, { feature }, 'patch');
-    }
+    try {
+      for (const feature of features) {
+        const { id } = feature.properties;
+        if (id) {
+          await getJSON(`${url}/${id}`, { feature }, 'patch');
+        } else {
+          const data = await getJSON(url, { feature }, 'post');
+          setFeatureId(feature.id, data.feature);
+        }
+      }
 
-    updateFeaturesList(features);
+      updateFeaturesList(features);
+    } catch {
+      setErrorMessage('Le polygone dessiné n’est pas valide.');
+    }
   }
 
   async function onDrawDelete({ features }) {
@@ -152,8 +178,9 @@ function MapEditor({ featureCollection, url, preview, options }) {
     );
   }
 
-  const onFileImport = (e, inputId) => {
-    readGeoFile(e.target.files[0]).then(async (featureCollection) => {
+  const onFileImport = async (e, inputId) => {
+    try {
+      const featureCollection = await readGeoFile(e.target.files[0]);
       const resultFeatureCollection = await getJSON(
         `${url}/import`,
         featureCollection,
@@ -188,7 +215,9 @@ function MapEditor({ featureCollection, url, preview, options }) {
       updateFeaturesList(resultFeatureCollection.features);
       setImportInputs(setInputs);
       setBbox(resultFeatureCollection.bbox);
-    });
+    } catch {
+      setErrorMessage('Le fichier importé contient des polygones invalides.');
+    }
   };
 
   const addInputFile = (e) => {
@@ -233,6 +262,9 @@ function MapEditor({ featureCollection, url, preview, options }) {
 
   return (
     <>
+      {errorMessage && (
+        <FlashMessage message={errorMessage} level="alert" fixed={true} />
+      )}
       <div>
         <p style={{ marginBottom: '20px' }}>
           Besoin d&apos;aide ?&nbsp;
