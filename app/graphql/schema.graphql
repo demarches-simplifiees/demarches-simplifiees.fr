@@ -1089,7 +1089,7 @@ type Entreprise {
   """
   capital social de l’entreprise. -1 si inconnu.
   """
-  capitalSocial: BigInt!
+  capitalSocial: BigInt
   codeEffectifEntreprise: String
   dateCreation: ISO8601Date!
 
@@ -1107,7 +1107,7 @@ type Entreprise {
   inlineAdresse: String!
   nom: String
   nomCommercial: String!
-  numeroTvaIntracommunautaire: String!
+  numeroTvaIntracommunautaire: String
   prenom: String
   raisonSociale: String!
   siren: String!
