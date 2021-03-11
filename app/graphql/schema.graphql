@@ -425,7 +425,7 @@ type Demarche {
     maxRevision: ID
 
     """
-    Seulement les dossiers pour les révisons après la révision donnée.
+    Seulement les dossiers pour les révisions après la révision donnée.
     """
     minRevision: ID
 
