@@ -420,7 +420,7 @@ type Demarche {
     last: Int
 
     """
-    Seulement les dossiers pour les révisons avant la révision donnée.
+    Seulement les dossiers pour les révisions avant la révision donnée.
     """
     maxRevision: ID
 
