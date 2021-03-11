@@ -98,14 +98,10 @@ describe Instructeurs::AvisController, type: :controller do
       end
 
       context 'with attachment' do
-        include ActiveJob::TestHelper
         let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
         before do
-          expect(ClamavService).to receive(:safe_file?).and_return(true)
-          perform_enqueued_jobs do
-            post :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer', piece_justificative_file: file } }
-          end
+          post :update, params: { id: avis_without_answer.id, procedure_id: procedure.id, avis: { answer: 'answer', piece_justificative_file: file } }
           avis_without_answer.reload
         end
 
@@ -126,7 +122,6 @@ describe Instructeurs::AvisController, type: :controller do
       subject { post :create_commentaire, params: { id: avis_without_answer.id, procedure_id: procedure.id, commentaire: { body: 'commentaire body', piece_jointe: file } } }
 
       before do
-        allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
         Timecop.freeze(now)
       end
 
