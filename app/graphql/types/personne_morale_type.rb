@@ -7,8 +7,8 @@ module Types
       end
 
       field :siren, String, null: false
-      field :capital_social, GraphQL::Types::BigInt, null: false, description: "capital social de l’entreprise. -1 si inconnu."
-      field :numero_tva_intracommunautaire, String, null: false
+      field :capital_social, GraphQL::Types::BigInt, null: true, description: "capital social de l’entreprise. -1 si inconnu."
+      field :numero_tva_intracommunautaire, String, null: true
       field :forme_juridique, String, null: true
       field :forme_juridique_code, String, null: true
       field :nom_commercial, String, null: false
