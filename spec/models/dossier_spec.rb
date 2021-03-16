@@ -1386,27 +1386,21 @@ describe Dossier do
     it "clean up titres identite on accepter" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      perform_enqueued_jobs do
-        dossier.accepter!(dossier.followers_instructeurs.first, "yolo!")
-      end
+      dossier.accepter!(dossier.followers_instructeurs.first, "yolo!")
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
     end
 
     it "clean up titres identite on refuser" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      perform_enqueued_jobs do
-        dossier.refuser!(dossier.followers_instructeurs.first, "yolo!")
-      end
+      dossier.refuser!(dossier.followers_instructeurs.first, "yolo!")
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
     end
 
     it "clean up titres identite on classer_sans_suite" do
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
       expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-      perform_enqueued_jobs do
-        dossier.classer_sans_suite!(dossier.followers_instructeurs.first, "yolo!")
-      end
+      dossier.classer_sans_suite!(dossier.followers_instructeurs.first, "yolo!")
       expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
     end
 
@@ -1416,9 +1410,7 @@ describe Dossier do
       it "clean up titres identite on accepter_automatiquement" do
         expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
         expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
-        perform_enqueued_jobs do
-          dossier.accepter_automatiquement!
-        end
+        dossier.accepter_automatiquement!
         expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
       end
     end
