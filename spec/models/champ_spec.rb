@@ -458,7 +458,8 @@ describe Champ do
         end
 
         it 'marks the file as safe once the scan completes' do
-          perform_enqueued_jobs { subject }
+          subject
+          perform_enqueued_jobs
           expect(champ.reload.piece_justificative_file.virus_scanner.safe?).to be_truthy
         end
       end
@@ -480,13 +481,15 @@ describe Champ do
         champ
       end
 
-      it 'enqueues a watermark job on file attachment' do
+      it 'marks the file as needing watermarking' do
         expect(subject.piece_justificative_file.watermark_pending?).to be_truthy
       end
 
       it 'watermarks the file' do
-        perform_enqueued_jobs { subject }
-        expect(champ.reload.piece_justificative_file.blob.metadata[:watermark]).to be_truthy
+        subject
+        perform_enqueued_jobs
+        expect(champ.reload.piece_justificative_file.watermark_pending?).to be_falsy
+        expect(champ.reload.piece_justificative_file.blob.watermark_done?).to be_truthy
       end
     end
   end

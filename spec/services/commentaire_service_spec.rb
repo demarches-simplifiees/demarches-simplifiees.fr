@@ -29,15 +29,8 @@ describe CommentaireService do
     context 'when it has a file' do
       let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
-      before do
-        expect(ClamavService).to receive(:safe_file?).and_return(true)
-      end
-
-      it 'saves the attached file' do
-        perform_enqueued_jobs do
-          commentaire.save
-          expect(commentaire.piece_jointe.attached?).to be_truthy
-        end
+      it 'attaches the file' do
+        expect(commentaire.piece_jointe.attached?).to be_truthy
       end
     end
   end
