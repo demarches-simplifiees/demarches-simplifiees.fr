@@ -54,20 +54,24 @@ jobs:
 
     strategy:
       matrix:
-        pattern:
-          - spec/controllers/*_spec.rb
-          - spec/controllers/[a-l]**/*_spec.rb
-          - spec/controllers/[m-z]**/*_spec.rb
-          - spec/features
-          - spec/helpers spec/lib spec/middlewares
-          - spec/mailers spec/jobs spec/policies
-          - spec/models
-          - spec/serializers spec/services
-          - spec/views
+        spec_group:
+          - ./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/features/**' -split-index=0 -split-total=6
+          - ./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/features/**' -split-index=1 -split-total=6
+          - ./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/features/**' -split-index=2 -split-total=6
+          - ./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/features/**' -split-index=3 -split-total=6
+          - ./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/features/**' -split-index=4 -split-total=6
+          - ./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/features/**' -split-index=5 -split-total=6
+          - ./split_tests -line-count -glob='spec/features/**' -split-index=0 -split-total=2
+          - ./split_tests -line-count -glob='spec/features/**' -split-index=1 -split-total=2
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Setup split_tests binary
+        run: |
+          curl --no-progress-meter -L https://github.com/leonid-shevtsov/split_tests/releases/download/v0.3.0/split_tests.linux.gz | gunzip -c > split_tests
+          chmod +x split_tests
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -100,4 +104,6 @@ jobs:
           bundle exec rake db:create db:schema:load db:migrate
 
       - name: Run tests
-        run: bundle exec rspec ${{ matrix.pattern }}
+        run: |
+          SPEC_FILES=$(${{matrix.spec_group}})
+          bundle exec rspec $SPEC_FILES
