@@ -58,6 +58,13 @@ module TPS
     # See https://github.com/rails/rails/issues/21948
     config.action_dispatch.default_headers['Cache-Control'] = 'no-store, no-cache'
 
+    # ActionDispatch's IP spoofing detection is quite limited, and often rejects
+    # legitimate requests from misconfigured proxies (such as mobile telcos).
+    #
+    # As we have our own proxy stack before reaching the Rails app, we can
+    # disable the check performed by Rails.
+    config.action_dispatch.ip_spoofing_check = false
+
     config.to_prepare do
       # Make main application helpers available in administrate
       Administrate::ApplicationController.helper(TPS::Application.helpers)
