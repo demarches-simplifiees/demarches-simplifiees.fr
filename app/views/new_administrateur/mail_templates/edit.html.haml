@@ -1,6 +1,6 @@
 - content_for(:root_class, 'scroll-margins-for-sticky-footer')
 - if params[:id] == 'closed_mail'
-  = render partial: 'admin/closed_mail_template_attestation_inconsistency_alert'
+  = render partial: 'new_administrateur/mail_templates/closed_mail_template_attestation_inconsistency_alert'
 
 = render partial: 'new_administrateur/breadcrumbs',
   locals: { steps: [link_to('Démarches', admin_procedures_path),
@@ -31,4 +31,3 @@
               Cet aperçu est mis à jour après chaque sauvegarde.
         .procedure-preview
           = render partial: 'apercu', locals: { procedure: @procedure }
-
