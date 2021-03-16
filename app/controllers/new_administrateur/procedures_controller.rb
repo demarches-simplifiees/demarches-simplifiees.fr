@@ -52,6 +52,23 @@ module NewAdministrateur
       @procedure ||= Procedure.new(for_individual: true)
     end
 
+    SIGNIFICANT_DOSSIERS_THRESHOLD = 30
+
+    def new_from_existing
+      significant_procedure_ids = Procedure
+                                    .publiees_ou_closes
+                                    .joins(:dossiers)
+                                    .group("procedures.id")
+                                    .having("count(dossiers.id) >= ?", SIGNIFICANT_DOSSIERS_THRESHOLD)
+                                    .pluck('procedures.id')
+
+      @grouped_procedures = Procedure
+                              .includes(:administrateurs, :service)
+                              .where(id: significant_procedure_ids)
+                              .group_by(&:organisation_name)
+                              .sort_by { |_, procedures| procedures.first.created_at }
+    end
+
     def show
       @procedure = current_administrateur.procedures.find(params[:id])
       @current_administrateur = current_administrateur

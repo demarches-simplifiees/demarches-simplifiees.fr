@@ -177,38 +177,6 @@ Rails.application.routes.draw do
     patch 'activate' => '/users/activate#create'
   end
 
-  # order matters: we don't want those routes to match /admin/procedures/:id
-  get 'admin/procedures/new' => 'new_administrateur/procedures#new', as: :new_admin_procedure
-
-  namespace :admin do
-    get 'activate' => '/administrateurs/activate#new'
-    patch 'activate' => '/administrateurs/activate#create'
-    get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
-    get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
-
-    resources :procedures, only: [:destroy] do
-      collection do
-        get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
-      end
-
-      member do
-        delete :delete_logo
-        delete :delete_deliberation
-        delete :delete_notice
-      end
-
-      put 'archive' => 'procedures#archive', as: :archive
-      get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
-      put 'clone' => 'procedures#clone', as: :clone
-    end
-
-    namespace :assigns do
-      get 'show' # delete after fixed tests admin/instructeurs/show_spec without this line
-    end
-
-    resources :instructeurs, only: [:index, :create, :destroy]
-  end
-
   resources :invites, only: [:show, :destroy] do
     collection do
       post 'dossier/:dossier_id', to: 'invites#create', as: :dossier
@@ -370,6 +338,10 @@ Rails.application.routes.draw do
 
   namespace :admin, module: 'new_administrateur' do
     resources :procedures, except: [:destroy] do
+      collection do
+        get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
+      end
+
       member do
         get 'apercu'
         get 'champs'
