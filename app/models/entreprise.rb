@@ -5,8 +5,8 @@ class Entreprise < Hashie::Dash
 
   property :etablissement
   property :siren
-  property :capital_social
-  property :numero_tva_intracommunautaire
+  property :capital_social, default: nil
+  property :numero_tva_intracommunautaire, default: nil
   property :forme_juridique, default: nil
   property :forme_juridique_code, default: nil
   property :nom_commercial
