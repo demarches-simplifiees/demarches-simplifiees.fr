@@ -35,7 +35,21 @@ fr:
       previous: Précédent
       first: Premier
       truncate: '&hellip;'
-
+    sessions:
+      new:
+        title: Connectez-vous
+        email: Email (nom@site.com)
+        password: Mot de passe (%{min_length} caractères minimum)
+        remember_me: Se souvenir de moi
+        reset_password: Mot de passe oublié ?
+        connection: Se connecter
+        are_you_new: Vous êtes nouveau sur %{app_name} ?
+        find_procedure: Trouvez votre démarche
+    commencer:
+      no_procedure:
+        ligne1: Un outil simple
+        ligne2: pour gérer les formulaires
+        ligne3: administratifs dématérialisés.
   modal:
     publish:
       title:
@@ -47,7 +61,6 @@ fr:
       submit:
         publish: Publier
         reopen: Réactiver
-
   activerecord:
     attributes:
       default_attributes: &default_attributes
@@ -100,7 +113,6 @@ fr:
               taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               taken_can_be_claimed: est identique à celui d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
               invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
-
   errors:
     messages:
       saml_not_authorized: "Vous n'êtes pas autorisé à accéder à ce service."
@@ -122,7 +134,6 @@ fr:
         other: "Aucune parcelle cadastrale sur les zones sélectionnées"
       not_an_integer: "doit être un nombre entier (sans chiffres après la virgule)"
       blank: "doit être rempli"
-
   time:
     formats:
       default: "%d %B %Y %R"
