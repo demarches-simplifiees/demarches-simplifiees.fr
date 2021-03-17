@@ -234,6 +234,64 @@ describe API::V2::GraphqlController do
           end
         end
       end
+
+      context "filter by minRevision" do
+        let(:query) do
+          "{
+            demarche(number: #{procedure.id}) {
+              id
+              number
+              dossiers(minRevision: \"#{procedure.revisions.first.to_typed_id}\") {
+                nodes {
+                  id
+                }
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            dossiers: {
+              nodes: procedure.dossiers.order(:created_at).map do |dossier|
+                { id: dossier.to_typed_id }
+              end
+            }
+          })
+        end
+      end
+
+      context "filter by maxRevision" do
+        let(:query) do
+          "{
+            demarche(number: #{procedure.id}) {
+              id
+              number
+              dossiers(maxRevision: \"#{procedure.revisions.last.to_typed_id}\") {
+                nodes {
+                  id
+                }
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            dossiers: {
+              nodes: procedure.dossiers.order(:created_at).map do |dossier|
+                { id: dossier.to_typed_id }
+              end
+            }
+          })
+        end
+      end
     end
 
     context "dossier" do
