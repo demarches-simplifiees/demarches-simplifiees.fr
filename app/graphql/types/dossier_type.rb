@@ -90,10 +90,10 @@ module Types
     def avis(id: nil)
       if id.present?
         Loaders::Record
-          .for(Avis, where: { dossier: object }, includes: [:instructeur, :claimant], array: true)
+          .for(Avis, where: { dossier: object }, includes: [:claimant], array: true)
           .load(ApplicationRecord.id_from_typed_id(id))
       else
-        Loaders::Association.for(object.class, avis: [:instructeur, :claimant]).load(object)
+        Loaders::Association.for(object.class, avis: [:claimant]).load(object)
       end
     end
 
