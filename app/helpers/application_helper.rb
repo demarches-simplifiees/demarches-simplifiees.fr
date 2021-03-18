@@ -79,6 +79,12 @@ module ApplicationHelper
     # rubocop:enable Rails/OutputSafety
   end
 
+  def focus_element(selector)
+    # rubocop:disable Rails/OutputSafety
+    raw("document.querySelector('#{selector}').focus();")
+    # rubocop:enable Rails/OutputSafety
+  end
+
   def disable_element(selector)
     # rubocop:disable Rails/OutputSafety
     raw("document.querySelector('#{selector}').disabled = true;")
