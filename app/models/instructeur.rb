@@ -23,7 +23,6 @@ class Instructeur < ApplicationRecord
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
-  has_many :avis
   has_many :dossiers_from_avis, through: :avis, source: :dossier
   has_many :trusted_device_tokens, dependent: :destroy
 
