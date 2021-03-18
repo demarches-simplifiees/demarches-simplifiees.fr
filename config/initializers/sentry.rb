@@ -4,4 +4,13 @@ Sentry.init do |config|
   config.enabled_environments = ['production']
   config.breadcrumbs_logger = [:active_support_logger]
   config.traces_sample_rate = ENV['SENTRY_ENABLED'] == 'enabled' ? 0.001 : nil
+  config.excluded_exceptions += [
+    # Ignore exceptions caught by ActiveJob.retry_on
+    # https://github.com/getsentry/sentry-ruby/issues/1347
+    'Excon::Error::BadRequest',
+    'ActiveStorage::IntegrityError',
+    'VirusScannerJob::FileNotAnalyzedYetError',
+    'TitreIdentiteWatermarkJob::WatermarkFileNotScannedYetError',
+    'APIEntreprise::API::Error::TimedOut'
+  ]
 end
