@@ -4,6 +4,7 @@ feature 'Inviting an expert:' do
 
   let(:instructeur) { create(:instructeur, password: 'my-s3cure-p4ssword') }
   let(:expert) { create(:expert, password: expert_password) }
+  let(:expert2) { create(:expert, password: expert_password) }
   let(:expert_password) { 'mot de passe d’expert' }
   let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
   let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
@@ -20,7 +21,7 @@ feature 'Inviting an expert:' do
       click_on 'Avis externes'
       expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
 
-      fill_in 'avis_emails', with: 'expert1@expert.com, expert2@expert.com'
+      fill_in 'avis_emails', with: "#{expert.email}, #{expert2.email}"
       fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
       check 'avis_invite_linked_dossiers'
       page.select 'confidentiel', from: 'avis_confidentiel'
@@ -31,16 +32,16 @@ feature 'Inviting an expert:' do
       expect(page).to have_content('Une demande d\'avis a été envoyée')
       expect(page).to have_content('Avis des invités')
       within('.list-avis') do
-        expect(page).to have_content('expert1@expert.com')
-        expect(page).to have_content('expert2@expert.com')
+        expect(page).to have_content(expert.email.to_s)
+        expect(page).to have_content(expert2.email.to_s)
         expect(page).to have_content('Bonjour, merci de me donner votre avis sur ce dossier.')
       end
 
       expect(Avis.count).to eq(4)
-      expect(emails_sent_to('expert1@expert.com').size).to eq(1)
-      expect(emails_sent_to('expert2@expert.com').size).to eq(1)
+      expect(emails_sent_to(expert.email.to_s).size).to eq(1)
+      expect(emails_sent_to(expert2.email.to_s).size).to eq(1)
 
-      invitation_email = open_email('expert1@expert.com')
+      invitation_email = open_email(expert.email.to_s)
       avis = Avis.find_by(expert: expert.id)
       sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, avis.expert.email)
       expect(invitation_email.body).to include(sign_up_link)
