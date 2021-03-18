@@ -153,7 +153,7 @@ feature 'Instructing a dossier:' do
 
     scenario 'A instructeur can download an archive containing a single attachment' do
       find(:css, '.attached').click
-      click_on 'Télécharger toutes les pièces jointes'
+      click_on 'Télécharger le dossier et toutes ses pièces jointes'
       # For some reason, clicking the download link does not trigger the download in the headless browser ;
       # So we need to go to the download link directly
       visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
@@ -162,10 +162,11 @@ feature 'Instructing a dossier:' do
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
-      expect(files.size).to be 2
+      expect(files.size).to be 3
       expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[0].uncompressed_size).to be File.size(path)
       expect(files[1].filename.include?('horodatage/operation')).to be_truthy
+      expect(files[2].filename.include?('dossier/export')).to be_truthy
     end
 
     scenario 'A instructeur can download an archive containing several identical attachments' do
@@ -176,13 +177,14 @@ feature 'Instructing a dossier:' do
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
-      expect(files.size).to be 3
+      expect(files.size).to be 4
       expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[0].filename).not_to eq files[1].filename
       expect(files[0].uncompressed_size).to be File.size(path)
       expect(files[1].uncompressed_size).to be File.size(path)
       expect(files[2].filename.include?('horodatage/operation')).to be_truthy
+      expect(files[3].filename.include?('dossier/export')).to be_truthy
     end
 
     before { DownloadHelpers.clear_downloads }

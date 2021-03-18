@@ -16,5 +16,6 @@ delegate('click', TOGGLE_SOURCE_SELECTOR, (evt) => {
   const targetElements = document.querySelectorAll(targetSelector);
   for (let target of targetElements) {
     toggle(target);
+    target.focus();
   }
 });

@@ -108,9 +108,9 @@ module Types
         street_number: object.numero_voie,
         street_name: object.nom_voie,
         street_address: object.nom_voie.present? ? [object.numero_voie, object.type_voie, object.nom_voie].compact.join(' ') : nil,
-        postal_code: object.code_postal,
-        city_name: object.localite,
-        city_code: object.code_insee_localite
+        postal_code: object.code_postal.presence || '',
+        city_name: object.localite.presence || '',
+        city_code: object.code_insee_localite.presence || ''
       }
     end
 
