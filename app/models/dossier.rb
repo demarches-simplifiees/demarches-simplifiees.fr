@@ -497,7 +497,6 @@ class Dossier < ApplicationRecord
         .where(confidentiel: false)
         .or(avis.where(claimant_id: expert.id, claimant_type: 'Expert', tmp_expert_migrated: true))
         .or(avis.where(claimant_id: instructeur, claimant_type: 'Instructeur', tmp_expert_migrated: false))
-        .or(avis.where(expert: expert))
         .order(created_at: :asc)
     end
   end
