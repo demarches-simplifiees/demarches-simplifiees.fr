@@ -7,12 +7,7 @@ FactoryBot.define do
     confidentiel { false }
 
     association :dossier
-    association :claimant, factory: :instructeur
-
-    trait :with_instructeur do
-      email { nil }
-      instructeur { association :instructeur, email: generate(:expert_email) }
-    end
+    association :claimant
 
     trait :with_answer do
       answer { "Mon avis se décompose en deux points :\n- La demande semble pertinente\n- Le demandeur remplit les conditions." }
