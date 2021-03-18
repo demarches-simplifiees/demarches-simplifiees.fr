@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_11_141956) do
+ActiveRecord::Schema.define(version: 2021_03_17_154308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,7 +114,6 @@ ActiveRecord::Schema.define(version: 2021_03_11_141956) do
     t.string "email"
     t.text "introduction"
     t.text "answer"
-    t.integer "instructeur_id"
     t.integer "dossier_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -123,11 +122,9 @@ ActiveRecord::Schema.define(version: 2021_03_11_141956) do
     t.datetime "revoked_at"
     t.bigint "experts_procedure_id"
     t.string "claimant_type"
-    t.boolean "tmp_expert_migrated", default: false
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
     t.index ["experts_procedure_id"], name: "index_avis_on_experts_procedure_id"
-    t.index ["instructeur_id"], name: "index_avis_on_instructeur_id"
   end
 
   create_table "bill_signatures", force: :cascade do |t|
