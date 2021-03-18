@@ -9,6 +9,7 @@ gem 'administrate'
 gem 'after_party'
 gem 'anchored'
 gem 'bcrypt'
+gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'
 gem 'chartkick'
 gem 'chunky_png'
