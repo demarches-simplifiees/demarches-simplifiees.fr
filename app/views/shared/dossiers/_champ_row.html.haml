@@ -36,6 +36,12 @@
               = render partial: "shared/champs/textarea/show", locals: { champ: c }
             - when TypeDeChamp.type_champs.fetch(:annuaire_education)
               = render partial: "shared/champs/annuaire_education/show", locals: { champ: c }
+            - when TypeDeChamp.type_champs.fetch(:address)
+              = render partial: "shared/champs/address/show", locals: { champ: c }
+            - when TypeDeChamp.type_champs.fetch(:communes)
+              = render partial: "shared/champs/communes/show", locals: { champ: c }
+            - when TypeDeChamp.type_champs.fetch(:regions)
+              = render partial: "shared/champs/regions/show", locals: { champ: c }
             - when TypeDeChamp.type_champs.fetch(:date)
               = c.to_s
             - when TypeDeChamp.type_champs.fetch(:datetime)
