@@ -134,6 +134,8 @@ GEM
     bcrypt (3.1.16)
     bindata (2.4.8)
     bindex (0.8.1)
+    bootsnap (1.7.2)
+      msgpack (~> 1.0)
     brakeman (5.0.0)
     browser (5.3.0)
     builder (3.2.4)
@@ -419,6 +421,7 @@ GEM
     minitest (5.14.4)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
+    msgpack (1.4.2)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     mustermann (1.1.1)
@@ -781,6 +784,7 @@ DEPENDENCIES
   annotate
   axe-matchers
   bcrypt
+  bootsnap (>= 1.4.4)
   brakeman
   browser
   capybara
