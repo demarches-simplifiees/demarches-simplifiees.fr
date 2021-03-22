@@ -9,7 +9,7 @@
 #  email                :string
 #  introduction         :text
 #  revoked_at           :datetime
-#  tmp_expert_migrated  :boolean          default(FALSE)
+# tmp_expert_migrated   :boolean         default(FALSE)
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  claimant_id          :integer          not null
@@ -57,26 +57,7 @@ class Avis < ApplicationRecord
   attr_accessor :emails
   attr_accessor :invite_linked_dossiers
 
-  def claimant
-    claimant_id = read_attribute(:claimant_id)
-    claimant_type = read_attribute(:claimant_type)
-    if claimant_type == 'Instructeur' || !tmp_expert_migrated
-      Instructeur.find(claimant_id)
-    else
-      Expert.find(claimant_id)
-    end
-  end
-
-  def claimant=(claimant)
-    self.claimant_id = claimant.id
-
-    if claimant.is_a? Instructeur
-      self.claimant_type = 'Instructeur'
-    else
-      self.claimant_type = 'Expert'
-      self.tmp_expert_migrated = true
-    end
-  end
+  self.ignored_columns = [:instructeur_id, :tmp_expert_migrated]
 
   def email_to_display
     expert&.email
