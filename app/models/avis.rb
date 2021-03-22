@@ -9,7 +9,7 @@
 #  email                :string
 #  introduction         :text
 #  revoked_at           :datetime
-# tmp_expert_migrated   :boolean         default(FALSE)
+#  tmp_expert_migrated  :boolean          default(FALSE)
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  claimant_id          :integer          not null
@@ -21,9 +21,8 @@ class Avis < ApplicationRecord
   include EmailSanitizableConcern
 
   belongs_to :dossier, inverse_of: :avis, touch: true, optional: false
-  belongs_to :instructeur, optional: true
   belongs_to :experts_procedure, optional: false
-  belongs_to :claimant, class_name: 'Instructeur', optional: false
+  belongs_to :claimant, polymorphic: true, optional: false
 
   has_one_attached :piece_justificative_file
   has_one_attached :introduction_file
