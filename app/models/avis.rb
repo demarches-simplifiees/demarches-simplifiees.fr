@@ -22,7 +22,7 @@ class Avis < ApplicationRecord
 
   belongs_to :dossier, inverse_of: :avis, touch: true, optional: false
   belongs_to :instructeur, optional: true
-  belongs_to :experts_procedure, optional: true
+  belongs_to :experts_procedure, optional: false
   belongs_to :claimant, class_name: 'Instructeur', optional: false
 
   has_one_attached :piece_justificative_file

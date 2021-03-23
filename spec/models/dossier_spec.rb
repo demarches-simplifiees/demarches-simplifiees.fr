@@ -307,13 +307,13 @@ describe Dossier do
     let!(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let!(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
-    let!(:experts_procedure) { ExpertsProcedure.create(expert: expert_1, procedure: procedure) }
-    let!(:experts_procedure_2) { ExpertsProcedure.create(expert: expert_2, procedure: procedure) }
+    let!(:experts_procedure) { create(:experts_procedure, expert: expert_1, procedure: procedure) }
+    let!(:experts_procedure_2) { create(:experts_procedure, expert: expert_2, procedure: procedure) }
     let!(:expert_1) { create(:expert) }
     let!(:expert_2) { create(:expert) }
 
     context 'when there is a public advice asked from the dossiers instructeur' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false) }
 
       it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
@@ -321,7 +321,7 @@ describe Dossier do
     end
 
     context 'when there is a private advice asked from the dossiers instructeur' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 
       it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
@@ -329,7 +329,7 @@ describe Dossier do
     end
 
     context 'when there is a public advice asked from one expert to another' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
 
       it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
@@ -337,7 +337,7 @@ describe Dossier do
     end
 
     context 'when there is a private advice asked from one expert to another' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: true) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: true) }
 
       it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for_expert(expert_1)).not_to match([avis]) }
@@ -345,9 +345,9 @@ describe Dossier do
     end
 
     context 'when they are a lot of advice' do
-      let!(:avis_1) { Avis.create(dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010'), tmp_expert_migrated: true) }
-      let!(:avis_2) { Avis.create(dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010'), tmp_expert_migrated: true) }
-      let!(:avis_3) { Avis.create(dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010'), tmp_expert_migrated: true) }
+      let!(:avis_1) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010'), tmp_expert_migrated: true) }
+      let!(:avis_2) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010'), tmp_expert_migrated: true) }
+      let!(:avis_3) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010'), tmp_expert_migrated: true) }
 
       it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_2, avis_1, avis_3]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis_2, avis_1, avis_3]) }

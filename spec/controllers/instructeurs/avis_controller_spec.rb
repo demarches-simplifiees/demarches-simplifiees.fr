@@ -5,12 +5,12 @@ describe Instructeurs::AvisController, type: :controller do
     let(:now) { Time.zone.parse('01/02/2345') }
     let(:expert) { create(:expert) }
     let(:claimant) { create(:instructeur) }
-    let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure) }
-    let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, experts_procedure: experts_procedure) }
+    let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure) }
+    let!(:avis_without_answer) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure) }
 
     before { sign_in(instructeur.user) }
 
