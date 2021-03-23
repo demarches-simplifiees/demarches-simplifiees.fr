@@ -536,14 +536,14 @@ describe NewAdministrateur::ProceduresController, type: :controller do
   describe 'PUT #update_allow_decision_access' do
     let!(:procedure) { create :procedure, :with_service, administrateur: admin }
     let(:expert) { create(:expert) }
-    let(:expert_procedure) { ExpertsProcedure.create(procedure: procedure, expert: expert) }
+    let(:expert_procedure) { create(:experts_procedure, procedure: procedure, expert: expert) }
 
     subject do
       put :update_allow_decision_access, params: { procedure_id: procedure.id, experts_procedure: { allow_decision_access: !expert_procedure.allow_decision_access }, expert_procedure: expert_procedure }, format: :js
     end
 
     context 'when the experts_procedure is true' do
-      let(:expert_procedure) { ExpertsProcedure.create(procedure: procedure, expert: expert, allow_decision_access: true) }
+      let(:expert_procedure) { create(:experts_procedure, procedure: procedure, expert: expert, allow_decision_access: true) }
 
       before do
         subject

@@ -435,7 +435,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe "#create_avis" do
     let(:expert) { create(:expert) }
-    let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: dossier.procedure) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: dossier.procedure) }
     let(:invite_linked_dossiers) { false }
     let(:saved_avis) { dossier.avis.first }
     let!(:old_avis_count) { Avis.count }
@@ -556,7 +556,7 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:instructeur) { create(:instructeur) }
       let(:expert) { create(:expert) }
       let(:procedure) { create(:procedure, :published, instructeurs: instructeurs) }
-      let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
       let(:dossier) do
         create(:dossier,
           :accepte,
