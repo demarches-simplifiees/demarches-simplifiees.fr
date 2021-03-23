@@ -3,8 +3,8 @@ RSpec.describe AvisMailer, type: :mailer do
     let(:claimant) { create(:instructeur) }
     let(:expert) { create(:expert) }
     let(:dossier) { create(:dossier) }
-    let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: dossier.procedure) }
-    let(:avis) { Avis.create(dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, introduction: 'intro') }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: dossier.procedure) }
+    let(:avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, introduction: 'intro') }
 
     subject { described_class.avis_invitation(avis) }
 

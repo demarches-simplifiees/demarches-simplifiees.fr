@@ -5,7 +5,7 @@ RSpec.describe Avis, type: :model do
     let(:invited_email) { 'invited@avis.com' }
     let(:expert) { create(:expert) }
     let(:procedure) { create(:procedure) }
-    let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
 
     subject { avis.email_to_display }
 
@@ -31,7 +31,7 @@ RSpec.describe Avis, type: :model do
   describe "an avis is linked to an expert_procedure" do
     let(:procedure) { create(:procedure) }
     let(:expert) { create(:expert) }
-    let(:experts_procedure) { ExpertsProcedure.create(procedure: procedure, expert: expert) }
+    let(:experts_procedure) { create(:experts_procedure, procedure: procedure, expert: expert) }
 
     context 'an avis is linked to an experts_procedure' do
       let!(:avis) { create(:avis, email: nil, experts_procedure: experts_procedure) }
@@ -77,8 +77,8 @@ RSpec.describe Avis, type: :model do
   describe "email sanitization" do
     let(:expert) { create(:expert) }
     let(:procedure) { create(:procedure) }
-    let!(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
-    subject { Avis.create(claimant: claimant, email: email, experts_procedure: experts_procedure, dossier: create(:dossier)) }
+    let!(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+    subject { create(:avis, claimant: claimant, email: email, experts_procedure: experts_procedure, dossier: create(:dossier)) }
 
     context "when there is no email" do
       let(:email) { nil }
@@ -147,7 +147,7 @@ RSpec.describe Avis, type: :model do
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
     let(:claimant_expert) { create(:instructeur) }
     let(:expert) { create(:expert) }
-    let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
     let(:another_expert) { create(:expert) }
 
     context "when avis claimed by an expert" do
@@ -164,8 +164,8 @@ RSpec.describe Avis, type: :model do
       let(:expert) { create(:expert) }
       let(:expert_2) { create(:expert) }
       let!(:procedure) { create(:procedure, :published, instructeurs: instructeurs) }
-      let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
-      let(:experts_procedure_2) { ExpertsProcedure.create(expert: expert_2, procedure: procedure) }
+      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+      let(:experts_procedure_2) { create(:experts_procedure, expert: expert_2, procedure: procedure) }
       let(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure) }
       let(:another_avis) { create(:avis, dossier: dossier, claimant: expert, experts_procedure: experts_procedure_2) }
       let(:another_instructeur) { create(:instructeur) }
