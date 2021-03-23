@@ -3,7 +3,7 @@ describe InvitesController, type: :controller do
   let(:email) { 'plop@octo.com' }
   let(:expert) { create(:expert) }
   let(:procedure) { create(:procedure) }
-  let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+  let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
 
   describe '#POST create' do
     let(:invite) { Invite.last }
@@ -26,7 +26,7 @@ describe InvitesController, type: :controller do
       end
 
       context 'when instructeur is invited for avis on dossier' do
-        before { Avis.create(experts_procedure: experts_procedure, claimant: create(:instructeur), dossier: dossier) }
+        before { create(:avis, experts_procedure: experts_procedure, claimant: create(:instructeur), dossier: dossier) }
 
         it_behaves_like "he can not create invitation"
       end

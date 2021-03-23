@@ -18,8 +18,8 @@ module CreateAvisConcern
 
     create_results = Avis.create(
       expert_emails.flat_map do |email|
-        expert = User.create_or_promote_to_expert(email, SecureRandom.hex).expert
-        experts_procedure = ExpertsProcedure.find_or_create_by(procedure: dossier.procedure, expert: expert)
+        user = User.create_or_promote_to_expert(email, SecureRandom.hex)
+        experts_procedure = user.valid? ? ExpertsProcedure.find_or_create_by(procedure: dossier.procedure, expert: user.expert) : nil
         allowed_dossiers.map do |dossier|
           {
             email: email,
@@ -54,7 +54,7 @@ module CreateAvisConcern
     if failed.any?
       flash.now.alert = failed
         .filter { |avis| avis.errors.present? }
-        .map { |avis| "#{avis.email} : #{avis.errors.full_messages.join(', ')}" }
+        .map { |avis| "#{avis.email} : #{avis.errors.full_messages_for(:email).join(', ')}" }
 
       # When an error occurs, return the avis back to the controller
       # to give the user a chance to correct and resubmit
