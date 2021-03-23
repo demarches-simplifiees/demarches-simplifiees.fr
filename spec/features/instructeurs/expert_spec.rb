@@ -48,7 +48,7 @@ feature 'Inviting an expert:' do
     end
 
     context 'when experts submitted their answer' do
-      let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
       let!(:answered_avis) { create(:avis, :with_answer, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure) }
 
       scenario 'I can read the expert answer' do
