@@ -93,7 +93,7 @@ class Procedure < ApplicationRecord
 
   def types_de_champ_for_export
     if brouillon?
-      draft_types_de_champ
+      draft_types_de_champ.reject(&:exclude_from_export?)
     else
       all_types_de_champ
         .uniq

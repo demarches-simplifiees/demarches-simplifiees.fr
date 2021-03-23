@@ -24,12 +24,8 @@ describe 'new_administrateur/procedures/invited_expert_list.html.haml', type: :v
 
   context 'when the procedure has 3 avis from 2 experts and 1 unasigned' do
     let!(:dossier) { create(:dossier, procedure: procedure) }
-    let(:expert) { create(:expert) }
-    let(:expert2) { create(:expert) }
-    let(:experts_procedure) { ExpertsProcedure.create(procedure: procedure, expert: expert) }
-    let(:experts_procedure2) { ExpertsProcedure.create(procedure: procedure, expert: expert2) }
-    let!(:avis) { create(:avis, dossier: dossier, experts_procedure: experts_procedure) }
-    let!(:avis2) { create(:avis, dossier: dossier, experts_procedure: experts_procedure2) }
+    let!(:avis) { create(:avis, dossier: dossier) }
+    let!(:avis2) { create(:avis, dossier: dossier) }
 
     before do
       @invited_experts = procedure.experts_procedures
@@ -38,7 +34,7 @@ describe 'new_administrateur/procedures/invited_expert_list.html.haml', type: :v
 
     it 'has 2 experts and match array' do
       expect(@invited_experts.count).to eq(2)
-      expect(@invited_experts).to match_array([experts_procedure, experts_procedure2])
+      expect(@invited_experts).to match_array([avis.experts_procedure, avis2.experts_procedure])
     end
   end
 end
