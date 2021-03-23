@@ -1376,7 +1376,7 @@ describe Dossier do
     context "when procedure brouillon" do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_explication) }
 
-      it "should not contain explication type de champ" do
+      it "should not contain non-exportable types de champ" do
         expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
       end
     end
