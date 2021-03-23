@@ -16,7 +16,7 @@
       - if unspecified_attestation_champs.present?
         .warning
           Attention, les valeurs suivantes n'ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
-          - unspecified_champs, unspecified_annotations_privees = unspecified_attestation_champs.partition(&:private)
+          - unspecified_annotations_privees, unspecified_champs = unspecified_attestation_champs.partition(&:private)
 
           - if unspecified_champs.present?
             %h4 Champs de la demande
