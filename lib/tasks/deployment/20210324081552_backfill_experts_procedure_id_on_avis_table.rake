@@ -1,10 +1,10 @@
 namespace :after_party do
-  desc 'Deployment task: backfill_experts_procedure_on_avis_2'
-  task backfill_experts_procedure_on_avis_2: :environment do
-    puts "Running deploy task 'backfill_experts_procedure_on_avis_2'"
+  desc 'Deployment task: backfill_experts_procedure_id_on_avis_table'
+  task backfill_experts_procedure_id_on_avis_table: :environment do
+    puts "Running deploy task 'backfill_experts_procedure_id_on_avis_table'"
 
-    without_instructeur = Avis.where(experts_procedure_id: nil, answer: nil, instructeur_id: nil).where.not(email: nil)
-    with_instructeur = Avis.where(experts_procedure_id: nil, answer: nil, email: nil).where.not(instructeur_id: nil)
+    without_instructeur = Avis.where(experts_procedure_id: nil, instructeur_id: nil).where.not(email: nil)
+    with_instructeur = Avis.where(experts_procedure_id: nil, email: nil).where.not(instructeur_id: nil)
     progress = ProgressReport.new(without_instructeur.count)
     progress2 = ProgressReport.new(with_instructeur.count)
 
