@@ -1,0 +1,9 @@
+en:
+  views:
+    shared:
+      france_connect_login:
+        title: "With FranceConnect"
+        description: "France connect is a solution proposed by the government to secure and simplify the connection to web services."
+        login_button: "Sign in with FranceConnect"
+        help_link: What is FranceConnect ?
+        separator: or
