@@ -35,7 +35,21 @@ en:
       previous: Previous
       first: First
       truncate: '&hellip;'
-
+    sessions:
+      new:
+        title: Sign in
+        email: Email address (name@site.com)
+        password: Password (minimum length %{min_length} characters)
+        remember_me: Remember me
+        reset_password: Forgot password?
+        connection: Sign in
+        are_you_new: First time on %{app_name} ?
+        find_procedure: Find your procedure
+    commencer:
+      no_procedure:
+        ligne1: A simple tool
+        ligne2: to manage dematerialized 
+        ligne3: administrative forms.
   modal:
     publish:
       title:
@@ -47,7 +61,6 @@ en:
       submit:
         publish: Publish
         reopen: Reopen
-
   activerecord:
     attributes:
       user:
@@ -91,7 +104,6 @@ en:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               # taken_can_be_claimed: est identique à celui d’une autre de vos procedures publiées. Si vous publiez cette procedure, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
               invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
-
   errors:
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
@@ -111,7 +123,6 @@ en:
       #   other: "Aucune parcelle cadastrale sur les zones sélectionnées"
       not_an_integer: "must be an integer (without decimal)"
       blank: "can't be blank"
-
   time:
     formats:
       default: "%B %d %Y %R"
