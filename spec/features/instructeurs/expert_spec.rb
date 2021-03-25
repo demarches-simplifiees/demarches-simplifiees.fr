@@ -42,7 +42,7 @@ feature 'Inviting an expert:' do
       expect(emails_sent_to(expert2.email.to_s).size).to eq(1)
 
       invitation_email = open_email(expert.email.to_s)
-      avis = Avis.find_by(expert: expert.id)
+      avis = expert.avis.reload.last
       sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, avis.expert.email)
       expect(invitation_email.body).to include(sign_up_link)
     end
