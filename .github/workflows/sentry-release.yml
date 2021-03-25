@@ -16,3 +16,4 @@ jobs:
         SENTRY_PROJECT: rails
       with:
         environment: production
+        version: ${{ github.ref }}
