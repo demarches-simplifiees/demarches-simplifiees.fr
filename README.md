@@ -118,6 +118,7 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
 
 - Faire tourner tous les linters : `bin/rake lint`
+- Vérifier l'état des traductions : `bundle exec i18n-tasks health`
 - [AccessLint](http://accesslint.com/) tourne automatiquement sur les PRs
 
 ### Régénérer les binstubs
@@ -127,8 +128,14 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 
 ## Déploiement
 
-- Tout nouveau commit ajouté à la branche `dev` est automatiquement déployé [en intégration](https://dev.demarches-simplifiees.fr/)
-- Tout nouveau commit ajouté à la branche `master` est automatiquement déployé [en production](https://www.demarches-simplifiees.fr/)
+Dans le cas d’un déploiement sur plusieurs serveurs, l’application peut être déployée avec la tâche :
+
+```
+DOMAINS="web1 web2" BRANCH="main" bin/rake deploy
+```
+
+En interne, cette tâche utilise [mina](https://github.com/mina-deploy/mina) pour lancer les commandes
+de déploiement sur tous les serveurs spécifiés.
 
 ## Tâches courantes
 

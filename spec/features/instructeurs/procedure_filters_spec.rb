@@ -125,15 +125,13 @@ feature "procedure filters" do
 
   def add_column(column_name)
     click_on 'Personnaliser'
-    find("span.select2-container").click
-    find(:xpath, "//li[text()='#{column_name}']").click
+    select_multi('colonne', column_name)
     click_button "Enregistrer"
   end
 
   def remove_column(column_name)
     click_on 'Personnaliser'
-    find(:xpath, "//li[contains(@title, '#{column_name}')]/span[contains(text(), '×')]").click
-    find(:xpath, "//form[contains(@class, 'columns-form')]//span[contains(@class, 'select2-container')]").click
+    find(:xpath, "//li[contains(text(), '#{column_name}')]/span[contains(text(), 'x')]").click
     click_button "Enregistrer"
   end
 end

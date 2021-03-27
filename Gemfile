@@ -9,8 +9,7 @@ gem 'administrate'
 gem 'after_party'
 gem 'anchored'
 gem 'bcrypt'
-gem 'bootstrap-sass', '>= 3.4.1'
-gem 'bootstrap-wysihtml5-rails', '~> 0.3.3.8'
+gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'
 gem 'chartkick'
 gem 'chunky_png'
@@ -23,14 +22,12 @@ gem 'delayed_job_web'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'devise-i18n'
-gem 'devise-two-factor', github: 'bryanfagan/devise-two-factor'
+gem 'devise-two-factor', github: 'jason-hobbs/devise-two-factor', branch: 'master' # Rails 6.1 compatibility: https://github.com/tinfoil/devise-two-factor/issues/183
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
-gem 'ffi-geos', require: false
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
-gem 'font-awesome-rails'
 gem 'fugit'
 gem 'geocoder'
 gem 'geo_coord', require: "geo/coord"
@@ -43,11 +40,13 @@ gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
 gem 'http_accept_language'
+gem 'i18n-tasks', require: false
 gem 'iban-tools'
 gem 'image_processing'
-gem 'jquery-rails' # Use jquery as the JavaScript library
+gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari', '1.2.1' # Pagination
+gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
@@ -69,12 +68,13 @@ gem 'rqrcode'
 gem 'ruby-saml-idp'
 gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
-gem 'sentry-raven'
+gem 'sentry-delayed_job'
+gem 'sentry-rails'
+gem 'sentry-ruby'
 gem 'sib-api-v3-sdk'
 gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
-gem 'sprockets', '< 4'
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'
@@ -88,9 +88,6 @@ group :test do
   gem 'capybara-selenium'
   gem 'database_cleaner'
   gem 'factory_bot'
-  gem 'guard'
-  gem 'guard-livereload', require: false
-  gem 'guard-rspec', require: false
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers', require: false
@@ -112,18 +109,14 @@ group :development do
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
   gem 'web-console'
-  gem 'xray-rails'
 end
 
 group :development, :test do
   gem 'axe-matchers' # accessibility rspec matchers
-  gem 'byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
-  gem 'pry-byebug'
-  gem 'rspec_junit_formatter', require: false
+  gem 'pry-byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec-rails'
-  gem 'ruby-debug-ide', require: false
   gem 'simple_xlsx_reader'
   gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'

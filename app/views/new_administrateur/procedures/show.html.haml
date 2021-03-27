@@ -156,6 +156,20 @@
       .card-admin-action
         = link_to "#{@procedure.allow_expert_review? ? 'Désactiver' : 'Activer'}", allow_expert_review_admin_procedure_path(@procedure), method: :put,  class: 'button'
 
+    - if @procedure.allow_expert_review?
+      .card-admin
+        %div
+          %span.icon.preview
+          %p.card-admin-status-todo À voir
+
+        %div
+          %p.card-admin-title Liste des experts
+          %p.card-admin-subtitle Liste des experts invités par les instructeurs
+
+        .card-admin-action
+          = link_to "Voir", admin_procedure_invited_expert_list_path(@procedure), class: 'button'
+
+
     .card-admin
       %div
         %span.icon.clock

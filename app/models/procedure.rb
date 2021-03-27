@@ -43,7 +43,6 @@
 #  published_revision_id               :bigint
 #  service_id                          :bigint
 #
-require Rails.root.join('lib', 'percentile')
 
 class Procedure < ApplicationRecord
   self.ignored_columns = ['archived_at', 'csv_export_queued', 'xlsx_export_queued', 'ods_export_queued']
@@ -62,13 +61,13 @@ class Procedure < ApplicationRecord
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
   has_many :deleted_dossiers, dependent: :destroy
 
-  has_many :published_types_de_champ, -> { ordered }, through: :published_revision, source: :types_de_champ
-  has_many :published_types_de_champ_private, -> { ordered }, through: :published_revision, source: :types_de_champ_private
-  has_many :draft_types_de_champ, -> { ordered }, through: :draft_revision, source: :types_de_champ
-  has_many :draft_types_de_champ_private, -> { ordered }, through: :draft_revision, source: :types_de_champ_private
+  has_many :published_types_de_champ, through: :published_revision, source: :types_de_champ
+  has_many :published_types_de_champ_private, through: :published_revision, source: :types_de_champ_private
+  has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ
+  has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
 
-  has_many :all_types_de_champ, -> { joins(:procedure).where('types_de_champ.revision_id != procedures.draft_revision_id').ordered }, through: :revisions, source: :types_de_champ
-  has_many :all_types_de_champ_private, -> { joins(:procedure).where('types_de_champ.revision_id != procedures.draft_revision_id').ordered }, through: :revisions, source: :types_de_champ_private
+  has_many :experts_procedures, dependent: :destroy
+  has_many :experts, through: :experts_procedures
 
   has_one :module_api_carto, dependent: :destroy
   has_one :attestation_template, dependent: :destroy
@@ -90,31 +89,11 @@ class Procedure < ApplicationRecord
   end
 
   def types_de_champ_for_export
-    if brouillon?
-      draft_types_de_champ
-    else
-      all_types_de_champ
-        .uniq
-        .reject(&:exclude_from_export?)
-        .filter(&:active_revision?)
-        .group_by(&:stable_id).values.map do |types_de_champ|
-          types_de_champ.sort_by(&:created_at).last
-        end
-    end
+    types_de_champ.reject(&:exclude_from_export?)
   end
 
   def types_de_champ_private_for_export
-    if brouillon?
-      draft_types_de_champ_private
-    else
-      all_types_de_champ_private
-        .uniq
-        .reject(&:exclude_from_export?)
-        .filter(&:active_revision?)
-        .group_by(&:stable_id).values.map do |types_de_champ|
-          types_de_champ.sort_by(&:created_at).last
-        end
-    end
+    types_de_champ_private.reject(&:exclude_from_export?)
   end
 
   has_many :administrateurs_procedures
@@ -133,7 +112,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
-  has_one :defaut_groupe_instructeur, -> { order(:id) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
+  has_one :defaut_groupe_instructeur, -> { order(:label) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
 
   has_one_attached :logo
   has_one_attached :notice
@@ -186,34 +165,43 @@ class Procedure < ApplicationRecord
   validate :check_juridique
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: MAX_DUREE_CONSERVATION }
-  validates :duree_conservation_dossiers_hors_ds, allow_nil: false, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :duree_conservation_dossiers_hors_ds, allow_nil: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates_with MonAvisEmbedValidator
   validates :notice, content_type: [
     "application/msword",
     "application/pdf",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "application/vnd.oasis.opendocument.text",
     "application/vnd.oasis.opendocument.presentation",
+    "application/vnd.oasis.opendocument.text",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
     "text/plain"
-  ], size: { less_than: 20.megabytes }
+  ], size: { less_than: 20.megabytes }, if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
 
   validates :deliberation, content_type: [
     "application/msword",
     "application/pdf",
+    "application/vnd.oasis.opendocument.text",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "text/plain",
-    "application/vnd.oasis.opendocument.text"
-  ], size: { less_than: 20.megabytes }
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "text/plain"
+  ], size: { less_than: 20.megabytes }, if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
 
-  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
+  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    size: { less_than: 5.megabytes },
+    if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
+
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
-  after_create :ensure_default_groupe_instructeur
+  after_create :ensure_defaut_groupe_instructeur
 
   include AASM
 
@@ -258,7 +246,7 @@ class Procedure < ApplicationRecord
     if locked?
       raise "Can not reset a locked procedure."
     else
-      groupe_instructeurs.each { |gi| gi.dossiers.destroy_all }
+      draft_revision.dossiers.destroy_all
     end
   end
 
@@ -332,6 +320,10 @@ class Procedure < ApplicationRecord
     declarative_with_states.map do |state, _|
       [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
     end
+  end
+
+  def feature_enabled?(feature)
+    Flipper.enabled?(feature, self)
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -410,6 +402,7 @@ class Procedure < ApplicationRecord
     procedure.save
     procedure.draft_types_de_champ.update_all(revision_id: procedure.draft_revision.id)
     procedure.draft_types_de_champ_private.update_all(revision_id: procedure.draft_revision.id)
+    TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition + procedure.draft_types_de_champ_private.repetition).update_all(revision_id: procedure.draft_revision.id)
 
     if is_different_admin || from_library
       procedure.draft_types_de_champ.each { |tdc| tdc.options&.delete(:old_pj) }
@@ -532,9 +525,12 @@ class Procedure < ApplicationRecord
   end
 
   def populate_champ_stable_ids
-    TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
-      type_de_champ.update_column(:stable_id, type_de_champ.id)
-    end
+    TypeDeChamp
+      .joins(:revisions)
+      .where(procedure_revisions: { procedure_id: id }, stable_id: nil)
+      .find_each do |type_de_champ|
+        type_de_champ.update_column(:stable_id, type_de_champ.id)
+      end
   end
 
   def missing_steps
@@ -568,7 +564,7 @@ class Procedure < ApplicationRecord
     if logo.attached?
       Rails.application.routes.url_helpers.url_for(logo)
     else
-      ActionController::Base.helpers.image_url("republique-francaise-logo.svg")
+      ActionController::Base.helpers.image_url(PROCEDURE_DEFAULT_LOGO_SRC)
     end
   end
 
@@ -577,7 +573,13 @@ class Procedure < ApplicationRecord
   end
 
   def routee?
-    groupe_instructeurs.count > 1
+    groupe_instructeurs.size > 1
+  end
+
+  def defaut_groupe_instructeur_for_new_dossier
+    if !routee? || feature_enabled?(:procedure_routage_api)
+      defaut_groupe_instructeur
+    end
   end
 
   def can_be_deleted_by_administrateur?
@@ -615,7 +617,7 @@ class Procedure < ApplicationRecord
   end
 
   def api_entreprise_role?(role)
-    ApiEntrepriseToken.new(api_entreprise_token).role?(role)
+    APIEntrepriseToken.new(api_entreprise_token).role?(role)
   end
 
   def api_entreprise_token
@@ -623,7 +625,7 @@ class Procedure < ApplicationRecord
   end
 
   def api_entreprise_token_expired?
-    ApiEntrepriseToken.new(api_entreprise_token).expired?
+    APIEntrepriseToken.new(api_entreprise_token).expired?
   end
 
   def create_new_revision
@@ -706,9 +708,9 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def ensure_default_groupe_instructeur
+  def ensure_defaut_groupe_instructeur
     if self.groupe_instructeurs.empty?
-      groupe_instructeurs.create(label: GroupeInstructeur::DEFAULT_LABEL)
+      groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
     end
   end
 end

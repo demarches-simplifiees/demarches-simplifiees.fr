@@ -1,0 +1,81 @@
+-# We can't use &. because the controller may not implement #nav_bar_profile
+- nav_bar_profile = controller.try(:nav_bar_profile) || :guest
+- dossier = controller.try(:dossier_for_help)
+- procedure = controller.try(:procedure_for_help)
+
+-# only display the coronavirus to usagers (instructeurs know there are delays) when they are logged in, or on the public pages.
+- if user_signed_in?
+  - if dossier.present? && dossier.procedure.feature_enabled?(:coronavirus_banner)
+    = render partial: 'layouts/coronavirus_banner'
+- else
+  - if procedure.present? && procedure.feature_enabled?(:coronavirus_banner)
+    = render partial: 'layouts/coronavirus_banner'
+
+%header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: 'banner' }
+  .header-inner-content
+
+    .flex.align-center.justify-center
+      - if params[:controller] == 'users/commencer'
+        = link_to 'Revenir en arrière', url_for(:back), class: "button", title: "Revenir sur le site de mon administration"
+      - else
+        - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
+        = link_to root_profile_link, class: 'header-logo justify-center', title: root_profile_libelle do
+          = image_tag HEADER_LOGO_SRC, alt: HEADER_LOGO_ALT, width: HEADER_LOGO_WIDTH, height: HEADER_LOGO_HEIGHT, loading: 'lazy'
+          %span.big.site-title>
+            = APPLICATION_NAME
+          %span.small.site-title>
+            = APPLICATION_SHORTNAME
+
+      - if nav_bar_profile == :instructeur && instructeur_signed_in?
+        - current_url = request.path_info
+        %ul.header-tabs
+          - if current_instructeur.procedures.count > 0
+            %li
+              = active_link_to "Démarches", instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
+      - if nav_bar_profile == :expert && expert_signed_in?
+        - if current_expert.avis.count > 0
+          %ul.header-tabs
+            %li
+              = active_link_to expert_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do
+                Avis
+                - avis_counter = current_expert.avis.without_answer.count
+                - if avis_counter > 0
+                  %span.badge.warning= avis_counter
+
+      - if nav_bar_profile == :user
+        %ul.header-tabs
+          %li
+            = active_link_to "Dossiers", dossiers_path, active: :inclusive, class: 'tab-link'
+
+    %ul.header-right-content
+      - if nav_bar_profile == :instructeur && instructeur_signed_in?
+        %li
+          = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: instructeur_recherche_path }
+
+      - if nav_bar_profile == :user && user_signed_in? && current_user.dossiers.count > 2
+        %li
+          = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_dossiers_path }
+
+      - if instructeur_signed_in? || user_signed_in?
+        %li
+          = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
+
+      - elsif request.path != new_user_session_path
+        - if request.path == new_user_registration_path
+          %li
+            Vous avez déjà un compte ?
+        %li
+          = link_to "Connexion", new_user_session_path, class: "button secondary"
+
+      %li
+        - if dossier.present? && nav_bar_profile == :user
+          = render partial: 'shared/help/help_dropdown_dossier', locals: { dossier: dossier }
+
+        - elsif procedure.present? && (nav_bar_profile == :user || nav_bar_profile == :guest)
+          = render partial: 'shared/help/help_dropdown_procedure', locals: { procedure: procedure }
+
+        - elsif nav_bar_profile == :instructeur
+          = render partial: 'shared/help/help_dropdown_instructeur'
+
+        - else
+          = render partial: 'shared/help/help_button'

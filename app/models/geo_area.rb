@@ -35,16 +35,14 @@ class GeoArea < ApplicationRecord
   ]
 
   enum source: {
-    quartier_prioritaire: 'quartier_prioritaire',
     cadastre: 'cadastre',
-    parcelle_agricole: 'parcelle_agricole',
     selection_utilisateur: 'selection_utilisateur'
   }
 
   scope :selections_utilisateur, -> { where(source: sources.fetch(:selection_utilisateur)) }
-  scope :quartiers_prioritaires, -> { where(source: sources.fetch(:quartier_prioritaire)) }
   scope :cadastres, -> { where(source: sources.fetch(:cadastre)) }
-  scope :parcelles_agricoles, -> { where(source: sources.fetch(:parcelle_agricole)) }
+
+  validates :geometry, geo_json: true, allow_blank: false
 
   def to_feature
     {

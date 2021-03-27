@@ -18,15 +18,8 @@ module Users
     def index
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
       @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
-
-      @current_tab = current_tab(@user_dossiers.count, @dossiers_invites.count)
-
-      @dossiers = case @current_tab
-      when 'mes-dossiers'
-        @user_dossiers
-      when 'dossiers-invites'
-        @dossiers_invites
-      end
+      @dossiers_supprimes = current_user.deleted_dossiers.order_by_updated_at.page(page)
+      @statut = statut(@user_dossiers, @dossiers_invites, @dossiers_supprimes, params[:statut])
     end
 
     def show
@@ -39,7 +32,7 @@ module Users
       respond_to do |format|
         format.pdf do
           @include_infos_administration = false
-          render(file: 'dossiers/show', formats: [:pdf])
+          render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all
       end
@@ -104,8 +97,8 @@ module Users
 
       sanitized_siret = siret_model.siret
       begin
-        etablissement = ApiEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
-      rescue ApiEntreprise::API::RequestFailed, ApiEntreprise::API::BadGateway
+        etablissement = APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
+      rescue APIEntreprise::API::Error::RequestFailed, APIEntreprise::API::Error::BadGateway, APIEntreprise::API::Error::TimedOut
         return render_siret_error(t('errors.messages.siret_network_error'))
       end
       if etablissement.nil?
@@ -261,7 +254,7 @@ module Users
 
       dossier = Dossier.new(
         revision: procedure.active_revision,
-        groupe_instructeur: procedure.defaut_groupe_instructeur,
+        groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
       )
@@ -282,6 +275,25 @@ module Users
 
     private
 
+    # if the status tab is filled, then this tab
+    # else first filled tab
+    # else mes-dossiers
+    def statut(mes_dossiers, dossiers_invites, dossiers_supprimes, params_statut)
+      tabs = {
+        'mes-dossiers' => mes_dossiers.present?,
+        'dossiers-invites' => dossiers_invites.present?,
+        'dossiers-supprimes' => dossiers_supprimes.present?
+      }
+      if tabs[params_statut]
+        params_statut
+      else
+        tabs
+          .filter { |_tab, filled| filled }
+          .map { |tab, _| tab }
+          .first || 'mes-dossiers'
+      end
+    end
+
     def store_user_location!
       store_location_for(:user, request.fullpath)
     end
@@ -292,7 +304,7 @@ module Users
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.procedure.brouillon?
-        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entrainera sa suppression."
+        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
       end
     end
 
@@ -307,22 +319,12 @@ module Users
       [params[:page].to_i, 1].max
     end
 
-    def current_tab(mes_dossiers_count, dossiers_invites_count)
-      if dossiers_invites_count == 0
-        'mes-dossiers'
-      elsif mes_dossiers_count == 0
-        'dossiers-invites'
-      else
-        params[:current_tab].presence || 'mes-dossiers'
-      end
-    end
-
     # FIXME: require(:dossier) when all the champs are united
     def champs_params
       params.permit(dossier: {
         champs_attributes: [
-          :id, :value, :primary_value, :secondary_value, :piece_justificative_file, value: [],
-          champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
+          :id, :value, :external_id, :primary_value, :secondary_value, :piece_justificative_file, value: [],
+          champs_attributes: [:id, :_destroy, :value, :external_id, :primary_value, :secondary_value, :piece_justificative_file, value: []]
         ]
       })
     end
@@ -336,7 +338,21 @@ module Users
     end
 
     def change_groupe_instructeur?
-      params[:dossier][:groupe_instructeur_id].present? && @dossier.groupe_instructeur_id != params[:dossier][:groupe_instructeur_id].to_i
+      if params[:dossier].key?(:groupe_instructeur_id)
+        groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
+        if groupe_instructeur_id.nil?
+          @dossier.groupe_instructeur_id.present?
+        else
+          @dossier.groupe_instructeur_id != groupe_instructeur_id.to_i
+        end
+      end
+    end
+
+    def groupe_instructeur_from_params
+      groupe_instructeur_id = params[:dossier][:groupe_instructeur_id]
+      if groupe_instructeur_id.present?
+        @dossier.procedure.groupe_instructeurs.find(groupe_instructeur_id)
+      end
     end
 
     def update_dossier_and_compute_errors
@@ -344,19 +360,27 @@ module Users
 
       if champs_params[:dossier]
         @dossier.assign_attributes(champs_params[:dossier])
+        # FIXME in some cases a removed repetition bloc row is submitted.
+        # In this case it will be trated as a new records and action will fail.
+        @dossier.champs.filter(&:repetition?).each do |champ|
+          champ.champs = champ.champs.filter(&:persisted?)
+        end
         if @dossier.champs.any?(&:changed?)
           @dossier.last_champ_updated_at = Time.zone.now
         end
         if !@dossier.save
           errors += @dossier.errors.full_messages
         elsif change_groupe_instructeur?
-          groupe_instructeur = @dossier.procedure.groupe_instructeurs.find(params[:dossier][:groupe_instructeur_id])
-          @dossier.assign_to_groupe_instructeur(groupe_instructeur)
+          @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
         end
       end
 
       if !save_draft?
         errors += @dossier.check_mandatory_champs
+
+        if @dossier.groupe_instructeur.nil?
+          errors << "Le champ « #{@dossier.procedure.routing_criteria_name} » doit être rempli"
+        end
       end
 
       errors

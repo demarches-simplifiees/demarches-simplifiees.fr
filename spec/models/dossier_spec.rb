@@ -307,55 +307,55 @@ describe Dossier do
     let!(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let!(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction)) }
-
-    let!(:expert_1) { create(:instructeur) }
-    let!(:expert_2) { create(:instructeur) }
+    let!(:experts_procedure) { create(:experts_procedure, expert: expert_1, procedure: procedure) }
+    let!(:experts_procedure_2) { create(:experts_procedure, expert: expert_2, procedure: procedure) }
+    let!(:expert_1) { create(:expert) }
+    let!(:expert_2) { create(:expert) }
 
     context 'when there is a public advice asked from the dossiers instructeur' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, instructeur: expert_1, confidentiel: false) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false) }
 
-      it { expect(dossier.avis_for(instructeur)).to match([avis]) }
-      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
-      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_2)).to match([avis]) }
     end
 
     context 'when there is a private advice asked from the dossiers instructeur' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: instructeur, instructeur: expert_1, confidentiel: true) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 
-      it { expect(dossier.avis_for(instructeur)).to match([avis]) }
-      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
-      it { expect(dossier.avis_for(expert_2)).to match([]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_2)).not_to match([avis]) }
     end
 
     context 'when there is a public advice asked from one expert to another' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: false) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
 
-      it { expect(dossier.avis_for(instructeur)).to match([avis]) }
-      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
-      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_2)).to match([avis]) }
     end
 
     context 'when there is a private advice asked from one expert to another' do
-      let!(:avis) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: true) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: true) }
 
-      it { expect(dossier.avis_for(instructeur)).to match([avis]) }
-      it { expect(dossier.avis_for(expert_1)).to match([avis]) }
-      it { expect(dossier.avis_for(expert_2)).to match([avis]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_1)).not_to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_2)).to match([avis]) }
     end
 
     context 'when they are a lot of advice' do
-      let!(:avis_1) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010')) }
-      let!(:avis_2) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
-      let!(:avis_3) { Avis.create(dossier: dossier, claimant: expert_1, instructeur: expert_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010')) }
+      let!(:avis_1) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010')) }
+      let!(:avis_2) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
+      let!(:avis_3) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010')) }
 
-      it { expect(dossier.avis_for(instructeur)).to match([avis_2, avis_1, avis_3]) }
-      it { expect(dossier.avis_for(expert_1)).to match([avis_2, avis_1, avis_3]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_2, avis_1, avis_3]) }
+      it { expect(dossier.avis_for_expert(expert_1)).to match([avis_2, avis_1, avis_3]) }
     end
   end
 
   describe '#update_state_dates' do
-    let(:state) { Dossier.states.fetch(:brouillon) }
-    let(:dossier) { create(:dossier, state: state) }
+    let(:dossier) { create(:dossier, :brouillon, :with_individual) }
     let(:beginning_of_day) { Time.zone.now.beginning_of_day }
     let(:instructeur) { create(:instructeur) }
 
@@ -381,7 +381,7 @@ describe Dossier do
     end
 
     context 'when dossier is en_instruction' do
-      let(:state) { Dossier.states.fetch(:en_construction) }
+      let(:dossier) { create(:dossier, :en_construction, :with_individual) }
       let(:instructeur) { create(:instructeur) }
 
       before do
@@ -402,7 +402,7 @@ describe Dossier do
     end
 
     context 'when dossier is accepte' do
-      let(:state) { Dossier.states.fetch(:en_instruction) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
         dossier.accepter!(instructeur, nil, nil)
@@ -415,7 +415,7 @@ describe Dossier do
     end
 
     context 'when dossier is refuse' do
-      let(:state) { Dossier.states.fetch(:en_instruction) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
         dossier.refuser!(instructeur, nil, nil)
@@ -427,7 +427,7 @@ describe Dossier do
     end
 
     context 'when dossier is sans_suite' do
-      let(:state) { Dossier.states.fetch(:en_instruction) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
         dossier.classer_sans_suite!(instructeur, nil, nil)
@@ -469,11 +469,11 @@ describe Dossier do
   end
 
   describe "#unfollow_stale_instructeurs" do
-    let(:procedure) { create(:procedure, :published) }
+    let(:procedure) { create(:procedure, :published, :for_individual) }
     let(:instructeur) { create(:instructeur) }
     let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
     let(:instructeur2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur, new_groupe_instructeur]) }
-    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
     let(:last_operation) { DossierOperationLog.last }
 
     before do
@@ -918,7 +918,7 @@ describe Dossier do
   end
 
   describe '#accepter!' do
-    let(:dossier) { create(:dossier, :en_instruction) }
+    let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let!(:instructeur) { create(:instructeur) }
@@ -953,7 +953,7 @@ describe Dossier do
   end
 
   describe '#accepter_automatiquement!' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
@@ -1268,8 +1268,8 @@ describe Dossier do
       end
     end
 
-    it { expect(Dossier.discarded_brouillon_expired.count).to eq(2) }
-    it { expect(Dossier.discarded_en_construction_expired.count).to eq(2) }
+    it { expect(Dossier.discarded_brouillon_expired.count).to eq(3) }
+    it { expect(Dossier.discarded_en_construction_expired.count).to eq(3) }
   end
 
   describe "discarded procedure dossier should be able to access it's procedure" do
@@ -1345,29 +1345,98 @@ describe Dossier do
   end
 
   describe "champs_for_export" do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication) }
     let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
     let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
     let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+    let(:explication_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
 
-    before do
-      procedure.publish!
-      dossier
-      procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
-      procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
-      procedure.draft_revision.find_or_clone_type_de_champ(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
-      procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
-      dossier.reload
-      procedure.reload
+    context "when procedure published" do
+      before do
+        procedure.publish!
+        dossier
+        procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
+        procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
+        procedure.draft_revision.find_or_clone_type_de_champ(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
+        procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
+        dossier.reload
+        procedure.reload
+      end
+
+      it "should have champs from all revisions" do
+        expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle])
+        expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, "New text field"])
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_export))
+      end
     end
 
-    it "should have champs from all revisions" do
-      expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no"])
-      expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
-      expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
-      expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_export))
+    context "when procedure brouillon" do
+      let(:procedure) { create(:procedure, :with_type_de_champ, :with_explication) }
+
+      it "should not contain non-exportable types de champ" do
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
+      end
+    end
+  end
+
+  describe "remove_titres_identite!" do
+    let(:dossier) { create(:dossier, :en_instruction, :followed, :with_individual) }
+    let(:type_de_champ_titre_identite) { create(:type_de_champ_titre_identite, procedure: dossier.procedure) }
+    let(:champ_titre_identite) { create(:champ_titre_identite, type_de_champ: type_de_champ_titre_identite) }
+    let(:type_de_champ_titre_identite_vide) { create(:type_de_champ_titre_identite, procedure: dossier.procedure) }
+    let(:champ_titre_identite_vide) { create(:champ_titre_identite, type_de_champ: type_de_champ_titre_identite_vide) }
+
+    before do
+      champ_titre_identite_vide.piece_justificative_file.purge
+      dossier.champs << champ_titre_identite
+      dossier.champs << champ_titre_identite_vide
+    end
+
+    it "clean up titres identite on accepter" do
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
+      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
+      dossier.accepter!(dossier.followers_instructeurs.first, "yolo!")
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+    end
+
+    it "clean up titres identite on refuser" do
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
+      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
+      dossier.refuser!(dossier.followers_instructeurs.first, "yolo!")
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+    end
+
+    it "clean up titres identite on classer_sans_suite" do
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
+      expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
+      dossier.classer_sans_suite!(dossier.followers_instructeurs.first, "yolo!")
+      expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+    end
+
+    context 'en_construction' do
+      let(:dossier) { create(:dossier, :en_construction, :followed, :with_individual) }
+
+      it "clean up titres identite on accepter_automatiquement" do
+        expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy
+        expect(champ_titre_identite_vide.piece_justificative_file.attached?).to be_falsey
+        dossier.accepter_automatiquement!
+        expect(champ_titre_identite.piece_justificative_file.attached?).to be_falsey
+      end
+    end
+  end
+
+  describe '#log_api_entreprise_job_exception' do
+    let(:dossier) { create(:dossier) }
+
+    context "add execption to the log" do
+      before do
+        dossier.log_api_entreprise_job_exception(StandardError.new('My special exception!'))
+      end
+
+      it { expect(dossier.api_entreprise_job_exceptions).to eq(['#<StandardError: My special exception!>']) }
     end
   end
 end

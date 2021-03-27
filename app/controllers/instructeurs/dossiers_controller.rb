@@ -42,7 +42,7 @@ module Instructeurs
       respond_to do |format|
         format.pdf do
           @include_infos_administration = true
-          render(file: 'dossiers/show', formats: [:pdf])
+          render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all
       end
@@ -66,13 +66,14 @@ module Instructeurs
       @following_instructeurs_emails = dossier.followers_instructeurs.map(&:email)
       previous_followers = dossier.previous_followers_instructeurs - dossier.followers_instructeurs
       @previous_following_instructeurs_emails = previous_followers.map(&:email)
-      @avis_emails = dossier.avis.includes(:instructeur).map(&:email_to_display)
+      @avis_emails = dossier.experts.map(&:email)
       @invites_emails = dossier.invites.map(&:email)
       @potential_recipients = dossier.groupe_instructeur.instructeurs.reject { |g| g == current_instructeur }
     end
 
     def send_to_instructeurs
-      recipients = Instructeur.find(params[:recipients])
+      recipients = params['recipients'].presence || [].to_json
+      recipients = Instructeur.find(JSON.parse(recipients))
 
       recipients.each do |recipient|
         recipient.follow(dossier)
@@ -180,7 +181,7 @@ module Instructeurs
     end
 
     def create_avis
-      @avis = create_avis_from_params(dossier)
+      @avis = create_avis_from_params(dossier, current_instructeur)
 
       if @avis.nil?
         redirect_to avis_instructeur_dossier_path(procedure, dossier)
@@ -209,15 +210,33 @@ module Instructeurs
     def telecharger_pjs
       return head(:forbidden) if !dossier.attachments_downloadable?
 
+      generate_pdf_for_instructeur_export
       files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
 
       zipline(files, "dossier-#{dossier.id}.zip")
+    end
+
+    def delete_dossier
+      if dossier.termine?
+        dossier.discard_and_keep_track!(current_instructeur, :instructeur_request)
+        flash.notice = 'Le dossier a bien été supprimé'
+        redirect_to instructeur_procedure_path(procedure)
+      else
+        flash.alert = "Suppression impossible : le dossier n'est pas terminé"
+        redirect_back(fallback_location: instructeur_procedures_url)
+      end
     end
 
     private
 
     def dossier
       @dossier ||= current_instructeur.dossiers.find(params[:dossier_id])
+    end
+
+    def generate_pdf_for_instructeur_export
+      @include_infos_administration = true
+      pdf = render_to_string(template: 'dossiers/show', formats: [:pdf])
+      dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
     end
 
     def commentaire_params

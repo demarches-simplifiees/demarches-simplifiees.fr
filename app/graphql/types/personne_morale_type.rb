@@ -7,10 +7,10 @@ module Types
       end
 
       field :siren, String, null: false
-      field :capital_social, GraphQL::Types::BigInt, null: false, description: "capital social de l’entreprise. -1 si inconnu."
-      field :numero_tva_intracommunautaire, String, null: false
-      field :forme_juridique, String, null: false
-      field :forme_juridique_code, String, null: false
+      field :capital_social, GraphQL::Types::BigInt, null: true, description: "capital social de l’entreprise. -1 si inconnu."
+      field :numero_tva_intracommunautaire, String, null: true
+      field :forme_juridique, String, null: true
+      field :forme_juridique_code, String, null: true
       field :nom_commercial, String, null: false
       field :raison_sociale, String, null: false
       field :siret_siege_social, String, null: false
@@ -18,8 +18,8 @@ module Types
       field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
       field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d’une année"
       field :date_creation, GraphQL::Types::ISO8601Date, null: false
-      field :nom, String, null: false
-      field :prenom, String, null: false
+      field :nom, String, null: true
+      field :prenom, String, null: true
       field :inline_adresse, String, null: false
       field :attestation_sociale_attachment, Types::File, null: true
       field :attestation_fiscale_attachment, Types::File, null: true
@@ -74,10 +74,10 @@ module Types
     class AssociationType < Types::BaseObject
       field :rna, String, null: false
       field :titre, String, null: false
-      field :objet, String, null: false
-      field :date_creation, GraphQL::Types::ISO8601Date, null: false
-      field :date_declaration, GraphQL::Types::ISO8601Date, null: false
-      field :date_publication, GraphQL::Types::ISO8601Date, null: false
+      field :objet, String, null: true
+      field :date_creation, GraphQL::Types::ISO8601Date, null: true
+      field :date_declaration, GraphQL::Types::ISO8601Date, null: true
+      field :date_publication, GraphQL::Types::ISO8601Date, null: true
     end
 
     implements Types::DemandeurType
@@ -86,16 +86,33 @@ module Types
     field :siege_social, Boolean, null: false
     field :naf, String, null: false
     field :libelle_naf, String, null: false
-    field :adresse, String, null: false
-    field :numero_voie, String, null: true
-    field :type_voie, String, null: true
-    field :nom_voie, String, null: false
-    field :complement_adresse, String, null: false
-    field :code_postal, String, null: false
-    field :localite, String, null: false
-    field :code_insee_localite, String, null: false
+
+    field :address, Types::AddressType, null: false
+
     field :entreprise, EntrepriseType, null: true
     field :association, AssociationType, null: true
+
+    field :adresse, String, null: false, deprecation_reason: "Utilisez le champ `address.label` à la place."
+    field :numero_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_number` à la place."
+    field :type_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_address` à la place."
+    field :nom_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_name` à la place."
+    field :code_postal, String, null: false, deprecation_reason: "Utilisez le champ `address.postal_code` à la place."
+    field :localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_name` à la place."
+    field :code_insee_localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_code` à la place."
+    field :complement_adresse, String, null: true, deprecation_reason: "Utilisez le champ `address` à la place."
+
+    def address
+      {
+        label: object.adresse,
+        type: :housenumber,
+        street_number: object.numero_voie,
+        street_name: object.nom_voie,
+        street_address: object.nom_voie.present? ? [object.numero_voie, object.type_voie, object.nom_voie].compact.join(' ') : nil,
+        postal_code: object.code_postal.presence || '',
+        city_name: object.localite.presence || '',
+        city_code: object.code_insee_localite.presence || ''
+      }
+    end
 
     def entreprise
       if object.entreprise_siren.present?

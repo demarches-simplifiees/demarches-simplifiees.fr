@@ -25,6 +25,7 @@
 #  created_at                   :datetime
 #  updated_at                   :datetime
 #  administrateur_id            :bigint
+#  expert_id                    :bigint
 #  instructeur_id               :bigint
 #
 class User < ApplicationRecord
@@ -44,23 +45,19 @@ class User < ApplicationRecord
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :feedbacks, dependent: :destroy
+  has_many :deleted_dossiers
   has_one :france_connect_information, dependent: :destroy
   belongs_to :instructeur, optional: true
   belongs_to :administrateur, optional: true
+  belongs_to :expert, optional: true
 
   accepts_nested_attributes_for :france_connect_information
 
-  default_scope { eager_load(:instructeur, :administrateur) }
+  default_scope { eager_load(:instructeur, :administrateur, :expert) }
 
   before_validation -> { sanitize_email(:email) }
 
-  validate :password_complexity, if: -> (u) { u.administrateur.present? && Devise.password_length.include?(u.password.try(:size)) }
-
-  def password_complexity
-    if password.present? && ZxcvbnService.new(password).score < PASSWORD_COMPLEXITY_FOR_ADMIN
-      errors.add(:password, :not_strong)
-    end
-  end
+  validates :password, password_complexity: true, if: -> (u) { u.administrateur.present? && Devise.password_length.include?(u.password.try(:size)) }
 
   # Override of Devise::Models::Confirmable#send_confirmation_instructions
   def send_confirmation_instructions
@@ -115,6 +112,7 @@ class User < ApplicationRecord
     if user.valid?
       if user.instructeur_id.nil?
         user.create_instructeur!
+        user.update(france_connect_information: nil)
       end
 
       user.instructeur.administrateurs << administrateurs
@@ -128,6 +126,21 @@ class User < ApplicationRecord
 
     if user.valid? && user.administrateur_id.nil?
       user.create_administrateur!
+      user.update(france_connect_information: nil)
+    end
+
+    user
+  end
+
+  def self.create_or_promote_to_expert(email, password)
+    user = User
+      .create_with(password: password, confirmed_at: Time.zone.now)
+      .find_or_create_by(email: email)
+
+    if user.valid?
+      if user.expert_id.nil?
+        user.create_expert!
+      end
     end
 
     user
@@ -139,6 +152,18 @@ class User < ApplicationRecord
 
   def active?
     last_sign_in_at.present?
+  end
+
+  def administrateur?
+    administrateur_id.present?
+  end
+
+  def instructeur?
+    instructeur_id.present?
+  end
+
+  def can_france_connect?
+    !administrateur? && !instructeur?
   end
 
   def can_be_deleted?

@@ -37,7 +37,10 @@ module Types
       argument :created_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers déposés depuis la date."
       argument :updated_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers mis à jour depuis la date."
       argument :state, Types::DossierType::DossierState, required: false, description: "Dossiers avec statut."
-      argument :archived, Boolean, required: false, description: "Si présent, permet de filtrer les dossiers archivés ou non"
+      argument :archived, Boolean, required: false, description: "Seulement les dossiers archivés."
+      argument :revision, ID, required: false, description: "Seulement les dossiers pour la révision donnée."
+      argument :max_revision, ID, required: false, description: "Seulement les dossiers pour les révisons avant la révision donnée."
+      argument :min_revision, ID, required: false, description: "Seulement les dossiers pour les révisons après la révision donnée."
     end
 
     field :champ_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ
@@ -63,7 +66,7 @@ module Types
       Loaders::Association.for(object.class, :revisions).load(object)
     end
 
-    def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, order:)
+    def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, revision: nil, max_revision: nil, min_revision: nil, order:)
       dossiers = object.dossiers.state_not_brouillon.for_api_v2
 
       if state.present?
@@ -72,6 +75,18 @@ module Types
 
       if !archived.nil?
         dossiers = dossiers.where(archived: archived)
+      end
+
+      if !revision.nil?
+        dossiers = dossiers.where(revision: find_revision(revision))
+      else
+        if !min_revision.nil?
+          dossiers = dossiers.joins(:revision).where('procedure_revisions.created_at >= ?', find_revision(min_revision).created_at)
+        end
+
+        if !max_revision.nil?
+          dossiers = dossiers.joins(:revision).where('procedure_revisions.created_at <= ?', find_revision(max_revision).created_at)
+        end
       end
 
       if updated_since.present?
@@ -88,7 +103,14 @@ module Types
     end
 
     def self.authorized?(object, context)
-      authorized_demarche?(object, context)
+      context.authorized_demarche?(object)
+    end
+
+    private
+
+    def find_revision(revision)
+      revision_id = GraphQL::Schema::UniqueWithinType.decode(revision).second
+      object.revisions.find(revision_id)
     end
   end
 end

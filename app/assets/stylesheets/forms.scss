@@ -1,0 +1,521 @@
+@import "constants";
+@import "colors";
+@import "placeholders";
+
+.form {
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+
+    @media (max-width: $two-columns-breakpoint) {
+      font-size: 26px;
+    }
+  }
+
+  hr {
+    width: 100%;
+    height: 0;
+    margin-top: $default-padding;
+    margin-bottom: $default-fields-spacer;
+    border: none;
+    border-bottom: 2px solid $border-grey;
+  }
+
+  @mixin notice-text-style {
+    font-size: 16px;
+    color: $dark-grey;
+  }
+
+  .mandatory {
+    color: $dark-red;
+  }
+
+  label {
+    font-size: 18px;
+    margin-bottom: $default-padding;
+    display: block;
+    font-weight: bold;
+
+    &.required {
+      &::after {
+        color: $dark-red;
+        content: " *";
+      }
+    }
+  }
+
+  .form-label {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: $default-padding;
+  }
+
+  .notice {
+    @include notice-text-style;
+    margin-top: - $default-spacer;
+    margin-bottom: $default-padding;
+
+    p {
+      margin-bottom: $default-spacer;
+    }
+
+    input[type='date'] {
+      display: inline;
+    }
+  }
+
+  .editable-champ {
+    position: relative;
+
+    .updated-at {
+      @include notice-text-style;
+      float: right;
+      display: inline-block;
+      margin-left: $default-spacer;
+      visibility: hidden;
+    }
+
+    &:hover .updated-at,
+    .updated-at.highlighted {
+      visibility: visible;
+    }
+
+    // Move checkbox to the top-left side of the label
+    &.editable-champ-checkbox,
+    &.editable-champ-engagement {
+      p,
+      label {
+        padding-left: 28px;
+      }
+
+      input[type=checkbox] {
+        position: absolute;
+        top: 3px;
+        left: 0px;
+      }
+
+      // When an (eventual) notice is displayed after the input, give it some bottom margin.
+      .notice {
+        margin-bottom: $default-fields-spacer;
+      }
+    }
+  }
+
+  .radios {
+    display: flex;
+
+    // Horizontal layout (default)
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    label {
+      margin-right: $default-padding;
+    }
+
+    // Vertical layout
+    &.vertical {
+      flex-direction: column;
+      align-items: stretch;
+
+      label {
+        margin-right: 0;
+      }
+    }
+
+    label {
+      padding: $default-padding $default-padding $default-padding $default-spacer;
+      border: 1px solid $border-grey;
+      border-radius: 4px;
+      font-weight: normal;
+      background: $white;
+      user-select: none;
+
+      &:last-of-type {
+        margin-bottom: $default-fields-spacer;
+      }
+
+      &:hover {
+        background: $light-grey;
+        cursor: pointer;
+      }
+
+      &:active {
+        border-color: darken($border-grey, 10);
+      }
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &.blank-radio {
+        color: $dark-grey;
+        font-style: italic;
+      }
+
+      input[type=radio] {
+        margin-bottom: 0;
+      }
+
+      .notice {
+        margin: 4px 0 0 27px;
+      }
+    }
+  }
+
+  input[type=text]:not([data-address='true']),
+  input[type=email],
+  input[type=password],
+  input[type=date],
+  input[type=number],
+  input[type=tel],
+  textarea,
+  select,
+  .attachment {
+    display: block;
+    margin-bottom: $default-fields-spacer;
+
+    &.small-margin {
+      margin-bottom: $default-padding / 2;
+    }
+  }
+
+  .add-row {
+    margin-bottom: $default-fields-spacer;
+  }
+
+  input[type=checkbox] {
+    &.small-margin {
+      margin-bottom: $default-padding / 2;
+    }
+  }
+
+  input[type=text]:not([data-address='true']),
+  input[type=email],
+  input[type=password],
+  input[type=date],
+  input[type=number],
+  input[type=tel],
+  textarea,
+  select {
+    border-radius: 4px;
+    border: solid 1px $border-grey;
+    padding: $default-padding;
+
+    &.small {
+      padding: $default-padding / 2;
+    }
+
+    &:disabled {
+      background-color: $border-grey;
+    }
+
+    &:focus {
+      border: 1px solid $blue;
+      box-shadow: 0px 0px 2px 1px $blue;
+    }
+
+    // Hide the browser default invalidity indicator until the field is touched
+    &:invalid:not(:focus) {
+      box-shadow: none;
+    }
+
+    &.touched:invalid {
+      border: 1px solid $dark-red;
+      box-shadow: 0px 0px 2px 1px $dark-red;
+    }
+  }
+
+  input[type=text],
+  input[type=email],
+  input[type=password],
+  input[type=date],
+  input[type=number],
+  input[type=tel],
+  textarea {
+    width: 100%;
+  }
+
+  input[type=email],
+  input[type=number],
+  input[type=tel], {
+    max-width: 500px;
+  }
+
+  input[type=checkbox],
+  input[type=radio] {
+    @extend %outline;
+
+    // Firefox tends to display some controls smaller than other browsers.
+    // Ensure a consistency of size between browsers.
+    width: 16px;
+    height: 16px;
+
+    margin-left: 5px;
+    margin-right: 4px;
+    margin-bottom: $default-fields-spacer;
+  }
+
+  input[type=date] {
+    max-width: 180px;
+  }
+
+  select {
+    // hack found here: https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #FFFFFF;
+    background-image: image-url("icons/chevron-down.svg");
+    background-repeat: no-repeat;
+    background-size: 14px;
+    background-position: right 10px center;
+    padding-right: 4 * $default-spacer;
+    max-width: 100%;
+
+    &.small {
+      padding-right: 3 * $default-spacer;
+    }
+
+    // CAUTION: IE hackery ahead
+    &::-ms-expand {
+      display: none; // remove default arrow in IE 10 and 11 */
+    }
+
+    // target Internet Explorer 9 to undo the custom arrow */
+    @media screen and (min-width:0\0) {
+      select {
+        background: none\9;
+      }
+    }
+  }
+
+
+  [data-reach-combobox-input] {
+    padding: 16px;
+    width: 100%;
+    min-width: 50%;
+    max-width: 100%;
+    min-height: 62px;
+    margin-bottom: 40px;
+  }
+
+  [data-reach-combobox-input]:focus {
+    border-color: $blue;
+  }
+
+  [data-reach-combobox-token-list] {
+    padding: $default-padding;
+    display: flex;
+  }
+
+  [data-reach-combobox-token] {
+    border: solid 1px $border-grey;
+    color: $black;
+    margin-top: $default-padding;
+    margin-bottom: $default-padding;
+    margin-right: 0.5 * $default-padding;
+    border-radius: 4px;
+    padding: $default-padding;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  [data-reach-combobox-token]:focus {
+    background-color: $black;
+    color: $white;
+  }
+
+  .editable-champ {
+    &:not(.editable-champ-carte) .algolia-autocomplete {
+      margin-bottom: 2 * $default-padding;
+    }
+
+    .geo-areas {
+      margin-bottom: 2 * $default-padding;
+    }
+
+    &.editable-champ-repetition {
+      .row {
+        border-radius: 4px;
+        border: 1px solid $border-grey;
+        padding: $default-padding;
+        margin-bottom: 2 * $default-padding;
+      }
+    }
+  }
+
+  input.aa-input,
+  input.aa-hint {
+    border-radius: 4px;
+    border: solid 1px $border-grey;
+    padding: $default-padding;
+  }
+
+  input.aa-hint {
+    color: $dark-grey;
+  }
+
+  .datetime {
+    input[type=date] {
+      display: inline-block;
+    }
+
+    select {
+      display: inline-block;
+    }
+  }
+
+  .header-section {
+    display: inline-block;
+    color: $blue;
+    font-size: 30px;
+    margin-bottom: 3 * $default-padding;
+    border-bottom: 3px solid $blue;
+  }
+
+  .header-subsection {
+    font-size: 22px;
+    color: $blue;
+    margin-bottom: $default-padding;
+  }
+
+  .explication-libelle {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: $default-padding;
+  }
+
+  .explication {
+    margin-bottom: $default-fields-spacer;
+    padding: $default-padding / 2;
+    background-color: $light-grey;
+
+    p:not(:last-child) {
+      margin-bottom: $default-padding;
+    }
+  }
+
+  .siret-info {
+    margin-top: -$default-fields-spacer;
+    margin-bottom: $default-fields-spacer;
+    // Ensure the bottom-margin is not collapsed when the element is empty
+    min-height: 1px;
+  }
+
+  .send-wrapper {
+    display: flex;
+    width: 100%;
+    margin-top: $default-padding;
+    margin-bottom: 2 * $default-padding;
+
+    .button {
+      margin-top: $default-padding;
+      margin-bottom: 0;
+    }
+
+    // Wide layout: align buttons on a single row
+    @media (min-width: 550px) {
+      flex-direction: row;
+
+      .button:not(:first-of-type) {
+        margin-left: $default-spacer;
+      }
+
+      // If there are more than one button, align the "Send" button to the right
+      .button:not(:first-of-type).send {
+        margin-left: auto;
+      }
+    }
+
+    // Narrow layout: stack buttons vertically
+    @media (max-width: 550px) {
+      flex-direction: column-reverse;
+      align-items: center;
+
+      .button {
+        width: 100%;
+        max-width: 350px;
+        line-height: 30px;
+        margin-left: none;
+        margin-right: none;
+      }
+    }
+  }
+
+  .send-notice {
+    @include notice-text-style;
+    margin-bottom: $default-padding;
+  }
+
+  .send-wrapper + .send-notice {
+    margin-top: - $default-padding;
+  }
+
+  .inline-champ {
+    margin-left: $default-spacer;
+    margin-right: $default-spacer;
+    width: 100%;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+[data-react-class="ComboMultipleDropdownList"] {
+  margin-bottom: $default-fields-spacer;
+
+  [data-reach-combobox-input] {
+    outline: none;
+    border: none;
+    flex-grow: 1;
+    margin: 0.25rem;
+    background-image: image-url("icons/chevron-down");
+    background-size: 14px;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+
+  [data-reach-combobox-input]:focus {
+    outline: solid;
+    outline-color: $light-blue;
+  }
+}
+
+[data-combobox-token-label] {
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+[data-reach-combobox-option] {
+  font-size: 16px;
+  list-style-type: none;
+}
+
+[data-reach-combobox-option][aria-selected="true"] {
+  background: $light-blue !important;
+  color: $white;
+}
+
+[data-combobox-separator] {
+  font-size: 16px;
+  color: $dark-grey;
+  margin-top: 6px;
+}
+
+[data-combobox-remove-token] {
+  color: $dark-grey;
+  padding-right: 4px;
+}
+
+
+[data-reach-combobox-input]:focus {
+  outline-color: $light-blue;
+}

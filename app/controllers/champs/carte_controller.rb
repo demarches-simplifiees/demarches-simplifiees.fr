@@ -11,7 +11,7 @@ class Champs::CarteController < ApplicationController
       @champ.geo_areas += GeoArea.from_feature_collection(cadastres_features_collection(@champ.to_feature_collection))
       @champ.save!
     end
-  rescue ApiCarto::API::ResourceNotFound
+  rescue APICarto::API::ResourceNotFound
     flash.alert = 'Les données cartographiques sont temporairement indisponibles. Réessayez dans un instant.'
     response.status = 503
   end
@@ -71,13 +71,13 @@ class Champs::CarteController < ApplicationController
 
   def cadastres_features_collection(feature_collection)
     coordinates = feature_collection[:features].filter do |feature|
-      feature[:properties][:source] == GeoArea.sources.fetch(:selection_utilisateur) && feature[:geometry]['type'] == 'Polygon'
+      feature[:properties][:source] == GeoArea.sources.fetch(:selection_utilisateur) && feature[:geometry] && feature[:geometry]['type'] == 'Polygon'
     end.map do |feature|
       feature[:geometry]['coordinates'][0].map { |(lng, lat)| { 'lng' => lng, 'lat' => lat } }
     end
 
     if coordinates.present?
-      cadastres = ApiCartoService.generate_cadastre(coordinates)
+      cadastres = APICartoService.generate_cadastre(coordinates)
 
       {
         type: 'FeatureCollection',

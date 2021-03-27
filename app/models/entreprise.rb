@@ -5,10 +5,10 @@ class Entreprise < Hashie::Dash
 
   property :etablissement
   property :siren
-  property :capital_social
-  property :numero_tva_intracommunautaire
-  property :forme_juridique
-  property :forme_juridique_code
+  property :capital_social, default: nil
+  property :numero_tva_intracommunautaire, default: nil
+  property :forme_juridique, default: nil
+  property :forme_juridique_code, default: nil
   property :nom_commercial
   property :raison_sociale
   property :siret_siege_social
@@ -19,8 +19,8 @@ class Entreprise < Hashie::Dash
   property :effectif_annuel
   property :effectif_annuel_annee
   property :date_creation
-  property :nom
-  property :prenom
+  property :nom, default: nil
+  property :prenom, default: nil
 
   property :inline_adresse
 end

@@ -338,7 +338,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     subject { patch :update_jeton, params: { id: procedure.id, procedure: { api_entreprise_token: token } } }
 
     before do
-      allow_any_instance_of(ApiEntreprise::PrivilegesAdapter).to receive(:valid?).and_return(token_is_valid)
+      allow_any_instance_of(APIEntreprise::PrivilegesAdapter).to receive(:valid?).and_return(token_is_valid)
       subject
     end
 
@@ -530,6 +530,36 @@ describe NewAdministrateur::ProceduresController, type: :controller do
 
     context 'when admin accept to invite experts on this procedure (true by default)' do
       it { expect(procedure.allow_expert_review).to be_truthy }
+    end
+  end
+
+  describe 'PUT #update_allow_decision_access' do
+    let!(:procedure) { create :procedure, :with_service, administrateur: admin }
+    let(:expert) { create(:expert) }
+    let(:expert_procedure) { create(:experts_procedure, procedure: procedure, expert: expert) }
+
+    subject do
+      put :update_allow_decision_access, params: { procedure_id: procedure.id, experts_procedure: { allow_decision_access: !expert_procedure.allow_decision_access }, expert_procedure: expert_procedure }, format: :js
+    end
+
+    context 'when the experts_procedure is true' do
+      let(:expert_procedure) { create(:experts_procedure, procedure: procedure, expert: expert, allow_decision_access: true) }
+
+      before do
+        subject
+        expert_procedure.reload
+      end
+
+      it { expect(expert_procedure.allow_decision_access).to be_falsy }
+    end
+
+    context 'when the experts_procedure is false' do
+      before do
+        subject
+        expert_procedure.reload
+      end
+
+      it { expect(expert_procedure.allow_decision_access).to be_truthy }
     end
   end
 end

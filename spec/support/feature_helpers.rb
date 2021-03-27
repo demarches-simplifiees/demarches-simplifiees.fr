@@ -27,8 +27,8 @@ module FeatureHelpers
     if sign_in_by_link
       mail = ActionMailer::Base.deliveries.last
       message = mail.html_part.body.raw_source
-      instructeur_id = message[/\".+\/connexion-par-jeton\/(.+)\?jeton=(.*)\"/, 1]
-      jeton = message[/\".+\/connexion-par-jeton\/(.+)\?jeton=(.*)\"/, 2]
+      instructeur_id = message[/".+\/connexion-par-jeton\/(.+)\?jeton=(.*)"/, 1]
+      jeton = message[/".+\/connexion-par-jeton\/(.+)\?jeton=(.*)"/, 2]
 
       visit sign_in_by_link_path(instructeur_id, jeton: jeton)
     end
@@ -71,7 +71,7 @@ module FeatureHelpers
 
   # Add a new type de champ in the procedure editor
   def add_champ(options = {})
-    add_champs(options)
+    add_champs(**options)
   end
 
   # Add several new type de champ in the procedure editor
@@ -101,6 +101,25 @@ module FeatureHelpers
       sleep(0.1) until (value = yield)
       value
     end
+  end
+
+  def select_multi(champ, with)
+    input = find("input[aria-label='#{champ}'")
+    input.click
+
+    # hack because for unknown reason, the click on input doesn't show combobox-popover with selenium driver
+    script = "document.evaluate(\"//input[@aria-label='#{champ}']//ancestor::div[@data-reach-combobox]/div[@data-reach-combobox-popover]\", document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null).iterateNext().removeAttribute(\"hidden\")"
+    execute_script(script)
+
+    element = find(:xpath, "//input[@aria-label='#{champ}']/ancestor::div[@data-reach-combobox]//div[@data-reach-combobox-popover]//li/span[normalize-space(text())='#{with}']")
+    element.click
+  end
+
+  def check_selected_values(champ, values)
+    combobox = find(:xpath, "//input[@aria-label='#{champ}']/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
+    hiddenFieldId = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
+    hiddenField = find("input[data-uuid='#{hiddenFieldId}']")
+    expect(values.sort).to eq(JSON.parse(hiddenField.value).sort)
   end
 
   # Keep the brower window open after a test success of failure, to

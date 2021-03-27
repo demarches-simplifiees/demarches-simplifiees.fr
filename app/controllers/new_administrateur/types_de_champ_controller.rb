@@ -59,8 +59,7 @@ module NewAdministrateur
             :drop_down_list_value,
             :piece_justificative_template_filename,
             :piece_justificative_template_url,
-            :cadastres,
-            :mnhn
+            :editable_options
           ]
         )
       }
@@ -75,8 +74,18 @@ module NewAdministrateur
         :private,
         :drop_down_list_value,
         :piece_justificative_template,
-        :cadastres,
-        :mnhn)
+        editable_options: [
+          :cadastres,
+          :unesco,
+          :arretes_protection,
+          :conservatoire_littoral,
+          :reserves_chasse_faune_sauvage,
+          :reserves_biologiques,
+          :reserves_naturelles,
+          :natura_2000,
+          :zones_humides,
+          :znieff
+        ])
     end
 
     def type_de_champ_update_params
@@ -86,8 +95,18 @@ module NewAdministrateur
         :mandatory,
         :drop_down_list_value,
         :piece_justificative_template,
-        :cadastres,
-        :mnhn)
+        editable_options: [
+          :cadastres,
+          :unesco,
+          :arretes_protection,
+          :conservatoire_littoral,
+          :reserves_chasse_faune_sauvage,
+          :reserves_biologiques,
+          :reserves_naturelles,
+          :natura_2000,
+          :zones_humides,
+          :znieff
+        ])
     end
   end
 end

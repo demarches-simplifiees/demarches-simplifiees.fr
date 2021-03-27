@@ -206,11 +206,11 @@ describe Users::DossiersController, type: :controller do
 
     before do
       sign_in(user)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}?.*token=/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
-      allow_any_instance_of(ApiEntrepriseToken).to receive(:roles)
+      allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
-      allow_any_instance_of(ApiEntrepriseToken).to receive(:expired?).and_return(token_expired)
+      allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
     end
 
     subject! { post :update_siret, params: { id: dossier.id, user: { siret: params_siret } } }
@@ -342,6 +342,7 @@ describe Users::DossiersController, type: :controller do
       {
         id: dossier.id,
         dossier: {
+          groupe_instructeur_id: dossier.groupe_instructeur_id,
           champs_attributes: {
             id: first_champ.id,
             value: value
@@ -418,19 +419,44 @@ describe Users::DossiersController, type: :controller do
         let(:another_group) { create(:groupe_instructeur, procedure: procedure) }
         let(:instructeur_of_dossier) { create(:instructeur) }
         let(:instructeur_in_another_group) { create(:instructeur) }
-        let!(:dossier) { create(:dossier, groupe_instructeur: dossier_group, user: user) }
 
-        before do
-          allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
-          create(:assign_to, instructeur: instructeur_of_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier_group)
-          create(:assign_to, instructeur: instructeur_in_another_group, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: another_group)
+        context "and grope instructeur is set" do
+          let!(:dossier) { create(:dossier, groupe_instructeur: dossier_group, user: user) }
+
+          before do
+            allow(DossierMailer).to receive(:notify_new_dossier_depose_to_instructeur).and_return(double(deliver_later: nil))
+            create(:assign_to, instructeur: instructeur_of_dossier, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: dossier_group)
+            create(:assign_to, instructeur: instructeur_in_another_group, procedure: dossier.procedure, instant_email_dossier_notifications_enabled: true, groupe_instructeur: another_group)
+          end
+
+          it "sends notification mail to instructeurs in the correct group instructeur" do
+            subject
+
+            expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_of_dossier.email)
+            expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_in_another_group.email)
+          end
         end
 
-        it "sends notification mail to instructeurs in the correct group instructeur" do
-          subject
+        context "and groupe instructeur is not set" do
+          let(:dossier) { create(:dossier, procedure: procedure, user: user) }
+          let(:submit_payload) do
+            {
+              id: dossier.id,
+              dossier: {
+                champs_attributes: {
+                  id: first_champ.id,
+                  value: value
+                }
+              },
+              submit_draft: false
+            }
+          end
 
-          expect(DossierMailer).to have_received(:notify_new_dossier_depose_to_instructeur).once.with(dossier, instructeur_of_dossier.email)
-          expect(DossierMailer).not_to have_received(:notify_new_dossier_depose_to_instructeur).with(dossier, instructeur_in_another_group.email)
+          it "can not submit" do
+            subject
+
+            expect(flash.alert).to eq(['Le champ « Votre ville » doit être rempli'])
+          end
         end
       end
 
@@ -557,6 +583,7 @@ describe Users::DossiersController, type: :controller do
       {
         id: dossier.id,
         dossier: {
+          groupe_instructeur_id: dossier.groupe_instructeur_id,
           champs_attributes: [
             {
               id: first_champ.id,
@@ -743,16 +770,15 @@ describe Users::DossiersController, type: :controller do
     context 'when the user does not have any dossiers' do
       before { get(:index) }
 
-      it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
+      it { expect(assigns(:statut)).to eq('mes-dossiers') }
     end
 
     context 'when the user only have its own dossiers' do
       let!(:own_dossier) { create(:dossier, user: user) }
 
       before { get(:index) }
-
-      it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
-      it { expect(assigns(:dossiers)).to match([own_dossier]) }
+      it { expect(assigns(:statut)).to eq('mes-dossiers') }
+      it { expect(assigns(:user_dossiers)).to match([own_dossier]) }
     end
 
     context 'when the user only have some dossiers invites' do
@@ -760,30 +786,30 @@ describe Users::DossiersController, type: :controller do
 
       before { get(:index) }
 
-      it { expect(assigns(:current_tab)).to eq('dossiers-invites') }
-      it { expect(assigns(:dossiers)).to match([invite.dossier]) }
+      it { expect(assigns(:statut)).to eq('dossiers-invites') }
+      it { expect(assigns(:dossiers_invites)).to match([invite.dossier]) }
     end
 
     context 'when the user has both' do
       let!(:own_dossier) { create(:dossier, user: user) }
       let!(:invite) { create(:invite, dossier: create(:dossier), user: user) }
 
-      context 'and there is no current_tab param' do
+      context 'and there is no statut param' do
         before { get(:index) }
 
-        it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
+        it { expect(assigns(:statut)).to eq('mes-dossiers') }
       end
 
       context 'and there is "dossiers-invites" param' do
-        before { get(:index, params: { current_tab: 'dossiers-invites' }) }
+        before { get(:index, params: { statut: 'dossiers-invites' }) }
 
-        it { expect(assigns(:current_tab)).to eq('dossiers-invites') }
+        it { expect(assigns(:statut)).to eq('dossiers-invites') }
       end
 
       context 'and there is "mes-dossiers" param' do
-        before { get(:index, params: { current_tab: 'mes-dossiers' }) }
+        before { get(:index, params: { statut: 'mes-dossiers' }) }
 
-        it { expect(assigns(:current_tab)).to eq('mes-dossiers') }
+        it { expect(assigns(:statut)).to eq('mes-dossiers') }
       end
     end
 
@@ -827,15 +853,16 @@ describe Users::DossiersController, type: :controller do
 
     context "with PDF output" do
       let(:procedure) { create(:procedure) }
-      let(:dossier) {
-  create(:dossier,
-    :accepte,
-    :with_all_champs,
-    :with_motivation,
-    :with_commentaires,
-    procedure: procedure,
-    user: user)
-}
+      let(:dossier) do
+        create(:dossier,
+          :accepte,
+          :with_all_champs,
+          :with_motivation,
+          :with_commentaires,
+          procedure: procedure,
+          user: user)
+      end
+
       subject! { get(:show, params: { id: dossier.id, format: :pdf }) }
 
       context 'when the dossier is a brouillon' do

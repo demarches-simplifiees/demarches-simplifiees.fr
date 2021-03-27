@@ -1,31 +1,56 @@
+@import "colors";
+@import "constants";
 
 #attestation-template-edit {
-  .notice {
-    margin-bottom: 30px;
+  .text-active {
+    color: $green;
   }
 
-  .image-upload {
-    display: flex;
-    align-items: center;
+  .text-inactive {
+    color: $grey;
+  }
+}
 
-    input {
-      margin: 10px 0;
+#tags-table {
+  margin-top: -20px;
+  margin-bottom: 40px;
+
+  .add-tag-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .head {
+    padding: 10px 0px;
+    font-weight: bold;
+    display: flex;
+  }
+
+  .items {
+    max-height: 210px;
+    overflow-y: auto;
+    border-bottom: 1px solid $border-grey;
+  }
+
+  .item {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: solid 1px $border-grey;
+
+    .tag {
+      font-weight: bold;
+    }
+
+    &:last-child {
+      border-bottom: none;
     }
   }
 
-  .thumbnail {
-    width: 90px;
-    margin-right: 15px;
+  .tag {
+    width: 35%;
   }
 
-  .balises {
-    max-height: 180px;
-    overflow-y: scroll;
-    margin-bottom: 20px;
-  }
-
-  .table {
-    border: 1px solid #DDDDDD;
-    margin-bottom: 0px;
+  .description {
+    width: 65%;
   }
 }

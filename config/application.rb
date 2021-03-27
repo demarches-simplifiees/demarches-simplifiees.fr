@@ -1,25 +1,27 @@
-require File.expand_path('boot', __dir__)
+require_relative "boot"
 
-require 'rails/all'
+require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 Dotenv::Railtie.load
-require_relative 'application_name'
 
 module TPS
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
 
-    # The default autoloader since Rails 6.0 defaults is zeitwerk.
-    # However, to split the work, we will move to zeitwerk only in a future PR.
-    config.autoloader = :classic
+    Rails.autoloaders.main.ignore(Rails.root.join('lib/cops'))
+    Rails.autoloaders.main.ignore(Rails.root.join('lib/linters'))
+    Rails.autoloaders.main.ignore(Rails.root.join('lib/tasks/task_helper.rb'))
+    config.paths.add Rails.root.join('spec/mailers/previews').to_s, eager_load: true
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -35,8 +37,6 @@ module TPS
     config.assets.paths << Rails.root.join('app', 'assets', 'javascript')
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.precompile += ['.woff']
-
-    config.active_job.queue_adapter = :delayed_job
 
     # The default list used to be accessible through `ActionView::Base.sanitized_allowed_tags`,
     # but a regression in Rails 6.0 makes it unavailable.
@@ -58,6 +58,13 @@ module TPS
     # See https://github.com/rails/rails/issues/21948
     config.action_dispatch.default_headers['Cache-Control'] = 'no-store, no-cache'
 
+    # ActionDispatch's IP spoofing detection is quite limited, and often rejects
+    # legitimate requests from misconfigured proxies (such as mobile telcos).
+    #
+    # As we have our own proxy stack before reaching the Rails app, we can
+    # disable the check performed by Rails.
+    config.action_dispatch.ip_spoofing_check = false
+
     config.to_prepare do
       # Make main application helpers available in administrate
       Administrate::ApplicationController.helper(TPS::Application.helpers)
@@ -66,7 +73,9 @@ module TPS
     config.middleware.use Rack::Attack
     config.middleware.use Flipper::Middleware::Memoizer, preload_all: true
 
-    config.ds_weekly_overview = ENV['APP_NAME'] == 'tps'
+    config.ds_env = ENV.fetch('DS_ENV', Rails.env)
+
+    config.ds_weekly_overview = Rails.env.production? && config.ds_env != 'staging'
 
     config.ds_autosave = {
       debounce_delay: 3000,

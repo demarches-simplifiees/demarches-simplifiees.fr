@@ -12,15 +12,12 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
-    let(:avis) { create :avis, dossier: dossier, instructeur: instructeur }
     let(:champ1) { create(:champ_checkbox, dossier: dossier, value: "on") }
     let(:champ2) { create(:champ_header_section, dossier: dossier, value: "Section") }
     let(:champ3) { create(:champ_explication, dossier: dossier, value: "mazette") }
     let(:champ4) { create(:champ_dossier_link, dossier: dossier, value: dossier.id) }
     let(:champ5) { create(:champ_textarea, dossier: dossier, value: "Some long text in a textarea.") }
     let(:champs) { [champ1, champ2, champ3, champ4, champ5] }
-
-    before { dossier.avis << avis }
 
     it "renders titles and values of champs" do
       expect(subject).to include(champ1.libelle)
@@ -29,7 +26,6 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
       expect(subject).to have_css(".header-section")
       expect(subject).to include(champ2.libelle)
 
-      expect(subject).to have_link("Dossier nº #{dossier.id}")
       expect(subject).to include(dossier.text_summary)
 
       expect(subject).to include(champ5.libelle)
@@ -63,9 +59,20 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:champs) { [] }
 
-    it "renders the routing criteria name and its value" do
-      expect(subject).to include(procedure.routing_criteria_name)
-      expect(subject).to include(dossier.groupe_instructeur.label)
+    it "does not render the routing criteria name and its value" do
+      expect(subject).not_to include(procedure.routing_criteria_name)
+      expect(subject).not_to include(dossier.procedure.defaut_groupe_instructeur.label)
+    end
+
+    context "with selected groupe instructeur" do
+      before do
+        dossier.groupe_instructeur = dossier.procedure.defaut_groupe_instructeur
+      end
+
+      it "renders the routing criteria name and its value" do
+        expect(subject).to include(procedure.routing_criteria_name)
+        expect(subject).to include(dossier.groupe_instructeur.label)
+      end
     end
 
     context "with seen_at" do

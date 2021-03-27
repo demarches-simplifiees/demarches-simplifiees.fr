@@ -19,7 +19,7 @@ FactoryBot.define do
 
       # Assign the procedure to the dossier through the groupe_instructeur
       if dossier.groupe_instructeur.nil?
-        dossier.groupe_instructeur = procedure.defaut_groupe_instructeur
+        dossier.groupe_instructeur = procedure.routee? ? nil : procedure.defaut_groupe_instructeur
       end
 
       dossier.build_default_individual
@@ -111,9 +111,13 @@ FactoryBot.define do
       end
     end
 
+    trait :brouillon do
+    end
+
     trait :en_construction do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:en_construction)
+        dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
         dossier.save!
       end
@@ -122,6 +126,7 @@ FactoryBot.define do
     trait :en_instruction do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:en_instruction)
+        dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
         dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
         dossier.save!
@@ -136,6 +141,7 @@ FactoryBot.define do
 
       after(:create) do |dossier, evaluator|
         dossier.state = Dossier.states.fetch(:accepte)
+        dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         processed_at = evaluator.processed_at
         if processed_at.present?
           dossier.en_construction_at ||= processed_at - 2.minutes
@@ -153,6 +159,7 @@ FactoryBot.define do
     trait :refuse do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:refuse)
+        dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
         dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
         dossier.traitements.build(state: Dossier.states.fetch(:refuse), processed_at: dossier.en_instruction_at + 1.minute)
@@ -163,6 +170,7 @@ FactoryBot.define do
     trait :sans_suite do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:sans_suite)
+        dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
         dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
         dossier.traitements.build(state: Dossier.states.fetch(:sans_suite), processed_at: dossier.en_instruction_at + 1.minute)
@@ -193,6 +201,15 @@ FactoryBot.define do
       end
     end
 
+    trait :with_pdf_export do
+      after(:create) do |dossier, _evaluator|
+        dossier.pdf_export_for_instructeur.attach(
+          io: StringIO.new('Hello World'),
+          filename: 'export.pdf'
+        )
+      end
+    end
+
     trait :with_justificatif do
       after(:create) do |dossier, _evaluator|
         dossier.justificatif_motivation.attach(
@@ -213,8 +230,8 @@ FactoryBot.define do
 
     trait :with_all_annotations do
       after(:create) do |dossier, _evaluator|
-        dossier.champs = dossier.types_de_champ.map do |type_de_champ|
-          build(:"champ_#{type_de_champ.type_champ}", dossier: dossier, type_de_champ: type_de_champ)
+        dossier.champs_private = dossier.types_de_champ_private.map do |type_de_champ|
+          build(:"champ_#{type_de_champ.type_champ}", private: true, dossier: dossier, type_de_champ: type_de_champ)
         end
         dossier.save!
       end

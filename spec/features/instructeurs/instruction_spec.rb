@@ -5,7 +5,7 @@ feature 'Instructing a dossier:' do
   let!(:instructeur) { create(:instructeur, password: password) }
 
   let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-  let!(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+  let!(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
   context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
       visit commencer_path(path: procedure.path)
@@ -128,10 +128,8 @@ feature 'Instructing a dossier:' do
 
     click_on 'Personnes impliquées'
 
-    first('.select2-container', minimum: 1).click
-    find('li.select2-results__option[role="option"]', text: instructeur_2.email).click
-    first('.select2-container', minimum: 1).click
-    find('li.select2-results__option[role="option"]', text: instructeur_3.email).click
+    select_multi('email instructeur', instructeur_2.email)
+    select_multi('email instructeur', instructeur_3.email)
 
     click_on 'Envoyer'
 
@@ -146,6 +144,7 @@ feature 'Instructing a dossier:' do
     let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
 
     before do
+      dossier.passer_en_instruction!(instructeur)
       champ.piece_justificative_file.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
 
       log_in(instructeur.email, password)
@@ -154,7 +153,7 @@ feature 'Instructing a dossier:' do
 
     scenario 'A instructeur can download an archive containing a single attachment' do
       find(:css, '.attached').click
-      click_on 'Télécharger toutes les pièces jointes'
+      click_on 'Télécharger le dossier et toutes ses pièces jointes'
       # For some reason, clicking the download link does not trigger the download in the headless browser ;
       # So we need to go to the download link directly
       visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
@@ -163,9 +162,11 @@ feature 'Instructing a dossier:' do
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
-      expect(files.size).to be 1
+      expect(files.size).to be 3
       expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[0].uncompressed_size).to be File.size(path)
+      expect(files[1].filename.include?('horodatage/operation')).to be_truthy
+      expect(files[2].filename.include?('dossier/export')).to be_truthy
     end
 
     scenario 'A instructeur can download an archive containing several identical attachments' do
@@ -176,14 +177,17 @@ feature 'Instructing a dossier:' do
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
-      expect(files.size).to be 2
+      expect(files.size).to be 4
       expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[0].filename).not_to eq files[1].filename
       expect(files[0].uncompressed_size).to be File.size(path)
       expect(files[1].uncompressed_size).to be File.size(path)
+      expect(files[2].filename.include?('horodatage/operation')).to be_truthy
+      expect(files[3].filename.include?('dossier/export')).to be_truthy
     end
 
+    before { DownloadHelpers.clear_downloads }
     after { DownloadHelpers.clear_downloads }
   end
 

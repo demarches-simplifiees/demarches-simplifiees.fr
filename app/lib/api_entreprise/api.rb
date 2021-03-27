@@ -1,4 +1,4 @@
-class ApiEntreprise::API
+class APIEntreprise::API
   ENTREPRISE_RESOURCE_NAME = "entreprises"
   ETABLISSEMENT_RESOURCE_NAME = "etablissements"
   EXERCICES_RESOURCE_NAME = "exercices"
@@ -10,22 +10,8 @@ class ApiEntreprise::API
   BILANS_BDF_RESOURCE_NAME = "bilans_entreprises_bdf"
   PRIVILEGES_RESOURCE_NAME = "privileges"
 
-  TIMEOUT = 15
-
-  class ResourceNotFound < StandardError
-  end
-
-  class RequestFailed < StandardError
-  end
-
-  class BadFormatRequest < StandardError
-  end
-
-  class BadGateway < StandardError
-  end
-
-  class ServiceUnavailable < StandardError
-  end
+  TIMEOUT = 20
+  DEFAULT_API_ENTREPRISE_DELAY = 0.0
 
   def self.entreprise(siren, procedure_id)
     call_with_siret(ENTREPRISE_RESOURCE_NAME, siren, procedure_id)
@@ -74,45 +60,55 @@ class ApiEntreprise::API
   private
 
   def self.call_with_token(resource_name, token)
-    url = "#{API_ENTREPRISE_URL}/privileges?token=#{token}"
+    url = "#{API_ENTREPRISE_URL}/#{resource_name}"
+
+    # this is a poor man throttling
+    # the idea is to queue api entreprise job on 1 worker
+    # and add a delay between each call
+    # example: API_ENTREPRISE_DELAY=1 => 60 rpm max
+    if api_entreprise_delay != 0.0
+      sleep api_entreprise_delay
+    end
+
     response = Typhoeus.get(url,
+      headers: { Authorization: "Bearer #{token}" },
       timeout: TIMEOUT)
 
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     else
-      raise RequestFailed, "HTTP Error Code: #{response.code} for #{url}\nheaders: #{response.headers}\nbody: #{response.body}"
+      raise RequestFailed.new(response)
     end
   end
 
   def self.call_with_siret(resource_name, siret_or_siren, procedure_id, user_id = nil)
-    return if ApiEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
+    return if APIEntrepriseToken.new(token_for_procedure(procedure_id)).expired?
     url = url(resource_name, siret_or_siren)
     params = params(siret_or_siren, procedure_id, user_id)
 
+    if api_entreprise_delay != 0.0
+      sleep api_entreprise_delay
+    end
+
     response = Typhoeus.get(url,
+      headers: { Authorization: "Bearer #{token_for_procedure(procedure_id)}" },
       params: params,
       timeout: TIMEOUT)
 
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     elsif response.code&.between?(401, 499)
-      raise ResourceNotFound, "url: #{url}"
+      raise Error::ResourceNotFound.new(response)
     elsif response.code == 400
-      raise BadFormatRequest, "url: #{url}"
+      raise Error::BadFormatRequest.new(response)
     elsif response.code == 502
-      raise	BadGateway, "url: #{url}"
+      raise	Error::BadGateway.new(response)
     elsif response.code == 503
-      raise ServiceUnavailable, "url: #{url}"
+      raise Error::ServiceUnavailable.new(response)
+    elsif response.timed_out?
+      raise Error::TimedOut.new(response)
     else
-      raise RequestFailed,
-        <<~TEXT
-          HTTP Error Code: #{response.code} for #{url}
-          headers: #{response.headers}
-          body: #{response.body}
-          curl message: #{response.return_message}
-          timeout: #{response.timed_out?}
-        TEXT
+      raise Error::RequestFailed.new(response)
     end
   end
 
@@ -132,8 +128,7 @@ class ApiEntreprise::API
       context: "demarches-simplifiees.fr",
       recipient: siret_or_siren,
       object: "procedure_id: #{procedure_id}",
-      non_diffusables: true,
-      token: token_for_procedure(procedure_id)
+      non_diffusables: true
     }
     # rubocop:enable DS/ApplicationName
     params[:user_id] = user_id if user_id.present?
@@ -143,5 +138,9 @@ class ApiEntreprise::API
   def self.token_for_procedure(procedure_id)
     procedure = Procedure.find(procedure_id)
     procedure.api_entreprise_token
+  end
+
+  def self.api_entreprise_delay
+    ENV.fetch("API_ENTREPRISE_DELAY", DEFAULT_API_ENTREPRISE_DELAY).to_f
   end
 end

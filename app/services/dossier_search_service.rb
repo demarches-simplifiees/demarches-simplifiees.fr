@@ -21,7 +21,7 @@ class DossierSearchService
   end
 
   def self.dossiers_by_id(id, instructeur)
-    (instructeur.dossiers.where(id: id) + instructeur.dossiers_from_avis.where(id: id)).uniq
+    instructeur.dossiers.where(id: id).uniq
   end
 
   def self.id_compatible?(number)
@@ -37,7 +37,7 @@ class DossierSearchService
 
     dossiers
       .where("#{ts_vector} @@ #{ts_query}")
-      .order("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC")
+      .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
   end
 
   def self.dossier_by_exact_id_for_user(search_terms, user)
@@ -57,12 +57,12 @@ class DossierSearchService
       .dossiers
       .state_not_brouillon
       .where("#{ts_vector} @@ #{ts_query}")
-      .order("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC")
+      .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
   end
 
   def self.to_tsquery(search_terms)
     (search_terms || "")
-      .gsub(/['?\\:&|!<>\(\)]/, "") # drop disallowed characters
+      .gsub(/['?\\:&|!<>()]/, "") # drop disallowed characters
       .strip
       .split(/\s+/)           # split words
       .map { |x| "#{x}:*" }   # enable prefix matching

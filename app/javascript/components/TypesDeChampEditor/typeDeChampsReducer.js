@@ -1,4 +1,3 @@
-import scrollToComponent from 'react-scroll-to-component';
 import { debounce } from '@utils';
 import {
   createTypeDeChampOperation,
@@ -53,8 +52,10 @@ function addTypeDeChamp(state, typeDeChamps, insertAfter, done) {
       state.flash.success();
       done();
       if (insertAfter) {
-        scrollToComponent(insertAfter.target.nextElementSibling, {
-          duration: 300
+        insertAfter.target.nextElementSibling.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest'
         });
       }
     })
@@ -113,7 +114,13 @@ function updateTypeDeChamp(
     }
   }
 
-  typeDeChamp[field] = value;
+  if (field.startsWith('options.')) {
+    const [, optionsField] = field.split('.');
+    typeDeChamp.editable_options = typeDeChamp.editable_options || {};
+    typeDeChamp.editable_options[optionsField] = value;
+  } else {
+    typeDeChamp[field] = value;
+  }
 
   getUpdateHandler(typeDeChamp, state)(done);
 

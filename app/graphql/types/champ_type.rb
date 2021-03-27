@@ -9,10 +9,22 @@ module Types
     definition_methods do
       def resolve_type(object, context)
         case object
+        when ::Champs::AddressChamp
+          if context.has_fragment?(:AddressChamp)
+            Types::Champs::AddressChampType
+          else
+            Types::Champs::TextChampType
+          end
         when ::Champs::EngagementChamp, ::Champs::YesNoChamp, ::Champs::CheckboxChamp
           Types::Champs::CheckboxChampType
-        when ::Champs::DateChamp, ::Champs::DatetimeChamp
+        when ::Champs::DateChamp
           Types::Champs::DateChampType
+        when ::Champs::DatetimeChamp
+          if context.has_fragment?(:DatetimeChamp)
+            Types::Champs::DatetimeChampType
+          else
+            Types::Champs::DateChampType
+          end
         when ::Champs::DossierLinkChamp
           Types::Champs::DossierLinkChampType
         when ::Champs::PieceJustificativeChamp
@@ -33,6 +45,8 @@ module Types
           Types::Champs::LinkedDropDownListChampType
         when ::Champs::CiviliteChamp
           Types::Champs::CiviliteChampType
+        when ::Champs::TitreIdentiteChamp
+          Types::Champs::TitreIdentiteChampType
         else
           Types::Champs::TextChampType
         end

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
   get '/saml/auth' => 'saml_idp#new'
   post '/saml/auth' => 'saml_idp#create'
   get '/saml/metadata' => 'saml_idp#metadata'
@@ -83,6 +85,10 @@ Rails.application.routes.draw do
     sessions: 'super_admins/sessions',
     passwords: 'super_admins/passwords'
   }
+
+  devise_scope :super_admin do
+    get '/super_admins/password/test_strength' => 'super_admins/passwords#test_strength'
+  end
 
   get 'super_admins/edit_otp', to: 'super_admins#edit_otp', as: 'edit_super_admin_otp'
   put 'super_admins/enable_otp', to: 'super_admins#enable_otp', as: 'enable_super_admin_otp'
@@ -282,12 +288,40 @@ Rails.application.routes.draw do
   end
 
   #
+  # Expert
+  #
+  scope module: 'experts', as: 'expert' do
+    get 'avis', to: 'avis#index', as: 'all_avis'
+
+    # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
+    # TODO : they will be removed in September, 2020
+    get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
+    get 'avis/:id/sign_up/email/:email', to: redirect("/procedures/old/avis/%{id}/sign_up/email/%{email}"), constraints: { email: /.*/ }
+
+    resources :procedures, only: [], param: :procedure_id do
+      member do
+        resources :avis, only: [:show, :update] do
+          get '', action: 'procedure', on: :collection, as: :procedure
+          member do
+            get 'instruction'
+            get 'messagerie'
+            post 'commentaire' => 'avis#create_commentaire'
+            post 'avis' => 'avis#create_avis'
+            get 'bilans_bdf'
+
+            get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
+            post 'sign_up/email/:email' => 'avis#update_expert', constraints: { email: /.*/ }
+          end
+        end
+      end
+    end
+  end
+
+  #
   # Instructeur
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
-    get 'avis', to: 'avis#index', as: 'all_avis'
-
     # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
     # TODO : they will be removed in September, 2020
     get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
@@ -305,16 +339,8 @@ Rails.application.routes.draw do
         resources :avis, only: [:show, :update] do
           get '', action: 'procedure', on: :collection, as: :procedure
           member do
-            get 'instruction'
-            get 'messagerie'
-            post 'commentaire' => 'avis#create_commentaire'
-            post 'avis' => 'avis#create_avis'
             patch 'revoquer'
             get 'revive'
-            get 'bilans_bdf'
-
-            get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
-            post 'sign_up/email/:email' => 'avis#create_instructeur', constraints: { email: /.*/ }
           end
         end
 
@@ -342,6 +368,7 @@ Rails.application.routes.draw do
             patch 'unfollow'
             patch 'archive'
             patch 'unarchive'
+            patch 'supprimer-dossier' => 'dossiers#delete_dossier'
             patch 'annotations' => 'dossiers#update_annotations'
             post 'commentaire' => 'dossiers#create_commentaire'
             post 'passer-en-instruction' => 'dossiers#passer_en_instruction'
@@ -380,6 +407,8 @@ Rails.application.routes.draw do
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert
       post 'transfer' => 'procedures#transfer', as: :transfer
+      get 'invited_expert_list'
+      put 'update_allow_decision_access' => 'procedures#update_allow_decision_access', as: :update_allow_decision_access
 
       resources :mail_templates, only: [:edit, :update]
 

@@ -18,7 +18,7 @@ class AdministrateurUsageStatisticsService
   private
 
   def api
-    @api ||= Sendinblue::Api.new_properly_configured!
+    @api ||= Sendinblue::API.new_properly_configured!
   end
 
   def administrateur_stats(administrateur)
@@ -125,10 +125,10 @@ class AdministrateurUsageStatisticsService
     result = {}
 
     Dossier
-      .joins(groupe_instructeur: { procedure: [:administrateurs] })
+      .joins(revision: { procedure: [:administrateurs] })
       .group(
         'administrateurs.id',
-        'groupe_instructeurs.procedure_id',
+        'procedure_revisions.procedure_id',
         <<~EOSQL
           CASE
             WHEN state IN('accepte', 'refuse', 'sans_suite') THEN 'termine'

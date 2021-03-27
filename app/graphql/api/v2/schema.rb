@@ -1,10 +1,12 @@
-class Api::V2::Schema < GraphQL::Schema
+class API::V2::Schema < GraphQL::Schema
   default_max_page_size 100
   max_complexity 300
   max_depth 15
 
   query Types::QueryType
   mutation Types::MutationType
+
+  context_class API::V2::Context
 
   def self.id_from_object(object, type_definition, ctx)
     object.to_typed_id
@@ -24,7 +26,7 @@ class Api::V2::Schema < GraphQL::Schema
       Types::DossierType
     when Commentaire
       Types::MessageType
-    when Instructeur, User
+    when Instructeur, User, Expert
       Types::ProfileType
     when Individual
       Types::PersonnePhysiqueType
@@ -37,10 +39,12 @@ class Api::V2::Schema < GraphQL::Schema
     end
   end
 
-  orphan_types Types::Champs::CarteChampType,
+  orphan_types Types::Champs::AddressChampType,
+    Types::Champs::CarteChampType,
     Types::Champs::CheckboxChampType,
     Types::Champs::CiviliteChampType,
     Types::Champs::DateChampType,
+    Types::Champs::DatetimeChampType,
     Types::Champs::DecimalNumberChampType,
     Types::Champs::DossierLinkChampType,
     Types::Champs::IntegerNumberChampType,
@@ -50,8 +54,8 @@ class Api::V2::Schema < GraphQL::Schema
     Types::Champs::RepetitionChampType,
     Types::Champs::SiretChampType,
     Types::Champs::TextChampType,
+    Types::Champs::TitreIdentiteChampType,
     Types::GeoAreas::ParcelleCadastraleType,
-    Types::GeoAreas::QuartierPrioritaireType,
     Types::GeoAreas::SelectionUtilisateurType,
     Types::PersonneMoraleType,
     Types::PersonnePhysiqueType

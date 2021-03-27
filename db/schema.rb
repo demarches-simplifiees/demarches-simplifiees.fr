@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_17_122923) do
+ActiveRecord::Schema.define(version: 2021_03_18_090001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,7 +44,14 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.string "service_name"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
@@ -121,8 +128,12 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.integer "claimant_id", null: false
     t.boolean "confidentiel", default: false, null: false
     t.datetime "revoked_at"
+    t.bigint "experts_procedure_id"
+    t.string "claimant_type"
+    t.boolean "tmp_expert_migrated", default: false
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
+    t.index ["experts_procedure_id"], name: "index_avis_on_experts_procedure_id"
     t.index ["instructeur_id"], name: "index_avis_on_instructeur_id"
   end
 
@@ -143,6 +154,9 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.integer "etablissement_id"
     t.bigint "parent_id"
     t.integer "row"
+    t.jsonb "data"
+    t.string "external_id"
+    t.string "fetch_external_data_exceptions", array: true
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
@@ -246,6 +260,7 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.datetime "last_commentaire_updated_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
+    t.string "api_entreprise_job_exceptions", array: true
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
@@ -317,6 +332,22 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.datetime "date_fin_exercice"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "experts", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "experts_procedures", force: :cascade do |t|
+    t.bigint "expert_id", null: false
+    t.bigint "procedure_id", null: false
+    t.boolean "allow_decision_access", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["expert_id", "procedure_id"], name: "index_experts_procedures_on_expert_id_and_procedure_id", unique: true
+    t.index ["expert_id"], name: "index_experts_procedures_on_expert_id"
+    t.index ["procedure_id"], name: "index_experts_procedures_on_procedure_id"
   end
 
   create_table "exports", force: :cascade do |t|
@@ -674,9 +705,11 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.datetime "locked_at"
     t.bigint "instructeur_id"
     t.bigint "administrateur_id"
+    t.bigint "expert_id"
     t.index ["administrateur_id"], name: "index_users_on_administrateur_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["expert_id"], name: "index_users_on_expert_id"
     t.index ["instructeur_id"], name: "index_users_on_instructeur_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
@@ -701,10 +734,11 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
   end
 
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assign_tos", "groupe_instructeurs"
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
-  add_foreign_key "avis", "instructeurs", column: "claimant_id"
+  add_foreign_key "avis", "experts_procedures"
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
@@ -713,6 +747,8 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
+  add_foreign_key "experts_procedures", "experts"
+  add_foreign_key "experts_procedures", "procedures"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "geo_areas", "champs"
   add_foreign_key "groupe_instructeurs", "procedures"
@@ -732,6 +768,7 @@ ActiveRecord::Schema.define(version: 2020_11_17_122923) do
   add_foreign_key "types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "users", "administrateurs"
+  add_foreign_key "users", "experts"
   add_foreign_key "users", "instructeurs"
   add_foreign_key "without_continuation_mails", "procedures"
 end

@@ -35,7 +35,7 @@ class AssignTo < ApplicationRecord
       # a bug somewhere else that we need to fix.
 
       errors = procedure_presentation.errors
-      Raven.capture_message(
+      Sentry.capture_message(
         "Destroying invalid ProcedurePresentation",
         extra: { procedure_presentation: procedure_presentation.as_json }
       )

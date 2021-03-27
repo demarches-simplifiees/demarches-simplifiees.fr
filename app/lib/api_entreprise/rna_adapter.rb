@@ -1,8 +1,8 @@
-class ApiEntreprise::RNAAdapter < ApiEntreprise::Adapter
+class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
-    ApiEntreprise::API.rna(@siret, @procedure_id)
+    APIEntreprise::API.rna(@siret, @procedure_id)
   end
 
   def process_params

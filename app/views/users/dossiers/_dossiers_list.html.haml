@@ -1,0 +1,51 @@
+- if dossiers.present?
+  %table.table.dossiers-table.hoverable
+    %thead
+      %tr
+        %th.number-col Nº dossier
+        %th Démarche
+        - if dossiers.present?
+          %th Demandeur
+        %th.status-col Statut
+        %th.updated-at-col Mis à jour
+        %th.sr-only Actions
+    %tbody
+      - dossiers.each do |dossier|
+        %tr{ data: { 'dossier-id': dossier.id } }
+          %td.number-col
+            = link_to(url_for_dossier(dossier), class: 'cell-link', tabindex: -1) do
+              %span.icon.folder
+              = dossier.id
+          %td
+            = link_to(url_for_dossier(dossier), class: 'cell-link') do
+              = procedure_libelle(dossier.procedure)
+          - if dossiers.present?
+            %td.cell-link
+              = demandeur_dossier(dossier)
+          %td.status-col
+            = status_badge(dossier.state)
+          %td.updated-at-col.cell-link
+            = try_format_date(dossier.updated_at)
+          %td.action-col
+            = render partial: 'dossier_actions', locals: { dossier: dossier }
+
+  = paginate(dossiers)
+
+  - if current_user.feedbacks.empty? || current_user.feedbacks.last.created_at < 1.month.ago
+    #user-satisfaction
+      %h3 Que pensez-vous de la facilité d'utilisation de ce service ?
+      .icons
+        = link_to feedback_path(rating: Feedback.ratings.fetch(:unhappy)), data: { remote: true, method: :post } do
+          %span.icon.frown
+        = link_to feedback_path(rating: Feedback.ratings.fetch(:neutral)), data: { remote: true, method: :post } do
+          %span.icon.meh
+        = link_to feedback_path(rating: Feedback.ratings.fetch(:happy)), data: { remote: true, method: :post } do
+          %span.icon.smile
+
+- else
+  .blank-tab
+    %h2.empty-text Aucun dossier.
+    %p.empty-text-details
+      Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
+      %br
+      Celui ci doit ressembler à #{APPLICATION_BASE_URL}/commencer/xxx.

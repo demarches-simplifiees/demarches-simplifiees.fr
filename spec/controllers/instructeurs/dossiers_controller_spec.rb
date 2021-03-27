@@ -5,8 +5,8 @@ describe Instructeurs::DossiersController, type: :controller do
   let(:administrateur) { create(:administrateur) }
   let(:administration) { create(:administration) }
   let(:instructeurs) { [instructeur] }
-  let(:procedure) { create(:procedure, :published, instructeurs: instructeurs) }
-  let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+  let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: instructeurs) }
+  let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:fake_justificatif) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
   before { sign_in(instructeur.user) }
@@ -38,7 +38,7 @@ describe Instructeurs::DossiersController, type: :controller do
       post(
         :send_to_instructeurs,
         params: {
-          recipients: [recipient],
+          recipients: [recipient.id].to_json,
           procedure_id: procedure.id,
           dossier_id: dossier.id
         }
@@ -306,7 +306,7 @@ describe Instructeurs::DossiersController, type: :controller do
       context 'when the dossier has an attestation' do
         before do
           attestation = Attestation.new
-          allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes))
+          allow(attestation).to receive(:pdf).and_return(double(read: 'pdf', size: 2.megabytes, attached?: false))
           allow(attestation).to receive(:pdf_url).and_return('http://some_document_url')
 
           allow_any_instance_of(Dossier).to receive(:build_attestation).and_return(attestation)
@@ -328,7 +328,7 @@ describe Instructeurs::DossiersController, type: :controller do
       context 'when the attestation template uses the motivation field' do
         let(:emailable) { false }
         let(:template) { create(:attestation_template) }
-        let(:procedure) { create(:procedure, :published, attestation_template: template, instructeurs: [instructeur]) }
+        let(:procedure) { create(:procedure, :published, :for_individual, attestation_template: template, instructeurs: [instructeur]) }
 
         subject do
           post :terminer, params: {
@@ -434,6 +434,8 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe "#create_avis" do
+    let(:expert) { create(:expert) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: dossier.procedure) }
     let(:invite_linked_dossiers) { false }
     let(:saved_avis) { dossier.avis.first }
     let!(:old_avis_count) { Avis.count }
@@ -442,7 +444,7 @@ describe Instructeurs::DossiersController, type: :controller do
       post :create_avis, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id,
-        avis: { emails: emails, introduction: 'intro', confidentiel: true, invite_linked_dossiers: invite_linked_dossiers }
+        avis: { emails: emails, introduction: 'intro', confidentiel: true, invite_linked_dossiers: invite_linked_dossiers, claimant: instructeur, experts_procedure: experts_procedure }
       }
     end
 
@@ -466,7 +468,7 @@ describe Instructeurs::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(saved_avis.email).to eq('email@a.com') }
+      it { expect(saved_avis.expert.email).to eq('email@a.com') }
       it { expect(saved_avis.introduction).to eq('intro') }
       it { expect(saved_avis.confidentiel).to eq(true) }
       it { expect(saved_avis.dossier).to eq(dossier) }
@@ -493,7 +495,7 @@ describe Instructeurs::DossiersController, type: :controller do
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
         it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
-        it { expect(saved_avis.email).to eq("titi@titimail.com") }
+        it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
       end
 
       context 'with linked dossiers' do
@@ -507,7 +509,7 @@ describe Instructeurs::DossiersController, type: :controller do
           it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
             expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
             expect(Avis.count).to eq(old_avis_count + 1)
-            expect(saved_avis.email).to eq("email@a.com")
+            expect(saved_avis.expert.email).to eq("email@a.com")
             expect(saved_avis.dossier).to eq(dossier)
           end
         end
@@ -526,7 +528,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
             it 'sends one avis for the main dossier' do
               expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
-              expect(saved_avis.email).to eq("email@a.com")
+              expect(saved_avis.expert.email).to eq("email@a.com")
               expect(saved_avis.dossier).to eq(dossier)
             end
 
@@ -540,7 +542,7 @@ describe Instructeurs::DossiersController, type: :controller do
             it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
               expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
               expect(Avis.count).to eq(old_avis_count + 1)
-              expect(saved_avis.email).to eq("email@a.com")
+              expect(saved_avis.expert.email).to eq("email@a.com")
               expect(saved_avis.dossier).to eq(dossier)
             end
           end
@@ -552,6 +554,9 @@ describe Instructeurs::DossiersController, type: :controller do
   describe "#show" do
     context "when the dossier is exported as PDF" do
       let(:instructeur) { create(:instructeur) }
+      let(:expert) { create(:expert) }
+      let(:procedure) { create(:procedure, :published, instructeurs: instructeurs) }
+      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
       let(:dossier) do
         create(:dossier,
           :accepte,
@@ -561,7 +566,7 @@ describe Instructeurs::DossiersController, type: :controller do
           :with_entreprise,
           :with_commentaires, procedure: procedure)
       end
-      let(:avis) { create(:avis, dossier: dossier, instructeur: instructeur) }
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure) }
 
       subject do
         avis
@@ -712,6 +717,71 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'is forbidden' do
         subject
         expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe "#delete_dossier" do
+    subject do
+      patch :delete_dossier, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+
+    before do
+      dossier.passer_en_instruction(instructeur)
+    end
+
+    context 'just before delete the dossier, the operation must be equal to 2' do
+      before do
+        dossier.accepter!(instructeur, 'le dossier est correct')
+      end
+
+      it 'has 2 operations logs before deletion' do
+        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(2)
+      end
+    end
+
+    context 'when the instructeur want to delete a dossier with a decision' do
+      before do
+        dossier.accepter!(instructeur, "le dossier est correct")
+        allow(DossierMailer).to receive(:notify_instructeur_deletion_to_user).and_return(double(deliver_later: nil))
+        subject
+      end
+
+      it 'deletes previous logs and add a suppression log' do
+        expect(DossierOperationLog.where(dossier_id: dossier.id).count).to eq(3)
+        expect(DossierOperationLog.where(dossier_id: dossier.id).last.operation).to eq('supprimer')
+      end
+
+      it 'send an email to the user' do
+        expect(DossierMailer).to have_received(:notify_instructeur_deletion_to_user).with(DeletedDossier.where(dossier_id: dossier.id).first, dossier.user.email)
+      end
+
+      it 'add a record into deleted_dossiers table' do
+        expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(1)
+        expect(DeletedDossier.where(dossier_id: dossier.id).first.revision_id).to eq(dossier.revision_id)
+        expect(DeletedDossier.where(dossier_id: dossier.id).first.user_id).to eq(dossier.user_id)
+        expect(DeletedDossier.where(dossier_id: dossier.id).first.groupe_instructeur_id).to eq(dossier.groupe_instructeur_id)
+      end
+
+      it 'discard the dossier' do
+        expect(dossier.reload.hidden_at).not_to eq(nil)
+      end
+    end
+
+    context 'when the instructeur want to delete a dossier without a decision' do
+      before do
+        subject
+      end
+
+      it 'does not delete the dossier' do
+        expect { dossier.reload }.not_to raise_error # A deleted dossier would raise an ActiveRecord::RecordNotFound
+      end
+
+      it 'does not add a record into deleted_dossiers table' do
+        expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
       end
     end
   end

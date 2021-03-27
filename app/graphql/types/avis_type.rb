@@ -11,7 +11,8 @@ module Types
       { Extensions::Attachment => { attachment: :piece_justificative_file } }
     ]
 
-    field :instructeur, Types::ProfileType, null: false, method: :claimant
-    field :expert, Types::ProfileType, null: true, method: :instructeur
+    field :instructeur, Types::ProfileType, null: false, method: :claimant, deprecation_reason: "Utilisez le champ claimant à la place."
+    field :claimant, Types::ProfileType, null: true
+    field :expert, Types::ProfileType, null: true
   end
 end

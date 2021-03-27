@@ -8,7 +8,6 @@ FactoryBot.define do
     cadre_juridique { "un cadre juridique important" }
     published_at { nil }
     duree_conservation_dossiers_dans_ds { 3 }
-    duree_conservation_dossiers_hors_ds { 6 }
     ask_birthday { false }
     lien_site_web { "https://mon-site.gouv" }
     path { SecureRandom.uuid }
@@ -102,7 +101,7 @@ FactoryBot.define do
 
     trait :routee do
       after(:create) do |procedure, _evaluator|
-        procedure.groupe_instructeurs.create(label: '2nd groupe')
+        procedure.groupe_instructeurs.create(label: 'deuxième groupe')
       end
     end
 
@@ -170,6 +169,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_titre_identite do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_titre_identite, procedure: procedure)
+      end
+    end
+
     trait :with_repetition do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure)
@@ -185,6 +190,12 @@ FactoryBot.define do
     trait :with_phone do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_phone, procedure: procedure)
+      end
+    end
+
+    trait :with_explication do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_explication, procedure: procedure)
       end
     end
 

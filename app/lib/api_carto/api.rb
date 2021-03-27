@@ -1,4 +1,4 @@
-class ApiCarto::API
+class APICarto::API
   class ResourceNotFound < StandardError
   end
 
@@ -16,7 +16,7 @@ class ApiCarto::API
       response.body
     else
       message = response.code == 0 ? response.return_message : response.code.to_s
-      Rails.logger.error "[ApiCarto] Error on #{url}: #{message}"
+      Rails.logger.error "[APICarto] Error on #{url}: #{message}"
       raise ResourceNotFound
     end
   end

@@ -1,0 +1,38 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Liste des experts'] }
+
+.container
+  %h1.page-title.mt-2 Experts invités sur #{@procedure.libelle}
+  - if @experts_procedure.present?
+    %table.table.mt-2
+      %thead
+        %tr
+          %th Liste des experts
+          - if @procedure.feature_enabled?(:make_experts_notifiable)
+            %th Notifier des décisions sur les dossiers
+      %tbody
+        - @experts_procedure.each do |expert_procedure|
+          %tr
+            %td
+              %span.icon.person
+              = expert_procedure.expert.email
+            - if @procedure.feature_enabled?(:make_experts_notifiable)
+              %td
+                = form_for expert_procedure,
+                  url: admin_procedure_update_allow_decision_access_path(expert_procedure: expert_procedure),
+                  remote: true,
+                  method: :put,
+                  authenticity_token: true,
+                  html: { class: 'form procedure-form__column--form no-background' } do |f|
+                  %label.toggle-switch
+                    = f.check_box :allow_decision_access, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
+                    %span.toggle-switch-control.round
+                    %span.toggle-switch-label.on
+                    %span.toggle-switch-label.off
+  - else
+    .blank-tab
+      %h2.empty-text Aucun expert invité pour le moment.
+      %p.empty-text-details Les instructeurs de cette démarche n'ont pas encore fait appel aux experts.
+

@@ -35,11 +35,19 @@ module Types
     field :demandeur, Types::DemandeurType, null: false
 
     field :instructeurs, [Types::ProfileType], null: false
-    field :messages, [Types::MessageType], null: false
-    field :avis, [Types::AvisType], null: false
 
-    field :champs, [Types::ChampType], null: false
-    field :annotations, [Types::ChampType], null: false
+    field :messages, [Types::MessageType], null: false do
+      argument :id, ID, required: false
+    end
+    field :avis, [Types::AvisType], null: false do
+      argument :id, ID, required: false
+    end
+    field :champs, [Types::ChampType], null: false do
+      argument :id, ID, required: false
+    end
+    field :annotations, [Types::ChampType], null: false do
+      argument :id, ID, required: false
+    end
 
     def state
       object.state
@@ -69,20 +77,44 @@ module Types
       Loaders::Association.for(object.class, :followers_instructeurs).load(object)
     end
 
-    def messages
-      Loaders::Association.for(object.class, commentaires: [:instructeur, :user]).load(object)
+    def messages(id: nil)
+      if id.present?
+        Loaders::Record
+          .for(Commentaire, where: { dossier: object }, includes: [:instructeur, :user], array: true)
+          .load(ApplicationRecord.id_from_typed_id(id))
+      else
+        Loaders::Association.for(object.class, commentaires: [:instructeur, :user]).load(object)
+      end
     end
 
-    def avis
-      Loaders::Association.for(object.class, avis: [:instructeur, :claimant]).load(object)
+    def avis(id: nil)
+      if id.present?
+        Loaders::Record
+          .for(Avis, where: { dossier: object }, includes: [:expert, :claimant], array: true)
+          .load(ApplicationRecord.id_from_typed_id(id))
+      else
+        Loaders::Association.for(object.class, avis: [:expert, :claimant]).load(object)
+      end
     end
 
-    def champs
-      Loaders::Association.for(object.class, champs: [:type_de_champ]).load(object)
+    def champs(id: nil)
+      if id.present?
+        Loaders::Champ
+          .for(object, private: false)
+          .load(ApplicationRecord.id_from_typed_id(id))
+      else
+        Loaders::Association.for(object.class, champs: :type_de_champ).load(object)
+      end
     end
 
-    def annotations
-      Loaders::Association.for(object.class, :champs_private).load(object)
+    def annotations(id: nil)
+      if id.present?
+        Loaders::Champ
+          .for(object, private: true)
+          .load(ApplicationRecord.id_from_typed_id(id))
+      else
+        Loaders::Association.for(object.class, champs_private: :type_de_champ).load(object)
+      end
     end
 
     def pdf
@@ -110,7 +142,7 @@ module Types
     end
 
     def self.authorized?(object, context)
-      authorized_demarche?(object.procedure, context)
+      context.authorized_demarche?(object.procedure)
     end
   end
 end

@@ -2,17 +2,20 @@
 #
 # Table name: champs
 #
-#  id               :integer          not null, primary key
-#  private          :boolean          default(FALSE), not null
-#  row              :integer
-#  type             :string
-#  value            :string
-#  created_at       :datetime
-#  updated_at       :datetime
-#  dossier_id       :integer
-#  etablissement_id :integer
-#  parent_id        :bigint
-#  type_de_champ_id :integer
+#  id                             :integer          not null, primary key
+#  data                           :jsonb
+#  fetch_external_data_exceptions :string           is an Array
+#  private                        :boolean          default(FALSE), not null
+#  row                            :integer
+#  type                           :string
+#  value                          :string
+#  created_at                     :datetime
+#  updated_at                     :datetime
+#  dossier_id                     :integer
+#  etablissement_id               :integer
+#  external_id                    :string
+#  parent_id                      :bigint
+#  type_de_champ_id               :integer
 #
 class Champs::CarteChamp < Champ
   # Default map location. Center of the World, ahm, France...
@@ -27,45 +30,41 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def quartiers_prioritaires
-    geo_areas.filter do |area|
-      area.source == GeoArea.sources.fetch(:quartier_prioritaire)
-    end
-  end
-
-  def parcelles_agricoles
-    geo_areas.filter do |area|
-      area.source == GeoArea.sources.fetch(:parcelle_agricole)
-    end
-  end
-
   def selections_utilisateur
     geo_areas.filter do |area|
       area.source == GeoArea.sources.fetch(:selection_utilisateur)
     end
   end
 
+  def layer_enabled?(layer)
+    type_de_champ.options && type_de_champ.options[layer] && type_de_champ.options[layer] != '0'
+  end
+
   def cadastres?
-    type_de_champ&.cadastres && type_de_champ.cadastres != '0'
+    layer_enabled?(:cadastres)
   end
 
-  def quartiers_prioritaires?
-    type_de_champ&.quartiers_prioritaires && type_de_champ.quartiers_prioritaires != '0'
-  end
-
-  def parcelles_agricoles?
-    type_de_champ&.parcelles_agricoles && type_de_champ.parcelles_agricoles != '0'
-  end
-
-  def mnhn?
-    type_de_champ&.mnhn && type_de_champ.mnhn != '0'
+  def optional_layers
+    [
+      :unesco,
+      :arretes_protection,
+      :conservatoire_littoral,
+      :reserves_chasse_faune_sauvage,
+      :reserves_biologiques,
+      :reserves_naturelles,
+      :natura_2000,
+      :zones_humides,
+      :znieff,
+      :cadastres
+    ].map do |layer|
+      layer_enabled?(layer) ? layer : nil
+    end.compact
   end
 
   def render_options
     {
       ign: Flipper.enabled?(:carte_ign, procedure),
-      mnhn: mnhn?,
-      cadastres: cadastres?
+      layers: optional_layers
     }
   end
 

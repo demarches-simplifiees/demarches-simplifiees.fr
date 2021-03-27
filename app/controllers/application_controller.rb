@@ -9,8 +9,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception, if: -> { !Rails.env.test? }
   before_action :set_current_roles
-  before_action :load_navbar_left_pannel_partial_url
-  before_action :set_raven_context
+  before_action :set_sentry_user
   before_action :redirect_if_untrusted
   before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -21,7 +20,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_tracking
   before_action :set_locale
 
-  helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur,
+  helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,
     :administrateur_signed_in?, :current_administrateur, :current_account
 
   def staging_authenticate
@@ -30,18 +29,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def load_navbar_left_pannel_partial_url
-    controller = request.controller_class
-    method = params[:action]
-    service = RenderPartialService.new(controller, method)
-    @navbar_url = service.navbar
-    @left_pannel_url = service.left_panel
-  end
-
   def multiple_devise_profile_connect?
     user_signed_in? && instructeur_signed_in? ||
         instructeur_signed_in? && administrateur_signed_in? ||
-        user_signed_in? && administrateur_signed_in?
+        instructeur_signed_in? && expert_signed_in? ||
+        user_signed_in? && administrateur_signed_in? ||
+        user_signed_in? && expert_signed_in?
   end
 
   def current_instructeur
@@ -60,6 +53,14 @@ class ApplicationController < ActionController::Base
     current_administrateur.present?
   end
 
+  def current_expert
+    current_user&.expert
+  end
+
+  def expert_signed_in?
+    current_expert.present?
+  end
+
   def current_account
     {
       administrateur: current_administrateur,
@@ -76,13 +77,11 @@ class ApplicationController < ActionController::Base
     Flipper.enabled?(feature_name, current_user)
   end
 
-  def feature_enabled_for?(feature_name, item)
-    Flipper.enabled?(feature_name, item)
-  end
-
   def authenticate_logged_user!
     if instructeur_signed_in?
       authenticate_instructeur!
+    elsif expert_signed_in?
+      authenticate_expert!
     elsif administrateur_signed_in?
       authenticate_administrateur!
     else
@@ -92,6 +91,12 @@ class ApplicationController < ActionController::Base
 
   def authenticate_instructeur!
     if !instructeur_signed_in?
+      redirect_to new_user_session_path
+    end
+  end
+
+  def authenticate_expert!
+    if !expert_signed_in?
       redirect_to new_user_session_path
     end
   end
@@ -149,8 +154,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_raven_context
-    Raven.user_context(sentry_user)
+  def set_sentry_user
+    Sentry.set_user(sentry_user)
   end
 
   # private method called by rails fwk

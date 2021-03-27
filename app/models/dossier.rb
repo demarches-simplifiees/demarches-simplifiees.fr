@@ -3,6 +3,7 @@
 # Table name: dossiers
 #
 #  id                                                 :integer          not null, primary key
+#  api_entreprise_job_exceptions                      :string           is an Array
 #  archived                                           :boolean          default(FALSE)
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
@@ -62,6 +63,7 @@ class Dossier < ApplicationRecord
   has_one :france_connect_information, through: :user
 
   has_one_attached :justificatif_motivation
+  has_one_attached :pdf_export_for_instructeur
 
   has_many :champs, -> { root.public_ordered }, inverse_of: :dossier, dependent: :destroy
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: :dossier, dependent: :destroy
@@ -72,11 +74,12 @@ class Dossier < ApplicationRecord
   has_many :followers_instructeurs, through: :follows, source: :instructeur
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, inverse_of: :dossier, dependent: :destroy
+  has_many :experts, through: :avis
   has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
 
-  belongs_to :groupe_instructeur, optional: false
+  belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: false
 
@@ -152,6 +155,16 @@ class Dossier < ApplicationRecord
   scope :updated_since,       -> (since) { where('dossiers.updated_at >= ?', since) }
   scope :created_since,       -> (since) { where('dossiers.en_construction_at >= ?', since) }
 
+  scope :with_type_de_champ, -> (stable_id) {
+    joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
+      .where('types_de_champ.private = FALSE AND types_de_champ.stable_id = ?', stable_id)
+  }
+
+  scope :with_type_de_champ_private, -> (stable_id) {
+    joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')
+      .where('types_de_champ.private = TRUE AND types_de_champ.stable_id = ?', stable_id)
+  }
+
   scope :all_state,                   -> { not_archived.state_not_brouillon }
   scope :en_construction,             -> { not_archived.state_en_construction }
   scope :en_instruction,              -> { not_archived.state_en_instruction }
@@ -162,8 +175,16 @@ class Dossier < ApplicationRecord
         :user,
         :individual,
         :followers_instructeurs,
-        :avis,
         :traitements,
+        :groupe_instructeur,
+        procedure: [
+          :groupe_instructeurs,
+          :draft_types_de_champ,
+          :draft_types_de_champ_private,
+          :published_types_de_champ,
+          :published_types_de_champ_private
+        ],
+        avis: [:claimant, :expert],
         etablissement: :champ,
         champs: {
           type_de_champ: [],
@@ -182,8 +203,7 @@ class Dossier < ApplicationRecord
             type_de_champ: [],
             piece_justificative_file_attachment: :blob
           ]
-        },
-        procedure: :groupe_instructeurs
+        }
       ).order(en_construction_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
@@ -216,8 +236,8 @@ class Dossier < ApplicationRecord
       user: [])
   }
 
-  scope :with_notifiable_procedure, -> (notify_on_closed: false) do
-    states = notify_on_closed ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
+  scope :with_notifiable_procedure, -> (opts = { notify_on_closed: false }) do
+    states = opts[:notify_on_closed] ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
     joins(:procedure)
       .where(procedures: { aasm_state: states })
   end
@@ -263,21 +283,27 @@ class Dossier < ApplicationRecord
     with_discarded
       .discarded
       .state_brouillon
-      .where('hidden_at < ?', 1.month.ago)
+      .where('hidden_at < ?', 1.week.ago)
   end
   scope :discarded_en_construction_expired, -> do
     with_discarded
       .discarded
       .state_en_construction
-      .where('dossiers.hidden_at < ?', 1.month.ago)
+      .where('dossiers.hidden_at < ?', 1.week.ago)
+  end
+  scope :discarded_termine_expired, -> do
+    with_discarded
+      .discarded
+      .state_termine
+      .where('dossiers.hidden_at < ?', 1.week.ago)
   end
 
   scope :brouillon_near_procedure_closing_date, -> do
     # select users who have submitted dossier for the given 'procedures.id'
     users_who_submitted =
       state_not_brouillon
-        .joins(:groupe_instructeur)
-        .where("groupe_instructeurs.procedure_id = procedures.id")
+        .joins(:revision)
+        .where("procedure_revisions.procedure_id = procedures.id")
         .select(:user_id)
     # select dossier in brouillon where procedure closes in two days and for which the user has not submitted a Dossier
     state_brouillon
@@ -304,7 +330,7 @@ class Dossier < ApplicationRecord
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user
 
-  before_save :build_default_champs, if: Proc.new { groupe_instructeur_id_was.nil? }
+  before_save :build_default_champs, if: Proc.new { revision_id_was.nil? }
   before_save :update_search_terms
 
   after_save :send_dossier_received
@@ -313,7 +339,7 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
-  validates :groupe_instructeur, presence: true
+  validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
   def motivation
     return nil if !termine?
@@ -401,8 +427,16 @@ class Dossier < ApplicationRecord
     Dossier.en_construction_close_to_expiration.where(id: self).present?
   end
 
+  def show_groupe_instructeur_details?
+    procedure.routee? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
+  end
+
+  def show_groupe_instructeur_selector?
+    procedure.routee? && !procedure.feature_enabled?(:procedure_routage_api)
+  end
+
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)
-    if groupe_instructeur.procedure == procedure && groupe_instructeur != self.groupe_instructeur
+    if (groupe_instructeur.nil? || groupe_instructeur.procedure == procedure) && self.groupe_instructeur != groupe_instructeur
       if update(groupe_instructeur: groupe_instructeur, groupe_instructeur_updated_at: Time.zone.now)
         unfollow_stale_instructeurs
 
@@ -449,14 +483,27 @@ class Dossier < ApplicationRecord
     parts.join
   end
 
-  def avis_for(instructeur)
+  def avis_for_instructeur(instructeur)
     if instructeur.dossiers.include?(self)
       avis.order(created_at: :asc)
     else
       avis
         .where(confidentiel: false)
-        .or(avis.where(claimant: instructeur))
+        .or(avis.where(claimant_id: instructeur.id, claimant_type: 'Instructeur'))
         .or(avis.where(instructeur: instructeur))
+        .order(created_at: :asc)
+    end
+  end
+
+  def avis_for_expert(expert)
+    if expert.dossiers.include?(self)
+      avis.order(created_at: :asc)
+    else
+      instructeur = expert.user.instructeur.id if expert.user.instructeur
+      avis
+        .where(confidentiel: false)
+        .or(avis.where(claimant_id: expert.id, claimant_type: 'Expert', tmp_expert_migrated: true))
+        .or(avis.where(claimant_id: instructeur, claimant_type: 'Instructeur', tmp_expert_migrated: false))
         .order(created_at: :asc)
     end
   end
@@ -521,16 +568,24 @@ class Dossier < ApplicationRecord
   end
 
   def discard_and_keep_track!(author, reason)
-    if keep_track_on_deletion? && en_construction?
-      deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+    if keep_track_on_deletion?
+      if en_construction?
+        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
 
-      administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
-      administration_emails.each do |email|
-        DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
+        administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
+        administration_emails.each do |email|
+          DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
+        end
+        DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
+
+        log_dossier_operation(author, :supprimer, self)
+      elsif termine?
+        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+
+        DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user.email).deliver_later
+
+        log_dossier_operation(author, :supprimer, self)
       end
-      DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
-
-      log_dossier_operation(author, :supprimer, self)
     end
 
     discard!
@@ -591,6 +646,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_dossier_operation(instructeur, :accepter, self)
   end
@@ -604,6 +660,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_closed_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
   end
@@ -616,6 +673,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_refused_notification(self).deliver_later
     log_dossier_operation(instructeur, :refuser, self)
   end
@@ -628,8 +686,13 @@ class Dossier < ApplicationRecord
     end
 
     save!
+    remove_titres_identite!
     NotificationMailer.send_without_continuation_notification(self).deliver_later
     log_dossier_operation(instructeur, :classer_sans_suite, self)
+  end
+
+  def remove_titres_identite!
+    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def check_mandatory_champs
@@ -644,6 +707,10 @@ class Dossier < ApplicationRecord
     champs_private.filter(&:value_previously_changed?).each do |champ|
       log_dossier_operation(instructeur, :modifier_annotation, champ)
     end
+  end
+
+  def log_modifier_annotation!(champ, instructeur)
+    log_dossier_operation(instructeur, :modifier_annotation, champ)
   end
 
   def demander_un_avis!(avis)
@@ -765,9 +832,9 @@ class Dossier < ApplicationRecord
       && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
-  def linked_dossiers_for(instructeur)
+  def linked_dossiers_for(instructeur_or_expert)
     dossier_ids = champs.filter(&:dossier_link?).map(&:value).compact
-    (instructeur.dossiers.where(id: dossier_ids) + instructeur.dossiers_from_avis.where(id: dossier_ids)).uniq
+    instructeur_or_expert.dossiers.where(id: dossier_ids)
   end
 
   def hash_for_deletion_mail
@@ -787,7 +854,17 @@ class Dossier < ApplicationRecord
     }
   end
 
+  def log_api_entreprise_job_exception(exception)
+    exceptions = self.api_entreprise_job_exceptions ||= []
+    exceptions << exception.inspect
+    update_column(:api_entreprise_job_exceptions, exceptions)
+  end
+
   private
+
+  def defaut_groupe_instructeur?
+    groupe_instructeur == procedure.defaut_groupe_instructeur
+  end
 
   def geo_areas
     champs.includes(:geo_areas).flat_map(&:geo_areas) + champs_private.includes(:geo_areas).flat_map(&:geo_areas)

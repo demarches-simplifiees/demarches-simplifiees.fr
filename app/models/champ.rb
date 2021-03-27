@@ -2,17 +2,20 @@
 #
 # Table name: champs
 #
-#  id               :integer          not null, primary key
-#  private          :boolean          default(FALSE), not null
-#  row              :integer
-#  type             :string
-#  value            :string
-#  created_at       :datetime
-#  updated_at       :datetime
-#  dossier_id       :integer
-#  etablissement_id :integer
-#  parent_id        :bigint
-#  type_de_champ_id :integer
+#  id                             :integer          not null, primary key
+#  data                           :jsonb
+#  fetch_external_data_exceptions :string           is an Array
+#  private                        :boolean          default(FALSE), not null
+#  row                            :integer
+#  type                           :string
+#  value                          :string
+#  created_at                     :datetime
+#  updated_at                     :datetime
+#  dossier_id                     :integer
+#  etablissement_id               :integer
+#  external_id                    :string
+#  parent_id                      :bigint
+#  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
   belongs_to :dossier, -> { with_discarded }, inverse_of: :champs, touch: true, optional: false
@@ -41,6 +44,7 @@ class Champ < ApplicationRecord
     :exclude_from_view?,
     :repetition?,
     :dossier_link?,
+    :titre_identite?,
     to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
@@ -63,6 +67,8 @@ class Champ < ApplicationRecord
 
   before_create :set_dossier_id, if: :needs_dossier_id?
   before_validation :set_dossier_id, if: :needs_dossier_id?
+  before_save :cleanup_if_empty
+  after_update_commit :fetch_external_data_later
 
   validates :type_de_champ_id, uniqueness: { scope: [:dossier_id, :row] }
 
@@ -88,6 +94,8 @@ class Champ < ApplicationRecord
     case type_de_champ.type_champ
     when TypeDeChamp.type_champs.fetch(:carte)
       geo_areas.blank? || value == '[]'
+    when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+      value.blank? || value == '[]'
     else
       value.blank?
     end
@@ -133,6 +141,20 @@ class Champ < ApplicationRecord
     type_de_champ.stable_id
   end
 
+  def log_fetch_external_data_exception(exception)
+    exceptions = self.fetch_external_data_exceptions ||= []
+    exceptions << exception.inspect
+    update_column(:fetch_external_data_exceptions, exceptions)
+  end
+
+  def fetch_external_data?
+    false
+  end
+
+  def fetch_external_data
+    raise NotImplemented.new(:fetch_external_data)
+  end
+
   private
 
   def needs_dossier_id?
@@ -141,5 +163,23 @@ class Champ < ApplicationRecord
 
   def set_dossier_id
     self.dossier_id = parent.dossier_id
+  end
+
+  def cleanup_if_empty
+    if external_id_changed?
+      self.data = nil
+    end
+  end
+
+  def fetch_external_data_later
+    if fetch_external_data? && external_id.present? && data.nil?
+      ChampFetchExternalDataJob.perform_later(self, external_id)
+    end
+  end
+
+  class NotImplemented < ::StandardError
+    def initialize(method)
+      super(":#{method} not implemented")
+    end
   end
 end

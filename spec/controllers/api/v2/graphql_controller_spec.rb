@@ -1,11 +1,12 @@
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
   let(:dossier) do
     dossier = create(:dossier,
       :en_construction,
       :with_all_champs,
+      :with_all_annotations,
       :with_individual,
       procedure: procedure)
     create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
@@ -233,6 +234,64 @@ describe API::V2::GraphqlController do
           end
         end
       end
+
+      context "filter by minRevision" do
+        let(:query) do
+          "{
+            demarche(number: #{procedure.id}) {
+              id
+              number
+              dossiers(minRevision: \"#{procedure.revisions.first.to_typed_id}\") {
+                nodes {
+                  id
+                }
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            dossiers: {
+              nodes: procedure.dossiers.order(:created_at).map do |dossier|
+                { id: dossier.to_typed_id }
+              end
+            }
+          })
+        end
+      end
+
+      context "filter by maxRevision" do
+        let(:query) do
+          "{
+            demarche(number: #{procedure.id}) {
+              id
+              number
+              dossiers(maxRevision: \"#{procedure.revisions.last.to_typed_id}\") {
+                nodes {
+                  id
+                }
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            dossiers: {
+              nodes: procedure.dossiers.order(:created_at).map do |dossier|
+                { id: dossier.to_typed_id }
+              end
+            }
+          })
+        end
+      end
     end
 
     context "dossier" do
@@ -403,12 +462,14 @@ describe API::V2::GraphqlController do
                     dateCreation
                     capitalSocial
                     codeEffectifEntreprise
+                    numeroTvaIntracommunautaire
                   }
                 }
               }
             }
           }"
         end
+
         context "in the nominal case" do
           it "should be returned" do
             expect(gql_errors).to eq(nil)
@@ -429,7 +490,8 @@ describe API::V2::GraphqlController do
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
-                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s
+                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s,
+                  numeroTvaIntracommunautaire: dossier.etablissement.entreprise_numero_tva_intracommunautaire
                 }
               }
             })
@@ -468,7 +530,7 @@ describe API::V2::GraphqlController do
         context "when there are missing data" do
           before do
             dossier.etablissement.update!(entreprise_code_effectif_entreprise: nil, entreprise_capital_social: nil,
-                                          numero_voie: nil, type_voie: nil)
+                                          numero_voie: nil, type_voie: nil, entreprise_numero_tva_intracommunautaire: nil)
           end
 
           it "should be returned" do
@@ -490,9 +552,97 @@ describe API::V2::GraphqlController do
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: '-1',
-                  codeEffectifEntreprise: nil
+                  codeEffectifEntreprise: nil,
+                  numeroTvaIntracommunautaire: nil
                 }
               }
+            })
+          end
+        end
+      end
+
+      context "champs" do
+        let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin], types_de_champ: [type_de_champ_date, type_de_champ_datetime]) }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:type_de_champ_date) { build(:type_de_champ_date) }
+        let(:type_de_champ_datetime) { build(:type_de_champ_datetime) }
+        let(:champ_date) { dossier.champs.first }
+        let(:champ_datetime) { dossier.champs.second }
+
+        before do
+          champ_date.update(value: '2019-07-10')
+          champ_datetime.update(value: '15/09/1962 15:35')
+        end
+
+        context "with Date" do
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                champs {
+                  id
+                  label
+                  ... on DateChamp {
+                    value
+                  }
+                }
+              }
+            }"
+          end
+
+          it "should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossier: {
+              champs: [
+                {
+                  id: champ_date.to_typed_id,
+                  label: champ_date.libelle,
+                  value: '2019-07-10T00:00:00+02:00'
+                },
+                {
+                  id: champ_datetime.to_typed_id,
+                  label: champ_datetime.libelle,
+                  value: '1962-09-15T15:35:00+01:00'
+                }
+              ]
+            })
+          end
+        end
+
+        context "with Datetime" do
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                champs {
+                  id
+                  label
+                  ... on DateChamp {
+                    value
+                    date
+                  }
+                  ... on DatetimeChamp {
+                    datetime
+                  }
+                }
+              }
+            }"
+          end
+
+          it "should be returned" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossier: {
+              champs: [
+                {
+                  id: champ_date.to_typed_id,
+                  label: champ_date.libelle,
+                  value: '2019-07-10T00:00:00+02:00',
+                  date: '2019-07-10'
+                },
+                {
+                  id: champ_datetime.to_typed_id,
+                  label: champ_datetime.libelle,
+                  datetime: '1962-09-15T15:35:00+01:00'
+                }
+              ]
             })
           end
         end
@@ -636,11 +786,12 @@ describe API::V2::GraphqlController do
 
       describe 'dossierPasserEnInstruction' do
         let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+        let(:instructeur_id) { instructeur.to_typed_id }
         let(:query) do
           "mutation {
             dossierPasserEnInstruction(input: {
               dossierId: \"#{dossier.to_typed_id}\",
-              instructeurId: \"#{instructeur.to_typed_id}\"
+              instructeurId: \"#{instructeur_id}\"
             }) {
               dossier {
                 id
@@ -676,6 +827,18 @@ describe API::V2::GraphqlController do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(dossierPasserEnInstruction: {
               errors: [{ message: "Le dossier est déjà en instruction" }],
+              dossier: nil
+            })
+          end
+        end
+
+        context 'instructeur error' do
+          let(:instructeur_id) { create(:instructeur).to_typed_id }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierPasserEnInstruction: {
+              errors: [{ message: 'L’instructeur n’a pas les droits d’accès à ce dossier' }],
               dossier: nil
             })
           end
@@ -885,6 +1048,29 @@ describe API::V2::GraphqlController do
           }"
         end
 
+        let(:attach_query) do
+          "mutation {
+            dossierEnvoyerMessage(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur.to_typed_id}\",
+              body: \"Hello world\",
+              attachment: \"#{direct_upload_blob_id}\"
+            }) {
+              message {
+                body
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+        let(:attach_query_exec) { post :execute, params: { query: attach_query } }
+        let(:attach_query_body) { JSON.parse(attach_query_exec.body, symbolize_names: true) }
+        let(:attach_query_data) { attach_query_body[:data] }
+        let(:direct_upload_data) { gql_data[:createDirectUpload][:directUpload] }
+        let(:direct_upload_blob_id) { direct_upload_data[:signedBlobId] }
+
         it "should initiate a direct upload" do
           expect(gql_errors).to eq(nil)
 
@@ -893,6 +1079,15 @@ describe API::V2::GraphqlController do
           expect(data[:headers]).not_to be_nil
           expect(data[:blobId]).not_to be_nil
           expect(data[:signedBlobId]).not_to be_nil
+        end
+
+        it "wrong hash error" do
+          blob = ActiveStorage::Blob.find direct_upload_data[:blobId]
+          blob.service.upload blob.key, StringIO.new('toto')
+          expect(attach_query_data).to eq(dossierEnvoyerMessage: {
+            errors: [{ message: "Le hash du fichier téléversé est invalide" }],
+            message: nil
+          })
         end
       end
 
@@ -981,6 +1176,240 @@ describe API::V2::GraphqlController do
               },
               errors: nil
             })
+          end
+        end
+      end
+
+      describe 'dossierModifierAnnotation' do
+        describe 'text' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationText(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.first.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: \"hello\"
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationText: {
+                annotation: {
+                  stringValue: 'hello'
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'checkbox' do
+          let(:value) { 'true' }
+
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationCheckbox(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'checkbox' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: #{value}
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success when true" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
+                annotation: {
+                  stringValue: 'true'
+                },
+                errors: nil
+              })
+            end
+          end
+
+          context "success when false" do
+            let(:value) { 'false' }
+
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
+                annotation: {
+                  stringValue: 'false'
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'yes_no' do
+          let(:value) { 'true' }
+
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationCheckbox(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'yes_no' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: #{value}
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success when true" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
+                annotation: {
+                  stringValue: 'true'
+                },
+                errors: nil
+              })
+            end
+          end
+
+          context "success when false" do
+            let(:value) { 'false' }
+
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationCheckbox: {
+                annotation: {
+                  stringValue: 'false'
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'date' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationDate(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'date' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: \"#{1.day.from_now.to_date.iso8601}\"
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationDate: {
+                annotation: {
+                  stringValue: dossier.reload.champs_private.find { |c| c.type_champ == 'date' }.to_s
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'datetime' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationDatetime(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'datetime' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: \"#{1.day.from_now.iso8601}\"
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationDatetime: {
+                annotation: {
+                  stringValue: dossier.reload.champs_private.find { |c| c.type_champ == 'datetime' }.to_s
+                },
+                errors: nil
+              })
+            end
+          end
+        end
+
+        describe 'integer_number' do
+          let(:query) do
+            "mutation {
+              dossierModifierAnnotationIntegerNumber(input: {
+                dossierId: \"#{dossier.to_typed_id}\",
+                annotationId: \"#{dossier.champs_private.find { |c| c.type_champ == 'integer_number' }.to_typed_id}\",
+                instructeurId: \"#{instructeur.to_typed_id}\",
+                value: 42
+              }) {
+                annotation {
+                  stringValue
+                }
+                errors {
+                  message
+                }
+              }
+            }"
+          end
+
+          context "success" do
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationIntegerNumber: {
+                annotation: {
+                  stringValue: '42'
+                },
+                errors: nil
+              })
+            end
           end
         end
       end

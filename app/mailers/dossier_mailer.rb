@@ -75,6 +75,20 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: @subject)
   end
 
+  def notify_instructeur_deletion_to_user(deleted_dossier, to_email)
+    @subject = default_i18n_subject(libelle_demarche: deleted_dossier.procedure.libelle)
+    @deleted_dossier = deleted_dossier
+
+    mail(to: to_email, subject: @subject)
+  end
+
+  def notify_instructeur(deleted_dossier, to_email)
+    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
+    @deleted_dossier = deleted_dossier
+
+    mail(to: to_email, subject: @subject)
+  end
+
   def notify_deletion_to_administration(deleted_dossier, to_email)
     @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
     @deleted_dossier = deleted_dossier
@@ -136,7 +150,7 @@ class DossierMailer < ApplicationMailer
     if interpolations[:state]
       mailer_scope = self.class.mailer_name.tr('/', '.')
       state = interpolations[:state].in?(Dossier::TERMINE) ? 'termine' : interpolations[:state]
-      I18n.t("subject_#{state}", interpolations.merge(scope: [mailer_scope, action_name]))
+      I18n.t("subject_#{state}", **interpolations.merge(scope: [mailer_scope, action_name]))
     else
       super
     end

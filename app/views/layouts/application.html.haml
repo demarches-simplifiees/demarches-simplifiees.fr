@@ -9,9 +9,9 @@
     %title
       = content_for?(:title) ? "#{yield(:title)} · #{APPLICATION_NAME}" : APPLICATION_NAME
 
-    = favicon_link_tag(image_url("favicons/16x16.png"), type: "image/png", sizes: "16x16")
-    = favicon_link_tag(image_url("favicons/32x32.png"), type: "image/png", sizes: "32x32")
-    = favicon_link_tag(image_url("favicons/96x96.png"), type: "image/png", sizes: "96x96")
+    = favicon_link_tag(image_url("#{FAVICON_16PX_SRC}"), type: "image/png", sizes: "16x16")
+    = favicon_link_tag(image_url("#{FAVICON_32PX_SRC}"), type: "image/png", sizes: "32x32")
+    = favicon_link_tag(image_url("#{FAVICON_96PX_SRC}"), type: "image/png", sizes: "96x96")
 
     - packs = ['application', 'track', administrateur_signed_in? ? 'track-admin' : nil].compact
     = javascript_packs_with_chunks_tag *packs, defer: true
@@ -19,8 +19,7 @@
     = preload_link_tag(asset_url("Muli-Regular.woff2"))
     = preload_link_tag(asset_url("Muli-Bold.woff2"))
 
-    = stylesheet_link_tag 'new_design/new_application', media: 'all'
-    = stylesheet_link_tag 'new_design/print', media: 'print'
+    = stylesheet_link_tag 'application', media: 'all'
 
     = Gon::Base.render_data(camel_case: true, init: true, nonce:  request.content_security_policy_nonce)
 
@@ -36,7 +35,7 @@
         #beta
           Env Test
 
-      = render partial: "layouts/new_header"
+      = render partial: "layouts/header"
       %main
         = render partial: "layouts/flash_messages"
         = content_for?(:content) ? yield(:content) : yield

@@ -58,7 +58,7 @@ class DossierOperationLog < ApplicationRecord
       operation: operation_log.operation,
       dossier_id: operation_log.dossier_id,
       author: self.serialize_author(params[:author]),
-      subject: self.serialize_subject(params[:subject]),
+      subject: self.serialize_subject(params[:subject], operation_log.operation),
       automatic_operation: operation_log.automatic_operation?,
       executed_at: operation_log.executed_at.iso8601
     }.compact.to_json
@@ -80,21 +80,45 @@ class DossierOperationLog < ApplicationRecord
     if author.nil?
       nil
     else
-      OperationAuthorSerializer.new(author).as_json
+      {
+        id: serialize_author_id(author),
+        email: author.email
+      }.as_json
     end
   end
 
-  def self.serialize_subject(subject)
+  def self.serialize_author_id(object)
+    case object
+    when User
+      "Usager##{object.id}"
+    when Instructeur
+      "Instructeur##{object.id}"
+    when Administrateur
+      "Administrateur##{object.id}"
+    when SuperAdmin
+      "Manager##{object.id}"
+    else
+      nil
+    end
+  end
+
+  def self.serialize_subject(subject, operation = nil)
     if subject.nil?
       nil
+    elsif operation == operations.fetch(:supprimer)
+      {
+        date_de_depot: subject.en_construction_at,
+        date_de_mise_en_instruction: subject.en_instruction_at,
+        date_de_decision: subject.termine? ? subject.traitements.last.processed_at : nil
+      }.as_json
     else
       case subject
       when Dossier
-        DossierSerializer.new(subject).as_json
+        SerializerService.dossier(subject)
       when Champ
-        ChampSerializer.new(subject).as_json
+        SerializerService.champ(subject)
       when Avis
-        AvisSerializer.new(subject).as_json
+        SerializerService.avis(subject)
       end
     end
   end

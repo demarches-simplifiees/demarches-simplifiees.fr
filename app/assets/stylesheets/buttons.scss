@@ -1,0 +1,303 @@
+@import "colors";
+@import "constants";
+@import "placeholders";
+
+.button {
+  @extend %outline;
+
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid $border-grey;
+  font-family: "Muli";
+  font-size: 14px;
+  line-height: 20px;
+  background-color: #FFFFFF;
+  color: $black;
+  text-align: center;
+  -webkit-appearance: none;
+
+  &:hover:not(:disabled) {
+    cursor: pointer;
+    background: $light-grey;
+    text-decoration: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    filter: saturate(50%);
+  }
+
+  &.primary {
+    color: #FFFFFF;
+    border-color: $blue;
+    background-color: $blue;
+
+    &:hover:not(:disabled) {
+      background: $light-blue;
+    }
+  }
+
+  &.secondary {
+    color: $blue;
+    border-color: $blue;
+    background-color: #FFFFFF;
+
+    &:hover:not(:disabled) {
+      color: #FFFFFF;
+      background: $light-blue;
+    }
+  }
+
+  &.danger {
+    color: $black;
+    border-color: $border-grey;
+    background-color: #FFFFFF;
+
+    &:hover:not(:disabled) {
+      color: #FFFFFF;
+      border-color: $medium-red;
+      background-color: $medium-red;
+
+      > .icon {
+        filter: contrast(0) brightness(100);
+      }
+    }
+  }
+
+  &.accepted {
+    color: #FFFFFF;
+    border-color: $green;
+    background-color: $green;
+
+    &:hover:not(:disabled) {
+      color: $green;
+      background-color: #FFFFFF;
+    }
+  }
+
+  &.without-continuation {
+    color: #FFFFFF;
+    border-color: $black;
+    background-color: $black;
+
+    &:hover:not(:disabled) {
+      color: $black;
+      background-color: #FFFFFF;
+    }
+  }
+
+  &.refused {
+    color: #FFFFFF;
+    border-color: $dark-red;
+    background-color: $dark-red;
+
+    &:hover:not(:disabled) {
+      color: $dark-red;
+      background-color: #FFFFFF;
+    }
+  }
+
+  &.small {
+    line-height: 14px;
+    padding: 5px 10px 6px 10px;
+  }
+
+  &.large {
+    font-size: 18px;
+    line-height: 26px;
+    padding: 15px 32px;
+  }
+
+  &.expand {
+    width: 100%;
+  }
+
+  > .icon {
+    width: 18px;
+    height: 18px;
+    background-size: 18px 18px;
+    vertical-align: text-bottom;
+    margin-right: $default-spacer;
+  }
+
+  &.icon-only {
+    padding: 9px 16px;
+
+    .icon {
+      margin-right: 0;
+    }
+  }
+}
+
+.state-button {
+  display: inline-block;
+}
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+
+  .dropdown-button {
+    white-space: nowrap;
+
+    &::after {
+      content: "▾";
+      margin-left: $default-spacer;
+      font-weight: bold;
+    }
+
+    &.icon-only {
+      &::after {
+        margin-left: 2px;
+        color: $blue;
+      }
+    }
+  }
+
+  .dropdown-content {
+    display: none;
+  }
+
+  &.open .dropdown-content {
+    display: block;
+  }
+}
+
+.dropdown-content {
+  border: 1px solid $border-grey;
+  background: #FFFFFF;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 0;
+  text-align: left;
+  top: 5 * $default-spacer;
+  cursor: default;
+  z-index: 10;
+
+  &.left-aligned {
+    left: 0;
+    right: unset;
+  }
+
+  &.terminated {
+    width: 600px;
+    color: $black;
+    padding: $default-padding;
+
+    .title {
+      font-size: 24px;
+    }
+
+    .dossier-motivation {
+      margin: $default-padding 0;
+    }
+
+    .attestation {
+      margin: $default-padding 0;
+      color: $dark-grey;
+    }
+  }
+}
+
+.dropdown-items {
+  li {
+    display: flex;
+    padding: $default-padding;
+    color: $dark-grey;
+    border-bottom: 1px solid $border-grey;
+    font-size: 12px;
+    min-width: 300px;
+
+    &.selected {
+      cursor: default;
+
+      h4 {
+        color: $blue;
+      }
+    }
+
+    &:not(.inactive) {
+      cursor: pointer;
+
+      &:hover,
+      &.selected {
+        background: $light-grey;
+      }
+    }
+
+    &.danger {
+      &:hover {
+        background-color: $medium-red;
+
+        &,
+        a {
+          color: $white;
+        }
+
+        .icon {
+          filter: contrast(0) brightness(100);
+        }
+      }
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    a {
+      color: $dark-grey;
+    }
+
+    // Make child links fill the whole clickable area
+    > a {
+      display: flex;
+      flex-grow: 1;
+      margin: -$default-padding;
+      padding: $default-padding;
+    }
+
+    .icon {
+      flex-shrink: 0;
+    }
+
+    .dropdown-description {
+      padding-left: $default-spacer;
+    }
+  }
+
+  h4 {
+    font-size: 14px;
+    color: $black;
+    margin-bottom: $default-spacer;
+  }
+
+  p + h4,
+  p + p, {
+    margin-top: $default-spacer;
+  }
+}
+
+.dropdown-form {
+  padding: 2 * $default-spacer;
+
+  &.large {
+    width: 340px;
+  }
+
+  label {
+    width: 100px;
+    display: inline-block;
+    margin-bottom: 2 * $default-spacer;
+  }
+
+  input,
+  select {
+    width: 200px;
+    display: inline-block;
+  }
+}
+
+.link {
+  color: $blue;
+}

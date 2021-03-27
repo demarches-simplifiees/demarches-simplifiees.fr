@@ -2,17 +2,20 @@
 #
 # Table name: champs
 #
-#  id               :integer          not null, primary key
-#  private          :boolean          default(FALSE), not null
-#  row              :integer
-#  type             :string
-#  value            :string
-#  created_at       :datetime
-#  updated_at       :datetime
-#  dossier_id       :integer
-#  etablissement_id :integer
-#  parent_id        :bigint
-#  type_de_champ_id :integer
+#  id                             :integer          not null, primary key
+#  data                           :jsonb
+#  fetch_external_data_exceptions :string           is an Array
+#  private                        :boolean          default(FALSE), not null
+#  row                            :integer
+#  type                           :string
+#  value                          :string
+#  created_at                     :datetime
+#  updated_at                     :datetime
+#  dossier_id                     :integer
+#  etablissement_id               :integer
+#  external_id                    :string
+#  parent_id                      :bigint
+#  type_de_champ_id               :integer
 #
 class Champs::IntegerNumberChamp < Champ
   validates :value, numericality: {
@@ -20,6 +23,7 @@ class Champs::IntegerNumberChamp < Champ
     allow_nil: true,
     allow_blank: true,
     message: -> (object, _data) {
+      # i18n-tasks-use t('errors.messages.not_an_integer')
       "« #{object.libelle} » " + object.errors.generate_message(:value, :not_an_integer)
     }
   }

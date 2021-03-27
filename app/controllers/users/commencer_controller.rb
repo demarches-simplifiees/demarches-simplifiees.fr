@@ -82,7 +82,7 @@ module Users
 
     def generate_empty_pdf(procedure)
       @dossier = procedure.new_dossier
-      s = render_to_string(file: 'dossiers/dossier_vide', formats: [:pdf])
+      s = render_to_string(template: 'dossiers/dossier_vide', formats: [:pdf])
       send_data(s, :filename => "#{procedure.libelle}.pdf")
     end
   end

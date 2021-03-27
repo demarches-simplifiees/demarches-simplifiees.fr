@@ -271,12 +271,6 @@ describe Procedure do
 
       it_behaves_like 'duree de conservation'
     end
-
-    describe 'duree de conservation hors ds' do
-      let(:field_name) { :duree_conservation_dossiers_hors_ds }
-
-      it_behaves_like 'duree de conservation'
-    end
   end
 
   describe 'active' do
@@ -325,14 +319,16 @@ describe Procedure do
 
   describe 'clone' do
     let(:service) { create(:service) }
-    let(:procedure) { create(:procedure, received_mail: received_mail, service: service, types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj], types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2]) }
+    let(:procedure) { create(:procedure, received_mail: received_mail, service: service, types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj, type_de_champ_repetition], types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2, type_de_champ_private_repetition]) }
     let(:type_de_champ_0) { build(:type_de_champ, position: 0) }
     let(:type_de_champ_1) { build(:type_de_champ, position: 1) }
     let(:type_de_champ_2) { build(:type_de_champ_drop_down_list, position: 2) }
     let(:type_de_champ_pj) { build(:type_de_champ_piece_justificative, position: 3, old_pj: { stable_id: 2713 }) }
+    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, position: 4, types_de_champ: [build(:type_de_champ)]) }
     let(:type_de_champ_private_0) { build(:type_de_champ, :private, position: 0) }
     let(:type_de_champ_private_1) { build(:type_de_champ, :private, position: 1) }
     let(:type_de_champ_private_2) { build(:type_de_champ_drop_down_list, :private, position: 2) }
+    let(:type_de_champ_private_repetition) { build(:type_de_champ_repetition, :private, position: 3, types_de_champ: [build(:type_de_champ, :private)]) }
     let(:received_mail) { build(:received_mail) }
     let(:from_library) { false }
     let(:administrateur) { procedure.administrateurs.first }
@@ -378,8 +374,18 @@ describe Procedure do
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
+      TypeDeChamp.where(parent: procedure.draft_types_de_champ.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ.repetition)).each do |ptc, stc|
+        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id"])
+        expect(stc.revision).to eq(subject.draft_revision)
+      end
+
       procedure.draft_types_de_champ_private.zip(subject.draft_types_de_champ_private).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc, except: ["revision_id"])
+        expect(stc.revision).to eq(subject.draft_revision)
+      end
+
+      TypeDeChamp.where(parent: procedure.draft_types_de_champ_private.repetition).zip(TypeDeChamp.where(parent: subject.draft_types_de_champ_private.repetition)).each do |ptc, stc|
+        expect(stc).to have_same_attributes_as(ptc, except: ["revision_id", "parent_id"])
         expect(stc.revision).to eq(subject.draft_revision)
       end
 
@@ -460,7 +466,7 @@ describe Procedure do
 
       it 'should have a default groupe instructeur' do
         expect(subject.groupe_instructeurs.size).to eq(1)
-        expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL)
+        expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL)
         expect(subject.groupe_instructeurs.first.instructeurs.size).to eq(0)
       end
     end
@@ -597,6 +603,7 @@ describe Procedure do
         Timecop.freeze(now) do
           procedure.publish_or_reopen!(administrateur)
         end
+        procedure.reload
         canonical_procedure.reload
       end
 
@@ -1005,7 +1012,7 @@ describe Procedure do
     let!(:procedure) { create(:procedure) }
 
     it { expect(procedure.groupe_instructeurs.count).to eq(1) }
-    it { expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAULT_LABEL) }
+    it { expect(procedure.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL) }
   end
 
   describe '.missing_instructeurs?' do
@@ -1048,7 +1055,7 @@ describe Procedure do
       end
 
       context 'with a new brouillon dossier' do
-        let!(:brouillon_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
+        let!(:brouillon_dossier) { create(:dossier, procedure: procedure) }
 
         it { expect(subject['a_suivre']).to eq(0) }
         it { expect(subject['suivis']).to eq(0) }
@@ -1058,7 +1065,7 @@ describe Procedure do
       end
 
       context 'with a new dossier without follower' do
-        let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+        let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         it { expect(subject['a_suivre']).to eq(1) }
         it { expect(subject['suivis']).to eq(0) }
@@ -1067,8 +1074,8 @@ describe Procedure do
         it { expect(subject['archived']).to eq(0) }
 
         context 'and dossiers without follower on each of the others groups' do
-          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
-          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
+          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
+          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
 
           before { subject }
 
@@ -1078,7 +1085,7 @@ describe Procedure do
       end
 
       context 'with a new dossier with a follower' do
-        let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+        let!(:new_followed_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         before do
           instructeur.followed_dossiers << new_followed_dossier
@@ -1091,8 +1098,8 @@ describe Procedure do
         it { expect(subject['archived']).to eq(0) }
 
         context 'and dossier with a follower on each of the others groups' do
-          let!(:new_follow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
-          let!(:new_follow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
+          let!(:new_follow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
+          let!(:new_follow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
 
           before do
             instructeur.followed_dossiers << new_follow_dossier_on_gi_2 << new_follow_dossier_on_gi_3
@@ -1115,7 +1122,7 @@ describe Procedure do
       end
 
       context 'with a termine dossier' do
-        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) }
+        let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure) }
 
         it { expect(subject['a_suivre']).to eq(0) }
         it { expect(subject['suivis']).to eq(0) }
@@ -1124,8 +1131,8 @@ describe Procedure do
         it { expect(subject['archived']).to eq(0) }
 
         context 'and terminer dossiers on each of the others groups' do
-          let!(:termine_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:accepte)) }
-          let!(:termine_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:accepte)) }
+          let!(:termine_dossier_on_gi_2) { create(:dossier, :accepte, groupe_instructeur: gi_2) }
+          let!(:termine_dossier_on_gi_3) { create(:dossier, :accepte, groupe_instructeur: gi_3) }
 
           before { subject }
 
@@ -1138,7 +1145,7 @@ describe Procedure do
       end
 
       context 'with an archived dossier' do
-        let!(:archived_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) }
+        let!(:archived_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
 
         it { expect(subject['a_suivre']).to eq(0) }
         it { expect(subject['suivis']).to eq(0) }
@@ -1147,8 +1154,8 @@ describe Procedure do
         it { expect(subject['archived']).to eq(1) }
 
         context 'and terminer dossiers on each of the others groups' do
-          let!(:archived_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction), archived: true) }
-          let!(:archived_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction), archived: true) }
+          let!(:archived_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, archived: true) }
+          let!(:archived_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3, archived: true) }
 
           it { expect(subject['archived']).to eq(2) }
         end
