@@ -206,10 +206,6 @@ class TypeDeChamp < ApplicationRecord
     !private?
   end
 
-  def active_revision?
-    revisions.include?(procedure.active_revision)
-  end
-
   def self.type_champ_to_class_name(type_champ)
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
