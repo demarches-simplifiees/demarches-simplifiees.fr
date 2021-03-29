@@ -48,4 +48,12 @@ class Archive < ApplicationRecord
   def available?
     status == 'generated' && file.attached?
   end
+
+  def filename(procedure)
+    if content_type == 'everything'
+      "procedure-#{procedure.id}.zip"
+    else
+      "procedure-#{procedure.id}-mois-#{I18n.l(month, format: '%Y-%m')}.zip"
+    end
+  end
 end
