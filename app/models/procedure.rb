@@ -66,9 +66,6 @@ class Procedure < ApplicationRecord
   has_many :draft_types_de_champ, through: :draft_revision, source: :types_de_champ
   has_many :draft_types_de_champ_private, through: :draft_revision, source: :types_de_champ_private
 
-  has_many :all_types_de_champ, -> { joins(:procedure).where('types_de_champ.revision_id != procedures.draft_revision_id') }, through: :revisions, source: :types_de_champ
-  has_many :all_types_de_champ_private, -> { joins(:procedure).where('types_de_champ.revision_id != procedures.draft_revision_id') }, through: :revisions, source: :types_de_champ_private
-
   has_many :experts_procedures, dependent: :destroy
   has_many :experts, through: :experts_procedures
 
@@ -92,31 +89,11 @@ class Procedure < ApplicationRecord
   end
 
   def types_de_champ_for_export
-    if brouillon?
-      draft_types_de_champ.reject(&:exclude_from_export?)
-    else
-      all_types_de_champ
-        .uniq
-        .reject(&:exclude_from_export?)
-        .filter(&:active_revision?)
-        .group_by(&:stable_id).values.map do |types_de_champ|
-          types_de_champ.sort_by(&:created_at).last
-        end
-    end
+    types_de_champ.reject(&:exclude_from_export?)
   end
 
   def types_de_champ_private_for_export
-    if brouillon?
-      draft_types_de_champ_private
-    else
-      all_types_de_champ_private
-        .uniq
-        .reject(&:exclude_from_export?)
-        .filter(&:active_revision?)
-        .group_by(&:stable_id).values.map do |types_de_champ|
-          types_de_champ.sort_by(&:created_at).last
-        end
-    end
+    types_de_champ_private.reject(&:exclude_from_export?)
   end
 
   has_many :administrateurs_procedures
@@ -596,7 +573,7 @@ class Procedure < ApplicationRecord
   end
 
   def routee?
-    groupe_instructeurs.count > 1
+    groupe_instructeurs.size > 1
   end
 
   def defaut_groupe_instructeur_for_new_dossier
