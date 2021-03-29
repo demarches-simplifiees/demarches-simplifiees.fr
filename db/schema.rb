@@ -81,6 +81,23 @@ ActiveRecord::Schema.define(version: 2021_04_27_120002) do
     t.index ["procedure_id"], name: "index_administrateurs_procedures_on_procedure_id"
   end
 
+  create_table "archives", force: :cascade do |t|
+    t.string "status", null: false
+    t.date "month"
+    t.string "content_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "archives_groupe_instructeurs", force: :cascade do |t|
+    t.bigint "archive_id", null: false
+    t.bigint "groupe_instructeur_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["archive_id"], name: "index_archives_groupe_instructeurs_on_archive_id"
+    t.index ["groupe_instructeur_id"], name: "index_archives_groupe_instructeurs_on_groupe_instructeur_id"
+  end
+
   create_table "assign_tos", id: :serial, force: :cascade do |t|
     t.integer "instructeur_id"
     t.datetime "created_at"
@@ -735,6 +752,8 @@ ActiveRecord::Schema.define(version: 2021_04_27_120002) do
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "archives_groupe_instructeurs", "archives"
+  add_foreign_key "archives_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "assign_tos", "groupe_instructeurs"
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
