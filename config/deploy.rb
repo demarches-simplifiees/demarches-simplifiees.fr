@@ -4,6 +4,7 @@ require 'mina/rails'
 require 'mina/rbenv'
 
 SHARED_WORKER_FILE_NAME = 'i_am_a_worker'
+SHARED_WEBSERVER_FILE_NAME = 'i_am_a_webserver'
 # Basic settings:
 #   domain        - The hostname to SSH to.
 #   deploy_to     - Path to deploy into.
@@ -80,17 +81,21 @@ end
 namespace :service do
   desc "Restart puma"
   task :restart_puma do
+    webserver_file_path = File.join(deploy_to, 'shared', SHARED_WEBSERVER_FILE_NAME)
+
     command %{
       echo "-----> Restarting puma service"
-      #{echo_cmd %[sudo systemctl restart puma]}
+      #{echo_cmd %[test -f #{webserver_file_path} && sudo systemctl restart puma]}
     }
   end
 
   desc "Reload nginx"
   task :reload_nginx do
+    webserver_file_path = File.join(deploy_to, 'shared', SHARED_WEBSERVER_FILE_NAME)
+
     command %{
       echo "-----> Reloading nginx service"
-      #{echo_cmd %[sudo systemctl reload nginx]}
+      #{echo_cmd %[test -f #{webserver_file_path} && sudo systemctl reload nginx]}
     }
   end
 
