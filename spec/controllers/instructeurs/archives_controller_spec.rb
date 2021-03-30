@@ -9,6 +9,7 @@ describe Instructeurs::ArchivesController, type: :controller do
 
   before do
     sign_in(instructeur.user)
+    Flipper.enable(:archive_zip_globale, procedure1)
   end
 
   after { Timecop.return }
