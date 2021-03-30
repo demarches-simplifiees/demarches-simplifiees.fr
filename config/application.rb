@@ -65,6 +65,12 @@ module TPS
     # disable the check performed by Rails.
     config.action_dispatch.ip_spoofing_check = false
 
+    # Set the queue name for the mail delivery jobs to 'mailers'
+    config.action_mailer.deliver_later_queue_name = :mailers
+
+    # Set the queue name for the analysis jobs to 'active_storage_analysis'
+    config.active_storage.queues.analysis = :active_storage_analysis
+
     config.to_prepare do
       # Make main application helpers available in administrate
       Administrate::ApplicationController.helper(TPS::Application.helpers)
