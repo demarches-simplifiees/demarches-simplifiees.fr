@@ -258,9 +258,9 @@ ActiveRecord::Schema.define(version: 2021_03_18_090001) do
     t.datetime "last_champ_private_updated_at"
     t.datetime "last_avis_updated_at"
     t.datetime "last_commentaire_updated_at"
+    t.string "api_entreprise_job_exceptions", array: true
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
-    t.string "api_entreprise_job_exceptions", array: true
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
