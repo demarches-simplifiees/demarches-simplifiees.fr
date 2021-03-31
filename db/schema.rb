@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_30_112235) do
+ActiveRecord::Schema.define(version: 2021_03_31_123709) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -354,6 +354,8 @@ ActiveRecord::Schema.define(version: 2021_03_30_112235) do
     t.string "format", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "key"
+    t.index ["format", "key"], name: "index_exports_on_format_and_key", unique: true
   end
 
   create_table "exports_groupe_instructeurs", force: :cascade do |t|
