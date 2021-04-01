@@ -14,8 +14,6 @@ describe Manager::ApplicationController, type: :controller do
         payload.delete(key)
       end
       expect(payload).to eq({
-        sk_rendered_format: :text,
-        sk_variant: [],
         user_agent: 'Rails Testing',
         user_id: current_user.id,
         user_email: current_user.email
