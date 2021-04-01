@@ -365,7 +365,7 @@ module Users
         @dossier.champs.filter(&:repetition?).each do |champ|
           champ.champs = champ.champs.filter(&:persisted?)
         end
-        if @dossier.champs.any?(&:changed?)
+        if @dossier.champs.any?(&:changed_for_autosave?)
           @dossier.last_champ_updated_at = Time.zone.now
         end
         if !@dossier.save
