@@ -360,8 +360,8 @@ module Users
 
       if champs_params[:dossier]
         @dossier.assign_attributes(champs_params[:dossier])
-        # FIXME in some cases a removed repetition bloc row is submitted.
-        # In this case it will be trated as a new records and action will fail.
+        # FIXME: in some cases a removed repetition bloc row is submitted.
+        # In this case it will be treated as a new record, and the action will fail.
         @dossier.champs.filter(&:repetition?).each do |champ|
           champ.champs = champ.champs.filter(&:persisted?)
         end
