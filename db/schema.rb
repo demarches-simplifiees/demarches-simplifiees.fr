@@ -345,6 +345,7 @@ ActiveRecord::Schema.define(version: 2021_04_02_163003) do
     t.boolean "allow_decision_access", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "revoked_at"
     t.index ["expert_id", "procedure_id"], name: "index_experts_procedures_on_expert_id_and_procedure_id", unique: true
     t.index ["expert_id"], name: "index_experts_procedures_on_expert_id"
     t.index ["procedure_id"], name: "index_experts_procedures_on_procedure_id"
