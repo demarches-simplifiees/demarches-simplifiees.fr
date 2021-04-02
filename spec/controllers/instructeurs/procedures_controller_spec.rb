@@ -441,7 +441,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     context 'when the export is not ready' do
       before do
-        Export.create(format: :csv, groupe_instructeurs: [gi_1])
+        create(:export, groupe_instructeurs: [gi_1])
       end
 
       it 'displays an notice' do
@@ -451,9 +451,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when the export is ready' do
-      let!(:export) do
-        Export.create(format: :csv, groupe_instructeurs: [gi_1])
-      end
+      let!(:export) { create(:export, groupe_instructeurs: [gi_1]) }
 
       before do
         export.file.attach(io: StringIO.new('export'), filename: 'file.csv')
@@ -466,9 +464,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when another export is ready' do
-      let!(:export) do
-        Export.create(format: :csv, groupe_instructeurs: [gi_0, gi_1])
-      end
+      let!(:export) { create(:export, groupe_instructeurs: [gi_0, gi_1]) }
 
       before do
         export.file.attach(io: StringIO.new('export'), filename: 'file.csv')

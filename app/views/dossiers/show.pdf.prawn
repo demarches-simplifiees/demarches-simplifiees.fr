@@ -1,114 +1,157 @@
 require 'prawn/measurement_extensions'
 
-def format_in_2_lines(pdf, label, text)
-  pdf.font 'marianne', style: :bold, size: 10  do
-    pdf.text label
-  end
-  pdf.text text, size: 9
-  pdf.text "\n", size: 9
+def default_margin
+  10
 end
 
-def render_box(pdf, text, x, width)
-  box = ::Prawn::Text::Box.new(text.to_s, { document: pdf, width: width, overflow: :expand, at: [x, pdf.cursor] })
+def maybe_start_new_page(pdf, size)
+  if pdf.cursor < size + default_margin
+    pdf.start_new_page
+  end
+end
+
+def text_box(pdf, text, x, width)
+  box = ::Prawn::Text::Box.new(text.to_s,
+    document: pdf,
+    width: width,
+    overflow: :expand,
+    at: [x, pdf.cursor])
+
   box.render
   box.height
 end
 
+def format_in_2_lines(pdf, label, text)
+  min_height = [
+    label.present? ? pdf.height_of_formatted([{ text: label, style: :bold, size: 12 }]) : nil,
+    text.present? ? pdf.height_of_formatted([{ text: text }]) : nil
+  ].compact.sum
+  maybe_start_new_page(pdf, min_height)
+
+  pdf.pad_bottom(2) do
+    pdf.font 'marianne', style: :bold, size: 12  do
+      pdf.text label
+    end
+  end
+  pdf.pad_bottom(default_margin) do
+    pdf.text text
+  end
+end
+
 def format_in_2_columns(pdf, label, text)
-  h1 = render_box(pdf, label, 0, 100)
-  h2 = render_box(pdf, ':', 100, 10)
-  h3 = render_box(pdf, text, 110, pdf.bounds.width - 110)
-  pdf.move_down 5 + [h1,h2,h3].max
+  min_height = [
+    label.present? ? pdf.height_of_formatted([{ text: label }]) : nil,
+    text.present? ? pdf.height_of_formatted([{ text: text }]) : nil
+  ].compact.max
+  maybe_start_new_page(pdf, min_height)
+
+  pdf.pad_bottom(default_margin) do
+    height = [
+      text_box(pdf, label, 0, 150),
+      text_box(pdf, ':', 150, 10),
+      text_box(pdf, text, 160, pdf.bounds.width - 160)
+    ].max
+    pdf.move_down height
+  end
 end
 
 def add_title(pdf, title)
-  title_style = {style: :bold, size: 20}
-  pdf.font 'marianne', title_style do
-    pdf.text title
-  end
-  pdf.text "\n"
-end
+  maybe_start_new_page(pdf, 100)
 
-def format_date(date)
-  I18n.l(date, format: :message_date_with_year)
-end
-
-def add_identite_individual(pdf, dossier)
-  format_in_2_columns(pdf, "Civilité", dossier.individual.gender)
-  format_in_2_columns(pdf, "Nom", dossier.individual.nom)
-  format_in_2_columns(pdf, "Prénom", dossier.individual.prenom)
-
-  if dossier.individual.birthdate.present?
-    format_in_2_columns(pdf, "Date de naissance", try_format_date(dossier.individual.birthdate))
+  pdf.pad(default_margin) do
+    pdf.font 'marianne', style: :bold, size: 20 do
+      pdf.text title
+    end
   end
 end
 
-def render_siret_info(pdf, etablissement)
-  pdf.text " - Dénomination : #{raison_sociale_or_name(etablissement)}"
-  pdf.text " - Forme juridique : #{etablissement.entreprise_forme_juridique}"
-  if etablissement.entreprise_capital_social.present?
-    pdf.text " - Capital social : #{pretty_currency(etablissement.entreprise_capital_social)}"
-  end
-  pdf.text "\n"
-end
+def add_section_title(pdf, title)
+  maybe_start_new_page(pdf, 100)
 
-def render_identite_etablissement(pdf, etablissement)
-  format_in_2_columns(pdf, "SIRET", etablissement.siret)
-  format_in_2_columns(pdf, "SIRET du siège social", etablissement.entreprise.siret_siege_social) if etablissement.entreprise.siret_siege_social.present?
-  format_in_2_columns(pdf, "Dénomination", raison_sociale_or_name(etablissement))
-  format_in_2_columns(pdf, "Forme juridique ", etablissement.entreprise_forme_juridique)
-  if etablissement.entreprise_capital_social.present?
-    format_in_2_columns(pdf, "Capital social ", pretty_currency(etablissement.entreprise_capital_social))
-  end
-  format_in_2_columns(pdf, "Libellé NAF ", etablissement.libelle_naf)
-  format_in_2_columns(pdf, "Code NAF ", etablissement.naf)
-  format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.entreprise.date_creation))
-  if @include_infos_administration
-    format_in_2_columns(pdf, "Effectif mensuel #{try_format_mois_effectif(etablissement)} (URSSAF) ", etablissement.entreprise_effectif_mensuel)
-    format_in_2_columns(pdf, "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} (URSSAF) ", etablissement.entreprise_effectif_annuel)
-  end
-  format_in_2_columns(pdf, "Effectif (ISPF) ", effectif(etablissement))
-  format_in_2_columns(pdf, "Code effectif ", etablissement.entreprise.code_effectif_entreprise)
-  format_in_2_columns(pdf, "Numéro de TVA intracommunautaire ", etablissement.entreprise.numero_tva_intracommunautaire) if etablissement.entreprise.numero_tva_intracommunautaire.present?
-  format_in_2_columns(pdf, "Adresse ", etablissement.adresse)
-  if etablissement.association?
-    format_in_2_columns(pdf, "Numéro RNA ", etablissement.association_rna)
-    format_in_2_columns(pdf, "Titre ", etablissement.association_titre)
-    format_in_2_columns(pdf, "Objet ", etablissement.association_objet)
-    format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.association_date_creation))
-    format_in_2_columns(pdf, "Date de publication ", try_format_date(etablissement.association_date_publication))
-    format_in_2_columns(pdf, "Date de déclaration ", try_format_date(etablissement.association_date_declaration))
+  pdf.pad_bottom(default_margin) do
+    pdf.font 'marianne', style: :bold, size: 14 do
+      pdf.text title
+    end
   end
 end
 
-def render_single_champ(pdf, champ)
+def add_identite_individual(pdf, individual)
+  pdf.pad_bottom(default_margin) do
+    format_in_2_columns(pdf, "Civilité", individual.gender)
+    format_in_2_columns(pdf, "Nom", individual.nom)
+    format_in_2_columns(pdf, "Prénom", individual.prenom)
+
+    if individual.birthdate.present?
+      format_in_2_columns(pdf, "Date de naissance", try_format_date(individual.birthdate))
+    end
+  end
+end
+
+def add_identite_etablissement(pdf, etablissement)
+  pdf.pad_bottom(default_margin) do
+    format_in_2_columns(pdf, "SIRET", etablissement.siret)
+    format_in_2_columns(pdf, "SIRET du siège social", etablissement.entreprise.siret_siege_social) if etablissement.entreprise.siret_siege_social.present?
+    format_in_2_columns(pdf, "Dénomination", raison_sociale_or_name(etablissement))
+    format_in_2_columns(pdf, "Forme juridique ", etablissement.entreprise_forme_juridique)
+
+    if etablissement.entreprise_capital_social.present?
+      format_in_2_columns(pdf, "Capital social ", pretty_currency(etablissement.entreprise_capital_social))
+    end
+
+    format_in_2_columns(pdf, "Libellé NAF ", etablissement.libelle_naf)
+    format_in_2_columns(pdf, "Code NAF ", etablissement.naf)
+    format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.entreprise.date_creation))
+
+    if @include_infos_administration
+      if etablissement.entreprise_effectif_mensuel.present?
+        format_in_2_columns(pdf, "Effectif mensuel #{try_format_mois_effectif(etablissement)} (URSSAF) ", number_with_delimiter(etablissement.entreprise_effectif_mensuel.to_s))
+      end
+      if etablissement.entreprise_effectif_annuel_annee.present?
+        format_in_2_columns(pdf, "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} (URSSAF) ", number_with_delimiter(etablissement.entreprise_effectif_annuel.to_s))
+      end
+    end
+
+    format_in_2_columns(pdf, "Effectif (ISPF) ", effectif(etablissement))
+    format_in_2_columns(pdf, "Code effectif ", etablissement.entreprise.code_effectif_entreprise)
+    if etablissement.entreprise.numero_tva_intracommunautaire.present?
+      format_in_2_columns(pdf, "Numéro de TVA intracommunautaire ", etablissement.entreprise.numero_tva_intracommunautaire)
+    end
+    format_in_2_columns(pdf, "Adresse ", etablissement.adresse)
+
+    if etablissement.association?
+      format_in_2_columns(pdf, "Numéro RNA ", etablissement.association_rna)
+      format_in_2_columns(pdf, "Titre ", etablissement.association_titre)
+      format_in_2_columns(pdf, "Objet ", etablissement.association_objet)
+      format_in_2_columns(pdf, "Date de création ", try_format_date(etablissement.association_date_creation))
+      format_in_2_columns(pdf, "Date de publication ", try_format_date(etablissement.association_date_publication))
+      format_in_2_columns(pdf, "Date de déclaration ", try_format_date(etablissement.association_date_declaration))
+    end
+  end
+end
+
+def add_single_champ(pdf, champ)
   case champ.type
-  when 'Champs::RepetitionChamp'
-    raise 'There should not be a RepetitionChamp here !'
-  when 'Champs::PieceJustificativeChamp'
+  when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
     return
   when 'Champs::HeaderSectionChamp'
-    pdf.font 'marianne', style: :bold, size: 14 do
-      pdf.text champ.libelle
-    end
-    pdf.text "\n"
+    add_section_title(pdf, champ.libelle)
   when 'Champs::ExplicationChamp'
-    format_in_2_columns(pdf, champ.libelle, champ.description)
+    format_in_2_lines(pdf, champ.libelle, champ.description)
   when 'Champs::CarteChamp'
-    format_in_2_columns(pdf, champ.libelle, champ.to_feature_collection.to_json)
+    format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
-    pdf.font 'marianne', style: :bold, size: 9 do
+    pdf.font 'marianne', style: :bold do
       pdf.text champ.libelle
     end
-    pdf.text " - SIRET: #{champ.to_s}"
-    render_identite_etablissement(pdf, champ.etablissement) if champ.etablissement.present?
-    pdf.text "\n"
+    if champ.etablissement.present?
+      add_identite_etablissement(pdf, champ.etablissement)
+    end
   when 'Champs::NumberChamp'
-    value = number_with_delimiter(champ.to_s)
-    format_in_2_columns(pdf, champ.libelle, value)
+    value = champ.to_s.empty? ? 'Non communiqué' : number_with_delimiter(champ.to_s)
+    format_in_2_lines(pdf, champ.libelle, value)
   else
     value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
-    format_in_2_columns(pdf, champ.libelle, value)
+    format_in_2_lines(pdf, champ.libelle, value)
   end
 end
 
@@ -117,11 +160,11 @@ def add_champs(pdf, champs)
     if champ.type == 'Champs::RepetitionChamp'
       champ.rows.each do |row|
         row.each do |inner_champ|
-          render_single_champ(pdf, inner_champ)
+          add_single_champ(pdf, inner_champ)
         end
       end
     else
-      render_single_champ(pdf, champ)
+      add_single_champ(pdf, champ)
     end
   end
 end
@@ -134,19 +177,19 @@ def add_message(pdf, message)
     sender = @dossier.user.email
   end
 
-  pdf.text "#{sender}, #{format_date(message.created_at)}", style: :bold
-  pdf.text ActionView::Base.full_sanitizer.sanitize(message.body), size: 9
-  pdf.text "\n", size: 9
+  format_in_2_lines(pdf, "#{sender}, #{try_format_date(message.created_at)}",
+    ActionView::Base.full_sanitizer.sanitize(message.body))
 end
 
 def add_avis(pdf, avis)
-  pdf.text "Avis de #{avis.email_to_display}", style: :bold
-  if avis.confidentiel?
-    pdf.text "(confidentiel)", style: :bold
+  format_in_2_lines(pdf, "Avis de #{avis.email_to_display}#{avis.confidentiel? ? ' (confidentiel)' : ''}",
+    avis.answer || 'En attente de réponse')
+end
+
+def add_etat_dossier(pdf, dossier)
+  pdf.pad_bottom(default_margin) do
+    pdf.text "Ce dossier est <b>#{dossier_display_state(dossier, lower: true)}</b>.", inline_format: true
   end
-  text = avis.answer || 'En attente de réponse'
-  pdf.text text
-  pdf.text "\n"
 end
 
 def add_etats_dossier(pdf, dossier)
@@ -159,8 +202,6 @@ def add_etats_dossier(pdf, dossier)
   if dossier.processed_at.present?
     format_in_2_columns(pdf, "Décision le", try_format_date(dossier.processed_at))
   end
-
-  pdf.text "\n"
 end
 
 prawn_document(page_size: "A4") do |pdf|
@@ -170,16 +211,16 @@ prawn_document(page_size: "A4") do |pdf|
   })
   pdf.font 'marianne'
 
-  pdf.svg IO.read(DOSSIER_PDF_EXPORT_LOGO_SRC), width: 300, position: :center
-  pdf.move_down(40)
+  pdf.pad_bottom(40) do
+    pdf.svg IO.read(DOSSIER_PDF_EXPORT_LOGO_SRC), width: 300, position: :center
+  end
 
   format_in_2_columns(pdf, 'Dossier Nº', @dossier.id.to_s)
   format_in_2_columns(pdf, 'Démarche', @dossier.procedure.libelle)
   format_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name)
-  pdf.text "\n"
 
-  pdf.text "Ce dossier est <b>#{dossier_display_state(@dossier, lower: true)}</b>.", inline_format: true
-  pdf.text "\n"
+  add_etat_dossier(pdf, @dossier)
+
   if @dossier.motivation.present?
     format_in_2_columns(pdf, "Motif de la décision", @dossier.motivation)
   end
@@ -191,15 +232,19 @@ prawn_document(page_size: "A4") do |pdf|
   if @dossier.france_connect_information.present?
     format_in_2_columns(pdf, 'Informations France Connect', "Le dossier a été déposé par le compte de #{@dossier.france_connect_information.given_name} #{@dossier.france_connect_information.family_name}, authentifié par France Connect le #{@dossier.france_connect_information.updated_at.strftime('%d/%m/%Y')}")
   end
+
   format_in_2_columns(pdf, "Email", @dossier.user.email)
-  add_identite_individual(pdf, @dossier) if @dossier.individual.present?
-  render_identite_etablissement(pdf, @dossier.etablissement) if @dossier.etablissement.present?
-  pdf.text "\n"
+
+  if @dossier.individual.present?
+    add_identite_individual(pdf, @dossier.individual)
+  elsif @dossier.etablissement.present?
+    add_identite_etablissement(pdf, @dossier.etablissement)
+  end
 
   add_title(pdf, 'Formulaire')
   add_champs(pdf, @dossier.champs)
 
-  if @include_infos_administration && @dossier.champs_private&.size > 0
+  if @include_infos_administration && @dossier.champs_private.present?
     add_title(pdf, "Annotations privées")
     add_champs(pdf, @dossier.champs_private)
   end
@@ -211,8 +256,12 @@ prawn_document(page_size: "A4") do |pdf|
     end
   end
 
-  add_title(pdf, 'Messagerie')
-  @dossier.commentaires.each do |commentaire|
-    add_message(pdf, commentaire)
+  if @dossier.commentaires.present?
+    add_title(pdf, 'Messagerie')
+    @dossier.commentaires.each do |commentaire|
+      add_message(pdf, commentaire)
+    end
   end
+
+  pdf.number_pages '<page> / <total>', at: [pdf.bounds.right - 80, pdf.bounds.bottom], align: :right, size: 10
 end

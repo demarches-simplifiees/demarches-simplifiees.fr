@@ -4,6 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  format     :string           not null
+#  key        :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -20,9 +21,9 @@ class Export < ApplicationRecord
 
   has_one_attached :file
 
-  validates :format, :groupe_instructeurs, presence: true
+  validates :format, :groupe_instructeurs, :key, presence: true
 
-  scope :stale, -> { where('updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
+  scope :stale, -> { where('exports.updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
 
   after_create_commit :compute_async
 
@@ -45,35 +46,22 @@ class Export < ApplicationRecord
   end
 
   def self.find_or_create_export(format, groupe_instructeurs)
-    export = Export.find_for_format_and_groupe_instructeurs(format, groupe_instructeurs)
-
-    if export.nil?
-      export = Export.create(
-        format: format,
-        groupe_instructeurs: groupe_instructeurs
-      )
-    end
-
-    export
+    create_with(groupe_instructeurs: groupe_instructeurs)
+      .create_or_find_by(format: format, key: generate_cache_key(groupe_instructeurs))
   end
 
   def self.find_for_format_and_groupe_instructeurs(format, groupe_instructeurs)
-    export_including_gis = Export
-      .joins(:exports_groupe_instructeurs)
-      .where(
-        format: format,
-        exports_groupe_instructeurs: { groupe_instructeur: groupe_instructeurs }
-      )
+    find_by(format: format, key: generate_cache_key(groupe_instructeurs))
+  end
 
-    export_including_gis.find do |export|
-      export.groupe_instructeurs.pluck(:id).sort == groupe_instructeurs.map(&:id).sort
-    end
+  def self.generate_cache_key(groupe_instructeurs)
+    groupe_instructeurs.map(&:id).sort.join('-')
   end
 
   private
 
   def filename
-    procedure_identifier = procedure.path || "procedure-#{id}"
+    procedure_identifier = procedure.path || "procedure-#{procedure.id}"
     "dossiers_#{procedure_identifier}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}.#{format}"
   end
 
