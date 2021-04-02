@@ -3,7 +3,7 @@ RSpec.describe Export, type: :model do
     let(:groupe_instructeur) { create(:groupe_instructeur) }
 
     context 'when everything is ok' do
-      let(:export) { build(:export) }
+      let(:export) { build(:export, groupe_instructeurs: [groupe_instructeur]) }
 
       it { expect(export.save).to be true }
     end
@@ -15,7 +15,7 @@ RSpec.describe Export, type: :model do
     end
 
     context 'when format is missing' do
-      let(:export) { build(:export, format: nil) }
+      let(:export) { build(:export, format: nil, groupe_instructeurs: [groupe_instructeur]) }
 
       it { expect(export.save).to be false }
     end
@@ -46,7 +46,7 @@ RSpec.describe Export, type: :model do
     let!(:gi_3) { create(:groupe_instructeur, procedure: procedure) }
 
     context 'when an export is made for one groupe instructeur' do
-      let!(:export) { Export.create(format: :csv, groupe_instructeurs: [gi_1, gi_2]) }
+      let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
       it { expect(Export.find_for_format_and_groupe_instructeurs(:csv, [gi_1])).to eq(nil) }
       it { expect(Export.find_for_format_and_groupe_instructeurs(:csv, [gi_2, gi_1])).to eq(export) }

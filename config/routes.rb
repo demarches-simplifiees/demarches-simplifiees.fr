@@ -146,7 +146,6 @@ Rails.application.routes.draw do
   resources :attachments, only: [:show, :destroy]
 
   get "patron" => "root#patron"
-  get "accessibilite" => "root#accessibilite"
   get "suivi" => "root#suivi"
   post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
 
