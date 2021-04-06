@@ -425,10 +425,7 @@ Rails.application.routes.draw do
 
       resources :administrateurs, controller: 'procedure_administrateurs', only: [:index, :create, :destroy]
 
-      resources :experts, controller: 'experts_procedures', only: [] do
-        post :add_expert_to_procedure, on: :collection
-        delete :revoke_expert_from_procedure, on: :member
-      end
+      resources :experts, controller: 'experts_procedures', only: [:create, :destroy]
 
       resources :types_de_champ, only: [:create, :update, :destroy] do
         member do
