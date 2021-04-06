@@ -31,7 +31,6 @@ features = [
   :dossier_pdf_vide,
   :expert_not_allowed_to_invite,
   :hide_instructeur_email,
-  :insee_api_v3,
   :instructeur_bypass_email_login_token,
   :localization,
   :make_experts_notifiable,
