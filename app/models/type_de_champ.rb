@@ -174,6 +174,10 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
+  def header_section?
+    type_champ == TypeDeChamp.type_champs.fetch(:header_section)
+  end
+
   def linked_drop_down_list?
     type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
   end

@@ -22,9 +22,19 @@ class Champs::HeaderSectionChamp < Champ
     # The user cannot enter any information here so it doesn’t make much sense to search
   end
 
+  def libelle_with_section_index
+    if sections.none?(&:libelle_with_section_index?)
+      "#{section_index}. #{libelle}"
+    else
+      libelle
+    end
+  end
+
+  def libelle_with_section_index?
+    libelle =~ /^\d/
+  end
+
   def section_index
-    siblings
-      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
-      .index(self) + 1
+    sections.index(self) + 1
   end
 end
