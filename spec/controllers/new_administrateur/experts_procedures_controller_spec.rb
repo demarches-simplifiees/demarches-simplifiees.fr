@@ -41,6 +41,31 @@ describe NewAdministrateur::ExpertsProceduresController, type: :controller do
     end
   end
 
+  describe '#update' do
+    let(:expert) { create(:expert) }
+    let(:expert_procedure) { create(:experts_procedure, procedure: procedure, expert: expert) }
+
+    subject do
+      put :update, params: {
+        id: expert_procedure.id,
+        procedure_id: procedure.id,
+        experts_procedure: {
+          allow_decision_access: true
+        }
+      }, format: :js
+    end
+
+    before do
+      subject
+    end
+
+    it 'updates the record' do
+      expect(expert_procedure.allow_decision_access).to be false
+      subject
+      expect(expert_procedure.reload.allow_decision_access).to be true
+    end
+  end
+
   describe '#delete' do
     let(:expert) { create(:expert) }
     let(:expert_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }

@@ -46,7 +46,7 @@
             - if @procedure.feature_enabled?(:admin_affect_experts_to_avis)
               %td.text-center
                 = form_for expert_procedure,
-                  url: admin_procedure_update_allow_decision_access_path(expert_procedure: expert_procedure),
+                  url: admin_procedure_expert_path(id: expert_procedure),
                   remote: true,
                   method: :put,
                   authenticity_token: true,
