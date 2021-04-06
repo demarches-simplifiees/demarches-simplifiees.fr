@@ -76,7 +76,7 @@ class ProcedureExportService
     # transliterate: convert to ASCII characters
     # to ensure truncate respects 30 bytes
     # /\*?[] are invalid Excel worksheet characters
-    options[:sheet_name] = I18n.transliterate(options[:sheet_name], '', locale: :en)
+    options[:sheet_name] = I18n.transliterate(options[:sheet_name], replacement: '', locale: :en)
       .delete('/\*?[]')
       .truncate(30, omission: '')
 
