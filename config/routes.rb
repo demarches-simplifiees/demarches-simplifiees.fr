@@ -406,7 +406,6 @@ Rails.application.routes.draw do
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert
       post 'transfer' => 'procedures#transfer', as: :transfer
-      get 'invited_expert_list'
       put 'update_allow_decision_access' => 'procedures#update_allow_decision_access', as: :update_allow_decision_access
       resources :mail_templates, only: [:edit, :update]
 
@@ -425,7 +424,7 @@ Rails.application.routes.draw do
 
       resources :administrateurs, controller: 'procedure_administrateurs', only: [:index, :create, :destroy]
 
-      resources :experts, controller: 'experts_procedures', only: [:create, :destroy]
+      resources :experts, controller: 'experts_procedures', only: [:index, :create, :destroy]
 
       resources :types_de_champ, only: [:create, :update, :destroy] do
         member do
