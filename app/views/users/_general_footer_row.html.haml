@@ -1,7 +1,9 @@
 %ul.footer-row.footer-bottom-line.footer-site-links
-  %li.footer-link-accessibilite>= link_to "Accessibilité", ACCESSIBILITE_URL, target: "_blank", rel: "noopener noreferrer"
+  %li.footer-link-accessibilite>
+    = link_to ACCESSIBILITE_URL, target: "_blank", rel: "noopener noreferrer" do
+      Accessibilité&nbsp;: non conforme
   %li.footer-link-cgu>= link_to "CGU", CGU_URL, target: "_blank", rel: "noopener noreferrer"
   %li.footer-link-mentions-legales>= link_to "Mentions légales", MENTIONS_LEGALES_URL, target: "_blank", rel: "noopener noreferrer"
-  %li.footer-link-doc>= link_to 'Documentation', DOC_URL
+  %li.footer-link-doc>= link_to 'Documentation', DOC_URL, target: "_blank", rel: "noopener noreferrer"
   %li.footer-link-contact>= contact_link "Contact technique", dossier_id: dossier&.id
-  %li.footer-link-aide>= link_to 'Aide', FAQ_URL
+  %li.footer-link-aide>= link_to 'Aide', FAQ_URL, target: "_blank", rel: "noopener noreferrer"
