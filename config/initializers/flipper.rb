@@ -34,7 +34,6 @@ features = [
   :insee_api_v3,
   :instructeur_bypass_email_login_token,
   :localization,
-  :maintenance_mode,
   :make_experts_notifiable,
   :mini_profiler,
   :procedure_routage_api,

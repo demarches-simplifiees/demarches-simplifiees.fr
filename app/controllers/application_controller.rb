@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   before_action :set_current_roles
   before_action :set_sentry_user
   before_action :redirect_if_untrusted
-  before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
+  before_action :reject, if: -> { ENV.fetch("MAINTENANCE_MODE", 'false') == 'true' }
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   before_action :staging_authenticate
