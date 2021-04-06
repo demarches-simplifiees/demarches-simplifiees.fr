@@ -45,6 +45,7 @@ class Champ < ApplicationRecord
     :repetition?,
     :dossier_link?,
     :titre_identite?,
+    :header_section?,
     to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
@@ -84,6 +85,10 @@ class Champ < ApplicationRecord
     else
       dossier&.champs_private
     end
+  end
+
+  def sections
+    siblings.filter(&:header_section?)
   end
 
   def mandatory_and_blank?

@@ -23,22 +23,18 @@ class Champs::HeaderSectionChamp < Champ
   end
 
   def libelle_with_section_index
-    if libelle_with_section_index? || siblings.any?(&:libelle_with_section_index?)
-      libelle
-    else
+    if sections.none?(&:libelle_with_section_index?)
       "#{section_index}. #{libelle}"
+    else
+      libelle
     end
   end
-
-  private
 
   def libelle_with_section_index?
     libelle =~ /^\d/
   end
 
   def section_index
-    siblings
-      .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
-      .index(self) + 1
+    sections.index(self) + 1
   end
 end
