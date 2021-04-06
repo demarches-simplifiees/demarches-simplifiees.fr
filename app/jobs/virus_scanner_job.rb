@@ -11,17 +11,32 @@ class VirusScannerJob < ApplicationJob
   # If the file is not analyzed yet, retry later (to avoid clobbering metadata)
   retry_on FileNotAnalyzedYetError, wait: :exponentially_longer, attempts: 10
   # If for some reason the file appears invalid, retry for a while
-  retry_on ActiveStorage::IntegrityError, attempts: 10, wait: 5.seconds
+  retry_on(ActiveStorage::IntegrityError, attempts: 5, wait: 5.seconds) do |job, _error|
+    blob = job.arguments.first
+
+    metadata = {
+      virus_scan_result: ActiveStorage::VirusScanner::INTEGRITY_ERROR,
+      scanned_at: Time.zone.now
+    }
+
+    merge_and_update_metadata(blob, metadata)
+  end
 
   def perform(blob)
     if !blob.analyzed? then raise FileNotAnalyzedYetError end
     if blob.virus_scanner.done? then return end
 
     metadata = extract_metadata_via_virus_scanner(blob)
-    blob.update!(metadata: blob.metadata.merge(metadata))
+    VirusScannerJob.merge_and_update_metadata(blob, metadata)
   end
 
   def extract_metadata_via_virus_scanner(blob)
     ActiveStorage::VirusScanner.new(blob).metadata
+  end
+
+  private
+
+  def self.merge_and_update_metadata(blob, metadata)
+    blob.update!(metadata: blob.metadata.merge(metadata))
   end
 end
