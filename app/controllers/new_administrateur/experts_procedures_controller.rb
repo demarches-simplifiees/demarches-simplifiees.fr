@@ -1,8 +1,16 @@
 module NewAdministrateur
   class ExpertsProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:add_expert_to_procedure, :revoke_expert_from_procedure]
+    before_action :retrieve_procedure
 
-    def add_expert_to_procedure
+    def index
+      @experts_procedure = @procedure
+        .experts_procedures
+        .where(revoked_at: nil)
+        .sort_by { |expert_procedure| expert_procedure.expert.email }
+      @experts_emails = experts_procedure_emails
+    end
+
+    def create
       emails = params['emails'].presence || [].to_json
       emails = JSON.parse(emails).map(&:strip).map(&:downcase)
 
@@ -29,15 +37,32 @@ module NewAdministrateur
           value: valid_users.map(&:email).join(', '),
           procedure: @procedure.id)
       end
-      redirect_to admin_procedure_invited_expert_list_path(@procedure)
+      redirect_to admin_procedure_experts_path(@procedure)
     end
 
-    def revoke_expert_from_procedure
-      expert_procedure = ExpertsProcedure.find_by!(procedure: @procedure, id: params[:expert_procedure][:id])
+    def update
+      @procedure
+        .experts_procedures
+        .find(params[:id])
+        .update!(expert_procedure_params)
+    end
+
+    def destroy
+      expert_procedure = ExpertsProcedure.find_by!(procedure: @procedure, id: params[:id])
       expert_email = expert_procedure.expert.email
       expert_procedure.update!(revoked_at: Time.zone.now)
       flash[:notice] = "#{expert_email} a été révoqué de la démarche et ne pourra plus déposer d'avis."
-      redirect_to admin_procedure_invited_expert_list_path(@procedure)
+      redirect_to admin_procedure_experts_path(@procedure)
+    end
+
+    private
+
+    def experts_procedure_emails
+      @procedure.experts.map(&:email).sort
+    end
+
+    def expert_procedure_params
+      params.require(:experts_procedure).permit(:allow_decision_access)
     end
   end
 end
