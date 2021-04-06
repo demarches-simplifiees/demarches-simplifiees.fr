@@ -4,6 +4,7 @@
 #
 #  id                    :bigint           not null, primary key
 #  allow_decision_access :boolean          default(FALSE), not null
+#  revoked_at            :datetime
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  expert_id             :bigint           not null

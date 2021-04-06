@@ -619,13 +619,14 @@ describe Users::DossiersController, type: :controller do
       it 'updates the champs' do
         subject
         expect(first_champ.reload.value).to eq('beautiful value')
-        expect(first_champ.dossier.reload.last_champ_updated_at).to eq(now)
         expect(piece_justificative_champ.reload.piece_justificative_file).to be_attached
       end
 
-      it 'updates the dossier modification date' do
+      it 'updates the dossier timestamps' do
         subject
-        expect(dossier.reload.updated_at.year).to eq(2100)
+        dossier.reload
+        expect(dossier.updated_at).to eq(now)
+        expect(dossier.last_champ_updated_at).to eq(now)
       end
 
       it 'updates the dossier state' do
@@ -635,22 +636,34 @@ describe Users::DossiersController, type: :controller do
 
       it { is_expected.to redirect_to(demande_dossier_path(dossier)) }
 
-      context 'when only files champs are modified' do
+      context 'when only a single file champ are modified' do
+        # A bug in ActiveRecord causes records changed through grand-parent <->  parent <-> child
+        # relationships do not touch the grand-parent record on change.
+        # This situation is hit when updating just the attachment of a champ (and not the
+        # champ itself).
+        #
+        # This test ensures that, whatever workaround we wrote for this, it still works properly.
+        #
+        # See https://github.com/rails/rails/issues/26726
         let(:submit_payload) do
           {
             id: dossier.id,
             dossier: {
-              champs_attributes: {
-                id: piece_justificative_champ.id,
-                piece_justificative_file: file
-              }
+              champs_attributes: [
+                {
+                  id: piece_justificative_champ.id,
+                  piece_justificative_file: file
+                }
+              ]
             }
           }
         end
 
-        it 'updates the dossier modification date' do
+        it 'updates the dossier timestamps' do
           subject
-          expect(dossier.reload.updated_at.year).to eq(2100)
+          dossier.reload
+          expect(dossier.updated_at).to eq(now)
+          expect(dossier.last_champ_updated_at).to eq(now)
         end
       end
     end
@@ -666,6 +679,12 @@ describe Users::DossiersController, type: :controller do
 
       it { expect(response).to render_template(:modifier) }
       it { expect(flash.alert).to eq(['nop']) }
+
+      it 'does not update the dossier timestamps' do
+        dossier.reload
+        expect(dossier.updated_at).not_to eq(now)
+        expect(dossier.last_champ_updated_at).not_to eq(now)
+      end
 
       it 'does not send an email' do
         expect(NotificationMailer).not_to receive(:send_initiated_notification)

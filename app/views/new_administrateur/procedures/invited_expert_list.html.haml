@@ -5,12 +5,35 @@
 
 .container
   %h1.page-title.mt-2 Experts invités sur #{@procedure.libelle}
+
+  .container.groupe-instructeur
+
+    .card
+      .card-title Affecter des experts à la démarche
+      = form_for :experts_procedure,
+        url: admin_procedure_add_expert_to_procedure_path(@procedure),
+        html: { class: 'form' } do |f|
+
+        .instructeur-wrapper
+          %p.notice Pendant l'instruction d'un dossier, les instructeurs peuvent demander leur avis à un ou plusieurs experts.
+          %p.notice Entrez les adresses email des experts que vous souhaitez affecter à cette démarche
+          - hidden_field_id = SecureRandom.uuid
+          = hidden_field_tag :emails, nil, data: { uuid: hidden_field_id }
+          = react_component("ComboMultipleDropdownList",
+            options: [],
+            selected: [], disabled: [],
+            hiddenFieldId: hidden_field_id,
+            label: 'email expert',
+            acceptNewValues: true)
+
+          = f.submit 'Affecter à la démarche', class: 'button primary send'
   - if @experts_procedure.present?
     %table.table.mt-2
       %thead
         %tr
           %th Liste des experts
-          - if @procedure.feature_enabled?(:make_experts_notifiable)
+          %th Nombre d'avis
+          - if @procedure.feature_enabled?(:admin_affect_experts_to_avis)
             %th Notifier des décisions sur les dossiers
       %tbody
         - @experts_procedure.each do |expert_procedure|
@@ -18,8 +41,10 @@
             %td
               %span.icon.person
               = expert_procedure.expert.email
-            - if @procedure.feature_enabled?(:make_experts_notifiable)
-              %td
+            %td.text-center
+              = expert_procedure.avis.count
+            - if @procedure.feature_enabled?(:admin_affect_experts_to_avis)
+              %td.text-center
                 = form_for expert_procedure,
                   url: admin_procedure_update_allow_decision_access_path(expert_procedure: expert_procedure),
                   remote: true,
@@ -31,6 +56,12 @@
                     %span.toggle-switch-control.round
                     %span.toggle-switch-label.on
                     %span.toggle-switch-label.off
+            %td.actions= button_to 'retirer',
+              { action: "revoke_expert_from_procedure", :controller=>"new_administrateur/experts_procedures" },
+              { method: :put,
+                data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d'avis" },
+                params: { expert_procedure: { id: expert_procedure.id }},
+                class: 'button' }
   - else
     .blank-tab
       %h2.empty-text Aucun expert invité pour le moment.
