@@ -27,7 +27,7 @@ describe ActiveStorage::DownloadableFile do
 
     context 'when there is a repetition bloc' do
       before do
-        dossier.champs << build(:champ_repetition_with_piece_jointe, dossier: dossier)
+        dossier.champs << create(:champ_repetition_with_piece_jointe, dossier: dossier)
       end
 
       it 'should have 4 piece_justificatives' do
