@@ -34,6 +34,7 @@ module CreateAvisConcern
         end
       end
     )
+    dossier.avis.reload # unload non-persisted avis from dossier
 
     persisted, failed = create_results.partition(&:persisted?)
 
