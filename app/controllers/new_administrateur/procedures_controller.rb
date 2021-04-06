@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :invited_expert_list, :update_allow_decision_access]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :update_allow_decision_access]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
@@ -185,11 +185,6 @@ module NewAdministrateur
       end
     end
 
-    def invited_expert_list
-      @experts_procedure = @procedure.experts_procedures.where(revoked_at: nil).sort_by { |expert_procedure| expert_procedure.expert.email }
-      @experts_emails = experts_procedure_emails
-    end
-
     def update_allow_decision_access
       @procedure
         .experts_procedures
@@ -198,10 +193,6 @@ module NewAdministrateur
     end
 
     private
-
-    def experts_procedure_emails
-      @procedure.experts.map(&:email).sort
-    end
 
     def apercu_tab
       params[:tab] || 'dossier'
