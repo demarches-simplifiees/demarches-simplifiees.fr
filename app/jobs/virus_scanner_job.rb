@@ -19,7 +19,7 @@ class VirusScannerJob < ApplicationJob
       scanned_at: Time.zone.now
     }
 
-    blob.update!(metadata: blob.metadata.merge(metadata))
+    merge_and_update_metadata(blob, metadata)
   end
 
   def perform(blob)
@@ -27,10 +27,16 @@ class VirusScannerJob < ApplicationJob
     if blob.virus_scanner.done? then return end
 
     metadata = extract_metadata_via_virus_scanner(blob)
-    blob.update!(metadata: blob.metadata.merge(metadata))
+    VirusScannerJob.merge_and_update_metadata(blob, metadata)
   end
 
   def extract_metadata_via_virus_scanner(blob)
     ActiveStorage::VirusScanner.new(blob).metadata
+  end
+
+  private
+
+  def self.merge_and_update_metadata(blob, metadata)
+    blob.update!(metadata: blob.metadata.merge(metadata))
   end
 end
