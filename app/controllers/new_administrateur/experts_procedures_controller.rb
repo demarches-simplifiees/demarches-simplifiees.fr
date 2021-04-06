@@ -33,7 +33,7 @@ module NewAdministrateur
     end
 
     def revoke_expert_from_procedure
-      expert_procedure = ExpertsProcedure.find_by!(procedure: @procedure, id: params[:expert_procedure][:id])
+      expert_procedure = ExpertsProcedure.find_by!(procedure: @procedure, id: params[:id])
       expert_email = expert_procedure.expert.email
       expert_procedure.update!(revoked_at: Time.zone.now)
       flash[:notice] = "#{expert_email} a été révoqué de la démarche et ne pourra plus déposer d'avis."

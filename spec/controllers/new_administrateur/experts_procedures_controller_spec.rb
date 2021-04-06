@@ -32,7 +32,7 @@ describe NewAdministrateur::ExpertsProceduresController, type: :controller do
     let(:expert_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
 
     subject do
-      put :revoke_expert_from_procedure, params: { procedure_id: procedure.id, expert_procedure: { id: expert_procedure.id } }
+      delete :revoke_expert_from_procedure, params: { procedure_id: procedure.id, id: expert_procedure.id }
     end
 
     before do
