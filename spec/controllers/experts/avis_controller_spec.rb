@@ -159,7 +159,7 @@ describe Experts::AvisController, type: :controller do
       let(:previous_avis_confidentiel) { false }
       let(:asked_confidentiel) { false }
       let(:intro) { 'introduction' }
-      let(:emails) { ["toto@totomail.com"] }
+      let(:emails) { "[\"toto@totomail.com\"]" }
       let(:invite_linked_dossiers) { nil }
 
       before do
@@ -176,7 +176,7 @@ describe Experts::AvisController, type: :controller do
 
     describe '#create_avis' do
       let!(:previous_avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, confidentiel: previous_avis_confidentiel) }
-      let(:emails) { ['a@b.com'] }
+      let(:emails) { "[\"a@b.com\"]" }
       let(:intro) { 'introduction' }
       let(:created_avis) { Avis.last }
       let!(:old_avis_count) { Avis.count }
@@ -194,7 +194,7 @@ describe Experts::AvisController, type: :controller do
       context 'when an invalid email' do
         let(:previous_avis_confidentiel) { false }
         let(:asked_confidentiel) { false }
-        let(:emails) { ["toto.fr"] }
+        let(:emails) { "[\"toto.fr\"]" }
 
         it { expect(response).to render_template :instruction }
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
@@ -205,7 +205,7 @@ describe Experts::AvisController, type: :controller do
       context 'ask review with attachment' do
         let(:previous_avis_confidentiel) { false }
         let(:asked_confidentiel) { false }
-        let(:emails) { ["toto@totomail.com"] }
+        let(:emails) { "[\"toto@totomail.com\"]" }
 
         it { expect(created_avis.introduction_file).to be_attached }
         it { expect(created_avis.introduction_file.filename).to eq("piece_justificative_0.pdf") }
@@ -216,7 +216,7 @@ describe Experts::AvisController, type: :controller do
       context 'with multiple emails' do
         let(:asked_confidentiel) { false }
         let(:previous_avis_confidentiel) { false }
-        let(:emails) { ["toto.fr,titi@titimail.com"] }
+        let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
 
         it { expect(response).to render_template :instruction }
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }

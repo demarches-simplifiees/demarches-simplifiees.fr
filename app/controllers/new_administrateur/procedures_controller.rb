@@ -186,7 +186,8 @@ module NewAdministrateur
     end
 
     def invited_expert_list
-      @experts_procedure = @procedure.experts_procedures.sort_by { |expert_procedure| expert_procedure.expert.email }
+      @experts_procedure = @procedure.experts_procedures.where(revoked_at: nil).sort_by { |expert_procedure| expert_procedure.expert.email }
+      @experts_emails = experts_procedure_emails
     end
 
     def update_allow_decision_access
@@ -197,6 +198,10 @@ module NewAdministrateur
     end
 
     private
+
+    def experts_procedure_emails
+      @procedure.experts.map(&:email).sort
+    end
 
     def apercu_tab
       params[:tab] || 'dossier'

@@ -1,5 +1,12 @@
 fr:
   new_administrateur:
+    experts_procedures:
+      wrong_address:
+          one: "%{value} n’est pas une adresse email valide"
+          other: "%{value} ne sont pas des adresses emails valides"
+      experts_assignment:
+          one: "L'expert %{value} a été affecté à la démarche n° %{procedure}"
+          other: "Les experts %{value} ont été affectés à la démarche n° %{procedure}"
     groupe_instructeurs:
       index:
         existing_groupe:

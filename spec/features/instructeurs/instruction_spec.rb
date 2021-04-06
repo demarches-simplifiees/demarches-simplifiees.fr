@@ -1,4 +1,4 @@
-feature 'Instructing a dossier:' do
+feature 'Instructing a dossier:', js: true do
   include ActiveJob::TestHelper
 
   let(:password) { 'my-s3cure-p4ssword' }
@@ -101,11 +101,13 @@ feature 'Instructing a dossier:' do
     click_on 'Avis externes'
     expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
 
+    expert_email_formated = "[\"expert@tps.com\"]"
     expert_email = 'expert@tps.com'
-    ask_confidential_avis(expert_email, 'a good introduction')
+    ask_confidential_avis(expert_email_formated, 'a good introduction')
 
+    expert_email_formated = "[\"#{instructeur2.email}\"]"
     expert_email = instructeur2.email
-    ask_confidential_avis(expert_email, 'a good introduction')
+    ask_confidential_avis(expert_email_formated, 'a good introduction')
 
     click_on 'Personnes impliquées'
     expect(page).to have_text(expert_email)
@@ -206,7 +208,7 @@ feature 'Instructing a dossier:' do
   end
 
   def ask_confidential_avis(to, introduction)
-    fill_in 'avis_emails', with: to
+    page.execute_script("document.querySelector('#avis_emails').value = '#{to}'")
     fill_in 'avis_introduction', with: introduction
     select 'confidentiel', from: 'avis_confidentiel'
     click_on 'Demander un avis'
