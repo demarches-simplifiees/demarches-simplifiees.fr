@@ -4,14 +4,17 @@ describe NewAdministrateur::ExpertsProceduresController, type: :controller do
   before do
     sign_in(admin.user)
   end
-  describe '#add_expert_to_procedure' do
+
+  describe '#create' do
     let(:procedure) { create :procedure, administrateur: admin }
     let(:expert) { create(:expert) }
     let(:expert2) { create(:expert) }
 
     subject do
-      post :add_expert_to_procedure,
-      params: { procedure_id: procedure.id, emails: "[\"#{expert.email}\",\"#{expert2.email}\"]" }
+      post :create, params: {
+        procedure_id: procedure.id,
+        emails: "[\"#{expert.email}\",\"#{expert2.email}\"]"
+      }
     end
 
     before do
@@ -26,13 +29,13 @@ describe NewAdministrateur::ExpertsProceduresController, type: :controller do
     end
   end
 
-  describe '#revoke_expert_from_procedure' do
+  describe '#delete' do
     let(:procedure) { create :procedure, administrateur: admin }
     let(:expert) { create(:expert) }
     let(:expert_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
 
     subject do
-      delete :revoke_expert_from_procedure, params: { procedure_id: procedure.id, id: expert_procedure.id }
+      delete :destroy, params: { procedure_id: procedure.id, id: expert_procedure.id }
     end
 
     before do
