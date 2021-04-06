@@ -40,6 +40,13 @@ module NewAdministrateur
       redirect_to admin_procedure_experts_path(@procedure)
     end
 
+    def update
+      @procedure
+        .experts_procedures
+        .find(params[:id])
+        .update!(expert_procedure_params)
+    end
+
     def destroy
       expert_procedure = ExpertsProcedure.find_by!(procedure: @procedure, id: params[:id])
       expert_email = expert_procedure.expert.email
@@ -52,6 +59,10 @@ module NewAdministrateur
 
     def experts_procedure_emails
       @procedure.experts.map(&:email).sort
+    end
+
+    def expert_procedure_params
+      params.require(:experts_procedure).permit(:allow_decision_access)
     end
   end
 end

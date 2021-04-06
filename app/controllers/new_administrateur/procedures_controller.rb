@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :update_allow_decision_access]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
@@ -183,13 +183,6 @@ module NewAdministrateur
         redirect_to admin_procedure_path(params[:procedure_id])
         flash.notice = "La démarche a correctement été clonée vers le nouvel administrateur."
       end
-    end
-
-    def update_allow_decision_access
-      @procedure
-        .experts_procedures
-        .find(params[:expert_procedure])
-        .update!(allow_decision_access_params)
     end
 
     private
