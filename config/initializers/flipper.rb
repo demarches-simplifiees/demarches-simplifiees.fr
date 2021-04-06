@@ -28,7 +28,6 @@ features = [
   :administrateur_routage,
   :administrateur_web_hook,
   :carte_ign,
-  :coronavirus_banner,
   :dossier_pdf_vide,
   :expert_not_allowed_to_invite,
   :hide_instructeur_email,
