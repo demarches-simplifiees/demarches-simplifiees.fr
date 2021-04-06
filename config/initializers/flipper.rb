@@ -35,7 +35,6 @@ features = [
   :instructeur_bypass_email_login_token,
   :localization,
   :make_experts_notifiable,
-  :mini_profiler,
   :procedure_routage_api,
   :xray
 ]
