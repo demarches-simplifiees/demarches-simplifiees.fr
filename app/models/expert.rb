@@ -7,7 +7,7 @@
 #  updated_at :datetime         not null
 #
 class Expert < ApplicationRecord
-  has_one :user
+  has_one :user, dependent: :destroy
   has_many :experts_procedures
   has_many :avis, through: :experts_procedures
   has_many :dossiers, through: :avis
