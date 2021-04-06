@@ -309,7 +309,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    if feature_enabled?(:localization)
+    if ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true'
       I18n.locale = http_accept_language.compatible_language_from(I18n.available_locales)
     end
   end

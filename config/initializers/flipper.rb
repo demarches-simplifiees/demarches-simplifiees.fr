@@ -32,7 +32,6 @@ features = [
   :expert_not_allowed_to_invite,
   :hide_instructeur_email,
   :instructeur_bypass_email_login_token,
-  :localization,
   :make_experts_notifiable,
   :procedure_routage_api
 ]
