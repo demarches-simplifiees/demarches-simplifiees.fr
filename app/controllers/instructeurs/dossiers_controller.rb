@@ -172,7 +172,9 @@ module Instructeurs
 
       if @commentaire.save
         @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
-        current_instructeur.follow(dossier)
+        if !current_instructeur.follow?(dossier)
+          current_instructeur.follow(dossier)
+        end
         flash.notice = "Message envoyé"
         redirect_to messagerie_instructeur_dossier_path(procedure, dossier)
       else
