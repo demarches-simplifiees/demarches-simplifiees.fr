@@ -23,7 +23,7 @@ class Champs::HeaderSectionChamp < Champ
   end
 
   def libelle_with_section_index
-    if sections.none?(&:libelle_with_section_index?)
+    if sections&.none?(&:libelle_with_section_index?)
       "#{section_index}. #{libelle}"
     else
       libelle
