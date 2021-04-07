@@ -85,10 +85,10 @@ module Instructeurs
         @archived_dossiers
       end
 
-      @has_en_cours_notifications = current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?
-      @has_termine_notifications = current_instructeur.notifications_for_procedure(@procedure, :termine).exists?
-
-      @not_archived_notifications_dossier_ids = current_instructeur.notifications_for_procedure(@procedure, :not_archived).pluck(:id)
+      notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
+      @has_en_cours_notifications = notifications[:en_cours].present?
+      @has_termine_notifications = notifications[:termines].present?
+      @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
       sorted_ids = procedure_presentation.sorted_ids(@dossiers, current_instructeur)
 

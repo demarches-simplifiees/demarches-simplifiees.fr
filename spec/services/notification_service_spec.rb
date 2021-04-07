@@ -92,8 +92,8 @@ describe NotificationService do
 
       context 'when there is a notification on this procedure' do
         before do
-          allow_any_instance_of(Instructeur).to receive(:notifications_for_procedure)
-            .and_return([12])
+          allow_any_instance_of(Instructeur).to receive(:notifications_for_groupe_instructeurs)
+            .and_return(en_cours: [12], termines: [])
         end
 
         it do
