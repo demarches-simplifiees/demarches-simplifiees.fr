@@ -4,7 +4,7 @@ FactoryBot.define do
     groupe_instructeurs { [association(:groupe_instructeur)] }
 
     after(:build) do |export, _evaluator|
-      export.key = Export.generate_cache_key(export.groupe_instructeurs)
+      export.key = Export.generate_cache_key(export.groupe_instructeurs.map(&:id))
     end
   end
 end
