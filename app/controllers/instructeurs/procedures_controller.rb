@@ -220,10 +220,7 @@ module Instructeurs
     end
 
     def assign_exports
-      groupe_instructeurs_for_procedure = current_instructeur.groupe_instructeurs.where(procedure: procedure)
-      @xlsx_export = Export.find_for_format_and_groupe_instructeurs(:xlsx, groupe_instructeurs_for_procedure)
-      @csv_export = Export.find_for_format_and_groupe_instructeurs(:csv, groupe_instructeurs_for_procedure)
-      @ods_export = Export.find_for_format_and_groupe_instructeurs(:ods, groupe_instructeurs_for_procedure)
+      @xlsx_export, @csv_export, @ods_export = Export.find_for_groupe_instructeurs(groupe_instructeur_ids)
     end
 
     def assign_to
