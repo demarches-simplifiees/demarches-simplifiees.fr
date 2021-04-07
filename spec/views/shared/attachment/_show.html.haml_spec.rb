@@ -55,4 +55,14 @@ describe 'shared/attachment/_show.html.haml', type: :view do
       expect(subject).to have_text('virus détecté')
     end
   end
+
+  context 'when the file is corrupted' do
+    let(:virus_scan_result) { ActiveStorage::VirusScanner::INTEGRITY_ERROR }
+
+    it 'displays the filename, but doesn’t allow to download the file' do
+      expect(subject).to have_text(champ.piece_justificative_file.filename.to_s)
+      expect(subject).not_to have_link(champ.piece_justificative_file.filename.to_s)
+      expect(subject).to have_text('corrompu')
+    end
+  end
 end
