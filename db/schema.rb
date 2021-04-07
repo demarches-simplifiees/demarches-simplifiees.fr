@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_02_163003) do
+ActiveRecord::Schema.define(version: 2021_04_07_174523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,7 +121,6 @@ ActiveRecord::Schema.define(version: 2021_04_02_163003) do
     t.string "email"
     t.text "introduction"
     t.text "answer"
-    t.integer "instructeur_id"
     t.integer "dossier_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -130,11 +129,9 @@ ActiveRecord::Schema.define(version: 2021_04_02_163003) do
     t.datetime "revoked_at"
     t.bigint "experts_procedure_id"
     t.string "claimant_type"
-    t.boolean "tmp_expert_migrated", default: false
     t.index ["claimant_id"], name: "index_avis_on_claimant_id"
     t.index ["dossier_id"], name: "index_avis_on_dossier_id"
     t.index ["experts_procedure_id"], name: "index_avis_on_experts_procedure_id"
-    t.index ["instructeur_id"], name: "index_avis_on_instructeur_id"
   end
 
   create_table "bill_signatures", force: :cascade do |t|
@@ -291,7 +288,6 @@ ActiveRecord::Schema.define(version: 2021_04_02_163003) do
     t.string "localite"
     t.string "code_insee_localite"
     t.integer "dossier_id"
-    t.integer "entreprise_id"
     t.string "entreprise_siren"
     t.bigint "entreprise_capital_social"
     t.string "entreprise_numero_tva_intracommunautaire"
@@ -532,7 +528,6 @@ ActiveRecord::Schema.define(version: 2021_04_02_163003) do
     t.date "auto_archive_on"
     t.datetime "published_at"
     t.datetime "hidden_at"
-    t.datetime "archived_at"
     t.datetime "whitelisted_at"
     t.boolean "ask_birthday", default: false, null: false
     t.string "web_hook_url"
@@ -550,9 +545,6 @@ ActiveRecord::Schema.define(version: 2021_04_02_163003) do
     t.string "declarative_with_state"
     t.text "monavis_embed"
     t.text "routing_criteria_name", default: "Votre ville"
-    t.boolean "csv_export_queued"
-    t.boolean "xlsx_export_queued"
-    t.boolean "ods_export_queued"
     t.datetime "closed_at"
     t.datetime "unpublished_at"
     t.bigint "canonical_procedure_id"
