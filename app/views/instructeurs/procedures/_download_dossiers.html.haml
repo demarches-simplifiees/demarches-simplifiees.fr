@@ -7,11 +7,12 @@
         - [[xlsx_export, :xlsx], [ods_export, :ods], [csv_export, :csv]].each do |(export, format)|
           %li
             - if export.nil?
-              - export_text = "Demander un export au format .#{format}"
-              - if format == :csv
-                - export_text = "Demander un export au format .#{format}<br/>(uniquement les dossiers, sans les champs répétables)".html_safe
-              = link_to export_text, download_export_instructeur_procedure_path(procedure, export_format: format), remote: true
+              = link_to t("#{format}_html", scope: [:instructeurs, :procedure, :export_stale]), download_export_instructeur_procedure_path(procedure, export_format: format), remote: true
             - elsif export.ready?
-              = link_to "Télécharger l'export au format .#{format}", export.file.service_url, target: "_blank", rel: "noopener"
+              = link_to t(:export_ready_html, export_time: time_ago_in_words(export.updated_at), export_format: ".#{format}", scope: [:instructeurs, :procedure]), export.file.service_url, target: "_blank", rel: "noopener"
+              - if export.old?
+                = button_to download_export_instructeur_procedure_path(procedure, export_format: format, force_export: true), class: "button small", style: "padding-right: 2px", title: t(:short, export_format: ".#{format}", scope: [:instructeurs, :procedure, :export_stale]), remote: true, method: :get, params: { export_format: format, force_export: true } do
+                  .icon.retry
             - else
               %span{ 'data-export-poll-url': download_export_instructeur_procedure_path(procedure, export_format: format, no_progress_notification: true) }
+                = t(:export_pending_html, export_time: time_ago_in_words(export.created_at), export_format: ".#{format}", scope: [:instructeurs, :procedure])

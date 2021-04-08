@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 class Export < ApplicationRecord
-  MAX_DUREE_CONSERVATION_EXPORT = 1.hour
+  MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
   enum format: {
     csv: 'csv',
@@ -43,6 +43,10 @@ class Export < ApplicationRecord
 
   def ready?
     file.attached?
+  end
+
+  def old?
+    updated_at < 20.minutes.ago
   end
 
   def self.find_or_create_export(format, groupe_instructeurs)
