@@ -45,8 +45,6 @@
 #
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['archived_at', 'csv_export_queued', 'xlsx_export_queued', 'ods_export_queued']
-
   include ProcedureStatsConcern
 
   include Discard::Model
