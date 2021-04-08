@@ -17,7 +17,7 @@
 </header>
 
 <section class="main-content__body">
-  <h2>Historique des email</h2>
+  <h2 style="font-size: 1.3em; margin: 24px 0 8px 0">Historique des email</h2>
 <% if @sent_mails.present? %>
   <p>
   Cet historique contient les 30 derniers jours. Pour un recherche plus fine, il faut fouiller les <a href="https://app-smtp.sendinblue.com/log">logs de SendInblue</a> ou de Mailjet.
@@ -69,7 +69,7 @@
     Vous pouvez éventuellement fouiller les <a href="https://app-smtp.sendinblue.com/log">logs de SendInBlue</a> ou de Mailjet.</p>
 <% end %>
 
-  <h2>Problèmes potentiel</h2>
+  <h2 style="font-size: 1.3em; margin: 24px 0 8px 0">Problèmes potentiel</h2>
 
   <% if @user.confirmed? %>
     <p><strong>Compte activé, n'arrive pas à se connecter</strong> ? <button class="btn btn-secondary btn-small" onclick="reveal_email('#activated-cant-connect')">Voir la suggestion d’email</button></p>
