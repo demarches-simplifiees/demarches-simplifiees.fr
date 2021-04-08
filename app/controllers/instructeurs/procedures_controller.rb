@@ -58,13 +58,13 @@ module Instructeurs
 
       @followed_dossiers = current_instructeur
         .followed_dossiers
-        .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .for_procedure(procedure)
         .en_cours
 
       @followed_dossiers_id = current_instructeur
         .followed_dossiers
-        .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .for_procedure(procedure)
         .pluck(:id)
 
@@ -239,6 +239,18 @@ module Instructeurs
 
     def assign_to
       current_instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure })
+    end
+
+    def assign_tos
+      @assign_tos ||= current_instructeur
+        .assign_to
+        .joins(:groupe_instructeur)
+        .where(groupe_instructeur: { procedure_id: procedure_id })
+    end
+
+    def groupe_instructeur_ids
+      @groupe_instructeur_ids ||= assign_tos
+        .map(&:groupe_instructeur_id)
     end
 
     def statut
