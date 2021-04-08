@@ -39,7 +39,7 @@ class Champs::AddressChamp < Champs::TextChamp
   end
 
   def to_s
-    address_label
+    address_label.presence || ''
   end
 
   def for_tag
