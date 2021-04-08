@@ -55,6 +55,15 @@ class Sendinblue::API
     []
   end
 
+  def unblock_user(email_address)
+    client = ::SibApiV3Sdk::TransactionalEmailsApi.new
+    client.smtp_blocked_contacts_email_delete(email_address)
+    true
+  rescue ::SibApiV3Sdk::ApiError => e
+    Rails.logger.error e.message
+    false
+  end
+
   def run
     hydra.run
     @hydra = nil

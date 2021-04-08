@@ -52,14 +52,14 @@ module Manager
       @sent_mails = Sendinblue::API.new.sent_mails(@user.email)
     end
 
-    def unblock_user
-      @user = User.find(params[:id])
-
-      transactionnal_api = ::SibApiV3Sdk::TransactionalEmailsApi.new
-      transactionnal_api.smtp_blocked_contacts_email_delete(@user.email)
-
-    rescue ::SibApiV3Sdk::ApiError => e
-      flash.alert = "Impossible de débloquer cet email auprès de Sendinblue : #{e.message}"
+    def unblock_email
+      @user = User.find(params[:user_id])
+      if Sendinblue::API.new.unblock_user(@user.email)
+        flash.notice = "L'adresse email a été débloquée auprès de Sendinblue"
+      else
+        flash.alert = "Impossible de débloquer cette addresse email auprès de Sendinblue"
+      end
+      redirect_to emails_manager_user_path(@user)
     end
   end
 end
