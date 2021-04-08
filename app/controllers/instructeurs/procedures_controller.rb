@@ -245,8 +245,12 @@ module Instructeurs
       @statut ||= (params[:statut].presence || 'a-suivre')
     end
 
+    def procedure_id
+      params[:procedure_id]
+    end
+
     def procedure
-      Procedure.find(params[:procedure_id])
+      Procedure.find(procedure_id)
     end
 
     def ensure_ownership!
@@ -267,7 +271,7 @@ module Instructeurs
     end
 
     def get_procedure_presentation
-      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(params[:procedure_id])
+      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(procedure_id)
       if errors.present?
         flash[:alert] = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
       end
