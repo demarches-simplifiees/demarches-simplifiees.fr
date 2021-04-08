@@ -16,6 +16,7 @@ class Sendinblue::API
   end
 
   def update_contact(email, attributes = {})
+    # TODO: refactor this to use the official SiB SDK (by using contact create + attributes)
     req = post_api_request('contacts', email: email, attributes: attributes, updateEnabled: true)
     req.on_complete do |response|
       if !response.success?
@@ -23,6 +24,35 @@ class Sendinblue::API
       end
     end
     hydra.queue(req)
+  end
+
+  # Get messages sent to a user through SendInBlue.
+  #
+  # Returns an array of SentMail objects.
+  def sent_mails(email_address)
+    client = ::SibApiV3Sdk::TransactionalEmailsApi.new
+    @events = client.get_email_event_report(email: email_address, days: 30).events
+
+    if @events.blank?
+      Rails.logger.info "SendInBlue::API: no messages found for email address '#{email_address}'"
+      return []
+    end
+
+    @events.group_by(&:message_id).values.map do |message_events|
+      latest_event = message_events.first
+      SentMail.new(
+        from: latest_event.from,
+        to: latest_event.email,
+        subject: latest_event.subject,
+        delivered_at: parse_date(latest_event.date),
+        status: latest_event.event,
+        service_name: 'SendInBlue',
+        external_url: 'https://app-smtp.sendinblue.com/log'
+      )
+    end
+  rescue ::SibApiV3Sdk::ApiError => e
+    Rails.logger.error e.message
+    []
   end
 
   def run
@@ -69,5 +99,9 @@ class Sendinblue::API
 
   def client_key
     Rails.application.secrets.sendinblue[:api_v3_key]
+  end
+
+  def parse_date(date)
+    date.is_a?(String) ? Time.zone.parse(date) : date
   end
 end
