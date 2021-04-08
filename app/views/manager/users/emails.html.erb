@@ -98,8 +98,12 @@ https://www.demarches-simplifiees.fr/users/password/new
 
 Cordialement</pre>
   <% end %>
-  <p><strong>Compte <a href="https://app-smtp.sendinblue.com/block">bloqué</a> chez Sendinblue ?</strong> Vous pouvez le <%= link_to('débloquer', manager_user_unblock_email_path(@user), method: :put, class: 'button', remote: true) %>  puis lui envoyer <button class="btn btn-secondary btn-small" onclick="reveal_email('#unblock_email')">le mail suivant</button></p>
-    <pre class="hidden" id="unblock_email">
+  <p>
+    <strong>Compte <a href="https://app-smtp.sendinblue.com/block">bloqué</a> chez Sendinblue ?</strong>
+    Vous pouvez le <%= link_to('débloquer', manager_user_unblock_email_path(@user), method: :put, class: 'button') %>
+    puis lui envoyer <button class="btn btn-secondary btn-small" onclick="reveal_email('#unblock_email')">le mail suivant</button>
+  </p>
+  <pre class="hidden" id="unblock_email">
 Bonjour,
 
 votre email était bloqué par notre prestataire.
@@ -109,12 +113,18 @@ Cela peut arriver si vous, ou ceux qui gèrent vos emails, marquent nos emails c
 
 Nous vous invitons donc à autoriser les emails émis depuis demarches-simplifiees.fr
 
-Bien cordialement</pre>
-<p><strong>Problème chez Sendinblue ?</strong> Regardez leur <a href="https://status.sendinblue.com/">page de status</a>. <button class="btn btn-secondary btn-small" onclick="reveal_email('#pb-sendinblue')">Voir la suggestion d’email</button></p>
+Bien cordialement
+  </pre>
+  <p>
+    <strong>Problème chez Sendinblue ?</strong>
+    Regardez leur <a href="https://status.sendinblue.com/">page de status</a>.
+    <button class="btn btn-secondary btn-small" onclick="reveal_email('#pb-sendinblue')">Voir la suggestion d’email</button>
+  </p>
   <pre class="hidden" id="pb-sendinblue">
 Bonjour,
 Désolé, notre prestataire d'envoi d'email subit actuellement des soucis avec sa plateforme ;
 vous allez recevoir cet email sous peu.
 
-Bien cordialement,</pre>
+Bien cordialement,
+  </pre>
 </section>
