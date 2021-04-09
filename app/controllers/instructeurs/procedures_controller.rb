@@ -56,7 +56,7 @@ module Instructeurs
 
       @a_suivre_dossiers = current_instructeur
         .dossiers
-        .for_procedure(procedure)
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .without_followers
         .en_cours
 
@@ -69,17 +69,17 @@ module Instructeurs
 
       @termines_dossiers = current_instructeur
         .dossiers
-        .for_procedure(procedure)
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .termine
 
       @all_state_dossiers = current_instructeur
         .dossiers
-        .for_procedure(procedure)
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .all_state
 
       @archived_dossiers = current_instructeur
         .dossiers
-        .for_procedure(procedure)
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .archived
 
       @dossiers = case statut
