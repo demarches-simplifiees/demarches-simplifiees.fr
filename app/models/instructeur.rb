@@ -2,11 +2,12 @@
 #
 # Table name: instructeurs
 #
-#  id                     :integer          not null, primary key
-#  encrypted_login_token  :text
-#  login_token_created_at :datetime
-#  created_at             :datetime
-#  updated_at             :datetime
+#  id                       :integer          not null, primary key
+#  bypass_email_login_token :boolean          default(FALSE), not null
+#  encrypted_login_token    :text
+#  login_token_created_at   :datetime
+#  created_at               :datetime
+#  updated_at               :datetime
 #
 class Instructeur < ApplicationRecord
   has_and_belongs_to_many :administrateurs
