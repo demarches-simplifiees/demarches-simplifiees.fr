@@ -63,14 +63,9 @@ module Instructeurs
       @followed_dossiers = current_instructeur
         .followed_dossiers
         .where(groupe_instructeur_id: groupe_instructeur_ids)
-        .for_procedure(procedure)
         .en_cours
 
-      @followed_dossiers_id = current_instructeur
-        .followed_dossiers
-        .where(groupe_instructeur_id: groupe_instructeur_ids)
-        .for_procedure(procedure)
-        .pluck(:id)
+      @followed_dossiers_id = @followed_dossiers.pluck(:id)
 
       @termines_dossiers = current_instructeur
         .dossiers
