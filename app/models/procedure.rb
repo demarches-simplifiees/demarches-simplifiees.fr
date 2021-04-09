@@ -632,47 +632,6 @@ class Procedure < ApplicationRecord
     draft_revision.deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
   end
 
-  def dossiers_count_for_instructeur(instructeur)
-    query = <<-EOF
-  SELECT
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."id" IS NULL and not "dossiers"."archived") AS a_suivre,
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."instructeur_id" = :instructeur_id and not "dossiers"."archived" and "follows"."unfollowed_at" IS NULL) AS suivis,
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('accepte', 'refuse', 'sans_suite') and not "dossiers"."archived" ) AS termines,
-      COUNT(*) FILTER ( WHERE "dossiers"."state" != 'brouillon' and not "dossiers"."archived" ) AS total,
-      COUNT(*) FILTER ( WHERE "dossiers"."archived" ) AS archived
-  FROM
-      "dossiers"
-  INNER JOIN
-      "groupe_instructeurs"
-          ON "dossiers"."groupe_instructeur_id" = "groupe_instructeurs"."id"
-  INNER JOIN
-      "assign_tos"
-          ON "groupe_instructeurs"."id" = "assign_tos"."groupe_instructeur_id"
-  INNER JOIN
-      "procedures"
-          ON "groupe_instructeurs"."procedure_id" = "procedures"."id"
-  LEFT OUTER JOIN
-      "follows"
-          ON "follows"."dossier_id" = "dossiers"."id"
-          AND "follows"."unfollowed_at" IS NULL
-  WHERE
-      "dossiers"."hidden_at" IS NULL
-      AND "assign_tos"."instructeur_id" = :instructeur_id
-      AND "procedures"."id" = :procedure_id
-  GROUP BY
-      groupe_instructeurs.procedure_id, procedures.libelle
-    EOF
-
-    sanitized_query = ActiveRecord::Base.sanitize_sql([
-      query,
-      instructeur_id: instructeur.id,
-      procedure_id: self.id,
-      now: Time.zone.now
-    ])
-
-    Procedure.connection.select_all(sanitized_query).first || { "a_suivre" => 0, "suivis" => 0, "termines" => 0, "total" => 0, "archived" => 0 }
-  end
-
   private
 
   def before_publish
