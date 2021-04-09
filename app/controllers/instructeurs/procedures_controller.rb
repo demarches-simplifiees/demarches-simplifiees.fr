@@ -54,9 +54,10 @@ module Instructeurs
         .dossiers_count_summary(groupe_instructeur_ids)
         .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives')
 
-      @a_suivre_dossiers = current_instructeur
-        .dossiers
+      dossiers_visibles = Dossier
         .where(groupe_instructeur_id: groupe_instructeur_ids)
+
+      @a_suivre_dossiers = dossiers_visibles
         .without_followers
         .en_cours
 
@@ -67,20 +68,9 @@ module Instructeurs
 
       @followed_dossiers_id = @followed_dossiers.pluck(:id)
 
-      @termines_dossiers = current_instructeur
-        .dossiers
-        .where(groupe_instructeur_id: groupe_instructeur_ids)
-        .termine
-
-      @all_state_dossiers = current_instructeur
-        .dossiers
-        .where(groupe_instructeur_id: groupe_instructeur_ids)
-        .all_state
-
-      @archived_dossiers = current_instructeur
-        .dossiers
-        .where(groupe_instructeur_id: groupe_instructeur_ids)
-        .archived
+      @termines_dossiers = dossiers_visibles.termine
+      @all_state_dossiers = dossiers_visibles.all_state
+      @archived_dossiers = dossiers_visibles.archived
 
       @dossiers = case statut
       when 'a-suivre'
