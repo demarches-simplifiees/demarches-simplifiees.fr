@@ -647,6 +647,7 @@ class Dossier < ApplicationRecord
     save!
     remove_titres_identite!
     NotificationMailer.send_closed_notification(self).deliver_later
+    send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :accepter, self)
   end
 
@@ -674,6 +675,7 @@ class Dossier < ApplicationRecord
     save!
     remove_titres_identite!
     NotificationMailer.send_refused_notification(self).deliver_later
+    send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :refuser, self)
   end
 
@@ -687,6 +689,7 @@ class Dossier < ApplicationRecord
     save!
     remove_titres_identite!
     NotificationMailer.send_without_continuation_notification(self).deliver_later
+    send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :classer_sans_suite, self)
   end
 
@@ -940,5 +943,22 @@ class Dossier < ApplicationRecord
       .find_each do |dossier|
         DossierMailer.notify_brouillon_not_submitted(dossier).deliver_later
       end
+  end
+
+  def send_dossier_decision_to_experts(dossier)
+    avis_experts_procedures_ids = Avis
+      .joins(:experts_procedure)
+      .where(dossier: dossier, experts_procedures: { allow_decision_access: true })
+      .with_answer
+      .distinct
+      .pluck('avis.id, experts_procedures.id')
+
+    # rubocop:disable Lint/UnusedBlockArgument
+    avis_ids = avis_experts_procedures_ids
+      .uniq { |(avis_id, experts_procedures_id)| experts_procedures_id }
+      .map { |(avis_id, _)| avis_id }
+    # rubocop:enable Lint/UnusedBlockArgument
+
+    avis_ids.each { |avis_id| ExpertMailer.send_dossier_decision(avis_id).deliver_later }
   end
 end
