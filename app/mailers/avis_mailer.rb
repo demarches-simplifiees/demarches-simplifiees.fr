@@ -5,10 +5,12 @@ class AvisMailer < ApplicationMailer
   layout 'mailers/layout'
 
   def avis_invitation(avis)
-    @avis = avis
-    email = @avis.expert&.email
-    subject = "Donnez votre avis sur le dossier nº #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
+    if avis.dossier.present?
+      @avis = avis
+      email = @avis.expert&.email
+      subject = "Donnez votre avis sur le dossier nº #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
 
-    mail(to: email, subject: subject)
+      mail(to: email, subject: subject)
+    end
   end
 end
