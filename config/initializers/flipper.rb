@@ -32,6 +32,7 @@ features = [
   :hide_instructeur_email,
   :instructeur_bypass_email_login_token,
   :make_experts_notifiable,
+  :procedure_revisions,
   :procedure_routage_api
 ]
 
