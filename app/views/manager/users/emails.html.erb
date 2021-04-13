@@ -20,7 +20,11 @@
   <h2 style="font-size: 1.3em; margin: 24px 0 8px 0">Historique des email</h2>
 <% if @sent_mails.present? %>
   <p>
-  Cet historique contient les 30 derniers jours. Pour un recherche plus fine, il faut fouiller les <a href="https://app-smtp.sendinblue.com/log">logs de SendInblue</a> ou de Mailjet.
+  Cet historique contient les 30 derniers jours.
+    Pour un recherche plus fine, il faut fouiller les
+    <a href="https://app-smtp.sendinblue.com/log">logs de SendInblue</a>
+    ou
+    <a href="https://app.mailjet.com/contacts/subscribers/contact_list">de Mailjet</a>.
   </p>
   <table>
     <thead>
@@ -66,7 +70,11 @@
   </table>
 <% else %>
   <p>Historique indisponible. Cette adresse email n'existe pas chez nos prestataires d'envoi, ou nous n'avons pas réussi à en charger des données.
-    Vous pouvez éventuellement fouiller les <a href="https://app-smtp.sendinblue.com/log">logs de SendInBlue</a> ou de Mailjet.</p>
+    Vous pouvez éventuellement fouiller les
+    <a href="https://app-smtp.sendinblue.com/log">logs de SendInBlue</a>
+    ou
+    <a href="https://app.mailjet.com/contacts/subscribers/contact_list">de Mailjet</a>.
+  </p>
 <% end %>
 
   <h2 style="font-size: 1.3em; margin: 24px 0 8px 0">Problèmes potentiel</h2>
