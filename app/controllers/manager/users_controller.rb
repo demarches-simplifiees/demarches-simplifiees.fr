@@ -50,23 +50,27 @@ module Manager
     def emails
       @user = User.find(params[:id])
 
-      transactionnal_api = ::SibApiV3Sdk::TransactionalEmailsApi.new
+      email_services = [
+        Mailjet::API.new,
+        Sendinblue::API.new
+      ]
 
-      @transactionnal_emails = transactionnal_api.get_transac_emails_list(email: @user.email)
-      @events = transactionnal_api.get_email_event_report(email: @user.email, days: 30)
-
-    rescue ::SibApiV3Sdk::ApiError => e
-      flash.alert = "Impossible de récupérer les emails de cet utilisateur chez Sendinblue : #{e.message}"
+      @sent_mails = email_services
+        .filter(&:properly_configured?)
+        .map { |api| api.sent_mails(@user.email) }
+        .flatten
+        .sort_by(&:delivered_at)
+        .reverse
     end
 
-    def unblock_user
-      @user = User.find(params[:id])
-
-      transactionnal_api = ::SibApiV3Sdk::TransactionalEmailsApi.new
-      transactionnal_api.smtp_blocked_contacts_email_delete(@user.email)
-
-    rescue ::SibApiV3Sdk::ApiError => e
-      flash.alert = "Impossible de débloquer cet email auprès de Sendinblue : #{e.message}"
+    def unblock_email
+      @user = User.find(params[:user_id])
+      if Sendinblue::API.new.unblock_user(@user.email)
+        flash.notice = "L'adresse email a été débloquée auprès de Sendinblue"
+      else
+        flash.alert = "Impossible de débloquer cette addresse email auprès de Sendinblue"
+      end
+      redirect_to emails_manager_user_path(@user)
     end
   end
 end
