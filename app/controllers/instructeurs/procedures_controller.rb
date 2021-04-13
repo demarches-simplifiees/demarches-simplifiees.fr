@@ -50,38 +50,27 @@ module Instructeurs
       @current_filters = current_filters
       @displayed_fields_options, @displayed_fields_selected = procedure_presentation.displayed_fields_for_select
 
-      @a_suivre_dossiers = current_instructeur
-        .dossiers
-        .for_procedure(procedure)
+      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count = current_instructeur
+        .dossiers_count_summary(groupe_instructeur_ids)
+        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives')
+
+      dossiers_visibles = Dossier
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
+
+      @a_suivre_dossiers = dossiers_visibles
         .without_followers
         .en_cours
 
       @followed_dossiers = current_instructeur
         .followed_dossiers
-        .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
-        .for_procedure(procedure)
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .en_cours
 
-      @followed_dossiers_id = current_instructeur
-        .followed_dossiers
-        .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
-        .for_procedure(procedure)
-        .pluck(:id)
+      @followed_dossiers_id = @followed_dossiers.pluck(:id)
 
-      @termines_dossiers = current_instructeur
-        .dossiers
-        .for_procedure(procedure)
-        .termine
-
-      @all_state_dossiers = current_instructeur
-        .dossiers
-        .for_procedure(procedure)
-        .all_state
-
-      @archived_dossiers = current_instructeur
-        .dossiers
-        .for_procedure(procedure)
-        .archived
+      @termines_dossiers = dossiers_visibles.termine
+      @all_state_dossiers = dossiers_visibles.all_state
+      @archived_dossiers = dossiers_visibles.archived
 
       @dossiers = case statut
       when 'a-suivre'
@@ -241,12 +230,28 @@ module Instructeurs
       current_instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure })
     end
 
+    def assign_tos
+      @assign_tos ||= current_instructeur
+        .assign_to
+        .joins(:groupe_instructeur)
+        .where(groupe_instructeur: { procedure_id: procedure_id })
+    end
+
+    def groupe_instructeur_ids
+      @groupe_instructeur_ids ||= assign_tos
+        .map(&:groupe_instructeur_id)
+    end
+
     def statut
       @statut ||= (params[:statut].presence || 'a-suivre')
     end
 
+    def procedure_id
+      params[:procedure_id]
+    end
+
     def procedure
-      Procedure.find(params[:procedure_id])
+      Procedure.find(procedure_id)
     end
 
     def ensure_ownership!
@@ -267,7 +272,7 @@ module Instructeurs
     end
 
     def get_procedure_presentation
-      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(params[:procedure_id])
+      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(procedure_id)
       if errors.present?
         flash[:alert] = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
       end

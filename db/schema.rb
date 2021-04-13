@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_09_075105) do
+ActiveRecord::Schema.define(version: 2021_04_12_092710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -410,6 +410,7 @@ ActiveRecord::Schema.define(version: 2021_04_09_075105) do
     t.string "email_france_connect"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.jsonb "data"
     t.index ["user_id"], name: "index_france_connect_informations_on_user_id"
   end
 
@@ -459,6 +460,7 @@ ActiveRecord::Schema.define(version: 2021_04_09_075105) do
     t.datetime "updated_at"
     t.text "encrypted_login_token"
     t.datetime "login_token_created_at"
+    t.boolean "bypass_email_login_token", default: false, null: false
   end
 
   create_table "invites", id: :serial, force: :cascade do |t|

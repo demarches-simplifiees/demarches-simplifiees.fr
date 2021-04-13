@@ -5,6 +5,7 @@
 #  id                            :integer          not null, primary key
 #  birthdate                     :date
 #  birthplace                    :string
+#  data                          :jsonb
 #  email_france_connect          :string
 #  family_name                   :string
 #  gender                        :string

@@ -17,10 +17,14 @@
 </header>
 
 <section class="main-content__body">
-  <h2>Historique des email</h2>
-<% if @transactionnal_emails.present? %>
+  <h2 style="font-size: 1.3em; margin: 24px 0 8px 0">Historique des email</h2>
+<% if @sent_mails.present? %>
   <p>
-  Cet historique contient les 30 derniers jours. Pour un recherche plus fine, il faut <a href="https://app-smtp.sendinblue.com/log">fouiller les logs</a>.
+  Cet historique contient les 30 derniers jours.
+    Pour un recherche plus fine, il faut fouiller les
+    <a href="https://app-smtp.sendinblue.com/log">logs de SendInblue</a>
+    ou
+    <a href="https://app.mailjet.com/contacts/subscribers/contact_list">de Mailjet</a>.
   </p>
   <table>
     <thead>
@@ -29,44 +33,51 @@
         Émetteur
       </th>
       <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
-        Sujet
+        Objet
       </th>
       <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
         Date
       </th>
+      <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
+        Statut
+      </th>
+      <th class="cell-label cell-label--string cell-label--false" scope="col" role="columnheader" aria-sort="none">
+        Prestataire
+      </th>
     </tr>
     </thead>
     <tbody>
-      <% @transactionnal_emails&.transactional_emails&.reverse&.each do |email| %>
-        <% matching_events = @events&.events&.select { |e| e.message_id == email.message_id } %>
-      <tr class="<%= event_color_code(matching_events) %>">
+      <% @sent_mails.each do |email| %>
+      <tr class="<%= status_color_code(email.status) %>">
         <td class="cell-data cell-data--string" style="">
           <%= email.from %>
         </td>
         <td class="cell-data cell-data--string" style="">
-        <%= email.subject %>
+          <%= email.subject %>
         </td>
         <td class="cell-data cell-data--string" style="text-align: center;">
-        <%= l(email.date.is_a?(String) ? Time.zone.parse(email.date) : email.date, format: '%d/%m/%y à %H:%M') %>
+          <%= l(email.delivered_at, format: :long) %>
         </td>
         <td class="cell-data cell-data--string" style="text-align: center;">
-          <ul>
-
-          <% matching_events.each do |event|%>
-          <li><%= event.event %></li>
-          <% end %>
-          </ul>
+          <%= email.status %>
+        </td>
+        <td class="cell-data cell-data--string" style="">
+          <%= link_to email.service_name, email.external_url, style: 'text-decoration: underline' %>
         </td>
       </tr>
       <% end %>
     </tbody>
   </table>
 <% else %>
-  <p>Historique indisponible. Cet email n'existe pas chez Sendinblue, ou nous n'avons pas réussi à échanger.
-    Vous pouvez éventuellement <a href="https://app-smtp.sendinblue.com/log">fouiller leurs logs</a>.</p>
+  <p>Historique indisponible. Cette adresse email n'existe pas chez nos prestataires d'envoi, ou nous n'avons pas réussi à en charger des données.
+    Vous pouvez éventuellement fouiller les
+    <a href="https://app-smtp.sendinblue.com/log">logs de SendInBlue</a>
+    ou
+    <a href="https://app.mailjet.com/contacts/subscribers/contact_list">de Mailjet</a>.
+  </p>
 <% end %>
 
-  <h2>Problèmes potentiel</h2>
+  <h2 style="font-size: 1.3em; margin: 24px 0 8px 0">Problèmes potentiel</h2>
 
   <% if @user.confirmed? %>
     <p><strong>Compte activé, n'arrive pas à se connecter</strong> ? <button class="btn btn-secondary btn-small" onclick="reveal_email('#activated-cant-connect')">Voir la suggestion d’email</button></p>
@@ -95,8 +106,12 @@ https://www.demarches-simplifiees.fr/users/password/new
 
 Cordialement</pre>
   <% end %>
-  <p><strong>Compte <a href="https://app-smtp.sendinblue.com/block">bloqué</a> chez Sendinblue ?</strong> Vous pouvez le <%= link_to('débloquer', manager_user_unblock_email_path(@user), method: :put, class: 'button', remote: true) %>  puis lui envoyer <button class="btn btn-secondary btn-small" onclick="reveal_email('#unblock_email')">le mail suivant</button></p>
-    <pre class="hidden" id="unblock_email">
+  <p>
+    <strong>Compte <a href="https://app-smtp.sendinblue.com/block">bloqué</a> chez Sendinblue ?</strong>
+    Vous pouvez le <%= link_to('débloquer', manager_user_unblock_email_path(@user), method: :put, class: 'button') %>
+    puis lui envoyer <button class="btn btn-secondary btn-small" onclick="reveal_email('#unblock_email')">le mail suivant</button>
+  </p>
+  <pre class="hidden" id="unblock_email">
 Bonjour,
 
 votre email était bloqué par notre prestataire.
@@ -106,12 +121,18 @@ Cela peut arriver si vous, ou ceux qui gèrent vos emails, marquent nos emails c
 
 Nous vous invitons donc à autoriser les emails émis depuis demarches-simplifiees.fr
 
-Bien cordialement</pre>
-<p><strong>Problème chez Sendinblue ?</strong> Regardez leur <a href="https://status.sendinblue.com/">page de status</a>. <button class="btn btn-secondary btn-small" onclick="reveal_email('#pb-sendinblue')">Voir la suggestion d’email</button></p>
+Bien cordialement
+  </pre>
+  <p>
+    <strong>Problème chez Sendinblue ?</strong>
+    Regardez leur <a href="https://status.sendinblue.com/">page de status</a>.
+    <button class="btn btn-secondary btn-small" onclick="reveal_email('#pb-sendinblue')">Voir la suggestion d’email</button>
+  </p>
   <pre class="hidden" id="pb-sendinblue">
 Bonjour,
 Désolé, notre prestataire d'envoi d'email subit actuellement des soucis avec sa plateforme ;
 vous allez recevoir cet email sous peu.
 
-Bien cordialement,</pre>
+Bien cordialement,
+  </pre>
 </section>
