@@ -212,6 +212,32 @@ class Instructeur < ApplicationRecord
     "Instructeur:#{id}"
   end
 
+  def dossiers_count_summary(groupe_instructeur_ids)
+    query = <<~EOF
+      SELECT
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.id IS NULL) AS a_suivre,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.instructeur_id = :instructeur_id) AS suivis,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived) AS tous,
+        COUNT(DISTINCT dossiers.id) FILTER (where archived)     AS archives
+      FROM "dossiers"
+        LEFT OUTER JOIN follows
+          ON  follows.dossier_id = dossiers.id
+          AND follows.unfollowed_at IS NULL
+      WHERE "dossiers"."hidden_at" IS NULL
+        AND "dossiers"."state" != 'brouillon'
+        AND "dossiers"."groupe_instructeur_id" in (:groupe_instructeur_ids)
+    EOF
+
+    sanitized_query = ActiveRecord::Base.sanitize_sql([
+      query,
+      instructeur_id: id,
+      groupe_instructeur_ids: groupe_instructeur_ids
+    ])
+
+    Dossier.connection.select_all(sanitized_query).first
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)
