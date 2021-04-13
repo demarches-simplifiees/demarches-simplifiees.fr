@@ -1,9 +1,8 @@
 module EmailHelper
-  def event_color_code(email_events)
-    unique_events = email_events.map(&:event)
-    if unique_events.include?('delivered')
+  def status_color_code(status)
+    if status.include?('delivered')
       return 'email-sent'
-    elsif unique_events.include?('blocked') || unique_events.include?('hardBounces')
+    elsif status.include?('blocked') || status.include?('hardBounces')
       return 'email-blocked'
     else
       return ''
