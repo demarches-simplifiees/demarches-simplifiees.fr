@@ -49,7 +49,18 @@ module Manager
 
     def emails
       @user = User.find(params[:id])
-      @sent_mails = Sendinblue::API.new.sent_mails(@user.email)
+
+      email_services = [
+        Mailjet::API.new,
+        Sendinblue::API.new
+      ]
+
+      @sent_mails = email_services
+        .filter(&:properly_configured?)
+        .map { |api| api.sent_mails(@user.email) }
+        .flatten
+        .sort_by(&:delivered_at)
+        .reverse
     end
 
     def unblock_email
