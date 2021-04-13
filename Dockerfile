@@ -143,7 +143,7 @@ ENV \
     TATOU_CLIENT_ID=""\
     TATOU_CLIENT_SECRET=""\
     TRUSTED_NETWORKS=""\
-    UNIVERSIGN_API_URL=""\
+    UNIVERSIGN_API_URL="https://ws.universign.eu/tsa/post/"\
     UNIVERSIGN_USERPWD=""\
     WATERMARK_FILE="watermark_pf.png"\
     YAHOO_CLIENT_ID=""\

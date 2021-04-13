@@ -139,6 +139,7 @@ services:
       - SENTRY_DSN_RAILS
       - SENTRY_ENABLED
       - UNIVERSIGN_USERPWD
+      - UNIVERSIGN_API_URL
       - WATERMARK_FILE
     volumes:
       - md-data-files:/app/storage
