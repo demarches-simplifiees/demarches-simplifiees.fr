@@ -52,7 +52,7 @@ Rails.application.routes.draw do
 
     resources :services, only: [:index, :show]
 
-    resources :super_admins, only: [:index, :show]
+    resources :super_admins, only: [:index, :show, :destroy]
 
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
