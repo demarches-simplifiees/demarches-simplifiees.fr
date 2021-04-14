@@ -19,7 +19,7 @@
 #
 class Champs::NationaliteChamp < Champs::TextChamp
   def self.options
-    ApiGeo::API.nationalites.pluck(:nom)
+    APIGeo::API.nationalites.pluck(:nom)
   end
 
   def self.disabled_options

@@ -1,4 +1,4 @@
-class ApiGeo::API
+class APIGeo::API
   TIMEOUT = 15
   CACHE_DURATION = 1.day
 
