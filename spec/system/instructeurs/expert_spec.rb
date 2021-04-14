@@ -10,6 +10,10 @@ describe 'Inviting an expert:', js: true do
   let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
   let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).filter_map(&:value)) }
 
+  before do
+    clear_emails
+  end
+
   context 'as an Instructeur' do
     scenario 'I can invite an expert' do
       allow(ClamavService).to receive(:safe_file?).and_return(true)
