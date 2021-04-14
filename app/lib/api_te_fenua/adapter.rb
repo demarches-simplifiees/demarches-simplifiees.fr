@@ -1,4 +1,4 @@
-class ApiTeFenua::Adapter
+class APITeFenua::Adapter
   private
 
   def initialize(address, blank_return)
