@@ -1,4 +1,4 @@
-describe ApiCarto::CadastreAdapter do
+describe APICarto::CadastreAdapter do
   subject { described_class.new(coordinates).results }
 
   before do
@@ -58,6 +58,6 @@ describe ApiCarto::CadastreAdapter do
     let(:status) { 404 }
     let(:body) { '' }
 
-    it { expect { subject }.to raise_error(ApiCarto::API::ResourceNotFound) }
+    it { expect { subject }.to raise_error(APICarto::API::ResourceNotFound) }
   end
 end

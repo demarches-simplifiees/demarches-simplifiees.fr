@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ApiTeFenua::PlaceAdapter do
+describe APITeFenua::PlaceAdapter do
   describe '#suggestions' do
     let(:request) { 'Snack' }
     let(:response) { File.open('spec/fixtures/files/api_te_fenua/results.json') }

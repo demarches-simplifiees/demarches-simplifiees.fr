@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ApiGeo::API do
+describe APIGeo::API do
   describe '.nationalites', vcr: { cassette_name: 'api_geo_nationalites' } do
     subject { described_class.nationalites }
     let(:nationalites) {

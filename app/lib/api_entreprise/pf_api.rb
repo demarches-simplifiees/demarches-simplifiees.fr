@@ -1,4 +1,4 @@
-class ApiEntreprise::PF_API
+class APIEntreprise::PfAPI
   ENTREPRISE_RESOURCE_NAME = "etablissements/Entreprise"
 
   TIMEOUT = 15
@@ -18,17 +18,17 @@ class ApiEntreprise::PF_API
     if response.success?
       JSON.parse(response.body, symbolize_names: true)
     elsif response.code&.between?(401, 499)
-      raise ApiEntreprise::API::Error::ResourceNotFound.new(response)
+      raise APIEntreprise::API::Error::ResourceNotFound.new(response)
     elsif response.code == 400
-      raise ApiEntreprise::API::Error::BadFormatRequest.new(response)
+      raise APIEntreprise::API::Error::BadFormatRequest.new(response)
     elsif response.code == 502
-      raise	ApiEntreprise::API::Error::BadGateway.new(response)
+      raise	APIEntreprise::API::Error::BadGateway.new(response)
     elsif response.code == 503
-      raise ApiEntreprise::API::Error::ServiceUnavailable.new(response)
+      raise APIEntreprise::API::Error::ServiceUnavailable.new(response)
     elsif response.timed_out?
-      raise ApiEntreprise::API::Error::TimedOut.new(response)
+      raise APIEntreprise::API::Error::TimedOut.new(response)
     else
-      raise ApiEntreprise::API::Error::RequestFailed.new(response)
+      raise APIEntreprise::API::Error::RequestFailed.new(response)
     end
   end
 

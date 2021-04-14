@@ -1,4 +1,4 @@
-class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
+class APIEntreprise::PfEtablissementAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
@@ -11,7 +11,7 @@ class ApiEntreprise::PfEtablissementAdapter < ApiEntreprise::Adapter
   end
 
   def pf_api
-    @api ||= ApiEntreprise::PF_API.new
+    @api ||= APIEntreprise::PfAPI.new
   end
 
   def process_params

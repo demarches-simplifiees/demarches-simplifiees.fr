@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_21_134435) do
+ActiveRecord::Schema.define(version: 2021_02_04_180955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(version: 2021_01_21_134435) do
     t.integer "row"
     t.jsonb "data"
     t.string "external_id"
+    t.string "fetch_external_data_exceptions", array: true
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
@@ -248,6 +249,7 @@ ActiveRecord::Schema.define(version: 2021_01_21_134435) do
     t.datetime "last_champ_private_updated_at"
     t.datetime "last_avis_updated_at"
     t.datetime "last_commentaire_updated_at"
+    t.string "api_entreprise_job_exceptions", array: true
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"

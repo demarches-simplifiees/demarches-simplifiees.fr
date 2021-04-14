@@ -1,4 +1,2 @@
-class ApiEntreprise::API::Error
-  class BadGateway < ApiEntreprise::API::Error
-  end
+class APIEntreprise::API::Error::BadGateway < APIEntreprise::API::Error
 end

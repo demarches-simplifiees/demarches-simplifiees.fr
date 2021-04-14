@@ -2,19 +2,20 @@
 #
 # Table name: champs
 #
-#  id               :integer          not null, primary key
-#  data             :jsonb
-#  private          :boolean          default(FALSE), not null
-#  row              :integer
-#  type             :string
-#  value            :string
-#  created_at       :datetime
-#  updated_at       :datetime
-#  dossier_id       :integer
-#  etablissement_id :integer
-#  external_id      :string
-#  parent_id        :bigint
-#  type_de_champ_id :integer
+#  id                             :integer          not null, primary key
+#  data                           :jsonb
+#  fetch_external_data_exceptions :string           is an Array
+#  private                        :boolean          default(FALSE), not null
+#  row                            :integer
+#  type                           :string
+#  value                          :string
+#  created_at                     :datetime
+#  updated_at                     :datetime
+#  dossier_id                     :integer
+#  etablissement_id               :integer
+#  external_id                    :string
+#  parent_id                      :bigint
+#  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
   belongs_to :dossier, -> { with_discarded }, inverse_of: :champs, touch: true, optional: false
@@ -134,6 +135,12 @@ class Champ < ApplicationRecord
 
   def stable_id
     type_de_champ.stable_id
+  end
+
+  def log_fetch_external_data_exception(exception)
+    exceptions = self.fetch_external_data_exceptions ||= []
+    exceptions << exception.inspect
+    update_column(:fetch_external_data_exceptions, exceptions)
   end
 
   private

@@ -1,4 +1,4 @@
-class Api::V2::Schema < GraphQL::Schema
+class API::V2::Schema < GraphQL::Schema
   default_max_page_size 100
   max_complexity 300
   max_depth 15
@@ -6,7 +6,7 @@ class Api::V2::Schema < GraphQL::Schema
   query Types::QueryType
   mutation Types::MutationType
 
-  context_class Api::V2::Context
+  context_class API::V2::Context
 
   def self.id_from_object(object, type_definition, ctx)
     object.to_typed_id

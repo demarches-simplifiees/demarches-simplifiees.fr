@@ -187,6 +187,7 @@ feature 'Instructing a dossier:' do
       expect(files[2].filename.include?('horodatage/operation')).to be_truthy
     end
 
+    before { DownloadHelpers.clear_downloads }
     after { DownloadHelpers.clear_downloads }
   end
 

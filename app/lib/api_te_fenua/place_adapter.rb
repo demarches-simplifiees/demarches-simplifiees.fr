@@ -1,4 +1,4 @@
-class ApiTeFenua::PlaceAdapter < ApiTeFenua::Adapter
+class APITeFenua::PlaceAdapter < APITeFenua::Adapter
   def initialize(place)
     super(place, [])
   end

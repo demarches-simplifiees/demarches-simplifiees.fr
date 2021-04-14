@@ -1,4 +1,4 @@
-class Sendinblue::Api
+class Sendinblue::API
   def self.new_properly_configured!
     api = self.new
     if !api.properly_configured?

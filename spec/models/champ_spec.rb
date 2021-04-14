@@ -559,4 +559,16 @@ describe Champ do
       end
     end
   end
+
+  describe '#log_fetch_external_data_exception' do
+    let(:champ) { create(:champ_siret) }
+
+    context "add execption to the log" do
+      before do
+        champ.log_fetch_external_data_exception(StandardError.new('My special exception!'))
+      end
+
+      it { expect(champ.fetch_external_data_exceptions).to eq(['#<StandardError: My special exception!>']) }
+    end
+  end
 end

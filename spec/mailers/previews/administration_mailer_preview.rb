@@ -24,12 +24,6 @@ class AdministrationMailerPreview < ActionMailer::Preview
     AdministrationMailer.new_admin_email(administrateur, administration)
   end
 
-  def dossier_expiration_summary
-    expiring_dossiers = [Dossier.new(id: 100, procedure: procedure_1)]
-    expired_dossiers = [Dossier.new(id: 100, procedure: procedure_2)]
-    AdministrationMailer.dossier_expiration_summary(expiring_dossiers, expired_dossiers)
-  end
-
   def procedure_published
     AdministrationMailer.procedure_published(published_procedure)
   end
