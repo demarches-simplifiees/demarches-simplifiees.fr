@@ -162,12 +162,16 @@ class User < ApplicationRecord
     instructeur_id.present?
   end
 
+  def expert?
+    expert_id.present?
+  end
+
   def can_france_connect?
     !administrateur? && !instructeur?
   end
 
   def can_be_deleted?
-    administrateur.nil? && instructeur.nil? && dossiers.with_discarded.state_instruction_commencee.empty?
+    !administrateur? && !instructeur? && !expert? && dossiers.with_discarded.state_instruction_commencee.empty?
   end
 
   def delete_and_keep_track_dossiers(administration)
