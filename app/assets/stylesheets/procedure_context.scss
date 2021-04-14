@@ -118,7 +118,7 @@ $procedure-description-line-height: 22px;
 
     img {
       max-width: 100%;
-      max-height: 50px;
+      max-height: 100px;
 
       // Fix Chrome flexbox issue
       // See https://github.com/philipwalton/flexbugs/issues/225
@@ -129,7 +129,7 @@ $procedure-description-line-height: 22px;
 
       @media (min-width: $procedure-context-breakpoint) {
         max-width: 500px;
-        max-height: 130px;
+        max-height: 250px;
       }
     }
   }
