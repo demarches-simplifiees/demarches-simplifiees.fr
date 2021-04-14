@@ -1,4 +1,4 @@
-class NumeroDNValidator < ActiveModel::Validator
+class NumeroDnValidator < ActiveModel::Validator
   def validate(record)
     # we validate the dn against CPS Web Service
     # As we are in a UI, if CPS WS doesn't answer, we continue

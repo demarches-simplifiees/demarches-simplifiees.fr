@@ -18,7 +18,7 @@
 #  type_de_champ_id               :integer
 #
 class Champs::NumeroDnChamp < Champ
-  validates_with NumeroDNValidator
+  validates_with NumeroDnValidator
 
   def numero_dn
     if value.present?
