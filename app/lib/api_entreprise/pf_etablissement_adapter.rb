@@ -11,7 +11,7 @@ class APIEntreprise::PfEtablissementAdapter < APIEntreprise::Adapter
   end
 
   def pf_api
-    @api ||= APIEntreprise::PF_API.new
+    @api ||= APIEntreprise::PfAPI.new
   end
 
   def process_params

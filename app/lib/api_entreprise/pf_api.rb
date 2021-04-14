@@ -1,4 +1,4 @@
-class APIEntreprise::PF_API
+class APIEntreprise::PfAPI
   ENTREPRISE_RESOURCE_NAME = "etablissements/Entreprise"
 
   TIMEOUT = 15
