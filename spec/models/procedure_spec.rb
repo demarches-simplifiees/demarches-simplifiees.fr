@@ -1030,4 +1030,12 @@ describe Procedure do
       it { is_expected.to be false }
     end
   end
+
+  describe "#destroy" do
+    let(:procedure) { create(:procedure, :with_type_de_champ) }
+
+    it "can destroy procedure" do
+      expect(procedure.destroy).to be_truthy
+    end
+  end
 end
