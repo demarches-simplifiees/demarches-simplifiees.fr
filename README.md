@@ -109,6 +109,10 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
         bin/rake spec SPEC=file_path/file_name_spec.rb
         bin/rspec file_path/file_name_spec.rb
 
+- Relancer uniquement les tests qui ont échoué précédemment
+
+        bin/rspec --only-failures
+
 ### Ajout de taches à exécuter au déploiement
 
         rails generate after_party:task task_name
