@@ -62,6 +62,9 @@ class Dossier < ApplicationRecord
   has_one :attestation, dependent: :destroy
   has_one :france_connect_information, through: :user
 
+  # FIXME: some dossiers have more than one attestation
+  has_many :attestations, dependent: :destroy
+
   has_one_attached :justificatif_motivation
   has_one_attached :pdf_export_for_instructeur
 
