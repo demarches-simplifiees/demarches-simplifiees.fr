@@ -42,8 +42,8 @@ describe StatsController, type: :controller do
 
       it do
         expect(subject).to eq([
-          [I18n.l(45.days.ago.beginning_of_month, format: "%B %Y"), 1],
-          [I18n.l(1.day.ago.beginning_of_month, format: "%B %Y"), 2]
+          [I18n.l(45.days.ago.utc.beginning_of_month, format: "%B %Y"), 1],
+          [I18n.l(1.day.ago.utc.beginning_of_month, format: "%B %Y"), 2]
         ])
       end
     end
