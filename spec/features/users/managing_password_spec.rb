@@ -11,7 +11,7 @@ feature 'Managing password:' do
 
       fill_in 'Email', with: user.email
       perform_enqueued_jobs do
-        click_on 'Réinitialiser'
+        click_on 'Demander un nouveau mot de passe'
       end
       expect(page).to have_content('Si votre courriel existe dans notre base de données, vous recevrez un lien vous permettant de récupérer votre mot de passe.')
 
@@ -38,7 +38,7 @@ feature 'Managing password:' do
 
       fill_in 'Email', with: user.email
       perform_enqueued_jobs do
-        click_on 'Réinitialiser'
+        click_on 'Demander un nouveau mot de passe'
       end
       expect(page).to have_content('Si votre courriel existe dans notre base de données, vous recevrez un lien vous permettant de récupérer votre mot de passe.')
 
