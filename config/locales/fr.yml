@@ -39,7 +39,7 @@ fr:
       new:
         title: Connectez-vous
         email: Email (nom@site.com)
-        password: Mot de passe (%{min_length} caractères minimum)
+        password: Mot de passe
         remember_me: Se souvenir de moi
         reset_password: Mot de passe oublié ?
         connection: Se connecter
