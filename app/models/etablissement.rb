@@ -47,8 +47,6 @@
 #  dossier_id                               :integer
 #
 class Etablissement < ApplicationRecord
-  self.ignored_columns = [:entreprise_id]
-
   belongs_to :dossier, optional: true
 
   has_one :champ, class_name: 'Champs::SiretChamp'
