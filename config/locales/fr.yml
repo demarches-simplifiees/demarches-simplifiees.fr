@@ -50,6 +50,9 @@ fr:
         ligne1: Un outil simple
         ligne2: pour gérer les formulaires
         ligne3: administratifs dématérialisés.
+    passwords:
+      new:
+        send_me_reset_password_instructions: "Indiquez l’email de votre compte, et nous vous enverrons un lien pour créer un nouveau mot de passe."
   modal:
     publish:
       title:
