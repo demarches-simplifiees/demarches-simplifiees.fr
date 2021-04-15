@@ -36,7 +36,7 @@ class Champs::NumeroDnController < ApplicationController
   end
 
   def check_dn
-    result = ApiCPS::API.new().verify({ @dn => @ddn })
+    result = APICps::API.new().verify({ @dn => @ddn })
     case result[@dn]
     when 'true'
       @status = :good_dn

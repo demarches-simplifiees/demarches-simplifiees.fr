@@ -1,6 +1,6 @@
 require 'json'
 
-class ApiCPS::API
+class APICps::API
   RESOURCE_NAME = "covid/assures/coherenceDnDdn/multiples"
 
   TIMEOUT = 3

@@ -6,7 +6,7 @@ class NumeroDnValidator < ActiveModel::Validator
     ddn = record.date_de_naissance
     if dn.present? && ddn.present?
       begin
-        result = ApiCPS::API.new().verify({ dn => ddn })
+        result = APICps::API.new().verify({ dn => ddn })
         case result[dn]
         when 'true'
           # everything is good
