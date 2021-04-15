@@ -38,7 +38,6 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
         expect(find('#procedure_for_individual_true')).to be_checked
         expect(find('#procedure_for_individual_false')).not_to be_checked
         fill_in 'procedure_duree_conservation_dossiers_dans_ds', with: '3'
-        fill_in 'procedure_duree_conservation_dossiers_hors_ds', with: '6'
         click_on 'Créer la démarche'
 
         expect(page).to have_text('Toutes les cases concernant le RGPD et le RGS doivent être cochées')

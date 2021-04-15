@@ -271,12 +271,6 @@ describe Procedure do
 
       it_behaves_like 'duree de conservation'
     end
-
-    describe 'duree de conservation hors ds' do
-      let(:field_name) { :duree_conservation_dossiers_hors_ds }
-
-      it_behaves_like 'duree de conservation'
-    end
   end
 
   describe 'active' do

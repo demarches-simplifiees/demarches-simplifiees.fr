@@ -39,7 +39,8 @@ class API::V2::Schema < GraphQL::Schema
     end
   end
 
-  orphan_types Types::Champs::CarteChampType,
+  orphan_types Types::Champs::AddressChampType,
+    Types::Champs::CarteChampType,
     Types::Champs::CheckboxChampType,
     Types::Champs::CiviliteChampType,
     Types::Champs::DateChampType,

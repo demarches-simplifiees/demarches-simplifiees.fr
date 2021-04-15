@@ -1,3 +1,107 @@
+type Address {
+  """
+  code INSEE de la commune
+  """
+  cityCode: String!
+
+  """
+  nom de la commune
+  """
+  cityName: String!
+
+  """
+  n° de département
+  """
+  departmentCode: String
+
+  """
+  nom de département
+  """
+  departmentName: String
+
+  """
+  coordonnées géographique
+  """
+  geometry: GeoJSON
+
+  """
+  libellé complet de l’adresse
+  """
+  label: String!
+
+  """
+  code postal
+  """
+  postalCode: String!
+
+  """
+  n° de region
+  """
+  regionCode: String
+
+  """
+  nom de région
+  """
+  regionName: String
+
+  """
+  numéro éventuel et nom de voie ou lieu dit
+  """
+  streetAddress: String!
+
+  """
+  nom de voie ou lieu dit
+  """
+  streetName: String
+
+  """
+  numéro avec indice de répétition éventuel (bis, ter, A, B)
+  """
+  streetNumber: String
+
+  """
+  type de résultat trouvé
+  """
+  type: AddressType!
+}
+
+type AddressChamp implements Champ {
+  address: Address
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
+enum AddressType {
+  """
+  numéro « à la plaque »
+  """
+  housenumber
+
+  """
+  lieu-dit
+  """
+  locality
+
+  """
+  numéro « à la commune »
+  """
+  municipality
+
+  """
+  position « à la voie », placé approximativement au centre de celle-ci
+  """
+  street
+}
+
 type Association {
   dateCreation: ISO8601Date!
   dateDeclaration: ISO8601Date!
@@ -1385,21 +1489,22 @@ type ParcelleCadastrale implements GeoArea {
 }
 
 type PersonneMorale implements Demandeur {
-  adresse: String!
+  address: Address!
+  adresse: String! @deprecated(reason: "Utilisez le champ `address.label` à la place.")
   association: Association
-  codeInseeLocalite: String!
-  codePostal: String!
-  complementAdresse: String
+  codeInseeLocalite: String! @deprecated(reason: "Utilisez le champ `address.city_code` à la place.")
+  codePostal: String! @deprecated(reason: "Utilisez le champ `address.postal_code` à la place.")
+  complementAdresse: String @deprecated(reason: "Utilisez le champ `address` à la place.")
   entreprise: Entreprise
   id: ID!
   libelleNaf: String!
-  localite: String!
+  localite: String! @deprecated(reason: "Utilisez le champ `address.city_name` à la place.")
   naf: String!
-  nomVoie: String
-  numeroVoie: String
+  nomVoie: String @deprecated(reason: "Utilisez le champ `address.street_name` à la place.")
+  numeroVoie: String @deprecated(reason: "Utilisez le champ `address.street_number` à la place.")
   siegeSocial: Boolean!
   siret: String!
-  typeVoie: String
+  typeVoie: String @deprecated(reason: "Utilisez le champ `address.street_address` à la place.")
 }
 
 type PersonnePhysique implements Demandeur {

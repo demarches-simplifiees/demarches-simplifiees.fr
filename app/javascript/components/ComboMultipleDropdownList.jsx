@@ -31,23 +31,46 @@ function ComboMultipleDropdownList({
   if (label == undefined) {
     label = 'Choisir une option';
   }
-  if (Array.isArray(options[0]) == false) {
-    options = options.map((o) => [o, o]);
+  if (!Array.isArray(options[0])) {
+    options = options.filter((o) => o).map((o) => [o, o]);
   }
   const inputRef = useRef();
   const [term, setTerm] = useState('');
   const [selections, setSelections] = useState(selected);
   const [newValues, setNewValues] = useState([]);
+
+  const optionValueByLabel = (label) => {
+    const maybeOption = newValues.includes(label)
+      ? [label, label]
+      : options.find(([optionLabel]) => optionLabel == label);
+    return maybeOption ? maybeOption[1] : undefined;
+  };
+  const optionLabelByValue = (value) => {
+    const maybeOption = newValues.includes(value)
+      ? [value, value]
+      : options.find(([, optionValue]) => optionValue == value);
+    return maybeOption ? maybeOption[0] : undefined;
+  };
+
+  const extraOptions = useMemo(
+    () =>
+      acceptNewValues && term && term.length > 2 && !optionLabelByValue(term)
+        ? [[term, term]]
+        : [],
+    [acceptNewValues, term, newValues.join(',')]
+  );
   const results = useMemo(
     () =>
-      (term
-        ? matchSorter(
-            options.filter((o) => !o[0].startsWith('--')),
-            term
-          )
-        : options
-      ).filter((o) => o[0] && !selections.includes(o[1])),
-    [term, selections.join(',')]
+      [
+        ...extraOptions,
+        ...(term
+          ? matchSorter(
+              options.filter(([label]) => !label.startsWith('--')),
+              term
+            )
+          : options)
+      ].filter(([, value]) => !selections.includes(value)),
+    [term, selections.join(','), newValues.join(',')]
   );
   const hiddenField = useMemo(
     () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
@@ -60,22 +83,12 @@ function ComboMultipleDropdownList({
 
   const onKeyDown = (event) => {
     if (event.key === 'Enter') {
-      if (term && options.map((o) => o[0]).includes(term)) {
-        event.preventDefault();
-        return onSelect(term);
-      }
       if (
-        acceptNewValues &&
         term &&
-        matchSorter(
-          options.map((o) => o[0]),
-          term
-        ).length == 0 // ignore when was pressed for selecting popover option
+        [...extraOptions, ...options].map(([label]) => label).includes(term)
       ) {
         event.preventDefault();
-        setNewValues([...newValues, term]);
-        saveSelection([...selections, term]);
-        setTerm('');
+        return onSelect(term);
       }
     }
   };
@@ -89,19 +102,29 @@ function ComboMultipleDropdownList({
   };
 
   const onSelect = (value) => {
-    let sel = options.find((o) => o[0] == value)[1];
-    saveSelection([...selections, sel]);
+    const maybeValue = [...extraOptions, ...options].find(
+      ([val]) => val == value
+    );
+    const selectedValue = maybeValue && maybeValue[1];
+    if (value) {
+      if (
+        acceptNewValues &&
+        extraOptions[0] &&
+        extraOptions[0][0] == selectedValue
+      ) {
+        setNewValues([...newValues, selectedValue]);
+      }
+      saveSelection([...selections, selectedValue]);
+    }
     setTerm('');
   };
 
-  const onRemove = (value) => {
-    saveSelection(
-      selections.filter((s) =>
-        newValues.includes(value)
-          ? s != value
-          : s !== options.find((o) => o[0] == value)[1]
-      )
-    );
+  const onRemove = (label) => {
+    const optionValue = optionValueByLabel(label);
+    if (optionValue) {
+      saveSelection(selections.filter((value) => value != optionValue));
+      setNewValues(newValues.filter((value) => value != optionValue));
+    }
     inputRef.current.focus();
   };
 
@@ -116,10 +139,7 @@ function ComboMultipleDropdownList({
           {selections.map((selection) => (
             <ComboboxToken
               key={selection}
-              value={
-                newValues.find((newValue) => newValue == selection) ||
-                options.find((o) => o[1] == selection)[0]
-              }
+              value={optionLabelByValue(selection)}
             />
           ))}
         </ul>
@@ -136,21 +156,15 @@ function ComboMultipleDropdownList({
           {results.length === 0 && (
             <p>
               Aucun résultat{' '}
-              <button
-                onClick={() => {
-                  setTerm('');
-                }}
-              >
-                Effacer
-              </button>
+              <button onClick={() => setTerm('')}>Effacer</button>
             </p>
           )}
           <ComboboxList>
-            {results.map((value, index) => {
-              if (value[0].startsWith('--')) {
-                return <ComboboxSeparator key={index} value={value[0]} />;
+            {results.map(([label], index) => {
+              if (label.startsWith('--')) {
+                return <ComboboxSeparator key={index} value={label} />;
               }
-              return <ComboboxOption key={index} value={value[0]} />;
+              return <ComboboxOption key={index} value={label} />;
             })}
           </ComboboxList>
         </ComboboxPopover>
