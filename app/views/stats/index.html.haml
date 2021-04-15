@@ -26,19 +26,6 @@
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
-        Satisfaction usager
-
-      .chart-container
-        .chart
-          = area_chart @satisfaction_usagers,
-            stacked: true,
-            suffix: ' %',
-            max: 100,
-            library: { plotOptions: { series: { marker: { enabled: true }}}},
-            colors: ["#C31C25", "#F5962A", "#25B177"]
-
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title
         Pourcentage de contact utilisateur
 
       .chart-container

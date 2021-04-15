@@ -17,8 +17,6 @@ class StatsController < ApplicationController
       stat.dossiers_deposes_entre_60_et_30_jours
     )
 
-    @satisfaction_usagers = satisfaction_usagers
-
     @contact_percentage = contact_percentage
 
     @dossiers_states_for_pie = {
@@ -121,42 +119,6 @@ class StatsController < ApplicationController
       last_30_days_count: last_30_days_count.to_s,
       evolution: formatted_evolution
     }
-  end
-
-  def satisfaction_usagers
-    legend = {
-      Feedback.ratings.fetch(:unhappy) => "Mécontents",
-      Feedback.ratings.fetch(:neutral) => "Neutres",
-      Feedback.ratings.fetch(:happy)   => "Satisfaits"
-    }
-
-    number_of_weeks = 12
-    totals = Feedback
-      .group_by_week(:created_at, last: number_of_weeks, current: false)
-      .count
-
-    legend.keys.map do |rating|
-      data = Feedback
-        .where(rating: rating)
-        .group_by_week(:created_at, last: number_of_weeks, current: false)
-        .count
-        .map do |week, count|
-          total = totals[week]
-          # By default a week is displayed by the first day of the week – but we'd rather display the last day
-          label = week.next_week
-
-          if total > 0
-            [label, (count.to_f / total * 100).round(2)]
-          else
-            [label, 0]
-          end
-        end.to_h
-
-      {
-        name: legend[rating],
-        data: data
-      }
-    end
   end
 
   def contact_percentage
