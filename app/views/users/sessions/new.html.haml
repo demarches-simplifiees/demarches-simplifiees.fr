@@ -14,7 +14,7 @@
     = f.password_field :password, autocomplete: 'current-password'
 
     .auth-options
-      %div
+      .flex-no-shrink
         = f.check_box :remember_me
         = f.label :remember_me, t('views.sessions.new.remember_me'), class: 'remember-me'
 

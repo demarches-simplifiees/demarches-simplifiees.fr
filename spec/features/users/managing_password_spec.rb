@@ -6,7 +6,7 @@ feature 'Managing password:' do
     scenario 'a simple user can reset their password' do
       visit root_path
       click_on 'Connexion'
-      click_on 'Mot de passe oublié ?'
+      click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
 
       fill_in 'Email', with: user.email
@@ -33,7 +33,7 @@ feature 'Managing password:' do
     scenario 'an admin can reset their password' do
       visit root_path
       click_on 'Connexion'
-      click_on 'Mot de passe oublié ?'
+      click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
 
       fill_in 'Email', with: user.email
