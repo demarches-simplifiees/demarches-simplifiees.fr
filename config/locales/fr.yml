@@ -41,7 +41,7 @@ fr:
         email: Email (nom@site.com)
         password: Mot de passe (%{min_length} caractères minimum)
         remember_me: Se souvenir de moi
-        reset_password: Mot de passe oublié ?
+        reset_password: Mot de passe oublié ?
         connection: Se connecter
         are_you_new: Vous êtes nouveau sur %{app_name} ?
         find_procedure: Trouvez votre démarche
