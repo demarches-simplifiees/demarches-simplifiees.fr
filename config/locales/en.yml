@@ -60,6 +60,9 @@ en:
         ligne1: A simple tool
         ligne2: to manage dematerialized
         ligne3: administrative forms.
+    passwords:
+      new:
+        send_me_reset_password_instructions: "Fill-in your account's email, and we’ll send you instructions to reset your password."
   modal:
     publish:
       title:
