@@ -103,6 +103,25 @@ module FeatureHelpers
     end
   end
 
+  def select_multi(champ, with)
+    input = find("input[aria-label='#{champ}'")
+    input.click
+
+    # hack because for unknown reason, the click on input doesn't show combobox-popover with selenium driver
+    script = "document.evaluate(\"//input[@aria-label='#{champ}']//ancestor::div[@data-reach-combobox]/div[@data-reach-combobox-popover]\", document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null).iterateNext().removeAttribute(\"hidden\")"
+    execute_script(script)
+
+    element = find(:xpath, "//input[@aria-label='#{champ}']/ancestor::div[@data-reach-combobox]//div[@data-reach-combobox-popover]//li/span[normalize-space(text())='#{with}']")
+    element.click
+  end
+
+  def check_selected_values(champ, values)
+    combobox = find(:xpath, "//input[@aria-label='#{champ}']/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
+    hiddenFieldId = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
+    hiddenField = find("input[data-uuid='#{hiddenFieldId}']")
+    expect(values.sort).to eq(JSON.parse(hiddenField.value).sort)
+  end
+
   # Keep the brower window open after a test success of failure, to
   # allow inspecting the page or the console.
   #

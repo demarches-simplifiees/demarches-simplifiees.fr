@@ -914,9 +914,11 @@ describe ProcedurePresentation do
       it 'should downcase and transform value' do
         procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "Oui")
 
-        expect(procedure_presentation.filters).to eq({ "suivis" => [
-          { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true" }
-        ]
+        expect(procedure_presentation.filters).to eq({
+          "suivis" =>
+                    [
+                      { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true" }
+                    ]
         })
       end
     end
@@ -927,9 +929,10 @@ describe ProcedurePresentation do
       it 'should passthrough value' do
         procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "Oui")
 
-        expect(procedure_presentation.filters).to eq({ "suivis" => [
-          { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "Oui" }
-        ]
+        expect(procedure_presentation.filters).to eq({
+          "suivis" => [
+            { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "Oui" }
+          ]
         })
       end
     end

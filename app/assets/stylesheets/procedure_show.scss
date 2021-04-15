@@ -61,4 +61,42 @@
     margin-bottom: 3 * $default-spacer;
     text-align: center;
   }
+
+  [data-react-class="ComboMultipleDropdownList"] {
+    margin-bottom: $default-fields-spacer;
+
+    [data-reach-combobox-token-list] {
+      padding: 0.25 * $default-padding;
+      display: inline-block;
+      width: 100%;
+    }
+
+    [data-reach-combobox-token] {
+      border: solid 1px $border-grey;
+      color: $black;
+      margin: 0.25 * $default-padding;
+      border-radius: 2px;
+      padding: 0.25 * $default-padding;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    [data-reach-combobox-token]:focus {
+      background-color: $black;
+      color: $white;
+    }
+
+
+    [data-reach-combobox-input] {
+      outline: none;
+      border: none;
+      flex-grow: 1;
+      margin: 0.25rem;
+    }
+
+    [data-reach-combobox-input]:focus {
+      outline: solid;
+      outline-color: $light-blue;
+    }
+  }
 }

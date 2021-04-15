@@ -1321,6 +1321,8 @@ Rails/ActiveRecordCallbacksOrder:
   Enabled: false
 Rails/AfterCommitOverride:
   Enabled: true
+Rails/AttributeDefaultBlockValue:
+  Enabled: true
 Rails/FindById:
   Enabled: true
 Rails/Inquiry:
@@ -1342,6 +1344,8 @@ Rails/RenderPlainText:
 Rails/ShortI18n:
   Enabled: true
 Rails/SquishedSQLHeredocs:
+  Enabled: true
+Rails/WhereEquals:
   Enabled: true
 Rails/WhereExists:
   Enabled: true

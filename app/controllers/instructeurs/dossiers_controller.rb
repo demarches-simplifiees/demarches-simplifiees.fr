@@ -72,7 +72,7 @@ module Instructeurs
     end
 
     def send_to_instructeurs
-      recipients = Instructeur.find(params[:recipients])
+      recipients = Instructeur.find(JSON.parse(params[:recipients]))
 
       recipients.each do |recipient|
         recipient.follow(dossier)

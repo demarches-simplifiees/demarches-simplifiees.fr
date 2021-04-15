@@ -138,7 +138,7 @@ module Instructeurs
     end
 
     def update_displayed_fields
-      procedure_presentation.update_displayed_fields(params[:values])
+      procedure_presentation.update_displayed_fields(JSON.parse(params[:values]))
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end

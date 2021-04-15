@@ -128,10 +128,8 @@ feature 'Instructing a dossier:' do
 
     click_on 'Personnes impliquées'
 
-    first('.select2-container', minimum: 1).click
-    find('li.select2-results__option[role="option"]', text: instructeur_2.email).click
-    first('.select2-container', minimum: 1).click
-    find('li.select2-results__option[role="option"]', text: instructeur_3.email).click
+    select_multi('email instructeur', instructeur_2.email)
+    select_multi('email instructeur', instructeur_3.email)
 
     click_on 'Envoyer'
 
