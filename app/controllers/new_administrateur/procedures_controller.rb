@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
@@ -169,7 +169,7 @@ module NewAdministrateur
     def allow_expert_review
       @procedure.update!(allow_expert_review: !@procedure.allow_expert_review)
       flash.notice = @procedure.allow_expert_review? ? "Avis externes activés" : "Avis externes désactivés"
-      redirect_to admin_procedure_path(@procedure)
+      redirect_to admin_procedure_experts_path(@procedure)
     end
 
     def transfer
@@ -183,6 +183,12 @@ module NewAdministrateur
         redirect_to admin_procedure_path(params[:procedure_id])
         flash.notice = "La démarche a correctement été clonée vers le nouvel administrateur."
       end
+    end
+
+    def experts_require_administrateur_invitation
+      @procedure.update!(experts_require_administrateur_invitation: !@procedure.experts_require_administrateur_invitation)
+      flash.notice = @procedure.experts_require_administrateur_invitation? ? "Les experts sont gérés par les administrateurs de la démarche" : "Les experts sont gérés par les instructeurs"
+      redirect_to admin_procedure_experts_path(@procedure)
     end
 
     private
