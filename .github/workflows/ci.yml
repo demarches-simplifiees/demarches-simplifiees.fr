@@ -55,15 +55,16 @@ jobs:
     strategy:
       matrix:
         pattern:
-          - spec/controllers/*_spec.rb
-          - spec/controllers/[a-l]**/*_spec.rb
-          - spec/controllers/[m-z]**/*_spec.rb
-          - spec/features
-          - spec/helpers spec/lib spec/middlewares
-          - spec/mailers spec/jobs spec/policies
-          - spec/models
-          - spec/serializers spec/services
-          - spec/views
+          - bin/rake zeitwerk:check
+          - bin/rspec spec/controllers/*_spec.rb
+          - bin/rspec spec/controllers/[a-l]**/*_spec.rb
+          - bin/rspec spec/controllers/[m-z]**/*_spec.rb
+          - bin/rspec spec/features
+          - bin/rspec spec/helpers spec/lib spec/middlewares
+          - bin/rspec spec/mailers spec/jobs spec/policies
+          - bin/rspec spec/models
+          - bin/rspec spec/serializers spec/services
+          - bin/rspec spec/views
 
     steps:
       - name: Checkout code
@@ -99,5 +100,9 @@ jobs:
         run: |
           bundle exec rake db:create db:schema:load db:migrate
 
+      - name: Setup environment variables
+        run: |
+          cp config/env.example .env
+
       - name: Run tests
-        run: bundle exec rspec ${{ matrix.pattern }}
+        run: ${{ matrix.pattern }}
