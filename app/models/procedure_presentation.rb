@@ -177,9 +177,9 @@ class ProcedurePresentation < ApplicationRecord
       .map do |table|
         case table
         when 'type_de_champ'
-          :champs
+          { champs: :type_de_champ }
         when 'type_de_champ_private'
-          :champs_private
+          { champs_private: :type_de_champ }
         else
           table
         end
