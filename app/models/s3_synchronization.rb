@@ -49,15 +49,15 @@ class S3Synchronization < ApplicationRecord
       end
     rescue => e
       puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
-      e.backtrace.each { |line| rake_print line }
+      e.backtrace.each { |line| puts line }
       false
     end
 
     def upload_blobs(msg, from, to, until_time, &block)
-      rake_print msg
+      puts msg
       configs = Rails.configuration.active_storage.service_configurations
       from_service = ActiveStorage::Service.configure from, configs
-      progress = ProgressReport.new(ActiveStorage::Blob.count)
+      progress = ProgressReport.new(ActiveStorage::Blob.count) if $running_via_rake
       pool = Concurrent::FixedThreadPool.new(POOL_SIZE)
 
       blob = ActiveStorage::Blob.first
@@ -70,7 +70,7 @@ class S3Synchronization < ApplicationRecord
       end
       pool.shutdown
       pool.wait_for_termination
-      progress.finish
+      progress.finish if progress
     end
 
     def upload_file(to_service, blob, file)
@@ -129,7 +129,7 @@ class S3Synchronization < ApplicationRecord
           upload_file(service, blob, file)
         end
       end
-      progress.inc
+      progress.inc if progress
     end
   end
 end
