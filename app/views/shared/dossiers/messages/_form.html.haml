@@ -1,14 +1,14 @@
 = form_for(commentaire, url: form_url, html: { class: 'form' }) do |f|
-  - placeholder = 'Écrivez votre message à l’administration ici'
+  - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in?
-    - placeholder = 'Écrivez votre message ici'
+    - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
   = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea'
   .flex.justify-between.wrap
     %div
       = f.label :piece_jointe, for: :piece_jointe do
-        Joindre un document
-        %span.notice (taille max : 20 Mo)
+        = t('views.shared.dossiers.messages.form.attach_dossier')
+        %span.notice= t('views.shared.dossiers.messages.form.attachment_size')
       = f.file_field :piece_jointe, id: 'piece_jointe', direct_upload: true
 
     %div
-      = f.submit 'Envoyer le message', class: 'button primary send', data: { disable: true }
+      = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'button primary send', data: { disable: true }
