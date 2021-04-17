@@ -28,46 +28,156 @@ fr:
     subject: Sujet
     message: Message
     send_mail: Envoyer le message
+  helpers:
+    procedure:
+      testing_procedure: démarche en test
+    commentaire:
+      send_message_to_instructeur: "Envoyer un message à l’instructeur"
+      reply_in_mailbox: "Répondre dans la messagerie."
   views:
+    commencer:
+      show:
+        start_procedure: Commencer la démarche
+        existing_dossiers: Vous avez déjà des dossiers pour cette démarche
+        show_dossiers: Voir mes dossiers en cours
+        start_new_dossier: Commencer un nouveau dossier
+    invites:
+      dropdown:
+        invite_to_edit: Inviter une personne à modifier ce dossier
+        view_invited_people: "Voir les personnes invitées"
+        invite_to_view: "Inviter une personne à consulter ce dossier"
+      form:
+        invite_to_edit_line1: Vous pouvez inviter quelqu’un à remplir ce dossier avec vous.
+        invite_to_edit_line2: Cette personne aura le droit de modifier votre dossier.
+        email: Adresse mail
+        invite_message: Ajouter un message à la personne invitée (optionnel)
+        send_invitation: Envoyer une invitation
+        invite_to_participate: "Personnes invitées à participer à ce dossier"
+        withdraw_permission: "Révoquer l’autorisation"
+        want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation ?"
+        edit_dossier: "Ces personnes peuvent modifier ce dossier."
+        submit_dossier_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
+    layouts:
+      commencer:
+        no_procedure:
+          line1: Un outil simple
+          line2: pour gérer les formulaires
+          line3: administratifs dématérialisés.
     pagination:
       next: Suivant
       last: Dernier
       previous: Précédent
       first: Premier
       truncate: '&hellip;'
-    sessions:
-      new:
-        title: Connectez-vous
-        email: Email (nom@site.com)
-        password: Mot de passe
-        remember_me: Se souvenir de moi
-        reset_password: Mot de passe oublié ?
-        connection: Se connecter
-        are_you_new: Vous êtes nouveau sur %{app_name} ?
-        find_procedure: Trouvez votre démarche
-    commencer:
-      no_procedure:
-        ligne1: Un outil simple
-        ligne2: pour gérer les formulaires
-        ligne3: administratifs dématérialisés.
-    passwords:
-      new:
-        send_me_reset_password_instructions: "Indiquez l’email de votre compte, et nous vous enverrons un lien pour créer un nouveau mot de passe."
+    shared:
+      dossiers:
+        edit:
+          autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
+          submit_dossier: Déposer le dossier
+          save_changes: Enregistrer les modifications du dossier
+        messages:
+          message_issuer:
+            automatic_email: "Email automatique"
+            you: "Vous"
+          message:
+            reply: "Répondre"
+            guest: "Invité"
+          form:
+            send_message: "Envoyer le message"
+            attachment_size: "(taille max : 20 Mo)"
+            attach_dossier: "Joindre un document"
+            write_message_placeholder: "Écrivez votre message ici"
+            write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
+        demande:
+          requester_identity: "Identité du demandeur"
+          form: "Formulaire"
+          edit_siret: "Modifier le SIRET"
+          edit_identity: "Modifier l’identité"
     users:
+      dossiers:
+        autosave:
+          autosave_draft: Votre brouillon est automatiquement enregistré.
+          more_infos: En savoir plus
+        identite:
+          identity_data: Données d’identité
+          complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
+          continue: Continuer
+        merci:
+          thanks: Merci !
+          dossier_send_l1: Votre dossier sur la démarche
+          dossier_send_l2: a bien été envoyé.
+          dossier_acces_l1: Vous avez désormais accès à votre
+          dossier_acces_l2: dossier en ligne.
+          dossier_edit_l1: Vous pouvez
+          dossier_edit_l2: le modifier
+          dossier_edit_l3: et
+          dossier_edit_l4: échanger avec un instructeur.
+          acces_dossier: Accéder à votre dossier
+          submit_dossier: Déposer un autre dossier
+        show:
+          header:
+            edit_dossier: Modifier mon dossier
+            summary: "Résumé"
+            request: "Demande"
+            mailbox: "Messagerie"
+            dossier_number: "Dossier nº %{dossier_id}"
+            submit_date: "- Déposé le %{date_du_dossier}"
+            print: "imprimer"
+            print_dossier: "Tout le dossier"
+          status_overview:
+            status_draft: brouillon
+            status_in_progress: en construction
+            en_construction_html: "Votre dossier est en construction. Cela signifie que <strong>vous pouvez encore le modifier</strong>. Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction »."
+            status_review: en instruction
+            admin_review: Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
+            status_completed: terminé
+            use_mailbox_for_questions_html: "<strong>Vous avez une question ?</strong> Utilisez la messagerie pour <a href=\"%{mailbox_url}\">contacter l’administration directement</a>."
+          latest_message:
+            latest_message: "Dernier message"
+        messagerie:
+          mailbox: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
+        demande:
+          edit_dossier: "Modifier le dossier"
+        index:
+          dossiers: "Dossiers"
+        dossiers_list:
+          procedure: "Démarche"
+          n_dossier: "Nº dossier"
+          requester: "Demandeur"
+          status: "Statut"
+          updated: "Mis à jour"
+          actions: "Actions"
+          accessibility_question: "Que pensez-vous de la facilité d’utilisation de ce service ?"
+        dossier_action:
+          edit_dossier: "Modifier le dossier"
+          start_other_dossier: "Commencer un autre dossier"
+          delete_dossier: "Supprimer le dossier"
+          edit_draft: "Modifier le brouillon"
+          actions: "Actions"
+      sessions:
+        new:
+          sign_in: Connectez-vous
+          email: Email (nom@site.com)
+          password: Mot de passe (%{min_length} caractères minimum)
+          remember_me: Se souvenir de moi
+          reset_password: Mot de passe oublié ?
+          connection: Se connecter
+          are_you_new: Vous êtes nouveau sur %{app_name} ?
+          find_procedure: Trouvez votre démarche
       passwords:
         reset_link_sent:
           email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
           click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."
-          no_mail: "Vous n’avez pas reçu l’email ?"
+          no_mail: "Vous n’avez pas reçu l’email ?"
           check_spams: "Vérifiez la boite Indésirables ou Spam de votre boite email."
-          check_account: "Avez-vous bien créé un compte %{application_name} avec l’adresse %{email} ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
-          check_france_connect_html: "Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href=\"%{href}\">essayez à nouveau avec France Connect</a>."
+          check_account: "Avez-vous bien créé un compte %{application_name} avec l’adresse %{email} ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
+          check_france_connect_html: "Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href=\"%{href}\">essayez à nouveau avec France Connect</a>."
           got_it: "Bien reçu !"
           open_your_mailbox: "Maintenant ouvrez votre boite email."
           title: "Lien de réinitialisation du mot de passe envoyé"
-      shared:
-        email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
-        contact_us_if_any_trouble_html: "En cas de difficultés, nous restons joignables <a href=\"%{href}\">via ce formulaire</a>."
+        shared:
+          email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
+          contact_us_if_any_trouble_html: "En cas de difficultés, nous restons joignables <a href=\"%{href}\">via ce formulaire</a>."
   modal:
     publish:
       title:
@@ -208,3 +318,16 @@ fr:
       zero: Brouillon
       one: Brouillon
       other: Brouillons
+  users:
+    dossiers:
+      test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
+      message_send: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
+      no_access: "Vous n’avez pas accès à ce dossier"
+      no_longer_editable: "Votre dossier ne peut plus être modifié"
+      undergoingreview: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
+      deleted_dossier: "Votre dossier a bien été supprimé."
+      archived_dossier: "Votre dossier sera conservé un mois supplémentaire"
+      draft_saved: "Votre brouillon a bien été sauvegardé."
+      no_establishment: "Aucun établissement n’est associé à ce dossier"
+      identity_saved: "Identité enregistrée"
+      no_longer_available: "L’attestation n'est plus disponible sur ce dossier."

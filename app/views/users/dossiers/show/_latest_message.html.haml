@@ -1,7 +1,7 @@
 - latest_message = dossier.commentaires.last
 - if latest_message.present?
   .latest-message-section
-    %h3.tab-title Dernier message
+    %h3.tab-title= t('views.users.dossiers.show.latest_message.latest_message')
 
     .message.inverted-background
       = render partial: "shared/dossiers/messages/message", locals: { commentaire: latest_message, connected_user: current_user, messagerie_seen_at: nil, show_reply_button: false }
