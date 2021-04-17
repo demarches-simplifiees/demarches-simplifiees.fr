@@ -6,7 +6,7 @@
 - if has_actions
   .dropdown.user-dossier-actions
     %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'actions-menu' }
-      Actions
+      = t('views.users.dossiers.dossier_action.button_actions')
     #actions-menu.dropdown-content.fade-in-down
       %ul.dropdown-items
         - if !dossier.read_only?
@@ -15,24 +15,24 @@
               = link_to(url_for_dossier(dossier)) do
                 %span.icon.edit
                 .dropdown-description
-                  Modifier le brouillon
+                  = t('views.users.dossiers.dossier_action.link_edit_draft')
           - else
             %li
               = link_to modifier_dossier_path(dossier) do
                 %span.icon.edit
                 .dropdown-description
-                  Modifier le dossier
+                  = t('views.users.dossiers.dossier_action.link_edit_file')
 
         - if has_new_dossier_action
           %li
             = link_to procedure_lien(dossier.procedure) do
               %span.icon.new-folder
               .dropdown-description
-                Commencer un autre dossier
+                = t('views.users.dossiers.dossier_action.link_start_other_file')
 
         - if has_delete_action
           %li.danger
             = link_to ask_deletion_dossier_path(dossier), method: :post, data: { disable: true, confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?" } do
               %span.icon.delete
               .dropdown-description
-                Supprimer le dossier
+                = t('views.users.dossiers.dossier_action.link_delete_file')

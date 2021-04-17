@@ -28,28 +28,146 @@ en:
     subject: Subject
     message: Message
     send_mail: Send message
+  helpers:
+    procedure_helper:
+        testing_procedure_badge: testing procedure
+    commentaire_helper:
+      send_message_instructor: "Send a message to the instructor"
+      reply_in_mailbox_button: "Reply in mailbox"
   views:
+    commencer:
+      show:
+        link_start_procedure: Start the procedure
+        title_existing_files: You already have files for this procedure
+        link_show_files_button: View my current files
+        link_start_new_file_button: Start a new file
+    invites:
+      dropdown:
+        invite_to_edit: Invite someone to edit this file
+        view_invited_people: "View invited people"
+        invite_to_view: "Invite someone to view this file"
+      form:
+        invite_to_edit_text_line1: You can invite someone to completethis file with you.
+        invite_to_edit_text_line2: This person will have the right to edit your file.
+        email: Email address
+        invite_message: Add a message to the person you invite (optional)
+        send_invitation: Send an invitation
+        invite_to_participate: "Invited people to participate in this file"
+        withdraw_permission: "Withdraw the permission"
+        want_to_withdraw_permission: "Would you like to withdraw the permission ?"
+        edit_file_text: "These people can edit this file."
+        submit_file_yourself: "You must submit the file yourself when it is complete."
+    layouts:
+      commencer:
+        no_procedure:
+          line1: A simple tool
+          line2: to manage dematerialized
+          line3: administrative forms.
     pagination:
       next: Next
       last: Last
       previous: Previous
       first: First
       truncate: '&hellip;'
-    sessions:
-      new:
-        title: Sign in
-        email: Email address (name@site.com)
-        password: Password (minimum length %{min_length} characters)
-        remember_me: Remember me
-        reset_password: Forgot password?
-        connection: Sign in
-        are_you_new: First time on %{app_name} ?
-        find_procedure: Find your procedure
-    commencer:
-      no_procedure:
-        ligne1: A simple tool
-        ligne2: to manage dematerialized 
-        ligne3: administrative forms.
+    shared:
+      dossiers:
+        edit:
+          autosave_text: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
+          submit_file_button: Submit the file
+          save_changes_button: Save the changes of the file
+        messages:
+          message_issuer:
+            automatic_email: "Automatic email"
+            you: "You"
+          message:
+            reply_button: "Reply"
+            guest: "Guest"
+          form:
+            send_message_button: "Send message"
+            attachment_size: "(attachment size max : 20 Mo)"
+            attach_file: "Attach a file"
+            write_message_placeholder: "Write your message here"
+            write_message_to_administration_placeholder: "Write your message to the administration here"
+        demande:
+          tabtitle_requester_id: "Identity of the requester"
+          tabtitle_form: "Form"
+          link_edit_siret: "Edit SIRET"
+          link_edit_identity: "Edit identity data"
+    users:
+      dossiers:
+        autosave:
+          autosave_draft_text: Your draft is automatically saved.
+          link_more_infos: More informations
+        identite:
+          title_id_data: Identity data
+          complete_data: Please complete your personal information to access the procedure.
+          continue_button: Continue
+        merci:
+          title_thanks: Thank you !
+          file_send_text_line1: Your file on the procedure
+          file_send_text_line2: has been sent.
+          file_acces_text_line1: You have now access to your
+          file_acces_text_line2: online file.
+          file_edit_text_line1: You can
+          file_edit_text_line2: edit it
+          file_edit_text_line3: and
+          file_edit_text_line4: talk with an instructor.
+          acces_file_button: Access your file
+          link_submit_file: Submit an other file
+        show:
+          header:
+            link_edit_my_file: Edit my file
+            summary: "Summary"
+            request: "Request"
+            mailbox: "Mailbox"
+            title_file_number: "File n. %{dossier_id}"
+            title_submit_date: "- Submit on %{date_du_dossier}"
+            print_button: "print"
+            link_print_all_file: "All the file"
+          status_overview:
+            status_draft: draft
+            status_in_progress: in progress
+            file_in_progress_text: Your file is in progress. It means that
+            still_edit_text: you can still edit it
+            no_longer_edit_text: You will no longer be able to edit the file when the administration will switch it to "review".
+            status_review: undergoing review
+            admin_review_text: The administration is reviewing your file. You are no longer able to edit it.
+            status_completed: completed
+            you_have_question_text: You have a question ?
+            use_mailbox_text: Use the mailbox to
+            contact_admin_link: contact the administration directly
+          latest_message:
+            title_latest_message: "Latest message"
+        messagerie:
+          mailbox_text: "The mailbox allows you to contact the instructor in charge of your file."
+        demande:
+          edit_file_button: "Edit file"
+        index:
+          pagetitle_files: "Files"
+        dossiers_list:
+          tabletitle_procedure: "Procedure"
+          tabletitle_n_file: "File n."
+          tabletitle_requester: "Requester"
+          tabletitle_status: "Status"
+          tabletitle_updated: "Updated"
+          tabletitle_actions: "Actions"
+          accessibility_question: "What do you think about the accessibility of this service ?"
+        dossier_action:
+          link_edit_file: "Edit the file"
+          link_start_other_file: "Start an other file"
+          link_delete_file: "Delete the file"
+          link_edit_draft: "Edit the draft"
+          button_actions: "Actions"
+      sessions:
+        new:
+          title: Sign in
+          email: Email address (name@site.com)
+          password: Password (minimum length %{min_length} characters)
+          remember_me: Remember me
+          reset_password: Forgot password?
+          connection: Sign in
+          are_you_new: First time on %{app_name} ?
+          find_procedure: Find your procedure
   modal:
     publish:
       title:
@@ -63,11 +181,18 @@ en:
         reopen: Reopen
   activerecord:
     attributes:
-      user:
-        siret: 'SIRET number'
-        password: 'password'
+      individual:
+        gender: Gender
+        nom: Last Name
+        prenom: First Name
+        gender_options:
+          "Mme": "Female"
+          "M.": "Male"
+    user:
+      siret: 'SIRET number'
+      password: 'password'
       instructeur:
-        password: 'password'
+      password: 'password'
     errors:
       messages:
         not_a_phone: 'Invalid phone number'
@@ -147,6 +272,18 @@ en:
       zero: archived
       one: archived
       other: archived
+    mes_dossiers:
+      zero: my file
+      one: my file
+      other: my files
+    dossiers_invites:
+      zero: guest file
+      one: guest file
+      other: guest files
+    dossiers_supprimes:
+      zero: deleted file
+      one: deleted file
+      other: deleted files
     dossier_trouve:
       zero: 0 file found
       one: 1 file found
@@ -163,3 +300,17 @@ en:
       zero: Draft
       one: Draft
       other: Drafts
+  controllers:
+    users:
+      dossier_controller:
+        test_procedure_flashnowalert: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
+        message_send_flashnotice: "Your message has been sent to the instructor in charge of your file."
+        have_not_access_file_flashalert: "You do not have access to this file"
+        no_longer_edit_file_flashalert: "Your file can no longer be edited"
+        undergoingreview_flashnotice: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
+        file_deleted_flashalert: "Your file has been successfully deleted"
+        file_longer_archived_flashnownotice: "Your file will be archived for an additional month"
+        saved_draft_flashnownotice: "Your draft has been saved."
+        establishment_tied_to_flashalert: "There is no establishment tied to this file"
+        id_data_registred_flashnotice: "Identity data is registred"
+        not_available_certificate: "The certificate is no longer available on this file."

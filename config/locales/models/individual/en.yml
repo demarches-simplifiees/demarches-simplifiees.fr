@@ -1,0 +1,11 @@
+fr:
+  activerecord:
+    attributes:
+      individual:
+        gender: Gender
+        nom: Last name
+        prenom: First name
+        birthdate: Date de naissance
+        gender_options:
+          "Mme": "Female"
+          "M.": "Male"

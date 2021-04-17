@@ -3,13 +3,14 @@
     %ul.status-timeline
       - if dossier.brouillon?
         %li.brouillon{ class: dossier.brouillon? ? 'active' : nil }
-          brouillon
+          = t('views.users.dossiers.show.status_overview.status_draft')
       %li.en-construction{ class: dossier.en_construction? ? 'active' : nil }
-        en construction
+        = t('views.users.dossiers.show.status_overview.status_in_progress')
       %li.en-instruction{ class: dossier.en_instruction? ? 'active' : nil }
-        en instruction
+        = t('views.users.dossiers.show.status_overview.status_review')
       %li.termine{ class: dossier.termine? ? 'active' : nil }
-        terminé
+        = t('views.users.dossiers.show.status_overview.status_completed')
+
 
   .status-explanation
     - if dossier.brouillon?
@@ -20,30 +21,30 @@
     - elsif dossier.en_construction?
       .en-construction
         %p
-          Votre dossier est en construction. Cela signifie que
+          = t('views.users.dossiers.show.status_overview.file_in_progress_text')
           = succeed '.' do
-            %strong vous pouvez encore le modifier
-          Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction ».
+            %strong= t('views.users.dossiers.show.status_overview.still_edit_text')
+          = t('views.users.dossiers.show.status_overview.no_longer_edit_text')
 
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
 
         %p
-          %strong Vous avez une question ?
-          Utilisez la messagerie pour
+          %strong= t('views.users.dossiers.show.status_overview.you_have_question_text')
+          = t('views.users.dossiers.show.status_overview.use_mailbox_text')
           = succeed '.' do
-            = link_to 'contacter l’administration directement', messagerie_dossier_url(dossier)
+            = link_to t('views.users.dossiers.show.status_overview.contact_admin_link'), messagerie_dossier_url(dossier)
 
     - elsif dossier.en_instruction?
       .en-instruction
-        %p Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
+        %p t('views.users.dossiers.show.status_overview.admin_review_text')
 
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
 
         %p
-          %strong Vous avez une question ?
-          Utilisez la messagerie pour
+          %strong= t('views.users.dossiers.show.status_overview.you_have_question_text')
+          = t('views.users.dossiers.show.status_overview.use_mailbox_text')
           = succeed '.' do
-            = link_to 'contacter l’administration directement', messagerie_dossier_url(dossier)
+            = link_to t('views.users.dossiers.show.status_overview.contact_admin_link'), messagerie_dossier_url(dossier)
 
     - elsif dossier.accepte?
       .accepte

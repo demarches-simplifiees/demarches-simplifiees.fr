@@ -3,7 +3,7 @@
     .card
       = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier }
 
-  .tab-title Identité du demandeur
+  .tab-title= t('views.shared.dossiers.demande.tabtitle_requester_id')
   .card
     - if dossier.france_connect_information.present?
       = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
@@ -14,16 +14,16 @@
 
       - if profile == 'usager' && !dossier.read_only?
         .flex.row-reverse
-          = link_to "Modifier le SIRET", siret_dossier_path(dossier), class: 'button'
+          = link_to t('views.shared.dossiers.demande.link_edit_siret'), siret_dossier_path(dossier), class: 'button'
 
     - if dossier.individual.present?
       = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
 
       - if profile == 'usager' && !dossier.read_only?
         .flex.row-reverse
-          = link_to "Modifier l'identité", identite_dossier_path(dossier), class: 'button'
+          = link_to t('views.shared.dossiers.demande.link_edit_identity'), identite_dossier_path(dossier), class: 'button'
 
-  .tab-title Formulaire
+  .tab-title= t('views.shared.dossiers.demande.tabtitle_form')
   - champs = dossier.champs.includes(:type_de_champ)
   - if champs.any? || dossier.procedure.routee?
     .card

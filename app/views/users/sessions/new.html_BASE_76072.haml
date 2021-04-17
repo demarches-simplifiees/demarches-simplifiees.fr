@@ -1,0 +1,31 @@
+= content_for(:page_id, 'auth')
+
+.auth-form.sign-in-form
+
+  = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
+    %h1.huge-title= t('views.session')
+
+    = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+
+    = f.label :email, "Email (nom@site.com)"
+    = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
+
+    = f.label :password, "Mot de passe (#{PASSWORD_MIN_LENGTH} caractères minimum)"
+    = f.password_field :password, autocomplete: 'current-password'
+
+    .auth-options
+      %div
+        = f.check_box :remember_me
+        = f.label :remember_me, "Se souvenir de moi", class: 'remember-me'
+
+      .text-right
+        = link_to "Mot de passe oublié ?", new_user_password_path, class: "link"
+
+    = f.submit "Se connecter", class: "button large primary expand"
+
+  %hr
+  %p.center
+    %span Vous êtes nouveau sur #{APPLICATION_NAME.gsub("-","&#8209;").html_safe} ?
+    %br
+    %br
+    = link_to "Trouvez votre démarche", COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button expend secondary"

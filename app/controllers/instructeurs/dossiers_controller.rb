@@ -121,7 +121,7 @@ module Instructeurs
     def repasser_en_construction
       begin
         dossier.repasser_en_construction!(current_instructeur)
-        flash.notice = 'Dossier repassé en construction.'
+        flash.notice = 'Dossier repassé .'
       rescue AASM::InvalidTransition => e
         flash.alert = aasm_error_message(e, target_state: :en_construction)
       end

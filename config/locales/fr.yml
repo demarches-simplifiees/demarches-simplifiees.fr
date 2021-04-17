@@ -28,28 +28,146 @@ fr:
     subject: Sujet
     message: Message
     send_mail: Envoyer le message
+  helpers:
+    procedure_helper:
+      testing_procedure_badge: démarche en test
+    commentaire_helper:
+      send_message_instructor: "Envoyer un message à l’instructeur"
+      reply_in_mailbox_button: "Répondre dans la messagerie."
   views:
+    commencer:
+      show:
+        link_start_procedure: Commencer la démarche
+        title_existing_files: Vous avez déjà des dossiers pour cette démarche
+        show_files_button: Voir mes dossiers en cours
+        start_new_file_button: Commencer un nouveau dossier
+    invites:
+      dropdown:
+        invite_to_edit: Inviter une personne à modifier ce dossier
+        view_invited_people: "Voir les personnes invitées"
+        invite_to_view: "Inviter une personne à consulter ce dossier"
+      form:
+        invite_to_edit_text_line1: Vous pouvez inviter quelqu’un à remplir ce dossier avec vous.
+        invite_to_edit_text_line2: Cette personne aura le droit de modifier votre dossier.
+        email: Adresse mail
+        invite_message: Ajouter un message à la personne invitée (optionnel)
+        send_invitation: Envoyer une invitation
+        invite_to_participate: "Personnes invitées à participer à ce dossier"
+        withdraw_permission: "Révoquer l'autorisation"
+        want_to_withdraw_permission: "Souhaitez-vous supprimer l'autorisation ?"
+        edit_file_text: "Ces personnes peuvent modifier ce dossier."
+        submit_file_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
+    layouts:
+      commencer:
+        no_procedure:
+          line1: Un outil simple
+          line2: pour gérer les formulaires
+          line3: administratifs dématérialisés.
     pagination:
       next: Suivant
       last: Dernier
       previous: Précédent
       first: Premier
       truncate: '&hellip;'
-    sessions:
-      new:
-        title: Connectez-vous
-        email: Email (nom@site.com)
-        password: Mot de passe (%{min_length} caractères minimum)
-        remember_me: Se souvenir de moi
-        reset_password: Mot de passe oublié ?
-        connection: Se connecter
-        are_you_new: Vous êtes nouveau sur %{app_name} ?
-        find_procedure: Trouvez votre démarche
-    commencer:
-      no_procedure:
-        ligne1: Un outil simple
-        ligne2: pour gérer les formulaires
-        ligne3: administratifs dématérialisés.
+    shared:
+      dossiers:
+        edit:
+          autosave_text: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
+          submit_file_button: Déposer le dossier
+          save_changes_button: Enregistrer les modifications du dossier
+        messages:
+          message_issuer:
+            automatic_email: "Email automatique"
+            you: "Vous"
+          message:
+            reply_button: "Répondre"
+            guest: "Invité"
+          form:
+            send_message_button: "Envoyer le message"
+            attachment_size: "(taille max : 20 Mo)"
+            attach_file: "Joindre un document"
+            write_message_placeholder: "Écrivez votre message ici"
+            write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
+        demande:
+          tabtitle_requester_id: "Identité du demandeur"
+          tabtitle_form: "Formulaire"
+          link_edit_siret: "Modifier le SIRET"
+          link_edit_identity: "Modifier l'identité"
+    users:
+      dossiers:
+        autosave:
+          autosave_draft_text: Votre brouillon est automatiquement enregistré.
+          link_more_infos: En savoir plus
+        identite:
+          title_id_data: Données d'identité
+          complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
+          continue_button: Continuer
+        merci:
+          title_thanks: Merci !
+          file_send_text_line1: Votre dossier sur la démarche
+          file_send_text_line2: a bien été envoyé.
+          file_acces_text_line1: Vous avez désormais accès à votre
+          file_acces_text_line2: dossier en ligne.
+          file_edit_text_line1: Vous pouvez
+          file_edit_text_line2: le modifier
+          file_edit_text_line3: et
+          file_edit_text_line4: échanger avec un instructeur.
+          acces_file_button: Accéder à votre dossier
+          link_submit_file: Déposer un autre dossier
+        show:
+          header:
+            link_edit_my_file: Modifier mon dossier
+            summary: "Résumé"
+            request: "Demande"
+            mailbox: "Messagerie"
+            title_file_number: "Dossier nº %{dossier_id}"
+            title_submit_date: "- Déposé le %{date_du_dossier}"
+            print_button: "imprimer"
+            link_print_all_file: "Tout le dossier"
+          status_overview:
+            status_draft: brouillon
+            status_in_progress: en construction
+            file_in_progress_text: Votre dossier est en construction. Cela signifie que
+            still_edit_text: vous pouvez encore le modifier
+            no_longer_edit_text: Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction ».
+            status_review: en instruction
+            admin_review_text: Votre dossier est en cours d'instruction par l'administration. Vous ne pouvez plus le modifier.
+            status_completed: terminé
+            you_have_question_text: Vous avez une question ?
+            use_mailbox_text: Utilisez la messagerie pour
+            contact_admin_link: contacter l’administration directement
+          latest_message:
+            title_latest_message: "Dernier message"
+        messagerie:
+          mailbox_text: "La messagerie vous permet de contacter l’instructeur en charge de votre dossier."
+        demande:
+          edit_file_button: "Modifier le dossier"
+        index:
+          pagetitle_files: "Dossiers"
+        dossiers_list:
+          tabletitle_procedure: "Démarche"
+          tabletitle_n_file: "Nº dossier"
+          tabletitle_requester: "Demandeur"
+          tabletitle_status: "Statut"
+          tabletitle_updated: "Mis à jour"
+          tabletitle_actions: "Actions"
+          accessibility_question: "Que pensez-vous de la facilité d'utilisation de ce service ?"
+        dossier_action:
+          link_edit_file: "Modifier le dossier"
+          link_start_other_file: "Commencer un autre dossier"
+          link_delete_file: "Supprimer le dossier"
+          link_edit_draft: "Modifier le brouillon"
+          button_actions: "Actions"
+      sessions:
+        new:
+          title: Connectez-vous
+          email: Email (nom@site.com)
+          password: Mot de passe (%{min_length} caractères minimum)
+          remember_me: Se souvenir de moi
+          reset_password: Mot de passe oublié ?
+          connection: Se connecter
+          are_you_new: Vous êtes nouveau sur %{app_name} ?
+          find_procedure: Trouvez votre démarche
   modal:
     publish:
       title:
@@ -63,6 +181,13 @@ fr:
         reopen: Réactiver
   activerecord:
     attributes:
+      individual:
+        gender: Civilité
+        nom: Nom
+        prenom: Prénom
+        gender_options:
+          "Mme": "Madame"
+          "M.": "Monsieur"
       default_attributes: &default_attributes
         password: 'Le mot de passe'
       user:
@@ -186,3 +311,17 @@ fr:
       zero: Brouillon
       one: Brouillon
       other: Brouillons
+  controllers:
+    users:
+      dossier_controller:
+        test_procedure_flashnowalert: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
+        message_send_flashnotice: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
+        have_not_access_file_flashalert: "Vous n'avez pas accès à ce dossier"
+        no_longer_edit_file_flashalert: "Votre dossier ne peut plus être modifié"
+        undergoingreview_flashnotice: "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
+        file_deleted_flashalert: "Votre dossier a bien été supprimé."
+        file_longer_archived_flashnownotice: "Votre dossier sera conservé un mois supplémentaire"
+        saved_draft_flashnownotice: "Votre brouillon a bien été sauvegardé."
+        establishment_tied_to_flashalert: "Aucun établissement n’est associé à ce dossier"
+        id_data_registred_flashnotice: "Identité enregistrée"
+        not_available_certificate: "L'attestation n'est plus disponible sur ce dossier."

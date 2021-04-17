@@ -1,8 +1,8 @@
 .autosave.autosave-state-idle
   %p.autosave-explanation
     %span.autosave-explanation-text
-      Votre brouillon est automatiquement enregistré.
-    = link_to 'En savoir plus', FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
+      = t('views.users.dossiers.autosave.autosave_draft_text')
+    = link_to t('views.users.dossiers.autosave.link_more_infos'), FAQ_AUTOSAVE_URL, target: '_blank', rel: 'noopener', class: 'autosave-more-infos'
 
   %p.autosave-status.succeeded
     %span.autosave-icon.icon.accept

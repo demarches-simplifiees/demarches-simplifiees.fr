@@ -7,9 +7,9 @@ module CommentaireHelper
 
   def commentaire_answer_action(commentaire, connected_user)
     if commentaire.sent_by?(connected_user)
-      "Envoyer un message à l’instructeur"
+      I18n.t('helpers.commentaire_helper.send_message_instructor')
     else
-      "Répondre dans la messagerie"
+      I18n.t('helpers.commentaire_helper.reply_in_mailbox_button')
     end
   end
 
