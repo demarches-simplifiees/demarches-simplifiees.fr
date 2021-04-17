@@ -106,6 +106,7 @@ services:
       - SIPF_CLIENT_BASE_URL
       - SIPF_CLIENT_ID
       - SIPF_CLIENT_SECRET
+      - STORAGE
       - TATOU_BASE_URL
       - TATOU_CLIENT_ID
       - TATOU_CLIENT_SECRET
@@ -143,6 +144,7 @@ services:
       - SENTRY_DSN_JS
       - SENTRY_DSN_RAILS
       - SENTRY_ENABLED
+      - STORAGE
       - UNIVERSIGN_USERPWD
       - UNIVERSIGN_API_URL
       - WATERMARK_FILE
