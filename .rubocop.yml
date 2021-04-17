@@ -25,6 +25,7 @@ DS/ApplicationName:
     - './lib/linters/application_name_linter.rb'
     - "./spec/**/*"
 
+
 Bundler/DuplicatedGem:
   Enabled: true
 
@@ -686,6 +687,9 @@ Rails/ApplicationRecord:
 Rails/ApplicationController:
   Enabled: false
 
+Rails/AttributeDefaultBlockValue: # (new in 2.9)
+  Enabled: true
+
 Rails/RakeEnvironment:
   Enabled: false
 
@@ -812,6 +816,9 @@ Rails/UnknownEnv:
   Enabled: false
 
 Rails/Validation:
+  Enabled: true
+
+Rails/WhereEquals:
   Enabled: true
 
 Rails:

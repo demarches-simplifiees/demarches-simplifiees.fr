@@ -41,12 +41,12 @@ class APITeFenua::Adapter
                                   params: {
                                     # mandatory but unused parameters
                                     d: '0',
-                                                                    x: '0',
-                                                                    y: '0',
-                                                                    id: '',
-                                                                    sid: 'reqId',
-                                                                    # query
-                                                                    q: search
+                                    x: '0',
+                                    y: '0',
+                                    id: '',
+                                    sid: 'reqId',
+                                    # query
+                                    q: search
                                   }
                                 })
   rescue RestClient::ServiceUnavailable

@@ -22,11 +22,11 @@ class S3Synchronization < ApplicationRecord
   class << self
     POOL_SIZE = 10
 
-    def synchronize(until_time)
+    def synchronize(under_rake, until_time)
       if Rails.configuration.active_storage.service == :local
-        upload(:local, :s3, until_time)
+        upload(:local, :s3, under_rake, until_time)
       else
-        upload(:s3, :local, until_time)
+        upload(:s3, :local, under_rake, until_time)
       end
       AdministrationMailer.s3_synchronization_report.deliver_now
     end
@@ -53,11 +53,11 @@ class S3Synchronization < ApplicationRecord
       false
     end
 
-    def upload_blobs(msg, from, to, until_time, &block)
+    def upload_blobs(msg, from, to, under_rake, until_time, &block)
       puts msg
       configs = Rails.configuration.active_storage.service_configurations
       from_service = ActiveStorage::Service.configure from, configs
-      progress = ProgressReport.new(ActiveStorage::Blob.count) if $running_via_rake
+      progress = ProgressReport.new(ActiveStorage::Blob.count) if under_rake
       pool = Concurrent::FixedThreadPool.new(POOL_SIZE)
 
       blob = ActiveStorage::Blob.first
@@ -84,7 +84,7 @@ class S3Synchronization < ApplicationRecord
       end
     end
 
-    def upload(from, to, until_time)
+    def upload(from, to, under_rake, until_time)
       ActiveStorage::Blob.service
       configs = Rails.configuration.active_storage.service_configurations
       from_service = ActiveStorage::Service.configure from, configs
@@ -94,12 +94,12 @@ class S3Synchronization < ApplicationRecord
       S3Synchronization.all.count # load class before multi-threading
 
       msg = "First step: files not uploaded yet. #{ActiveStorage::Blob.count} Blobs to go..."
-      upload_blobs(msg, from, to, until_time) do |_service_name, service, blob|
+      upload_blobs(msg, from, to, under_rake, until_time) do |_service_name, service, blob|
         service.exist?(blob.key)
       end
 
       msg = "Second step: check integrity of files. #{ActiveStorage::Blob.count} Blobs to go..."
-      upload_blobs(msg, from, to, until_time) do |service_name, service, blob|
+      upload_blobs(msg, from, to, under_rake, until_time) do |service_name, service, blob|
         uploaded(service_name, service, blob)
       end
     end
