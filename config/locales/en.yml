@@ -103,7 +103,7 @@ en:
           complete_data: Please complete your personal information to access the procedure.
           continue_button: Continue
         merci:
-          title_thanks: Thank you !
+          title_thanks: Thank you!
           file_send_text_line1: Your file on the procedure
           file_send_text_line2: has been sent.
           file_acces_text_line1: You have now access to your
