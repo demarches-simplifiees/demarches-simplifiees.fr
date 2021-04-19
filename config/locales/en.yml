@@ -166,7 +166,7 @@ en:
           remember_me: Remember me
           reset_password: Forgot password?
           connection: Sign in
-          are_you_new: First time on %{app_name} ?
+          are_you_new: First time on %{app_name}?
           find_procedure: Find your procedure
   modal:
     publish:
