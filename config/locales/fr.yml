@@ -92,7 +92,7 @@ fr:
           tabtitle_requester_id: "Identité du demandeur"
           tabtitle_form: "Formulaire"
           link_edit_siret: "Modifier le SIRET"
-          link_edit_identity: "Modifier l'identité"
+          link_edit_identity: "Modifier l’identité"
     users:
       dossiers:
         autosave:
