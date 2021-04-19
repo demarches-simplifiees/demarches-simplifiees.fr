@@ -54,7 +54,7 @@ en:
         send_invitation: Send an invitation
         invite_to_participate: "Invited people to participate in this file"
         withdraw_permission: "Withdraw the permission"
-        want_to_withdraw_permission: "Would you like to withdraw the permission ?"
+        want_to_withdraw_permission: "Would you like to withdraw the permission?"
         edit_file_text: "These people can edit this file."
         submit_file_yourself: "You must submit the file yourself when it is complete."
     layouts:
