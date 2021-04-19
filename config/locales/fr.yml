@@ -131,7 +131,7 @@ fr:
             still_edit_text: vous pouvez encore le modifier
             no_longer_edit_text: Vous ne pourrez plus modifier votre dossier lorsque l’administration le passera « en instruction ».
             status_review: en instruction
-            admin_review_text: Votre dossier est en cours d'instruction par l'administration. Vous ne pouvez plus le modifier.
+            admin_review_text: Votre dossier est en cours d’instruction par l’administration. Vous ne pouvez plus le modifier.
             status_completed: terminé
             you_have_question_text: Vous avez une question ?
             use_mailbox_text: Utilisez la messagerie pour
