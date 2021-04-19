@@ -47,7 +47,7 @@ en:
         view_invited_people: "View invited people"
         invite_to_view: "Invite someone to view this file"
       form:
-        invite_to_edit_text_line1: You can invite someone to completethis file with you.
+        invite_to_edit_text_line1: You can invite someone to complete this file with you.
         invite_to_edit_text_line2: This person will have the right to edit your file.
         email: Email address
         invite_message: Add a message to the person you invite (optional)
