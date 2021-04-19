@@ -47,10 +47,10 @@
           - if matching_archive.try(&:available?)
             = link_to url_for(matching_archive.file), class: 'button primary' do
               %span.icon.download-white
-              Télécharger
+              = t(:archive_ready_html, generated_period: time_ago_in_words(matching_archive.updated_at), scope: [:instructeurs, :procedure])
           - elsif matching_archive.try(&:pending?)
             %span.icon.retry
-            Archive en cours de création
+            = t(:archive_pending_html, created_period: time_ago_in_words(matching_archive.created_at), scope: [:instructeurs, :procedure])
           - elsif @dossiers_termines.count > 0
             = link_to instructeur_archives_path(@procedure, type: 'everything'), method: :post, class: "button", remote: true do
               %span.icon.new-folder
@@ -78,12 +78,12 @@
               - if matching_archive.status == 'generated' && matching_archive.file.attached?
                 = link_to url_for(matching_archive.file), class: 'button primary' do
                   %span.icon.download-white
-                  Télécharger
+                  = t(:archive_ready_html, generated_period: time_ago_in_words(matching_archive.updated_at), scope: [:instructeurs, :procedure])
               - else
                 %span.icon.retry
-                Archive en cours de création
+                = t(:archive_pending_html, created_period: time_ago_in_words(matching_archive.created_at), scope: [:instructeurs, :procedure])
             - else
-              = link_to instructeur_archives_path(@procedure, type:'monthly', month: month.strftime('%Y-%m')), method: :post, class: "button", remote: true do
+              = link_to instructeur_archives_path(@procedure, type:'monthly', month: month.strftime('%Y-%m')), method: :post, class: "button" do
                 %span.icon.new-folder
                 Démander la création
           - else
