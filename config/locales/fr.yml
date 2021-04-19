@@ -99,7 +99,7 @@ fr:
           autosave_draft_text: Votre brouillon est automatiquement enregistré.
           link_more_infos: En savoir plus
         identite:
-          title_id_data: Données d'identité
+          title_id_data: Données d’identité
           complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
           continue_button: Continuer
         merci:
