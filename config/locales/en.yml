@@ -151,7 +151,7 @@ en:
           tabletitle_status: "Status"
           tabletitle_updated: "Updated"
           tabletitle_actions: "Actions"
-          accessibility_question: "What do you think about the accessibility of this service ?"
+          accessibility_question: "What do you think about the accessibility of this service?"
         dossier_action:
           link_edit_file: "Edit the file"
           link_start_other_file: "Start an other file"
