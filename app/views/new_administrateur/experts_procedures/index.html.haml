@@ -9,59 +9,88 @@
   .container.groupe-instructeur
 
     .card
-      .card-title Affecter des experts à la démarche
-      = form_for :experts_procedure,
-        url: admin_procedure_experts_path(@procedure),
-        html: { class: 'form' } do |f|
+      .card-title Autoriser les instructeurs à solliciter des experts invités
+      %p.notice Si cette fonctionnalité est désactivée, les instructeurs ne pourront plus solliciter d'experts
+      = form_for @procedure,
+        method: :put,
+        url: allow_expert_review_admin_procedure_path(@procedure),
+        html: { class: 'form procedure-form__column--form no-background' } do |f|
+        %label.toggle-switch
+          = f.check_box :allow_expert_review, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
+          %span.toggle-switch-control.round
+          %span.toggle-switch-label.on
+          %span.toggle-switch-label.off
 
-        .instructeur-wrapper
-          %p.notice Pendant l'instruction d'un dossier, les instructeurs peuvent demander leur avis à un ou plusieurs experts.
-          %p.notice Entrez les adresses email des experts que vous souhaitez affecter à cette démarche
-          - hidden_field_id = SecureRandom.uuid
-          = hidden_field_tag :emails, nil, data: { uuid: hidden_field_id }
-          = react_component("ComboMultipleDropdownList",
-            options: [],
-            selected: [], disabled: [],
-            hiddenFieldId: hidden_field_id,
-            label: 'email expert',
-            acceptNewValues: true)
+    - if @procedure.allow_expert_review?
+      .card
+        .card-title Gérer les experts invités de la démarche
+        %p.notice Si cette fonctionnalité est activée, les instructeurs pourront uniquement inviter les experts de votre liste
+        = form_for @procedure,
+          method: :put,
+          url: experts_require_administrateur_invitation_admin_procedure_path(@procedure),
+          html: { class: 'form procedure-form__column--form no-background' } do |f|
+          %label.toggle-switch
+            = f.check_box :experts_require_administrateur_invitation, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
+            %span.toggle-switch-control.round
+            %span.toggle-switch-label.on
+            %span.toggle-switch-label.off
 
-          = f.submit 'Affecter à la démarche', class: 'button primary send'
-  - if @experts_procedure.present?
-    %table.table.mt-2
-      %thead
-        %tr
-          %th Liste des experts
-          %th Nombre d'avis
-          - if @procedure.feature_enabled?(:admin_affect_experts_to_avis)
-            %th Notifier des décisions sur les dossiers
-      %tbody
-        - @experts_procedure.each do |expert_procedure|
-          %tr
-            %td
-              %span.icon.person
-              = expert_procedure.expert.email
-            %td.text-center
-              = expert_procedure.avis.count
-            - if @procedure.feature_enabled?(:admin_affect_experts_to_avis)
-              %td.text-center
-                = form_for expert_procedure,
-                  url: admin_procedure_expert_path(id: expert_procedure),
-                  remote: true,
-                  method: :put,
-                  authenticity_token: true,
-                  html: { class: 'form procedure-form__column--form no-background' } do |f|
-                  %label.toggle-switch
-                    = f.check_box :allow_decision_access, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
-                    %span.toggle-switch-control.round
-                    %span.toggle-switch-label.on
-                    %span.toggle-switch-label.off
-            %td.actions= button_to 'retirer',
-              admin_procedure_expert_path(id: expert_procedure, procedure: @procedure),
-              method: :delete,
-              data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d'avis" },
-              class: 'button'
-  - else
-    .blank-tab
-      %h2.empty-text Aucun expert invité pour le moment.
-      %p.empty-text-details Les instructeurs de cette démarche n'ont pas encore fait appel aux experts.
+      - if @procedure.experts_require_administrateur_invitation?
+        .card
+          .card-title Affecter des experts à la démarche
+          = form_for :experts_procedure,
+            url: admin_procedure_experts_path(@procedure),
+            html: { class: 'form' } do |f|
+
+            .instructeur-wrapper
+              %p.notice Pendant l'instruction d'un dossier, les instructeurs peuvent demander leur avis à un ou plusieurs experts.
+              %p.notice Entrez les adresses email des experts que vous souhaitez affecter à cette démarche
+              - hidden_field_id = SecureRandom.uuid
+              = hidden_field_tag :emails, nil, data: { uuid: hidden_field_id }
+              = react_component("ComboMultipleDropdownList",
+                options: [],
+                selected: [], disabled: [],
+                hiddenFieldId: hidden_field_id,
+                label: 'email expert',
+                acceptNewValues: true)
+
+              = f.submit 'Affecter à la démarche', class: 'button primary send'
+      - if @experts_procedure.present?
+        %table.table.mt-2
+          %thead
+            %tr
+              %th Liste des experts
+              %th Nombre d'avis
+              - if @procedure.experts_require_administrateur_invitation
+                %th Notifier des décisions sur les dossiers
+          %tbody
+            - @experts_procedure.each do |expert_procedure|
+              %tr
+                %td
+                  %span.icon.person
+                  = expert_procedure.expert.email
+                %td.text-center
+                  = expert_procedure.avis.count
+                - if @procedure.experts_require_administrateur_invitation
+                  %td.text-center
+                    = form_for expert_procedure,
+                      url: admin_procedure_expert_path(id: expert_procedure),
+                      remote: true,
+                      method: :put,
+                      authenticity_token: true,
+                      html: { class: 'form procedure-form__column--form no-background' } do |f|
+                      %label.toggle-switch
+                        = f.check_box :allow_decision_access, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
+                        %span.toggle-switch-control.round
+                        %span.toggle-switch-label.on
+                        %span.toggle-switch-label.off
+                - if @procedure.experts_require_administrateur_invitation
+                  %td.actions= button_to 'retirer',
+                    admin_procedure_expert_path(id: expert_procedure, procedure: @procedure),
+                    method: :delete,
+                    data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d'avis" },
+                    class: 'button'
+      - else
+        .blank-tab
+          %h2.empty-text Aucun expert invité pour le moment.
+          %p.empty-text-details Les instructeurs de cette démarche n'ont pas encore fait appel aux experts.
