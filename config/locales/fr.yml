@@ -318,7 +318,7 @@ fr:
         message_send_flashnotice: "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
         have_not_access_file_flashalert: "Vous n'avez pas accès à ce dossier"
         no_longer_edit_file_flashalert: "Votre dossier ne peut plus être modifié"
-        undergoingreview_flashnotice: "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
+        undergoingreview_flashnotice: "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
         file_deleted_flashalert: "Votre dossier a bien été supprimé."
         file_longer_archived_flashnownotice: "Votre dossier sera conservé un mois supplémentaire"
         saved_draft_flashnownotice: "Votre brouillon a bien été sauvegardé."
