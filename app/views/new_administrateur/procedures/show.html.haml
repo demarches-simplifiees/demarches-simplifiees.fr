@@ -142,32 +142,16 @@
         = link_to 'Modifier', edit_admin_procedure_attestation_template_path(@procedure), class: 'button'
 
     .card-admin
-      - if @procedure.allow_expert_review?
-        %div
-          %span.icon.accept
-          %p.card-admin-status-accept Activé
-      - else
-        %div
-          %span.icon.clock
-          %p.card-admin-status-todo Désactivée
+      %div
+        %span.icon.preview
+        %p.card-admin-status-todo À configurer
+
       %div
         %p.card-admin-title Avis externes
-        %p.card-admin-subtitle Demander des avis aux experts invités
+        %p.card-admin-subtitle Gérer les avis des experts invités
+
       .card-admin-action
-        = link_to "#{@procedure.allow_expert_review? ? 'Désactiver' : 'Activer'}", allow_expert_review_admin_procedure_path(@procedure), method: :put,  class: 'button'
-
-    - if @procedure.allow_expert_review?
-      .card-admin
-        %div
-          %span.icon.preview
-          %p.card-admin-status-todo À voir
-
-        %div
-          %p.card-admin-title Liste des experts
-          %p.card-admin-subtitle Liste des experts invités par les instructeurs
-
-        .card-admin-action
-          = link_to "Voir", admin_procedure_experts_path(@procedure), class: 'button'
+        = link_to "Modifier", admin_procedure_experts_path(@procedure), class: 'button'
 
 
     .card-admin
