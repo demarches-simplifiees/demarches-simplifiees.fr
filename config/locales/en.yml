@@ -182,7 +182,7 @@ en:
   activerecord:
     attributes:
       individual:
-        gender: Gender
+        gender: Title
         nom: Last Name
         prenom: First Name
         gender_options:
