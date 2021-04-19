@@ -133,7 +133,7 @@ en:
             status_review: undergoing review
             admin_review_text: The administration is reviewing your file. You are no longer able to edit it.
             status_completed: completed
-            you_have_question_text: You have a question ?
+            you_have_question_text: You have a question?
             use_mailbox_text: Use the mailbox to
             contact_admin_link: contact the administration directly
           latest_message:
