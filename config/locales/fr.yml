@@ -151,7 +151,7 @@ fr:
           tabletitle_status: "Statut"
           tabletitle_updated: "Mis à jour"
           tabletitle_actions: "Actions"
-          accessibility_question: "Que pensez-vous de la facilité d'utilisation de ce service ?"
+          accessibility_question: "Que pensez-vous de la facilité d’utilisation de ce service ?"
         dossier_action:
           link_edit_file: "Modifier le dossier"
           link_start_other_file: "Commencer un autre dossier"
