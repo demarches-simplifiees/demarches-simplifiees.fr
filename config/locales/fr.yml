@@ -39,9 +39,9 @@ fr:
       new:
         title: Connectez-vous
         email: Email (nom@site.com)
-        password: Mot de passe (%{min_length} caractères minimum)
+        password: Mot de passe
         remember_me: Se souvenir de moi
-        reset_password: Mot de passe oublié ?
+        reset_password: Mot de passe oublié ?
         connection: Se connecter
         are_you_new: Vous êtes nouveau sur %{app_name} ?
         find_procedure: Trouvez votre démarche
@@ -50,6 +50,9 @@ fr:
         ligne1: Un outil simple
         ligne2: pour gérer les formulaires
         ligne3: administratifs dématérialisés.
+    passwords:
+      new:
+        send_me_reset_password_instructions: "Indiquez l’email de votre compte, et nous vous enverrons un lien pour créer un nouveau mot de passe."
   modal:
     publish:
       title:
