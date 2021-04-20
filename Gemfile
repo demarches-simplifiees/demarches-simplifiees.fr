@@ -49,7 +49,7 @@ gem 'kaminari', '1.2.1' # Pagination
 gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
-gem 'mailjet'
+gem 'mailjet', require: false
 gem 'openid_connect'
 gem 'pg'
 gem 'phonelib'
