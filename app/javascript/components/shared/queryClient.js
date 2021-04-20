@@ -19,6 +19,13 @@ function buildURL(scope, term) {
     return `${api_adresse_url}/search?q=${term}&limit=5`;
   } else if (scope === 'annuaire-education') {
     return `${api_education_url}/search?dataset=fr-en-annuaire-education&q=${term}&rows=5`;
+  } else if (scope === 'communes') {
+    if (isNumeric(term)) {
+      return `${api_geo_url}/communes?codePostal=${term}&limit=5`;
+    }
+    // Avoid hiding similar matches for precise queries (like "Sainte Marie")
+    const limit = term.length > 5 ? 10 : 5;
+    return `${api_geo_url}/communes?nom=${term}&boost=population&limit=${limit}`;
   } else if (isNumeric(term)) {
     const code = term.padStart(2, '0');
     return `${api_geo_url}/${scope}?code=${code}&limit=5`;
