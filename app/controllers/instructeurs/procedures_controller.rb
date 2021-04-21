@@ -112,6 +112,8 @@ module Instructeurs
 
       @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
 
+      @projected_dossiers = DossierProjectionService.project(filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
+
       kaminarize(page, filtered_sorted_ids.count)
 
       assign_exports
