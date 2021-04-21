@@ -1,12 +1,11 @@
 describe ProcedureArchiveService do
-    let(:procedure) { create(:procedure, :published) }
-    let(:instructeur) { create(:instructeur) }
-    let(:service) { ProcedureArchiveService.new(procedure) }
-    let(:year) { 2020 }
-    let(:month) { 3 }
-    let(:date_month) { Date.strptime("#{year}-#{month}", "%Y-%m") }
+  let(:procedure) { create(:procedure, :published) }
+  let(:instructeur) { create(:instructeur) }
+  let(:service) { ProcedureArchiveService.new(procedure) }
+  let(:year) { 2020 }
+  let(:month) { 3 }
+  let(:date_month) { Date.strptime("#{year}-#{month}", "%Y-%m") }
   describe '#create_pending_archive' do
-
     context 'for a specific month' do
       it 'creates a pending archive' do
         archive = service.create_pending_archive(instructeur, 'monthly', date_month)

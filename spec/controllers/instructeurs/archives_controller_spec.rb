@@ -36,7 +36,7 @@ describe Instructeurs::ArchivesController, type: :controller do
     let(:archive) { create(:archive) }
     let(:subject) do
       post :create, {
-          params: { procedure_id: procedure1.id, type: 'monthly', month: month }
+        params: { procedure_id: procedure1.id, type: 'monthly', month: month }
       }
     end
 
