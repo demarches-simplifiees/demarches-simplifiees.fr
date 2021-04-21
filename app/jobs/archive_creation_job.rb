@@ -1,7 +1,7 @@
 class ArchiveCreationJob < ApplicationJob
-  def perform(procedure, instructeur, type, month)
+  def perform(procedure, archive, instructeur)
     ProcedureArchiveService
       .new(procedure)
-      .create_archive(instructeur, type, month)
+      .collect_files_archive(archive, instructeur)
   end
 end
