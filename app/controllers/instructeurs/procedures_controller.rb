@@ -251,7 +251,9 @@ module Instructeurs
     end
 
     def procedure
-      Procedure.find(procedure_id)
+      Procedure
+        .with_attached_logo
+        .find(procedure_id)
     end
 
     def ensure_ownership!
