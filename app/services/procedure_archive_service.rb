@@ -5,11 +5,10 @@ class ProcedureArchiveService
     @procedure = procedure
   end
 
-  def create_pending_archive(instructeur, type, month=nil)
+  def create_pending_archive(instructeur, type, month = nil)
     groupe_instructeurs = instructeur
       .groupe_instructeurs
       .where(procedure: @procedure)
-
 
     archive = Archive.for_groupe_instructeur(groupe_instructeurs).find_by(
       content_type: type,
