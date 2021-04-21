@@ -5,24 +5,34 @@ class ProcedureArchiveService
     @procedure = procedure
   end
 
-  def create_archive(instructeur, type, month = nil)
+  def create_pending_archive(instructeur, type, month=nil)
     groupe_instructeurs = instructeur
       .groupe_instructeurs
       .where(procedure: @procedure)
 
-    if type == 'everything'
+
+    archive = Archive.for_groupe_instructeur(groupe_instructeurs).find_by(
+      content_type: type,
+      month: month
+    )
+    if archive.nil?
+      archive = Archive.create!(
+        content_type: type,
+        month: month,
+        groupe_instructeurs: groupe_instructeurs
+      )
+    end
+    archive
+  end
+
+  def collect_files_archive(archive, instructeur)
+    if archive.content_type == 'everything'
       dossiers = @procedure.dossiers.state_termine
     else
-      dossiers = @procedure.dossiers.processed_in_month(month)
+      dossiers = @procedure.dossiers.processed_in_month(archive.month)
     end
 
     files = create_list_of_attachments(dossiers)
-
-    archive = Archive.create!(
-      content_type: type,
-      month: month,
-      groupe_instructeurs: groupe_instructeurs
-    )
 
     tmp_file = Tempfile.new(['tc', '.zip'])
 
