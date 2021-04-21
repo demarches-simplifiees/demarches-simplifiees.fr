@@ -108,8 +108,6 @@ module Instructeurs
 
       @dossiers = @dossiers.where(id: filtered_sorted_paginated_ids)
 
-      @dossiers = procedure_presentation.eager_load_displayed_fields(@dossiers)
-
       @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
 
       @projected_dossiers = DossierProjectionService.project(filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
