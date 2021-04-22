@@ -106,6 +106,7 @@ Rails.application.routes.draw do
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
     get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
+    get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
   end
 
   devise_scope :administrateur do

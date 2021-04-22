@@ -38,4 +38,16 @@ describe Users::PasswordsController, type: :controller do
       end
     end
   end
+
+  describe '#reset_link_sent' do
+    let(:email) { 'test@example.com' }
+
+    it 'displays the page' do
+      get 'reset_link_sent', params: { email: email }
+
+      expect(response).to have_http_status(:ok)
+      expect(response).to render_template('reset_link_sent')
+      expect(assigns(:email)).to eq email
+    end
+  end
 end

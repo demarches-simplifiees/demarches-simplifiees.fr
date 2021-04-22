@@ -13,7 +13,8 @@ feature 'Managing password:' do
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
-      expect(page).to have_content('Si votre courriel existe dans notre base de données, vous recevrez un lien vous permettant de récupérer votre mot de passe.')
+      expect(page).to have_text 'Nous vous avons envoyé un email'
+      expect(page).to have_text user.email
 
       click_reset_password_link_for user.email
       expect(page).to have_content 'Changement de mot de passe'
@@ -40,7 +41,8 @@ feature 'Managing password:' do
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
-      expect(page).to have_content('Si votre courriel existe dans notre base de données, vous recevrez un lien vous permettant de récupérer votre mot de passe.')
+      expect(page).to have_text 'Nous vous avons envoyé un email'
+      expect(page).to have_text user.email
 
       click_reset_password_link_for user.email
 
