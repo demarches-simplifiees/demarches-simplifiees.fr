@@ -156,6 +156,11 @@ module Instructeurs
         .groupe_instructeurs
         .where(procedure: procedure)
 
+      @dossier_count = current_instructeur
+        .dossiers_count_summary(groupe_instructeur_ids)
+        .fetch_values('tous', 'archives')
+        .sum
+
       export = Export.find_or_create_export(export_format, groupe_instructeurs)
 
       if export.ready? && export.old? && params[:force_export]
