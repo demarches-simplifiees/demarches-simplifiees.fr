@@ -11,12 +11,10 @@
     %p
       Ouvrez votre boite email <strong>#{@email}</strong> puis cliquez sur le lien d’activation du message <strong>Connexion sécurisée à #{APPLICATION_NAME}</strong>.
     %p
-      <strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver.
+      = t('views.users.shared.email_can_take_a_while')
 
   %section.link-sent-help
     %p
       Si vous voyez cette page trop souvent, consultez notre aide : #{link_to FAQ_CONFIRMER_COMPTE_CHAQUE_CONNEXION_URL, FAQ_CONFIRMER_COMPTE_CHAQUE_CONNEXION_URL, target: '_blank', rel: 'noopener' }
     %p
-      En cas de difficultés, nous restons joignables
-      = succeed '.' do
-        = link_to("via ce formulaire", contact_admin_url)
+      = t('views.users.shared.contact_us_if_any_trouble_html', href: contact_admin_url)
