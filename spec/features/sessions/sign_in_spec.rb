@@ -6,8 +6,11 @@ feature 'Signin in:' do
     visit root_path
     click_on 'Connexion'
 
-    sign_in_with user.email, password
+    sign_in_with user.email, 'invalid-password'
+    expect(page).to have_content 'Courriel ou mot de passe incorrect.'
+    expect(page).to have_field('Email', with: user.email)
 
+    sign_in_with user.email, password
     expect(page).to have_current_path dossiers_path
   end
 

@@ -39,9 +39,9 @@ fr:
       new:
         title: Connectez-vous
         email: Email (nom@site.com)
-        password: Mot de passe (%{min_length} caractères minimum)
+        password: Mot de passe
         remember_me: Se souvenir de moi
-        reset_password: Mot de passe oublié ?
+        reset_password: Mot de passe oublié ?
         connection: Se connecter
         are_you_new: Vous êtes nouveau sur %{app_name} ?
         find_procedure: Trouvez votre démarche
@@ -50,6 +50,24 @@ fr:
         ligne1: Un outil simple
         ligne2: pour gérer les formulaires
         ligne3: administratifs dématérialisés.
+    passwords:
+      new:
+        send_me_reset_password_instructions: "Indiquez l’email de votre compte, et nous vous enverrons un lien pour créer un nouveau mot de passe."
+    users:
+      passwords:
+        reset_link_sent:
+          email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
+          click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."
+          no_mail: "Vous n’avez pas reçu l’email ?"
+          check_spams: "Vérifiez la boite Indésirables ou Spam de votre boite email."
+          check_account: "Avez-vous bien créé un compte %{application_name} avec l’adresse %{email} ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
+          check_france_connect_html: "Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href=\"%{href}\">essayez à nouveau avec France Connect</a>."
+          got_it: "Bien reçu !"
+          open_your_mailbox: "Maintenant ouvrez votre boite email."
+          title: "Lien de réinitialisation du mot de passe envoyé"
+      shared:
+        email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
+        contact_us_if_any_trouble_html: "En cas de difficultés, nous restons joignables <a href=\"%{href}\">via ce formulaire</a>."
   modal:
     publish:
       title:
