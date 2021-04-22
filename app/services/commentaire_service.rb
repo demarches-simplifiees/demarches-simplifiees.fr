@@ -2,10 +2,10 @@ class CommentaireService
   class << self
     def build(sender, dossier, params)
       case sender
-      when User
-        params[:user] = sender
       when Instructeur
         params[:instructeur] = sender
+      when Expert
+        params[:expert] = sender
       end
 
       build_with_email(sender.email, dossier, params)
