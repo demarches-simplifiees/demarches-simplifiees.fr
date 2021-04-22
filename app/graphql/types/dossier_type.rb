@@ -80,10 +80,10 @@ module Types
     def messages(id: nil)
       if id.present?
         Loaders::Record
-          .for(Commentaire, where: { dossier: object }, includes: [:instructeur, :user], array: true)
+          .for(Commentaire, where: { dossier: object }, includes: [:instructeur, :expert], array: true)
           .load(ApplicationRecord.id_from_typed_id(id))
       else
-        Loaders::Association.for(object.class, commentaires: [:instructeur, :user]).load(object)
+        Loaders::Association.for(object.class, commentaires: [:instructeur, :expert]).load(object)
       end
     end
 
