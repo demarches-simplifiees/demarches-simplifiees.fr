@@ -7,16 +7,16 @@
   = image_tag('user/confirmation-email.svg')
   %h1 Encore une petite étape :)
 
-  %p.mail
-    Ouvrez votre boite email <b>#{@email}</b> puis cliquez sur le lien d'activation du message <b>Connexion sécurisée à #{APPLICATION_NAME}</b>.
-    %br
-    %br
-    <b>Attention</b>, ce message peut mettre jusqu'à <b>15 minutes</b> pour arriver.
+  %section.link-sent-info
+    %p
+      Ouvrez votre boite email <strong>#{@email}</strong> puis cliquez sur le lien d’activation du message <strong>Connexion sécurisée à #{APPLICATION_NAME}</strong>.
+    %p
+      <strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver.
 
-  %p.help
-    Si vous voyez cette page trop souvent, consultez notre aide : #{link_to FAQ_CONFIRMER_COMPTE_CHAQUE_CONNEXION_URL, FAQ_CONFIRMER_COMPTE_CHAQUE_CONNEXION_URL, target: '_blank', rel: 'noopener' }
-    %br
-    %br
-    En cas de difficultés, nous restons joignables
-    = succeed '.' do
-      = link_to("via ce formulaire", contact_admin_url)
+  %section.link-sent-help
+    %p
+      Si vous voyez cette page trop souvent, consultez notre aide : #{link_to FAQ_CONFIRMER_COMPTE_CHAQUE_CONNEXION_URL, FAQ_CONFIRMER_COMPTE_CHAQUE_CONNEXION_URL, target: '_blank', rel: 'noopener' }
+    %p
+      En cas de difficultés, nous restons joignables
+      = succeed '.' do
+        = link_to("via ce formulaire", contact_admin_url)
