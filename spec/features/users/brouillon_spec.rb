@@ -25,16 +25,13 @@ feature 'The user' do
     check('val1')
     check('val3')
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
-    select_multi('multiple_choice_drop_down_list_long', 'alpha')
-    select_multi('multiple_choice_drop_down_list_long', 'charly')
+    select_multi_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
+    select_multi_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
 
-    select_champ_geo('pays', 'aust', 'AUSTRALIE')
-
-    select_champ_geo('regions', 'Ma', 'Martinique')
-
-    select_champ_geo('departements', 'Ai', '02 - Aisne')
-
-    select_champ_geo('communes', 'Ambl', 'Ambléon (01300)')
+    select_combobox('pays', 'aust', 'AUSTRALIE')
+    select_combobox('regions', 'Ma', 'Martinique')
+    select_combobox('departements', 'Ai', '02 - Aisne')
+    select_combobox('communes', 'Ambl', 'Ambléon (01300)')
 
     check('engagement')
     fill_in('dossier_link', with: '123')
@@ -320,10 +317,6 @@ feature 'The user' do
     e.sibling('.datetime').first('select')[:id][0..-4]
   end
 
-  def have_hidden_field(libelle, with:)
-    have_css("##{form_id_for(libelle)}[value=\"#{with}\"]")
-  end
-
   def champ_value_for(libelle)
     champs = user_dossier.champs
     champs.find { |c| c.libelle == libelle }.value
@@ -351,15 +344,5 @@ feature 'The user' do
     expect(page).to have_selected_value("#{field}_3i", selected: date.strftime('%-d'))
     expect(page).to have_selected_value("#{field}_4i", selected: date.strftime('%H'))
     expect(page).to have_selected_value("#{field}_5i", selected: date.strftime('%M'))
-  end
-
-  def select_champ_geo(champ, fill_with, value)
-    input = find("input[aria-label=#{champ}")
-    input.click
-    input.fill_in with: fill_with
-    selector = "li[data-option-value=\"#{value}\"]"
-    find(selector).click
-    expect(page).to have_css(selector)
-    expect(page).to have_hidden_field(champ, with: value)
   end
 end
