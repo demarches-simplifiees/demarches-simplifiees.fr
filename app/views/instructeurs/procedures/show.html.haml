@@ -76,7 +76,8 @@
           Afficher les dossiers supprimés
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-      = paginate @filtered_sorted_paginated_ids
+      - pagination =  paginate @filtered_sorted_paginated_ids
+      = pagination
       %span.dropdown
         %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'filter-menu' }
           Filtrer
@@ -151,6 +152,6 @@
                 %a.cell-link{ href: path }= status_badge(dossier.state)
 
               %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
-      = paginate @filtered_sorted_paginated_ids
+      = pagination
     - else
       %h2.empty-text Aucun dossier
