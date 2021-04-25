@@ -101,18 +101,12 @@ module Instructeurs
 
       page = params[:page].presence || 1
 
-      filtered_sorted_paginated_ids = Kaminari
+      @filtered_sorted_paginated_ids = Kaminari
         .paginate_array(filtered_sorted_ids)
         .page(page)
         .per(ITEMS_PER_PAGE)
 
-      @dossiers = @dossiers.where(id: filtered_sorted_paginated_ids)
-
-      @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
-
-      @projected_dossiers = DossierProjectionService.project(filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
-
-      kaminarize(page, filtered_sorted_ids.count)
+      @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
 
       assign_exports
     end
@@ -285,26 +279,6 @@ module Instructeurs
 
     def current_filters
       @current_filters ||= procedure_presentation.filters[statut]
-    end
-
-    def kaminarize(current_page, total)
-      @dossiers.instance_eval <<-EVAL
-        def current_page
-          #{current_page}
-        end
-        def total_pages
-          (#{total} / #{ITEMS_PER_PAGE}.to_f).ceil
-        end
-        def limit_value
-          #{ITEMS_PER_PAGE}
-        end
-        def first_page?
-          current_page == 1
-        end
-        def last_page?
-          current_page == total_pages
-        end
-      EVAL
     end
   end
 end
