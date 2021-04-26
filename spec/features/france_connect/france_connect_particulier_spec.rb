@@ -33,23 +33,23 @@ feature 'France Connect Particulier Connexion' do
       let(:code) { 'plop' }
 
       context 'when authentification is ok' do
-        let(:france_connect_information) do
-          create(:france_connect_information,
-            france_connect_particulier_id: france_connect_particulier_id,
-            given_name: given_name,
-            family_name: family_name,
-            birthdate: birthdate,
-            birthplace: birthplace,
-            gender: gender,
-            email_france_connect: email)
-        end
-
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(FranceConnectInformation.new(user_info))
+          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(france_connect_information)
         end
 
         context 'when is the first connexion' do
+          let(:france_connect_information) do
+            build(:france_connect_information,
+                  france_connect_particulier_id: france_connect_particulier_id,
+                  given_name: given_name,
+                  family_name: family_name,
+                  birthdate: birthdate,
+                  birthplace: birthplace,
+                  gender: gender,
+                  email_france_connect: email)
+          end
+
           before do
             page.find('.france-connect-login-button').click
           end
@@ -60,8 +60,21 @@ feature 'France Connect Particulier Connexion' do
         end
 
         context 'when is not the first connexion' do
+          let!(:france_connect_information) do
+            create(:france_connect_information,
+                  :with_user,
+                  france_connect_particulier_id: france_connect_particulier_id,
+                  given_name: given_name,
+                  family_name: family_name,
+                  birthdate: birthdate,
+                  birthplace: birthplace,
+                  gender: gender,
+                  email_france_connect: email,
+                  created_at: Time.zone.parse('12/12/2012'),
+                  updated_at: Time.zone.parse('12/12/2012'))
+          end
+
           before do
-            create(:user, france_connect_information: france_connect_information)
             page.find('.france-connect-login-button').click
           end
 
