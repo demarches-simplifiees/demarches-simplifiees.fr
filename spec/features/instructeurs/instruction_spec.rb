@@ -216,11 +216,11 @@ feature 'Instructing a dossier:', js: true do
 
   def test_statut_bar(a_suivre: 0, suivi: 0, traite: 0, tous_les_dossiers: 0, archive: 0)
     texts = [
-      "à suivre #{a_suivre}",
-      "suivi #{suivi}",
-      "traité #{traite}",
-      "tous les dossiers #{tous_les_dossiers}",
-      "archivé #{archive}"
+      "#{a_suivre} à suivre",
+      "#{suivi} suivi",
+      "#{traite} traité",
+      "#{tous_les_dossiers} au total",
+      "#{archive} archivé"
     ]
 
     texts.each { |text| expect(page).to have_text(text) }
