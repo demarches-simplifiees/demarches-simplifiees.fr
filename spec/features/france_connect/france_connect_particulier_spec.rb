@@ -83,7 +83,7 @@ feature 'France Connect Particulier Connexion' do
           end
 
           scenario 'the updated_at date is well updated' do
-            expect(france_connect_information.updated_at).not_to eq(france_connect_information.created_at)
+            expect(france_connect_information.reload.updated_at).not_to eq(france_connect_information.created_at)
           end
         end
       end

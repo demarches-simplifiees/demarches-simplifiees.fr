@@ -39,5 +39,6 @@ class FranceConnectInformation < ApplicationRecord
     end
 
     update_attribute('user_id', user.id)
+    touch # needed to update updated_at column
   end
 end
