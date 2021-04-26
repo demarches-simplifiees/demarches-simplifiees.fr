@@ -131,27 +131,32 @@
 
         %tbody
           - @projected_dossiers.each do |p|
-            - dossier = p.dossier
-            - path = instructeur_dossier_path(@procedure, dossier.id)
+            - path = instructeur_dossier_path(@procedure, p.dossier_id)
 
             %tr
               %td.folder-col
                 %a.cell-link{ href: path }
                   %span.icon.folder
-                    - if @not_archived_notifications_dossier_ids.include?(dossier.id)
+                    - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
                       %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
-                %a.cell-link{ href: path }= dossier.id
+                %a.cell-link{ href: path }= p.dossier_id
 
               - p.columns.each do |column|
                 %td
                   %a.cell-link{ href: path }= column
 
               %td.status-col
-                %a.cell-link{ href: path }= status_badge(dossier.state)
+                %a.cell-link{ href: path }= status_badge(p.state)
 
-              %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
+              %td.action-col.follow-col= render partial: 'dossier_actions',
+                locals: { procedure_id: @procedure.id,
+                          dossier_id: p.dossier_id,
+                          state: p.state,
+                          archived: p.archived,
+                          dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id) }
+
       = pagination
     - else
       %h2.empty-text Aucun dossier
