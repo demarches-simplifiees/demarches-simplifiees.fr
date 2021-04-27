@@ -27,19 +27,6 @@ class Admin::ProceduresController < AdminController
     @current_administrateur = current_administrateur
   end
 
-  def destroy
-    procedure = current_administrateur.procedures.find(params[:id])
-
-    if procedure.can_be_deleted_by_administrateur?
-      procedure.discard_and_keep_track!(current_administrateur)
-
-      flash.notice = 'Démarche supprimée'
-      redirect_to admin_procedures_draft_path
-    else
-      render json: {}, status: 403
-    end
-  end
-
   def active_class
     @active_class = 'active'
   end

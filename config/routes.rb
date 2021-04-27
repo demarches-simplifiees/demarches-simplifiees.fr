@@ -190,7 +190,7 @@ Rails.application.routes.draw do
     get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
     get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
-    resources :procedures, only: [:destroy] do
+    resources :procedures, only: [] do
       get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
     end
 
@@ -381,7 +381,7 @@ Rails.application.routes.draw do
   #
 
   namespace :admin, module: 'new_administrateur' do
-    resources :procedures, except: [:destroy] do
+    resources :procedures do
       collection do
         get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
       end

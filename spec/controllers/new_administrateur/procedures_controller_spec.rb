@@ -654,4 +654,69 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    let(:procedure_draft)     { create(:procedure, administrateurs: [admin]) }
+    let(:procedure_published) { create(:procedure, :published, administrateurs: [admin]) }
+    let(:procedure_closed)    { create(:procedure, :closed, administrateurs: [admin]) }
+    let(:procedure) { dossier.procedure }
+
+    subject { delete :destroy, params: { id: procedure } }
+
+    context 'when the procedure is a brouillon' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_draft) }
+
+      before { subject }
+
+      it 'discard the procedure' do
+        expect(procedure.reload.discarded?).to be_truthy
+      end
+
+      it 'deletes associated dossiers' do
+        expect(procedure.dossiers.with_discarded.count).to eq(0)
+      end
+
+      it 'redirects to the procedure drafts page' do
+        expect(response).to redirect_to admin_procedures_draft_path
+        expect(flash[:notice]).to be_present
+      end
+    end
+
+    context 'when procedure is published' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_published) }
+
+      before { subject }
+
+      it { expect(response.status).to eq 403 }
+
+      context 'when dossier is en_construction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure_published) }
+
+        it { expect(procedure.reload.close?).to be_truthy }
+        it { expect(procedure.reload.discarded?).to be_truthy }
+        it { expect(dossier.reload.discarded?).to be_truthy }
+      end
+    end
+
+    context 'when procedure is closed' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: procedure_closed) }
+
+      before { subject }
+
+      it { expect(response.status).to eq 403 }
+
+      context 'when dossier is en_construction' do
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure_published) }
+
+        it { expect(procedure.reload.discarded?).to be_truthy }
+        it { expect(dossier.reload.discarded?).to be_truthy }
+      end
+    end
+
+    context "when administrateur does not own the procedure" do
+      let(:dossier) { create(:dossier) }
+
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+  end
 end
