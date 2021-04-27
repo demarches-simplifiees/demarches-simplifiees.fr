@@ -32,7 +32,7 @@
     %tbody
     - if can_generate_archive?(@dossiers_termines, @poids_total)
       %tr
-        - matching_archive = @archives.find_by(content_type: 'everything')
+        - matching_archive = @archives.find_by(time_span_type: 'everything')
         %td
           Tous les dossiers
         %td
@@ -60,7 +60,7 @@
     - @archivable_months.each do |month|
       - dossiers_termines = @procedure.dossiers.processed_in_month(month)
       - nb_dossiers_termines = dossiers_termines.count
-      - matching_archive = @archives.find_by(content_type: 'monthly', month: month)
+      - matching_archive = @archives.find_by(time_span_type: 'monthly', month: month)
       %tr
         %td
           = I18n.l(month, format: "%B %Y")

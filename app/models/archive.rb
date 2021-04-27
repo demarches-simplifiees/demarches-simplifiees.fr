@@ -2,12 +2,12 @@
 #
 # Table name: archives
 #
-#  id           :bigint           not null, primary key
-#  content_type :string           not null
-#  month        :date
-#  status       :string           not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id             :bigint           not null, primary key
+#  month          :date
+#  status         :string           not null
+#  time_span_type :string           not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #
 class Archive < ApplicationRecord
   include AASM
@@ -26,7 +26,7 @@ class Archive < ApplicationRecord
       )
   }
 
-  enum content_type: {
+  enum time_span_type: {
     everything: 'everything',
     monthly:    'monthly'
   }
@@ -50,7 +50,7 @@ class Archive < ApplicationRecord
   end
 
   def filename(procedure)
-    if content_type == 'everything'
+    if time_span_type == 'everything'
       "procedure-#{procedure.id}.zip"
     else
       "procedure-#{procedure.id}-mois-#{I18n.l(month, format: '%Y-%m')}.zip"
