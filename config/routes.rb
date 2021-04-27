@@ -190,9 +190,6 @@ Rails.application.routes.draw do
     get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
     get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
-    resources :procedures, only: [] do
-    end
-
     namespace :assigns do
       get 'show' # delete after fixed tests admin/instructeurs/show_spec without this line
     end
