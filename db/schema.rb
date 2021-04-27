@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_160721) do
+ActiveRecord::Schema.define(version: 2021_04_27_120002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -175,7 +175,9 @@ ActiveRecord::Schema.define(version: 2021_04_16_160721) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "instructeur_id"
+    t.bigint "expert_id"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
+    t.index ["expert_id"], name: "index_commentaires_on_expert_id"
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
     t.index ["user_id"], name: "index_commentaires_on_user_id"
   end
@@ -444,7 +446,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_160721) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date "birthdate"
-    t.index ["dossier_id"], name: "index_individuals_on_dossier_id"
+    t.index ["dossier_id"], name: "index_individuals_on_dossier_id", unique: true
   end
 
   create_table "initiated_mails", id: :serial, force: :cascade do |t|
@@ -472,6 +474,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_160721) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text "message"
+    t.index ["email", "dossier_id"], name: "index_invites_on_email_and_dossier_id", unique: true
   end
 
   create_table "module_api_cartos", id: :serial, force: :cascade do |t|
@@ -557,6 +560,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_160721) do
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
+    t.index ["path", "closed_at", "hidden_at", "unpublished_at"], name: "procedure_path_uniqueness", unique: true
     t.index ["path", "closed_at", "hidden_at"], name: "index_procedures_on_path_and_closed_at_and_hidden_at", unique: true
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
@@ -738,6 +742,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_160721) do
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
+  add_foreign_key "commentaires", "experts"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_operation_logs", "instructeurs"
   add_foreign_key "dossiers", "groupe_instructeurs"
