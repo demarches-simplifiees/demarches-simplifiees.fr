@@ -198,9 +198,7 @@ Rails.application.routes.draw do
         delete :delete_notice
       end
 
-      put 'archive' => 'procedures#archive', as: :archive
       get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
-      put 'clone' => 'procedures#clone', as: :clone
     end
 
     namespace :assigns do
@@ -401,6 +399,8 @@ Rails.application.routes.draw do
         get 'annotations'
         get 'monavis'
         patch 'update_monavis'
+        put 'clone'
+        put 'archive'
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review

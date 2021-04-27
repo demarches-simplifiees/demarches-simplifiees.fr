@@ -576,4 +576,82 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       it { expect(procedure.allow_expert_review).to be_truthy }
     end
   end
+
+  describe 'PUT #archive' do
+    let(:procedure) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
+
+    context 'when admin is the owner of the procedure' do
+      before do
+        put :archive, params: { id: procedure.id }
+        procedure.reload
+      end
+
+      context 'when owner want archive procedure' do
+        it { expect(procedure.close?).to be_truthy }
+        it { expect(response).to redirect_to :admin_procedures }
+        it { expect(flash[:notice]).to have_content 'Démarche close' }
+      end
+    end
+
+    context 'when admin is not the owner of the procedure' do
+      let(:admin_2) { create(:administrateur) }
+
+      before do
+        sign_out(admin.user)
+        sign_in(admin_2.user)
+
+        put :archive, params: { id: procedure.id }
+        procedure.reload
+      end
+
+      it { expect(response).to redirect_to :admin_procedures }
+      it { expect(flash[:alert]).to have_content 'Démarche inexistante' }
+    end
+  end
+
+  describe 'PUT #clone' do
+    let!(:procedure) { create(:procedure, :with_notice, :with_deliberation, administrateur: admin) }
+    let(:params) { { id: procedure.id } }
+    subject { put :clone, params: params }
+
+    before do
+      response = Typhoeus::Response.new(code: 200, body: 'Hello world')
+      Typhoeus.stub(/active_storage\/disk/).and_return(response)
+    end
+
+    it { expect { subject }.to change(Procedure, :count).by(1) }
+
+    context 'when admin is the owner of the procedure' do
+      before { subject }
+
+      it 'creates a new procedure and redirect to it' do
+        expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
+        expect(Procedure.last.cloned_from_library).to be_falsey
+        expect(Procedure.last.notice.attached?).to be_truthy
+        expect(Procedure.last.deliberation.attached?).to be_truthy
+        expect(flash[:notice]).to have_content 'Démarche clonée'
+      end
+
+      context 'when the procedure is cloned from the library' do
+        let(:params) { { id: procedure.id, from_new_from_existing: true } }
+
+        it { expect(Procedure.last.cloned_from_library).to be(true) }
+      end
+    end
+
+    context 'when admin is not the owner of the procedure' do
+      let(:admin_2) { create(:administrateur) }
+
+      before do
+        sign_out(admin.user)
+        sign_in(admin_2.user)
+        subject
+      end
+
+      it 'creates a new procedure and redirect to it' do
+        expect(response).to redirect_to edit_admin_procedure_path(id: Procedure.last.id)
+        expect(flash[:notice]).to have_content 'Démarche clonée'
+      end
+    end
+  end
 end

@@ -25,7 +25,7 @@
     = link_to 'Réactiver', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
   - if @procedure.locked? && !@procedure.close?
-    = link_to admin_procedure_archive_path(procedure_id: @procedure.id), method: :put, class: 'button', id: "close-procedure-link", data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
+    = link_to archive_admin_procedure_path(@procedure), method: :put, class: 'button', id: "close-procedure-link", data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
       %span.icon.archive
       Clore
 

@@ -45,14 +45,14 @@
                       %h4 Tester
 
               %li
-                = link_to admin_procedure_clone_path(procedure.id), class: 'clone-btn', data: { method: :put } do
+                = link_to clone_admin_procedure_path(procedure.id), class: 'clone-btn', data: { method: :put } do
                   %span.icon.new-folder
                   .dropdown-description
                     %h4 Cloner
 
               - if procedure.publiee?
                 %li
-                  = link_to admin_procedure_archive_path(procedure_id: procedure.id), method: :put, data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
+                  = link_to archive_admin_procedure_path(procedure.id), method: :put, data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
                     %span.icon.archive
                     .dropdown-description
                       %h4 Clore

@@ -189,6 +189,40 @@ module NewAdministrateur
       redirect_to admin_procedure_experts_path(@procedure)
     end
 
+    def archive
+      procedure = current_administrateur.procedures.find(params[:id])
+      procedure.close!
+
+      flash.notice = "Démarche close"
+      redirect_to admin_procedures_path
+
+    rescue ActiveRecord::RecordNotFound
+      flash.alert = 'Démarche inexistante'
+      redirect_to admin_procedures_path
+    end
+
+    def clone
+      procedure = Procedure.find(params[:id])
+      new_procedure = procedure.clone(current_administrateur, cloned_from_library?)
+
+      if new_procedure.valid?
+        flash.notice = 'Démarche clonée'
+        redirect_to edit_admin_procedure_path(id: new_procedure.id)
+      else
+        if cloned_from_library?
+          flash.alert = new_procedure.errors.full_messages
+          redirect_to new_from_existing_admin_procedures_path
+        else
+          flash.alert = new_procedure.errors.full_messages
+          redirect_to admin_procedures_path
+        end
+      end
+
+    rescue ActiveRecord::RecordNotFound
+      flash.alert = 'Démarche inexistante'
+      redirect_to admin_procedures_path
+    end
+
     def transfer
       admin = Administrateur.by_email(params[:email_admin].downcase)
       if admin.nil?
@@ -209,6 +243,10 @@ module NewAdministrateur
     end
 
     private
+
+    def cloned_from_library?
+      params[:from_new_from_existing].present?
+    end
 
     def apercu_tab
       params[:tab] || 'dossier'
