@@ -191,13 +191,6 @@ Rails.application.routes.draw do
     get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
     resources :procedures, only: [:destroy] do
-
-      member do
-        delete :delete_logo
-        delete :delete_deliberation
-        delete :delete_notice
-      end
-
       get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
     end
 

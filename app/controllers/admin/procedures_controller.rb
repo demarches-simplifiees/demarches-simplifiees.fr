@@ -52,27 +52,6 @@ class Admin::ProceduresController < AdminController
     @draft_class = 'active'
   end
 
-  def delete_logo
-    @procedure.logo.purge_later
-
-    flash.notice = 'le logo a bien été supprimé'
-    redirect_to edit_admin_procedure_path(@procedure)
-  end
-
-  def delete_deliberation
-    @procedure.deliberation.purge_later
-
-    flash.notice = 'la délibération a bien été supprimée'
-    redirect_to edit_admin_procedure_path(@procedure)
-  end
-
-  def delete_notice
-    @procedure.notice.purge_later
-
-    flash.notice = 'la notice a bien été supprimée'
-    redirect_to edit_admin_procedure_path(@procedure)
-  end
-
   private
 
   def cloned_from_library?
