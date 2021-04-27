@@ -11,7 +11,7 @@ class ProcedureArchiveService
       .where(procedure: @procedure)
 
     archive = Archive.for_groupe_instructeur(groupe_instructeurs).find_by(
-      content_type: type,
+      time_span_type: type,
       month: month
     )
     if archive.nil?
@@ -25,7 +25,7 @@ class ProcedureArchiveService
   end
 
   def collect_files_archive(archive, instructeur)
-    if archive.content_type == 'everything'
+    if archive.time_span_type == 'everything'
       dossiers = @procedure.dossiers.state_termine
     else
       dossiers = @procedure.dossiers.processed_in_month(archive.month)

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :archive do
-    content_type { 'everything' }
+    time_span_type { 'everything' }
     groupe_instructeurs { [association(:groupe_instructeur)] }
 
     trait :pending do

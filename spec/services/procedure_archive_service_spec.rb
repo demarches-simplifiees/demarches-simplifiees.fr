@@ -10,7 +10,7 @@ describe ProcedureArchiveService do
       it 'creates a pending archive' do
         archive = service.create_pending_archive(instructeur, 'monthly', date_month)
 
-        expect(archive.content_type).to eq 'monthly'
+        expect(archive.time_span_type).to eq 'monthly'
         expect(archive.month).to eq date_month
         expect(archive.pending?).to be_truthy
       end
@@ -20,7 +20,7 @@ describe ProcedureArchiveService do
       it 'creates a pending archive' do
         archive = service.create_pending_archive(instructeur, 'everything')
 
-        expect(archive.content_type).to eq 'everything'
+        expect(archive.time_span_type).to eq 'everything'
         expect(archive.month).to eq nil
         expect(archive.pending?).to be_truthy
       end
@@ -36,7 +36,7 @@ describe ProcedureArchiveService do
     after { Timecop.return }
 
     context 'for a specific month' do
-      let(:archive) { create(:archive, content_type: 'monthly', status: 'pending', month: date_month) }
+      let(:archive) { create(:archive, time_span_type: 'monthly', status: 'pending', month: date_month) }
       let(:year) { 2021 }
       let(:mailer) { double('mailer', deliver_later: true) }
 
@@ -56,7 +56,7 @@ describe ProcedureArchiveService do
     end
 
     context 'for all months' do
-      let(:archive) { create(:archive, content_type: 'everything', status: 'pending') }
+      let(:archive) { create(:archive, time_span_type: 'everything', status: 'pending') }
       let(:mailer) { double('mailer', deliver_later: true) }
 
       it 'collect files' do
