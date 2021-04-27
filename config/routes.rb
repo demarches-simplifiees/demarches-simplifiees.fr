@@ -191,7 +191,6 @@ Rails.application.routes.draw do
     get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
     resources :procedures, only: [] do
-      get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
     end
 
     namespace :assigns do

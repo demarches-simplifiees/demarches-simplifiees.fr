@@ -2,7 +2,7 @@ class Admin::ProceduresController < AdminController
   include SmartListing::Helper::ControllerExtensions
   helper SmartListing::Helper
 
-  before_action :retrieve_procedure, only: [:show, :delete_logo, :delete_deliberation, :delete_notice, :publish_validate, :publish]
+  before_action :retrieve_procedure, only: [:show, :delete_logo, :delete_deliberation, :delete_notice, :publish]
 
   def index
     if current_administrateur.procedures.count != 0
