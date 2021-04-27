@@ -3,6 +3,7 @@
 # Table name: archives
 #
 #  id             :bigint           not null, primary key
+#  key            :text             not null
 #  month          :date
 #  status         :string           not null
 #  time_span_type :string           not null
@@ -55,5 +56,16 @@ class Archive < ApplicationRecord
     else
       "procedure-#{procedure.id}-mois-#{I18n.l(month, format: '%Y-%m')}.zip"
     end
+  end
+
+  def self.find_or_create_archive(time_span_type, month, groupe_instructeurs)
+    create_with(groupe_instructeurs: groupe_instructeurs)
+      .create_or_find_by(time_span_type: time_span_type, month: month, key: generate_cache_key(groupe_instructeurs))
+  end
+
+  private
+
+  def self.generate_cache_key(groupe_instructeurs)
+    groupe_instructeurs.map(&:id).sort.join('-')
   end
 end

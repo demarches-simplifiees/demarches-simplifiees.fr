@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_27_112642) do
+ActiveRecord::Schema.define(version: 2021_04_27_124500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,8 @@ ActiveRecord::Schema.define(version: 2021_04_27_112642) do
     t.string "time_span_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "key", null: false
+    t.index ["key", "time_span_type", "month"], name: "index_archives_on_key_and_time_span_type_and_month", unique: true
   end
 
   create_table "archives_groupe_instructeurs", force: :cascade do |t|

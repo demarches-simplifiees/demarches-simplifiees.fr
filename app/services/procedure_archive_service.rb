@@ -10,18 +10,7 @@ class ProcedureArchiveService
       .groupe_instructeurs
       .where(procedure: @procedure)
 
-    archive = Archive.for_groupe_instructeur(groupe_instructeurs).find_by(
-      time_span_type: type,
-      month: month
-    )
-    if archive.nil?
-      archive = Archive.create!(
-        content_type: type,
-        month: month,
-        groupe_instructeurs: groupe_instructeurs
-      )
-    end
-    archive
+    Archive.find_or_create_archive(type, month, groupe_instructeurs)
   end
 
   def collect_files_archive(archive, instructeur)
