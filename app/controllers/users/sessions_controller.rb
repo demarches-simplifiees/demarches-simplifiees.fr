@@ -77,4 +77,22 @@ class Users::SessionsController < Devise::SessionsController
       redirect_to link_sent_path(email: instructeur.email)
     end
   end
+
+  private
+
+  def handle_unverified_request
+    log_invalid_authenticity_token_error
+    super
+  end
+
+  def log_invalid_authenticity_token_error
+    Sentry.with_scope do |temp_scope|
+      tags = {
+        request_tokens: request_authenticity_tokens.compact.map { |t| t.gsub(/.....$/, '*****') }.join(', '),
+        session_token: session[:_csrf_token]&.gsub(/.....$/, '*****')
+      }
+      temp_scope.set_tags(tags)
+      Sentry.capture_message("ActionController::InvalidAuthenticityToken in Users::SessionsController")
+    end
+  end
 end

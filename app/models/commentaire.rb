@@ -8,14 +8,15 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  dossier_id     :integer
+#  expert_id      :bigint
 #  instructeur_id :bigint
-#  user_id        :bigint
 #
 class Commentaire < ApplicationRecord
+  self.ignored_columns = [:user_id]
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
 
-  belongs_to :user, optional: true
   belongs_to :instructeur, optional: true
+  belongs_to :expert, optional: true
 
   validate :messagerie_available?, on: :create
 
@@ -33,10 +34,10 @@ class Commentaire < ApplicationRecord
   after_create :notify
 
   def email
-    if user
-      user.email
-    elsif instructeur
+    if sent_by_instructeur?
       instructeur.email
+    elsif sent_by_expert?
+      expert.email
     else
       read_attribute(:email)
     end
@@ -47,7 +48,7 @@ class Commentaire < ApplicationRecord
   end
 
   def redacted_email
-    if instructeur.present?
+    if sent_by_instructeur?
       if Flipper.enabled?(:hide_instructeur_email, dossier.procedure)
         "Instructeur n° #{instructeur.id}"
       else
@@ -59,8 +60,15 @@ class Commentaire < ApplicationRecord
   end
 
   def sent_by_system?
-    [CONTACT_EMAIL, OLD_CONTACT_EMAIL].include?(email) &&
-      user.nil? && instructeur.nil?
+    [CONTACT_EMAIL, OLD_CONTACT_EMAIL].include?(email)
+  end
+
+  def sent_by_instructeur?
+    instructeur_id.present?
+  end
+
+  def sent_by_expert?
+    expert_id.present?
   end
 
   def sent_by?(someone)
@@ -76,15 +84,12 @@ class Commentaire < ApplicationRecord
   private
 
   def notify
-    dossier_user_email = dossier.user.email
-    invited_users_emails = dossier.invites.pluck(:email).to_a
-
     # - If the email is the contact email, the commentaire is a copy
     #   of an automated notification email we sent to a user, so do nothing.
     # - If a user or an invited user posted a commentaire, do nothing,
     #   the notification system will properly
     # - Otherwise, a instructeur posted a commentaire, we need to notify the user
-    if !email.in?([CONTACT_EMAIL, dossier_user_email, *invited_users_emails])
+    if sent_by_instructeur? || sent_by_expert?
       notify_user
     end
   end

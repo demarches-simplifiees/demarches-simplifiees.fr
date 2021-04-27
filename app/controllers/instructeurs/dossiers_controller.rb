@@ -233,7 +233,10 @@ module Instructeurs
     private
 
     def dossier
-      @dossier ||= current_instructeur.dossiers.find(params[:dossier_id])
+      @dossier ||= current_instructeur
+        .dossiers
+        .includes(champs: :type_de_champ)
+        .find(params[:dossier_id])
     end
 
     def generate_pdf_for_instructeur_export
