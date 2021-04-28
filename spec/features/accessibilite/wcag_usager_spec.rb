@@ -3,6 +3,10 @@ feature 'wcag rules for usager', js: true do
   let(:password) { 'a very complicated password' }
   let(:litteraire_user) { create(:user, password: password) }
 
+  before do
+    procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:carte) }.destroy
+  end
+
   context 'pages without the need to be logged in' do
     scenario 'homepage' do
       visit root_path
