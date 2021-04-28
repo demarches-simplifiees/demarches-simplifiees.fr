@@ -1,16 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/solid';
 
 function MoveButton({ isEnabled, icon, title, onClick }) {
   return (
     <button
-      className="button small icon-only move"
+      className="button small move"
       disabled={!isEnabled}
       title={title}
       onClick={onClick}
     >
-      <FontAwesomeIcon icon={icon} />
+      {icon == 'arrow-up' ? (
+        <ArrowUpIcon className="icon-size" />
+      ) : (
+        <ArrowDownIcon className="icon-size" />
+      )}
     </button>
   );
 }
