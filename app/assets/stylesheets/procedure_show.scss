@@ -79,24 +79,33 @@
       padding: 0.25 * $default-padding;
       cursor: pointer;
       list-style: none;
+      display: flex;
+      align-items: center;
     }
 
     [data-reach-combobox-token]:focus {
       background-color: $black;
       color: $white;
+
+      [data-combobox-remove-token] {
+        background-color: $black;
+        color: $white;
+      }
     }
 
 
     [data-reach-combobox-input] {
       outline: none;
-      border: none;
       flex-grow: 1;
-      margin: 0.25rem;
+      margin: $default-spacer;
+      padding: $default-spacer;
+      border-radius: 4px;
+      border: solid 1px $border-grey;
+      margin-top: 0;
     }
 
     [data-reach-combobox-input]:focus {
-      outline: solid;
-      outline-color: $light-blue;
+      border-color: $blue;
     }
   }
 }

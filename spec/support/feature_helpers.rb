@@ -103,23 +103,43 @@ module FeatureHelpers
     end
   end
 
-  def select_multi(champ, with)
-    input = find("input[aria-label='#{champ}'")
+  def select_combobox(champ, fill_with, value)
+    input = find("input[aria-label=\"#{champ}\"")
     input.click
+    input.fill_in with: fill_with
+    selector = "li[data-option-value=\"#{value}\"]"
+    find(selector).click
+    expect(page).to have_css(selector)
+    expect(page).to have_hidden_field(champ, with: value)
+  end
 
-    # hack because for unknown reason, the click on input doesn't show combobox-popover with selenium driver
-    script = "document.evaluate(\"//input[@aria-label='#{champ}']//ancestor::div[@data-reach-combobox]/div[@data-reach-combobox-popover]\", document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null).iterateNext().removeAttribute(\"hidden\")"
-    execute_script(script)
-
-    element = find(:xpath, "//input[@aria-label='#{champ}']/ancestor::div[@data-reach-combobox]//div[@data-reach-combobox-popover]//li/span[normalize-space(text())='#{with}']")
-    element.click
+  def select_multi_combobox(champ, fill_with, value)
+    input = find("input[aria-label=\"#{champ}\"")
+    input.click
+    input.fill_in with: fill_with
+    selector = "li[data-option-value=\"#{value}\"]"
+    find(selector).click
+    check_selected_value(champ, value)
   end
 
   def check_selected_values(champ, values)
-    combobox = find(:xpath, "//input[@aria-label='#{champ}']/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
-    hiddenFieldId = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
-    hiddenField = find("input[data-uuid='#{hiddenFieldId}']")
-    expect(values.sort).to eq(JSON.parse(hiddenField.value).sort)
+    combobox = find(:xpath, "//input[@aria-label=\"#{champ}\"]/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
+    hidden_field_id = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
+    hidden_field = find("input[data-uuid=\"#{hidden_field_id}\"]")
+    hidden_field_values = JSON.parse(hidden_field.value)
+    expect(values.sort).to eq(hidden_field_values.sort)
+  end
+
+  def check_selected_value(champ, value)
+    combobox = find(:xpath, "//input[@aria-label=\"#{champ}\"]/ancestor::div[@data-react-class='ComboMultipleDropdownList']")
+    hidden_field_id = JSON.parse(combobox["data-react-props"])["hiddenFieldId"]
+    hidden_field = find("input[data-uuid=\"#{hidden_field_id}\"]")
+    hidden_field_values = JSON.parse(hidden_field.value)
+    expect(hidden_field_values).to include(value)
+  end
+
+  def have_hidden_field(libelle, with:)
+    have_css("##{form_id_for(libelle)}[value=\"#{with}\"]")
   end
 
   # Keep the brower window open after a test success of failure, to
