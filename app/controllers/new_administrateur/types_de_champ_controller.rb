@@ -1,7 +1,7 @@
 module NewAdministrateur
   class TypesDeChampController < AdministrateurController
     before_action :retrieve_procedure, only: [:create, :update, :move, :destroy]
-    before_action :procedure_locked?, only: [:create, :update, :move, :destroy]
+    before_action :procedure_revisable?, only: [:create, :update, :move, :destroy]
 
     def create
       type_de_champ = @procedure.draft_revision.add_type_de_champ(type_de_champ_create_params)
