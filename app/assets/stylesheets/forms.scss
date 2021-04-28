@@ -176,7 +176,7 @@
     margin-bottom: $default-fields-spacer;
 
     &.small-margin {
-      margin-bottom: $default-padding / 2;
+      margin-bottom: $default-spacer;
     }
   }
 
@@ -186,7 +186,7 @@
 
   input[type=checkbox] {
     &.small-margin {
-      margin-bottom: $default-padding / 2;
+      margin-bottom: $default-spacer;
     }
   }
 
@@ -203,7 +203,7 @@
     padding: $default-padding;
 
     &.small {
-      padding: $default-padding / 2;
+      padding: $default-spacer;
     }
 
     &:disabled {
@@ -292,12 +292,13 @@
 
 
   [data-reach-combobox-input] {
-    padding: 16px;
     width: 100%;
     min-width: 50%;
     max-width: 100%;
     min-height: 62px;
-    margin-bottom: 40px;
+    border-radius: 4px;
+    border: solid 1px $border-grey;
+    padding: $default-padding;
   }
 
   [data-reach-combobox-input]:focus {
@@ -305,25 +306,31 @@
   }
 
   [data-reach-combobox-token-list] {
-    padding: $default-padding;
+    padding: $default-spacer;
     display: flex;
+    align-items: center;
+    list-style: none;
   }
 
   [data-reach-combobox-token] {
     border: solid 1px $border-grey;
     color: $black;
-    margin-top: $default-padding;
-    margin-bottom: $default-padding;
-    margin-right: 0.5 * $default-padding;
     border-radius: 4px;
-    padding: $default-padding;
+    padding: $default-spacer;
+    margin-right: $default-spacer;
     cursor: pointer;
-    list-style: none;
+    display: flex;
+    align-items: center;
   }
 
   [data-reach-combobox-token]:focus {
     background-color: $black;
     color: $white;
+
+    [data-combobox-remove-token] {
+      background-color: $black;
+      color: $white;
+    }
   }
 
   .editable-champ {
@@ -388,7 +395,7 @@
 
   .explication {
     margin-bottom: $default-fields-spacer;
-    padding: $default-padding / 2;
+    padding: $default-spacer;
     background-color: $light-grey;
 
     p:not(:last-child) {
@@ -467,23 +474,26 @@
   }
 }
 
+[data-react-class]:not([data-react-class="ComboMultipleDropdownList"]) {
+  [data-reach-combobox-input] {
+    margin-bottom: $default-fields-spacer;
+  }
+}
+
 [data-react-class="ComboMultipleDropdownList"] {
   margin-bottom: $default-fields-spacer;
 
   [data-reach-combobox-input] {
-    outline: none;
-    border: none;
     flex-grow: 1;
-    margin: 0.25rem;
     background-image: image-url("icons/chevron-down");
     background-size: 14px;
     background-repeat: no-repeat;
     background-position: right 10px center;
-  }
-
-  [data-reach-combobox-input]:focus {
-    outline: solid;
-    outline-color: $light-blue;
+    border-radius: 4px;
+    border: solid 1px $border-grey;
+    padding: $default-padding;
+    margin: $default-spacer;
+    margin-top: 0;
   }
 }
 
@@ -507,15 +517,26 @@
 [data-combobox-separator] {
   font-size: 16px;
   color: $dark-grey;
-  margin-top: 6px;
+  background: $light-grey;
+  padding: $default-spacer;
 }
 
 [data-combobox-remove-token] {
-  color: $dark-grey;
-  padding-right: 4px;
+  cursor: pointer;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  line-height: 1;
+  padding: 0;
+  margin-right: 4px;
+  display: flex;
+  align-items: center !important;
 }
-
 
 [data-reach-combobox-input]:focus {
   outline-color: $light-blue;
+}
+
+[data-reach-combobox-popover] {
+  z-index: 20;
 }
