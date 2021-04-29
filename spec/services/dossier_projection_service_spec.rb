@@ -5,8 +5,8 @@ describe DossierProjectionService do
     context 'with multiple dossier' do
       let!(:procedure) { create(:procedure, :with_type_de_champ) }
       let!(:dossier_1) { create(:dossier, procedure: procedure) }
-      let!(:dossier_2) { create(:dossier, procedure: procedure) }
-      let!(:dossier_3) { create(:dossier, procedure: procedure) }
+      let!(:dossier_2) { create(:dossier, :en_construction, :archived, procedure: procedure) }
+      let!(:dossier_3) { create(:dossier, :en_instruction, procedure: procedure) }
 
       let(:dossiers_ids) { [dossier_3.id, dossier_1.id, dossier_2.id] }
       let(:fields) do
@@ -26,11 +26,20 @@ describe DossierProjectionService do
 
       let(:result) { subject }
 
-      it 'respects the dossiers_ids order and returns nil for empty result' do
+      it 'respects the dossiers_ids order, returns state, archived and nil for empty result' do
         expect(result.length).to eq(3)
-        expect(result[0].dossier.id).to eq(dossier_3.id)
-        expect(result[1].dossier.id).to eq(dossier_1.id)
-        expect(result[2].dossier.id).to eq(dossier_2.id)
+
+        expect(result[0].dossier_id).to eq(dossier_3.id)
+        expect(result[1].dossier_id).to eq(dossier_1.id)
+        expect(result[2].dossier_id).to eq(dossier_2.id)
+
+        expect(result[0].state).to eq('en_instruction')
+        expect(result[1].state).to eq('brouillon')
+        expect(result[2].state).to eq('en_construction')
+
+        expect(result[0].archived).to be false
+        expect(result[1].archived).to be false
+        expect(result[2].archived).to be true
 
         expect(result[0].columns[0]).to be nil
         expect(result[1].columns[0]).to eq('champ_1')

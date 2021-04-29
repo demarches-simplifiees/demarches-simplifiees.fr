@@ -21,30 +21,28 @@
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         - current_url = request.path_info
         %ul.header-tabs
-          - if current_instructeur.procedures.count > 0
+          - if current_instructeur.procedures.any?
             %li
               = active_link_to "Démarches", instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
-          - if current_instructeur.user.expert && current_expert.avis.count > 0
+          - if current_instructeur.user.expert && current_expert.avis_summary[:total] > 0
             %li
               = active_link_to expert_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do
                 Avis
-                - avis_counter = current_expert.avis.without_answer.count
-                - if avis_counter > 0
-                  %span.badge.warning= avis_counter
+                - if current_expert.avis_summary[:unanswered] > 0
+                  %span.badge.warning= current_expert.avis_summary[:unanswered]
 
       - if nav_bar_profile == :expert && expert_signed_in?
         %ul.header-tabs
-          - if current_expert.user.instructeur && current_instructeur.procedures.count > 0
+          - if current_expert.user.instructeur && current_instructeur.procedures.any?
             %li
               = active_link_to "Démarches", instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
 
-          - if current_expert.avis.count > 0
+          - if current_expert.avis_summary[:total] > 0
             %li
               = active_link_to expert_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do
                 Avis
-                - avis_counter = current_expert.avis.without_answer.count
-                - if avis_counter > 0
-                  %span.badge.warning= avis_counter
+                - if current_expert.avis_summary[:unanswered] > 0
+                  %span.badge.warning= current_expert.avis_summary[:unanswered]
 
       - if nav_bar_profile == :user
         %ul.header-tabs

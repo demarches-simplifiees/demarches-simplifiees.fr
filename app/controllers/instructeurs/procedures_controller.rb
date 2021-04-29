@@ -85,10 +85,10 @@ module Instructeurs
         @archived_dossiers
       end
 
-      @has_en_cours_notifications = current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?
-      @has_termine_notifications = current_instructeur.notifications_for_procedure(@procedure, :termine).exists?
-
-      @not_archived_notifications_dossier_ids = current_instructeur.notifications_for_procedure(@procedure, :not_archived).pluck(:id)
+      notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
+      @has_en_cours_notifications = notifications[:en_cours].present?
+      @has_termine_notifications = notifications[:termines].present?
+      @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
       sorted_ids = procedure_presentation.sorted_ids(@dossiers, current_instructeur)
 
@@ -101,18 +101,12 @@ module Instructeurs
 
       page = params[:page].presence || 1
 
-      filtered_sorted_paginated_ids = Kaminari
+      @filtered_sorted_paginated_ids = Kaminari
         .paginate_array(filtered_sorted_ids)
         .page(page)
         .per(ITEMS_PER_PAGE)
 
-      @dossiers = @dossiers.where(id: filtered_sorted_paginated_ids)
-
-      @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
-
-      @projected_dossiers = DossierProjectionService.project(filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
-
-      kaminarize(page, filtered_sorted_ids.count)
+      @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
 
       assign_exports
     end
@@ -155,6 +149,11 @@ module Instructeurs
       groupe_instructeurs = current_instructeur
         .groupe_instructeurs
         .where(procedure: procedure)
+
+      @dossier_count = current_instructeur
+        .dossiers_count_summary(groupe_instructeur_ids)
+        .fetch_values('tous', 'archives')
+        .sum
 
       export = Export.find_or_create_export(export_format, groupe_instructeurs)
 
@@ -220,10 +219,7 @@ module Instructeurs
     end
 
     def assign_exports
-      groupe_instructeurs_for_procedure = current_instructeur.groupe_instructeurs.where(procedure: procedure)
-      @xlsx_export = Export.find_for_format_and_groupe_instructeurs(:xlsx, groupe_instructeurs_for_procedure)
-      @csv_export = Export.find_for_format_and_groupe_instructeurs(:csv, groupe_instructeurs_for_procedure)
-      @ods_export = Export.find_for_format_and_groupe_instructeurs(:ods, groupe_instructeurs_for_procedure)
+      @xlsx_export, @csv_export, @ods_export = Export.find_for_groupe_instructeurs(groupe_instructeur_ids)
     end
 
     def assign_to
@@ -251,7 +247,9 @@ module Instructeurs
     end
 
     def procedure
-      Procedure.find(procedure_id)
+      Procedure
+        .with_attached_logo
+        .find(procedure_id)
     end
 
     def ensure_ownership!
@@ -281,26 +279,6 @@ module Instructeurs
 
     def current_filters
       @current_filters ||= procedure_presentation.filters[statut]
-    end
-
-    def kaminarize(current_page, total)
-      @dossiers.instance_eval <<-EVAL
-        def current_page
-          #{current_page}
-        end
-        def total_pages
-          (#{total} / #{ITEMS_PER_PAGE}.to_f).ceil
-        end
-        def limit_value
-          #{ITEMS_PER_PAGE}
-        end
-        def first_page?
-          current_page == 1
-        end
-        def last_page?
-          current_page == total_pages
-        end
-      EVAL
     end
   end
 end
