@@ -14,6 +14,12 @@ ActiveSupport.on_load(:active_storage_attachment) do
   include AttachmentVirusScannerConcern
 end
 
+Rails.application.reloader.to_prepare do
+  class ActiveStorage::BaseJob
+    include ActiveJob::RetryOnTransientErrors
+  end
+end
+
 # When an OpenStack service is initialized it makes a request to fetch
 # `publicURL` to use for all operations. We intercept the method that reads
 # this url and replace the host with DS_Proxy host. This way all the operation
