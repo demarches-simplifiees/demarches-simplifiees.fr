@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { PlusIcon } from '@heroicons/react/outline';
 
 import { SortableContainer, addChampLabel } from '../utils';
 import TypeDeChamp from './TypeDeChamp';
@@ -45,7 +45,7 @@ function TypeDeChampRepetitionOptions({
             })
           }
         >
-          <FontAwesomeIcon icon="plus" size="sm" />
+          <PlusIcon className="icon-size" />
           &nbsp;&nbsp;
           {addChampLabel(state.isAnnotation)}
         </button>
