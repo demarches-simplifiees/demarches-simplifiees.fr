@@ -18,4 +18,47 @@
 #  type_de_champ_id               :integer
 #
 class Champs::AddressChamp < Champs::TextChamp
+  def full_address?
+    data.present?
+  end
+
+  def address
+    full_address? ? data : nil
+  end
+
+  def address_label
+    full_address? ? data['label'] : value
+  end
+
+  def search_terms
+    if full_address?
+      [data['label'], data['departement'], data['region'], data['city']]
+    else
+      [address_label]
+    end
+  end
+
+  def to_s
+    address_label
+  end
+
+  def for_tag
+    address_label
+  end
+
+  def for_export
+    value.present? ? address_label : nil
+  end
+
+  def for_api
+    address_label
+  end
+
+  def fetch_external_data?
+    true
+  end
+
+  def fetch_external_data
+    APIAddress::AddressAdapter.new(external_id).to_params
+  end
 end

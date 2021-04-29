@@ -3,5 +3,5 @@ Sentry.init do |config|
   config.send_default_pii = false
   config.enabled_environments = ['production']
   config.breadcrumbs_logger = [:active_support_logger]
-  config.traces_sample_rate = 0.01
+  config.traces_sample_rate = 0.001
 end

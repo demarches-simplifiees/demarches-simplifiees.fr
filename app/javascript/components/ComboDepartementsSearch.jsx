@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
-import { ReactQueryCacheProvider } from 'react-query';
-import matchSorter from 'match-sorter';
+import { QueryClientProvider } from 'react-query';
+import { matchSorter } from 'match-sorter';
 
 import ComboSearch from './ComboSearch';
-import { queryCache } from './shared/queryCache';
+import { queryClient } from './shared/queryClient';
 
 const extraTerms = [{ code: '99', nom: 'Etranger' }];
 
@@ -16,7 +16,7 @@ function ComboDepartementsSearch(params) {
   ]);
 
   return (
-    <ReactQueryCacheProvider queryCache={queryCache}>
+    <QueryClientProvider client={queryClient}>
       <ComboSearch
         required={params.mandatory}
         hiddenFieldId={params.hiddenFieldId}
@@ -25,7 +25,7 @@ function ComboDepartementsSearch(params) {
         transformResult={({ code, nom }) => [code, `${code} - ${nom}`]}
         transformResults={transformResults}
       />
-    </ReactQueryCacheProvider>
+    </QueryClientProvider>
   );
 }
 

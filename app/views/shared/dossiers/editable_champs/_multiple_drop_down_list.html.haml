@@ -7,10 +7,7 @@
           = b.text
 
   - else
-    = form.select :value,
-        champ.options,
-        { selected: champ.selected_options,
-          disabled: champ.disabled_options },
-        multiple: true,
-        class: 'select2'
+    - hidden_field_id = SecureRandom.uuid
+    = form.hidden_field :value, { data: { uuid: hidden_field_id } }
+    = react_component("ComboMultipleDropdownList", options: champ.options, selected: champ.selected_options, disabled: champ.disabled_options, hiddenFieldId: hidden_field_id, label: champ.libelle)
 

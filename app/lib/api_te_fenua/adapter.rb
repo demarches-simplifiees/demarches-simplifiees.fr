@@ -37,17 +37,18 @@ class APITeFenua::Adapter
     RestClient::Request.execute(method: :get,
                                 url: search_url,
                                 timeout: 8,
-                                headers: { params: {
-                                  # mandatory but unused parameters
-                                  d: '0',
-                                  x: '0',
-                                  y: '0',
-                                  id: '',
-                                  sid: 'reqId',
-                                  # query
-                                  q: search
-                                }
-})
+                                headers: {
+                                  params: {
+                                    # mandatory but unused parameters
+                                    d: '0',
+                                                                    x: '0',
+                                                                    y: '0',
+                                                                    id: '',
+                                                                    sid: 'reqId',
+                                                                    # query
+                                                                    q: search
+                                  }
+                                })
   rescue RestClient::ServiceUnavailable
     nil
   rescue StandardError => e

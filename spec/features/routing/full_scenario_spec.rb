@@ -30,14 +30,14 @@ feature 'The routing', js: true do
     expect(page).to have_field('Nom du groupe', with: 'littéraire')
 
     # add victor to littéraire groupe
-    find('input.select2-search__field').send_keys('victor@inst.com', :enter)
+    find("input[aria-label='email instructeur'").send_keys('victor@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
 
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
     # add superwoman to littéraire groupe
-    find('input.select2-search__field').send_keys('superwoman@inst.com', :enter)
+    find("input[aria-label='email instructeur'").send_keys('superwoman@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
 
@@ -50,14 +50,14 @@ feature 'The routing', js: true do
     expect(page).to have_text('Le groupe d’instructeurs « scientifique » a été créé.')
 
     # add marie to scientifique groupe
-    find('input.select2-search__field').send_keys('marie@inst.com', :enter)
+    find("input[aria-label='email instructeur'").send_keys('marie@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur marie@inst.com a été affecté")
 
     marie = User.find_by(email: 'marie@inst.com').instructeur
 
     # add superwoman to scientifique groupe
-    find('input.select2-search__field').send_keys('superwoman@inst.com', :enter)
+    find("input[aria-label='email instructeur'").send_keys('superwoman@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
     expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
 

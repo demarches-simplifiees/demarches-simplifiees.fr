@@ -83,7 +83,7 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
       let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, :long, procedure: dossier.procedure) }
 
       it 'renders the list as a multiple-selection dropdown' do
-        expect(subject).to have_selector('select.select2')
+        expect(subject).to have_selector('[data-react-class="ComboMultipleDropdownList"]')
       end
     end
   end

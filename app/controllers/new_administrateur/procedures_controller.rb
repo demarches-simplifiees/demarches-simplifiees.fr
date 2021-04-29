@@ -1,6 +1,6 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :invited_expert_list]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :invited_expert_list, :update_allow_decision_access]
     before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
@@ -190,7 +190,14 @@ module NewAdministrateur
     end
 
     def invited_expert_list
-      @invited_expert_emails = ExpertsProcedure.invited_expert_emails(@procedure)
+      @experts_procedure = @procedure.experts_procedures.sort_by { |expert_procedure| expert_procedure.expert.email }
+    end
+
+    def update_allow_decision_access
+      @procedure
+        .experts_procedures
+        .find(params[:expert_procedure])
+        .update!(allow_decision_access_params)
     end
 
     private
@@ -226,6 +233,10 @@ module NewAdministrateur
 
     def publish_params
       params.permit(:path, :lien_site_web)
+    end
+
+    def allow_decision_access_params
+      params.require(:experts_procedure).permit(:allow_decision_access)
     end
   end
 end
