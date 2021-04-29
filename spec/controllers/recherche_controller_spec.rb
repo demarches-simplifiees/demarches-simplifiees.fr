@@ -1,23 +1,30 @@
-describe Instructeurs::RechercheController, type: :controller do
+describe RechercheController, type: :controller do
   let(:dossier) { create(:dossier, :en_construction) }
   let(:dossier2) { create(:dossier, :en_construction, procedure: dossier.procedure) }
   let(:instructeur) { create(:instructeur) }
 
-  before { instructeur.groupe_instructeurs << dossier2.procedure.defaut_groupe_instructeur }
+  before do
+    #instructeur.groupe_instructeurs << dossier2.procedure.defaut_groupe_instructeur
+    instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
+  end
 
   describe 'GET #index' do
     before { sign_in(instructeur.user) }
-
+  
     subject { get :index, params: { q: query } }
 
     describe 'by id' do
       context 'when instructeur own the dossier' do
+
+        before do
+          subject
+        end
+        
         let(:query) { dossier.id }
 
         it { is_expected.to have_http_status(200) }
 
         it 'returns the expected dossier' do
-          subject
           expect(assigns(:dossiers).count).to eq(1)
           expect(assigns(:dossiers).first.id).to eq(dossier.id)
         end
