@@ -1,7 +1,7 @@
 .dropdown.header-menu-opener
   %button.button.dropdown-button.icon-only.header-menu-button{ title: "Mon compte", 'aria-expanded' => 'false', 'aria-controls' => 'mon_compte_menu' }
     .hidden Mon compte
-    = image_tag "icons/account-circle.svg", alt: 'Mon compte'
+    = image_tag "icons/account-circle.svg", alt: 'Mon compte', width: 24, height: 24, loading: 'lazy'
   %ul.header-menu.dropdown-content#mon_compte_menu
     %li
       .menu-item{ title: current_email }
