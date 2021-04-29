@@ -41,6 +41,17 @@ class PiecesJustificativesService
     end
   end
 
+  def self.generate_dossier_export(dossier)
+    pdf = ApplicationController
+      .render(template: 'dossiers/show', formats: [:pdf],
+              assigns: {
+                include_infos_administration: true,
+                dossier: dossier
+              })
+    dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
+    dossier.pdf_export_for_instructeur
+  end
+
   private
 
   def self.pjs_for_champs(dossier)
