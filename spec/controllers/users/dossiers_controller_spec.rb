@@ -476,12 +476,12 @@ describe Users::DossiersController, type: :controller do
       delivery = double
       expect(delivery).to receive(:deliver_later).with(no_args)
 
-      expect(NotificationMailer).to receive(:send_initiated_notification)
+      expect(NotificationMailer).to receive(:send_en_construction_notification)
         .and_return(delivery)
 
       subject
 
-      expect(NotificationMailer).not_to receive(:send_initiated_notification)
+      expect(NotificationMailer).not_to receive(:send_en_construction_notification)
 
       subject
     end
@@ -499,7 +499,7 @@ describe Users::DossiersController, type: :controller do
       it { expect(flash.alert).to eq(['nop']) }
 
       it 'does not send an email' do
-        expect(NotificationMailer).not_to receive(:send_initiated_notification)
+        expect(NotificationMailer).not_to receive(:send_en_construction_notification)
 
         subject
       end
@@ -687,7 +687,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       it 'does not send an email' do
-        expect(NotificationMailer).not_to receive(:send_initiated_notification)
+        expect(NotificationMailer).not_to receive(:send_en_construction_notification)
 
         subject
       end
