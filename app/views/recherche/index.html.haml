@@ -1,0 +1,105 @@
+- content_for(:title, "Recherche : #{@search_terms}")
+- pagination =  paginate @paginated_ids
+- procedure_libelle_index = 0
+- user_email_index = 1
+
+.container
+  .page-title
+    Résultat de la recherche :
+    = t('pluralize.dossier_trouve', count: @dossiers_count)
+
+  - if @projected_dossiers.present?
+    %table.table.dossiers-table.hoverable
+      %thead
+        %tr
+          %th.notification-col
+          %th.number-col Nº dossier
+          %th Démarche
+          %th Demandeur
+          %th.status-col Statut
+          %th.action-col.follow-col
+      %tbody
+        - @projected_dossiers.each do |p|
+          - procedure_id = p.columns.last
+          - if current_expert.present?
+            - avis_id =  @dossier_avis_ids_h[p.dossier_id]
+
+          - if (current_expert.present? && current_instructeur.blank?) || (current_instructeur.present? && current_expert.blank?)
+
+            - path = current_instructeur.present? ? instructeur_dossier_path(procedure_id, p.dossier_id) : expert_avis_path(procedure_id, avis_id)
+
+            %tr
+              %td.folder-col
+                = link_to(path, class: 'cell-link') do
+                  %span.icon.folder
+              %td.number-col
+                = link_to(path, class: 'cell-link') do
+                  = p.dossier_id
+
+              - p.columns.values_at(procedure_libelle_index, user_email_index).each do |column|
+                %td
+                  %a.cell-link{ href: path }= column
+
+              %td.status-col
+                = link_to(path, class: 'cell-link') do
+                  = status_badge(p.state)
+
+              - if current_instructeur.present?
+                %td.action-col.follow-col= render partial: "instructeurs/procedures/dossier_actions",
+                                              locals: { procedure_id: procedure_id,
+                                                        dossier_id: p.dossier_id,
+                                                        state: p.state,
+                                                        archived: p.archived,
+                                                        button_class: false,
+                                                        dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id) }
+
+          - else
+            %tr
+              %td.folder-col
+                %span.icon.folder
+              %td.number-col
+                .cell-link
+                  = p.dossier_id
+
+                - p.columns.values_at(procedure_libelle_index, user_email_index).each do |column|
+                  %td
+                    .cell-link
+                      = column
+
+              %td.status-col
+                .cell-link
+                  = status_badge(p.state)
+              %td.action-col.follow-col
+                .dropdown
+                  .button.dropdown-button
+                    Actions
+                    .dropdown-content.fade-in-down
+                      %ul.dropdown-items.pl-0
+                        - if current_instructeur.present?
+                          %li
+                            .dropdown-description
+                              %h4
+                                = render partial: "instructeurs/procedures/dossier_actions",
+                                              locals: { procedure_id: procedure_id,
+                                                        dossier_id: p.dossier_id,
+                                                        state: p.state,
+                                                        archived: p.archived,
+                                                        button_class: false,
+                                                        dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id) }
+
+                        %li
+                          = link_to instructeur_dossier_path(procedure_id, p.dossier_id) do
+                            %span.icon.in-progress
+                            .dropdown-description
+                              %h4 Instruire le dossier
+                        - if avis_id.present?
+                          %li
+                            = link_to(expert_avis_path(procedure_id, avis_id)) do
+                              %span.icon.in-progress
+                              .dropdown-description
+                                %h4 Donner mon avis
+          = pagination
+
+
+  - else
+    %h2 Aucun dossier correspondant à votre recherche n'a été trouvé
