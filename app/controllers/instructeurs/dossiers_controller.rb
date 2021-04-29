@@ -213,7 +213,6 @@ module Instructeurs
     def telecharger_pjs
       return head(:forbidden) if !dossier.attachments_downloadable?
 
-      generate_pdf_for_instructeur_export
       files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
 
       zipline(files, "dossier-#{dossier.id}.zip")
@@ -237,12 +236,6 @@ module Instructeurs
         .dossiers
         .includes(champs: :type_de_champ)
         .find(params[:dossier_id])
-    end
-
-    def generate_pdf_for_instructeur_export
-      @include_infos_administration = true
-      pdf = render_to_string(template: 'dossiers/show', formats: [:pdf])
-      dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
     end
 
     def commentaire_params
