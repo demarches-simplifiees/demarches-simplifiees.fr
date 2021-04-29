@@ -2,6 +2,8 @@ module ActiveJob::RetryOnTransientErrors
   extend ActiveSupport::Concern
 
   TRANSIENT_ERRORS = [
+    Excon::Error::InternalServerError,
+    Excon::Error::GatewayTimeout,
     Excon::Error::BadRequest
   ]
 
