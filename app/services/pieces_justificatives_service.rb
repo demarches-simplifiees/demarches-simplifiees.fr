@@ -1,11 +1,10 @@
 class PiecesJustificativesService
   def self.liste_pieces_justificatives(dossier)
-    dossier_export = generate_dossier_export(dossier)
     pjs_champs = pjs_for_champs(dossier)
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier)
 
-    ([dossier_export] + pjs_champs + pjs_commentaires + pjs_dossier)
+    (pjs_champs + pjs_commentaires + pjs_dossier)
       .filter(&:attached?)
   end
 
@@ -43,17 +42,6 @@ class PiecesJustificativesService
   end
 
   private
-
-  def self.generate_dossier_export(dossier)
-    pdf = ApplicationController
-      .render(template: 'dossiers/show', formats: [:pdf],
-              assigns: {
-                include_infos_administration: true,
-                dossier: dossier
-              })
-    dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
-    dossier.pdf_export_for_instructeur
-  end
 
   def self.pjs_for_champs(dossier)
     allowed_champs = dossier.champs + dossier.champs_private
