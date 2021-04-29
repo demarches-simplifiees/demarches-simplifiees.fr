@@ -12,6 +12,8 @@ feature 'Inviting an expert:', js: true do
 
   context 'as an Instructeur' do
     scenario 'I can invite an expert' do
+      allow(ClamavService).to receive(:safe_file?).and_return(true)
+
       # assign instructeur to linked dossier
       instructeur.assign_to_procedure(linked_dossier.procedure)
 
