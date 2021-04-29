@@ -344,7 +344,7 @@ class Dossier < ApplicationRecord
   before_save :build_default_champs, if: Proc.new { revision_id_was.nil? }
   before_save :update_search_terms
 
-  after_save :send_dossier_received
+  after_save :send_dossier_en_instruction
   after_save :send_web_hook
   after_create_commit :send_draft_notification_email
 
@@ -690,7 +690,7 @@ class Dossier < ApplicationRecord
 
     save!
     remove_titres_identite!
-    NotificationMailer.send_closed_notification(self).deliver_later
+    NotificationMailer.send_accepte_notification(self).deliver_later
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :accepter, self)
   end
@@ -705,7 +705,7 @@ class Dossier < ApplicationRecord
 
     save!
     remove_titres_identite!
-    NotificationMailer.send_closed_notification(self).deliver_later
+    NotificationMailer.send_accepte_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
   end
 
@@ -718,7 +718,7 @@ class Dossier < ApplicationRecord
 
     save!
     remove_titres_identite!
-    NotificationMailer.send_refused_notification(self).deliver_later
+    NotificationMailer.send_refuse_notification(self).deliver_later
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :refuser, self)
   end
@@ -732,7 +732,7 @@ class Dossier < ApplicationRecord
 
     save!
     remove_titres_identite!
-    NotificationMailer.send_without_continuation_notification(self).deliver_later
+    NotificationMailer.send_sans_suite_notification(self).deliver_later
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :classer_sans_suite, self)
   end
@@ -949,9 +949,9 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def send_dossier_received
+  def send_dossier_en_instruction
     if saved_change_to_state? && en_instruction? && !procedure.declarative_accepte?
-      NotificationMailer.send_dossier_received(self).deliver_later
+      NotificationMailer.send_en_instruction_notification(self).deliver_later
     end
   end
 

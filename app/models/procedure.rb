@@ -500,6 +500,23 @@ class Procedure < ApplicationRecord
     without_continuation_mail || Mails::WithoutContinuationMail.default_for_procedure(self)
   end
 
+  def mail_template_for(state)
+    case state
+    when Dossier.states.fetch(:en_construction)
+      initiated_mail_template
+    when Dossier.states.fetch(:en_instruction)
+      received_mail_template
+    when Dossier.states.fetch(:accepte)
+      closed_mail_template
+    when Dossier.states.fetch(:refuse)
+      refused_mail_template
+    when Dossier.states.fetch(:sans_suite)
+      without_continuation_mail_template
+    else
+      raise "Unknown dossier state: #{state}"
+    end
+  end
+
   def self.default_sort
     {
       'table' => 'self',
