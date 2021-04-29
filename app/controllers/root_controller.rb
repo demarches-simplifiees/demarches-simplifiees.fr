@@ -1,6 +1,6 @@
 class RootController < ApplicationController
   include ApplicationHelper
-
+  
   def index
     if administrateur_signed_in?
       return redirect_to admin_procedures_path
@@ -89,5 +89,10 @@ class RootController < ApplicationController
       format.html { redirect_back(fallback_location: root_path) }
       format.js { render js: helpers.remove_element('#outdated-browser-banner') }
     end
+  end
+
+  def save_locale
+    puts "action change_locale"
+    # locale = params[:locale] || I18n.default_locale
   end
 end

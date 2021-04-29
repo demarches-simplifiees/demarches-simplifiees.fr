@@ -1,0 +1,11 @@
+.dropdown.localization-dropdown
+    %button.button.dropdown-button.icon-only.header-menu-button{ title: "Translate", 'aria-expanded' => 'false', 'aria-controls' => 'localization_menu' }
+        .hidden Translate
+        = image_tag "icons/translate-icon.svg", alt: 'Translate', 'aria-hidden':'true'
+    %ul.header-menu.dropdown-content#mon_compte_menu
+        %li
+        = link_to save_locale_path(locale: :en), method: :post, class: "menu-item menu-link" do
+            EN - English
+        %li
+        = link_to save_locale_path(locale: :fr), method: :post, class: "menu-item menu-link" do
+            FR - français

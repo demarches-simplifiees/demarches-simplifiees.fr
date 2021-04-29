@@ -147,6 +147,7 @@ Rails.application.routes.draw do
   get "accessibilite" => "root#accessibilite"
   get "suivi" => "root#suivi"
   post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
+  post "save_locale" => "root#save_locale"
 
   get "contact", to: "support#index"
   post "contact", to: "support#create"
