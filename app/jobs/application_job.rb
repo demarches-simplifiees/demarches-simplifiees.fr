@@ -1,7 +1,7 @@
 class ApplicationJob < ActiveJob::Base
-  DEFAULT_MAX_ATTEMPTS_JOBS = 25
+  include ActiveJob::RetryOnTransientErrors
 
-  retry_on ::Excon::Error::BadRequest
+  DEFAULT_MAX_ATTEMPTS_JOBS = 25
 
   before_perform do |job|
     Rails.logger.info("#{job.class.name} started at #{Time.zone.now}")
