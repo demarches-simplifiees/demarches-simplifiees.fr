@@ -1,14 +1,13 @@
 class ActiveStorage::DownloadableFile
   def self.create_list_from_dossier(dossier)
-    pjs = PiecesJustificativesService.liste_pieces_justificatives(dossier)
-    files = pjs.map do |piece_justificative|
+    dossier_export = PiecesJustificativesService.generate_dossier_export(dossier)
+    pjs = [dossier_export] + PiecesJustificativesService.liste_pieces_justificatives(dossier)
+    pjs.map do |piece_justificative|
       [
         piece_justificative,
-        self.timestamped_filename(piece_justificative)
+        "dossier-#{dossier.id}/#{self.timestamped_filename(piece_justificative)}"
       ]
     end
-    files << [dossier.pdf_export_for_instructeur, self.timestamped_filename(dossier.pdf_export_for_instructeur)]
-    files
   end
 
   private
@@ -22,19 +21,23 @@ class ActiveStorage::DownloadableFile
     timestamp = attachment.created_at.strftime("%d-%m-%Y-%H-%M")
     id = attachment.id % 10000
 
-    "#{folder}/#{basename}-#{timestamp}-#{id}#{extension}"
+    [folder, "#{basename}-#{timestamp}-#{id}#{extension}"].join
   end
 
   def self.folder(attachment)
+    if attachment.name == 'pdf_export_for_instructeur'
+      return ''
+    end
+
     case attachment.record_type
     when 'Dossier'
-      'dossier'
+      'dossier/'
     when 'DossierOperationLog', 'BillSignature'
-      'horodatage'
+      'horodatage/'
     when 'Commentaire'
-      'messagerie'
+      'messagerie/'
     else
-      'pieces_justificatives'
+      'pieces_justificatives/'
     end
   end
 
