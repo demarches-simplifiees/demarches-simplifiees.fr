@@ -90,4 +90,9 @@ class RootController < ApplicationController
       format.js { render js: helpers.remove_element('#outdated-browser-banner') }
     end
   end
+
+  def save_locale
+    puts "action change_locale"
+    # locale = params[:locale] || I18n.default_locale
+  end
 end
