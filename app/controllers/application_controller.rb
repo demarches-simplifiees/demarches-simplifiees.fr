@@ -18,7 +18,11 @@ class ApplicationController < ActionController::Base
   before_action :set_active_storage_host
   before_action :setup_javascript_settings
   before_action :setup_tracking
+<<<<<<< HEAD
   
+=======
+ 
+>>>>>>> 73ec2289fe189e94f595d2e88bdb01bbb009cc27
   around_action :switch_locale
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,

@@ -148,7 +148,11 @@ Rails.application.routes.draw do
   get "suivi" => "root#suivi"
   post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
   post "save_locale" => "root#save_locale"
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 73ec2289fe189e94f595d2e88bdb01bbb009cc27
   get "contact", to: "support#index"
   post "contact", to: "support#create"
 

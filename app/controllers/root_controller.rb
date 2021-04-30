@@ -1,6 +1,6 @@
 class RootController < ApplicationController
   include ApplicationHelper
-
+  
   def index
     if administrateur_signed_in?
       return redirect_to admin_procedures_path
@@ -95,4 +95,8 @@ class RootController < ApplicationController
     puts "action change_locale"
     # locale = params[:locale] || I18n.default_locale
   end
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> 73ec2289fe189e94f595d2e88bdb01bbb009cc27
