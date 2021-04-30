@@ -349,7 +349,8 @@
     max-width: 180px;
   }
 
-  select {
+  select,
+  .select2-selection {
     // hack found here: https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -391,6 +392,43 @@
 
   [data-reach-combobox-input]:focus {
     border-color: $blue;
+  }
+
+  .select2 {
+    min-width: 50%;
+  }
+
+  .select2-container {
+    display: block;
+    margin-bottom: $default-fields-spacer;
+
+    &.select2-container--focus {
+      .select2-selection {
+        border-color: $border-grey;
+      }
+    }
+
+    .select2-selection--single {
+      min-height: 62px;
+
+      // scss-lint:disable SelectorFormat
+      .select2-selection__arrow {
+        display: none;
+      }
+
+      // scss-lint:enable
+    }
+
+    // scss-lint:disable SelectorFormat
+    .select2-selection__rendered {
+      padding: $default-padding;
+    }
+
+    .select2-selection__choice {
+      background-color: #FFFFFF;
+    }
+
+    // scss-lint:enable
   }
 
   [data-reach-combobox-token-list] {
