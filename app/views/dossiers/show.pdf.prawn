@@ -174,7 +174,7 @@ def add_message(pdf, message)
   if message.sent_by_system?
     sender = 'Email automatique'
   elsif message.sent_by?(@dossier.user)
-    sender = @dossier.user.email
+    sender = @dossier.user_email_for(:display)
   end
 
   format_in_2_lines(pdf, "#{sender}, #{try_format_date(message.created_at)}",
@@ -233,7 +233,7 @@ prawn_document(page_size: "A4") do |pdf|
     format_in_2_columns(pdf, 'Informations France Connect', "Le dossier a été déposé par le compte de #{@dossier.france_connect_information.given_name} #{@dossier.france_connect_information.family_name}, authentifié par France Connect le #{@dossier.france_connect_information.updated_at.strftime('%d/%m/%Y')}")
   end
 
-  format_in_2_columns(pdf, "Email", @dossier.user.email)
+  format_in_2_columns(pdf, "Email", @dossier.user_email_for(:display))
 
   if @dossier.individual.present?
     add_identite_individual(pdf, @dossier.individual)

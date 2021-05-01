@@ -8,6 +8,8 @@
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
 
+  before_action :prevent_delivery_to_deleted_users
+
   helper ServiceHelper
   helper MailerHelper
 
@@ -36,8 +38,12 @@ class NotificationMailer < ApplicationMailer
 
   private
 
+  def prevent_delivery_to_deleted_users
+    !@dossier.user_deleted?
+  end
+
   def send_notification(dossier, mail_template)
-    email = dossier.user.email
+    email = dossier.user_email_for(:notification)
 
     subject = mail_template.subject_for_dossier(dossier)
     body = mail_template.body_for_dossier(dossier)
