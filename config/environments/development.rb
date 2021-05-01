@@ -87,7 +87,21 @@ Rails.application.configure do
       authentication: :cram_md5
     }
   else
-    config.action_mailer.delivery_method = :letter_opener_web
+    # https://usehelo.com
+    if ENV['HELO_ENABLED'] == 'enabled'
+      config.action_mailer.delivery_method = :smtp
+      config.action_mailer.smtp_settings = {
+        user_name: APPLICATION_NAME,
+        password: '',
+        address: '127.0.0.1',
+        domain: '127.0.0.1',
+        port: ENV.fetch('HELO_PORT', '2525'),
+        authentication: :plain
+      }
+    else
+      config.action_mailer.delivery_method = :letter_opener_web
+    end
+
     config.action_mailer.default_url_options = {
       host: 'localhost',
       port: 3000
