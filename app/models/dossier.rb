@@ -8,6 +8,7 @@
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
 #  conservation_extension                             :interval         default(0 seconds)
+#  deleted_user_email_never_send                      :string
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime
 #  en_construction_conservation_extension             :interval         default(0 seconds)
@@ -137,9 +138,9 @@ class Dossier < ApplicationRecord
     end
 
     event :repasser_en_instruction, after: :after_repasser_en_instruction do
-      transitions from: :refuse, to: :en_instruction
-      transitions from: :sans_suite, to: :en_instruction
-      transitions from: :accepte, to: :en_instruction
+      transitions from: :refuse, to: :en_instruction, guard: :can_repasser_en_instruction?
+      transitions from: :sans_suite, to: :en_instruction, guard: :can_repasser_en_instruction?
+      transitions from: :accepte, to: :en_instruction, guard: :can_repasser_en_instruction?
     end
   end
 
@@ -249,6 +250,7 @@ class Dossier < ApplicationRecord
     states = opts[:notify_on_closed] ? [:publiee, :close, :depubliee] : [:publiee, :depubliee]
     joins(:procedure)
       .where(procedures: { aasm_state: states })
+      .where.not(user_id: nil)
   end
 
   scope :brouillon_close_to_expiration, -> do
@@ -350,6 +352,22 @@ class Dossier < ApplicationRecord
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
+  def user_deleted?
+    user_id.nil?
+  end
+
+  def user_email_for(use)
+    if user_deleted?
+      if use == :display
+        deleted_user_email_never_send
+      else
+        raise "Can not send email to discarded user"
+      end
+    else
+      user.email
+    end
+  end
+
   def motivation
     return nil if !termine?
     traitements.any? ? traitements.last.motivation : read_attribute(:motivation)
@@ -416,6 +434,10 @@ class Dossier < ApplicationRecord
     brouillon? && procedure.dossier_can_transition_to_en_construction?
   end
 
+  def can_repasser_en_instruction?
+    termine? && !user_deleted?
+  end
+
   def can_be_updated_by_user?
     brouillon? || en_construction?
   end
@@ -429,7 +451,7 @@ class Dossier < ApplicationRecord
   end
 
   def messagerie_available?
-    !brouillon? && !archived
+    !brouillon? && !user_deleted? && !archived
   end
 
   def en_construction_close_to_expiration?
@@ -590,13 +612,18 @@ class Dossier < ApplicationRecord
         administration_emails.each do |email|
           DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
         end
-        DossierMailer.notify_deletion_to_user(deleted_dossier, user.email).deliver_later
+
+        if !user_deleted?
+          DossierMailer.notify_deletion_to_user(deleted_dossier, user_email_for(:notification)).deliver_later
+        end
 
         log_dossier_operation(author, :supprimer, self)
       elsif termine?
         deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
 
-        DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user.email).deliver_later
+        if !user_deleted?
+          DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user_email_for(:notification)).deliver_later
+        end
 
         log_dossier_operation(author, :supprimer, self)
       end
@@ -751,7 +778,7 @@ class Dossier < ApplicationRecord
   def spreadsheet_columns(with_etablissement: false, types_de_champ:, types_de_champ_private:)
     columns = [
       ['ID', id.to_s],
-      ['Email', user.email]
+      ['Email', user_email_for(:display)]
     ]
 
     if procedure.for_individual?
