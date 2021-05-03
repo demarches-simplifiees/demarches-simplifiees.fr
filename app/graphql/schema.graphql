@@ -565,6 +565,7 @@ type Dossier {
   L’état du dossier.
   """
   state: DossierState!
+  traitements: [Traitement!]!
   usager: Profile!
 }
 
@@ -1661,6 +1662,30 @@ enum TitreIdentiteGrantType {
   Pièce justificative
   """
   piece_justificative
+}
+
+type Traitement {
+  id: ID!
+
+  """
+  L'instructeur ayant pris la décision.
+  """
+  instructeurEmail: String!
+
+  """
+  La motivation de la décision.
+  """
+  motivation: String!
+
+  """
+  La date de la décision
+  """
+  processedAt: ISO8601DateTime!
+
+  """
+  La décision sur le dossier.
+  """
+  state: DossierState!
 }
 
 enum TypeDeChamp {

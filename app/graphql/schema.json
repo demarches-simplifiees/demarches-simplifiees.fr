@@ -11,6 +11,341 @@
       "types": [
         {
           "kind": "OBJECT",
+          "name": "Address",
+          "description": null,
+          "fields": [
+            {
+              "name": "cityCode",
+              "description": "code INSEE de la commune",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "cityName",
+              "description": "nom de la commune",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "departmentCode",
+              "description": "n° de département",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "departmentName",
+              "description": "nom de département",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "geometry",
+              "description": "coordonnées géographique",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "GeoJSON",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "libellé complet de l’adresse",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "postalCode",
+              "description": "code postal",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "regionCode",
+              "description": "n° de region",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "regionName",
+              "description": "nom de région",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "streetAddress",
+              "description": "numéro éventuel et nom de voie ou lieu dit",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "streetName",
+              "description": "nom de voie ou lieu dit",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "streetNumber",
+              "description": "numéro avec indice de répétition éventuel (bis, ter, A, B)",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "type",
+              "description": "type de résultat trouvé",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "AddressType",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "AddressChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "address",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Address",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "ENUM",
+          "name": "AddressType",
+          "description": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "housenumber",
+              "description": "numéro « à la plaque »",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "street",
+              "description": "position « à la voie », placé approximativement au centre de celle-ci",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "municipality",
+              "description": "numéro « à la commune »",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "locality",
+              "description": "lieu-dit",
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "Association",
           "description": null,
           "fields": [
@@ -444,6 +779,11 @@
           "interfaces": null,
           "enumValues": null,
           "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "AddressChamp",
+              "ofType": null
+            },
             {
               "kind": "OBJECT",
               "name": "CarteChamp",
@@ -886,7 +1226,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "filename",
@@ -900,7 +1242,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "byteSize",
@@ -914,7 +1258,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "checksum",
@@ -928,7 +1274,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "contentType",
@@ -942,7 +1290,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "clientMutationId",
@@ -952,7 +1302,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -1484,7 +1836,9 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "before",
@@ -1494,7 +1848,9 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "first",
@@ -1504,7 +1860,9 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "last",
@@ -1514,7 +1872,9 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "order",
@@ -1524,7 +1884,9 @@
                     "name": "Order",
                     "ofType": null
                   },
-                  "defaultValue": "ASC"
+                  "defaultValue": "ASC",
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "createdSince",
@@ -1534,7 +1896,9 @@
                     "name": "ISO8601DateTime",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "updatedSince",
@@ -1544,7 +1908,9 @@
                     "name": "ISO8601DateTime",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "state",
@@ -1554,7 +1920,9 @@
                     "name": "DossierState",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "archived",
@@ -1564,7 +1932,9 @@
                     "name": "Boolean",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -2277,6 +2647,32 @@
               "deprecationReason": null
             },
             {
+              "name": "traitements",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "Traitement",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "usager",
               "description": null,
               "args": [
@@ -2320,7 +2716,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "instructeurId",
@@ -2334,7 +2732,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "motivation",
@@ -2344,7 +2744,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "justificatif",
@@ -2354,7 +2756,9 @@
                 "name": "ID",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "clientMutationId",
@@ -2364,7 +2768,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -2452,7 +2858,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "instructeurId",
@@ -2466,7 +2874,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "clientMutationId",
@@ -2476,7 +2886,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -2564,7 +2976,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "groupeInstructeurId",
@@ -2578,7 +2992,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "clientMutationId",
@@ -2588,7 +3004,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -2676,7 +3094,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "instructeurId",
@@ -2690,7 +3110,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "motivation",
@@ -2704,7 +3126,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "justificatif",
@@ -2714,7 +3138,9 @@
                 "name": "ID",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "clientMutationId",
@@ -2724,7 +3150,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -2947,7 +3375,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "instructeurId",
@@ -2961,7 +3391,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "body",
@@ -2975,7 +3407,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "attachment",
@@ -2985,7 +3419,9 @@
                 "name": "ID",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "clientMutationId",
@@ -2995,7 +3431,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -3148,6 +3586,756 @@
         },
         {
           "kind": "INPUT_OBJECT",
+          "name": "DossierModifierAnnotationCheckboxInput",
+          "description": "Autogenerated input type of DossierModifierAnnotationCheckbox",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "dossierId",
+              "description": "Dossier ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "instructeurId",
+              "description": "Instructeur qui demande la modification.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "annotationId",
+              "description": "Annotation ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "value",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DossierModifierAnnotationCheckboxPayload",
+          "description": "Autogenerated return type of DossierModifierAnnotationCheckbox",
+          "fields": [
+            {
+              "name": "annotation",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "INTERFACE",
+                "name": "Champ",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "errors",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ValidationError",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "DossierModifierAnnotationDateInput",
+          "description": "Autogenerated input type of DossierModifierAnnotationDate",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "dossierId",
+              "description": "Dossier ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "instructeurId",
+              "description": "Instructeur qui demande la modification.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "annotationId",
+              "description": "Annotation ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "value",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601Date",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DossierModifierAnnotationDatePayload",
+          "description": "Autogenerated return type of DossierModifierAnnotationDate",
+          "fields": [
+            {
+              "name": "annotation",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "INTERFACE",
+                "name": "Champ",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "errors",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ValidationError",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "DossierModifierAnnotationDatetimeInput",
+          "description": "Autogenerated input type of DossierModifierAnnotationDatetime",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "dossierId",
+              "description": "Dossier ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "instructeurId",
+              "description": "Instructeur qui demande la modification.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "annotationId",
+              "description": "Annotation ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "value",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DossierModifierAnnotationDatetimePayload",
+          "description": "Autogenerated return type of DossierModifierAnnotationDatetime",
+          "fields": [
+            {
+              "name": "annotation",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "INTERFACE",
+                "name": "Champ",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "errors",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ValidationError",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "DossierModifierAnnotationIntegerNumberInput",
+          "description": "Autogenerated input type of DossierModifierAnnotationIntegerNumber",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "dossierId",
+              "description": "Dossier ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "instructeurId",
+              "description": "Instructeur qui demande la modification.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "annotationId",
+              "description": "Annotation ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "value",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DossierModifierAnnotationIntegerNumberPayload",
+          "description": "Autogenerated return type of DossierModifierAnnotationIntegerNumber",
+          "fields": [
+            {
+              "name": "annotation",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "INTERFACE",
+                "name": "Champ",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "errors",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ValidationError",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "DossierModifierAnnotationTextInput",
+          "description": "Autogenerated input type of DossierModifierAnnotationText",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "dossierId",
+              "description": "Dossier ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "instructeurId",
+              "description": "Instructeur qui demande la modification.",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "annotationId",
+              "description": "Annotation ID",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "value",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "DossierModifierAnnotationTextPayload",
+          "description": "Autogenerated return type of DossierModifierAnnotationText",
+          "fields": [
+            {
+              "name": "annotation",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "INTERFACE",
+                "name": "Champ",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": "A unique identifier for the client performing the mutation.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "errors",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ValidationError",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
           "name": "DossierPasserEnInstructionInput",
           "description": "Autogenerated input type of DossierPasserEnInstruction",
           "fields": null,
@@ -3164,7 +4352,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "instructeurId",
@@ -3178,7 +4368,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "clientMutationId",
@@ -3188,7 +4380,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -3276,7 +4470,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "instructeurId",
@@ -3290,7 +4486,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "motivation",
@@ -3304,7 +4502,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "justificatif",
@@ -3314,7 +4514,9 @@
                 "name": "ID",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "clientMutationId",
@@ -3324,7 +4526,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -3602,13 +4806,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -3620,13 +4820,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -3656,13 +4852,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -3710,13 +4902,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -4154,7 +5342,9 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "before",
@@ -4164,7 +5354,9 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "first",
@@ -4174,7 +5366,9 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "last",
@@ -4184,7 +5378,9 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "order",
@@ -4194,7 +5390,9 @@
                     "name": "Order",
                     "ofType": null
                   },
-                  "defaultValue": "ASC"
+                  "defaultValue": "ASC",
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "createdSince",
@@ -4204,7 +5402,9 @@
                     "name": "ISO8601DateTime",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "updatedSince",
@@ -4214,7 +5414,9 @@
                     "name": "ISO8601DateTime",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 },
                 {
                   "name": "state",
@@ -4224,7 +5426,9 @@
                     "name": "DossierState",
                     "ofType": null
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -4746,7 +5950,7 @@
               "args": [
                 {
                   "name": "input",
-                  "description": null,
+                  "description": "Parameters for CreateDirectUpload",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -4756,7 +5960,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -4773,7 +5979,7 @@
               "args": [
                 {
                   "name": "input",
-                  "description": null,
+                  "description": "Parameters for DossierAccepter",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -4783,7 +5989,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -4800,7 +6008,7 @@
               "args": [
                 {
                   "name": "input",
-                  "description": null,
+                  "description": "Parameters for DossierArchiver",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -4810,7 +6018,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -4827,7 +6037,7 @@
               "args": [
                 {
                   "name": "input",
-                  "description": null,
+                  "description": "Parameters for DossierChangerGroupeInstructeur",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -4837,7 +6047,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -4854,7 +6066,7 @@
               "args": [
                 {
                   "name": "input",
-                  "description": null,
+                  "description": "Parameters for DossierClasserSansSuite",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -4864,7 +6076,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -4881,7 +6095,7 @@
               "args": [
                 {
                   "name": "input",
-                  "description": null,
+                  "description": "Parameters for DossierEnvoyerMessage",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -4891,7 +6105,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -4903,12 +6119,157 @@
               "deprecationReason": null
             },
             {
+              "name": "dossierModifierAnnotationCheckbox",
+              "description": "Modifier l’annotation au format oui/non.",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "Parameters for DossierModifierAnnotationCheckbox",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "DossierModifierAnnotationCheckboxInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "DossierModifierAnnotationCheckboxPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dossierModifierAnnotationDate",
+              "description": "Modifier l’annotation au format date.",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "Parameters for DossierModifierAnnotationDate",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "DossierModifierAnnotationDateInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "DossierModifierAnnotationDatePayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dossierModifierAnnotationDatetime",
+              "description": "Modifier l’annotation au format date et heure.",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "Parameters for DossierModifierAnnotationDatetime",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "DossierModifierAnnotationDatetimeInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "DossierModifierAnnotationDatetimePayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dossierModifierAnnotationIntegerNumber",
+              "description": "Modifier l’annotation au format nombre entier.",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "Parameters for DossierModifierAnnotationIntegerNumber",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "DossierModifierAnnotationIntegerNumberInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "DossierModifierAnnotationIntegerNumberPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "dossierModifierAnnotationText",
+              "description": "Modifier l’annotation au format text.",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "Parameters for DossierModifierAnnotationText",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "DossierModifierAnnotationTextInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "DossierModifierAnnotationTextPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "dossierPasserEnInstruction",
               "description": "Passer le dossier en instruction.",
               "args": [
                 {
                   "name": "input",
-                  "description": null,
+                  "description": "Parameters for DossierPasserEnInstruction",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -4918,7 +6279,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -4935,7 +6298,7 @@
               "args": [
                 {
                   "name": "input",
-                  "description": null,
+                  "description": "Parameters for DossierRefuser",
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
@@ -4945,7 +6308,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -5398,6 +6763,24 @@
           "description": null,
           "fields": [
             {
+              "name": "address",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Address",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "adresse",
               "description": null,
               "args": [
@@ -5412,8 +6795,8 @@
                   "ofType": null
                 }
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `address.label` à la place."
             },
             {
               "name": "association",
@@ -5444,8 +6827,8 @@
                   "ofType": null
                 }
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `address.city_code` à la place."
             },
             {
               "name": "codePostal",
@@ -5462,8 +6845,8 @@
                   "ofType": null
                 }
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `address.postal_code` à la place."
             },
             {
               "name": "complementAdresse",
@@ -5476,8 +6859,8 @@
                 "name": "String",
                 "ofType": null
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `address` à la place."
             },
             {
               "name": "entreprise",
@@ -5544,8 +6927,8 @@
                   "ofType": null
                 }
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `address.city_name` à la place."
             },
             {
               "name": "naf",
@@ -5576,8 +6959,8 @@
                 "name": "String",
                 "ofType": null
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `address.street_name` à la place."
             },
             {
               "name": "numeroVoie",
@@ -5590,8 +6973,8 @@
                 "name": "String",
                 "ofType": null
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `address.street_number` à la place."
             },
             {
               "name": "siegeSocial",
@@ -5640,8 +7023,8 @@
                 "name": "String",
                 "ofType": null
               },
-              "isDeprecated": false,
-              "deprecationReason": null
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `address.street_address` à la place."
             }
           ],
           "inputFields": null,
@@ -5905,7 +7288,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -5936,7 +7321,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -5967,7 +7354,9 @@
                       "ofType": null
                     }
                   },
-                  "defaultValue": null
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -6618,6 +8007,109 @@
               "deprecationReason": null
             }
           ],
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Traitement",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "instructeurEmail",
+              "description": "L'instructeur ayant pris la décision.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "motivation",
+              "description": "La motivation de la décision.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "processedAt",
+              "description": "La date de la décision",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "state",
+              "description": "La décision sur le dossier.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "DossierState",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
           "possibleTypes": null
         },
         {
@@ -7303,7 +8795,18 @@
               "name": "args",
               "description": null,
               "args": [
-
+                {
+                  "name": "includeDeprecated",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
               ],
               "type": {
                 "kind": "NON_NULL",
@@ -7435,6 +8938,20 @@
               "deprecationReason": null
             },
             {
+              "name": "deprecationReason",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "description",
               "description": null,
               "args": [
@@ -7444,6 +8961,24 @@
                 "kind": "SCALAR",
                 "name": "String",
                 "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isDeprecated",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -7634,7 +9169,9 @@
                     "name": "Boolean",
                     "ofType": null
                   },
-                  "defaultValue": "false"
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -7665,7 +9202,9 @@
                     "name": "Boolean",
                     "ofType": null
                   },
-                  "defaultValue": "false"
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -7688,7 +9227,18 @@
               "name": "inputFields",
               "description": null,
               "args": [
-
+                {
+                  "name": "includeDeprecated",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
               ],
               "type": {
                 "kind": "LIST",
@@ -7886,7 +9436,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ]
         },
@@ -7911,7 +9463,9 @@
                   "ofType": null
                 }
               },
-              "defaultValue": null
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ]
         },
@@ -7920,7 +9474,9 @@
           "description": "Marks an element of a GraphQL schema as no longer supported.",
           "locations": [
             "FIELD_DEFINITION",
-            "ENUM_VALUE"
+            "ENUM_VALUE",
+            "ARGUMENT_DEFINITION",
+            "INPUT_FIELD_DEFINITION"
           ],
           "args": [
             {
@@ -7931,7 +9487,9 @@
                 "name": "String",
                 "ofType": null
               },
-              "defaultValue": "\"No longer supported\""
+              "defaultValue": "\"No longer supported\"",
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ]
         }

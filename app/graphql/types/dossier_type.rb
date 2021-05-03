@@ -40,6 +40,7 @@ module Types
 
     field :champs, [Types::ChampType], null: false
     field :annotations, [Types::ChampType], null: false
+    field :traitements, [Types::TraitementType], null: false
 
     def state
       object.state
