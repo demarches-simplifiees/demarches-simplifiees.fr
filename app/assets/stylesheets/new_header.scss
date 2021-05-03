@@ -9,7 +9,7 @@ $header-mobile-breakpoint: 550px;
 
 // FIXME: Rename when the header is generalized
 .new-header {
-  background-color: $red;
+  background-color: $white;
 }
 
 .new-header-with-border {
@@ -68,10 +68,7 @@ $header-mobile-breakpoint: 550px;
     font-size: 18px;
     color: $nav-bar-fg;
 
-    &.active {
-      border-bottom: 2px solid $nav-bar-fg;
-    }
-
+    &.active,
     &:hover {
       color: $blue-france-500;
       border-bottom: 2px solid $blue-france-500;
@@ -252,9 +249,3 @@ $header-mobile-breakpoint: 550px;
     }
   }
 }
-
-.header-text {
-  color: $nav-bar-fg;
-  background: $nav-bar-bg;
-}
-
