@@ -512,17 +512,17 @@ describe Dossier do
     let(:instructeur) { create(:instructeur) }
 
     before do
-      allow(NotificationMailer).to receive(:send_dossier_received).and_return(double(deliver_later: nil))
+      allow(NotificationMailer).to receive(:send_en_instruction_notification).and_return(double(deliver_later: nil))
     end
 
     it "sends an email when the dossier becomes en_instruction" do
       dossier.passer_en_instruction!(instructeur)
-      expect(NotificationMailer).to have_received(:send_dossier_received).with(dossier)
+      expect(NotificationMailer).to have_received(:send_en_instruction_notification).with(dossier)
     end
 
     it "does not an email when the dossier becomes accepte" do
       dossier.accepte!
-      expect(NotificationMailer).to_not have_received(:send_dossier_received)
+      expect(NotificationMailer).to_not have_received(:send_en_instruction_notification)
     end
   end
 
@@ -935,7 +935,7 @@ describe Dossier do
     let(:attestation) { Attestation.new }
 
     before do
-      allow(NotificationMailer).to receive(:send_closed_notification).and_return(double(deliver_later: true))
+      allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
       Timecop.freeze(now)
@@ -957,7 +957,7 @@ describe Dossier do
     it { expect(operation_serialized['operation']).to eq('accepter') }
     it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
-    it { expect(NotificationMailer).to have_received(:send_closed_notification).with(dossier) }
+    it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
   end
 
@@ -968,7 +968,7 @@ describe Dossier do
     let(:attestation) { Attestation.new }
 
     before do
-      allow(NotificationMailer).to receive(:send_closed_notification).and_return(double(deliver_later: true))
+      allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
       Timecop.freeze(now)
@@ -984,7 +984,7 @@ describe Dossier do
     it { expect(dossier.state).to eq('accepte') }
     it { expect(last_operation.operation).to eq('accepter') }
     it { expect(last_operation.automatic_operation?).to be_truthy }
-    it { expect(NotificationMailer).to have_received(:send_closed_notification).with(dossier) }
+    it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
   end
 

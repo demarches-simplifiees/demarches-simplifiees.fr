@@ -8,54 +8,63 @@
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::SanitizeHelper
 
+  before_action :set_dossier
+  after_action :create_commentaire_for_notification
+
   helper ServiceHelper
   helper MailerHelper
 
   layout 'mailers/notifications_layout'
   default from: NO_REPLY_EMAIL
 
-  def send_dossier_received(dossier)
-    send_notification(dossier, dossier.procedure.received_mail_template)
+  def send_notification
+    @service = @dossier.procedure.service
+    @logo_url = attach_logo(@dossier.procedure)
+    @rendered_template = sanitize(@body)
+
+    mail(subject: @subject, to: @email, template_name: 'send_notification')
   end
 
-  def send_initiated_notification(dossier)
-    send_notification(dossier, dossier.procedure.initiated_mail_template)
+  def self.send_en_construction_notification(dossier)
+    with(dossier: dossier, state: Dossier.states.fetch(:en_construction)).send_notification
   end
 
-  def send_closed_notification(dossier)
-    send_notification(dossier, dossier.procedure.closed_mail_template)
+  def self.send_en_instruction_notification(dossier)
+    with(dossier: dossier, state: Dossier.states.fetch(:en_instruction)).send_notification
   end
 
-  def send_refused_notification(dossier)
-    send_notification(dossier, dossier.procedure.refused_mail_template)
+  def self.send_accepte_notification(dossier)
+    with(dossier: dossier, state: Dossier.states.fetch(:accepte)).send_notification
   end
 
-  def send_without_continuation_notification(dossier)
-    send_notification(dossier, dossier.procedure.without_continuation_mail_template)
+  def self.send_refuse_notification(dossier)
+    with(dossier: dossier, state: Dossier.states.fetch(:refuse)).send_notification
+  end
+
+  def self.send_sans_suite_notification(dossier)
+    with(dossier: dossier, state: Dossier.states.fetch(:sans_suite)).send_notification
   end
 
   private
 
-  def send_notification(dossier, mail_template)
-    email = dossier.user.email
+  def set_dossier
+    @dossier = params[:dossier]
 
-    subject = mail_template.subject_for_dossier(dossier)
-    body = mail_template.body_for_dossier(dossier)
+    if @dossier.user_deleted?
+      mail.perform_deliveries = false
+    else
+      mail_template = @dossier.procedure.mail_template_for(params[:state])
 
-    create_commentaire_for_notification(dossier, subject, body)
-
-    @dossier = dossier
-    @service = dossier.procedure.service
-    @logo_url = attach_logo(dossier.procedure)
-    @rendered_template = sanitize(body)
-    @actions = mail_template.actions_for_dossier(dossier)
-
-    mail(subject: subject, to: email, template_name: 'send_notification')
+      @email = @dossier.user_email_for(:notification)
+      @subject = mail_template.subject_for_dossier(@dossier)
+      @body = mail_template.body_for_dossier(@dossier)
+      @actions = mail_template.actions_for_dossier(@dossier)
+    end
   end
 
-  def create_commentaire_for_notification(dossier, subject, body)
-    params = { body: ["[#{subject}]", body].join("<br><br>") }
-    commentaire = CommentaireService.build_with_email(CONTACT_EMAIL, dossier, params)
+  def create_commentaire_for_notification
+    body = ["[#{@subject}]", @body].join("<br><br>")
+    commentaire = CommentaireService.build_with_email(CONTACT_EMAIL, @dossier, body: body)
     commentaire.save!
   end
 end
