@@ -7,7 +7,6 @@
 #  archived                                           :boolean          default(FALSE)
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
-#  conservation_extension                             :interval         default(0 seconds)
 #  deleted_user_email_never_send                      :string
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime
@@ -256,22 +255,21 @@ class Dossier < ApplicationRecord
   scope :brouillon_close_to_expiration, -> do
     state_brouillon
       .joins(:procedure)
-      .where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where("dossiers.created_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :en_construction_close_to_expiration, -> do
     state_en_construction
       .joins(:procedure)
-      .where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where("dossiers.en_construction_at + dossiers.en_construction_conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :en_instruction_close_to_expiration, -> do
     state_en_instruction
       .joins(:procedure)
       .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
-  scope :termine_close_to_expiration, -> do
-    state_termine
-      .joins(:procedure)
-      .where(id: Traitement.termine_close_to_expiration.pluck(:dossier_id).uniq)
+  def self.termine_close_to_expiration
+    dossier_ids = Traitement.termine_close_to_expiration.pluck(:dossier_id).uniq
+    Dossier.where(id: dossier_ids)
   end
 
   scope :brouillon_expired, -> do
@@ -455,15 +453,7 @@ class Dossier < ApplicationRecord
   end
 
   def en_construction_close_to_expiration?
-    self.class.en_construction_close_to_expiration.exists?(id: self)
-  end
-
-  def brouillon_close_to_expiration?
-    self.class.brouillon_close_to_expiration.exists?(id: self)
-  end
-
-  def close_to_expiration?
-    en_construction_close_to_expiration? || brouillon_close_to_expiration?
+    Dossier.en_construction_close_to_expiration.where(id: self).present?
   end
 
   def show_groupe_instructeur_details?
@@ -646,7 +636,6 @@ class Dossier < ApplicationRecord
   end
 
   def after_passer_en_construction
-    update!(conservation_extension: 0.days)
     update!(en_construction_at: Time.zone.now) if self.en_construction_at.nil?
   end
 
@@ -663,7 +652,6 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_construction(instructeur)
-    update!(conservation_extension: 0.days)
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
