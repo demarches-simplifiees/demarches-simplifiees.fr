@@ -873,9 +873,8 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def attachments_downloadable?
-    PiecesJustificativesService.liste_pieces_justificatives(self).present? \
-      && PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
+  def export_and_attachments_downloadable?
+    PiecesJustificativesService.pieces_justificatives_total_size(self) < Dossier::TAILLE_MAX_ZIP
   end
 
   def linked_dossiers_for(instructeur_or_expert)
