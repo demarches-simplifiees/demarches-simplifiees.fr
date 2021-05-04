@@ -274,7 +274,6 @@ ActiveRecord::Schema.define(version: 2021_04_28_114228) do
     t.datetime "last_avis_updated_at"
     t.datetime "last_commentaire_updated_at"
     t.string "api_entreprise_job_exceptions", array: true
-    t.interval "conservation_extension", default: "PT0S"
     t.string "deleted_user_email_never_send"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
