@@ -1,19 +1,21 @@
 RSpec.describe NotificationMailer, type: :mailer do
+  let(:administrateur) { create(:administrateur) }
   let(:user) { create(:user) }
   let(:procedure) { create(:simple_procedure) }
-  let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_service, user: user, procedure: procedure) }
 
-  describe '.send_dossier_received' do
+  describe 'send_en_instruction_notification' do
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_service, user: user, procedure: procedure) }
     let(:email_template) { create(:received_mail, subject: 'Email subject', body: 'Your dossier was processed. Thanks.') }
 
     before do
       dossier.procedure.received_mail = email_template
     end
 
-    subject(:mail) { described_class.send_dossier_received(dossier) }
+    subject(:mail) { described_class.send_en_instruction_notification(dossier) }
 
     it 'creates a commentaire in the messagerie' do
       expect { subject.deliver_now }.to change { Commentaire.count }.by(1)
+      expect(subject.perform_deliveries).to be_truthy
 
       commentaire = Commentaire.last
       expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
@@ -57,6 +59,29 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     it 'sends the mail from a no-reply address' do
       expect(subject.from.first).to eq(Mail::Address.new(NO_REPLY_EMAIL).address)
+    end
+  end
+
+  describe 'send_accepte_notification' do
+    let(:dossier) { create(:dossier, :en_instruction, :with_individual, :with_service, user: user, procedure: procedure) }
+    let(:email_template) { create(:closed_mail, subject: 'Email subject', body: 'Your dossier was accepted. Thanks.') }
+
+    before do
+      dossier.procedure.closed_mail = email_template
+    end
+
+    subject(:mail) { described_class.send_accepte_notification(dossier) }
+
+    context 'when dossier user is deleted' do
+      before do
+        dossier.user.delete_and_keep_track_dossiers(administrateur)
+        dossier.reload
+      end
+
+      it 'should not send notification' do
+        expect { subject.deliver_now }.not_to change { Commentaire.count }
+        expect(subject.perform_deliveries).to be_falsey
+      end
     end
   end
 end

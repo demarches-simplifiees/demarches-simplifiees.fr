@@ -27,7 +27,7 @@
               = link_to(dossier_linked_path(current_instructeur, dossier), class: 'cell-link') do
                 = dossier.id
             %td= link_to(dossier.procedure.libelle, dossier_linked_path(current_instructeur, dossier), class: 'cell-link')
-            %td= link_to(dossier.user.email, dossier_linked_path(current_instructeur, dossier), class: 'cell-link')
+            %td= link_to(dossier.user_email_for(:display), dossier_linked_path(current_instructeur, dossier), class: 'cell-link')
             %td.status-col
               = link_to(dossier_linked_path(current_instructeur, dossier), class: 'cell-link') do
                 = status_badge(dossier.state)
