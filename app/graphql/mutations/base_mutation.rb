@@ -5,6 +5,8 @@ module Mutations
     def validate_blob(blob_id)
       begin
         blob = ActiveStorage::Blob.find_signed(blob_id)
+        raise ActiveSupport::MessageVerifier::InvalidSignature if blob.nil?
+
         # open downloads the file and checks its hash
         blob.open { |f| }
         true
