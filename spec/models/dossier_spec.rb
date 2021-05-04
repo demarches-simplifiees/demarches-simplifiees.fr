@@ -1135,30 +1135,26 @@ describe Dossier do
     after { Timecop.return }
   end
 
-  describe '#attachments_downloadable?' do
+  describe '#export_and_attachments_downloadable?' do
     let(:dossier) { create(:dossier, user: user) }
-    # subject { dossier.attachments_downloadable? }
 
     context "no attachments" do
       it {
-        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([])
-        expect(dossier.attachments_downloadable?).to be false
+        expect(dossier.export_and_attachments_downloadable?).to be true
       }
     end
 
     context "with a small attachment" do
       it {
-        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([Champ.new])
         expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(4.megabytes)
-        expect(dossier.attachments_downloadable?).to be true
+        expect(dossier.export_and_attachments_downloadable?).to be true
       }
     end
 
     context "with a too large attachment" do
       it {
-        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([Champ.new])
         expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(100.megabytes)
-        expect(dossier.attachments_downloadable?).to be false
+        expect(dossier.export_and_attachments_downloadable?).to be false
       }
     end
   end
