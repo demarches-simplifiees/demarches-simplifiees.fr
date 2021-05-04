@@ -211,7 +211,7 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      return head(:forbidden) if !dossier.attachments_downloadable?
+      return head(:forbidden) if !dossier.export_and_attachments_downloadable?
 
       files = ActiveStorage::DownloadableFile.create_list_from_dossier(dossier)
 

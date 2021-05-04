@@ -170,18 +170,24 @@ class User < ApplicationRecord
   end
 
   def can_be_deleted?
-    !administrateur? && !instructeur? && !expert? && dossiers.with_discarded.state_instruction_commencee.empty?
+    !administrateur? && !instructeur? && !expert?
   end
 
   def delete_and_keep_track_dossiers(administration)
     if !can_be_deleted?
-      raise "Cannot delete this user because instruction has started for some dossiers"
+      raise "Cannot delete this user because they are also instructeur, expert or administrateur"
     end
 
-    dossiers.each do |dossier|
+    Invite.where(dossier: dossiers.with_discarded).destroy_all
+    dossiers.state_en_construction.each do |dossier|
       dossier.discard_and_keep_track!(administration, :user_removed)
     end
-    dossiers.with_discarded.destroy_all
+    DossierOperationLog
+      .where(dossier: dossiers.with_discarded.discarded)
+      .where.not(operation: DossierOperationLog.operations.fetch(:supprimer))
+      .destroy_all
+    dossiers.with_discarded.discarded.destroy_all
+    dossiers.update_all(deleted_user_email_never_send: email, user_id: nil)
     destroy!
   end
 

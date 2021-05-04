@@ -41,7 +41,7 @@ module Manager
 
     def export_mail_brouillons
       dossiers = procedure.dossiers.state_brouillon.includes(:user)
-      emails = dossiers.map { |d| d.user.email }.sort.uniq
+      emails = dossiers.map { |dossier| dossier.user_email_for(:display) }.sort.uniq
       date = Time.zone.now.strftime('%d-%m-%Y')
       send_data(emails.join("\n"), :filename => "brouillons-#{procedure.id}-au-#{date}.csv")
     end
