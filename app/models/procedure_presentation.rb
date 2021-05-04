@@ -121,6 +121,7 @@ class ProcedurePresentation < ApplicationRecord
         .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
         .order("instructeurs_users.email #{order}")
         .pluck(:id)
+        .uniq
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
       (table == 'self' ? dossiers : dossiers.includes(table))
         .order("#{self.class.sanitized_column(table, column)} #{order}")
