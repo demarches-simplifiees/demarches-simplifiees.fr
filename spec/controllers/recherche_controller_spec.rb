@@ -1,32 +1,47 @@
 describe RechercheController, type: :controller do
-  let(:dossier) { create(:dossier, :en_construction) }
+  let(:dossier) { create(:dossier, :en_construction, :with_all_annotations) }
   let(:dossier2) { create(:dossier, :en_construction, procedure: dossier.procedure) }
   let(:instructeur) { create(:instructeur) }
 
+  let(:dossier_with_expert) { avis.dossier }
+  let(:avis) { create(:avis, dossier: create(:dossier, :en_construction, :with_all_annotations)) }
+
+  let(:user) { instructeur.user }
+
   before do
-    #instructeur.groupe_instructeurs << dossier2.procedure.defaut_groupe_instructeur
-    instructeur.groupe_instructeurs << dossier.procedure.defaut_groupe_instructeur
+    instructeur.assign_to_procedure(dossier.procedure)
   end
 
   describe 'GET #index' do
-    before { sign_in(instructeur.user) }
-  
+    before { sign_in(user) }
+
     subject { get :index, params: { q: query } }
 
     describe 'by id' do
       context 'when instructeur own the dossier' do
-
-        before do
-          subject
-        end
-        
         let(:query) { dossier.id }
+
+        before { subject }
 
         it { is_expected.to have_http_status(200) }
 
         it 'returns the expected dossier' do
-          expect(assigns(:dossiers).count).to eq(1)
-          expect(assigns(:dossiers).first.id).to eq(dossier.id)
+          expect(assigns(:projected_dossiers).count).to eq(1)
+          expect(assigns(:projected_dossiers).first.dossier_id).to eq(dossier.id)
+        end
+      end
+
+      context 'when expert own the dossier' do
+        let(:user) { avis.experts_procedure.expert.user }
+        let(:query) { dossier_with_expert.id }
+
+        before { subject }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'returns the expected dossier' do
+          expect(assigns(:projected_dossiers).count).to eq(1)
+          expect(assigns(:projected_dossiers).first.dossier_id).to eq(dossier_with_expert.id)
         end
       end
 
@@ -38,7 +53,7 @@ describe RechercheController, type: :controller do
 
         it 'does not return the dossier' do
           subject
-          expect(assigns(:dossiers).count).to eq(0)
+          expect(assigns(:projected_dossiers).count).to eq(0)
         end
       end
 
@@ -49,7 +64,35 @@ describe RechercheController, type: :controller do
 
         it 'does not return the dossier' do
           subject
-          expect(assigns(:dossiers).count).to eq(0)
+          expect(assigns(:projected_dossiers).count).to eq(0)
+        end
+      end
+    end
+
+    describe 'by private annotations' do
+      context 'when instructeur search by private annotations' do
+        let(:query) { dossier.private_search_terms }
+
+        before { subject }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'returns the expected dossier' do
+          expect(assigns(:projected_dossiers).count).to eq(1)
+          expect(assigns(:projected_dossiers).first.dossier_id).to eq(dossier.id)
+        end
+      end
+
+      context 'when expert search by private annotations' do
+        let(:user) { avis.experts_procedure.expert.user }
+        let(:query) { dossier_with_expert.private_search_terms }
+
+        before { subject }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'returns 0 dossiers' do
+          expect(assigns(:projected_dossiers).count).to eq(0)
         end
       end
     end
@@ -61,7 +104,7 @@ describe RechercheController, type: :controller do
 
       it 'returns 0 dossier' do
         subject
-        expect(assigns(:dossiers).count).to eq(0)
+        expect(assigns(:projected_dossiers).count).to eq(0)
       end
     end
   end

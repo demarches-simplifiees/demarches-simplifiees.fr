@@ -1,9 +1,9 @@
 describe DossierSearchService do
-  describe '#matching_dossiers_for_current_user' do
+  describe '#matching_dossiers' do
     subject { liste_dossiers }
 
     let(:liste_dossiers) do
-      described_class.matching_dossiers_for_current_user(terms, instructeur_1.user)
+      described_class.matching_dossiers(instructeur_1.dossiers, terms)
     end
 
     let(:administrateur_1) { create(:administrateur) }
