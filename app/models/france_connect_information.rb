@@ -10,10 +10,10 @@
 #  family_name                   :string
 #  gender                        :string
 #  given_name                    :string
-#  created_at                    :datetime
-#  updated_at                    :datetime
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
 #  france_connect_particulier_id :string
-#  user_id                       :integer
+#  user_id                       :integer          not null
 #
 class FranceConnectInformation < ApplicationRecord
   belongs_to :user, optional: true
@@ -39,5 +39,6 @@ class FranceConnectInformation < ApplicationRecord
     end
 
     update_attribute('user_id', user.id)
+    touch # needed to update updated_at column
   end
 end
