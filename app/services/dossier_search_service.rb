@@ -31,13 +31,6 @@ class DossierSearchService
       .uniq
   end
 
-  def self.id_compatible?(number)
-    ActiveRecord::Type::Integer.new.serialize(number)
-    true
-  rescue ActiveModel::RangeError
-    false
-  end
-
   def self.dossier_by_full_text_for_user(search_terms, dossiers)
     ts_vector = "to_tsvector('french', search_terms)"
     ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
@@ -56,15 +49,11 @@ class DossierSearchService
     end
   end
 
-  def self.dossier_by_full_text_for_current_user(search_terms, user)
-    ts_vector = "to_tsvector('french', search_terms || private_search_terms)"
-    ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
-
-    user
-      .dossiers
-      .state_not_brouillon
-      .where("#{ts_vector} @@ #{ts_query}")
-      .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
+  def self.id_compatible?(number)
+    ActiveRecord::Type::Integer.new.serialize(number)
+    true
+  rescue ActiveModel::RangeError
+    false
   end
 
   def self.to_tsquery(search_terms)
