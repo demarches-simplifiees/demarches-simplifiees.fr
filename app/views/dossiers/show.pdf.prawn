@@ -7,7 +7,7 @@ def prawn_text(message)
 end
 
 def format_in_2_lines(pdf, label, text)
-  pdf.font 'marianne', style: :bold, size: 10 do
+  pdf.font 'Helvetica', style: :bold, size: 10 do
     pdf.text label
   end
   pdf.text prawn_text(text), size: 9, inline_format: true
@@ -38,7 +38,7 @@ end
 def add_title(pdf, title)
   title_style = { style: :bold, size: 16 }
   pdf.fill_color "E11619"
-  pdf.font 'marianne', title_style do
+  pdf.font 'Helvetica', title_style do
     pdf.text title
   end
   pdf.text "\n"
@@ -111,7 +111,7 @@ def render_single_champ(pdf, champ)
     end
     format_in_2_columns(pdf, champ.libelle, link)
   when 'Champs::HeaderSectionChamp'
-    pdf.font 'marianne', style: :bold, size: 14 do
+    pdf.font 'Helvetica', style: :bold, size: 14 do
       pdf.text champ.libelle
     end
     pdf.text "\n"
@@ -120,7 +120,7 @@ def render_single_champ(pdf, champ)
   when 'Champs::CarteChamp'
     format_in_2_columns(pdf, champ.libelle, champ.to_feature_collection.to_json)
   when 'Champs::SiretChamp'
-    pdf.font 'marianne', style: :bold, size: 9 do
+    pdf.font 'Helvetica', style: :bold, size: 9 do
       pdf.text champ.libelle
     end
     pdf.text " - Numéro TAHITI: #{champ.to_s}"
@@ -193,7 +193,13 @@ prawn_document(page_size: "A4") do |pdf|
     bold_italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
     italic: Rails.root.join('lib/prawn/fonts/marianne/marianne-bold.ttf'),
   })
-  pdf.font 'marianne'
+  # pdf.font_families.update('liberation' => {
+  #   normal: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Regular.ttf'),
+  #   bold: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Bold.ttf'),
+  #   bold_italic: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-BoldItalic.ttf'),
+  #   italic: Rails.root.join('lib/prawn/fonts/liberation_serif/LiberationSerif-Italic.ttf'),
+  # })
+  # pdf.font 'marianne'
 
   pdf.bounding_box([0, pdf.cursor], :width => 523, :height => 40) do
     pdf.fill_color "E11619"

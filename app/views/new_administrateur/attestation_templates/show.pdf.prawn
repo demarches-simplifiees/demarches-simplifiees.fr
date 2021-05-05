@@ -130,7 +130,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     bold_italic: Rails.root.join(base, 'LiberationSerif-BoldItalic.ttf'),
     italic: Rails.root.join(base, 'LiberationSerif-Italic.ttf')
   })
-  pdf.font 'liberation serif'
+  # pdf.font 'Helvetica'
 
   grey = '555555'
   black = '000000'
