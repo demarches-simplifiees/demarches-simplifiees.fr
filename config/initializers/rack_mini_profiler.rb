@@ -1,3 +1,3 @@
 if Rails.env.development?
-  Rack::MiniProfiler.config.authorization_mode = :whitelist
+  Rack::MiniProfiler.config.show_total_sql_count = true
 end
