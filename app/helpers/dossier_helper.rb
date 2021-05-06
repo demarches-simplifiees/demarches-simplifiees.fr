@@ -51,7 +51,7 @@ module DossierHelper
 
   def dossier_display_state(dossier_or_state, lower: false)
     state = dossier_or_state.is_a?(Dossier) ? dossier_or_state.state : dossier_or_state
-    display_state = I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])
+    display_state = Dossier.human_attribute_name("state.#{state}")
     lower ? display_state.downcase : display_state
   end
 
