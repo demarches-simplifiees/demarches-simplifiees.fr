@@ -146,5 +146,5 @@
 
 %p
   = link_to "➡ Autres informations sur l’organisme sur « annuaire-entreprises.data.gouv.fr » (ex: fiche d'immatriculation RNCS)",
-  "https://annuaire-entreprises.data.gouv.fr/entreprise/#{etablissement.siren}",
+  annuaire_link(etablissement.siren),
   target: "_blank"
