@@ -102,6 +102,8 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    administrate-field-enum (0.0.9)
+      administrate (~> 0.12)
     aes_key_wrap (1.1.0)
     after_party (1.11.2)
     anchored (1.1.0)
@@ -776,6 +778,7 @@ DEPENDENCIES
   active_storage_validations
   activestorage-openstack
   administrate!
+  administrate-field-enum
   after_party
   anchored
   annotate
