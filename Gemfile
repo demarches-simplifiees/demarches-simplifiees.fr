@@ -5,7 +5,7 @@ gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
 gem 'activestorage-openstack'
 gem 'active_storage_validations'
-gem 'administrate'
+gem 'administrate', git: 'https://github.com/thoughtbot/administrate.git', ref: 'refs/pull/1972/head' # Provides an administration UI (pull request #1972 has fixes for Rails 6.1.3.2)
 gem 'after_party'
 gem 'anchored'
 gem 'bcrypt'

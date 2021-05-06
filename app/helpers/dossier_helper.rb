@@ -101,4 +101,10 @@ module DossierHelper
       end
     end
   end
+
+  def annuaire_link(siren)
+    base_url = "https://annuaire-entreprises.data.gouv.fr"
+    return base_url if siren.blank?
+    "#{base_url}/entreprise/#{siren}"
+  end
 end
