@@ -3,17 +3,23 @@ namespace :after_party do
   task rename_conservation_extension: :environment do
     puts "Running deploy task 'rename_conservation_extension'"
 
-    BATCH_SIZE = 20000
+    BATCH_SIZE = 20_000
 
     dossiers = Dossier.state_en_construction.where.not(en_construction_conservation_extension: 0.days)
-    dossiers.in_batches do |relation|
+    progress = ProgressReport.new((dossiers.count.to_f / BATCH_SIZE).round)
+    dossiers.in_batches(of: BATCH_SIZE) do |relation|
       relation.update_all("dossiers.conservation_extension = dossiers.en_construction_conservation_extension")
+      progress.inc
     end
+    progress.finish
 
     dossiers_without_conservation_extension = Dossier.where(conservation_extension: nil)
-    dossiers_without_conservation_extension.in_batches do |relation|
+    progress = ProgressReport.new((dossiers_without_conservation_extension.count.to_f / BATCH_SIZE).round)
+    dossiers_without_conservation_extension.in_batches(of: BATCH_SIZE) do |relation|
       relation.update_all(conservation_extension: 0.days)
+      progress.inc
     end
+    progress.finish
 
     # Update task as completed.  If you remove the line below, the task will
     # run with every deploy (or every time you call after_party:run).
