@@ -6,8 +6,8 @@ namespace :after_party do
     BATCH_SIZE = 20000
 
     dossiers = Dossier.state_en_construction.where.not(en_construction_conservation_extension: 0.days)
-    dossiers.find_each do |dossier|
-      dossier.update_column(:conservation_extension, dossier.en_construction_conservation_extension)
+    dossiers.in_batches do |relation|
+      relation.update_all("dossiers.conservation_extension = dossiers.en_construction_conservation_extension")
     end
 
     dossiers_without_conservation_extension = Dossier.where(conservation_extension: nil)
