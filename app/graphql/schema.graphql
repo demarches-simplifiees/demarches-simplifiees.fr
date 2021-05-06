@@ -1088,7 +1088,7 @@ enum DossierState {
   refuse
 
   """
-  Sans suite
+  Classé sans suite
   """
   sans_suite
 }
