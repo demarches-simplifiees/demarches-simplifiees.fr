@@ -1,29 +1,27 @@
-import baseStyle, { rasterLayer, buildLayers } from './base';
-import orthoStyle from './ortho-style';
-import vectorStyle from './vector-style';
+import baseStyle, { buildOptionalLayers } from './base';
+import orthoStyle from './layers/ortho';
+import vectorStyle from './layers/vector';
+import ignLayers from './layers/ign';
 
-export function getMapStyle(style, optionalLayers) {
-  const mapStyle = { ...baseStyle };
+export function getMapStyle(id, optionalLayers) {
+  const style = { ...baseStyle, id };
 
-  switch (style) {
+  switch (id) {
     case 'ortho':
-      mapStyle.layers = orthoStyle;
-      mapStyle.id = 'ortho';
-      mapStyle.name = 'Photographies aériennes';
+      style.layers = orthoStyle;
+      style.name = 'Photographies aériennes';
       break;
     case 'vector':
-      mapStyle.layers = vectorStyle;
-      mapStyle.id = 'vector';
-      mapStyle.name = 'Carte OSM';
+      style.layers = vectorStyle;
+      style.name = 'Carte OSM';
       break;
     case 'ign':
-      mapStyle.layers = [rasterLayer('plan-ign')];
-      mapStyle.id = 'ign';
-      mapStyle.name = 'Carte IGN';
+      style.layers = ignLayers;
+      style.name = 'Carte IGN';
       break;
   }
 
-  mapStyle.layers = mapStyle.layers.concat(buildLayers(optionalLayers));
+  style.layers = style.layers.concat(buildOptionalLayers(optionalLayers));
 
-  return mapStyle;
+  return style;
 }
