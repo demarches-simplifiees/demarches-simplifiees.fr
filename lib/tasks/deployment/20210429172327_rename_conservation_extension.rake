@@ -10,10 +10,9 @@ namespace :after_party do
       dossier.update_column(:conservation_extension, dossier.en_construction_conservation_extension)
     end
 
-    dossiers = Dossier.where(conservation_extension: nil)
-    n = (dossiers.count / BATCH_SIZE).ceil + 1
-    n.times do
-      dossiers.limit(BATCH_SIZE).update_all(conservation_extension: 0.days)
+    dossiers_without_conservation_extension = Dossier.where(conservation_extension: nil)
+    dossiers_without_conservation_extension.in_batches do |relation|
+      relation.update_all(conservation_extension: 0.days)
     end
 
     # Update task as completed.  If you remove the line below, the task will
