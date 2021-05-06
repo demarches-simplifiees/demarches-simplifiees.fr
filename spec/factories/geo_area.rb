@@ -1,17 +1,11 @@
 FactoryBot.define do
   factory :geo_area do
     association :champ
+    properties { {} }
 
     trait :cadastre do
       source { GeoArea.sources.fetch(:cadastre) }
-      numero { '42' }
-      feuille { 'A11' }
-    end
-
-    trait :quartier_prioritaire do
-      source { GeoArea.sources.fetch(:quartier_prioritaire) }
-      nom { 'XYZ' }
-      commune { 'Paris' }
+      properties { { numero: '42', section: 'A11', commune: '75127' } }
     end
 
     trait :selection_utilisateur do
