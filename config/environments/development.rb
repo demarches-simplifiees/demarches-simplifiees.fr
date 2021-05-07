@@ -91,7 +91,7 @@ Rails.application.configure do
     if ENV['HELO_ENABLED'] == 'enabled'
       config.action_mailer.delivery_method = :smtp
       config.action_mailer.smtp_settings = {
-        user_name: APPLICATION_NAME,
+        user_name: 'demarches-simplifiees',
         password: '',
         address: '127.0.0.1',
         domain: '127.0.0.1',
