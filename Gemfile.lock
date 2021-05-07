@@ -6,22 +6,6 @@ GIT
       open4 (~> 1.3.4)
       rake
 
-GIT
-  remote: https://github.com/thoughtbot/administrate.git
-  revision: 27404f6bbbfa8ae7227ff205ac8cc4ad194194dd
-  ref: refs/pull/1972/head
-  specs:
-    administrate (0.15.0)
-      actionpack (>= 5.0)
-      actionview (>= 5.0)
-      activerecord (>= 5.0)
-      datetime_picker_rails (~> 0.0.7)
-      jquery-rails (>= 4.0)
-      kaminari (>= 1.0)
-      momentjs-rails (~> 2.8)
-      sassc-rails (~> 2.1)
-      selectize-rails (~> 0.6)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -102,6 +86,16 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    administrate (0.16.0)
+      actionpack (>= 5.0)
+      actionview (>= 5.0)
+      activerecord (>= 5.0)
+      datetime_picker_rails (~> 0.0.7)
+      jquery-rails (>= 4.0)
+      kaminari (>= 1.0)
+      momentjs-rails (~> 2.8)
+      sassc-rails (~> 2.1)
+      selectize-rails (~> 0.6)
     administrate-field-enum (0.0.9)
       administrate (~> 0.12)
     aes_key_wrap (1.1.0)
@@ -255,7 +249,7 @@ GEM
       multipart-post (>= 1.2, < 3)
       ruby2_keywords
     faraday-net_http (1.0.1)
-    ffi (1.14.2)
+    ffi (1.15.0)
     flipper (0.20.3)
     flipper-active_record (0.20.3)
       activerecord (>= 5.0, < 7)
@@ -777,7 +771,7 @@ DEPENDENCIES
   active_model_serializers
   active_storage_validations
   activestorage-openstack
-  administrate!
+  administrate
   administrate-field-enum
   after_party
   anchored
