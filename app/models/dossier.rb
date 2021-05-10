@@ -817,7 +817,7 @@ class Dossier < ApplicationRecord
 
     columns += [
       ['Archivé', :archived],
-      ['État du dossier', I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])],
+      ['État du dossier', Dossier.human_attribute_name("state.#{state}")],
       ['Dernière mise à jour le', :updated_at],
       ['Déposé le', :en_construction_at],
       ['Passé en instruction le', :en_instruction_at],
