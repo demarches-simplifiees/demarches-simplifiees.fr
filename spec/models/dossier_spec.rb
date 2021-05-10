@@ -1430,4 +1430,10 @@ describe Dossier do
       expect(dossier.destroy).to be_truthy
     end
   end
+
+  describe "#spreadsheet_columns" do
+    let(:dossier) { create(:dossier) }
+
+    it { expect(dossier.spreadsheet_columns(types_de_champ: [], types_de_champ_private: [])).to include(["État du dossier", "Brouillon"]) }
+  end
 end
