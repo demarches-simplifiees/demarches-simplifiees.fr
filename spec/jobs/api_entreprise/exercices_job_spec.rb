@@ -15,6 +15,7 @@ RSpec.describe APIEntreprise::ExercicesJob, type: :job do
 
   it 'updates etablissement' do
     subject
-    expect(Etablissement.find(etablissement.id).exercices[0].ca).to eq('21009417')
+    ca_list = Etablissement.find(etablissement.id).exercices.map(&:ca)
+    expect(ca_list).to contain_exactly('21009417', '18968298', '17768838')
   end
 end
