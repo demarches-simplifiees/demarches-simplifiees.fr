@@ -528,6 +528,10 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def unspecified_champs
+    (unspecified_attestation_champs + procedure.closed_mail_template.unspecified_champs_for_dossier(self)).uniq
+  end
+
   def build_attestation
     if procedure.attestation_template&.activated?
       procedure.attestation_template.attestation_for(self)

@@ -12,16 +12,16 @@
           = link_to 'une attestation', apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
           à l'usager.
 
-      - unspecified_attestation_champs = dossier.unspecified_attestation_champs
-      - if unspecified_attestation_champs.present?
+      - unspecified_champs = dossier.unspecified_champs
+      - if unspecified_champs.present?
         .warning
           Attention, les valeurs suivantes n'ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
-          - unspecified_annotations_privees, unspecified_champs = unspecified_attestation_champs.partition(&:private)
+          - unspecified_annotations_privees, unspecified_champs = unspecified_champs.partition(&:private)
 
           - if unspecified_champs.present?
             %h4 Champs de la demande
             %ul
-              - unspecified_attestation_champs.each do |unspecified_champ|
+              - unspecified_champs.each do |unspecified_champ|
                 %li= unspecified_champ.libelle
 
           - if unspecified_annotations_privees.present?

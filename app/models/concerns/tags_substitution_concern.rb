@@ -154,6 +154,13 @@ module TagsSubstitutionConcern
     filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
   end
 
+  def unspecified_champs_for_dossier(dossier)
+    tags = used_tags
+    (dossier.champs + dossier.champs_private).filter do |champ|
+      tags.include?(champ.libelle) && champ.value.blank? && champ.champs.empty? && !champ.piece_justificative_file.attached?
+    end
+  end
+
   private
 
   def format_date(date)
@@ -255,5 +262,16 @@ module TagsSubstitutionConcern
     end
 
     text.gsub(/--#{libelle}--/, value.to_s)
+  end
+
+  def used_tags
+    delimiters_regex = /--(?<capture>((?!--).)*)--/
+
+    # We can't use flat_map as scan will return 3 levels of array,
+    # using flat_map would give us 2, whereas flatten will
+    # give us 1, which is what we want
+    [subject, body]
+      .compact.map { |str| str.scan(delimiters_regex) }
+      .flatten.to_set
   end
 end
