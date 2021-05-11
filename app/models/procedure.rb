@@ -566,10 +566,14 @@ class Procedure < ApplicationRecord
   end
 
   def usual_traitement_time
+    compute_usual_traitement_time_for_month(Time.zone.now)
+  end
+
+  def compute_usual_traitement_time_for_month(month_date)
     times = Traitement.includes(:dossier)
       .where(dossier: self.dossiers)
       .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
-      .where(processed_at: 1.month.ago..Time.zone.now)
+      .where(processed_at: (month_date - 1.month)..month_date)
       .pluck('dossiers.en_construction_at', :processed_at)
       .map { |(en_construction_at, processed_at)| processed_at - en_construction_at }
 

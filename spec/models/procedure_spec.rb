@@ -983,10 +983,6 @@ describe Procedure do
   describe '#usual_traitement_time' do
     let(:procedure) { create(:procedure) }
 
-    def create_dossier(construction_date:, instruction_date:, processed_date:)
-      dossier = create(:dossier, :accepte, procedure: procedure, en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
-    end
-
     before do
       Timecop.freeze(Time.utc(2019, 6, 1, 12, 0))
 
@@ -1031,6 +1027,36 @@ describe Procedure do
     context 'where there is no processed dossier' do
       let(:delays) { [] }
       it { expect(procedure.usual_traitement_time).to be_nil }
+    end
+  end
+
+  describe '.compute_usual_traitement_time_for_month' do
+    let(:procedure) { create(:procedure) }
+
+    def create_dossiers(delays_by_month)
+      delays_by_month.each_with_index do |delays, index|
+        delays.each do |delay|
+          processed_date = (index.months + 1.week).ago
+          create_dossier(construction_date: processed_date - delay, instruction_date: processed_date - delay + 12.hours, processed_date: processed_date)
+        end
+      end
+    end
+
+    before do
+      Timecop.freeze(Time.utc(2019, 6, 1, 12, 0))
+
+      create_dossiers(delays_by_month)
+    end
+
+    after { Timecop.return }
+
+    context 'when there are several processed dossiers' do
+      let(:delays_by_month) { [[1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days], [1.month, 2.months, 2.months, 2.months]] }
+
+      it 'computes a time representative of the dossier instruction delay for a specific month' do
+        expect(procedure.compute_usual_traitement_time_for_month(Date.strptime("2019-05", "%Y-%m"))).to be_between(1.month, 2.months)
+        expect(procedure.compute_usual_traitement_time_for_month(Date.strptime("2019-06", "%Y-%m"))).to be_between(3.days, 4.days)
+      end
     end
   end
 
@@ -1082,12 +1108,16 @@ describe Procedure do
     it 'estimates average dossier weight' do
       expect(procedure.reload.average_dossier_weight).to eq 5
     end
+  end
 
-    private
+  private
 
-    def create_dossier_with_pj_of_size(size, procedure)
-      dossier = create(:dossier, :accepte, procedure: procedure)
-      create(:champ_piece_justificative, size: size, dossier: dossier)
-    end
+  def create_dossier_with_pj_of_size(size, procedure)
+    dossier = create(:dossier, :accepte, procedure: procedure)
+    create(:champ_piece_justificative, size: size, dossier: dossier)
+  end
+
+  def create_dossier(construction_date:, instruction_date:, processed_date:)
+    dossier = create(:dossier, :accepte, procedure: procedure, en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
   end
 end
