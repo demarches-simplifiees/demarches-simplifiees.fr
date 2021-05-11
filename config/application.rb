@@ -38,12 +38,7 @@ module TPS
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.precompile += ['.woff']
 
-    # The default list used to be accessible through `ActionView::Base.sanitized_allowed_tags`,
-    # but a regression in Rails 6.0 makes it unavailable.
-    # It should be fixed in Rails 6.1.
-    # See https://github.com/rails/rails/issues/39586
-    # default_allowed_tags = ActionView::Base.sanitized_allowed_tags
-    default_allowed_tags = ['strong', 'em', 'b', 'i', 'p', 'code', 'pre', 'tt', 'samp', 'kbd', 'var', 'sub', 'sup', 'dfn', 'cite', 'big', 'small', 'address', 'hr', 'br', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'abbr', 'acronym', 'a', 'img', 'blockquote', 'del', 'ins']
+    default_allowed_tags = ActionView::Base.sanitized_allowed_tags
     config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u']
 
     # Some mobile browsers have a behaviour where, although they will delete the session
