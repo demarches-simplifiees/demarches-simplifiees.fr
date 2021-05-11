@@ -5,9 +5,6 @@ class ApplicationController < ActionController::Base
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception, if: -> { !Rails.env.test? }
   before_action :set_current_roles
   before_action :set_sentry_user
   before_action :redirect_if_untrusted
