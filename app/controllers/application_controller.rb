@@ -18,11 +18,7 @@ class ApplicationController < ActionController::Base
   before_action :set_active_storage_host
   before_action :setup_javascript_settings
   before_action :setup_tracking
-<<<<<<< HEAD
   
-=======
- 
->>>>>>> 73ec2289fe189e94f595d2e88bdb01bbb009cc27
   around_action :switch_locale
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,
@@ -314,10 +310,13 @@ class ApplicationController < ActionController::Base
   end
 
   def switch_locale(&action)
-    locale = if feature_enabled?(:localization)
-      http_accept_language.compatible_language_from(I18n.available_locales)
+    locale = nil
+    if cookies[:locale]
+      locale = cookies[:locale]
+    elsif feature_enabled?(:localization)
+      locale = http_accept_language.compatible_language_from(I18n.available_locales)
     else
-      I18n.default_locale
+      locale = I18n.default_locale
     end
     I18n.with_locale(locale, &action)
   end

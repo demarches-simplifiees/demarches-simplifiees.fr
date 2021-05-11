@@ -92,11 +92,7 @@ class RootController < ApplicationController
   end
 
   def save_locale
-    puts "action change_locale"
-    # locale = params[:locale] || I18n.default_locale
+    cookies[:locale] = params[:locale]
+    redirect_to request.referer
   end
-<<<<<<< HEAD
 end
-=======
-end
->>>>>>> 73ec2289fe189e94f595d2e88bdb01bbb009cc27
