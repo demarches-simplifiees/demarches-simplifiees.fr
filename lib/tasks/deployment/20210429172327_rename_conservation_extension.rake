@@ -8,7 +8,7 @@ namespace :after_party do
     dossiers = Dossier.state_en_construction.where.not(en_construction_conservation_extension: 0.days)
     progress = ProgressReport.new((dossiers.count.to_f / BATCH_SIZE).round)
     dossiers.in_batches(of: BATCH_SIZE) do |relation|
-      relation.update_all("dossiers.conservation_extension = dossiers.en_construction_conservation_extension")
+      relation.update_all("conservation_extension = en_construction_conservation_extension")
       progress.inc
     end
     progress.finish
