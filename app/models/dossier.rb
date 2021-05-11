@@ -87,7 +87,7 @@ class Dossier < ApplicationRecord
 
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
-  belongs_to :user, optional: false
+  belongs_to :user, optional: true
 
   has_one :procedure, through: :revision
   has_many :types_de_champ, through: :revision
@@ -349,7 +349,7 @@ class Dossier < ApplicationRecord
   after_save :send_web_hook
   after_create_commit :send_draft_notification_email
 
-  validates :user, presence: true
+  validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
