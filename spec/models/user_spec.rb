@@ -332,7 +332,7 @@ describe User, type: :model do
       end
     end
 
-    context 'with dossiers with processing strted' do
+    context 'with dossiers with processing started' do
       let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
       let!(:dossier_termine) { create(:dossier, :accepte, user: user) }
 
@@ -347,6 +347,7 @@ describe User, type: :model do
         expect(dossier_termine.reload).to be_present
         expect(dossier_termine.user).to be_nil
         expect(dossier_termine.user_email_for(:display)).to eq(user.email)
+        expect(dossier_termine.valid?).to be_truthy
         expect { dossier_termine.user_email_for(:notification) }.to raise_error(RuntimeError)
 
         expect(User.find_by(id: user.id)).to be_nil
