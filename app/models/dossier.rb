@@ -7,6 +7,7 @@
 #  archived                                           :boolean          default(FALSE)
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
+#  conservation_extension                             :interval         default(0 seconds)
 #  deleted_user_email_never_send                      :string
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime
@@ -636,6 +637,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_passer_en_construction
+    update!(conservation_extension: 0.days)
     update!(en_construction_at: Time.zone.now) if self.en_construction_at.nil?
   end
 
@@ -652,6 +654,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_construction(instructeur)
+    update!(conservation_extension: 0.days)
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
