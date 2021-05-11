@@ -16,7 +16,7 @@ namespace :after_party do
     dossiers_without_conservation_extension = Dossier.where(conservation_extension: nil)
     progress = ProgressReport.new((dossiers_without_conservation_extension.count.to_f / BATCH_SIZE).round)
     dossiers_without_conservation_extension.in_batches(of: BATCH_SIZE) do |relation|
-      relation.update_all(conservation_extension: 0.days)
+      relation.update_all(conservation_extension: 'PT0S')
       progress.inc
     end
     progress.finish
