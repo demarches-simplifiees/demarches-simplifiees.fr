@@ -36,7 +36,7 @@
                 .cell-link= procedure_libelle
               %td
                 .cell-link= user_email
-              %td
+              %td.status-col
                 .cell-link= status_badge(p.state)
 
             - else
@@ -74,11 +74,19 @@
                           %span.icon.in-progress>
                           .dropdown-description
                             Donner mon avis
+
+            - elsif instructeur_dossier
+              %td.action-col.follow-col= render partial: "instructeurs/procedures/dossier_actions",
+                                                            locals: { procedure_id: procedure_id,
+                                                                      dossier_id: p.dossier_id,
+                                                                      state: p.state,
+                                                                      archived: p.archived,
+                                                                      dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id) }
+
             - else
               %td
 
           = pagination
-
 
   - else
     %h2 Aucun dossier correspondant à votre recherche n'a été trouvé
