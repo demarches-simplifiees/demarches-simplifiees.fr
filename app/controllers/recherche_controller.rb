@@ -9,27 +9,13 @@ class RechercheController < ApplicationController
 
   def index
     @search_terms = search_terms
-    matching_dossiers_ids = []
-    instructeur_dossiers_ids = []
-    expert_dossiers_ids = []
 
-    if instructeur_signed_in?
-      instructeur_dossiers_ids.concat(current_instructeur.dossiers.ids)
-      @followed_dossiers_id = current_instructeur.followed_dossiers.where(id: instructeur_dossiers_ids).ids
+    @instructeur_dossiers_ids = current_instructeur&.dossiers&.ids || []
+    matching_dossiers_ids = DossierSearchService.matching_dossiers(@instructeur_dossiers_ids, @search_terms, true)
 
-      if instructeur_dossiers_ids.present?
-        matching_dossiers_ids.concat(DossierSearchService.matching_dossiers(instructeur_dossiers_ids, @search_terms, true))
-      end
-    end
-
-    if expert_signed_in?
-      @dossier_avis_ids_h = current_expert.avis.pluck(:dossier_id, :id).to_h
-      expert_dossiers_ids.concat(@dossier_avis_ids_h.keys)
-
-      if expert_dossiers_ids.present?
-        matching_dossiers_ids.concat(DossierSearchService.matching_dossiers(expert_dossiers_ids, @search_terms))
-      end
-    end
+    @dossier_avis_ids_h = current_expert&.avis&.pluck(:dossier_id, :id).to_h || {}
+    expert_dossiers_ids = @dossier_avis_ids_h.keys
+    matching_dossiers_ids.concat(DossierSearchService.matching_dossiers(expert_dossiers_ids, @search_terms))
 
     @paginated_ids = Kaminari
       .paginate_array(matching_dossiers_ids.uniq)
