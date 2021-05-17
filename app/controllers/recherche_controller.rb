@@ -11,16 +11,18 @@ class RechercheController < ApplicationController
     @search_terms = search_terms
 
     @instructeur_dossiers_ids = current_instructeur&.dossiers&.ids || []
-    matching_dossiers_ids = DossierSearchService.matching_dossiers(@instructeur_dossiers_ids, @search_terms, true)
+    matching_dossiers_ids = DossierSearchService
+      .matching_dossiers(@instructeur_dossiers_ids, @search_terms, with_annotation: true)
+      .to_set
 
     @dossier_avis_ids_h = current_expert&.avis&.pluck(:dossier_id, :id).to_h || {}
     expert_dossiers_ids = @dossier_avis_ids_h.keys
-    matching_dossiers_ids.concat(DossierSearchService.matching_dossiers(expert_dossiers_ids, @search_terms))
+    matching_dossiers_ids.merge(DossierSearchService.matching_dossiers(expert_dossiers_ids, @search_terms))
 
     @dossiers_count = matching_dossiers_ids.count
 
     @paginated_ids = Kaminari
-      .paginate_array(matching_dossiers_ids.uniq)
+      .paginate_array(matching_dossiers_ids.to_a)
       .page(page)
       .per(ITEMS_PER_PAGE)
 
