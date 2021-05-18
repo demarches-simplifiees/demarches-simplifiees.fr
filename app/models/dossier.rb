@@ -63,7 +63,6 @@ class Dossier < ApplicationRecord
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
   has_one :attestation, dependent: :destroy
-  has_one :france_connect_information, through: :user
 
   # FIXME: some dossiers have more than one attestation
   has_many :attestations, dependent: :destroy
@@ -88,6 +87,7 @@ class Dossier < ApplicationRecord
   belongs_to :groupe_instructeur, optional: true
   belongs_to :revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :user, optional: true
+  has_one :france_connect_information, through: :user
 
   has_one :procedure, through: :revision
   has_many :types_de_champ, through: :revision
@@ -340,7 +340,7 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
-  delegate :france_connect_information, to: :user
+  delegate :france_connect_information, to: :user, allow_nil: true
 
   before_save :build_default_champs, if: Proc.new { revision_id_was.nil? }
   before_save :update_search_terms
