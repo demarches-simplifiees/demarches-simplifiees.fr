@@ -74,6 +74,12 @@ class DossierProjectionService
           .where(id: dossiers_ids)
           .pluck('dossiers.id, groupe_instructeurs.label')
           .to_h
+      when 'procedure'
+        Dossier
+          .joins(:procedure)
+          .where(id: dossiers_ids)
+          .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
+          .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
       when 'followers_instructeurs'
         fields[0][:id_value_h] = Follow
           .active
