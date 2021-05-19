@@ -33,7 +33,7 @@ class DossierProjectionService
             types_de_champ: { stable_id: fields.map { |f| f[COLUMN] } },
             dossier_id: dossiers_ids
           )
-          .select(:dossier_id, :value, :type_de_champ_id, :stable_id) # we cannot pluck :value, as we need the champ.to_s method
+          .select(:dossier_id, :value, :type_de_champ_id, :stable_id, :type) # we cannot pluck :value, as we need the champ.to_s method
           .group_by(&:stable_id) # the champs are redispatched to their respective fields
           .map do |stable_id, champs|
             field = fields.find { |f| f[COLUMN] == stable_id.to_s }
@@ -74,6 +74,12 @@ class DossierProjectionService
           .where(id: dossiers_ids)
           .pluck('dossiers.id, groupe_instructeurs.label')
           .to_h
+      when 'procedure'
+        Dossier
+          .joins(:procedure)
+          .where(id: dossiers_ids)
+          .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
+          .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
       when 'followers_instructeurs'
         fields[0][:id_value_h] = Follow
           .active
