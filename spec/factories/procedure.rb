@@ -193,6 +193,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_address do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_address, procedure: procedure)
+      end
+    end
+
     trait :with_explication do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_explication, procedure: procedure)
