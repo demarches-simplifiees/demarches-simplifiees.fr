@@ -535,14 +535,10 @@ class Dossier < ApplicationRecord
   end
 
   def avis_for_expert(expert)
-    if expert.dossiers.include?(self)
-      avis.order(created_at: :asc)
-    else
-      avis
-        .where(confidentiel: false)
-        .or(avis.where(claimant: expert))
-        .order(created_at: :asc)
-    end
+    Avis
+      .where(dossier_id: id, confidentiel: false)
+      .or(Avis.where(id: expert.avis))
+      .order(created_at: :asc)
   end
 
   def owner_name
