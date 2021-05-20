@@ -537,7 +537,7 @@ class Dossier < ApplicationRecord
   def avis_for_expert(expert)
     Avis
       .where(dossier_id: id, confidentiel: false)
-      .or(Avis.where(id: expert.avis))
+      .or(Avis.where(id: expert.avis, dossier_id: id))
       .order(created_at: :asc)
   end
 
