@@ -100,6 +100,17 @@ function ComboMultipleDropdownList({
     }
   };
 
+  const onBlur = (event) => {
+    if (
+      acceptNewValues &&
+      term &&
+      [...extraOptions, ...options].map(([label]) => label).includes(term)
+    ) {
+      event.preventDefault();
+      return onSelect(term);
+    }
+  };
+
   const saveSelection = (fn) => {
     setSelections((selections) => {
       selections = fn(selections);
@@ -162,6 +173,7 @@ function ComboMultipleDropdownList({
           value={term}
           onChange={handleChange}
           onKeyDown={onKeyDown}
+          onBlur={onBlur}
           autocomplete={false}
         />
       </ComboboxTokenLabel>
