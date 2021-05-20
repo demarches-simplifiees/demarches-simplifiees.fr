@@ -19,6 +19,7 @@ import '@reach/combobox/styles.css';
 import { matchSorter } from 'match-sorter';
 import { fire } from '@utils';
 import { XIcon } from '@heroicons/react/outline';
+import isHotkey from 'is-hotkey';
 
 const Context = createContext();
 
@@ -83,7 +84,12 @@ function ComboMultipleDropdownList({
   };
 
   const onKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (
+      isHotkey('enter', event) ||
+      isHotkey(' ', event) ||
+      isHotkey(',', event) ||
+      isHotkey(';', event)
+    ) {
       if (
         term &&
         [...extraOptions, ...options].map(([label]) => label).includes(term)
