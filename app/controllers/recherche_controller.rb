@@ -10,24 +10,25 @@ class RechercheController < ApplicationController
   def index
     @search_terms = search_terms
 
-    @instructeur_dossiers_ids = DossierSearchService
-      .matching_dossiers(current_instructeur&.dossiers, @search_terms, with_annotation: true)
+    @instructeur_dossiers_ids = current_instructeur&.dossiers&.ids || []
+    matching_dossiers_ids = DossierSearchService
+      .matching_dossiers(@instructeur_dossiers_ids, @search_terms, with_annotation: true)
+      .to_set
 
-    expert_dossier_ids = DossierSearchService
-      .matching_dossiers(current_expert&.dossiers, @search_terms)
+    @dossier_avis_ids_h = current_expert&.avis&.pluck(:dossier_id, :id).to_h || {}
+    expert_dossiers_ids = @dossier_avis_ids_h.keys
+    matching_dossiers_ids.merge(DossierSearchService.matching_dossiers(expert_dossiers_ids, @search_terms))
 
-    matching_dossiers_ids = (@instructeur_dossiers_ids + expert_dossier_ids).uniq
+    @dossiers_count = matching_dossiers_ids.count
 
     @paginated_ids = Kaminari
-      .paginate_array(matching_dossiers_ids)
+      .paginate_array(matching_dossiers_ids.to_a)
       .page(page)
       .per(ITEMS_PER_PAGE)
 
     @projected_dossiers = DossierProjectionService.project(@paginated_ids, PROJECTIONS)
 
-    @dossiers_count = matching_dossiers_ids.count
     @followed_dossiers_id = current_instructeur&.followed_dossiers&.where(id: @paginated_ids)&.ids || []
-    @dossier_avis_ids_h = current_expert&.avis&.where(dossier_id: @paginated_ids)&.pluck(:dossier_id, :id).to_h || {}
   end
 
   private

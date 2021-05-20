@@ -19,7 +19,6 @@ import '../new_design/procedure-context';
 import '../new_design/procedure-form';
 import '../new_design/spinner';
 import '../new_design/support';
-import '../new_design/messagerie';
 import '../new_design/dossiers/auto-save';
 import '../new_design/dossiers/auto-upload';
 

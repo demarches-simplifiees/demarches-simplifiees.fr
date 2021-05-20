@@ -337,22 +337,20 @@ describe Dossier do
       it { expect(dossier.avis_for_expert(expert_2)).not_to match([avis]) }
     end
 
-    context 'when there is a public advice asked from one instructeur to an expert' do
-      let!(:avis_1) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false) }
-      let!(:avis_2) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
+    context 'when there is a public advice asked from one expert to another' do
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_1, avis_2]) }
-      it { expect(dossier.avis_for_expert(expert_1)).to match([avis_1, avis_2]) }
-      it { expect(dossier.avis_for_expert(expert_2)).to match([avis_1, avis_2]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_2)).to match([avis]) }
     end
 
-    context 'when there is a private advice asked from one instructeur to an expert' do
-      let!(:avis_1) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
-      let!(:avis_2) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: true) }
+    context 'when there is a private advice asked from one expert to another' do
+      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: true) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_1, avis_2]) }
-      it { expect(dossier.avis_for_expert(expert_1)).to match([avis_1]) }
-      it { expect(dossier.avis_for_expert(expert_2)).to match([avis_2]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_1)).not_to match([avis]) }
+      it { expect(dossier.avis_for_expert(expert_2)).to match([avis]) }
     end
 
     context 'when they are a lot of advice' do
