@@ -165,7 +165,7 @@ function ComboMultipleDropdownList({
           autocomplete={false}
         />
       </ComboboxTokenLabel>
-      {results && (
+      {results && (results.length > 0 || !acceptNewValues) && (
         <ComboboxPopover className="shadow-popup">
           {results.length === 0 && (
             <p>
