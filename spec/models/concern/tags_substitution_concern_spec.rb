@@ -401,18 +401,18 @@ describe TagsSubstitutionConcern, type: :model do
         procedure.update!(draft_revision: procedure.create_new_revision, published_revision: procedure.draft_revision)
       end
 
-      context "replace by old label" do
+      context "when using the champ's original label" do
         let(:template) { '--mon tag--' }
 
-        it "should replace tag" do
+        it "replaces the tag" do
           is_expected.to eq('valeur')
         end
       end
 
-      context "replace by new label" do
+      context "when using the champ's revised label" do
         let(:template) { '--ton tag--' }
 
-        it "should replace tag" do
+        it "replaces the tag" do
           is_expected.to eq('valeur')
         end
       end
