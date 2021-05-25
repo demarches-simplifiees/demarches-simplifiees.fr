@@ -1,4 +1,4 @@
-import cadastreLayers from './cadastre-layers';
+import cadastreLayers from './layers/cadastre';
 
 const IGN_TOKEN = 'rc1egnbeoss72hxvd143tbyk';
 
@@ -138,7 +138,16 @@ function rasterSource(tiles, attribution) {
   };
 }
 
-export function buildLayers(ids) {
+function rasterLayer(source) {
+  return {
+    id: source,
+    source,
+    type: 'raster',
+    paint: { 'raster-resampling': 'linear' }
+  };
+}
+
+export function buildOptionalLayers(ids) {
   return OPTIONAL_LAYERS.filter(({ id }) => ids.includes(id))
     .flatMap(({ layers }) => layers)
     .flatMap(([, code]) =>
@@ -146,15 +155,6 @@ export function buildLayers(ids) {
         ? cadastreLayers
         : [rasterLayer(code.toLowerCase().replace(/\./g, '-'))]
     );
-}
-
-export function rasterLayer(source) {
-  return {
-    id: source,
-    source,
-    type: 'raster',
-    paint: { 'raster-resampling': 'linear' }
-  };
 }
 
 export default {

@@ -36,7 +36,7 @@ module ChampHelper
     case geo_area.source
     when GeoArea.sources.fetch(:cadastre)
       capture do
-        concat "Parcelle n° #{geo_area.numero} - Feuille #{geo_area.code_arr} #{geo_area.section} #{geo_area.feuille} - #{geo_area.surface_parcelle.round} m"
+        concat "Parcelle n° #{geo_area.numero} - Feuille #{geo_area.prefixe} #{geo_area.section} - #{geo_area.surface.round} m"
         concat tag.sup("2")
       end
     when GeoArea.sources.fetch(:selection_utilisateur)

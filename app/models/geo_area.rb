@@ -14,25 +14,33 @@
 class GeoArea < ApplicationRecord
   belongs_to :champ, optional: false
 
-  store :properties, accessors: [
-    :description,
-    :surface_intersection,
-    :surface_parcelle,
-    :numero,
-    :feuille,
-    :section,
-    :code_dep,
-    :nom_com,
-    :code_com,
-    :code_arr,
-    :code,
-    :nom,
-    :commune,
-    :culture,
-    :code_culture,
-    :surface,
-    :bio
-  ]
+  # FIXME: once geo_areas are migrated to not use YAML serialization we can enable store_accessor
+  # store_accessor :properties, :description, :numero, :section
+
+  def properties
+    value = read_attribute(:properties)
+    if value.is_a? String
+      ActiveRecord::Coders::YAMLColumn.new(:properties).load(value)
+    else
+      value
+    end
+  end
+
+  def description
+    properties['description']
+  end
+
+  def numero
+    properties['numero']
+  end
+
+  def section
+    properties['section']
+  end
+
+  def filename
+    properties['filename']
+  end
 
   enum source: {
     cadastre: 'cadastre',
@@ -48,10 +56,12 @@ class GeoArea < ApplicationRecord
     {
       type: 'Feature',
       geometry: safe_geometry,
-      properties: properties.symbolize_keys.merge(
+      properties: cadastre_properties.merge(
         source: source,
         area: area,
         length: length,
+        description: description,
+        filename: filename,
         id: id,
         champ_id: champ.stable_id,
         dossier_id: champ.dossier_id
@@ -67,16 +77,6 @@ class GeoArea < ApplicationRecord
     RGeo::GeoJSON.decode(geometry.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
   rescue RGeo::Error::InvalidGeometry
     nil
-  end
-
-  def self.from_feature_collection(feature_collection)
-    feature_collection[:features].map do |feature|
-      GeoArea.new(
-        source: feature[:properties].delete(:source),
-        properties: feature[:properties],
-        geometry: feature[:geometry]
-      )
-    end
   end
 
   def area
@@ -107,5 +107,108 @@ class GeoArea < ApplicationRecord
 
   def point?
     geometry['type'] == 'Point'
+  end
+
+  def legacy_cadastre?
+    cadastre? && properties['surface_intersection'].present?
+  end
+
+  def cadastre?
+    source == GeoArea.sources.fetch(:cadastre)
+  end
+
+  def cadastre_properties
+    if cadastre?
+      {
+        cid: cid,
+        numero: numero,
+        section: section,
+        prefixe: prefixe,
+        commune: commune,
+        surface: surface
+      }
+    else
+      {}
+    end
+  end
+
+  def code_dep
+    if legacy_cadastre?
+      properties['code_dep']
+    else
+      properties['commune'][0..1]
+    end
+  end
+
+  def code_com
+    if legacy_cadastre?
+      properties['code_com']
+    else
+      properties['commune'][2...commune.size]
+    end
+  end
+
+  def nom_com
+    if legacy_cadastre?
+      properties['nom_com']
+    else
+      ''
+    end
+  end
+
+  def surface_intersection
+    if legacy_cadastre?
+      properties['surface_intersection']
+    else
+      ''
+    end
+  end
+
+  def feuille
+    if legacy_cadastre?
+      properties['feuille']
+    else
+      1
+    end
+  end
+
+  def code_arr
+    prefixe
+  end
+
+  def surface_parcelle
+    surface
+  end
+
+  def surface
+    if legacy_cadastre?
+      properties['surface_parcelle']
+    else
+      properties['contenance']
+    end
+  end
+
+  def prefixe
+    if legacy_cadastre?
+      properties['code_arr']
+    else
+      properties['prefixe']
+    end
+  end
+
+  def commune
+    if legacy_cadastre?
+      "#{properties['code_dep']}#{properties['code_com']}"
+    else
+      properties['commune']
+    end
+  end
+
+  def cid
+    if legacy_cadastre?
+      "#{code_dep}#{code_com}#{code_arr}#{section}#{numero}"
+    else
+      properties['id']
+    end
   end
 end
