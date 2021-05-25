@@ -1,7 +1,11 @@
 class DossierSearchService
-  def self.matching_dossiers_for_instructeur(search_terms, instructeur)
-    dossier_by_exact_id_for_instructeur(search_terms, instructeur)
-      .presence || dossier_by_full_text_for_instructeur(search_terms, instructeur)
+  def self.matching_dossiers(dossiers, search_terms, with_annotations = false)
+    if dossiers.nil?
+      []
+    else
+      dossier_by_exact_id(dossiers, search_terms)
+        .presence || dossier_by_full_text(dossiers, search_terms, with_annotations)
+    end
   end
 
   def self.matching_dossiers_for_user(search_terms, user)
@@ -11,24 +15,24 @@ class DossierSearchService
 
   private
 
-  def self.dossier_by_exact_id_for_instructeur(search_terms, instructeur)
+  def self.dossier_by_exact_id(dossiers, search_terms)
     id = search_terms.to_i
     if id != 0 && id_compatible?(id) # Sometimes instructeur is searching dossiers with a big number (ex: SIRET), ActiveRecord can't deal with them and throws ActiveModel::RangeError. id_compatible? prevents this.
-      dossiers_by_id(id, instructeur)
+      dossiers.where(id: id).ids
     else
-      Dossier.none
+      []
     end
   end
 
-  def self.dossiers_by_id(id, instructeur)
-    instructeur.dossiers.where(id: id).uniq
-  end
+  def self.dossier_by_full_text(dossiers, search_terms, with_annotations)
+    ts_vector = "to_tsvector('french', #{with_annotations ? 'dossiers.search_terms || dossiers.private_search_terms' : 'dossiers.search_terms'})"
+    ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
 
-  def self.id_compatible?(number)
-    ActiveRecord::Type::Integer.new.serialize(number)
-    true
-  rescue ActiveModel::RangeError
-    false
+    dossiers
+      .where("#{ts_vector} @@ #{ts_query}")
+      .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
+      .pluck('id')
+      .uniq
   end
 
   def self.dossier_by_full_text_for_user(search_terms, dossiers)
@@ -49,15 +53,11 @@ class DossierSearchService
     end
   end
 
-  def self.dossier_by_full_text_for_instructeur(search_terms, instructeur)
-    ts_vector = "to_tsvector('french', search_terms || private_search_terms)"
-    ts_query = "to_tsquery('french', #{Dossier.connection.quote(to_tsquery(search_terms))})"
-
-    instructeur
-      .dossiers
-      .state_not_brouillon
-      .where("#{ts_vector} @@ #{ts_query}")
-      .order(Arel.sql("COALESCE(ts_rank(#{ts_vector}, #{ts_query}), 0) DESC"))
+  def self.id_compatible?(number)
+    ActiveRecord::Type::Integer.new.serialize(number)
+    true
+  rescue ActiveModel::RangeError
+    false
   end
 
   def self.to_tsquery(search_terms)

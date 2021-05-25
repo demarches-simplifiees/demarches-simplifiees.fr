@@ -147,6 +147,7 @@ Rails.application.routes.draw do
   end
 
   resources :attachments, only: [:show, :destroy]
+  resources :recherche, only: [:index]
 
   get "patron" => "root#patron"
   get "suivi" => "root#suivi"
@@ -295,7 +296,6 @@ Rails.application.routes.draw do
   #
   scope module: 'experts', as: 'expert' do
     get 'avis', to: 'avis#index', as: 'all_avis'
-
     # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
     # TODO : they will be removed in September, 2020
     get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
@@ -388,7 +388,6 @@ Rails.application.routes.draw do
         resources :archives, only: [:index, :create, :show], controller: 'archives'
       end
     end
-    get "recherche" => "recherche#index"
   end
 
   #

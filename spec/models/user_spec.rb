@@ -348,6 +348,7 @@ describe User, type: :model do
         expect(dossier_termine.user).to be_nil
         expect(dossier_termine.user_email_for(:display)).to eq(user.email)
         expect(dossier_termine.valid?).to be_truthy
+        expect(dossier_termine.france_connect_information).to be_nil
         expect { dossier_termine.user_email_for(:notification) }.to raise_error(RuntimeError)
 
         expect(User.find_by(id: user.id)).to be_nil

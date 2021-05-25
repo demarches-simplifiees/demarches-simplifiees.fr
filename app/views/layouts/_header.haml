@@ -50,9 +50,15 @@
             = active_link_to "Dossiers", dossiers_path, active: :inclusive, class: 'tab-link'
 
     %ul.header-right-content
+      - if params[:controller] == 'recherche'
+        = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
+
       - if nav_bar_profile == :instructeur && instructeur_signed_in?
         %li
-          = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: instructeur_recherche_path }
+          = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
+
+      - if nav_bar_profile == :expert && expert_signed_in?
+        = render partial: 'layouts/search_dossiers_form', locals: { search_endpoint: recherche_index_path }
 
       - if nav_bar_profile == :user && user_signed_in? && current_user.dossiers.count > 2
         %li

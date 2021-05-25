@@ -1467,18 +1467,21 @@ type PageInfo {
 }
 
 type ParcelleCadastrale implements GeoArea {
-  codeArr: String!
-  codeCom: String!
-  codeDep: String!
-  feuille: Int!
+  codeArr: String! @deprecated(reason: "Utilisez le champ `prefixe` à la place.")
+  codeCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
+  codeDep: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
+  commune: String!
+  feuille: Int! @deprecated(reason: "L‘information n‘est plus disponible.")
   geometry: GeoJSON!
   id: ID!
-  nomCom: String!
+  nomCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   numero: String!
+  prefixe: String!
   section: String!
   source: GeoAreaSource!
-  surfaceIntersection: Float!
-  surfaceParcelle: Float!
+  surface: String!
+  surfaceIntersection: Float! @deprecated(reason: "L‘information n‘est plus disponible.")
+  surfaceParcelle: Float! @deprecated(reason: "Utilisez le champ `surface` à la place.")
 }
 
 type PersonneMorale implements Demandeur {
@@ -1587,6 +1590,7 @@ type Revision {
 }
 
 type SelectionUtilisateur implements GeoArea {
+  description: String!
   geometry: GeoJSON!
   id: ID!
   source: GeoAreaSource!
