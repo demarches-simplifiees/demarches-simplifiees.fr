@@ -392,17 +392,17 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     context 'when procedure has revisions' do
-      let(:types_de_champ) { [build(:type_de_champ, libelle: 'mon tag')] }
+      let(:types_de_champ) { [build(:type_de_champ, libelle: 'mon ancien libellé')] }
       let(:draft_type_de_champ) { procedure.draft_revision.find_or_clone_type_de_champ(types_de_champ[0].stable_id) }
 
       before do
-        draft_type_de_champ.update(libelle: 'ton tag')
+        draft_type_de_champ.update(libelle: 'mon nouveau libellé')
         dossier.champs.first.update(value: 'valeur')
         procedure.update!(draft_revision: procedure.create_new_revision, published_revision: procedure.draft_revision)
       end
 
       context "when using the champ's original label" do
-        let(:template) { '--mon tag--' }
+        let(:template) { '--mon ancien libellé--' }
 
         it "replaces the tag" do
           is_expected.to eq('valeur')
@@ -410,7 +410,7 @@ describe TagsSubstitutionConcern, type: :model do
       end
 
       context "when using the champ's revised label" do
-        let(:template) { '--ton tag--' }
+        let(:template) { '--mon nouveau libellé--' }
 
         it "replaces the tag" do
           is_expected.to eq('valeur')
