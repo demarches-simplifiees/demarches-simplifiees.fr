@@ -313,7 +313,7 @@ class ApplicationController < ActionController::Base
     locale = nil
     if cookies[:locale]
       locale = cookies[:locale]
-    elsif ENV['LOCALIZATION_ENABLED'] == 'enabled'
+    elsif ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true'
       locale = http_accept_language.compatible_language_from(I18n.available_locales)
     else
       locale = I18n.default_locale
