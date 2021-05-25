@@ -1139,6 +1139,7 @@ type File {
 }
 
 interface GeoArea {
+  description: String
   geometry: GeoJSON!
   id: ID!
   source: GeoAreaSource!
@@ -1471,6 +1472,7 @@ type ParcelleCadastrale implements GeoArea {
   codeCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   codeDep: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   commune: String!
+  description: String
   feuille: Int! @deprecated(reason: "L‘information n‘est plus disponible.")
   geometry: GeoJSON!
   id: ID!
@@ -1590,7 +1592,7 @@ type Revision {
 }
 
 type SelectionUtilisateur implements GeoArea {
-  description: String!
+  description: String
   geometry: GeoJSON!
   id: ID!
   source: GeoAreaSource!

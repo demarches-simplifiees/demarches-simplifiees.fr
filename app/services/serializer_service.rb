@@ -48,7 +48,9 @@ class SerializerService
     query serializeChamp($number: Int!, $id: ID!) {
       dossier(number: $number) {
         champs(id: $id) {
-          ...RootChampFragment
+          ...ChampFragment
+          ...RepetitionChampFragment
+          ...CarteChampFragment
         }
       }
     }
@@ -56,7 +58,9 @@ class SerializerService
     query serializeAnnotation($number: Int!, $id: ID!) {
       dossier(number: $number) {
         annotations(id: $id) {
-          ...RootChampFragment
+          ...ChampFragment
+          ...RepetitionChampFragment
+          ...CarteChampFragment
         }
       }
     }
@@ -77,29 +81,28 @@ class SerializerService
         label
       }
       champs {
-        ...RootChampFragment
+        ...ChampFragment
+        ...RepetitionChampFragment
+        ...CarteChampFragment
       }
       annotations {
-        ...RootChampFragment
+        ...ChampFragment
+        ...RepetitionChampFragment
+        ...CarteChampFragment
       }
       avis {
         ...AvisFragment
       }
       demandeur {
-        ... on PersonnePhysique {
-          civilite
-          nom
-          prenom
-          dateDeNaissance
-        }
+        ...PersonnePhysiqueFragment
         ...PersonneMoraleFragment
       }
       motivation
       motivationAttachment {
-        byteSize
-        checksum
-        filename
-        contentType
+        ...FileFragment
+      }
+      revision {
+        id
       }
     }
 
@@ -116,10 +119,7 @@ class SerializerService
         email
       }
       attachment {
-        byteSize
-        checksum
-        filename
-        contentType
+        ...FileFragment
       }
     }
 
@@ -141,10 +141,7 @@ class SerializerService
       }
       ... on PieceJustificativeChamp {
         file {
-          byteSize
-          checksum
-          filename
-          contentType
+          ...FileFragment
         }
       }
       ... on AddressChamp {
@@ -154,33 +151,35 @@ class SerializerService
       }
     }
 
-    fragment RootChampFragment on Champ {
-      ...ChampFragment
-      ... on RepetitionChamp {
-        champs {
-          ...ChampFragment
+    fragment RepetitionChampFragment on RepetitionChamp {
+      champs {
+        ...ChampFragment
+      }
+    }
+
+    fragment CarteChampFragment on CarteChamp {
+      geoAreas {
+        source
+        description
+        geometry {
+          type
+          coordinates
+        }
+        ... on ParcelleCadastrale {
+          prefixe
+          numero
+          commune
+          section
+          surface
         }
       }
-      ... on CarteChamp {
-        geoAreas {
-          source
-          geometry {
-            type
-            coordinates
-          }
-          ... on ParcelleCadastrale {
-            codeArr
-            codeCom
-            codeDep
-            feuille
-            nomCom
-            numero
-            section
-            surfaceParcelle
-            surfaceIntersection
-          }
-        }
-      }
+    }
+
+    fragment PersonnePhysiqueFragment on PersonnePhysique {
+      civilite
+      nom
+      prenom
+      dateDeNaissance
     }
 
     fragment PersonneMoraleFragment on PersonneMorale {
@@ -228,6 +227,13 @@ class SerializerService
       departmentCode
       regionName
       regionCode
+    }
+
+    fragment FileFragment on File {
+      filename
+      checksum
+      byteSize
+      contentType
     }
   GRAPHQL
 end
