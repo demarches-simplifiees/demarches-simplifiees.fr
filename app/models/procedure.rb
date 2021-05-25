@@ -87,6 +87,30 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
+  def types_de_champ_for_tags
+    if brouillon?
+      draft_types_de_champ
+    else
+      TypeDeChamp.root
+        .public_only
+        .where(revision: revisions - [draft_revision])
+        .order(:created_at)
+        .uniq
+    end
+  end
+
+  def types_de_champ_private_for_tags
+    if brouillon?
+      draft_types_de_champ_private
+    else
+      TypeDeChamp.root
+        .private_only
+        .where(revision: revisions - [draft_revision])
+        .order(:created_at)
+        .uniq
+    end
+  end
+
   def types_de_champ_for_export
     types_de_champ.reject(&:exclude_from_export?)
   end

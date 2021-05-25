@@ -6,26 +6,24 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
 
   def tags_for_template
     tags = super
-    tdc = @type_de_champ
+    stable_id = @type_de_champ.stable_id
     tags.push(
       {
         libelle: "#{libelle}/primaire",
+        id: "tdc#{stable_id}/primaire",
         description: "#{description} (menu primaire)",
         lambda: -> (champs) {
-          champs
-            .find { |champ| champ.type_de_champ == tdc }
-            &.primary_value
+          champs.find { |champ| champ.stable_id == stable_id }&.primary_value
         }
       }
     )
     tags.push(
       {
         libelle: "#{libelle}/secondaire",
+        id: "tdc#{stable_id}/secondaire",
         description: "#{description} (menu secondaire)",
         lambda: -> (champs) {
-          champs
-            .find { |champ| champ.type_de_champ == tdc }
-            &.secondary_value
+          champs.find { |champ| champ.stable_id == stable_id }&.secondary_value
         }
       }
     )
