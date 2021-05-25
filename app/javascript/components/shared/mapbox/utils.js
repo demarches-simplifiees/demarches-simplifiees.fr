@@ -1,5 +1,4 @@
 import { LngLatBounds } from 'mapbox-gl';
-import { useEffect } from 'react';
 
 export function getBounds(geometry) {
   const bbox = new LngLatBounds();
@@ -18,15 +17,9 @@ export function getBounds(geometry) {
   return bbox;
 }
 
-export function fitBounds(map, feature) {
-  if (map) {
-    map.fitBounds(getBounds(feature.geometry), { padding: 100 });
-  }
-}
-
-export function findFeature(featureCollection, id) {
+export function findFeature(featureCollection, value, property = 'id') {
   return featureCollection.features.find(
-    (feature) => feature.properties.id === id
+    (feature) => feature.properties[property] === value
   );
 }
 
@@ -48,17 +41,8 @@ export function filterFeatureCollectionByGeometryType(featureCollection, type) {
   };
 }
 
-export function noop() {}
-
 export function generateId() {
   return Math.random().toString(20).substr(2, 6);
-}
-
-export function useEvent(eventName, callback) {
-  return useEffect(() => {
-    addEventListener(eventName, callback);
-    return () => removeEventListener(eventName, callback);
-  }, [eventName, callback]);
 }
 
 export function getCenter(geometry, lngLat) {
@@ -75,4 +59,14 @@ export function getCenter(geometry, lngLat) {
       }
       return bbox.getCenter();
   }
+}
+
+export function defer() {
+  const deferred = {};
+  const promise = new Promise(function (resolve, reject) {
+    deferred.resolve = resolve;
+    deferred.reject = reject;
+  });
+  deferred.promise = promise;
+  return deferred;
 }

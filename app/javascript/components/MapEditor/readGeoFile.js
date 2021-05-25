@@ -1,17 +1,28 @@
 import { gpx, kml } from '@tmcw/togeojson/dist/togeojson.es.js';
+import { generateId } from '../shared/mapbox/utils';
 
-export const polygonCadastresFill = {
-  'fill-color': '#EC3323',
-  'fill-opacity': 0.3
-};
+export function readGeoFile(file) {
+  const isGpxFile = file.name.includes('.gpx');
+  const reader = new FileReader();
 
-export const polygonCadastresLine = {
-  'line-color': 'rgba(255, 0, 0, 1)',
-  'line-width': 4,
-  'line-dasharray': [1, 1]
-};
+  return new Promise((resolve) => {
+    reader.onload = (event) => {
+      const xml = new DOMParser().parseFromString(
+        event.target.result,
+        'text/xml'
+      );
+      const featureCollection = normalizeFeatureCollection(
+        isGpxFile ? gpx(xml) : kml(xml),
+        file.name
+      );
 
-export function normalizeFeatureCollection(featureCollection) {
+      resolve(featureCollection);
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+}
+
+function normalizeFeatureCollection(featureCollection, filename) {
   const features = [];
   for (const feature of featureCollection.features) {
     switch (feature.geometry.type) {
@@ -65,26 +76,13 @@ export function normalizeFeatureCollection(featureCollection) {
     }
   }
 
-  featureCollection.features = features;
+  featureCollection.filename = `${generateId()}-${filename}`;
+  featureCollection.features = features.map((feature) => ({
+    ...feature,
+    properties: {
+      ...feature.properties,
+      filename: featureCollection.filename
+    }
+  }));
   return featureCollection;
-}
-
-export function readGeoFile(file) {
-  const isGpxFile = file.name.includes('.gpx');
-  const reader = new FileReader();
-
-  return new Promise((resolve) => {
-    reader.onload = (event) => {
-      const xml = new DOMParser().parseFromString(
-        event.target.result,
-        'text/xml'
-      );
-      const featureCollection = normalizeFeatureCollection(
-        isGpxFile ? gpx(xml) : kml(xml)
-      );
-
-      resolve(featureCollection);
-    };
-    reader.readAsText(file, 'UTF-8');
-  });
 }

@@ -7,7 +7,7 @@
           - if editing
             = link_to '#', data: { geo_area: geo_area.id } do
               = geo_area_label(geo_area)
-            = text_field_tag :description, geo_area.description, data: { geo_area: geo_area.id }, placeholder: 'Description de la sélection'
+            = text_field_tag :description, geo_area.description, data: { geo_area: geo_area.id }, placeholder: 'Description de la sélection', class: 'no-margin'
           - else
             = link_to '#', data: { geo_area: geo_area.id } do
               = geo_area_label(geo_area)
