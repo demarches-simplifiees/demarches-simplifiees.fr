@@ -25,7 +25,8 @@ describe Champs::CarteController, type: :controller do
     let(:params) do
       {
         champ_id: champ.id,
-        feature: feature
+        feature: feature,
+        source: GeoArea.sources.fetch(:selection_utilisateur)
       }
     end
 
@@ -98,67 +99,37 @@ describe Champs::CarteController, type: :controller do
       it { expect(response.status).to eq 204 }
     end
 
-    describe 'POST #import' do
+    describe 'GET #index' do
       render_views
 
       let(:params) do
-        {
-          champ_id: champ.id,
-          features: [feature]
-
-        }
+        { champ_id: champ.id }
       end
-
-      before do
-        post :import, params: params
-      end
-
-      it {
-        expect(response.status).to eq 201
-        expect(response.body).to include("bbox")
-      }
-    end
-
-    describe 'GET #index' do
-      render_views
 
       before do
         request.accept = "application/javascript"
         request.content_type = "application/javascript"
+        get :index, params: params
       end
 
-      context 'with cadastres update' do
-        let(:params) do
-          {
-            champ_id: champ.id,
-            cadastres: 'update'
-          }
-        end
-
-        before do
-          get :index, params: params
-        end
-
+      context "update list" do
         it {
+          expect(response.body).not_to include("DS.fire('map:feature:focus'")
           expect(response.status).to eq 200
-          expect(response.body).to include("DS.fire('cadastres:update'")
         }
       end
 
-      context 'without cadastres update' do
+      context "update list and focus" do
         let(:params) do
           {
-            champ_id: champ.id
+            champ_id: champ.id,
+            focus: true
           }
         end
 
-        before do
-          get :index, params: params
-        end
-
         it {
+          expect(response.body).to include("DS.fire('map:feature:focus'")
           expect(response.status).to eq 200
-          expect(response.body).not_to include("DS.fire('cadastres:update'")
         }
       end
     end

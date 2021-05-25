@@ -25,7 +25,8 @@ function ComboSearch({
   minimumInputLength,
   transformResult,
   allowInputValues = false,
-  transformResults = defaultTransformResults
+  transformResults = defaultTransformResults,
+  className
 }) {
   const label = scope;
   const hiddenValueField = useMemo(
@@ -93,6 +94,7 @@ function ComboSearch({
   return (
     <Combobox aria-label={label} onSelect={handleOnSelect}>
       <ComboboxInput
+        className={className}
         placeholder={placeholder}
         onChange={handleOnChange}
         value={value}
@@ -134,7 +136,8 @@ ComboSearch.propTypes = {
   transformResult: PropTypes.func,
   transformResults: PropTypes.func,
   allowInputValues: PropTypes.bool,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  className: PropTypes.string
 };
 
 export default ComboSearch;
