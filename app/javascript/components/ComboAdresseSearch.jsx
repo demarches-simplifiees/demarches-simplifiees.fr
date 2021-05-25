@@ -11,13 +11,15 @@ function ComboAdresseSearch({
   hiddenFieldId,
   onChange,
   transformResult = ({ properties: { label } }) => [label, label],
-  allowInputValues = true
+  allowInputValues = true,
+  className
 }) {
   const transformResults = useCallback((_, { features }) => features);
 
   return (
     <QueryClientProvider client={queryClient}>
       <ComboSearch
+        className={className}
         placeholder={placeholder}
         required={mandatory}
         hiddenFieldId={hiddenFieldId}
@@ -33,6 +35,7 @@ function ComboAdresseSearch({
 }
 
 ComboAdresseSearch.propTypes = {
+  className: PropTypes.string,
   placeholder: PropTypes.string,
   mandatory: PropTypes.bool,
   hiddenFieldId: PropTypes.string,

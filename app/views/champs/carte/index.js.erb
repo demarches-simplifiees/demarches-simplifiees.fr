@@ -4,6 +4,6 @@
   partial: 'shared/champs/carte/geo_areas',
   locals: { champ: @champ, editing: true }) %>
 
-<% if @update_cadastres %>
-  <%= fire_event('cadastres:update', { featureCollection: @champ.to_feature_collection }.to_json) %>
+<% if @focus %>
+  <%= fire_event('map:feature:focus', { bbox: @champ.bounding_box }.to_json) %>
 <% end %>
