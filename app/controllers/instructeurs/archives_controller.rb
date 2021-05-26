@@ -6,12 +6,12 @@ module Instructeurs
       @procedure = procedure
       @average_dossier_weight = procedure.average_dossier_weight
 
-      @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(@procedure)
+      @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(groupe_instructeurs)
       @nb_dossiers = @count_dossiers_termines_by_month.sum { |count_by_month| count_by_month["count"] }
       @poids_total = @nb_dossiers * @average_dossier_weight
 
       @archives = Archive
-        .for_groupe_instructeur(current_instructeur.groupe_instructeurs.where(procedure: @procedure))
+        .for_groupe_instructeur(groupe_instructeurs)
         .to_a
     end
 
@@ -38,10 +38,20 @@ module Instructeurs
       end
     end
 
+    def procedure_id
+      params[:procedure_id]
+    end
+
+    def groupe_instructeurs
+      current_instructeur
+        .groupe_instructeurs
+        .where(procedure_id: procedure_id)
+    end
+
     def procedure
       current_instructeur
         .procedures
-        .find(params[:procedure_id])
+        .find(procedure_id)
     end
   end
 end
