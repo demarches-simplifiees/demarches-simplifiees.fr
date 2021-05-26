@@ -5,11 +5,14 @@ module Instructeurs
     def index
       @procedure = procedure
       @average_dossier_weight = procedure.average_dossier_weight
+
       @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(@procedure)
       @nb_dossiers = @count_dossiers_termines_by_month.sum { |count_by_month| count_by_month["count"] }
       @poids_total = @nb_dossiers * @average_dossier_weight
-      groupe_instructeur = current_instructeur.groupe_instructeurs.where(procedure: @procedure.id).first
-      @archives = Archive.for_groupe_instructeur(groupe_instructeur).to_a
+
+      @archives = Archive
+        .for_groupe_instructeur(current_instructeur.groupe_instructeurs.where(procedure: @procedure))
+        .to_a
     end
 
     def create
