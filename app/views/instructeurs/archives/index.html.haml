@@ -70,7 +70,7 @@
           - if matching_archive.present? && matching_archive.available?
             - weight = matching_archive.file.byte_size
           - else
-            weight = ProcedureArchiveService::dossiers_files_size(dossiers_termines)
+            - weight = nb_dossiers_termines * @average_dossier_weight
           = number_to_human_size(weight)
         %td
           - if nb_dossiers_termines > 0
