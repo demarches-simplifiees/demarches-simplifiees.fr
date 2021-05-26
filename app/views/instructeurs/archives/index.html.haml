@@ -30,7 +30,6 @@
         %th Télécharger
 
     %tbody
-    - if can_generate_archive?(@dossiers_termines, @poids_total)
       %tr
         - matching_archive = @archives.find { |archive| archive.time_span_type == 'everything' }
         %td
