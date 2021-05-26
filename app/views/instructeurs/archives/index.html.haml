@@ -32,7 +32,7 @@
     %tbody
     - if can_generate_archive?(@dossiers_termines, @poids_total)
       %tr
-        - matching_archive = @archives.find_by(time_span_type: 'everything')
+        - matching_archive = @archives.find { |archive| archive.time_span_type == 'everything' }
         %td
           Tous les dossiers
         %td
@@ -57,10 +57,10 @@
               Demander la création
           - else
             Rien à télécharger !
-    - @archivable_months.each do |month|
-      - dossiers_termines = @procedure.dossiers.processed_in_month(month)
-      - nb_dossiers_termines = dossiers_termines.count
-      - matching_archive = @archives.find_by(time_span_type: 'monthly', month: month)
+    - @count_dossiers_termines_by_month.each do |count_by_month|
+      - month = count_by_month["month"].to_date
+      - nb_dossiers_termines = count_by_month["count"]
+      - matching_archive = @archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == month }
       %tr
         %td
           = I18n.l(month, format: "%B %Y")
@@ -70,7 +70,7 @@
           - if matching_archive.present? && matching_archive.available?
             - weight = matching_archive.file.byte_size
           - else
-            - weight = ProcedureArchiveService::dossiers_files_size(dossiers_termines)
+            weight = ProcedureArchiveService::dossiers_files_size(dossiers_termines)
           = number_to_human_size(weight)
         %td
           - if nb_dossiers_termines > 0
