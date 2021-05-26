@@ -36,7 +36,7 @@
         %td
           Tous les dossiers
         %td
-          = @count_dossiers_termines_by_month.sum { |count_by_month| count_by_month["count"] }
+          = @nb_dossiers
         %td
           - if matching_archive.present? && matching_archive.available?
             - weight = matching_archive.file.byte_size
