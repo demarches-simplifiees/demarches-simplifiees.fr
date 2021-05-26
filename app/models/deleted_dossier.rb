@@ -20,6 +20,7 @@ class DeletedDossier < ApplicationRecord
   validates :dossier_id, uniqueness: true
 
   scope :order_by_updated_at, -> (order = :desc) { order(created_at: order) }
+  scope :deleted_since,       -> (since) { where('deleted_dossiers.deleted_at >= ?', since) }
 
   enum reason: {
     user_request:      'user_request',
