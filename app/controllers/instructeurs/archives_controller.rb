@@ -4,6 +4,7 @@ module Instructeurs
 
     def index
       @procedure = procedure
+      @average_dossier_weight = procedure.average_dossier_weight
 
       @archivable_months = archivable_months
       @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(@procedure)
