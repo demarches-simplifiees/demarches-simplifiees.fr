@@ -32,15 +32,15 @@
     %tbody
       %tr
         - matching_archive = @archives.find { |archive| archive.time_span_type == 'everything' }
+        - if matching_archive.present? && matching_archive.available?
+          - weight = matching_archive.file.byte_size
+        - else
+          - weight = @poids_total
         %td
           Tous les dossiers
         %td
           = @nb_dossiers
         %td
-          - if matching_archive.present? && matching_archive.available?
-            - weight = matching_archive.file.byte_size
-          - else
-            - weight = @poids_total
           = number_to_human_size(weight)
         %td
           - if matching_archive.try(&:available?)
@@ -50,12 +50,14 @@
           - elsif matching_archive.try(&:pending?)
             %span.icon.retry
             = t(:archive_pending_html, created_period: time_ago_in_words(matching_archive.created_at), scope: [:instructeurs, :procedure])
-          - elsif @nb_dossiers > 0
+          - elsif @nb_dossiers == 0
+            Rien à télécharger !
+          - elsif weight < 1.gigabyte
             = link_to instructeur_archives_path(@procedure, type: 'everything'), method: :post, class: "button" do
               %span.icon.new-folder
               Demander la création
           - else
-            Rien à télécharger !
+            Archive trop volumineuse
     - @count_dossiers_termines_by_month.each do |count_by_month|
       - month = count_by_month["month"].to_date
       - nb_dossiers_termines = count_by_month["count"]
