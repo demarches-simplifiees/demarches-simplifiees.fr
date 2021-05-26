@@ -5,7 +5,6 @@ module Instructeurs
     def index
       @procedure = procedure
       @average_dossier_weight = procedure.average_dossier_weight
-      @archivable_months = archivable_months
       @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(@procedure)
       @nb_dossiers = @count_dossiers_termines_by_month.sum { |count_by_month| count_by_month["count"] }
       @poids_total = @nb_dossiers * @average_dossier_weight
@@ -34,16 +33,6 @@ module Instructeurs
         flash[:alert] = "L'accès aux archives n’est pas disponible pour cette démarche, merci d’en faire la demande à l'équipe de démarches simplifiees"
         return redirect_to instructeur_procedure_path(procedure)
       end
-    end
-
-    def archivable_months
-      start_date = procedure.published_at.to_date
-      end_date = Time.zone.now.to_date
-
-      (start_date...end_date)
-        .map(&:beginning_of_month)
-        .uniq
-        .reverse
     end
 
     def procedure
