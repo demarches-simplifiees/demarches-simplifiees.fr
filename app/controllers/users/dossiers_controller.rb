@@ -51,7 +51,7 @@ module Users
       if dossier.attestation&.pdf&.attached?
         redirect_to dossier.attestation.pdf.service_url
       else
-        flash.notice = "L'attestation n'est plus disponible sur ce dossier."
+        flash.notice = "L'attestation n’est plus disponible sur ce dossier."
         redirect_to dossier_path(dossier)
       end
     end
@@ -213,7 +213,7 @@ module Users
         flash.notice = 'Votre dossier a bien été supprimé.'
         redirect_to dossiers_path
       else
-        flash.notice = "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
+        flash.notice = "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
         redirect_to dossier_path(dossier)
       end
     end
@@ -304,7 +304,7 @@ module Users
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.procedure.brouillon?
-        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
+        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
       end
     end
 
@@ -411,7 +411,7 @@ module Users
     end
 
     def forbidden!
-      flash[:alert] = "Vous n'avez pas accès à ce dossier"
+      flash[:alert] = "Vous n’avez pas accès à ce dossier"
       redirect_to root_path
     end
 

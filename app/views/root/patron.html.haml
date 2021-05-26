@@ -272,7 +272,7 @@
   .container
     %section.ask-avis
       %h1 Inviter une personne à donner son avis
-      %p.avis-notice L'invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais il ne pourra le modifier.
+      %p.avis-notice L’invité pourra consulter, donner un avis sur le dossier et contribuer au fil de messagerie, mais il ne pourra le modifier.
 
       = form_for Avis.new, url: '/', html: { class: 'form' } do |f|
         = f.email_field :email, placeholder: 'Adresse email', required: true
@@ -289,7 +289,7 @@
         %li.one-avis
           %h2.claimant
             Vous
-            %span.date Demande d'avis envoyée le 12/01/2012
+            %span.date Demande d’avis envoyée le 12/01/2012
           %p Bonjour, merci de me donner votre avis sur ce dossier.
 
           .answer.flex.align-start

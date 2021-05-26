@@ -23,7 +23,7 @@
             %span.icon.in-progress
             .dropdown-description
               %h4 Passer en instruction
-              L'usager ne pourra plus modifier le formulaire
+              L’usager ne pourra plus modifier le formulaire
 
     - elsif dossier.en_instruction?
       -# ------------------------------------------------------
@@ -42,28 +42,28 @@
           %span.icon.in-progress
           .dropdown-description
             %h4 En instruction
-            L'usager ne peut modifier son dossier pendant l'instruction
+            L’usager ne peut modifier son dossier pendant l'instruction
 
         %li
           %a{ href: '#', onclick: "DS.showMotivation(event, 'accept');" }
             %span.icon.accept
             .dropdown-description
               %h4 Accepter
-              L'usager sera notifié que son dossier a été accepté
+              L’usager sera notifié que son dossier a été accepté
 
         %li
           %a{ href: '#', onclick: "DS.showMotivation(event, 'without-continuation');" }
             %span.icon.without-continuation
             .dropdown-description
               %h4 Classer sans suite
-              L'usager sera notifié que son dossier a été classé sans suite
+              L’usager sera notifié que son dossier a été classé sans suite
 
         %li
           %a{ href: '#', onclick: "DS.showMotivation(event, 'refuse');" }
             %span.icon.refuse
             .dropdown-description
               %h4 Refuser
-              L'usager sera notifié que son dossier a été refusé
+              L’usager sera notifié que son dossier a été refusé
 
         = render partial: 'instructeurs/dossiers/state_button_motivation', locals: { dossier: dossier, popup_title: 'Accepter le dossier', placeholder: 'Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)', popup_class: 'accept', process_action: 'accepter', title: 'Accepter', confirm: "Confirmez-vous l'acceptation ce dossier ?" }
 
@@ -111,7 +111,7 @@
             %span.icon.info
             .dropdown-description
               %h4 En attente d’archivage
-              L'usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
+              L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
 
         %li
           = link_to supprimer_dossier_instructeur_dossier_path(dossier.procedure, dossier), method: :patch, data: { confirm: "Voulez vous vraiment supprimer le dossier #{dossier.id} ? Cette action est irréversible. \nNous vous suggérons de télécharger le dossier au format PDF au préalable." } do
