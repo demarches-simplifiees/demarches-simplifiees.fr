@@ -100,4 +100,12 @@ RSpec.describe GeoArea, type: :model do
       end
     end
   end
+
+  describe 'description' do
+    context 'when properties is nil' do
+      let(:geo_area) { build(:geo_area, properties: nil) }
+
+      it { expect(geo_area.description).to be_nil }
+    end
+  end
 end
