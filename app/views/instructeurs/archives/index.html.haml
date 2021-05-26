@@ -21,13 +21,13 @@
       = link_to 'la documentation', ARCHIVAGE_DOC_URL
       afin de voir les options à votre disposition pour mettre en place un système d’archive.
 
-  %table.table.hoverable
+  %table.table.hoverable.archive-table
     %thead
       %tr
         %th &nbsp;
-        %th Nombre de dossiers terminés
-        %th Poids estimé
-        %th Télécharger
+        %th.text-right Nombre de dossiers terminés
+        %th.text-right Poids estimé
+        %th.center Télécharger
 
     %tbody
       %tr
@@ -38,11 +38,11 @@
           - weight = @poids_total
         %td
           Tous les dossiers
-        %td
+        %td.text-right
           = @nb_dossiers
-        %td
+        %td.text-right
           = number_to_human_size(weight)
-        %td
+        %td.center
           - if matching_archive.try(&:available?)
             = link_to url_for(matching_archive.file), class: 'button primary' do
               %span.icon.download-white
@@ -70,11 +70,11 @@
       %tr
         %td
           = I18n.l(month, format: "%B %Y")
-        %td
+        %td.text-right
           = nb_dossiers_termines
-        %td
+        %td.text-right
           = number_to_human_size(weight)
-        %td
+        %td.center
           - if matching_archive.present?
             - if matching_archive.status == 'generated' && matching_archive.file.attached?
               = link_to url_for(matching_archive.file), class: 'button primary' do
