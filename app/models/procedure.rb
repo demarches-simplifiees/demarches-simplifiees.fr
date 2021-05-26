@@ -686,6 +686,19 @@ class Procedure < ApplicationRecord
     draft_revision.deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
   end
 
+  def average_dossier_weight
+    if dossiers.termine.any?
+      total_size = Champ
+        .includes(piece_justificative_file_attachment: :blob)
+        .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers.termine.limit(100))
+        .sum('active_storage_blobs.byte_size')
+
+      total_size / dossiers.termine.limit(100).count
+    else
+      nil
+    end
+  end
+
   private
 
   def before_publish
