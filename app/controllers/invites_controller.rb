@@ -54,7 +54,7 @@ class InvitesController < ApplicationController
     dossier = invite.dossier
     if dossier.user == current_user
       invite.destroy!
-      flash.notice = "L'autorisation de #{invite.email} vient d'être révoquée."
+      flash.notice = "L’autorisation de #{invite.email} vient d’être révoquée."
     else
       flash.alert = "Vous ne pouvez pas révoquer cette autorisation"
     end

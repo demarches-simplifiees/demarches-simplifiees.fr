@@ -4,7 +4,7 @@
 
 - if !dossier_submission_is_closed?(@dossier)
   = form_for @dossier.individual, url: update_identite_dossier_path(@dossier), html: { class: "form" } do |f|
-    %h1 Données d'identité
+    %h1 Données d’identité
 
     %p.mb-1 Merci de remplir vos informations personnelles pour accéder à la démarche.
 

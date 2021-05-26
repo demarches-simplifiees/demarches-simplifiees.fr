@@ -133,7 +133,7 @@ fr:
               invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
   errors:
     messages:
-      saml_not_authorized: "Vous n'êtes pas autorisé à accéder à ce service."
+      saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
       # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
       invalid_siret: "Le siret est incorrect"
@@ -144,7 +144,7 @@ fr:
       # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
-        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu'instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
+        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
       procedure_archived: "Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier."
       # procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."
       cadastres_empty:

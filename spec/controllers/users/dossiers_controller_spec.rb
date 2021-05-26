@@ -23,7 +23,7 @@ describe Users::DossiersController, type: :controller do
     before { @controller.send(ensure_authorized) }
 
     it { expect(@controller).to have_received(:redirect_to).with(root_path) }
-    it { expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier") }
+    it { expect(flash.alert).to eq("Vous n’avez pas accès à ce dossier") }
   end
 
   describe '#ensure_ownership!' do
@@ -563,7 +563,7 @@ describe Users::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to redirect_to(root_path) }
-        it { expect(flash.alert).to eq("Vous n'avez pas accès à ce dossier") }
+        it { expect(flash.alert).to eq("Vous n’avez pas accès à ce dossier") }
       end
     end
   end

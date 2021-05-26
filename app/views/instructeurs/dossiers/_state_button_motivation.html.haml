@@ -8,14 +8,14 @@
       = text_area :dossier, :motivation, class: 'motivation-text-area', placeholder: placeholder, required: false
       - if dossier.procedure.attestation_template&.activated?
         %p.help
-          L'acceptation du dossier envoie automatiquement
+          L’acceptation du dossier envoie automatiquement
           = link_to 'une attestation', apercu_attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener', title: "Voir l'attestation qui sera envoyée à l'usager"
           à l'usager.
 
       - unspecified_attestation_champs = dossier.unspecified_attestation_champs
       - if unspecified_attestation_champs.present?
         .warning
-          Attention, les valeurs suivantes n'ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
+          Attention, les valeurs suivantes n’ont pas été renseignées mais sont nécessaires pour pouvoir envoyer une attestation valide :
           - unspecified_annotations_privees, unspecified_champs = unspecified_attestation_champs.partition(&:private)
 
           - if unspecified_champs.present?

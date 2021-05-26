@@ -136,7 +136,7 @@ module NewAdministrateur
           notice: 'Le jeton a bien été mis à jour'
       else
 
-        flash.now.alert = "Mise à jour impossible : le jeton n'est pas valide"
+        flash.now.alert = "Mise à jour impossible : le jeton n’est pas valide"
         render 'jeton'
       end
     end
@@ -176,7 +176,7 @@ module NewAdministrateur
       admin = Administrateur.by_email(params[:email_admin].downcase)
       if admin.nil?
         redirect_to admin_procedure_transfert_path(params[:procedure_id])
-        flash.alert = "Envoi vers #{params[:email_admin]} impossible : cet administrateur n'existe pas"
+        flash.alert = "Envoi vers #{params[:email_admin]} impossible : cet administrateur n’existe pas"
       else
         procedure = current_administrateur.procedures.find(params[:procedure_id])
         procedure.clone(admin, false)

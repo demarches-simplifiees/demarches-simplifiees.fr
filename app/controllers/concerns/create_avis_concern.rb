@@ -50,7 +50,7 @@ module CreateAvisConcern
           avis.update_column(:email, nil)
         end
       end
-      flash.notice = "Une demande d'avis a été envoyée à #{sent_emails_addresses.uniq.join(", ")}"
+      flash.notice = "Une demande d’avis a été envoyée à #{sent_emails_addresses.uniq.join(", ")}"
     end
 
     if failed.any?
