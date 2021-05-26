@@ -10,12 +10,12 @@ class Champs::CarteController < ApplicationController
   def create
     champ = policy_scope(Champ).find(params[:champ_id])
     geo_area = if params_source == GeoArea.sources.fetch(:cadastre)
-      champ.geo_areas.find_by("properties->>'id' = :id", id: params_feature[:properties][:id])
+      champ.geo_areas.find_by("properties->>'id' = :id", id: create_params_feature[:properties][:id])
     end
 
     if geo_area.nil?
       geo_area = champ.geo_areas.build(source: params_source, properties: {})
-      save_feature!(geo_area, params_feature)
+      save_feature!(geo_area, create_params_feature)
     end
 
     render json: { feature: geo_area.to_feature }, status: :created
@@ -24,7 +24,7 @@ class Champs::CarteController < ApplicationController
   def update
     champ = policy_scope(Champ).find(params[:champ_id])
     geo_area = champ.geo_areas.find(params[:id])
-    save_feature!(geo_area, params_feature)
+    save_feature!(geo_area, update_params_feature)
 
     head :no_content
   end
@@ -42,7 +42,7 @@ class Champs::CarteController < ApplicationController
     params[:source]
   end
 
-  def params_feature
+  def create_params_feature
     params.require(:feature).permit(properties: [
       :filename,
       :description,
@@ -56,6 +56,12 @@ class Champs::CarteController < ApplicationController
       :section,
       :updated
     ]).tap do |feature|
+      feature[:geometry] = params[:feature][:geometry]
+    end
+  end
+
+  def update_params_feature
+    params.require(:feature).permit(properties: [:description]).tap do |feature|
       feature[:geometry] = params[:feature][:geometry]
     end
   end
