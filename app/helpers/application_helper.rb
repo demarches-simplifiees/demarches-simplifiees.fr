@@ -135,13 +135,13 @@ module ApplicationHelper
   def root_path_info_for_profile(nav_bar_profile)
     case nav_bar_profile
     when :administrateur
-      [admin_procedures_path, "Aller au panneau d'administration"]
+      [admin_procedures_path, "Aller au panneau d’administration"]
     when :instructeur
       [instructeur_procedures_path, 'Aller à la liste des démarches']
     when :user
       [dossiers_path, 'Aller à la liste des dossiers']
     else
-      [root_path, "Aller à la page d'accueil"]
+      [root_path, "Aller à la page d’accueil"]
     end
   end
 
