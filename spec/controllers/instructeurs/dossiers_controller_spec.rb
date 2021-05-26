@@ -493,7 +493,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
         it { expect(response).to render_template :avis }
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
-        it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
+        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
         it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
       end
@@ -507,7 +507,7 @@ describe Instructeurs::DossiersController, type: :controller do
           let(:invite_linked_dossiers) { false }
 
           it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-            expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
+            expect(flash.notice).to eq("Une demande d’avis a été envoyée à email@a.com")
             expect(Avis.count).to eq(old_avis_count + 1)
             expect(saved_avis.expert.email).to eq("email@a.com")
             expect(saved_avis.dossier).to eq(dossier)
@@ -527,7 +527,7 @@ describe Instructeurs::DossiersController, type: :controller do
             end
 
             it 'sends one avis for the main dossier' do
-              expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
+              expect(flash.notice).to eq("Une demande d’avis a été envoyée à email@a.com")
               expect(saved_avis.expert.email).to eq("email@a.com")
               expect(saved_avis.dossier).to eq(dossier)
             end
@@ -540,7 +540,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
           context 'but the expert can’t access the linked dossier' do
             it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-              expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
+              expect(flash.notice).to eq("Une demande d’avis a été envoyée à email@a.com")
               expect(Avis.count).to eq(old_avis_count + 1)
               expect(saved_avis.expert.email).to eq("email@a.com")
               expect(saved_avis.dossier).to eq(dossier)

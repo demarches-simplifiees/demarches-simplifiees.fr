@@ -224,7 +224,7 @@ module Instructeurs
         flash.notice = 'Le dossier a bien été supprimé'
         redirect_to instructeur_procedure_path(procedure)
       else
-        flash.alert = "Suppression impossible : le dossier n'est pas terminé"
+        flash.alert = "Suppression impossible : le dossier n’est pas terminé"
         redirect_back(fallback_location: instructeur_procedures_url)
       end
     end
