@@ -6,10 +6,11 @@ module Instructeurs
       @procedure = procedure
 
       @archivable_months = archivable_months
+      @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(@procedure)
       @dossiers_termines = @procedure.dossiers.state_termine
       @poids_total = ProcedureArchiveService.procedure_files_size(@procedure)
       groupe_instructeur = current_instructeur.groupe_instructeurs.where(procedure: @procedure.id).first
-      @archives = Archive.for_groupe_instructeur(groupe_instructeur)
+      @archives = Archive.for_groupe_instructeur(groupe_instructeur).to_a
     end
 
     def create
@@ -48,7 +49,6 @@ module Instructeurs
     def procedure
       current_instructeur
         .procedures
-        .for_download
         .find(params[:procedure_id])
     end
   end
