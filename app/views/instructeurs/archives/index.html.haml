@@ -50,7 +50,7 @@
           - elsif matching_archive.try(&:pending?)
             %span.icon.retry
             = t(:archive_pending_html, created_period: time_ago_in_words(matching_archive.created_at), scope: [:instructeurs, :procedure])
-          - elsif @dossiers_termines.count > 0
+          - elsif @nb_dossiers > 0
             = link_to instructeur_archives_path(@procedure, type: 'everything'), method: :post, class: "button" do
               %span.icon.new-folder
               Demander la création
