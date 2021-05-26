@@ -61,16 +61,17 @@
       -# dossiers_termines = @procedure.dossiers.processed_in_month(month)
       - nb_dossiers_termines = count_by_month["count"]
       - matching_archive = @archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == month }
+      - if matching_archive.present? && matching_archive.available?
+        - weight = matching_archive.file.byte_size
+      - else
+        - weight = nb_dossiers_termines * @average_dossier_weight
+
       %tr
         %td
           = I18n.l(month, format: "%B %Y")
         %td
           = nb_dossiers_termines
         %td
-          - if matching_archive.present? && matching_archive.available?
-            - weight = matching_archive.file.byte_size
-          - else
-            - weight = nb_dossiers_termines * @average_dossier_weight
           = number_to_human_size(weight)
         %td
           - if matching_archive.present?
@@ -81,8 +82,10 @@
             - else
               %span.icon.retry
               = t(:archive_pending_html, created_period: time_ago_in_words(matching_archive.created_at), scope: [:instructeurs, :procedure])
-          - else
+          - elsif weight < 1.gigabyte
             = link_to instructeur_archives_path(@procedure, type:'monthly', month: month.strftime('%Y-%m')), method: :post, class: "button" do
               %span.icon.new-folder
               Démander la création
+          - else
+            Archive trop volumineuse
 
