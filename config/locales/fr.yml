@@ -80,6 +80,10 @@ fr:
         publish: Publier
         reopen: Réactiver
   activerecord:
+    models:
+      user:
+        one: Utilisateur
+        other: Utilisateurs
     attributes:
       default_attributes: &default_attributes
         password: 'Le mot de passe'
