@@ -75,6 +75,10 @@ en:
         publish: Publish
         reopen: Reopen
   activerecord:
+    models:
+      user:
+        one: User
+        other: Users
     attributes:
       user:
         siret: 'SIRET number'
