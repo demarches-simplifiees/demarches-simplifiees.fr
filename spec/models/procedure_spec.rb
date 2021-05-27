@@ -1032,9 +1032,14 @@ describe Procedure do
   end
 
   describe "#destroy" do
-    let(:procedure) { create(:procedure, :with_type_de_champ) }
+    let(:procedure) { create(:procedure, :closed, :with_type_de_champ) }
+
+    before do
+      procedure.discard!
+    end
 
     it "can destroy procedure" do
+      expect(procedure.revisions.count).to eq(2)
       expect(procedure.destroy).to be_truthy
     end
   end
