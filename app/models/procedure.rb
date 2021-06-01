@@ -690,12 +690,13 @@ class Procedure < ApplicationRecord
 
   def average_dossier_weight
     if dossiers.termine.any?
+      dossiers_sample = dossiers.termine.limit(100)
       total_size = Champ
         .includes(piece_justificative_file_attachment: :blob)
-        .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers.termine.limit(100))
+        .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers_sample)
         .sum('active_storage_blobs.byte_size')
 
-      total_size / dossiers.termine.limit(100).count
+      total_size / dossiers_sample.length
     else
       nil
     end
