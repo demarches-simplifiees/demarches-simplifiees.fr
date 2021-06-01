@@ -30,6 +30,7 @@ class Traitement < ApplicationRecord
       select date_trunc('month', r1.processed_at) as month, count(r1.processed_at)
       from (#{last_traitements_per_dossier}) as r1
       group by date_trunc('month', r1.processed_at)
+      order by month desc
     EOF
 
     ActiveRecord::Base.connection.execute(sql)
