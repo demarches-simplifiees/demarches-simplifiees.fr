@@ -52,9 +52,9 @@ class ProcedureOverview
     when 0
       nil
     when 1
-      "dossier est en cours d'instruction"
+      "dossier est en cours d’instruction"
     else
-      "dossiers sont en cours d'instruction"
+      "dossiers sont en cours d’instruction"
     end
   end
 

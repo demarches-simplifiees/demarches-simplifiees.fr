@@ -69,7 +69,7 @@
     </tbody>
   </table>
 <% else %>
-  <p>Historique indisponible. Cette adresse email n'existe pas chez nos prestataires d'envoi, ou nous n'avons pas réussi à en charger des données.
+  <p>Historique indisponible. Cette adresse email n’existe pas chez nos prestataires d’envoi, ou nous n’avons pas réussi à en charger des données.
     Vous pouvez éventuellement fouiller les
     <a href="https://app-smtp.sendinblue.com/log">logs de SendInBlue</a>
     ou
@@ -80,7 +80,7 @@
   <h2 style="font-size: 1.3em; margin: 24px 0 8px 0">Problèmes potentiel</h2>
 
   <% if @user.confirmed? %>
-    <p><strong>Compte activé, n'arrive pas à se connecter</strong> ? <button class="btn btn-secondary btn-small" onclick="reveal_email('#activated-cant-connect')">Voir la suggestion d’email</button></p>
+    <p><strong>Compte activé, n’arrive pas à se connecter</strong> ? <button class="btn btn-secondary btn-small" onclick="reveal_email('#activated-cant-connect')">Voir la suggestion d’email</button></p>
     <pre class="hidden" id="activated-cant-connect">
 Bonjour,
 votre compte est activé de notre côté.
@@ -93,11 +93,11 @@ https://www.demarches-simplifiees.fr/users/password/new
 
 Bien cordialement</pre>
   <% else %>
-    <p><strong>Ce compte n'est pas activé</strong>. Vous pouvez lui <%= link_to('renvoyer l’email de confirmation', [:resend_confirmation_instructions, namespace, 'user'], method: :post, class: 'button') %>, puis un email. <button class="btn btn-secondary btn-small" onclick="reveal_email('#not-activated')">Voir la suggestion d’email</button> </p>
+    <p><strong>Ce compte n’est pas activé</strong>. Vous pouvez lui <%= link_to('renvoyer l’email de confirmation', [:resend_confirmation_instructions, namespace, 'user'], method: :post, class: 'button') %>, puis un email. <button class="btn btn-secondary btn-small" onclick="reveal_email('#not-activated')">Voir la suggestion d’email</button> </p>
     <pre class="hidden" id="not-activated">
 Bonjour,
 
-Votre compte n'a pas été confirmé. Je vous ai transmis à nouveau un code de confirmation
+Votre compte n’a pas été confirmé. Je vous ai transmis à nouveau un code de confirmation
 dans un email séparé ; après avoir cliqué sur le lien qui s'y trouve, vous pourrez vous connecter
 à votre compte, voir les dossiers déposés et en déposer de nouveaux.
 
@@ -130,7 +130,7 @@ Bien cordialement
   </p>
   <pre class="hidden" id="pb-sendinblue">
 Bonjour,
-Désolé, notre prestataire d'envoi d'email subit actuellement des soucis avec sa plateforme ;
+Désolé, notre prestataire d’envoi d’email subit actuellement des soucis avec sa plateforme ;
 vous allez recevoir cet email sous peu.
 
 Bien cordialement,

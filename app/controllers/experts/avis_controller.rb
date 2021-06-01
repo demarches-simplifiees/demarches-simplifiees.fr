@@ -144,7 +144,7 @@ module Experts
     def check_if_avis_revoked
       avis = Avis.find(params[:id])
       if avis.revoked?
-        flash.alert = "Vous n'avez plus accès à ce dossier."
+        flash.alert = "Vous n’avez plus accès à ce dossier."
         redirect_to url_for(root_path)
       end
     end
