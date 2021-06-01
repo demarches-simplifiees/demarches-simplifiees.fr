@@ -674,7 +674,7 @@ describe Procedure do
         expect(procedure.published_revision.published_at).not_to eq(now)
       end
 
-      it "shouldn't create a new revision" do
+      it "doesn't create a new revision" do
         expect(procedure.published_revision).not_to be_nil
         expect(procedure.draft_revision).not_to be_nil
         expect(procedure.revisions.count).to eq(2)
