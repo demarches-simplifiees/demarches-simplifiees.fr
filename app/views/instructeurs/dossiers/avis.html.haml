@@ -7,7 +7,7 @@
     - if @dossier.procedure.allow_expert_review
       = render partial: "instructeurs/shared/avis/form", locals: { url: avis_instructeur_dossier_path(@dossier.procedure, @dossier), linked_dossiers: @dossier.linked_dossiers_for(current_instructeur), must_be_confidentiel: false, avis: @avis }
     - else
-      %p Cette démarche n'autorise pas la demande d'avis à un expert. Veuillez contacter votre administrateur
+      %p Cette démarche n’autorise pas la demande d’avis à un expert. Veuillez contacter votre administrateur
 
   - if @dossier.avis.present?
     = render partial: 'instructeurs/shared/avis/list', locals: { avis: @dossier.avis, avis_seen_at: @avis_seen_at }
@@ -15,4 +15,4 @@
   - if @dossier.termine? && !@dossier.avis.present?
     .blank-tab
       %h2.empty-text Aucun avis.
-      %p.empty-text-details Aucun avis n'a été demandé sur ce dossier.
+      %p.empty-text-details Aucun avis n’a été demandé sur ce dossier.

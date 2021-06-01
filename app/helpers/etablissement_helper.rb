@@ -17,8 +17,8 @@ module EtablissementHelper
 
   def effectif(etablissement)
     {
-      'NN' => "Unités non employeuses (pas de salarié au cours de l'année de référence et pas d'effectif au 31/12).",
-      '00' => "0 salarié (n'ayant pas d'effectif au 31/12 mais ayant employé des salariés au cours de l'année de référence)",
+      'NN' => "Unités non employeuses (pas de salarié au cours de l'année de référence et pas d’effectif au 31/12).",
+      '00' => "0 salarié (n'ayant pas d’effectif au 31/12 mais ayant employé des salariés au cours de l'année de référence)",
       '01' => '1 ou 2 salariés',
       '02' => '3 à 5 salariés',
       '03' => '6 à 9 salariés',
