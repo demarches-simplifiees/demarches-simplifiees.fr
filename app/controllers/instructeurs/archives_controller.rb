@@ -7,8 +7,7 @@ module Instructeurs
       @average_dossier_weight = procedure.average_dossier_weight
 
       @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(groupe_instructeurs)
-      @nb_dossiers = @count_dossiers_termines_by_month.sum { |count_by_month| count_by_month["count"] }
-      @poids_total = @nb_dossiers * @average_dossier_weight
+      @nb_dossiers_termines = @count_dossiers_termines_by_month.sum { |count_by_month| count_by_month["count"] }
 
       @archives = Archive
         .for_groupe_instructeur(groupe_instructeurs)
