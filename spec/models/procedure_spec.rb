@@ -1069,4 +1069,25 @@ describe Procedure do
       expect(procedure.destroy).to be_truthy
     end
   end
+
+  describe '#average_dossier_weight' do
+    let(:procedure) { create(:procedure, :published) }
+
+    before do
+      create_dossier_with_pj_of_size(4, procedure)
+      create_dossier_with_pj_of_size(5, procedure)
+      create_dossier_with_pj_of_size(6, procedure)
+    end
+
+    it 'estimates average dossier weight' do
+      expect(procedure.reload.average_dossier_weight).to eq 5
+    end
+
+    private
+
+    def create_dossier_with_pj_of_size(size, procedure)
+      dossier = create(:dossier, :accepte, procedure: procedure)
+      create(:champ_piece_justificative, size: size, dossier: dossier)
+    end
+  end
 end
