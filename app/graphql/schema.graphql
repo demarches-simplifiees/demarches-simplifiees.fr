@@ -1131,7 +1131,8 @@ type Entreprise {
 }
 
 type File {
-  byteSize: Int!
+  byteSize: Int! @deprecated(reason: "Utilisez le champ `byteSizeBigInt` à la place.")
+  byteSizeBigInt: BigInt!
   checksum: String!
   contentType: String!
   filename: String!
