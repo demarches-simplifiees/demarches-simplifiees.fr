@@ -138,8 +138,12 @@ FactoryBot.define do
     factory :champ_piece_justificative, class: 'Champs::PieceJustificativeChamp' do
       type_de_champ { association :type_de_champ_piece_justificative, procedure: dossier.procedure }
 
-      after(:build) do |champ, _evaluator|
-        champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+      transient do
+        size { 4 }
+      end
+
+      after(:build) do |champ, evaluator|
+        champ.piece_justificative_file.attach(io: StringIO.new("x" * evaluator.size), filename: "toto.txt", content_type: "text/plain")
       end
     end
 
