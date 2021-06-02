@@ -649,6 +649,73 @@ describe API::V2::GraphqlController do
       end
     end
 
+    context "champ" do
+      let(:champ) { create(:champ_piece_justificative, dossier: dossier) }
+      let(:byte_size) { 2712286911 }
+
+      context "byteSize" do
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
+              champs(id: \"#{champ.to_typed_id}\") {
+                ... on PieceJustificativeChamp {
+                  file { byteSize }
+                }
+              }
+            }
+          }"
+        end
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data).to eq(dossier: { champs: [{ file: { byteSize: 4 } }] })
+        }
+      end
+
+      context "when file is really big" do
+        before do
+          champ.piece_justificative_file.blob.update(byte_size: byte_size)
+        end
+
+        context "byteSize" do
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                champs(id: \"#{champ.to_typed_id}\") {
+                  ... on PieceJustificativeChamp {
+                    file { byteSize }
+                  }
+                }
+              }
+            }"
+          end
+
+          it {
+            expect(gql_errors).not_to be_nil
+          }
+        end
+
+        context "byteSizeBigInt" do
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                champs(id: \"#{champ.to_typed_id}\") {
+                  ... on PieceJustificativeChamp {
+                    file { byteSizeBigInt }
+                  }
+                }
+              }
+            }"
+          end
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data).to eq(dossier: { champs: [{ file: { byteSizeBigInt: '2712286911' } }] })
+          }
+        end
+      end
+    end
+
     context "groupeInstructeur" do
       let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
       let(:query) do
