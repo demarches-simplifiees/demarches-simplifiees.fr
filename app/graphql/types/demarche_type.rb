@@ -24,7 +24,7 @@ module Types
     field :declarative, DossierDeclarativeState, "L’état de dossier pour une démarche déclarative", null: true, method: :declarative_with_state
 
     field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
-    field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: false, method: :published_at
+    field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: true, method: :published_at
     field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
     field :date_depublication, GraphQL::Types::ISO8601DateTime, "Date de la dépublication.", null: true, method: :unpublished_at
     field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :closed_at
