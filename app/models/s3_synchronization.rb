@@ -20,118 +20,18 @@ class S3Synchronization < ApplicationRecord
   scope :checked_stats, -> { uploaded_stats.where('checked') }
 
   class << self
-    POOL_SIZE = 10
+    POOL_SIZE = 45
 
     def synchronize(under_rake, until_time)
       if Rails.configuration.active_storage.service == :local
-        upload2(:local, :s3, under_rake, until_time)
+        upload(:local, :s3, under_rake, until_time)
       else
-        upload2(:s3, :local, under_rake, until_time)
+        upload(:s3, :local, under_rake, until_time)
       end
       AdministrationMailer.s3_synchronization_report.deliver_now
     end
 
-    def uploaded(to, to_service, blob)
-      synchronization = S3Synchronization.find_or_create_by(target: to, active_storage_blob_id: blob.id)
-      return true if synchronization.checked
-
-      return false unless to_service.exist?(blob.key)
-
-      begin
-        to_service.open blob.key, checksum: blob.checksum do |f|
-        end
-        synchronization.checked = true
-        synchronization.save
-        return true
-      rescue => e
-        puts "\nIntegrity error on #{blob.key} #{e} #{e.message} ==> force upload"
-        return false
-      end
-    rescue => e
-      puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
-      e.backtrace.each { |line| puts line }
-      false
-    end
-
-    def upload_blobs(msg, from, to, under_rake, until_time, &block)
-      puts msg
-      configs = Rails.configuration.active_storage.service_configurations
-      from_service = ActiveStorage::Service.configure from, configs
-      progress = ProgressReport.new(ActiveStorage::Blob.count) if under_rake
-      pool = Concurrent::FixedThreadPool.new(POOL_SIZE)
-
-      blob = ActiveStorage::Blob.first
-      process_blob(blob, block, configs, from, from_service, to, progress, until_time) if blob.present?
-
-      ActiveStorage::Blob.find_each do |blob|
-        pool.post do
-          process_blob(blob, block, configs, from, from_service, to, progress, until_time)
-        end
-      end
-      pool.shutdown
-      pool.wait_for_termination
-      progress.finish if progress
-    end
-
-    def upload_file(to_service, blob, file)
-      begin
-        puts "\nUploading file #{blob.id}\t#{blob.key} #{blob.byte_size}"
-        to_service.upload(blob.key, file, checksum: blob.checksum)
-      rescue SystemExit, Interrupt
-        puts "\nCanceling upload of #{blob.key}"
-        to_service.delete blob.key
-        raise
-      end
-    end
-
     def upload(from, to, under_rake, until_time)
-      ActiveStorage::Blob.service
-      configs = Rails.configuration.active_storage.service_configurations
-      from_service = ActiveStorage::Service.configure from, configs
-
-      ActiveStorage::Blob.service = from_service
-
-      S3Synchronization.all.count # load class before multi-threading
-
-      msg = "First step: files not uploaded yet. #{ActiveStorage::Blob.count} Blobs to go..."
-      upload_blobs(msg, from, to, under_rake, until_time) do |_service_name, service, blob|
-        service.exist?(blob.key)
-      end
-
-      msg = "Second step: check integrity of files. #{ActiveStorage::Blob.count} Blobs to go..."
-      upload_blobs(msg, from, to, under_rake, until_time) do |service_name, service, blob|
-        uploaded(service_name, service, blob)
-      end
-    end
-
-    def process_blob(blob, block, configs, from, from_service, to, progress, until_time)
-      begin
-        return if until_time.present? && Time.zone.now > until_time
-        if from_service.exist?(blob.key)
-          blob.open do |file|
-            upload_blob(blob, file, configs, to, progress, &block)
-          end
-        else
-          puts "\nFichier non présent sur #{from}: #{blob.key}"
-        end
-      rescue => e
-        puts "\nErreur inconnue #{blob.key} #{e} #{e.message}"
-        e.backtrace.each { |line| puts line }
-      end
-    end
-
-    def upload_blob(blob, file, configs, to, progress, &block)
-      if File.file?(file)
-        service = ActiveStorage::Service.configure to, configs
-        unless yield(to, service, blob) then
-          upload_file(service, blob, file)
-        end
-      end
-      progress.inc if progress
-    end
-
-    #---------------------------------------------------------------------
-    def upload2(from, to, under_rake, until_time)
       ActiveStorage::Blob.service
       configs = Rails.configuration.active_storage.service_configurations
       from_service = ActiveStorage::Service.configure from, configs
@@ -151,7 +51,7 @@ class S3Synchronization < ApplicationRecord
       pool.shutdown
       pool.wait_for_termination
       progress.finish if progress
-    end
+     end
 
     private
 
@@ -164,7 +64,7 @@ class S3Synchronization < ApplicationRecord
       return if until_time.present? && Time.zone.now > until_time
       if from_service.exist?(blob.key)
         blob.open do |file|
-          upload_blob2(blob, file, configs, to, progress)
+          upload_blob(blob, file, configs, to, progress)
         end
       else
         puts "\nFichier non présent à la source : #{blob.key}"
@@ -174,7 +74,7 @@ class S3Synchronization < ApplicationRecord
       e.backtrace.each { |line| puts line }
     end
 
-    def upload_blob2(blob, file, configs, to, progress, &block)
+    def upload_blob(blob, file, configs, to, progress, &block)
       if File.file?(file)
         to_service = ActiveStorage::Service.configure to, configs
         synchronization = S3Synchronization.find_or_create_by(target: to, active_storage_blob_id: blob.id)
@@ -188,6 +88,17 @@ class S3Synchronization < ApplicationRecord
       unless synchronization&.checked
         upload_file(to_service, blob, file)
         check_integrity(to_service, blob, synchronization)
+      end
+    end
+
+    def upload_file(to_service, blob, file)
+      begin
+        puts "\nUploading file #{blob.id}\t#{blob.key} #{blob.byte_size}"
+        to_service.upload(blob.key, file, checksum: blob.checksum)
+      rescue SystemExit, Interrupt
+        puts "\nCanceling upload of #{blob.key}"
+        to_service.delete blob.key
+        raise
       end
     end
 
