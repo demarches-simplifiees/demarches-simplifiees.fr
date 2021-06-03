@@ -625,6 +625,7 @@ describe Procedure do
         expect(procedure.draft_revision).not_to be_nil
         expect(procedure.revisions.count).to eq(2)
         expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+        expect(procedure.published_revision.published_at).to eq(now)
       end
     end
 
@@ -649,10 +650,35 @@ describe Procedure do
         expect(procedure.canonical_procedure).to eq(canonical_procedure)
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
+        expect(procedure.published_revision.published_at).to eq(now)
       end
 
       it 'unpublishes parent procedure' do
         expect(parent_procedure.unpublished_at).to eq(now)
+      end
+    end
+
+    context 'when republishing a previously closed procedure' do
+      let(:procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
+
+      before do
+        procedure.close!
+        Timecop.freeze(now) do
+          procedure.publish_or_reopen!(administrateur)
+        end
+      end
+
+      it 'changes the procedure state to published' do
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+        expect(procedure.published_revision.published_at).not_to eq(now)
+      end
+
+      it "doesn't create a new revision" do
+        expect(procedure.published_revision).not_to be_nil
+        expect(procedure.draft_revision).not_to be_nil
+        expect(procedure.revisions.count).to eq(2)
+        expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
       end
     end
   end
