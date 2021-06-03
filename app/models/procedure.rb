@@ -688,6 +688,11 @@ class Procedure < ApplicationRecord
     draft_revision.deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
   end
 
+  def publish_revision!
+    update!(draft_revision: create_new_revision, published_revision: draft_revision)
+    published_revision.touch(:published_at)
+  end
+
   private
 
   def before_publish
