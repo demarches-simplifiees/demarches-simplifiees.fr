@@ -93,7 +93,7 @@ https://www.demarches-simplifiees.fr/users/password/new
 
 Bien cordialement</pre>
   <% else %>
-    <p><strong>Ce compte n’est pas activé</strong>. Vous pouvez lui <%= link_to('renvoyer l’email de confirmation', [:resend_confirmation_instructions, namespace, 'user'], method: :post, class: 'button') %>, puis un email. <button class="btn btn-secondary btn-small" onclick="reveal_email('#not-activated')">Voir la suggestion d’email</button> </p>
+    <p><strong>Ce compte n’est pas activé</strong>. Vous pouvez lui <%= link_to('renvoyer l’email de confirmation', [:resend_confirmation_instructions, namespace, :user], method: :post, class: 'button') %>, puis un email. <button class="btn btn-secondary btn-small" onclick="reveal_email('#not-activated')">Voir la suggestion d’email</button> </p>
     <pre class="hidden" id="not-activated">
 Bonjour,
 
