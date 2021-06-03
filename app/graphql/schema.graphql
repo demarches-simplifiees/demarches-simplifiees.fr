@@ -374,7 +374,7 @@ type Demarche {
   """
   Date de la publication.
   """
-  datePublication: ISO8601DateTime!
+  datePublication: ISO8601DateTime
 
   """
   L’état de dossier pour une démarche déclarative
@@ -1131,7 +1131,8 @@ type Entreprise {
 }
 
 type File {
-  byteSize: Int!
+  byteSize: Int! @deprecated(reason: "Utilisez le champ `byteSizeBigInt` à la place.")
+  byteSizeBigInt: BigInt!
   checksum: String!
   contentType: String!
   filename: String!
@@ -1588,6 +1589,11 @@ type Revision {
   Date de la création.
   """
   dateCreation: ISO8601DateTime!
+
+  """
+  Date de la publication.
+  """
+  datePublication: ISO8601DateTime
   id: ID!
 }
 

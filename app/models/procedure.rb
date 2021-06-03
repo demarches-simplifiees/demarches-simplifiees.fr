@@ -248,10 +248,10 @@ class Procedure < ApplicationRecord
     state :close
     state :depubliee
 
-    event :publish, before: :before_publish, after: :after_publish do
-      transitions from: :brouillon, to: :publiee
-      transitions from: :close, to: :publiee
-      transitions from: :depubliee, to: :publiee
+    event :publish, before: :before_publish do
+      transitions from: :brouillon, to: :publiee, after: :after_publish
+      transitions from: :close, to: :publiee, after: :after_republish
+      transitions from: :depubliee, to: :publiee, after: :after_republish
     end
 
     event :close, after: :after_close do
@@ -550,7 +550,7 @@ class Procedure < ApplicationRecord
   end
 
   def whitelist!
-    update_attribute('whitelisted_at', Time.zone.now)
+    touch(:whitelisted_at)
   end
 
   def closed_mail_template_attestation_inconsistency_state
@@ -693,15 +693,21 @@ class Procedure < ApplicationRecord
   end
 
   def after_publish(canonical_procedure = nil)
-    update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
+    update!(canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
+    touch(:published_at)
+    published_revision.touch(:published_at)
+  end
+
+  def after_republish(canonical_procedure = nil)
+    touch(:published_at)
   end
 
   def after_close
-    update!(closed_at: Time.zone.now)
+    touch(:closed_at)
   end
 
   def after_unpublish
-    update!(unpublished_at: Time.zone.now)
+    touch(:unpublished_at)
   end
 
   def update_juridique_required
