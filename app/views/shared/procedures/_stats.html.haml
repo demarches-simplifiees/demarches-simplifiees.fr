@@ -15,6 +15,14 @@
 
   .stat-cards
     .stat-card.stat-card-half.pull-left
+      %span.stat-card-title TEMPS DE TRAITEMENT
+      .chart-container
+        .chart
+          - colors = %w(#C3D9FF #0069CC #1C7EC9) # from _colors.scss
+          = column_chart @usual_traitement_time_by_month, ytitle: "Nb Jours"
+
+  .stat-cards
+    .stat-card.stat-card-half.pull-left
       %span.stat-card-title AVANCÉE DES DOSSIERS
       .chart-container
         .chart

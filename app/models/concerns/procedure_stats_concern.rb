@@ -7,6 +7,12 @@ module ProcedureStatsConcern
     end
   end
 
+  def stats_usual_traitement_time_by_month_in_days
+    Rails.cache.fetch("#{cache_key_with_version}/stats_usual_traitement_time_by_month_in_days", expires_in: 12.hours) do
+      usual_traitement_time_by_month_in_days
+    end
+  end
+
   def stats_dossiers_funnel
     Rails.cache.fetch("#{cache_key_with_version}/stats_dossiers_funnel", expires_in: 12.hours) do
       [
