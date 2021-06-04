@@ -1,0 +1,4 @@
+- title = "Statistiques · #{@procedure.libelle}"
+- content_for(:title, title)
+
+= render partial: 'shared/procedures/stats', locals: { title: title }
