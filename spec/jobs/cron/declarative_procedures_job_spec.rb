@@ -9,14 +9,17 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
     let(:nouveau_dossier2) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
     let(:dossier_recu) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
     let(:dossier_brouillon) { create(:dossier, procedure: procedure) }
+    let(:dossier_repasse_en_construction) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
 
     before do
       Timecop.freeze(date)
+      dossier_repasse_en_construction.touch(:declarative_triggered_at)
       dossiers = [
         nouveau_dossier1,
         nouveau_dossier2,
         dossier_recu,
-        dossier_brouillon
+        dossier_brouillon,
+        dossier_repasse_en_construction
       ]
 
       create(:attestation_template, procedure: procedure)
@@ -33,19 +36,21 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
         let(:last_operation) { nouveau_dossier1.dossier_operation_logs.last }
 
         it {
-          expect(nouveau_dossier1.en_instruction?).to be true
+          expect(nouveau_dossier1.en_instruction?).to be_truthy
           expect(nouveau_dossier1.en_instruction_at).to eq(date)
           expect(last_operation.operation).to eq('passer_en_instruction')
           expect(last_operation.automatic_operation?).to be_truthy
 
-          expect(nouveau_dossier2.en_instruction?).to be true
+          expect(nouveau_dossier2.en_instruction?).to be_truthy
           expect(nouveau_dossier2.en_instruction_at).to eq(date)
 
-          expect(dossier_recu.en_instruction?).to be true
+          expect(dossier_recu.en_instruction?).to be_truthy
           expect(dossier_recu.en_instruction_at).to eq(instruction_date)
 
-          expect(dossier_brouillon.brouillon?).to be true
+          expect(dossier_brouillon.brouillon?).to be_truthy
           expect(dossier_brouillon.en_instruction_at).to eq(nil)
+
+          expect(dossier_repasse_en_construction.en_construction?).to be_truthy
         }
       end
 
