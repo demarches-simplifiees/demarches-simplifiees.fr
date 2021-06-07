@@ -8,6 +8,7 @@
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
 #  conservation_extension                             :interval         default(0 seconds)
+#  declarative_triggered_at                           :datetime
 #  deleted_user_email_never_send                      :string
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime
@@ -655,7 +656,9 @@ class Dossier < ApplicationRecord
   end
 
   def after_passer_automatiquement_en_instruction
-    update!(en_instruction_at: Time.zone.now) if self.en_instruction_at.nil?
+    self.en_instruction_at ||= Time.zone.now
+    self.declarative_triggered_at = Time.zone.now
+    save!
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
@@ -695,6 +698,7 @@ class Dossier < ApplicationRecord
   def after_accepter_automatiquement
     self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur_email: nil, motivation: nil, processed_at: Time.zone.now)
     self.en_instruction_at ||= Time.zone.now
+    self.declarative_triggered_at = Time.zone.now
 
     if attestation.nil?
       self.attestation = build_attestation

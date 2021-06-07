@@ -248,6 +248,10 @@ Rails.application.routes.draw do
   #
 
   scope module: 'users' do
+    namespace :statistiques do
+      get '/:path', action: 'statistiques'
+    end
+
     namespace :commencer do
       get '/test/:path/dossier_vide', action: 'dossier_vide_pdf_test', as: :dossier_vide_test
       get '/test/:path', action: 'commencer_test', as: :test
