@@ -19,15 +19,15 @@
       .chart-container
         .chart
           - colors = %w(#C3D9FF #0069CC #1C7EC9) # from _colors.scss
-          = column_chart @usual_traitement_time_by_month, ytitle: "Nb Jours"
+          = column_chart @usual_traitement_time_by_month, ytitle: "Nb Jours", legend: "bottom", label: "Temps de traitement entre le passage en instruction et la réponse (accepté, refusé, ou classé sans suite) pour 90% des dossiers"
 
-  .stat-cards
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title AVANCÉE DES DOSSIERS
       .chart-container
         .chart
           = area_chart @dossiers_funnel
 
+  .stat-cards
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title TAUX D’ACCEPTATION
       .chart-container
@@ -35,9 +35,8 @@
           - colors = %w(#C3D9FF #0069CC #1C7EC9) # from _colors.scss
           = pie_chart @termines_states, colors: colors
 
-    .stat-cards
-      .stat-card.stat-card-half.pull-left
-        %span.stat-card-title RÉPARTITION PAR SEMAINE
-        .chart-container
-          .chart
-            = line_chart @termines_by_week, colors: ["#387EC3", "#AE2C2B", "#FAD859"]
+    .stat-card.stat-card-half.pull-left
+      %span.stat-card-title RÉPARTITION PAR SEMAINE
+      .chart-container
+        .chart
+          = line_chart @termines_by_week, colors: ["#387EC3", "#AE2C2B", "#FAD859"]
