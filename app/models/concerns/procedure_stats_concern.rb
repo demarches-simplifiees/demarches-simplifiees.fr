@@ -31,7 +31,7 @@ module ProcedureStatsConcern
   def stats_termines_by_week
     Rails.cache.fetch("#{cache_key_with_version}/stats_termines_by_week", expires_in: 12.hours) do
       now = Time.zone.now
-      chart_data = dossiers.joins(:traitements)
+      chart_data = dossiers.includes(:traitements)
         .state_termine
         .where(traitements: { processed_at: (now.beginning_of_week - 6.months)..now.end_of_week })
 
