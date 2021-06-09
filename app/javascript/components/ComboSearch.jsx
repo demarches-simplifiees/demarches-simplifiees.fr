@@ -45,17 +45,23 @@ function ComboSearch({
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [value, setValue] = useState(initialValue);
   const resultsMap = useRef({});
-  const setExternalValue = useCallback((value) => {
-    if (hiddenValueField) {
-      hiddenValueField.setAttribute('value', value);
-      fire(hiddenValueField, 'autosave:trigger');
-    }
-  });
-  const setExternalId = useCallback((key) => {
-    if (hiddenIdField) {
-      hiddenIdField.setAttribute('value', key);
-    }
-  });
+  const setExternalValue = useCallback(
+    (value) => {
+      if (hiddenValueField) {
+        hiddenValueField.setAttribute('value', value);
+        fire(hiddenValueField, 'autosave:trigger');
+      }
+    },
+    [hiddenValueField]
+  );
+  const setExternalId = useCallback(
+    (key) => {
+      if (hiddenIdField) {
+        hiddenIdField.setAttribute('value', key);
+      }
+    },
+    [hiddenIdField]
+  );
   const setExternalValueAndId = useCallback((value) => {
     const [key, result] = resultsMap.current[value];
     setExternalId(key);
@@ -63,7 +69,7 @@ function ComboSearch({
     if (onChange) {
       onChange(value, result);
     }
-  });
+  }, []);
 
   const handleOnChange = useCallback(
     ({ target: { value } }) => {
@@ -82,7 +88,7 @@ function ComboSearch({
   const handleOnSelect = useCallback((value) => {
     setExternalValueAndId(value);
     setValue(value);
-  });
+  }, []);
 
   const { isSuccess, data } = useQuery([scope, debouncedSearchTerm], {
     enabled: !!debouncedSearchTerm,
