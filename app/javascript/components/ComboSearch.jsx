@@ -12,6 +12,8 @@ import {
 import '@reach/combobox/styles.css';
 import { fire } from '@utils';
 
+import { useDeferredSubmit } from './shared/hooks';
+
 function defaultTransformResults(_, results) {
   return results;
 }
@@ -70,6 +72,7 @@ function ComboSearch({
       onChange(value, result);
     }
   }, []);
+  const awaitFormSubmit = useDeferredSubmit(hiddenValueField);
 
   const handleOnChange = useCallback(
     ({ target: { value } }) => {
@@ -88,6 +91,8 @@ function ComboSearch({
   const handleOnSelect = useCallback((value) => {
     setExternalValueAndId(value);
     setValue(value);
+    setSearchTerm('');
+    awaitFormSubmit.done();
   }, []);
 
   const { isSuccess, data } = useQuery([scope, debouncedSearchTerm], {
@@ -97,12 +102,22 @@ function ComboSearch({
   });
   const results = isSuccess ? transformResults(debouncedSearchTerm, data) : [];
 
+  const onBlur = useCallback(() => {
+    if (!allowInputValues && isSuccess && results[0]) {
+      const [, value] = transformResult(results[0]);
+      awaitFormSubmit(() => {
+        handleOnSelect(value);
+      });
+    }
+  }, [data]);
+
   return (
     <Combobox aria-label={label} onSelect={handleOnSelect}>
       <ComboboxInput
         className={className}
         placeholder={placeholder}
         onChange={handleOnChange}
+        onBlur={onBlur}
         value={value}
         required={required}
       />
