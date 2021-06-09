@@ -4,12 +4,14 @@ module Instructeurs
 
     def index
       @procedure = procedure
+      @average_dossier_weight = procedure.average_dossier_weight
 
-      @archivable_months = archivable_months
-      @dossiers_termines = @procedure.dossiers.state_termine
-      @poids_total = ProcedureArchiveService.procedure_files_size(@procedure)
-      groupe_instructeur = current_instructeur.groupe_instructeurs.where(procedure: @procedure.id).first
-      @archives = Archive.for_groupe_instructeur(groupe_instructeur)
+      @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(groupe_instructeurs)
+      @nb_dossiers_termines = @count_dossiers_termines_by_month.sum { |count_by_month| count_by_month["count"] }
+
+      @archives = Archive
+        .for_groupe_instructeur(groupe_instructeurs)
+        .to_a
     end
 
     def create
@@ -35,21 +37,20 @@ module Instructeurs
       end
     end
 
-    def archivable_months
-      start_date = procedure.published_at.to_date
-      end_date = Time.zone.now.to_date
+    def procedure_id
+      params[:procedure_id]
+    end
 
-      (start_date...end_date)
-        .map(&:beginning_of_month)
-        .uniq
-        .reverse
+    def groupe_instructeurs
+      current_instructeur
+        .groupe_instructeurs
+        .where(procedure_id: procedure_id)
     end
 
     def procedure
       current_instructeur
         .procedures
-        .for_download
-        .find(params[:procedure_id])
+        .find(procedure_id)
     end
   end
 end
