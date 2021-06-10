@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier-test.api.gouv.fr/api/ping
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 15:08:50 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '6'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Range,Content-Range,X-Content-Range,X-API-Key
+      Etag:
+      - W/"6-uBnwlsJiQ3kuZAgKKWB4aV5ugdE"
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15552000
+      Vary:
+      - Origin, Accept
+      X-Gravitee-Request-Id:
+      - 0f547b5b-52f1-4a5d-947b-5b52f11a5dfd
+      X-Gravitee-Transaction-Id:
+      - 0f547b5b-52f1-4a5d-947b-5b52f11a5dfd
+    body:
+      encoding: UTF-8
+      string: '"pong"'
+  recorded_at: Tue, 16 Mar 2021 15:08:50 GMT
+recorded_with: VCR 6.0.0

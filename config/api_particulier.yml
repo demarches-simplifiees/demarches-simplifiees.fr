@@ -1,0 +1,14 @@
+defaults: &defaults
+  timeout: <%= ENV.fetch("API_PARTICULIER_TIMEOUT", 20).to_i %>
+
+development:
+  <<: *defaults
+  url: <%= ENV.fetch("API_PARTICULIER_URL", "https://particulier-test.api.gouv.fr/api/v2") %>
+
+test:
+  <<: *defaults
+  url: https://particulier-test.api.gouv.fr/api/v2
+
+production:
+  <<: *defaults
+  url: <%= ENV.fetch("API_PARTICULIER_URL", "https://particulier.api.gouv.fr/api/v2") %>

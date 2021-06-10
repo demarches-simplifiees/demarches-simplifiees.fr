@@ -85,5 +85,9 @@ module TPS
     }
 
     config.skylight.probes += [:graphql]
+
+    # Custom Configuration
+    # @see https://guides.rubyonrails.org/configuring.html#custom-configuration
+    config.x.api_particulier = config_for(:api_particulier)
   end
 end
