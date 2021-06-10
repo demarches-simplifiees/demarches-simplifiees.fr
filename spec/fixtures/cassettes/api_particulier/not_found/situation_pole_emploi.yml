@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier-test.api.gouv.fr/api/v2/situations-pole-emploi?identifiant=0000000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 17:38:05 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '36'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15724800; includeSubdomains
+      X-Gravitee-Request-Id:
+      - 1671abaa-d35a-424d-b1ab-aad35a924dff
+      X-Gravitee-Transaction-Id:
+      - 97fd78a4-36d0-45aa-bd78-a436d0a5aa86
+    body:
+      encoding: UTF-8
+      string: '{"message": "Individu introuvable"}
+
+'
+  recorded_at: Tue, 16 Mar 2021 17:38:04 GMT
+recorded_with: VCR 6.0.0

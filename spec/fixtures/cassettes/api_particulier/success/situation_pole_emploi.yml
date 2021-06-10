@@ -1,0 +1,56 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier-test.api.gouv.fr/api/v2/situations-pole-emploi?identifiant=georges_moustaki_77
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 16:19:31 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '697'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15724800; includeSubdomains
+      X-Gravitee-Request-Id:
+      - a9770b1e-1fb1-4e8a-b70b-1e1fb1fe8aae
+      X-Gravitee-Transaction-Id:
+      - 694271cf-316a-43f8-8271-cf316aa3f87d
+    body:
+      encoding: UTF-8
+      string: '{"email": "georges@moustaki.fr", "nom": "Moustaki", "nomUsage": "Moustaki",
+        "prenom": "Georges", "identifiant": "georges_moustaki_77", "sexe": "M", "dateNaissance":
+        "1934-05-03T00:00:00", "dateInscription": "1965-05-03T00:00:00", "dateRadiation":
+        "1966-05-03T00:00:00", "dateProchaineConvocation": "1966-05-03T00:00:00",
+        "categorieInscription": "3", "codeCertificationCNAV": "VC", "telephone": "0629212921",
+        "telephone2": null, "civilite": "M.", "adresse": {"codePostal": "75018", "INSEECommune":
+        "75118", "localite": "75018 Paris", "ligneVoie": "3 rue des Huttes", "ligneComplementDestinataire":
+        null, "ligneComplementAdresse": null, "ligneComplementDistribution": null,
+        "ligneNom": "MOUSTAKI"}}
+
+'
+  recorded_at: Tue, 16 Mar 2021 16:19:31 GMT
+recorded_with: VCR 6.0.0

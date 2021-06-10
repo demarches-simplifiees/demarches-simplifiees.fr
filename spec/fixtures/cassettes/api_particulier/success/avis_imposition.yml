@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier-test.api.gouv.fr/api/v2/avis-imposition?numeroFiscal=2097699999077&referenceAvis=2097699999077
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 17:01:19 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '747'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Range,Content-Range,X-Content-Range,X-API-Key
+      Etag:
+      - W/"2eb-A0NiRd+gbJKIAT0y4tR4j9tjXb0"
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15552000
+      Vary:
+      - Origin, Accept
+      X-Gravitee-Request-Id:
+      - 7bfb7f99-ac2d-4443-bb7f-99ac2d0443c5
+      X-Gravitee-Transaction-Id:
+      - f5dca8b3-2ab7-4c9a-9ca8-b32ab70c9a2b
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJkZWNsYXJhbnQxIjogewogICAgIm5vbSI6ICJGRVJSSSIsCiAgICAibm9tTmFpc3NhbmNlIjogIkZFUlJJIiwKICAgICJwcmVub21zIjogIkthcmluZSIsCiAgICAiZGF0ZU5haXNzYW5jZSI6ICIxMi8wOC8xOTc4IgogIH0sCiAgImRlY2xhcmFudDIiOiB7CiAgICAibm9tIjogIiIsCiAgICAibm9tTmFpc3NhbmNlIjogIiIsCiAgICAicHJlbm9tcyI6ICIiLAogICAgImRhdGVOYWlzc2FuY2UiOiAiMTIvMDgvMTk3OCIKICB9LAogICJkYXRlUmVjb3V2cmVtZW50IjogIjA5LzEwLzIwMjAiLAogICJkYXRlRXRhYmxpc3NlbWVudCI6ICIwNy8wNy8yMDIwIiwKICAibm9tYnJlUGFydHMiOiAxLAogICJzaXR1YXRpb25GYW1pbGxlIjogIkPDqWxpYmF0YWlyZSIsCiAgIm5vbWJyZVBlcnNvbm5lc0NoYXJnZSI6IDAsCiAgInJldmVudUJydXRHbG9iYWwiOiAzODgxNCwKICAicmV2ZW51SW1wb3NhYmxlIjogMzg4MTQsCiAgImltcG90UmV2ZW51TmV0QXZhbnRDb3JyZWN0aW9ucyI6IDM4ODE0LAogICJtb250YW50SW1wb3QiOiAzODgxNCwKICAicmV2ZW51RmlzY2FsUmVmZXJlbmNlIjogMzg4MTQsCiAgImZveWVyRmlzY2FsIjogewogICAgImFubmVlIjogMjAyMCwKICAgICJhZHJlc3NlIjogIjEzIHJ1ZSBkZSBsYSBQbGFnZSA5NzYxNSBQYW1hbnppIgogIH0sCiAgImFubmVlSW1wb3RzIjogIjIwMjAiLAogICJhbm5lZVJldmVudXMiOiAiMjAyMCIsCiAgInNpdHVhdGlvblBhcnRpZWxsZSI6ICJTVVAgRE9NIgp9
+  recorded_at: Tue, 16 Mar 2021 17:01:18 GMT
+recorded_with: VCR 6.0.0

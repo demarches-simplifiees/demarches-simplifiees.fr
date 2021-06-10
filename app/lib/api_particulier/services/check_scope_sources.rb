@@ -15,8 +15,20 @@ module APIParticulier
       end
       alias_method :mandatory?, :call
 
+      def dgfip_mandatory?(strict: true)
+        call(APIParticulier::Types::DGFIP_SCOPES, strict: strict)
+      end
+
       def caf_mandatory?(strict: true)
         call(APIParticulier::Types::CAF_SCOPES, strict: strict)
+      end
+
+      def pole_emploi_mandatory?(strict: true)
+        call(APIParticulier::Types::POLE_EMPLOI_SCOPES, strict: strict)
+      end
+
+      def etudiant_mandatory?(strict: true)
+        call(APIParticulier::Types::ETUDIANT_SCOPES, strict: strict)
       end
 
       private
@@ -45,6 +57,10 @@ module APIParticulier
 
       def scoped_sources(scope_type)
         case scope_type
+        when APIParticulier::Types::Scope[:pe_situation_individu] then sources.dig(:pole_emploi, :situation)
+        when APIParticulier::Types::Scope[:mesri_statut_etudiant] then sources.dig(:mesri, :statut_etudiant)
+        when APIParticulier::Types::Scope[:dgfip_avis_imposition] then sources.dig(:dgfip, :avis_imposition)
+        when APIParticulier::Types::Scope[:dgfip_adresse] then sources.dig(:dgfip, :foyer_fiscal)
         when APIParticulier::Types::Scope[:cnaf_allocataires] then sources.dig(:caf, :allocataires)
         when APIParticulier::Types::Scope[:cnaf_enfants] then sources.dig(:caf, :enfants)
         when APIParticulier::Types::Scope[:cnaf_adresse] then sources.dig(:caf, :adresse)

@@ -12,7 +12,10 @@ module APIParticulier
 
       def call
         {
-          caf: caf
+          dgfip: dgfip,
+          caf: caf,
+          pole_emploi: pole_emploi,
+          mesri: mesri
         }
       end
 
@@ -41,6 +44,32 @@ module APIParticulier
           procedure.api_particulier_scopes,
           procedure.api_particulier_sources
         )
+      end
+
+      def dgfip
+        {
+          avis_imposition: dgfip_avis_imposition,
+          foyer_fiscal: dgfip_foyer_fiscal
+        }.compact
+      end
+
+      def fetch_dgfip
+        @fetch_dgfip ||= api.avis_d_imposition(
+          numero_fiscal: individual.api_particulier_dgfip_numero_fiscal,
+          reference_de_l_avis: individual.api_particulier_dgfip_reference_de_l_avis
+        )
+      end
+
+      def dgfip_avis_imposition
+        return unless check_scope_sources_service.mandatory?("dgfip_avis_imposition")
+
+        fetch_dgfip.dup.tap(&:ignore_foyer_fiscal!)
+      end
+
+      def dgfip_foyer_fiscal
+        return unless check_scope_sources_service.mandatory?("dgfip_adresse")
+
+        fetch_dgfip.foyer_fiscal
       end
 
       def caf
@@ -80,6 +109,36 @@ module APIParticulier
         return {} unless check_scope_sources_service.mandatory?("cnaf_quotient_familial")
 
         fetch_caf.as_json.symbolize_keys.slice(:quotient_familial, :annee, :mois)
+      end
+
+      def pole_emploi
+        { situation: pole_emploi_situation }.compact
+      end
+
+      def fetch_pole_emploi
+        @fetch_pole_emploi ||= api.situation_pole_emploi(
+          identifiant: individual.api_particulier_pole_emploi_identifiant
+        )
+      end
+
+      def pole_emploi_situation
+        return unless check_scope_sources_service.mandatory?("pe_situation_individu")
+
+        fetch_pole_emploi
+      end
+
+      def mesri
+        { statut_etudiant: mesri_statut_etudiant }.compact
+      end
+
+      def fetch_mesri
+        @fetch_mesri ||= api.etudiants(ine: individual.api_particulier_mesri_ine)
+      end
+
+      def mesri_statut_etudiant
+        return unless check_scope_sources_service.mandatory?("mesri_statut_etudiant")
+
+        fetch_mesri
       end
     end
   end

@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier-test.api.gouv.fr/api/v2/etudiants?ine=0000000000T
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 17:38:06 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15724800; includeSubdomains
+      X-Gravitee-Request-Id:
+      - 56804eac-dd21-4bc0-804e-acdd214bc095
+      X-Gravitee-Transaction-Id:
+      - c64ea1b0-8231-492f-8ea1-b08231d92f59
+    body:
+      encoding: UTF-8
+      string: '{"message": "\u00c9tudiant introuvable"}
+
+'
+  recorded_at: Tue, 16 Mar 2021 17:38:06 GMT
+recorded_with: VCR 6.0.0

@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier-test.api.gouv.fr/api/v2/etudiants?ine=0906018155T
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 15:46:49 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '395'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15724800; includeSubdomains
+      X-Gravitee-Request-Id:
+      - 4163abd8-c79b-4d11-a3ab-d8c79bfd115e
+      X-Gravitee-Transaction-Id:
+      - '04134962-52de-4d2f-9349-6252de4d2f86'
+    body:
+      encoding: UTF-8
+      string: '{"ine": "0906018155T", "nom": "Dupont", "prenom": "Ga\u00ebtan", "dateNaissance":
+        "1999-10-12T00:00:00", "inscriptions": [{"dateDebutInscription": "2019-09-01T00:00:00",
+        "dateFinInscription": "2020-08-31T00:00:00", "statut": "admis", "regime":
+        "formation initiale", "codeCommune": "44000", "etablissement": {"uai": "0011402U",
+        "nom": "EGC AIN BOURG EN BRESSE EC GESTION ET COMMERCE (01000)"}}]}
+
+'
+  recorded_at: Tue, 16 Mar 2021 15:46:49 GMT
+recorded_with: VCR 6.0.0

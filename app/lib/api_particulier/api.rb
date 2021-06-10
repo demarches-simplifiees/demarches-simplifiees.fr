@@ -10,12 +10,45 @@ module APIParticulier
       @http_service = attrs[:http_service]
     end
 
+    def avis_d_imposition(numero_fiscal:, reference_de_l_avis:)
+      # NOTE: Attention, il est possible que l'utilisateur ajoute une quatorzième lettre à la fin de sa
+      # référence d'avis. Il s'agit d'une clé de vérification, il est nécessaire de l'enlever avant de
+      # l'envoyer sur l'API Particulier.
+      params = {
+        numeroFiscal: numero_fiscal.to_i.to_s.rjust(13, "0"),
+        referenceAvis: reference_de_l_avis.to_i.to_s.rjust(13, "0")
+      }
+
+      get("avis-imposition", **params) do |response|
+        data = JSON.parse(response.body, symbolize_names: true)
+        APIParticulier::Entities::DGFIP::AvisImposition.new(**data)
+      end
+    end
+
     def composition_familiale(numero_d_allocataire:, code_postal:)
       params = { numeroAllocataire: numero_d_allocataire, codePostal: code_postal }
 
       get("composition-familiale", **params) do |response|
         data = JSON.parse(response.body, symbolize_names: true)
         APIParticulier::Entities::CAF::Famille.new(**data)
+      end
+    end
+
+    def situation_pole_emploi(identifiant:)
+      params = { identifiant: identifiant }
+
+      get("situations-pole-emploi", **params) do |response|
+        data = JSON.parse(response.body, symbolize_names: true)
+        APIParticulier::Entities::PoleEmploi::SituationPoleEmploi.new(**data)
+      end
+    end
+
+    def etudiants(ine:)
+      params = { ine: ine }
+
+      get("etudiants", **params) do |response|
+        data = JSON.parse(response.body, symbolize_names: true)
+        APIParticulier::Entities::MESRI::Etudiant.new(**data)
       end
     end
 

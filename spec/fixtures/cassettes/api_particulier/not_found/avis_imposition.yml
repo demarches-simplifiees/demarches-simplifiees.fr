@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier-test.api.gouv.fr/api/v2/avis-imposition?numeroFiscal=0000000000000&referenceAvis=2097699999077
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 17:38:02 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '207'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Range,Content-Range,X-Content-Range,X-API-Key
+      Etag:
+      - W/"cf-uNwYL0YRBYrkS70EgL3y55S6raE"
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15552000
+      Vary:
+      - Origin, Accept
+      X-Gravitee-Request-Id:
+      - '0648dc90-b3aa-4c25-88dc-90b3aa4c25b3'
+      X-Gravitee-Transaction-Id:
+      - 39fa111e-9901-4aa7-ba11-1e99017aa7f5
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJlcnJvciI6ICJub3RfZm91bmQiLAogICJyZWFzb24iOiAiTGVzIHBhcmFtw6h0cmVzIGZvdXJuaXMgc29udCBpbmNvcnJlY3RzIG91IG5lIGNvcnJlc3BvbmRlbnQgcGFzIMOgIHVuIGF2aXMiLAogICJtZXNzYWdlIjogIkxlcyBwYXJhbcOodHJlcyBmb3VybmlzIHNvbnQgaW5jb3JyZWN0cyBvdSBuZSBjb3JyZXNwb25kZW50IHBhcyDDoCB1biBhdmlzIgp9
+  recorded_at: Tue, 16 Mar 2021 17:38:03 GMT
+recorded_with: VCR 6.0.0
