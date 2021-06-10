@@ -68,7 +68,10 @@
     = f.label :for_individual, value: true do
       = f.radio_button :for_individual, true
       Ma démarche s’adresse à un particulier
-      %p.notice En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
+      %p.notice
+        En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire.
+        - if feature_enabled?(:api_particulier)
+          <br>Grâce à l’API Particulier, les informations sur l'usager pourront être renseignées automatiquement selon vos besoins.
 
     = f.label :for_individual, value: false do
       = f.radio_button :for_individual, false

@@ -55,4 +55,42 @@ module ProcedureHelper
   def procedure_auto_archive_datetime(procedure)
     procedure_auto_archive_date(procedure) + ' ' + procedure_auto_archive_time(procedure)
   end
+
+  def api_particulier_sources_checkboxes(procedure_mask, parent, child)
+    return unless procedure_mask.fetch(parent, {}).key?(child)
+
+    mask = procedure_mask.dig(parent, child)
+    form_prefix = "procedure[#{parent}]"
+    i18n_scope = "api_particulier.entities.#{parent}"
+
+    capture do
+      if mask.is_a?(Hash)
+        api_particulier_sources_ul(mask, form_prefix: "#{form_prefix}[#{child}]", i18n_scope: "#{i18n_scope}.#{child}")
+      else
+        api_particulier_sources_checkbox(form_prefix, child, mask, i18n_scope: i18n_scope)
+      end
+    end
+  end
+
+  private
+
+  def api_particulier_sources_checkbox(key, value, checked, label: nil, i18n_scope: nil)
+    concat(tag.label do
+      concat(check_box key, value, checked: ActiveModel::Type::Boolean.new.cast(checked))
+      concat(label || t(value, scope: i18n_scope))
+    end)
+  end
+
+  def api_particulier_sources_ul(mask, form_prefix: nil, i18n_scope: nil)
+    concat(tag.strong(t(:libelle, scope: i18n_scope).capitalize))
+    concat(tag.ul(class: "procedure-admin-api-particulier-sources") do
+      mask.each do |k, v|
+        if v.is_a?(Hash)
+          concat(tag.li { api_particulier_sources_ul(v, form_prefix: "#{form_prefix}[#{k}]", i18n_scope: "#{i18n_scope}.#{k}") })
+        else
+          concat(tag.li { api_particulier_sources_checkbox(form_prefix, k, v, i18n_scope: i18n_scope) })
+        end
+      end
+    end)
+  end
 end

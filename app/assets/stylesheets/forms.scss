@@ -405,6 +405,13 @@
     p:not(:last-child) {
       margin-bottom: $default-padding;
     }
+
+    ul {
+      list-style-type: circle;
+      list-style-position: inside;
+      padding-left: $default-padding;
+      margin-bottom: 1em;
+    }
   }
 
   .siret-info {

@@ -6,6 +6,8 @@
 #  aasm_state                                :string           default("brouillon")
 #  allow_expert_review                       :boolean          default(TRUE), not null
 #  api_entreprise_token                      :string
+#  api_particulier_scopes                    :text             default([]), is an Array
+#  api_particulier_sources                   :jsonb
 #  ask_birthday                              :boolean          default(FALSE), not null
 #  auto_archive_on                           :date
 #  cadre_juridique                           :string
@@ -18,6 +20,7 @@
 #  duree_conservation_dossiers_dans_ds       :integer
 #  duree_conservation_dossiers_hors_ds       :integer
 #  durees_conservation_required              :boolean          default(TRUE)
+#  encrypted_api_particulier_token           :string
 #  euro_flag                                 :boolean          default(FALSE)
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  for_individual                            :boolean          default(FALSE)
@@ -47,6 +50,7 @@
 
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
+  include EncryptableConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -54,6 +58,8 @@ class Procedure < ApplicationRecord
 
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
+
+  attr_encrypted :api_particulier_token
 
   has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
@@ -74,6 +80,11 @@ class Procedure < ApplicationRecord
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
   belongs_to :service, optional: true
+
+  # NOTE: Empty objects as {}, in the case of Hash, or [], in the case of Array, will always be persisted as null.
+  def api_particulier_sources
+    Hash(super).deep_symbolize_keys
+  end
 
   def active_revision
     brouillon? ? draft_revision : published_revision
@@ -234,6 +245,7 @@ class Procedure < ApplicationRecord
     if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
+  validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/, message: "n'est pas un jeton valide" }, allow_blank: true
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
@@ -415,6 +427,9 @@ class Procedure < ApplicationRecord
     if is_different_admin
       procedure.administrateurs = [admin]
       procedure.api_entreprise_token = nil
+      procedure.encrypted_api_particulier_token = nil
+      procedure.api_particulier_sources = {}
+      procedure.api_particulier_scopes = []
     else
       procedure.administrateurs = administrateurs
     end
@@ -674,6 +689,10 @@ class Procedure < ApplicationRecord
 
   def api_entreprise_role?(role)
     APIEntrepriseToken.new(api_entreprise_token).role?(role)
+  end
+
+  def api_particulier_validated?
+    api_particulier_token.present? && api_particulier_sources.present?
   end
 
   def api_entreprise_token

@@ -1,0 +1,60 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    link_to('Jeton Particulier', admin_procedure_jetons_particulier_path(@procedure)),
+                    'Sources de données'] }
+
+.container
+  %h1.page-title
+    Définir les sources de données
+
+.container
+  = form_with model: @procedure, url: update_sources_admin_procedure_jetons_particulier_path, local: true, html: { class: 'form' } do |f|
+    .explication
+      %p
+        API Particulier facilite l'accès des administrations aux données
+        fiscales (DGFIP), familiales (CAF), au statut pôle-emploi et au statut
+        étudiant d'un citoyen, pour simplifier les démarches administratives
+        mises en oeuvre par les collectivités et les administrations.<br>
+        Cela permet aux administrations d'accéder à des informations certifiées à la source et ainsi :
+      %ul
+        %li de s’affranchir des pièces justificatives lors des démarches en ligne
+        %li de réduire le nombre d’erreurs de saisie
+        %li d'écarter le risque de fraude documentaire
+      %p
+        %strong Important :
+        les disposition de l'article
+        = link_to 'L144-8', "https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000031366350&idArticle=LEGIARTI000031367412&dateTexte=&categorieLien=cid"
+        n'autorise que l'échange des informations strictement nécessaires pour
+        traiter une démarche. En conséquence, assurez-vous de ne sélectionner
+        ici que les sources correspondant aux données auxquelles vous aurez
+        accès d'un point de vue légal.
+
+    - if @check_scope_sources_service.dgfip_mandatory?(strict: false)
+      %h2.tab-title Données DGFIP
+      %ul.procedure-admin-api-particulier-sources
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :dgfip, :foyer_fiscal)
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :dgfip, :avis_imposition)
+
+    - if @check_scope_sources_service.caf_mandatory?(strict: false)
+      %h2.tab-title Données CAF
+      %ul.procedure-admin-api-particulier-sources
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :caf, :allocataires)
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :caf, :enfants)
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :caf, :adresse)
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :caf, :quotient_familial)
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :caf, :annee)
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :caf, :mois)
+
+    - if @check_scope_sources_service.pole_emploi_mandatory?(strict: false)
+      %h2.tab-title Données Pôle Emploi
+      %ul.procedure-admin-api-particulier-sources
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :pole_emploi, :situation)
+
+    - if @check_scope_sources_service.etudiant_mandatory?(strict: false)
+      %h2.tab-title Données étudiant
+      %ul.procedure-admin-api-particulier-sources
+        %li= api_particulier_sources_checkboxes(@procedure_sources, :mesri, :statut_etudiant)
+
+    .text-right
+      = f.button 'Enregistrer', class: 'button primary send'

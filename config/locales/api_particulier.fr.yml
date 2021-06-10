@@ -1,0 +1,119 @@
+fr:
+  api_particulier:
+    types:
+      dgfip: impôts
+      cnaf: CAF
+      pe: pôle emploi
+      mesri: statut étudiant
+    entities:
+      dgfip:
+        declarant: &declarant
+          nom: nom
+          nom_de_naissance: nom de naissance
+          prenoms: prénoms
+          date_de_naissance: date de naissance
+        foyer_fiscal: &foyer_fiscal
+          libelle: foyer fiscal
+          annee: année
+          adresse: adresse fiscale de l'année passée
+        avis_imposition:
+          libelle: avis d'imposition
+          declarant1:
+            <<: *declarant
+            libelle: déclarant 1
+          declarant2:
+            <<: *declarant
+            libelle: déclarant 2
+          foyer_fiscal: *foyer_fiscal
+          date_de_recouvrement: date de recouvrement
+          date_d_etablissement: date d'établissement
+          nombre_de_parts: nombre de parts
+          situation_familiale: situation familiale
+          nombre_de_personnes_a_charge: nombre de personnes à charge
+          revenu_brut_global: revenu brut global
+          revenu_imposable: revenu imposable
+          impot_revenu_net_avant_corrections: impôt sur le revenu net avant corrections
+          montant_de_l_impot: montant de l'impôt
+          revenu_fiscal_de_reference: revenu fiscal de référence
+          annee_d_imposition: année d'imposition
+          annee_des_revenus: année des revenus
+          erreur_correctif: erreur correctif
+          situation_partielle: situation partielle
+      caf:
+        personne: &personne
+          noms_et_prenoms: noms et prénoms
+          date_de_naissance: date de naissance
+          sexe: sexe
+        poste_adresse: &poste_adresse
+          identite: identité
+          complement_d_identite: complément d'identité
+          complement_d_identite_geo: complément d'identité géographique
+          numero_et_rue: numéro et rue
+          lieu_dit: lieu-dit
+          code_postal_et_ville: code postal et ville
+          pays: pays
+        allocataires:
+          libelle: allocataires
+          <<: *personne
+          adresse: *poste_adresse
+        enfants:
+          libelle: enfants
+          <<: *personne
+        adresse:
+          libelle: adresse
+          <<: *poste_adresse
+        quotient_familial: quotient familial
+        annee: année
+        mois: mois
+      pole_emploi:
+        adresse: &adresse
+          code_postal: code postal
+          insee_commune: code INSEE de la commune
+          localite: localité
+          ligne_voie: voie
+          ligne_complement_destinataire: complément destinataire
+          ligne_complement_d_adresse: complément d'adresse
+          ligne_complement_de_distribution: complément de distribution
+          ligne_nom_du_detinataire: nom du destinataire
+        situation:
+          libelle: situation
+          email: courriel
+          nom: nom
+          nom_d_usage: nom d'usage
+          prenom: prénom
+          identifiant: identifiant
+          sexe: sexe
+          date_de_naissance: date de naissance
+          date_d_inscription: date d'inscription
+          date_de_radiation: date de radiation
+          date_de_la_prochaine_convocation: date de la prochaine convocation
+          categorie_d_inscription: catégorie d'inscription
+          code_de_certification_cnav: code de certification CNAV
+          telephone: téléphone
+          telephone2: téléphone 2
+          civilite: civilté
+          adresse:
+            <<: *adresse
+            libelle: adresse
+      mesri:
+        etablissement: &etablissement
+          uai: UAI
+          nom: nom
+        inscription: &inscription
+          date_de_debut_d_inscription: date de début d'inscription
+          date_de_fin_d_inscription: date de fin d'inscription
+          statut: statut
+          regime: régime
+          code_commune: code de la commune
+          etablissement:
+            <<: *etablissement
+            libelle: établissement
+        statut_etudiant:
+          libelle: statut étudiant
+          ine: INE
+          nom: nom
+          prenom: prénom
+          date_de_naissance: date de naissance
+          inscriptions:
+            <<: *inscription
+            libelle: inscriptions

@@ -412,6 +412,16 @@ Rails.application.routes.draw do
         put :experts_require_administrateur_invitation
       end
 
+      resources :jetons_particulier, only: [:index] do
+        collection do
+          get 'jeton',            constraints: -> { Flipper.enabled?(:api_particulier) }
+          patch 'update_jeton',   constraints: -> { Flipper.enabled?(:api_particulier) }
+          get 'sources',          constraints: -> { Flipper.enabled?(:api_particulier) }
+          patch 'update_sources', constraints: -> { Flipper.enabled?(:api_particulier) }
+          post 'update_sources',  constraints: -> { Flipper.enabled?(:api_particulier) }
+        end
+      end
+
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert

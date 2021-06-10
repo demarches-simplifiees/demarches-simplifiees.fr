@@ -1,0 +1,36 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'Jeton Particulier'] }
+
+.container
+  - if feature_enabled?(:api_particulier)
+    .card
+      .flex.justify-between
+        %div
+          .card-title Jeton
+          %p.notice= @procedure.api_particulier_token.blank? ? 'À définir' : 'Personnalisé'
+
+        %div
+          = link_to 'Modifier', jeton_admin_procedure_jetons_particulier_path(@procedure), class: 'button'
+    .card
+      .flex.justify-between
+        %div
+          .card-title Sources de données
+          %p.notice= @procedure.api_particulier_sources.blank? ? 'À définir' : 'Personnalisées'
+
+        %div
+          = link_to 'Modifier', sources_admin_procedure_jetons_particulier_path(@procedure), class: 'button'
+  - else
+    .card.warning
+      .card-title Fonctionnalité désctivée
+      %p
+        La fonctionnalité
+        %strong API Particulier
+        est désactivée.
+
+        - if super_admin_signed_in?
+          Vous pouvez l'activer
+          = link_to("via l'inteface de gestion", manager_flipper_url)
+        - else
+          Pour l'activer, veuillez contacter l'administrateur de votre instance.
