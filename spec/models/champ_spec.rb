@@ -328,7 +328,7 @@ describe Champ do
 
       context 'for phone champ' do
         let(:type_de_champ) { build(:type_de_champ_phone) }
-        let(:value) { "0606060606" }
+        let(:value) { "06 06 06 06 06" }
 
         it { is_expected.to eq([value]) }
       end
