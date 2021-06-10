@@ -11,6 +11,11 @@
     width: 325px;
   }
 
+  tr.section {
+    border-bottom: 1px dotted $dark-grey;
+    color: $dark-grey;
+  }
+
   td.updated-at {
     font-size: 13px;
     color: $dark-grey;

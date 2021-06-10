@@ -1,0 +1,25 @@
+- if check_scope_sources_service.dgfip_mandatory?
+  .inline-champ
+    = f.label :api_particulier_dgfip_numero_fiscal
+    = f.text_field :api_particulier_dgfip_numero_fiscal, class: "small", value: dossier.individual.api_particulier_dgfip_numero_fiscal, placeholder: '2008399999000', required: true
+  .inline-champ
+    = f.label :api_particulier_dgfip_reference_de_l_avis
+    = f.text_field :api_particulier_dgfip_reference_de_l_avis, class: "small", value: dossier.individual.api_particulier_dgfip_reference_de_l_avis, placeholder: '2008399999000', required: true
+
+- if check_scope_sources_service.caf_mandatory?
+  .inline-champ
+    = f.label :api_particulier_caf_numero_d_allocataire
+    = f.text_field :api_particulier_caf_numero_d_allocataire, class: "small", value: dossier.individual.api_particulier_caf_numero_d_allocataire, placeholder: '0000354', required: true
+  .inline-champ
+    = f.label :api_particulier_caf_code_postal
+    = f.text_field :api_particulier_caf_code_postal, class: "small", value: dossier.individual.api_particulier_caf_code_postal, placeholder: '99148', required: true
+
+- if check_scope_sources_service.pole_emploi_mandatory?
+  .inline-champ
+    = f.label :api_particulier_pole_emploi_identifiant
+    = f.text_field :api_particulier_pole_emploi_identifiant, value: dossier.individual.api_particulier_pole_emploi_identifiant, placeholder: 'adurand_28', required: true
+
+- if check_scope_sources_service.etudiant_mandatory?
+  .inline-champ
+    = f.label :api_particulier_mesri_ine
+    = f.text_field :api_particulier_mesri_ine, value: dossier.individual.api_particulier_mesri_ine, placeholder: '0906018155T', required: true

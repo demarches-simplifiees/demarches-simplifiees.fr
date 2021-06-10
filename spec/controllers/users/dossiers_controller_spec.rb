@@ -184,6 +184,30 @@ describe Users::DossiersController, type: :controller do
         expect(response).not_to have_http_status(:redirect)
         expect(flash[:alert]).to include("Civilité doit être rempli", "Nom doit être rempli", "Prénom doit être rempli")
       end
+
+      context 'and API Particulier disabled' do
+        before(:all) do
+          Flipper.disable(:api_particulier)
+        end
+
+        it { is_expected.to render_template(:identite) }
+        it { expect(assigns(:dossier)).to be_a(Dossier) }
+        it { expect(assigns(:check_scope_sources_service)).to be_nil }
+      end
+
+      context 'and API Particulier enabled' do
+        before(:all) do
+          Flipper.enable(:api_particulier)
+        end
+
+        after(:all) do
+          Flipper.disable(:api_particulier)
+        end
+
+        it { is_expected.to render_template(:identite) }
+        it { expect(assigns(:dossier)).to be_a(Dossier) }
+        it { expect(assigns(:check_scope_sources_service)).to be_an(APIParticulier::Services::CheckScopeSources) }
+      end
     end
   end
 

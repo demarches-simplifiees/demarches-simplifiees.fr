@@ -1,0 +1,6 @@
+- if dossier.api_particulier_job_exceptions.any?
+  .card.warning
+    .card-title Les données complémentaires n'ont pas pu être récupérées
+    = api_particulier_job_exception_reasons(dossier)
+- else
+  .card.warning Données complémentaires en cours de récupération. Veuillez recharger la page dans quelques instants…

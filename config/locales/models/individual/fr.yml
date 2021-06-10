@@ -9,3 +9,9 @@ fr:
         gender_options:
           "Mme": "Madame"
           "M." : "Monsieur"
+        api_particulier_dgfip_numero_fiscal: Numéro fiscal
+        api_particulier_dgfip_reference_de_l_avis: Référence de l'avis fiscal
+        api_particulier_caf_numero_d_allocataire: Numéro d'allocataire CAF
+        api_particulier_caf_code_postal: Code postal
+        api_particulier_pole_emploi_identifiant: Identifiant pôle emploi
+        api_particulier_mesri_ine: INE étudiant

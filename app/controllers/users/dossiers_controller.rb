@@ -40,6 +40,15 @@ module Users
 
     def demande
       @dossier = dossier
+
+      if feature_enabled?(:api_particulier) && dossier.procedure&.api_particulier_validated?
+        @api_particulier_donnees = APIParticulier::Services::BuildData.new.call(raw: dossier.individual.api_particulier_donnees)
+
+        @check_scope_sources_service = APIParticulier::Services::CheckScopeSources.new(
+          dossier.procedure.api_particulier_scopes,
+          dossier.procedure.api_particulier_sources
+        )
+      end
     end
 
     def messagerie
@@ -59,18 +68,38 @@ module Users
     def identite
       @dossier = dossier
       @user = current_user
+
+      if feature_enabled?(:api_particulier)
+        @check_scope_sources_service = APIParticulier::Services::CheckScopeSources.new(
+          @dossier.procedure.api_particulier_scopes,
+          @dossier.procedure.api_particulier_sources
+        )
+      end
     end
 
     def update_identite
       @dossier = dossier
 
-      if @dossier.individual.update(individual_params)
-        @dossier.update!(autorisation_donnees: true)
+      success = Dossier.transaction do
+        @dossier.individual.update(individual_params.merge(api_particulier_donnees: nil)) &&
+          @dossier.update(autorisation_donnees: true)
+      end
+
+      if success
+        ApiParticulier::DossierJob.perform_later(@dossier.id)
         flash.notice = "Identité enregistrée"
 
         redirect_to brouillon_dossier_path(@dossier)
       else
-        flash.now.alert = @dossier.individual.errors.full_messages
+        flash.now.alert = @dossier.individual.errors.full_messages + @dossier.errors.full_messages
+
+        if feature_enabled?(:api_particulier)
+          @check_scope_sources_service = APIParticulier::Services::CheckScopeSources.new(
+            @dossier.procedure.api_particulier_scopes,
+            @dossier.procedure.api_particulier_sources
+          )
+        end
+
         render :identite
       end
     end
@@ -421,7 +450,13 @@ module Users
     end
 
     def individual_params
-      params.require(:individual).permit(:gender, :nom, :prenom, :birthdate)
+      params.require(:individual).permit(:gender, :nom, :prenom, :birthdate,
+                                        :api_particulier_dgfip_numero_fiscal,
+                                        :api_particulier_dgfip_reference_de_l_avis,
+                                        :api_particulier_caf_numero_d_allocataire,
+                                        :api_particulier_caf_code_postal,
+                                        :api_particulier_pole_emploi_identifiant,
+                                        :api_particulier_mesri_ine)
     end
 
     def siret_params

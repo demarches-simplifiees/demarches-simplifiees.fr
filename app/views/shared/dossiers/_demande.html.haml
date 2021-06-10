@@ -18,10 +18,18 @@
 
     - if dossier.individual.present?
       = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
+      - if feature_enabled?(:api_particulier) && dossier.procedure&.api_particulier_validated?
+        = render partial: "shared/dossiers/identite_particulier", locals: { individual: dossier.individual, check_scope_sources_service: check_scope_sources_service }
 
       - if profile == 'usager' && !dossier.read_only?
         .flex.row-reverse
           = link_to "Modifier l'identité", identite_dossier_path(dossier), class: 'button'
+
+  - if feature_enabled?(:api_particulier) && dossier.procedure&.api_particulier_validated?
+    - if !dossier.individual&.api_particulier_donnees?
+      = render partial: "shared/dossiers/identite_particulier_absente", locals: { dossier: dossier }
+    - elsif profile == 'usager'
+      = render partial: "shared/dossiers/identite_particulier_usager", locals: { dossier: dossier, individual: dossier.individual, donnees: donnees, check_scope_sources_service: check_scope_sources_service }
 
   .tab-title Formulaire
   - champs = dossier.champs.includes(:type_de_champ)

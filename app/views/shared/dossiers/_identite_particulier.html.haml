@@ -1,0 +1,45 @@
+- if check_scope_sources_service.dgfip_mandatory?
+  %table.table.vertical.dossier-champs
+    %thead
+      %tr.section
+        %th{ colspan: 2 } DGFIP
+    %tbody
+      %tr
+        %th.libelle Numéro fiscal :
+        %td= individual.api_particulier_dgfip_numero_fiscal
+      %tr
+        %th.libelle Référence de l'avis :
+        %td= individual.api_particulier_dgfip_reference_de_l_avis
+
+- if check_scope_sources_service.caf_mandatory?
+  %table.table.vertical.dossier-champs
+    %thead
+      %tr.section
+        %th{ colspan: 2 } CAF
+    %tbody
+      %tr
+        %th.libelle Numéro d'allocataire :
+        %td= individual.api_particulier_caf_numero_d_allocataire
+      %tr
+        %th.libelle Code postal :
+        %td= individual.api_particulier_caf_code_postal
+
+- if check_scope_sources_service.pole_emploi_mandatory?
+  %table.table.vertical.dossier-champs
+    %thead
+      %tr.section
+        %th{ colspan: 2 } Pôle Emploi
+    %tbody
+      %tr
+        %th.libelle Identifiant Pôle Emploi :
+        %td= individual.api_particulier_pole_emploi_identifiant
+
+- if check_scope_sources_service.etudiant_mandatory?
+  %table.table.vertical.dossier-champs
+    %thead
+      %tr.section
+        %th{ colspan: 2 } Statut Étudiant
+    %tbody
+      %tr
+        %th.libelle INE :
+        %td= individual.api_particulier_mesri_ine

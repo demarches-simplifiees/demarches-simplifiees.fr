@@ -469,6 +469,14 @@ ActiveRecord::Schema.define(version: 2021_06_04_095054) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date "birthdate"
+    t.string "api_particulier_dgfip_numero_fiscal"
+    t.string "api_particulier_dgfip_reference_de_l_avis"
+    t.string "api_particulier_caf_numero_d_allocataire"
+    t.string "api_particulier_caf_code_postal"
+    t.string "api_particulier_pole_emploi_identifiant"
+    t.string "api_particulier_mesri_ine"
+    t.jsonb "api_particulier_donnees", default: {}
+    t.index ["api_particulier_donnees"], name: "index_individuals_on_api_particulier_donnees", using: :gin
     t.index ["dossier_id"], name: "index_individuals_on_dossier_id", unique: true
   end
 

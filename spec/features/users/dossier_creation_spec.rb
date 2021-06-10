@@ -61,6 +61,277 @@ feature 'Creating a new dossier:' do
       end
     end
 
+    context 'when the procedure has identification by individual' do
+      let(:procedure) do
+        create(:procedure, :published, :for_individual, :with_service,
+               api_particulier_scopes: scopes, api_particulier_sources: sources)
+      end
+
+      context 'when API Particulier is enabled' do
+        before do
+          Flipper.enable(:api_particulier)
+          visit commencer_path(path: procedure.path)
+          click_on 'Commencer la démarche'
+
+          expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
+          expect(page).to have_procedure_description(procedure)
+        end
+
+        context "when DGFIP scopes are present" do
+          let(:scopes) { APIParticulier::Types::DGFIP_SCOPES }
+
+          context "but without selected sources" do
+            let(:sources) { nil }
+
+            it "wont display DGFIP fields only" do
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Numéro d'allocataire CAF")
+              expect(page).not_to have_content("Code postal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+              expect(page).not_to have_content("INE étudiant")
+            end
+          end
+
+          context "and some sources are selected" do
+            let(:sources) do
+              {
+                dgfip: {
+                  foyer_fiscal: { annee: 1, adresse: 0 },
+                  avis_imposition: {
+                    declarant1: { nom: 1, prenoms: 0, nom_de_naissance: 0, date_de_naissance: 1 }
+                  }
+                }
+              }
+            end
+
+            it "must display DGFIP fields only" do
+              expect(page).to have_content("Numéro fiscal")
+              expect(page).to have_content("Référence de l'avis fiscal")
+
+              expect(page).not_to have_content("Numéro d'allocataire CAF")
+              expect(page).not_to have_content("Code postal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+              expect(page).not_to have_content("INE étudiant")
+            end
+          end
+        end
+
+        context "when CAF scopes are present" do
+          let(:scopes) { APIParticulier::Types::CAF_SCOPES }
+
+          context "but without selected sources" do
+            let(:sources) { nil }
+
+            it "wont display CAF fields only" do
+              expect(page).not_to have_content("Numéro d'allocataire CAF")
+              expect(page).not_to have_content("Code postal")
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+              expect(page).not_to have_content("INE étudiant")
+            end
+          end
+
+          context "and some sources are selected" do
+            let(:sources) do
+              {
+                caf: {
+                  allocataires: { sexe: 0, noms_et_prenoms: 1, date_de_naissance: 0 },
+                  quotient_familial: 1
+                }
+              }
+            end
+
+            it "must display CAF fields only" do
+              expect(page).to have_content("Numéro d'allocataire CAF")
+              expect(page).to have_content("Code postal")
+
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+              expect(page).not_to have_content("INE étudiant")
+            end
+          end
+        end
+
+        context "when Pole Emploi scopes are present" do
+          let(:scopes) { APIParticulier::Types::POLE_EMPLOI_SCOPES }
+
+          context "but without selected sources" do
+            let(:sources) { nil }
+
+            it "must display Pole Emploi fields only" do
+              expect(page).not_to have_content("Identifiant pôle emploi")
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Numéro d'allocataire CAF")
+              expect(page).not_to have_content("Code postal")
+              expect(page).not_to have_content("INE étudiant")
+            end
+          end
+
+          context "and some sources are selected" do
+            let(:sources) do
+              {
+                pole_emploi: { situation: { email: 1, nom: 0 } }
+              }
+            end
+
+            it "must display Pole Emploi fields only" do
+              expect(page).to have_content("Identifiant pôle emploi")
+
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Numéro d'allocataire CAF")
+              expect(page).not_to have_content("Code postal")
+              expect(page).not_to have_content("INE étudiant")
+            end
+          end
+        end
+
+        context "when MESRI scopes are present" do
+          let(:scopes) { APIParticulier::Types::ETUDIANT_SCOPES }
+
+          context "but without selected sources" do
+            let(:sources) { nil }
+
+            it "wont display MESRI fields only" do
+              expect(page).not_to have_content("INE étudiant")
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Numéro d'allocataire CAF")
+              expect(page).not_to have_content("Code postal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+            end
+          end
+
+          context "and some sources are selected" do
+            let(:sources) do
+              {
+                mesri: {
+                  statut_etudiant: { inscriptions: { etablissement: { nom: 1, uai: 0 } } }
+                }
+              }
+            end
+
+            it "must display MESRI fields only" do
+              expect(page).to have_content("INE étudiant")
+
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Numéro d'allocataire CAF")
+              expect(page).not_to have_content("Code postal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+            end
+          end
+        end
+
+        context "when CAF & MESRI scopes are present" do
+          let(:scopes) { APIParticulier::Types::ETUDIANT_SCOPES + APIParticulier::Types::CAF_SCOPES }
+
+          context "but without selected sources" do
+            let(:sources) { nil }
+
+            it "wont display CAF & MESRI fields" do
+              expect(page).not_to have_content("Numéro d'allocataire CAF")
+              expect(page).not_to have_content("Code postal")
+              expect(page).not_to have_content("INE étudiant")
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+            end
+          end
+
+          context "and only some CAF sources are selected" do
+            let(:sources) do
+              {
+                caf: {
+                  allocataires: { sexe: 0, noms_et_prenoms: 1, date_de_naissance: 0 },
+                  quotient_familial: 1
+                },
+                mesri: {
+                  statut_etudiant: { inscriptions: { etablissement: { nom: 0, uai: 0 } } }
+                }
+              }
+            end
+
+            it "must display CAF fields" do
+              expect(page).to have_content("Numéro d'allocataire CAF")
+              expect(page).to have_content("Code postal")
+
+              expect(page).not_to have_content("INE étudiant")
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+            end
+          end
+
+          context "and some sources are selected" do
+            let(:sources) do
+              {
+                caf: {
+                  allocataires: { sexe: 0, noms_et_prenoms: 1, date_de_naissance: 0 },
+                  quotient_familial: 1
+                },
+                mesri: {
+                  statut_etudiant: { inscriptions: { etablissement: { nom: 1, uai: 0 } } }
+                }
+              }
+            end
+
+            it "must display CAF & MESRI fields" do
+              expect(page).to have_content("Numéro d'allocataire CAF")
+              expect(page).to have_content("Code postal")
+              expect(page).to have_content("INE étudiant")
+
+              expect(page).not_to have_content("Numéro fiscal")
+              expect(page).not_to have_content("Référence de l'avis fiscal")
+              expect(page).not_to have_content("Identifiant pôle emploi")
+            end
+          end
+        end
+      end
+
+      context 'when API Particulier is disabled' do
+        before do
+          Flipper.disable(:api_particulier)
+          visit commencer_path(path: procedure.path)
+          click_on 'Commencer la démarche'
+
+          expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
+          expect(page).to have_procedure_description(procedure)
+        end
+
+        let(:scopes) { APIParticulier::Types::SCOPES }
+
+        let(:sources) do
+          {
+            dgfip: {
+              foyer_fiscal: { annee: 1, adresse: 0 },
+              avis_imposition: {
+                declarant1: { nom: 1, prenoms: 0, nom_de_naissance: 0, date_de_naissance: 1 }
+              }
+            },
+            caf: { quotient_familial: 1 },
+            pole_emploi: { situation: { email: 1, nom: 0 } },
+            mesri: {
+              statut_etudiant: { inscriptions: { etablissement: { nom: 1, uai: 0 } } }
+            }
+          }
+        end
+
+        it "wont display any API Partucilier fields" do
+          expect(page).not_to have_content("Numéro fiscal")
+          expect(page).not_to have_content("Référence de l'avis fiscal")
+          expect(page).not_to have_content("Numéro d'allocataire CAF")
+          expect(page).not_to have_content("Code postal")
+          expect(page).not_to have_content("Identifiant pôle emploi")
+          expect(page).not_to have_content("INE étudiant")
+        end
+      end
+    end
+
     context 'when identifying through SIRET' do
       let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ) }
       let(:dossier) { procedure.dossiers.last }

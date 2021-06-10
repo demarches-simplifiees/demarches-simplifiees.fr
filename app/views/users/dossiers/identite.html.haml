@@ -31,4 +31,7 @@
       = f.label :birthdate
       = f.date_field :birthdate, value: @dossier.individual.birthdate, placeholder: 'format : AAAA-MM-JJ', required: true, class: "small"
 
+    - if feature_enabled?(:api_particulier)
+      = render partial: 'api_particulier_form', locals: { f: f, dossier: @dossier, check_scope_sources_service: @check_scope_sources_service }
+
     = f.submit "Continuer", class: "button large primary expand"

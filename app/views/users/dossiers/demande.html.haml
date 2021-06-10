@@ -6,7 +6,7 @@
 #dossier-show
   = render partial: 'users/dossiers/show/header', locals: { dossier: @dossier }
 
-  = render partial: 'shared/dossiers/demande', locals: { dossier: @dossier, demande_seen_at: nil, profile: 'usager' }
+  = render partial: 'shared/dossiers/demande', locals: { dossier: @dossier, demande_seen_at: nil, profile: 'usager', donnees: @api_particulier_donnees, check_scope_sources_service: @check_scope_sources_service }
 
   .container
     - if !@dossier.read_only?

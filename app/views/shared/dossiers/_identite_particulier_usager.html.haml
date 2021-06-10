@@ -1,0 +1,7 @@
+- if dossier.api_particulier_job_exceptions.any?
+  .card.warning
+    .card-title Les données complémentaires n'ont pas pu être récupérées
+    = api_particulier_job_exception_reasons(dossier)
+- else
+  - procedure_scopes = api_particulier_scopes(@dossier.procedure)
+  .card.featured Les données complémentaires ont été correctement récupérées à l'aide de vos identifiants #{procedure_scopes}.
