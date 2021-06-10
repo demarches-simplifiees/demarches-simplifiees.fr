@@ -39,6 +39,15 @@ module Instructeurs
     def show
       @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.demande_seen_at
 
+      if feature_enabled?(:api_particulier) && dossier.procedure&.api_particulier_validated?
+        @api_particulier_donnees = APIParticulier::Services::BuildData.new.call(raw: dossier.individual.api_particulier_donnees)
+
+        @check_scope_sources_service = APIParticulier::Services::CheckScopeSources.new(
+          dossier.procedure.api_particulier_scopes,
+          dossier.procedure.api_particulier_sources
+        )
+      end
+
       respond_to do |format|
         format.pdf do
           @include_infos_administration = true

@@ -1,0 +1,14 @@
+- if personne.noms_et_prenoms
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.personne.noms_et_prenoms')} :"
+    %td= personne.noms_et_prenoms
+
+- if personne.date_de_naissance
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.personne.date_de_naissance')} :"
+    %td= l(personne.date_de_naissance)
+
+- if personne.sexe
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.personne.sexe')} :"
+    %td= personne.sexe

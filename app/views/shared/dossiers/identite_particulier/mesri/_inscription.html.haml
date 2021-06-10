@@ -1,0 +1,34 @@
+- if inscription.date_de_debut_d_inscription
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.inscription.date_de_debut_d_inscription')} :"
+    %td= l(inscription.date_de_debut_d_inscription)
+
+- if inscription.date_de_fin_d_inscription
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.inscription.date_de_fin_d_inscription')} :"
+    %td= l(inscription.date_de_fin_d_inscription)
+
+- if inscription.statut
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.inscription.statut')} :"
+    %td= inscription.statut
+
+- if inscription.regime
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.inscription.regime')} :"
+    %td= inscription.regime
+
+- if inscription.code_commune
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.inscription.code_commune')} :"
+    %td= inscription.code_commune
+
+- if inscription.etablissement&.uai
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.etablissement.uai')} :"
+    %td= inscription.etablissement.uai
+
+- if inscription.etablissement&.nom
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.etablissement.nom')} :"
+    %td= inscription.etablissement.nom

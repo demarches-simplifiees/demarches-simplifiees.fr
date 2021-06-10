@@ -1,0 +1,31 @@
+- if check_scope_sources_service.dgfip_mandatory?
+  .card
+    .card-title DGFIP
+    %table.table.vertical.dossier-champs
+      %tbody
+        - if donnees[:dgfip]
+          = render partial: "shared/dossiers/identite_particulier/dgfip", locals: { dgfip: donnees[:dgfip] }
+
+- if check_scope_sources_service.caf_mandatory?
+  .card
+    .card-title CAF
+    %table.table.vertical.dossier-champs
+      %tbody
+        - if donnees[:caf]
+          = render partial: "shared/dossiers/identite_particulier/caf", locals: { famille: donnees[:caf] }
+
+- if check_scope_sources_service.pole_emploi_mandatory?
+  .card
+    .card-title Pôle Emploi
+    %table.table.vertical.dossier-champs
+      %tbody
+        - if donnees[:pole_emploi]
+          = render partial: "shared/dossiers/identite_particulier/pole_emploi", locals: { situation: donnees[:pole_emploi] }
+
+- if check_scope_sources_service.etudiant_mandatory?
+  .card
+    .card-title Statut Étudiant
+    %table.table.vertical.dossier-champs
+      %tbody
+        - if donnees[:mesri]
+          = render partial: "shared/dossiers/identite_particulier/mesri", locals: { etudiant: donnees[:mesri] }

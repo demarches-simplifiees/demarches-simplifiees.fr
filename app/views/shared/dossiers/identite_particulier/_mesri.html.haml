@@ -1,0 +1,25 @@
+-# - if etudiant.ine
+-#   %tr
+-#     %th.libelle= "#{t('api_particulier.entities.mesri.statut_etudiant.ine')} :"
+-#     %td= etudiant.ine
+
+- if etudiant.nom
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.statut_etudiant.nom')} :"
+    %td= etudiant.nom
+
+- if etudiant.prenom
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.statut_etudiant.prenom')} :"
+    %td= etudiant.prenom
+
+- if etudiant.date_de_naissance
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.mesri.statut_etudiant.date_de_naissance')} :"
+    %td= etudiant.date_de_naissance
+
+- if etudiant.inscriptions?
+  %tr.section
+    %th{ colspan: 2 }= t("api_particulier.entities.mesri.statut_etudiant.inscriptions.libelle")
+  - etudiant.inscriptions.each do |inscription|
+    = render partial: "shared/dossiers/identite_particulier/mesri/inscription", locals: { inscription: inscription }

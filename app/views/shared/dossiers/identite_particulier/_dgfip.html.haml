@@ -1,0 +1,84 @@
+- if dgfip.declarant1?
+  %tr.section
+    %th{ colspan: 2 }= t("api_particulier.entities.dgfip.avis_imposition.declarant1.libelle")
+  = render partial: "shared/dossiers/identite_particulier/dgfip/declarant", locals: { declarant: dgfip.declarant1 }
+
+- if dgfip.declarant2?
+  %tr.section
+    %th{ colspan: 2 }= t("api_particulier.entities.dgfip.avis_imposition.declarant2.libelle")
+  = render partial: "shared/dossiers/identite_particulier/dgfip/declarant", locals: { declarant: dgfip.declarant2 }
+
+- if dgfip.foyer_fiscal?
+  %tr.section
+    %th{ colspan: 2 }= t("api_particulier.entities.dgfip.foyer_fiscal.libelle")
+  = render partial: "shared/dossiers/identite_particulier/dgfip/foyer_fiscal", locals: { foyer_fiscal: dgfip.foyer_fiscal }
+
+- if dgfip.date_de_recouvrement
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.date_de_recouvrement')} :"
+    %td= l(dgfip.date_de_recouvrement)
+
+- if dgfip.date_d_etablissement
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.date_d_etablissement')} :"
+    %td= l(dgfip.date_d_etablissement)
+
+- if dgfip.nombre_de_parts?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.nombre_de_parts')} :"
+    %td= dgfip.nombre_de_parts
+
+- if dgfip.situation_familiale
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.situation_familiale')} :"
+    %td= dgfip.situation_familiale
+
+- if dgfip.nombre_de_personnes_a_charge?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.nombre_de_personnes_a_charge')} :"
+    %td= dgfip.nombre_de_personnes_a_charge
+
+- if dgfip.revenu_brut_global?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.revenu_brut_global')} :"
+    %td= dgfip.revenu_brut_global
+
+- if dgfip.revenu_imposable?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.revenu_imposable')} :"
+    %td= dgfip.revenu_imposable
+
+- if dgfip.impot_revenu_net_avant_corrections?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.impot_revenu_net_avant_corrections')} :"
+    %td= dgfip.impot_revenu_net_avant_corrections
+
+- if dgfip.montant_de_l_impot?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.montant_de_l_impot')} :"
+    %td= dgfip.montant_de_l_impot
+
+- if dgfip.revenu_fiscal_de_reference?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.revenu_fiscal_de_reference')} :"
+    %td= dgfip.revenu_fiscal_de_reference
+
+- if dgfip.annee_d_imposition?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.annee_d_imposition')} :"
+    %td= dgfip.annee_d_imposition
+
+- if dgfip.annee_des_revenus?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.annee_des_revenus')} :"
+    %td= dgfip.annee_des_revenus
+
+- if dgfip.erreur_correctif
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.erreur_correctif')} :"
+    %td= dgfip.erreur_correctif
+
+- if dgfip.situation_partielle
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.avis_imposition.situation_partielle')} :"
+    %td= dgfip.situation_partielle

@@ -1,0 +1,10 @@
+- if foyer_fiscal.annee?
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.foyer_fiscal.annee')} :"
+    %td= foyer_fiscal.annee
+
+- if foyer_fiscal.adresse
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.foyer_fiscal.adresse')} :"
+    %td= foyer_fiscal.adresse
+

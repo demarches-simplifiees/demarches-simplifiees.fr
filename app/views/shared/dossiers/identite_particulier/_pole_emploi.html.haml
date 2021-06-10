@@ -1,0 +1,79 @@
+- if situation.email
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.email')} :"
+    %td= situation.email
+
+- if situation.nom
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.nom')} :"
+    %td= situation.nom
+
+- if situation.nom_d_usage
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.nom_d_usage')} :"
+    %td= situation.nom_d_usage
+
+- if situation.prenom
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.prenom')} :"
+    %td= situation.prenom
+
+-# - if situation.identifiant
+-#   %tr
+-#     %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.identifiant')} :"
+-#     %td= situation.identifiant
+
+- if situation.sexe
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.sexe')} :"
+    %td= situation.sexe
+
+- if situation.date_de_naissance
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.date_de_naissance')} :"
+    %td= l(situation.date_de_naissance)
+
+- if situation.date_d_inscription
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.date_d_inscription')} :"
+    %td= l(situation.date_d_inscription)
+
+- if situation.date_de_radiation
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.date_de_radiation')} :"
+    %td= l(situation.date_de_radiation)
+
+- if situation.date_de_la_prochaine_convocation
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.date_de_la_prochaine_convocation')} :"
+    %td= l(situation.date_de_la_prochaine_convocation)
+
+- if situation.categorie_d_inscription
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.categorie_d_inscription')} :"
+    %td= situation.categorie_d_inscription
+
+- if situation.code_de_certification_cnav
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.code_de_certification_cnav')} :"
+    %td= situation.code_de_certification_cnav
+
+- if situation.telephone
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.telephone')} :"
+    %td= situation.telephone
+
+- if situation.telephone2
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.telephone2')} :"
+    %td= situation.telephone2
+
+- if situation.civilite
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.situation.civilite')} :"
+    %td= situation.civilite
+
+- if situation.adresse?
+  %tr.section
+    %th{ colspan: 2 }= t("api_particulier.entities.pole_emploi.adresse.libelle")
+  = render partial: "shared/dossiers/identite_particulier/pole_emploi/adresse", locals: { adresse: situation.adresse }

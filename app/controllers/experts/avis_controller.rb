@@ -34,6 +34,14 @@ module Experts
     end
 
     def show
+      if feature_enabled?(:api_particulier) && @dossier.procedure&.api_particulier_validated?
+        @api_particulier_donnees = APIParticulier::Services::BuildData.new.call(raw: @dossier.individual.api_particulier_donnees)
+
+        @check_scope_sources_service = APIParticulier::Services::CheckScopeSources.new(
+          @dossier.procedure.api_particulier_scopes,
+          @dossier.procedure.api_particulier_sources
+        )
+      end
     end
 
     def instruction

@@ -2,4 +2,4 @@
 
 = render partial: "header", locals: { dossier: @dossier }
 
-= render partial: "shared/dossiers/demande", locals: { dossier: @dossier, demande_seen_at: @demande_seen_at, profile: 'instructeur' }
+= render partial: "shared/dossiers/demande", locals: { dossier: @dossier, demande_seen_at: @demande_seen_at, profile: 'instructeur', donnees: @api_particulier_donnees, check_scope_sources_service: @check_scope_sources_service }

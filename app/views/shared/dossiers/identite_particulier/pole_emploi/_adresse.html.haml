@@ -1,0 +1,39 @@
+- if adresse.code_postal
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.adresse.code_postal')} :"
+    %td= adresse.code_postal
+
+- if adresse.insee_commune
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.adresse.insee_commune')} :"
+    %td= adresse.insee_commune
+
+- if adresse.localite
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.adresse.localite')} :"
+    %td= adresse.localite
+
+- if adresse.ligne_voie
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.adresse.ligne_voie')} :"
+    %td= adresse.ligne_voie
+
+- if adresse.ligne_complement_destinataire
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.adresse.ligne_complement_destinataire')} :"
+    %td= adresse.ligne_complement_destinataire
+
+- if adresse.ligne_complement_d_adresse
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.adresse.ligne_complement_d_adresse')} :"
+    %td= adresse.ligne_complement_d_adresse
+
+- if adresse.ligne_complement_de_distribution
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.adresse.ligne_complement_de_distribution')} :"
+    %td= adresse.ligne_complement_de_distribution
+
+- if adresse.ligne_nom_du_detinataire
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.pole_emploi.adresse.ligne_nom_du_detinataire')} :"
+    %td= adresse.ligne_nom_du_detinataire

@@ -1,0 +1,34 @@
+- if adresse.identite
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.adresse.identite')} :"
+    %td= adresse.identite
+
+- if adresse.complement_d_identite
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.adresse.complement_d_identite')} :"
+    %td= adresse.complement_d_identite
+
+- if adresse.complement_d_identite_geo
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.adresse.complement_d_identite_geo')} :"
+    %td= adresse.complement_d_identite_geo
+
+- if adresse.numero_et_rue
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.adresse.numero_et_rue')} :"
+    %td= adresse.numero_et_rue
+
+- if adresse.lieu_dit
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.adresse.lieu_dit')} :"
+    %td= adresse.lieu_dit
+
+- if adresse.code_postal_et_ville
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.adresse.code_postal_et_ville')} :"
+    %td= adresse.code_postal_et_ville
+
+- if adresse.pays
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.caf.adresse.pays')} :"
+    %td= adresse.pays

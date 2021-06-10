@@ -1,0 +1,19 @@
+- if declarant.nom
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.declarant.nom')} :"
+    %td= declarant.nom
+
+- if declarant.nom_de_naissance
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.declarant.nom_de_naissance')} :"
+    %td= declarant.nom_de_naissance
+
+- if declarant.prenoms
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.declarant.prenoms')} :"
+    %td= declarant.prenoms
+
+- if declarant.date_de_naissance
+  %tr
+    %th.libelle= "#{t('api_particulier.entities.dgfip.declarant.date_de_naissance')} :"
+    %td= l(declarant.date_de_naissance)
