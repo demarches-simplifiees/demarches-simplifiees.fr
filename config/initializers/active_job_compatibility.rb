@@ -31,4 +31,13 @@ Rails.application.reloader.to_prepare do
       FixMissingAntivirusAnalysis = FixMissingAntivirusAnalysisJob
     end
   end
+
+  if !defined?(ApiParticulier)
+    require 'excon'
+
+    module ApiParticulier
+      Job = APIParticulier::Job
+      DossierJob = APIParticulier::DossierJob
+    end
+  end
 end
