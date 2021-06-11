@@ -29,6 +29,7 @@ features = [
   :api_particulier,
   :dossier_pdf_vide,
   :expert_not_allowed_to_invite,
+  :france_connect,
   :hide_instructeur_email,
   :procedure_revisions,
   :procedure_routage_api,

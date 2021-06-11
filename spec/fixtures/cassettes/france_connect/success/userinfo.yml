@@ -1,0 +1,42 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://fcp.integ01.dev-franceconnect.fr/api/v1/userinfo
+    headers:
+      Authorization:
+      - Bearer ca2b5f0d-ce03-430c-bb71-fbe73073ee33
+      User-Agent:
+      - Rack::OAuth2 (1.16.0) (2.8.3, ruby 2.7.3 (2021-04-05))
+      Accept:
+      - "*/*"
+      Date:
+      - Fri, 04 Jun 2021 15:15:15 GMT
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 04 Jun 2021 15:15:16 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Content-Security-Policy:
+      - default-src 'none'
+      X-Content-Type-Options:
+      - nosniff
+      Set-Cookie:
+      - connect.sid=s%3APmHlOkm_nbO-V2Meqg4_biWjuKA93Bbs.P8OxdLQi8X2kkXZbR%2B7CBh1%2BZ0%2FzfjZCxcRBrrO9eHA;
+        Domain=.fcp.integ01.dev-franceconnect.fr; Path=/; HttpOnly; Secure
+      Content-Length:
+      - '0'
+    body:
+      encoding: UTF-8
+      string: |
+        {"given_name":"Angela Claire Louise","family_name":"DUBOIS","birthdate":"1962-08-24","gender":"female","preferred_username":"","email":"wossewodda-3728@yopmail.com","sub":"b6048e95bb134ec5b1d1e1fa69f287172e91722b9354d637a1bcf2ebb0fd2ef5v1"}
+  recorded_at: Fri, 04 Jun 2021 15:15:16 GMT
+recorded_with: VCR 6.0.0

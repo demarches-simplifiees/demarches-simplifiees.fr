@@ -1,0 +1,47 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://fcp.integ01.dev-franceconnect.fr/api/v1/token
+    body:
+      encoding: UTF-8
+      string: grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&code=<%= fc_code %>&client_id=<FC_IDENTIFIER>&client_secret=<FC_SECRET>
+    headers:
+      User-Agent:
+      - Rack::OAuth2 (1.16.0) (2.8.3, ruby 2.7.3 (2021-04-05))
+      Accept:
+      - "*/*"
+      Date:
+      - Fri, 04 Jun 2021 15:15:15 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '279'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 04 Jun 2021 15:15:16 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Content-Security-Policy:
+      - default-src 'none'
+      X-Content-Type-Options:
+      - nosniff
+      Set-Cookie:
+      - connect.sid=s%3APmHlOkm_nbO-V2Meqg4_biWjuKA93Bbs.P8OxdLQi8X2kkXZbR%2B7CBh1%2BZ0%2FzfjZCxcRBrrO9eHA;
+        Domain=.fcp.integ01.dev-franceconnect.fr; Path=/; HttpOnly; Secure
+      Content-Length:
+      - '0'
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJhY2Nlc3NfdG9rZW4iOiJjYTJiNWYwZC1jZTAzLTQzMGMtYmI3MS1mYmU3MzA3M2VlMzMiLCJ0b2tlbl90eXBlIjoiQmVhcmVyIiwiZXhwaXJlc19pbiI6NjAsImlkX3Rva2VuIjoiZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SnBjM01pT2lKb2RIUndjem92TDJaamNDNXBiblJsWnpBeExtUmxkaTFtY21GdVkyVmpiMjV1WldOMExtWnlJaXdpYzNWaUlqb2lZall3TkRobE9UVmlZakV6TkdWak5XSXhaREZsTVdaaE5qbG1NamczTVRjeVpUa3hOekl5WWprek5UUmtOak0zWVRGaVkyWXlaV0ppTUdaa01tVm1OWFl4SWl3aVlYVmtJam9pTWpFeE1qZzJORE16WlRNNVkyTmxNREZrWWpRME9HUTRNREU0TVdKa1ptUXdNRFUxTlRSaU1UbGpaRFV4WWpObVpUYzVORE5tTm1JellqZzJZV0kyWlNJc0ltVjRjQ0k2TVRZeU1qWXpNRFl3T1N3aWFXRjBJam94TmpJeU5qTXdOVFE1TENKdWIyNWpaU0k2SW1ZeU1XWTRZV001WmpoaE5HWTBOMkpoWW1Fd00yUm1abU14TTJFM1kyRmxJaXdpYVdSd0lqb2lSa01pTENKaFkzSWlPaUpsYVdSaGN6RWlMQ0poYlhJaU9tNTFiR3g5LjNmV0xKYWhQMGpHbDRnS3dpTFJMa28wWmJ3SnlHQ0htRE9ZSVVhRE9DT1UifQ==
+  recorded_at: Fri, 04 Jun 2021 15:15:16 GMT
+recorded_with: VCR 6.0.0

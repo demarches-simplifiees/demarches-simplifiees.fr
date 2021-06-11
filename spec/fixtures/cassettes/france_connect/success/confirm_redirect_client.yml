@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://fournisseur-d-identite.dev-franceconnect.fr/confirm-redirect-client
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like
+        Gecko) Chrome/15.0.853.0 Safari/535.2
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Cookie:
+      - _session=f6f6c6f4-984c-42f1-9264-b0584bc840fc; _session.sig=aewZdf8TyO9iYyBqKE1FFA0Z5gY
+      Referer:
+      - https://fournisseur-d-identite.dev-franceconnect.fr/interaction/bb5635cc-a814-465b-8493-5721eb1bfdbc/login
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '34'
+      Http-Referer:
+      - https://fournisseur-d-identite.dev-franceconnect.fr/interaction/bb5635cc-a814-465b-8493-5721eb1bfdbc/login
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - '300'
+  response:
+    status:
+      code: 302
+      message: Found
+    headers:
+      Date:
+      - Tue, 08 Jun 2021 13:42:59 GMT
+      Content-Length:
+      - '274'
+      Connection:
+      - keep-alive
+      Location:
+      - <%= Rails.configuration.x.fcp.redirect_uri %>?code=4b79ae97-5b16-4b58-9c8a-c81937a4879a&state=f9f619ab827857f1e0d57d1b1d0ed507
+      Strict-Transport-Security:
+      - max-age=15768000
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Tue, 08 Jun 2021 13:42:59 GMT
+recorded_with: VCR 6.0.0

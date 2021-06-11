@@ -1,0 +1,202 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://fcp.integ01.dev-franceconnect.fr/call?provider=identity-provider-example-faible&storeFI=1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like
+        Gecko) Chrome/15.0.853.0 Safari/535.2
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Cookie:
+      - connect.sid=s%3AwIprXrhe6twGloLiaOI56EirN-r4RVlj.kMl%2FrmbJitArRR0kvdg6SfXbwlEFnjo2JVC4K8Sp%2BNs
+      Referer:
+      - https://fcp.integ01.dev-franceconnect.fr/api/v1/authorize?acr_values=eidas1&client_id=<FC_IDENTIFIER>&nonce=00000000000000000000000000000000&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=profile%20email%20openid&state=00000000000000000000000000000000
+      Http-Referer:
+      - https://fcp.integ01.dev-franceconnect.fr/api/v1/authorize?acr_values=eidas1&client_id=<FC_IDENTIFIER>&nonce=00000000000000000000000000000000&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=profile%20email%20openid&state=00000000000000000000000000000000
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - '300'
+  response:
+    status:
+      code: 302
+      message: Found
+    headers:
+      Date:
+      - Fri, 04 Jun 2021 22:02:57 GMT
+      Content-Length:
+      - '0'
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - connect.sid=s%3AoM-vkDf-uK3WD69bnGUKGA4hjk4zvalF.R%2FeMowgJcVAnRWCgTtOLryT6I6kgc2bsnQI6hj9xcoI;
+        Domain=.fcp.integ01.dev-franceconnect.fr; Path=/; HttpOnly; Secure
+      - fiName=%7B%22name%22%3A%22identity-provider-example-faible%22%2C%22remember%22%3Afalse%7D;
+        Max-Age=2592; Path=/; Expires=Fri, 04 Jun 2021 22:46:09 GMT; HttpOnly; Secure
+      Location:
+      - https://fournisseur-d-identite.dev-franceconnect.fr/user/authorize?state=3f5462e57ae702f8e62957bd2dc74adfb39a71d461776a78765d81384f101d07&nonce=9c503816523d45c388913e25df589880d0ca4e21f8290e4ea6ed8cea520984bc&response_type=code&client_id=5612e79ecc8683b8d386994c01835cae&redirect_uri=https%3A%2F%2Ffcp.integ01.dev-franceconnect.fr%2Foidc_callback&scope=openid%20profile%20email%20address%20phone%20birth
+      Strict-Transport-Security:
+      - max-age=15768000
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 04 Jun 2021 22:02:57 GMT
+- request:
+    method: get
+    uri: https://fournisseur-d-identite.dev-franceconnect.fr/user/authorize?client_id=5612e79ecc8683b8d386994c01835cae&nonce=9c503816523d45c388913e25df589880d0ca4e21f8290e4ea6ed8cea520984bc&redirect_uri=https://fcp.integ01.dev-franceconnect.fr/oidc_callback&response_type=code&scope=openid%20profile%20email%20address%20phone%20birth&state=3f5462e57ae702f8e62957bd2dc74adfb39a71d461776a78765d81384f101d07
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like
+        Gecko) Chrome/15.0.853.0 Safari/535.2
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Referer:
+      - https://fcp.integ01.dev-franceconnect.fr/api/v1/authorize?acr_values=eidas1&client_id=<FC_IDENTIFIER>&nonce=00000000000000000000000000000000&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=profile%20email%20openid&state=00000000000000000000000000000000
+      Http-Referer:
+      - https://fcp.integ01.dev-franceconnect.fr/api/v1/authorize?acr_values=eidas1&client_id=<FC_IDENTIFIER>&nonce=00000000000000000000000000000000&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=profile%20email%20openid&state=00000000000000000000000000000000
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - '300'
+  response:
+    status:
+      code: 302
+      message: Found
+    headers:
+      Server:
+      - Cowboy
+      Connection:
+      - keep-alive
+      X-Dns-Prefetch-Control:
+      - 'off'
+      X-Frame-Options:
+      - SAMEORIGIN
+      Strict-Transport-Security:
+      - max-age=15552000; includeSubDomains
+      X-Download-Options:
+      - noopen
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache, no-store
+      Set-Cookie:
+      - _grant.sig=edyqKya64yxBnWhF5hech4FciMI; path=/interaction/bb5635cc-a814-465b-8493-5721eb1bfdbc;
+        expires=Fri, 04 Jun 2021 22:12:57 GMT; samesite=lax; secure; httponly
+      - _grant.sig=edyqKya64yxBnWhF5hech4FciMI; path=/user/authorize/bb5635cc-a814-465b-8493-5721eb1bfdbc;
+        expires=Fri, 04 Jun 2021 22:12:57 GMT; samesite=lax; secure; httponly
+      - _grant=bb5635cc-a814-465b-8493-5721eb1bfdbc; path=/interaction/bb5635cc-a814-465b-8493-5721eb1bfdbc;
+        expires=Fri, 04 Jun 2021 22:12:57 GMT; samesite=lax; secure; httponly
+      - _grant=bb5635cc-a814-465b-8493-5721eb1bfdbc; path=/user/authorize/bb5635cc-a814-465b-8493-5721eb1bfdbc;
+        expires=Fri, 04 Jun 2021 22:12:57 GMT; samesite=lax; secure; httponly
+      - _session.sig=aewZdf8TyO9iYyBqKE1FFA0Z5gY; path=/; expires=Sat, 05 Jun 2021
+        22:02:57 GMT; samesite=lax; secure; httponly
+      - _session=f6f6c6f4-984c-42f1-9264-b0584bc840fc; path=/; expires=Sat, 05 Jun
+        2021 22:02:57 GMT; samesite=lax; secure; httponly
+      Location:
+      - "/interaction/bb5635cc-a814-465b-8493-5721eb1bfdbc"
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Length:
+      - '129'
+      Date:
+      - Fri, 04 Jun 2021 22:02:57 GMT
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: UTF-8
+      string: Redirecting to <a href="/interaction/bb5635cc-a814-465b-8493-5721eb1bfdbc">/interaction/bb5635cc-a814-465b-8493-5721eb1bfdbc</a>.
+  recorded_at: Fri, 04 Jun 2021 22:02:57 GMT
+- request:
+    method: get
+    uri: https://fournisseur-d-identite.dev-franceconnect.fr/interaction/bb5635cc-a814-465b-8493-5721eb1bfdbc
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like
+        Gecko) Chrome/15.0.853.0 Safari/535.2
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Cookie:
+      - _grant=bb5635cc-a814-465b-8493-5721eb1bfdbc; _grant.sig=edyqKya64yxBnWhF5hech4FciMI;
+        _session=f6f6c6f4-984c-42f1-9264-b0584bc840fc; _session.sig=aewZdf8TyO9iYyBqKE1FFA0Z5gY
+      Referer:
+      - https://fcp.integ01.dev-franceconnect.fr/api/v1/authorize?acr_values=eidas1&client_id=<FC_IDENTIFIER>&nonce=00000000000000000000000000000000&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=profile%20email%20openid&state=00000000000000000000000000000000
+      Http-Referer:
+      - https://fcp.integ01.dev-franceconnect.fr/api/v1/authorize?acr_values=eidas1&client_id=<FC_IDENTIFIER>&nonce=00000000000000000000000000000000&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&response_type=code&scope=profile%20email%20openid&state=00000000000000000000000000000000
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - '300'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Cowboy
+      Connection:
+      - keep-alive
+      X-Dns-Prefetch-Control:
+      - 'off'
+      X-Frame-Options:
+      - SAMEORIGIN
+      Strict-Transport-Security:
+      - max-age=15552000; includeSubDomains
+      X-Download-Options:
+      - noopen
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache, no-store
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Length:
+      - '2624'
+      Etag:
+      - W/"a40-falhdI756EEClRp5N3uLaP5Tl/A"
+      Date:
+      - Fri, 04 Jun 2021 22:02:57 GMT
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        PGh0bWw+CjxoZWFkPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MSIgLz4KICA8bGluayByZWw9ImFwcGxlLXRvdWNoLWljb24iIHNpemVzPSIxODB4MTgwIiBocmVmPSIvYXNzZXRzL2Zhdmljb25zL2FwcGxlLWljb24tMTgweDE4MC5wbmciLz4KICA8bGluayByZWw9Imljb24iIHR5cGU9ImltYWdlL3BuZyIgc2l6ZXM9IjE2eDE2IiBocmVmPSIvYXNzZXRzL2Zhdmljb25zL2Zhdmljb24tMTZ4MTYucG5nIj4KICA8bGluayByZWw9Imljb24iIHR5cGU9ImltYWdlL3BuZyIgc2l6ZXM9IjE2eDE2IiBocmVmPSIvYXNzZXRzL2Zhdmljb25zL2Zhdmljb24tMzJ4MzIucG5nIj4KICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Imh0dHBzOi8vdW5wa2cuY29tL3RlbXBsYXRlLmRhdGEuZ291di5mckAxLjEuNS9kaXN0L3N0eWxlL21haW4uY3NzIj4KICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Ii9hc3NldHMvYXBwbGljYXRpb24uY3NzIj4KPC9oZWFkPgo8Ym9keT4KPGRpdiBjbGFzcz0ibWFpbiI+CiAgPGRpdiBjbGFzcz0idGV4dC1jZW50ZXIiPgogICAgPGltZyBjbGFzcz0iaGVhZGVyLWxvZ28iIHNyYz0iL2Fzc2V0cy9mY19sb2dvX3YyLnBuZyIgYWx0PSJGcmFuY2UgQ29ubmVjdCAtIGFwcGxpY2F0aW9uIGRlIGTDqW1vbnN0cmF0aW9uIj4KICAgIDxzZWN0aW9uPgogICAgPGRpdiBjbGFzcz0iY29udGFpbmVyIj4KICAgICAgICA8aDMgY2xhc3M9InNlY3Rpb25fX3RpdGxlIj5Gb3Vybmlzc2V1ciBkJ2lkZW50aXTDqSBkZSBkw6ltb25zdHJhdGlvbjwvaDM+CgogICAgICAgIDxmb3JtIGF1dG9jb21wbGV0ZT0ib2ZmIiBhY3Rpb249Ii9pbnRlcmFjdGlvbi9iYjU2MzVjYy1hODE0LTQ2NWItODQ5My01NzIxZWIxYmZkYmMvbG9naW4iIG1ldGhvZD0icG9zdCI+CgogICAgICAgIAogICAgICAgICAgICAKICAgICAgICAKCiAgICAgICAgPGRpdiBjbGFzcz0iZm9ybV9fZ3JvdXAiPgogICAgICAgICAgICA8bGFiZWwgZm9yPSJsb2dpbiI+SWRlbnRpZmlhbnQ8L2xhYmVsPgogICAgICAgICAgICA8aW5wdXQgY2xhc3M9ImZvcm0tY29udHJvbCIgcmVxdWlyZWQgdHlwZT0idGV4dCIgbmFtZT0ibG9naW4iIHBsYWNlaG9sZGVyPSJJZGVudGlmaWFudCIgYXV0b2ZvY3VzPSJvbiIgdmFsdWU9InRlc3QiPgogICAgICAgIDwvZGl2PgoKICAgICAgICA8ZGl2IGNsYXNzPSJmb3JtX19ncm91cCI+CiAgICAgICAgICAgIDxsYWJlbCBmb3I9InBhc3N3b3JkIj5Nb3QgZGUgcGFzc2U8L2xhYmVsPgogICAgICAgICAgICA8aW5wdXQgY2xhc3M9ImZvcm0tY29udHJvbCIgcmVxdWlyZWQgdHlwZT0icGFzc3dvcmQiIG5hbWU9InBhc3N3b3JkIiBwbGFjZWhvbGRlcj0iTW90IGRlIHBhc3NlIiB2YWx1ZT0iMTIzIj4KICAgICAgICA8L2Rpdj4KCiAgICAgICAgPGRpdiBjbGFzcz0iZm9ybV9fZ3JvdXAiPgogICAgICAgICAgICA8bGFiZWwgZm9yPSJhY3IiPk5pdmVhdSBlSURBUwogICAgICAgICAgICAgICAgPGEgdGl0bGU9IkZvcmNlciBsZSBuaXZlYXUgZUlEQVMgcmVudm95w6kgcGFyIGxlIEZvdXJuaXNzZXVyIGQnSWRlbnRpdMOpIG5lIGZvbmN0aW9ubmVyYSBxdWUgc2kgbGUgRm91cm5pc3NldXIgZGUgU2VydmljZSBhIHByw6ljaXPDqSBsZSBwYXJhbcOodHJlICZxdW90O2Fjcl92YWx1ZXMmcXVvdDsgZGFucyBsJ2FwcGVsIMOgIEZyYW5jZUNvbm5lY3QuIj4oaW5mbyk8L2E+CiAgICAgICAgICAgIDwvbGFiZWw+CiAgICAgICAgICAgIDxzZWxlY3QgY2xhc3M9ImZvcm0tY29udHJvbCIgcmVxdWlyZWQgbmFtZT0iYWNyIiBwbGFjZWhvbGRlcj0iTml2ZWF1IGVJREFTICjDoCByZW52b3llciDDoCBGQykqIj4KICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9ImVpZGFzMSIgPkZhaWJsZSAoZWlkYXMxKTwvb3B0aW9uPgogICAgICAgICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iZWlkYXMyIiA+U3Vic3RhbnRpZWwgKGVpZGFzMik8L29wdGlvbj4KICAgICAgICAgICAgICAgIDxvcHRpb24gdmFsdWU9ImVpZGFzMyIgc2VsZWN0ZWQ+w4lsZXbDqSAoZWlkYXMzKTwvb3B0aW9uPgogICAgICAgICAgICA8L3NlbGVjdD4KICAgICAgICA8L2Rpdj4KCiAgICAgICAgPGRpdiBjbGFzcz0iZm9ybV9fZ3JvdXAiPgogICAgICAgICAgICA8aW5wdXQgdHlwZT0ic3VibWl0IiB2YWx1ZT0iVmFsaWRlciIgY2xhc3M9ImJ1dHRvbiBsYXJnZSI+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPC9mb3JtPgoKICAgICAgICA8ZGl2IGNsYXNzPSJ0ZXh0LWNlbnRlciI+CiAgICAgICAgICAgIDxwPjxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9mcmFuY2UtY29ubmVjdC9pZGVudGl0eS1wcm92aWRlci1leGFtcGxlL2Jsb2IvbWFzdGVyL2RhdGFiYXNlLmNzdiI+TGlzdGUgZGVzIGlkZW50aWZpYW50cyBkaXNwb25pYmxlczwvYT48L3A+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KPC9zZWN0aW9uPgoKPGRpdiBjbGFzcz0iY29udGFpbmVyIj4KICAgIDxkaXYgY2xhc3M9InRleHQtY2VudGVyIj4KICAgICAgICA8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CjwvZGl2PgoKICA8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=
+  recorded_at: Fri, 04 Jun 2021 22:02:57 GMT
+recorded_with: VCR 6.0.0

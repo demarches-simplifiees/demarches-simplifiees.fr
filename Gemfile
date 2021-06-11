@@ -90,6 +90,8 @@ group :test do
   gem 'axe-core-rspec' # accessibility rspec matchers
   gem 'capybara' # Integration testing
   gem 'capybara-email' # Access emails during integration tests
+  # gem 'capybara-mechanize', '~> 1.11' # RackTest driver for Capybara, but with remote request support
+  gem 'capybara-mechanize', github: 'tomstuart/capybara-mechanize', ref: '64073e9'
   gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
   gem 'factory_bot'
   gem 'launchy'

@@ -2,6 +2,9 @@ require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'capybara/email/rspec'
 require 'selenium/webdriver'
+require 'capybara/mechanize'
+
+Capybara::Mechanize.local_hosts = ["test.host", "www.example.com"]
 
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
