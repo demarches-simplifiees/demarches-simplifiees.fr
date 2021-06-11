@@ -1,7 +1,7 @@
 module Administrateurs
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation]
-    before_action :procedure_revisable?, only: [:champs, :annotations]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation, :fc_particulier, :update_fc_particulier]
+    before_action :procedure_locked?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
 
@@ -169,6 +169,25 @@ module Administrateurs
       render 'monavis'
     end
 
+    def fc_particulier
+    end
+
+    def update_fc_particulier
+      client_id = update_fc_particulier_params[:fc_particulier_id]
+      client_secret = update_fc_particulier_params[:fc_particulier_secret]
+
+      @procedure.update!(
+        fc_particulier_id: client_id,
+        fc_particulier_secret: client_secret
+      )
+
+      redirect_to admin_procedure_path(procedure_id: params[:procedure_id]),
+        notice: "FranceConnect est correctement configuré"
+    rescue ActiveRecord::ActiveRecordError
+      flash.now.alert = "La validation a échoué : vos accréditations ne sont pas valides"
+      render "fc_particulier"
+    end
+
     def jeton
     end
 
@@ -273,6 +292,10 @@ module Administrateurs
 
     def cloned_from_library?
       params[:from_new_from_existing].present?
+    end
+
+    def update_fc_particulier_params
+      params.require(:procedure).permit(:fc_particulier_id, :fc_particulier_secret)
     end
   end
 end

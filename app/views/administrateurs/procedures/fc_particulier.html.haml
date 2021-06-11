@@ -1,0 +1,26 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    'FranceConnect'] }
+
+.container
+  %h1.page-title
+    Configurer FranceConnect
+
+.container
+  %h1
+  = form_with model: @procedure, url: update_fc_particulier_admin_procedure_path(@procedure), html: { class: 'form' } do |f|
+    %p.explication
+      Démarches Simplifiées utilise
+      = link_to 'FranceConnect', "https://franceconnect.gouv.fr/"
+      solution proposée par l’État pour sécuriser et simplifier la connexion à plus de 900 services en ligne.
+      Si vous disposez d'une
+      = link_to 'habilitation FranceConnect', "https://entreprise.api.gouv.fr/demander_un_acces/"
+      pour votre démarche, merci de renseigner ici vos accréditations.
+
+    = f.label :fc_particulier_id, "Identifiant"
+    = f.password_field :fc_particulier_id, value: @procedure.read_attribute(:fc_particulier_id), class: 'form-control'
+    = f.label :fc_particulier_secret, "Secret"
+    = f.password_field :fc_particulier_secret, value: @procedure.read_attribute(:fc_particulier_secret), class: 'form-control'
+    .text-right
+      = f.button 'Enregistrer', class: 'button primary send'

@@ -10,6 +10,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   #  inflect.uncountable %w( fish sheep )
   inflect.acronym 'API'
   inflect.acronym 'ASN1'
+  inflect.acronym 'FC'
   inflect.acronym 'IP'
   inflect.acronym 'JSON'
   inflect.acronym 'RNA'
@@ -26,6 +27,8 @@ end
 # From https://github.com/davidcelis/inflections
 ActiveSupport::Inflector.inflections(:fr) do |inflect|
   inflect.clear
+
+  inflect.acronym 'FC'
 
   inflect.plural(/$/, 's')
   inflect.singular(/s$/, '')

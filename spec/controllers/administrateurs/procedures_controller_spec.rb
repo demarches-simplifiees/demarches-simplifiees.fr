@@ -535,6 +535,42 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
+  describe 'GET #fc_particulier' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+
+    subject { get :fc_particulier, params: { id: procedure.id } }
+
+    it { is_expected.to have_http_status(:success) }
+  end
+
+  describe 'PATCH #update_fc_particulier' do
+    let(:procedure) { create(:procedure, administrateur: admin) }
+
+    before do
+      patch :update_fc_particulier, params: { id: procedure.id, procedure: { fc_particulier_id: client_id, fc_particulier_secret: client_secret } }
+    end
+
+    context 'when credentials are valid' do
+      let(:client_id) { "211286433e39cce01db448d80181bdfd005554b19cd51b3fe7943f6b3b86ab6e" }
+      let(:client_secret) { "2791a731e6a59f56b6b4dd0d08c9b1f593b5f3658b9fd731cb24248e2669af4b" }
+
+      it { expect(flash.alert).to be_nil }
+      it { expect(flash.notice).not_to be_nil }
+      it { expect(procedure.reload.fc_particulier_id).to eql(client_id) }
+      it { expect(procedure.reload.fc_particulier_secret).to eql(client_secret) }
+    end
+
+    context 'when credentials are invalid' do
+      let(:client_id) { "invalid" }
+      let(:client_secret) { "invalid" }
+
+      it { expect(flash.alert).not_to be_nil }
+      it { expect(flash.notice).to be_nil }
+      it { expect(procedure.reload.fc_particulier_id).not_to eq(client_id) }
+      it { expect(procedure.reload.fc_particulier_secret).not_to eq(client_secret) }
+    end
+  end
+
   describe 'GET #jeton' do
     let(:procedure) { create(:procedure, administrateur: admin) }
 
