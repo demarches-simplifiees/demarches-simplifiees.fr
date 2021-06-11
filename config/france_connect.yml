@@ -1,0 +1,23 @@
+defaults: &defaults
+  acr_values: <%= ENV.fetch('FC_PARTICULIER_ACR_VALUES', 'eidas1') %>
+  authorization_endpoint: <%= ENV['FC_PARTICULIER_BASE_URL'] %>/api/v1/authorize
+  integration_base_url: <%= ENV.fetch('FC_PARTICULIER_INTEGRATION_BASE_URL', 'https://fcp.integ01.dev-franceconnect.fr') %>
+  logout_endpoint: <%= ENV['FC_PARTICULIER_BASE_URL'] %>/api/v1/logout
+  redirect_uri: https://<%= ENV['APP_HOST'] %>/france_connect/particulier/callback
+  token_endpoint: <%= ENV['FC_PARTICULIER_BASE_URL'] %>/api/v1/token
+  userinfo_endpoint: <%= ENV['FC_PARTICULIER_BASE_URL'] %>/api/v1/userinfo
+
+development:
+  <<: *defaults
+  redirect_uri: <%= ENV.fetch('FC_PARTICULIER_REDIRECT_URI', "http://#{ENV['APP_HOST']}/france_connect/particulier/callback") %>
+
+test:
+  <<: *defaults
+  authorization_endpoint: https://fcp.integ01.dev-franceconnect.fr/api/v1/authorize
+  logout_endpoint: https://fcp.integ01.dev-franceconnect.fr/api/v1/logout
+  redirect_uri: http://www.example.com/callback
+  token_endpoint: https://fcp.integ01.dev-franceconnect.fr/api/v1/token
+  userinfo_endpoint: https://fcp.integ01.dev-franceconnect.fr/api/v1/userinfo
+
+production:
+  <<: *defaults
