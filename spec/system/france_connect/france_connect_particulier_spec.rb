@@ -21,7 +21,17 @@ describe 'France Connect Particulier Connexion' do
   end
 
   context 'when user is on login page' do
-    before { visit new_user_session_path }
+    before(:all) do
+      Rails.configuration.x.france_connect.enabled = true
+    end
+
+    after(:all) do
+      Rails.configuration.x.france_connect.enabled = false
+    end
+
+    before do
+      visit new_user_session_path
+    end
 
     scenario 'link to France Connect is present' do
       expect(page).to have_css('.france-connect-login-button')
@@ -31,7 +41,7 @@ describe 'France Connect Particulier Connexion' do
       context 'when authentification is ok' do
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(france_connect_information)
+          allow_any_instance_of(FranceConnectService).to receive(:find_or_retrieve_france_connect_information).and_return(france_connect_information)
         end
 
         context 'when no user is linked' do
@@ -114,7 +124,7 @@ describe 'France Connect Particulier Connexion' do
       context 'when authentification is not ok' do
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
-          allow(FranceConnectService).to receive(:retrieve_user_informations_particulier) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
+          allow_any_instance_of(FranceConnectService).to receive(:find_or_retrieve_france_connect_information) { raise Rack::OAuth2::Client::Error.new(500, error: 'Unknown') }
           page.find('.france-connect-login-button').click
         end
 

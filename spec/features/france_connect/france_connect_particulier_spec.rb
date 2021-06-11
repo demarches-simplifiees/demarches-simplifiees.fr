@@ -7,9 +7,47 @@ feature 'France Connect Particulier Connexion' do
     Flipper.disable("france_connect")
   end
 
+  context 'when user comes from a procedure link and choose FranceConnect login' do
+    let(:procedure) { create(:procedure, :published, :for_individual, :with_service) }
 
+    before do
+      Capybara.current_driver = :mechanize
+      allow(SecureRandom).to receive(:hex).with(16).and_return("00000000000000000000000000000000")
+    end
 
+    scenario 'he is redirected to dossier page' do
+      visit commencer_path(path: procedure.path)
 
+      expect(page).to have_procedure_description(procedure)
+      expect(page).to have_css('.france-connect-login-button')
+
+      VCR.use_cassette("france_connect/success/authorize") do
+        page.find('.france-connect-login-button').click
+      end
+
+      VCR.use_cassette("france_connect/success/call_provider") do
+        page.click_on("Démonstration - faible")
+      end
+
+      VCR.use_cassette("france_connect/success/interaction") do
+        page.fill_in("Identifiant", with: "test")
+        page.fill_in("Mot de passe", with: "123")
+        page.select("eidas1", from: "acr")
+        page.click_on("Valider")
+      end
+
+      VCR.use_cassette("france_connect/success/userinfo") do
+        VCR.use_cassette("france_connect/success/token") do
+          VCR.use_cassette("france_connect/success/confirm_redirect_client", erb: true) do
+            page.click_on("Continuer")
+          end
+        end
+      end
+
+      expect(page).to have_procedure_description(procedure)
+      expect(page).to have_link("Commencer la démarche")
+    end
+  end
 
   context 'when user is on login page and choose FranceConnect login' do
     before do

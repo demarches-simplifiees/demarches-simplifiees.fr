@@ -5,7 +5,8 @@
   = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
     %h1= t('views.registrations.new.title', name: APPLICATION_NAME)
 
-    = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+    - if FranceConnectService.enabled?
+      = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
     = f.label :email, t('views.registrations.new.email_label'), id: :user_email_label
     = f.text_field :email, type: :email, autocomplete: 'email', autofocus: true, placeholder: t('views.registrations.new.email_placeholder'), 'aria-describedby': :user_email_label

@@ -1,7 +1,7 @@
 describe Users::SessionsController, type: :controller do
   let(:email) { 'unique@plop.com' }
   let(:password) { 'my-s3cure-p4ssword' }
-  let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
+  let(:loged_in_with_france_connect) { User.loged_in_with_france_connect.fetch(:particulier) }
   let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
 
   before do
@@ -9,7 +9,6 @@ describe Users::SessionsController, type: :controller do
   end
 
   describe '#create' do
-    let(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: 'particulier') }
     let(:send_password) { password }
     let(:remember_me) { '0' }
 
@@ -93,14 +92,14 @@ describe Users::SessionsController, type: :controller do
 
     it 'loged_in_with_france_connect current_user attribut is nil' do
       user.reload
-      expect(user.loged_in_with_france_connect.present?).to be_falsey
+      expect(user.loged_in_with_france_connect).not_to be_present
     end
 
     context 'when user is connect with france connect particulier' do
-      let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
+      let(:loged_in_with_france_connect) { User.loged_in_with_france_connect.fetch(:particulier) }
 
       it 'redirect to france connect logout page' do
-        expect(response).to redirect_to(FRANCE_CONNECT[:particulier][:logout_endpoint])
+        expect(response).to redirect_to(Rails.configuration.x.fcp.logout_endpoint)
       end
     end
 

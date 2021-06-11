@@ -16,11 +16,32 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
   context 'when no user is signed in' do
     let(:user) { nil }
 
-    it 'renders sign-in and sign-up links' do
-      subject
-      expect(rendered).to have_link('Créer un compte')
-      expect(rendered).to have_link('J’ai déjà un compte')
-      expect(rendered).to have_link('S’identifier avec FranceConnect')
+    context 'and FranceConnect is enabled' do
+      before(:all) do
+        Rails.configuration.x.france_connect.enabled = true
+        Rails.application.reload_routes!
+      end
+
+      it 'renders sign-in and sign-up links' do
+        subject
+        expect(rendered).to have_link('Créer un compte')
+        expect(rendered).to have_link('J’ai déjà un compte')
+        expect(rendered).to have_link('S’identifier avec FranceConnect')
+      end
+    end
+
+    context 'and FranceConnect is disabled' do
+      before(:all) do
+        Rails.configuration.x.france_connect.enabled = false
+        Rails.application.reload_routes!
+      end
+
+      it 'renders sign-in and sign-up links' do
+        subject
+        expect(rendered).to have_link('Créer un compte')
+        expect(rendered).to have_link('J’ai déjà un compte')
+        expect(rendered).not_to have_link('S’identifier avec FranceConnect')
+      end
     end
   end
 

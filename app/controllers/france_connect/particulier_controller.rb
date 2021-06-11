@@ -4,14 +4,15 @@ class FranceConnect::ParticulierController < ApplicationController
 
   def login
     if FranceConnectService.enabled?
-      redirect_to FranceConnectService.authorization_uri
+      redirect_to FranceConnectService.new(**credentials).authorization_uri
     else
       redirect_to new_user_session_path
     end
   end
 
   def callback
-    fci = FranceConnectService.find_or_retrieve_france_connect_information(params[:code])
+    fcs = FranceConnectService.new(code: callback_params[:code], **credentials)
+    fci = fcs.find_or_retrieve_france_connect_information
 
     if fci.user.nil?
       preexisting_unlinked_user = User.find_by(email: fci.email_france_connect.downcase)
@@ -26,21 +27,16 @@ class FranceConnect::ParticulierController < ApplicationController
         merge_token = fci.create_merge_token!
         redirect_to france_connect_particulier_merge_path(merge_token)
       end
-    else
-      user = fci.user
-
-      if user.can_france_connect?
-        fci.update(updated_at: Time.zone.now)
-        connect_france_connect_particulier(user)
-      else # same behaviour as redirect nicely with message when instructeur/administrateur
-        fci.destroy
-        redirect_to new_user_session_path, alert: t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
-      end
+    elsif fci.user.can_france_connect?
+      fci.update(updated_at: Time.zone.now)
+      connect_france_connect_particulier(fci.user)
+    else # same behaviour as redirect nicely with message when instructeur/administrateur
+      fci.destroy
+      redirect_to new_user_session_path, alert: t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
     end
-
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
-    redirect_france_connect_error_connection
+    redirect_to new_user_session_path, alert: t('errors.messages.france_connect.connexion')
   end
 
   def merge
@@ -125,26 +121,34 @@ class FranceConnect::ParticulierController < ApplicationController
     end
   end
 
+  def callback_params
+    params.permit(:code, :state)
+  end
+
+  def procedure_path
+    # Consume the stored procedure path and store it in another session key as
+    # it will be used by both the credential service and the callback action.
+    # By doing so, we avoid betting on the immutability of Devise internals.
+    @procedure_path ||= session[:fc_user_procedure_path] ||= stored_location_for(:user)
+  end
+
+  def credentials
+    FranceConnectCredentialsService.new.call(procedure_path)
+  end
+
   def connect_france_connect_particulier(user)
     if user_signed_in?
       sign_out :user
     end
 
     sign_in user
-
-    user.update_attribute('loged_in_with_france_connect', User.loged_in_with_france_connects.fetch(:particulier))
-
-    redirection_location = stored_location_for(current_user) || root_path(current_user)
+    user.update_attribute(:loged_in_with_france_connect, User.loged_in_with_france_connect.fetch(:particulier))
+    redirection_location = session.delete(:fc_user_procedure_path) || root_path(current_user)
 
     respond_to do |format|
       format.html { redirect_to redirection_location }
       format.js { render js: ajax_redirect(root_path) }
     end
-  end
-
-  def redirect_france_connect_error_connection
-    flash.alert = t('errors.messages.france_connect.connexion')
-    redirect_to(new_user_session_path)
   end
 
   def merge_token_params

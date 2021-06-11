@@ -21,7 +21,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular 'revision_type_de_champ', 'revision_types_de_champ'
   inflect.irregular 'revision_type_de_champ_private', 'revision_types_de_champ_private'
   inflect.irregular 'assign_to', 'assign_tos'
-  inflect.uncountable(['avis', 'pays'])
+  inflect.uncountable(['avis', 'pays', 'loged_in_with_france_connect'])
 end
 
 # From https://github.com/davidcelis/inflections
@@ -50,4 +50,6 @@ ActiveSupport::Inflector.inflections(:fr) do |inflect|
   inflect.irregular('monsieur', 'messieurs')
   inflect.irregular('madame', 'mesdames')
   inflect.irregular('mademoiselle', 'mesdemoiselles')
+
+  inflect.uncountable(['avis', 'pays', 'loged_in_with_france_connect'])
 end
