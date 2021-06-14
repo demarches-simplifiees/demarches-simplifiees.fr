@@ -879,7 +879,7 @@ class Dossier < ApplicationRecord
   end
 
   def linked_dossiers_for(instructeur_or_expert)
-    dossier_ids = champs.filter(&:dossier_link?).map(&:value).compact
+    dossier_ids = champs.filter(&:dossier_link?).filter_map(&:value)
     instructeur_or_expert.dossiers.where(id: dossier_ids)
   end
 
@@ -920,7 +920,7 @@ class Dossier < ApplicationRecord
     factory = RGeo::Geographic.simple_mercator_factory
     bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
 
-    geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+    geo_areas.filter_map(&:rgeo_geometry).each do |geometry|
       bounding_box.add(geometry)
     end
 
