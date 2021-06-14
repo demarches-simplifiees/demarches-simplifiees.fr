@@ -520,7 +520,7 @@ describe Instructeurs::DossiersController, type: :controller do
           context 'and the expert can access the linked dossiers' do
             let(:saved_avis) { Avis.last(2).first }
             let(:linked_avis) { Avis.last }
-            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
+            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).filter_map(&:value)) }
             let(:invite_linked_dossiers) do
               instructeur.assign_to_procedure(linked_dossier.procedure)
               true

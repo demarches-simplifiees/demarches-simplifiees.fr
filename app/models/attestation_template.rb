@@ -45,13 +45,13 @@ class AttestationTemplate < ApplicationRecord
         acc
       end
 
-    used_tags.map do |used_tag|
+    used_tags.filter_map do |used_tag|
       corresponding_champ = all_champs_with_libelle_index[used_tag]
 
       if corresponding_champ && corresponding_champ.value.blank?
         corresponding_champ
       end
-    end.compact
+    end
   end
 
   def dup
