@@ -301,10 +301,6 @@ Rails.application.routes.draw do
   #
   scope module: 'experts', as: 'expert' do
     get 'avis', to: 'avis#index', as: 'all_avis'
-    # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
-    # TODO : they will be removed in September, 2020
-    get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
-    get 'avis/:id/sign_up/email/:email', to: redirect("/procedures/old/avis/%{id}/sign_up/email/%{email}"), constraints: { email: /.*/ }
 
     resources :procedures, only: [], param: :procedure_id do
       member do
@@ -330,11 +326,6 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
-    # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
-    # TODO : they will be removed in September, 2020
-    get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
-    get 'avis/:id/sign_up/email/:email', to: redirect("/procedures/old/avis/%{id}/sign_up/email/%{email}"), constraints: { email: /.*/ }
-
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
