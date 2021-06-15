@@ -81,7 +81,7 @@ class PiecesJustificativesService
   end
 
   def self.pjs_for_dossier(dossier)
-    bill_signatures = dossier.dossier_operation_logs.map(&:bill_signature).compact.uniq
+    bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
 
     [
       dossier.justificatif_motivation,

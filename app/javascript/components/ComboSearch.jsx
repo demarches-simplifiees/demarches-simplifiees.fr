@@ -12,6 +12,8 @@ import {
 import '@reach/combobox/styles.css';
 import { fire } from '@utils';
 
+import { useDeferredSubmit } from './shared/hooks';
+
 function defaultTransformResults(_, results) {
   return results;
 }
@@ -45,17 +47,23 @@ function ComboSearch({
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [value, setValue] = useState(initialValue);
   const resultsMap = useRef({});
-  const setExternalValue = useCallback((value) => {
-    if (hiddenValueField) {
-      hiddenValueField.setAttribute('value', value);
-      fire(hiddenValueField, 'autosave:trigger');
-    }
-  });
-  const setExternalId = useCallback((key) => {
-    if (hiddenIdField) {
-      hiddenIdField.setAttribute('value', key);
-    }
-  });
+  const setExternalValue = useCallback(
+    (value) => {
+      if (hiddenValueField) {
+        hiddenValueField.setAttribute('value', value);
+        fire(hiddenValueField, 'autosave:trigger');
+      }
+    },
+    [hiddenValueField]
+  );
+  const setExternalId = useCallback(
+    (key) => {
+      if (hiddenIdField) {
+        hiddenIdField.setAttribute('value', key);
+      }
+    },
+    [hiddenIdField]
+  );
   const setExternalValueAndId = useCallback((value) => {
     const [key, result] = resultsMap.current[value];
     setExternalId(key);
@@ -63,7 +71,8 @@ function ComboSearch({
     if (onChange) {
       onChange(value, result);
     }
-  });
+  }, []);
+  const awaitFormSubmit = useDeferredSubmit(hiddenValueField);
 
   const handleOnChange = useCallback(
     ({ target: { value } }) => {
@@ -82,7 +91,9 @@ function ComboSearch({
   const handleOnSelect = useCallback((value) => {
     setExternalValueAndId(value);
     setValue(value);
-  });
+    setSearchTerm('');
+    awaitFormSubmit.done();
+  }, []);
 
   const { isSuccess, data } = useQuery([scope, debouncedSearchTerm], {
     enabled: !!debouncedSearchTerm,
@@ -91,12 +102,22 @@ function ComboSearch({
   });
   const results = isSuccess ? transformResults(debouncedSearchTerm, data) : [];
 
+  const onBlur = useCallback(() => {
+    if (!allowInputValues && isSuccess && results[0]) {
+      const [, value] = transformResult(results[0]);
+      awaitFormSubmit(() => {
+        handleOnSelect(value);
+      });
+    }
+  }, [data]);
+
   return (
     <Combobox aria-label={label} onSelect={handleOnSelect}>
       <ComboboxInput
         className={className}
         placeholder={placeholder}
         onChange={handleOnChange}
+        onBlur={onBlur}
         value={value}
         required={required}
       />
