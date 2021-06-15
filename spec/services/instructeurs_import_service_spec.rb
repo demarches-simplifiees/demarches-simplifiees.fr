@@ -1,6 +1,5 @@
 describe InstructeursImportService do
   describe '#import' do
-    let(:service) { InstructeursImportService.new }
     let(:procedure) { create(:procedure) }
 
     let(:procedure_groupes) do
@@ -10,7 +9,7 @@ describe InstructeursImportService do
         .to_h
     end
 
-    subject { service.import(procedure, lines) }
+    subject { described_class.import(procedure, lines) }
 
     context 'nominal case' do
       let(:lines) do
