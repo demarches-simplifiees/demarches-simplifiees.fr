@@ -565,54 +565,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def usual_traitement_time
-    compute_usual_traitement_time_for_month(Time.zone.now)
-  end
-
-  def compute_usual_traitement_time_for_month(month_date)
-    times = Traitement.includes(:dossier)
-      .where(dossier: self.dossiers)
-      .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
-      .where(processed_at: (month_date - 1.month)..month_date)
-      .pluck('dossiers.en_construction_at', :processed_at)
-      .map { |(en_construction_at, processed_at)| processed_at - en_construction_at }
-
-    if times.present?
-      times.percentile(90).ceil
-    end
-  end
-
-  def usual_traitement_time_by_month
-    first_processed_at = Traitement.includes(:dossier)
-      .where(dossier: self.dossiers)
-      .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
-      .order(:processed_at)
-      .pick(:processed_at)
-
-    return [] if first_processed_at.nil?
-    month_index = first_processed_at.at_end_of_month
-    month_range = []
-    while month_index <= Time.zone.now.at_end_of_month
-      month_range << month_index
-      month_index += 1.month
-    end
-
-    month_range.map do |month|
-      [I18n.l(month, format: "%B %Y"), compute_usual_traitement_time_for_month(month)]
-    end
-  end
-
-  def usual_traitement_time_by_month_in_days
-    usual_traitement_time_by_month.map do |month, time_in_seconds|
-      if time_in_seconds.present?
-        time_in_days = (time_in_seconds / 60.0 / 60.0 / 24.0).ceil
-      else
-        time_in_days = nil
-      end
-      [month, time_in_days]
-    end
-  end
-
   def populate_champ_stable_ids
     TypeDeChamp
       .joins(:revisions)
