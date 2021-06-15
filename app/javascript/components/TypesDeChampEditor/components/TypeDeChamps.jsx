@@ -60,12 +60,9 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
           &nbsp;&nbsp;
           {addChampLabel(state.isAnnotation)}
         </button>
-        <button
-          className="button primary"
-          onClick={() => state.flash.success()}
-        >
-          Enregistrer
-        </button>
+        <a className="button accepted" href={state.continuerUrl}>
+          Continuer &gt;
+        </a>
       </div>
     </div>
   );
