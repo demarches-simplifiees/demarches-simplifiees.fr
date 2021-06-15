@@ -21,6 +21,8 @@ import { fire } from '@utils';
 import { XIcon } from '@heroicons/react/outline';
 import isHotkey from 'is-hotkey';
 
+import { useDeferredSubmit } from './shared/hooks';
+
 const Context = createContext();
 
 function ComboMultipleDropdownList({
@@ -78,37 +80,10 @@ function ComboMultipleDropdownList({
     () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
     [hiddenFieldId]
   );
+  const awaitFormSubmit = useDeferredSubmit(hiddenField);
 
   const handleChange = (event) => {
     setTerm(event.target.value);
-  };
-
-  const onKeyDown = (event) => {
-    if (
-      isHotkey('enter', event) ||
-      isHotkey(' ', event) ||
-      isHotkey(',', event) ||
-      isHotkey(';', event)
-    ) {
-      if (
-        term &&
-        [...extraOptions, ...options].map(([label]) => label).includes(term)
-      ) {
-        event.preventDefault();
-        return onSelect(term);
-      }
-    }
-  };
-
-  const onBlur = (event) => {
-    if (
-      acceptNewValues &&
-      term &&
-      [...extraOptions, ...options].map(([label]) => label).includes(term)
-    ) {
-      event.preventDefault();
-      return onSelect(term);
-    }
   };
 
   const saveSelection = (fn) => {
@@ -138,6 +113,7 @@ function ComboMultipleDropdownList({
       saveSelection((selections) => [...selections, selectedValue]);
     }
     setTerm('');
+    awaitFormSubmit.done();
   };
 
   const onRemove = (label) => {
@@ -151,6 +127,34 @@ function ComboMultipleDropdownList({
       );
     }
     inputRef.current.focus();
+  };
+
+  const onKeyDown = (event) => {
+    if (
+      isHotkey('enter', event) ||
+      isHotkey(' ', event) ||
+      isHotkey(',', event) ||
+      isHotkey(';', event)
+    ) {
+      if (
+        term &&
+        [...extraOptions, ...options].map(([label]) => label).includes(term)
+      ) {
+        event.preventDefault();
+        onSelect(term);
+      }
+    }
+  };
+
+  const onBlur = () => {
+    if (
+      term &&
+      [...extraOptions, ...options].map(([label]) => label).includes(term)
+    ) {
+      awaitFormSubmit(() => {
+        onSelect(term);
+      });
+    }
   };
 
   return (
