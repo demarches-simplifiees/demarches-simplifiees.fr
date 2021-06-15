@@ -105,7 +105,8 @@ Rails.application.routes.draw do
   devise_scope :user do
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
-    get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
+    get 'lien-envoye' => 'users/sessions#link_sent', as: 'link_sent'
+    get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent_legacy' # legacy, can be removed as soon as the previous line is deployed to production servers
     get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
   end
 
