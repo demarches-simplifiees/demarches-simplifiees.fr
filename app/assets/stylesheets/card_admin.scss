@@ -2,6 +2,7 @@
 @import "constants";
 
 .card-admin {
+  color: $black;
   padding-top: 10px;
   padding-bottom: 10px;
   width: 236px;
@@ -34,6 +35,18 @@
 
   .card-admin-action {
     margin-top: auto;
+  }
+
+  .button {
+    margin: auto auto 0 auto;
+  }
+
+  &:hover {
+    color: $blue;
+
+    .button {
+      color: $blue;
+    }
   }
 }
 
