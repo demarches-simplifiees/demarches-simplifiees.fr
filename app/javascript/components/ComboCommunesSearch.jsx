@@ -3,16 +3,24 @@ import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
 
 import ComboSearch from './ComboSearch';
-import { queryClient } from './shared/queryClient';
+import { queryClient, searchResultsLimit } from './shared/queryClient';
 
 function expandResultsWithMultiplePostalCodes(term, results) {
+  // A single result may have several associated postal codes.
+  // To make the search results more precise, we want to generate
+  // an actual result for each postal code.
   const expandedResults = results.flatMap((result) =>
     result.codesPostaux.map((codePostal) => ({
       ...result,
       codesPostaux: [codePostal]
     }))
   );
-  const limit = term.length > 5 ? 10 : 5;
+
+  // Some very large cities (like Paris) have A LOT of associated postal codes.
+  // As we generated one result per postal code, we now have a lot of results
+  // for the same city. If the number of results is above the threshold, we use
+  // local search to narrow the results.
+  const limit = searchResultsLimit(term);
   if (expandedResults.length > limit) {
     return matchSorter(expandedResults, term, {
       keys: [(item) => `${item.nom} (${item.codesPostaux[0]})`, 'code'],
