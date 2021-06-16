@@ -66,19 +66,9 @@ class ProcedurePresentation < ApplicationRecord
       )
     end
 
-    explanatory_types_de_champ = [:header_section, :explication].map { |k| TypeDeChamp.type_champs.fetch(k) }
-
-    fields.concat procedure.types_de_champ
-      .where.not(type_champ: explanatory_types_de_champ)
-      .order(:id)
+    fields.concat procedure.types_de_champ_for_procedure_presentation
       .pluck(:libelle, :stable_id)
       .map { |(libelle, stable_id)| field_hash(libelle, TYPE_DE_CHAMP, stable_id.to_s) }
-
-    fields.concat procedure.types_de_champ_private
-      .where.not(type_champ: explanatory_types_de_champ)
-      .order(:id)
-      .pluck(:libelle, :stable_id)
-      .map { |(libelle, stable_id)| field_hash(libelle, TYPE_DE_CHAMP_PRIVATE, stable_id.to_s) }
 
     fields
   end
