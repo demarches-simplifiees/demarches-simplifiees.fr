@@ -52,6 +52,22 @@ module ProcedureStatsConcern
     end
   end
 
+  def traitement_times(date_range)
+    Traitement.for_traitement_time_stats(self)
+      .where(processed_at: date_range)
+      .pluck('dossiers.en_construction_at', :processed_at)
+      .map{|en_construction_at, processed_at| { en_construction_at: en_construction_at, processed_at: processed_at }}
+  end
+
+  def usual_traitement_time_by_month_in_days
+    traitement_times(first_processed_at..last_considered_processed_at)
+      .group_by {|t| t[:processed_at].beginning_of_month }
+      .transform_values{|month| month.map{|h| h[:processed_at] - h[:en_construction_at]}}
+      .transform_values{|traitement_times_for_month| traitement_times_for_month.percentile(90).ceil }
+      .transform_values{|seconds| convert_seconds_in_days(seconds)}
+      .transform_keys{|month| pretty_month(month)}
+  end
+
   def usual_traitement_time
     compute_usual_traitement_time_for_month(Time.zone.now)
   end
@@ -69,35 +85,21 @@ module ProcedureStatsConcern
     end
   end
 
-  def usual_traitement_time_by_month
-    first_processed_at = Traitement.includes(:dossier)
-      .where(dossier: self.dossiers)
-      .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
-      .order(:processed_at)
-      .pick(:processed_at)
-
-    return [] if first_processed_at.nil?
-    month_index = first_processed_at.at_end_of_month
-    month_range = []
-    while month_index <= Time.zone.now.at_end_of_month
-      month_range << month_index
-      month_index += 1.month
-    end
-
-    month_range.map do |month|
-      [I18n.l(month, format: "%B %Y"), compute_usual_traitement_time_for_month(month)]
-    end
+  private
+  def first_processed_at
+    Traitement.for_traitement_time_stats(self).pick(:processed_at)
   end
 
-  def usual_traitement_time_by_month_in_days
-    usual_traitement_time_by_month.map do |month, time_in_seconds|
-      if time_in_seconds.present?
-        time_in_days = (time_in_seconds / 60.0 / 60.0 / 24.0).ceil
-      else
-        time_in_days = nil
-      end
-      [month, time_in_days]
-    end
+  def last_considered_processed_at
+    (Time.zone.now - 1.month).end_of_month
+  end
+
+  def convert_seconds_in_days(seconds)
+    (seconds / 60.0 / 60.0 / 24.0).ceil
+  end
+
+  def pretty_month(month)
+    I18n.l(month, format: "%B %Y")
   end
 
 end
