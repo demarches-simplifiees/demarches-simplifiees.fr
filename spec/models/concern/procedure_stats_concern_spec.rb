@@ -70,11 +70,13 @@ describe ProcedureStatsConcern do
     after { Timecop.return }
 
     context 'when there are several processed dossiers' do
-      let(:delays_by_month) { [
-        [90.days, 90.days],
-        [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days],
-        [30.days, 60.days, 60.days, 60.days]
-      ] }
+      let(:delays_by_month) {
+  [
+    [90.days, 90.days],
+    [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days],
+    [30.days, 60.days, 60.days, 60.days]
+  ]
+}
 
       it 'computes a time representative of the dossier instruction delay for each month except current month' do
         expect(procedure.usual_traitement_time_by_month_in_days['avril 2019']).to eq 60

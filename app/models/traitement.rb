@@ -19,7 +19,7 @@ class Traitement < ApplicationRecord
       .where("traitements.processed_at + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: Dossier::INTERVAL_BEFORE_EXPIRATION })
   end
 
-  scope :for_traitement_time_stats, ->(procedure) do
+  scope :for_traitement_time_stats, -> (procedure) do
     includes(:dossier)
       .where(dossier: procedure.dossiers)
       .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)

@@ -59,27 +59,28 @@ module ProcedureStatsConcern
     Traitement.for_traitement_time_stats(self)
       .where(processed_at: date_range)
       .pluck('dossiers.en_construction_at', :processed_at)
-      .map{|en_construction_at, processed_at| { en_construction_at: en_construction_at, processed_at: processed_at }}
+      .map { |en_construction_at, processed_at| { en_construction_at: en_construction_at, processed_at: processed_at } }
   end
 
   def usual_traitement_time_by_month_in_days
     traitement_times(first_processed_at..last_considered_processed_at)
-      .group_by {|t| t[:processed_at].beginning_of_month }
-      .transform_values{|month| month.map{|h| h[:processed_at] - h[:en_construction_at]}}
-      .transform_values{|traitement_times_for_month| traitement_times_for_month.percentile(PERCENTILE).ceil }
-      .transform_values{|seconds| convert_seconds_in_days(seconds)}
-      .transform_keys{|month| pretty_month(month)}
+      .group_by { |t| t[:processed_at].beginning_of_month }
+      .transform_values { |month| month.map { |h| h[:processed_at] - h[:en_construction_at] } }
+      .transform_values { |traitement_times_for_month| traitement_times_for_month.percentile(PERCENTILE).ceil }
+      .transform_values { |seconds| convert_seconds_in_days(seconds) }
+      .transform_keys { |month| pretty_month(month) }
   end
 
   def usual_traitement_time_for_recent_dossiers(nb_days)
     now = Time.zone.now
     traitement_times((now - nb_days.days)..now)
-      .map{|times| times[:processed_at] - times[:en_construction_at]}
+      .map { |times| times[:processed_at] - times[:en_construction_at] }
       .percentile(PERCENTILE)
       .ceil
   end
 
   private
+
   def first_processed_at
     Traitement.for_traitement_time_stats(self).pick(:processed_at)
   end
