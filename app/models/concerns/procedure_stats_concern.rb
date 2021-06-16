@@ -3,7 +3,7 @@ module ProcedureStatsConcern
 
   def stats_usual_traitement_time
     Rails.cache.fetch("#{cache_key_with_version}/stats_usual_traitement_time", expires_in: 12.hours) do
-      usual_traitement_time
+      usual_traitement_time_for_recent_dossiers(30)
     end
   end
 
@@ -68,21 +68,12 @@ module ProcedureStatsConcern
       .transform_keys{|month| pretty_month(month)}
   end
 
-  def usual_traitement_time
-    compute_usual_traitement_time_for_month(Time.zone.now)
-  end
-
-  def compute_usual_traitement_time_for_month(month_date)
-    times = Traitement.includes(:dossier)
-      .where(dossier: self.dossiers)
-      .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
-      .where(processed_at: (month_date - 1.month)..month_date)
-      .pluck('dossiers.en_construction_at', :processed_at)
-      .map { |(en_construction_at, processed_at)| processed_at - en_construction_at }
-
-    if times.present?
-      times.percentile(90).ceil
-    end
+  def usual_traitement_time_for_recent_dossiers(nb_days)
+    now = Time.zone.now
+    traitement_times((now - nb_days.days)..now)
+      .map{|times| times[:processed_at] - times[:en_construction_at]}
+      .percentile(90)
+      .ceil
   end
 
   private
