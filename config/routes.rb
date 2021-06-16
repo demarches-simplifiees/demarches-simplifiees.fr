@@ -428,6 +428,7 @@ Rails.application.routes.draw do
 
         collection do
           patch 'update_routing_criteria_name'
+          post 'import'
         end
       end
 
