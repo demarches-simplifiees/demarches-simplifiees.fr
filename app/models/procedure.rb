@@ -87,6 +87,41 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
+  def types_de_champ_for_procedure_presentation
+    explanatory_types_de_champ = [:header_section, :explication].map { |k| TypeDeChamp.type_champs.fetch(k) }
+
+    if brouillon?
+      TypeDeChamp
+        .joins(:revisions)
+        .where.not(type_champ: explanatory_types_de_champ)
+        .where(procedure_revisions: { id: draft_revision_id })
+        .order(:position)
+    else
+      # fetch all type_de_champ.stable_id for all the revisions expect draft
+      # and for each stable_id take the bigger (more recent) type_de_champ.id
+      recent_ids = TypeDeChamp
+        .joins(:revisions)
+        .where.not(type_champ: explanatory_types_de_champ)
+        .where(procedure_revisions: { procedure_id: id })
+        .where.not(procedure_revisions: { id: draft_revision_id })
+        .group(:stable_id)
+        .select('MAX(types_de_champ.id)')
+
+      # fetch the more recent procedure_revision_types_de_champ
+      # which includes recents_ids
+      recents_prtdc = ProcedureRevisionTypeDeChamp
+        .where(type_de_champ_id: recent_ids)
+        .where.not(revision_id: draft_revision_id)
+        .group(:type_de_champ_id)
+        .select('MAX(id)')
+
+      TypeDeChamp
+        .joins(:revision_types_de_champ)
+        .where(revision_types_de_champ: { id: recents_prtdc })
+        .order(:position, 'revision_types_de_champ.revision_id': :desc)
+    end
+  end
+
   def types_de_champ_for_tags
     if brouillon?
       draft_types_de_champ
