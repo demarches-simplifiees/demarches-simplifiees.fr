@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
 
@@ -7,14 +7,16 @@ import { queryClient } from './shared/queryClient';
 
 const extraTerms = [{ code: '99', nom: 'Etranger' }];
 
-function ComboDepartementsSearch(params) {
-  const transformResults = useCallback((term, results) => [
+function expandResultsWithForeignDepartement(term, results) {
+  return [
     ...results,
     ...matchSorter(extraTerms, term, {
       keys: ['nom', 'code']
     })
-  ]);
+  ];
+}
 
+function ComboDepartementsSearch(params) {
   return (
     <QueryClientProvider client={queryClient}>
       <ComboSearch
@@ -23,7 +25,7 @@ function ComboDepartementsSearch(params) {
         scope="departements"
         minimumInputLength={1}
         transformResult={({ code, nom }) => [code, `${code} - ${nom}`]}
-        transformResults={transformResults}
+        transformResults={expandResultsWithForeignDepartement}
       />
     </QueryClientProvider>
   );

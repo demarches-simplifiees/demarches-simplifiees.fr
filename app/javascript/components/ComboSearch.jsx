@@ -125,12 +125,12 @@ function ComboSearch({
         <ComboboxPopover className="shadow-popup">
           {results.length > 0 ? (
             <ComboboxList>
-              {results.map((result) => {
+              {results.map((result, index) => {
                 const [key, str] = transformResult(result);
                 resultsMap.current[str] = [key, result];
                 return (
                   <ComboboxOption
-                    key={key}
+                    key={`${key}-${index}`}
                     value={str}
                     data-option-value={str}
                   />
