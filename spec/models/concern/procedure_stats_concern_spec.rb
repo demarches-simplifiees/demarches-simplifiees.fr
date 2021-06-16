@@ -1,5 +1,5 @@
 describe ProcedureStatsConcern do
-  describe '#usual_traitement_time' do
+  describe '#usual_traitement_time_for_recent_dossiers' do
     let(:procedure) { create(:procedure) }
 
     before do
@@ -16,7 +16,7 @@ describe ProcedureStatsConcern do
       let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
 
       it 'returns a time representative of the dossier instruction delay' do
-        expect(procedure.usual_traitement_time).to be_between(3.days, 4.days)
+        expect(procedure.usual_traitement_time_for_recent_dossiers(30)).to be_between(3.days, 4.days)
       end
     end
 
@@ -25,7 +25,7 @@ describe ProcedureStatsConcern do
       let!(:old_dossier) { create_dossier(construction_date: 3.months.ago, instruction_date: 2.months.ago, processed_date: 2.months.ago) }
 
       it 'ignores dossiers older than 1 month' do
-        expect(procedure.usual_traitement_time).to be_within(1.hour).of(2.days)
+        expect(procedure.usual_traitement_time_for_recent_dossiers(30)).to be_within(1.hour).of(2.days)
       end
     end
 
@@ -34,22 +34,22 @@ describe ProcedureStatsConcern do
       let!(:bad_dossier) { create_dossier(construction_date: nil, instruction_date: nil, processed_date: 10.days.ago) }
 
       it 'ignores bad dossiers' do
-        expect(procedure.usual_traitement_time).to be_within(1.hour).of(2.days)
+        expect(procedure.usual_traitement_time_for_recent_dossiers(30)).to be_within(1.hour).of(2.days)
       end
     end
 
     context 'when there is only one processed dossier' do
       let(:delays) { [1.day] }
-      it { expect(procedure.usual_traitement_time).to be_within(1.hour).of(1.day) }
+      it { expect(procedure.usual_traitement_time_for_recent_dossiers(30)).to be_within(1.hour).of(1.day) }
     end
 
     context 'where there is no processed dossier' do
       let(:delays) { [] }
-      it { expect(procedure.usual_traitement_time).to be_nil }
+      it { expect(procedure.usual_traitement_time_for_recent_dossiers(30)).to eq 0 }
     end
   end
 
-  describe '.compute_usual_traitement_time_for_month' do
+  describe '.usual_traitement_time_by_month_in_days' do
     let(:procedure) { create(:procedure) }
 
     def create_dossiers(delays_by_month)
@@ -62,7 +62,7 @@ describe ProcedureStatsConcern do
     end
 
     before do
-      Timecop.freeze(Time.utc(2019, 6, 1, 12, 0))
+      Timecop.freeze(Time.utc(2019, 6, 25, 12, 0))
 
       create_dossiers(delays_by_month)
     end
@@ -70,11 +70,16 @@ describe ProcedureStatsConcern do
     after { Timecop.return }
 
     context 'when there are several processed dossiers' do
-      let(:delays_by_month) { [[1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days], [1.month, 2.months, 2.months, 2.months]] }
+      let(:delays_by_month) { [
+        [90.days, 90.days],
+        [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days],
+        [30.days, 60.days, 60.days, 60.days]
+      ] }
 
-      it 'computes a time representative of the dossier instruction delay for a specific month' do
-        expect(procedure.compute_usual_traitement_time_for_month(Date.strptime("2019-05", "%Y-%m"))).to be_between(1.month, 2.months)
-        expect(procedure.compute_usual_traitement_time_for_month(Date.strptime("2019-06", "%Y-%m"))).to be_between(3.days, 4.days)
+      it 'computes a time representative of the dossier instruction delay for each month except current month' do
+        expect(procedure.usual_traitement_time_by_month_in_days['avril 2019']).to eq 60
+        expect(procedure.usual_traitement_time_by_month_in_days['mai 2019']).to eq 4
+        expect(procedure.usual_traitement_time_by_month_in_days['juin 2019']).to eq nil
       end
     end
   end
