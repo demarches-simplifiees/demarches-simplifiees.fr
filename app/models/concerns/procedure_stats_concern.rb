@@ -1,9 +1,12 @@
 module ProcedureStatsConcern
   extend ActiveSupport::Concern
 
+  NB_DAYS_RECENT_DOSSIERS = 30
+  PERCENTILE = 90
+
   def stats_usual_traitement_time
     Rails.cache.fetch("#{cache_key_with_version}/stats_usual_traitement_time", expires_in: 12.hours) do
-      usual_traitement_time_for_recent_dossiers(30)
+      usual_traitement_time_for_recent_dossiers(NB_DAYS_RECENT_DOSSIERS)
     end
   end
 
@@ -63,7 +66,7 @@ module ProcedureStatsConcern
     traitement_times(first_processed_at..last_considered_processed_at)
       .group_by {|t| t[:processed_at].beginning_of_month }
       .transform_values{|month| month.map{|h| h[:processed_at] - h[:en_construction_at]}}
-      .transform_values{|traitement_times_for_month| traitement_times_for_month.percentile(90).ceil }
+      .transform_values{|traitement_times_for_month| traitement_times_for_month.percentile(PERCENTILE).ceil }
       .transform_values{|seconds| convert_seconds_in_days(seconds)}
       .transform_keys{|month| pretty_month(month)}
   end
@@ -72,7 +75,7 @@ module ProcedureStatsConcern
     now = Time.zone.now
     traitement_times((now - nb_days.days)..now)
       .map{|times| times[:processed_at] - times[:en_construction_at]}
-      .percentile(90)
+      .percentile(PERCENTILE)
       .ceil
   end
 
