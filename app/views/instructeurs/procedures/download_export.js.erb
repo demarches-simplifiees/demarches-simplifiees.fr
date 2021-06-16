@@ -1,9 +1,10 @@
-<%= render_to_element('.procedure-actions', partial: "download_dossiers", 
-                      locals: { procedure: @procedure, xlsx_export: @xlsx_export, csv_export: @csv_export, ods_export: @ods_export, dossier_count: @dossier_count }) %>
+<%= render_to_element('.procedure-actions', partial: "download_dossiers",  locals: { procedure: @procedure, exports: @exports, dossier_count: @dossier_count }) %>
 
-<% [[@xlsx_export, :xlsx], [@csv_export, :csv], [@ods_export, :ods]].each do |(export, format)| %>
-  <% if export && !export.ready? %>
-    <%= fire_event('export:update', { url: download_export_instructeur_procedure_path(@procedure, export_format: format, no_progress_notification: true) }.to_json ) %>
+<% @exports.each do |format, exports| %>
+  <% exports.each do |time_span_type, export| %>
+    <% if !export.ready? %>
+      <%= fire_event('export:update', { url: download_export_instructeur_procedure_path(@procedure, export_format: format, time_span_type: time_span_type, no_progress_notification: true) }.to_json) %>
+    <% end %>
   <% end %>
 <% end %>
 
