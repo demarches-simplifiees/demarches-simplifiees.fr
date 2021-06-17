@@ -45,7 +45,7 @@ describe ProcedureStatsConcern do
 
     context 'where there is no processed dossier' do
       let(:delays) { [] }
-      it { expect(procedure.usual_traitement_time_for_recent_dossiers(30)).to eq 0 }
+      it { expect(procedure.usual_traitement_time_for_recent_dossiers(30)).to eq nil }
     end
   end
 
