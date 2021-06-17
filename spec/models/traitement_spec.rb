@@ -6,6 +6,7 @@ describe Traitement do
     before do
       create_dossier_for_month(procedure, 2021, 3)
       create_dossier_for_month(procedure, 2021, 3)
+      create_archived_dossier_for_month(procedure, 2021, 3)
       create_dossier_for_month(procedure, 2021, 2)
     end
 
@@ -16,7 +17,7 @@ describe Traitement do
     end
 
     it 'count dossiers_termines by month' do
-      expect(count_for_month(subject, 3)).to eq 2
+      expect(count_for_month(subject, 3)).to eq 3
       expect(count_for_month(subject, 2)).to eq 1
     end
 
@@ -37,6 +38,12 @@ describe Traitement do
   def create_dossier_for_month(procedure, year, month)
     Timecop.freeze(Time.zone.local(year, month, 5)) do
       create(:dossier, :accepte, :with_attestation, procedure: procedure)
+    end
+  end
+
+  def create_archived_dossier_for_month(procedure, year, month)
+    Timecop.freeze(Time.zone.local(year, month, 5)) do
+      create(:dossier, :accepte, :archived, :with_attestation, procedure: procedure)
     end
   end
 end
