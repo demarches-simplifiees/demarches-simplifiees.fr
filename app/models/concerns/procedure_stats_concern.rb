@@ -2,7 +2,10 @@ module ProcedureStatsConcern
   extend ActiveSupport::Concern
 
   NB_DAYS_RECENT_DOSSIERS = 30
-  PERCENTILE = 90
+  # Percentage of dossiers considered to compute the 'usual traitement time'.
+  # For instance, a value of '90' means that the usual traitement time will return
+  # the duration under which 90% of the given dossiers are closed.
+  USUAL_TRAITEMENT_TIME_PERCENTILE = 90
 
   def stats_usual_traitement_time
     Rails.cache.fetch("#{cache_key_with_version}/stats_usual_traitement_time", expires_in: 12.hours) do
@@ -66,7 +69,7 @@ module ProcedureStatsConcern
     traitement_times(first_processed_at..last_considered_processed_at)
       .group_by { |t| t[:processed_at].beginning_of_month }
       .transform_values { |month| month.map { |h| h[:processed_at] - h[:en_construction_at] } }
-      .transform_values { |traitement_times_for_month| traitement_times_for_month.percentile(PERCENTILE).ceil }
+      .transform_values { |traitement_times_for_month| traitement_times_for_month.percentile(USUAL_TRAITEMENT_TIME_PERCENTILE).ceil }
       .transform_values { |seconds| seconds == 0 ? nil : seconds }
       .transform_values { |seconds| convert_seconds_in_days(seconds) }
       .transform_keys { |month| pretty_month(month) }
@@ -77,7 +80,7 @@ module ProcedureStatsConcern
     traitement_time =
       traitement_times((now - nb_days.days)..now)
         .map { |times| times[:processed_at] - times[:en_construction_at] }
-        .percentile(PERCENTILE)
+        .percentile(USUAL_TRAITEMENT_TIME_PERCENTILE)
         .ceil
 
     traitement_time = nil if traitement_time == 0
@@ -101,5 +104,4 @@ module ProcedureStatsConcern
   def pretty_month(month)
     I18n.l(month, format: "%B %Y")
   end
-
 end

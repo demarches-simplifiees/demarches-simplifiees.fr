@@ -11,7 +11,7 @@
         %span.big-number-card-number
           = distance_of_time_in_words(@usual_traitement_time)
         %span.big-number-card-detail
-          #{ProcedureStatsConcern::PERCENTILE}% des demandes des #{ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS} derniers jours ont été traitées en moins de #{distance_of_time_in_words(@usual_traitement_time)}.
+          #{ProcedureStatsConcern::USUAL_TRAITEMENT_TIME_PERCENTILE}% des demandes des #{ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS} derniers jours ont été traitées en moins de #{distance_of_time_in_words(@usual_traitement_time)}.
 
   .stat-cards
     .stat-card.stat-card-half.pull-left
