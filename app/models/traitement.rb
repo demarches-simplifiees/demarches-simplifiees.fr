@@ -29,7 +29,7 @@ class Traitement < ApplicationRecord
   def self.count_dossiers_termines_by_month(groupe_instructeurs)
     last_traitements_per_dossier = Traitement
       .select('max(traitements.processed_at) as processed_at')
-      .where(dossier: Dossier.termine.where(groupe_instructeur: groupe_instructeurs))
+      .where(dossier: Dossier.state_termine.where(groupe_instructeur: groupe_instructeurs))
       .group(:dossier_id)
       .to_sql
 
