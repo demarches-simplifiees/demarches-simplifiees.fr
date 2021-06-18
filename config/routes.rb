@@ -105,7 +105,8 @@ Rails.application.routes.draw do
   devise_scope :user do
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
-    get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
+    get 'lien-envoye' => 'users/sessions#link_sent', as: 'link_sent'
+    get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent_legacy' # legacy, can be removed as soon as the previous line is deployed to production servers
     get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
   end
 
@@ -300,10 +301,6 @@ Rails.application.routes.draw do
   #
   scope module: 'experts', as: 'expert' do
     get 'avis', to: 'avis#index', as: 'all_avis'
-    # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
-    # TODO : they will be removed in September, 2020
-    get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
-    get 'avis/:id/sign_up/email/:email', to: redirect("/procedures/old/avis/%{id}/sign_up/email/%{email}"), constraints: { email: /.*/ }
 
     resources :procedures, only: [], param: :procedure_id do
       member do
@@ -316,8 +313,13 @@ Rails.application.routes.draw do
             post 'avis' => 'avis#create_avis'
             get 'bilans_bdf'
 
-            get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
-            post 'sign_up/email/:email' => 'avis#update_expert', constraints: { email: /.*/ }
+            get 'sign_up' => 'avis#sign_up'
+            post 'sign_up' => 'avis#update_expert'
+
+            # This redirections are ephemeral, to ensure that emails sent to experts before are still valid
+            # TODO : remove these lines after September, 2021
+            get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up_legacy'
+            post 'sign_up/email/:email' => 'avis#update_expert', constraints: { email: /.*/ }, as: 'update_expert_legacy'
           end
         end
       end
@@ -329,11 +331,6 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
-    # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
-    # TODO : they will be removed in September, 2020
-    get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
-    get 'avis/:id/sign_up/email/:email', to: redirect("/procedures/old/avis/%{id}/sign_up/email/%{email}"), constraints: { email: /.*/ }
-
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
