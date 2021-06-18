@@ -4,7 +4,7 @@
       %p.description= @dossier.procedure.libelle
       %p.dossier Dossier nº #{@dossier.id}
     .column
-      = form_for(User.new, url: { controller: "experts/avis", action: :update_expert }, method: :post, html: { class: "form" }) do |f|
+      = form_for(User.new, url: sign_up_expert_avis_path(email: @email), method: :post, html: { class: "form" }) do |f|
         %h1 Créez-vous un compte
 
         = f.label :email, "Email"
