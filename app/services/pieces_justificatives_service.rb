@@ -56,7 +56,9 @@ class PiecesJustificativesService
                 include_infos_administration: true,
                 dossier: dossier
               })
-    dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
+    ActiveRecord::Base.no_touching do
+      dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
+    end
     dossier.pdf_export_for_instructeur
   end
 
