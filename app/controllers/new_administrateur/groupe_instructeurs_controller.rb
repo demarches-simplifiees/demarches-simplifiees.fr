@@ -170,7 +170,7 @@ module NewAdministrateur
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
 
       else
-        groupes_emails = CSV.new(group_csv_file.read, headers: true, header_converters: :downcase)
+        groupes_emails = CSV.new(group_csv_file.read.force_encoding("UTF-8"), headers: true, header_converters: :downcase)
           .map { |r| r.to_h.slice('groupe', 'email') }
 
         add_instructeurs_and_get_errors = InstructeursImportService.import(procedure, groupes_emails)
