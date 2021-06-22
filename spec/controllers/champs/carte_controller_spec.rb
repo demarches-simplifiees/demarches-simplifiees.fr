@@ -116,21 +116,19 @@ describe Champs::CarteController, type: :controller do
     describe 'GET #index' do
       render_views
 
-      let(:params) do
-        { champ_id: champ.id }
-      end
-
       before do
-        request.accept = "application/javascript"
-        request.content_type = "application/javascript"
-        get :index, params: params
+        get :index, params: params, format: :js, xhr: true
       end
 
-      context "update list" do
-        it {
+      context 'without focus' do
+        let(:params) do
+          { champ_id: champ.id }
+        end
+
+        it 'updates the list' do
           expect(response.body).not_to include("DS.fire('map:feature:focus'")
           expect(response.status).to eq 200
-        }
+        end
       end
 
       context "update list and focus" do
@@ -141,10 +139,10 @@ describe Champs::CarteController, type: :controller do
           }
         end
 
-        it {
+        it 'updates the list and focuses the map' do
           expect(response.body).to include("DS.fire('map:feature:focus'")
           expect(response.status).to eq 200
-        }
+        end
       end
     end
   end
