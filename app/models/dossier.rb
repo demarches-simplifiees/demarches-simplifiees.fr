@@ -764,19 +764,19 @@ class Dossier < ApplicationRecord
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
   end
 
-  def spreadsheet_columns_csv(types_de_champ:, types_de_champ_private:)
-    spreadsheet_columns(with_etablissement: true, types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
+  def spreadsheet_columns_csv(types_de_champ:)
+    spreadsheet_columns(with_etablissement: true, types_de_champ: types_de_champ)
   end
 
-  def spreadsheet_columns_xlsx(types_de_champ:, types_de_champ_private:)
-    spreadsheet_columns(types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
+  def spreadsheet_columns_xlsx(types_de_champ:)
+    spreadsheet_columns(types_de_champ: types_de_champ)
   end
 
-  def spreadsheet_columns_ods(types_de_champ:, types_de_champ_private:)
-    spreadsheet_columns(types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
+  def spreadsheet_columns_ods(types_de_champ:)
+    spreadsheet_columns(types_de_champ: types_de_champ)
   end
 
-  def spreadsheet_columns(with_etablissement: false, types_de_champ:, types_de_champ_private:)
+  def spreadsheet_columns(with_etablissement: false, types_de_champ:)
     columns = [
       ['ID', id.to_s],
       ['Email', user_email_for(:display)]
@@ -843,26 +843,12 @@ class Dossier < ApplicationRecord
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
 
-    columns + champs_for_export(types_de_champ) + champs_private_for_export(types_de_champ_private)
+    columns + champs_for_export(types_de_champ)
   end
 
   def champs_for_export(types_de_champ)
     # Index values by stable_id
-    values = champs.reject(&:exclude_from_export?).reduce({}) do |champs, champ|
-      champs[champ.stable_id] = champ.for_export
-      champs
-    end
-
-    # Get all the champs values for the types de champ in the final list.
-    # Dossier might not have corresponding champ – display nil.
-    types_de_champ.map do |type_de_champ|
-      [type_de_champ.libelle, values[type_de_champ.stable_id]]
-    end
-  end
-
-  def champs_private_for_export(types_de_champ)
-    # Index values by stable_id
-    values = champs_private.reject(&:exclude_from_export?).reduce({}) do |champs, champ|
+    values = (champs + champs_private).reject(&:exclude_from_export?).reduce({}) do |champs, champ|
       champs[champ.stable_id] = champ.for_export
       champs
     end

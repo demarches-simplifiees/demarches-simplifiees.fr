@@ -1364,8 +1364,8 @@ describe Dossier do
       it "should have champs from all revisions" do
         expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle])
         expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, "New text field"])
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_export))
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_procedure_presentation))
       end
     end
 
@@ -1373,7 +1373,7 @@ describe Dossier do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_explication) }
 
       it "should not contain non-exportable types de champ" do
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
       end
     end
   end
@@ -1451,6 +1451,6 @@ describe Dossier do
   describe "#spreadsheet_columns" do
     let(:dossier) { create(:dossier) }
 
-    it { expect(dossier.spreadsheet_columns(types_de_champ: [], types_de_champ_private: [])).to include(["État du dossier", "Brouillon"]) }
+    it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["État du dossier", "Brouillon"]) }
   end
 end

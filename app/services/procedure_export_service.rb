@@ -84,11 +84,10 @@ class ProcedureExportService
   end
 
   def spreadsheet_columns(format)
-    types_de_champ = @procedure.types_de_champ_for_export
-    types_de_champ_private = @procedure.types_de_champ_private_for_export
+    types_de_champ = @procedure.types_de_champ_for_procedure_presentation.to_a
 
     Proc.new do |instance|
-      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private)
+      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ)
     end
   end
 end
