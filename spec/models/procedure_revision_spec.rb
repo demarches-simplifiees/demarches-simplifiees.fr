@@ -173,7 +173,8 @@ describe ProcedureRevision do
         expect(procedure.active_revision.compare(new_revision)).to eq([
           {
             op: :add,
-            label: "Un champ text"
+            label: "Un champ text",
+            private: false
           }
         ])
 
@@ -183,12 +184,14 @@ describe ProcedureRevision do
             op: :update,
             attribute: :libelle,
             label: type_de_champ_first.libelle,
+            private: false,
             from: type_de_champ_first.libelle,
             to: "modifier le libelle"
           },
           {
             op: :add,
-            label: "Un champ text"
+            label: "Un champ text",
+            private: false
           }
         ])
         expect(new_revision.types_de_champ.first.revision).to eq(new_revision)
@@ -199,16 +202,19 @@ describe ProcedureRevision do
             op: :update,
             attribute: :libelle,
             label: type_de_champ_first.libelle,
+            private: false,
             from: type_de_champ_first.libelle,
             to: "modifier le libelle"
           },
           {
             op: :add,
-            label: "Un champ text"
+            label: "Un champ text",
+            private: false
           },
           {
             op: :move,
             label: type_de_champ_second.libelle,
+            private: false,
             from: 1,
             to: 2
           }
@@ -219,11 +225,13 @@ describe ProcedureRevision do
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
             op: :remove,
-            label: type_de_champ_first.libelle
+            label: type_de_champ_first.libelle,
+            private: false
           },
           {
             op: :add,
-            label: "Un champ text"
+            label: "Un champ text",
+            private: false
           }
         ])
 
@@ -232,16 +240,19 @@ describe ProcedureRevision do
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
             op: :remove,
-            label: type_de_champ_first.libelle
+            label: type_de_champ_first.libelle,
+            private: false
           },
           {
             op: :add,
-            label: "Un champ text"
+            label: "Un champ text",
+            private: false
           },
           {
             op: :update,
             attribute: :description,
             label: type_de_champ_second.libelle,
+            private: false,
             from: type_de_champ_second.description,
             to: "une description"
           },
@@ -249,6 +260,7 @@ describe ProcedureRevision do
             op: :update,
             attribute: :mandatory,
             label: type_de_champ_second.libelle,
+            private: false,
             from: false,
             to: true
           }
@@ -259,16 +271,19 @@ describe ProcedureRevision do
         expect(procedure.active_revision.compare(new_revision.reload)).to eq([
           {
             op: :remove,
-            label: type_de_champ_first.libelle
+            label: type_de_champ_first.libelle,
+            private: false
           },
           {
             op: :add,
-            label: "Un champ text"
+            label: "Un champ text",
+            private: false
           },
           {
             op: :update,
             attribute: :description,
             label: type_de_champ_second.libelle,
+            private: false,
             from: type_de_champ_second.description,
             to: "une description"
           },
@@ -276,6 +291,7 @@ describe ProcedureRevision do
             op: :update,
             attribute: :mandatory,
             label: type_de_champ_second.libelle,
+            private: false,
             from: false,
             to: true
           },
@@ -283,6 +299,7 @@ describe ProcedureRevision do
             op: :update,
             attribute: :type_champ,
             label: "sub type de champ",
+            private: false,
             from: "text",
             to: "drop_down_list"
           },
@@ -290,6 +307,7 @@ describe ProcedureRevision do
             op: :update,
             attribute: :drop_down_options,
             label: "sub type de champ",
+            private: false,
             from: [],
             to: ["one", "two"]
           }

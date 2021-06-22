@@ -30,5 +30,6 @@
               %li= "Valeurs ajoutés : #{added.map{ |term| "« #{term.strip} »" }.join(", ")}."
             - if removed.present?
               %li= "Valeurs supprimés : #{removed.map{ |term| "« #{term.strip} »" }.join(", ")}."
-  - if changes.any? { |change| change[:op] == :move }
-    %li.mb-1 Des champs ont changé de position
+  - move_changes = changes.filter { |change| change[:op] == :move }.size
+  - if move_changes != 0
+    %li.mb-1= t(:has_move_changes, count: move_changes, scope: [:new_administrateur, :revision_changes])

@@ -125,11 +125,11 @@ class ProcedureRevision < ApplicationRecord
       to_sids = to_h.keys
 
       removed = (from_sids - to_sids).map do |sid|
-        { op: :remove, label: from_h[sid].libelle, position: from_sids.index(sid) }
+        { op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, position: from_sids.index(sid) }
       end
 
       added = (to_sids - from_sids).map do |sid|
-        { op: :add, label: to_h[sid].libelle, position: to_sids.index(sid) }
+        { op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, position: to_sids.index(sid) }
       end
 
       kept = from_sids.intersection(to_sids)
@@ -138,7 +138,7 @@ class ProcedureRevision < ApplicationRecord
         .map { |sid| [sid, from_sids.index(sid), to_sids.index(sid)] }
         .filter { |_, from_index, to_index| from_index != to_index }
         .map do |sid, from_index, to_index|
-        { op: :move, label: from_h[sid].libelle, from: from_index, to: to_index, position: to_index }
+        { op: :move, label: from_h[sid].libelle, private: from_h[sid].private?, from: from_index, to: to_index, position: to_index }
       end
 
       changed = kept
@@ -161,6 +161,7 @@ class ProcedureRevision < ApplicationRecord
         op: :update,
         attribute: :type_champ,
         label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
         from: from_type_de_champ.type_champ,
         to: to_type_de_champ.type_champ
       }
@@ -170,6 +171,7 @@ class ProcedureRevision < ApplicationRecord
         op: :update,
         attribute: :libelle,
         label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
         from: from_type_de_champ.libelle,
         to: to_type_de_champ.libelle
       }
@@ -179,6 +181,7 @@ class ProcedureRevision < ApplicationRecord
         op: :update,
         attribute: :description,
         label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
         from: from_type_de_champ.description,
         to: to_type_de_champ.description
       }
@@ -188,6 +191,7 @@ class ProcedureRevision < ApplicationRecord
         op: :update,
         attribute: :mandatory,
         label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
         from: from_type_de_champ.mandatory?,
         to: to_type_de_champ.mandatory?
       }
@@ -198,6 +202,7 @@ class ProcedureRevision < ApplicationRecord
           op: :update,
           attribute: :drop_down_options,
           label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
           from: from_type_de_champ.drop_down_list_options,
           to: to_type_de_champ.drop_down_list_options
         }
@@ -208,6 +213,7 @@ class ProcedureRevision < ApplicationRecord
           op: :update,
           attribute: :piece_justificative_template,
           label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
           from: from_type_de_champ.piece_justificative_template_filename,
           to: to_type_de_champ.piece_justificative_template_filename
         }
