@@ -385,6 +385,15 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(flash.alert).to be_present }
       it { expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV") }
     end
+
+    context 'when the headers are wrong' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/invalid-group-file.csv', 'text/csv') }
+
+      before { subject }
+
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/import-groupe-test.csv\">suivant ce modèle</a>") }
+    end
   end
 
   describe '#update_routing_criteria_name' do
