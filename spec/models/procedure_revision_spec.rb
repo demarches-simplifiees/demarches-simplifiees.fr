@@ -56,7 +56,7 @@ describe ProcedureRevision do
       revision.reload
       expect(revision.types_de_champ.index(type_de_champ)).to eq(2)
       expect(revision.procedure.types_de_champ.index(type_de_champ)).to eq(2)
-      expect(revision.procedure.types_de_champ_for_export.index(type_de_champ)).to eq(2)
+      expect(revision.procedure.types_de_champ_for_procedure_presentation.index(type_de_champ)).to eq(2)
     end
 
     it 'move up' do
@@ -66,7 +66,7 @@ describe ProcedureRevision do
       revision.reload
       expect(revision.types_de_champ.index(last_type_de_champ)).to eq(0)
       expect(revision.procedure.types_de_champ.index(last_type_de_champ)).to eq(0)
-      expect(revision.procedure.types_de_champ_for_export.index(last_type_de_champ)).to eq(0)
+      expect(revision.procedure.types_de_champ_for_procedure_presentation.index(last_type_de_champ)).to eq(0)
     end
 
     context 'repetition' do

@@ -67,8 +67,8 @@ class ProcedurePresentation < ApplicationRecord
     end
 
     fields.concat procedure.types_de_champ_for_procedure_presentation
-      .pluck(:libelle, :stable_id)
-      .map { |(libelle, stable_id)| field_hash(libelle, TYPE_DE_CHAMP, stable_id.to_s) }
+      .pluck(:libelle, :private, :stable_id)
+      .map { |(libelle, is_private, stable_id)| field_hash(libelle, is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s) }
 
     fields
   end

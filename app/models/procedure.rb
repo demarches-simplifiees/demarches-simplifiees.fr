@@ -88,14 +88,14 @@ class Procedure < ApplicationRecord
   end
 
   def types_de_champ_for_procedure_presentation
-    explanatory_types_de_champ = [:header_section, :explication].map { |k| TypeDeChamp.type_champs.fetch(k) }
+    explanatory_types_de_champ = [:header_section, :explication, :repetition].map { |k| TypeDeChamp.type_champs.fetch(k) }
 
     if brouillon?
       TypeDeChamp
         .joins(:revisions)
         .where.not(type_champ: explanatory_types_de_champ)
         .where(procedure_revisions: { id: draft_revision_id })
-        .order(:position)
+        .order(:private, :position)
     else
       # fetch all type_de_champ.stable_id for all the revisions expect draft
       # and for each stable_id take the bigger (more recent) type_de_champ.id
@@ -118,7 +118,7 @@ class Procedure < ApplicationRecord
       TypeDeChamp
         .joins(:revision_types_de_champ)
         .where(revision_types_de_champ: { id: recents_prtdc })
-        .order(:position, 'revision_types_de_champ.revision_id': :desc)
+        .order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
     end
   end
 
@@ -144,14 +144,6 @@ class Procedure < ApplicationRecord
         .order(:created_at)
         .uniq
     end
-  end
-
-  def types_de_champ_for_export
-    types_de_champ.reject(&:exclude_from_export?)
-  end
-
-  def types_de_champ_private_for_export
-    types_de_champ_private.reject(&:exclude_from_export?)
   end
 
   has_many :administrateurs_procedures
