@@ -12,7 +12,7 @@ describe AttachmentsController, type: :controller do
 
     subject do
       request.headers['HTTP_REFERER'] = dossier_url(dossier)
-      get :show, params: { id: attachment.id, signed_id: signed_id }, format: format
+      get :show, params: { id: attachment.id, signed_id: signed_id }, format: format, xhr: (format == :js)
     end
 
     context 'when authenticated' do

@@ -22,9 +22,9 @@ describe Champs::DossierLinkController, type: :controller do
       let(:dossier_id) { dossier.id }
 
       context 'when the dossier exist' do
-        before {
-          get :show, params: params, format: 'js'
-        }
+        before do
+          get :show, params: params, format: :js, xhr: true
+        end
 
         it 'renders the procedure name' do
           expect(response.body).to include('Dossier en brouillon')
@@ -36,9 +36,9 @@ describe Champs::DossierLinkController, type: :controller do
 
       context 'when the dossier does not exist' do
         let(:dossier_id) { '13' }
-        before {
-          get :show, params: params, format: 'js'
-        }
+        before do
+          get :show, params: params, format: :js, xhr: true
+        end
 
         it 'renders error message' do
           expect(response.body).to include('Ce dossier est inconnu')
@@ -48,9 +48,9 @@ describe Champs::DossierLinkController, type: :controller do
     end
 
     context 'when user is not connected' do
-      before {
-        get :show, params: { position: '1' }, format: 'js'
-      }
+      before do
+        get :show, params: { position: '1' }, format: :js, xhr: true
+      end
 
       it { expect(response.code).to eq('401') }
     end
