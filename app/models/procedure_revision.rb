@@ -207,6 +207,17 @@ class ProcedureRevision < ApplicationRecord
           to: to_type_de_champ.drop_down_list_options
         }
       end
+    elsif to_type_de_champ.carte?
+      if from_type_de_champ.carte_optional_layers != to_type_de_champ.carte_optional_layers
+        changes << {
+          op: :update,
+          attribute: :carte_layers,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: from_type_de_champ.carte_optional_layers,
+          to: to_type_de_champ.carte_optional_layers
+        }
+      end
     elsif to_type_de_champ.piece_justificative?
       if from_type_de_champ.piece_justificative_template_checksum != to_type_de_champ.piece_justificative_template_checksum
         changes << {

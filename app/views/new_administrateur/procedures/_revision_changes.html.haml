@@ -24,12 +24,22 @@
         - added = change[:to].sort - change[:from].sort
         - removed = change[:from].sort - change[:to].sort
         %li.mb-1
-          = "Les options de sélection du champ « #{change[:label]} » ont changé."
+          = "Les options de sélection du champ « #{change[:label]} » ont changé :"
           %ul
             - if added.present?
               %li= "Valeurs ajoutés : #{added.map{ |term| "« #{term.strip} »" }.join(", ")}."
             - if removed.present?
               %li= "Valeurs supprimés : #{removed.map{ |term| "« #{term.strip} »" }.join(", ")}."
+      - when :carte_layers
+        - added = change[:to].sort - change[:from].sort
+        - removed = change[:from].sort - change[:to].sort
+        %li.mb-1
+          = "Les référentiels cartographiques du champ « #{change[:label]} » ont changé :"
+          %ul
+            - if added.present?
+              %li= "Référentiels ajoutés : #{added.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", ")}."
+            - if removed.present?
+              %li= "Référentiels supprimés : #{removed.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", ")}."
   - move_changes = changes.filter { |change| change[:op] == :move }.size
   - if move_changes != 0
     %li.mb-1= t(:has_move_changes, count: move_changes, scope: [:new_administrateur, :revision_changes])
