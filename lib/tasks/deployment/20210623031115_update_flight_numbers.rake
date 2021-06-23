@@ -1,5 +1,5 @@
 def update_field(param)
-  procedure = Procedure.find_by_id(param[:procedure])
+  procedure = Procedure.find_by(id: param[:procedure])
   if procedure.nil?
     puts "Procedure #{param[:procedure]} non trouvée"
     return
