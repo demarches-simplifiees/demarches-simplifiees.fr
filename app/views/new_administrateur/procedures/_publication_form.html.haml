@@ -1,40 +1,44 @@
 .card.mb-4
   %h2.card-title Publiez votre démarche
   = form_tag admin_procedure_publish_path(procedure_id: procedure.id), method: :put, class: 'form' do
-    %p.mb-4 Publiez votre démarche, et partagez la à vos usagers. Aucune modification ne sera possible.
-    %p Personnalisez le lien public de la démarche pour en faciliter l’accès (<strong>obligatoire pour publier votre démarche</strong>) :
-    %p.empty-text
-      = commencer_url(path: '')
-      = text_field_tag(:path, procedure.path,
-                      id: 'procedure_path',
-                      label: 'Adresse de diffusion',
-                      placeholder: 'chemin-de-la-démarche',
-                      required: true,
-                      class: 'form',
-                      pattern: '^[a-z0-9_-]{3,200}$',
-                      title: "De 3 à 200 caractères; minuscules, chiffres et tiret seulement",
-                      data: { debounce: true, url: admin_procedure_publish_validate_path(procedure)},
-                      autocomplete: 'off',
-                      style: 'width: 300px; display: inline;')
-      .text-info.mb-4
-        Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
-    %h2.card-title Diffusion de la démarche
-    %p Où les utilisateurs trouveront-ils le lien de la démarche ? Typiquement, il s’agit d’une page de votre site web.
-    %p.center
-      = text_field_tag(:lien_site_web, procedure.lien_site_web,
+    - if procedure.draft_changed?
+      %p.mb-4 Publiez une nouvelle version de votre démarche. Les changements suivants seront appliqués :
+      = render partial: 'revision_changes', locals: { changes: procedure.revision_changes }
+    - else
+      %p.mb-4 Publiez votre démarche, et partagez la à vos usagers. Aucune modification ne sera possible.
+      %p Personnalisez le lien public de la démarche pour en faciliter l’accès (<strong>obligatoire pour publier votre démarche</strong>) :
+      %p.empty-text
+        = commencer_url(path: '')
+        = text_field_tag(:path, procedure.path,
+                        id: 'procedure_path',
+                        label: 'Adresse de diffusion',
+                        placeholder: 'chemin-de-la-démarche',
                         required: true,
-                        class: 'form-control',
+                        class: 'form',
+                        pattern: '^[a-z0-9_-]{3,200}$',
+                        title: "De 3 à 200 caractères; minuscules, chiffres et tiret seulement",
+                        data: { debounce: true, url: admin_procedure_publish_validate_path(procedure)},
                         autocomplete: 'off',
-                        placeholder: 'https://exemple.gouv.fr/ma_demarche')
+                        style: 'width: 300px; display: inline;')
+        .text-info.mb-4
+          Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
+      %h2.card-title Diffusion de la démarche
+      %p Où les utilisateurs trouveront-ils le lien de la démarche ? Typiquement, il s’agit d’une page de votre site web.
+      %p.center
+        = text_field_tag(:lien_site_web, procedure.lien_site_web,
+                          required: true,
+                          class: 'form-control',
+                          autocomplete: 'off',
+                          placeholder: 'https://exemple.gouv.fr/ma_demarche')
 
     - procedure.validate(:publication)
     - errors = procedure.errors
     -# Ignore the :taken error if the path can be claimed
-    - if errors.details[:path]&.pluck(:error)&.include?(:taken) && @procedure.path_available?(administrateur, procedure.path)
+    - if errors.details[:path]&.pluck(:error)&.include?(:taken) && procedure.path_available?(administrateur, procedure.path)
       - errors.delete(:path)
 
     - options = { class: "button primary", id: 'publish' }
     - if errors.details[:path].present?
       - options[:disabled] = :disabled
     .flex.justify-end
-      = submit_tag procedure_publish_text(@procedure, :submit), options
+      = submit_tag procedure_publish_text(procedure, :submit), options

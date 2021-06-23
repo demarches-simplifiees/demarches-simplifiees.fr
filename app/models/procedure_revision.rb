@@ -101,7 +101,130 @@ class ProcedureRevision < ApplicationRecord
     !draft?
   end
 
+  def changed?(revision)
+    types_de_champ != revision.types_de_champ || types_de_champ_private != revision.types_de_champ_private
+  end
+
+  def compare(revision)
+    changes = []
+    changes += compare_types_de_champ(types_de_champ, revision.types_de_champ)
+    changes += compare_types_de_champ(types_de_champ_private, revision.types_de_champ_private)
+    changes
+  end
+
   private
+
+  def compare_types_de_champ(from_tdc, to_tdc)
+    if from_tdc == to_tdc
+      []
+    else
+      from_h = from_tdc.index_by(&:stable_id)
+      to_h = to_tdc.index_by(&:stable_id)
+
+      from_sids = from_h.keys
+      to_sids = to_h.keys
+
+      removed = (from_sids - to_sids).map do |sid|
+        { op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, position: from_sids.index(sid) }
+      end
+
+      added = (to_sids - from_sids).map do |sid|
+        { op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, position: to_sids.index(sid) }
+      end
+
+      kept = from_sids.intersection(to_sids)
+
+      moved = kept
+        .map { |sid| [sid, from_sids.index(sid), to_sids.index(sid)] }
+        .filter { |_, from_index, to_index| from_index != to_index }
+        .map do |sid, from_index, to_index|
+        { op: :move, label: from_h[sid].libelle, private: from_h[sid].private?, from: from_index, to: to_index, position: to_index }
+      end
+
+      changed = kept
+        .map { |sid| [sid, from_h[sid], to_h[sid]] }
+        .flat_map do |sid, from, to|
+        compare_type_de_champ(from, to)
+          .each { |h| h[:position] = to_sids.index(sid) }
+      end
+
+      (removed + added + moved + changed)
+        .sort_by { |h| h[:position] }
+        .each { |h| h.delete(:position) }
+    end
+  end
+
+  def compare_type_de_champ(from_type_de_champ, to_type_de_champ)
+    changes = []
+    if from_type_de_champ.type_champ != to_type_de_champ.type_champ
+      changes << {
+        op: :update,
+        attribute: :type_champ,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.type_champ,
+        to: to_type_de_champ.type_champ
+      }
+    end
+    if from_type_de_champ.libelle != to_type_de_champ.libelle
+      changes << {
+        op: :update,
+        attribute: :libelle,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.libelle,
+        to: to_type_de_champ.libelle
+      }
+    end
+    if from_type_de_champ.description != to_type_de_champ.description
+      changes << {
+        op: :update,
+        attribute: :description,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.description,
+        to: to_type_de_champ.description
+      }
+    end
+    if from_type_de_champ.mandatory? != to_type_de_champ.mandatory?
+      changes << {
+        op: :update,
+        attribute: :mandatory,
+        label: from_type_de_champ.libelle,
+        private: from_type_de_champ.private?,
+        from: from_type_de_champ.mandatory?,
+        to: to_type_de_champ.mandatory?
+      }
+    end
+    if to_type_de_champ.drop_down_list?
+      if from_type_de_champ.drop_down_list_options != to_type_de_champ.drop_down_list_options
+        changes << {
+          op: :update,
+          attribute: :drop_down_options,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: from_type_de_champ.drop_down_list_options,
+          to: to_type_de_champ.drop_down_list_options
+        }
+      end
+    elsif to_type_de_champ.piece_justificative?
+      if from_type_de_champ.piece_justificative_template_checksum != to_type_de_champ.piece_justificative_template_checksum
+        changes << {
+          op: :update,
+          attribute: :piece_justificative_template,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: from_type_de_champ.piece_justificative_template_filename,
+          to: to_type_de_champ.piece_justificative_template_filename
+        }
+      end
+    elsif to_type_de_champ.repetition?
+      if from_type_de_champ.types_de_champ != to_type_de_champ.types_de_champ
+        changes += compare_types_de_champ(from_type_de_champ.types_de_champ, to_type_de_champ.types_de_champ)
+      end
+    end
+    changes
+  end
 
   def revise_type_de_champ(type_de_champ)
     types_de_champ_association = type_de_champ.private? ? :revision_types_de_champ_private : :revision_types_de_champ

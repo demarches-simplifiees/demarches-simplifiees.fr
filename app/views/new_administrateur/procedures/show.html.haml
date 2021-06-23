@@ -29,6 +29,27 @@
       %span.icon.archive
       Clore
 
+  - if @procedure.draft_changed?
+    = link_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
+
+- if @procedure.draft_changed?
+  - types_de_champ_changes = @procedure.revision_types_de_champ_changes
+  - types_de_champ_private_changes = @procedure.revision_types_de_champ_private_changes
+
+  - if types_de_champ_changes.present?
+    .container
+      .card.featured
+        .card-title
+          = t(:has_changes, count: types_de_champ_changes.size, scope: [:new_administrateur, :revision_changes])
+        = render partial: 'revision_changes', locals: { changes: types_de_champ_changes }
+
+  - if types_de_champ_private_changes.present?
+    .container
+      .card.featured
+        .card-title
+          = t(:has_private_changes, count: types_de_champ_private_changes.size, scope: [:new_administrateur, :revision_changes])
+        = render partial: 'revision_changes', locals: { changes: types_de_champ_private_changes }
+
 .container
   %h2.procedure-admin-explanation Indispensable avant publication
   .procedure-grid
@@ -41,7 +62,7 @@
         %p.card-admin-subtitle Logo, nom, description
       %p.button Modifier
 
-    - if !@procedure.locked?
+    - if !@procedure.locked? || @procedure.feature_enabled?(:procedure_revisions)
       = link_to champs_admin_procedure_path(@procedure), class: 'card-admin' do
         - if @procedure.draft_types_de_champ.count > 0
           %div
@@ -159,7 +180,7 @@
         %p.card-admin-subtitle Notifications automatiques
       %p.button Modifier
 
-    - if !@procedure.locked?
+    - if !@procedure.locked? || @procedure.feature_enabled?(:procedure_revisions)
       = link_to annotations_admin_procedure_path(@procedure), class: 'card-admin' do
         - if @procedure.draft_types_de_champ_private.present?
           %div

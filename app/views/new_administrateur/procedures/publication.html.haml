@@ -14,6 +14,9 @@
       - if @procedure.close? || @procedure.depubliee?
         %p.mb-4 Cette démarche est <strong>close</strong> et n’est donc plus accessible par le public. Vous pouvez la réactiver :
         = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
+      - elsif @procedure.draft_changed?
+        %p.mb-4 Cette démarche est déjà <strong>publiée</strong>. Elle a été <strong>modifiée</strong> depuis sa publication. Vous pouvez publier les changements effectués dans une nouvelle version de cette démarche :
+        = render partial: 'publication_form', locals: { procedure: @procedure, administrateur: @current_administrateur }
       - elsif @procedure.publiee?
         %p Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
         Pour y accéder vous pouvez utiliser le lien :
