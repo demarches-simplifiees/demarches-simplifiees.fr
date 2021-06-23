@@ -1,7 +1,7 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
     before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation]
-    before_action :procedure_locked?, only: [:champs, :annotations]
+    before_action :procedure_revisable?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
 
@@ -154,12 +154,16 @@ module NewAdministrateur
     def publish
       @procedure.assign_attributes(publish_params)
 
-      if @procedure.publish_or_reopen!(current_administrateur)
+      if @procedure.draft_changed?
+        @procedure.publish_revision!
+        flash.notice = "Nouvelle version de la démarche publiée"
         redirect_to admin_procedure_path(@procedure)
+      elsif @procedure.publish_or_reopen!(current_administrateur)
         flash.notice = "Démarche publiée"
-      else
         redirect_to admin_procedure_path(@procedure)
+      else
         flash.alert = @procedure.errors.full_messages
+        redirect_to admin_procedure_path(@procedure)
       end
     end
 

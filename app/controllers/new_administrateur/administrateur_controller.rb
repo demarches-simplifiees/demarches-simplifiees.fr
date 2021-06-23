@@ -19,6 +19,13 @@ module NewAdministrateur
       end
     end
 
+    def procedure_revisable?
+      if @procedure.locked? && !@procedure.feature_enabled?(:procedure_revisions)
+        flash.alert = 'Démarche verrouillée'
+        redirect_to admin_procedure_path(@procedure)
+      end
+    end
+
     def reset_procedure
       if @procedure.brouillon?
         @procedure.reset!
