@@ -87,6 +87,41 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
+  def types_de_champ_for_procedure_presentation
+    explanatory_types_de_champ = [:header_section, :explication, :repetition].map { |k| TypeDeChamp.type_champs.fetch(k) }
+
+    if brouillon?
+      TypeDeChamp
+        .joins(:revisions)
+        .where.not(type_champ: explanatory_types_de_champ)
+        .where(procedure_revisions: { id: draft_revision_id })
+        .order(:private, :position)
+    else
+      # fetch all type_de_champ.stable_id for all the revisions expect draft
+      # and for each stable_id take the bigger (more recent) type_de_champ.id
+      recent_ids = TypeDeChamp
+        .joins(:revisions)
+        .where.not(type_champ: explanatory_types_de_champ)
+        .where(procedure_revisions: { procedure_id: id })
+        .where.not(procedure_revisions: { id: draft_revision_id })
+        .group(:stable_id)
+        .select('MAX(types_de_champ.id)')
+
+      # fetch the more recent procedure_revision_types_de_champ
+      # which includes recents_ids
+      recents_prtdc = ProcedureRevisionTypeDeChamp
+        .where(type_de_champ_id: recent_ids)
+        .where.not(revision_id: draft_revision_id)
+        .group(:type_de_champ_id)
+        .select('MAX(id)')
+
+      TypeDeChamp
+        .joins(:revision_types_de_champ)
+        .where(revision_types_de_champ: { id: recents_prtdc })
+        .order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
+    end
+  end
+
   def types_de_champ_for_tags
     if brouillon?
       draft_types_de_champ
@@ -109,14 +144,6 @@ class Procedure < ApplicationRecord
         .order(:created_at)
         .uniq
     end
-  end
-
-  def types_de_champ_for_export
-    types_de_champ.reject(&:exclude_from_export?)
-  end
-
-  def types_de_champ_private_for_export
-    types_de_champ_private.reject(&:exclude_from_export?)
   end
 
   has_many :administrateurs_procedures
@@ -331,6 +358,22 @@ class Procedure < ApplicationRecord
 
   def locked?
     publiee? || close? || depubliee?
+  end
+
+  def draft_changed?
+    publiee? && published_revision.changed?(draft_revision)
+  end
+
+  def revision_changes
+    published_revision.compare(draft_revision)
+  end
+
+  def revision_types_de_champ_private_changes
+    revision_changes.filter { |change| change[:private] }
+  end
+
+  def revision_types_de_champ_changes
+    revision_changes.filter { |change| !change[:private] }
   end
 
   def accepts_new_dossiers?
@@ -687,6 +730,11 @@ class Procedure < ApplicationRecord
     else
       nil
     end
+  end
+
+  def publish_revision!
+    update!(draft_revision: create_new_revision, published_revision: draft_revision)
+    published_revision.touch(:published_at)
   end
 
   private
