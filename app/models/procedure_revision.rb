@@ -112,6 +112,15 @@ class ProcedureRevision < ApplicationRecord
     changes
   end
 
+  def new_dossier
+    Dossier.new(
+      revision: self,
+      champs: build_champs,
+      champs_private: build_champs_private,
+      groupe_instructeur: procedure.defaut_groupe_instructeur
+    )
+  end
+
   private
 
   def compare_types_de_champ(from_tdc, to_tdc)
