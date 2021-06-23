@@ -20,7 +20,7 @@ class S3Synchronization < ApplicationRecord
   scope :checked_stats, -> { uploaded_stats.where('checked') }
 
   class << self
-    POOL_SIZE = 45
+    POOL_SIZE = 25
 
     def synchronize(under_rake, until_time)
       if Rails.configuration.active_storage.service == :local
