@@ -368,14 +368,6 @@ class Procedure < ApplicationRecord
     published_revision.compare(draft_revision)
   end
 
-  def revision_types_de_champ_private_changes
-    revision_changes.filter { |change| change[:private] }
-  end
-
-  def revision_types_de_champ_changes
-    revision_changes.filter { |change| !change[:private] }
-  end
-
   def accepts_new_dossiers?
     publiee? || brouillon?
   end
