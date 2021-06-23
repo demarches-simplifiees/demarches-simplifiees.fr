@@ -406,17 +406,6 @@ class Procedure < ApplicationRecord
     Flipper.enabled?(feature, self)
   end
 
-  # Warning: dossier after_save build_default_champs must be removed
-  # to save a dossier created from this method
-  def new_dossier
-    Dossier.new(
-      revision: active_revision,
-      champs: active_revision.build_champs,
-      champs_private: active_revision.build_champs_private,
-      groupe_instructeur: defaut_groupe_instructeur
-    )
-  end
-
   def path_customized?
     !path.match?(/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/)
   end
