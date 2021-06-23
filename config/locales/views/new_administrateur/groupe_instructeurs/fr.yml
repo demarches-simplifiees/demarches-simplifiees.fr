@@ -27,24 +27,3 @@ fr:
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
-    revision_changes:
-      has_changes:
-        one: Un champ a été changé
-        other: "%{count} champs ont été changés"
-      has_private_changes:
-        one: Une annotation privée a été changée
-        other: "%{count} deux annotations privées ont été changées"
-      has_move_changes:
-        one: Un champ a changé de position
-        other: "%{count} champs ont changé de position"
-    carte_layers:
-      unesco: UNESCO
-      arretes_protection: Arrêtés de protection
-      conservatoire_littoral: Conservatoire du Littoral
-      reserves_chasse_faune_sauvage: Réserves nationales de chasse et de faune sauvage
-      reserves_biologiques: Réserves biologiques
-      reserves_naturelles: Réserves naturelles
-      natura_2000: Natura 2000
-      zones_humides: Zones humides d’importance internationale
-      znieff: ZNIEFF
-      cadastres: Cadastre
