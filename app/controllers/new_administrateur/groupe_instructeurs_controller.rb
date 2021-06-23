@@ -173,12 +173,18 @@ module NewAdministrateur
         groupes_emails = CSV.new(group_csv_file.read.force_encoding("UTF-8"), headers: true, header_converters: :downcase)
           .map { |r| r.to_h.slice('groupe', 'email') }
 
-        add_instructeurs_and_get_errors = InstructeursImportService.import(procedure, groupes_emails)
+        groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")
 
-        if add_instructeurs_and_get_errors.empty?
-          flash[:notice] = "La liste des instructeurs a été importée avec succès"
+        if groupes_emails_has_keys.blank?
+          flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/import-groupe-test.csv")}"
         else
-          flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{add_instructeurs_and_get_errors.join(', ')}"
+          add_instructeurs_and_get_errors = InstructeursImportService.import(procedure, groupes_emails)
+
+          if add_instructeurs_and_get_errors.empty?
+            flash[:notice] = "La liste des instructeurs a été importée avec succès"
+          else
+            flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{add_instructeurs_and_get_errors.join(', ')}"
+          end
         end
 
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)

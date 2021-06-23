@@ -107,4 +107,10 @@ module DossierHelper
     return base_url if siren.blank?
     "#{base_url}/entreprise/#{siren}"
   end
+
+  def exports_list(exports)
+    Export::FORMATS.map do |(format, time_span_type)|
+      [format, time_span_type, exports[format] && exports[format][time_span_type]]
+    end
+  end
 end
