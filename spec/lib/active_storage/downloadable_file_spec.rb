@@ -1,12 +1,12 @@
 describe ActiveStorage::DownloadableFile do
-  let(:dossier) { create(:dossier, :en_construction) }
+  let(:dossier) { create(:dossier, :en_construction, :with_pdf_export) }
 
   subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossier(dossier) }
 
   describe 'create_list_from_dossier' do
     context 'when no piece_justificative is present' do
       it { expect(list.length).to eq 1 }
-      it { expect(list.first[0].name).to eq "pdf_export_for_instructeur" }
+      it { expect(list.first[0].record_type).to eq "Dossier" }
     end
 
     context 'when there is a piece_justificative' do
