@@ -44,7 +44,7 @@ module NewAdministrateur
     end
 
     def apercu
-      @dossier = procedure_without_control.new_dossier
+      @dossier = procedure_without_control.draft_revision.new_dossier
       @tab = apercu_tab
     end
 
