@@ -1,0 +1,17 @@
+- content_for(:title, 'Activation de votre compte expert')
+
+%p
+  Bonjour,
+
+%p
+  Vous venez d’être nommé expert sur #{APPLICATION_NAME}.
+
+%p
+  Votre compte a été créé pour l'adresse email #{@user.email}. Pour l’activer, nous vous invitons à cliquer sur le lien suivant : 
+  = link_to(users_activate_url(token: @reset_password_token), users_activate_url(token: @reset_password_token))
+
+%p
+  Par ailleurs, nous vous invitons à prendre quelques minutes pour consulter notre tutoriel à destination des nouveaux experts:
+  = link_to(EXPERT_TUTORIAL_URL, EXPERT_TUTORIAL_URL)
+
+= render partial: "layouts/mailers/signature"
