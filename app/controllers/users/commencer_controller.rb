@@ -5,13 +5,15 @@ module Users
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
+      @revision = @procedure.published_revision
 
       render 'commencer/show'
     end
 
     def commencer_test
       @procedure = retrieve_procedure
-      return procedure_not_found if @procedure.blank? || @procedure.publiee?
+      return procedure_not_found if @procedure.blank? || (@procedure.publiee? && !@procedure.draft_changed?)
+      @revision = @procedure.draft_revision
 
       render 'commencer/show'
     end
@@ -20,14 +22,14 @@ module Users
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
 
-      generate_empty_pdf(@procedure)
+      generate_empty_pdf(@procedure.published_revision)
     end
 
     def dossier_vide_pdf_test
       @procedure = retrieve_procedure
-      return procedure_not_found if @procedure.blank? || @procedure.publiee?
+      return procedure_not_found if @procedure.blank? || (@procedure.publiee? && !@procedure.draft_changed?)
 
-      generate_empty_pdf(@procedure)
+      generate_empty_pdf(@procedure.draft_revision)
     end
 
     def sign_in
@@ -80,10 +82,10 @@ module Users
       store_location_for(:user, helpers.procedure_lien(procedure))
     end
 
-    def generate_empty_pdf(procedure)
-      @dossier = procedure.active_revision.new_dossier
+    def generate_empty_pdf(revision)
+      @dossier = revision.new_dossier
       s = render_to_string(template: 'dossiers/dossier_vide', formats: [:pdf])
-      send_data(s, :filename => "#{procedure.libelle}.pdf")
+      send_data(s, :filename => "#{revision.procedure.libelle}.pdf")
     end
   end
 end
