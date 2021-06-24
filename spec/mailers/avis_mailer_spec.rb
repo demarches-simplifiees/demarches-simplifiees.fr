@@ -13,10 +13,6 @@ RSpec.describe AvisMailer, type: :mailer do
     it { expect(subject.body).to include(avis.introduction) }
     it { expect(subject.body).to include(instructeur_avis_url(avis.dossier.procedure.id, avis)) }
 
-    context 'when the recipient is not already registered' do
-      it { expect(subject.body).to include(sign_up_expert_avis_url(avis.dossier.procedure.id, avis.id, email: avis.expert.email)) }
-    end
-
     context 'when the dossier has been deleted before the avis was sent' do
       before { dossier.update(hidden_at: Time.zone.now) }
 
