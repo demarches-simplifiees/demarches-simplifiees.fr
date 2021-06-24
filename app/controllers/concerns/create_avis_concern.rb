@@ -19,7 +19,7 @@ module CreateAvisConcern
 
     create_results = Avis.create(
       expert_emails.flat_map do |email|
-        user = User.create_or_promote_to_expert(email, SecureRandom.hex)
+        user = Expert.by_email(email).present? ? Expert.by_email(email).user : create_expert(email)
         experts_procedure = user.valid? ? ExpertsProcedure.find_or_create_by(procedure: dossier.procedure, expert: user.expert) : nil
         allowed_dossiers.map do |dossier|
           {
@@ -68,5 +68,11 @@ module CreateAvisConcern
 
   def create_avis_params
     params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, :emails)
+  end
+
+  def create_expert(email)
+    user = User.create_or_promote_to_expert(email, SecureRandom.hex)
+    user.invite_expert!
+    user
   end
 end
