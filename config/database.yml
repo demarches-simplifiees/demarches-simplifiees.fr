@@ -20,10 +20,10 @@ development:
 
 test:
   <<: *default
-  database: md_test
+  database: tps_test
   host: localhost
-  username: md_test
-  password: md_test
+  username: tps_test
+  password: tps_test
   # Workaround for https://github.com/ged/ruby-pg/issues/311
   gssencmode: disable
 

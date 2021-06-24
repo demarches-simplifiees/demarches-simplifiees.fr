@@ -1,9 +1,9 @@
 name: Continuous Integration
 on:
   push:
-    branches: 'main'
+    branches: ['devpf', 'masterpf', 'issue/*']
   pull_request:
-    branches: 'main'
+    branches: ['devpf', 'masterpf', 'issue/*']
 
 jobs:
   linters:
