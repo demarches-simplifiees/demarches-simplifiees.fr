@@ -57,7 +57,7 @@ class PiecesJustificativesService
     property :created_at
 
     def download
-      file
+      file.read
     end
 
     def read(*args)
