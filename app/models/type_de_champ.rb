@@ -206,6 +206,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
   end
 
+  def carte?
+    type_champ == TypeDeChamp.type_champs.fetch(:carte)
+  end
+
   def public?
     !private?
   end
@@ -260,6 +264,16 @@ class TypeDeChamp < ApplicationRecord
     (drop_down_list_options - drop_down_list_disabled_options).reject(&:empty?)
   end
 
+  def layer_enabled?(layer)
+    options && options[layer] && options[layer] != '0'
+  end
+
+  def carte_optional_layers
+    TypesDeChamp::CarteTypeDeChamp::LAYERS.filter_map do |layer|
+      layer_enabled?(layer) ? layer : nil
+    end.sort
+  end
+
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
   end
@@ -269,16 +283,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def editable_options
-    options.slice(:cadastres,
-      :unesco,
-      :arretes_protection,
-      :conservatoire_littoral,
-      :reserves_chasse_faune_sauvage,
-      :reserves_biologiques,
-      :reserves_naturelles,
-      :natura_2000,
-      :zones_humides,
-      :znieff)
+    options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
   end
 
   FEATURE_FLAGS = {}
