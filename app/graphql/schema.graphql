@@ -340,6 +340,67 @@ type DecimalNumberChamp implements Champ {
   value: Float
 }
 
+"""
+Un dossier supprimé
+"""
+type DeletedDossier {
+  """
+  Date de suppression.
+  """
+  dateSupression: ISO8601DateTime!
+  id: ID!
+
+  """
+  Le numéro du dossier qui a été supprimé.
+  """
+  number: Int!
+
+  """
+  La raison de la suppression du dossier.
+  """
+  reason: String!
+
+  """
+  L’état du dossier supprimé.
+  """
+  state: DossierState!
+}
+
+"""
+The connection type for DeletedDossier.
+"""
+type DeletedDossierConnection {
+  """
+  A list of edges.
+  """
+  edges: [DeletedDossierEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [DeletedDossier]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type DeletedDossierEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: DeletedDossier
+}
+
 interface Demandeur {
   id: ID!
 }
@@ -380,6 +441,41 @@ type Demarche {
   L’état de dossier pour une démarche déclarative
   """
   declarative: DossierDeclarativeState
+
+  """
+  Liste de tous les dossiers supprimés d’une démarche.
+  """
+  deletedDossiers(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Dossiers supprimés depuis la date.
+    """
+    deletedSince: ISO8601DateTime
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    L’ordre des dossiers supprimés.
+    """
+    order: Order = ASC
+  ): DeletedDossierConnection!
 
   """
   Description de la démarche.
