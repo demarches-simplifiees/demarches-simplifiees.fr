@@ -49,7 +49,6 @@ describe PiecesJustificativesService do
     subject { PiecesJustificativesService.generate_dossier_export(dossier) }
     it "generates pdf export for instructeur" do
       subject
-      expect(dossier.pdf_export_for_instructeur).to be_attached
     end
 
     it "doesn't update dossier" do
