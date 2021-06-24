@@ -25,12 +25,8 @@ module DossierHelper
     end
   end
 
-  def url_for_new_dossier(procedure)
-    if procedure.brouillon?
-      new_dossier_url(procedure_id: procedure.id, brouillon: true)
-    else
-      new_dossier_url(procedure_id: procedure.id)
-    end
+  def url_for_new_dossier(revision)
+    new_dossier_url(procedure_id: revision.procedure.id, brouillon: revision.draft? ? true : nil)
   end
 
   def dossier_form_class(dossier)
