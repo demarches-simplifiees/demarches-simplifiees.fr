@@ -29,4 +29,14 @@ class UserMailer < ApplicationMailer
       subject: subject,
       reply_to: CONTACT_EMAIL)
   end
+
+  def invite_expert(user, reset_password_token)
+    @reset_password_token = reset_password_token
+    @user = user
+    subject = "Activez votre compte expert"
+
+    mail(to: user.email,
+      subject: subject,
+      reply_to: CONTACT_EMAIL)
+  end
 end
