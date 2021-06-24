@@ -97,6 +97,10 @@ class User < ApplicationRecord
     AdministrationMailer.invite_admin(self, set_reset_password_token, administration_id).deliver_later
   end
 
+  def invite_expert!
+    UserMailer.invite_expert(self, set_reset_password_token).deliver_later
+  end
+
   def remind_invitation!
     reset_password_token = set_reset_password_token
 
