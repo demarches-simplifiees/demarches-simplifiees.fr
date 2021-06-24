@@ -49,6 +49,30 @@ class PiecesJustificativesService
     end
   end
 
+  class FakeAttachment < Hashie::Dash
+    property :filename
+    property :name
+    property :file
+    property :id
+    property :created_at
+
+    def download
+      file
+    end
+
+    def read(*args)
+      file.read(*args)
+    end
+
+    def close
+      file.close
+    end
+
+    def attached?
+      true
+    end
+  end
+
   def self.generate_dossier_export(dossier)
     pdf = ApplicationController
       .render(template: 'dossiers/show', formats: [:pdf],
@@ -56,10 +80,14 @@ class PiecesJustificativesService
                 include_infos_administration: true,
                 dossier: dossier
               })
-    ActiveRecord::Base.no_touching do
-      dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
-    end
-    dossier.pdf_export_for_instructeur
+
+    FakeAttachment.new(
+      file: StringIO.new(pdf),
+      filename: "export-#{dossier.id}.pdf",
+      name: 'pdf_export_for_instructeur',
+      id: dossier.id,
+      created_at: dossier.updated_at
+    )
   end
 
   private
