@@ -649,6 +649,44 @@ describe API::V2::GraphqlController do
       end
     end
 
+    context "deletedDossiers" do
+      let(:query) do
+        "{
+          demarche(number: #{procedure.id}) {
+            deletedDossiers {
+              nodes {
+                id
+                number
+                state
+                reason
+                dateSupression
+              }
+            }
+          }
+        }"
+      end
+      let(:deleted_dossier) { create(:deleted_dossier, procedure: procedure) }
+
+      before { deleted_dossier }
+
+      it "should be returned" do
+        expect(gql_errors).to eq(nil)
+        expect(gql_data).to eq(demarche: {
+          deletedDossiers: {
+            nodes: [
+              {
+                id: deleted_dossier.to_typed_id,
+                number: deleted_dossier.dossier_id,
+                state: deleted_dossier.state,
+                reason: deleted_dossier.reason,
+                dateSupression: deleted_dossier.deleted_at.iso8601
+              }
+            ]
+          }
+        })
+      end
+    end
+
     context "champ" do
       let(:champ) { create(:champ_piece_justificative, dossier: dossier) }
       let(:byte_size) { 2712286911 }

@@ -361,19 +361,11 @@ class Procedure < ApplicationRecord
   end
 
   def draft_changed?
-    publiee? && published_revision.changed?(draft_revision)
+    publiee? && published_revision.changed?(draft_revision) && revision_changes.present?
   end
 
   def revision_changes
     published_revision.compare(draft_revision)
-  end
-
-  def revision_types_de_champ_private_changes
-    revision_changes.filter { |change| change[:private] }
-  end
-
-  def revision_types_de_champ_changes
-    revision_changes.filter { |change| !change[:private] }
   end
 
   def accepts_new_dossiers?
@@ -404,17 +396,6 @@ class Procedure < ApplicationRecord
 
   def feature_enabled?(feature)
     Flipper.enabled?(feature, self)
-  end
-
-  # Warning: dossier after_save build_default_champs must be removed
-  # to save a dossier created from this method
-  def new_dossier
-    Dossier.new(
-      revision: active_revision,
-      champs: active_revision.build_champs,
-      champs_private: active_revision.build_champs_private,
-      groupe_instructeur: defaut_groupe_instructeur
-    )
   end
 
   def path_customized?
