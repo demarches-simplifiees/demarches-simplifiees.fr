@@ -36,3 +36,4 @@ vendor/*
 # Local Netlify folder
 .netlify
 *.xcf
+/cors.json
