@@ -4,10 +4,12 @@ class AvisMailer < ApplicationMailer
 
   layout 'mailers/layout'
 
-  def avis_invitation(avis)
+  def avis_invitation(avis, reset_password_token)
     if avis.dossier.present?
       @avis = avis
       email = @avis.expert&.email
+      @reset_password_token = reset_password_token
+
       subject = "Donnez votre avis sur le dossier nº #{@avis.dossier.id} (#{@avis.dossier.procedure.libelle})"
 
       mail(to: email, subject: subject)
