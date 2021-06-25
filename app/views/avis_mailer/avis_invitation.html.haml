@@ -1,5 +1,6 @@
 - content_for(:title, 'Invitation à donner votre avis')
-- avis_link = @avis.expert.user.active?.present? ? expert_avis_url(@avis.procedure, @avis) : sign_up_expert_avis_url(@avis.procedure, @avis.id, email: @avis.expert.email)
+- avis_link = expert_avis_url(@avis.procedure, @avis)
+- sign_in_link = users_activate_url(token: @reset_password_token)
 
 - content_for(:footer) do
   Merci de ne pas répondre à cet email. Donnez votre avis
@@ -22,12 +23,11 @@
   %br
 %p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
   = @avis.introduction
-
 - if @avis.expert.user.active?.present?
   %p
     = round_button("Donner votre avis", avis_link, :primary)
 - else
   %p
-    = round_button("Inscrivez-vous pour donner votre avis", avis_link, :primary)
+    = round_button("Inscrivez-vous pour donner votre avis", sign_in_link, :primary)
 
 = render partial: "layouts/mailers/signature"
