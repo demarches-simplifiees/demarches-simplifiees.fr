@@ -201,15 +201,6 @@ FactoryBot.define do
       end
     end
 
-    trait :with_pdf_export do
-      after(:create) do |dossier, _evaluator|
-        dossier.pdf_export_for_instructeur.attach(
-          io: StringIO.new('Hello World'),
-          filename: 'export.pdf'
-        )
-      end
-    end
-
     trait :with_justificatif do
       after(:create) do |dossier, _evaluator|
         dossier.justificatif_motivation.attach(
