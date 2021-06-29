@@ -25,11 +25,7 @@
             %li
               = active_link_to "Démarches", instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
           - if current_instructeur.user.expert && current_expert.avis_summary[:total] > 0
-            %li
-              = active_link_to expert_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do
-                Avis
-                - if current_expert.avis_summary[:unanswered] > 0
-                  %span.badge.warning= current_expert.avis_summary[:unanswered]
+            = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 
       - if nav_bar_profile == :expert && expert_signed_in?
         %ul.header-tabs
@@ -38,11 +34,7 @@
               = active_link_to "Démarches", instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'tab-link'
 
           - if current_expert.avis_summary[:total] > 0
-            %li
-              = active_link_to expert_all_avis_path, active: controller_name == 'avis', class: 'tab-link' do
-                Avis
-                - if current_expert.avis_summary[:unanswered] > 0
-                  %span.badge.warning= current_expert.avis_summary[:unanswered]
+            = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 
       - if nav_bar_profile == :user
         %ul.header-tabs
