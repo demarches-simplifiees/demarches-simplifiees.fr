@@ -82,12 +82,11 @@ module Experts
       email = params[:email]
       password = params[:user][:password]
 
-      # Not perfect because the password will not be changed if the user already exists
       user = User.create_or_promote_to_expert(email, password)
+      user.reset_password(password, password)
 
       if user.valid?
         sign_in(user)
-
         redirect_to url_for(expert_all_avis_path)
       else
         flash[:alert] = user.errors.full_messages

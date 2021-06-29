@@ -360,6 +360,11 @@ describe Experts::AvisController, type: :controller do
       context 'when the expert hasn’t signed up yet' do
         before { expert.user.update(last_sign_in_at: nil) }
 
+        it 'saves the expert new password' do
+          subject
+          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be true
+        end
+
         it { is_expected.to redirect_to expert_all_avis_path }
       end
     end
