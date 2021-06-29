@@ -367,6 +367,17 @@ describe Experts::AvisController, type: :controller do
 
         it { is_expected.to redirect_to expert_all_avis_path }
       end
+
+      context 'when the expert has already signed up' do
+        before { expert.user.update(last_sign_in_at: Time.zone.now) }
+
+        it 'doesn’t change the expert password' do
+          subject
+          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be false
+        end
+
+        it { is_expected.to redirect_to new_user_session_url }
+      end
     end
   end
 end

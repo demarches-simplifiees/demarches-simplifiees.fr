@@ -4,7 +4,7 @@ module Experts
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
     before_action :check_if_avis_revoked, only: [:show]
-    before_action :redirect_if_no_sign_up_needed, only: [:sign_up]
+    before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
     before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :update]
 
     A_DONNER_STATUS = 'a-donner'
@@ -127,11 +127,9 @@ module Experts
 
       if current_expert.present?
         # an expert is authenticated ... lets see if it can view the dossier
-
         redirect_to expert_avis_url(avis.procedure, avis)
-
       elsif avis.expert&.email == params[:email] && avis.expert.user.active?.present?
-
+        # The expert already used the sign-in page to change their password: ask them to sign-in instead.
         redirect_to new_user_session_url
       end
     end
