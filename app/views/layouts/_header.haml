@@ -40,6 +40,8 @@
         %ul.header-tabs
           %li
             = active_link_to "Dossiers", dossiers_path, active: :inclusive, class: 'tab-link'
+          - if current_user.expert && current_expert.avis_summary[:total] > 0
+            = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 
     %ul.header-right-content
       - if params[:controller] == 'recherche'
