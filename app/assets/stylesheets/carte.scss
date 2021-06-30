@@ -1,4 +1,5 @@
 @import "colors";
+@import "constants";
 
 .areas-title {
   font-weight: bold;
@@ -36,6 +37,23 @@
       position: absolute;
       bottom: 5px;
       left: 5px;
+    }
+  }
+
+  .map-style-panel {
+    z-index: 99;
+    padding: $default-spacer;
+    margin-bottom: $default-spacer;
+
+    ul {
+      padding: $default-spacer;
+      padding-bottom: 0;
+      margin-bottom: -$default-spacer;
+
+      label {
+        font-size: 12px;
+        font-weight: normal;
+      }
     }
   }
 }

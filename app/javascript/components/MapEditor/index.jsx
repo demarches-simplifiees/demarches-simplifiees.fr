@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactMapboxGl, { ZoomControl } from 'react-mapbox-gl';
 import DrawControl from 'react-mapbox-gl-draw';
-import { MapIcon } from '@heroicons/react/outline';
+import { CursorClickIcon } from '@heroicons/react/outline';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
@@ -36,7 +36,13 @@ function MapEditor({ featureCollection, url, options, preview }) {
     enabled: !preview,
     cadastreEnabled
   });
-  const [style, setStyle] = useMapStyle(options.layers, {
+  const {
+    style,
+    layers,
+    setStyle,
+    setLayerEnabled,
+    setLayerOpacity
+  } = useMapStyle(options.layers, {
     onStyleChange,
     cadastreEnabled
   });
@@ -133,7 +139,13 @@ function MapEditor({ featureCollection, url, options, preview }) {
             }}
           />
         )}
-        <MapStyleControl style={style.id} setStyle={setStyle} />
+        <MapStyleControl
+          style={style.id}
+          layers={layers}
+          setStyle={setStyle}
+          setLayerEnabled={setLayerEnabled}
+          setLayerOpacity={setLayerOpacity}
+        />
         <ZoomControl />
         {options.layers.includes('cadastres') && (
           <div className="cadastres-selection-control mapboxgl-ctrl-group">
@@ -145,7 +157,7 @@ function MapEditor({ featureCollection, url, options, preview }) {
               title="Sélectionner les parcelles cadastrales"
               className={cadastreEnabled ? 'on' : ''}
             >
-              <MapIcon className="icon-size" />
+              <CursorClickIcon className="icon-size" />
             </button>
           </div>
         )}
