@@ -157,6 +157,13 @@ export function buildOptionalLayers(ids) {
     );
 }
 
+export function getLayerName(layer) {
+  return OPTIONAL_LAYERS.find(({ id }) => id == layer).label.replace(
+    /\s/g,
+    ' '
+  );
+}
+
 export default {
   version: 8,
   metadat: {
