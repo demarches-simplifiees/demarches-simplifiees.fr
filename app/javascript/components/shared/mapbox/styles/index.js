@@ -1,7 +1,9 @@
-import baseStyle, { buildOptionalLayers } from './base';
+import baseStyle, { buildOptionalLayers, getLayerName } from './base';
 import orthoStyle from './layers/ortho';
 import vectorStyle from './layers/vector';
 import ignLayers from './layers/ign';
+
+export { getLayerName };
 
 export function getMapStyle(id, optionalLayers) {
   const style = { ...baseStyle, id };
