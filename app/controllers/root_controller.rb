@@ -90,4 +90,13 @@ class RootController < ApplicationController
       format.js { render js: helpers.remove_element('#outdated-browser-banner') }
     end
   end
+
+  def dismiss_new_look
+    dismiss_new_look_banner
+
+    respond_to do |format|
+      format.html { redirect_back(fallback_location: root_path) }
+      format.js { render js: helpers.remove_element('#new-look-banner') }
+    end
+  end
 end

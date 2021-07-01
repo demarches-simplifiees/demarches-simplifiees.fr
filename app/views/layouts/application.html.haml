@@ -30,6 +30,7 @@
   %body{ id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil }
     .page-wrapper
       = render partial: "layouts/outdated_browser_banner"
+      = render partial: "layouts/new_look_banner"
       = render partial: 'layouts/pre_maintenance'
 
       - if staging?

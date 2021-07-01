@@ -1,0 +1,11 @@
+- if show_new_look_banner?
+  #new-look-banner.site-banner.new-look
+    .container
+      .site-banner-icon 🎨
+      .site-banner-text
+        %div
+          Mes-Démarches change bientôt d'apparence. Voyez le changement
+          %a{ href: 'https://mes-demarches.gitbook.io/documentation/nouveautes/pour-les-usagers', target: "_blank", rel: "noopener" }
+            ici
+      .site-banner-actions
+        = button_to 'Cacher', dismiss_new_look_path, method: :post, remote: true, class: 'button btn', title: 'Ne plus afficher cette information'
