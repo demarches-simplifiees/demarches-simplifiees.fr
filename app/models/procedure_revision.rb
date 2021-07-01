@@ -249,7 +249,9 @@ class ProcedureRevision < ApplicationRecord
   def revise_type_de_champ(type_de_champ)
     types_de_champ_association = type_de_champ.private? ? :revision_types_de_champ_private : :revision_types_de_champ
     association = send(types_de_champ_association).find_by!(type_de_champ: type_de_champ)
-    cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ], &type_de_champ.method(:clone_attachments))
+    cloned_type_de_champ = type_de_champ.deep_clone(include: [:types_de_champ]) do |original, kopy|
+      PiecesJustificativesService.clone_attachments(original, kopy)
+    end
     cloned_type_de_champ.revision = self
     association.update!(type_de_champ: cloned_type_de_champ)
     cloned_type_de_champ
