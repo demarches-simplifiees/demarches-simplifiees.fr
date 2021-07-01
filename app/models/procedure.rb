@@ -307,9 +307,7 @@ class Procedure < ApplicationRecord
   end
 
   def reset!
-    if locked?
-      raise "Can not reset a locked procedure."
-    else
+    if !locked? || draft_changed?
       draft_revision.dossiers.destroy_all
     end
   end
