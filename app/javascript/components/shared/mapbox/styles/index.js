@@ -1,11 +1,11 @@
-import baseStyle, { buildOptionalLayers, getLayerName } from './base';
+import baseStyle, { buildOptionalLayers, getLayerName, NBS } from './base';
 import orthoStyle from './layers/ortho';
 import vectorStyle from './layers/vector';
 import ignLayers from './layers/ign';
 
-export { getLayerName };
+export { getLayerName, NBS };
 
-export function getMapStyle(id, optionalLayers) {
+export function getMapStyle(id, layers, opacity) {
   const style = { ...baseStyle, id };
 
   switch (id) {
@@ -23,7 +23,7 @@ export function getMapStyle(id, optionalLayers) {
       break;
   }
 
-  style.layers = style.layers.concat(buildOptionalLayers(optionalLayers));
+  style.layers = style.layers.concat(buildOptionalLayers(layers, opacity));
 
   return style;
 }
