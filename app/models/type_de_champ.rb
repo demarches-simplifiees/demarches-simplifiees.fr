@@ -369,23 +369,4 @@ class TypeDeChamp < ApplicationRecord
       types_de_champ.destroy_all
     end
   end
-
-  def clone_attachments(original, kopy)
-    if original.is_a?(TypeDeChamp)
-      clone_attachment(:piece_justificative_template, original, kopy)
-    end
-  end
-
-  def clone_attachment(attribute, original, kopy)
-    original_attachment = original.send(attribute)
-    if original_attachment.attached?
-      kopy.send(attribute).attach({
-        io: StringIO.new(original_attachment.download),
-        filename: original_attachment.filename,
-        content_type: original_attachment.content_type,
-        # we don't want to run virus scanner on cloned file
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      })
-    end
-  end
 end
