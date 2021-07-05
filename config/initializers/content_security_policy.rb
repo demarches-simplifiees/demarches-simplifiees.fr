@@ -22,7 +22,7 @@ Rails.application.config.content_security_policy do |policy|
   end
   # polynesian configurations
   policy.img_src(*policy.img_src, "beta.mes-demarches.gov.pf")
-  policy.connect_src(*policy.connect_src, "www.tefenua.gov.pf")
+  policy.connect_src(*policy.connect_src, "www.tefenua.gov.pf", "oos.eu-west-2.outscale.com")
   policy.default_src(*policy.default_src, "oos.eu-west-2.outscale.com")
 end
 # rubocop:enable DS/ApplicationName
