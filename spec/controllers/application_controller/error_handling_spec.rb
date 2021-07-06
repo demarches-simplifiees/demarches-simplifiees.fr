@@ -33,15 +33,10 @@ RSpec.describe ApplicationController::ErrorHandling, type: :controller do
         {}
       end
 
-      it 'returns a message' do
-        post :invalid_authenticity_token
-
-        expect(response).to have_http_status(403)
-        expect(response.body).to include('cookies')
-      end
-
-      it 'renders the standard exception page' do
-        expect { post :invalid_authenticity_token }.not_to raise_error
+      it 'doesn’t log the error' do
+        allow(Sentry).to receive(:capture_message)
+        post :invalid_authenticity_token rescue nil
+        expect(Sentry).not_to have_received(:capture_message)
       end
     end
   end
