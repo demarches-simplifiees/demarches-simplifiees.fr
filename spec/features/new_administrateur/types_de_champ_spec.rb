@@ -122,7 +122,6 @@ feature 'As an administrateur I can edit types de champ', js: true do
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
     within_window(preview_window) do
       expect(page).to have_content('Libellé de champ carte')
-      expect(page).to have_content('Parcelles cadastrales')
     end
   end
 
