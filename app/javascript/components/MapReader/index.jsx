@@ -20,7 +20,13 @@ const MapReader = ({ featureCollection, options }) => {
     onMouseEnter,
     onMouseLeave
   } = useMapbox(featureCollection);
-  const [style, setStyle] = useMapStyle(options.layers, { onStyleChange });
+  const {
+    style,
+    layers,
+    setStyle,
+    setLayerEnabled,
+    setLayerOpacity
+  } = useMapStyle(options.layers, { onStyleChange });
 
   if (!isSupported) {
     return (
@@ -36,7 +42,7 @@ const MapReader = ({ featureCollection, options }) => {
     <Mapbox
       onStyleLoad={(map) => onLoad(map)}
       style={style}
-      containerStyle={{ height: '400px' }}
+      containerStyle={{ height: '500px' }}
     >
       <SelectionUtilisateurPolygonLayer
         featureCollection={featureCollection}
@@ -54,7 +60,13 @@ const MapReader = ({ featureCollection, options }) => {
         onMouseLeave={onMouseLeave}
       />
 
-      <MapStyleControl style={style.id} setStyle={setStyle} />
+      <MapStyleControl
+        style={style.id}
+        layers={layers}
+        setStyle={setStyle}
+        setLayerEnabled={setLayerEnabled}
+        setLayerOpacity={setLayerOpacity}
+      />
       <ZoomControl />
     </Mapbox>
   );
