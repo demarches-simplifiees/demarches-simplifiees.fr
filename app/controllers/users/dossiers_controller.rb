@@ -242,18 +242,18 @@ module Users
       erase_user_location!
 
       begin
-        if params[:brouillon]
-          procedure = Procedure.brouillon.find(params[:procedure_id])
+        procedure = if params[:brouillon]
+          Procedure.publiees.or(Procedure.brouillons).find(params[:procedure_id])
         else
-          procedure = Procedure.publiees.find(params[:procedure_id])
+          Procedure.publiees.find(params[:procedure_id])
         end
       rescue ActiveRecord::RecordNotFound
         flash.alert = t('errors.messages.procedure_not_found')
-        return redirect_to url_for dossiers_path
+        return redirect_to dossiers_path
       end
 
       dossier = Dossier.new(
-        revision: procedure.active_revision,
+        revision: params[:brouillon] ? procedure.draft_revision : procedure.active_revision,
         groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
@@ -303,7 +303,7 @@ module Users
     end
 
     def show_demarche_en_test_banner
-      if @dossier.present? && @dossier.procedure.brouillon?
+      if @dossier.present? && @dossier.revision.draft?
         flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
       end
     end

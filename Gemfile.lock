@@ -170,7 +170,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.8)
+    concurrent-ruby (1.1.9)
     connection_pool (2.2.3)
     crack (0.4.5)
       rexml
@@ -244,7 +244,7 @@ GEM
     execjs (2.7.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
-    faraday (1.4.2)
+    faraday (1.4.3)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)

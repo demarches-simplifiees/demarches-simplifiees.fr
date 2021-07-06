@@ -300,54 +300,83 @@ describe Experts::AvisController, type: :controller do
   end
 
   context 'without an expert signed in' do
+    let(:claimant) { create(:instructeur) }
+    let(:expert) { create(:expert) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+    let(:dossier) { create(:dossier) }
+    let(:avis) { create(:avis, dossier: dossier, experts_procedure: experts_procedure, claimant: claimant) }
+    let(:procedure) { dossier.procedure }
+
     describe '#sign_up' do
-      let(:invited_email) { 'invited@avis.com' }
-      let(:claimant) { create(:instructeur) }
-      let(:expert) { create(:expert) }
-      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
-      let(:dossier) { create(:dossier) }
-      let(:procedure) { dossier.procedure }
-      let!(:avis) { create(:avis, experts_procedure: experts_procedure, claimant: claimant, dossier: dossier) }
-      let(:invitations_email) { true }
-
-      context 'when the expert has already signed up and belongs to the invitation' do
-        let!(:avis) { create(:avis, dossier: dossier, experts_procedure: experts_procedure, claimant: claimant) }
-
-        context 'when the expert is authenticated' do
-          before do
-            sign_in(expert.user)
-            expert.user.update(last_sign_in_at: Time.zone.now)
-            expert.user.reload
-            get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
-          end
-
-          it { is_expected.to redirect_to expert_avis_url(avis.procedure, avis) }
-        end
-
-        context 'when the expert is not authenticated' do
-          before do
-            sign_in(expert.user)
-            expert.user.update(last_sign_in_at: Time.zone.now)
-            expert.user.reload
-            sign_out(expert.user)
-            get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
-          end
-
-          it { is_expected.to redirect_to new_user_session_url }
-        end
+      subject do
+        get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
       end
 
-      context 'when the expert has already signed up / is authenticated and does not belong to the invitation' do
-        let(:expert) { create(:expert) }
-        let!(:avis) { create(:avis, email: invited_email, dossier: dossier, experts_procedure: experts_procedure) }
+      context 'when the expert hasn’t signed up yet' do
+        before { expert.user.update(last_sign_in_at: nil) }
 
-        before do
-          sign_in(expert.user)
-          get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
+        it { is_expected.to have_http_status(:success) }
+      end
+
+      context 'when the expert has already signed up' do
+        before { expert.user.update(last_sign_in_at: Time.zone.now) }
+
+        context 'and the expert belongs to the invitation' do
+          context 'and the expert is authenticated' do
+            before { sign_in(expert.user) }
+
+            it { is_expected.to redirect_to expert_avis_url(avis.procedure, avis) }
+          end
+
+          context 'and the expert is not authenticated' do
+            before { sign_out(expert.user) }
+
+            it { is_expected.to redirect_to new_user_session_url }
+          end
         end
 
-        # redirected to dossier but then the instructeur gonna be banished !
-        it { is_expected.to redirect_to expert_avis_url(avis.procedure, avis) }
+        context 'and the expert does not belong to the invitation' do
+          let(:avis) { create(:avis, email: 'another_expert@avis.com', dossier: dossier, experts_procedure: experts_procedure) }
+
+          before { sign_in(expert.user) }
+          # redirected to dossier but then the instructeur gonna be banished !
+          it { is_expected.to redirect_to expert_avis_url(avis.procedure, avis) }
+        end
+      end
+    end
+
+    describe '#update_expert' do
+      subject do
+        post :update_expert, params: {
+          id: avis.id,
+          procedure_id: procedure.id,
+          email: avis.expert.email,
+          user: {
+            password: 'my-s3cure-p4ssword'
+          }
+        }
+      end
+
+      context 'when the expert hasn’t signed up yet' do
+        before { expert.user.update(last_sign_in_at: nil) }
+
+        it 'saves the expert new password' do
+          subject
+          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be true
+        end
+
+        it { is_expected.to redirect_to expert_all_avis_path }
+      end
+
+      context 'when the expert has already signed up' do
+        before { expert.user.update(last_sign_in_at: Time.zone.now) }
+
+        it 'doesn’t change the expert password' do
+          subject
+          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be false
+        end
+
+        it { is_expected.to redirect_to new_user_session_url }
       end
     end
   end
