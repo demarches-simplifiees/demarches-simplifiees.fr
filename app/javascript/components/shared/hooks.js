@@ -4,7 +4,7 @@ export function useDeferredSubmit(input) {
   const calledRef = useRef(false);
   const awaitFormSubmit = useCallback(
     (callback) => {
-      const form = input.form;
+      const form = input?.form;
       if (!form) {
         return;
       }
