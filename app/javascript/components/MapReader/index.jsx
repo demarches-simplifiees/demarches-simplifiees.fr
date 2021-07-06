@@ -42,7 +42,7 @@ const MapReader = ({ featureCollection, options }) => {
     <Mapbox
       onStyleLoad={(map) => onLoad(map)}
       style={style}
-      containerStyle={{ height: '400px' }}
+      containerStyle={{ height: '500px' }}
     >
       <SelectionUtilisateurPolygonLayer
         featureCollection={featureCollection}

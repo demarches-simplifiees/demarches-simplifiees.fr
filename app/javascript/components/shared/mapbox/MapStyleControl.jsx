@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { Popover, RadioGroup } from '@headlessui/react';
 import { usePopper } from 'react-popper';
 import { MapIcon } from '@heroicons/react/outline';
+import { Slider } from '@reach/slider';
+import '@reach/slider/styles.css';
 
-import { getMapStyle, getLayerName } from './styles';
+import { getMapStyle, getLayerName, NBS } from './styles';
 
 const STYLES = {
   ortho: 'Satellite',
@@ -16,7 +18,10 @@ function optionalLayersMap(optionalLayers) {
   return Object.fromEntries(
     optionalLayers
       .filter((layer) => layer != 'cadastres')
-      .map((layer) => [layer, { enabled: true, opacity: 100 }])
+      .map((layer) => [
+        layer,
+        { enabled: true, opacity: 70, name: getLayerName(layer) }
+      ])
   );
 }
 
@@ -43,7 +48,10 @@ export function useMapStyle(
     () =>
       getMapStyle(
         styleId,
-        enabledLayers.map(([layer]) => layer)
+        enabledLayers.map(([layer]) => layer),
+        Object.fromEntries(
+          enabledLayers.map(([layer, { opacity }]) => [layer, opacity])
+        )
       ),
     [
       styleId,
@@ -56,7 +64,13 @@ export function useMapStyle(
   return { style, layers, setStyle, setLayerEnabled, setLayerOpacity };
 }
 
-function MapStyleControl({ style, layers, setStyle, setLayerEnabled }) {
+function MapStyleControl({
+  style,
+  layers,
+  setStyle,
+  setLayerEnabled,
+  setLayerOpacity
+}) {
   const [buttonElement, setButtonElement] = useState();
   const [panelElement, setPanelElement] = useState();
   const { styles, attributes } = usePopper(buttonElement, panelElement, {
@@ -111,19 +125,40 @@ function MapStyleControl({ style, layers, setStyle, setLayerEnabled }) {
           </RadioGroup>
           {Object.keys(layers).length ? (
             <ul className="layers-list">
-              {Object.entries(layers).map(([layer, { enabled }]) => (
-                <li key={layer} className="flex">
-                  <input
-                    className="m-0 p-0 mr-1"
-                    type="checkbox"
-                    checked={enabled}
-                    onChange={(event) => {
-                      setLayerEnabled(layer, event.target.checked);
-                    }}
-                  />
-                  <label>{getLayerName(layer)}</label>
-                </li>
-              ))}
+              {Object.entries(layers).map(
+                ([layer, { enabled, opacity, name }]) => (
+                  <li key={layer}>
+                    <div className="flex mb-1">
+                      <input
+                        className="m-0 p-0 mr-1"
+                        type="checkbox"
+                        checked={enabled}
+                        onChange={(event) => {
+                          setLayerEnabled(layer, event.target.checked);
+                        }}
+                      />
+                      <label className="m-0">{name}</label>
+                    </div>
+                    <Slider
+                      min={10}
+                      max={100}
+                      step={5}
+                      value={opacity}
+                      onChange={(value) => {
+                        setLayerOpacity(layer, value);
+                      }}
+                      className="mb-1"
+                      title={`Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`}
+                      getAriaLabel={() =>
+                        `Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`
+                      }
+                      getAriaValueText={(value) =>
+                        `L’opacité de la couche «${NBS}${name}${NBS}» est à ${value}${NBS}%`
+                      }
+                    />
+                  </li>
+                )
+              )}
             </ul>
           ) : null}
         </Popover.Panel>
