@@ -1026,7 +1026,7 @@ describe Procedure do
     end
 
     it 'estimates average dossier weight' do
-      expect(procedure.reload.average_dossier_weight).to eq 5
+      expect(procedure.reload.average_dossier_weight).to eq(5 + Procedure::MIN_WEIGHT)
     end
   end
 

@@ -55,6 +55,7 @@ class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
+  MIN_WEIGHT = 350000
   has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
@@ -684,7 +685,7 @@ class Procedure < ApplicationRecord
         .where(type: Champs::PieceJustificativeChamp.to_s, dossier: dossiers_sample)
         .sum('active_storage_blobs.byte_size')
 
-      total_size / dossiers_sample.length
+      MIN_WEIGHT + total_size / dossiers_sample.length
     else
       nil
     end
