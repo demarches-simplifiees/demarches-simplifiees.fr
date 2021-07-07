@@ -4,6 +4,7 @@ import { Popover, RadioGroup } from '@headlessui/react';
 import { usePopper } from 'react-popper';
 import { MapIcon } from '@heroicons/react/outline';
 import { Slider } from '@reach/slider';
+import { useId } from '@reach/auto-id';
 import '@reach/slider/styles.css';
 
 import { getMapStyle, getLayerName, NBS } from './styles';
@@ -82,6 +83,7 @@ function MapStyleControl({
   const configurableLayers = Object.entries(layers).filter(
     ([, { configurable }]) => configurable
   );
+  const mapId = useId();
 
   return (
     <div className="form map-style-control mapboxgl-ctrl-group">
@@ -135,6 +137,7 @@ function MapStyleControl({
                 <li key={layer}>
                   <div className="flex mb-1">
                     <input
+                      id={`${mapId}-${layer}`}
                       className="m-0 p-0 mr-1"
                       type="checkbox"
                       checked={enabled}
@@ -142,7 +145,9 @@ function MapStyleControl({
                         setLayerEnabled(layer, event.target.checked);
                       }}
                     />
-                    <label className="m-0">{name}</label>
+                    <label className="m-0" htmlFor={`${mapId}-${layer}`}>
+                      {name}
+                    </label>
                   </div>
                   <Slider
                     min={10}
