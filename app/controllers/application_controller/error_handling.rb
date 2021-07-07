@@ -3,19 +3,20 @@ module ApplicationController::ErrorHandling
 
   included do
     rescue_from ActionController::InvalidAuthenticityToken do
-      if cookies.count == 0
-        # When some browsers (like Safari) re-open a previously closed tab, they attempts
-        # to reload the page – even if it is a POST request. But in that case, they don’t
-        # sends any of the cookies.
-        #
-        # Ignore this error.
-        render plain: "Les cookies doivent être activés pour utiliser #{APPLICATION_NAME}.", status: 403
-      else
+      # When some browsers (like Safari) re-open a previously closed tab, they attempts
+      # to reload the page – even if it is a POST request. But in that case, they don’t
+      # sends any of the cookies.
+      #
+      # In that case, don’t report this error.
+      if request.cookies.count > 0
         log_invalid_authenticity_token_error
-        raise # propagate the exception up, to render the default exception page
       end
+
+      raise # propagate the exception up, to render the default exception page
     end
   end
+
+  private
 
   def log_invalid_authenticity_token_error
     Sentry.with_scope do |temp_scope|
