@@ -1,4 +1,4 @@
-%li{ class: editing ? '' : 'flex column mb-2' }
+%li{ class: editing ? 'mb-1' : 'flex column mb-2' }
   - if editing
     = link_to '#', data: { geo_area: geo_area.id } do
       = geo_area_label(geo_area)

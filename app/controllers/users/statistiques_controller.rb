@@ -16,16 +16,11 @@ module Users
     private
 
     def procedure
-      Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path])
+      Procedure.publiees_ou_closes.find_by(path: params[:path])
     end
 
     def procedure_not_found
-      if procedure&.close?
-        flash.alert = t('errors.messages.procedure_archived')
-      else
-        flash.alert = t('errors.messages.procedure_not_found')
-      end
-
+      flash.alert = t('errors.messages.procedure_not_found')
       redirect_to root_path
     end
   end
