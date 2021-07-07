@@ -16,12 +16,15 @@ const STYLES = {
 
 function optionalLayersMap(optionalLayers) {
   return Object.fromEntries(
-    optionalLayers
-      .filter((layer) => layer != 'cadastres')
-      .map((layer) => [
-        layer,
-        { enabled: true, opacity: 70, name: getLayerName(layer) }
-      ])
+    optionalLayers.map((layer) => [
+      layer,
+      {
+        configurable: layer != 'cadastres',
+        enabled: true,
+        opacity: 70,
+        name: getLayerName(layer)
+      }
+    ])
   );
 }
 
@@ -76,6 +79,9 @@ function MapStyleControl({
   const { styles, attributes } = usePopper(buttonElement, panelElement, {
     placement: 'bottom-end'
   });
+  const configurableLayers = Object.entries(layers).filter(
+    ([, { configurable }]) => configurable
+  );
 
   return (
     <div className="form map-style-control mapboxgl-ctrl-group">
@@ -123,42 +129,40 @@ function MapStyleControl({
               </RadioGroup.Option>
             ))}
           </RadioGroup>
-          {Object.keys(layers).length ? (
+          {configurableLayers.length ? (
             <ul className="layers-list">
-              {Object.entries(layers).map(
-                ([layer, { enabled, opacity, name }]) => (
-                  <li key={layer}>
-                    <div className="flex mb-1">
-                      <input
-                        className="m-0 p-0 mr-1"
-                        type="checkbox"
-                        checked={enabled}
-                        onChange={(event) => {
-                          setLayerEnabled(layer, event.target.checked);
-                        }}
-                      />
-                      <label className="m-0">{name}</label>
-                    </div>
-                    <Slider
-                      min={10}
-                      max={100}
-                      step={5}
-                      value={opacity}
-                      onChange={(value) => {
-                        setLayerOpacity(layer, value);
+              {configurableLayers.map(([layer, { enabled, opacity, name }]) => (
+                <li key={layer}>
+                  <div className="flex mb-1">
+                    <input
+                      className="m-0 p-0 mr-1"
+                      type="checkbox"
+                      checked={enabled}
+                      onChange={(event) => {
+                        setLayerEnabled(layer, event.target.checked);
                       }}
-                      className="mb-1"
-                      title={`Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`}
-                      getAriaLabel={() =>
-                        `Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`
-                      }
-                      getAriaValueText={(value) =>
-                        `L’opacité de la couche «${NBS}${name}${NBS}» est à ${value}${NBS}%`
-                      }
                     />
-                  </li>
-                )
-              )}
+                    <label className="m-0">{name}</label>
+                  </div>
+                  <Slider
+                    min={10}
+                    max={100}
+                    step={5}
+                    value={opacity}
+                    onChange={(value) => {
+                      setLayerOpacity(layer, value);
+                    }}
+                    className="mb-1"
+                    title={`Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`}
+                    getAriaLabel={() =>
+                      `Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`
+                    }
+                    getAriaValueText={(value) =>
+                      `L’opacité de la couche «${NBS}${name}${NBS}» est à ${value}${NBS}%`
+                    }
+                  />
+                </li>
+              ))}
             </ul>
           ) : null}
         </Popover.Panel>
