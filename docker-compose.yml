@@ -61,6 +61,7 @@ services:
       - APPLICATION_BASE_URL
       - APPLICATION_NAME
       - APP_HOST
+      - BANNER_MESSAGE
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
       - CRISP_CLIENT_KEY
