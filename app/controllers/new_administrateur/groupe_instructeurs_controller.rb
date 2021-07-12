@@ -170,7 +170,10 @@ module NewAdministrateur
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
 
       else
-        groupes_emails = CSV.new(group_csv_file.read.force_encoding("UTF-8"), headers: true, header_converters: :downcase)
+        file = group_csv_file.read
+        # find the original encoding to avoid encoding errors
+        base_encoding = CharlockHolmes::EncodingDetector.detect(file)
+        groupes_emails = CSV.new(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
           .map { |r| r.to_h.slice('groupe', 'email') }
 
         groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")

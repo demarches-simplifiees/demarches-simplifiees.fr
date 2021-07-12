@@ -365,6 +365,16 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
     end
 
+    context 'when the content of csv contains special characters' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_avec_caracteres_speciaux.csv', 'text/csv') }
+
+      before { subject }
+
+      it { expect(procedure.groupe_instructeurs.pluck(:label)).to eq(["défaut", "Auvergne-Rhône-Alpes", "Vendée"]) }
+      it { expect(flash.notice).to be_present }
+      it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
+    end
+
     context 'when the csv file length is more than 1 mo' do
       let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
 
