@@ -86,7 +86,7 @@
             = select_tag :field, options_for_select(@displayed_fields_options)
             %br
             = label_tag :value, "Valeur"
-            = text_field_tag :value, nil, maxlength: ProcedurePresentation::FILTERS_VALUE_MAX_LENGTH
+            = text_field_tag :value
             = hidden_field_tag :statut, @statut
             %br
             = submit_tag "Ajouter le filtre", class: 'button'
