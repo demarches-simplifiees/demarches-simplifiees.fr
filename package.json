@@ -12,7 +12,7 @@
     "@reach/combobox": "^0.13.0",
     "@reach/slider": "^0.15.0",
     "@reach/visually-hidden": "^0.15.2",
-    "@sentry/browser": "^5.15.5",
+    "@sentry/browser": "6.9.0",
     "@tmcw/togeojson": "^4.3.0",
     "babel-plugin-macros": "^2.8.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
