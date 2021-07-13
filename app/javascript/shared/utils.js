@@ -57,7 +57,10 @@ export function ajax(options) {
         resolve({ response, statusText, xhr });
       },
       error: (response, statusText, xhr) => {
-        let error = new Error(`Erreur ${xhr.status} : ${statusText}`);
+        // NB: on HTTP/2 connections, statusText is always empty.
+        let error = new Error(
+          `Erreur ${xhr.status}` + (statusText ? ` : ${statusText}` : '')
+        );
         Object.assign(error, { response, statusText, xhr });
         reject(error);
       }
