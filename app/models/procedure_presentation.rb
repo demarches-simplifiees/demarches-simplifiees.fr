@@ -22,6 +22,8 @@ class ProcedurePresentation < ApplicationRecord
   TYPE_DE_CHAMP = 'type_de_champ'
   TYPE_DE_CHAMP_PRIVATE = 'type_de_champ_private'
 
+  FILTERS_VALUE_MAX_LENGTH = 100
+
   belongs_to :assign_to, optional: false
 
   delegate :procedure, to: :assign_to
@@ -30,6 +32,7 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_sort_column
   validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
+  validate :check_filters_max_length
 
   def fields
     fields = [
@@ -279,6 +282,14 @@ class ProcedurePresentation < ApplicationRecord
     table, column = field.values_at(TABLE, COLUMN)
     if !valid_column?(table, column, extra_columns)
       errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
+    end
+  end
+
+  def check_filters_max_length
+    filters.values.flatten.each do |filter|
+      if filter['value']&.length.to_i > FILTERS_VALUE_MAX_LENGTH
+        errors.add(:filters, :too_long)
+      end
     end
   end
 

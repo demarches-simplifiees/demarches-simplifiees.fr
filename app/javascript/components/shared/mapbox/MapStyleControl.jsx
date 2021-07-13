@@ -48,6 +48,9 @@ export function useMapStyle(
   const enabledLayers = Object.entries(layers).filter(
     ([, { enabled }]) => enabled
   );
+  const layerIds = enabledLayers.map(
+    ([layer, { opacity }]) => `${layer}-${opacity}`
+  );
   const style = useMemo(
     () =>
       getMapStyle(
@@ -57,13 +60,10 @@ export function useMapStyle(
           enabledLayers.map(([layer, { opacity }]) => [layer, opacity])
         )
       ),
-    [
-      styleId,
-      enabledLayers.map(([layer, { opacity }]) => `${layer}-${opacity}`)
-    ]
+    [styleId, layerIds]
   );
 
-  useEffect(() => onStyleChange(), [styleId, cadastreEnabled]);
+  useEffect(() => onStyleChange(), [styleId, layerIds, cadastreEnabled]);
 
   return { style, layers, setStyle, setLayerEnabled, setLayerOpacity };
 }
