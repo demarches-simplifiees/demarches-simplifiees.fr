@@ -56,6 +56,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::SiretChampType,
     Types::Champs::TextChampType,
     Types::Champs::TitreIdentiteChampType,
+    Types::Champs::ParapheChampType,
     Types::GeoAreas::ParcelleCadastraleType,
     Types::GeoAreas::SelectionUtilisateurType,
     Types::PersonneMoraleType,

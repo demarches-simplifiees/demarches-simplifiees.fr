@@ -63,6 +63,7 @@ module NewAdministrateur
             :min,
             :max,
             :zones_manuelles,
+            :accredited_user_string,
             # base fields
             :drop_down_list_value,
             :piece_justificative_template_filename,
@@ -82,6 +83,7 @@ module NewAdministrateur
         :zones_manuelles,
         :min,
         :max,
+        :accredited_user_string,
         # base
         :libelle,
         :description,
@@ -114,6 +116,7 @@ module NewAdministrateur
         :zones_manuelles,
         :min,
         :max,
+        :accredited_user_string,
         # base
         :libelle,
         :description,

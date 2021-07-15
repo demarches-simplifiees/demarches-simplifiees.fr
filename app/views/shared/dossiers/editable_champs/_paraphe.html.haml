@@ -1,0 +1,11 @@
+.row
+  = form.check_box :value,
+    { required: champ.mandatory?, disabled: !champ.user_accredited?(current_user), checked: champ.value.present?, data: { paraphe: "true" } },
+    current_user.email,
+    ''
+  .paraphe-info
+    - if champ.value.present?
+      validé par
+      = champ.value
+    - else
+      cochez la case pour valider.

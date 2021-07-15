@@ -54,7 +54,8 @@ class TypeDeChamp < ApplicationRecord
     repetition: 'repetition',
     titre_identite: 'titre_identite',
     iban: 'iban',
-    annuaire_education: 'annuaire_education'
+    annuaire_education: 'annuaire_education',
+    paraphe: 'paraphe'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
@@ -63,7 +64,7 @@ class TypeDeChamp < ApplicationRecord
   belongs_to :parent, class_name: 'TypeDeChamp', optional: true
   has_many :types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'TypeDeChamp', inverse_of: :parent, dependent: :destroy
 
-  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :parcelles, :batiments, :zones_manuelles, :min, :max, :level
+  store_accessor :options, :cadastres, :old_pj, :drop_down_options, :skip_pj_validation, :skip_content_type_pj_validation, :parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users
   has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_many :revisions, through: :revision_types_de_champ
 
@@ -224,6 +225,14 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:carte)
   end
 
+  def paraphe?
+    type_champ == TypeDeChamp.type_champs.fetch(:paraphe)
+  end
+
+  def public?
+    !private?
+  end
+
   def public?
     !private?
   end
@@ -287,6 +296,26 @@ class TypeDeChamp < ApplicationRecord
       layer_enabled?(layer) ? layer : nil
     end.sort
   end
+  
+  def accredited_user_string
+    if accredited_user_list.present?
+      accredited_user_list.reject(&:empty?).join("\r\n")
+    else
+      ''
+    end
+  end
+
+  def accredited_user_string=(value)
+    self.accredited_users = parse_accredited_user_string(value)
+  end
+
+  def accredited_user_list?
+    accredited_user_list.any?
+  end
+
+  def accredited_user_list
+    accredited_users.presence || []
+  end
 
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
@@ -300,7 +329,7 @@ class TypeDeChamp < ApplicationRecord
     options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
   end
 
-  FEATURE_FLAGS = {}
+  FEATURE_FLAGS = { 'paraphe' => 'paraphe' }
 
   def self.type_de_champ_types_for(procedure, user)
     has_legacy_number = (procedure.types_de_champ + procedure.types_de_champ_private).any?(&:legacy_number?)
@@ -338,6 +367,7 @@ class TypeDeChamp < ApplicationRecord
       :min,
       :max,
       :level,
+      :accredited_user_string,
       # base methods
       :drop_down_list_value,
       :piece_justificative_template_filename,
@@ -366,6 +396,10 @@ class TypeDeChamp < ApplicationRecord
     value = value ? value.split("\r\n").map(&:strip).join("\r\n") : ''
     result = value.split(/[\r\n]|[\r]|[\n]|[\n\r]/).reject(&:empty?)
     result.blank? ? [] : [''] + result
+  end
+
+  def parse_accredited_user_string(value)
+    value.blank? ? [] : value.split(/\s*[\r\n]+\s*/)
   end
 
   def populate_stable_id

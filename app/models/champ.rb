@@ -45,6 +45,7 @@ class Champ < ApplicationRecord
     :dossier_link?,
     :titre_identite?,
     :header_section?,
+    :accredited_user_list,
     to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }

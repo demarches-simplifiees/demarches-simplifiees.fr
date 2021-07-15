@@ -49,6 +49,8 @@ module Types
           Types::Champs::CiviliteChampType
         when ::Champs::TitreIdentiteChamp
           Types::Champs::TitreIdentiteChampType
+        when ::Champs::ParapheChamp
+          Types::Champs::ParapheChampType
         else
           Types::Champs::TextChampType
         end

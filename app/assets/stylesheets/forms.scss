@@ -136,6 +136,16 @@
         margin-bottom: $default-fields-spacer;
       }
     }
+
+    &.editable-champ-paraphe {
+      .row {
+        display: flex;
+      }
+
+      .info {
+        margin-left: 10px;
+      }
+    }
   }
 
   .checkboxes {

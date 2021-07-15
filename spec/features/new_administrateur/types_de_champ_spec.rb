@@ -160,4 +160,19 @@ feature 'As an administrateur I can edit types de champ', js: true do
 
     expect(page).to have_content('Un menu')
   end
+
+  # it "Add paraphe champ" do
+  #   add_champ
+  #
+  #   select('Paraphe', from: 'champ-0-type_champ')
+  #   fill_in 'champ-0-libelle', with: 'Libellé de champ paraphe', fill_options: { clear: :backspace }
+  #   fill_in 'champ-0-drop_down_list_value', with: 'boss@company.com', fill_options: { clear: :backspace }
+  #
+  #   wait_until { procedure.draft_types_de_champ.first.accredited_user_list == ['boss@company.com'] }
+  #   expect(page).to have_content('Formulaire enregistré')
+  #
+  #   page.refresh
+  #
+  #   expect(page).to have_content('boss@company.com')
+  # end
 end
