@@ -125,8 +125,8 @@ services:
 
   worker:
     image: ${IMAGE}:${TAG}
-    entrypoint: ["bundle", "exec"]
-    command: rails jobs:work
+    entrypoint: []
+    command: app/lib/worker.sh
     container_name: worker-${ENV:-dev}
     restart: always
     environment:
@@ -139,6 +139,7 @@ services:
       - DB_HOST
       - DB_PASSWORD
       - DB_USERNAME
+      - DELAYED_JOB_ARGS=${DELAYED_JOB_ARGS:--pool=*:3}
       - MAILJET_API_KEY
       - MAILJET_SECRET_KEY
       - PROCEDURE_DEFAULT_LOGO_SRC
