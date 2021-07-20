@@ -51,7 +51,7 @@ module Users
       if dossier.attestation&.pdf&.attached?
         redirect_to dossier.attestation.pdf.service_url
       else
-        flash.notice = "L'attestation n’est plus disponible sur ce dossier."
+        flash.notice = t('.no_longer_available')
         redirect_to dossier_path(dossier)
       end
     end
@@ -66,7 +66,7 @@ module Users
 
       if @dossier.individual.update(individual_params)
         @dossier.update!(autorisation_donnees: true)
-        flash.notice = "Identité enregistrée"
+        flash.notice = t('.identity_saved')
 
         redirect_to brouillon_dossier_path(@dossier)
       else
@@ -116,7 +116,7 @@ module Users
 
       # Redirect if the user attempts to access the page URL directly
       if !@dossier.etablissement
-        flash.alert = 'Aucun établissement n’est associé à ce dossier'
+        flash.alert = t('.no_establishment')
         return redirect_to siret_dossier_path(@dossier)
       end
     end
@@ -151,7 +151,7 @@ module Users
       elsif errors.present?
         flash.now.alert = errors
       else
-        flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
+        flash.now.notice = t('.draft_saved')
       end
 
       respond_to do |format|
@@ -162,7 +162,7 @@ module Users
 
     def extend_conservation
       dossier.update(conservation_extension: dossier.conservation_extension + 1.month)
-      flash[:notice] = 'Votre dossier sera conservé un mois supplémentaire'
+      flash[:notice] = t('.archived_dossier')
       redirect_to dossier_path(@dossier)
     end
 
@@ -197,7 +197,7 @@ module Users
           .each do |instructeur|
           DossierMailer.notify_new_commentaire_to_instructeur(dossier, instructeur.email).deliver_later
         end
-        flash.notice = "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
+        flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)
       else
         flash.now.alert = @commentaire.errors.full_messages
@@ -210,10 +210,10 @@ module Users
 
       if dossier.can_be_deleted_by_user?
         dossier.discard_and_keep_track!(current_user, :user_request)
-        flash.notice = 'Votre dossier a bien été supprimé.'
+        flash.notice = t('.deleted_dossier')
         redirect_to dossiers_path
       else
-        flash.notice = "L’instruction de votre dossier a commencé, il n’est plus possible de supprimer votre dossier. Si vous souhaitez annuler l’instruction contactez votre administration par la messagerie de votre dossier."
+        flash.notice = t('.undergoingreview')
         redirect_to dossier_path(dossier)
       end
     end
@@ -304,13 +304,13 @@ module Users
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.revision.draft?
-        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
+        flash.now.alert = t('.test_procedure')
       end
     end
 
     def ensure_dossier_can_be_updated
       if !dossier.can_be_updated_by_user?
-        flash.alert = 'Votre dossier ne peut plus être modifié'
+        flash.alert = t('.no_longer_editable')
         redirect_to dossiers_path
       end
     end
@@ -411,7 +411,7 @@ module Users
     end
 
     def forbidden!
-      flash[:alert] = "Vous n’avez pas accès à ce dossier"
+      flash[:alert] = t('.no_access')
       redirect_to root_path
     end
 

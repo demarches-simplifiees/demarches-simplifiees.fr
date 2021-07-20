@@ -8,4 +8,4 @@ fr:
         birthdate: Date de naissance
         gender_options:
           "Mme": "Madame"
-          "M." : "Monsieur"
+          "M.": "Monsieur"
