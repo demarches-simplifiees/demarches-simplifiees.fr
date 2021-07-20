@@ -157,7 +157,7 @@ ENV \
 COPY --chown=userapp:userapp . ${APP_PATH}
 RUN RAILS_ENV=production bundle exec rails assets:precompile
 
-RUN chmod a+x $APP_PATH/app/lib/*.sh
+RUN chmod a+x $APP_PATH/app/lib/docker-entry-point.sh
 
 EXPOSE 3000
 ENTRYPOINT ["/app/app/lib/docker-entry-point.sh"]
