@@ -3,7 +3,12 @@ import { QueryClientProvider } from 'react-query';
 import { matchSorter } from 'match-sorter';
 
 import ComboSearch from './ComboSearch';
-import { queryClient, searchResultsLimit } from './shared/queryClient';
+import { queryClient } from './shared/queryClient';
+
+// Avoid hiding similar matches for precise queries (like "Sainte Marie")
+function searchResultsLimit(term) {
+  return term.length > 5 ? 10 : 5;
+}
 
 function expandResultsWithMultiplePostalCodes(term, results) {
   // A single result may have several associated postal codes.
