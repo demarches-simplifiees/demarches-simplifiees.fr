@@ -38,31 +38,142 @@ en:
     subject: Subject
     message: Message
     send_mail: Send message
+  helpers:
+    procedure:
+      testing_procedure: testing procedure
+    commentaire:
+      send_message_to_instructeur: "Send a message to the instructor"
+      reply_in_mailbox: "Reply in mailbox"
   views:
+    commencer:
+      show:
+        start_procedure: Start the procedure
+        existing_dossiers: You already have files for this procedure
+        show_dossiers: View my current files
+        start_new_dossier: Start a new file
+    invites:
+      dropdown:
+        invite_to_edit: Invite someone to edit this file
+        view_invited_people: "View invited people"
+        invite_to_view: "Invite someone to view this file"
+      form:
+        invite_to_edit_line1: You can invite someone to complete this file with you.
+        invite_to_edit_line2: This person will have the right to edit your file.
+        email: Email address
+        invite_message: Add a message to the person you invite (optional)
+        send_invitation: Send an invitation
+        invite_to_participate: "Invited people to participate in this file"
+        withdraw_permission: "Withdraw the permission"
+        want_to_withdraw_permission: "Would you like to withdraw the permission?"
+        edit_dossier: "These people can edit this file."
+        submit_dossier_yourself: "You must submit the file yourself when it is complete."
+    layouts:
+      commencer:
+        no_procedure:
+          line1: A simple tool
+          line2: to manage dematerialized
+          line3: administrative forms.
     pagination:
       next: Next
       last: Last
       previous: Previous
       first: First
       truncate: '&hellip;'
-    sessions:
-      new:
-        title: Sign in
-        email: Email address (name@site.com)
-        password: Password
-        remember_me: Remember me
-        reset_password: Forgot password?
-        connection: Sign in
-        are_you_new: First time on %{app_name} ?
-        find_procedure: Find your procedure
-    commencer:
-      no_procedure:
-        ligne1: A simple tool
-        ligne2: to manage dematerialized
-        ligne3: administrative forms.
-    passwords:
-      new:
-        send_me_reset_password_instructions: "Fill-in your account's email, and we’ll send you instructions to reset your password."
+    shared:
+      dossiers:
+        edit:
+          autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
+          submit_dossier: Submit the file
+          save_changes: Save the changes of the file
+        messages:
+          message_issuer:
+            automatic_email: "Automatic email"
+            you: "You"
+          message:
+            reply: "Reply"
+            guest: "Guest"
+          form:
+            send_message: "Send message"
+            attachment_size: "(attachment size max : 20 Mo)"
+            attach_dossier: "Attach a file"
+            write_message_placeholder: "Write your message here"
+            write_message_to_administration_placeholder: "Write your message to the administration here"
+        demande:
+          requester_identity: "Identity of the requester"
+          form: "Form"
+          edit_siret: "Edit SIRET"
+          edit_identity: "Edit identity data"
+    users:
+      dossiers:
+        autosave:
+          autosave_draft: Your draft is automatically saved.
+          more_infos: More informations
+        identite:
+          identity_data: Identity data
+          complete_data: Please complete your personal information to access the procedure.
+          continue: Continue
+        merci:
+          thanks: Thank you!
+          dossier_send_l1: Your file on the procedure
+          dossier_send_l2: has been sent.
+          dossier_acces_l1: You have now access to your
+          dossier_acces_l2: online file.
+          dossier_edit_l1: You can
+          dossier_edit_l2: edit it
+          dossier_edit_l3: and
+          dossier_edit_l4: talk with an instructor.
+          acces_dossier: Access your file
+          submit_dossier: Submit an other file
+        show:
+          header:
+            edit_dossier: Edit my file
+            summary: "Summary"
+            request: "Request"
+            mailbox: "Mailbox"
+            dossier_number: "File n. %{dossier_id}"
+            submit_date: "- Submit on %{date_du_dossier}"
+            print: "print"
+            print_dossier: "All the file"
+          status_overview:
+            status_draft: draft
+            status_in_progress: in progress
+            en_construction_html: Your file is in progress. It means that <strong>you can still edit it</strong>. You will no longer be able to edit the file when the administration will switch it to "review".
+            status_review: undergoing review
+            admin_review: The administration is reviewing your file. You are no longer able to edit it.
+            status_completed: completed
+            use_mailbox_for_questions_html: "<strong>You have a question?</strong> Use the mailbox to <a href=\"%{mailbox_url}\">contact the administration directly</a>."
+          latest_message:
+            latest_message: "Latest message"
+        messagerie:
+          mailbox: "The mailbox allows you to contact the instructor in charge of your file."
+        demande:
+          edit_dossier: "Edit file"
+        index:
+          dossiers: "Files"
+        dossiers_list:
+          procedure: "Procedure"
+          n_dossier: "File n."
+          requester: "Requester"
+          status: "Status"
+          updated: "Updated"
+          actions: "Actions"
+          accessibility_question: "What do you think about the accessibility of this service?"
+        dossier_action:
+          edit_dossier: "Edit the file"
+          start_other_dossier: "Start an other file"
+          delete_dossier: "Delete the file"
+          edit_draft: "Edit the draft"
+          actions: "Actions"
+      sessions:
+        new:
+          sign_in: Sign in
+          email: Email address (name@site.com)
+          password: Password (minimum length %{min_length} characters)
+          remember_me: Remember me
+          reset_password: Forgot password?
+          connection: Sign in
+          are_you_new: First time on %{app_name}?
+          find_procedure: Find your procedure
   modal:
     publish:
       title:
@@ -164,6 +275,18 @@ en:
       zero: archived
       one: archived
       other: archived
+    mes_dossiers:
+      zero: my file
+      one: my file
+      other: my files
+    dossiers_invites:
+      zero: guest file
+      one: guest file
+      other: guest files
+    dossiers_supprimes:
+      zero: deleted file
+      one: deleted file
+      other: deleted files
     dossier_trouve:
       zero: 0 file found
       one: 1 file found
@@ -180,3 +303,16 @@ en:
       zero: Draft
       one: Draft
       other: Drafts
+  users:
+    dossiers:
+      test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
+      message_send: "Your message has been sent to the instructor in charge of your file."
+      no_access: "You do not have access to this file"
+      no_longer_editable: "Your file can no longer be edited"
+      undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
+      deleted_dossier: "Your file has been successfully deleted"
+      archived_dossier: "Your file will be archived for an additional month"
+      draft_saved: "Your draft has been saved."
+      no_establishment: "There is no establishment tied to this file"
+      identity_saved: "Identity data is registred"
+      no_longer_available: "The certificate is no longer available on this file."

@@ -5,7 +5,7 @@
     %span.mail
       = render partial: 'shared/dossiers/messages/message_issuer', locals: { commentaire: commentaire, connected_user: connected_user }
     - if commentaire_is_from_guest(commentaire)
-      %span.guest Invité
+      %span.guest= t('views.shared.dossiers.messages.message.guest')
     %span.date{ class: highlight_if_unseen_class(messagerie_seen_at, commentaire.created_at) }
       = commentaire_date(commentaire)
   .rich-text= pretty_commentaire(commentaire)
@@ -18,4 +18,4 @@
     - if show_reply_button
       = button_tag type: 'button', class: 'button small message-answer-button', onclick: 'document.querySelector("#commentaire_body").focus()' do
         %span.icon.reply
-        Répondre
+        = t('views.shared.dossiers.messages.message.reply')
