@@ -45,6 +45,7 @@ describe ProcedurePresentation do
 
     context 'of filters' do
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ "table" => "user", "column" => "reset_password_token", "order" => "asc" }] })).to be_invalid }
+      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ "table" => "user", "column" => "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
     end
   end
 
