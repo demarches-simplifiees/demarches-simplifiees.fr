@@ -6,23 +6,23 @@
 .merci
   .container
     = image_tag('user/envoi-dossier.svg', alt: '')
-    %h1 Merci !
+    %h1= t('views.users.dossiers.merci.thanks')
     %p.send
-      Votre dossier sur la démarche
+      = t('views.users.dossiers.merci.dossier_send_l1')
       %b= @dossier.procedure.libelle
-      a bien été envoyé.
+      = t('views.users.dossiers.merci.dossier_send_l2')
     %p
-      Vous avez désormais accès à votre
-      %b dossier en ligne.
+      = t('views.users.dossiers.merci.dossier_acces_l1')
+      %b= t('views.users.dossiers.merci.dossier_acces_l2')
     %p
-      Vous pouvez
+      = t('views.users.dossiers.merci.dossier_edit_l1')
       - if !@dossier.read_only?
-        %b le modifier
-        et
-      %b échanger avec un instructeur.
+        %b= t('views.users.dossiers.merci.dossier_edit_l2')
+        = t('views.users.dossiers.merci.dossier_edit_l3')
+      %b= t('views.users.dossiers.merci.dossier_edit_l4')
 
     .flex.column.align-center
-      = link_to 'Accéder à votre dossier', dossier_path(@dossier), class: 'button large primary'
-      = link_to 'Déposer un autre dossier', procedure_lien(@dossier.procedure)
+      = link_to t('views.users.dossiers.merci.acces_dossier'), dossier_path(@dossier), class: 'button large primary'
+      = link_to t('views.users.dossiers.merci.submit_dossier'), procedure_lien(@dossier.procedure)
       .monavis
         != @dossier.procedure.monavis_embed

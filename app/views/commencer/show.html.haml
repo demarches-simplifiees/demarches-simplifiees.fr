@@ -16,7 +16,7 @@
     - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 
     - if dossiers.count == 0
-      = link_to 'Commencer la démarche', url_for_new_dossier(@revision), class: ['button large expand primary']
+      = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: ['button large expand primary']
 
     - elsif drafts.count == 1 && not_drafts.count == 0
       - dossier = drafts.first
@@ -37,9 +37,9 @@
       = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@revision), class: ['button large expand']
 
     - else
-      %h2.huge-title Vous avez déjà des dossiers pour cette démarche
-      = link_to 'Voir mes dossiers en cours', dossiers_path, class: ['button large expand primary']
-      = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@revision), class: ['button large expand']
+      %h2.huge-title= t('views.commencer.show.existing_dossiers')
+      = link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: ['button large expand primary']
+      = link_to t('views.commencer.show.start_new_dossier'), url_for_new_dossier(@revision), class: ['button large expand']
 
   - if @procedure.feature_enabled?(:dossier_pdf_vide)
     - pdf_link = @revision.draft? ? commencer_dossier_vide_test_path(path: @procedure.path) : commencer_dossier_vide_path(path: @procedure.path)

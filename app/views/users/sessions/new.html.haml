@@ -3,29 +3,29 @@
 .auth-form.sign-in-form
 
   = form_for resource, url: user_session_path, html: { class: "form" } do |f|
-    %h1.huge-title= t('views.sessions.new.title')
+    %h1.huge-title= t('views.users.sessions.new.sign_in')
 
     = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
-    = f.label :email, t('views.sessions.new.email')
+    = f.label :email, t('views.users.sessions.new.email')
     = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
 
-    = f.label :password, t('views.sessions.new.password', min_length: PASSWORD_MIN_LENGTH)
+    = f.label :password, t('views.users.sessions.new.password', min_length: PASSWORD_MIN_LENGTH)
     = f.password_field :password, autocomplete: 'current-password'
 
     .auth-options
       .flex-no-shrink
         = f.check_box :remember_me
-        = f.label :remember_me, t('views.sessions.new.remember_me'), class: 'remember-me'
+        = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
 
       .text-right
-        = link_to t('views.sessions.new.reset_password'), new_user_password_path, class: "link"
+        = link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
 
-    = f.submit t('views.sessions.new.connection'), class: "button large primary expand"
+    = f.submit t('views.users.sessions.new.connection'), class: "button large primary expand"
 
   %hr
   %p.center
-    %span= t('views.sessions.new.are_you_new', app_name: APPLICATION_NAME.gsub("-","&#8209;")).html_safe
+    %span= t('views.users.sessions.new.are_you_new', app_name: APPLICATION_NAME.gsub("-","&#8209;")).html_safe
     %br
     %br
-    = link_to t('views.sessions.new.find_procedure'), COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button expend secondary"
+    = link_to t('views.users.sessions.new.find_procedure'), COMMENT_TROUVER_MA_DEMARCHE_URL, target: "_blank", class: "button expend secondary"
