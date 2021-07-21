@@ -176,7 +176,11 @@ FactoryBot.define do
     factory :champ_repetition, class: 'Champs::RepetitionChamp' do
       type_de_champ { association :type_de_champ_repetition, procedure: dossier.procedure }
 
-      after(:build) do |champ_repetition, _evaluator|
+      transient do
+        rows { 2 }
+      end
+
+      after(:build) do |champ_repetition, evaluator|
         types_de_champ = champ_repetition.type_de_champ.types_de_champ
         existing_type_de_champ_text = types_de_champ.find { |tdc| tdc.libelle == 'Nom' }
         type_de_champ_text = existing_type_de_champ_text || build(
@@ -195,12 +199,12 @@ FactoryBot.define do
         )
 
         champ_repetition.type_de_champ.types_de_champ << [type_de_champ_text, type_de_champ_number]
-        champ_repetition.champs << [
-          build(:champ_text, dossier: champ_repetition.dossier, row: 0, type_de_champ: type_de_champ_text, parent: champ_repetition),
-          build(:champ_number, dossier: champ_repetition.dossier, row: 0, type_de_champ: type_de_champ_number, parent: champ_repetition),
-          build(:champ_text, dossier: champ_repetition.dossier, row: 1, type_de_champ: type_de_champ_text, parent: champ_repetition),
-          build(:champ_number, dossier: champ_repetition.dossier, row: 1, type_de_champ: type_de_champ_number, parent: champ_repetition)
-        ]
+        evaluator.rows.times do |row|
+          champ_repetition.champs << [
+            build(:champ_text, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_text, parent: champ_repetition),
+            build(:champ_number, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_number, parent: champ_repetition)
+          ]
+        end
       end
 
       trait :without_champs do
