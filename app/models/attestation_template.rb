@@ -39,16 +39,12 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def unspecified_champs_for_dossier(dossier)
-    all_champs_with_libelle_index = (dossier.champs + dossier.champs_private)
-      .reduce({}) do |acc, champ|
-        acc[champ.libelle] = champ
-        acc
-      end
+    all_champs_with_libelle_index = (dossier.champs + dossier.champs_private).index_by { |champ| "tdc#{champ.stable_id}" }
 
     used_tags.filter_map do |used_tag|
       corresponding_champ = all_champs_with_libelle_index[used_tag]
 
-      if corresponding_champ && corresponding_champ.value.blank?
+      if corresponding_champ && corresponding_champ.blank?
         corresponding_champ
       end
     end
@@ -113,7 +109,7 @@ class AttestationTemplate < ApplicationRecord
     # We can't use flat_map as scan will return 3 levels of array,
     # using flat_map would give us 2, whereas flatten will
     # give us 1, which is what we want
-    [title, body]
+    [normalize_tags(title), normalize_tags(body)]
       .map { |str| str.scan(delimiters_regex) }
       .flatten
   end
