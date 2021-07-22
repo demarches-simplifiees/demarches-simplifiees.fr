@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_22_133440) do
+ActiveRecord::Schema.define(version: 2021_07_22_133531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,6 +229,7 @@ ActiveRecord::Schema.define(version: 2021_07_22_133440) do
     t.bigint "user_id"
     t.bigint "groupe_instructeur_id"
     t.bigint "revision_id"
+    t.index ["dossier_id"], name: "index_deleted_dossiers_on_dossier_id", unique: true
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
   end
 
