@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_22_133531) do
+ActiveRecord::Schema.define(version: 2021_07_22_133553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -340,7 +340,7 @@ ActiveRecord::Schema.define(version: 2021_07_22_133531) do
     t.jsonb "entreprise_bilans_bdf"
     t.string "entreprise_bilans_bdf_monnaie"
     t.string "enseigne"
-    t.index ["dossier_id"], name: "index_etablissements_on_dossier_id"
+    t.index ["dossier_id"], name: "index_etablissements_on_dossier_id", unique: true
   end
 
   create_table "exercices", id: :serial, force: :cascade do |t|
