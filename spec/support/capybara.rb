@@ -47,3 +47,16 @@ Capybara::Screenshot.prune_strategy = :keep_last_run
 Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
   driver.browser.save_screenshot(path)
 end
+
+RSpec.configure do |config|
+  # Examples tagged with :capybara_ignore_server_errors will allow Capybara
+  # to continue when an exception in raised by Rails.
+  # This allows to test for error cases.
+  config.around(:each, :capybara_ignore_server_errors) do |example|
+    Capybara.raise_server_errors = false
+
+    example.run
+  ensure
+    Capybara.raise_server_errors = true
+  end
+end
