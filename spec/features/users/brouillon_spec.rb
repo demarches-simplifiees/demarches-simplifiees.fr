@@ -255,23 +255,45 @@ feature 'The user' do
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
     end
 
-    scenario 'retry on autosave error', js: true do
+    scenario 'retry on autosave error', :capybara_ignore_server_errors, js: true do
       log_in(user, simple_procedure)
       fill_individual
 
       # Test autosave failure
-      logout(:user) # Make the subsequent autosave requests fail
+      allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_raise("Server is busy")
       fill_in('texte obligatoire', with: 'a valid user input')
       blur
       expect(page).to have_css('span', text: 'Impossible d’enregistrer le brouillon', visible: true)
 
       # Test that retrying after a failure works
-      login_as(user, scope: :user) # Make the autosave requests work again
+      allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_call_original
       click_on 'réessayer'
       expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
+    end
+
+    scenario 'autosave redirects to sign-in after being disconnected', js: true do
+      log_in(user, simple_procedure)
+      fill_individual
+
+      # When the user is disconnected
+      # (either because signing-out in another tab, or because the session cookie expired)
+      logout(:user)
+      fill_in('texte obligatoire', with: 'a valid user input')
+      blur
+
+      # … they are redirected to the sign-in page.
+      expect(page).to have_current_path(new_user_session_path)
+
+      # After sign-in, they are redirected back to their brouillon
+      sign_in_with(user.email, password)
+      expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
+
+      fill_in('texte obligatoire', with: 'a valid user input')
+      blur
+      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
     end
   end
 
