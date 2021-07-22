@@ -156,6 +156,23 @@ ActiveRecord::Schema.define(version: 2021_07_22_133553) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "bulk_messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.integer "dossier_count"
+    t.string "dossier_state"
+    t.datetime "sent_at", null: false
+    t.bigint "instructeur_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "bulk_messages_groupe_instructeurs", id: false, force: :cascade do |t|
+    t.bigint "bulk_message_id"
+    t.bigint "groupe_instructeur_id"
+    t.index ["bulk_message_id"], name: "index_bulk_messages_groupe_instructeurs_on_bulk_message_id"
+    t.index ["groupe_instructeur_id"], name: "index_bulk_messages_groupe_instructeurs_on_gi_id"
+  end
+
   create_table "champs", id: :serial, force: :cascade do |t|
     t.string "value"
     t.integer "type_de_champ_id"
@@ -767,6 +784,8 @@ ActiveRecord::Schema.define(version: 2021_07_22_133553) do
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
   add_foreign_key "avis", "experts_procedures"
+  add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
+  add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
