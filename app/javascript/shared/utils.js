@@ -50,6 +50,13 @@ export function delegate(eventNames, selector, callback) {
     );
 }
 
+// A promise-based wrapper for Rails.ajax().
+//
+// Returns a Promise that is either:
+// - resolved in case of a 20* HTTP response code,
+// - rejected with an Error object otherwise.
+//
+// See Rails.ajax() code for more details.
 export function ajax(options) {
   return new Promise((resolve, reject) => {
     Object.assign(options, {
@@ -57,7 +64,10 @@ export function ajax(options) {
         resolve({ response, statusText, xhr });
       },
       error: (response, statusText, xhr) => {
-        let error = new Error(`Erreur ${xhr.status} : ${statusText}`);
+        // NB: on HTTP/2 connections, statusText is always empty.
+        let error = new Error(
+          `Erreur ${xhr.status}` + (statusText ? ` : ${statusText}` : '')
+        );
         Object.assign(error, { response, statusText, xhr });
         reject(error);
       }

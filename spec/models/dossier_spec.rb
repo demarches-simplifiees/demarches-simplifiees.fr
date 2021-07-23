@@ -564,7 +564,7 @@ describe Dossier do
 
   describe "#unspecified_attestation_champs" do
     let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private) }
-    let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+    let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
 

@@ -30,8 +30,8 @@ class Champs::RepetitionChamp < Champ
     end
   end
 
-  def mandatory_and_blank?
-    mandatory? && champs.empty?
+  def blank?
+    champs.empty?
   end
 
   def search_terms
