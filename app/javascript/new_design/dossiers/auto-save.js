@@ -62,6 +62,15 @@ addEventListener('autosave:end', () => {
 });
 
 addEventListener('autosave:error', (event) => {
+  let error = event.detail;
+
+  if (error.xhr.status == 401) {
+    // If we are unauthenticated, reload the page using a GET request.
+    // This will allow Devise to properly redirect us to sign-in, and then back to this page.
+    document.location.reload();
+    return;
+  }
+
   enable(document.querySelector('button.autosave-retry'));
   setState('failed');
   logError(event.detail);
