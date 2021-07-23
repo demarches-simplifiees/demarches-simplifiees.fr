@@ -132,7 +132,7 @@ describe ProcedurePresentation do
     let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
     let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, sort: sort) }
 
-    subject { procedure_presentation.sorted_ids(procedure.dossiers, instructeur) }
+    subject { procedure_presentation.sorted_ids(procedure.dossiers, procedure.dossiers.count, instructeur) }
 
     context 'for notifications table' do
       let(:table) { 'notifications' }
@@ -205,35 +205,113 @@ describe ProcedurePresentation do
     end
 
     context 'for type_de_champ table' do
-      let(:table) { 'type_de_champ' }
-      let(:column) { procedure.types_de_champ.first.stable_id.to_s }
-      let(:order) { 'desc' } # Asc works the same, no extra test required
+      context 'with no revisions' do
+        let(:table) { 'type_de_champ' }
+        let(:column) { procedure.types_de_champ.first.stable_id.to_s }
 
-      let(:beurre_dossier) { create(:dossier, procedure: procedure) }
-      let(:tartine_dossier) { create(:dossier, procedure: procedure) }
+        let(:beurre_dossier) { create(:dossier, procedure: procedure) }
+        let(:tartine_dossier) { create(:dossier, procedure: procedure) }
 
-      before do
-        beurre_dossier.champs.first.update(value: 'beurre')
-        tartine_dossier.champs.first.update(value: 'tartine')
+        before do
+          beurre_dossier.champs.first.update(value: 'beurre')
+          tartine_dossier.champs.first.update(value: 'tartine')
+        end
+
+        context 'asc' do
+          let(:order) { 'asc' }
+
+          it { is_expected.to eq([beurre_dossier, tartine_dossier].map(&:id)) }
+        end
+
+        context 'desc' do
+          let(:order) { 'desc' }
+
+          it { is_expected.to eq([tartine_dossier, beurre_dossier].map(&:id)) }
+        end
       end
 
-      it { is_expected.to eq([tartine_dossier, beurre_dossier].map(&:id)) }
+      context 'with a revision adding a new type_de_champ' do
+        let!(:tdc) { { type_champ: :text, libelle: 'nouveau champ' } }
+        let(:table) { 'type_de_champ' }
+        let(:column) { procedure.types_de_champ.last.stable_id.to_s }
+
+        let(:nothing_dossier) { create(:dossier, procedure: procedure) }
+        let(:beurre_dossier) { create(:dossier, procedure: procedure) }
+        let(:tartine_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          nothing_dossier
+          procedure.draft_revision.add_type_de_champ(tdc)
+          procedure.publish_revision!
+          beurre_dossier.champs.last.update(value: 'beurre')
+          tartine_dossier.champs.last.update(value: 'tartine')
+        end
+
+        context 'asc' do
+          let(:order) { 'asc' }
+          it { is_expected.to eq([beurre_dossier, tartine_dossier, nothing_dossier].map(&:id)) }
+        end
+
+        context 'desc' do
+          let(:order) { 'desc' }
+          it { is_expected.to eq([nothing_dossier, tartine_dossier, beurre_dossier].map(&:id)) }
+        end
+      end
     end
 
     context 'for type_de_champ_private table' do
-      let(:table) { 'type_de_champ_private' }
-      let(:column) { procedure.types_de_champ_private.first.stable_id.to_s }
-      let(:order) { 'asc' } # Desc works the same, no extra test required
+      context 'with no revisions' do
+        let(:table) { 'type_de_champ_private' }
+        let(:column) { procedure.types_de_champ_private.first.stable_id.to_s }
 
-      let(:biere_dossier) { create(:dossier, procedure: procedure) }
-      let(:vin_dossier) { create(:dossier, procedure: procedure) }
+        let(:biere_dossier) { create(:dossier, procedure: procedure) }
+        let(:vin_dossier) { create(:dossier, procedure: procedure) }
 
-      before do
-        biere_dossier.champs_private.first.update(value: 'biere')
-        vin_dossier.champs_private.first.update(value: 'vin')
+        before do
+          biere_dossier.champs_private.first.update(value: 'biere')
+          vin_dossier.champs_private.first.update(value: 'vin')
+        end
+
+        context 'asc' do
+          let(:order) { 'asc' }
+
+          it { is_expected.to eq([biere_dossier, vin_dossier].map(&:id)) }
+        end
+
+        context 'desc' do
+          let(:order) { 'desc' }
+
+          it { is_expected.to eq([vin_dossier, biere_dossier].map(&:id)) }
+        end
       end
 
-      it { is_expected.to eq([biere_dossier, vin_dossier].map(&:id)) }
+      context 'with a revision adding a new type_de_champ' do
+        let!(:tdc) { { type_champ: :text, private: true, libelle: 'nouveau champ' } }
+        let(:table) { 'type_de_champ_private' }
+        let(:column) { procedure.types_de_champ_private.last.stable_id.to_s }
+
+        let(:nothing_dossier) { create(:dossier, procedure: procedure) }
+        let(:biere_dossier) { create(:dossier, procedure: procedure) }
+        let(:vin_dossier) { create(:dossier, procedure: procedure) }
+
+        before do
+          nothing_dossier
+          procedure.draft_revision.add_type_de_champ(tdc)
+          procedure.publish_revision!
+          biere_dossier.champs_private.last.update(value: 'biere')
+          vin_dossier.champs_private.last.update(value: 'vin')
+        end
+
+        context 'asc' do
+          let(:order) { 'asc' }
+          it { is_expected.to eq([biere_dossier, vin_dossier, nothing_dossier].map(&:id)) }
+        end
+
+        context 'desc' do
+          let(:order) { 'desc' }
+          it { is_expected.to eq([nothing_dossier, vin_dossier, biere_dossier].map(&:id)) }
+        end
+      end
     end
 
     context 'for individual table' do

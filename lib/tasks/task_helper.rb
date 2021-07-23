@@ -15,17 +15,6 @@ def rake_print(*args)
   end
 end
 
-# Display progress of a long-running Rake task.
-#
-# Usage:
-#
-# ```
-# progress = ProgressReport.new(100)
-# (0..100).times do
-#   progress.inc
-# end
-# progress.finish
-# ````
 class ProgressReport
   def initialize(total)
     @start = Time.zone.now
