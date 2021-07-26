@@ -8,5 +8,10 @@
     %p.mb-2 Messages envoyés aux usagers :
     - @bulk_messages.each do |bulk_message|
       %li.mb-1 #{bulk_message.instructeur.email} a envoyé un message le #{bulk_message.sent_at.strftime('%d-%m-%Y')} à #{bulk_message.dossier_count} usagers, #{bulk_message.piece_jointe.blob.present? ? "avec" : "sans"} pièce jointe
-  %p.notice.mb-2.mt-4 Vous allez envoyer un message à #{pluralize(@dossiers_count, 'personne')} dans les groupes instructeurs : #{@groupe_instructeurs.join(', ')}.
-  = render partial: 'shared/dossiers/messages/form', locals: { commentaire: @commentaire, form_url: create_multiple_commentaire_instructeur_procedure_path(@procedure) }
+  - if @email_usagers_dossiers.present?
+    %p.notice.mb-2.mt-4 Vous allez envoyer un message à #{pluralize(@dossiers_count, 'personne')} dans les groupes instructeurs : #{@groupe_instructeurs.join(', ')}.
+    = render partial: 'shared/dossiers/messages/form', locals: { commentaire: @commentaire, form_url: create_multiple_commentaire_instructeur_procedure_path(@procedure) }
+  - else
+    .page-title.center
+      %h2 Il n'y a aucun dossier en brouillon dans vos groupes instructeurs
+
