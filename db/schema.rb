@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_22_133553) do
+ActiveRecord::Schema.define(version: 2021_07_27_172504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -169,6 +169,7 @@ ActiveRecord::Schema.define(version: 2021_07_22_133553) do
   create_table "bulk_messages_groupe_instructeurs", id: false, force: :cascade do |t|
     t.bigint "bulk_message_id"
     t.bigint "groupe_instructeur_id"
+    t.index ["bulk_message_id", "groupe_instructeur_id"], name: "index_bulk_msg_gi_on_bulk_msg_id_and_gi_id", unique: true
     t.index ["bulk_message_id"], name: "index_bulk_messages_groupe_instructeurs_on_bulk_message_id"
     t.index ["groupe_instructeur_id"], name: "index_bulk_messages_groupe_instructeurs_on_gi_id"
   end
