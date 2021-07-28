@@ -175,9 +175,9 @@ fr:
           got_it: "Bien reçu !"
           open_your_mailbox: "Maintenant ouvrez votre boite email."
           title: "Lien de réinitialisation du mot de passe envoyé"
-        shared:
-          email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
-          contact_us_if_any_trouble_html: "En cas de difficultés, nous restons joignables <a href=\"%{href}\">via ce formulaire</a>."
+      shared:
+        email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
+        contact_us_if_any_trouble_html: "En cas de difficultés, nous restons joignables <a href=\"%{href}\">via ce formulaire</a>."
   modal:
     publish:
       title:
