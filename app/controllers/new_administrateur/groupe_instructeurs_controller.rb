@@ -74,9 +74,19 @@ module NewAdministrateur
         .without_group(@groupe_instructeur)
     end
 
+    def reaffecter_bulk_messages(target_group)
+      bulk_messages = BulkMessage.joins(:groupe_instructeurs).where(groupe_instructeurs: { id: groupe_instructeur.id })
+      bulk_messages.each do |bulk_message|
+        bulk_message.groupe_instructeurs.delete(groupe_instructeur)
+        if !bulk_message.groupe_instructeur_ids.include?(target_group.id)
+          bulk_message.groupe_instructeurs << target_group
+        end
+      end
+    end
+
     def reaffecter
       target_group = procedure.groupe_instructeurs.find(params[:target_group])
-
+      reaffecter_bulk_messages(target_group)
       groupe_instructeur.dossiers.with_discarded.find_each do |dossier|
         dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
       end
