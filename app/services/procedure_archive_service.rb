@@ -27,7 +27,11 @@ class ProcedureArchiveService
     Zip::OutputStream.open(tmp_file) do |zipfile|
       files.each do |attachment, pj_filename|
         zipfile.put_next_entry("procedure-#{@procedure.id}/#{pj_filename}")
-        zipfile.puts(attachment.download)
+        begin
+          zipfile.puts(attachment.download)
+        rescue
+          raise "Problem while trying to attach #{pj_filename}"
+        end
       end
     end
 
