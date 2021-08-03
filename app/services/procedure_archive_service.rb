@@ -25,13 +25,18 @@ class ProcedureArchiveService
     tmp_file = Tempfile.new(['tc', '.zip'])
 
     Zip::OutputStream.open(tmp_file) do |zipfile|
+      bug_reports = ''
       files.each do |attachment, pj_filename|
         zipfile.put_next_entry("procedure-#{@procedure.id}/#{pj_filename}")
         begin
           zipfile.puts(attachment.download)
         rescue
-          raise "Problem while trying to attach #{pj_filename}"
+          bug_reports += "Impossible de récupérer le fichier #{pj_filename}\n"
         end
+      end
+      if !bug_reports.empty?
+        zipfile.put_next_entry("LISEZMOI.txt")
+        zipfile.puts(bug_reports)
       end
     end
 

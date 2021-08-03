@@ -95,6 +95,10 @@ class PiecesJustificativesService
     def attached?
       true
     end
+
+    def record_type
+      'Fake'
+    end
   end
 
   def self.generate_dossier_export(dossier)
