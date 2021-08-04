@@ -13,6 +13,6 @@
 #
 class BulkMessage < ApplicationRecord
   belongs_to :instructeur
-  has_one_attached :piece_jointe
   has_and_belongs_to_many :groupe_instructeurs
+  has_one_attached :piece_jointe
 end
