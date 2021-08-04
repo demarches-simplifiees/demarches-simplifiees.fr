@@ -27,7 +27,7 @@ class ProcedureArchiveService
     Zip::OutputStream.open(tmp_file) do |zipfile|
       bug_reports = ''
       files.each do |attachment, pj_filename|
-        zipfile.put_next_entry("procedure-#{@procedure.id}/#{pj_filename}")
+        zipfile.put_next_entry("#{zip_root_folder(@procedure)}/#{pj_filename}")
         begin
           zipfile.puts(attachment.download)
         rescue
@@ -35,7 +35,7 @@ class ProcedureArchiveService
         end
       end
       if !bug_reports.empty?
-        zipfile.put_next_entry("LISEZMOI.txt")
+        zipfile.put_next_entry("#{zip_root_folder(@procedure)}/LISEZMOI.txt")
         zipfile.puts(bug_reports)
       end
     end
@@ -57,6 +57,10 @@ class ProcedureArchiveService
   end
 
   private
+
+  def zip_root_folder(procedure)
+    "procedure-#{@procedure.id}"
+  end
 
   def create_list_of_attachments(dossiers)
     dossiers.flat_map do |dossier|
