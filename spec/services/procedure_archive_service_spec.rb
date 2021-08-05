@@ -90,7 +90,7 @@ describe ProcedureArchiveService do
           archive.file.open do |f|
             files = ZipTricks::FileReader.read_zip_structure(io: f)
             expect(files.size).to be 4
-            expect(files.last.filename).to include("LISEZMOI")
+            expect(files.last.filename).to eq("procedure-#{procedure.id}/LISEZMOI.txt")
             expect(extract(f, files.last)).to match(/Impossible de .*cni.*png/)
           end
         end
