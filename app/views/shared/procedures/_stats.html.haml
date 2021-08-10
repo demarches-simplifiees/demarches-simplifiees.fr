@@ -37,6 +37,7 @@
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title RÉPARTITION PAR SEMAINE
+      .stat-card-details au cours des 6 derniers mois
       .chart-container
         .chart
-          = line_chart @termines_by_week, colors: ["#387EC3", "#AE2C2B", "#FAD859"]
+          = line_chart @termines_by_week, colors: ["#387EC3", "#AE2C2B", "#FAD859"], ytitle: 'Nb dossiers'
