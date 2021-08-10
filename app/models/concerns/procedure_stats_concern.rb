@@ -52,7 +52,12 @@ module ProcedureStatsConcern
       # rubocop:disable Style/HashTransformValues
       dossier_state_values
         .map do |state|
-          { name: state, data: chart_data.where(state: state).group_by_week { |dossier| dossier.traitements.first.processed_at }.map { |k, v| [k, v.count] }.to_h }
+          {
+            name: state,
+            data: chart_data .where(state: state) .group_by_week do |dossier|
+              dossier.traitements.first.processed_at
+            end.map { |k, v| [k, v.count] }.to_h.transform_keys { |week| pretty_week(week) }
+          }
           # rubocop:enable Style/HashTransformValues
         end
     end
@@ -103,5 +108,9 @@ module ProcedureStatsConcern
 
   def pretty_month(month)
     I18n.l(month, format: "%B %Y")
+  end
+
+  def pretty_week(week)
+    I18n.l(week, format: '%d %b')
   end
 end
