@@ -5,6 +5,6 @@
         = render partial: "shared/dossiers/messages/message", locals: { commentaire: commentaire, connected_user: connected_user, messagerie_seen_at: messagerie_seen_at, show_reply_button: show_reply_button(commentaire, connected_user) }
 
   - if dossier.messagerie_available?
-    = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url }
+    = render partial: "shared/dossiers/messages/form", locals: { commentaire: new_commentaire, form_url: form_url, dossier: dossier }
   - else
     = render partial: "shared/dossiers/messages/messagerie_disabled", locals: { service: dossier.procedure.service, dossier: dossier }

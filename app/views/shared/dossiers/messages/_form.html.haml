@@ -1,8 +1,9 @@
-= form_for(commentaire, url: form_url, html: { class: 'form' }) do |f|
+= form_for(commentaire, url: form_url, html: { class: 'form', id: "commentaire-form-#{@dossier.id}" }) do |f|
+  - dossier = commentaire.dossier
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in?
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
-  = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea'
+  = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea', id: "messagerie-#{@dossier.id}"
   .flex.justify-between.wrap
     %div
       = f.label :piece_jointe, for: :piece_jointe do
@@ -12,3 +13,17 @@
 
     %div
       = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'button primary send', data: { disable: true }
+
+:javascript
+  const commentaireInput = document.getElementById('messagerie-#{@dossier.id}')
+  const commentaireForm = document.getElementById('commentaire-form-#{@dossier.id}')
+  commentaireInput.value = localStorage.getItem(`message-#{@dossier.id}`)
+
+  commentaireInput.addEventListener('change', (event) => {
+    localStorage.setItem(`message-#{@dossier.id}`, event.target.value);
+  });
+
+  commentaireForm.addEventListener('submit', () => {
+    localStorage.removeItem(`message-#{@dossier.id}`);
+  })
+
