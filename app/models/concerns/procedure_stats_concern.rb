@@ -31,11 +31,12 @@ module ProcedureStatsConcern
   end
 
   def stats_termines_states
+    nb_dossiers_termines = dossiers.state_termine.count
     Rails.cache.fetch("#{cache_key_with_version}/stats_termines_states", expires_in: 12.hours) do
       [
-        ['Acceptés', dossiers.where(state: :accepte).count],
-        ['Refusés', dossiers.where(state: :refuse).count],
-        ['Classés sans suite', dossiers.where(state: :sans_suite).count]
+        ['Acceptés', percentage(dossiers.where(state: :accepte).count, nb_dossiers_termines)],
+        ['Refusés', percentage(dossiers.where(state: :refuse).count, nb_dossiers_termines)],
+        ['Classés sans suite', percentage(dossiers.where(state: :sans_suite).count, nb_dossiers_termines)]
       ]
     end
   end
@@ -104,6 +105,10 @@ module ProcedureStatsConcern
 
   def convert_seconds_in_days(seconds)
     (seconds / 60.0 / 60.0 / 24.0).ceil
+  end
+
+  def percentage(value, total)
+    (100 * value / total.to_f).round(1)
   end
 
   def pretty_month(month)
