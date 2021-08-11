@@ -31,6 +31,15 @@ class S3Synchronization < ApplicationRecord
       AdministrationMailer.s3_synchronization_report.deliver_now
     end
 
+    def switch_synchronize
+      if Rails.configuration.active_storage.service == :local
+        upload(:s3, :local, false, nil)
+      else
+        upload(:local, :s3, false, nil)
+      end
+      AdministrationMailer.s3_synchronization_report.deliver_now
+    end
+
     def upload(from, to, under_rake, until_time)
       ActiveStorage::Blob.service
       configs = Rails.configuration.active_storage.service_configurations

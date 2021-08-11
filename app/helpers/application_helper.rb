@@ -173,4 +173,19 @@ module ApplicationHelper
   def show_outdated_browser_banner?
     !supported_browser? && !has_dismissed_outdated_browser_banner?
   end
+
+  def show_new_look_banner?
+    feature_enabled?(:new_look_banner) && !has_dismissed_new_look_banner?
+  end
+
+  def dismiss_new_look_banner
+    cookies[:dismissed_new_look_banner] = {
+      value: 'true',
+      expires: 1.week.from_now
+    }
+  end
+
+  def has_dismissed_new_look_banner?
+    cookies[:dismissed_new_look_banner] == 'true'
+  end
 end

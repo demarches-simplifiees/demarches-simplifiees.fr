@@ -786,6 +786,67 @@ describe API::V2::GraphqlController do
         end
       end
 
+      describe 'dossierRepasserEnInstruction' do
+        let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
+        let(:instructeur_id) { instructeur.to_typed_id }
+        let(:query) do
+          "mutation {
+            dossierRepasserEnInstruction(input: {
+              dossierId: \"#{dossier.to_typed_id}\",
+              instructeurId: \"#{instructeur_id}\"
+            }) {
+              dossier {
+                id
+                state
+                motivation
+              }
+              errors {
+                message
+              }
+            }
+          }"
+        end
+
+        context 'success' do
+          it "should repasser en instruction dossier" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierRepasserEnInstruction: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "en_instruction",
+                motivation: nil
+              },
+              errors: nil
+            })
+          end
+        end
+
+        context 'validation error' do
+          let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierRepasserEnInstruction: {
+              errors: [{ message: "Le dossier ne peut repasser en instruction lorsqu'il est en instruction" }],
+              dossier: nil
+            })
+          end
+        end
+
+        context 'instructeur error' do
+          let(:instructeur_id) { create(:instructeur).to_typed_id }
+
+          it "should fail" do
+            expect(gql_errors).to eq(nil)
+            expect(gql_data).to eq(dossierRepasserEnInstruction: {
+              errors: [{ message: 'L’instructeur n’a pas les droits d’accès à ce dossier' }],
+              dossier: nil
+            })
+          end
+        end
+      end
+
       describe 'dossierClasserSansSuite' do
         let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
         let(:query) do

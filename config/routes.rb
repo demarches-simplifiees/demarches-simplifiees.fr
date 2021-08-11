@@ -155,6 +155,7 @@ Rails.application.routes.draw do
   get "accessibilite" => "root#accessibilite"
   get "suivi" => "root#suivi"
   post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
+  post "dismiss_new_look" => "root#dismiss_new_look"
 
   get "contact", to: "support#index"
   post "contact", to: "support#create"

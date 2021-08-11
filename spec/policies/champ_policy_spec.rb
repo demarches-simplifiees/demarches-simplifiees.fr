@@ -6,8 +6,6 @@ describe ChampPolicy do
   let(:signed_in_user) { create(:user) }
   let(:account) { { user: signed_in_user } }
 
-  subject { Pundit.policy_scope(account, Champ) }
-
   let(:champ) { dossier.champs.first }
   let(:champ_private) { dossier.champs_private.first }
 
@@ -27,55 +25,115 @@ describe ChampPolicy do
     it { expect(subject.find_by(id: champ_private.id)).to eq(nil) }
   end
 
-  context 'when an user only has user rights' do
-    context 'as the dossier owner' do
-      let(:signed_in_user) { dossier_owner }
+  context 'Write Policy' do
+    subject { Pundit.policy_scope(account, Champ) }
 
-      it_behaves_like 'they can access a public champ'
-      it_behaves_like 'they can’t access a private champ'
+    context 'when an user only has user rights' do
+      context 'as the dossier owner' do
+        let(:signed_in_user) { dossier_owner }
+
+        it_behaves_like 'they can access a public champ'
+        it_behaves_like 'they can’t access a private champ'
+      end
+
+      context 'as a person invited on the dossier' do
+        let(:invite) { create(:invite, :with_user, dossier: dossier) }
+        let(:signed_in_user) { invite.user }
+
+        it_behaves_like 'they can access a public champ'
+        it_behaves_like 'they can’t access a private champ'
+      end
+
+      context 'as another user' do
+        let(:signed_in_user) { create(:user) }
+
+        it_behaves_like 'they can’t access a public champ'
+        it_behaves_like 'they can’t access a private champ'
+      end
     end
 
-    context 'as a person invited on the dossier' do
-      let(:invite) { create(:invite, :with_user, dossier: dossier) }
-      let(:signed_in_user) { invite.user }
+    context 'when the user also has instruction rights' do
+      let(:instructeur) { create(:instructeur, email: signed_in_user.email, password: signed_in_user.password) }
+      let(:account) { { user: signed_in_user, instructeur: instructeur } }
 
-      it_behaves_like 'they can access a public champ'
-      it_behaves_like 'they can’t access a private champ'
-    end
+      context 'as the dossier instructeur and owner' do
+        let(:signed_in_user) { dossier_owner }
+        before { instructeur.assign_to_procedure(dossier.procedure) }
 
-    context 'as another user' do
-      let(:signed_in_user) { create(:user) }
+        it_behaves_like 'they can access a public champ'
+        it_behaves_like 'they can access a private champ'
+      end
 
-      it_behaves_like 'they can’t access a public champ'
-      it_behaves_like 'they can’t access a private champ'
+      context 'as the dossier instructeur (but not owner)' do
+        let(:signed_in_user) { create(:user) }
+        before { instructeur.assign_to_procedure(dossier.procedure) }
+
+        it_behaves_like 'they can’t access a public champ'
+        it_behaves_like 'they can access a private champ'
+      end
+
+      context 'as an instructeur not assigned to the procedure' do
+        let(:signed_in_user) { create(:user) }
+
+        it_behaves_like 'they can’t access a public champ'
+        it_behaves_like 'they can’t access a private champ'
+      end
     end
   end
 
-  context 'when the user also has instruction rights' do
-    let(:instructeur) { create(:instructeur, email: signed_in_user.email, password: signed_in_user.password) }
-    let(:account) { { user: signed_in_user, instructeur: instructeur } }
+  context 'Read Policy' do
+    subject { ChampPolicy::ReadScope.new(account, Champ).resolve }
 
-    context 'as the dossier instructeur and owner' do
-      let(:signed_in_user) { dossier_owner }
-      before { instructeur.assign_to_procedure(dossier.procedure) }
+    context 'when an user only has user rights' do
+      context 'as the dossier owner' do
+        let(:signed_in_user) { dossier_owner }
 
-      it_behaves_like 'they can access a public champ'
-      it_behaves_like 'they can access a private champ'
+        it_behaves_like 'they can access a public champ'
+        it_behaves_like 'they can access a private champ'
+      end
+
+      context 'as a person invited on the dossier' do
+        let(:invite) { create(:invite, :with_user, dossier: dossier) }
+        let(:signed_in_user) { invite.user }
+
+        it_behaves_like 'they can access a public champ'
+        it_behaves_like 'they can access a private champ'
+      end
+
+      context 'as another user' do
+        let(:signed_in_user) { create(:user) }
+
+        it_behaves_like 'they can’t access a public champ'
+        it_behaves_like 'they can’t access a private champ'
+      end
     end
 
-    context 'as the dossier instructeur (but not owner)' do
-      let(:signed_in_user) { create(:user) }
-      before { instructeur.assign_to_procedure(dossier.procedure) }
+    context 'when the user also has instruction rights' do
+      let(:instructeur) { create(:instructeur, email: signed_in_user.email, password: signed_in_user.password) }
+      let(:account) { { user: signed_in_user, instructeur: instructeur } }
 
-      it_behaves_like 'they can’t access a public champ'
-      it_behaves_like 'they can access a private champ'
-    end
+      context 'as the dossier instructeur and owner' do
+        let(:signed_in_user) { dossier_owner }
+        before { instructeur.assign_to_procedure(dossier.procedure) }
 
-    context 'as an instructeur not assigned to the procedure' do
-      let(:signed_in_user) { create(:user) }
+        it_behaves_like 'they can access a public champ'
+        it_behaves_like 'they can access a private champ'
+      end
 
-      it_behaves_like 'they can’t access a public champ'
-      it_behaves_like 'they can’t access a private champ'
+      context 'as the dossier instructeur (but not owner)' do
+        let(:signed_in_user) { create(:user) }
+        before { instructeur.assign_to_procedure(dossier.procedure) }
+
+        it_behaves_like 'they can access a public champ'
+        it_behaves_like 'they can access a private champ'
+      end
+
+      context 'as an instructeur not assigned to the procedure' do
+        let(:signed_in_user) { create(:user) }
+
+        it_behaves_like 'they can’t access a public champ'
+        it_behaves_like 'they can’t access a private champ'
+      end
     end
   end
 end

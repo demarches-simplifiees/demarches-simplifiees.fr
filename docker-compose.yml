@@ -61,6 +61,7 @@ services:
       - APPLICATION_BASE_URL
       - APPLICATION_NAME
       - APP_HOST
+      - BANNER_MESSAGE
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
       - CRISP_CLIENT_KEY
@@ -107,6 +108,7 @@ services:
       - SIPF_CLIENT_ID
       - SIPF_CLIENT_SECRET
       - STORAGE
+      - STORAGE_SWITCH
       - TATOU_BASE_URL
       - TATOU_CLIENT_ID
       - TATOU_CLIENT_SECRET
@@ -150,6 +152,7 @@ services:
       - SENTRY_DSN_RAILS
       - SENTRY_ENABLED
       - STORAGE
+      - STORAGE_SWITCH
       - UNIVERSIGN_USERPWD
       - UNIVERSIGN_API_URL
       - WATERMARK_FILE
