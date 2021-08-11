@@ -18,4 +18,19 @@
 #  type_de_champ_id               :integer
 #
 class Champs::CommuneChamp < Champs::TextChamp
+  def for_export
+    return nil if value.blank?
+    commune_parts = parts
+    if commune_parts
+      "#{parts[:commune]} (code_postal : #{parts[:code_postal]} / code insee : #{external_id})"
+    else
+      value
+    end
+  end
+
+  private
+
+  def parts
+    value.match(/(?<commune>.*) \((?<code_postal>\d+)\)/)
+  end
 end
