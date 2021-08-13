@@ -108,9 +108,16 @@ GEM
     attr_encrypted (3.1.0)
       encryptor (~> 3.0.0)
     attr_required (1.0.1)
-    axe-matchers (2.6.1)
-      dumb_delegator (~> 0.8)
-      virtus (~> 1.0)
+    axe-core-api (4.2.1)
+      capybara
+      dumb_delegator
+      selenium-webdriver
+      virtus
+      watir
+    axe-core-rspec (4.2.1)
+      axe-core-api
+      dumb_delegator
+      virtus
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -230,11 +237,10 @@ GEM
       dotenv (= 2.7.6)
       railties (>= 3.2)
     dry-inflector (0.2.0)
-    dumb_delegator (0.8.1)
+    dumb_delegator (1.0.0)
     ecma-re-validator (0.3.0)
       regexp_parser (~> 2.0)
     encryptor (3.0.0)
-    equalizer (0.0.11)
     erubi (1.10.0)
     erubis (2.7.0)
     et-orbi (1.2.4)
@@ -731,13 +737,15 @@ GEM
       activemodel (>= 3.0.0)
       public_suffix
     vcr (6.0.0)
-    virtus (1.0.5)
+    virtus (2.0.0)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
-      equalizer (~> 0.0, >= 0.0.9)
     warden (1.2.9)
       rack (>= 2.0.9)
+    watir (6.19.1)
+      regexp_parser (>= 1.2, < 3)
+      selenium-webdriver (>= 3.142.7)
     web-console (4.1.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -785,7 +793,7 @@ DEPENDENCIES
   after_party
   anchored
   annotate
-  axe-matchers
+  axe-core-rspec
   bcrypt
   bootsnap (>= 1.4.4)
   brakeman
