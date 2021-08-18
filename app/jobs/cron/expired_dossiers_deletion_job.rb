@@ -4,5 +4,6 @@ class Cron::ExpiredDossiersDeletionJob < Cron::CronJob
   def perform(*args)
     ExpiredDossiersDeletionService.process_expired_dossiers_brouillon
     ExpiredDossiersDeletionService.process_expired_dossiers_en_construction
+    ExpiredDossiersDeletionService.process_expired_dossiers_termine
   end
 end
