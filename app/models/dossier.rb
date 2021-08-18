@@ -79,7 +79,37 @@ class Dossier < ApplicationRecord
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
   has_many :avis, inverse_of: :dossier, dependent: :destroy
   has_many :experts, through: :avis
-  has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy
+  has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy do
+    def accepter_automatiquement(processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:accepte),
+        process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
+        processed_at: processed_at)
+    end
+
+    def accepter(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:accepte),
+        instructeur_email: instructeur&.email,
+        motivation: motivation,
+        process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
+        processed_at: processed_at)
+    end
+
+    def refuser(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:refuse),
+        instructeur_email: instructeur&.email,
+        motivation: motivation,
+        process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
+        processed_at: processed_at)
+    end
+
+    def classer_sans_suite(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:sans_suite),
+        instructeur_email: instructeur&.email,
+        motivation: motivation,
+        process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
+        processed_at: processed_at)
+    end
+  end
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
 
@@ -271,7 +301,7 @@ class Dossier < ApplicationRecord
   scope :termine_close_to_expiration, -> do
     state_termine
       .joins(:procedure)
-      .where(id: Traitement.termine_close_to_expiration.pluck(:dossier_id).uniq)
+      .where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
   end
 
   scope :brouillon_expired, -> do
@@ -676,7 +706,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter(instructeur, motivation, justificatif = nil)
-    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
+    self.traitements.accepter(motivation: motivation, instructeur: instructeur)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -694,7 +724,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter_automatiquement
-    self.traitements.build(state: Dossier.states.fetch(:accepte), instructeur_email: nil, motivation: nil, processed_at: Time.zone.now)
+    self.traitements.accepter_automatiquement
     self.en_instruction_at ||= Time.zone.now
     self.declarative_triggered_at = Time.zone.now
 
@@ -709,7 +739,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_refuser(instructeur, motivation, justificatif = nil)
-    self.traitements.build(state: Dossier.states.fetch(:refuse), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
+    self.traitements.refuser(motivation: motivation, instructeur: instructeur)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -723,7 +753,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_classer_sans_suite(instructeur, motivation, justificatif = nil)
-    self.traitements.build(state: Dossier.states.fetch(:sans_suite), instructeur_email: instructeur.email, motivation: motivation, processed_at: Time.zone.now)
+    self.traitements.classer_sans_suite(motivation: motivation, instructeur: instructeur)
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
