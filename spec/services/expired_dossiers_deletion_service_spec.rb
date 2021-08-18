@@ -275,6 +275,11 @@ describe ExpiredDossiersDeletionService do
     after  { Timecop.return }
 
     before do
+      Flipper.enable(:procedure_process_expired_dossiers_termine, procedure)
+      Flipper.enable(:procedure_process_expired_dossiers_termine, procedure_2)
+    end
+
+    before do
       allow(DossierMailer).to receive(:notify_near_deletion_to_user).and_call_original
       allow(DossierMailer).to receive(:notify_near_deletion_to_administration).and_call_original
     end
@@ -342,6 +347,11 @@ describe ExpiredDossiersDeletionService do
   describe '#delete_expired_termine_and_notify' do
     before { Timecop.freeze(reference_date) }
     after  { Timecop.return }
+
+    before do
+      Flipper.enable(:procedure_process_expired_dossiers_termine, procedure)
+      Flipper.enable(:procedure_process_expired_dossiers_termine, procedure_2)
+    end
 
     before do
       allow(DossierMailer).to receive(:notify_automatic_deletion_to_user).and_call_original
