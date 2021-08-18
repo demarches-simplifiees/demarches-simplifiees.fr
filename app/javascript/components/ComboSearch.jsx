@@ -83,6 +83,9 @@ function ComboSearch({
           setExternalId('');
           setExternalValue(value);
         }
+      } else if (!value) {
+        setExternalId('');
+        setExternalValue('');
       }
     },
     [minimumInputLength]
