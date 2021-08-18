@@ -883,8 +883,8 @@ class Dossier < ApplicationRecord
     # Get all the champs values for the types de champ in the final list.
     # Dossier might not have corresponding champ – display nil.
     types_de_champ.flat_map do |type_de_champ|
-      Array.wrap(values[type_de_champ.stable_id] || [nil]).map do |champ_value, index|
-        [type_de_champ.libelle, champ_value]
+      Array.wrap(values[type_de_champ.stable_id] || [nil]).map.with_index do |champ_value, index|
+        [type_de_champ.libelle_for_export(index), champ_value]
       end
     end
   end
