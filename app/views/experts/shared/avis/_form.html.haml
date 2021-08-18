@@ -3,7 +3,7 @@
     %h1.tab-title Inviter des personnes à donner leur avis
     %p.avis-notice Les invités pourront consulter le dossier, donner un avis et contribuer au fil de messagerie. Ils ne pourront pas modifier le dossier.
 
-    = form_for avis, url: url, html: { class: 'form' } do |f|
+    = form_for avis, url: url, html: { class: 'form', data: { persisted_content_id: "expert-ask-avis-for-dossier-#{@avis.dossier.id}" } } do |f|
       - hidden_field_id = SecureRandom.uuid
       = hidden_field_tag  'avis[emails]', nil, data: { uuid: hidden_field_id }
       = react_component("ComboMultipleDropdownList",
@@ -12,7 +12,7 @@
           hiddenFieldId: hidden_field_id,
           label: 'avis_emails',
           acceptNewValues: true)
-      = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
+      = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true, class: 'persisted-input'
       %p.tab-title Ajouter une pièce jointe
       .form-group
         = text_upload_and_render f, avis.introduction_file
