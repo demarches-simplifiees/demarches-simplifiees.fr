@@ -1341,11 +1341,12 @@ describe Dossier do
   end
 
   describe "champs_for_export" do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune) }
     let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
     let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
     let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
     let(:explication_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
+    let(:commune_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:communes) } }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
 
@@ -1356,15 +1357,16 @@ describe Dossier do
         procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
         procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
         procedure.draft_revision.find_or_clone_type_de_champ(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
+        procedure.draft_revision.find_or_clone_type_de_champ(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
         procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
         dossier.reload
         procedure.reload
       end
 
       it "should have champs from all revisions" do
-        expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle])
-        expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, "New text field"])
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
+        expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle, commune_type_de_champ.libelle])
+        expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, 'Commune de naissance', "New text field"])
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code insee)", "New text field"])
         expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_procedure_presentation))
       end
     end

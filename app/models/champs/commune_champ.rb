@@ -18,4 +18,7 @@
 #  type_de_champ_id               :integer
 #
 class Champs::CommuneChamp < Champs::TextChamp
+  def for_export
+    [value, external_id]
+  end
 end
