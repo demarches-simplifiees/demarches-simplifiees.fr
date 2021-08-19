@@ -7,3 +7,6 @@ en:
         login_button: "Sign in with FranceConnect"
         help_link: What is FranceConnect ?
         separator: or
+      account:
+        already_user: "I already have an account"
+        create: 'Create an account'
