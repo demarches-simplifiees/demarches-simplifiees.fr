@@ -21,6 +21,10 @@ class TypesDeChamp::TypeDeChampBase
     ]
   end
 
+  def libelle_for_export(index)
+    libelle
+  end
+
   def build_champ
     @type_de_champ.champ.build
   end
