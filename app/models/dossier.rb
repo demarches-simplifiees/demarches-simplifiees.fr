@@ -876,15 +876,16 @@ class Dossier < ApplicationRecord
 
   def champs_for_export(types_de_champ)
     # Index values by stable_id
-    values = (champs + champs_private).reject(&:exclude_from_export?).reduce({}) do |champs, champ|
-      champs[champ.stable_id] = champ.for_export
-      champs
-    end
+    values = (champs + champs_private).reject(&:exclude_from_export?)
+      .index_by(&:stable_id)
+      .transform_values(&:for_export)
 
     # Get all the champs values for the types de champ in the final list.
     # Dossier might not have corresponding champ – display nil.
-    types_de_champ.map do |type_de_champ|
-      [type_de_champ.libelle, values[type_de_champ.stable_id]]
+    types_de_champ.flat_map do |type_de_champ|
+      Array.wrap(values[type_de_champ.stable_id] || [nil]).map.with_index do |champ_value, index|
+        [type_de_champ.libelle_for_export(index), champ_value]
+      end
     end
   end
 
