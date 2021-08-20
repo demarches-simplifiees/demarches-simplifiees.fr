@@ -30,6 +30,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  help: 'Help'
   utils:
     deconnexion: "Log out"
     pj: "Attachments"
@@ -51,6 +52,23 @@ en:
         existing_dossiers: You already have files for this procedure
         show_dossiers: View my current files
         start_new_dossier: Start a new file
+        already_draft: "You already started to fill a file"
+        already_draft_detail_html: "You started to fill a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
+        already_not_draft: "You already submitted a file"
+        already_not_draft_detail_html: "You submitted a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>."
+        continue_file: "Continue to fill my file"
+        start_new_file: "Start a new file"
+        show_my_submitted_file: 'Show my submitted file'
+        want_empty_pdf: "You prefer to submit a paper form? You can download an empty PDF file, and send it to the right administration : %{service} - %{adresse}"
+        download_empty_pdf: 'Download an empty PDF file'
+    registrations:
+      new:
+        title: "Create an account %{name}"
+        email_label: 'Email (name@site.com)'
+        email_placeholder: 'Your email address'
+        wanna_say: 'Do you mean to say'
+        password_label: "Password (%{min_length} characters minimum)"
+        password_placeholder: "%{min_length} characters minimum"
     invites:
       dropdown:
         invite_to_edit: Invite someone to edit this file

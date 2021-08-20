@@ -15,3 +15,8 @@ fr:
         login_button: "S’identifier avec FranceConnect"
         help_link: "Qu’est-ce que FranceConnect ?"
         separator: 'ou'
+      account:
+        already_user_question: 'Vous avez déjà un compte ?'
+        already_user: 'J’ai déjà un compte'
+        create: 'Créer un compte'
+        signin: 'Connexion'
