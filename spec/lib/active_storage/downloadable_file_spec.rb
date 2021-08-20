@@ -1,12 +1,12 @@
 describe ActiveStorage::DownloadableFile do
-  let(:dossier) { create(:dossier, :en_construction, :with_pdf_export) }
+  let(:dossier) { create(:dossier, :en_construction) }
 
   subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossier(dossier) }
 
   describe 'create_list_from_dossier' do
     context 'when no piece_justificative is present' do
       it { expect(list.length).to eq 1 }
-      it { expect(list.first[0].record_type).to eq "Dossier" }
+      it { expect(list.first[0].name).to eq "pdf_export_for_instructeur" }
     end
 
     context 'when there is a piece_justificative' do
@@ -27,7 +27,7 @@ describe ActiveStorage::DownloadableFile do
 
     context 'when there is a repetition bloc' do
       before do
-        dossier.champs << build(:champ_repetition_with_piece_jointe, dossier: dossier)
+        dossier.champs << create(:champ_repetition_with_piece_jointe, dossier: dossier)
       end
 
       it 'should have 4 piece_justificatives' do

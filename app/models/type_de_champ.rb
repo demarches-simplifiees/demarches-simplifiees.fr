@@ -61,7 +61,7 @@ class TypeDeChamp < ApplicationRecord
   has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_many :revisions, through: :revision_types_de_champ
 
-  delegate :tags_for_template, to: :dynamic_type
+  delegate :tags_for_template, :libelle_for_export, to: :dynamic_type
 
   class WithIndifferentAccess
     def self.load(options)
@@ -174,6 +174,10 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
+  def header_section?
+    type_champ == TypeDeChamp.type_champs.fetch(:header_section)
+  end
+
   def linked_drop_down_list?
     type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
   end
@@ -202,6 +206,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
   end
 
+  def carte?
+    type_champ == TypeDeChamp.type_champs.fetch(:carte)
+  end
+
   def public?
     !private?
   end
@@ -219,6 +227,12 @@ class TypeDeChamp < ApplicationRecord
   def piece_justificative_template_filename
     if piece_justificative_template.attached?
       piece_justificative_template.filename
+    end
+  end
+
+  def piece_justificative_template_checksum
+    if piece_justificative_template.attached?
+      piece_justificative_template.checksum
     end
   end
 
@@ -250,6 +264,16 @@ class TypeDeChamp < ApplicationRecord
     (drop_down_list_options - drop_down_list_disabled_options).reject(&:empty?)
   end
 
+  def layer_enabled?(layer)
+    options && options[layer] && options[layer] != '0'
+  end
+
+  def carte_optional_layers
+    TypesDeChamp::CarteTypeDeChamp::LAYERS.filter_map do |layer|
+      layer_enabled?(layer) ? layer : nil
+    end.sort
+  end
+
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
   end
@@ -259,16 +283,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def editable_options
-    options.slice(:cadastres,
-      :unesco,
-      :arretes_protection,
-      :conservatoire_littoral,
-      :reserves_chasse_faune_sauvage,
-      :reserves_biologiques,
-      :reserves_naturelles,
-      :natura_2000,
-      :zones_humides,
-      :znieff)
+    options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
   end
 
   FEATURE_FLAGS = {}
@@ -352,25 +367,6 @@ class TypeDeChamp < ApplicationRecord
   def remove_repetition
     if !repetition?
       types_de_champ.destroy_all
-    end
-  end
-
-  def clone_attachments(original, kopy)
-    if original.is_a?(TypeDeChamp)
-      clone_attachment(:piece_justificative_template, original, kopy)
-    end
-  end
-
-  def clone_attachment(attribute, original, kopy)
-    original_attachment = original.send(attribute)
-    if original_attachment.attached?
-      kopy.send(attribute).attach({
-        io: StringIO.new(original_attachment.download),
-        filename: original_attachment.filename,
-        content_type: original_attachment.content_type,
-        # we don't want to run virus scanner on cloned file
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      })
     end
   end
 end

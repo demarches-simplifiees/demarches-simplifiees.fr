@@ -2,23 +2,23 @@ class ApplicationController < ActionController::Base
   include TrustedDeviceConcern
   include Pundit
   include Devise::StoreLocationExtension
+  include ApplicationController::LongLivedAuthenticityToken
+  include ApplicationController::ErrorHandling
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception, if: -> { !Rails.env.test? }
   before_action :set_current_roles
   before_action :set_sentry_user
   before_action :redirect_if_untrusted
-  before_action :reject, if: -> { feature_enabled?(:maintenance_mode) }
+  before_action :reject, if: -> { ENV.fetch("MAINTENANCE_MODE", 'false') == 'true' }
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   before_action :staging_authenticate
   before_action :set_active_storage_host
   before_action :setup_javascript_settings
   before_action :setup_tracking
-  before_action :set_locale
+
+  around_action :switch_locale
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,
     :administrateur_signed_in?, :current_administrateur, :current_account
@@ -243,7 +243,7 @@ class ApplicationController < ActionController::Base
     sentry = Rails.application.secrets.sentry
 
     {
-      key: sentry[:client_key],
+      key: sentry[:js_client_key],
       enabled: sentry[:enabled],
       environment: sentry[:environment],
       browser: { modern: BrowserSupport.supported?(browser) },
@@ -308,9 +308,15 @@ class ApplicationController < ActionController::Base
     current_user&.email
   end
 
-  def set_locale
-    if feature_enabled?(:localization)
-      I18n.locale = http_accept_language.compatible_language_from(I18n.available_locales)
+  def switch_locale(&action)
+    locale = nil
+    if cookies[:locale]
+      locale = cookies[:locale]
+    elsif ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true'
+      locale = http_accept_language.compatible_language_from(I18n.available_locales)
+    else
+      locale = I18n.default_locale
     end
+    I18n.with_locale(locale, &action)
   end
 end

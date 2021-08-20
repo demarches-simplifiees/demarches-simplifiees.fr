@@ -51,7 +51,7 @@ module Users
       if dossier.attestation&.pdf&.attached?
         redirect_to dossier.attestation.pdf.service_url
       else
-        flash.notice = "L'attestation n'est plus disponible sur ce dossier."
+        flash.notice = t('.no_longer_available')
         redirect_to dossier_path(dossier)
       end
     end
@@ -66,7 +66,7 @@ module Users
 
       if @dossier.individual.update(individual_params)
         @dossier.update!(autorisation_donnees: true)
-        flash.notice = "Identité enregistrée"
+        flash.notice = t('.identity_saved')
 
         redirect_to brouillon_dossier_path(@dossier)
       else
@@ -116,7 +116,7 @@ module Users
 
       # Redirect if the user attempts to access the page URL directly
       if !@dossier.etablissement
-        flash.alert = 'Aucun établissement n’est associé à ce dossier'
+        flash.alert = t('.no_establishment')
         return redirect_to siret_dossier_path(@dossier)
       end
     end
@@ -143,7 +143,7 @@ module Users
 
       if passage_en_construction? && errors.blank?
         @dossier.passer_en_construction!
-        NotificationMailer.send_initiated_notification(@dossier).deliver_later
+        NotificationMailer.send_en_construction_notification(@dossier).deliver_later
         @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
           DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
         end
@@ -151,7 +151,7 @@ module Users
       elsif errors.present?
         flash.now.alert = errors
       else
-        flash.now.notice = 'Votre brouillon a bien été sauvegardé.'
+        flash.now.notice = t('.draft_saved')
       end
 
       respond_to do |format|
@@ -161,8 +161,8 @@ module Users
     end
 
     def extend_conservation
-      dossier.update(en_construction_conservation_extension: dossier.en_construction_conservation_extension + 1.month)
-      flash[:notice] = 'Votre dossier sera conservé un mois supplémentaire'
+      dossier.update(conservation_extension: dossier.conservation_extension + 1.month)
+      flash[:notice] = t('.archived_dossier')
       redirect_to dossier_path(@dossier)
     end
 
@@ -197,7 +197,7 @@ module Users
           .each do |instructeur|
           DossierMailer.notify_new_commentaire_to_instructeur(dossier, instructeur.email).deliver_later
         end
-        flash.notice = "Votre message a bien été envoyé à l’instructeur en charge de votre dossier."
+        flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)
       else
         flash.now.alert = @commentaire.errors.full_messages
@@ -210,10 +210,10 @@ module Users
 
       if dossier.can_be_deleted_by_user?
         dossier.discard_and_keep_track!(current_user, :user_request)
-        flash.notice = 'Votre dossier a bien été supprimé.'
+        flash.notice = t('.deleted_dossier')
         redirect_to dossiers_path
       else
-        flash.notice = "L'instruction de votre dossier a commencé, il n'est plus possible de supprimer votre dossier. Si vous souhaitez annuler l'instruction contactez votre administration par la messagerie de votre dossier."
+        flash.notice = t('.undergoingreview')
         redirect_to dossier_path(dossier)
       end
     end
@@ -242,18 +242,18 @@ module Users
       erase_user_location!
 
       begin
-        if params[:brouillon]
-          procedure = Procedure.brouillon.find(params[:procedure_id])
+        procedure = if params[:brouillon]
+          Procedure.publiees.or(Procedure.brouillons).find(params[:procedure_id])
         else
-          procedure = Procedure.publiees.find(params[:procedure_id])
+          Procedure.publiees.find(params[:procedure_id])
         end
       rescue ActiveRecord::RecordNotFound
         flash.alert = t('errors.messages.procedure_not_found')
-        return redirect_to url_for dossiers_path
+        return redirect_to dossiers_path
       end
 
       dossier = Dossier.new(
-        revision: procedure.active_revision,
+        revision: params[:brouillon] ? procedure.draft_revision : procedure.active_revision,
         groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
@@ -303,14 +303,14 @@ module Users
     end
 
     def show_demarche_en_test_banner
-      if @dossier.present? && @dossier.procedure.brouillon?
-        flash.now.alert = "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l'administrateur (ajout d'un champ, publication de la démarche...) entraînera sa suppression."
+      if @dossier.present? && @dossier.revision.draft?
+        flash.now.alert = t('.test_procedure')
       end
     end
 
     def ensure_dossier_can_be_updated
       if !dossier.can_be_updated_by_user?
-        flash.alert = 'Votre dossier ne peut plus être modifié'
+        flash.alert = t('.no_longer_editable')
         redirect_to dossiers_path
       end
     end
@@ -360,12 +360,12 @@ module Users
 
       if champs_params[:dossier]
         @dossier.assign_attributes(champs_params[:dossier])
-        # FIXME in some cases a removed repetition bloc row is submitted.
-        # In this case it will be trated as a new records and action will fail.
+        # FIXME: in some cases a removed repetition bloc row is submitted.
+        # In this case it will be treated as a new record, and the action will fail.
         @dossier.champs.filter(&:repetition?).each do |champ|
           champ.champs = champ.champs.filter(&:persisted?)
         end
-        if @dossier.champs.any?(&:changed?)
+        if @dossier.champs.any?(&:changed_for_autosave?)
           @dossier.last_champ_updated_at = Time.zone.now
         end
         if !@dossier.save
@@ -411,7 +411,7 @@ module Users
     end
 
     def forbidden!
-      flash[:alert] = "Vous n'avez pas accès à ce dossier"
+      flash[:alert] = t('.no_access')
       redirect_to root_path
     end
 

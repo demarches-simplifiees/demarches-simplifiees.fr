@@ -13,6 +13,7 @@ describe Users::CommencerController, type: :controller do
         expect(subject.status).to eq(200)
         expect(subject).to render_template('show')
         expect(assigns(:procedure)).to eq published_procedure
+        expect(assigns(:revision)).to eq published_procedure.published_revision
       end
     end
 
@@ -43,6 +44,7 @@ describe Users::CommencerController, type: :controller do
         expect(subject.status).to eq(200)
         expect(subject).to render_template('show')
         expect(assigns(:procedure)).to eq draft_procedure
+        expect(assigns(:revision)).to eq draft_procedure.draft_revision
       end
     end
 

@@ -1,0 +1,20 @@
+- avis_link = expert_avis_url(@dossier.procedure, @avis)
+%p
+  Bonjour,
+
+%p
+  Une décision a été rendue sur le dossier n°
+  %strong= @dossier.id
+  et ce dossier a préalablement reçu votre avis.
+%p
+  Le dossier a été
+  = succeed '.' do
+    %strong= @decision
+
+%p
+  Pour plus d’informations, cliquez sur le lien ci-dessous :
+
+%p
+  = round_button("Voir le dossier", avis_link, :primary)
+
+= render partial: "layouts/mailers/signature"

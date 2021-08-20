@@ -25,7 +25,8 @@ describe Champs::CarteController, type: :controller do
     let(:params) do
       {
         champ_id: champ.id,
-        feature: feature
+        feature: feature,
+        source: GeoArea.sources.fetch(:selection_utilisateur)
       }
     end
 
@@ -40,23 +41,38 @@ describe Champs::CarteController, type: :controller do
         post :create, params: params
       end
 
-      it { expect(response.status).to eq 201 }
+      context 'success' do
+        it { expect(response.status).to eq 201 }
+      end
+
+      context 'error' do
+        let(:feature) { attributes_for(:geo_area, :invalid_right_hand_rule_polygon) }
+        let(:params) do
+          {
+            champ_id: champ.id,
+            feature: feature,
+            source: GeoArea.sources.fetch(:selection_utilisateur)
+          }
+        end
+
+        it { expect(response.status).to eq 422 }
+      end
     end
 
     describe 'PATCH #update' do
+      let(:params) do
+        {
+          champ_id: champ.id,
+          id: geo_area.id,
+          feature: feature
+        }
+      end
+
       before do
         patch :update, params: params
       end
 
       context 'update geometry' do
-        let(:params) do
-          {
-            champ_id: champ.id,
-            id: geo_area.id,
-            feature: feature
-          }
-        end
-
         it { expect(response.status).to eq 204 }
       end
 
@@ -68,18 +84,17 @@ describe Champs::CarteController, type: :controller do
             }
           }
         end
-        let(:params) do
-          {
-            champ_id: champ.id,
-            id: geo_area.id,
-            feature: feature
-          }
-        end
 
         it {
           expect(response.status).to eq 204
           expect(geo_area.reload.description).to eq('un point')
         }
+      end
+
+      context 'error' do
+        let(:feature) { attributes_for(:geo_area, :invalid_right_hand_rule_polygon) }
+
+        it { expect(response.status).to eq 422 }
       end
     end
 
@@ -98,68 +113,36 @@ describe Champs::CarteController, type: :controller do
       it { expect(response.status).to eq 204 }
     end
 
-    describe 'POST #import' do
-      render_views
-
-      let(:params) do
-        {
-          champ_id: champ.id,
-          features: [feature]
-
-        }
-      end
-
-      before do
-        post :import, params: params
-      end
-
-      it {
-        expect(response.status).to eq 201
-        expect(response.body).to include("bbox")
-      }
-    end
-
     describe 'GET #index' do
       render_views
 
       before do
-        request.accept = "application/javascript"
-        request.content_type = "application/javascript"
+        get :index, params: params, format: :js, xhr: true
       end
 
-      context 'with cadastres update' do
+      context 'without focus' do
+        let(:params) do
+          { champ_id: champ.id }
+        end
+
+        it 'updates the list' do
+          expect(response.body).not_to include("DS.fire('map:feature:focus'")
+          expect(response.status).to eq 200
+        end
+      end
+
+      context "update list and focus" do
         let(:params) do
           {
             champ_id: champ.id,
-            cadastres: 'update'
+            focus: true
           }
         end
 
-        before do
-          get :index, params: params
-        end
-
-        it {
+        it 'updates the list and focuses the map' do
+          expect(response.body).to include("DS.fire('map:feature:focus'")
           expect(response.status).to eq 200
-          expect(response.body).to include("DS.fire('cadastres:update'")
-        }
-      end
-
-      context 'without cadastres update' do
-        let(:params) do
-          {
-            champ_id: champ.id
-          }
         end
-
-        before do
-          get :index, params: params
-        end
-
-        it {
-          expect(response.status).to eq 200
-          expect(response.body).not_to include("DS.fire('cadastres:update'")
-        }
       end
     end
   end

@@ -1,6 +1,12 @@
 module NewAdministrateur
   class GroupeInstructeursController < AdministrateurController
+    include ActiveSupport::NumberHelper
     ITEMS_PER_PAGE = 25
+    CSV_MAX_SIZE = 1.megabytes
+    CSV_ACCEPTED_CONTENT_TYPES = [
+      "text/csv",
+      "application/vnd.ms-excel"
+    ]
 
     def index
       @procedure = procedure
@@ -68,9 +74,19 @@ module NewAdministrateur
         .without_group(@groupe_instructeur)
     end
 
+    def reaffecter_bulk_messages(target_group)
+      bulk_messages = BulkMessage.joins(:groupe_instructeurs).where(groupe_instructeurs: { id: groupe_instructeur.id })
+      bulk_messages.each do |bulk_message|
+        bulk_message.groupe_instructeurs.delete(groupe_instructeur)
+        if !bulk_message.groupe_instructeur_ids.include?(target_group.id)
+          bulk_message.groupe_instructeurs << target_group
+        end
+      end
+    end
+
     def reaffecter
       target_group = procedure.groupe_instructeurs.find(params[:target_group])
-
+      reaffecter_bulk_messages(target_group)
       groupe_instructeur.dossiers.with_discarded.find_each do |dossier|
         dossier.assign_to_groupe_instructeur(target_group, current_administrateur)
       end
@@ -158,6 +174,39 @@ module NewAdministrateur
         notice: "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
     end
 
+    def import
+      if !CSV_ACCEPTED_CONTENT_TYPES.include?(group_csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
+        flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+
+      elsif group_csv_file.size > CSV_MAX_SIZE
+        flash[:alert] = "Importation impossible : la poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+
+      else
+        file = group_csv_file.read
+        base_encoding = CharlockHolmes::EncodingDetector.detect(file)
+        groupes_emails = CSV.new(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
+          .map { |r| r.to_h.slice('groupe', 'email') }
+
+        groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")
+
+        if groupes_emails_has_keys.blank?
+          flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/import-groupe-test.csv")}"
+        else
+          add_instructeurs_and_get_errors = InstructeursImportService.import(procedure, groupes_emails)
+
+          if add_instructeurs_and_get_errors.empty?
+            flash[:notice] = "La liste des instructeurs a été importée avec succès"
+          else
+            flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{add_instructeurs_and_get_errors.join(', ')}"
+          end
+        end
+
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      end
+    end
+
     private
 
     def create_instructeur(email)
@@ -213,6 +262,14 @@ module NewAdministrateur
       all = current_administrateur.instructeurs.map(&:email)
       assigned = groupe_instructeur.instructeurs.map(&:email)
       (all - assigned).sort
+    end
+
+    def group_csv_file
+      params[:group_csv_file]
+    end
+
+    def marcel_content_type
+      Marcel::MimeType.for(group_csv_file.read, name: group_csv_file.original_filename, declared_type: group_csv_file.content_type)
     end
   end
 end

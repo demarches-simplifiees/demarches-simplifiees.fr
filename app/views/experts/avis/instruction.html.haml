@@ -8,15 +8,15 @@
     %h2.claimant
       Demandeur :
       %span.email= @avis.claimant.email
-      %span.date Demande d'avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
+      %span.date Demande d’avis envoyée le #{l(@avis.created_at, format: '%d/%m/%y')}
     %p.introduction= @avis.introduction
 
     - if @avis.introduction_file.attached?
       = render partial: 'shared/attachment/show', locals: { attachment: @avis.introduction_file.attachment }
     %br/
 
-    = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { class: 'form' } do |f|
-      = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true
+    = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { class: 'form', data: { persisted_content_id: @avis.id } } do |f|
+      = f.text_area :answer, rows: 3, placeholder: 'Votre avis', required: true, class: 'persisted-input'
       = text_upload_and_render f, @avis.piece_justificative_file
 
       .flex.justify-between.align-baseline
@@ -24,7 +24,7 @@
           - if @avis.confidentiel?
             %span.icon.lock
             %span
-              Cet avis est confidentiel et n'est pas affiché aux autres experts consultés
+              Cet avis est confidentiel et n’est pas affiché aux autres experts consultés
           - else
             %span
               Cet avis est partagé avec les autres experts

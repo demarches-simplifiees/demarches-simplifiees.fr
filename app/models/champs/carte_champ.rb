@@ -36,36 +36,16 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def layer_enabled?(layer)
-    type_de_champ.options && type_de_champ.options[layer] && type_de_champ.options[layer] != '0'
-  end
-
   def cadastres?
-    layer_enabled?(:cadastres)
+    type_de_champ.layer_enabled?(:cadastres)
   end
 
   def optional_layers
-    [
-      :unesco,
-      :arretes_protection,
-      :conservatoire_littoral,
-      :reserves_chasse_faune_sauvage,
-      :reserves_biologiques,
-      :reserves_naturelles,
-      :natura_2000,
-      :zones_humides,
-      :znieff,
-      :cadastres
-    ].map do |layer|
-      layer_enabled?(layer) ? layer : nil
-    end.compact
+    type_de_champ.carte_optional_layers
   end
 
   def render_options
-    {
-      ign: Flipper.enabled?(:carte_ign, procedure),
-      layers: optional_layers
-    }
+    { layers: optional_layers }
   end
 
   def position
@@ -85,7 +65,7 @@ class Champs::CarteChamp < Champ
     bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
 
     if geo_areas.present?
-      geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+      geo_areas.filter_map(&:rgeo_geometry).each do |geometry|
         bounding_box.add(geometry)
       end
     elsif dossier.present?
@@ -127,6 +107,10 @@ class Champs::CarteChamp < Champ
 
   def for_export
     nil
+  end
+
+  def blank?
+    geo_areas.blank?
   end
 
   private

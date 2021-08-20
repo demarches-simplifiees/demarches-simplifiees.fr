@@ -11,7 +11,7 @@ Dotenv::Railtie.load
 module TPS
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 6.1
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -38,25 +38,8 @@ module TPS
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.precompile += ['.woff']
 
-    # The default list used to be accessible through `ActionView::Base.sanitized_allowed_tags`,
-    # but a regression in Rails 6.0 makes it unavailable.
-    # It should be fixed in Rails 6.1.
-    # See https://github.com/rails/rails/issues/39586
-    # default_allowed_tags = ActionView::Base.sanitized_allowed_tags
-    default_allowed_tags = ['strong', 'em', 'b', 'i', 'p', 'code', 'pre', 'tt', 'samp', 'kbd', 'var', 'sub', 'sup', 'dfn', 'cite', 'big', 'small', 'address', 'hr', 'br', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'abbr', 'acronym', 'a', 'img', 'blockquote', 'del', 'ins']
+    default_allowed_tags = ActionView::Base.sanitized_allowed_tags
     config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u']
-
-    # Some mobile browsers have a behaviour where, although they will delete the session
-    # cookie when the browser shutdowns, they will still serve a cached version
-    # of the page on relaunch.
-    # The CSRF token in the HTML is then mismatched with the CSRF token in the session cookie
-    # (because the session cookie has been cleared). This causes form submissions to fail with
-    # a "ActionController::InvalidAuthenticityToken" exception.
-    # To prevent this, tell browsers to never cache the HTML of a page.
-    # (This doesn’t affect assets files, which are still sent with the proper cache headers).
-    #
-    # See https://github.com/rails/rails/issues/21948
-    config.action_dispatch.default_headers['Cache-Control'] = 'no-store, no-cache'
 
     # ActionDispatch's IP spoofing detection is quite limited, and often rejects
     # legitimate requests from misconfigured proxies (such as mobile telcos).
@@ -65,13 +48,20 @@ module TPS
     # disable the check performed by Rails.
     config.action_dispatch.ip_spoofing_check = false
 
+    # Set the queue name for the mail delivery jobs to 'mailers'
+    config.action_mailer.deliver_later_queue_name = :mailers
+
+    # Set the queue name for the analysis jobs to 'active_storage_analysis'
+    config.active_storage.queues.analysis = :active_storage_analysis
+
     config.to_prepare do
       # Make main application helpers available in administrate
       Administrate::ApplicationController.helper(TPS::Application.helpers)
     end
 
     config.middleware.use Rack::Attack
-    config.middleware.use Flipper::Middleware::Memoizer, preload_all: true
+    config.middleware.use Flipper::Middleware::Memoizer,
+      preload: [:instructeur_bypass_email_login_token]
 
     config.ds_env = ENV.fetch('DS_ENV', Rails.env)
 

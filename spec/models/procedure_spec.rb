@@ -206,18 +206,25 @@ describe Procedure do
         end
       end
 
-      context 'api_entreprise_token' do
-        let(:valid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
-        let(:invalid_token) { 'plouf' }
-        it { is_expected.to allow_value(valid_token).for(:api_entreprise_token) }
-        it { is_expected.not_to allow_value(invalid_token).for(:api_entreprise_token) }
+      context 'when juridique_required is false' do
+        let(:procedure) { build(:procedure, juridique_required: false, cadre_juridique: nil) }
+
+        it { expect(procedure.valid?).to eq(true) }
       end
     end
 
-    context 'when juridique_required is false' do
-      let(:procedure) { build(:procedure, juridique_required: false, cadre_juridique: nil) }
+    context 'api_entreprise_token' do
+      let(:valid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c" }
+      let(:invalid_token) { 'plouf' }
+      it { is_expected.to allow_value(valid_token).for(:api_entreprise_token) }
+      it { is_expected.not_to allow_value(invalid_token).for(:api_entreprise_token) }
+    end
 
-      it { expect(procedure.valid?).to eq(true) }
+    context 'api_particulier_token' do
+      let(:valid_token) { "3841b13fa8032ed3c31d160d3437a76a" }
+      let(:invalid_token) { 'jet0n 1nvalide' }
+      it { is_expected.to allow_value(valid_token).for(:api_particulier_token) }
+      it { is_expected.not_to allow_value(invalid_token).for(:api_particulier_token) }
     end
 
     context 'monavis' do
@@ -625,6 +632,7 @@ describe Procedure do
         expect(procedure.draft_revision).not_to be_nil
         expect(procedure.revisions.count).to eq(2)
         expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
+        expect(procedure.published_revision.published_at).to eq(now)
       end
     end
 
@@ -649,10 +657,35 @@ describe Procedure do
         expect(procedure.canonical_procedure).to eq(canonical_procedure)
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
+        expect(procedure.published_revision.published_at).to eq(now)
       end
 
       it 'unpublishes parent procedure' do
         expect(parent_procedure.unpublished_at).to eq(now)
+      end
+    end
+
+    context 'when republishing a previously closed procedure' do
+      let(:procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
+
+      before do
+        procedure.close!
+        Timecop.freeze(now) do
+          procedure.publish_or_reopen!(administrateur)
+        end
+      end
+
+      it 'changes the procedure state to published' do
+        expect(procedure.closed_at).to be_nil
+        expect(procedure.published_at).to eq(now)
+        expect(procedure.published_revision.published_at).not_to eq(now)
+      end
+
+      it "doesn't create a new revision" do
+        expect(procedure.published_revision).not_to be_nil
+        expect(procedure.draft_revision).not_to be_nil
+        expect(procedure.revisions.count).to eq(2)
+        expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
       end
     end
   end
@@ -901,7 +934,7 @@ describe Procedure do
         ])
     end
 
-    let(:dossier) { procedure.new_dossier }
+    let(:dossier) { procedure.active_revision.new_dossier }
 
     it { expect(dossier.procedure).to eq(procedure) }
 
@@ -954,60 +987,6 @@ describe Procedure do
     end
   end
 
-  describe '#usual_traitement_time' do
-    let(:procedure) { create(:procedure) }
-
-    def create_dossier(construction_date:, instruction_date:, processed_date:)
-      dossier = create(:dossier, :accepte, procedure: procedure, en_construction_at: construction_date, en_instruction_at: instruction_date, processed_at: processed_date)
-    end
-
-    before do
-      Timecop.freeze(Time.utc(2019, 6, 1, 12, 0))
-
-      delays.each do |delay|
-        create_dossier(construction_date: 1.week.ago - delay, instruction_date: 1.week.ago - delay + 12.hours, processed_date: 1.week.ago)
-      end
-    end
-
-    after { Timecop.return }
-
-    context 'when there are several processed dossiers' do
-      let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
-
-      it 'returns a time representative of the dossier instruction delay' do
-        expect(procedure.usual_traitement_time).to be_between(3.days, 4.days)
-      end
-    end
-
-    context 'when there are very old dossiers' do
-      let(:delays) { [2.days, 2.days] }
-      let!(:old_dossier) { create_dossier(construction_date: 3.months.ago, instruction_date: 2.months.ago, processed_date: 2.months.ago) }
-
-      it 'ignores dossiers older than 1 month' do
-        expect(procedure.usual_traitement_time).to be_within(1.hour).of(2.days)
-      end
-    end
-
-    context 'when there is a dossier with bad data' do
-      let(:delays) { [2.days, 2.days] }
-      let!(:bad_dossier) { create_dossier(construction_date: nil, instruction_date: nil, processed_date: 10.days.ago) }
-
-      it 'ignores bad dossiers' do
-        expect(procedure.usual_traitement_time).to be_within(1.hour).of(2.days)
-      end
-    end
-
-    context 'when there is only one processed dossier' do
-      let(:delays) { [1.day] }
-      it { expect(procedure.usual_traitement_time).to be_within(1.hour).of(1.day) }
-    end
-
-    context 'where there is no processed dossier' do
-      let(:delays) { [] }
-      it { expect(procedure.usual_traitement_time).to be_nil }
-    end
-  end
-
   describe '.ensure_a_groupe_instructeur_exists' do
     let!(:procedure) { create(:procedure) }
 
@@ -1031,135 +1010,37 @@ describe Procedure do
     end
   end
 
-  describe "#dossiers_count_for_instructeur" do
-    let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
-    let(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
-    let(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
+  describe "#destroy" do
+    let(:procedure) { create(:procedure, :closed, :with_type_de_champ) }
 
-    subject do
-      procedure.dossiers_count_for_instructeur(instructeur)
+    before do
+      procedure.discard!
     end
 
-    context "when logged in, and belonging to gi_1, gi_2" do
-      before do
-        instructeur.groupe_instructeurs << gi_2
-      end
-
-      context "without any dossier" do
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['termines']).to eq(0) }
-        it { expect(subject['total']).to eq(0) }
-        it { expect(subject['archived']).to eq(0) }
-      end
-
-      context 'with a new brouillon dossier' do
-        let!(:brouillon_dossier) { create(:dossier, procedure: procedure) }
-
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['termines']).to eq(0) }
-        it { expect(subject['total']).to eq(0) }
-        it { expect(subject['archived']).to eq(0) }
-      end
-
-      context 'with a new dossier without follower' do
-        let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-
-        it { expect(subject['a_suivre']).to eq(1) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['termines']).to eq(0) }
-        it { expect(subject['total']).to eq(1) }
-        it { expect(subject['archived']).to eq(0) }
-
-        context 'and dossiers without follower on each of the others groups' do
-          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
-          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
-
-          before { subject }
-
-          it { expect(subject['a_suivre']).to eq(2) }
-          it { expect(subject['total']).to eq(2) }
-        end
-      end
-
-      context 'with a new dossier with a follower' do
-        let!(:new_followed_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-
-        before do
-          instructeur.followed_dossiers << new_followed_dossier
-        end
-
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(1) }
-        it { expect(subject['termines']).to eq(0) }
-        it { expect(subject['total']).to eq(1) }
-        it { expect(subject['archived']).to eq(0) }
-
-        context 'and dossier with a follower on each of the others groups' do
-          let!(:new_follow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
-          let!(:new_follow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
-
-          before do
-            instructeur.followed_dossiers << new_follow_dossier_on_gi_2 << new_follow_dossier_on_gi_3
-          end
-
-          # followed dossiers on another groupe should not be displayed
-          it { expect(subject['suivis']).to eq(2) }
-          it { expect(subject['total']).to eq(2) }
-        end
-
-        context 'and dossier with a follower is unfollowed' do
-          before do
-            instructeur.unfollow(new_followed_dossier)
-          end
-
-          it { expect(subject['a_suivre']).to eq(1) }
-          it { expect(subject['suivis']).to eq(0) }
-          it { expect(subject['total']).to eq(1) }
-        end
-      end
-
-      context 'with a termine dossier' do
-        let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure) }
-
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['termines']).to eq(1) }
-        it { expect(subject['total']).to eq(1) }
-        it { expect(subject['archived']).to eq(0) }
-
-        context 'and terminer dossiers on each of the others groups' do
-          let!(:termine_dossier_on_gi_2) { create(:dossier, :accepte, groupe_instructeur: gi_2) }
-          let!(:termine_dossier_on_gi_3) { create(:dossier, :accepte, groupe_instructeur: gi_3) }
-
-          before { subject }
-
-          it { expect(subject['a_suivre']).to eq(0) }
-          it { expect(subject['suivis']).to eq(0) }
-          it { expect(subject['termines']).to eq(2) }
-          it { expect(subject['total']).to eq(2) }
-          it { expect(subject['archived']).to eq(0) }
-        end
-      end
-
-      context 'with an archived dossier' do
-        let!(:archived_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
-
-        it { expect(subject['a_suivre']).to eq(0) }
-        it { expect(subject['suivis']).to eq(0) }
-        it { expect(subject['termines']).to eq(0) }
-        it { expect(subject['total']).to eq(0) }
-        it { expect(subject['archived']).to eq(1) }
-
-        context 'and terminer dossiers on each of the others groups' do
-          let!(:archived_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, archived: true) }
-          let!(:archived_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3, archived: true) }
-
-          it { expect(subject['archived']).to eq(2) }
-        end
-      end
+    it "can destroy procedure" do
+      expect(procedure.revisions.count).to eq(2)
+      expect(procedure.destroy).to be_truthy
     end
+  end
+
+  describe '#average_dossier_weight' do
+    let(:procedure) { create(:procedure, :published) }
+
+    before do
+      create_dossier_with_pj_of_size(4, procedure)
+      create_dossier_with_pj_of_size(5, procedure)
+      create_dossier_with_pj_of_size(6, procedure)
+    end
+
+    it 'estimates average dossier weight' do
+      expect(procedure.reload.average_dossier_weight).to eq(5 + Procedure::MIN_WEIGHT)
+    end
+  end
+
+  private
+
+  def create_dossier_with_pj_of_size(size, procedure)
+    dossier = create(:dossier, :accepte, procedure: procedure)
+    create(:champ_piece_justificative, size: size, dossier: dossier)
   end
 end

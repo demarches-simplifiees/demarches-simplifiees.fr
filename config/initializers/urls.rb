@@ -1,6 +1,5 @@
 # rubocop:disable DS/ApplicationName
 # API URLs
-API_CARTO_URL = ENV.fetch("API_CARTO_URL", "https://sandbox.geo.api.gouv.fr/apicarto")
 API_ENTREPRISE_URL = ENV.fetch("API_ENTREPRISE_URL", "https://entreprise.api.gouv.fr/v2")
 API_EDUCATION_URL = ENV.fetch("API_EDUCATION_URL", "https://data.education.gouv.fr/api/records/1.0")
 HELPSCOUT_API_URL = ENV.fetch("HELPSCOUT_API_URL", "https://api.helpscout.net/v2")
@@ -25,7 +24,8 @@ CADRE_JURIDIQUE_URL = [DOC_URL, "tutoriels/video-le-cadre-juridique"].join("/")
 LISTE_DES_DEMARCHES_URL = [DOC_URL, "listes-des-demarches"].join("/")
 CGU_URL = ENV.fetch("CGU_URL", [DOC_URL, "cgu"].join("/"))
 MENTIONS_LEGALES_URL = ENV.fetch("MENTIONS_LEGALES_URL", [DOC_URL, "mentions-legales"].join("/"))
-API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "api"].join("/")
+ACCESSIBILITE_URL = ENV.fetch("ACCESSIBILITE_URL", [DOC_URL, "declaration-daccessibilite"].join("/"))
+API_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "graphql"].join("/")
 WEBHOOK_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 ARCHIVAGE_DOC_URL = [DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")
 DOC_INTEGRATION_MONAVIS_URL = [DOC_URL, "tutoriels", "integration-du-bouton-mon-avis"].join("/")

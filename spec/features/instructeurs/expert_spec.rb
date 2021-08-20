@@ -1,4 +1,4 @@
-feature 'Inviting an expert:' do
+feature 'Inviting an expert:', js: true do
   include ActiveJob::TestHelper
   include ActionView::Helpers
 
@@ -8,10 +8,12 @@ feature 'Inviting an expert:' do
   let(:expert_password) { 'mot de passe d’expert' }
   let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
   let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
-  let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
+  let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).filter_map(&:value)) }
 
   context 'as an Instructeur' do
     scenario 'I can invite an expert' do
+      allow(ClamavService).to receive(:safe_file?).and_return(true)
+
       # assign instructeur to linked dossier
       instructeur.assign_to_procedure(linked_dossier.procedure)
 
@@ -21,7 +23,7 @@ feature 'Inviting an expert:' do
       click_on 'Avis externes'
       expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
 
-      fill_in 'avis_emails', with: "#{expert.email}, #{expert2.email}"
+      page.execute_script("document.querySelector('#avis_emails').value = '[\"#{expert.email}\",\"#{expert2.email}\"]'")
       fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
       check 'avis_invite_linked_dossiers'
       page.select 'confidentiel', from: 'avis_confidentiel'
@@ -29,7 +31,7 @@ feature 'Inviting an expert:' do
       click_on 'Demander un avis'
       perform_enqueued_jobs
 
-      expect(page).to have_content('Une demande d\'avis a été envoyée')
+      expect(page).to have_content('Une demande d’avis a été envoyée')
       expect(page).to have_content('Avis des invités')
       within('.list-avis') do
         expect(page).to have_content(expert.email.to_s)
@@ -42,8 +44,8 @@ feature 'Inviting an expert:' do
       expect(emails_sent_to(expert2.email.to_s).size).to eq(1)
 
       invitation_email = open_email(expert.email.to_s)
-      avis = expert.avis.reload.last
-      sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, avis.expert.email)
+      avis = expert.avis.find_by(dossier: dossier)
+      sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, email: avis.expert.email)
       expect(invitation_email.body).to include(sign_up_link)
     end
 

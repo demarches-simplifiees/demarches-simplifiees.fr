@@ -33,6 +33,10 @@
                 - horaires = "Horaires : #{formatted_horaires(service.horaires)}"
                 = simple_format(horaires, {}, wrapper_tag: 'span')
 
+              %li
+                Statistiques :
+                = link_to "voir les statistiques de la démarche", statistiques_path(procedure.path)
+
 
         - politiques = politiques_conservation_de_donnees(procedure)
         - if politiques.present?

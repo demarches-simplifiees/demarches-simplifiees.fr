@@ -20,14 +20,26 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.subject).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier_url(dossier)) }
-    it { expect(subject.body).to include("Vous pouvez déposer votre dossier jusqu'au") }
+    it { expect(subject.body).to include("Vous pouvez déposer votre dossier jusqu’au") }
     it { expect(subject.body).to include("heure de") }
 
     it_behaves_like 'a dossier notification'
   end
 
-  describe '.notify_new_answer' do
+  describe '.notify_new_answer with dossier brouillon' do
     let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+
+    subject { described_class.notify_new_answer(dossier) }
+
+    it { expect(subject.subject).to include("Nouveau message") }
+    it { expect(subject.subject).to include(dossier.id.to_s) }
+    it { expect(subject.body).not_to include(messagerie_dossier_url(dossier)) }
+
+    it_behaves_like 'a dossier notification'
+  end
+
+  describe '.notify_new_answer with dossier en construction' do
+    let(:dossier) { create(:dossier, state: "en_construction", procedure: build(:simple_procedure)) }
 
     subject { described_class.notify_new_answer(dossier) }
 
@@ -167,7 +179,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
       it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n’avez rien à faire.") }
-      it { expect(subject.body).to include("Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l'interface.") }
+      it { expect(subject.body).to include("Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface.") }
     end
 
     describe 'termine' do

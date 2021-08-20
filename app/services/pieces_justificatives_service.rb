@@ -1,10 +1,18 @@
 class PiecesJustificativesService
-  def self.liste_pieces_justificatives(dossier)
+  def self.liste_documents(dossier)
     pjs_champs = pjs_for_champs(dossier)
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier)
 
     (pjs_champs + pjs_commentaires + pjs_dossier)
+      .filter(&:attached?)
+  end
+
+  def self.liste_pieces_justificatives(dossier)
+    pjs_champs = pjs_for_champs(dossier)
+    pjs_commentaires = pjs_for_commentaires(dossier)
+
+    (pjs_champs + pjs_commentaires)
       .filter(&:attached?)
   end
 
@@ -41,6 +49,75 @@ class PiecesJustificativesService
     end
   end
 
+  def self.clone_attachments(original, kopy)
+    if original.is_a?(TypeDeChamp)
+      clone_attachment(original.piece_justificative_template, kopy.piece_justificative_template)
+    elsif original.is_a?(Procedure)
+      clone_attachment(original.logo, kopy.logo)
+      clone_attachment(original.notice, kopy.notice)
+      clone_attachment(original.deliberation, kopy.deliberation)
+    end
+  end
+
+  def self.clone_attachment(original_attachment, copy_attachment)
+    if original_attachment.attached?
+      original_attachment.open do |tempfile|
+        copy_attachment.attach({
+          io: File.open(tempfile.path),
+          filename: original_attachment.filename,
+          content_type: original_attachment.content_type,
+          # we don't want to run virus scanner on cloned file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        })
+      end
+    end
+  end
+
+  class FakeAttachment < Hashie::Dash
+    property :filename
+    property :name
+    property :file
+    property :id
+    property :created_at
+
+    def download
+      file.read
+    end
+
+    def read(*args)
+      file.read(*args)
+    end
+
+    def close
+      file.close
+    end
+
+    def attached?
+      true
+    end
+
+    def record_type
+      'Fake'
+    end
+  end
+
+  def self.generate_dossier_export(dossier)
+    pdf = ApplicationController
+      .render(template: 'dossiers/show', formats: [:pdf],
+              assigns: {
+                include_infos_administration: true,
+                dossier: dossier
+              })
+
+    FakeAttachment.new(
+      file: StringIO.new(pdf),
+      filename: "export-#{dossier.id}.pdf",
+      name: 'pdf_export_for_instructeur',
+      id: dossier.id,
+      created_at: dossier.updated_at
+    )
+  end
+
   private
 
   def self.pjs_for_champs(dossier)
@@ -62,7 +139,7 @@ class PiecesJustificativesService
   end
 
   def self.pjs_for_dossier(dossier)
-    bill_signatures = dossier.dossier_operation_logs.map(&:bill_signature).compact.uniq
+    bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
 
     [
       dossier.justificatif_motivation,

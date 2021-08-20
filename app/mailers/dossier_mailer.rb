@@ -13,19 +13,20 @@ class DossierMailer < ApplicationMailer
 
     subject = "Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »"
 
-    mail(from: NO_REPLY_EMAIL, to: dossier.user.email, subject: subject) do |format|
+    mail(from: NO_REPLY_EMAIL, to: dossier.user_email_for(:notification), subject: subject) do |format|
       format.html { render layout: 'mailers/notifications_layout' }
     end
   end
 
-  def notify_new_answer(dossier)
+  def notify_new_answer(dossier, body = nil)
     @dossier = dossier
     @service = dossier.procedure.service
     @logo_url = attach_logo(dossier.procedure)
+    @body = body
 
     subject = "Nouveau message pour votre dossier nº #{dossier.id} (#{dossier.procedure.libelle})"
 
-    mail(from: NO_REPLY_EMAIL, to: dossier.user.email, subject: subject) do |format|
+    mail(from: NO_REPLY_EMAIL, to: dossier.user_email_for(:notification), subject: subject) do |format|
       format.html { render layout: 'mailers/notifications_layout' }
     end
   end
@@ -47,9 +48,9 @@ class DossierMailer < ApplicationMailer
     @service = dossier.procedure.service
     @logo_url = attach_logo(dossier.procedure)
 
-    subject = "Votre dossier nº #{@dossier.id} est en train d'être réexaminé"
+    subject = "Votre dossier nº #{@dossier.id} est en train d’être réexaminé"
 
-    mail(from: NO_REPLY_EMAIL, to: dossier.user.email, subject: subject) do |format|
+    mail(from: NO_REPLY_EMAIL, to: dossier.user_email_for(:notification), subject: subject) do |format|
       format.html { render layout: 'mailers/notifications_layout' }
     end
   end
@@ -136,10 +137,10 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_brouillon_not_submitted(dossier)
-    @subject = "Attention : votre dossier n'est pas déposé."
+    @subject = "Attention : votre dossier n’est pas déposé."
     @dossier = dossier
 
-    mail(to: dossier.user.email, subject: @subject)
+    mail(to: dossier.user_email_for(:notification), subject: @subject)
   end
 
   protected

@@ -17,8 +17,6 @@ class StatsController < ApplicationController
       stat.dossiers_deposes_entre_60_et_30_jours
     )
 
-    @satisfaction_usagers = satisfaction_usagers
-
     @contact_percentage = contact_percentage
 
     @dossiers_states_for_pie = {
@@ -121,42 +119,6 @@ class StatsController < ApplicationController
       last_30_days_count: last_30_days_count.to_s,
       evolution: formatted_evolution
     }
-  end
-
-  def satisfaction_usagers
-    legend = {
-      Feedback.ratings.fetch(:unhappy) => "Mécontents",
-      Feedback.ratings.fetch(:neutral) => "Neutres",
-      Feedback.ratings.fetch(:happy)   => "Satisfaits"
-    }
-
-    number_of_weeks = 12
-    totals = Feedback
-      .group_by_week(:created_at, last: number_of_weeks, current: false)
-      .count
-
-    legend.keys.map do |rating|
-      data = Feedback
-        .where(rating: rating)
-        .group_by_week(:created_at, last: number_of_weeks, current: false)
-        .count
-        .map do |week, count|
-          total = totals[week]
-          # By default a week is displayed by the first day of the week – but we'd rather display the last day
-          label = week.next_week
-
-          if total > 0
-            [label, (count.to_f / total * 100).round(2)]
-          else
-            [label, 0]
-          end
-        end.to_h
-
-      {
-        name: legend[rating],
-        data: data
-      }
-    end
   end
 
   def contact_percentage
@@ -327,7 +289,7 @@ class StatsController < ApplicationController
       dossiers_grouped_by_groupe_instructeur = dossier_plucks.group_by { |(groupe_instructeur_id, *_)| groupe_instructeur_id }
 
       # Compute the mean time for this procedure
-      procedure_processing_times = dossiers_grouped_by_groupe_instructeur.map do |groupe_instructeur_id, procedure_dossiers|
+      procedure_processing_times = dossiers_grouped_by_groupe_instructeur.filter_map do |groupe_instructeur_id, procedure_dossiers|
         procedure_fields_count = groupe_instructeur_id_type_de_champs_count[groupe_instructeur_id]
 
         if (procedure_fields_count == 0 || procedure_fields_count.nil?)
@@ -340,7 +302,6 @@ class StatsController < ApplicationController
         # We normalize the data for 24 fields
         procedure_mean * (MEAN_NUMBER_OF_CHAMPS_IN_A_FORM / procedure_fields_count)
       end
-        .compact
 
       # Compute the average mean time for all the procedures of this month
       month_average = mean(procedure_processing_times)

@@ -24,7 +24,7 @@ module Types
     field :declarative, DossierDeclarativeState, "L’état de dossier pour une démarche déclarative", null: true, method: :declarative_with_state
 
     field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
-    field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: false, method: :published_at
+    field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: true, method: :published_at
     field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
     field :date_depublication, GraphQL::Types::ISO8601DateTime, "Date de la dépublication.", null: true, method: :unpublished_at
     field :date_fermeture, GraphQL::Types::ISO8601DateTime, "Date de la fermeture.", null: true, method: :closed_at
@@ -41,6 +41,11 @@ module Types
       argument :revision, ID, required: false, description: "Seulement les dossiers pour la révision donnée."
       argument :max_revision, ID, required: false, description: "Seulement les dossiers pour les révisons avant la révision donnée."
       argument :min_revision, ID, required: false, description: "Seulement les dossiers pour les révisons après la révision donnée."
+    end
+
+    field :deleted_dossiers, Types::DeletedDossierType.connection_type, "Liste de tous les dossiers supprimés d’une démarche.", null: false do
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers supprimés."
+      argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers supprimés depuis la date."
     end
 
     field :champ_descriptors, [Types::ChampDescriptorType], null: false, method: :types_de_champ
@@ -100,6 +105,16 @@ module Types
       end
 
       dossiers
+    end
+
+    def deleted_dossiers(deleted_since: nil, order:)
+      dossiers = object.deleted_dossiers
+
+      if deleted_since.present?
+        dossiers = dossiers.deleted_since(deleted_since)
+      end
+
+      dossiers.order(deleted_at: order)
     end
 
     def self.authorized?(object, context)

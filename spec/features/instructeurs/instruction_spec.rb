@@ -1,4 +1,4 @@
-feature 'Instructing a dossier:' do
+feature 'Instructing a dossier:', js: true do
   include ActiveJob::TestHelper
 
   let(:password) { 'my-s3cure-p4ssword' }
@@ -66,6 +66,15 @@ feature 'Instructing a dossier:' do
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
     expect(dossier.motivation).to eq('a good reason')
+
+    click_on procedure.libelle
+    click_on 'traité'
+    click_on 'Actions'
+    accept_confirm do
+      click_on 'Supprimer le dossier'
+    end
+    click_on 'traité'
+    expect(page).not_to have_button('Actions')
   end
 
   scenario 'A instructeur can follow/unfollow a dossier' do
@@ -90,6 +99,32 @@ feature 'Instructing a dossier:' do
     expect(page).to have_text('Aucun dossier')
   end
 
+  scenario 'A instructeur can request an export' do
+    log_in(instructeur.email, password)
+
+    click_on procedure.libelle
+    test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
+    assert_performed_jobs 1
+
+    click_on "Télécharger tous les dossiers"
+    click_on "Demander un export au format .xlsx"
+    expect(page).to have_text('Nous générons cet export.')
+    expect(page).to have_text('Un export au format .xlsx est en train d’être généré')
+
+    click_on "Télécharger tous les dossiers"
+    click_on "Demander un export des 30 derniers jours au format .xlsx"
+    expect(page).to have_text('Nous générons cet export.')
+    expect(page).to have_text('Un export des 30 derniers jours au format .xlsx est en train d’être généré')
+
+    perform_enqueued_jobs(only: ExportJob)
+    assert_performed_jobs 3
+    page.driver.browser.navigate.refresh
+
+    click_on "Télécharger tous les dossiers"
+    expect(page).to have_text('Télécharger l’export au format .xlsx')
+    expect(page).to have_text('Télécharger l’export des 30 derniers jours au format .xlsx')
+  end
+
   scenario 'A instructeur can see the personnes impliquées' do
     instructeur2 = create(:instructeur, password: password)
 
@@ -101,11 +136,13 @@ feature 'Instructing a dossier:' do
     click_on 'Avis externes'
     expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
 
+    expert_email_formated = "[\"expert@tps.com\"]"
     expert_email = 'expert@tps.com'
-    ask_confidential_avis(expert_email, 'a good introduction')
+    ask_confidential_avis(expert_email_formated, 'a good introduction')
 
+    expert_email_formated = "[\"#{instructeur2.email}\"]"
     expert_email = instructeur2.email
-    ask_confidential_avis(expert_email, 'a good introduction')
+    ask_confidential_avis(expert_email_formated, 'a good introduction')
 
     click_on 'Personnes impliquées'
     expect(page).to have_text(expert_email)
@@ -128,8 +165,8 @@ feature 'Instructing a dossier:' do
 
     click_on 'Personnes impliquées'
 
-    select_multi('email instructeur', instructeur_2.email)
-    select_multi('email instructeur', instructeur_3.email)
+    select_multi_combobox('email instructeur', instructeur_2.email, instructeur_2.id)
+    select_multi_combobox('email instructeur', instructeur_3.email, instructeur_3.id)
 
     click_on 'Envoyer'
 
@@ -163,10 +200,10 @@ feature 'Instructing a dossier:' do
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
       expect(files.size).to be 3
-      expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
-      expect(files[0].uncompressed_size).to be File.size(path)
-      expect(files[1].filename.include?('horodatage/operation')).to be_truthy
-      expect(files[2].filename.include?('dossier/export')).to be_truthy
+      expect(files[0].filename.include?('export')).to be_truthy
+      expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
+      expect(files[1].uncompressed_size).to be File.size(path)
+      expect(files[2].filename.include?('horodatage/operation')).to be_truthy
     end
 
     scenario 'A instructeur can download an archive containing several identical attachments' do
@@ -178,13 +215,13 @@ feature 'Instructing a dossier:' do
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
       expect(files.size).to be 4
-      expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
+      expect(files[0].filename.include?('export')).to be_truthy
       expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
-      expect(files[0].filename).not_to eq files[1].filename
-      expect(files[0].uncompressed_size).to be File.size(path)
+      expect(files[2].filename.include?('piece_justificative_0')).to be_truthy
+      expect(files[1].filename).not_to eq files[2].filename
       expect(files[1].uncompressed_size).to be File.size(path)
-      expect(files[2].filename.include?('horodatage/operation')).to be_truthy
-      expect(files[3].filename.include?('dossier/export')).to be_truthy
+      expect(files[2].uncompressed_size).to be File.size(path)
+      expect(files[3].filename.include?('horodatage/operation')).to be_truthy
     end
 
     before { DownloadHelpers.clear_downloads }
@@ -206,7 +243,7 @@ feature 'Instructing a dossier:' do
   end
 
   def ask_confidential_avis(to, introduction)
-    fill_in 'avis_emails', with: to
+    page.execute_script("document.querySelector('#avis_emails').value = '#{to}'")
     fill_in 'avis_introduction', with: introduction
     select 'confidentiel', from: 'avis_confidentiel'
     click_on 'Demander un avis'
@@ -214,11 +251,11 @@ feature 'Instructing a dossier:' do
 
   def test_statut_bar(a_suivre: 0, suivi: 0, traite: 0, tous_les_dossiers: 0, archive: 0)
     texts = [
-      "à suivre #{a_suivre}",
-      "suivi #{suivi}",
-      "traité #{traite}",
-      "tous les dossiers #{tous_les_dossiers}",
-      "archivé #{archive}"
+      "#{a_suivre} à suivre",
+      "#{suivi} suivi",
+      "#{traite} traité",
+      "#{tous_les_dossiers} au total",
+      "#{archive} archivé"
     ]
 
     texts.each { |text| expect(page).to have_text(text) }

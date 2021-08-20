@@ -1,3 +1,6 @@
+@import "colors";
+@import "constants";
+
 .areas-title {
   font-weight: bold;
   margin-top: 5px;
@@ -14,4 +17,57 @@
 
 .form [data-react-class='MapEditor'] [data-reach-combobox-input] {
   margin-bottom: 0;
+}
+
+.map-style-control {
+  position: absolute;
+  bottom: 4px;
+  left: 10px;
+
+  img {
+    width: 100%;
+  }
+
+  button {
+    padding: 0;
+    border: none;
+    cursor: pointer;
+
+    > div {
+      position: absolute;
+      bottom: 5px;
+      left: 5px;
+    }
+  }
+
+  .map-style-panel {
+    z-index: 99;
+    padding: $default-spacer;
+    margin-bottom: $default-spacer;
+
+    ul {
+      list-style: none;
+      padding: $default-spacer;
+      padding-bottom: 0;
+      margin-bottom: -$default-spacer;
+
+      label {
+        font-size: 12px;
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.cadastres-selection-control {
+  position: absolute;
+  top: 135px;
+  left: 10px;
+
+  button {
+    &.on,
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
 }

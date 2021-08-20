@@ -61,16 +61,20 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
 
   context 'with a multiple-values list' do
     let(:dossier) { create(:dossier) }
-    let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, procedure: dossier.procedure) }
-    let(:champ) { create(:champ_multiple_drop_down_list, dossier: dossier, type_de_champ: type_de_champ) }
+    let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, procedure: dossier.procedure, drop_down_list_value: drop_down_list_value) }
+    let(:champ) { create(:champ_multiple_drop_down_list, dossier: dossier, type_de_champ: type_de_champ, value: champ_value) }
     let(:options) { type_de_champ.drop_down_list_options }
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
 
     before { dossier.champs << champ }
 
     context 'when the list is short' do
+      let(:drop_down_list_value) { ['valid', 'invalid', 'not sure yet'].join("\r\n") }
+      let(:champ_value) { ['invalid'].to_json }
+
       it 'renders the list as checkboxes' do
         expect(subject).to have_selector('input[type=checkbox]', count: enabled_options.count)
+        expect(subject).to have_selector('input[type=checkbox][checked=checked]', count: 1)
       end
 
       it 'adds an extra hidden input, to send a blank value even when all checkboxes are unchecked' do
@@ -79,7 +83,8 @@ describe 'shared/dossiers/edit.html.haml', type: :view do
     end
 
     context 'when the list is long' do
-      let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, :long, procedure: dossier.procedure) }
+      let(:drop_down_list_value) { ['peach', 'banana', 'pear', 'apricot', 'apple', 'grapefruit'].join("\r\n") }
+      let(:champ_value) { ['banana', 'grapefruit'].to_json }
 
       it 'renders the list as a multiple-selection dropdown' do
         expect(subject).to have_selector('[data-react-class="ComboMultipleDropdownList"]')

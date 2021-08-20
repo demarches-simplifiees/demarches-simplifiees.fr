@@ -649,6 +649,111 @@ describe API::V2::GraphqlController do
       end
     end
 
+    context "deletedDossiers" do
+      let(:query) do
+        "{
+          demarche(number: #{procedure.id}) {
+            deletedDossiers {
+              nodes {
+                id
+                number
+                state
+                reason
+                dateSupression
+              }
+            }
+          }
+        }"
+      end
+      let(:deleted_dossier) { create(:deleted_dossier, procedure: procedure) }
+
+      before { deleted_dossier }
+
+      it "should be returned" do
+        expect(gql_errors).to eq(nil)
+        expect(gql_data).to eq(demarche: {
+          deletedDossiers: {
+            nodes: [
+              {
+                id: deleted_dossier.to_typed_id,
+                number: deleted_dossier.dossier_id,
+                state: deleted_dossier.state,
+                reason: deleted_dossier.reason,
+                dateSupression: deleted_dossier.deleted_at.iso8601
+              }
+            ]
+          }
+        })
+      end
+    end
+
+    context "champ" do
+      let(:champ) { create(:champ_piece_justificative, dossier: dossier) }
+      let(:byte_size) { 2712286911 }
+
+      context "byteSize" do
+        let(:query) do
+          "{
+            dossier(number: #{dossier.id}) {
+              champs(id: \"#{champ.to_typed_id}\") {
+                ... on PieceJustificativeChamp {
+                  file { byteSize }
+                }
+              }
+            }
+          }"
+        end
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data).to eq(dossier: { champs: [{ file: { byteSize: 4 } }] })
+        }
+      end
+
+      context "when file is really big" do
+        before do
+          champ.piece_justificative_file.blob.update(byte_size: byte_size)
+        end
+
+        context "byteSize" do
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                champs(id: \"#{champ.to_typed_id}\") {
+                  ... on PieceJustificativeChamp {
+                    file { byteSize }
+                  }
+                }
+              }
+            }"
+          end
+
+          it {
+            expect(gql_errors).not_to be_nil
+          }
+        end
+
+        context "byteSizeBigInt" do
+          let(:query) do
+            "{
+              dossier(number: #{dossier.id}) {
+                champs(id: \"#{champ.to_typed_id}\") {
+                  ... on PieceJustificativeChamp {
+                    file { byteSizeBigInt }
+                  }
+                }
+              }
+            }"
+          end
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data).to eq(dossier: { champs: [{ file: { byteSizeBigInt: '2712286911' } }] })
+          }
+        end
+      end
+    end
+
     context "groupeInstructeur" do
       let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
       let(:query) do

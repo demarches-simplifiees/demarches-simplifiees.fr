@@ -60,7 +60,7 @@ describe Experts::AvisController, type: :controller do
         it "refuse l'accès au dossier" do
           avis_with_answer.update!(revoked_at: Time.zone.now)
           subject
-          expect(flash.alert).to eq("Vous n'avez plus accès à ce dossier.")
+          expect(flash.alert).to eq("Vous n’avez plus accès à ce dossier.")
           expect(response).to redirect_to(root_path)
         end
       end
@@ -159,7 +159,7 @@ describe Experts::AvisController, type: :controller do
       let(:previous_avis_confidentiel) { false }
       let(:asked_confidentiel) { false }
       let(:intro) { 'introduction' }
-      let(:emails) { ["toto@totomail.com"] }
+      let(:emails) { "[\"toto@totomail.com\"]" }
       let(:invite_linked_dossiers) { nil }
 
       before do
@@ -176,7 +176,7 @@ describe Experts::AvisController, type: :controller do
 
     describe '#create_avis' do
       let!(:previous_avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, confidentiel: previous_avis_confidentiel) }
-      let(:emails) { ['a@b.com'] }
+      let(:emails) { "[\"a@b.com\"]" }
       let(:intro) { 'introduction' }
       let(:created_avis) { Avis.last }
       let!(:old_avis_count) { Avis.count }
@@ -194,7 +194,7 @@ describe Experts::AvisController, type: :controller do
       context 'when an invalid email' do
         let(:previous_avis_confidentiel) { false }
         let(:asked_confidentiel) { false }
-        let(:emails) { ["toto.fr"] }
+        let(:emails) { "[\"toto.fr\"]" }
 
         it { expect(response).to render_template :instruction }
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
@@ -205,22 +205,22 @@ describe Experts::AvisController, type: :controller do
       context 'ask review with attachment' do
         let(:previous_avis_confidentiel) { false }
         let(:asked_confidentiel) { false }
-        let(:emails) { ["toto@totomail.com"] }
+        let(:emails) { "[\"toto@totomail.com\"]" }
 
         it { expect(created_avis.introduction_file).to be_attached }
         it { expect(created_avis.introduction_file.filename).to eq("piece_justificative_0.pdf") }
         it { expect(created_avis.dossier.reload.last_avis_updated_at).to eq(now) }
-        it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à toto@totomail.com") }
+        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à toto@totomail.com") }
       end
 
       context 'with multiple emails' do
         let(:asked_confidentiel) { false }
         let(:previous_avis_confidentiel) { false }
-        let(:emails) { ["toto.fr,titi@titimail.com"] }
+        let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
 
         it { expect(response).to render_template :instruction }
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
-        it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
+        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
       end
 
@@ -263,7 +263,7 @@ describe Experts::AvisController, type: :controller do
           let(:invite_linked_dossiers) { false }
 
           it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-            expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+            expect(flash.notice).to eq("Une demande d’avis a été envoyée à a@b.com")
             expect(Avis.count).to eq(old_avis_count + 1)
             expect(created_avis.dossier).to eq(dossier)
           end
@@ -272,12 +272,12 @@ describe Experts::AvisController, type: :controller do
         context 'when the expert also shares the linked dossiers' do
           context 'and the expert can access the linked dossiers' do
             let(:created_avis) { create(:avis, dossier: dossier, claimant: claimant, email: "toto3@gmail.com") }
-            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
+            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).filter_map(&:value)) }
             let(:linked_avis) { create(:avis, dossier: linked_dossier, claimant: claimant) }
             let(:invite_linked_dossiers) { true }
 
             it 'sends one avis for the main dossier' do
-              expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+              expect(flash.notice).to eq("Une demande d’avis a été envoyée à a@b.com")
               expect(created_avis.dossier).to eq(dossier)
             end
 
@@ -289,7 +289,7 @@ describe Experts::AvisController, type: :controller do
 
           context 'but the expert can’t access the linked dossier' do
             it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-              expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+              expect(flash.notice).to eq("Une demande d’avis a été envoyée à a@b.com")
               expect(Avis.count).to eq(old_avis_count + 1)
               expect(created_avis.dossier).to eq(dossier)
             end
@@ -300,54 +300,83 @@ describe Experts::AvisController, type: :controller do
   end
 
   context 'without an expert signed in' do
+    let(:claimant) { create(:instructeur) }
+    let(:expert) { create(:expert) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+    let(:dossier) { create(:dossier) }
+    let(:avis) { create(:avis, dossier: dossier, experts_procedure: experts_procedure, claimant: claimant) }
+    let(:procedure) { dossier.procedure }
+
     describe '#sign_up' do
-      let(:invited_email) { 'invited@avis.com' }
-      let(:claimant) { create(:instructeur) }
-      let(:expert) { create(:expert) }
-      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
-      let(:dossier) { create(:dossier) }
-      let(:procedure) { dossier.procedure }
-      let!(:avis) { create(:avis, experts_procedure: experts_procedure, claimant: claimant, dossier: dossier) }
-      let(:invitations_email) { true }
-
-      context 'when the expert has already signed up and belongs to the invitation' do
-        let!(:avis) { create(:avis, dossier: dossier, experts_procedure: experts_procedure, claimant: claimant) }
-
-        context 'when the expert is authenticated' do
-          before do
-            sign_in(expert.user)
-            expert.user.update(last_sign_in_at: Time.zone.now)
-            expert.user.reload
-            get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
-          end
-
-          it { is_expected.to redirect_to expert_avis_url(avis.procedure, avis) }
-        end
-
-        context 'when the expert is not authenticated' do
-          before do
-            sign_in(expert.user)
-            expert.user.update(last_sign_in_at: Time.zone.now)
-            expert.user.reload
-            sign_out(expert.user)
-            get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
-          end
-
-          it { is_expected.to redirect_to new_user_session_url }
-        end
+      subject do
+        get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
       end
 
-      context 'when the expert has already signed up / is authenticated and does not belong to the invitation' do
-        let(:expert) { create(:expert) }
-        let!(:avis) { create(:avis, email: invited_email, dossier: dossier, experts_procedure: experts_procedure) }
+      context 'when the expert hasn’t signed up yet' do
+        before { expert.user.update(last_sign_in_at: nil) }
 
-        before do
-          sign_in(expert.user)
-          get :sign_up, params: { id: avis.id, procedure_id: procedure.id, email: avis.expert.email }
+        it { is_expected.to have_http_status(:success) }
+      end
+
+      context 'when the expert has already signed up' do
+        before { expert.user.update(last_sign_in_at: Time.zone.now) }
+
+        context 'and the expert belongs to the invitation' do
+          context 'and the expert is authenticated' do
+            before { sign_in(expert.user) }
+
+            it { is_expected.to redirect_to expert_avis_url(avis.procedure, avis) }
+          end
+
+          context 'and the expert is not authenticated' do
+            before { sign_out(expert.user) }
+
+            it { is_expected.to redirect_to new_user_session_url }
+          end
         end
 
-        # redirected to dossier but then the instructeur gonna be banished !
-        it { is_expected.to redirect_to expert_avis_url(avis.procedure, avis) }
+        context 'and the expert does not belong to the invitation' do
+          let(:avis) { create(:avis, email: 'another_expert@avis.com', dossier: dossier, experts_procedure: experts_procedure) }
+
+          before { sign_in(expert.user) }
+          # redirected to dossier but then the instructeur gonna be banished !
+          it { is_expected.to redirect_to expert_avis_url(avis.procedure, avis) }
+        end
+      end
+    end
+
+    describe '#update_expert' do
+      subject do
+        post :update_expert, params: {
+          id: avis.id,
+          procedure_id: procedure.id,
+          email: avis.expert.email,
+          user: {
+            password: 'my-s3cure-p4ssword'
+          }
+        }
+      end
+
+      context 'when the expert hasn’t signed up yet' do
+        before { expert.user.update(last_sign_in_at: nil) }
+
+        it 'saves the expert new password' do
+          subject
+          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be true
+        end
+
+        it { is_expected.to redirect_to expert_all_avis_path }
+      end
+
+      context 'when the expert has already signed up' do
+        before { expert.user.update(last_sign_in_at: Time.zone.now) }
+
+        it 'doesn’t change the expert password' do
+          subject
+          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be false
+        end
+
+        it { is_expected.to redirect_to new_user_session_url }
       end
     end
   end

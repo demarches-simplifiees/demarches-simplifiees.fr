@@ -13,7 +13,7 @@
       = render partial: "dossiers_list", locals: { dossiers: @dossiers }
 
     - else
-      %h1.page-title Dossiers
+      %h1.page-title= t('views.users.dossiers.index.dossiers')
       %ul.tabs
         - if @user_dossiers.count > 0
           = tab_item(t('pluralize.mes_dossiers', count: @user_dossiers.count),

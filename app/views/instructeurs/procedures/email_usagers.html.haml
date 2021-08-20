@@ -1,0 +1,31 @@
+- content_for(:title, "Contacter les usagers pour #{@procedure.libelle}")
+
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
+                    'Contacter les usagers (brouillon)'] }
+.messagerie.container
+  - if @email_usagers_dossiers.present?
+    %p.notice.mb-2.mt-4 Vous allez envoyer un message à #{pluralize(@dossiers_count, 'personne')} dont les dossiers sont en brouillon, dans les groupes instructeurs : #{@groupe_instructeurs.join(', ')}.
+    = render partial: 'shared/dossiers/messages/form', locals: { commentaire: @commentaire, form_url: create_multiple_commentaire_instructeur_procedure_path(@procedure) }
+
+    - if @bulk_messages.present?
+      %section.list-avis.mt-8
+        %h1.tab-title
+          Messages envoyés précedemment
+          %span.count= @bulk_messages.count
+
+        %ul
+          - @bulk_messages.each do |message|
+            %li.one-avis.flex.align-start
+              .width-100
+                %h2.claimant
+                  %span.email= message.instructeur.email
+                  %span.date message envoyé à #{@dossiers_count} usagers le #{message.sent_at.strftime('%d/%m/%y à %H:%M')}
+                %p= message.body
+                .answer.flex.align-start
+                  - if message.piece_jointe.present?
+                    = render partial: 'shared/attachment/show', locals: { attachment: message.piece_jointe.attachment }
+  - else
+    .page-title.center
+      %h2 Il n'y a aucun dossier en brouillon dans vos groupes instructeurs
+

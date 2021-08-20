@@ -2,7 +2,7 @@ module Types
   class DossierType < Types::BaseObject
     class DossierState < Types::BaseEnum
       Dossier.aasm.states.reject { |state| state.name == :brouillon }.each do |state|
-        value(state.name.to_s, state.display_name, value: state.name.to_s)
+        value(state.name.to_s, Dossier.human_attribute_name("state.#{state.name}"), value: state.name.to_s)
       end
     end
 
@@ -54,7 +54,11 @@ module Types
     end
 
     def usager
-      Loaders::Record.for(User).load(object.user_id)
+      if object.user_deleted?
+        { email: object.user_email_for(:display), id: -1 }
+      else
+        Loaders::Record.for(User).load(object.user_id)
+      end
     end
 
     def groupe_instructeur
@@ -80,10 +84,10 @@ module Types
     def messages(id: nil)
       if id.present?
         Loaders::Record
-          .for(Commentaire, where: { dossier: object }, includes: [:instructeur, :user], array: true)
+          .for(Commentaire, where: { dossier: object }, includes: [:instructeur, :expert], array: true)
           .load(ApplicationRecord.id_from_typed_id(id))
       else
-        Loaders::Association.for(object.class, commentaires: [:instructeur, :user]).load(object)
+        Loaders::Association.for(object.class, commentaires: [:instructeur, :expert]).load(object)
       end
     end
 

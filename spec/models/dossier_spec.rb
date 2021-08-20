@@ -52,6 +52,15 @@ describe Dossier do
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
     end
+
+    context 'does not include an expiring dossier that has been postponed' do
+      before do
+        expiring_dossier.update(conservation_extension: 1.month)
+        expiring_dossier.reload
+      end
+
+      it { is_expected.not_to include(expiring_dossier) }
+    end
   end
 
   describe 'en_construction_close_to_expiration' do
@@ -72,7 +81,7 @@ describe Dossier do
 
     context 'does not include an expiring dossier that has been postponed' do
       before do
-        expiring_dossier.update(en_construction_conservation_extension: 1.month)
+        expiring_dossier.update(conservation_extension: 1.month)
         expiring_dossier.reload
       end
 
@@ -328,20 +337,22 @@ describe Dossier do
       it { expect(dossier.avis_for_expert(expert_2)).not_to match([avis]) }
     end
 
-    context 'when there is a public advice asked from one expert to another' do
-      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
+    context 'when there is a public advice asked from one instructeur to an expert' do
+      let!(:avis_1) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false) }
+      let!(:avis_2) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
-      it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
-      it { expect(dossier.avis_for_expert(expert_2)).to match([avis]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_1, avis_2]) }
+      it { expect(dossier.avis_for_expert(expert_1)).to match([avis_1, avis_2]) }
+      it { expect(dossier.avis_for_expert(expert_2)).to match([avis_1, avis_2]) }
     end
 
-    context 'when there is a private advice asked from one expert to another' do
-      let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: true) }
+    context 'when there is a private advice asked from one instructeur to an expert' do
+      let!(:avis_1) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
+      let!(:avis_2) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: true) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
-      it { expect(dossier.avis_for_expert(expert_1)).not_to match([avis]) }
-      it { expect(dossier.avis_for_expert(expert_2)).to match([avis]) }
+      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_1, avis_2]) }
+      it { expect(dossier.avis_for_expert(expert_1)).to match([avis_1]) }
+      it { expect(dossier.avis_for_expert(expert_2)).to match([avis_2]) }
     end
 
     context 'when they are a lot of advice' do
@@ -351,6 +362,12 @@ describe Dossier do
 
       it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_2, avis_1, avis_3]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis_2, avis_1, avis_3]) }
+    end
+
+    context 'when they are a advice published on another dossier' do
+      let!(:avis) { create(:avis, dossier: create(:dossier, procedure: procedure), claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
+
+      it { expect(dossier.avis_for_expert(expert_1)).to match([]) }
     end
   end
 
@@ -503,17 +520,17 @@ describe Dossier do
     let(:instructeur) { create(:instructeur) }
 
     before do
-      allow(NotificationMailer).to receive(:send_dossier_received).and_return(double(deliver_later: nil))
+      allow(NotificationMailer).to receive(:send_en_instruction_notification).and_return(double(deliver_later: nil))
     end
 
     it "sends an email when the dossier becomes en_instruction" do
       dossier.passer_en_instruction!(instructeur)
-      expect(NotificationMailer).to have_received(:send_dossier_received).with(dossier)
+      expect(NotificationMailer).to have_received(:send_en_instruction_notification).with(dossier)
     end
 
     it "does not an email when the dossier becomes accepte" do
       dossier.accepte!
-      expect(NotificationMailer).to_not have_received(:send_dossier_received)
+      expect(NotificationMailer).to_not have_received(:send_en_instruction_notification)
     end
   end
 
@@ -547,7 +564,7 @@ describe Dossier do
 
   describe "#unspecified_attestation_champs" do
     let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ: types_de_champ, types_de_champ_private: types_de_champ_private) }
-    let(:dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+    let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
 
@@ -926,7 +943,7 @@ describe Dossier do
     let(:attestation) { Attestation.new }
 
     before do
-      allow(NotificationMailer).to receive(:send_closed_notification).and_return(double(deliver_later: true))
+      allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
       Timecop.freeze(now)
@@ -948,7 +965,7 @@ describe Dossier do
     it { expect(operation_serialized['operation']).to eq('accepter') }
     it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
-    it { expect(NotificationMailer).to have_received(:send_closed_notification).with(dossier) }
+    it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
   end
 
@@ -959,7 +976,7 @@ describe Dossier do
     let(:attestation) { Attestation.new }
 
     before do
-      allow(NotificationMailer).to receive(:send_closed_notification).and_return(double(deliver_later: true))
+      allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
       Timecop.freeze(now)
@@ -975,7 +992,7 @@ describe Dossier do
     it { expect(dossier.state).to eq('accepte') }
     it { expect(last_operation.operation).to eq('accepter') }
     it { expect(last_operation.automatic_operation?).to be_truthy }
-    it { expect(NotificationMailer).to have_received(:send_closed_notification).with(dossier) }
+    it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
     it { expect(dossier.attestation).to eq(attestation) }
   end
 
@@ -1126,49 +1143,28 @@ describe Dossier do
     after { Timecop.return }
   end
 
-  describe '#attachments_downloadable?' do
+  describe '#export_and_attachments_downloadable?' do
     let(:dossier) { create(:dossier, user: user) }
-    # subject { dossier.attachments_downloadable? }
 
     context "no attachments" do
       it {
-        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([])
-        expect(dossier.attachments_downloadable?).to be false
+        expect(dossier.export_and_attachments_downloadable?).to be true
       }
     end
 
     context "with a small attachment" do
       it {
-        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([Champ.new])
         expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(4.megabytes)
-        expect(dossier.attachments_downloadable?).to be true
+        expect(dossier.export_and_attachments_downloadable?).to be true
       }
     end
 
     context "with a too large attachment" do
       it {
-        expect(PiecesJustificativesService).to receive(:liste_pieces_justificatives).and_return([Champ.new])
         expect(PiecesJustificativesService).to receive(:pieces_justificatives_total_size).and_return(100.megabytes)
-        expect(dossier.attachments_downloadable?).to be false
+        expect(dossier.export_and_attachments_downloadable?).to be false
       }
     end
-  end
-
-  describe '#for_procedure' do
-    let!(:procedure_1) { create(:procedure)  }
-    let!(:procedure_2) { create(:procedure)  }
-
-    let!(:dossier_1_1) { create(:dossier, procedure: procedure_1) }
-    let!(:dossier_1_2) { create(:dossier, procedure: procedure_1) }
-    let!(:dossier_2_1) { create(:dossier, procedure: procedure_2) }
-
-    before do
-      gi_1_2 = procedure_1.groupe_instructeurs.create(label: 2)
-      gi_1_2.dossiers << dossier_1_2
-    end
-
-    it { expect(Dossier.for_procedure(procedure_1)).to contain_exactly(dossier_1_1, dossier_1_2) }
-    it { expect(Dossier.for_procedure(procedure_2)).to contain_exactly(dossier_2_1) }
   end
 
   describe '#notify_draft_not_submitted' do
@@ -1345,11 +1341,12 @@ describe Dossier do
   end
 
   describe "champs_for_export" do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune) }
     let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
     let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
     let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
     let(:explication_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
+    let(:commune_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:communes) } }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
 
@@ -1360,16 +1357,17 @@ describe Dossier do
         procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
         procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
         procedure.draft_revision.find_or_clone_type_de_champ(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
+        procedure.draft_revision.find_or_clone_type_de_champ(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
         procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
         dossier.reload
         procedure.reload
       end
 
       it "should have champs from all revisions" do
-        expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle])
-        expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, "New text field"])
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, "Updated yes/no", "New text field"])
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_export))
+        expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle, commune_type_de_champ.libelle])
+        expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, 'Commune de naissance', "New text field"])
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code insee)", "New text field"])
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_procedure_presentation))
       end
     end
 
@@ -1377,7 +1375,7 @@ describe Dossier do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_explication) }
 
       it "should not contain non-exportable types de champ" do
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_export).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
+        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
       end
     end
   end
@@ -1438,5 +1436,23 @@ describe Dossier do
 
       it { expect(dossier.api_entreprise_job_exceptions).to eq(['#<StandardError: My special exception!>']) }
     end
+  end
+
+  describe "#destroy" do
+    let(:dossier) { create(:dossier) }
+    before do
+      create(:attestation, dossier: dossier)
+      create(:attestation, dossier: dossier)
+    end
+
+    it "can destroy dossier with two attestations" do
+      expect(dossier.destroy).to be_truthy
+    end
+  end
+
+  describe "#spreadsheet_columns" do
+    let(:dossier) { create(:dossier) }
+
+    it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["État du dossier", "Brouillon"]) }
   end
 end

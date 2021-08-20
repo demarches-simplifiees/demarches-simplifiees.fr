@@ -11,7 +11,7 @@ class Administrateurs::ActivateController < ApplicationController
       # the administrateur activates its account from an email
       trust_device(Time.zone.now)
     else
-      flash.alert = "Le lien de validation d'administrateur a expiré, #{helpers.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."
+      flash.alert = "Le lien de validation d’administrateur a expiré, #{helpers.contact_link('contactez-nous', tags: 'lien expiré')} pour obtenir un nouveau lien."
       redirect_to root_path
     end
   end

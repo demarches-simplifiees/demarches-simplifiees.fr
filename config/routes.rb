@@ -52,6 +52,8 @@ Rails.application.routes.draw do
 
     resources :services, only: [:index, :show]
 
+    resources :super_admins, only: [:index, :show, :destroy]
+
     post 'demandes/create_administrateur'
     post 'demandes/refuse_administrateur'
 
@@ -103,7 +105,9 @@ Rails.application.routes.draw do
   devise_scope :user do
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
-    get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
+    get 'lien-envoye' => 'users/sessions#link_sent', as: 'link_sent'
+    get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent_legacy' # legacy, can be removed as soon as the previous line is deployed to production servers
+    get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
   end
 
   devise_scope :administrateur do
@@ -144,11 +148,12 @@ Rails.application.routes.draw do
   end
 
   resources :attachments, only: [:show, :destroy]
+  resources :recherche, only: [:index]
 
   get "patron" => "root#patron"
-  get "accessibilite" => "root#accessibilite"
   get "suivi" => "root#suivi"
   post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
+  post "save_locale" => "root#save_locale"
 
   get "contact", to: "support#index"
   post "contact", to: "support#create"
@@ -244,6 +249,10 @@ Rails.application.routes.draw do
   #
 
   scope module: 'users' do
+    namespace :statistiques do
+      get '/:path', action: 'statistiques'
+    end
+
     namespace :commencer do
       get '/test/:path/dossier_vide', action: 'dossier_vide_pdf_test', as: :dossier_vide_test
       get '/test/:path', action: 'commencer_test', as: :test
@@ -293,11 +302,6 @@ Rails.application.routes.draw do
   scope module: 'experts', as: 'expert' do
     get 'avis', to: 'avis#index', as: 'all_avis'
 
-    # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
-    # TODO : they will be removed in September, 2020
-    get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
-    get 'avis/:id/sign_up/email/:email', to: redirect("/procedures/old/avis/%{id}/sign_up/email/%{email}"), constraints: { email: /.*/ }
-
     resources :procedures, only: [], param: :procedure_id do
       member do
         resources :avis, only: [:show, :update] do
@@ -309,8 +313,13 @@ Rails.application.routes.draw do
             post 'avis' => 'avis#create_avis'
             get 'bilans_bdf'
 
-            get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up'
-            post 'sign_up/email/:email' => 'avis#update_expert', constraints: { email: /.*/ }
+            get 'sign_up' => 'avis#sign_up'
+            post 'sign_up' => 'avis#update_expert'
+
+            # This redirections are ephemeral, to ensure that emails sent to experts before are still valid
+            # TODO : remove these lines after September, 2021
+            get 'sign_up/email/:email' => 'avis#sign_up', constraints: { email: /.*/ }, as: 'sign_up_legacy'
+            post 'sign_up/email/:email' => 'avis#update_expert', constraints: { email: /.*/ }, as: 'update_expert_legacy'
           end
         end
       end
@@ -322,11 +331,6 @@ Rails.application.routes.draw do
   #
 
   scope module: 'instructeurs', as: 'instructeur' do
-    # this redirections are ephemeral, to ensure that emails sent to experts before are still valid
-    # TODO : they will be removed in September, 2020
-    get 'avis/:id', to: redirect('/procedures/old/avis/%{id}')
-    get 'avis/:id/sign_up/email/:email', to: redirect("/procedures/old/avis/%{id}/sign_up/email/%{email}"), constraints: { email: /.*/ }
-
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
@@ -353,6 +357,8 @@ Rails.application.routes.draw do
         get 'email_notifications'
         patch 'update_email_notifications'
         get 'deleted_dossiers'
+        get 'email_usagers'
+        post 'create_multiple_commentaire'
 
         resources :dossiers, only: [:show], param: :dossier_id do
           member do
@@ -381,9 +387,10 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
+
+        resources :archives, only: [:index, :create, :show], controller: 'archives'
       end
     end
-    get "recherche" => "recherche#index"
   end
 
   #
@@ -401,15 +408,13 @@ Rails.application.routes.draw do
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review
+        put :experts_require_administrateur_invitation
       end
 
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert
       post 'transfer' => 'procedures#transfer', as: :transfer
-      get 'invited_expert_list'
-      put 'update_allow_decision_access' => 'procedures#update_allow_decision_access', as: :update_allow_decision_access
-
       resources :mail_templates, only: [:edit, :update]
 
       resources :groupe_instructeurs, only: [:index, :show, :create, :update, :destroy] do
@@ -422,10 +427,13 @@ Rails.application.routes.draw do
 
         collection do
           patch 'update_routing_criteria_name'
+          post 'import'
         end
       end
 
       resources :administrateurs, controller: 'procedure_administrateurs', only: [:index, :create, :destroy]
+
+      resources :experts, controller: 'experts_procedures', only: [:index, :create, :update, :destroy]
 
       resources :types_de_champ, only: [:create, :update, :destroy] do
         member do

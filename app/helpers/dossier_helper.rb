@@ -25,12 +25,8 @@ module DossierHelper
     end
   end
 
-  def url_for_new_dossier(procedure)
-    if procedure.brouillon?
-      new_dossier_url(procedure_id: procedure.id, brouillon: true)
-    else
-      new_dossier_url(procedure_id: procedure.id)
-    end
+  def url_for_new_dossier(revision)
+    new_dossier_url(procedure_id: revision.procedure.id, brouillon: revision.draft? ? true : nil)
   end
 
   def dossier_form_class(dossier)
@@ -51,7 +47,7 @@ module DossierHelper
 
   def dossier_display_state(dossier_or_state, lower: false)
     state = dossier_or_state.is_a?(Dossier) ? dossier_or_state.state : dossier_or_state
-    display_state = I18n.t(state, scope: [:activerecord, :attributes, :dossier, :state])
+    display_state = Dossier.human_attribute_name("state.#{state}")
     lower ? display_state.downcase : display_state
   end
 
@@ -99,6 +95,18 @@ module DossierHelper
       else
         ""
       end
+    end
+  end
+
+  def annuaire_link(siren)
+    base_url = "https://annuaire-entreprises.data.gouv.fr"
+    return base_url if siren.blank?
+    "#{base_url}/entreprise/#{siren}"
+  end
+
+  def exports_list(exports)
+    Export::FORMATS.map do |(format, time_span_type)|
+      [format, time_span_type, exports[format] && exports[format][time_span_type]]
     end
   end
 end

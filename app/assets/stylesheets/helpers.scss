@@ -1,11 +1,15 @@
 @import "constants";
 
+.m-0 {
+  margin: 0px !important;
+}
+
 .mb-1 {
   margin-bottom: $default-spacer;
 }
 
 .mr-1 {
-  margin-right: $default-spacer;
+  margin-right: $default-spacer !important;
 }
 
 .mb-4 {
@@ -20,6 +24,10 @@
   padding-left: 0px !important;
 }
 
+.p-0 {
+  padding: 0px !important;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -27,4 +35,8 @@
 .numbers-delimiter {
   display: inline-block;
   width: 5px;
+}
+
+.text-center {
+  text-align: center;
 }

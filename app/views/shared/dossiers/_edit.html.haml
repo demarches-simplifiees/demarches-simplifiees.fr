@@ -11,14 +11,11 @@
   = form_for dossier, form_options.merge({ html: { id: 'dossier-edit-form', class: dossier_form_class(dossier), multipart: true } }) do |f|
 
     .prologue
-      %p.mandatory-explanation
-        Les champs suivis d’un astérisque (
-        %span.mandatory> *
-        ) sont obligatoires.
+      %p.mandatory-explanation= t('utils.asterisk_html')
       - if dossier.brouillon?
         %p.mandatory-explanation
           - if autosave_available?(dossier)
-            Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
+            = t('views.shared.dossiers.edit.autosave')
           - else
             Pour enregistrer votre dossier et le reprendre plus tard, cliquez sur le bouton « Enregistrer le brouillon » en bas à gauche du formulaire.
       - if !apercu && dossier.france_connect_information.present?
@@ -56,7 +53,7 @@
                 data: { 'disable-with': "Envoi en cours…" }
 
             - if dossier.can_transition_to_en_construction?
-              = f.button 'Déposer le dossier',
+              = f.button t('views.shared.dossiers.edit.submit_dossier'),
                 name: :submit_draft,
                 value: true,
                 class: 'button send primary',
@@ -64,7 +61,7 @@
                 data: { 'disable-with': "Envoi en cours…" }
 
           - else
-            = f.button 'Enregistrer les modifications du dossier',
+            = f.button t('views.shared.dossiers.edit.save_changes'),
               class: 'button send primary',
               data: { 'disable-with': "Envoi en cours…" }
 

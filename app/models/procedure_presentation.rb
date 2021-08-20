@@ -16,6 +16,14 @@ class ProcedurePresentation < ApplicationRecord
     'self' => ['id', 'state']
   }
 
+  TABLE = 'table'
+  COLUMN = 'column'
+  SLASH = '/'
+  TYPE_DE_CHAMP = 'type_de_champ'
+  TYPE_DE_CHAMP_PRIVATE = 'type_de_champ_private'
+
+  FILTERS_VALUE_MAX_LENGTH = 100
+
   belongs_to :assign_to, optional: false
 
   delegate :procedure, to: :assign_to
@@ -24,6 +32,7 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_sort_column
   validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
+  validate :check_filters_max_length
 
   def fields
     fields = [
@@ -60,17 +69,9 @@ class ProcedurePresentation < ApplicationRecord
       )
     end
 
-    explanatory_types_de_champ = [:header_section, :explication].map { |k| TypeDeChamp.type_champs.fetch(k) }
-
-    fields.concat procedure.types_de_champ
-      .where.not(type_champ: explanatory_types_de_champ)
-      .order(:id)
-      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ', type_de_champ.stable_id.to_s) }
-
-    fields.concat procedure.types_de_champ_private
-      .where.not(type_champ: explanatory_types_de_champ)
-      .order(:id)
-      .map { |type_de_champ| field_hash(type_de_champ.libelle, 'type_de_champ_private', type_de_champ.stable_id.to_s) }
+    fields.concat procedure.types_de_champ_for_procedure_presentation
+      .pluck(:libelle, :private, :stable_id)
+      .map { |(libelle, is_private, stable_id)| field_hash(libelle, is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s) }
 
     fields
   end
@@ -82,12 +83,8 @@ class ProcedurePresentation < ApplicationRecord
     ]
   end
 
-  def displayed_fields_values(dossier)
-    displayed_fields.map { |field| get_value(dossier, field['table'], field['column']) }
-  end
-
-  def sorted_ids(dossiers, instructeur)
-    table, column, order = sort.values_at('table', 'column', 'order')
+  def sorted_ids(dossiers, count, instructeur)
+    table, column, order = sort.values_at(TABLE, COLUMN, 'order')
 
     case table
     when 'notifications'
@@ -99,16 +96,28 @@ class ProcedurePresentation < ApplicationRecord
         (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
             dossiers_id_with_notification
       end
-    when 'type_de_champ'
-      dossiers
+    when TYPE_DE_CHAMP
+      ids = dossiers
         .with_type_de_champ(column)
         .order("champs.value #{order}")
         .pluck(:id)
-    when 'type_de_champ_private'
-      dossiers
+      if ids.size != count
+        rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
+        order == 'asc' ? ids + rest : rest + ids
+      else
+        ids
+      end
+    when TYPE_DE_CHAMP_PRIVATE
+      ids = dossiers
         .with_type_de_champ_private(column)
         .order("champs.value #{order}")
         .pluck(:id)
+      if ids.size != count
+        rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
+        order == 'asc' ? ids + rest : rest + ids
+      else
+        ids
+      end
     when 'followers_instructeurs'
       assert_supported_column(table, column)
       # LEFT OUTER JOIN allows to keep dossiers without assignated instructeurs yet
@@ -117,6 +126,7 @@ class ProcedurePresentation < ApplicationRecord
         .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id')
         .order("instructeurs_users.email #{order}")
         .pluck(:id)
+        .uniq
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
       (table == 'self' ? dossiers : dossiers.includes(table))
         .order("#{self.class.sanitized_column(table, column)} #{order}")
@@ -125,25 +135,25 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def filtered_ids(dossiers, statut)
-    filters[statut].group_by { |filter| filter.values_at('table', 'column') } .map do |(table, column), filters|
+    filters[statut].group_by { |filter| filter.values_at(TABLE, COLUMN) } .map do |(table, column), filters|
       values = filters.pluck('value')
       case table
       when 'self'
         dates = values
-          .map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
-          .compact
+          .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+
         dossiers.filter_by_datetimes(column, dates)
-      when 'type_de_champ'
+      when TYPE_DE_CHAMP
         dossiers.with_type_de_champ(column)
           .filter_ilike(:champs, :value, values)
-      when 'type_de_champ_private'
+      when TYPE_DE_CHAMP_PRIVATE
         dossiers.with_type_de_champ_private(column)
           .filter_ilike(:champs_private, :value, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values
-            .map { |v| v.to_date rescue nil }
-            .compact
+            .filter_map { |v| v.to_date rescue nil }
+
           dossiers
             .includes(table)
             .where(table.pluralize => { column => dates })
@@ -170,29 +180,10 @@ class ProcedurePresentation < ApplicationRecord
     end.reduce(:&)
   end
 
-  def eager_load_displayed_fields(dossiers)
-    relations_to_include = displayed_fields
-      .pluck('table')
-      .reject { |table| table == 'self' }
-      .map do |table|
-        case table
-        when 'type_de_champ'
-          :champs
-        when 'type_de_champ_private'
-          :champs_private
-        else
-          table
-        end
-      end
-      .uniq
-
-    dossiers.includes(relations_to_include)
-  end
-
   def human_value_for_filter(filter)
-    case filter['table']
-    when 'type_de_champ', 'type_de_champ_private'
-      find_type_de_champ(filter['column']).dynamic_type.filter_to_human(filter['value'])
+    case filter[TABLE]
+    when TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE
+      find_type_de_champ(filter[COLUMN]).dynamic_type.filter_to_human(filter['value'])
     else
       filter['value']
     end
@@ -200,19 +191,19 @@ class ProcedurePresentation < ApplicationRecord
 
   def add_filter(statut, field, value)
     if value.present?
-      table, column = field.split('/')
+      table, column = field.split(SLASH)
       label = find_field(table, column)['label']
 
       case table
-      when 'type_de_champ', 'type_de_champ_private'
+      when TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE
         value = find_type_de_champ(column).dynamic_type.human_to_filter(value)
       end
 
       updated_filters = filters.dup
       updated_filters[statut] << {
         'label' => label,
-        'table' => table,
-        'column' => column,
+        TABLE => table,
+        COLUMN => column,
         'value' => value
       }
 
@@ -221,11 +212,11 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def remove_filter(statut, field, value)
-    table, column = field.split('/')
+    table, column = field.split(SLASH)
 
     updated_filters = filters.dup
     updated_filters[statut] = filters[statut].reject do |filter|
-      filter.values_at('table', 'column', 'value') == [table, column, value]
+      filter.values_at(TABLE, COLUMN, 'value') == [table, column, value]
     end
 
     update!(filters: updated_filters)
@@ -236,7 +227,7 @@ class ProcedurePresentation < ApplicationRecord
       values = []
     end
 
-    fields = values.map { |value| find_field(*value.split('/')) }
+    fields = values.map { |value| find_field(*value.split(SLASH)) }
 
     update!(displayed_fields: fields)
 
@@ -246,15 +237,15 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def update_sort(table, column)
-    order = if sort.values_at('table', 'column') == [table, column]
+    order = if sort.values_at(TABLE, COLUMN) == [table, column]
       sort['order'] == 'asc' ? 'desc' : 'asc'
     else
       'asc'
     end
 
     update!(sort: {
-      'table' => table,
-      'column' => column,
+      TABLE => table,
+      COLUMN => column,
       'order' => order
     })
   end
@@ -262,11 +253,11 @@ class ProcedurePresentation < ApplicationRecord
   private
 
   def field_id(field)
-    field.values_at('table', 'column').join('/')
+    field.values_at(TABLE, COLUMN).join(SLASH)
   end
 
   def find_field(table, column)
-    fields.find { |field| field.values_at('table', 'column') == [table, column] }
+    fields.find { |field| field.values_at(TABLE, COLUMN) == [table, column] }
   end
 
   def find_type_de_champ(column)
@@ -300,34 +291,26 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def check_allowed_field(kind, field, extra_columns = {})
-    table, column = field.values_at('table', 'column')
+    table, column = field.values_at(TABLE, COLUMN)
     if !valid_column?(table, column, extra_columns)
       errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
     end
   end
 
-  def get_value(dossier, table, column)
-    case table
-    when 'self'
-      dossier.send(column)&.strftime('%d/%m/%Y')
-    when 'user', 'individual', 'etablissement'
-      dossier.send(table)&.send(column)
-    when 'followers_instructeurs'
-      dossier.send(table)&.map { |g| g.send(column) }&.join(', ')
-    when 'type_de_champ'
-      dossier.champs.find { |c| c.stable_id == column.to_i }.to_s
-    when 'type_de_champ_private'
-      dossier.champs_private.find { |c| c.stable_id == column.to_i }.to_s
-    when 'groupe_instructeur'
-      dossier.groupe_instructeur.label
+  def check_filters_max_length
+    individual_filters = filters.values.flatten.filter { |f| f.is_a?(Hash) }
+    individual_filters.each do |filter|
+      if filter['value']&.length.to_i > FILTERS_VALUE_MAX_LENGTH
+        errors.add(:filters, :too_long)
+      end
     end
   end
 
   def field_hash(label, table, column)
     {
       'label' => label,
-      'table' => table,
-      'column' => column
+      TABLE => table,
+      COLUMN => column
     }
   end
 
@@ -338,8 +321,8 @@ class ProcedurePresentation < ApplicationRecord
 
   def valid_columns_for_table(table)
     @column_whitelist ||= fields
-      .group_by { |field| field['table'] }
-      .transform_values { |fields| Set.new(fields.pluck('column')) }
+      .group_by { |field| field[TABLE] }
+      .transform_values { |fields| Set.new(fields.pluck(COLUMN)) }
 
     @column_whitelist[table] || []
   end

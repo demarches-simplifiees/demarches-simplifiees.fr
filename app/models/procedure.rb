@@ -2,52 +2,53 @@
 #
 # Table name: procedures
 #
-#  id                                  :integer          not null, primary key
-#  aasm_state                          :string           default("brouillon")
-#  allow_expert_review                 :boolean          default(TRUE), not null
-#  api_entreprise_token                :string
-#  ask_birthday                        :boolean          default(FALSE), not null
-#  auto_archive_on                     :date
-#  cadre_juridique                     :string
-#  cerfa_flag                          :boolean          default(FALSE)
-#  cloned_from_library                 :boolean          default(FALSE)
-#  closed_at                           :datetime
-#  declarative_with_state              :string
-#  description                         :string
-#  direction                           :string
-#  duree_conservation_dossiers_dans_ds :integer
-#  duree_conservation_dossiers_hors_ds :integer
-#  durees_conservation_required        :boolean          default(TRUE)
-#  euro_flag                           :boolean          default(FALSE)
-#  for_individual                      :boolean          default(FALSE)
-#  hidden_at                           :datetime
-#  juridique_required                  :boolean          default(TRUE)
-#  libelle                             :string
-#  lien_demarche                       :string
-#  lien_notice                         :string
-#  lien_site_web                       :string
-#  monavis_embed                       :text
-#  organisation                        :string
-#  path                                :string           not null
-#  published_at                        :datetime
-#  routing_criteria_name               :text             default("Votre ville")
-#  test_started_at                     :datetime
-#  unpublished_at                      :datetime
-#  web_hook_url                        :string
-#  whitelisted_at                      :datetime
-#  created_at                          :datetime         not null
-#  updated_at                          :datetime         not null
-#  canonical_procedure_id              :bigint
-#  draft_revision_id                   :bigint
-#  parent_procedure_id                 :bigint
-#  published_revision_id               :bigint
-#  service_id                          :bigint
+#  id                                        :integer          not null, primary key
+#  aasm_state                                :string           default("brouillon")
+#  allow_expert_review                       :boolean          default(TRUE), not null
+#  api_entreprise_token                      :string
+#  ask_birthday                              :boolean          default(FALSE), not null
+#  auto_archive_on                           :date
+#  cadre_juridique                           :string
+#  cerfa_flag                                :boolean          default(FALSE)
+#  cloned_from_library                       :boolean          default(FALSE)
+#  closed_at                                 :datetime
+#  declarative_with_state                    :string
+#  description                               :string
+#  direction                                 :string
+#  duree_conservation_dossiers_dans_ds       :integer
+#  duree_conservation_dossiers_hors_ds       :integer
+#  durees_conservation_required              :boolean          default(TRUE)
+#  encrypted_api_particulier_token           :string
+#  euro_flag                                 :boolean          default(FALSE)
+#  experts_require_administrateur_invitation :boolean          default(FALSE)
+#  for_individual                            :boolean          default(FALSE)
+#  hidden_at                                 :datetime
+#  juridique_required                        :boolean          default(TRUE)
+#  libelle                                   :string
+#  lien_demarche                             :string
+#  lien_notice                               :string
+#  lien_site_web                             :string
+#  monavis_embed                             :text
+#  organisation                              :string
+#  path                                      :string           not null
+#  published_at                              :datetime
+#  routing_criteria_name                     :text             default("Votre ville")
+#  test_started_at                           :datetime
+#  unpublished_at                            :datetime
+#  web_hook_url                              :string
+#  whitelisted_at                            :datetime
+#  created_at                                :datetime         not null
+#  updated_at                                :datetime         not null
+#  canonical_procedure_id                    :bigint
+#  draft_revision_id                         :bigint
+#  parent_procedure_id                       :bigint
+#  published_revision_id                     :bigint
+#  service_id                                :bigint
 #
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['archived_at', 'csv_export_queued', 'xlsx_export_queued', 'ods_export_queued']
-
   include ProcedureStatsConcern
+  include EncryptableConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -55,6 +56,10 @@ class Procedure < ApplicationRecord
 
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
+
+  MIN_WEIGHT = 350000
+
+  attr_encrypted :api_particulier_token
 
   has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
@@ -88,12 +93,63 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
-  def types_de_champ_for_export
-    types_de_champ.reject(&:exclude_from_export?)
+  def types_de_champ_for_procedure_presentation
+    explanatory_types_de_champ = [:header_section, :explication, :repetition].map { |k| TypeDeChamp.type_champs.fetch(k) }
+
+    if brouillon?
+      TypeDeChamp
+        .joins(:revisions)
+        .where.not(type_champ: explanatory_types_de_champ)
+        .where(procedure_revisions: { id: draft_revision_id })
+        .order(:private, :position)
+    else
+      # fetch all type_de_champ.stable_id for all the revisions expect draft
+      # and for each stable_id take the bigger (more recent) type_de_champ.id
+      recent_ids = TypeDeChamp
+        .joins(:revisions)
+        .where.not(type_champ: explanatory_types_de_champ)
+        .where(procedure_revisions: { procedure_id: id })
+        .where.not(procedure_revisions: { id: draft_revision_id })
+        .group(:stable_id)
+        .select('MAX(types_de_champ.id)')
+
+      # fetch the more recent procedure_revision_types_de_champ
+      # which includes recents_ids
+      recents_prtdc = ProcedureRevisionTypeDeChamp
+        .where(type_de_champ_id: recent_ids)
+        .where.not(revision_id: draft_revision_id)
+        .group(:type_de_champ_id)
+        .select('MAX(id)')
+
+      TypeDeChamp
+        .joins(:revision_types_de_champ)
+        .where(revision_types_de_champ: { id: recents_prtdc })
+        .order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
+    end
   end
 
-  def types_de_champ_private_for_export
-    types_de_champ_private.reject(&:exclude_from_export?)
+  def types_de_champ_for_tags
+    if brouillon?
+      draft_types_de_champ
+    else
+      TypeDeChamp.root
+        .public_only
+        .where(revision: revisions - [draft_revision])
+        .order(:created_at)
+        .uniq
+    end
+  end
+
+  def types_de_champ_private_for_tags
+    if brouillon?
+      draft_types_de_champ_private
+    else
+      TypeDeChamp.root
+        .private_only
+        .where(revision: revisions - [draft_revision])
+        .order(:created_at)
+        .uniq
+    end
   end
 
   has_many :administrateurs_procedures
@@ -157,6 +213,20 @@ class Procedure < ApplicationRecord
     includes(:draft_revision, :published_revision, administrateurs: :user)
   }
 
+  scope :for_download, -> {
+    includes(
+      :groupe_instructeurs,
+      dossiers: {
+        champs: [
+          piece_justificative_file_attachment: :blob,
+          champs: [
+            piece_justificative_file_attachment: :blob
+          ]
+        ]
+      }
+    )
+  }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
@@ -197,6 +267,7 @@ class Procedure < ApplicationRecord
     if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
+  validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/, message: "n'est pas un jeton valide" }, allow_blank: true
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
@@ -211,10 +282,10 @@ class Procedure < ApplicationRecord
     state :close
     state :depubliee
 
-    event :publish, before: :before_publish, after: :after_publish do
-      transitions from: :brouillon, to: :publiee
-      transitions from: :close, to: :publiee
-      transitions from: :depubliee, to: :publiee
+    event :publish, before: :before_publish do
+      transitions from: :brouillon, to: :publiee, after: :after_publish
+      transitions from: :close, to: :publiee, after: :after_republish
+      transitions from: :depubliee, to: :publiee, after: :after_republish
     end
 
     event :close, after: :after_close do
@@ -243,9 +314,7 @@ class Procedure < ApplicationRecord
   end
 
   def reset!
-    if locked?
-      raise "Can not reset a locked procedure."
-    else
+    if !locked? || draft_changed?
       draft_revision.dossiers.destroy_all
     end
   end
@@ -296,6 +365,14 @@ class Procedure < ApplicationRecord
     publiee? || close? || depubliee?
   end
 
+  def draft_changed?
+    publiee? && published_revision.changed?(draft_revision) && revision_changes.present?
+  end
+
+  def revision_changes
+    published_revision.compare(draft_revision)
+  end
+
   def accepts_new_dossiers?
     publiee? || brouillon?
   end
@@ -326,17 +403,6 @@ class Procedure < ApplicationRecord
     Flipper.enabled?(feature, self)
   end
 
-  # Warning: dossier after_save build_default_champs must be removed
-  # to save a dossier created from this method
-  def new_dossier
-    Dossier.new(
-      revision: active_revision,
-      champs: active_revision.build_champs,
-      champs_private: active_revision.build_champs_private,
-      groupe_instructeur: defaut_groupe_instructeur
-    )
-  end
-
   def path_customized?
     !path.match?(/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/)
   end
@@ -365,7 +431,9 @@ class Procedure < ApplicationRecord
       }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
-    procedure = self.deep_clone(include: include_list, &method(:clone_attachments))
+    procedure = self.deep_clone(include: include_list) do |original, kopy|
+      PiecesJustificativesService.clone_attachments(original, kopy)
+    end
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
     procedure.closed_at = nil
@@ -378,6 +446,7 @@ class Procedure < ApplicationRecord
     if is_different_admin
       procedure.administrateurs = [admin]
       procedure.api_entreprise_token = nil
+      procedure.encrypted_api_particulier_token = nil
     else
       procedure.administrateurs = administrateurs
     end
@@ -409,29 +478,6 @@ class Procedure < ApplicationRecord
     end
 
     procedure
-  end
-
-  def clone_attachments(original, kopy)
-    if original.is_a?(TypeDeChamp)
-      clone_attachment(:piece_justificative_template, original, kopy)
-    elsif original.is_a?(Procedure)
-      clone_attachment(:logo, original, kopy)
-      clone_attachment(:notice, original, kopy)
-      clone_attachment(:deliberation, original, kopy)
-    end
-  end
-
-  def clone_attachment(attribute, original, kopy)
-    original_attachment = original.send(attribute)
-    if original_attachment.attached?
-      kopy.send(attribute).attach({
-        io: StringIO.new(original_attachment.download),
-        filename: original_attachment.filename,
-        content_type: original_attachment.content_type,
-        # we don't want to run virus scanner on cloned file
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      })
-    end
   end
 
   def whitelisted?
@@ -487,6 +533,23 @@ class Procedure < ApplicationRecord
     without_continuation_mail || Mails::WithoutContinuationMail.default_for_procedure(self)
   end
 
+  def mail_template_for(state)
+    case state
+    when Dossier.states.fetch(:en_construction)
+      initiated_mail_template
+    when Dossier.states.fetch(:en_instruction)
+      received_mail_template
+    when Dossier.states.fetch(:accepte)
+      closed_mail_template
+    when Dossier.states.fetch(:refuse)
+      refused_mail_template
+    when Dossier.states.fetch(:sans_suite)
+      without_continuation_mail_template
+    else
+      raise "Unknown dossier state: #{state}"
+    end
+  end
+
   def self.default_sort
     {
       'table' => 'self',
@@ -496,7 +559,7 @@ class Procedure < ApplicationRecord
   end
 
   def whitelist!
-    update_attribute('whitelisted_at', Time.zone.now)
+    touch(:whitelisted_at)
   end
 
   def closed_mail_template_attestation_inconsistency_state
@@ -508,19 +571,6 @@ class Procedure < ApplicationRecord
       elsif !attestation_template&.activated? && tag_present
         :extraneous_tag
       end
-    end
-  end
-
-  def usual_traitement_time
-    times = Traitement.includes(:dossier)
-      .where(dossier: self.dossiers)
-      .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
-      .where(processed_at: 1.month.ago..Time.zone.now)
-      .pluck('dossiers.en_construction_at', :processed_at)
-      .map { |(en_construction_at, processed_at)| processed_at - en_construction_at }
-
-    if times.present?
-      times.percentile(90).ceil
     end
   end
 
@@ -552,10 +602,12 @@ class Procedure < ApplicationRecord
     when Procedure.declarative_with_states.fetch(:en_instruction)
       dossiers
         .state_en_construction
+        .where(declarative_triggered_at: nil)
         .find_each(&:passer_automatiquement_en_instruction!)
     when Procedure.declarative_with_states.fetch(:accepte)
       dossiers
         .state_en_construction
+        .where(declarative_triggered_at: nil)
         .find_each(&:accepter_automatiquement!)
     end
   end
@@ -632,45 +684,23 @@ class Procedure < ApplicationRecord
     draft_revision.deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
   end
 
-  def dossiers_count_for_instructeur(instructeur)
-    query = <<-EOF
-  SELECT
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."id" IS NULL and not "dossiers"."archived") AS a_suivre,
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('en_construction', 'en_instruction') and "follows"."instructeur_id" = :instructeur_id and not "dossiers"."archived" and "follows"."unfollowed_at" IS NULL) AS suivis,
-      COUNT(*) FILTER ( WHERE "dossiers"."state" in ('accepte', 'refuse', 'sans_suite') and not "dossiers"."archived" ) AS termines,
-      COUNT(*) FILTER ( WHERE "dossiers"."state" != 'brouillon' and not "dossiers"."archived" ) AS total,
-      COUNT(*) FILTER ( WHERE "dossiers"."archived" ) AS archived
-  FROM
-      "dossiers"
-  INNER JOIN
-      "groupe_instructeurs"
-          ON "dossiers"."groupe_instructeur_id" = "groupe_instructeurs"."id"
-  INNER JOIN
-      "assign_tos"
-          ON "groupe_instructeurs"."id" = "assign_tos"."groupe_instructeur_id"
-  INNER JOIN
-      "procedures"
-          ON "groupe_instructeurs"."procedure_id" = "procedures"."id"
-  LEFT OUTER JOIN
-      "follows"
-          ON "follows"."dossier_id" = "dossiers"."id"
-          AND "follows"."unfollowed_at" IS NULL
-  WHERE
-      "dossiers"."hidden_at" IS NULL
-      AND "assign_tos"."instructeur_id" = :instructeur_id
-      AND "procedures"."id" = :procedure_id
-  GROUP BY
-      groupe_instructeurs.procedure_id, procedures.libelle
-    EOF
+  def average_dossier_weight
+    if dossiers.termine.any?
+      dossiers_sample = dossiers.termine.limit(100)
+      total_size = Champ
+        .includes(piece_justificative_file_attachment: :blob)
+        .where(type: Champs::PieceJustificativeChamp.to_s, dossier: dossiers_sample)
+        .sum('active_storage_blobs.byte_size')
 
-    sanitized_query = ActiveRecord::Base.sanitize_sql([
-      query,
-      instructeur_id: instructeur.id,
-      procedure_id: self.id,
-      now: Time.zone.now
-    ])
+      MIN_WEIGHT + total_size / dossiers_sample.length
+    else
+      nil
+    end
+  end
 
-    Procedure.connection.select_all(sanitized_query).first || { "a_suivre" => 0, "suivis" => 0, "termines" => 0, "total" => 0, "archived" => 0 }
+  def publish_revision!
+    update!(draft_revision: create_new_revision, published_revision: draft_revision)
+    published_revision.touch(:published_at)
   end
 
   private
@@ -680,15 +710,21 @@ class Procedure < ApplicationRecord
   end
 
   def after_publish(canonical_procedure = nil)
-    update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
+    update!(canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
+    touch(:published_at)
+    published_revision.touch(:published_at)
+  end
+
+  def after_republish(canonical_procedure = nil)
+    touch(:published_at)
   end
 
   def after_close
-    update!(closed_at: Time.zone.now)
+    touch(:closed_at)
   end
 
   def after_unpublish
-    update!(unpublished_at: Time.zone.now)
+    touch(:unpublished_at)
   end
 
   def update_juridique_required

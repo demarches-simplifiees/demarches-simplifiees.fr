@@ -19,42 +19,44 @@
             = link_to 'instructeurs', admin_procedure_groupe_instructeurs_path(@procedure), class: 'header-link'
           - else
             = link_to 'instructeurs', instructeur_groupes_path(@procedure), class: 'header-link'
+        - if @procedure.dossiers.state_brouillon.where(groupe_instructeur: current_instructeur.groupe_instructeur_ids).includes(:groupe_instructeur).present?
+          |
+          = link_to 'contacter les usagers (brouillon)', email_usagers_instructeur_procedure_path(@procedure), class: 'header-link'
 
         %ul.tabs
           = tab_item('à suivre',
             instructeur_procedure_path(@procedure, statut: 'a-suivre'),
             active: @statut == 'a-suivre',
-            badge: number_with_html_delimiter(@a_suivre_dossiers.count))
+            badge: number_with_html_delimiter(@a_suivre_count))
 
-          = tab_item(t('pluralize.followed', count: @followed_dossiers.count),
+          = tab_item(t('pluralize.followed', count: @suivis_count),
             instructeur_procedure_path(@procedure, statut: 'suivis'),
             active: @statut == 'suivis',
-            badge: number_with_html_delimiter(@followed_dossiers.count),
+            badge: number_with_html_delimiter(@suivis_count),
             notification: @has_en_cours_notifications)
 
-          = tab_item(t('pluralize.processed', count: @termines_dossiers.count),
+          = tab_item(t('pluralize.processed', count: @traites_count),
             instructeur_procedure_path(@procedure, statut: 'traites'),
             active: @statut == 'traites',
-            badge: number_with_html_delimiter(@termines_dossiers.count),
+            badge: number_with_html_delimiter(@traites_count),
             notification: @has_termine_notifications)
 
-          = tab_item('tous les dossiers',
+          = tab_item('au total',
             instructeur_procedure_path(@procedure, statut: 'tous'),
             active: @statut == 'tous',
-            badge: number_with_html_delimiter(@all_state_dossiers.count))
+            badge: number_with_html_delimiter(@tous_count))
 
-          = tab_item(t('pluralize.archived', count: @archived_dossiers.count),
+          = tab_item(t('pluralize.archived', count: @archives_count),
             instructeur_procedure_path(@procedure, statut: 'archives'),
             active: @statut == 'archives',
-            badge: number_with_html_delimiter(@archived_dossiers.count))
+            badge: number_with_html_delimiter(@archives_count))
 
       .procedure-actions
-        = render partial: "download_dossiers",
-          locals: { procedure: @procedure, xlsx_export: @xlsx_export, csv_export: @csv_export, ods_export: @ods_export }
+        = render partial: "download_dossiers", locals: { procedure: @procedure, exports: @exports, dossier_count: @tous_count + @archives_count }
 
   .container
     - if @statut == 'a-suivre'
-      %p.explication-onglet Aucun instructeur n'est affecté au suivi de ces dossiers. Soyez le premier !
+      %p.explication-onglet Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
     - if @statut == 'suivis'
       %p.explication-onglet Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu'à pouvoir les accepter, les refuser ou les classer sans suite.
     - if @statut == 'traites'
@@ -75,8 +77,9 @@
           %span.icon.delete
           Afficher les dossiers supprimés
 
-    - if @dossiers.present? || @current_filters.count > 0
-      = paginate @dossiers
+    - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
+      - pagination =  paginate @filtered_sorted_paginated_ids
+      = pagination
       %span.dropdown
         %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'filter-menu' }
           Filtrer
@@ -86,7 +89,7 @@
             = select_tag :field, options_for_select(@displayed_fields_options)
             %br
             = label_tag :value, "Valeur"
-            = text_field_tag :value
+            = text_field_tag :value, nil, maxlength: ProcedurePresentation::FILTERS_VALUE_MAX_LENGTH
             = hidden_field_tag :statut, @statut
             %br
             = submit_tag "Ajouter le filtre", class: 'button'
@@ -121,7 +124,7 @@
                 %button.button.dropdown-button{ 'aria-expanded' => 'false', 'aria-controls' => 'custom-menu' }
                   Personnaliser
                 #custom-menu.dropdown-content.fade-in-down
-                  = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form columns-form' do
+                  = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
                     - hidden_field_id = SecureRandom.uuid
                     = hidden_field_tag :values, nil, data: { uuid: hidden_field_id }
                     = react_component("ComboMultipleDropdownList", options: @displayed_fields_options, selected: @displayed_fields_selected, disabled: [], hiddenFieldId: hidden_field_id, label: 'colonne')
@@ -129,26 +132,33 @@
                     = submit_tag "Enregistrer", class: 'button'
 
         %tbody
-          - @dossiers.each do |dossier|
+          - @projected_dossiers.each do |p|
+            - path = instructeur_dossier_path(@procedure, p.dossier_id)
+
             %tr
               %td.folder-col
-                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
+                %a.cell-link{ href: path }
                   %span.icon.folder
-                    - if @not_archived_notifications_dossier_ids.include?(dossier.id)
+                    - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
                       %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
-                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
-                  = dossier.id
+                %a.cell-link{ href: path }= p.dossier_id
 
-              - @procedure_presentation.displayed_fields_values(dossier).each do |value|
+              - p.columns.each do |column|
                 %td
-                  = link_to(value, instructeur_dossier_path(@procedure, dossier), class: 'cell-link')
+                  %a.cell-link{ href: path }= column
 
               %td.status-col
-                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
-                  = status_badge(dossier.state)
-              %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
-      = paginate @dossiers
+                %a.cell-link{ href: path }= status_badge(p.state)
+
+              %td.action-col.follow-col= render partial: 'dossier_actions',
+                locals: { procedure_id: @procedure.id,
+                          dossier_id: p.dossier_id,
+                          state: p.state,
+                          archived: p.archived,
+                          dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id) }
+
+      = pagination
     - else
       %h2.empty-text Aucun dossier

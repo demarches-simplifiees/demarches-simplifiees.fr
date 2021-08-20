@@ -9,7 +9,8 @@ module CreateAvisConcern
     # the :emails parameter is a 1-element array.
     # Hence the call to first
     # https://github.com/rails/rails/issues/17225
-    expert_emails = create_avis_params[:emails].first.split(',').map(&:strip)
+    expert_emails = create_avis_params[:emails].presence || [].to_json
+    expert_emails = JSON.parse(expert_emails).map(&:strip).map(&:downcase)
     allowed_dossiers = [dossier]
 
     if create_avis_params[:invite_linked_dossiers].present?
@@ -33,6 +34,7 @@ module CreateAvisConcern
         end
       end
     )
+    dossier.avis.reload # unload non-persisted avis from dossier
 
     persisted, failed = create_results.partition(&:persisted?)
 
@@ -48,7 +50,7 @@ module CreateAvisConcern
           avis.update_column(:email, nil)
         end
       end
-      flash.notice = "Une demande d'avis a été envoyée à #{sent_emails_addresses.uniq.join(", ")}"
+      flash.notice = "Une demande d’avis a été envoyée à #{sent_emails_addresses.uniq.join(", ")}"
     end
 
     if failed.any?
@@ -65,6 +67,6 @@ module CreateAvisConcern
   end
 
   def create_avis_params
-    params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, emails: [])
+    params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, :emails)
   end
 end

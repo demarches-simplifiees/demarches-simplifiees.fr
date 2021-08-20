@@ -76,9 +76,6 @@ class RootController < ApplicationController
     @dossier = Dossier.new(champs: all_champs)
   end
 
-  def accessibilite
-  end
-
   def suivi
   end
 
@@ -89,5 +86,10 @@ class RootController < ApplicationController
       format.html { redirect_back(fallback_location: root_path) }
       format.js { render js: helpers.remove_element('#outdated-browser-banner') }
     end
+  end
+
+  def save_locale
+    cookies[:locale] = params[:locale]
+    redirect_to request.referer
   end
 end

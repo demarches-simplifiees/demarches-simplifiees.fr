@@ -18,15 +18,14 @@
 #  type_de_champ_id               :integer
 #
 class Champ < ApplicationRecord
-  belongs_to :dossier, -> { with_discarded }, inverse_of: :champs, touch: true, optional: false
+  belongs_to :dossier, -> { with_discarded }, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
-  has_many :commentaires
   has_one_attached :piece_justificative_file
 
   # We declare champ specific relationships (Champs::CarteChamp, Champs::SiretChamp and Champs::RepetitionChamp)
   # here because otherwise we can't easily use includes in our queries.
-  has_many :geo_areas, dependent: :destroy
+  has_many :geo_areas, -> { order(:created_at) }, dependent: :destroy, inverse_of: :champ
   belongs_to :etablissement, optional: true, dependent: :destroy
   has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent, dependent: :destroy
 
@@ -45,6 +44,7 @@ class Champ < ApplicationRecord
     :repetition?,
     :dossier_link?,
     :titre_identite?,
+    :header_section?,
     to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
@@ -86,19 +86,16 @@ class Champ < ApplicationRecord
     end
   end
 
+  def sections
+    siblings&.filter(&:header_section?)
+  end
+
   def mandatory_and_blank?
     mandatory? && blank?
   end
 
   def blank?
-    case type_de_champ.type_champ
-    when TypeDeChamp.type_champs.fetch(:carte)
-      geo_areas.blank? || value == '[]'
-    when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
-      value.blank? || value == '[]'
-    else
-      value.blank?
-    end
+    value.blank?
   end
 
   def search_terms

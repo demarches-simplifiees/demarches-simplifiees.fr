@@ -1,4 +1,4 @@
-import cadastreLayers from './cadastre-layers';
+import cadastreLayers from './layers/cadastre';
 
 const IGN_TOKEN = 'rc1egnbeoss72hxvd143tbyk';
 
@@ -119,9 +119,9 @@ const OPTIONAL_LAYERS = [
 function buildSources() {
   return Object.fromEntries(
     OPTIONAL_LAYERS.filter(({ id }) => id !== 'cadastres')
-      .flatMap(({ layers }) => layers)
-      .map(([, code]) => [
-        code.toLowerCase().replace(/\./g, '-'),
+      .flatMap(({ layers }) => layers.map(([, code]) => code))
+      .map((code) => [
+        getLayerCode(code),
         rasterSource([ignServiceURL(code)], 'IGN-F/Géoportail/MNHN')
       ])
   );
@@ -138,23 +138,38 @@ function rasterSource(tiles, attribution) {
   };
 }
 
-export function buildLayers(ids) {
-  return OPTIONAL_LAYERS.filter(({ id }) => ids.includes(id))
-    .flatMap(({ layers }) => layers)
-    .flatMap(([, code]) =>
-      code === 'CADASTRE'
-        ? cadastreLayers
-        : [rasterLayer(code.toLowerCase().replace(/\./g, '-'))]
-    );
-}
-
-export function rasterLayer(source) {
+function rasterLayer(source, opacity) {
   return {
     id: source,
     source,
     type: 'raster',
-    paint: { 'raster-resampling': 'linear' }
+    paint: { 'raster-resampling': 'linear', 'raster-opacity': opacity }
   };
+}
+
+export function buildOptionalLayers(ids, opacity) {
+  return OPTIONAL_LAYERS.filter(({ id }) => ids.includes(id))
+    .flatMap(({ layers, id }) =>
+      layers.map(([, code]) => [code, opacity[id] / 100])
+    )
+    .flatMap(([code, opacity]) =>
+      code === 'CADASTRE'
+        ? cadastreLayers
+        : [rasterLayer(getLayerCode(code), opacity)]
+    );
+}
+
+export const NBS = ' ';
+
+export function getLayerName(layer) {
+  return OPTIONAL_LAYERS.find(({ id }) => id == layer).label.replace(
+    /\s/g,
+    NBS
+  );
+}
+
+function getLayerCode(code) {
+  return code.toLowerCase().replace(/\./g, '-');
 }
 
 export default {

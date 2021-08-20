@@ -17,7 +17,7 @@ class Array
     values = self.sort
 
     if values.empty?
-      return []
+      return 0
     elsif values.size == 1
       return values.first
     elsif p == 100

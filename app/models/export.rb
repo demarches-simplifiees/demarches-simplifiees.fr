@@ -2,13 +2,15 @@
 #
 # Table name: exports
 #
-#  id         :bigint           not null, primary key
-#  format     :string           not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id             :bigint           not null, primary key
+#  format         :string           not null
+#  key            :text             not null
+#  time_span_type :string           default("everything"), not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #
 class Export < ApplicationRecord
-  MAX_DUREE_CONSERVATION_EXPORT = 1.hour
+  MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
   enum format: {
     csv: 'csv',
@@ -16,15 +18,26 @@ class Export < ApplicationRecord
     xlsx: 'xlsx'
   }
 
+  enum time_span_type: {
+    everything: 'everything',
+    monthly:    'monthly'
+  }
+
   has_and_belongs_to_many :groupe_instructeurs
 
   has_one_attached :file
 
-  validates :format, :groupe_instructeurs, presence: true
+  validates :format, :groupe_instructeurs, :key, presence: true
 
-  scope :stale, -> { where('updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
+  scope :stale, -> { where('exports.updated_at < ?', (Time.zone.now - MAX_DUREE_CONSERVATION_EXPORT)) }
 
   after_create_commit :compute_async
+
+  FORMATS = [:xlsx, :ods, :csv].flat_map do |format|
+    Export.time_span_types.values.map do |time_span_type|
+      [format, time_span_type]
+    end
+  end
 
   def compute_async
     ExportJob.perform_later(self)
@@ -32,7 +45,7 @@ class Export < ApplicationRecord
 
   def compute
     file.attach(
-      io: io,
+      io: io(since: since),
       filename: filename,
       content_type: content_type,
       # We generate the exports ourselves, so they are safe
@@ -40,45 +53,54 @@ class Export < ApplicationRecord
     )
   end
 
+  def since
+    time_span_type == Export.time_span_types.fetch(:monthly) ? 30.days.ago : nil
+  end
+
   def ready?
     file.attached?
   end
 
-  def self.find_or_create_export(format, groupe_instructeurs)
-    export = Export.find_for_format_and_groupe_instructeurs(format, groupe_instructeurs)
-
-    if export.nil?
-      export = Export.create(
-        format: format,
-        groupe_instructeurs: groupe_instructeurs
-      )
-    end
-
-    export
+  def old?
+    updated_at < 20.minutes.ago
   end
 
-  def self.find_for_format_and_groupe_instructeurs(format, groupe_instructeurs)
-    export_including_gis = Export
-      .joins(:exports_groupe_instructeurs)
-      .where(
-        format: format,
-        exports_groupe_instructeurs: { groupe_instructeur: groupe_instructeurs }
-      )
+  def self.find_or_create_export(format, time_span_type, groupe_instructeurs)
+    create_with(groupe_instructeurs: groupe_instructeurs)
+      .create_or_find_by(format: format,
+        time_span_type: time_span_type,
+        key: generate_cache_key(groupe_instructeurs.map(&:id)))
+  end
 
-    export_including_gis.find do |export|
-      export.groupe_instructeurs.pluck(:id).sort == groupe_instructeurs.map(&:id).sort
-    end
+  def self.find_for_groupe_instructeurs(groupe_instructeurs_ids)
+    exports = where(key: generate_cache_key(groupe_instructeurs_ids))
+
+    [:xlsx, :csv, :ods].map do |format|
+      [
+        format,
+        Export.time_span_types.values.map do |time_span_type|
+          [time_span_type, exports.find { |export| export.format == format.to_s && export.time_span_type == time_span_type }]
+        end.filter { |(_, export)| export.present? }.to_h
+      ]
+    end.filter { |(_, exports)| exports.present? }.to_h
+  end
+
+  def self.generate_cache_key(groupe_instructeurs_ids)
+    groupe_instructeurs_ids.sort.join('-')
   end
 
   private
 
   def filename
-    procedure_identifier = procedure.path || "procedure-#{id}"
+    procedure_identifier = procedure.path || "procedure-#{procedure.id}"
     "dossiers_#{procedure_identifier}_#{Time.zone.now.strftime('%Y-%m-%d_%H-%M')}.#{format}"
   end
 
-  def io
+  def io(since: nil)
     dossiers = Dossier.where(groupe_instructeur: groupe_instructeurs)
+    if since.present?
+      dossiers = dossiers.where('dossiers.en_construction_at > ?', since)
+    end
     service = ProcedureExportService.new(procedure, dossiers)
 
     case format.to_sym

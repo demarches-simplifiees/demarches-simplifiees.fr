@@ -353,7 +353,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     context 'when jeton is invalid' do
       let(:token_is_valid) { false }
 
-      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n'est pas valide") }
+      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide") }
       it { expect(flash.notice).to be_nil }
       it { expect(procedure.reload.api_entreprise_token).not_to eq(token) }
     end
@@ -362,7 +362,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       let(:token) { "invalid" }
       let(:token_is_valid) { true } # just to check jwt format by procedure model
 
-      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n'est pas valide") }
+      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide") }
       it { expect(flash.notice).to be_nil }
       it { expect(procedure.reload.api_entreprise_token).not_to eq(token) }
     end
@@ -479,7 +479,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       it { expect(subject.status).to eq 302 }
       it { expect(response.body).to include(admin_procedure_transfert_path(procedure.id)) }
       it { expect(flash[:alert]).to be_present }
-      it { expect(flash[:alert]).to eq("Envoi vers #{email_admin} impossible : cet administrateur n'existe pas") }
+      it { expect(flash[:alert]).to eq("Envoi vers #{email_admin} impossible : cet administrateur n’existe pas") }
     end
 
     context 'when admin is known' do
@@ -530,36 +530,6 @@ describe NewAdministrateur::ProceduresController, type: :controller do
 
     context 'when admin accept to invite experts on this procedure (true by default)' do
       it { expect(procedure.allow_expert_review).to be_truthy }
-    end
-  end
-
-  describe 'PUT #update_allow_decision_access' do
-    let!(:procedure) { create :procedure, :with_service, administrateur: admin }
-    let(:expert) { create(:expert) }
-    let(:expert_procedure) { create(:experts_procedure, procedure: procedure, expert: expert) }
-
-    subject do
-      put :update_allow_decision_access, params: { procedure_id: procedure.id, experts_procedure: { allow_decision_access: !expert_procedure.allow_decision_access }, expert_procedure: expert_procedure }, format: :js
-    end
-
-    context 'when the experts_procedure is true' do
-      let(:expert_procedure) { create(:experts_procedure, procedure: procedure, expert: expert, allow_decision_access: true) }
-
-      before do
-        subject
-        expert_procedure.reload
-      end
-
-      it { expect(expert_procedure.allow_decision_access).to be_falsy }
-    end
-
-    context 'when the experts_procedure is false' do
-      before do
-        subject
-        expert_procedure.reload
-      end
-
-      it { expect(expert_procedure.allow_decision_access).to be_truthy }
     end
   end
 end

@@ -50,10 +50,26 @@
   color: $black;
 }
 
+.mt-1 {
+  margin-top: $default-spacer;
+}
+
 .mt-2 {
   margin-top: 2 * $default-spacer;
 }
 
+.mt-4 {
+  margin-top: 4 * $default-spacer;
+}
+
+.mt-8 {
+  margin-top: 8 * $default-spacer;
+}
+
 .mb-2 {
   margin-bottom: 2 * $default-spacer;
+}
+
+.mb-1 {
+  margin-bottom: $default-spacer;
 }

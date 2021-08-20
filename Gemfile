@@ -6,11 +6,13 @@ gem 'active_model_serializers'
 gem 'activestorage-openstack'
 gem 'active_storage_validations'
 gem 'administrate'
+gem 'administrate-field-enum' # Allow using Field::Enum in administrate
 gem 'after_party'
 gem 'anchored'
 gem 'bcrypt'
 gem 'bootsnap', '>= 1.4.4', require: false # Reduces boot times through caching; required in config/boot.rb
 gem 'browser'
+gem 'charlock_holmes'
 gem 'chartkick'
 gem 'chunky_png'
 gem 'clamav-client', require: 'clamav/client'
@@ -18,11 +20,11 @@ gem 'daemons'
 gem 'deep_cloneable' # Enable deep clone of active record models
 gem 'delayed_cron_job' # Cron jobs
 gem 'delayed_job_active_record'
-gem 'delayed_job_web'
+gem 'delayed_job_web', '>= 1.4.4'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'devise-i18n'
-gem 'devise-two-factor', github: 'jason-hobbs/devise-two-factor', branch: 'master' # Rails 6.1 compatibility: https://github.com/tinfoil/devise-two-factor/issues/183
+gem 'devise-two-factor'
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
 gem 'flipper'
@@ -49,7 +51,7 @@ gem 'kaminari', '1.2.1' # Pagination
 gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
-gem 'mailjet'
+gem 'mailjet', require: false
 gem 'openid_connect'
 gem 'pg'
 gem 'phonelib'

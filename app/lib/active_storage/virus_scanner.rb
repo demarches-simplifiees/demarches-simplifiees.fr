@@ -8,6 +8,7 @@ class ActiveStorage::VirusScanner
   PENDING = 'pending'
   INFECTED = 'infected'
   SAFE = 'safe'
+  INTEGRITY_ERROR = 'integrity_error'
 
   def pending?
     blob.metadata[:virus_scan_result] == PENDING
@@ -19,6 +20,10 @@ class ActiveStorage::VirusScanner
 
   def safe?
     blob.metadata[:virus_scan_result] == SAFE
+  end
+
+  def corrupt?
+    blob.metadata[:virus_scan_result] == INTEGRITY_ERROR
   end
 
   def done?

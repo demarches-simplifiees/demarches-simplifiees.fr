@@ -31,5 +31,5 @@
     %p.etablissement-exercices Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
 %p
   = link_to "➡ Autres informations sur l’organisme sur « annuaire-entreprises.data.gouv.fr »",
-  "https://annuaire-entreprises.data.gouv.fr/entreprise/#{etablissement.siren}",
+  annuaire_link(etablissement.siren),
   target: "_blank"

@@ -50,58 +50,52 @@ module Instructeurs
       @current_filters = current_filters
       @displayed_fields_options, @displayed_fields_selected = procedure_presentation.displayed_fields_for_select
 
-      @a_suivre_dossiers = current_instructeur
-        .dossiers
-        .for_procedure(procedure)
+      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count = current_instructeur
+        .dossiers_count_summary(groupe_instructeur_ids)
+        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives')
+
+      dossiers_visibles = Dossier
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
+
+      @a_suivre_dossiers = dossiers_visibles
         .without_followers
         .en_cours
 
       @followed_dossiers = current_instructeur
         .followed_dossiers
-        .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
-        .for_procedure(procedure)
+        .where(groupe_instructeur_id: groupe_instructeur_ids)
         .en_cours
 
-      @followed_dossiers_id = current_instructeur
-        .followed_dossiers
-        .where(groupe_instructeur: current_instructeur.groupe_instructeurs)
-        .for_procedure(procedure)
-        .pluck(:id)
+      @followed_dossiers_id = @followed_dossiers.pluck(:id)
 
-      @termines_dossiers = current_instructeur
-        .dossiers
-        .for_procedure(procedure)
-        .termine
-
-      @all_state_dossiers = current_instructeur
-        .dossiers
-        .for_procedure(procedure)
-        .all_state
-
-      @archived_dossiers = current_instructeur
-        .dossiers
-        .for_procedure(procedure)
-        .archived
+      @termines_dossiers = dossiers_visibles.termine
+      @all_state_dossiers = dossiers_visibles.all_state
+      @archived_dossiers = dossiers_visibles.archived
 
       @dossiers = case statut
       when 'a-suivre'
+        dossiers_count = @a_suivre_count
         @a_suivre_dossiers
       when 'suivis'
+        dossiers_count = @suivis_count
         @followed_dossiers
       when 'traites'
+        dossiers_count = @traites_count
         @termines_dossiers
       when 'tous'
+        dossiers_count = @tous_count
         @all_state_dossiers
       when 'archives'
+        dossiers_count = @archives_count
         @archived_dossiers
       end
 
-      @has_en_cours_notifications = current_instructeur.notifications_for_procedure(@procedure, :en_cours).exists?
-      @has_termine_notifications = current_instructeur.notifications_for_procedure(@procedure, :termine).exists?
+      notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
+      @has_en_cours_notifications = notifications[:en_cours].present?
+      @has_termine_notifications = notifications[:termines].present?
+      @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
-      @not_archived_notifications_dossier_ids = current_instructeur.notifications_for_procedure(@procedure, :not_archived).pluck(:id)
-
-      sorted_ids = procedure_presentation.sorted_ids(@dossiers, current_instructeur)
+      sorted_ids = procedure_presentation.sorted_ids(@dossiers, dossiers_count, current_instructeur)
 
       if @current_filters.count > 0
         filtered_ids = procedure_presentation.filtered_ids(@dossiers, statut)
@@ -112,18 +106,12 @@ module Instructeurs
 
       page = params[:page].presence || 1
 
-      filtered_sorted_paginated_ids = Kaminari
+      @filtered_sorted_paginated_ids = Kaminari
         .paginate_array(filtered_sorted_ids)
         .page(page)
         .per(ITEMS_PER_PAGE)
 
-      @dossiers = @dossiers.where(id: filtered_sorted_paginated_ids)
-
-      @dossiers = procedure_presentation.eager_load_displayed_fields(@dossiers)
-
-      @dossiers = @dossiers.sort_by { |d| filtered_sorted_paginated_ids.index(d.id) }
-
-      kaminarize(page, filtered_sorted_ids.count)
+      @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
 
       assign_exports
     end
@@ -163,11 +151,22 @@ module Instructeurs
 
     def download_export
       export_format = params[:export_format]
+      time_span_type = params[:time_span_type] || Export.time_span_types.fetch(:everything)
       groupe_instructeurs = current_instructeur
         .groupe_instructeurs
         .where(procedure: procedure)
 
-      export = Export.find_or_create_export(export_format, groupe_instructeurs)
+      @dossier_count = current_instructeur
+        .dossiers_count_summary(groupe_instructeur_ids)
+        .fetch_values('tous', 'archives')
+        .sum
+
+      export = Export.find_or_create_export(export_format, time_span_type, groupe_instructeurs)
+
+      if export.ready? && export.old? && params[:force_export]
+        export.destroy
+        export = Export.find_or_create_export(export_format, time_span_type, groupe_instructeurs)
+      end
 
       if export.ready?
         respond_to do |format|
@@ -216,6 +215,53 @@ module Instructeurs
       @usual_traitement_time = @procedure.stats_usual_traitement_time
       @dossiers_funnel = @procedure.stats_dossiers_funnel
       @termines_states = @procedure.stats_termines_states
+      @termines_by_week = @procedure.stats_termines_by_week
+      @usual_traitement_time_by_month = @procedure.stats_usual_traitement_time_by_month_in_days
+    end
+
+    def email_usagers
+      @procedure = procedure
+      @commentaire = Commentaire.new
+      @email_usagers_dossiers = email_usagers_dossiers
+      @dossiers_count = @email_usagers_dossiers.count
+      @groupe_instructeurs = email_usagers_groupe_instructeurs_label
+      @bulk_messages = BulkMessage.includes(:groupe_instructeurs).where(groupe_instructeurs: { id: current_instructeur.groupe_instructeur_ids, procedure: procedure })
+    end
+
+    def create_multiple_commentaire
+      @procedure = procedure
+      errors = []
+
+      email_usagers_dossiers.each do |dossier|
+        commentaire = CommentaireService.build(current_instructeur, dossier, commentaire_params)
+        if commentaire.save
+          commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        else
+          errors << dossier.id
+        end
+      end
+
+      valid_dossiers_count = email_usagers_dossiers.count - errors.count
+      create_bulk_message_mail(valid_dossiers_count, Dossier.states.fetch(:brouillon))
+
+      if errors.empty?
+        flash[:notice] = "Tous les messages ont été envoyés avec succès"
+      else
+        flash[:alert] = "Envoi terminé. Cependant #{errors.count} messages n'ont pas été envoyés"
+      end
+      redirect_to instructeur_procedure_path(@procedure)
+    end
+
+    def create_bulk_message_mail(dossier_count, dossier_state)
+      BulkMessage.create(
+        dossier_count: dossier_count,
+        dossier_state: dossier_state,
+        body: commentaire_params[:body],
+        sent_at: Time.zone.now,
+        instructeur_id: current_instructeur.id,
+        piece_jointe: commentaire_params[:piece_jointe],
+        groupe_instructeurs: email_usagers_groupe_instructeurs
+      )
     end
 
     private
@@ -226,22 +272,37 @@ module Instructeurs
     end
 
     def assign_exports
-      groupe_instructeurs_for_procedure = current_instructeur.groupe_instructeurs.where(procedure: procedure)
-      @xlsx_export = Export.find_for_format_and_groupe_instructeurs(:xlsx, groupe_instructeurs_for_procedure)
-      @csv_export = Export.find_for_format_and_groupe_instructeurs(:csv, groupe_instructeurs_for_procedure)
-      @ods_export = Export.find_for_format_and_groupe_instructeurs(:ods, groupe_instructeurs_for_procedure)
+      @exports = Export.find_for_groupe_instructeurs(groupe_instructeur_ids)
     end
 
     def assign_to
       current_instructeur.assign_to.joins(:groupe_instructeur).find_by(groupe_instructeurs: { procedure: procedure })
     end
 
+    def assign_tos
+      @assign_tos ||= current_instructeur
+        .assign_to
+        .joins(:groupe_instructeur)
+        .where(groupe_instructeur: { procedure_id: procedure_id })
+    end
+
+    def groupe_instructeur_ids
+      @groupe_instructeur_ids ||= assign_tos
+        .map(&:groupe_instructeur_id)
+    end
+
     def statut
       @statut ||= (params[:statut].presence || 'a-suivre')
     end
 
+    def procedure_id
+      params[:procedure_id]
+    end
+
     def procedure
-      Procedure.find(params[:procedure_id])
+      Procedure
+        .with_attached_logo
+        .find(procedure_id)
     end
 
     def ensure_ownership!
@@ -262,7 +323,7 @@ module Instructeurs
     end
 
     def get_procedure_presentation
-      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(params[:procedure_id])
+      procedure_presentation, errors = current_instructeur.procedure_presentation_and_errors_for_procedure_id(procedure_id)
       if errors.present?
         flash[:alert] = "Votre affichage a dû être réinitialisé en raison du problème suivant : " + errors.full_messages.join(', ')
       end
@@ -273,24 +334,20 @@ module Instructeurs
       @current_filters ||= procedure_presentation.filters[statut]
     end
 
-    def kaminarize(current_page, total)
-      @dossiers.instance_eval <<-EVAL
-        def current_page
-          #{current_page}
-        end
-        def total_pages
-          (#{total} / #{ITEMS_PER_PAGE}.to_f).ceil
-        end
-        def limit_value
-          #{ITEMS_PER_PAGE}
-        end
-        def first_page?
-          current_page == 1
-        end
-        def last_page?
-          current_page == total_pages
-        end
-      EVAL
+    def email_usagers_dossiers
+      procedure.dossiers.state_brouillon.where(groupe_instructeur: current_instructeur.groupe_instructeur_ids).includes(:groupe_instructeur)
+    end
+
+    def email_usagers_groupe_instructeurs_label
+      email_usagers_dossiers.map(&:groupe_instructeur).uniq.map(&:label)
+    end
+
+    def email_usagers_groupe_instructeurs
+      email_usagers_dossiers.map(&:groupe_instructeur).uniq
+    end
+
+    def commentaire_params
+      params.require(:commentaire).permit(:body, :piece_jointe)
     end
   end
 end

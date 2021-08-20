@@ -210,7 +210,7 @@ describe Instructeurs::DossiersController, type: :controller do
         end
 
         it 'Notification email is sent' do
-          expect(NotificationMailer).to receive(:send_refused_notification)
+          expect(NotificationMailer).to receive(:send_refuse_notification)
             .with(dossier).and_return(NotificationMailer)
           expect(NotificationMailer).to receive(:deliver_later)
 
@@ -250,7 +250,7 @@ describe Instructeurs::DossiersController, type: :controller do
         end
 
         it 'Notification email is sent' do
-          expect(NotificationMailer).to receive(:send_without_continuation_notification)
+          expect(NotificationMailer).to receive(:send_sans_suite_notification)
             .with(dossier).and_return(NotificationMailer)
           expect(NotificationMailer).to receive(:deliver_later)
 
@@ -280,7 +280,7 @@ describe Instructeurs::DossiersController, type: :controller do
         dossier.passer_en_instruction!(instructeur)
         sign_in(instructeur.user)
 
-        expect(NotificationMailer).to receive(:send_closed_notification)
+        expect(NotificationMailer).to receive(:send_accepte_notification)
           .with(dossier)
           .and_return(NotificationMailer)
 
@@ -448,7 +448,7 @@ describe Instructeurs::DossiersController, type: :controller do
       }
     end
 
-    let(:emails) { ['email@a.com'] }
+    let(:emails) { "[\"email@a.com\"]" }
 
     context "notifications updates" do
       context 'when an instructeur follows the dossier' do
@@ -476,7 +476,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(response).to redirect_to(avis_instructeur_dossier_path(dossier.procedure, dossier)) }
 
       context "with an invalid email" do
-        let(:emails) { ['emaila.com'] }
+        let(:emails) { "[\"emaila.com\"]" }
 
         before { subject }
 
@@ -487,13 +487,13 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'with multiple emails' do
-        let(:emails) { ["toto.fr,titi@titimail.com"] }
+        let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
 
         before { subject }
 
         it { expect(response).to render_template :avis }
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
-        it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
+        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
         it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
       end
@@ -507,7 +507,7 @@ describe Instructeurs::DossiersController, type: :controller do
           let(:invite_linked_dossiers) { false }
 
           it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-            expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
+            expect(flash.notice).to eq("Une demande d’avis a été envoyée à email@a.com")
             expect(Avis.count).to eq(old_avis_count + 1)
             expect(saved_avis.expert.email).to eq("email@a.com")
             expect(saved_avis.dossier).to eq(dossier)
@@ -520,14 +520,14 @@ describe Instructeurs::DossiersController, type: :controller do
           context 'and the expert can access the linked dossiers' do
             let(:saved_avis) { Avis.last(2).first }
             let(:linked_avis) { Avis.last }
-            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
+            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).filter_map(&:value)) }
             let(:invite_linked_dossiers) do
               instructeur.assign_to_procedure(linked_dossier.procedure)
               true
             end
 
             it 'sends one avis for the main dossier' do
-              expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
+              expect(flash.notice).to eq("Une demande d’avis a été envoyée à email@a.com")
               expect(saved_avis.expert.email).to eq("email@a.com")
               expect(saved_avis.dossier).to eq(dossier)
             end
@@ -540,7 +540,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
           context 'but the expert can’t access the linked dossier' do
             it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-              expect(flash.notice).to eq("Une demande d'avis a été envoyée à email@a.com")
+              expect(flash.notice).to eq("Une demande d’avis a été envoyée à email@a.com")
               expect(Avis.count).to eq(old_avis_count + 1)
               expect(saved_avis.expert.email).to eq("email@a.com")
               expect(saved_avis.dossier).to eq(dossier)
@@ -711,13 +711,6 @@ describe Instructeurs::DossiersController, type: :controller do
         procedure_id: procedure.id,
         dossier_id: dossier.id
       }
-    end
-
-    context 'when zip download is disabled through flipflop' do
-      it 'is forbidden' do
-        subject
-        expect(response).to have_http_status(:forbidden)
-      end
     end
   end
 

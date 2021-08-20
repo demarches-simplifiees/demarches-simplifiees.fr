@@ -26,19 +26,6 @@
 
     .stat-card.stat-card-half.pull-left
       %span.stat-card-title
-        Satisfaction usager
-
-      .chart-container
-        .chart
-          = area_chart @satisfaction_usagers,
-            stacked: true,
-            suffix: ' %',
-            max: 100,
-            library: { plotOptions: { series: { marker: { enabled: true }}}},
-            colors: ["#C31C25", "#F5962A", "#25B177"]
-
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title
         Pourcentage de contact utilisateur
 
       .chart-container
@@ -90,7 +77,7 @@
 
     - if super_admin_signed_in?
       .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Temps de traitement moyen d'un dossier
+        %span.stat-card-title Temps de traitement moyen d’un dossier
 
         .chart-container
           .chart
@@ -98,7 +85,7 @@
               :ytitle => "Jours"
 
       .stat-card.stat-card-half.pull-left
-        %span.stat-card-title Temps de remplissage moyen d'un dossier
+        %span.stat-card-title Temps de remplissage moyen d’un dossier
 
         .chart-container
           .chart

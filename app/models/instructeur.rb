@@ -2,11 +2,12 @@
 #
 # Table name: instructeurs
 #
-#  id                     :integer          not null, primary key
-#  encrypted_login_token  :text
-#  login_token_created_at :datetime
-#  created_at             :datetime
-#  updated_at             :datetime
+#  id                       :integer          not null, primary key
+#  bypass_email_login_token :boolean          default(FALSE), not null
+#  encrypted_login_token    :text
+#  login_token_created_at   :datetime
+#  created_at               :datetime
+#  updated_at               :datetime
 #
 class Instructeur < ApplicationRecord
   has_and_belongs_to_many :administrateurs
@@ -24,6 +25,8 @@ class Instructeur < ApplicationRecord
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
   has_many :trusted_device_tokens, dependent: :destroy
+  has_many :archives
+  has_many :bulk_messages, dependent: :destroy
 
   has_one :user, dependent: :nullify
 
@@ -132,14 +135,21 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  def notifications_for_procedure(procedure, scope)
-    target_groupes = groupe_instructeurs.where(procedure: procedure)
-
+  def notifications_for_groupe_instructeurs(groupe_instructeurs)
     Dossier
-      .where(groupe_instructeur: target_groupes)
-      .send(scope) # :en_cours or :termine or :not_archived (or any other Dossier scope)
+      .not_archived
+      .where(groupe_instructeur: groupe_instructeurs)
       .merge(followed_dossiers)
       .with_notifications
+      .pluck(:state, :id)
+      .reduce({ termines: [], en_cours: [] }) do |acc, e|
+        if Dossier::TERMINE.include?(e[0])
+          acc[:termines] << e[1]
+        elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(e[0])
+          acc[:en_cours] << e[1]
+        end
+        acc
+      end
   end
 
   def procedure_ids_with_notifications(scope)
@@ -163,11 +173,14 @@ class Instructeur < ApplicationRecord
       .reduce([]) do |acc, groupe|
       procedure = groupe.procedure
 
+      notifications = notifications_for_groupe_instructeurs([groupe.id])
+      nb_notification = notifications[:en_cours].count + notifications[:termines].count
+
       h = {
         nb_en_construction: groupe.dossiers.en_construction.count,
         nb_en_instruction: groupe.dossiers.en_instruction.count,
         nb_accepted: Traitement.where(dossier: groupe.dossiers.accepte, processed_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count,
-        nb_notification: notifications_for_procedure(procedure, :not_archived).count
+        nb_notification: nb_notification
       }
 
       if h[:nb_en_construction] > 0 || h[:nb_notification] > 0
@@ -210,6 +223,32 @@ class Instructeur < ApplicationRecord
 
   def flipper_id
     "Instructeur:#{id}"
+  end
+
+  def dossiers_count_summary(groupe_instructeur_ids)
+    query = <<~EOF
+      SELECT
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.id IS NULL) AS a_suivre,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('en_construction', 'en_instruction') AND follows.instructeur_id = :instructeur_id) AS suivis,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived AND dossiers.state in ('accepte', 'refuse', 'sans_suite')) AS traites,
+        COUNT(DISTINCT dossiers.id) FILTER (where not archived) AS tous,
+        COUNT(DISTINCT dossiers.id) FILTER (where archived)     AS archives
+      FROM "dossiers"
+        LEFT OUTER JOIN follows
+          ON  follows.dossier_id = dossiers.id
+          AND follows.unfollowed_at IS NULL
+      WHERE "dossiers"."hidden_at" IS NULL
+        AND "dossiers"."state" != 'brouillon'
+        AND "dossiers"."groupe_instructeur_id" in (:groupe_instructeur_ids)
+    EOF
+
+    sanitized_query = ActiveRecord::Base.sanitize_sql([
+      query,
+      instructeur_id: id,
+      groupe_instructeur_ids: groupe_instructeur_ids
+    ])
+
+    Dossier.connection.select_all(sanitized_query).first
   end
 
   private

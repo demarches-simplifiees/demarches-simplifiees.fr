@@ -5,7 +5,7 @@
   font-size: 14px;
 
   th {
-    vertical-align: middle;
+    vertical-align: top;
     padding: (2 * $default-spacer) $default-spacer;
   }
 
@@ -46,8 +46,6 @@
   }
 
   .notification-col {
-    width: 45px;
-
     a {
       font-size: 16px;
     }

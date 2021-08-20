@@ -9,13 +9,11 @@
 #  email                :string
 #  introduction         :text
 #  revoked_at           :datetime
-#  tmp_expert_migrated  :boolean          default(FALSE)
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  claimant_id          :integer          not null
 #  dossier_id           :integer
 #  experts_procedure_id :bigint
-#  instructeur_id       :integer
 #
 class Avis < ApplicationRecord
   include EmailSanitizableConcern
@@ -55,8 +53,6 @@ class Avis < ApplicationRecord
   # hence this virtual attribute.
   attr_accessor :emails
   attr_accessor :invite_linked_dossiers
-
-  self.ignored_columns = [:instructeur_id, :tmp_expert_migrated]
 
   def email_to_display
     expert&.email

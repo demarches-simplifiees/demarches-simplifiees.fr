@@ -1,7 +1,7 @@
 module NewAdministrateur
   class ProceduresController < AdministrateurController
-    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :invited_expert_list, :update_allow_decision_access]
-    before_action :procedure_locked?, only: [:champs, :annotations]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :edit, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :allow_expert_review, :experts_require_administrateur_invitation]
+    before_action :procedure_revisable?, only: [:champs, :annotations]
 
     ITEMS_PER_PAGE = 25
 
@@ -44,7 +44,7 @@ module NewAdministrateur
     end
 
     def apercu
-      @dossier = procedure_without_control.new_dossier
+      @dossier = procedure_without_control.draft_revision.new_dossier
       @tab = apercu_tab
     end
 
@@ -55,11 +55,8 @@ module NewAdministrateur
     def show
       @procedure = current_administrateur.procedures.find(params[:id])
       @current_administrateur = current_administrateur
-      if @procedure.brouillon?
-        @procedure_lien = commencer_test_url(path: @procedure.path)
-      else
-        @procedure_lien = commencer_url(path: @procedure.path)
-      end
+      @procedure_lien = commencer_url(path: @procedure.path)
+      @procedure_lien_test = commencer_test_url(path: @procedure.path)
     end
 
     def edit
@@ -136,17 +133,14 @@ module NewAdministrateur
           notice: 'Le jeton a bien été mis à jour'
       else
 
-        flash.now.alert = "Mise à jour impossible : le jeton n'est pas valide"
+        flash.now.alert = "Mise à jour impossible : le jeton n’est pas valide"
         render 'jeton'
       end
     end
 
     def publication
-      if @procedure.brouillon?
-        @procedure_lien = commencer_test_url(path: @procedure.path)
-      else
-        @procedure_lien = commencer_url(path: @procedure.path)
-      end
+      @procedure_lien = commencer_url(path: @procedure.path)
+      @procedure_lien_test = commencer_test_url(path: @procedure.path)
       @procedure.path = @procedure.suggested_path(current_administrateur)
       @current_administrateur = current_administrateur
     end
@@ -154,12 +148,16 @@ module NewAdministrateur
     def publish
       @procedure.assign_attributes(publish_params)
 
-      if @procedure.publish_or_reopen!(current_administrateur)
+      if @procedure.draft_changed?
+        @procedure.publish_revision!
+        flash.notice = "Nouvelle version de la démarche publiée"
         redirect_to admin_procedure_path(@procedure)
+      elsif @procedure.publish_or_reopen!(current_administrateur)
         flash.notice = "Démarche publiée"
-      else
         redirect_to admin_procedure_path(@procedure)
+      else
         flash.alert = @procedure.errors.full_messages
+        redirect_to admin_procedure_path(@procedure)
       end
     end
 
@@ -169,14 +167,14 @@ module NewAdministrateur
     def allow_expert_review
       @procedure.update!(allow_expert_review: !@procedure.allow_expert_review)
       flash.notice = @procedure.allow_expert_review? ? "Avis externes activés" : "Avis externes désactivés"
-      redirect_to admin_procedure_path(@procedure)
+      redirect_to admin_procedure_experts_path(@procedure)
     end
 
     def transfer
       admin = Administrateur.by_email(params[:email_admin].downcase)
       if admin.nil?
         redirect_to admin_procedure_transfert_path(params[:procedure_id])
-        flash.alert = "Envoi vers #{params[:email_admin]} impossible : cet administrateur n'existe pas"
+        flash.alert = "Envoi vers #{params[:email_admin]} impossible : cet administrateur n’existe pas"
       else
         procedure = current_administrateur.procedures.find(params[:procedure_id])
         procedure.clone(admin, false)
@@ -185,15 +183,10 @@ module NewAdministrateur
       end
     end
 
-    def invited_expert_list
-      @experts_procedure = @procedure.experts_procedures.sort_by { |expert_procedure| expert_procedure.expert.email }
-    end
-
-    def update_allow_decision_access
-      @procedure
-        .experts_procedures
-        .find(params[:expert_procedure])
-        .update!(allow_decision_access_params)
+    def experts_require_administrateur_invitation
+      @procedure.update!(experts_require_administrateur_invitation: !@procedure.experts_require_administrateur_invitation)
+      flash.notice = @procedure.experts_require_administrateur_invitation? ? "Les experts sont gérés par les administrateurs de la démarche" : "Les experts sont gérés par les instructeurs"
+      redirect_to admin_procedure_experts_path(@procedure)
     end
 
     private

@@ -1,7 +1,7 @@
 .container
   %p
-    %strong Si vous n'effectuez pas cette étape maintenant, vous ne pourrez plus vous connecter au manager !
-  %p Depuis votre téléphone, lancez votre application cliente 2FA et scannez ce QRCode afin d'ajouter votre compte DSManager. Votre application vous fournira ensuite à chaque connexion au manager le code otp à saisir.
+    %strong Si vous n’effectuez pas cette étape maintenant, vous ne pourrez plus vous connecter au manager !
+  %p Depuis votre téléphone, lancez votre application cliente 2FA et scannez ce QRCode afin d’ajouter votre compte DSManager. Votre application vous fournira ensuite à chaque connexion au manager le code otp à saisir.
   %br
   = raw @qrcode.as_svg(module_size: 6)
 

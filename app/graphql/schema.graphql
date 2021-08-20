@@ -340,6 +340,67 @@ type DecimalNumberChamp implements Champ {
   value: Float
 }
 
+"""
+Un dossier supprimé
+"""
+type DeletedDossier {
+  """
+  Date de suppression.
+  """
+  dateSupression: ISO8601DateTime!
+  id: ID!
+
+  """
+  Le numéro du dossier qui a été supprimé.
+  """
+  number: Int!
+
+  """
+  La raison de la suppression du dossier.
+  """
+  reason: String!
+
+  """
+  L’état du dossier supprimé.
+  """
+  state: DossierState!
+}
+
+"""
+The connection type for DeletedDossier.
+"""
+type DeletedDossierConnection {
+  """
+  A list of edges.
+  """
+  edges: [DeletedDossierEdge]
+
+  """
+  A list of nodes.
+  """
+  nodes: [DeletedDossier]
+
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+An edge in a connection.
+"""
+type DeletedDossierEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: DeletedDossier
+}
+
 interface Demandeur {
   id: ID!
 }
@@ -374,12 +435,47 @@ type Demarche {
   """
   Date de la publication.
   """
-  datePublication: ISO8601DateTime!
+  datePublication: ISO8601DateTime
 
   """
   L’état de dossier pour une démarche déclarative
   """
   declarative: DossierDeclarativeState
+
+  """
+  Liste de tous les dossiers supprimés d’une démarche.
+  """
+  deletedDossiers(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Dossiers supprimés depuis la date.
+    """
+    deletedSince: ISO8601DateTime
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    L’ordre des dossiers supprimés.
+    """
+    order: Order = ASC
+  ): DeletedDossierConnection!
 
   """
   Description de la démarche.
@@ -1088,7 +1184,7 @@ enum DossierState {
   refuse
 
   """
-  Sans suite
+  Classé sans suite
   """
   sans_suite
 }
@@ -1131,7 +1227,8 @@ type Entreprise {
 }
 
 type File {
-  byteSize: Int!
+  byteSize: Int! @deprecated(reason: "Utilisez le champ `byteSizeBigInt` à la place.")
+  byteSizeBigInt: BigInt!
   checksum: String!
   contentType: String!
   filename: String!
@@ -1139,6 +1236,7 @@ type File {
 }
 
 interface GeoArea {
+  description: String
   geometry: GeoJSON!
   id: ID!
   source: GeoAreaSource!
@@ -1431,12 +1529,12 @@ type Mutation {
 
 enum Order {
   """
-  L‘ordre ascendant.
+  L’ordre ascendant.
   """
   ASC
 
   """
-  L‘ordre descendant.
+  L’ordre descendant.
   """
   DESC
 }
@@ -1467,18 +1565,22 @@ type PageInfo {
 }
 
 type ParcelleCadastrale implements GeoArea {
-  codeArr: String!
-  codeCom: String!
-  codeDep: String!
-  feuille: Int!
+  codeArr: String! @deprecated(reason: "Utilisez le champ `prefixe` à la place.")
+  codeCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
+  codeDep: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
+  commune: String!
+  description: String
+  feuille: Int! @deprecated(reason: "L’information n’est plus disponible.")
   geometry: GeoJSON!
   id: ID!
-  nomCom: String!
+  nomCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   numero: String!
+  prefixe: String!
   section: String!
   source: GeoAreaSource!
-  surfaceIntersection: Float!
-  surfaceParcelle: Float!
+  surface: String!
+  surfaceIntersection: Float! @deprecated(reason: "L’information n’est plus disponible.")
+  surfaceParcelle: Float! @deprecated(reason: "Utilisez le champ `surface` à la place.")
 }
 
 type PersonneMorale implements Demandeur {
@@ -1583,10 +1685,16 @@ type Revision {
   Date de la création.
   """
   dateCreation: ISO8601DateTime!
+
+  """
+  Date de la publication.
+  """
+  datePublication: ISO8601DateTime
   id: ID!
 }
 
 type SelectionUtilisateur implements GeoArea {
+  description: String
   geometry: GeoJSON!
   id: ID!
   source: GeoAreaSource!

@@ -1,256 +1,61 @@
-import React, {
-  useState,
-  useCallback,
-  useRef,
-  useMemo,
-  useEffect
-} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import mapboxgl from 'mapbox-gl';
-import { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
+import ReactMapboxGl, { ZoomControl } from 'react-mapbox-gl';
 import DrawControl from 'react-mapbox-gl-draw';
+import {
+  CursorClickIcon,
+  PlusIcon,
+  LocationMarkerIcon
+} from '@heroicons/react/outline';
+import CoordinateInput from 'react-coordinate-input';
+import { fire } from '@utils';
+import VisuallyHidden from '@reach/visually-hidden';
+import { useId } from '@reach/auto-id';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
-import { getJSON, ajax, fire } from '@utils';
-
-import Mapbox from '../shared/mapbox/Mapbox';
-import { getMapStyle } from '../shared/mapbox/styles';
-import SwitchMapStyle from '../shared/mapbox/SwitchMapStyle';
+import MapStyleControl, { useMapStyle } from '../shared/mapbox/MapStyleControl';
 import { FlashMessage } from '../shared/FlashMessage';
 
 import ComboAdresseSearch from '../ComboAdresseSearch';
-import {
-  polygonCadastresFill,
-  polygonCadastresLine,
-  readGeoFile
-} from './utils';
-import {
-  noop,
-  filterFeatureCollection,
-  fitBounds,
-  generateId,
-  useEvent,
-  findFeature
-} from '../shared/mapbox/utils';
+import { useMapboxEditor } from './useMapboxEditor';
 
-function MapEditor({ featureCollection, url, preview, options }) {
-  const drawControl = useRef(null);
-  const [currentMap, setCurrentMap] = useState(null);
+const Mapbox = ReactMapboxGl({});
 
-  const [errorMessage, setErrorMessage] = useState();
-  const [style, setStyle] = useState('ortho');
+function MapEditor({ featureCollection, url, options, preview }) {
+  const [cadastreEnabled, setCadastreEnabled] = useState(false);
   const [coords, setCoords] = useState([1.7, 46.9]);
   const [zoom, setZoom] = useState([5]);
-  const [bbox, setBbox] = useState(featureCollection.bbox);
-  const [importInputs, setImportInputs] = useState([]);
-  const [cadastresFeatureCollection, setCadastresFeatureCollection] = useState(
-    filterFeatureCollection(featureCollection, 'cadastre')
-  );
-  const mapStyle = useMemo(() => getMapStyle(style, options.layers), [
+  const {
+    isSupported,
+    error,
+    inputs,
+    onLoad,
+    onStyleChange,
+    onFileChange,
+    drawRef,
+    createFeatures,
+    updateFeatures,
+    deleteFeatures,
+    addInputFile,
+    removeInputFile
+  } = useMapboxEditor(featureCollection, {
+    url,
+    enabled: !preview,
+    cadastreEnabled
+  });
+  const {
     style,
-    options
-  ]);
-  const hasCadastres = useMemo(() => options.layers.includes('cadastres'));
+    layers,
+    setStyle,
+    setLayerEnabled,
+    setLayerOpacity
+  } = useMapStyle(options.layers, {
+    onStyleChange,
+    cadastreEnabled
+  });
 
-  useEffect(() => {
-    const timer = setTimeout(() => setErrorMessage(null), 5000);
-    return () => clearTimeout(timer);
-  }, [errorMessage]);
-
-  const translations = [
-    ['.mapbox-gl-draw_line', 'Tracer une ligne'],
-    ['.mapbox-gl-draw_polygon', 'Dessiner un polygone'],
-    ['.mapbox-gl-draw_point', 'Ajouter un point'],
-    ['.mapbox-gl-draw_trash', 'Supprimer']
-  ];
-  for (const [selector, translation] of translations) {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.setAttribute('title', translation);
-    }
-  }
-
-  const onFeatureFocus = useCallback(
-    ({ detail }) => {
-      const { id } = detail;
-      const featureCollection = drawControl.current.draw.getAll();
-      const feature = findFeature(featureCollection, id);
-      if (feature) {
-        fitBounds(currentMap, feature);
-      }
-    },
-    [currentMap, drawControl.current]
-  );
-
-  const onFeatureUpdate = useCallback(
-    async ({ detail }) => {
-      const { id, properties } = detail;
-      const featureCollection = drawControl.current.draw.getAll();
-      const feature = findFeature(featureCollection, id);
-
-      if (feature) {
-        getJSON(`${url}/${id}`, { feature: { properties } }, 'patch');
-      }
-    },
-    [url, drawControl.current]
-  );
-
-  const updateFeaturesList = useCallback(
-    async (features) => {
-      const cadastres = features.find(
-        ({ geometry }) => geometry.type === 'Polygon'
-      );
-      await ajax({
-        url,
-        type: 'get',
-        data: cadastres ? 'cadastres=update' : ''
-      });
-      fire(document, 'ds:page:update');
-    },
-    [url]
-  );
-
-  const onCadastresUpdate = useCallback(({ detail }) => {
-    setCadastresFeatureCollection(
-      filterFeatureCollection(detail.featureCollection, 'cadastre')
-    );
-  }, []);
-
-  useEvent('map:feature:focus', onFeatureFocus);
-  useEvent('map:feature:update', onFeatureUpdate);
-  useEvent('cadastres:update', onCadastresUpdate);
-
-  function setFeatureId(lid, feature) {
-    const draw = drawControl.current.draw;
-    draw.setFeatureProperty(lid, 'id', feature.properties.id);
-  }
-
-  function updateImportInputs(inputs, inputId) {
-    const updatedInputs = inputs.filter((input) => input.id !== inputId);
-    setImportInputs(updatedInputs);
-  }
-
-  async function onDrawCreate({ features }) {
-    try {
-      for (const feature of features) {
-        const data = await getJSON(url, { feature }, 'post');
-        setFeatureId(feature.id, data.feature);
-      }
-
-      updateFeaturesList(features);
-    } catch {
-      setErrorMessage('Le polygone dessiné n’est pas valide.');
-    }
-  }
-
-  async function onDrawUpdate({ features }) {
-    try {
-      for (const feature of features) {
-        const { id } = feature.properties;
-        if (id) {
-          await getJSON(`${url}/${id}`, { feature }, 'patch');
-        } else {
-          const data = await getJSON(url, { feature }, 'post');
-          setFeatureId(feature.id, data.feature);
-        }
-      }
-
-      updateFeaturesList(features);
-    } catch {
-      setErrorMessage('Le polygone dessiné n’est pas valide.');
-    }
-  }
-
-  async function onDrawDelete({ features }) {
-    for (const feature of features) {
-      const { id } = feature.properties;
-      await getJSON(`${url}/${id}`, null, 'delete');
-    }
-
-    updateFeaturesList(features);
-  }
-
-  function onMapLoad(map) {
-    setCurrentMap(map);
-
-    drawControl.current.draw.set(
-      filterFeatureCollection(featureCollection, 'selection_utilisateur')
-    );
-  }
-
-  const onFileImport = async (e, inputId) => {
-    try {
-      const featureCollection = await readGeoFile(e.target.files[0]);
-      const resultFeatureCollection = await getJSON(
-        `${url}/import`,
-        featureCollection,
-        'post'
-      );
-      let inputs = [...importInputs];
-      const setInputs = inputs.map((input) => {
-        if (input.id === inputId) {
-          input.disabled = true;
-          input.hasValue = true;
-          resultFeatureCollection.features.forEach((resultFeature) => {
-            featureCollection.features.forEach((feature) => {
-              if (
-                JSON.stringify(resultFeature.geometry) ===
-                JSON.stringify(feature.geometry)
-              ) {
-                input.featureIds.push(resultFeature.properties.id);
-              }
-            });
-          });
-        }
-        return input;
-      });
-
-      drawControl.current.draw.set(
-        filterFeatureCollection(
-          resultFeatureCollection,
-          'selection_utilisateur'
-        )
-      );
-
-      updateFeaturesList(resultFeatureCollection.features);
-      setImportInputs(setInputs);
-      setBbox(resultFeatureCollection.bbox);
-    } catch {
-      setErrorMessage('Le fichier importé contient des polygones invalides.');
-    }
-  };
-
-  const addInputFile = (e) => {
-    e.preventDefault();
-    let inputs = [...importInputs];
-    inputs.push({
-      id: generateId(),
-      disabled: false,
-      featureIds: [],
-      hasValue: false
-    });
-    setImportInputs(inputs);
-  };
-
-  const removeInputFile = async (e, inputId) => {
-    e.preventDefault();
-    const draw = drawControl.current.draw;
-    const featureCollection = draw.getAll();
-    let inputs = [...importInputs];
-    const inputToRemove = inputs.find((input) => input.id === inputId);
-
-    for (const feature of featureCollection.features) {
-      if (inputToRemove.featureIds.includes(feature.properties.id)) {
-        const featureToRemove = draw.get(feature.id);
-        await getJSON(`${url}/${feature.properties.id}`, null, 'delete');
-        draw.delete(feature.id).getAll();
-        updateFeaturesList([featureToRemove]);
-      }
-    }
-    updateImportInputs(inputs, inputId);
-  };
-
-  if (!mapboxgl.supported()) {
+  if (!isSupported) {
     return (
       <p>
         Nous ne pouvons pas afficher notre éditeur de carte car il est
@@ -262,9 +67,7 @@ function MapEditor({ featureCollection, url, preview, options }) {
 
   return (
     <>
-      {errorMessage && (
-        <FlashMessage message={errorMessage} level="alert" fixed={true} />
-      )}
+      {error && <FlashMessage message={error} level="alert" fixed={true} />}
       <div>
         <p style={{ marginBottom: '20px' }}>
           Besoin d&apos;aide ?&nbsp;
@@ -277,12 +80,12 @@ function MapEditor({ featureCollection, url, preview, options }) {
           </a>
         </p>
       </div>
-      <div className="file-import" style={{ marginBottom: '20px' }}>
+      <div className="file-import" style={{ marginBottom: '10px' }}>
         <button className="button send primary" onClick={addInputFile}>
           Ajouter un fichier GPX ou KML
         </button>
         <div>
-          {importInputs.map((input) => (
+          {inputs.map((input) => (
             <div key={input.id}>
               <input
                 title="Choisir un fichier gpx ou kml"
@@ -291,7 +94,7 @@ function MapEditor({ featureCollection, url, preview, options }) {
                 type="file"
                 accept=".gpx, .kml"
                 disabled={input.disabled}
-                onChange={(e) => onFileImport(e, input.id)}
+                onChange={(e) => onFileChange(e, input.id)}
               />
               {input.hasValue && (
                 <span
@@ -309,10 +112,11 @@ function MapEditor({ featureCollection, url, preview, options }) {
       </div>
       <div
         style={{
-          marginBottom: '50px'
+          marginBottom: '10px'
         }}
       >
         <ComboAdresseSearch
+          className="no-margin"
           placeholder="Rechercher une adresse : saisissez au moins 2 caractères"
           allowInputValues={false}
           onChange={(_, { geometry: { coordinates } }) => {
@@ -322,39 +126,131 @@ function MapEditor({ featureCollection, url, preview, options }) {
         />
       </div>
       <Mapbox
-        onStyleLoad={(map) => onMapLoad(map)}
-        fitBounds={bbox}
-        fitBoundsOptions={{ padding: 100 }}
+        onStyleLoad={(map) => onLoad(map)}
         center={coords}
         zoom={zoom}
-        style={mapStyle}
-        containerStyle={{
-          height: '500px'
-        }}
+        style={style}
+        containerStyle={{ height: '500px' }}
       >
-        {hasCadastres ? (
-          <GeoJSONLayer
-            data={cadastresFeatureCollection}
-            fillPaint={polygonCadastresFill}
-            linePaint={polygonCadastresLine}
+        {!cadastreEnabled && (
+          <DrawControl
+            ref={drawRef}
+            onDrawCreate={createFeatures}
+            onDrawUpdate={updateFeatures}
+            onDrawDelete={deleteFeatures}
+            displayControlsDefault={false}
+            controls={{
+              point: true,
+              line_string: true,
+              polygon: true,
+              trash: true
+            }}
           />
+        )}
+        <MapStyleControl
+          style={style.id}
+          layers={layers}
+          setStyle={setStyle}
+          setLayerEnabled={setLayerEnabled}
+          setLayerOpacity={setLayerOpacity}
+        />
+        <ZoomControl />
+        {options.layers.includes('cadastres') && (
+          <div className="cadastres-selection-control mapboxgl-ctrl-group">
+            <button
+              type="button"
+              onClick={() =>
+                setCadastreEnabled((cadastreEnabled) => !cadastreEnabled)
+              }
+              title="Sélectionner les parcelles cadastrales"
+              className={cadastreEnabled ? 'on' : ''}
+            >
+              <CursorClickIcon className="icon-size" />
+            </button>
+          </div>
+        )}
+      </Mapbox>
+      <PointInput />
+    </>
+  );
+}
+
+function PointInput() {
+  const inputId = useId();
+  const [value, setValue] = useState('');
+  const [feature, setFeature] = useState(null);
+  const getCurrentPosition = () => {
+    navigator.geolocation &&
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        setValue(
+          `${coords.latitude.toPrecision(6)}, ${coords.longitude.toPrecision(
+            6
+          )}`
+        );
+      });
+  };
+  const addPoint = () => {
+    if (feature) {
+      fire(document, 'map:feature:create', feature);
+      setValue('');
+      setFeature(null);
+    }
+  };
+
+  return (
+    <>
+      <label
+        className="areas-title mt-1"
+        htmlFor={inputId}
+        style={{ fontSize: '16px' }}
+      >
+        Ajouter un point sur la carte
+      </label>
+      <div className="flex align-center mt-1 mb-2">
+        {navigator.geolocation ? (
+          <button
+            type="button"
+            className="button mr-1"
+            onClick={getCurrentPosition}
+            title="Localiser votre position"
+          >
+            <VisuallyHidden>Localiser votre position</VisuallyHidden>
+            <LocationMarkerIcon className="icon-size-big" />
+          </button>
         ) : null}
-        <DrawControl
-          ref={drawControl}
-          onDrawCreate={preview ? noop : onDrawCreate}
-          onDrawUpdate={preview ? noop : onDrawUpdate}
-          onDrawDelete={preview ? noop : onDrawDelete}
-          displayControlsDefault={false}
-          controls={{
-            point: true,
-            line_string: true,
-            polygon: true,
-            trash: true
+        <CoordinateInput
+          id={inputId}
+          className="m-0 mr-1"
+          value={value}
+          onChange={(value, { dd }) => {
+            setValue(value);
+            setFeature(
+              dd.length
+                ? {
+                    type: 'Feature',
+                    geometry: {
+                      type: 'Point',
+                      coordinates: dd.reverse()
+                    },
+                    properties: {}
+                  }
+                : null
+            );
           }}
         />
-        <SwitchMapStyle style={style} setStyle={setStyle} ign={options.ign} />
-        <ZoomControl />
-      </Mapbox>
+        <button
+          type="button"
+          className="button"
+          onClick={addPoint}
+          disabled={!feature}
+          title="Ajouter le point avec les coordonnées saisies sur la carte"
+        >
+          <VisuallyHidden>
+            Ajouter le point avec les coordonnées saisies sur la carte
+          </VisuallyHidden>
+          <PlusIcon className="icon-size-big" />
+        </button>
+      </div>
     </>
   );
 }
@@ -362,15 +258,11 @@ function MapEditor({ featureCollection, url, preview, options }) {
 MapEditor.propTypes = {
   featureCollection: PropTypes.shape({
     bbox: PropTypes.array,
-    features: PropTypes.array,
-    id: PropTypes.number
+    features: PropTypes.array
   }),
   url: PropTypes.string,
   preview: PropTypes.bool,
-  options: PropTypes.shape({
-    layers: PropTypes.array,
-    ign: PropTypes.bool
-  })
+  options: PropTypes.shape({ layers: PropTypes.array })
 };
 
 export default MapEditor;

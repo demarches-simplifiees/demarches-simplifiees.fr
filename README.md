@@ -45,11 +45,7 @@ Les informations nécessaire à l'initialisation de la base doivent être pré-c
 
 Sous Ubuntu, certains packages doivent être installés au préalable :
 
-    sudo apt-get install libcurl3 libcurl3-gnutls libcurl4-openssl-dev libcurl4-gnutls-dev zlib1g-dev libgeos-dev
-
-Sous Mac, certains packages doivent être installés au préalable :
-
-    brew install geos
+    sudo apt-get install libcurl3 libcurl3-gnutls libcurl4-openssl-dev libcurl4-gnutls-dev zlib1g-dev
 
 Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 
@@ -108,6 +104,10 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
         bin/rake spec SPEC=file_path/file_name_spec.rb
         bin/rspec file_path/file_name_spec.rb
+
+- Relancer uniquement les tests qui ont échoué précédemment
+
+        bin/rspec --only-failures
 
 ### Ajout de taches à exécuter au déploiement
 

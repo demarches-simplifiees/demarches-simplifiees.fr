@@ -3,7 +3,6 @@ describe Commentaire do
   it { is_expected.to have_db_column(:body) }
   it { is_expected.to have_db_column(:created_at) }
   it { is_expected.to have_db_column(:updated_at) }
-  it { is_expected.to belong_to(:dossier) }
 
   describe 'messagerie_available validation' do
     subject { commentaire.valid?(:create) }
@@ -18,7 +17,7 @@ describe Commentaire do
       let(:dossier) { create :dossier, :archived }
       let(:commentaire) { build :commentaire, dossier: dossier }
 
-      it { is_expected.to be_falsey }
+      it { is_expected.to be_truthy }
     end
 
     context 'on a dossier en_construction' do
@@ -63,7 +62,7 @@ describe Commentaire do
     end
 
     context 'with a commentaire created by a user' do
-      let(:commentaire) { build :commentaire, user: user }
+      let(:commentaire) { build :commentaire, email: user.email }
       let(:user) { build :user, email: 'some_user@exemple.fr' }
 
       it { is_expected.to eq 'some_user@exemple.fr' }
@@ -73,26 +72,34 @@ describe Commentaire do
   describe "#notify" do
     let(:procedure) { create(:procedure) }
     let(:instructeur) { create(:instructeur) }
+    let(:expert) { create(:expert) }
     let(:assign_to) { create(:assign_to, instructeur: instructeur, procedure: procedure) }
     let(:user) { create(:user) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure, user: user) }
-    let(:commentaire) { Commentaire.new(dossier: dossier, body: "Mon commentaire") }
 
     context "with a commentaire created by a instructeur" do
+      let(:commentaire) { CommentaireService.build(instructeur, dossier, body: "Mon commentaire") }
+
       it "calls notify_user" do
         expect(commentaire).to receive(:notify_user)
+        commentaire.save
+      end
+    end
 
-        commentaire.email = instructeur.email
+    context "with a commentaire created by an expert" do
+      let(:commentaire) { CommentaireService.build(expert, dossier, body: "Mon commentaire") }
+
+      it "calls notify_user" do
+        expect(commentaire).to receive(:notify_user)
         commentaire.save
       end
     end
 
     context "with a commentaire automatically created (notification)" do
-      it "does not call notify_user or notify_instructeurs" do
-        expect(commentaire).not_to receive(:notify_user)
-        expect(commentaire).not_to receive(:notify_instructeurs)
+      let(:commentaire) { CommentaireService.build_with_email(CONTACT_EMAIL, dossier, body: "Mon commentaire") }
 
-        commentaire.email = CONTACT_EMAIL
+      it "does not call notify_user" do
+        expect(commentaire).not_to receive(:notify_user)
         commentaire.save
       end
     end

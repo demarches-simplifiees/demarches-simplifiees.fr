@@ -32,7 +32,7 @@
           %li.footer-link
             = link_to "Mentions légales", MENTIONS_LEGALES_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Suivi d'audience et vie privée", suivi_path, :class => "footer-link"
+            = link_to "Suivi d’audience et vie privée", suivi_path, :class => "footer-link"
 
       %li.footer-column
         %ul.footer-links
@@ -45,6 +45,7 @@
           %li.footer-link
             = link_to "FAQ", FAQ_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"
           %li.footer-link
-            = link_to "Accessibilité", accessibilite_path, :class => "footer-link"
+            = link_to ACCESSIBILITE_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer" do
+              Accessibilité&nbsp;: non conforme
           %li.footer-link
             = link_to "Disponibilité", STATUS_PAGE_URL, :class => "footer-link", :target => "_blank", rel: "noopener noreferrer"

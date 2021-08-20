@@ -163,6 +163,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_commune do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_communes, procedure: procedure)
+      end
+    end
+
     trait :with_piece_justificative do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_piece_justificative, procedure: procedure)
@@ -190,6 +196,12 @@ FactoryBot.define do
     trait :with_phone do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_phone, procedure: procedure)
+      end
+    end
+
+    trait :with_address do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_address, procedure: procedure)
       end
     end
 

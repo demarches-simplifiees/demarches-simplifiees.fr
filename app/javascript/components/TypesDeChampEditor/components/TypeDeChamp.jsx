@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { useInView } from 'react-intersection-observer';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { TrashIcon } from '@heroicons/react/outline';
 
 import DescriptionInput from './DescriptionInput';
 import LibelleInput from './LibelleInput';
@@ -77,7 +77,8 @@ const TypeDeChamp = sortableElement(
                   });
               }}
             >
-              <FontAwesomeIcon icon="trash" title="Supprimer" />
+              <TrashIcon className="icon-size" />
+              <span className="screen-reader-text">Supprimer</span>
             </button>
           </div>
         </div>

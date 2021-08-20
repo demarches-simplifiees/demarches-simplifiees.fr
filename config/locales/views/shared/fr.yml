@@ -5,8 +5,8 @@ fr:
         identite_entreprise:
           warning_for_private_info: "L’établissement %{etablissement} a exercé son droit à la non publication des informations relatives à son identité. Les informations ne seront donc visibles que de la part des services instructeurs"
       avis:
-        demande_envoyee_le: "Demande d'avis envoyée le %{date}"
-        demande_revoquee_le: "Demande d'avis révoquée le %{date}"
+        demande_envoyee_le: "Demande d’avis envoyée le %{date}"
+        demande_revoquee_le: "Demande d’avis révoquée le %{date}"
         reponse_donnee_le: "Réponse donnée le %{date}"
         en_attente: "En attente de réponse"
       france_connect_login:
@@ -15,3 +15,8 @@ fr:
         login_button: "S’identifier avec FranceConnect"
         help_link: "Qu’est-ce que FranceConnect ?"
         separator: 'ou'
+      account:
+        already_user_question: 'Vous avez déjà un compte ?'
+        already_user: 'J’ai déjà un compte'
+        create: 'Créer un compte'
+        signin: 'Connexion'

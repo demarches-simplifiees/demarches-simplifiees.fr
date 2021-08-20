@@ -5,6 +5,7 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
 
   before do
     assign(:procedure, procedure)
+    assign(:revision, procedure.published_revision)
     if user
       sign_in user
     end
