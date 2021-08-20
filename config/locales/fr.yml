@@ -40,7 +40,16 @@ fr:
         start_procedure: Commencer la démarche
         existing_dossiers: Vous avez déjà des dossiers pour cette démarche
         show_dossiers: Voir mes dossiers en cours
-        start_new_dossier: Commencer un nouveau dossier
+        already_draft: "Vous avez déjà commencé à remplir un dossier"
+        already_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez commencé à remplir un dossier sur la démarche « %{procedure} »."
+        already_not_draft: "Vous avez déjà déposé un dossier"
+        already_not_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez déposé un dossier sur la démarche « %{procedure} »."
+        continue_file: 'Continuer à remplir mon dossier'
+        start_new_file: 'Commencer un nouveau dossier'
+        show_my_submitted_file: 'Voir mon dossier déposé'
+        want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l'envoyer à l’administration concernée : %{service} - %{adresse}"
+        download_empty_pdf: 'Télécharger un dossier vide au format PDF'
+
     invites:
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
