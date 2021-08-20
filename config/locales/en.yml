@@ -58,7 +58,7 @@ en:
         continue_file: "Continue to fill my file"
         start_new_file: "Start a new file"
         show_my_submitted_file: 'Show my submitted file'
-        want_empty_pdf: "You prefer to submit a paper form ? You can download an empty PDF file, and send it to the right administration : %{service} - %{adresse}"
+        want_empty_pdf: "You prefer to submit a paper form? You can download an empty PDF file, and send it to the right administration : %{service} - %{adresse}"
         download_empty_pdf: 'Download an empty PDF file'
     invites:
       dropdown:
