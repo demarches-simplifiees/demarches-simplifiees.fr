@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 fr:
+  help: 'Aide'
   utils:
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
