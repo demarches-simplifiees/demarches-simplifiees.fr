@@ -1,4 +1,4 @@
-= form_for(commentaire, url: form_url, html: { class: 'form', data: { persisted_content_id: @dossier.id } }) do |f|
+= form_for(commentaire, url: form_url, html: { class: 'form', data: { persisted_content_id: @dossier.present? ? @dossier.id : "bulk-message-#{@procedure.id}" } }) do |f|
   - dossier = commentaire.dossier
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in?
