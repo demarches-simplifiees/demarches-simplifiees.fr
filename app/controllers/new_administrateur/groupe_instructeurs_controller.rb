@@ -180,7 +180,7 @@ module NewAdministrateur
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
 
       elsif group_csv_file.size > CSV_MAX_SIZE
-        flash[:alert] = "Importation impossible : la poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
+        flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
         redirect_to admin_procedure_groupe_instructeurs_path(procedure)
 
       else
