@@ -3,27 +3,27 @@
 .auth-form
   = devise_error_messages!
   = form_for resource, url: user_registration_path, html: { class: "form" } do |f|
-    %h1 Créez-vous un compte #{APPLICATION_NAME}
+    %h1= t('views.registrations.new.title', name: APPLICATION_NAME)
 
     = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 
-    = f.label :email, "Email (nom@site.com)", id: :user_email_label
-    = f.text_field :email, type: :email, autocomplete: 'email', autofocus: true, placeholder: "Votre adresse email", 'aria-describedby': :user_email_label
+    = f.label :email, t('views.registrations.new.email_label'), id: :user_email_label
+    = f.text_field :email, type: :email, autocomplete: 'email', autofocus: true, placeholder: t('views.registrations.new.email_placeholder'), 'aria-describedby': :user_email_label
 
     .suspect-email.hidden
       .email-suggestion-title
-        Voulez-vous dire
+        = t('views.registrations.new.wanna_say')
         %span.email-suggestion-address blabla@gmail.com
         &nbsp;?
       .email-suggestion-answer
         = button_tag type: 'button', class: 'button small', onclick: "DS.acceptEmailSuggestion()" do
-          Oui
+          = t('simple_form.yes')
         = button_tag type: 'button', class: 'button small', onclick: "DS.discardEmailSuggestionBox()" do
-          Non
+          = t('simple_form.no')
 
-    = f.label :password, "Mot de passe (#{PASSWORD_MIN_LENGTH} caractères minimum)", id: :user_password_label
-    = f.password_field :password, autocomplete: 'new-password', value: @user.password, placeholder: "#{PASSWORD_MIN_LENGTH} caractères minimum", 'aria-describedby': :user_password_label
+    = f.label :password, t('views.registrations.new.password_label', min_length: PASSWORD_MIN_LENGTH), id: :user_password_label
+    = f.password_field :password, autocomplete: 'new-password', value: @user.password, placeholder: t('views.registrations.new.password_placeholder', min_length: PASSWORD_MIN_LENGTH), 'aria-describedby': :user_password_label
 
-    = f.submit "Créer un compte", class: "button large primary expand"
+    = f.submit t('views.shared.account.create'), class: "button large primary expand"
 
 
