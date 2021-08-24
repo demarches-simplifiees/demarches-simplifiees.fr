@@ -8,7 +8,7 @@ feature 'Accessing the website in different languages:' do
       expect(page).to have_text('Connectez-vous')
 
       click_on 'Translate'
-      click_on 'EN - English'
+      click_on 'EN – English'
 
       # The page is now in English
       expect(page).to have_text('Sign in')
