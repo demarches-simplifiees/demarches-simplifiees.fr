@@ -10,12 +10,12 @@ feature 'wcag rules for usager', js: true do
   context 'pages without the need to be logged in' do
     scenario 'homepage' do
       visit root_path
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
 
     scenario 'sign_up page' do
       visit new_user_registration_path
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
 
     scenario 'account confirmation page' do
@@ -26,23 +26,23 @@ feature 'wcag rules for usager', js: true do
 
       perform_enqueued_jobs do
         click_button 'Créer un compte'
-        expect(page).to be_accessible
+        expect(page).to be_axe_clean
       end
     end
 
     scenario 'sign_in page' do
       visit new_user_session_path
-      expect(page).to be_accessible.excluding '#user_email'
+      expect(page).to be_axe_clean.excluding '#user_email'
     end
 
     scenario 'contact page' do
       visit contact_path
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
 
     scenario 'commencer page' do
       visit commencer_path(path: procedure.reload.path)
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
   end
 
@@ -54,7 +54,7 @@ feature 'wcag rules for usager', js: true do
 
     scenario 'écran identité usager' do
       click_on 'Commencer la démarche'
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
 
     # with no surprise, there's a lot of work on this one
@@ -66,7 +66,7 @@ feature 'wcag rules for usager', js: true do
       fill_in('individual_nom', with: 'nom')
       click_on 'Continuer'
 
-      expect(page).to be_accessible.skipping :'aria-input-field-name'
+      expect(page).to be_axe_clean.skipping :'aria-input-field-name'
     end
   end
 
@@ -80,7 +80,7 @@ feature 'wcag rules for usager', js: true do
 
     scenario "écran identification de l'entreprise" do
       click_on 'Commencer la démarche'
-      expect(page).to be_accessible.skipping :label
+      expect(page).to be_axe_clean.skipping :label
     end
   end
 
@@ -92,37 +92,37 @@ feature 'wcag rules for usager', js: true do
 
     scenario 'liste des dossiers' do
       visit dossiers_path
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
 
     scenario 'dossier' do
       visit dossier_path(dossier)
-      expect(page).to be_accessible.skipping :'aria-input-field-name'
+      expect(page).to be_axe_clean.skipping :'aria-input-field-name'
     end
 
     scenario 'merci' do
       visit merci_dossier_path(dossier)
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
 
     scenario 'demande' do
       visit demande_dossier_path(dossier)
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
 
     scenario 'messagerie' do
       visit messagerie_dossier_path(dossier)
-      expect(page).to be_accessible
+      expect(page).to be_axe_clean
     end
 
     scenario 'modifier' do
       visit modifier_dossier_path(dossier)
-      expect(page).to be_accessible.skipping :'aria-input-field-name'
+      expect(page).to be_axe_clean.skipping :'aria-input-field-name'
     end
 
     scenario 'brouillon' do
       visit brouillon_dossier_path(dossier)
-      expect(page).to be_accessible.skipping :'aria-input-field-name'
+      expect(page).to be_axe_clean.skipping :'aria-input-field-name'
     end
   end
 end
