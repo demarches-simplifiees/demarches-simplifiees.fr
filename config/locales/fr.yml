@@ -35,6 +35,12 @@ fr:
     commentaire:
       send_message_to_instructeur: "Envoyer un message à l’instructeur"
       reply_in_mailbox: "Répondre dans la messagerie."
+  layouts:
+    commencer:
+      no_procedure:
+        line1: Un outil simple
+        line2: pour gérer les formulaires
+        line3: administratifs dématérialisés.
   views:
     commencer:
       show:
@@ -76,12 +82,6 @@ fr:
         want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation ?"
         edit_dossier: "Ces personnes peuvent modifier ce dossier."
         submit_dossier_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
-    layouts:
-      commencer:
-        no_procedure:
-          line1: Un outil simple
-          line2: pour gérer les formulaires
-          line3: administratifs dématérialisés.
     pagination:
       next: Suivant
       last: Dernier
