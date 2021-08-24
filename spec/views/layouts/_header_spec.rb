@@ -5,6 +5,7 @@ describe 'layouts/_header.html.haml', type: :view do
     allow(view).to receive(:multiple_devise_profile_connect?).and_return(false)
     allow(view).to receive(:instructeur_signed_in?).and_return((profile == :instructeur))
     allow(view).to receive(:current_instructeur).and_return(current_instructeur)
+    allow(view).to receive(:localization_enabled?).and_return(false)
 
     if user
       sign_in user
