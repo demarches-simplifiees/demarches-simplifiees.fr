@@ -89,7 +89,7 @@ class RootController < ApplicationController
   end
 
   def save_locale
-    cookies[:locale] = params[:locale]
-    redirect_to request.referer
+    set_locale(params[:locale])
+    redirect_back(fallback_location: root_path)
   end
 end
