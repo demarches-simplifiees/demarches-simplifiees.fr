@@ -41,6 +41,8 @@ fr:
         line1: Un outil simple
         line2: pour gérer les formulaires
         line3: administratifs dématérialisés.
+    locale_dropdown:
+      languages: "Langues"
   views:
     commencer:
       show:
