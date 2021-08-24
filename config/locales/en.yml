@@ -51,6 +51,8 @@ en:
         line1: A simple tool
         line2: to manage dematerialized
         line3: administrative forms.
+    locale_dropdown:
+      languages: "Languages"
   views:
     commencer:
       show:
