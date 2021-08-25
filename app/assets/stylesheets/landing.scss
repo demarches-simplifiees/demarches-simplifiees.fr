@@ -37,7 +37,7 @@ $landing-breakpoint: 1040px;
 }
 
 .hero-tagline-em {
-  color: $blue;
+  color: $blue-france-500;
   font-size: 40px;
   font-style: normal;
   font-weight: bold;
@@ -62,6 +62,7 @@ $landing-breakpoint: 1040px;
   text-align: center;
   margin-bottom: 40px;
   margin-top: 0;
+  color: $g700;
 }
 
 .features-panel {
@@ -185,7 +186,7 @@ $landing-breakpoint: 1040px;
 }
 
 .number-value {
-  color: $blue;
+  color: $blue-france-500;
   font-weight: bold;
   font-size: 36px;
 }
@@ -193,6 +194,7 @@ $landing-breakpoint: 1040px;
 .number-label {
   font-weight: bold;
   font-size: 20px;
+  color: $g700;
 }
 
 $users-breakpoint: 950px;
@@ -248,7 +250,7 @@ $users-breakpoint: 950px;
 }
 
 .cta-panel {
-  background-color: $blue;
+  background-color: $blue-france-500;
   color: #FFFFFF;
 }
 
@@ -293,11 +295,21 @@ $users-breakpoint: 950px;
   font-size: 24px;
   font-weight: bold;
   margin-top: 13px;
+  color: #FFFFFF;
+
+  &.grey {
+    color: $g700;
+  }
 }
 
 .cta-panel-explanation {
   font-size: 24px;
   margin-bottom: 10px;
+  color: #FFFFFF;
+
+  &.grey {
+    color: $g700;
+  }
 }
 
 .role-panel-title {
@@ -305,6 +317,7 @@ $users-breakpoint: 950px;
   font-weight: bold;
   line-height: 36px;
   margin-bottom: 15px;
+  color: $g700;
 }
 
 .role-panel-explanation {
@@ -374,12 +387,12 @@ $cta-panel-button-border-size: 2px;
 
 .cta-panel-button-blue {
   @include cta-panel-button;
-  border: $cta-panel-button-border-size solid $light-blue;
-  color: $light-blue;
+  border: $cta-panel-button-border-size solid $blue-france-700;
+  color: $blue-france-700;
 
   &:hover {
     color: #FFFFFF;
-    background-color: $light-blue;
+    background-color: $blue-france-500;
     text-decoration: none;
 
     &:focus {
@@ -388,7 +401,7 @@ $cta-panel-button-border-size: 2px;
   }
 
   &:focus {
-    color: $light-blue;
+    color: $blue-france-500;
     text-decoration: none;
   }
 }
@@ -406,13 +419,13 @@ $cta-panel-button-border-size: 2px;
 
 .role-panel-button-primary {
   @include role-button;
-  background-color: $blue;
+  background-color: $blue-france-700;
   color: #FFFFFF;
 
   &:hover {
     color: #FFFFFF;
     text-decoration: none;
-    background-color: $light-blue;
+    background-color: $blue-france-500;
   }
 
   &:focus {
@@ -423,9 +436,9 @@ $cta-panel-button-border-size: 2px;
 
 .role-panel-button-secondary {
   @include role-button;
-  border: $cta-panel-button-border-size solid $blue;
+  border: $cta-panel-button-border-size solid $blue-france-700;
   line-height: 50px - 2 * $cta-panel-button-border-size;
-  color: $blue;
+  color: $blue-france-700;
   margin-left: 10px;
 
   @media (max-width: $users-breakpoint) {
@@ -433,8 +446,8 @@ $cta-panel-button-border-size: 2px;
   }
 
   &:hover {
-    color: $light-blue;
-    border: $cta-panel-button-border-size solid $light-blue;
+    color: $blue-france-500;
+    border: $cta-panel-button-border-size solid $blue-france-500;
     text-decoration: none;
   }
 
