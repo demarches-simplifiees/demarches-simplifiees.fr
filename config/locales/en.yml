@@ -53,6 +53,8 @@ en:
         line3: administrative forms.
     locale_dropdown:
       languages: "Languages"
+    signature:
+      best_regards: Best Regards,
   views:
     commencer:
       show:
