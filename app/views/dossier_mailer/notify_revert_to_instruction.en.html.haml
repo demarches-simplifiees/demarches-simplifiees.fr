@@ -1,0 +1,21 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
+%p= t(:greeting, scope: [:layouts, :signature])
+
+%p
+  Your File will be reexamined. All previous decisions are void.
+  To see the File created on procedure
+  %strong= @dossier.procedure.libelle
+  , select the following link:
+  = link_to dossier_url(@dossier), dossier_url(@dossier), target: '_blank', rel: 'noopener'
+
+- if @dossier.procedure.service.present?
+  %p
+    In order to get more details about the decision to reexamin, please contact the following service:
+    = mail_to @dossier.procedure.service.email, @dossier.procedure.service.email
+
+= render 'layouts/mailers/signature'
+
+- content_for :footer do
+  = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier
