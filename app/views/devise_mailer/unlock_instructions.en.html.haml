@@ -1,7 +1,6 @@
 - content_for(:title, 'Reactivate account')
 
-%p
-  Dear Sir or Madam,
+%p= t(:greeting, scope: [:layouts, :signature])
 
 %p
   Someone made too many unsuccessful attempts to connect to your account #{@resource.email} on #{APPLICATION_NAME}.

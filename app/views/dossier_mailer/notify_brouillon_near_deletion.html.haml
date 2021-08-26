@@ -1,7 +1,6 @@
 - content_for(:title, "#{@subject}")
 
-%p
-  Bonjour,
+%p= t(:greeting, scope: [:layouts, :signature])
 
 %p
   = t('.header', count: @dossiers.count)

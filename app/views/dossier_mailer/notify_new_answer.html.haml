@@ -1,8 +1,7 @@
 - content_for :procedure_logo do
   = render 'layouts/mailers/logo', url: @logo_url
 
-%p
-  Bonjour,
+%p= t(:greeting, scope: [:layouts, :signature])
 
 - if !@dossier.brouillon?
   %p

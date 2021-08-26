@@ -1,7 +1,6 @@
 - content_for(:title, "#{@subject}")
 
-%p
-  Bonjour,
+%p= t(:greeting, scope: [:layouts, :signature])
 
 %p
   = t('.body', dossier_id: @dossier.id, libelle_demarche: @dossier.procedure.libelle)
