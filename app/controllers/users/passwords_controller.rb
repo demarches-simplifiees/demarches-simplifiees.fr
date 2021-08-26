@@ -37,16 +37,16 @@ class Users::PasswordsController < Devise::PasswordsController
     @email = params[:email]
   end
 
-  # protected
+  protected
 
   # def after_resetting_password_path_for(resource)
   #   super(resource)
   # end
 
-  # The path used after sending reset password instructions
-  # def after_sending_reset_password_instructions_path_for(resource_name)
-  #   super(resource_name)
-  # end
+  def after_sending_reset_password_instructions_path_for(resource_name)
+    flash.discard(:notice)
+    users_password_reset_link_sent_path(email: resource.email)
+  end
 
   def try_to_authenticate_instructeur
     if user_signed_in?
@@ -77,10 +77,5 @@ class Users::PasswordsController < Devise::PasswordsController
 
   def password_params
     params.require(:user).permit(:reset_password_token, :password)
-  end
-
-  def after_sending_reset_password_instructions_path_for(resource_name)
-    flash.discard(:notice)
-    users_password_reset_link_sent_path(email: resource.email)
   end
 end
