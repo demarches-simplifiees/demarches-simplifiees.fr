@@ -54,6 +54,7 @@ en:
     locale_dropdown:
       languages: "Languages"
     signature:
+      greeting: Dear Sir or Madam,
       best_regards: Best Regards,
   views:
     commencer:

@@ -1,8 +1,7 @@
 - content_for :procedure_logo do
   = render 'layouts/mailers/logo', url: @logo_url
 
-%p
-  Dear Sir or Madam,
+%p= t(:greeting, scope: [:layouts, :signature])
 
 %p
   You started filling a File on the procedure:
