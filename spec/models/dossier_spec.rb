@@ -40,7 +40,7 @@ describe Dossier do
   describe 'brouillon_close_to_expiration' do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let!(:expiring_dossier) { create(:dossier, created_at: 170.days.ago, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, created_at: 175.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, created_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, created_at: 1.year.ago, procedure: procedure) }
 
@@ -66,7 +66,7 @@ describe Dossier do
   describe 'en_construction_close_to_expiration' do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
-    let!(:expiring_dossier) { create(:dossier, :en_construction, en_construction_at: 170.days.ago, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, :en_construction, en_construction_at: 175.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, :en_construction, en_construction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, :en_construction, en_construction_at: 1.year.ago, procedure: procedure) }
 
@@ -92,7 +92,7 @@ describe Dossier do
   describe 'en_instruction_close_to_expiration' do
     let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
     let!(:young_dossier) { create(:dossier, procedure: procedure) }
-    let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 170.days.ago, procedure: procedure) }
+    let!(:expiring_dossier) { create(:dossier, :en_instruction, en_instruction_at: 175.days.ago, procedure: procedure) }
     let!(:just_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: (6.months + 1.hour + 10.seconds).ago, procedure: procedure) }
     let!(:long_expired_dossier) { create(:dossier, :en_instruction, en_instruction_at: 1.year.ago, procedure: procedure) }
 
