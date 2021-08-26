@@ -56,6 +56,11 @@ en:
     signature:
       greeting: Dear Sir or Madam,
       best_regards: Best Regards,
+    notifications:
+      actions:
+        access: View your File
+        question: I have a question
+        reply: Reply to this message
   views:
     commencer:
       show:
