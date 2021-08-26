@@ -57,7 +57,7 @@ class Dossier < ApplicationRecord
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
-  INTERVAL_BEFORE_EXPIRATION = '1 month'
+  INTERVAL_BEFORE_EXPIRATION = '2 weeks'
   INTERVAL_EXPIRATION = '1 month 5 days'
 
   has_one :etablissement, dependent: :destroy
