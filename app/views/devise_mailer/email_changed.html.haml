@@ -1,6 +1,6 @@
 - content_for(:title, 'Votre nouvelle adresse email')
 
-%p= t(:greeting, scope: [:layouts, :signature])
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 - unconfirmed_email = @resource.try(:unconfirmed_email?)
 - if unconfirmed_email.present?

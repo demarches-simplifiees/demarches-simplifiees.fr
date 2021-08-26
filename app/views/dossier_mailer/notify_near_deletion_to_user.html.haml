@@ -1,6 +1,6 @@
 - content_for(:title, "#{@subject}")
 
-%p= t(:greeting, scope: [:layouts, :signature])
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   - if @state == Dossier.states.fetch(:en_construction)
