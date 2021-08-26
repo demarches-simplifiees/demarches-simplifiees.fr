@@ -46,6 +46,12 @@ fr:
     signature:
       greeting: Bonjour,
       best_regards: Bonne journée,
+    notifications:
+      actions:
+        access: Consulter mon dossier
+        question: J’ai une question
+        reply: Répondre à ce message
+
   views:
     commencer:
       show:
