@@ -2,8 +2,7 @@
 - if @user.unconfirmed_email.nil?
   - content_for(:title, 'Activate account')
 
-  %p
-    Dear Sir or Madam,
+  %p= t(:hello, scope: [:views, :shared, :greetings])
 
   %p
     You have entered your details to create an account on #{APPLICATION_NAME}. To confirm your email and finish creating your account, select the following link:
@@ -13,8 +12,7 @@
 - else
   - content_for(:title, "Change email address")
 
-  %p
-    Dear Sir or Madam,
+  %p= t(:hello, scope: [:views, :shared, :greetings])
 
   %p
     To confirm your account email change on #{APPLICATION_NAME}, select the following link:
