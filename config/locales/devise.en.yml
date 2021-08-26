@@ -1,0 +1,5 @@
+en:
+  devise:
+    passwords:
+      new:
+        request_new_password: Request new password
