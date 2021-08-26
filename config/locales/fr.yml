@@ -43,9 +43,6 @@ fr:
         line3: administratifs dématérialisés.
     locale_dropdown:
       languages: "Langues"
-    signature:
-      greeting: Bonjour,
-      best_regards: Bonne journée,
     notifications:
       actions:
         access: Consulter mon dossier
@@ -100,6 +97,9 @@ fr:
       first: Premier
       truncate: '&hellip;'
     shared:
+      greetings:
+        hello: Bonjour,
+        best_regards: Bonne journée,
       dossiers:
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.

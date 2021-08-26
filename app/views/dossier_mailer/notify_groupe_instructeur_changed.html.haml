@@ -1,6 +1,6 @@
 - content_for(:title, "#{@subject}")
 
-%p= t(:greeting, scope: [:layouts, :signature])
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   = "Vous suiviez jusqu'à maintenant le dossier n°#{@dossier_id} de la démarche #{@demarche}."

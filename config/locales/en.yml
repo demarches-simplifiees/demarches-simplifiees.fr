@@ -53,9 +53,6 @@ en:
         line3: administrative forms.
     locale_dropdown:
       languages: "Languages"
-    signature:
-      greeting: Dear Sir or Madam,
-      best_regards: Best Regards,
     notifications:
       actions:
         access: View your File
@@ -108,6 +105,9 @@ en:
       first: First
       truncate: '&hellip;'
     shared:
+      greetings:
+        hello: Dear Sir or Madam,
+        best_regards: Best Regards,
       dossiers:
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.

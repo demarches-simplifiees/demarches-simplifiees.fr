@@ -1,7 +1,7 @@
 - content_for :procedure_logo do
   = render 'layouts/mailers/logo', url: @logo_url
 
-%p= t(:greeting, scope: [:layouts, :signature])
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   Vous avez commencé à remplir un dossier pour la démarche
