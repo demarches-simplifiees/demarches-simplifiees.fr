@@ -1,4 +1,5 @@
 require 'prawn/measurement_extensions'
+require 'open-uri'
 
 def default_margin
   10
@@ -138,7 +139,10 @@ def add_single_champ(pdf, champ)
   when 'Champs::ExplicationChamp'
     format_in_2_lines(pdf, champ.libelle, champ.description)
   when 'Champs::CarteChamp'
-    format_in_2_lines(pdf, champ.libelle, champ.to_feature_collection.to_json)
+    geojson = champ.to_feature_collection.to_json
+    format_in_2_lines(pdf, champ.libelle, geojson)
+    mapbox_url = "https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/geojson(#{CGI.escape(geojson)})/auto/800x600@2x?access_token=#{MAPBOX_TOKEN}"
+    pdf.image open(mapbox_url), width: 400, position: :center
   when 'Champs::SiretChamp'
     pdf.font 'marianne', style: :bold do
       pdf.text champ.libelle
