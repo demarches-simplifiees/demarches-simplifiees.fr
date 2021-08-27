@@ -1,0 +1,31 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
+%p= t(:hello, scope: [:views, :shared, :greetings])
+
+- if !@dossier.brouillon?
+  %p
+    You received
+    %strong a new message
+    from the service in charge of examine your File.
+  %p
+    To read the message and answer it, select the following link:
+
+  = round_button('Read the message', messagerie_dossier_url(@dossier), :primary)
+- else
+  %p
+    You received
+    %strong a new message
+    from the service in charge of examine the File you started a draft for on the procedure #{@dossier.procedure.libelle}.
+  %p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
+    = @body
+
+  %p
+    If you chose to contact the service, please use the email available below in the page.
+
+  = round_button('Open the File', dossier_url(@dossier), :primary)
+
+= render 'layouts/mailers/signature', service: @service
+
+- content_for :footer do
+  = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier

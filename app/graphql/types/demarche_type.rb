@@ -14,14 +14,14 @@ module Types
       end
     end
 
-    description "Une demarche"
+    description "Une démarche"
 
     global_id_field :id
-    field :number, Int, "Le numero de la démarche.", null: false, method: :id
-    field :title, String, "Le titre de la démarche.", null: false, method: :libelle
+    field :number, Int, "Numero de la démarche.", null: false, method: :id
+    field :title, String, "Titre de la démarche.", null: false, method: :libelle
     field :description, String, "Description de la démarche.", null: false
-    field :state, DemarcheState, "L’état de la démarche.", null: false
-    field :declarative, DossierDeclarativeState, "L’état de dossier pour une démarche déclarative", null: true, method: :declarative_with_state
+    field :state, DemarcheState, "État de la démarche.", null: false
+    field :declarative, DossierDeclarativeState, "Pour une démarche déclarative, état cible des dossiers à valider automatiquement", null: true, method: :declarative_with_state
 
     field :date_creation, GraphQL::Types::ISO8601DateTime, "Date de la création.", null: false, method: :created_at
     field :date_publication, GraphQL::Types::ISO8601DateTime, "Date de la publication.", null: true, method: :published_at

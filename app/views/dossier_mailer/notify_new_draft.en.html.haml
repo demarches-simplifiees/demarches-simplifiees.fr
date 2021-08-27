@@ -4,20 +4,18 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  Vous avez commencé à remplir un dossier pour la démarche
+  You started filling a File on the procedure:
   = succeed '.' do
     %strong « #{@dossier.procedure.libelle} »
 
 %p
-  Vous pouvez
-  %strong retrouver et compléter votre dossier
-  en cliquant sur le bouton ci-dessous:
+  You can access your File, to review or complete, by clicking on the following button:
 
-= round_button('Afficher votre dossier', dossier_url(@dossier), :primary)
+= round_button('Access your File', dossier_url(@dossier), :primary)
 
 - if @dossier.procedure.auto_archive_on
   %p
-    Vous pouvez déposer votre dossier jusqu’au #{procedure_auto_archive_datetime(@dossier.procedure)}.
+    Your File needs to be submitted before #{procedure_auto_archive_datetime(@dossier.procedure)}.
 
 = render 'layouts/mailers/signature'
 
