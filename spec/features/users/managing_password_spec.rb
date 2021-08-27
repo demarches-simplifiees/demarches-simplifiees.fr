@@ -85,10 +85,12 @@ feature 'Managing password:' do
       expect(page).to have_content 'Changement de mot de passe'
 
       fill_in 'super_admin_password', with: weak_password
+      fill_in 'super_admin_password_confirmation', with: weak_password
       expect(page).to have_text('Mot de passe très vulnérable')
       expect(page).to have_button('Changer le mot de passe', disabled: true)
 
       fill_in 'super_admin_password', with: strong_password
+      fill_in 'super_admin_password_confirmation', with: strong_password
       expect(page).to have_text('Mot de passe suffisamment fort et sécurisé')
       expect(page).to have_button('Changer le mot de passe', disabled: false)
 
