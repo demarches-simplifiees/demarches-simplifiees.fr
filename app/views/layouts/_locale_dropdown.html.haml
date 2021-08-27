@@ -1,11 +1,11 @@
 .dropdown.locale-dropdown.header-menu-opener
-  %button.button.dropdown-button.icon-only.header-menu-button{ title: "Translate", aria: { expanded: 'false', controls: 'locale_menu' } }
-    .hidden Translate
-    = image_tag "icons/translate-icon.svg", alt: 'Translate', width: 24, height: 24, lazy: true, aria: { hidden: true }
+  %button.button.dropdown-button.icon-only.header-menu-button{ title: t('.languages'), aria: { expanded: 'false', controls: 'locale_menu' } }
+    .hidden t('.languages')
+    = image_tag "icons/translate-icon.svg", alt: t('.languages'), width: 24, height: 24, lazy: true, aria: { hidden: true }
   %ul.header-menu.dropdown-content
     %li
-      = link_to save_locale_path(locale: :en), method: :post, class: "menu-item menu-link" do
-        EN – English
+      = active_link_to save_locale_path(locale: :fr), method: :post, class: "menu-item menu-link", active: I18n.locale == :fr do
+        Français
     %li
-      = link_to save_locale_path(locale: :fr), method: :post, class: "menu-item menu-link" do
-        FR – français
+      = active_link_to save_locale_path(locale: :en), method: :post, class: "menu-item menu-link", active: I18n.locale == :en do
+        English

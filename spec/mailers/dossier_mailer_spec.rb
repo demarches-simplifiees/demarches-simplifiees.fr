@@ -151,7 +151,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("n° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous avez <b>un mois</b> pour commencer l’instruction du dossier.") }
+      it { expect(subject.body).to include("Vous avez <b>deux semaines</b> pour commencer l’instruction du dossier.") }
     end
 
     describe 'termine' do
@@ -163,7 +163,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("n° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous avez <b>un mois</b> pour archiver le dossier.") }
+      it { expect(subject.body).to include("Vous avez <b>deux semaines</b> pour archiver le dossier.") }
     end
   end
 
@@ -178,7 +178,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("n° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n’avez rien à faire.") }
+      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>deux semaines</b>. Vous n’avez rien à faire.") }
       it { expect(subject.body).to include("Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface.") }
     end
 
@@ -192,7 +192,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("n° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>un mois</b>. Vous n’avez rien à faire.") }
+      it { expect(subject.body).to include("Vous pouvez retrouver votre dossier pendant encore <b>deux semaines</b>. Vous n’avez rien à faire.") }
     end
   end
 

@@ -1,7 +1,6 @@
 - content_for(:title, "#{@subject}")
 
-%p
-  Bonjour,
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   Le dossier n°#{@dossier.id} pour la démarche  «&nbsp;

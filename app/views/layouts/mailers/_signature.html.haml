@@ -1,5 +1,5 @@
 %p
-  Bonne journée,
+  = t(:best_regards, scope: [:views, :shared, :greetings])
   %br
   - if defined?(service) && service && service.nom.present?
     = service.nom
