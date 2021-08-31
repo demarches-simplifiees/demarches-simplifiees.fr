@@ -195,7 +195,6 @@ Rails.application.routes.draw do
 
     resources :procedures, only: [] do
       put 'archive' => 'procedures#archive', as: :archive
-      put 'clone' => 'procedures#clone', as: :clone
     end
 
     namespace :assigns do
@@ -404,6 +403,7 @@ Rails.application.routes.draw do
         put :experts_require_administrateur_invitation
       end
 
+      put 'clone'
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert
