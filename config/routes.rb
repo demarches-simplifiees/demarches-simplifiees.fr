@@ -110,10 +110,6 @@ Rails.application.routes.draw do
     get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
   end
 
-  devise_scope :administrateur do
-    get '/administrateurs/password/test_strength' => 'administrateurs/passwords#test_strength'
-  end
-
   get 'password_complexity' => 'password_complexity#show', as: 'show_password_complexity'
 
   #
