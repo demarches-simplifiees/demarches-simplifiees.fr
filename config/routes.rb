@@ -194,10 +194,6 @@ Rails.application.routes.draw do
     get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
     resources :procedures, only: [] do
-      collection do
-        get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
-      end
-
       put 'archive' => 'procedures#archive', as: :archive
       put 'clone' => 'procedures#clone', as: :clone
     end
@@ -392,6 +388,10 @@ Rails.application.routes.draw do
 
   namespace :admin, module: 'new_administrateur' do
     resources :procedures, except: [:destroy] do
+      collection do
+        get 'new_from_existing'
+      end
+
       member do
         get 'apercu'
         get 'champs'
