@@ -33,24 +33,6 @@ class Admin::ProceduresController < AdminController
     redirect_to admin_procedures_path
   end
 
-  SIGNIFICANT_DOSSIERS_THRESHOLD = 30
-
-  def new_from_existing
-    significant_procedure_ids = Procedure
-      .publiees_ou_closes
-      .joins(:dossiers)
-      .group("procedures.id")
-      .having("count(dossiers.id) >= ?", SIGNIFICANT_DOSSIERS_THRESHOLD)
-      .pluck('procedures.id')
-
-    @grouped_procedures = Procedure
-      .includes(:administrateurs, :service)
-      .where(id: significant_procedure_ids)
-      .group_by(&:organisation_name)
-      .sort_by { |_, procedures| procedures.first.created_at }
-    render layout: 'application'
-  end
-
   private
 
   def cloned_from_library?
