@@ -242,6 +242,8 @@ Rails.application.routes.draw do
       get 'dossiers/pdf/:id', format: :pdf, to: "dossiers#pdf", as: :dossier_pdf
       get 'dossiers/geojson/:id', to: "dossiers#geojson", as: :dossier_geojson
     end
+
+    resources :pays, only: :index
   end
 
   #
