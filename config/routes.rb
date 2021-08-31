@@ -193,10 +193,6 @@ Rails.application.routes.draw do
     get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
     get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
-    resources :procedures, only: [] do
-      put 'archive' => 'procedures#archive', as: :archive
-    end
-
     namespace :assigns do
       get 'show' # delete after fixed tests admin/instructeurs/show_spec without this line
     end
@@ -404,6 +400,7 @@ Rails.application.routes.draw do
       end
 
       put 'clone'
+      put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert

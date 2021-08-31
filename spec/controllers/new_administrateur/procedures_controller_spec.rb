@@ -343,6 +343,40 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     end
   end
 
+  describe 'PUT #archive' do
+    let(:procedure) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
+
+    context 'when the admin is an owner of the procedure' do
+      before do
+        put :archive, params: { procedure_id: procedure.id }
+        procedure.reload
+      end
+
+      it 'archives the procedure' do
+        expect(procedure.close?).to be_truthy
+        expect(response).to redirect_to :admin_procedures
+        expect(flash[:notice]).to have_content 'Démarche close'
+      end
+    end
+
+    context 'when the admin is not an owner of the procedure' do
+      let(:admin_2) { create(:administrateur) }
+
+      before do
+        sign_out(admin.user)
+        sign_in(admin_2.user)
+
+        put :archive, params: { procedure_id: procedure.id }
+        procedure.reload
+      end
+
+      it 'displays an error message' do
+        expect(response).to redirect_to :admin_procedures
+        expect(flash[:alert]).to have_content 'Démarche inexistante'
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     let(:procedure_draft)     { create(:procedure, administrateurs: [admin]) }
     let(:procedure_published) { create(:procedure, :published, administrateurs: [admin]) }
