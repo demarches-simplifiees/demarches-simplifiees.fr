@@ -212,8 +212,6 @@ Rails.application.routes.draw do
     namespace :assigns do
       get 'show' # delete after fixed tests admin/instructeurs/show_spec without this line
     end
-
-    resources :instructeurs, only: [:index, :create, :destroy]
   end
 
   resources :invites, only: [:show, :destroy] do
