@@ -34,37 +34,4 @@ describe Admin::ProceduresController, type: :controller do
   before do
     sign_in(admin.user)
   end
-
-  describe 'PUT #archive' do
-    let(:procedure) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
-
-    context 'when admin is the owner of the procedure' do
-      before do
-        put :archive, params: { procedure_id: procedure.id }
-        procedure.reload
-      end
-
-      context 'when owner want archive procedure' do
-        it { expect(procedure.close?).to be_truthy }
-        it { expect(response).to redirect_to :admin_procedures }
-        it { expect(flash[:notice]).to have_content 'Démarche close' }
-      end
-    end
-
-    context 'when admin is not the owner of the procedure' do
-      let(:admin_2) { create(:administrateur) }
-
-      before do
-        sign_out(admin.user)
-        sign_in(admin_2.user)
-
-        put :archive, params: { procedure_id: procedure.id }
-        procedure.reload
-      end
-
-      it { expect(response).to redirect_to :admin_procedures }
-      it { expect(flash[:alert]).to have_content 'Démarche inexistante' }
-    end
-  end
-
 end
