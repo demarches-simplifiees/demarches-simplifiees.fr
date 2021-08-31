@@ -114,6 +114,8 @@ Rails.application.routes.draw do
     get '/administrateurs/password/test_strength' => 'administrateurs/passwords#test_strength'
   end
 
+  get 'password_complexity' => 'password_complexity#show', as: 'show_password_complexity'
+
   #
   # Main routes
   #
