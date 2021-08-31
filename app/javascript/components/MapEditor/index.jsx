@@ -44,16 +44,11 @@ function MapEditor({ featureCollection, url, options, preview }) {
     enabled: !preview,
     cadastreEnabled
   });
-  const {
-    style,
-    layers,
-    setStyle,
-    setLayerEnabled,
-    setLayerOpacity
-  } = useMapStyle(options.layers, {
-    onStyleChange,
-    cadastreEnabled
-  });
+  const { style, layers, setStyle, setLayerEnabled, setLayerOpacity } =
+    useMapStyle(options.layers, {
+      onStyleChange,
+      cadastreEnabled
+    });
 
   if (!isSupported) {
     return (
