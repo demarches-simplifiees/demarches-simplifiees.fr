@@ -47,6 +47,10 @@ function ComboSearch({
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [value, setValue] = useState(initialValue);
   const resultsMap = useRef({});
+  const getLabel = (result) => {
+    const [, value, label] = transformResult(result);
+    return label ?? value;
+  };
   const setExternalValue = useCallback(
     (value) => {
       if (hiddenValueField) {
@@ -64,8 +68,8 @@ function ComboSearch({
     },
     [hiddenIdField]
   );
-  const setExternalValueAndId = useCallback((value) => {
-    const [key, result] = resultsMap.current[value];
+  const setExternalValueAndId = useCallback((label) => {
+    const { key, value, result } = resultsMap.current[label];
     setExternalId(key);
     setExternalValue(value);
     if (onChange) {
@@ -107,9 +111,9 @@ function ComboSearch({
 
   const onBlur = useCallback(() => {
     if (!allowInputValues && isSuccess && results[0]) {
-      const [, value] = transformResult(results[0]);
+      const label = getLabel(results[0]);
       awaitFormSubmit(() => {
-        handleOnSelect(value);
+        handleOnSelect(label);
       });
     }
   }, [data]);
@@ -129,13 +133,14 @@ function ComboSearch({
           {results.length > 0 ? (
             <ComboboxList>
               {results.map((result, index) => {
-                const [key, str] = transformResult(result);
-                resultsMap.current[str] = [key, result];
+                const label = getLabel(result);
+                const [key, value] = transformResult(result);
+                resultsMap.current[label] = { key, value, result };
                 return (
                   <ComboboxOption
                     key={`${key}-${index}`}
-                    value={str}
-                    data-option-value={str}
+                    value={label}
+                    data-option-value={value}
                   />
                 );
               })}
