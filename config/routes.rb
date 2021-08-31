@@ -387,7 +387,7 @@ Rails.application.routes.draw do
   #
 
   namespace :admin, module: 'new_administrateur' do
-    resources :procedures, except: [:destroy] do
+    resources :procedures do
       collection do
         get 'new_from_existing'
       end
