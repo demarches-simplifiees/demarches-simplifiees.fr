@@ -904,11 +904,13 @@ describe API::V2::GraphqlController do
       describe 'dossierPasserEnInstruction' do
         let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
         let(:instructeur_id) { instructeur.to_typed_id }
+        let(:disable_notification) { false }
         let(:query) do
           "mutation {
             dossierPasserEnInstruction(input: {
               dossierId: \"#{dossier.to_typed_id}\",
-              instructeurId: \"#{instructeur_id}\"
+              instructeurId: \"#{instructeur_id}\",
+              disableNotification: #{disable_notification}
             }) {
               dossier {
                 id
@@ -934,6 +936,9 @@ describe API::V2::GraphqlController do
               },
               errors: nil
             })
+
+            perform_enqueued_jobs
+            expect(ActionMailer::Base.deliveries.size).to eq(4)
           end
         end
 
@@ -958,6 +963,25 @@ describe API::V2::GraphqlController do
               errors: [{ message: 'L’instructeur n’a pas les droits d’accès à ce dossier' }],
               dossier: nil
             })
+          end
+        end
+
+        context 'disable notification' do
+          let(:disable_notification) { true }
+          it "should passer en instruction dossier without notification" do
+            expect(gql_errors).to eq(nil)
+
+            expect(gql_data).to eq(dossierPasserEnInstruction: {
+              dossier: {
+                id: dossier.to_typed_id,
+                state: "en_instruction",
+                motivation: nil
+              },
+              errors: nil
+            })
+
+            perform_enqueued_jobs
+            expect(ActionMailer::Base.deliveries.size).to eq(3)
           end
         end
       end
