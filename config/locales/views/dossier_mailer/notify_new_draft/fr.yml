@@ -1,0 +1,10 @@
+fr:
+  dossier_mailer:
+    notify_new_draft:
+      subject: Retrouvez votre brouillon pour la démarche « %{libelle_demarche} »
+      body_html: |
+        Vous avez commencé à remplir un dossier pour la démarche <b>« %{libelle_demarche} »</b>.
+      link_html: |
+        Vous pouvez <b>retrouver et compléter votre dossier</b> en cliquant sur le bouton ci-dessous :
+      submit_before: Vous pouvez déposer votre dossier jusqu’au %{before}.
+      access_file: Afficher votre dossier
