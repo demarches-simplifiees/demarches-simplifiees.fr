@@ -39,6 +39,8 @@
     <tbody>
       <% @transactionnal_emails&.transactional_emails&.reverse&.each do |email| %>
         <% matching_events = @events&.events&.select { |e| e.message_id == email.message_id } %>
+        <% date = email.date %>
+        <% date = Date.iso8601(email.date) if date.is_a?(String) %>
       <tr class="<%= event_color_code(matching_events) %>">
         <td class="cell-data cell-data--string" style="">
           <%= email.from %>
@@ -47,7 +49,7 @@
         <%= email.subject %>
         </td>
         <td class="cell-data cell-data--string" style="text-align: center;">
-        <%= l(email.date.is_a?(String) ? Time.zone.parse(email.date) : email.date, format: '%d/%m/%y à %H:%M') %>
+        <%= l(date, format: '%d/%m/%y à %H:%M') %>
         </td>
         <td class="cell-data cell-data--string" style="text-align: center;">
           <ul>
