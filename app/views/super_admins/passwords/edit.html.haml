@@ -14,8 +14,6 @@
       = f.hidden_field :reset_password_token
 
       = f.label 'Nouveau mot de passe'
-
-      = render partial: 'shared/password/edit_password', locals: { form: f, controller: 'super_admins/passwords' }
-
+      = render 'password_complexity/field', { form: f, test_complexity: populated_resource.validate_password_complexity? }
 
       = f.submit 'Changer le mot de passe', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi..." }
