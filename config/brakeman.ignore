@@ -1,26 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "25d6ed4f7f9120faf69596aa97d9e0558fd86817583b99b9b7879aff43ec2751",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/procedure_presentation.rb",
-      "line": 114,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "dossiers.with_type_de_champ_private(column).order(\"champs.value #{order}\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ProcedurePresentation",
-        "method": "sorted_ids"
-      },
-      "user_input": "order",
-      "confidence": "Weak",
-      "note": "`table`, `column` and `order` come from the model, which is validated to prevent injection attacks. Furthermore, `table` and `column` are escaped."
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "483ae8c038244eb3ed709e89846335e2c8ff6579260348ec31d3d03d1c94ad64",
@@ -49,26 +29,6 @@
       },
       "user_input": "current_user.dossiers.includes(:procedure)",
       "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "7e27a03f04576569601d7ec70bddd05c21c4f2de17448e6e093f76844c59e0a0",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 175,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Export.find_or_create_export(params[:export_format], (params[:time_span_type] or Export.time_span_types.fetch(:everything)), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Instructeurs::ProceduresController",
-        "method": "download_export"
-      },
-      "user_input": "Export.find_or_create_export(params[:export_format], (params[:time_span_type] or Export.time_span_types.fetch(:everything)), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url",
-      "confidence": "High",
       "note": ""
     },
     {
@@ -110,68 +70,8 @@
       "user_input": "Export.find_or_create_export(params[:export_format], (params[:time_span_type] or \"everything\"), current_instructeur.groupe_instructeurs.where(:procedure => procedure)).file.service_url",
       "confidence": "High",
       "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "d6031dd493ff36d62af2d75d0b1e4606c665413a62ef26a847902af4ad97d81f",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/procedure_presentation.rb",
-      "line": 109,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "dossiers.with_type_de_champ(column).order(\"champs.value #{order}\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ProcedurePresentation",
-        "method": "sorted_ids"
-      },
-      "user_input": "order",
-      "confidence": "Weak",
-      "note": "`table`, `column` and `order` come from the model, which is validated to prevent injection attacks. Furthermore, `table` and `column` are escaped."
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "e6f09095e3d381bcf6280d2f9b06c239946be3e440330136934f34611bc2b2d9",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/procedure_presentation.rb",
-      "line": 127,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "((\"self\" == \"self\") ? (dossiers) : (dossiers.includes(\"self\"))).order(\"#{self.class.sanitized_column(\"self\", column)} #{order}\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ProcedurePresentation",
-        "method": "sorted_ids"
-      },
-      "user_input": "self.class.sanitized_column(\"self\", column)",
-      "confidence": "Weak",
-      "note": "`table`, `column` and `order` come from the model, which is validated to prevent injection attacks. Furthermore, `table` and `column` are escaped."
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "fd9d738975ccb93c8915833fceb3f43ac35410d653b8c64a1c92c1afc36d2177",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/procedure_presentation.rb",
-      "line": 122,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "dossiers.includes(:followers_instructeurs).joins(\"LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.instructeur_id = instructeurs.id\").order(\"instructeurs_users.email #{order}\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ProcedurePresentation",
-        "method": "sorted_ids"
-      },
-      "user_input": "order",
-      "confidence": "Weak",
-      "note": "`table`, `column` and `order` come from the model, which is validated to prevent injection attacks. Furthermore, `table` and `column` are escaped."
     }
   ],
-  "updated": "2021-09-02 16:10:12 -0500",
+  "updated": "2021-09-02 16:12:11 -0500",
   "brakeman_version": "5.1.1"
 }
