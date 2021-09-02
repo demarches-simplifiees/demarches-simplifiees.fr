@@ -80,7 +80,7 @@ gem 'spreadsheet_architect'
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'
-gem 'zipline'
+gem 'zipline', github: 'fringd/zipline', ref: 'd637bbff2' # Unreleased 1.3.0, with a fix for Ruby 3.0 kwargs
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 group :test do
