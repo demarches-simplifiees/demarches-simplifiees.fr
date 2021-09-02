@@ -193,15 +193,9 @@ Rails.application.routes.draw do
     get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
     get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
-    resources :procedures, only: [:destroy] do
+    resources :procedures, only: [] do
       collection do
         get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
-      end
-
-      member do
-        delete :delete_logo
-        delete :delete_deliberation
-        delete :delete_notice
       end
 
       put 'archive' => 'procedures#archive', as: :archive
