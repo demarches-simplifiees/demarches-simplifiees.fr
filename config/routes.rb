@@ -205,7 +205,6 @@ Rails.application.routes.draw do
       end
 
       put 'archive' => 'procedures#archive', as: :archive
-      get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
       put 'clone' => 'procedures#clone', as: :clone
     end
 
