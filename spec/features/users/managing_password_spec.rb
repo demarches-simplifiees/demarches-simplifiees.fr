@@ -27,11 +27,12 @@ feature 'Managing password:' do
   end
 
   context 'for admins' do
-    let(:user) { create(:user) }
-    let(:administrateur) { create(:administrateur, user: user) }
-    let(:new_password) { 'a new, long, and complicated password!' }
+    let(:administrateur) { create(:administrateur) }
+    let(:user) { administrateur.user }
+    let(:weak_password) { '12345678' }
+    let(:strong_password) { 'a new, long, and complicated password!' }
 
-    scenario 'an admin can reset their password' do
+    scenario 'an admin can reset their password', js: true do
       visit root_path
       click_on 'Connexion'
       click_on 'Mot de passe oublié ?'
@@ -48,8 +49,16 @@ feature 'Managing password:' do
 
       expect(page).to have_content 'Changement de mot de passe'
 
-      fill_in 'user_password', with: new_password
-      fill_in 'user_password_confirmation', with: new_password
+      fill_in 'user_password', with: weak_password
+      fill_in 'user_password_confirmation', with: weak_password
+      expect(page).to have_text('Mot de passe très vulnérable')
+      expect(page).to have_button('Changer le mot de passe', disabled: true)
+
+      fill_in 'user_password', with: strong_password
+      fill_in 'user_password_confirmation', with: strong_password
+      expect(page).to have_text('Mot de passe suffisamment fort et sécurisé')
+      expect(page).to have_button('Changer le mot de passe', disabled: false)
+
       click_on 'Changer le mot de passe'
       expect(page).to have_content('Votre mot de passe a bien été modifié.')
     end
