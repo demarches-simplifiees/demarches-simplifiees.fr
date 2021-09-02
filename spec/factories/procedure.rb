@@ -248,7 +248,9 @@ FactoryBot.define do
       after(:create) do |procedure, _evaluator|
         procedure.notice.attach(
           io: StringIO.new('Hello World'),
-          filename: 'hello.txt'
+          filename: 'hello.txt',
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
         )
       end
     end
@@ -257,7 +259,9 @@ FactoryBot.define do
       after(:create) do |procedure, _evaluator|
         procedure.deliberation.attach(
           io: StringIO.new('Hello World'),
-          filename: 'hello.txt'
+          filename: 'hello.txt',
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
         )
       end
     end

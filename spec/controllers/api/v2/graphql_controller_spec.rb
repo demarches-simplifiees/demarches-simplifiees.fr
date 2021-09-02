@@ -34,7 +34,9 @@ describe API::V2::GraphqlController do
       filename: file.original_filename,
       byte_size: file.size,
       checksum: compute_checksum_in_chunks(file),
-      content_type: file.content_type
+      content_type: file.content_type,
+      # we don't want to run virus scanner on this file
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     }
   end
   let(:blob) do
