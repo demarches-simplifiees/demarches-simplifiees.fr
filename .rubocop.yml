@@ -12,6 +12,7 @@ AllCops:
     - "db/migrate/20190730153555_recreate_structure.rb"
     - "bin/*"
     - "node_modules/**/*"
+    - "vendor/**/*"
 
 DS/Unscoped:
   Enabled: true
@@ -687,9 +688,6 @@ Rails/ApplicationRecord:
 Rails/ApplicationController:
   Enabled: false
 
-Rails/AttributeDefaultBlockValue: # (new in 2.9)
-  Enabled: true
-
 Rails/RakeEnvironment:
   Enabled: false
 
@@ -816,9 +814,6 @@ Rails/UnknownEnv:
   Enabled: false
 
 Rails/Validation:
-  Enabled: true
-
-Rails/WhereEquals:
   Enabled: true
 
 Rails:
