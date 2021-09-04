@@ -65,7 +65,7 @@ feature 'linked dropdown lists' do
   end
 
   def primary_id_for(libelle)
-    find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
+    find(:xpath, ".//label[text()[normalize-space() = '#{libelle}']]")[:for]
   end
 
   def secondary_id_for(libelle)
