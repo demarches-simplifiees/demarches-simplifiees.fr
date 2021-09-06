@@ -1,7 +1,9 @@
 class APIParticulier::API
+  include APIParticulier::Entities::Caf
   include APIParticulier::Error
 
   INTROSPECT_RESOURCE_NAME = "introspect"
+  COMPOSITION_FAMILIALE_RESOURCE_NAME = "v2/composition-familiale"
 
   TIMEOUT = 20
 
@@ -12,6 +14,14 @@ class APIParticulier::API
   def introspect
     response = get(INTROSPECT_RESOURCE_NAME)
     APIParticulier::Entities::Introspection.new(response)
+  end
+
+  def composition_familiale(numero_d_allocataire, code_postal)
+    response = get(COMPOSITION_FAMILIALE_RESOURCE_NAME,
+                   numeroAllocataire: numero_d_allocataire,
+                   codePostal: code_postal)
+
+    Famille.new(response)
   end
 
   private
