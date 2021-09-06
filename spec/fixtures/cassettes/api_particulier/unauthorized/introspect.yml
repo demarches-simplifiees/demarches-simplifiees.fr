@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier.api.gouv.fr/api/introspect
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 401
+      message: ''
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Wed, 15 Sep 2021 10:02:12 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '134'
+      X-Powered-By:
+      - Express
+      Vary:
+      - Origin
+      Etag:
+      - W/"86-FwFf7uuVKCSJkazn1ZHnY1yVYUo"
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubdomains
+    body:
+      encoding: UTF-8
+      string: >
+        {"error":"acces_denied","reason":"Token not found or inactive","message":"Votre jeton d'API n'a pas été trouvé ou n'est pas actif"}
+  recorded_at: Wed, 15 Sep 2021 10:02:12 GMT
+recorded_with: VCR 6.0.0
