@@ -202,7 +202,7 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: { less_than: 20.megabytes }, if: -> { new_record? || created_at > Date.new(2020, 2, 27) }
+  ], size: { less_than: 20.megabytes }, if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
 
   validates :deliberation, content_type: [
     "application/msword",
