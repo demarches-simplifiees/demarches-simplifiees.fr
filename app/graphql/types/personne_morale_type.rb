@@ -75,7 +75,7 @@ module Types
       field :rna, String, null: false
       field :titre, String, null: false
       field :objet, String, null: false
-      field :date_creation, GraphQL::Types::ISO8601Date, null: false
+      field :date_creation, GraphQL::Types::ISO8601Date, null: true
       field :date_declaration, GraphQL::Types::ISO8601Date, null: false
       field :date_publication, GraphQL::Types::ISO8601Date, null: false
     end

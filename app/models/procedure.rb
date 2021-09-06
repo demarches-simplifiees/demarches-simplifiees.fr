@@ -202,7 +202,7 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: { less_than: 20.megabytes }
+  ], size: { less_than: 20.megabytes }, if: -> { new_record? || created_at > Date.new(2020, 2, 27) }
 
   validates :deliberation, content_type: [
     "application/msword",
@@ -213,9 +213,12 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: { less_than: 20.megabytes }
+  ], size: { less_than: 20.megabytes }, if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
 
-  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
+  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    size: { less_than: 5.megabytes },
+    if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
+
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
 
   before_save :update_juridique_required
