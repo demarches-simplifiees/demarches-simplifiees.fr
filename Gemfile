@@ -23,10 +23,9 @@ gem 'delayed_job_web'
 gem 'devise' # Gestion des comptes utilisateurs
 gem 'devise-async'
 gem 'devise-i18n'
-gem 'devise-two-factor', github: 'bryanfagan/devise-two-factor'
+gem 'devise-two-factor', github: 'jason-hobbs/devise-two-factor', branch: 'master' # Rails 6.1 compatibility: https://github.com/tinfoil/devise-two-factor/issues/183
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
-gem 'ffi-geos', require: false
 gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-ui'
@@ -48,6 +47,7 @@ gem 'image_processing'
 gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari', '1.2.1' # Pagination
+gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet'
@@ -79,7 +79,6 @@ gem 'sib-api-v3-sdk'
 gem 'skylight'
 gem 'smart_listing'
 gem 'spreadsheet_architect'
-gem 'sprockets', '< 4'
 gem 'typhoeus'
 gem 'warden'
 gem 'webpacker'
@@ -93,9 +92,6 @@ group :test do
   gem 'capybara-selenium'
   gem 'database_cleaner'
   gem 'factory_bot'
-  gem 'guard'
-  gem 'guard-livereload', require: false
-  gem 'guard-rspec', require: false
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers', require: false
@@ -117,7 +113,6 @@ group :development do
   gem 'rubocop-rspec-focused', require: false
   gem 'scss_lint', require: false
   gem 'web-console'
-  gem 'xray-rails'
 end
 
 group :development, :test do
@@ -127,7 +122,6 @@ group :development, :test do
   gem 'pry-byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec_junit_formatter', require: false
   gem 'rspec-rails'
-  gem 'ruby-debug-ide', '~> 0.7.2', require: false
   gem 'simple_xlsx_reader'
   gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'

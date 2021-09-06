@@ -1,5 +1,3 @@
-require 'rspec'
-
 describe 'root/_footer.html.haml', type: :view do
   subject { render }
 

@@ -772,7 +772,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       it 'does not delete the dossier' do
-        expect { dossier.reload }.not_to raise_error ActiveRecord::RecordNotFound
+        expect { dossier.reload }.not_to raise_error # A deleted dossier would raise an ActiveRecord::RecordNotFound
       end
 
       it 'does not add a record into deleted_dossiers table' do

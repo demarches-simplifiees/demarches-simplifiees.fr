@@ -17,7 +17,6 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'rspec'
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'capybara/email/rspec'
