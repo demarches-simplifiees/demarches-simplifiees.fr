@@ -1,6 +1,6 @@
 %table.table.vertical.dossier-champs
   %tbody
-    - if dossier.procedure.routee?
+    - if dossier.show_groupe_instructeur_details?
       %th= dossier.procedure.routing_criteria_name
       %td{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }= dossier.groupe_instructeur.label
       %td.updated-at
