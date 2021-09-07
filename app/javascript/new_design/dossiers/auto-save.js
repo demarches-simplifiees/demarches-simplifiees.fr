@@ -73,7 +73,11 @@ addEventListener('autosave:error', (event) => {
 
   enable(document.querySelector('button.autosave-retry'));
   setState('failed');
-  logError(event.detail);
+
+  const shouldLogError = !error.xhr || error.xhr.status != 0; // ignore timeout errors
+  if (shouldLogError) {
+    logError(error);
+  }
 });
 
 function setState(state) {
