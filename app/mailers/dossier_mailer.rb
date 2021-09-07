@@ -5,61 +5,73 @@ class DossierMailer < ApplicationMailer
   helper ProcedureHelper
 
   layout 'mailers/layout'
+  default from: NO_REPLY_EMAIL
 
   def notify_new_draft(dossier)
-    @dossier = dossier
-    @service = dossier.procedure.service
-    @logo_url = attach_logo(dossier.procedure)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @service = dossier.procedure.service
+      @logo_url = attach_logo(dossier.procedure)
+      @subject = default_i18n_subject(libelle_demarche: dossier.procedure.libelle)
 
-    subject = "Retrouvez votre brouillon pour la démarche « #{dossier.procedure.libelle} »"
-
-    mail(from: NO_REPLY_EMAIL, to: dossier.user_email_for(:notification), subject: subject) do |format|
-      format.html { render layout: 'mailers/notifications_layout' }
+      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+        format.html { render layout: 'mailers/notifications_layout' }
+      end
     end
   end
 
   def notify_new_answer(dossier, body = nil)
-    @dossier = dossier
-    @service = dossier.procedure.service
-    @logo_url = attach_logo(dossier.procedure)
-    @body = body
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @service = dossier.procedure.service
+      @logo_url = attach_logo(dossier.procedure)
+      @body = body
+      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
-    subject = "Nouveau message pour votre dossier nº #{dossier.id} (#{dossier.procedure.libelle})"
-
-    mail(from: NO_REPLY_EMAIL, to: dossier.user_email_for(:notification), subject: subject) do |format|
-      format.html { render layout: 'mailers/notifications_layout' }
+      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+        format.html { render layout: 'mailers/notifications_layout' }
+      end
     end
   end
 
   def notify_new_commentaire_to_instructeur(dossier, instructeur_email)
-    @dossier = dossier
-    @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
-    mail(from: NO_REPLY_EMAIL, to: instructeur_email, subject: @subject)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+
+      mail(to: instructeur_email, subject: @subject)
+    end
   end
 
   def notify_new_dossier_depose_to_instructeur(dossier, instructeur_email)
-    @dossier = dossier
-    @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
-    mail(from: NO_REPLY_EMAIL, to: instructeur_email, subject: @subject)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+
+      mail(to: instructeur_email, subject: @subject)
+    end
   end
 
   def notify_revert_to_instruction(dossier)
-    @dossier = dossier
-    @service = dossier.procedure.service
-    @logo_url = attach_logo(dossier.procedure)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @service = dossier.procedure.service
+      @logo_url = attach_logo(dossier.procedure)
+      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
-    subject = "Votre dossier nº #{@dossier.id} est en train d’être réexaminé"
-
-    mail(from: NO_REPLY_EMAIL, to: dossier.user_email_for(:notification), subject: subject) do |format|
-      format.html { render layout: 'mailers/notifications_layout' }
+      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
+        format.html { render layout: 'mailers/notifications_layout' }
+      end
     end
   end
 
   def notify_brouillon_near_deletion(dossiers, to_email)
-    @subject = default_i18n_subject(count: dossiers.count)
-    @dossiers = dossiers
+    I18n.with_locale(dossiers.first.user_locale) do
+      @subject = default_i18n_subject(count: dossiers.count)
+      @dossiers = dossiers
 
-    mail(to: to_email, subject: @subject)
+      mail(to: to_email, subject: @subject)
+    end
   end
 
   def notify_brouillon_deletion(dossier_hashes, to_email)
@@ -70,24 +82,21 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_deletion_to_user(deleted_dossier, to_email)
-    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
-    @deleted_dossier = deleted_dossier
+    I18n.with_locale(deleted_dossier.user_locale) do
+      @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
+      @deleted_dossier = deleted_dossier
 
-    mail(to: to_email, subject: @subject)
+      mail(to: to_email, subject: @subject)
+    end
   end
 
   def notify_instructeur_deletion_to_user(deleted_dossier, to_email)
-    @subject = default_i18n_subject(libelle_demarche: deleted_dossier.procedure.libelle)
-    @deleted_dossier = deleted_dossier
+    I18n.with_locale(deleted_dossier.user_locale) do
+      @subject = default_i18n_subject(libelle_demarche: deleted_dossier.procedure.libelle)
+      @deleted_dossier = deleted_dossier
 
-    mail(to: to_email, subject: @subject)
-  end
-
-  def notify_instructeur(deleted_dossier, to_email)
-    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
-    @deleted_dossier = deleted_dossier
-
-    mail(to: to_email, subject: @subject)
+      mail(to: to_email, subject: @subject)
+    end
   end
 
   def notify_deletion_to_administration(deleted_dossier, to_email)
@@ -98,11 +107,13 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_automatic_deletion_to_user(deleted_dossiers, to_email)
-    @state = deleted_dossiers.first.state
-    @subject = default_i18n_subject(count: deleted_dossiers.count)
-    @deleted_dossiers = deleted_dossiers
+    I18n.with_locale(deleted_dossiers.first.user_locale) do
+      @state = deleted_dossiers.first.state
+      @subject = default_i18n_subject(count: deleted_dossiers.count)
+      @deleted_dossiers = deleted_dossiers
 
-    mail(to: to_email, subject: @subject)
+      mail(to: to_email, subject: @subject)
+    end
   end
 
   def notify_automatic_deletion_to_administration(deleted_dossiers, to_email)
@@ -113,11 +124,13 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_near_deletion_to_user(dossiers, to_email)
-    @state = dossiers.first.state
-    @subject = default_i18n_subject(count: dossiers.count, state: @state)
-    @dossiers = dossiers
+    I18n.with_locale(dossiers.first.user_locale) do
+      @state = dossiers.first.state
+      @subject = default_i18n_subject(count: dossiers.count, state: @state)
+      @dossiers = dossiers
 
-    mail(to: to_email, subject: @subject)
+      mail(to: to_email, subject: @subject)
+    end
   end
 
   def notify_near_deletion_to_administration(dossiers, to_email)
@@ -129,18 +142,19 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_groupe_instructeur_changed(instructeur, dossier)
-    @subject = "Un dossier a changé de groupe instructeur"
-    @dossier_id = dossier.id
-    @demarche = dossier.procedure.libelle
+    @subject = default_i18n_subject(dossier_id: dossier.id)
+    @dossier = dossier
 
-    mail(from: NO_REPLY_EMAIL, to: instructeur.email, subject: @subject)
+    mail(to: instructeur.email, subject: @subject)
   end
 
   def notify_brouillon_not_submitted(dossier)
-    @subject = "Attention : votre dossier n’est pas déposé."
-    @dossier = dossier
+    I18n.with_locale(dossier.user_locale) do
+      @subject = default_i18n_subject(dossier_id: dossier.id)
+      @dossier = dossier
 
-    mail(to: dossier.user_email_for(:notification), subject: @subject)
+      mail(to: dossier.user_email_for(:notification), subject: @subject)
+    end
   end
 
   protected
