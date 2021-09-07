@@ -13,6 +13,7 @@
 #  failed_attempts              :integer          default(0), not null
 #  last_sign_in_at              :datetime
 #  last_sign_in_ip              :string
+#  locale                       :string
 #  locked_at                    :datetime
 #  loged_in_with_france_connect :string           default(NULL)
 #  remember_created_at          :datetime

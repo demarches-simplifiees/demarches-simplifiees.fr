@@ -18,4 +18,19 @@
 #  type_de_champ_id               :integer
 #
 class Champs::PaysChamp < Champs::TextChamp
+  def localized_value
+    if external_id
+      I18nData.countries(I18n.locale)[external_id]
+    else
+      value.present? ? value.to_s : ''
+    end
+  end
+
+  def to_s
+    localized_value
+  end
+
+  def for_tag
+    localized_value
+  end
 end
