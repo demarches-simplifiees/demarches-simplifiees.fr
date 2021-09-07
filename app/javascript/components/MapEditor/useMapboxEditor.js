@@ -133,25 +133,20 @@ export function useMapboxEditor(
   );
 
   const addEventListeners = useCallback((events) => {
-    const unsubscribe = Object.entries(
-      events
-    ).map(([eventName, [target, callback]]) =>
-      addEventListener(eventName, target, callback)
+    const unsubscribe = Object.entries(events).map(
+      ([eventName, [target, callback]]) =>
+        addEventListener(eventName, target, callback)
     );
     return () => unsubscribe.map((unsubscribe) => unsubscribe());
   }, []);
 
-  const {
-    createFeatures,
-    updateFeatures,
-    deleteFeatures,
-    ...props
-  } = useFeatureCollection(featureCollection, {
-    url,
-    enabled: isSupported && enabled,
-    addFeatures,
-    removeFeatures
-  });
+  const { createFeatures, updateFeatures, deleteFeatures, ...props } =
+    useFeatureCollection(featureCollection, {
+      url,
+      enabled: isSupported && enabled,
+      addFeatures,
+      removeFeatures
+    });
 
   const onStyleChange = useCallback(() => {
     if (mapRef.current) {

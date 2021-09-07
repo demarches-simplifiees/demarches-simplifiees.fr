@@ -198,23 +198,16 @@ export default {
   sources: {
     'decoupage-administratif': {
       type: 'vector',
-      url:
-        'https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json'
+      url: 'https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json'
     },
     openmaptiles: {
       type: 'vector',
       url: 'https://openmaptiles.geo.data.gouv.fr/data/france-vector.json'
     },
-    'photographies-aeriennes': {
-      type: 'raster',
-      tiles: [
-        'https://tiles.geo.api.gouv.fr/photographies-aeriennes/tiles/{z}/{x}/{y}'
-      ],
-      tileSize: 256,
-      attribution: 'Images aériennes © IGN',
-      minzoom: 0,
-      maxzoom: 19
-    },
+    'photographies-aeriennes': rasterSource(
+      [ignServiceURL('ORTHOIMAGERY.ORTHOPHOTOS', 'image/jpeg')],
+      'IGN-F/Géoportail'
+    ),
     cadastre: {
       type: 'vector',
       url: 'https://openmaptiles.geo.data.gouv.fr/data/cadastre.json'

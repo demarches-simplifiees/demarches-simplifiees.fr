@@ -1,0 +1,13 @@
+fr:
+  dossier_mailer:
+    notify_new_answer:
+      subject: Nouveau message pour votre dossier nº %{dossier_id} « %{libelle_demarche} »
+      body_html: |
+        Vous avez reçu un <b>nouveau message</b> de la part du service en charge de votre dossier.
+      link: |
+        Pour consulter le message et y répondre, cliquez sur le bouton ci-dessous :
+      body_draft_html: |
+        Vous avez reçu un <b>nouveau message</b>du service pour lequel votre dossier est en brouillon pour la démarche « %{libelle_demarche} ».
+      contact: Si vous souhaitez contacter le service, merci de le faire directement à l'aide de l'email en bas de page.
+      access_message: Lire le message
+      access_file: Voir le dossier
