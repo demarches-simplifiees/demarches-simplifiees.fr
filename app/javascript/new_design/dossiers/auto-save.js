@@ -29,7 +29,7 @@ const FORM_SELECTOR = 'form#dossier-edit-form.autosave-enabled';
 const INPUTS_SELECTOR = `${FORM_SELECTOR} input:not([type=file]), ${FORM_SELECTOR} select, ${FORM_SELECTOR} textarea`;
 const RETRY_BUTTON_SELECTOR = '.autosave-retry';
 
-// When an autosave is requested programatically, auto-save the form immediately
+// When an autosave is requested programmatically, auto-save the form immediately
 addEventListener('autosave:trigger', (event) => {
   const form = event.target.closest('form');
   if (form && form.classList.contains('autosave-enabled')) {
