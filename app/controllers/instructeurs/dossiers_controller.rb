@@ -151,15 +151,15 @@ module Instructeurs
         case params[:process_action]
         when "refuser"
           target_state = :refuse
-          dossier.refuser!(current_instructeur, motivation, justificatif)
+          dossier.refuser!(current_instructeur, motivation, justificatif: justificatif)
           flash.notice = "Dossier considéré comme refusé."
         when "classer_sans_suite"
           target_state = :sans_suite
-          dossier.classer_sans_suite!(current_instructeur, motivation, justificatif)
+          dossier.classer_sans_suite!(current_instructeur, motivation, justificatif: justificatif)
           flash.notice = "Dossier considéré comme sans suite."
         when "accepter"
           target_state = :accepte
-          dossier.accepter!(current_instructeur, motivation, justificatif)
+          dossier.accepter!(current_instructeur, motivation, justificatif: justificatif)
           flash.notice = "Dossier traité avec succès."
         end
       rescue AASM::InvalidTransition => e
