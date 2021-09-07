@@ -921,6 +921,10 @@ class Dossier < ApplicationRecord
     update_column(:api_entreprise_job_exceptions, exceptions)
   end
 
+  def user_locale
+    user&.locale || I18n.default_locale
+  end
+
   private
 
   def defaut_groupe_instructeur?
