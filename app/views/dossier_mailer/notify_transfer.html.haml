@@ -1,0 +1,9 @@
+- content_for(:title, "#{@subject}")
+
+%p= t(:hello, scope: [:views, :shared, :greetings])
+
+%p
+  = t('.body', count: @transfer.dossiers.count)
+  = link_to t('.transfer_link'), dossiers_url(statut: 'dossiers-transferes')
+
+= render partial: "layouts/mailers/signature"

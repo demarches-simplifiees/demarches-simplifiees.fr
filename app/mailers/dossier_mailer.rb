@@ -157,6 +157,15 @@ class DossierMailer < ApplicationMailer
     end
   end
 
+  def notify_transfer(transfer)
+    I18n.with_locale(transfer.user_locale) do
+      @subject = default_i18n_subject(count: transfer.dossiers.count)
+      @transfer = transfer
+
+      mail(to: transfer.email, subject: @subject)
+    end
+  end
+
   protected
 
   # This is an override of `default_i18n_subject` method
