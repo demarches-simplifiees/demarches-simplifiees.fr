@@ -184,6 +184,33 @@ describe DossierProjectionService do
 
         it { is_expected.to eq('18 a la bonne rue') }
       end
+
+      context 'for type_de_champ table: type_de_champ pays which needs external_id field' do
+        let(:table) { 'type_de_champ' }
+        let(:procedure) { create(:procedure, types_de_champ: [build(:type_de_champ_pays)]) }
+        let(:dossier) { create(:dossier, procedure: procedure) }
+        let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
+        let!(:previous_locale) { I18n.locale }
+
+        before { I18n.locale = :fr }
+        after { I18n.locale = previous_locale }
+
+        context 'when external id is set' do
+          before do
+            dossier.champs.first.update(external_id: 'GB')
+          end
+
+          it { is_expected.to eq('Royaume-Uni') }
+        end
+
+        context 'when no external id is set' do
+          before do
+            dossier.champs.first.update(value: "qu'il est beau mon pays")
+          end
+
+          it { is_expected.to eq("qu'il est beau mon pays") }
+        end
+      end
     end
   end
 end
