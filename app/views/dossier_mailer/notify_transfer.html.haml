@@ -3,7 +3,7 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('.body', count: @transfer.dossiers.count)
+  = t('.body', count: @transfer.dossiers.size)
   = link_to t('.transfer_link'), dossiers_url(statut: 'dossiers-transferes')
 
 = render partial: "layouts/mailers/signature"
