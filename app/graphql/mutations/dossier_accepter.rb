@@ -8,12 +8,13 @@ module Mutations
     argument :instructeur_id, ID, "Instructeur qui prend la décision sur le dossier.", required: true, loads: Types::ProfileType
     argument :motivation, String, required: false
     argument :justificatif, ID, required: false
+    argument :disable_notification, Boolean, "Désactiver l’envoi de l’email de notification après l’opération", required: false, default_value: false
 
     field :dossier, Types::DossierType, null: true
     field :errors, [Types::ValidationErrorType], null: true
 
-    def resolve(dossier:, instructeur:, motivation: nil, justificatif: nil)
-      dossier.accepter!(instructeur, motivation, justificatif)
+    def resolve(dossier:, instructeur:, motivation: nil, justificatif: nil, disable_notification:)
+      dossier.accepter!(instructeur, motivation, justificatif: justificatif, disable_notification: disable_notification)
 
       { dossier: dossier }
     end

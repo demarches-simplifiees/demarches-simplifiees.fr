@@ -40,7 +40,12 @@ class ProcedureArchiveService
       end
     end
 
-    archive.file.attach(io: File.open(tmp_file), filename: archive.filename(@procedure))
+    archive.file.attach(
+      io: File.open(tmp_file),
+      filename: archive.filename(@procedure),
+      # we don't want to run virus scanner on this file
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+    )
     tmp_file.delete
     archive.make_available!
     InstructeurMailer.send_archive(instructeur, @procedure, archive).deliver_later

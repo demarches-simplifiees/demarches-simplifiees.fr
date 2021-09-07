@@ -11,7 +11,13 @@ FactoryBot.define do
 
     trait :with_piece_justificative_file do
       after(:build) do |champ, _evaluator|
-        champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+        champ.piece_justificative_file.attach(
+          io: StringIO.new("toto"),
+          filename: "toto.txt",
+          content_type: "text/plain",
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
       end
     end
 
@@ -143,7 +149,13 @@ FactoryBot.define do
       end
 
       after(:build) do |champ, evaluator|
-        champ.piece_justificative_file.attach(io: StringIO.new("x" * evaluator.size), filename: "toto.txt", content_type: "text/plain")
+        champ.piece_justificative_file.attach(
+          io: StringIO.new("x" * evaluator.size),
+          filename: "toto.txt",
+          content_type: "text/plain",
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
       end
     end
 
@@ -151,7 +163,13 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_titre_identite, procedure: dossier.procedure }
 
       after(:build) do |champ, _evaluator|
-        champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.png", content_type: "image/png")
+        champ.piece_justificative_file.attach(
+          io: StringIO.new("toto"),
+          filename: "toto.png",
+          content_type: "image/png",
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
       end
     end
 

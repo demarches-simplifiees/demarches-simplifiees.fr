@@ -176,6 +176,7 @@ class Etablissement < ApplicationRecord
       attestation.attach(
         io: StringIO.new(response.body),
         filename: filename,
+        # we don't want to run virus scanner on this file
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
     end
