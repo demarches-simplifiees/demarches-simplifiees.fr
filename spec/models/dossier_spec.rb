@@ -239,7 +239,7 @@ describe Dossier do
       Timecop.freeze(date2)
       d.passer_en_instruction!(instructeur)
       Timecop.freeze(date3)
-      d.accepter!(instructeur, "Motivation", nil)
+      d.accepter!(instructeur, "Motivation")
       Timecop.return
       d
     end
@@ -422,7 +422,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
-        dossier.accepter!(instructeur, nil, nil)
+        dossier.accepter!(instructeur, nil)
         dossier.reload
       end
 
@@ -435,7 +435,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
-        dossier.refuser!(instructeur, nil, nil)
+        dossier.refuser!(instructeur, nil)
         dossier.reload
       end
 
@@ -447,7 +447,7 @@ describe Dossier do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
-        dossier.classer_sans_suite!(instructeur, nil, nil)
+        dossier.classer_sans_suite!(instructeur, nil)
         dossier.reload
       end
 
