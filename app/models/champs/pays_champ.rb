@@ -20,7 +20,7 @@
 class Champs::PaysChamp < Champs::TextChamp
   def localized_value
     if external_id
-      I18nData.countries(I18n.locale)[external_id].to_s
+      CountriesService.get(I18n.locale)[external_id].to_s
     else
       value.present? ? value.to_s : ''
     end
