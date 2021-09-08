@@ -13,6 +13,10 @@ class ApplicationRecord < ActiveRecord::Base
     raise ActiveRecord::RecordNotFound, e.message
   end
 
+  def self.id_from_typed_id(id)
+    GraphQL::Schema::UniqueWithinType.decode(id)[1]
+  end
+
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode(self.class.name, id)
   end

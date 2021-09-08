@@ -14,7 +14,7 @@ export const queryClient = new QueryClient({
 });
 
 function buildURL(scope, term) {
-  term = encodeURIComponent(term);
+  term = encodeURIComponent(term.replace(/\(|\)/g, ''));
   if (scope === 'adresse') {
     return `${api_adresse_url}/search?q=${term}&limit=5`;
   } else if (scope === 'annuaire-education') {
@@ -42,7 +42,12 @@ async function defaultQueryFn({ queryKey: [scope, term] }) {
 
   const url = buildURL(scope, term);
   const [options, controller] = buildOptions();
-  const promise = fetch(url, options).then((response) => response.json());
+  const promise = fetch(url, options).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error(`Error fetching from "${scope}" API`);
+  });
   promise.cancel = () => controller && controller.abort();
   return promise;
 }

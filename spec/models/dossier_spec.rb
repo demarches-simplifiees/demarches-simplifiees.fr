@@ -354,8 +354,7 @@ describe Dossier do
   end
 
   describe '#update_state_dates' do
-    let(:state) { Dossier.states.fetch(:brouillon) }
-    let(:dossier) { create(:dossier, state: state) }
+    let(:dossier) { create(:dossier, :brouillon, :with_individual) }
     let(:beginning_of_day) { Time.zone.now.beginning_of_day }
     let(:instructeur) { create(:instructeur) }
 
@@ -381,7 +380,7 @@ describe Dossier do
     end
 
     context 'when dossier is en_instruction' do
-      let(:state) { Dossier.states.fetch(:en_construction) }
+      let(:dossier) { create(:dossier, :en_construction, :with_individual) }
       let(:instructeur) { create(:instructeur) }
 
       before do
@@ -402,7 +401,7 @@ describe Dossier do
     end
 
     context 'when dossier is accepte' do
-      let(:state) { Dossier.states.fetch(:en_instruction) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
         dossier.accepter!(instructeur, nil, nil)
@@ -415,7 +414,7 @@ describe Dossier do
     end
 
     context 'when dossier is refuse' do
-      let(:state) { Dossier.states.fetch(:en_instruction) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
         dossier.refuser!(instructeur, nil, nil)
@@ -427,7 +426,7 @@ describe Dossier do
     end
 
     context 'when dossier is sans_suite' do
-      let(:state) { Dossier.states.fetch(:en_instruction) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
 
       before do
         dossier.classer_sans_suite!(instructeur, nil, nil)
@@ -469,11 +468,11 @@ describe Dossier do
   end
 
   describe "#unfollow_stale_instructeurs" do
-    let(:procedure) { create(:procedure, :published) }
+    let(:procedure) { create(:procedure, :published, :for_individual) }
     let(:instructeur) { create(:instructeur) }
     let(:new_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
     let(:instructeur2) { create(:instructeur, groupe_instructeurs: [procedure.defaut_groupe_instructeur, new_groupe_instructeur]) }
-    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
     let(:last_operation) { DossierOperationLog.last }
 
     before do
@@ -918,7 +917,7 @@ describe Dossier do
   end
 
   describe '#accepter!' do
-    let(:dossier) { create(:dossier, :en_instruction) }
+    let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let!(:instructeur) { create(:instructeur) }
@@ -953,7 +952,7 @@ describe Dossier do
   end
 
   describe '#accepter_automatiquement!' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let!(:now) { Time.zone.parse('01/01/2100') }
     let(:attestation) { Attestation.new }
@@ -1372,7 +1371,7 @@ describe Dossier do
   end
 
   describe "remove_titres_identite!" do
-    let(:dossier) { create(:dossier, :en_instruction, :followed) }
+    let(:dossier) { create(:dossier, :en_instruction, :followed, :with_individual) }
     let(:type_de_champ_titre_identite) { create(:type_de_champ_titre_identite, procedure: dossier.procedure) }
     let(:champ_titre_identite) { create(:champ_titre_identite, type_de_champ: type_de_champ_titre_identite) }
     let(:type_de_champ_titre_identite_vide) { create(:type_de_champ_titre_identite, procedure: dossier.procedure) }
@@ -1412,7 +1411,7 @@ describe Dossier do
     end
 
     context 'en_construction' do
-      let(:dossier) { create(:dossier, :en_construction, :followed) }
+      let(:dossier) { create(:dossier, :en_construction, :followed, :with_individual) }
 
       it "clean up titres identite on accepter_automatiquement" do
         expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy

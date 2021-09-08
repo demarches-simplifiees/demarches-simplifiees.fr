@@ -10,7 +10,7 @@ module Types
     field :label, String, "libellé complet de l’adresse", null: false
     field :type, AddressTypeType, "type de résultat trouvé", null: false
 
-    field :street_address, String, "numéro éventuel et nom de voie ou lieu dit", null: false
+    field :street_address, String, "numéro éventuel et nom de voie ou lieu dit", null: true
     field :street_number, String, "numéro avec indice de répétition éventuel (bis, ter, A, B)", null: true
     field :street_name, String, "nom de voie ou lieu dit", null: true
 

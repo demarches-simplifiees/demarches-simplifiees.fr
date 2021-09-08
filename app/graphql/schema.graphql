@@ -47,7 +47,7 @@ type Address {
   """
   numéro éventuel et nom de voie ou lieu dit
   """
-  streetAddress: String!
+  streetAddress: String
 
   """
   nom de voie ou lieu dit
@@ -103,10 +103,10 @@ enum AddressType {
 }
 
 type Association {
-  dateCreation: ISO8601Date!
-  dateDeclaration: ISO8601Date!
-  datePublication: ISO8601Date!
-  objet: String!
+  dateCreation: ISO8601Date
+  dateDeclaration: ISO8601Date
+  datePublication: ISO8601Date
+  objet: String
   rna: String!
   titre: String!
 }
@@ -508,15 +508,15 @@ type DirectUpload {
 Un dossier
 """
 type Dossier {
-  annotations: [Champ!]!
+  annotations(id: ID): [Champ!]!
   archived: Boolean!
 
   """
   L’URL de l’attestation au format PDF.
   """
   attestation: File
-  avis: [Avis!]!
-  champs: [Champ!]!
+  avis(id: ID): [Avis!]!
+  champs(id: ID): [Champ!]!
 
   """
   Date de la dernière modification.
@@ -546,7 +546,7 @@ type Dossier {
   groupeInstructeur: GroupeInstructeur!
   id: ID!
   instructeurs: [Profile!]!
-  messages: [Message!]!
+  messages(id: ID): [Message!]!
   motivation: String
   motivationAttachment: File
 
@@ -565,7 +565,7 @@ type Dossier {
   L’état du dossier.
   """
   state: DossierState!
-  traitements: [Traitement!]!
+  traitements(id: ID): [Traitement!]!
   usager: Profile!
 }
 

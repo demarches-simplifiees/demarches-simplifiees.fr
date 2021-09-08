@@ -34,7 +34,7 @@
     -# See https://stackoverflow.com/a/51507806/5502765
     %button{ type: :submit, disabled: true, style: 'display: none' } BOUTON
 
-    - if dossier.procedure.routee?
+    - if dossier.show_groupe_instructeur_selector?
       = f.label :groupe_instructeur_id do
         = dossier.procedure.routing_criteria_name
         %span.mandatory *

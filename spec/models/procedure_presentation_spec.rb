@@ -730,8 +730,8 @@ describe ProcedurePresentation do
     context 'for groupe_instructeur table' do
       let(:filter) { [{ 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => 'défaut' }] }
 
-      let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
-      let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
+      let!(:gi_2) { procedure.groupe_instructeurs.create(label: 'gi2') }
+      let!(:gi_3) { procedure.groupe_instructeurs.create(label: 'gi3') }
 
       let!(:kept_dossier) { create(:dossier, procedure: procedure) }
       let!(:discarded_dossier) { create(:dossier, procedure: procedure, groupe_instructeur: gi_2) }
@@ -742,7 +742,7 @@ describe ProcedurePresentation do
         let(:filter) do
           [
             { 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => 'défaut' },
-            { 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => '3' }
+            { 'table' => 'groupe_instructeur', 'column' => 'label', 'value' => 'gi3' }
           ]
         end
 

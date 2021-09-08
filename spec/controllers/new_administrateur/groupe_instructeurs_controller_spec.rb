@@ -2,7 +2,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
   render_views
 
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, :published, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
   let!(:gi_1_1) { procedure.defaut_groupe_instructeur }
 
   let(:procedure2) { create(:procedure, :published) }
@@ -137,9 +137,9 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
 
   describe '#reaffecter' do
     let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
-    let!(:dossier12) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1_1) }
+    let!(:dossier12) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_1) }
     let!(:dossier_discarded) do
-      dossier = create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_1_1)
+      dossier = create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_1)
       dossier.discard!
       dossier
     end

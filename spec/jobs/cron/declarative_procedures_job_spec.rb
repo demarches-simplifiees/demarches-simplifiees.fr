@@ -4,10 +4,10 @@ RSpec.describe Cron::DeclarativeProceduresJob, type: :job do
     let(:instruction_date) { date + 120 }
 
     let(:state) { nil }
-    let(:procedure) { create(:procedure, :published, :with_instructeur, declarative_with_state: state) }
-    let(:nouveau_dossier1) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:nouveau_dossier2) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:dossier_recu) { create(:dossier, :en_instruction, procedure: procedure) }
+    let(:procedure) { create(:procedure, :published, :for_individual, :with_instructeur, declarative_with_state: state) }
+    let(:nouveau_dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+    let(:nouveau_dossier2) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+    let(:dossier_recu) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
     let(:dossier_brouillon) { create(:dossier, procedure: procedure) }
 
     before do

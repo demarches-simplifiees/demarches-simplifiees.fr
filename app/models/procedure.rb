@@ -135,7 +135,7 @@ class Procedure < ApplicationRecord
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
 
-  has_one :defaut_groupe_instructeur, -> { order(:id) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
+  has_one :defaut_groupe_instructeur, -> { order(:label) }, class_name: 'GroupeInstructeur', inverse_of: :procedure
 
   has_one_attached :logo
   has_one_attached :notice
@@ -202,7 +202,7 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: { less_than: 20.megabytes }
+  ], size: { less_than: 20.megabytes }, if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
 
   validates :deliberation, content_type: [
     "application/msword",
@@ -213,15 +213,18 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: { less_than: 20.megabytes }
+  ], size: { less_than: 20.megabytes }, if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
 
-  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: 5.megabytes }
+  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'],
+    size: { less_than: 5.megabytes },
+    if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
+
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
-  after_create :ensure_default_groupe_instructeur
+  after_create :ensure_defaut_groupe_instructeur
 
   include AASM
 
@@ -266,7 +269,7 @@ class Procedure < ApplicationRecord
     if locked?
       raise "Can not reset a locked procedure."
     else
-      groupe_instructeurs.each { |gi| gi.dossiers.destroy_all }
+      draft_revision.dossiers.destroy_all
     end
   end
 
@@ -342,6 +345,10 @@ class Procedure < ApplicationRecord
     declarative_with_states.map do |state, _|
       [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
     end
+  end
+
+  def feature_enabled?(feature)
+    Flipper.enabled?(feature, self)
   end
 
   # Warning: dossier after_save build_default_champs must be removed
@@ -543,9 +550,12 @@ class Procedure < ApplicationRecord
   end
 
   def populate_champ_stable_ids
-    TypeDeChamp.where(procedure: self, stable_id: nil).find_each do |type_de_champ|
-      type_de_champ.update_column(:stable_id, type_de_champ.id)
-    end
+    TypeDeChamp
+      .joins(:revisions)
+      .where(procedure_revisions: { procedure_id: id }, stable_id: nil)
+      .find_each do |type_de_champ|
+        type_de_champ.update_column(:stable_id, type_de_champ.id)
+      end
   end
 
   def missing_steps
@@ -783,9 +793,9 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def ensure_default_groupe_instructeur
+  def ensure_defaut_groupe_instructeur
     if self.groupe_instructeurs.empty?
-      groupe_instructeurs.create(label: GroupeInstructeur::DEFAULT_LABEL)
+      groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
     end
   end
 end
