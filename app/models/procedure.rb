@@ -448,6 +448,7 @@ class Procedure < ApplicationRecord
       procedure.administrateurs = [admin]
       procedure.api_entreprise_token = nil
       procedure.encrypted_api_particulier_token = nil
+      procedure.api_particulier_scopes = []
     else
       procedure.administrateurs = administrateurs
     end
