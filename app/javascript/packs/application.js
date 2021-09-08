@@ -11,6 +11,7 @@ import '../shared/safari-11-file-xhr-workaround';
 import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
+import '../shared/ujs-error-handling';
 
 import '../new_design/chartkick';
 import '../new_design/dropdown';

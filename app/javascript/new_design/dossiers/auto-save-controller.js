@@ -1,7 +1,12 @@
 import { ajax, fire, timeoutable } from '@utils';
 
 // Manages a queue of Autosave operations,
-// and sends `autosave:*` events to indicate the state of the requests.
+// and sends `autosave:*` events to indicate the state of the requests:
+//
+// - autosave:enqueue () when an autosave request has been enqueued
+// - autosave:end ({ response, statusText, xhr }) when an autosave request finished successfully
+// - autosave:failure (Error) when an autosave request failed
+//
 export default class AutoSaveController {
   constructor() {
     this.timeoutDelay = 60000; // 1mn
