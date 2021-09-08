@@ -20,7 +20,7 @@ describe Manager::DossiersController, type: :controller do
   end
 
   describe '#restore' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual) }
 
     before do
       dossier.discard_and_keep_track!(super_admin, :manager_request)

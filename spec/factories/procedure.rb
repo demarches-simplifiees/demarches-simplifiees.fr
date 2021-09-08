@@ -101,7 +101,7 @@ FactoryBot.define do
 
     trait :routee do
       after(:create) do |procedure, _evaluator|
-        procedure.groupe_instructeurs.create(label: '2nd groupe')
+        procedure.groupe_instructeurs.create(label: 'deuxième groupe')
       end
     end
 

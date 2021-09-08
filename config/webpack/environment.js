@@ -23,7 +23,9 @@ if (!Array.isArray(nodeModulesLoader.exclude)) {
   nodeModulesLoader.exclude =
     nodeModulesLoader.exclude == null ? [] : [nodeModulesLoader.exclude];
 }
-nodeModulesLoader.exclude.push(/mapbox-gl/);
+nodeModulesLoader.exclude.push({
+  and: [/mapbox-gl/, { not: [/react-mapbox-gl/] }]
+});
 
 // Uncoment next lines to run webpack-bundle-analyzer
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');

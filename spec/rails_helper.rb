@@ -2,12 +2,17 @@
 # The generated `.rspec` file contains `--require rails_helper` which will cause
 # this file to always be loaded, without a need to explicitly require it in any
 # files.
-
+require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
-require 'spec_helper'
+# Prevent database truncation if the environment is production
+abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+
+require 'axe/rspec'
+require 'devise'
+require 'shoulda-matchers'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -22,15 +27,24 @@ require 'rspec/rails'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/factories/**/*.rb')].each { |f| require f }
 
 ActiveSupport::Deprecation.silenced = true
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.maintain_test_schema!
+begin
+  ActiveRecord::Migration.maintain_test_schema!
+rescue ActiveRecord::PendingMigrationError => e
+  puts e.to_s.strip
+  exit 1
+end
 
 ActiveJob::Base.queue_adapter = :test
+
+TPS::Application.load_tasks
+Rake.application.options.trace = false
 
 RSpec.configure do |config|
   # Since rspec 3.8.0, bisect uses fork to improve bisection speed.
@@ -62,6 +76,22 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.infer_base_class_for_anonymous_controllers = false
+
+  config.before(:all) do
+    Rake.verbose false
+
+    Typhoeus::Expectation.clear
+
+    ActionMailer::Base.deliveries.clear
+
+    ActiveStorage::Current.host = 'http://test.host'
+
+    Geocoder.configure(lookup: :test)
+  end
+
+  config.before(:each) do
+    Flipper.enable(:instructeur_bypass_email_login_token)
+  end
 
   config.include Shoulda::Matchers::ActiveRecord, type: :model
   config.include Shoulda::Matchers::ActiveModel, type: :model

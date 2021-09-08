@@ -5,8 +5,8 @@ describe Instructeurs::DossiersController, type: :controller do
   let(:administrateur) { create(:administrateur) }
   let(:administration) { create(:administration) }
   let(:instructeurs) { [instructeur] }
-  let(:procedure) { create(:procedure, :published, instructeurs: instructeurs) }
-  let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+  let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: instructeurs) }
+  let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:fake_justificatif) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
   before { sign_in(instructeur.user) }
@@ -328,7 +328,7 @@ describe Instructeurs::DossiersController, type: :controller do
       context 'when the attestation template uses the motivation field' do
         let(:emailable) { false }
         let(:template) { create(:attestation_template) }
-        let(:procedure) { create(:procedure, :published, attestation_template: template, instructeurs: [instructeur]) }
+        let(:procedure) { create(:procedure, :published, :for_individual, attestation_template: template, instructeurs: [instructeur]) }
 
         subject do
           post :terminer, params: {
@@ -552,6 +552,7 @@ describe Instructeurs::DossiersController, type: :controller do
   describe "#show" do
     context "when the dossier is exported as PDF" do
       let(:instructeur) { create(:instructeur) }
+      let(:procedure) { create(:procedure, :published, instructeurs: instructeurs) }
       let(:dossier) do
         create(:dossier,
           :accepte,
