@@ -382,7 +382,7 @@ class Dossier < ApplicationRecord
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
 
   def user_deleted?
-    user_id.nil?
+    persisted? && user_id.nil?
   end
 
   def user_email_for(use)
