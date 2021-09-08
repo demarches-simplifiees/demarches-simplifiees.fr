@@ -6,6 +6,7 @@
 #  aasm_state                                :string           default("brouillon")
 #  allow_expert_review                       :boolean          default(TRUE), not null
 #  api_entreprise_token                      :string
+#  api_particulier_scopes                    :text             default([]), is an Array
 #  ask_birthday                              :boolean          default(FALSE), not null
 #  auto_archive_on                           :date
 #  cadre_juridique                           :string
