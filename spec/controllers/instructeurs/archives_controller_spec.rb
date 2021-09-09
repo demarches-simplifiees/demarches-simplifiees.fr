@@ -23,7 +23,7 @@ describe Instructeurs::ArchivesController, type: :controller do
     end
 
     it 'displays archives' do
-      get :index, { params: { procedure_id: procedure1.id } }
+      get :index, params: { procedure_id: procedure1.id }
 
       expect(assigns(:archives)).to eq([archive1])
     end
@@ -34,9 +34,7 @@ describe Instructeurs::ArchivesController, type: :controller do
     let(:date_month) { Date.strptime(month, "%Y-%m") }
     let(:archive) { create(:archive) }
     let(:subject) do
-      post :create, {
-        params: { procedure_id: procedure1.id, type: 'monthly', month: month }
-      }
+      post :create, params: { procedure_id: procedure1.id, type: 'monthly', month: month }
     end
 
     it "performs archive creation job" do
