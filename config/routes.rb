@@ -88,10 +88,6 @@ Rails.application.routes.draw do
     passwords: 'super_admins/passwords'
   }
 
-  devise_scope :super_admin do
-    get '/super_admins/password/test_strength' => 'super_admins/passwords#test_strength'
-  end
-
   get 'super_admins/edit_otp', to: 'super_admins#edit_otp', as: 'edit_super_admin_otp'
   put 'super_admins/enable_otp', to: 'super_admins#enable_otp', as: 'enable_super_admin_otp'
 
@@ -110,9 +106,7 @@ Rails.application.routes.draw do
     get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
   end
 
-  devise_scope :administrateur do
-    get '/administrateurs/password/test_strength' => 'administrateurs/passwords#test_strength'
-  end
+  get 'password_complexity' => 'password_complexity#show', as: 'show_password_complexity'
 
   #
   # Main routes
