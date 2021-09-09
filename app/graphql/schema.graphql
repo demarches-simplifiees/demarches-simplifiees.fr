@@ -1535,7 +1535,7 @@ type PersonneMorale implements Demandeur {
   address: Address!
   adresse: String! @deprecated(reason: "Utilisez le champ `address.label` à la place.")
   association: Association
-  codeInseeLocalite: String! @deprecated(reason: "Utilisez le champ `address.city_code` à la place.")
+  codeInseeLocalite: String @deprecated(reason: "Utilisez le champ `address.city_code` à la place.")
   codePostal: String! @deprecated(reason: "Utilisez le champ `address.postal_code` à la place.")
   complementAdresse: String @deprecated(reason: "Utilisez le champ `address` à la place.")
   entreprise: Entreprise
