@@ -110,7 +110,7 @@ module Types
         street_address: object.nom_voie.present? ? [object.numero_voie, object.type_voie, object.nom_voie].compact.join(' ') : nil,
         postal_code: object.code_postal,
         city_name: object.localite,
-        city_code: object.code_insee_localite
+        city_code: object.code_insee_localite.presence || "0" # TODO Pf code insee for cities
       }
     end
 
