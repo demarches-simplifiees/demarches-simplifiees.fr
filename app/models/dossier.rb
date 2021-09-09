@@ -63,6 +63,7 @@ class Dossier < ApplicationRecord
   has_one :france_connect_information, through: :user
 
   has_one_attached :justificatif_motivation
+  has_one_attached :pdf_export_for_instructeur
 
   has_many :champs, -> { root.public_ordered }, inverse_of: :dossier, dependent: :destroy
   has_many :champs_private, -> { root.private_ordered }, class_name: 'Champ', inverse_of: :dossier, dependent: :destroy

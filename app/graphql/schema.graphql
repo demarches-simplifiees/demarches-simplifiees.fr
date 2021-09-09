@@ -395,7 +395,7 @@ type Demarche {
     after: String
 
     """
-    Si présent, permet de filtrer les dossiers archivés ou non
+    Seulement les dossiers archivés.
     """
     archived: Boolean
 
@@ -420,9 +420,24 @@ type Demarche {
     last: Int
 
     """
+    Seulement les dossiers pour les révisons avant la révision donnée.
+    """
+    maxRevision: ID
+
+    """
+    Seulement les dossiers pour les révisons après la révision donnée.
+    """
+    minRevision: ID
+
+    """
     L’ordre des dossiers.
     """
     order: Order = ASC
+
+    """
+    Seulement les dossiers pour la révision donnée.
+    """
+    revision: ID
 
     """
     Dossiers avec statut.

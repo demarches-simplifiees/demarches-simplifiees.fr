@@ -3,7 +3,7 @@ namespace :after_party do
   task remove_invalid_geometries: :environment do
     puts "Running deploy task 'remove_invalid_geometries'"
 
-    geo_areas = GeoArea.where(source: :selection_utilisateur)
+    geo_areas = GeoArea.where(source: :selection_utilisateur).includes(champ: [:geo_areas, :type_de_champ])
     progress = ProgressReport.new(geo_areas.count)
     geo_areas.find_each do |geo_area|
       if !geo_area.valid?
