@@ -14,9 +14,9 @@
       = f.hidden_field :reset_password_token
 
       = f.label 'Nouveau mot de passe'
-      = f.password_field :password, autofocus: true, autocomplete: 'off'
+      = render 'password_complexity/field', { form: f, test_complexity: populated_resource.validate_password_complexity? }
 
       = f.label 'Confirmez le nouveau mot de passe'
       = f.password_field :password_confirmation, autocomplete: 'off'
 
-      = f.submit 'Changer le mot de passe', class: 'button primary'
+      = f.submit 'Changer le mot de passe', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi…" }

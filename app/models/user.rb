@@ -31,6 +31,7 @@
 #
 class User < ApplicationRecord
   include EmailSanitizableConcern
+  include PasswordComplexityConcern
 
   enum loged_in_with_france_connect: {
     particulier: 'particulier',
@@ -57,7 +58,9 @@ class User < ApplicationRecord
 
   before_validation -> { sanitize_email(:email) }
 
-  validates :password, password_complexity: true, if: -> (u) { u.administrateur.present? && Devise.password_length.include?(u.password.try(:size)) }
+  def validate_password_complexity?
+    administrateur?
+  end
 
   # Override of Devise::Models::Confirmable#send_confirmation_instructions
   def send_confirmation_instructions
