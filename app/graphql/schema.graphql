@@ -1545,7 +1545,7 @@ type PersonneMorale implements Demandeur {
   naf: String!
   nomVoie: String @deprecated(reason: "Utilisez le champ `address.street_name` à la place.")
   numeroVoie: String @deprecated(reason: "Utilisez le champ `address.street_number` à la place.")
-  siegeSocial: Boolean!
+  siegeSocial: Boolean
   siret: String!
   typeVoie: String @deprecated(reason: "Utilisez le champ `address.street_address` à la place.")
 }
