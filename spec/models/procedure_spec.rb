@@ -603,6 +603,7 @@ describe Procedure do
         Timecop.freeze(now) do
           procedure.publish_or_reopen!(administrateur)
         end
+        procedure.reload
         canonical_procedure.reload
       end
 
@@ -1061,7 +1062,7 @@ describe Procedure do
       end
 
       context 'with a new brouillon dossier' do
-        let!(:brouillon_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:brouillon)) }
+        let!(:brouillon_dossier) { create(:dossier, procedure: procedure) }
 
         it { expect(subject['a_suivre']).to eq(0) }
         it { expect(subject['suivis']).to eq(0) }
@@ -1071,7 +1072,7 @@ describe Procedure do
       end
 
       context 'with a new dossier without follower' do
-        let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+        let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         it { expect(subject['a_suivre']).to eq(1) }
         it { expect(subject['suivis']).to eq(0) }
@@ -1080,8 +1081,8 @@ describe Procedure do
         it { expect(subject['archived']).to eq(0) }
 
         context 'and dossiers without follower on each of the others groups' do
-          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
-          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
+          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
+          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
 
           before { subject }
 
@@ -1091,7 +1092,7 @@ describe Procedure do
       end
 
       context 'with a new dossier with a follower' do
-        let!(:new_followed_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
+        let!(:new_followed_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         before do
           instructeur.followed_dossiers << new_followed_dossier
@@ -1104,8 +1105,8 @@ describe Procedure do
         it { expect(subject['archived']).to eq(0) }
 
         context 'and dossier with a follower on each of the others groups' do
-          let!(:new_follow_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction)) }
-          let!(:new_follow_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction)) }
+          let!(:new_follow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
+          let!(:new_follow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
 
           before do
             instructeur.followed_dossiers << new_follow_dossier_on_gi_2 << new_follow_dossier_on_gi_3
@@ -1128,7 +1129,7 @@ describe Procedure do
       end
 
       context 'with a termine dossier' do
-        let!(:termine_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:accepte)) }
+        let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure) }
 
         it { expect(subject['a_suivre']).to eq(0) }
         it { expect(subject['suivis']).to eq(0) }
@@ -1137,8 +1138,8 @@ describe Procedure do
         it { expect(subject['archived']).to eq(0) }
 
         context 'and terminer dossiers on each of the others groups' do
-          let!(:termine_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:accepte)) }
-          let!(:termine_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:accepte)) }
+          let!(:termine_dossier_on_gi_2) { create(:dossier, :accepte, groupe_instructeur: gi_2) }
+          let!(:termine_dossier_on_gi_3) { create(:dossier, :accepte, groupe_instructeur: gi_3) }
 
           before { subject }
 
@@ -1151,7 +1152,7 @@ describe Procedure do
       end
 
       context 'with an archived dossier' do
-        let!(:archived_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction), archived: true) }
+        let!(:archived_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
 
         it { expect(subject['a_suivre']).to eq(0) }
         it { expect(subject['suivis']).to eq(0) }
@@ -1160,8 +1161,8 @@ describe Procedure do
         it { expect(subject['archived']).to eq(1) }
 
         context 'and terminer dossiers on each of the others groups' do
-          let!(:archived_dossier_on_gi_2) { create(:dossier, groupe_instructeur: gi_2, state: Dossier.states.fetch(:en_instruction), archived: true) }
-          let!(:archived_dossier_on_gi_3) { create(:dossier, groupe_instructeur: gi_3, state: Dossier.states.fetch(:en_instruction), archived: true) }
+          let!(:archived_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, archived: true) }
+          let!(:archived_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3, archived: true) }
 
           it { expect(subject['archived']).to eq(2) }
         end

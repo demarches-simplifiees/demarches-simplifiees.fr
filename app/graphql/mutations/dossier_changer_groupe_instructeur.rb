@@ -19,7 +19,7 @@ module Mutations
     def authorized?(dossier:, groupe_instructeur:)
       if dossier.groupe_instructeur == groupe_instructeur
         return false, { errors: ["Le dossier est déjà avec le grope instructeur: '#{groupe_instructeur.label}'"] }
-      elsif dossier.groupe_instructeur.procedure != groupe_instructeur.procedure
+      elsif dossier.procedure != groupe_instructeur.procedure
         return false, { errors: ["Le groupe instructeur '#{groupe_instructeur.label}' n’appartient pas à la même démarche que le dossier"] }
       else
         true
