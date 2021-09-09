@@ -4,7 +4,7 @@ module Users
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
-    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new]
+    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :modifier, :update, :create_commentaire]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
@@ -19,7 +19,12 @@ module Users
       @user_dossiers = current_user.dossiers.includes(:procedure).order_by_updated_at.page(page)
       @dossiers_invites = current_user.dossiers_invites.includes(:procedure).order_by_updated_at.page(page)
       @dossiers_supprimes = current_user.deleted_dossiers.order_by_updated_at.page(page)
-      @statut = statut(@user_dossiers, @dossiers_invites, @dossiers_supprimes, params[:statut])
+      @dossier_transfers = DossierTransfer
+        .includes(dossiers: :user)
+        .with_dossiers
+        .where(email: current_user.email)
+        .page(page)
+      @statut = statut(@user_dossiers, @dossiers_invites, @dossiers_supprimes, @dossier_transfers, params[:statut])
     end
 
     def show
@@ -273,16 +278,25 @@ module Users
       @dossier || (dossier_id.present? && Dossier.find_by(id: dossier_id.to_i))
     end
 
+    def transferer
+      @transfer = DossierTransfer.new(dossiers: [dossier])
+    end
+
+    def transferer_all
+      @transfer = DossierTransfer.new(dossiers: current_user.dossiers)
+    end
+
     private
 
     # if the status tab is filled, then this tab
     # else first filled tab
     # else mes-dossiers
-    def statut(mes_dossiers, dossiers_invites, dossiers_supprimes, params_statut)
+    def statut(mes_dossiers, dossiers_invites, dossiers_supprimes, dossier_transfers, params_statut)
       tabs = {
         'mes-dossiers' => mes_dossiers.present?,
         'dossiers-invites' => dossiers_invites.present?,
-        'dossiers-supprimes' => dossiers_supprimes.present?
+        'dossiers-supprimes' => dossiers_supprimes.present?,
+        'dossiers-transferes' => dossier_transfers.present?
       }
       if tabs[params_statut]
         params_statut

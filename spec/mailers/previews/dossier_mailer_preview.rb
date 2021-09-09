@@ -69,6 +69,10 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.notify_brouillon_not_submitted(draft)
   end
 
+  def notify_transfer
+    DossierMailer.notify_transfer(transfer)
+  end
+
   private
 
   def usager_email
@@ -110,5 +114,9 @@ class DossierMailerPreview < ActionMailer::Preview
       telephone: '01 34 22 33 85',
       horaires: 'Du lundi au vendredi, de 9 h à 18 h'
     )
+  end
+
+  def transfer
+    DossierTransfer.new(email: usager_email, dossiers: [dossier, dossier_accepte])
   end
 end

@@ -1,0 +1,32 @@
+- if dossier_transfers.present?
+  %ul.dossiers-transfers.mb-2
+    - dossier_transfers.each do |transfer|
+      %li.mb-4
+        .transfer-details.mb-2
+          Demande de transfert Nº #{transfer.id} envoyé par #{transfer.dossiers.first.user.email}
+        %table.table.dossiers-table.hoverable
+          %thead
+            %tr
+              %th.number-col= t('views.users.dossiers.dossiers_list.n_dossier')
+              %th= t('views.users.dossiers.dossiers_list.procedure')
+              %th= t('views.users.dossiers.dossiers_list.status')
+              %th Date de dépot
+          %tbody
+            - transfer.dossiers.each do |dossier|
+              %tr{ data: { 'transfer-id': transfer.id } }
+                %td.number-col
+                  %span.icon.folder
+                  = dossier.id
+                %td= dossier.procedure.libelle
+                %td= status_badge(dossier.state)
+                %td{ style: 'padding: 18px;' }= (dossier.en_construction_at || dossier.created_at).strftime('%d/%m/%Y')
+
+        .transfer-actions.mt-4
+          = link_to "Accepter", transfer_path(transfer), class: "button primary", method: :put
+          = link_to "Rejeter", transfer_path(transfer), class: "button danger", method: :delete
+
+  = paginate(dossier_transfers)
+
+- else
+  .blank-tab
+    %h2.empty-text Aucune demande de transfert de dossiers ne vous a été adressée.
