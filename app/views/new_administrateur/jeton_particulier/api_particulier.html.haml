@@ -1,7 +1,7 @@
 = render partial: 'new_administrateur/breadcrumbs',
   locals: { steps: [link_to('Démarches', admin_procedures_path),
                     link_to(@procedure.libelle, admin_procedure_path(@procedure)),
-                    'Jeton Particulier'] }
+                    Procedure.human_attribute_name(:jeton_api_particulier)] }
 
 .container
   .flex
@@ -9,12 +9,12 @@
       - if @procedure.api_particulier_token.blank?
         %div
           %span.icon.clock
-          %p.card-admin-status-todo À définir
+          %p.card-admin-status-todo= t('.needs_configuration')
       - else
         %div
           %span.icon.accept
-          %p.card-admin-status-accept Déjà rempli
+          %p.card-admin-status-accept= t('.already_configured')
       %div
         %p.card-admin-title
-          Jeton API particulier
-      %p.button Modifier
+          = Procedure.human_attribute_name(:jeton_api_particulier)
+      %p.button= t('views.shared.actions.edit')
