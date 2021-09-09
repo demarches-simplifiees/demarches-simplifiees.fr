@@ -83,24 +83,28 @@ class DossierMailerPreview < ActionMailer::Preview
     "administration@example.com"
   end
 
+  def user
+    User.new(email: "usager@example.com", locale: I18n.locale)
+  end
+
   def deleted_dossier
     DeletedDossier.new(dossier_id: 1, procedure: procedure)
   end
 
   def draft
-    Dossier.new(id: 47882, procedure: procedure, user: User.new(email: "usager@example.com"))
+    Dossier.new(id: 47882, procedure: procedure, user: user)
   end
 
   def dossier
-    Dossier.new(id: 47882, state: :en_instruction, procedure: procedure, user: User.new(email: "usager@example.com"))
+    Dossier.new(id: 47882, state: :en_instruction, procedure: procedure, user: user)
   end
 
   def dossier_en_construction
-    Dossier.new(id: 47882, state: :en_construction, procedure: procedure, user: User.new(email: "usager@example.com"))
+    Dossier.new(id: 47882, state: :en_construction, procedure: procedure, user: user)
   end
 
   def dossier_accepte
-    Dossier.new(id: 47882, state: :accepte, procedure: procedure, user: User.new(email: "usager@example.com"))
+    Dossier.new(id: 47882, state: :accepte, procedure: procedure, user: user)
   end
 
   def procedure
