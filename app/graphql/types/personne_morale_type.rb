@@ -83,7 +83,7 @@ module Types
     implements Types::DemandeurType
 
     field :siret, String, null: false
-    field :siege_social, Boolean, null: false
+    field :siege_social, Boolean, null: true # TODO Pf no_tahiti with etablissements
     field :naf, String, null: false
     field :libelle_naf, String, null: false
 
@@ -98,7 +98,7 @@ module Types
     field :nom_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_name` à la place."
     field :code_postal, String, null: false, deprecation_reason: "Utilisez le champ `address.postal_code` à la place."
     field :localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_name` à la place."
-    field :code_insee_localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_code` à la place."
+    field :code_insee_localite, String, null: true, deprecation_reason: "Utilisez le champ `address.city_code` à la place." # TODO Pf ajouter city_code
     field :complement_adresse, String, null: true, deprecation_reason: "Utilisez le champ `address` à la place."
 
     def address
