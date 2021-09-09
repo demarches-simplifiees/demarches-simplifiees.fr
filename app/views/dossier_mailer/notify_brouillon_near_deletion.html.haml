@@ -3,11 +3,11 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('.header', count: @dossiers.count)
+  = t('.header', count: @dossiers.size)
   %ul
     - @dossiers.each do |d|
       %li= link_to("n° #{d.id} (#{d.procedure.libelle})", dossier_url(d))
 
-%p= sanitize(t('.footer', count: @dossiers.count))
+%p= sanitize(t('.footer', count: @dossiers.size))
 
 = render partial: "layouts/mailers/signature"
