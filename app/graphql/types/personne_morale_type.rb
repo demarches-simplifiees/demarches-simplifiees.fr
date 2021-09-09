@@ -83,7 +83,7 @@ module Types
     implements Types::DemandeurType
 
     field :siret, String, null: false
-    field :siege_social, Boolean, null: false
+    field :siege_social, Boolean, null: true # TODO Pf no_tahiti with etablissements
     field :naf, String, null: false
     field :libelle_naf, String, null: false
 

@@ -18,7 +18,7 @@ class APIEntreprise::PfEtablissementAdapter < APIEntreprise::Adapter
     etablissements = data_source.sort_by { |a| a[:numEtablissement] }.filter { |h| h[:dateRadiation].nil? }
     etablissements = etablissements.map { |e| translate(e) }
     fields = Set.new(etablissements.map(&:keys).flatten)
-    etablissement = {}
+    etablissement = { siege_social: true }
     # for each field, concatenate the value of each etablissement (remove duplicates)
     fields.each { |k| etablissement[k] = merge_values(etablissements, k) }
     etablissement
