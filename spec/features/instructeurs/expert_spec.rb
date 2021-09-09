@@ -25,9 +25,8 @@ feature 'Inviting an expert:' do
       check 'avis_invite_linked_dossiers'
       page.select 'confidentiel', from: 'avis_confidentiel'
 
-      perform_enqueued_jobs do
-        click_on 'Demander un avis'
-      end
+      click_on 'Demander un avis'
+      perform_enqueued_jobs
 
       expect(page).to have_content('Une demande d\'avis a été envoyée')
       expect(page).to have_content('Avis des invités')
@@ -38,7 +37,8 @@ feature 'Inviting an expert:' do
       end
 
       expect(Avis.count).to eq(4)
-      expect(all_emails.size).to eq(2)
+      expect(emails_sent_to('expert1@exemple.fr').size).to eq(1)
+      expect(emails_sent_to('expert2@exemple.fr').size).to eq(1)
 
       invitation_email = open_email('expert2@exemple.fr')
       avis = Avis.find_by(email: 'expert2@exemple.fr', dossier: dossier)

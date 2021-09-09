@@ -57,6 +57,22 @@ FactoryBot.define do
       end
     end
 
+    trait :invalid_right_hand_rule_polygon do
+      geometry do
+        {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [1.9116157293319704, 49.758172033960115],
+              [1.9116157293319704, 49.758172033960115],
+              [1.91162645816803, 49.75818243044436],
+              [1.9116157293319704, 49.758172033960115]
+            ]
+          ]
+        }
+      end
+    end
+
     trait :polygon_with_extra_coordinate do
       geometry do
         {

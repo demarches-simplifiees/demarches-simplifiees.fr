@@ -404,6 +404,7 @@ describe API::V2::GraphqlController do
                     dateCreation
                     capitalSocial
                     codeEffectifEntreprise
+                    numeroTvaIntracommunautaire
                   }
                 }
               }
@@ -431,7 +432,8 @@ describe API::V2::GraphqlController do
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
-                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s
+                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s,
+                  numeroTvaIntracommunautaire: dossier.etablissement.entreprise_numero_tva_intracommunautaire
                 }
               }
             })
@@ -470,7 +472,7 @@ describe API::V2::GraphqlController do
         context "when there are missing data" do
           before do
             dossier.etablissement.update!(entreprise_code_effectif_entreprise: nil, entreprise_capital_social: nil,
-                                          numero_voie: nil, type_voie: nil)
+                                          numero_voie: nil, type_voie: nil, entreprise_numero_tva_intracommunautaire: nil)
           end
 
           it "should be returned" do
@@ -492,7 +494,8 @@ describe API::V2::GraphqlController do
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: '-1',
-                  codeEffectifEntreprise: nil
+                  codeEffectifEntreprise: nil,
+                  numeroTvaIntracommunautaire: nil
                 }
               }
             })
