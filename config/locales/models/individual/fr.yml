@@ -6,6 +6,6 @@ fr:
         nom: Nom
         prenom: Prénom
         birthdate: Date de naissance
-        gender_options:
-          "Mme": "Madame"
-          "M.": "Monsieur"
+      individual/gender:
+        female: Madame
+        male: Monsieur
