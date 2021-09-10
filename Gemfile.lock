@@ -265,6 +265,8 @@ GEM
     faraday-net_http (1.0.1)
     faraday-net_http_persistent (1.1.0)
     ffi (1.15.0)
+    ffi-geos (2.2.0)
+      ffi (>= 1.0.0)
     flipper (0.20.3)
     flipper-active_record (0.20.3)
       activerecord (>= 5.0, < 7)
@@ -574,6 +576,8 @@ GEM
     rgeo (2.2.0)
     rgeo-geojson (2.1.1)
       rgeo (>= 1.0.0)
+    rgeo-proj4 (3.0.1)
+      rgeo (~> 2.0)
     rodf (1.1.1)
       builder (>= 3.0)
       dry-inflector (~> 0.1)
@@ -819,6 +823,7 @@ DEPENDENCIES
   discard
   dotenv-rails
   factory_bot
+  ffi-geos
   flipper
   flipper-active_record
   flipper-ui
@@ -866,7 +871,9 @@ DEPENDENCIES
   rails-i18n
   rake-progressbar
   react-rails
+  rgeo
   rgeo-geojson
+  rgeo-proj4
   rqrcode
   rspec-rails
   rubocop

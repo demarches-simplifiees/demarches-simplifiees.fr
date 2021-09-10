@@ -1,5 +1,7 @@
 require 'prawn/measurement_extensions'
 require 'open-uri'
+require 'rgeo'
+require 'rgeo/geo_json'
 
 def default_margin
   10
@@ -141,8 +143,7 @@ def add_single_champ(pdf, champ)
   when 'Champs::CarteChamp'
     geojson = champ.to_feature_collection.to_json
     format_in_2_lines(pdf, champ.libelle, geojson)
-    mapbox_url = "https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/geojson(#{CGI.escape(geojson)})/auto/800x600@2x?access_token=#{MAPBOX_TOKEN}"
-    pdf.image open(mapbox_url), width: 400, position: :center
+    draw_map(pdf, geojson)
   when 'Champs::SiretChamp'
     pdf.font 'marianne', style: :bold do
       pdf.text champ.libelle
@@ -205,6 +206,105 @@ def add_etats_dossier(pdf, dossier)
   end
   if dossier.processed_at.present?
     format_in_2_columns(pdf, "Décision le", try_format_date(dossier.processed_at))
+  end
+end
+
+def draw_map(pdf, geojson)
+  # For now, only support squares
+  render_width=400
+  render_height=400
+  maybe_start_new_page(pdf, render_height)
+
+  # GeoJSON expresses everything in EPSG:4326
+  geo_factory = RGeo::Geographic.spherical_factory(srid: 4326)
+  geojson = RGeo::GeoJSON.decode(geojson)
+
+  # Compute bounding box and make it square
+  bbox = RGeo::Cartesian::BoundingBox.new(geo_factory)
+  geojson.each { |f| bbox.add(f.geometry) }
+  center = geo_factory.point(bbox.center_x, bbox.center_y)
+  bbox.add center.buffer(0.8 * bbox.max_point.distance(bbox.min_point))
+
+  urls = [
+    "wxs.ign.fr/ortho/geoportail/r/wms?LAYERS=ORTHOIMAGERY.ORTHOPHOTOS.BDORTHO",
+    "wxs.ign.fr/administratif/geoportail/r/wms?LAYERS=ADMINEXPRESS_COG_2020",
+    "wxs.ign.fr/parcellaire/geoportail/r/wms?LAYERS=CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+  ]
+  request = "EXCEPTIONS=text/xml&FORMAT=image/png&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&STYLES=&CRS=EPSG:4326&BBOX=#{bbox.min_y},#{bbox.min_x},#{bbox.max_y},#{bbox.max_x}&WIDTH=#{2*render_width}&HEIGHT=#{2*render_height}"
+
+  def pos(bbox, point, render_width, render_height)
+    w = bbox.x_span
+    h = bbox.y_span
+    [(point.x-bbox.min_x)/w*render_width, render_height + (point.y-bbox.max_y)/h*render_height]
+  end
+
+  pdf.bounding_box(
+    [pdf.bounds.width/2 - render_width/2, pdf.cursor],
+    width: render_width,
+    height: render_height,
+  ) do
+    pdf.save_graphics_state do
+      urls.each do |u|
+        pdf.image URI.open("http://#{u}&#{request}"), :at => [0, render_height], :width => render_width, :height => render_height
+      end
+      pdf.line_width=2
+
+      pdf.transparent(0.5, 1.0) do
+        geojson.each do |f|
+          g = f.geometry
+          case g
+          when RGeo::Feature::Point
+            pdf.stroke_color 'EC3323'
+            pdf.fill_color 'EC3323'
+
+            pdf.fill_and_stroke_circle pos(bbox, g, render_width, render_height), 2
+          when RGeo::Feature::LineString
+            pdf.stroke_color '372A7F'
+            pdf.fill_color '372A7F'
+
+            vertices = g.points.map { |p| pos(bbox, p, render_width, render_height) }
+            vertices.each_cons(2).each do |v|
+              pdf.stroke_line v
+            end
+          when RGeo::Feature::Polygon
+            pdf.stroke_color 'EC3323'
+            pdf.fill_color 'EC3323'
+
+            vertices = g.exterior_ring.points.map { |p| pos(bbox, p, render_width, render_height) }
+            pdf.fill_and_stroke_polygon *vertices
+          end
+        end
+      end
+    end
+  end
+
+  def dms(decimal, positive, negative)
+    sign = decimal >= 0
+    decimal = decimal.abs
+    ret = "#{decimal.floor()}°"
+    decimal = 60 * decimal.modulo(1)
+    ret = ret + "#{decimal.floor()}'"
+    decimal = 60 * decimal.modulo(1)
+    ret = ret + "#{decimal.floor()}\""
+    if sign
+      ret + positive
+    else
+      ret + negative
+    end
+  end
+  geojson.each do |f|
+    g = f.geometry
+    d = case g
+    when RGeo::Feature::Point
+      "Un point à #{dms(g.y, 'N', 'S')} #{dms(g.x, 'E', 'W')}\n"
+    when RGeo::Feature::LineString
+      g = g.convex_hull.centroid
+      "Une ligne autour de #{dms(g.y, 'N', 'S')} #{dms(g.x, 'E', 'W')}\n"
+    when RGeo::Feature::Polygon
+      g = g.centroid
+      "Une aire autour de #{dms(g.y, 'N', 'S')} #{dms(g.x, 'E', 'W')}\n"
+    end
+    format_in_2_columns(pdf, d, f['description'])
   end
 end
 
