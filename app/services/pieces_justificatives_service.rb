@@ -15,7 +15,7 @@ class PiecesJustificativesService
 
   def self.zip_entries(dossier)
     pdf = pjs_zip_entries([dossier.pdf_export_for_instructeur])
-    pjs = pdf + champs_zip_entries(dossier) + commentaires_zip_entries(dossier) + dossier_zip_entries(dossier)
+    pjs = champs_zip_entries(dossier) + commentaires_zip_entries(dossier) + dossier_zip_entries(dossier) + pdf
     index = {}
     pjs.map do |blob, filename|
       [
