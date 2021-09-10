@@ -4,3 +4,5 @@
 <% if attachment.virus_scanner.pending? %>
   <%= fire_event('attachment:update', { url: attachment_url(attachment.id, { signed_id: attachment.blob.signed_id, user_can_upload: true }) }.to_json ) %>
 <% end %>
+
+<%= focus_element("button[data-toggle-target=\".attachment-input-#{attachment.id}\"]") %>

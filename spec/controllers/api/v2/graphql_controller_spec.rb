@@ -234,6 +234,64 @@ describe API::V2::GraphqlController do
           end
         end
       end
+
+      context "filter by minRevision" do
+        let(:query) do
+          "{
+            demarche(number: #{procedure.id}) {
+              id
+              number
+              dossiers(minRevision: \"#{procedure.revisions.first.to_typed_id}\") {
+                nodes {
+                  id
+                }
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            dossiers: {
+              nodes: procedure.dossiers.order(:created_at).map do |dossier|
+                { id: dossier.to_typed_id }
+              end
+            }
+          })
+        end
+      end
+
+      context "filter by maxRevision" do
+        let(:query) do
+          "{
+            demarche(number: #{procedure.id}) {
+              id
+              number
+              dossiers(maxRevision: \"#{procedure.revisions.last.to_typed_id}\") {
+                nodes {
+                  id
+                }
+              }
+            }
+          }"
+        end
+
+        it "should be returned" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            dossiers: {
+              nodes: procedure.dossiers.order(:created_at).map do |dossier|
+                { id: dossier.to_typed_id }
+              end
+            }
+          })
+        end
+      end
     end
 
     context "dossier" do
@@ -404,6 +462,7 @@ describe API::V2::GraphqlController do
                     dateCreation
                     capitalSocial
                     codeEffectifEntreprise
+                    numeroTvaIntracommunautaire
                   }
                 }
               }
@@ -431,7 +490,8 @@ describe API::V2::GraphqlController do
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: dossier.etablissement.entreprise_capital_social.to_s,
-                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s
+                  codeEffectifEntreprise: dossier.etablissement.entreprise_code_effectif_entreprise.to_s,
+                  numeroTvaIntracommunautaire: dossier.etablissement.entreprise_numero_tva_intracommunautaire
                 }
               }
             })
@@ -470,7 +530,7 @@ describe API::V2::GraphqlController do
         context "when there are missing data" do
           before do
             dossier.etablissement.update!(entreprise_code_effectif_entreprise: nil, entreprise_capital_social: nil,
-                                          numero_voie: nil, type_voie: nil)
+                                          numero_voie: nil, type_voie: nil, entreprise_numero_tva_intracommunautaire: nil)
           end
 
           it "should be returned" do
@@ -492,7 +552,8 @@ describe API::V2::GraphqlController do
                   siren: dossier.etablissement.entreprise_siren,
                   dateCreation: dossier.etablissement.entreprise_date_creation.iso8601,
                   capitalSocial: '-1',
-                  codeEffectifEntreprise: nil
+                  codeEffectifEntreprise: nil,
+                  numeroTvaIntracommunautaire: nil
                 }
               }
             })

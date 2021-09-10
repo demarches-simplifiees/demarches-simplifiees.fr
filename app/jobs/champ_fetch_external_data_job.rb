@@ -1,6 +1,6 @@
 class ChampFetchExternalDataJob < ApplicationJob
-  def perform(champ)
-    if champ.external_id.present?
+  def perform(champ, external_id)
+    if champ.external_id == external_id && champ.data.nil?
       data = champ.fetch_external_data
 
       if data.present?

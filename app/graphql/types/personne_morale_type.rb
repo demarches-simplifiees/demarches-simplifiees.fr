@@ -7,8 +7,8 @@ module Types
       end
 
       field :siren, String, null: false
-      field :capital_social, GraphQL::Types::BigInt, null: false, description: "capital social de l’entreprise. -1 si inconnu."
-      field :numero_tva_intracommunautaire, String, null: false
+      field :capital_social, GraphQL::Types::BigInt, null: true, description: "capital social de l’entreprise. -1 si inconnu."
+      field :numero_tva_intracommunautaire, String, null: true
       field :forme_juridique, String, null: true
       field :forme_juridique_code, String, null: true
       field :nom_commercial, String, null: false
@@ -98,7 +98,7 @@ module Types
     field :nom_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_name` à la place."
     field :code_postal, String, null: false, deprecation_reason: "Utilisez le champ `address.postal_code` à la place."
     field :localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_name` à la place."
-    field :code_insee_localite, String, null: true, deprecation_reason: "Utilisez le champ `address.city_code` à la place." # TODO Pf ajouter city_code
+    field :code_insee_localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_code` à la place." # TODO Pf ajouter city_code
     field :complement_adresse, String, null: true, deprecation_reason: "Utilisez le champ `address` à la place."
 
     def address
@@ -108,9 +108,9 @@ module Types
         street_number: object.numero_voie,
         street_name: object.nom_voie,
         street_address: object.nom_voie.present? ? [object.numero_voie, object.type_voie, object.nom_voie].compact.join(' ') : nil,
-        postal_code: object.code_postal,
-        city_name: object.localite,
-        city_code: object.code_insee_localite.presence || "0" # TODO Pf code insee for cities
+        postal_code: object.code_postal.presence || '',
+        city_name: object.localite.presence || '',
+        city_code: object.code_insee_localite.presence || ''
       }
     end
 

@@ -395,7 +395,7 @@ type Demarche {
     after: String
 
     """
-    Si présent, permet de filtrer les dossiers archivés ou non
+    Seulement les dossiers archivés.
     """
     archived: Boolean
 
@@ -420,9 +420,24 @@ type Demarche {
     last: Int
 
     """
+    Seulement les dossiers pour les révisons avant la révision donnée.
+    """
+    maxRevision: ID
+
+    """
+    Seulement les dossiers pour les révisons après la révision donnée.
+    """
+    minRevision: ID
+
+    """
     L’ordre des dossiers.
     """
     order: Order = ASC
+
+    """
+    Seulement les dossiers pour la révision donnée.
+    """
+    revision: ID
 
     """
     Dossiers avec statut.
@@ -1122,7 +1137,7 @@ type Entreprise {
   """
   capital social de l’entreprise. -1 si inconnu.
   """
-  capitalSocial: BigInt!
+  capitalSocial: BigInt
   codeEffectifEntreprise: String
   dateCreation: ISO8601Date!
 
@@ -1140,7 +1155,7 @@ type Entreprise {
   inlineAdresse: String!
   nom: String
   nomCommercial: String!
-  numeroTvaIntracommunautaire: String!
+  numeroTvaIntracommunautaire: String
   prenom: String
   raisonSociale: String!
   siren: String!
@@ -1535,7 +1550,7 @@ type PersonneMorale implements Demandeur {
   address: Address!
   adresse: String! @deprecated(reason: "Utilisez le champ `address.label` à la place.")
   association: Association
-  codeInseeLocalite: String @deprecated(reason: "Utilisez le champ `address.city_code` à la place.")
+  codeInseeLocalite: String! @deprecated(reason: "Utilisez le champ `address.city_code` à la place.")
   codePostal: String! @deprecated(reason: "Utilisez le champ `address.postal_code` à la place.")
   complementAdresse: String @deprecated(reason: "Utilisez le champ `address` à la place.")
   entreprise: Entreprise
