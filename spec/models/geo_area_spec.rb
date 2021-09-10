@@ -52,4 +52,32 @@ RSpec.describe GeoArea, type: :model do
       it { expect(geo_area.safe_geometry).to eq(polygon) }
     end
   end
+
+  describe '#valid?' do
+    let(:geo_area) { build(:geo_area, :polygon) }
+
+    context 'polygon' do
+      it { expect(geo_area.valid?).to be_truthy }
+    end
+
+    context 'hourglass_polygon' do
+      let(:geo_area) { build(:geo_area, :hourglass_polygon) }
+      it { expect(geo_area.valid?).to be_falsey }
+    end
+
+    context 'line_string' do
+      let(:geo_area) { build(:geo_area, :line_string) }
+      it { expect(geo_area.valid?).to be_truthy }
+    end
+
+    context 'point' do
+      let(:geo_area) { build(:geo_area, :point) }
+      it { expect(geo_area.valid?).to be_truthy }
+    end
+
+    context 'invalid_right_hand_rule_polygon' do
+      let(:geo_area) { build(:geo_area, :invalid_right_hand_rule_polygon) }
+      it { expect(geo_area.valid?).to be_falsey }
+    end
+  end
 end

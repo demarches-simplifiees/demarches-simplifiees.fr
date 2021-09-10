@@ -63,9 +63,20 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:champs) { [] }
 
-    it "renders the routing criteria name and its value" do
-      expect(subject).to include(procedure.routing_criteria_name)
-      expect(subject).to include(dossier.groupe_instructeur.label)
+    it "does not render the routing criteria name and its value" do
+      expect(subject).not_to include(procedure.routing_criteria_name)
+      expect(subject).not_to include(dossier.procedure.defaut_groupe_instructeur.label)
+    end
+
+    context "with selected groupe instructeur" do
+      before do
+        dossier.groupe_instructeur = dossier.procedure.defaut_groupe_instructeur
+      end
+
+      it "renders the routing criteria name and its value" do
+        expect(subject).to include(procedure.routing_criteria_name)
+        expect(subject).to include(dossier.groupe_instructeur.label)
+      end
     end
 
     context "with seen_at" do

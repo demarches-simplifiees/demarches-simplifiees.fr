@@ -171,7 +171,7 @@ class Champ < ApplicationRecord
 
   def fetch_external_data_later
     if fetch_external_data? && external_id.present? && data.nil?
-      ChampFetchExternalDataJob.perform_later(self)
+      ChampFetchExternalDataJob.perform_later(self, external_id)
     end
   end
 
