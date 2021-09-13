@@ -73,7 +73,9 @@ module TPS
     config.middleware.use Rack::Attack
     config.middleware.use Flipper::Middleware::Memoizer, preload_all: true
 
-    config.ds_weekly_overview = ENV['APP_NAME'] == 'tps'
+    config.ds_env = ENV.fetch('DS_ENV', Rails.env)
+
+    config.ds_weekly_overview = Rails.env.production? && config.ds_env != 'staging'
 
     config.ds_autosave = {
       debounce_delay: 3000,

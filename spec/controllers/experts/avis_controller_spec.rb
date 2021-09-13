@@ -9,9 +9,9 @@ describe Experts::AvisController, type: :controller do
     let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:another_procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
-    let!(:avis_without_answer) { Avis.create(dossier: dossier, claimant: claimant, experts_procedure: experts_procedure) }
-    let!(:avis_with_answer) { Avis.create(dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, answer: 'yop') }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+    let!(:avis_without_answer) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure) }
+    let!(:avis_with_answer) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, answer: 'yop') }
 
     before do
       sign_in(expert.user)
@@ -155,7 +155,7 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#expert_cannot_invite_another_expert' do
-      let!(:previous_avis) { Avis.create(dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, confidentiel: previous_avis_confidentiel) }
+      let!(:previous_avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, confidentiel: previous_avis_confidentiel) }
       let(:previous_avis_confidentiel) { false }
       let(:asked_confidentiel) { false }
       let(:intro) { 'introduction' }
@@ -175,7 +175,7 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#create_avis' do
-      let!(:previous_avis) { Avis.create(dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, confidentiel: previous_avis_confidentiel) }
+      let!(:previous_avis) { create(:avis, dossier: dossier, claimant: claimant, experts_procedure: experts_procedure, confidentiel: previous_avis_confidentiel) }
       let(:emails) { ['a@b.com'] }
       let(:intro) { 'introduction' }
       let(:created_avis) { Avis.last }
@@ -271,9 +271,9 @@ describe Experts::AvisController, type: :controller do
 
         context 'when the expert also shares the linked dossiers' do
           context 'and the expert can access the linked dossiers' do
-            let(:created_avis) { Avis.create(dossier: dossier, claimant: claimant, email: "toto3@gmail.com") }
+            let(:created_avis) { create(:avis, dossier: dossier, claimant: claimant, email: "toto3@gmail.com") }
             let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
-            let(:linked_avis) { Avis.create(dossier: linked_dossier, claimant: claimant) }
+            let(:linked_avis) { create(:avis, dossier: linked_dossier, claimant: claimant) }
             let(:invite_linked_dossiers) { true }
 
             it 'sends one avis for the main dossier' do
@@ -304,7 +304,7 @@ describe Experts::AvisController, type: :controller do
       let(:invited_email) { 'invited@avis.com' }
       let(:claimant) { create(:instructeur) }
       let(:expert) { create(:expert) }
-      let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
       let(:dossier) { create(:dossier) }
       let(:procedure) { dossier.procedure }
       let!(:avis) { create(:avis, experts_procedure: experts_procedure, claimant: claimant, dossier: dossier) }

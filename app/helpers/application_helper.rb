@@ -110,7 +110,7 @@ module ApplicationHelper
   end
 
   def staging?
-    ENV['APP_NAME'] == 'tps_dev'
+    Rails.application.config.ds_env == 'staging'
   end
 
   def contact_link(title, options = {})

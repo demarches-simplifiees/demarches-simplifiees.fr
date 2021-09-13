@@ -3,7 +3,7 @@ describe 'experts/avis/instruction.html.haml', type: :view do
   let(:claimant) { create(:instructeur) }
   let(:procedure) { create(:procedure) }
   let!(:avis) { create(:avis, confidentiel: confidentiel, claimant: claimant, experts_procedure: experts_procedure) }
-  let!(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+  let!(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
 
   before do
     assign(:avis, avis)

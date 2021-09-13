@@ -6,7 +6,7 @@ feature 'Inviting an expert:' do
     let(:expert) { create(:expert) }
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-    let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
     let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
     let(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 

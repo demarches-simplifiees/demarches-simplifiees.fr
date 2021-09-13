@@ -130,7 +130,7 @@ def render_single_champ(pdf, champ)
     value = number_with_delimiter(champ.to_s)
     format_in_2_columns(pdf, champ.libelle, value)
   else
-    value = champ.to_s.empty? ? 'Non renseigné' : champ.for_tag
+    value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
     format_in_2_columns(pdf, champ.libelle, value)
   end
 end
