@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_08_162000) do
+ActiveRecord::Schema.define(version: 2021_09_08_170019) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -619,6 +620,8 @@ ActiveRecord::Schema.define(version: 2021_09_08_162000) do
     t.boolean "experts_require_administrateur_invitation", default: false
     t.string "encrypted_api_particulier_token"
     t.text "api_particulier_scopes", default: [], array: true
+    t.jsonb "api_particulier_sources", default: {}
+    t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
