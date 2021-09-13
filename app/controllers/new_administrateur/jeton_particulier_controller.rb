@@ -21,7 +21,7 @@ module NewAdministrateur
         @procedure.api_particulier_scopes = scopes
         @procedure.save!
 
-        redirect_to admin_procedure_api_particulier_jeton_path(procedure_id: @procedure.id),
+        redirect_to admin_procedure_api_particulier_sources_path(procedure_id: @procedure.id),
           notice: t('.token_ok')
       end
 
