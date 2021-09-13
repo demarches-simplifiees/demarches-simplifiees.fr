@@ -709,6 +709,10 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def estimate_weight(nb_dossiers_termines)
+    nb_dossiers_termines * average_dossier_weight
+  end
+
   def publish_revision!
     update!(draft_revision: create_new_revision, published_revision: draft_revision)
     published_revision.touch(:published_at)
