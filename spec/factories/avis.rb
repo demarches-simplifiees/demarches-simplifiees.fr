@@ -9,6 +9,10 @@ FactoryBot.define do
     association :dossier
     association :claimant, factory: :instructeur
 
+    after(:build) do |avis, _evaluator|
+      avis.experts_procedure ||= build(:experts_procedure, procedure: avis.dossier.procedure)
+    end
+
     trait :with_instructeur do
       email { nil }
       instructeur { association :instructeur, email: generate(:expert_email) }

@@ -5,9 +5,9 @@ RSpec.describe ExpertsProcedure, type: :model do
     let(:expert) { create(:expert) }
     let(:expert2) { create(:expert) }
     let(:expert3) { create(:expert) }
-    let(:experts_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure) }
-    let(:experts_procedure2) { ExpertsProcedure.create(expert: expert2, procedure: procedure) }
-    let(:experts_procedure3) { ExpertsProcedure.create(expert: expert3, procedure: procedure) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+    let(:experts_procedure2) { create(:experts_procedure, expert: expert2, procedure: procedure) }
+    let(:experts_procedure3) { create(:experts_procedure, expert: expert3, procedure: procedure) }
     subject { procedure.experts_procedures }
 
     context 'when there is one dossier' do
