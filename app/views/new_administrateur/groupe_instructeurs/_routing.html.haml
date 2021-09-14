@@ -1,0 +1,12 @@
+.card
+  .card-title Routage
+  %p.notice
+    Le routage est une fonctionnalité pour les démarches nécessitant le partage de l’instruction entre différents groupes en fonction d’un critère précis (territoire, thématique ou autre).
+    %br
+    %br
+    Cette fonctionnalité permet d’acheminer les dossier vers chaque groupe, et de ne plus avoir besoin de filtrer ses dossiers parmi une grande quantité de demandes. Elle est donc particulièrement adaptée pour les démarches nationales instruites localement.
+    %br
+    %br
+    Les instructeurs ne voient que les dossiers les concernant et n'ont donc pas accès aux données extérieures à leur périmètre.
+
+  = link_to 'Activer le routage', update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure), class: 'button primary', method: 'patch'
