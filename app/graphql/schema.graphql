@@ -113,11 +113,12 @@ type Association {
 
 type Avis {
   attachment: File
+  claimant: Profile
   dateQuestion: ISO8601DateTime!
   dateReponse: ISO8601DateTime
   expert: Profile
   id: ID!
-  instructeur: Profile!
+  instructeur: Profile! @deprecated(reason: "Utilisez le champ claimant à la place.")
   question: String!
   reponse: String
 }

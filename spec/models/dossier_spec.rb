@@ -345,9 +345,9 @@ describe Dossier do
     end
 
     context 'when they are a lot of advice' do
-      let!(:avis_1) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010'), tmp_expert_migrated: true) }
-      let!(:avis_2) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010'), tmp_expert_migrated: true) }
-      let!(:avis_3) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010'), tmp_expert_migrated: true) }
+      let!(:avis_1) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('10/01/2010')) }
+      let!(:avis_2) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
+      let!(:avis_3) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010')) }
 
       it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_2, avis_1, avis_3]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis_2, avis_1, avis_3]) }
