@@ -1,11 +1,13 @@
 describe 'users/dossiers/dossier_actions.html.haml', type: :view do
   let(:procedure) { create(:procedure, :published) }
   let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+  let(:user) { dossier.user }
 
-  subject { render 'users/dossiers/dossier_actions.html.haml', dossier: dossier }
+  subject { render 'users/dossiers/dossier_actions.html.haml', dossier: dossier, current_user: user }
 
   it { is_expected.to have_link('Commencer un autre dossier', href: commencer_url(path: procedure.path)) }
   it { is_expected.to have_link('Supprimer le dossier', href: ask_deletion_dossier_path(dossier)) }
+  it { is_expected.to have_link('Transferer le dossier', href: transferer_dossier_path(dossier)) }
 
   context 'when the dossier cannot be deleted' do
     let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
@@ -20,6 +22,7 @@ describe 'users/dossiers/dossier_actions.html.haml', type: :view do
   context 'when there are no actions to display' do
     let(:procedure) { create(:procedure, :closed) }
     let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+    let(:user) { create(:user) }
 
     it 'doesn’t render the menu at all' do
       expect(subject).not_to have_selector('.dropdown')

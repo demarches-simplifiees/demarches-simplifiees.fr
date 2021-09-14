@@ -363,45 +363,56 @@ describe User, type: :model do
     # 2 - somewhat guessable: protection from unthrottled online attacks. (guesses < 10^8)
     # 3 - safely unguessable: moderate protection from offline slow-hash scenario. (guesses < 10^10)
     # 4 - very unguessable: strong protection from offline slow-hash scenario. (guesses >= 10^10)
-    passwords = ['pass', '12pass23', 'démarches ', 'démarches-simple', '{My-$3cure-p4ssWord}']
+    passwords = ['password', '12pass23', 'démarches ', 'démarches-simple', '{My-$3cure-p4ssWord}']
     min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
 
-    context 'administrateurs' do
-      let(:email) { 'mail@beta.gouv.fr' }
-      let(:administrateur) { build(:user, email: email, password: password, administrateur: build(:administrateur)) }
+    subject do
+      user.valid?
+      user.errors.full_messages
+    end
 
-      subject do
-        administrateur.save
-        administrateur.errors.full_messages
-      end
+    context 'for administrateurs' do
+      let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur)) }
 
-      context 'when password is too short' do
+      context 'when the password is too short' do
         let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
 
-        it { expect(subject).to eq(["Le mot de passe est trop court"]) }
+        it 'reports an error about password length (but not about complexity)' do
+          expect(subject).to eq(["Le mot de passe est trop court"])
+        end
       end
 
-      context 'when password is too simple' do
-        passwords[0..(min_complexity - 1)].each do |password|
-          let(:password) { password }
+      passwords[0..(min_complexity - 1)].each do |simple_password|
+        context 'when the password is long enough, but too simple' do
+          let(:password) { simple_password }
 
           it { expect(subject).to eq(["Le mot de passe n’est pas assez complexe"]) }
         end
       end
 
-      context 'when password is acceptable' do
+      context 'when the password is long and complex' do
         let(:password) { passwords[min_complexity] }
 
-        it { expect(subject).to eq([]) }
+        it { expect(subject).to be_empty }
       end
     end
 
-    context 'simple users' do
-      passwords.each do |password|
-        let(:user) { build(:user, email: 'some@email.fr', password: password) }
-        it 'has no complexity validation' do
-          user.save
-          expect(user.errors.full_messages).to eq([])
+    context 'for simple users' do
+      let(:user) { build(:user, email: 'user@exemple.fr', password: password) }
+
+      context 'when the password is too short' do
+        let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
+
+        it 'reports an error about password length (but not about complexity)' do
+          expect(subject).to eq(["Le mot de passe est trop court"])
+        end
+      end
+
+      context 'when the password is long enough, but simple' do
+        let(:password) { 'simple-password' }
+
+        it 'doesn’t enforce the password complexity' do
+          expect(subject).to be_empty
         end
       end
     end

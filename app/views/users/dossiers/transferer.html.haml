@@ -1,0 +1,9 @@
+.container.mt-4
+  - dossier = @transfer.dossiers.first
+  Transferer le dossier #{dossier_display_state(dossier.state, lower: true)} nº #{@dossier.id} déposé par #{demandeur_dossier(dossier)} le #{try_format_date(dossier.created_at)} vers le compte d‘un autre usager :
+
+  = form_for @transfer, url: transfers_path, html: { class: 'form mt-2' } do |f|
+    = f.label :email, 'Email du compte destinataire'
+    = f.email_field :email
+    = f.hidden_field :dossiers, value: dossier.id
+    = f.submit "Envoyer la demande de transfert", class: 'button primary'
