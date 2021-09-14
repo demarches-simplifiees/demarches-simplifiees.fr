@@ -25,7 +25,6 @@ end
 
 # A list of features to be deployed on first push
 features = [
-  :administrateur_routage,
   :administrateur_web_hook,
   :api_particulier,
   :dossier_pdf_vide,

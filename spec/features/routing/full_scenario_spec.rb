@@ -7,7 +7,6 @@ feature 'The routing', js: true do
 
   before do
     procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
-    Flipper.enable_actor(:administrateur_routage, administrateur.user)
   end
 
   scenario 'works' do
