@@ -131,9 +131,7 @@ module NewAdministrateur
         else
 
           if instructeurs.present?
-            instructeurs.each do |instructeur|
-              instructeur.assign_to_procedure(procedure)
-            end
+            procedure.defaut_groupe_instructeur.instructeurs << instructeurs
             flash[:notice] = "Les instructeurs ont bien été affectés à la démarche"
           end
         end
