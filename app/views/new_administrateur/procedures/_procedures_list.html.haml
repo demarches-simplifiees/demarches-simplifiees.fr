@@ -18,7 +18,7 @@
 
     .admin-procedures-list-row.actions.flex.justify-between
       %div
-        - if feature_enabled?(:administrateur_routage)
+        - if procedure.routee?
           %span.icon.person
           %span.badge.baseline= procedure.groupe_instructeurs.count
         - else
