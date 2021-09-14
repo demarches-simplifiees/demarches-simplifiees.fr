@@ -11,7 +11,15 @@ module NewAdministrateur
     def index
       @procedure = procedure
 
-      @groupes_instructeurs = paginated_groupe_instructeurs
+      if procedure.routee?
+        @groupes_instructeurs = paginated_groupe_instructeurs
+        @instructeurs = []
+        @available_instructeur_emails = []
+      else
+        @groupes_instructeurs = []
+        @instructeurs = paginated_instructeurs
+        @available_instructeur_emails = available_instructeur_emails
+      end
     end
 
     def show
@@ -137,7 +145,11 @@ module NewAdministrateur
         end
       end
 
-      redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+      if procedure.routee?
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+      else
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      end
     end
 
     def remove_instructeur
@@ -162,7 +174,12 @@ module NewAdministrateur
           end
         end
       end
-      redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+
+      if procedure.routee?
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
+      else
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      end
     end
 
     def update_routing_criteria_name
@@ -170,6 +187,13 @@ module NewAdministrateur
 
       redirect_to admin_procedure_groupe_instructeurs_path(procedure),
         notice: "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
+    end
+
+    def update_routing_enabled
+      procedure.update!(routing_enabled: true)
+
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure),
+      notice: "Le routage est activé."
     end
 
     def import
@@ -225,7 +249,11 @@ module NewAdministrateur
     end
 
     def groupe_instructeur
-      procedure.groupe_instructeurs.find(params[:id])
+      if params[:id].present?
+        procedure.groupe_instructeurs.find(params[:id])
+      else
+        procedure.defaut_groupe_instructeur
+      end
     end
 
     def instructeur_id
