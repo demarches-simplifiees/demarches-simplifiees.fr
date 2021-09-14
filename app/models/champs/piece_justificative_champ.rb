@@ -18,10 +18,10 @@
 #  type_de_champ_id               :integer
 #
 class Champs::PieceJustificativeChamp < Champ
-  MAX_SIZE = 200.megabytes
+  FILE_MAX_SIZE = 200.megabytes
 
   validates :piece_justificative_file,
-    size: { less_than: MAX_SIZE },
+    size: { less_than: FILE_MAX_SIZE },
     if: -> { !type_de_champ.skip_pj_validation }
 
   validates :piece_justificative_file,

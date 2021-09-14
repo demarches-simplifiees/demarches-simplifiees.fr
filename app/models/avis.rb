@@ -27,18 +27,19 @@ class Avis < ApplicationRecord
   has_one :expert, through: :experts_procedure
   has_one :procedure, through: :experts_procedure
 
+  FILE_MAX_SIZE = 20.megabytes
   validates :piece_justificative_file,
     content_type: AUTHORIZED_CONTENT_TYPES,
-    size: { less_than: 20.megabytes }
+    size: { less_than: FILE_MAX_SIZE }
 
   validates :introduction_file,
     content_type: AUTHORIZED_CONTENT_TYPES,
-    size: { less_than: 20.megabytes }
+    size: { less_than: FILE_MAX_SIZE }
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
   validates :claimant, presence: true
-  validates :piece_justificative_file, size: { less_than: 20.megabytes }
-  validates :introduction_file, size: { less_than: 20.megabytes }
+  validates :piece_justificative_file, size: { less_than: FILE_MAX_SIZE }
+  validates :introduction_file, size: { less_than: FILE_MAX_SIZE }
 
   before_validation -> { sanitize_email(:email) }
 
