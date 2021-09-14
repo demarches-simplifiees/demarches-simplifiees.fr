@@ -109,7 +109,7 @@ class SerializerService
       reponse
       dateQuestion
       dateReponse
-      instructeur {
+      claimant {
         email
       }
       expert {

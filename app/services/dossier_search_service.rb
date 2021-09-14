@@ -21,7 +21,7 @@ class DossierSearchService
   end
 
   def self.dossiers_by_id(id, instructeur)
-    (instructeur.dossiers.where(id: id) + instructeur.dossiers_from_avis.where(id: id)).uniq
+    instructeur.dossiers.where(id: id).uniq
   end
 
   def self.id_compatible?(number)
