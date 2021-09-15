@@ -2,7 +2,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
   render_views
 
   let(:admin) { create(:administrateur) }
-  let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, administrateurs: [admin], routing_enabled: true) }
   let!(:gi_1_1) { procedure.defaut_groupe_instructeur }
 
   let(:procedure2) { create(:procedure, :published) }
@@ -222,7 +222,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(response.status).to eq(200) }
       it { expect(subject.request.flash[:alert]).to be_nil }
       it { expect(subject.request.flash[:notice]).to be_present }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
     end
 
     context 'when there is at least one bad email' do
@@ -230,13 +230,13 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(response.status).to eq(200) }
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject.request.flash[:notice]).to be_present }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
     end
 
     context 'when the admin wants to assign an instructor who is already assigned on this procedure' do
       let(:emails) { ['instructeur_1@ministere_a.gouv.fr'].to_json }
       it { expect(subject.request.flash[:alert]).to be_present }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, procedure.defaut_groupe_instructeur) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
     end
   end
 
@@ -344,7 +344,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(subject.request.flash[:notice]).to be_present }
       it { expect(subject.request.flash[:alert]).to be_nil }
       it { expect(response.status).to eq(302) }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, gi_1_1) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
     end
 
     context 'when the instructor is not assigned to the procedure' do
@@ -352,7 +352,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(subject.request.flash[:alert]).to be_present }
       it { expect(subject.request.flash[:notice]).to be_nil }
       it { expect(response.status).to eq(302) }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure, gi_1_1) }
+      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure) }
     end
   end
 
