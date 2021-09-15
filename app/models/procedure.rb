@@ -637,6 +637,10 @@ class Procedure < ApplicationRecord
     routing_enabled? || groupe_instructeurs.size > 1
   end
 
+  def instructeurs_self_management?
+    routee? || instructeurs_self_management_enabled?
+  end
+
   def defaut_groupe_instructeur_for_new_dossier
     if !routee? || feature_enabled?(:procedure_routage_api)
       defaut_groupe_instructeur
