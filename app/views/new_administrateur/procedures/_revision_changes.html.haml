@@ -28,9 +28,9 @@
           = t("update_drop_down_options#{postfix}", label: change[:label], scope: [:new_administrateur, :revision_changes])
           %ul
             - if added.present?
-              %li= t(:add_option, items: added.map{ |term| "« #{term.strip} »" }.join(", "), scope: [:new_administrateur, :revision_changes])
+              %li= t(:add_option, scope: [:new_administrateur, :revision_changes], items: added.map{ |term| "« #{term.strip} »" }.join(", "))
             - if removed.present?
-              %li= t(:remove_option, items: removed.map{ |term| "« #{term.strip} »" }.join(", "), scope: [:new_administrateur, :revision_changes])
+              %li= t(:remove_option, scope: [:new_administrateur, :revision_changes], items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
       - when :carte_layers
         - added = change[:to].sort - change[:from].sort
         - removed = change[:from].sort - change[:to].sort
@@ -38,11 +38,11 @@
           = t("update_carte_layers#{postfix}", label: change[:label], scope: [:new_administrateur, :revision_changes])
           %ul
             - if added.present?
-              %li= t(:add_option, items: added.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "), scope: [:new_administrateur, :revision_changes])
+              %li= t(:add_option, scope: [:new_administrateur, :revision_changes], items: added.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "))
             - if removed.present?
-              %li= t(:remove_option, items: removed.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "), scope: [:new_administrateur, :revision_changes])
+              %li= t(:remove_option, scope: [:new_administrateur, :revision_changes], items: removed.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "))
   - move_changes, move_private_changes = changes.filter { |change| change[:op] == :move }.partition { |change| !change[:private] }
   - if move_changes.size != 0
-    %li.mb-1= t(:move, count: move_changes.size, scope: [:new_administrateur, :revision_changes])
+    %li.mb-1= t(:move, scope: [:new_administrateur, :revision_changes], count: move_changes.size)
   - if move_private_changes.size != 0
-    %li.mb-1= t(:move_private, count: move_private_changes.size, scope: [:new_administrateur, :revision_changes])
+    %li.mb-1= t(:move_private, scope: [:new_administrateur, :revision_changes], count: move_private_changes.size)
