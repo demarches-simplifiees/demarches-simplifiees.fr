@@ -202,7 +202,7 @@ en:
           connection: Sign in
           are_you_new: First time on %{app_name}?
           find_procedure: Find your procedure
-      password:
+      passwords:
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
@@ -212,9 +212,9 @@ en:
           check_spams: Check your junk or spam email.
           check_account: Have you created a %{application_name} account with the adress %{email}? You will not receive any message if no account is linked to your email adress.
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
-        shared:
-          email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
-          contact_us_if_any_trouble_html: You can contact us <a href=\"%{href}\">through this form</a> if a problem still exists.
+      shared:
+        email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
+        contact_us_if_any_trouble_html: You can contact us <a href=\"%{href}\">through this form</a> if a problem still exists.
   modal:
     publish:
       title:
