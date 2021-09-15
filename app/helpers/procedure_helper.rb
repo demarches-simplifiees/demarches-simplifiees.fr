@@ -57,4 +57,8 @@ module ProcedureHelper
   def procedure_auto_archive_datetime(procedure)
     procedure_auto_archive_date(procedure) + ' ' + procedure_auto_archive_time(procedure)
   end
+
+  def can_manage_groupe_instructeurs?(procedure)
+    procedure.routee? && current_administrateur.present? && current_administrateur.owns?(procedure)
+  end
 end
