@@ -64,7 +64,6 @@ en:
         start_procedure: Start the procedure
         existing_dossiers: You already have files for this procedure
         show_dossiers: View my current files
-        start_new_dossier: Start a new file
         already_draft: "You already started to fill a file"
         already_draft_detail_html: "You started to fill a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
         already_not_draft: "You already submitted a file"
