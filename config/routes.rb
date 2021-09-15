@@ -397,6 +397,12 @@ Rails.application.routes.draw do
         put :experts_require_administrateur_invitation
       end
 
+      get :api_particulier, controller: 'jeton_particulier'
+
+      resource 'api_particulier', only: [] do
+        resource 'jeton', only: [:show]
+      end
+
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
