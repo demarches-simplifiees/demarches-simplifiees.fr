@@ -16,16 +16,22 @@
         %li.mb-1= t("update_description#{postfix}", label: change[:label], to: change[:to], scope: [:new_administrateur, :revision_changes])
       - when :mandatory
         - if change[:from] == false
-          %li.mb-1= t(:enabled, label: change[:label], scope: [:new_administrateur, :revision_changes, "update_mandatory#{postfix}"])
+          -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory.enabled')
+          -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory_private.enabled')
+          %li.mb-1= t("new_administrateur.revision_changes.update_mandatory#{postfix}.enabled", label: change[:label])
         - else
-          %li.mb-1= t(:disabled, label: change[:label], scope: [:new_administrateur, :revision_changes, "update_mandatory#{postfix}"])
+          -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory.disabled')
+          -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory_private.disabled')
+          %li.mb-1= t("new_administrateur.revision_changes.update_mandatory#{postfix}.disabled", label: change[:label])
       - when :piece_justificative_template
-        %li.mb-1= t("update_piece_justificative_template#{postfix}", label: change[:label], scope: [:new_administrateur, :revision_changes])
+        -# i18n-tasks-use t('new_administrateur.revision_changes.update_piece_justificative_template')
+        -# i18n-tasks-use t('new_administrateur.revision_changes.update_piece_justificative_template_private')
+        %li.mb-1= t("new_administrateur.revision_changes.update_piece_justificative_template#{postfix}", label: change[:label])
       - when :drop_down_options
         - added = change[:to].sort - change[:from].sort
         - removed = change[:from].sort - change[:to].sort
         %li.mb-1
-          = t("update_drop_down_options#{postfix}", label: change[:label], scope: [:new_administrateur, :revision_changes])
+          = t("update_drop_down_options#{postfix}", scope: [:new_administrateur, :revision_changes], label: change[:label])
           %ul
             - if added.present?
               %li= t(:add_option, scope: [:new_administrateur, :revision_changes], items: added.map{ |term| "« #{term.strip} »" }.join(", "))
@@ -35,7 +41,7 @@
         - added = change[:to].sort - change[:from].sort
         - removed = change[:from].sort - change[:to].sort
         %li.mb-1
-          = t("update_carte_layers#{postfix}", label: change[:label], scope: [:new_administrateur, :revision_changes])
+          = t("update_carte_layers#{postfix}", scope: [:new_administrateur, :revision_changes], label: change[:label])
           %ul
             - if added.present?
               %li= t(:add_option, scope: [:new_administrateur, :revision_changes], items: added.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "))
