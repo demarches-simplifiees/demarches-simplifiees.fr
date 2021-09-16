@@ -3,11 +3,11 @@ class Helpscout::FormAdapter
 
   def self.options
     [
-      [I18n.t(TYPE_INFO, scope: [:support, :question]), TYPE_INFO, FAQ_CONTACTER_SERVICE_EN_CHARGE_URL],
-      [I18n.t(TYPE_PERDU, scope: [:support, :question]), TYPE_PERDU, LISTE_DES_DEMARCHES_URL],
-      [I18n.t(TYPE_INSTRUCTION, scope: [:support, :question]), TYPE_INSTRUCTION, FAQ_OU_EN_EST_MON_DOSSIER_URL],
-      [I18n.t(TYPE_AMELIORATION, scope: [:support, :question]), TYPE_AMELIORATION, FEATURE_UPVOTE_URL],
-      [I18n.t(TYPE_AUTRE, scope: [:support, :question]), TYPE_AUTRE]
+      [I18n.t(:question, scope: [:support, :index, TYPE_INFO]), TYPE_INFO, FAQ_CONTACTER_SERVICE_EN_CHARGE_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_PERDU]), TYPE_PERDU, LISTE_DES_DEMARCHES_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_INSTRUCTION]), TYPE_INSTRUCTION, FAQ_OU_EN_EST_MON_DOSSIER_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_AMELIORATION]), TYPE_AMELIORATION, FEATURE_UPVOTE_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_AUTRE]), TYPE_AUTRE]
     ]
   end
 
