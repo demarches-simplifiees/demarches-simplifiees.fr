@@ -46,6 +46,14 @@ describe NewAdministrateur::JetonParticulierController, type: :controller do
         it { expect(procedure.reload.api_particulier_token).to eql(token) }
       end
 
+      context "and the api response is a success but with an empty scopes" do
+        let(:cassette) { "api_particulier/success/introspect_empty_scopes" }
+
+        it { expect(flash.alert).to include("le jeton n'a pas acces aux données") }
+        it { expect(flash.notice).to be_nil }
+        it { expect(procedure.reload.api_particulier_token).not_to eql(token) }
+      end
+
       context "and the api response is not unauthorized" do
         let(:cassette) { "api_particulier/unauthorized/introspect" }
 
@@ -55,12 +63,12 @@ describe NewAdministrateur::JetonParticulierController, type: :controller do
       end
     end
 
-    context "when jeton is invalid and no call is made" do
+    context "when jeton is invalid and no network call is made" do
       let(:token) { "jet0n 1nvalide" }
 
       before { subject }
 
-      it { expect(flash.alert).to include("Mise à jour impossible : le jeton n'est pas valide") }
+      it { expect(flash.alert.first).to include("pas le bon format") }
       it { expect(flash.notice).to be_nil }
       it { expect(procedure.reload.api_particulier_token).not_to eql(token) }
     end
