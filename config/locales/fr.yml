@@ -22,6 +22,8 @@
 fr:
   help: 'Aide'
   utils:
+    'yes': Oui
+    'no': Non
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
     asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
