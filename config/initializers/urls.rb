@@ -27,6 +27,7 @@ LISTE_DES_DEMARCHES_URL = "https://www.service-public.pf/demarches-en-ligne"
 CGU_URL = ENV.fetch("CGU_URL", [DOC_URL, "cgu"].join("/"))
 RGPD_URL = [CGU_URL, "rgpd"].join("#")
 MENTIONS_LEGALES_URL = ENV.fetch("MENTIONS_LEGALES_URL", [CGU_URL, "mentions-legales"].join("#"))
+ACCESSIBILITE_URL = ENV.fetch("ACCESSIBILITE_URL", [DOC_URL, "declaration-daccessibilite"].join("/"))
 API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "api"].join("/")
 WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 ARCHIVAGE_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")
