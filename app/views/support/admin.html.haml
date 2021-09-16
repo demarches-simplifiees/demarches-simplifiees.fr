@@ -20,7 +20,7 @@
 
       .contact-champ
         = label_tag :type do
-          = t('your_question', scope: [:support, :question])
+          = t('your_question', scope: [:supportadmin])
           %span.mandatory *
         = select_tag :type, options_for_select(@options, params[:type])
 

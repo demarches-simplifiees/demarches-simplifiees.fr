@@ -1,16 +1,16 @@
-- content_for(:title, 'Contact')
+- content_for(:title, t('.contact'))
 - content_for :footer do
   = render partial: "root/footer"
 
 #contact-form
   .container
     %h1.new-h1
-      = t('contact', scope: [:support])
+      = t('.contact')
 
     = form_tag contact_path, method: :post, multipart: true, class: 'form' do |f|
 
       .description
-        %p= t('intro_html', scope: [:support])
+        %p= t('.intro_html')
         %br
         %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
@@ -23,7 +23,7 @@
 
       .contact-champ
         = label_tag :type do
-          = t('your_question', scope: [:support, :question])
+          = t('.your_question')
           %span.mandatory *
         = hidden_field_tag :type, params[:type]
       %dl
@@ -37,9 +37,10 @@
             %dd
               .support.card.featured.hidden{ id: question_type }
                 .card-title
-                  = t('our_answer', scope: [:support, :response])
+                  = t('.our_answer')
                 .card-content
-                  = t("#{question_type}_html", scope: [:support, :response], base_url: APPLICATION_BASE_URL, "link_#{question_type}": link)
+                  -# i18n-tasks-use t("support.index.#{question_type}.answer_html")
+                  = t('answer_html', scope: [:support, :index, question_type], base_url: APPLICATION_BASE_URL, "link_#{question_type}": link)
 
       .contact-champ
         = label_tag :dossier_id, t('file_number', scope: [:utils])
@@ -61,9 +62,9 @@
         = label_tag :piece_jointe do
           = t('pj', scope: [:utils])
         %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AMELIORATION } }
-          = t('notice_pj_product', scope: [:support, :response])
+          = t('.notice_pj_product')
         %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AUTRE } }
-          = t('notice_pj_other', scope: [:support, :response])
+          = t('.notice_pj_other')
         = file_field_tag :piece_jointe
 
       = hidden_field_tag :tags, @tags&.join(',')
