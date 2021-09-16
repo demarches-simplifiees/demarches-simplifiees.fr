@@ -318,13 +318,13 @@ module Users
 
     def show_demarche_en_test_banner
       if @dossier.present? && @dossier.revision.draft?
-        flash.now.alert = t('.test_procedure')
+        flash.now.alert = t('users.dossiers.test_procedure')
       end
     end
 
     def ensure_dossier_can_be_updated
       if !dossier.can_be_updated_by_user?
-        flash.alert = t('.no_longer_editable')
+        flash.alert = t('users.dossiers.no_longer_editable')
         redirect_to dossiers_path
       end
     end
@@ -425,7 +425,7 @@ module Users
     end
 
     def forbidden!
-      flash[:alert] = t('.no_access')
+      flash[:alert] = t('users.dossiers.no_access')
       redirect_to root_path
     end
 
