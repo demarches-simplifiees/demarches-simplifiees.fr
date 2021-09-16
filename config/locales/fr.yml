@@ -97,6 +97,9 @@ fr:
       first: Premier
       truncate: '&hellip;'
     shared:
+      actions:
+        save: Enregistrer
+        edit: Modifier
       greetings:
         hello: Bonjour,
         best_regards: Bonne journée,
@@ -366,3 +369,22 @@ fr:
       no_establishment: "Aucun établissement n’est associé à ce dossier"
       identity_saved: "Identité enregistrée"
       no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
+  new_administrateur:
+    jeton_particulier:
+      show:
+        configure_token: "Configurer le jeton API Particulier"
+        api_particulier_description_html: "%{app_name} utilise <a href=\"https://api.gouv.fr/les-api/api-particulier\">API Particulier</a> qui permet de récupérer les données familiales (CAF).<br />Renseignez ici le <a href=\"https://api.gouv.fr/les-api/api-particulier/demande-acces\">jeton API Particulier</a> propre à votre démarche."
+        token_description: "Il doit contenir au minimum 15 caractères."
+      update:
+        token_ok: "Le jeton a bien été mis à jour"
+        no_scopes_token: "Mise à jour impossible : le jeton n'a pas acces aux données.<br /><br />Vérifier le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
+        not_found_token: "Mise à jour impossible : le jeton n'a pas été trouvé ou n'est pas actif<br /><br />Vérifier le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
+        network_error:  "Mise à jour impossible : une erreur réseau est survenue"
+    procedures:
+      show:
+        ready: "Validé"
+        needs_configuration: "À configurer"
+        configure_api_particulier_token: "Configurer le jeton API particulier"
+      api_particulier:
+        already_configured: "Déjà rempli"
+        needs_configuration: "À remplir"
