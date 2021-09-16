@@ -17,13 +17,11 @@
         &nbsp;?
       .email-suggestion-answer
         = button_tag type: 'button', class: 'button small', onclick: "DS.acceptEmailSuggestion()" do
-          = t('simple_form.yes')
+          = t('utils.yes')
         = button_tag type: 'button', class: 'button small', onclick: "DS.discardEmailSuggestionBox()" do
-          = t('simple_form.no')
+          = t('utils.no')
 
     = f.label :password, t('views.registrations.new.password_label', min_length: PASSWORD_MIN_LENGTH), id: :user_password_label
     = f.password_field :password, autocomplete: 'new-password', value: @user.password, placeholder: t('views.registrations.new.password_placeholder', min_length: PASSWORD_MIN_LENGTH), 'aria-describedby': :user_password_label
 
     = f.submit t('views.shared.account.create'), class: "button large primary expand"
-
-
