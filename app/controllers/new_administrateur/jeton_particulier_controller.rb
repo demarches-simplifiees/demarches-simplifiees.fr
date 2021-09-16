@@ -11,15 +11,19 @@ module NewAdministrateur
     def update
       @procedure.api_particulier_token = token
 
-      if @procedure.valid? && fetch_scopes(token).any?
+      if @procedure.invalid?
+        flash.now.alert = @procedure.errors.full_messages
+        render :show
+      elsif scopes.empty?
+        flash.now.alert = t('.no_scopes_token')
+        render :show
+      else
         @procedure.save
 
         redirect_to admin_procedure_api_particulier_jeton_path(procedure_id: @procedure.id),
           notice: t('.token_ok')
-      else
-        flash.now.alert = t('.invalid_token')
-        render :show
       end
+
     rescue APIParticulier::Error::Unauthorized
       flash.now.alert = t('.not_found_token')
       render :show
@@ -30,7 +34,7 @@ module NewAdministrateur
 
     private
 
-    def fetch_scopes(token)
+    def scopes
       @scopes ||= APIParticulier::API.new(token).scopes
     end
 
