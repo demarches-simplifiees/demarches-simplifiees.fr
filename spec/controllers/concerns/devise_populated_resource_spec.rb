@@ -17,12 +17,27 @@ describe DevisePopulatedResource, type: :controller do
   end
 
   context 'when initiating a password reset' do
-    subject { get :edit, params: { reset_password_token: @token } }
+    subject { get :edit, params: { reset_password_token: token } }
 
-    it 'returns the fully populated resource' do
-      subject
-      expect(controller.populated_resource.id).to eq(user.id)
-      expect(controller.populated_resource.email).to eq(user.email)
+    context 'with a valid token' do
+      let(:token) { @token }
+
+      it 'returns the fully populated resource' do
+        subject
+        expect(controller.populated_resource.id).to eq(user.id)
+        expect(controller.populated_resource.email).to eq(user.email)
+      end
+    end
+
+    context 'with an expired token' do
+      let(:token) { 'invalid-token' }
+
+      it 'returns a new blank resource' do
+        subject
+        expect(controller.populated_resource).to be_present
+        expect(controller.populated_resource.new_record?).to be(true)
+        expect(controller.populated_resource.email).to be_blank
+      end
     end
   end
 
