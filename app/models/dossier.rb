@@ -175,8 +175,16 @@ class Dossier < ApplicationRecord
         :user,
         :individual,
         :followers_instructeurs,
-        :avis,
         :traitements,
+        :groupe_instructeur,
+        procedure: [
+          :groupe_instructeurs,
+          :draft_types_de_champ,
+          :draft_types_de_champ_private,
+          :published_types_de_champ,
+          :published_types_de_champ_private
+        ],
+        avis: [:claimant, :expert],
         etablissement: :champ,
         champs: {
           type_de_champ: [],
@@ -195,8 +203,7 @@ class Dossier < ApplicationRecord
             type_de_champ: [],
             piece_justificative_file_attachment: :blob
           ]
-        },
-        procedure: :groupe_instructeurs
+        }
       ).order(en_construction_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
