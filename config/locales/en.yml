@@ -64,7 +64,6 @@ en:
         start_procedure: Start the procedure
         existing_dossiers: You already have files for this procedure
         show_dossiers: View my current files
-        start_new_dossier: Start a new file
         already_draft: "You already started to fill a file"
         already_draft_detail_html: "You started to fill a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
         already_not_draft: "You already submitted a file"
@@ -203,7 +202,7 @@ en:
           connection: Sign in
           are_you_new: First time on %{app_name}?
           find_procedure: Find your procedure
-      password:
+      passwords:
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
@@ -213,9 +212,9 @@ en:
           check_spams: Check your junk or spam email.
           check_account: Have you created a %{application_name} account with the adress %{email}? You will not receive any message if no account is linked to your email adress.
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
-        shared:
-          email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
-          contact_us_if_any_trouble_html: You can contact us <a href=\"%{href}\">through this form</a> if a problem still exists.
+      shared:
+        email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
+        contact_us_if_any_trouble_html: You can contact us <a href=\"%{href}\">through this form</a> if a problem still exists.
   modal:
     publish:
       title:
@@ -352,13 +351,20 @@ en:
   users:
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
-      message_send: "Your message has been sent to the instructor in charge of your file."
       no_access: "You do not have access to this file"
       no_longer_editable: "Your file can no longer be edited"
-      undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
-      deleted_dossier: "Your file has been successfully deleted"
-      archived_dossier: "Your file will be archived for an additional month"
-      draft_saved: "Your draft has been saved."
-      no_establishment: "There is no establishment tied to this file"
-      identity_saved: "Identity data is registred"
-      no_longer_available: "The certificate is no longer available on this file."
+      create_commentaire:
+        message_send: "Your message has been sent to the instructor in charge of your file."
+      ask_deletion:
+        undergoingreview: "Your file is undergoing review. It is no longer possible to delete your file. To cancel the undergoingreview contact the adminitration via the mailbox."
+        deleted_dossier: "Your file has been successfully deleted"
+      extend_conservation:
+        archived_dossier: "Your file will be archived for an additional month"
+      update_brouillon:
+        draft_saved: "Your draft has been saved."
+      etablissement:
+        no_establishment: "There is no establishment tied to this file"
+      update_identite:
+        identity_saved: "Identity data is registred"
+      attestation:
+        no_longer_available: "The certificate is no longer available on this file."
