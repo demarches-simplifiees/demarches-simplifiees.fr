@@ -3,7 +3,7 @@ fr:
     notify_new_answer:
       subject: Nouveau message pour votre dossier nº %{dossier_id} « %{libelle_demarche} »
       body_html: |
-        Vous avez reçu un <b>nouveau message</b> de la part du service en charge de votre dossier.
+        Vous avez reçu un <b>nouveau message</b> de la part du service en charge de votre dossier sur la démarche « %{libelle_demarche} ».
       link: |
         Pour consulter le message et y répondre, cliquez sur le bouton ci-dessous :
       body_draft_html: |
