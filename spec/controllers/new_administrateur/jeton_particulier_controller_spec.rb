@@ -44,6 +44,7 @@ describe NewAdministrateur::JetonParticulierController, type: :controller do
         it { expect(flash.alert).to be_nil }
         it { expect(flash.notice).to eq("Le jeton a bien été mis à jour") }
         it { expect(procedure.reload.api_particulier_token).to eql(token) }
+        it { expect(procedure.reload.api_particulier_scopes).to contain_exactly("dgfip_avis_imposition", "dgfip_adresse", "cnaf_allocataires", "cnaf_enfants", "cnaf_adresse", "cnaf_quotient_familial", "mesri_statut_etudiant") }
       end
 
       context "and the api response is a success but with an empty scopes" do
