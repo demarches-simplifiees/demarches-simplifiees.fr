@@ -33,18 +33,24 @@ en:
               <p><a href=%{link_lost_user}>%{link_lost_user}</a></p>"
       other:
         question: Other topic
-  supportadmin:
-    your_question: Your question
-    admin_intro_html: "<p>As an administration, you can contact us through this form. We'll answer you as quickly as possibly by e-mail or phone.</p>
-    <br>
-    <p><strong>Caution, this form is dedicated to public bodies only.</strong>
-    It does not concern individuals, companies nor associations (except those recognised of public utility). If you belong to one of these categories, contact us <a href=%{contact_path}>here</a>.</p>"
-    contact_team: Contact our team
-    pro_phone_number: Professional phone number (direct line)
-    pro_mail: Professional email address
-    admin demande rdv: I request an appointment for an online presentation of %{app_name}
-    admin question: I have a question about %{app_name}
-    admin soucis: I am facing a technical issue on %{app_name}
-    admin suggestion produit: I have a suggestion for an evolution
-    admin demande compte: I want to open an admin account with an Orange, Wanadoo, etc. email
-    admin autre: Other topic
+    admin:
+      your_question: Your question
+      admin_intro_html: "<p>As an administration, you can contact us through this form. We'll answer you as quickly as possibly by e-mail or phone.</p>
+      <br>
+      <p><strong>Caution, this form is dedicated to public bodies only.</strong>
+      It does not concern individuals, companies nor associations (except those recognised of public utility). If you belong to one of these categories, contact us <a href=%{contact_path}>here</a>.</p>"
+      contact_team: Contact our team
+      pro_phone_number: Professional phone number (direct line)
+      pro_mail: Professional email address
+      admin question:
+        question: I have a question about %{app_name}
+      admin demande rdv:
+        question: I request an appointment for an online presentation of %{app_name}
+      admin soucis:
+        question: I am facing a technical issue on %{app_name}
+      admin suggestion produit:
+        question: I have a suggestion for an evolution
+      admin demande compte:
+        question: I want to open an admin account with an Orange, Wanadoo, etc. email
+      admin autre:
+        question: Other topic
