@@ -1,0 +1,26 @@
+@import "constants";
+
+#sources-particulier-form {
+  h2 {
+    margin-bottom: 0;
+  }
+
+  h3 {
+    margin-top: 2 * $default-padding;
+  }
+
+  .explication {
+    padding: $default-padding;
+
+    ul {
+      list-style-type: circle;
+      list-style-position: inside;
+      padding-left: $default-padding;
+      margin-bottom: $default-padding;
+    }
+  }
+
+  .form input[type="checkbox"] {
+    margin-bottom: 0;
+  }
+}

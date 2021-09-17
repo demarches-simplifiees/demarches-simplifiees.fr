@@ -401,6 +401,7 @@ Rails.application.routes.draw do
 
       resource 'api_particulier', only: [] do
         resource 'jeton', only: [:show, :update], controller: 'jeton_particulier'
+        resource 'sources', only: [:show, :update], controller: 'sources_particulier'
       end
 
       put 'clone'
