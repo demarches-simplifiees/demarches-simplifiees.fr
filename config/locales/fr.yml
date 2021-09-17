@@ -182,7 +182,6 @@ fr:
           status: "Statut"
           updated: "Mis à jour"
           actions: "Actions"
-          accessibility_question: "Que pensez-vous de la facilité d’utilisation de ce service ?"
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier"
