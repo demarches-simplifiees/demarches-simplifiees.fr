@@ -186,7 +186,6 @@ en:
           status: "Status"
           updated: "Updated"
           actions: "Actions"
-          accessibility_question: "What do you think about the accessibility of this service?"
         dossier_action:
           edit_dossier: "Edit the file"
           start_other_dossier: "Start an other file"
