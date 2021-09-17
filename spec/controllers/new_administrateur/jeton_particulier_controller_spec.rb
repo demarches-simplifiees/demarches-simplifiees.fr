@@ -40,12 +40,14 @@ describe NewAdministrateur::JetonParticulierController, type: :controller do
 
       context "and the api response is a success" do
         let(:cassette) { "api_particulier/success/introspect" }
+        let(:procedure) { create(:procedure, administrateur: admin, api_particulier_sources: { cnaf: { allocataires: ['noms_prenoms'] } }) }
 
         it 'saves the jeton' do
           expect(flash.alert).to be_nil
           expect(flash.notice).to eq("Le jeton a bien été mis à jour")
           expect(procedure.reload.api_particulier_token).to eql(token)
           expect(procedure.reload.api_particulier_scopes).to contain_exactly("dgfip_avis_imposition", "dgfip_adresse", "cnaf_allocataires", "cnaf_enfants", "cnaf_adresse", "cnaf_quotient_familial", "mesri_statut_etudiant")
+          expect(procedure.reload.api_particulier_sources).to be_empty
         end
       end
 
