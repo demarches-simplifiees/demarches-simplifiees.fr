@@ -6,8 +6,8 @@ feature 'The routing', js: true do
   let(:litteraire_user) { create(:user, password: password) }
 
   before do
+    procedure.update(routing_enabled: true)
     procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
-    Flipper.enable_actor(:administrateur_routage, administrateur.user)
   end
 
   scenario 'works' do
@@ -32,14 +32,14 @@ feature 'The routing', js: true do
     # add victor to littéraire groupe
     find("input[aria-label='email instructeur'").send_keys('victor@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
+    expect(page).to have_text("L’instructeur victor@inst.com a été affecté au groupe « littéraire »")
 
     victor = User.find_by(email: 'victor@inst.com').instructeur
 
     # add superwoman to littéraire groupe
     find("input[aria-label='email instructeur'").send_keys('superwoman@inst.com', :enter)
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
+    expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté au groupe « littéraire »")
 
     superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
 
