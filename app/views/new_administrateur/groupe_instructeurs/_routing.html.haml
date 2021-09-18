@@ -1,0 +1,5 @@
+.card
+  .card-title Routage
+  %p.notice= t('.notice_html')
+
+  = link_to 'Activer le routage', update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure), class: 'button primary', method: 'patch'
