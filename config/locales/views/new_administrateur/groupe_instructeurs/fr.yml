@@ -13,10 +13,6 @@ fr:
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
-      show:
-        assigned_instructeur:
-          one: "%{count} instructeur est affecté"
-          other: "%{count} instructeurs sont affectés"
       add_instructeur:
         wrong_address:
           one: "%{value} n’est pas une adresse email valide"
@@ -25,6 +21,14 @@ fr:
           one: "L’instructeur %{value} a été affecté au groupe « %{groupe} »."
           other: "Les instructeurs %{value} ont été affectés au groupe « %{groupe} »."
       reaffecter_dossiers:
+        existing_groupe:
+          one: "%{count} groupe existe"
+          other: "%{count} groupes existent"
+      instructeurs:
+        assigned_instructeur:
+          one: "%{count} instructeur est affecté"
+          other: "%{count} instructeurs sont affectés"
+      edit:
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
