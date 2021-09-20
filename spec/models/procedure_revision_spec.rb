@@ -174,7 +174,8 @@ describe ProcedureRevision do
           {
             op: :add,
             label: "Un champ text",
-            private: false
+            private: false,
+            stable_id: new_type_de_champ.stable_id
           }
         ])
 
@@ -186,12 +187,14 @@ describe ProcedureRevision do
             label: type_de_champ_first.libelle,
             private: false,
             from: type_de_champ_first.libelle,
-            to: "modifier le libelle"
+            to: "modifier le libelle",
+            stable_id: type_de_champ_first.stable_id
           },
           {
             op: :add,
             label: "Un champ text",
-            private: false
+            private: false,
+            stable_id: new_type_de_champ.stable_id
           }
         ])
         expect(new_revision.types_de_champ.first.revision).to eq(new_revision)
@@ -204,19 +207,22 @@ describe ProcedureRevision do
             label: type_de_champ_first.libelle,
             private: false,
             from: type_de_champ_first.libelle,
-            to: "modifier le libelle"
+            to: "modifier le libelle",
+            stable_id: type_de_champ_first.stable_id
           },
           {
             op: :add,
             label: "Un champ text",
-            private: false
+            private: false,
+            stable_id: new_type_de_champ.stable_id
           },
           {
             op: :move,
             label: type_de_champ_second.libelle,
             private: false,
             from: 1,
-            to: 2
+            to: 2,
+            stable_id: type_de_champ_second.stable_id
           }
         ])
         expect(new_revision.types_de_champ.last.revision).to eq(revision)
@@ -226,12 +232,14 @@ describe ProcedureRevision do
           {
             op: :remove,
             label: type_de_champ_first.libelle,
-            private: false
+            private: false,
+            stable_id: type_de_champ_first.stable_id
           },
           {
             op: :add,
             label: "Un champ text",
-            private: false
+            private: false,
+            stable_id: new_type_de_champ.stable_id
           }
         ])
 
@@ -241,12 +249,14 @@ describe ProcedureRevision do
           {
             op: :remove,
             label: type_de_champ_first.libelle,
-            private: false
+            private: false,
+            stable_id: type_de_champ_first.stable_id
           },
           {
             op: :add,
             label: "Un champ text",
-            private: false
+            private: false,
+            stable_id: new_type_de_champ.stable_id
           },
           {
             op: :update,
@@ -254,7 +264,8 @@ describe ProcedureRevision do
             label: type_de_champ_second.libelle,
             private: false,
             from: type_de_champ_second.description,
-            to: "une description"
+            to: "une description",
+            stable_id: type_de_champ_second.stable_id
           },
           {
             op: :update,
@@ -262,7 +273,8 @@ describe ProcedureRevision do
             label: type_de_champ_second.libelle,
             private: false,
             from: false,
-            to: true
+            to: true,
+            stable_id: type_de_champ_second.stable_id
           }
         ])
 
@@ -272,12 +284,14 @@ describe ProcedureRevision do
           {
             op: :remove,
             label: type_de_champ_first.libelle,
-            private: false
+            private: false,
+            stable_id: type_de_champ_first.stable_id
           },
           {
             op: :add,
             label: "Un champ text",
-            private: false
+            private: false,
+            stable_id: new_type_de_champ.stable_id
           },
           {
             op: :update,
@@ -285,7 +299,8 @@ describe ProcedureRevision do
             label: type_de_champ_second.libelle,
             private: false,
             from: type_de_champ_second.description,
-            to: "une description"
+            to: "une description",
+            stable_id: type_de_champ_second.stable_id
           },
           {
             op: :update,
@@ -293,7 +308,8 @@ describe ProcedureRevision do
             label: type_de_champ_second.libelle,
             private: false,
             from: false,
-            to: true
+            to: true,
+            stable_id: type_de_champ_second.stable_id
           },
           {
             op: :update,
@@ -301,7 +317,8 @@ describe ProcedureRevision do
             label: "sub type de champ",
             private: false,
             from: "text",
-            to: "drop_down_list"
+            to: "drop_down_list",
+            stable_id: new_revision.types_de_champ.last.types_de_champ.first.stable_id
           },
           {
             op: :update,
@@ -309,7 +326,8 @@ describe ProcedureRevision do
             label: "sub type de champ",
             private: false,
             from: [],
-            to: ["one", "two"]
+            to: ["one", "two"],
+            stable_id: new_revision.types_de_champ.last.types_de_champ.first.stable_id
           }
         ])
 
@@ -319,12 +337,14 @@ describe ProcedureRevision do
           {
             op: :remove,
             label: type_de_champ_first.libelle,
-            private: false
+            private: false,
+            stable_id: type_de_champ_first.stable_id
           },
           {
             op: :add,
             label: "Un champ text",
-            private: false
+            private: false,
+            stable_id: new_type_de_champ.stable_id
           },
           {
             op: :update,
@@ -332,7 +352,8 @@ describe ProcedureRevision do
             label: type_de_champ_second.libelle,
             private: false,
             from: type_de_champ_second.description,
-            to: "une description"
+            to: "une description",
+            stable_id: type_de_champ_second.stable_id
           },
           {
             op: :update,
@@ -340,7 +361,8 @@ describe ProcedureRevision do
             label: type_de_champ_second.libelle,
             private: false,
             from: false,
-            to: true
+            to: true,
+            stable_id: type_de_champ_second.stable_id
           },
           {
             op: :update,
@@ -348,7 +370,8 @@ describe ProcedureRevision do
             label: "sub type de champ",
             private: false,
             from: "text",
-            to: "carte"
+            to: "carte",
+            stable_id: new_revision.types_de_champ.last.types_de_champ.first.stable_id
           },
           {
             op: :update,
@@ -356,7 +379,8 @@ describe ProcedureRevision do
             label: "sub type de champ",
             private: false,
             from: [],
-            to: [:cadastres, :znieff]
+            to: [:cadastres, :znieff],
+            stable_id: new_revision.types_de_champ.last.types_de_champ.first.stable_id
           }
         ])
       end
