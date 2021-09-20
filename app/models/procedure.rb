@@ -52,6 +52,7 @@
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
+  include FileValidationConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -242,9 +243,6 @@ class Procedure < ApplicationRecord
   validates_with MonAvisEmbedValidator
 
   FILE_MAX_SIZE = 20.megabytes
-  file_size_validation = Proc.new do
-    { less_than: FILE_MAX_SIZE, message: I18n.t('errors.messages.file_size_out_of_range', file_size_limit: ActiveSupport::NumberHelper.number_to_human_size(FILE_MAX_SIZE)) }
-  end
   validates :notice, content_type: [
     "application/msword",
     "application/pdf",
@@ -257,7 +255,7 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: file_size_validation.call, if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
+  ], size: file_size_validation(FILE_MAX_SIZE), if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
 
   validates :deliberation, content_type: [
     "application/msword",
@@ -268,15 +266,12 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: file_size_validation.call, if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
+  ], size: file_size_validation(FILE_MAX_SIZE), if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
 
   LOGO_MAX_SIZE = 5.megabytes
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'],
-    size: {
-      less_than: LOGO_MAX_SIZE,
-      message: I18n.t('errors.messages.file_size_out_of_range',
-      file_size_limit: ActiveSupport::NumberHelper.number_to_human_size(LOGO_MAX_SIZE))
-    }, if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
+    size: file_size_validation(LOGO_MAX_SIZE),
+    if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true

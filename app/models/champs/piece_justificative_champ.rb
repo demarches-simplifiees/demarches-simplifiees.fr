@@ -18,14 +18,11 @@
 #  type_de_champ_id               :integer
 #
 class Champs::PieceJustificativeChamp < Champ
+  include FileValidationConcern
   FILE_MAX_SIZE = 200.megabytes
 
   validates :piece_justificative_file,
-    size: {
-      less_than: FILE_MAX_SIZE,
-      message: I18n.t('errors.messages.file_size_out_of_range',
-      file_size_limit: ActiveSupport::NumberHelper.number_to_human_size(FILE_MAX_SIZE))
-    },
+    size: file_size_validation(FILE_MAX_SIZE),
     if: -> { !type_de_champ.skip_pj_validation }
 
   validates :piece_justificative_file,
