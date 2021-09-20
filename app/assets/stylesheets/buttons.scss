@@ -160,7 +160,7 @@
     &.icon-only {
       &::after {
         margin-left: 2px;
-        color: $blue;
+        color: $blue-france-500;
       }
     }
   }
@@ -223,7 +223,7 @@
       cursor: default;
 
       h4 {
-        color: $blue;
+        color: $blue-france-500;
       }
     }
 
@@ -309,5 +309,5 @@
 }
 
 .link {
-  color: $blue;
+  color: $blue-france-500;
 }
