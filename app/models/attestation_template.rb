@@ -14,6 +14,7 @@
 class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
+  include FileValidationConcern
 
   belongs_to :procedure, optional: false
 
@@ -23,11 +24,8 @@ class AttestationTemplate < ApplicationRecord
   validates :footer, length: { maximum: 190 }
 
   FILE_MAX_SIZE = 1.megabytes
-  file_size_validation = Proc.new do
-    { less_than: FILE_MAX_SIZE, message: I18n.t('errors.messages.file_size_out_of_range', file_size_limit: ActiveSupport::NumberHelper.number_to_human_size(FILE_MAX_SIZE)) }
-  end
-  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: file_size_validation.call
-  validates :signature, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: file_size_validation.call
+  validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: file_size_validation(FILE_MAX_SIZE)
+  validates :signature, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: file_size_validation(FILE_MAX_SIZE)
 
   DOSSIER_STATE = Dossier.states.fetch(:accepte)
 

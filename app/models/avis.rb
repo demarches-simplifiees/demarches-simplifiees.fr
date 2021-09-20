@@ -17,6 +17,7 @@
 #
 class Avis < ApplicationRecord
   include EmailSanitizableConcern
+  include FileValidationConcern
 
   belongs_to :dossier, inverse_of: :avis, touch: true, optional: false
   belongs_to :experts_procedure, optional: false
@@ -28,21 +29,18 @@ class Avis < ApplicationRecord
   has_one :procedure, through: :experts_procedure
 
   FILE_MAX_SIZE = 20.megabytes
-  file_size_validation = Proc.new do
-    { less_than: FILE_MAX_SIZE, message: I18n.t('errors.messages.file_size_out_of_range', file_size_limit: ActiveSupport::NumberHelper.number_to_human_size(FILE_MAX_SIZE)) }
-  end
   validates :piece_justificative_file,
     content_type: AUTHORIZED_CONTENT_TYPES,
-    size: file_size_validation.call
+    size: file_size_validation(FILE_MAX_SIZE)
 
   validates :introduction_file,
     content_type: AUTHORIZED_CONTENT_TYPES,
-    size: file_size_validation.call
+    size: file_size_validation(FILE_MAX_SIZE)
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
   validates :claimant, presence: true
-  validates :piece_justificative_file, size: file_size_validation.call
-  validates :introduction_file, size: file_size_validation.call
+  validates :piece_justificative_file, size: file_size_validation(FILE_MAX_SIZE)
+  validates :introduction_file, size: file_size_validation(FILE_MAX_SIZE)
   before_validation -> { sanitize_email(:email) }
 
   default_scope { joins(:dossier) }

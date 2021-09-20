@@ -12,6 +12,8 @@
 #  instructeur_id :bigint
 #
 class Commentaire < ApplicationRecord
+  include FileValidationConcern
+
   self.ignored_columns = [:user_id]
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
 
@@ -27,11 +29,7 @@ class Commentaire < ApplicationRecord
   FILE_MAX_SIZE = 20.megabytes
   validates :piece_jointe,
     content_type: AUTHORIZED_CONTENT_TYPES,
-    size: {
-      less_than: FILE_MAX_SIZE,
-      message: I18n.t('errors.messages.file_size_out_of_range',
-      file_size_limit: ActiveSupport::NumberHelper.number_to_human_size(FILE_MAX_SIZE))
-    }
+    size: file_size_validation(FILE_MAX_SIZE)
 
   default_scope { order(created_at: :asc) }
   scope :updated_since?, -> (date) { where('commentaires.updated_at > ?', date) }
