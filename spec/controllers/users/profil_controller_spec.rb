@@ -5,6 +5,18 @@ describe Users::ProfilController, type: :controller do
 
   before { sign_in(user) }
 
+  describe 'GET #show' do
+    let(:dossiers) { Array.new(3) { create(:dossier, user: user) } }
+    let(:next_owner) { 'loulou@lou.com' }
+    let!(:transfer) { DossierTransfer.initiate(next_owner, dossiers) }
+
+    render_views
+
+    before { post :show }
+
+    it { expect(response.body).to include(I18n.t('users.profil.show.one_waiting_transfer', count: dossiers.count, email: next_owner)) }
+  end
+
   describe 'POST #renew_api_token' do
     let(:administrateur) { create(:administrateur) }
 

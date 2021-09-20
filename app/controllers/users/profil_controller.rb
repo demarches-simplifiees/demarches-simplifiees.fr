@@ -5,6 +5,7 @@ module Users
       if: -> { instructeur_signed_in? }
 
     def show
+      @waiting_transfers = current_user.dossiers.joins(:transfer).group('dossier_transfers.email').count.to_a
     end
 
     def renew_api_token

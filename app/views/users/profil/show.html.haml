@@ -31,6 +31,14 @@
       = email_field_tag :next_owner, nil, required: true
       = submit_tag "Transférer tous mes dossiers", class: 'button primary'
 
+    - if @waiting_transfers.any?
+      .card.warning
+        .card-title= t('.waiting_transfers')
+        %ul
+          - @waiting_transfers.each do |email, nb_dossier|
+            %li= t('.one_waiting_transfer', email: email, count: nb_dossier)
+
+
   - if current_administrateur.present?
     .card
       .card-title Jeton d’identification de l’API (token)
