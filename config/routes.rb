@@ -276,6 +276,7 @@ Rails.application.routes.draw do
     # allow refresh 'renew api token' page
     get 'renew-api-token' => redirect('/profil')
     patch 'update_email' => 'profil#update_email'
+    post 'transfer_all_dossiers' => 'profil#transfer_all_dossiers'
   end
 
   #

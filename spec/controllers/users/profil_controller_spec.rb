@@ -5,6 +5,32 @@ describe Users::ProfilController, type: :controller do
 
   before { sign_in(user) }
 
+  describe 'GET #show' do
+    render_views
+
+    before { post :show }
+
+    context 'when the current user is not an instructeur' do
+      it { expect(response.body).to include(I18n.t('users.profil.show.transfer_title')) }
+
+      context 'when an existing transfer exists' do
+        let(:dossiers) { Array.new(3) { create(:dossier, user: user) } }
+        let(:next_owner) { 'loulou@lou.com' }
+        let!(:transfer) { DossierTransfer.initiate(next_owner, dossiers) }
+
+        before { post :show }
+
+        it { expect(response.body).to include(I18n.t('users.profil.show.one_waiting_transfer', count: dossiers.count, email: next_owner)) }
+      end
+    end
+
+    context 'when the current user is an instructeur' do
+      let(:user) { create(:instructeur).user }
+
+      it { expect(response.body).not_to include(I18n.t('users.profil.show.transfer_title')) }
+    end
+  end
+
   describe 'POST #renew_api_token' do
     let(:administrateur) { create(:administrateur) }
 
@@ -70,6 +96,22 @@ describe Users::ProfilController, type: :controller do
 
       it { expect(user.unconfirmed_email).to be_nil }
       it { expect(response).to redirect_to(profil_path) }
+    end
+  end
+
+  context 'POST #transfer_all_dossiers' do
+    let!(:dossiers) { Array.new(3) { create(:dossier, user: user) } }
+    let(:next_owner) { 'loulou@lou.com' }
+    let(:created_transfer) { DossierTransfer.first }
+
+    before do
+      post :transfer_all_dossiers, params: { next_owner: next_owner }
+    end
+
+    it "transfer all dossiers" do
+      expect(created_transfer.email).to eq(next_owner)
+      expect(created_transfer.dossiers).to eq(dossiers)
+      expect(flash.notice).to eq("Le transfert de 3 dossiers à #{next_owner} est en cours")
     end
   end
 end
