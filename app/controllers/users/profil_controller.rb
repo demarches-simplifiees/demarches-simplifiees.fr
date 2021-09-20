@@ -5,6 +5,7 @@ module Users
       if: -> { instructeur_signed_in? }
 
     def show
+      @waiting_transfers = current_user.dossiers.joins(:transfer).group('dossier_transfers.email').count.to_a
     end
 
     def renew_api_token
@@ -27,6 +28,12 @@ module Users
       redirect_to profil_path
     end
 
+    def transfer_all_dossiers
+      DossierTransfer.initiate(next_owner_email, current_user.dossiers)
+      flash.notice = t('.new_transfer', count: current_user.dossiers.count, email: next_owner_email)
+      redirect_to profil_path
+    end
+
     private
 
     def update_email_params
@@ -39,6 +46,10 @@ module Users
 
     def redirect_if_instructeur
       redirect_to profil_path
+    end
+
+    def next_owner_email
+      params[:next_owner]
     end
   end
 end
