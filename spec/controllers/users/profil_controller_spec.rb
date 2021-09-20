@@ -72,4 +72,20 @@ describe Users::ProfilController, type: :controller do
       it { expect(response).to redirect_to(profil_path) }
     end
   end
+
+  context 'POST #transfer_all_dossiers' do
+    let!(:dossiers) { Array.new(3) { create(:dossier, user: user) } }
+    let(:next_owner) { 'loulou@lou.com' }
+    let(:created_transfer) { DossierTransfer.first }
+
+    before do
+      post :transfer_all_dossiers, params: { next_owner: next_owner }
+    end
+
+    it "transfer all dossiers" do
+      expect(created_transfer.email).to eq(next_owner)
+      expect(created_transfer.dossiers).to eq(dossiers)
+      expect(flash.notice).to eq("Le transfert de 3 dossiers à #{next_owner} est en cours")
+    end
+  end
 end
