@@ -29,7 +29,7 @@
 
     = form_tag transfer_all_dossiers_path, class: 'form'  do
       = email_field_tag :next_owner, nil, required: true
-      = submit_tag "Transférer tous mes dossiers", class: 'button primary'
+      = submit_tag "Transférer tous mes dossiers", class: 'button primary', data: { confirm: t('.transfer_confirmation') }
 
     - if @waiting_transfers.any?
       .card.warning
