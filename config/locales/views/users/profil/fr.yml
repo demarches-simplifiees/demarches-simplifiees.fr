@@ -9,6 +9,7 @@ fr:
         one_waiting_transfer:
           one: "Le nouveau propriétaire %{email} doit confirmer le transfert d'un dossier en suivant les instructions reçues dans son mail."
           other: "Le nouveau propriétaire %{email} doit confirmer le transfert de vos %{count} dossiers en suivant les instructions reçues dans son mail."
+        transfer_confirmation: "Confirmez-vous le transfert ?"
       transfer_all_dossiers:
         new_transfer: 
           one: "Le transfert d'un dossier à %{email} est en cours"
