@@ -32,6 +32,8 @@
 en:
   help: 'Help'
   utils:
+    'yes': Yes
+    'no': No
     deconnexion: "Log out"
     pj: "Attachments"
     asterisk_html: Fields marked by an asterisk ( <span class = mandatory>*</span> ) are mandatory.
@@ -184,7 +186,6 @@ en:
           status: "Status"
           updated: "Updated"
           actions: "Actions"
-          accessibility_question: "What do you think about the accessibility of this service?"
         dossier_action:
           edit_dossier: "Edit the file"
           start_other_dossier: "Start an other file"

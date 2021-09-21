@@ -170,6 +170,8 @@ class DossierMailer < ApplicationMailer
 
   # This is an override of `default_i18n_subject` method
   # https://api.rubyonrails.org/v5.0.0/classes/ActionMailer/Base.html#method-i-default_i18n_subject
+  #
+  # i18n-tasks-use t("dossier_mailer.#{action}.subject")
   def default_i18n_subject(interpolations = {})
     if interpolations[:state]
       mailer_scope = self.class.mailer_name.tr('/', '.')
