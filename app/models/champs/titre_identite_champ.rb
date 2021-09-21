@@ -18,7 +18,8 @@
 #  type_de_champ_id               :integer
 #
 class Champs::TitreIdentiteChamp < Champ
-  MAX_SIZE = 20.megabytes
+  include FileValidationConcern
+  FILE_MAX_SIZE = 20.megabytes
 
   ACCEPTED_FORMATS = [
     "image/png",
@@ -30,7 +31,7 @@ class Champs::TitreIdentiteChamp < Champ
   #
   validates :piece_justificative_file,
     content_type: ACCEPTED_FORMATS,
-    size: { less_than: MAX_SIZE }
+    size: file_size_validation(FILE_MAX_SIZE)
 
   def main_value_name
     :piece_justificative_file
