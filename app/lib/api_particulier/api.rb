@@ -10,7 +10,7 @@ class APIParticulier::API
   end
 
   def scopes
-    get(INTROSPECT_RESOURCE_NAME)[:scopes]
+    get(INTROSPECT_RESOURCE_NAME)['scopes']
   end
 
   private
@@ -24,7 +24,7 @@ class APIParticulier::API
       timeout: TIMEOUT)
 
     if response.success?
-      JSON.parse(response.body, symbolize_names: true)
+      JSON.parse(response.body)
     elsif response.code == 401
       raise Unauthorized.new(response)
     else
