@@ -1,0 +1,24 @@
+- if champ.blank?
+  %p= t('.not_filled')
+- elsif champ.data.blank?
+  %p= t('.fetching_data',
+    numero_allocataire: champ.numero_allocataire,
+    code_postal: champ.code_postal)
+- else
+  - if profile == 'usager'
+    %p= t('.data_fetched',
+      sources: champ.procedure.api_particulier_sources['cnaf'].keys.map(&:to_s).join(', '),
+      numero_allocataire: champ.numero_allocataire,
+      code_postal: champ.code_postal)
+
+  - if profile == 'instructeur'
+    %p= t('.data_fetched_title')
+
+    - ['adresse', 'quotient_familial', 'enfants', 'allocataires'].each do |scope|
+      - if champ.data[scope].present?
+        - if scope == 'quotient_familial'
+          = render partial: 'shared/champs/cnaf/quotient_familial', locals: { quotient_familial: champ.data[scope] }
+        - if scope.in? ['enfants', 'allocataires']
+          = render partial: 'shared/champs/cnaf/personnes', locals: { scope: scope, personnes: champ.data[scope] }
+        - elsif scope == 'adresse'
+          = render partial: 'shared/champs/cnaf/adresse', locals: { adresse: champ.data[scope] }
