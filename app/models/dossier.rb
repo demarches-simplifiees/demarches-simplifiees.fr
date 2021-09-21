@@ -489,8 +489,7 @@ class Dossier < ApplicationRecord
     else
       avis
         .where(confidentiel: false)
-        .or(avis.where(claimant_id: instructeur.id, claimant_type: 'Instructeur'))
-        .or(avis.where(instructeur: instructeur))
+        .or(avis.where(claimant: instructeur))
         .order(created_at: :asc)
     end
   end
@@ -499,11 +498,9 @@ class Dossier < ApplicationRecord
     if expert.dossiers.include?(self)
       avis.order(created_at: :asc)
     else
-      instructeur = expert.user.instructeur.id if expert.user.instructeur
       avis
         .where(confidentiel: false)
-        .or(avis.where(claimant_id: expert.id, claimant_type: 'Expert', tmp_expert_migrated: true))
-        .or(avis.where(claimant_id: instructeur, claimant_type: 'Instructeur', tmp_expert_migrated: false))
+        .or(avis.where(claimant: expert))
         .order(created_at: :asc)
     end
   end
