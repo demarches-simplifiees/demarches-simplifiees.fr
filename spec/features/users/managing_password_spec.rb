@@ -98,4 +98,14 @@ feature 'Managing password:' do
       expect(page).to have_content('Votre mot de passe a bien été modifié.')
     end
   end
+
+  scenario 'the password reset token has expired' do
+    visit edit_user_password_path(reset_password_token: 'invalid-password-token')
+    expect(page).to have_content 'Changement de mot de passe'
+
+    fill_in 'user_password', with: 'SomePassword'
+    fill_in 'user_password_confirmation', with: 'SomePassword'
+    click_on 'Changer le mot de passe'
+    expect(page).to have_content('Votre lien de nouveau mot de passe a expiré')
+  end
 end
