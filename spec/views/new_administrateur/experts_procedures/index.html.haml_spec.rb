@@ -1,4 +1,4 @@
-describe 'new_administrateur/procedures/invited_expert_list.html.haml', type: :view do
+describe 'new_administrateur/experts_procedures/index.html.haml', type: :view do
   let!(:procedure) { create(:procedure, :published) }
 
   before do

@@ -11,7 +11,7 @@
     .card
       .card-title Affecter des experts à la démarche
       = form_for :experts_procedure,
-        url: admin_procedure_add_expert_to_procedure_path(@procedure),
+        url: admin_procedure_experts_path(@procedure),
         html: { class: 'form' } do |f|
 
         .instructeur-wrapper
@@ -46,7 +46,7 @@
             - if @procedure.feature_enabled?(:admin_affect_experts_to_avis)
               %td.text-center
                 = form_for expert_procedure,
-                  url: admin_procedure_update_allow_decision_access_path(expert_procedure: expert_procedure),
+                  url: admin_procedure_expert_path(id: expert_procedure),
                   remote: true,
                   method: :put,
                   authenticity_token: true,
@@ -57,13 +57,11 @@
                     %span.toggle-switch-label.on
                     %span.toggle-switch-label.off
             %td.actions= button_to 'retirer',
-              { action: "revoke_expert_from_procedure", :controller=>"new_administrateur/experts_procedures" },
-              { method: :put,
-                data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d'avis" },
-                params: { expert_procedure: { id: expert_procedure.id }},
-                class: 'button' }
+              admin_procedure_expert_path(id: expert_procedure, procedure: @procedure),
+              method: :delete,
+              data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d'avis" },
+              class: 'button'
   - else
     .blank-tab
       %h2.empty-text Aucun expert invité pour le moment.
       %p.empty-text-details Les instructeurs de cette démarche n'ont pas encore fait appel aux experts.
-

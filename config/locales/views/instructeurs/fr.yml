@@ -1,0 +1,10 @@
+fr:
+  instructeurs:
+    procedure:
+      export_stale:
+        short: Demander un export au format %{export_format}
+        csv_html: Demander un export au format .csv<br>(uniquement les dossiers, sans les champs répétables)
+        xlsx_html: Demander un export au format .xlsx
+        ods_html: Demander un export au format .ods
+      export_ready_html: Télécharger l’export au format %{export_format}<br>(généré il y a %{export_time})
+      export_pending_html: Un export au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})

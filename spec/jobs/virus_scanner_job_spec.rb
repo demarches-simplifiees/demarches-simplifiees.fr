@@ -18,6 +18,20 @@ describe VirusScannerJob, type: :job do
       blob.analyze
     end
 
+    context "when there is an integrity error" do
+      before do
+        blob.update_column('checksum', 'integrity error')
+
+        assert_performed_jobs(5) do
+          VirusScannerJob.perform_later(blob)
+        end
+      end
+
+      it do
+        expect(blob.reload.virus_scanner.corrupt?).to be_truthy
+      end
+    end
+
     context "when no virus is found" do
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(true)
