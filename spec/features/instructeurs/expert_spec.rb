@@ -1,4 +1,4 @@
-feature 'Inviting an expert:' do
+feature 'Inviting an expert:', js: true do
   include ActiveJob::TestHelper
   include ActionView::Helpers
 
@@ -21,7 +21,7 @@ feature 'Inviting an expert:' do
       click_on 'Avis externes'
       expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
 
-      fill_in 'avis_emails', with: "#{expert.email}, #{expert2.email}"
+      page.execute_script("document.querySelector('#avis_emails').value = '[\"#{expert.email}\",\"#{expert2.email}\"]'")
       fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
       check 'avis_invite_linked_dossiers'
       page.select 'confidentiel', from: 'avis_confidentiel'

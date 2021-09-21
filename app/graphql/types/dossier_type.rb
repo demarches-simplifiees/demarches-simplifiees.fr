@@ -2,7 +2,7 @@ module Types
   class DossierType < Types::BaseObject
     class DossierState < Types::BaseEnum
       Dossier.aasm.states.reject { |state| state.name == :brouillon }.each do |state|
-        value(state.name.to_s, state.display_name, value: state.name.to_s)
+        value(state.name.to_s, Dossier.human_attribute_name("state.#{state.name}"), value: state.name.to_s)
       end
     end
 
