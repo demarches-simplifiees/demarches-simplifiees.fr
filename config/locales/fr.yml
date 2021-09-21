@@ -22,6 +22,8 @@
 fr:
   help: 'Aide'
   utils:
+    'yes': Oui
+    'no': Non
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
     asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
@@ -180,7 +182,6 @@ fr:
           status: "Statut"
           updated: "Mis à jour"
           actions: "Actions"
-          accessibility_question: "Que pensez-vous de la facilité d’utilisation de ce service ?"
         dossier_action:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier"

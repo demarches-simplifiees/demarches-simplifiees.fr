@@ -3,10 +3,10 @@
 #contact-form
   .container
     %h1.new-h1
-      = t('contact_team', scope: [:supportadmin])
+      = t('.contact_team')
 
     .description
-      = t('admin_intro_html', scope: [:supportadmin], contact_path: contact_path)
+      = t('.admin_intro_html', contact_path: contact_path)
       %br
       %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
@@ -14,19 +14,19 @@
       - if !user_signed_in?
         .contact-champ
           = label_tag :email do
-            = t('pro_mail', scope: [:supportadmin])
+            = t('.pro_mail')
             %span.mandatory *
           = text_field_tag :email, params[:email], required: true
 
       .contact-champ
         = label_tag :type do
-          = t('your_question', scope: [:support, :question])
+          = t('.your_question')
           %span.mandatory *
         = select_tag :type, options_for_select(@options, params[:type])
 
       .contact-champ
         = label_tag :phone do
-          = t('pro_phone_number', scope: [:supportadmin])
+          = t('.pro_phone_number')
         = text_field_tag :phone
 
       .contact-champ
