@@ -11,7 +11,7 @@ Dotenv::Railtie.load
 module TPS
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 6.1
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -64,6 +64,12 @@ module TPS
     # As we have our own proxy stack before reaching the Rails app, we can
     # disable the check performed by Rails.
     config.action_dispatch.ip_spoofing_check = false
+
+    # Set the queue name for the mail delivery jobs to 'mailers'
+    config.action_mailer.deliver_later_queue_name = :mailers
+
+    # Set the queue name for the analysis jobs to 'active_storage_analysis'
+    config.active_storage.queues.analysis = :active_storage_analysis
 
     config.to_prepare do
       # Make main application helpers available in administrate

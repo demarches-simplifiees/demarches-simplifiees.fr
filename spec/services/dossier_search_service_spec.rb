@@ -23,15 +23,15 @@ describe DossierSearchService do
     let!(:dossier_0) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
 
     let!(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', siret: '41636169600051') }
-    let!(:dossier_1) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, user: create(:user, email: 'contact@test.com'), etablissement: etablissement_1) }
+    let!(:dossier_1) { create(:dossier, :en_construction, procedure: procedure_1, user: create(:user, email: 'contact@test.com'), etablissement: etablissement_1) }
 
     let!(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', siret: '41816602300012') }
-    let!(:dossier_2) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, user: create(:user, email: 'plop@gmail.com'), etablissement: etablissement_2) }
+    let!(:dossier_2) { create(:dossier, :en_construction, procedure: procedure_1, user: create(:user, email: 'plop@gmail.com'), etablissement: etablissement_2) }
 
     let!(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
-    let!(:dossier_3) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_2, user: create(:user, email: 'peace@clap.fr'), etablissement: etablissement_3) }
+    let!(:dossier_3) { create(:dossier, :en_construction, procedure: procedure_2, user: create(:user, email: 'peace@clap.fr'), etablissement: etablissement_3) }
 
-    let!(:dossier_archived) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, archived: true, user: create(:user, email: 'archived@clap.fr')) }
+    let!(:dossier_archived) { create(:dossier, :en_construction, procedure: procedure_1, archived: true, user: create(:user, email: 'archived@clap.fr')) }
 
     describe 'search is empty' do
       let(:terms) { '' }
