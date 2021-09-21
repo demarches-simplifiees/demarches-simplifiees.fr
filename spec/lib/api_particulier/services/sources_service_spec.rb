@@ -23,8 +23,8 @@ describe APIParticulier::Services::SourcesService do
       let(:cnaf_allocataires_and_enfants) do
         {
           'cnaf' => {
-            'allocataires' => ['noms_prenoms', 'date_de_naissance', 'sexe'],
-            'enfants' => ['noms_prenoms', 'date_de_naissance', 'sexe']
+            'allocataires' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
+            'enfants' => ['nomPrenom', 'dateDeNaissance', 'sexe']
           }
         }
       end
@@ -40,7 +40,7 @@ describe APIParticulier::Services::SourcesService do
     let(:requested_sources) do
       {
         'cnaf' => {
-          'allocataires' => ['noms_prenoms', 'forbidden_sources', { 'weird_object' => 1 }],
+          'allocataires' => ['nomPrenom', 'forbidden_sources', { 'weird_object' => 1 }],
           'forbidden_scope' => ['any_source'],
           'adresse' => { 'weird_object' => 1 }
         },
@@ -48,6 +48,6 @@ describe APIParticulier::Services::SourcesService do
       }
     end
 
-    it { is_expected.to eq({ 'cnaf' => { 'allocataires' => ['noms_prenoms'] } }) }
+    it { is_expected.to eq({ 'cnaf' => { 'allocataires' => ['nomPrenom'] } }) }
   end
 end
