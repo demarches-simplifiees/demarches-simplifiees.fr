@@ -28,3 +28,9 @@
         (virus détecté, merci d’envoyer un autre fichier)
       - else
         (virus détecté, le téléchargement de ce fichier est bloqué)
+    - elsif attachment.virus_scanner.corrupt?
+      - if user_can_upload
+        (le fichier est corrompu, merci d’envoyer un autre fichier)
+      - else
+        (le fichier est corrompu, le téléchargement est bloqué)
+
