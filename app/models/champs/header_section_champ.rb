@@ -22,6 +22,25 @@ class Champs::HeaderSectionChamp < Champ
     # The user cannot enter any information here so it doesn’t make much sense to search
   end
 
+  def level
+    level = type_de_champ.level.present? ? type_de_champ.level.to_i : 1
+    level = 1 if level < 1
+    level = 3 if level > 3
+    level
+  end
+
+  def libelle_with_section_index
+    if sections.none?(&:libelle_with_section_index?)
+      "#{section_index}. #{libelle}"
+    else
+      libelle
+    end
+  end
+
+  def libelle_with_section_index?
+    libelle =~ /^\d/
+  end
+
   def section_index
     siblings
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
