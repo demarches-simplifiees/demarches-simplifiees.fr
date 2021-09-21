@@ -34,7 +34,7 @@ features = [
   :instructeur_bypass_email_login_token,
   :make_experts_notifiable,
   :new_look_banner,
-  :procedure_routage_api,
+  :procedure_routage_api
 ]
 
 def database_exists?
