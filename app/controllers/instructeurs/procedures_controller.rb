@@ -169,6 +169,11 @@ module Instructeurs
 
       export = Export.find_or_create_export(export_format, groupe_instructeurs)
 
+      if export.ready? && export.old? && params[:force_export]
+        export.destroy
+        export = Export.find_or_create_export(export_format, groupe_instructeurs)
+      end
+
       if export.ready?
         respond_to do |format|
           format.js do
