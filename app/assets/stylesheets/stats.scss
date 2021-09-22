@@ -1,8 +1,6 @@
 @import "colors";
 $dark-grey: #333333;
 $light-grey: #999999;
-$blue: rgba(61, 149, 236, 1);
-$blue-hover: rgba(61, 149, 236, 0.8);
 
 $default-space: 15px;
 
@@ -87,11 +85,11 @@ $segmented-control-item-border-radius: 2 * $default-space;
 .segmented-control-item {
   display: inline-block;
   font-size: 15px;
-  border: 2px solid $blue-france-500;
+  border: 2px solid $blue-france-700;
   margin-right: -2px;
   padding-left: $segmented-control-item-horizontal-padding;
   padding-right: $segmented-control-item-horizontal-padding;
-  color: $blue-france-500;
+  color: $blue-france-700;
 
   &:first-of-type {
     border-radius: $segmented-control-item-border-radius 0px 0px $segmented-control-item-border-radius;
@@ -103,14 +101,14 @@ $segmented-control-item-border-radius: 2 * $default-space;
   }
 
   &:hover {
-    background-color: $blue-hover;
+    background-color: $blue-france-500;
     color: #FFFFFF;
     cursor: pointer;
   }
 }
 
 .segmented-control-item-active {
-  background-color: $blue-france-500;
+  background-color: $blue-france-700;
   color: #FFFFFF;
 }
 
