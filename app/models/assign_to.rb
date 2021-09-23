@@ -11,7 +11,6 @@
 #  updated_at                                  :datetime
 #  groupe_instructeur_id                       :bigint
 #  instructeur_id                              :integer
-#  procedure_id                                :integer
 #
 class AssignTo < ApplicationRecord
   self.ignored_columns = [:procedure_id]
