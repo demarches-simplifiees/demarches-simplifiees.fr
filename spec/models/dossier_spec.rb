@@ -1154,23 +1154,6 @@ describe Dossier do
     end
   end
 
-  describe '#for_procedure' do
-    let!(:procedure_1) { create(:procedure)  }
-    let!(:procedure_2) { create(:procedure)  }
-
-    let!(:dossier_1_1) { create(:dossier, procedure: procedure_1) }
-    let!(:dossier_1_2) { create(:dossier, procedure: procedure_1) }
-    let!(:dossier_2_1) { create(:dossier, procedure: procedure_2) }
-
-    before do
-      gi_1_2 = procedure_1.groupe_instructeurs.create(label: 2)
-      gi_1_2.dossiers << dossier_1_2
-    end
-
-    it { expect(Dossier.for_procedure(procedure_1)).to contain_exactly(dossier_1_1, dossier_1_2) }
-    it { expect(Dossier.for_procedure(procedure_2)).to contain_exactly(dossier_2_1) }
-  end
-
   describe '#notify_draft_not_submitted' do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
