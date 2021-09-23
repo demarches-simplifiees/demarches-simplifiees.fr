@@ -61,4 +61,11 @@ module ProcedureHelper
   def can_manage_groupe_instructeurs?(procedure)
     procedure.routee? && current_administrateur.present? && current_administrateur.owns?(procedure)
   end
+
+  def can_send_groupe_message?(procedure)
+    procedure.dossiers
+      .state_brouillon
+      .includes(:groupe_instructeur)
+      .exists?(groupe_instructeur: current_instructeur.groupe_instructeurs)
+  end
 end
