@@ -25,6 +25,7 @@
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  for_individual                            :boolean          default(FALSE)
 #  hidden_at                                 :datetime
+#  instructeurs_self_management_enabled      :boolean
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
 #  lien_demarche                             :string
