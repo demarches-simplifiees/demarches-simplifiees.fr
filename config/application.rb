@@ -77,8 +77,7 @@ module TPS
     end
 
     config.middleware.use Rack::Attack
-    config.middleware.use Flipper::Middleware::Memoizer,
-      preload: [:instructeur_bypass_email_login_token]
+    config.middleware.use Flipper::Middleware::Memoizer, preload_all: true
 
     config.ds_env = ENV.fetch('DS_ENV', Rails.env)
 
