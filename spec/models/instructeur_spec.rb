@@ -568,6 +568,152 @@ describe Instructeur, type: :model do
     end
   end
 
+  describe "#dossiers_count_summary" do
+    let(:instructeur_2) { create(:instructeur) }
+    let(:instructeur_3) { create(:instructeur) }
+    let(:procedure) { create(:procedure, instructeurs: [instructeur_2, instructeur_3]) }
+    let(:gi_1) { procedure.groupe_instructeurs.first }
+    let(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
+    let(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
+
+    subject do
+      instructeur_2.dossiers_count_summary([gi_1.id, gi_2.id])
+    end
+
+    context "when logged in, and belonging to gi_1, gi_2" do
+      before do
+        instructeur.groupe_instructeurs << gi_2
+      end
+
+      context "without any dossier" do
+        it { expect(subject['a_suivre']).to eq(0) }
+        it { expect(subject['suivis']).to eq(0) }
+        it { expect(subject['traites']).to eq(0) }
+        it { expect(subject['tous']).to eq(0) }
+        it { expect(subject['archives']).to eq(0) }
+      end
+
+      context 'with a new brouillon dossier' do
+        let!(:brouillon_dossier) { create(:dossier, procedure: procedure) }
+
+        it { expect(subject['a_suivre']).to eq(0) }
+        it { expect(subject['suivis']).to eq(0) }
+        it { expect(subject['traites']).to eq(0) }
+        it { expect(subject['tous']).to eq(0) }
+        it { expect(subject['archives']).to eq(0) }
+      end
+
+      context 'with a new dossier without follower' do
+        let!(:new_unfollow_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+        it { expect(subject['a_suivre']).to eq(1) }
+        it { expect(subject['suivis']).to eq(0) }
+        it { expect(subject['traites']).to eq(0) }
+        it { expect(subject['tous']).to eq(1) }
+        it { expect(subject['archives']).to eq(0) }
+
+        context 'and dossiers without follower on each of the others groups' do
+          let!(:new_unfollow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
+          let!(:new_unfollow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
+
+          before { subject }
+
+          it { expect(subject['a_suivre']).to eq(2) }
+          it { expect(subject['tous']).to eq(2) }
+        end
+      end
+
+      context 'with a new dossier with a follower' do
+        let!(:new_followed_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
+
+        before do
+          instructeur_2.followed_dossiers << new_followed_dossier
+        end
+
+        it { expect(subject['a_suivre']).to eq(0) }
+        it { expect(subject['suivis']).to eq(1) }
+        it { expect(subject['traites']).to eq(0) }
+        it { expect(subject['tous']).to eq(1) }
+        it { expect(subject['archives']).to eq(0) }
+
+        context 'and another one follows the same dossier' do
+          before do
+            instructeur_3.followed_dossiers << new_followed_dossier
+          end
+
+          it { expect(subject['a_suivre']).to eq(0) }
+          it { expect(subject['suivis']).to eq(1) }
+          it { expect(subject['traites']).to eq(0) }
+          it { expect(subject['tous']).to eq(1) }
+          it { expect(subject['archives']).to eq(0) }
+        end
+
+        context 'and dossier with a follower on each of the others groups' do
+          let!(:new_follow_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2) }
+          let!(:new_follow_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3) }
+
+          before do
+            instructeur_2.followed_dossiers << new_follow_dossier_on_gi_2 << new_follow_dossier_on_gi_3
+          end
+
+          # followed dossiers on another groupe should not be displayed
+          it { expect(subject['suivis']).to eq(2) }
+          it { expect(subject['tous']).to eq(2) }
+        end
+
+        context 'and dossier with a follower is unfollowed' do
+          before do
+            instructeur_2.unfollow(new_followed_dossier)
+          end
+
+          it { expect(subject['a_suivre']).to eq(1) }
+          it { expect(subject['suivis']).to eq(0) }
+          it { expect(subject['tous']).to eq(1) }
+        end
+      end
+
+      context 'with a termine dossier' do
+        let!(:termine_dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+        it { expect(subject['a_suivre']).to eq(0) }
+        it { expect(subject['suivis']).to eq(0) }
+        it { expect(subject['traites']).to eq(1) }
+        it { expect(subject['tous']).to eq(1) }
+        it { expect(subject['archives']).to eq(0) }
+
+        context 'and terminer dossiers on each of the others groups' do
+          let!(:termine_dossier_on_gi_2) { create(:dossier, :accepte, groupe_instructeur: gi_2) }
+          let!(:termine_dossier_on_gi_3) { create(:dossier, :accepte, groupe_instructeur: gi_3) }
+
+          before { subject }
+
+          it { expect(subject['a_suivre']).to eq(0) }
+          it { expect(subject['suivis']).to eq(0) }
+          it { expect(subject['traites']).to eq(2) }
+          it { expect(subject['tous']).to eq(2) }
+          it { expect(subject['archives']).to eq(0) }
+        end
+      end
+
+      context 'with an archives dossier' do
+        let!(:archives_dossier) { create(:dossier, :en_instruction, procedure: procedure, archived: true) }
+
+        it { expect(subject['a_suivre']).to eq(0) }
+        it { expect(subject['suivis']).to eq(0) }
+        it { expect(subject['traites']).to eq(0) }
+        it { expect(subject['tous']).to eq(0) }
+        it { expect(subject['archives']).to eq(1) }
+
+        context 'and terminer dossiers on each of the others groups' do
+          let!(:archives_dossier_on_gi_2) { create(:dossier, :en_instruction, groupe_instructeur: gi_2, archived: true) }
+          let!(:archives_dossier_on_gi_3) { create(:dossier, :en_instruction, groupe_instructeur: gi_3, archived: true) }
+
+          it { expect(subject['archives']).to eq(2) }
+        end
+      end
+    end
+  end
+
   private
 
   def assign(procedure_to_assign, instructeur_assigne: instructeur)
