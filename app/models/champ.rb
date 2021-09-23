@@ -88,7 +88,7 @@ class Champ < ApplicationRecord
   end
 
   def sections
-    siblings.filter(&:header_section?)
+    siblings&.filter(&:header_section?)
   end
 
   def mandatory_and_blank?

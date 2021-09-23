@@ -3,14 +3,6 @@
 - dossier = controller.try(:dossier_for_help)
 - procedure = controller.try(:procedure_for_help)
 
--# only display the coronavirus to usagers (instructeurs know there are delays) when they are logged in, or on the public pages.
-- if user_signed_in?
-  - if dossier.present? && dossier.procedure.feature_enabled?(:coronavirus_banner)
-    = render partial: 'layouts/coronavirus_banner'
-- else
-  - if procedure.present? && procedure.feature_enabled?(:coronavirus_banner)
-    = render partial: 'layouts/coronavirus_banner'
-
 %header.new-header{ class: current_page?(root_path) ? nil : "new-header-with-border", role: 'banner' }
   .header-inner-content
 
