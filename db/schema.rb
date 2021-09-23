@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_15_170019) do
+ActiveRecord::Schema.define(version: 2021_09_23_083416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -621,6 +621,7 @@ ActiveRecord::Schema.define(version: 2021_09_15_170019) do
     t.string "encrypted_api_particulier_token"
     t.text "api_particulier_scopes", default: [], array: true
     t.jsonb "api_particulier_sources", default: {}
+    t.boolean "instructeurs_self_management_enabled"
     t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
     t.boolean "routing_enabled"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
