@@ -1,0 +1,37 @@
+
+.card
+  .card-title Affectation des instructeurs
+  = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
+    .instructeur-wrapper
+      - if !procedure.routee?
+        %p.notice Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
+      - hidden_field_id = SecureRandom.uuid
+      = hidden_field_tag :emails, nil, data: { uuid: hidden_field_id }
+      = react_component("ComboMultipleDropdownList",
+        options: available_instructeur_emails, selected: [], disabled: [],
+        hiddenFieldId: hidden_field_id,
+        label: 'email instructeur',
+        acceptNewValues: true)
+
+      = f.submit 'Affecter', class: 'button primary send'
+
+  %table.table.mt-2
+    %thead
+      %tr
+        %th{ colspan: 2 }= t('.assigned_instructeur', count: instructeurs.count)
+    %tbody
+      - instructeurs.each do |instructeur|
+        %tr
+          %td
+            %span.icon.person
+            #{instructeur.email}
+
+          - confirmation_message = procedure.routee? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
+          %td.actions= button_to 'retirer',
+            { action: :remove_instructeur, id: groupe_instructeur.id },
+            { method: :delete,
+              data: { confirm: confirmation_message },
+              params: { instructeur: { id: instructeur.id }},
+              class: 'button' }
+
+  = paginate instructeurs

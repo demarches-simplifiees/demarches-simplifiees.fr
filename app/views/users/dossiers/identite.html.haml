@@ -14,10 +14,10 @@
       .radios
         %label
           = f.radio_button :gender, Individual::GENDER_FEMALE, required: true
-          = t(Individual::GENDER_FEMALE, scope: 'activerecord.attributes.individual.gender_options')
+          = Individual.human_attribute_name('gender.female')
         %label
           = f.radio_button :gender, Individual::GENDER_MALE, required: true
-          = t('activerecord.attributes.individual.gender_options')[Individual::GENDER_MALE.to_sym] # GENDER_MALE contains a point letter
+          = Individual.human_attribute_name('gender.male')
 
     .flex
       .inline-champ

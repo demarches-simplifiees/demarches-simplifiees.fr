@@ -3,8 +3,8 @@
     Sélectionnez une des valeurs
   %label
     = form.radio_button :value, Individual::GENDER_FEMALE
-    = t(Individual::GENDER_FEMALE, scope: 'activerecord.attributes.individual.gender_options')
+    = Individual.human_attribute_name('gender.female')
 
   %label
     = form.radio_button :value, Individual::GENDER_MALE
-    = t('activerecord.attributes.individual.gender_options')[Individual::GENDER_MALE.to_sym] # GENDER_MALE contains a point letter
+    = Individual.human_attribute_name('gender.male')

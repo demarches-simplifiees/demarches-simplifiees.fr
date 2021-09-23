@@ -1,5 +1,5 @@
 fr:
   errors:
     messages:
-      content_type_invalid: n’est pas d’un type accepté
-      file_size_out_of_range: "est trop lourde, elle doit faire au plus 200 Mo."
+      content_type_invalid: "n’est pas d’un type accepté"
+      file_size_out_of_range: "est trop lourd(e). Le fichier doit faire au plus %{file_size_limit}."
