@@ -11,8 +11,8 @@ fr:
       update_description: La description du champ « %{label} » a été modifiée. La nouvelle description est « %{to} »
       update_type_champ: Le type du champ « %{label} » a été modifié. Il est maintenant de type « %{to} »
       update_mandatory:
-        enable: Le champ « %{label} » est maintenant obligatoire
-        disable: Le champ « %{label} » n’est plus obligatoire
+        enabled: Le champ « %{label} » est maintenant obligatoire
+        disabled: Le champ « %{label} » n’est plus obligatoire
       update_piece_justificative_template: Le modèle de pièce justificative du champ « %{label} » a été modifié
       update_drop_down_options: Les options de sélection du champ « %{label} » ont été modifiées
       update_carte_layers: Les référentiels cartographiques du champ « %{label} » ont été modifiés
@@ -25,8 +25,8 @@ fr:
       update_description_private: La description de l’annotation privée « %{label} » a été modifiée. La nouvelle description est « %{to} »
       update_type_champ_private: Le type de l’annotation privée « %{label} » a été modifié. Elle est maintenant de type « %{to} »
       update_mandatory_private:
-        enable: L’annotation privée « %{label} » est maintenant obligatoire
-        disable: L’annotation privée « %{label} » n’est plus obligatoire
+        enabled: L’annotation privée « %{label} » est maintenant obligatoire
+        disabled: L’annotation privée « %{label} » n’est plus obligatoire
       update_piece_justificative_template_private: Le modèle de pièce justificative de l’annotation privée « %{label} » a été modifié
       update_drop_down_options_private: Les options de sélection de l’annotation privée « %{label} » ont été modifiées
       update_carte_layers_private: Les référentiels cartographiques de l’annotation privée « %{label} » ont été modifiés

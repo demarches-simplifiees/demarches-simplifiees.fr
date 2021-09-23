@@ -1,0 +1,22 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    link_to(Procedure.human_attribute_name(:jeton_api_particulier), admin_procedure_api_particulier_path(@procedure)),
+                    'Jeton'] }
+
+.container
+  %h1.page-title
+    = t('.configure_token')
+
+.container
+  %h1
+  = form_with model: @procedure, url: admin_procedure_api_particulier_jeton_path, local: true, html: { class: 'form' } do |f|
+    %p.explication
+      = t('.api_particulier_description_html', app_name: APPLICATION_NAME)
+
+    = f.label :api_particulier_token
+    .desc.mb-2
+      %p= t('.token_description')
+    = f.password_field :api_particulier_token, class: 'form-control', required: :required
+    .text-right
+      = f.button t('views.shared.actions.save'), class: 'button primary send'

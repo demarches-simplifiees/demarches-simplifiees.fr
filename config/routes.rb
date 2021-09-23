@@ -276,6 +276,7 @@ Rails.application.routes.draw do
     # allow refresh 'renew api token' page
     get 'renew-api-token' => redirect('/profil')
     patch 'update_email' => 'profil#update_email'
+    post 'transfer_all_dossiers' => 'profil#transfer_all_dossiers'
   end
 
   #
@@ -397,6 +398,13 @@ Rails.application.routes.draw do
         put :experts_require_administrateur_invitation
       end
 
+      get :api_particulier, controller: 'jeton_particulier'
+
+      resource 'api_particulier', only: [] do
+        resource 'jeton', only: [:show, :update], controller: 'jeton_particulier'
+        resource 'sources', only: [:show, :update], controller: 'sources_particulier'
+      end
+
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
@@ -415,6 +423,7 @@ Rails.application.routes.draw do
 
         collection do
           patch 'update_routing_criteria_name'
+          patch 'update_routing_enabled'
           post 'import'
         end
       end

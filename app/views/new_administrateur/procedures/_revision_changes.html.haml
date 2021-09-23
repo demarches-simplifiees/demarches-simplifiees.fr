@@ -16,33 +16,39 @@
         %li.mb-1= t("update_description#{postfix}", label: change[:label], to: change[:to], scope: [:new_administrateur, :revision_changes])
       - when :mandatory
         - if change[:from] == false
-          %li.mb-1= t(:enabled, label: change[:label], scope: [:new_administrateur, :revision_changes, "update_mandatory#{postfix}"])
+          -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory.enabled')
+          -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory_private.enabled')
+          %li.mb-1= t("new_administrateur.revision_changes.update_mandatory#{postfix}.enabled", label: change[:label])
         - else
-          %li.mb-1= t(:disabled, label: change[:label], scope: [:new_administrateur, :revision_changes, "update_mandatory#{postfix}"])
+          -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory.disabled')
+          -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory_private.disabled')
+          %li.mb-1= t("new_administrateur.revision_changes.update_mandatory#{postfix}.disabled", label: change[:label])
       - when :piece_justificative_template
-        %li.mb-1= t("update_piece_justificative_template#{postfix}", label: change[:label], scope: [:new_administrateur, :revision_changes])
+        -# i18n-tasks-use t('new_administrateur.revision_changes.update_piece_justificative_template')
+        -# i18n-tasks-use t('new_administrateur.revision_changes.update_piece_justificative_template_private')
+        %li.mb-1= t("new_administrateur.revision_changes.update_piece_justificative_template#{postfix}", label: change[:label])
       - when :drop_down_options
         - added = change[:to].sort - change[:from].sort
         - removed = change[:from].sort - change[:to].sort
         %li.mb-1
-          = t("update_drop_down_options#{postfix}", label: change[:label], scope: [:new_administrateur, :revision_changes])
+          = t("update_drop_down_options#{postfix}", scope: [:new_administrateur, :revision_changes], label: change[:label])
           %ul
             - if added.present?
-              %li= t(:add_option, items: added.map{ |term| "« #{term.strip} »" }.join(", "), scope: [:new_administrateur, :revision_changes])
+              %li= t(:add_option, scope: [:new_administrateur, :revision_changes], items: added.map{ |term| "« #{term.strip} »" }.join(", "))
             - if removed.present?
-              %li= t(:remove_option, items: removed.map{ |term| "« #{term.strip} »" }.join(", "), scope: [:new_administrateur, :revision_changes])
+              %li= t(:remove_option, scope: [:new_administrateur, :revision_changes], items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
       - when :carte_layers
         - added = change[:to].sort - change[:from].sort
         - removed = change[:from].sort - change[:to].sort
         %li.mb-1
-          = t("update_carte_layers#{postfix}", label: change[:label], scope: [:new_administrateur, :revision_changes])
+          = t("update_carte_layers#{postfix}", scope: [:new_administrateur, :revision_changes], label: change[:label])
           %ul
             - if added.present?
-              %li= t(:add_option, items: added.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "), scope: [:new_administrateur, :revision_changes])
+              %li= t(:add_option, scope: [:new_administrateur, :revision_changes], items: added.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "))
             - if removed.present?
-              %li= t(:remove_option, items: removed.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "), scope: [:new_administrateur, :revision_changes])
+              %li= t(:remove_option, scope: [:new_administrateur, :revision_changes], items: removed.map{ |term| "« #{t(term, scope: [:new_administrateur, :carte_layers])} »" }.join(", "))
   - move_changes, move_private_changes = changes.filter { |change| change[:op] == :move }.partition { |change| !change[:private] }
   - if move_changes.size != 0
-    %li.mb-1= t(:move, count: move_changes.size, scope: [:new_administrateur, :revision_changes])
+    %li.mb-1= t(:move, scope: [:new_administrateur, :revision_changes], count: move_changes.size)
   - if move_private_changes.size != 0
-    %li.mb-1= t(:move_private, count: move_private_changes.size, scope: [:new_administrateur, :revision_changes])
+    %li.mb-1= t(:move_private, scope: [:new_administrateur, :revision_changes], count: move_private_changes.size)

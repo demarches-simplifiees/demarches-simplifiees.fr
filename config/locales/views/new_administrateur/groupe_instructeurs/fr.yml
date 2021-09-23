@@ -4,7 +4,8 @@ fr:
       wrong_address:
           one: "%{value} n’est pas une adresse email valide"
           other: "%{value} ne sont pas des adresses emails valides"
-      experts_assignment:
+      create:
+        experts_assignment:
           one: "L'expert %{value} a été affecté à la démarche n° %{procedure}"
           other: "Les experts %{value} ont été affectés à la démarche n° %{procedure}"
     groupe_instructeurs:
@@ -12,10 +13,6 @@ fr:
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
-      show:
-        assigned_instructeur:
-          one: "%{count} instructeur est affecté"
-          other: "%{count} instructeurs sont affectés"
       add_instructeur:
         wrong_address:
           one: "%{value} n’est pas une adresse email valide"
@@ -27,3 +24,18 @@ fr:
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
+      instructeurs:
+        assigned_instructeur:
+          one: "%{count} instructeur est affecté"
+          other: "%{count} instructeurs sont affectés"
+      edit:
+        existing_groupe:
+          one: "%{count} groupe existe"
+          other: "%{count} groupes existent"
+      routing:
+        notice_html: |
+          Le routage est une fonctionnalité pour les démarches nécessitant le partage de l’instruction entre différents groupes en fonction d’un critère précis (territoire, thématique ou autre).
+          <br><br>
+          Cette fonctionnalité permet d’acheminer les dossier vers chaque groupe, et de ne plus avoir besoin de filtrer ses dossiers parmi une grande quantité de demandes. Elle est donc particulièrement adaptée pour les démarches nationales instruites localement.
+          <br><br>
+          Les instructeurs ne voient que les dossiers les concernant, et n’ont donc pas accès aux données extérieures à leur périmètre.
