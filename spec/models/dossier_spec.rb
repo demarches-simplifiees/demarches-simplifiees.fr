@@ -1422,4 +1422,16 @@ describe Dossier do
       it { expect(dossier.api_entreprise_job_exceptions).to eq(['#<StandardError: My special exception!>']) }
     end
   end
+
+  describe "#destroy" do
+    let(:dossier) { create(:dossier) }
+    before do
+      create(:attestation, dossier: dossier)
+      create(:attestation, dossier: dossier)
+    end
+
+    it "can destroy dossier with two attestations" do
+      expect(dossier.destroy).to be_truthy
+    end
+  end
 end

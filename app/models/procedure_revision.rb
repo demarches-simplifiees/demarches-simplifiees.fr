@@ -18,6 +18,10 @@ class ProcedureRevision < ApplicationRecord
   has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
   has_many :types_de_champ_private, through: :revision_types_de_champ_private, source: :type_de_champ
 
+  has_many :owned_types_de_champ, class_name: 'TypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
+  has_one :draft_procedure, class_name: 'Procedure', foreign_key: :draft_revision_id, dependent: :nullify, inverse_of: :draft_revision
+  has_one :published_procedure, class_name: 'Procedure', foreign_key: :published_revision_id, dependent: :nullify, inverse_of: :published_revision
+
   def build_champs
     types_de_champ.map(&:build_champ)
   end

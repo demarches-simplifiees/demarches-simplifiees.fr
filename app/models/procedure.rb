@@ -20,6 +20,7 @@
 #  durees_conservation_required        :boolean          default(TRUE)
 #  euro_flag                           :boolean          default(FALSE)
 #  for_individual                      :boolean          default(FALSE)
+#  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  hidden_at                           :datetime
 #  juridique_required                  :boolean          default(TRUE)
 #  libelle                             :string
@@ -45,8 +46,6 @@
 #
 
 class Procedure < ApplicationRecord
-  self.ignored_columns = ['archived_at', 'csv_export_queued', 'xlsx_export_queued', 'ods_export_queued']
-
   include ProcedureStatsConcern
 
   include Discard::Model
