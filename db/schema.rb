@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_07_174523) do
+ActiveRecord::Schema.define(version: 2021_04_12_092710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,7 +83,6 @@ ActiveRecord::Schema.define(version: 2021_04_07_174523) do
 
   create_table "assign_tos", id: :serial, force: :cascade do |t|
     t.integer "instructeur_id"
-    t.integer "procedure_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.bigint "groupe_instructeur_id"
@@ -93,9 +92,7 @@ ActiveRecord::Schema.define(version: 2021_04_07_174523) do
     t.boolean "instant_email_dossier_notifications_enabled", default: false, null: false
     t.index ["groupe_instructeur_id", "instructeur_id"], name: "unique_couple_groupe_instructeur_instructeur", unique: true
     t.index ["groupe_instructeur_id"], name: "index_assign_tos_on_groupe_instructeur_id"
-    t.index ["instructeur_id", "procedure_id"], name: "index_assign_tos_on_instructeur_id_and_procedure_id", unique: true
     t.index ["instructeur_id"], name: "index_assign_tos_on_instructeur_id"
-    t.index ["procedure_id"], name: "index_assign_tos_on_procedure_id"
   end
 
   create_table "attestation_templates", id: :serial, force: :cascade do |t|
@@ -413,6 +410,7 @@ ActiveRecord::Schema.define(version: 2021_04_07_174523) do
     t.string "email_france_connect"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.jsonb "data"
     t.index ["user_id"], name: "index_france_connect_informations_on_user_id"
   end
 
@@ -462,6 +460,7 @@ ActiveRecord::Schema.define(version: 2021_04_07_174523) do
     t.datetime "updated_at"
     t.text "encrypted_login_token"
     t.datetime "login_token_created_at"
+    t.boolean "bypass_email_login_token", default: false, null: false
   end
 
   create_table "invites", id: :serial, force: :cascade do |t|
