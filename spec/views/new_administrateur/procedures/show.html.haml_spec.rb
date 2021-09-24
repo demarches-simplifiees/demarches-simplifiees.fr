@@ -55,24 +55,5 @@ describe 'new_administrateur/procedures/show.html.haml', type: :view do
       it { expect(rendered).to have_css('#publish-procedure-link') }
       it { expect(rendered).to have_content('Réactiver') }
     end
-
-    describe 'When procedure.allow_expert_review is true, the expert list card must be visible' do
-      before do
-        render
-      end
-      it { expect(procedure.allow_expert_review).to be_truthy }
-      it { expect(rendered).to have_content('Liste des experts invités par les instructeurs') }
-    end
-
-    describe 'When procedure.allow_expert_review is false, the expert list card must not be visible' do
-      before do
-        procedure.update!(allow_expert_review: false)
-        procedure.reload
-        render
-      end
-
-      it { expect(procedure.allow_expert_review).to be_falsy }
-      it { expect(rendered).not_to have_content('Liste des experts invités par les instructeurs') }
-    end
   end
 end

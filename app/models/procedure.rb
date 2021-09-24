@@ -20,6 +20,7 @@
 #  durees_conservation_required        :boolean          default(TRUE)
 #  euro_flag                           :boolean          default(FALSE)
 #  for_individual                      :boolean          default(FALSE)
+#  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  hidden_at                           :datetime
 #  juridique_required                  :boolean          default(TRUE)
 #  libelle                             :string
