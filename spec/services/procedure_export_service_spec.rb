@@ -77,6 +77,7 @@ describe ProcedureExportService do
           "titre_identite",
           "iban",
           "annuaire_education",
+          "cnaf",
           "text"
         ]
       end
@@ -164,6 +165,7 @@ describe ProcedureExportService do
           "titre_identite",
           "iban",
           "annuaire_education",
+          "cnaf",
           "text"
         ]
       end
@@ -247,6 +249,7 @@ describe ProcedureExportService do
             "titre_identite",
             "iban",
             "annuaire_education",
+            "cnaf",
             "text"
           ]
         end

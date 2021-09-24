@@ -48,7 +48,8 @@ class TypeDeChamp < ApplicationRecord
     repetition: 'repetition',
     titre_identite: 'titre_identite',
     iban: 'iban',
-    annuaire_education: 'annuaire_education'
+    annuaire_education: 'annuaire_education',
+    cnaf: 'cnaf'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
