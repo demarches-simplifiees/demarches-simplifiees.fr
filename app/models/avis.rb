@@ -54,8 +54,6 @@ class Avis < ApplicationRecord
   attr_accessor :emails
   attr_accessor :invite_linked_dossiers
 
-  self.ignored_columns = [:instructeur_id, :tmp_expert_migrated]
-
   def email_to_display
     expert&.email
   end

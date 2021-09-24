@@ -37,4 +37,20 @@ describe 'new_administrateur/experts_procedures/index.html.haml', type: :view do
       expect(@invited_experts).to match_array([avis.experts_procedure, avis2.experts_procedure])
     end
   end
+
+  context 'when the experts_require_administrateur_invitation is false' do
+    it 'authorize instructors to invite any expert' do
+      expect(rendered).not_to have_content "Affecter des experts à la démarche"
+    end
+  end
+
+  context 'when the experts_require_administrateur_invitation is true' do
+    let!(:procedure) { create(:procedure, :published, experts_require_administrateur_invitation: true) }
+    before do
+      subject
+    end
+    it 'does not authorize instructors to invite any expert but only those presents in admin list' do
+      expect(rendered).to have_content "Affecter des experts à la démarche"
+    end
+  end
 end

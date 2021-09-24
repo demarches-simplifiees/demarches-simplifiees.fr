@@ -13,8 +13,6 @@
 #  instructeur_id                              :integer
 #
 class AssignTo < ApplicationRecord
-  self.ignored_columns = [:procedure_id]
-
   belongs_to :instructeur, optional: false
   belongs_to :groupe_instructeur, optional: false
   has_one :procedure_presentation, dependent: :destroy

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_12_092710) do
+ActiveRecord::Schema.define(version: 2021_04_16_074049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -551,6 +551,7 @@ ActiveRecord::Schema.define(version: 2021_04_12_092710) do
     t.bigint "draft_revision_id"
     t.bigint "published_revision_id"
     t.boolean "allow_expert_review", default: true, null: false
+    t.boolean "experts_require_administrateur_invitation", default: false
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
