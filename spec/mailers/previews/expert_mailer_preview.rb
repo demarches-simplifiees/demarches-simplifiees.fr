@@ -1,4 +1,4 @@
-class AvisMailerPreview < ActionMailer::Preview
+class ExpertMailerPreview < ActionMailer::Preview
   def send_dossier_decision
     procedure = Procedure.new(libelle: 'Démarche pour faire des marches')
     dossier = Dossier.new(id: 1, procedure: procedure)
