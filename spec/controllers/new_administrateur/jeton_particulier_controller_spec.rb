@@ -40,7 +40,7 @@ describe NewAdministrateur::JetonParticulierController, type: :controller do
 
       context "and the api response is a success" do
         let(:cassette) { "api_particulier/success/introspect" }
-        let(:procedure) { create(:procedure, administrateur: admin, api_particulier_sources: { cnaf: { allocataires: ['noms_prenoms'] } }) }
+        let(:procedure) { create(:procedure, administrateur: admin, api_particulier_sources: { cnaf: { allocataires: ['nomPrenom'] } }) }
 
         it 'saves the jeton' do
           expect(flash.alert).to be_nil
