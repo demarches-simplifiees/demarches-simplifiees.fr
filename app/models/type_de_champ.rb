@@ -303,6 +303,7 @@ class TypeDeChamp < ApplicationRecord
       .filter(&show_number)
       .filter(&enabled_featured_champ)
       .map { |tdc| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{tdc}"), tdc] }
+      .sort_by(&:first)
   end
 
   TYPES_DE_CHAMP_BASE = {
