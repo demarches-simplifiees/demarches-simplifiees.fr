@@ -50,7 +50,6 @@ class User < ApplicationRecord
   has_many :dossiers, dependent: :destroy
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
-  has_many :feedbacks, dependent: :destroy
   has_many :deleted_dossiers
   has_one :france_connect_information, dependent: :destroy
   belongs_to :instructeur, optional: true
