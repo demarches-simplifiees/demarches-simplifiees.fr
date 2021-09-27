@@ -166,7 +166,7 @@ def add_single_champ(pdf, champ)
     format_in_2_lines(pdf, champ.libelle, value)
   else
     value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
-    format_in_2_lines(pdf, champ.libelle, value)
+    format_in_2_columns(pdf, champ.libelle, value)
   end
 end
 
