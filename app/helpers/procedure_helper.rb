@@ -57,4 +57,15 @@ module ProcedureHelper
   def procedure_auto_archive_datetime(procedure)
     procedure_auto_archive_date(procedure) + ' ' + procedure_auto_archive_time(procedure)
   end
+
+  def can_manage_groupe_instructeurs?(procedure)
+    procedure.routee? && current_administrateur&.owns?(procedure)
+  end
+
+  def can_send_groupe_message?(procedure)
+    procedure.dossiers
+      .state_brouillon
+      .includes(:groupe_instructeur)
+      .exists?(groupe_instructeur: current_instructeur.groupe_instructeurs)
+  end
 end
