@@ -5,9 +5,10 @@ feature 'Inviting an expert:' do
   context 'as an invited Expert' do
     let(:expert) { create(:expert) }
     let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
     let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
     let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
+    let(:champ) { dossier.champs.first }
     let(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 
     context 'when I don’t already have an account' do
@@ -83,6 +84,42 @@ feature 'Inviting an expert:' do
 
     # scenario 'I can invite other experts' do
     # end
+
+    context 'with dossiers having attached files', js: true do
+      let(:path) { 'spec/fixtures/files/piece_justificative_0.pdf' }
+      let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
+
+      before do
+        champ.piece_justificative_file.attach(io: File.open(path), filename: "piece_justificative_0.pdf", content_type: "application/pdf")
+        dossier.champs_private << create(:champ_piece_justificative, :with_piece_justificative_file, private: true, dossier: dossier)
+      end
+
+      scenario 'An Expert can download an archive containing attachments without any private champ, bill signature and operations logs' do
+        avis # create avis
+        login_as expert.user, scope: :user
+        visit expert_all_avis_path
+
+        click_on '1 avis à donner'
+        click_on avis.dossier.user.email
+
+        find(:css, '.attached').click
+        click_on 'Télécharger le dossier et toutes ses pièces jointes'
+        # For some reason, clicking the download link does not trigger the download in the headless browser ;
+        # So we need to go to the download link directly
+        visit telecharger_pjs_expert_avis_path(avis.dossier.procedure, avis)
+
+        DownloadHelpers.wait_for_download
+        files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
+        expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
+        expect(files.size).to be 2
+        expect(files[0].filename.include?('export')).to be_truthy
+        expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
+        expect(files[1].uncompressed_size).to be File.size(path)
+      end
+
+      before { DownloadHelpers.clear_downloads }
+      after { DownloadHelpers.clear_downloads }
+    end
   end
 
   context 'when there are two experts' do

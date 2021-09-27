@@ -33,7 +33,7 @@ describe PiecesJustificativesService do
   end
 
   describe '.liste_documents' do
-    subject { PiecesJustificativesService.liste_documents(dossier) }
+    subject { PiecesJustificativesService.liste_documents(dossier, false) }
 
     it "doesn't return sensitive documents like titre_identite" do
       expect(champ_identite.piece_justificative_file).to be_attached
