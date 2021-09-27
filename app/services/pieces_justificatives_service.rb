@@ -1,10 +1,11 @@
 class PiecesJustificativesService
   def self.liste_pieces_justificatives(dossier)
+    dossier_export = generate_dossier_export(dossier)
     pjs_champs = pjs_for_champs(dossier)
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier)
 
-    (pjs_champs + pjs_commentaires + pjs_dossier)
+    ([dossier_export] + pjs_champs + pjs_commentaires + pjs_dossier)
       .filter(&:attached?)
   end
 
@@ -14,8 +15,8 @@ class PiecesJustificativesService
   end
 
   def self.zip_entries(dossier)
-    pdf = pjs_zip_entries([dossier.pdf_export_for_instructeur])
-    pjs = champs_zip_entries(dossier) + commentaires_zip_entries(dossier) + dossier_zip_entries(dossier) + pdf
+    pdf = pjs_zip_entries([generate_dossier_export(dossier)])
+    pjs = pdf + champs_zip_entries(dossier) + commentaires_zip_entries(dossier) + dossier_zip_entries(dossier)
     index = {}
     pjs.map do |blob, filename|
       [
@@ -88,6 +89,17 @@ class PiecesJustificativesService
     else
       'pieces_justificatives'
     end
+  end
+
+  def self.generate_dossier_export(dossier)
+    pdf = ApplicationController
+      .render(template: 'dossiers/show', formats: [:pdf],
+              assigns: {
+                include_infos_administration: true,
+                dossier: dossier
+              })
+    dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
+    dossier.pdf_export_for_instructeur
   end
 
   def self.pjs_champs(dossier)
