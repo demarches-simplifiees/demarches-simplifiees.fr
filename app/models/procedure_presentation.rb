@@ -90,10 +90,6 @@ class ProcedurePresentation < ApplicationRecord
     ]
   end
 
-  def displayed_fields_values(dossier)
-    displayed_fields.map { |field| get_value(dossier, field[TABLE], field[COLUMN]) }
-  end
-
   def sorted_ids(dossiers, instructeur)
     table, column, order = sort.values_at(TABLE, COLUMN, 'order')
 
@@ -176,25 +172,6 @@ class ProcedurePresentation < ApplicationRecord
           .filter_ilike(table, column, values)
       end.pluck(:id)
     end.reduce(:&)
-  end
-
-  def eager_load_displayed_fields(dossiers)
-    relations_to_include = displayed_fields
-      .pluck(TABLE)
-      .reject { |table| table == 'self' }
-      .map do |table|
-        case table
-        when TYPE_DE_CHAMP
-          { champs: :type_de_champ }
-        when TYPE_DE_CHAMP_PRIVATE
-          { champs_private: :type_de_champ }
-        else
-          table
-        end
-      end
-      .uniq
-
-    dossiers.includes(relations_to_include)
   end
 
   def human_value_for_filter(filter)
@@ -311,23 +288,6 @@ class ProcedurePresentation < ApplicationRecord
     table, column = field.values_at(TABLE, COLUMN)
     if !valid_column?(table, column, extra_columns)
       errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
-    end
-  end
-
-  def get_value(dossier, table, column)
-    case table
-    when 'self'
-      dossier.send(column)&.strftime('%d/%m/%Y')
-    when 'user', 'individual', 'etablissement'
-      dossier.send(table)&.send(column)
-    when 'followers_instructeurs'
-      dossier.send(table)&.map { |g| g.send(column) }&.join(', ')
-    when TYPE_DE_CHAMP
-      dossier.champs.find { |c| c.stable_id == column.to_i }.to_s
-    when TYPE_DE_CHAMP_PRIVATE
-      dossier.champs_private.find { |c| c.stable_id == column.to_i }.to_s
-    when 'groupe_instructeur'
-      dossier.groupe_instructeur.label
     end
   end
 
