@@ -291,16 +291,19 @@ class TypeDeChamp < ApplicationRecord
   def self.type_de_champ_types_for(procedure, user)
     has_legacy_number = (procedure.types_de_champ + procedure.types_de_champ_private).any?(&:legacy_number?)
 
-    type_champs.map do |type_champ|
-      [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{type_champ.last}"), type_champ.first]
-    end.filter do |tdc|
-      if tdc.last == TypeDeChamp.type_champs.fetch(:number)
-        has_legacy_number
-      else
-        feature_name = FEATURE_FLAGS[tdc.last]
-        feature_name.blank? || Flipper.enabled?(feature_name, user)
-      end
+    show_number = -> (tdc) { tdc != TypeDeChamp.type_champs.fetch(:number) || has_legacy_number }
+
+    enabled_featured_champ = -> (tdc) do
+      feature_name = FEATURE_FLAGS[tdc]
+      feature_name.blank? || Flipper.enabled?(feature_name, user)
     end
+
+    type_champs
+      .keys
+      .filter(&show_number)
+      .filter(&enabled_featured_champ)
+      .map { |tdc| [I18n.t("activerecord.attributes.type_de_champ.type_champs.#{tdc}"), tdc] }
+      .sort_by(&:first)
   end
 
   TYPES_DE_CHAMP_BASE = {
