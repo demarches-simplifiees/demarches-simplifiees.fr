@@ -49,8 +49,9 @@ en:
       new:
         title: Sign in
         title_pf: If you already have %{app_name} account
+        social_title: "To connect quicly and securely"
         email: Email address (name@site.com)
-        password: Password (minimum length %{min_length} characters)
+        password: Password
         remember_me: Remember me
         reset_password: Forgot password?
         connection: Sign in
@@ -59,8 +60,11 @@ en:
     commencer:
       no_procedure:
         ligne1: A simple tool
-        ligne2: to manage dematerialized 
+        ligne2: to manage dematerialized
         ligne3: administrative forms.
+    passwords:
+      new:
+        send_me_reset_password_instructions: "Fill-in your account's email, and we’ll send you instructions to reset your password."
   modal:
     publish:
       title:
