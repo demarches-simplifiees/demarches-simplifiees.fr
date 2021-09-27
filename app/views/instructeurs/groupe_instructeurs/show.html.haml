@@ -1,12 +1,23 @@
-- content_for(:title, "Instructeurs du groupe #{@groupe_instructeur.label}")
+- if @procedure.routee?
+  - content_for(:title, "Instructeurs du groupe #{@groupe_instructeur.label}")
 
-= render partial: 'new_administrateur/breadcrumbs',
-  locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
-                    link_to('Groupes d’instructeurs', instructeur_groupes_path(@procedure)),
-                    @groupe_instructeur.label] }
+  = render partial: 'new_administrateur/breadcrumbs',
+    locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)),
+                      link_to('Groupes d’instructeurs', instructeur_groupes_path(@procedure)),
+                      @groupe_instructeur.label] }
+
+- else
+  - content_for(:title, "Instructeurs de la démarche #{@procedure.libelle}")
+
+  = render partial: 'new_administrateur/breadcrumbs',
+    locals: { steps: [link_to(@procedure.libelle, instructeur_procedure_path(@procedure)), 'Instructeurs'] }
 
 .container.groupe-instructeur
-  %h1 Groupe « #{@groupe_instructeur.label} »
+  %h1
+    - if @procedure.routee?
+      Groupe « #{@groupe_instructeur.label} »
+    - else
+      Démarche « #{@procedure.libelle} »
 
   .card.mt-2
     .card-title Gestion des instructeurs
@@ -27,10 +38,11 @@
         - @instructeurs.each do |instructeur|
           %tr
             %td= instructeur.email
+            - confirmation_message = @procedure.routee? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{@groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
             %td.actions= button_to 'retirer',
               { action: :remove_instructeur },
               { method: :delete,
-                data: { confirm: "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe  « #{@groupe_instructeur.label} » ?" },
+                data: { confirm: confirmation_message },
                 params: { instructeur: { id: instructeur.id }},
                 class: 'button' }
 

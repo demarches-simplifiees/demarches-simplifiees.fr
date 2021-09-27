@@ -38,4 +38,9 @@ fr:
           <br><br>
           Cette fonctionnalité permet d’acheminer les dossier vers chaque groupe, et de ne plus avoir besoin de filtrer ses dossiers parmi une grande quantité de demandes. Elle est donc particulièrement adaptée pour les démarches nationales instruites localement.
           <br><br>
-          Les instructeurs ne voient que les dossiers les concernant, et n’ont donc pas accès aux données extérieures à leur périmètre.
+          Les instructeurs ne voient que les dossiers les concernant, et n’ont donc pas accès aux données extérieures à leur périmètre. 
+        self_managment_notice_html: |
+          L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.
+        button:
+          routing_enable: Activer le routage
+          self_managment_toggle: Activer l’autogestion des instructeurs
