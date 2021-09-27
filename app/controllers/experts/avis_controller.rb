@@ -1,11 +1,12 @@
 module Experts
   class AvisController < ExpertController
     include CreateAvisConcern
+    include Zipline
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
     before_action :check_if_avis_revoked, only: [:show]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
-    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :update]
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :update, :telecharger_pjs]
 
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
@@ -118,6 +119,14 @@ module Experts
       else
         redirect_to instructeur_avis_path(avis)
       end
+    end
+
+    def telecharger_pjs
+      return head(:forbidden) if !avis.dossier.export_and_attachments_downloadable?
+
+      files = ActiveStorage::DownloadableFile.create_list_from_dossier(@dossier, true)
+
+      zipline(files, "dossier-#{@dossier.id}.zip")
     end
 
     private
