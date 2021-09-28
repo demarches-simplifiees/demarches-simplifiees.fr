@@ -4,6 +4,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
+    "@heroicons/react": "^1.0.1",
     "@mapbox/mapbox-gl-draw": "^1.2.0",
     "@rails/actiontext": "^6.0.3",
     "@rails/activestorage": "^6.0.3",
