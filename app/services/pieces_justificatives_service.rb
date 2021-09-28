@@ -1,8 +1,8 @@
 class PiecesJustificativesService
-  def self.liste_documents(dossier)
-    pjs_champs = pjs_for_champs(dossier)
+  def self.liste_documents(dossier, for_expert)
+    pjs_champs = pjs_for_champs(dossier, for_expert)
     pjs_commentaires = pjs_for_commentaires(dossier)
-    pjs_dossier = pjs_for_dossier(dossier)
+    pjs_dossier = pjs_for_dossier(dossier, for_expert)
 
     (pjs_champs + pjs_commentaires + pjs_dossier)
       .filter(&:attached?)
@@ -120,8 +120,8 @@ class PiecesJustificativesService
 
   private
 
-  def self.pjs_for_champs(dossier)
-    allowed_champs = dossier.champs + dossier.champs_private
+  def self.pjs_for_champs(dossier, for_expert = false)
+    allowed_champs = for_expert ? dossier.champs : dossier.champs + dossier.champs_private
 
     allowed_child_champs = allowed_champs
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
@@ -138,17 +138,22 @@ class PiecesJustificativesService
       .map(&:piece_jointe)
   end
 
-  def self.pjs_for_dossier(dossier)
-    bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
-
-    [
+  def self.pjs_for_dossier(dossier, for_expert = false)
+    pjs = [
       dossier.justificatif_motivation,
       dossier.attestation&.pdf,
       dossier.etablissement&.entreprise_attestation_sociale,
-      dossier.etablissement&.entreprise_attestation_fiscale,
-      dossier.dossier_operation_logs.map(&:serialized),
-      bill_signatures.map(&:serialized),
-      bill_signatures.map(&:signature)
+      dossier.etablissement&.entreprise_attestation_fiscale
     ].flatten.compact
+
+    if !for_expert
+      bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
+      pjs += [
+        dossier.dossier_operation_logs.map(&:serialized),
+        bill_signatures.map(&:serialized),
+        bill_signatures.map(&:signature)
+      ].flatten.compact
+    end
+    pjs
   end
 end
