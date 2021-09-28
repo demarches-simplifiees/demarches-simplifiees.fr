@@ -129,25 +129,27 @@
                     = submit_tag "Enregistrer", class: 'button'
 
         %tbody
-          - @dossiers.each do |dossier|
+          - @projected_dossiers.each do |p|
+            - dossier = p.dossier
+            - path = instructeur_dossier_path(@procedure, dossier.id)
+
             %tr
               %td.folder-col
-                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
+                %a.cell-link{ href: path }
                   %span.icon.folder
                     - if @not_archived_notifications_dossier_ids.include?(dossier.id)
                       %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
-                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
-                  = dossier.id
+                %a.cell-link{ href: path }= dossier.id
 
-              - @procedure_presentation.displayed_fields_values(dossier).each do |value|
+              - p.columns.each do |column|
                 %td
-                  = link_to(value, instructeur_dossier_path(@procedure, dossier), class: 'cell-link')
+                  %a.cell-link{ href: path }= column
 
               %td.status-col
-                = link_to(instructeur_dossier_path(@procedure, dossier), class: 'cell-link') do
-                  = status_badge(dossier.state)
+                %a.cell-link{ href: path }= status_badge(dossier.state)
+
               %td.action-col.follow-col= render partial: 'dossier_actions', locals: { procedure: @procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
       = paginate @dossiers
     - else

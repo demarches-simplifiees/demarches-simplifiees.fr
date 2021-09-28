@@ -43,6 +43,10 @@ class Users::PasswordsController < Devise::PasswordsController
     super
   end
 
+  def reset_link_sent
+    @email = params[:email]
+  end
+
   # protected
 
   # def after_resetting_password_path_for(resource)
@@ -80,5 +84,14 @@ class Users::PasswordsController < Devise::PasswordsController
     @min_length = PASSWORD_MIN_LENGTH
     @min_complexity = params[:complexity].to_i # proper type is verified in toutes.rb
     render 'shared/password/test_strength'
+  end
+
+  def password_params
+    params.require(:user).permit(:reset_password_token, :password)
+  end
+
+  def after_sending_reset_password_instructions_path_for(resource_name)
+    flash.discard(:notice)
+    users_password_reset_link_sent_path(email: resource.email)
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_074049) do
+ActiveRecord::Schema.define(version: 2021_04_27_124500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,25 @@ ActiveRecord::Schema.define(version: 2021_04_16_074049) do
     t.index ["administrateur_id", "procedure_id"], name: "index_unique_admin_proc_couple", unique: true
     t.index ["administrateur_id"], name: "index_administrateurs_procedures_on_administrateur_id"
     t.index ["procedure_id"], name: "index_administrateurs_procedures_on_procedure_id"
+  end
+
+  create_table "archives", force: :cascade do |t|
+    t.string "status", null: false
+    t.date "month"
+    t.string "time_span_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "key", null: false
+    t.index ["key", "time_span_type", "month"], name: "index_archives_on_key_and_time_span_type_and_month", unique: true
+  end
+
+  create_table "archives_groupe_instructeurs", force: :cascade do |t|
+    t.bigint "archive_id", null: false
+    t.bigint "groupe_instructeur_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["archive_id"], name: "index_archives_groupe_instructeurs_on_archive_id"
+    t.index ["groupe_instructeur_id"], name: "index_archives_groupe_instructeurs_on_groupe_instructeur_id"
   end
 
   create_table "assign_tos", id: :serial, force: :cascade do |t|
@@ -175,7 +194,9 @@ ActiveRecord::Schema.define(version: 2021_04_16_074049) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "instructeur_id"
+    t.bigint "expert_id"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
+    t.index ["expert_id"], name: "index_commentaires_on_expert_id"
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
     t.index ["user_id"], name: "index_commentaires_on_user_id"
   end
@@ -325,6 +346,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_074049) do
     t.datetime "date_fin_exercice"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["etablissement_id"], name: "index_exercices_on_etablissement_id"
   end
 
   create_table "experts", force: :cascade do |t|
@@ -443,7 +465,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_074049) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date "birthdate"
-    t.index ["dossier_id"], name: "index_individuals_on_dossier_id"
+    t.index ["dossier_id"], name: "index_individuals_on_dossier_id", unique: true
   end
 
   create_table "initiated_mails", id: :serial, force: :cascade do |t|
@@ -471,6 +493,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_074049) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text "message"
+    t.index ["email", "dossier_id"], name: "index_invites_on_email_and_dossier_id", unique: true
   end
 
   create_table "module_api_cartos", id: :serial, force: :cascade do |t|
@@ -556,6 +579,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_074049) do
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["parent_procedure_id"], name: "index_procedures_on_parent_procedure_id"
+    t.index ["path", "closed_at", "hidden_at", "unpublished_at"], name: "procedure_path_uniqueness", unique: true
     t.index ["path", "closed_at", "hidden_at"], name: "index_procedures_on_path_and_closed_at_and_hidden_at", unique: true
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
@@ -740,6 +764,8 @@ ActiveRecord::Schema.define(version: 2021_04_16_074049) do
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "archives_groupe_instructeurs", "archives"
+  add_foreign_key "archives_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "assign_tos", "groupe_instructeurs"
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
@@ -747,6 +773,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_074049) do
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
+  add_foreign_key "commentaires", "experts"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_operation_logs", "instructeurs"
   add_foreign_key "dossiers", "groupe_instructeurs"
