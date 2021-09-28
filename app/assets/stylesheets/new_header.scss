@@ -27,6 +27,7 @@ $header-mobile-breakpoint: 550px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  color: $blue-france-500;
 
   img {
     margin-right: 10px;
@@ -65,8 +66,8 @@ $header-mobile-breakpoint: 550px;
 
     &.active,
     &:hover {
-      color: $blue;
-      border-bottom: 2px solid $blue;
+      color: $blue-france-500;
+      border-bottom: 2px solid $blue-france-500;
 
       &.contact-link {
         position: relative;
@@ -85,7 +86,7 @@ $header-mobile-breakpoint: 550px;
   position: absolute;
   left: -165px;
   background: #FFFFFF;
-  border: 2px solid $blue;
+  border: 2px solid $blue-france-500;
   border-radius: 5px;
   padding: 15px;
   width: 400px;
@@ -115,7 +116,7 @@ $header-mobile-breakpoint: 550px;
 
   &::before {
     border-color: rgba(255, 255, 255, 0);
-    border-bottom-color: $blue;
+    border-bottom-color: $blue-france-500;
     border-width: 18px;
     margin-left: -18px;
   }
