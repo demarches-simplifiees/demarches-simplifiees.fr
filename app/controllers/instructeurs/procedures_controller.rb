@@ -122,6 +122,16 @@ module Instructeurs
         .deleted_dossiers
         .order(:dossier_id)
         .page params[:page]
+
+      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count = current_instructeur
+        .dossiers_count_summary(groupe_instructeur_ids)
+        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives')
+
+      notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
+      @has_en_cours_notifications = notifications[:en_cours].present?
+      @has_termine_notifications = notifications[:termines].present?
+
+      @statut = 'supprime'
     end
 
     def update_displayed_fields

@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/composition-familiale.schema.json",
+  "title": "composition familiale",
+  "type": "object",
+  "properties": {
+    "adresse": {
+      "type": "object",
+      "properties": {
+        "codePostalVille": {
+          "type": "string"
+        },
+        "identite": {
+          "type": "string"
+        },
+        "complementIdentite": {
+          "type": "string"
+        },
+        "numeroRue": {
+          "type": "string"
+        },
+        "pays": {
+          "type": "string"
+        },
+        "complementIdentiteGeo": {
+          "type": "string"
+        },
+        "lieuDit": {
+          "type": "string"
+        }
+      }
+    },
+    "allocataires": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/person" }
+    },
+    "enfants": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/person" }
+    },
+    "quotientFamilial": {
+      "type": "integer"
+    },
+    "annee": {
+      "type": "integer"
+    },
+    "mois": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12
+    }
+  },
+  "$defs": {
+    "person": {
+      "type": "object",
+      "properties": {
+        "nomPrenom": {
+          "type": "string"
+        },
+        "dateDeNaissance": {
+          "type": "string",
+          "pattern": "^[0-9]{8}$"
+        },
+        "sexe": {
+          "enum": ["F", "M"]
+        }
+      }
+    }
+  }
+}

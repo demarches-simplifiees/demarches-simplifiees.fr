@@ -180,7 +180,6 @@ class ApplicationController < ActionController::Base
     payload.merge!({
       user_agent: request.user_agent,
       user_id: current_user&.id,
-      user_email: current_user&.email,
       user_roles: current_user_roles
     }.compact)
 
