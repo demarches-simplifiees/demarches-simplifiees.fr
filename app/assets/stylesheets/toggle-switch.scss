@@ -49,8 +49,8 @@ input:checked + .toggle-switch-control {
 }
 
 input:focus + .toggle-switch-control {
-  border-color: $blue;
-  box-shadow: 0px 0px 2px 1px $blue;
+  border-color: $blue-france-500;
+  box-shadow: 0px 0px 2px 1px $blue-france-500;
 }
 
 input:checked + .toggle-switch-control::before {

@@ -196,6 +196,13 @@ module NewAdministrateur
       notice: "Le routage est activé."
     end
 
+    def update_instructeurs_self_management_enabled
+      procedure.update!(instructeurs_self_management_enabled_params)
+
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure),
+      notice: "L’autogestion des instructeurs est #{procedure.instructeurs_self_management_enabled? ? "activée" : "désactivée"}."
+    end
+
     def import
       if !CSV_ACCEPTED_CONTENT_TYPES.include?(group_csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
         flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
@@ -296,6 +303,10 @@ module NewAdministrateur
 
     def marcel_content_type
       Marcel::MimeType.for(group_csv_file.read, name: group_csv_file.original_filename, declared_type: group_csv_file.content_type)
+    end
+
+    def instructeurs_self_management_enabled_params
+      params.require(:procedure).permit(:instructeurs_self_management_enabled)
     end
   end
 end

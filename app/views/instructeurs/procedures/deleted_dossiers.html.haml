@@ -7,35 +7,15 @@
       .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
         role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
 
-      .procedure-header
-        %h1= procedure_libelle @procedure
-        = link_to 'gestion des notifications', email_notifications_instructeur_procedure_path(@procedure), class: 'header-link'
-        |
-        = link_to 'statistiques', stats_instructeur_procedure_path(@procedure), class: 'header-link'
-
-        - if @procedure.routee?
-          |
-          - if current_administrateur.present? && current_administrateur.owns?(@procedure)
-            = link_to 'instructeurs', admin_procedure_groupe_instructeurs_path(@procedure), class: 'header-link'
-          - else
-            = link_to 'instructeurs', instructeur_groupes_path(@procedure), class: 'header-link'
-
-        %ul.tabs
-          = tab_item('à suivre',
-            instructeur_procedure_path(@procedure, statut: 'a-suivre'))
-          = tab_item(t('pluralize.followed', count: 1),
-            instructeur_procedure_path(@procedure, statut: 'suivis'),
-            active: @statut == 'suivis')
-
-          = tab_item(t('pluralize.processed', count: 1),
-            instructeur_procedure_path(@procedure, statut: 'traites'))
-
-          = tab_item('tous les dossiers',
-            instructeur_procedure_path(@procedure, statut: 'tous'))
-
-          = tab_item(t('pluralize.archived', count: 1),
-            instructeur_procedure_path(@procedure, statut: 'archives'),
-            active: true)
+      = render partial: 'header', locals: { procedure: @procedure,
+        statut: @statut,
+        a_suivre_count: @a_suivre_count,
+        suivis_count: @suivis_count,
+        traites_count: @traites_count,
+        tous_count: @tous_count,
+        archives_count: @archives_count,
+        has_en_cours_notifications: @has_en_cours_notifications,
+        has_termine_notifications: @has_termine_notifications }
 
   .container
     %h1.titre-dossiers Dossiers supprimés
