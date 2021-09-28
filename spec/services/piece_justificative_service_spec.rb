@@ -6,7 +6,7 @@ describe PiecesJustificativesService do
     let(:names) { list.map { |pair| pair[1].to_s } }
 
     context 'when no piece_justificative is present' do
-      it { expect(list).to match([]) }
+      it { expect(names).to match([dossier_libelle(dossier)]) }
     end
 
     context 'dossier with champ' do
@@ -16,17 +16,17 @@ describe PiecesJustificativesService do
 
       context 'piece_justificative with file' do
         let(:champ) { create(:champ_piece_justificative, :with_piece_justificative_file) }
-        it { expect(names).to eq [champ_libelle(champ)] }
+        it { expect(names).to eq [dossier_libelle(dossier), champ_libelle(champ)] }
       end
 
       context 'piece_justificative without file' do
         let(:champ) { create(:champ_piece_justificative_empty) }
-        it { expect(names).to eq [] }
+        it { expect(names).to eq [dossier_libelle(dossier)] }
       end
 
       context 'private piece_justificative with file' do
         let(:champ) { create(:champ_piece_justificative, :with_piece_justificative_file, private: true) }
-        it { expect(names).to eq [champ_libelle(champ)] }
+        it { expect(names).to eq [dossier_libelle(dossier), champ_libelle(champ)] }
       end
     end
 
@@ -36,6 +36,7 @@ describe PiecesJustificativesService do
 
       it 'should have 4 piece_justificatives' do
         expect(names).to eq([
+          dossier_libelle(dossier),
           champ_libelle(repetition.champs[0]),
           champ_libelle(repetition.champs[1]),
           champ_libelle(repetition.champs[2]).sub(/\./, '-2.'),
@@ -48,14 +49,14 @@ describe PiecesJustificativesService do
       let(:commentaire) { create(:commentaire) }
       let(:dossier) { commentaire.dossier }
 
-      it { expect(list.length).to eq 0 }
+      it { expect(list.length).to eq 1 }
     end
 
     context 'when there is a message with an attachment' do
       let(:commentaire) { create(:commentaire, :with_file) }
       let(:dossier) { commentaire.dossier }
 
-      it { expect(names).to eq [message_libelle(commentaire)] }
+      it { expect(names).to eq [dossier_libelle(dossier), message_libelle(commentaire)] }
     end
 
     context 'when there multiple messages with same file' do
@@ -67,6 +68,7 @@ describe PiecesJustificativesService do
 
       it {
         expect(names).to eq([
+          dossier_libelle(dossier),
           message_libelle(commentaire1),
           message_libelle(commentaire2).sub(/\./, '-2.')
         ])
@@ -79,6 +81,10 @@ describe PiecesJustificativesService do
 
     def message_libelle(pj)
       'messagerie/' + pj.piece_jointe.filename.to_s
+    end
+
+    def dossier_libelle(dossier)
+      "dossier/export-#{dossier.id}.pdf"
     end
   end
 end
