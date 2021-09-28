@@ -51,15 +51,18 @@ class Export < ApplicationRecord
 
   def self.find_or_create_export(format, groupe_instructeurs)
     create_with(groupe_instructeurs: groupe_instructeurs)
-      .create_or_find_by(format: format, key: generate_cache_key(groupe_instructeurs))
+      .create_or_find_by(format: format, key: generate_cache_key(groupe_instructeurs.map(&:id)))
   end
 
-  def self.find_for_format_and_groupe_instructeurs(format, groupe_instructeurs)
-    find_by(format: format, key: generate_cache_key(groupe_instructeurs))
+  def self.find_for_groupe_instructeurs(groupe_instructeurs_ids)
+    exports = where(key: generate_cache_key(groupe_instructeurs_ids))
+
+    ['xlsx', 'csv', 'ods']
+      .map { |format| exports.find { |export| export.format == format } }
   end
 
-  def self.generate_cache_key(groupe_instructeurs)
-    groupe_instructeurs.map(&:id).sort.join('-')
+  def self.generate_cache_key(groupe_instructeurs_ids)
+    groupe_instructeurs_ids.sort.join('-')
   end
 
   private

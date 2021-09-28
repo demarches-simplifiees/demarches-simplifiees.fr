@@ -134,14 +134,21 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  def notifications_for_procedure(procedure, scope)
-    target_groupes = groupe_instructeurs.where(procedure: procedure)
-
+  def notifications_for_groupe_instructeurs(groupe_instructeurs)
     Dossier
-      .where(groupe_instructeur: target_groupes)
-      .send(scope) # :en_cours or :termine or :not_archived (or any other Dossier scope)
+      .not_archived
+      .where(groupe_instructeur: groupe_instructeurs)
       .merge(followed_dossiers)
       .with_notifications
+      .pluck(:state, :id)
+      .reduce({ termines: [], en_cours: [] }) do |acc, e|
+        if Dossier::TERMINE.include?(e[0])
+          acc[:termines] << e[1]
+        elsif Dossier::EN_CONSTRUCTION_OU_INSTRUCTION.include?(e[0])
+          acc[:en_cours] << e[1]
+        end
+        acc
+      end
   end
 
   def procedure_ids_with_notifications(scope)
@@ -165,11 +172,14 @@ class Instructeur < ApplicationRecord
       .reduce([]) do |acc, groupe|
       procedure = groupe.procedure
 
+      notifications = notifications_for_groupe_instructeurs([groupe.id])
+      nb_notification = notifications[:en_cours].count + notifications[:termines].count
+
       h = {
         nb_en_construction: groupe.dossiers.en_construction.count,
         nb_en_instruction: groupe.dossiers.en_instruction.count,
         nb_accepted: Traitement.where(dossier: groupe.dossiers.accepte, processed_at: Time.zone.yesterday.beginning_of_day..Time.zone.yesterday.end_of_day).count,
-        nb_notification: notifications_for_procedure(procedure, :not_archived).count
+        nb_notification: nb_notification
       }
 
       if h[:nb_en_construction] > 0 || h[:nb_notification] > 0

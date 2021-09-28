@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
 import DrawControl from 'react-mapbox-gl-draw';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 import { getJSON, ajax, fire } from '@utils';
