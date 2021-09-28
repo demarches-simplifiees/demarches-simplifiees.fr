@@ -193,7 +193,7 @@
       %p.button Modifier
 
     - if feature_enabled?(:api_particulier)
-      = link_to admin_procedure_api_particulier_path(@procedure), class: 'card-admin' do
+      = link_to admin_procedure_api_particulier_path(@procedure), class: 'card-admin', id: 'api-particulier' do
         - if @procedure.api_particulier_token.present?
           %div
             %span.icon.accept

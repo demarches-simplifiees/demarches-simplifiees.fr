@@ -222,15 +222,4 @@ feature 'The routing', js: true do
 
     expect(page).to have_text('Mot de passe enregistré')
   end
-
-  def log_out(old_layout: false)
-    if old_layout
-      page.all('.dropdown-button').first.click
-      click_on 'Se déconnecter'
-    else
-      click_button(title: 'Mon compte')
-      click_on 'Se déconnecter'
-    end
-    expect(page).to have_current_path(root_path)
-  end
 end
