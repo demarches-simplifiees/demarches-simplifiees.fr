@@ -31,6 +31,12 @@ describe APIParticulier::Services::SourcesService do
 
       it { is_expected.to match(cnaf_allocataires_and_enfants) }
     end
+
+    context 'when a procedure has an unknown scope' do
+      let(:api_particulier_scopes) { ['unknown_scope'] }
+
+      it { is_expected.to match({}) }
+    end
   end
 
   describe '#sanitize' do
