@@ -60,7 +60,7 @@ class Champs::NumeroDnChamp < Champ
     if value.present?
       "#{numero_dn || ''}#{(ddn = displayed_date_de_naissance).present? ? " né(e) le #{ddn}" : ''}"
     else
-      nil
+      ''
     end
   end
 

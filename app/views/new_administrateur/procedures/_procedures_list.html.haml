@@ -6,7 +6,7 @@
       .flex.column.ml-1
         .card-title
           = link_to procedure.libelle, admin_procedure_path(procedure), style: 'color: black;'
-        = link_to(procedure_lien(procedure), procedure_lien(procedure), class: 'procedure-lien mb-1')
+        = link_to(procedure_lien(procedure), procedure_lien(procedure), class: 'mb-1')
 
       .admin-procedures-list-timestamps
         %p.notice N° #{procedure.id}

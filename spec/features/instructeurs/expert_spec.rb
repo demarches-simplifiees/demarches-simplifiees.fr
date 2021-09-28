@@ -12,6 +12,8 @@ feature 'Inviting an expert:', js: true do
 
   context 'as an Instructeur' do
     scenario 'I can invite an expert' do
+      allow(ClamavService).to receive(:safe_file?).and_return(true)
+
       # assign instructeur to linked dossier
       instructeur.assign_to_procedure(linked_dossier.procedure)
 
@@ -42,7 +44,7 @@ feature 'Inviting an expert:', js: true do
       expect(emails_sent_to(expert2.email.to_s).size).to eq(1)
 
       invitation_email = open_email(expert.email.to_s)
-      avis = expert.avis.reload.last
+      avis = expert.avis.find_by(dossier: dossier)
       sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, avis.expert.email)
       expect(invitation_email.body).to include(sign_up_link)
     end

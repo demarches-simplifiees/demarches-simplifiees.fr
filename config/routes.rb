@@ -113,6 +113,11 @@ Rails.application.routes.draw do
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
     get 'lien-envoye/:email' => 'users/sessions#link_sent', constraints: { email: /.*/ }, as: 'link_sent'
     get '/users/passwords/test_strength/:complexity' => 'users/passwords#test_strength', constraints: { complexity: /\d/ }, as: 'test_password_strength'
+    get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
+  end
+
+  devise_scope :administrateur do
+    get '/administrateurs/password/test_strength' => 'administrateurs/passwords#test_strength'
   end
 
   #
@@ -399,6 +404,8 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
+
+        resources :archives, only: [:index, :create, :show], controller: 'archives'
       end
     end
     get "recherche" => "recherche#index"
