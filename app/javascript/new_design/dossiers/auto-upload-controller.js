@@ -99,9 +99,8 @@ export default class AutoUploadController {
   }
 
   _hideErrorMessage() {
-    let errorElement = this.input.parentElement.querySelector(
-      '.attachment-error'
-    );
+    let errorElement =
+      this.input.parentElement.querySelector('.attachment-error');
     if (errorElement) {
       hide(errorElement);
     }

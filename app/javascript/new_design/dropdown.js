@@ -1,7 +1,7 @@
 import { delegate } from '@utils';
 
 delegate('click', 'body', (event) => {
-  if (!event.target.closest('.dropdown')) {
+  if (!event.target.closest('.dropdown, [data-reach-combobox-popover]')) {
     [...document.querySelectorAll('.dropdown')].forEach((element) => {
       const button = element.querySelector('.dropdown-button');
       button.setAttribute('aria-expanded', false);

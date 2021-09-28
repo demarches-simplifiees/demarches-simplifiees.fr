@@ -21,4 +21,17 @@ class Expert < ApplicationRecord
   def self.by_email(email)
     Expert.eager_load(:user).find_by(users: { email: email })
   end
+
+  def avis_summary
+    if @avis_summary.present?
+      @avis_summary
+    else
+      query = <<~EOF
+        COUNT(*) FILTER (where answer IS NULL) AS unanswered,
+        COUNT(*) AS total
+      EOF
+      result = avis.select(query)[0]
+      @avis_summary = { unanswered: result.unanswered, total: result.total }
+    end
+  end
 end

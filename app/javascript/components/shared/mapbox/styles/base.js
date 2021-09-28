@@ -183,8 +183,7 @@ export default {
   sources: {
     'decoupage-administratif': {
       type: 'vector',
-      url:
-        'https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json'
+      url: 'https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json'
     },
     openmaptiles: {
       type: 'vector',

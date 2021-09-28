@@ -3,6 +3,12 @@
 # Version of your assets, change this if you want to expire all your assets.
 Rails.application.config.assets.version = '1.0'
 
+# prevent random crashes when building docker (pf)
+# https://stackoverflow.com/questions/66927024/cant-push-to-heroku-sassc-segmentation-fault
+Rails.application.config.assets.configure do |env|
+  env.export_concurrent = false
+end
+
 # Add additional assets to the asset load path.
 # Rails.application.config.assets.paths << Emoji.images_path
 # Add some node_modules folder to the asset load path.

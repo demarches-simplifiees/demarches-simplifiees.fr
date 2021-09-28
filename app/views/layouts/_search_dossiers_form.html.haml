@@ -3,4 +3,4 @@
     = label_tag :q, "Numéro de dossier", class: 'hidden'
     = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: "Rechercher un dossier"
     %button{ title: "Rechercher" }
-      = image_tag "icons/search-blue.svg", alt: 'Rechercher', 'aria-hidden':'true'
+      = image_tag "icons/search-blue.svg", alt: 'Rechercher', 'aria-hidden':'true', width: 24, height: 24, loading: 'lazy'

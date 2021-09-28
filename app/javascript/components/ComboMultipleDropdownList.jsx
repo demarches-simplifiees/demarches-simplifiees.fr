@@ -18,6 +18,7 @@ import {
 import '@reach/combobox/styles.css';
 import { matchSorter } from 'match-sorter';
 import { fire } from '@utils';
+import { XIcon } from '@heroicons/react/outline';
 
 const Context = createContext();
 
@@ -152,7 +153,7 @@ function ComboMultipleDropdownList({
         />
       </ComboboxTokenLabel>
       {results && (
-        <ComboboxPopover portal={false}>
+        <ComboboxPopover className="shadow-popup">
           {results.length === 0 && (
             <p>
               Aucun résultat{' '}
@@ -160,11 +161,17 @@ function ComboMultipleDropdownList({
             </p>
           )}
           <ComboboxList>
-            {results.map(([label], index) => {
+            {results.map(([label, value], index) => {
               if (label.startsWith('--')) {
                 return <ComboboxSeparator key={index} value={label} />;
               }
-              return <ComboboxOption key={index} value={label} />;
+              return (
+                <ComboboxOption
+                  key={index}
+                  value={label}
+                  data-option-value={value}
+                />
+              );
             })}
           </ComboboxList>
         </ComboboxPopover>
@@ -226,15 +233,17 @@ function ComboboxToken({ value, ...props }) {
       }}
       {...props}
     >
-      <span
-        role="presentation"
+      <button
+        type="button"
+        tabIndex={-1}
         data-combobox-remove-token
         onClick={() => {
           onRemove(value);
         }}
       >
-        x
-      </span>
+        <XIcon style={{ width: '15px', height: '15px' }} />
+        <span className="screen-reader-text">Désélectionner</span>
+      </button>
       {value}
     </li>
   );

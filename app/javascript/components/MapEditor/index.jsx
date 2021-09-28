@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import { GeoJSONLayer, ZoomControl } from 'react-mapbox-gl';
 import DrawControl from 'react-mapbox-gl-draw';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 import { getJSON, ajax, fire } from '@utils';
@@ -46,10 +47,10 @@ function MapEditor({ featureCollection, url, preview, options }) {
   const [cadastresFeatureCollection, setCadastresFeatureCollection] = useState(
     filterFeatureCollection(featureCollection, 'cadastre')
   );
-  const mapStyle = useMemo(() => getMapStyle(style, options.layers), [
-    style,
-    options
-  ]);
+  const mapStyle = useMemo(
+    () => getMapStyle(style, options.layers),
+    [style, options]
+  );
   const hasCadastres = useMemo(() => options.layers.includes('cadastres'));
 
   useEffect(() => {

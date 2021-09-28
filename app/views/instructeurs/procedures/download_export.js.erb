@@ -1,5 +1,5 @@
 <%= render_to_element('.procedure-actions', partial: "download_dossiers", 
-                      locals: { procedure: @procedure, xlsx_export: @xlsx_export, csv_export: @csv_export, ods_export: @ods_export }) %>
+                      locals: { procedure: @procedure, xlsx_export: @xlsx_export, csv_export: @csv_export, ods_export: @ods_export, dossier_count: @dossier_count }) %>
 
 <% [[@xlsx_export, :xlsx], [@csv_export, :csv], [@ods_export, :ods]].each do |(export, format)| %>
   <% if export && !export.ready? %>
