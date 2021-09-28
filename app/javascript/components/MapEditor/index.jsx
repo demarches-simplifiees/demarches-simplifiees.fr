@@ -47,10 +47,10 @@ function MapEditor({ featureCollection, url, preview, options }) {
   const [cadastresFeatureCollection, setCadastresFeatureCollection] = useState(
     filterFeatureCollection(featureCollection, 'cadastre')
   );
-  const mapStyle = useMemo(() => getMapStyle(style, options.layers), [
-    style,
-    options
-  ]);
+  const mapStyle = useMemo(
+    () => getMapStyle(style, options.layers),
+    [style, options]
+  );
   const hasCadastres = useMemo(() => options.layers.includes('cadastres'));
 
   useEffect(() => {

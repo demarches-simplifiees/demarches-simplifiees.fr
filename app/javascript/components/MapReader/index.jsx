@@ -51,10 +51,10 @@ const MapReader = ({ featureCollection, options }) => {
     [selectionsUtilisateurFeatureCollection]
   );
   const hasCadastres = useMemo(() => options.layers.includes('cadastres'));
-  const mapStyle = useMemo(() => getMapStyle(style, options.layers), [
-    style,
-    options
-  ]);
+  const mapStyle = useMemo(
+    () => getMapStyle(style, options.layers),
+    [style, options]
+  );
   const popup = useMemo(
     () =>
       new Popup({
