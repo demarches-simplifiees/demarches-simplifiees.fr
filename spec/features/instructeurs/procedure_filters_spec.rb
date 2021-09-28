@@ -32,7 +32,7 @@ feature "procedure filters" do
   end
 
   scenario "should add be able to add created_at column", js: true do
-    add_column("Créé le")
+    add_column("Créé le", "self/created_at")
     within ".dossiers-table" do
       expect(page).to have_link("Créé le")
       expect(page).to have_link(new_unfollow_dossier.created_at.strftime('%d/%m/%Y'))
@@ -40,7 +40,7 @@ feature "procedure filters" do
   end
 
   scenario "should add be able to add and remove custom type_de_champ column", js: true do
-    add_column(type_de_champ.libelle)
+    add_column(type_de_champ.libelle, "type_de_champ/#{type_de_champ.stable_id}")
     within ".dossiers-table" do
       expect(page).to have_link(type_de_champ.libelle)
       expect(page).to have_link(champ.value)
@@ -123,15 +123,16 @@ feature "procedure filters" do
     click_button "Ajouter le filtre"
   end
 
-  def add_column(column_name)
+  def add_column(column_name, column_path)
     click_on 'Personnaliser'
-    select_multi('colonne', column_name)
+    select_multi_combobox('colonne', column_name, column_path)
     click_button "Enregistrer"
   end
 
   def remove_column(column_name)
     click_on 'Personnaliser'
-    find(:xpath, "//li[contains(text(), '#{column_name}')]/span[contains(text(), 'x')]").click
+    find(:xpath, ".//li[contains(text(), \"#{column_name}\")]/button", text: 'Désélectionner').click
+    find("body").native.send_key("Escape")
     click_button "Enregistrer"
   end
 end

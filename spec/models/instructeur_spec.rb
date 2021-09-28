@@ -255,29 +255,35 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe '#notifications_for_procedure' do
+  describe '#notifications_for_groupe_instructeurs' do
+    # one procedure, one group, 2 instructeurs
     let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private) }
-    let!(:dossier) { create(:dossier, :followed, groupe_instructeur: procedure.groupe_instructeurs.last, state: Dossier.states.fetch(:en_construction)) }
+    let(:gi_p1) { procedure.groupe_instructeurs.last }
+    let!(:dossier) { create(:dossier, :followed, groupe_instructeur: gi_p1, state: Dossier.states.fetch(:en_construction)) }
     let(:instructeur) { dossier.follows.first.instructeur }
-    let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [procedure.groupe_instructeurs.last]) }
+    let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [gi_p1]) }
 
+    # one other procedure, dossier followed by a third instructeur
     let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let!(:instructeur_on_procedure_2) { dossier_on_procedure_2.follows.first.instructeur }
+    let(:gi_p2) { dossier.groupe_instructeur }
+
     let(:now) { Time.zone.parse("14/09/1867") }
     let(:follow) { instructeur.follows.find_by(dossier: dossier) }
     let(:follow2) { instructeur_2.follows.find_by(dossier: dossier) }
+
     let(:seen_at_instructeur) { now - 1.hour }
     let(:seen_at_instructeur2) { now - 1.hour }
 
     before do
-      procedure.groupe_instructeurs.last.instructeurs << instructeur
+      gi_p1.instructeurs << instructeur
       instructeur_2.followed_dossiers << dossier
       Timecop.freeze(now)
     end
 
     after { Timecop.return }
 
-    subject { instructeur.notifications_for_procedure(procedure, :en_cours) }
+    subject { instructeur.notifications_for_groupe_instructeurs(gi_p1)[:en_cours] }
 
     context 'when the instructeur has just followed the dossier' do
       it { is_expected.to match([]) }
@@ -290,14 +296,14 @@ describe Instructeur, type: :model do
         follow2.update_attribute('demande_seen_at', seen_at_instructeur2)
       end
 
-      it { is_expected.to match([dossier]) }
-      it { expect(instructeur_2.notifications_for_procedure(procedure, :en_cours)).to match([dossier]) }
-      it { expect(instructeur_on_procedure_2.notifications_for_procedure(procedure, :en_cours)).to match([]) }
+      it { is_expected.to match([dossier.id]) }
+      it { expect(instructeur_2.notifications_for_groupe_instructeurs(gi_p1)[:en_cours]).to match([dossier.id]) }
+      it { expect(instructeur_on_procedure_2.notifications_for_groupe_instructeurs(gi_p2)[:en_cours]).to match([]) }
 
       context 'and there is a modification on private champs' do
         before { dossier.champs_private.first.update_attribute('value', 'toto') }
 
-        it { is_expected.to match([dossier]) }
+        it { is_expected.to match([dossier.id]) }
       end
 
       context 'when instructeur update it s public champs last seen' do
@@ -305,7 +311,7 @@ describe Instructeur, type: :model do
         let(:seen_at_instructeur2) { now - 1.hour }
 
         it { is_expected.to match([]) }
-        it { expect(instructeur_2.notifications_for_procedure(procedure, :en_cours)).to match([dossier]) }
+        it { expect(instructeur_2.notifications_for_groupe_instructeurs(gi_p1)[:en_cours]).to match([dossier.id]) }
       end
     end
 
@@ -321,7 +327,7 @@ describe Instructeur, type: :model do
         follow.update_attribute('annotations_privees_seen_at', seen_at_instructeur)
       end
 
-      it { is_expected.to match([dossier]) }
+      it { is_expected.to match([dossier.id]) }
     end
 
     context 'when there is a modification on avis' do
@@ -330,7 +336,7 @@ describe Instructeur, type: :model do
         follow.update_attribute('avis_seen_at', seen_at_instructeur)
       end
 
-      it { is_expected.to match([dossier]) }
+      it { is_expected.to match([dossier.id]) }
     end
 
     context 'the messagerie' do
@@ -340,7 +346,7 @@ describe Instructeur, type: :model do
           follow.update_attribute('messagerie_seen_at', seen_at_instructeur)
         end
 
-        it { is_expected.to match([dossier]) }
+        it { is_expected.to match([dossier.id]) }
       end
 
       context 'when there is a new commentaire issued by tps' do
@@ -431,9 +437,9 @@ describe Instructeur, type: :model do
 
     context 'when a notification exists' do
       before do
-        allow(instructeur).to receive(:notifications_for_procedure)
-          .with(procedure_to_assign, :not_archived)
-          .and_return([1, 2, 3])
+        allow(instructeur).to receive(:notifications_for_groupe_instructeurs)
+          .with([procedure_to_assign.groupe_instructeurs.first.id])
+          .and_return(en_cours: [1, 2, 3], termines: [])
       end
 
       it do

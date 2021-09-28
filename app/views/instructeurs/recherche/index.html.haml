@@ -31,6 +31,12 @@
             %td.status-col
               = link_to(dossier_linked_path(current_instructeur, dossier), class: 'cell-link') do
                 = status_badge(dossier.state)
-            %td.action-col.follow-col= render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure: dossier.procedure, dossier: dossier, dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
+            %td.action-col.follow-col= render partial: "instructeurs/procedures/dossier_actions",
+                                              locals: { procedure_id: dossier.procedure.id,
+                                                        dossier_id: dossier.id,
+                                                        state: dossier.state,
+                                                        archived: dossier.archived,
+                                                        dossier_is_followed: @followed_dossiers_id.include?(dossier.id) }
+
   - else
     %h2 Aucun dossier correspondant à votre recherche n'a été trouvé
