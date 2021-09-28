@@ -71,7 +71,7 @@ describe Users::PasswordsController, type: :controller do
       end
     end
   end
-  
+
   describe '#reset_link_sent' do
     let(:email) { 'test@example.com' }
 
