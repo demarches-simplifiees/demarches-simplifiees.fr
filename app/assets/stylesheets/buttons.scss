@@ -30,22 +30,22 @@
 
   &.primary {
     color: #FFFFFF;
-    border-color: $blue;
-    background-color: $blue;
+    border-color: $blue-france-700;
+    background-color: $blue-france-700;
 
     &:hover:not(:disabled) {
-      background: $light-blue;
+      background: $blue-france-500;
     }
   }
 
   &.secondary {
-    color: $blue;
-    border-color: $blue;
+    color: $blue-france-700;
+    border-color: $blue-france-700;
     background-color: #FFFFFF;
 
     &:hover:not(:disabled) {
       color: #FFFFFF;
-      background: $light-blue;
+      background: $blue-france-700;
     }
   }
 
@@ -160,7 +160,7 @@
     &.icon-only {
       &::after {
         margin-left: 2px;
-        color: $blue;
+        color: $blue-france-500;
       }
     }
   }
@@ -223,7 +223,7 @@
       cursor: default;
 
       h4 {
-        color: $blue;
+        color: $blue-france-500;
       }
     }
 
@@ -309,5 +309,5 @@
 }
 
 .link {
-  color: $blue;
+  color: $blue-france-500;
 }

@@ -20,7 +20,7 @@
   }
 
   .card-admin-status-todo {
-    color: #246AC5;
+    color: $blue-france-500;
   }
 
   .card-admin-title {
@@ -42,10 +42,10 @@
   }
 
   &:hover {
-    color: $blue;
+    color: $blue-france-500;
 
     .button {
-      color: $blue;
+      color: $blue-france-500;
     }
   }
 }
