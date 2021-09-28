@@ -1,7 +1,7 @@
 describe APIParticulier::CnafAdapter do
   let(:adapter) { described_class.new(api_particulier_token, numero_allocataire, code_postal, requested_sources) }
 
-  before { stub_const("API_PARTICULIER_URL", "https://particulier-test.api.gouv.fr/api") }
+  before { stub_const("API_PARTICULIER_URL", "https://particulier.api.gouv.fr/api") }
 
   describe '#to_params' do
     let(:api_particulier_token) { '29eb50b65f64e8e00c0847a8bbcbd150e1f847' }
