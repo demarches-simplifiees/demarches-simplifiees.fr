@@ -3,8 +3,10 @@
 # Table name: archives
 #
 #  id             :bigint           not null, primary key
+#  end_day        :date
 #  key            :text             not null
 #  month          :date
+#  start_day      :date
 #  status         :string           not null
 #  time_span_type :string           not null
 #  created_at     :datetime         not null
@@ -59,9 +61,18 @@ class Archive < ApplicationRecord
     end
   end
 
-  def self.find_or_create_archive(time_span_type, month, groupe_instructeurs)
-    create_with(groupe_instructeurs: groupe_instructeurs)
-      .create_or_find_by(time_span_type: time_span_type, month: month, key: generate_cache_key(groupe_instructeurs))
+  def self.find_or_create_archive(time_span_type, period, groupe_instructeurs)
+    case time_span_type
+    when 'everything'
+      create_with(groupe_instructeurs: groupe_instructeurs)
+        .create_or_find_by(time_span_type: time_span_type, key: generate_cache_key(groupe_instructeurs))
+    when 'monthly'
+      create_with(groupe_instructeurs: groupe_instructeurs)
+        .create_or_find_by(time_span_type: time_span_type, month: period[:month], key: generate_cache_key(groupe_instructeurs))
+    when 'custom'
+      create_with(groupe_instructeurs: groupe_instructeurs)
+        .create_or_find_by(time_span_type: time_span_type, start_day: period[:start_day], end_day: period[:end_day], key: generate_cache_key(groupe_instructeurs))
+    end
   end
 
   private

@@ -90,6 +90,8 @@ ActiveRecord::Schema.define(version: 2021_11_04_102349) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "key", null: false
+    t.date "start_day"
+    t.date "end_day"
     t.index ["key", "time_span_type", "month"], name: "index_archives_on_key_and_time_span_type_and_month", unique: true
   end
 

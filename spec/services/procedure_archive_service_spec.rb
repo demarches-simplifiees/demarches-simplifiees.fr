@@ -8,7 +8,7 @@ describe ProcedureArchiveService do
   describe '#create_pending_archive' do
     context 'for a specific month' do
       it 'creates a pending archive' do
-        archive = service.create_pending_archive(instructeur, 'monthly', date_month)
+        archive = service.create_pending_archive(instructeur, 'monthly', { month: date_month })
 
         expect(archive.time_span_type).to eq 'monthly'
         expect(archive.month).to eq date_month
