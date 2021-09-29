@@ -241,7 +241,7 @@ function ComboboxToken({ value, ...props }) {
           onRemove(value);
         }}
       >
-        <XIcon style={{ width: '15px', height: '15px' }} />
+        <XIcon className="icon-size" />
         <span className="screen-reader-text">Désélectionner</span>
       </button>
       {value}

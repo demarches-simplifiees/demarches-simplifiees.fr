@@ -1,9 +1,6 @@
 {
   "dependencies": {
     "@babel/preset-react": "^7.12.13",
-    "@fortawesome/fontawesome-svg-core": "^1.2.34",
-    "@fortawesome/free-solid-svg-icons": "^5.15.2",
-    "@fortawesome/react-fontawesome": "^0.1.14",
     "@heroicons/react": "^1.0.1",
     "@mapbox/mapbox-gl-draw": "^1.2.2",
     "@rails/actiontext": "^6.0.3",
