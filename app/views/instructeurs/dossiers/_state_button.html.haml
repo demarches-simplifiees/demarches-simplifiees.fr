@@ -99,17 +99,24 @@
                 %h4 Voir l’attestation
                 %p Cette attestation a été envoyée automatiquement au demandeur.
 
-        %li
-          = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?" } do
-            %span.icon.in-progress
-            .dropdown-description
-              %h4 Repasser en instruction
-              L’usager sera notifié que son dossier est réexaminé.
-        - if dossier.termine?
+        - if dossier.can_repasser_en_instruction?
           %li
-            = link_to supprimer_dossier_instructeur_dossier_path(dossier.procedure, dossier), method: :patch, data: { confirm: "Voulez vous vraiment supprimer le dossier #{dossier.id} ? Cette action est irréversible. \nNous vous suggérons de télécharger le dossier au format PDF au préalable." } do
-              %span.icon.delete
+            = link_to repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier), method: :post, data: { remote:true, confirm: "Voulez vous remettre le dossier #{dossier.id} en instruction ?" } do
+              %span.icon.in-progress
               .dropdown-description
-                %h4 Supprimer le dossier
-                L’usager sera notifié que son dossier est supprimé.
+                %h4 Repasser en instruction
+                L’usager sera notifié que son dossier est réexaminé.
+        - elsif dossier.user_deleted?
+          %li
+            %span.icon.info
+            .dropdown-description
+              %h4 En attente d‘archivage
+              L'usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
+
+        %li
+          = link_to supprimer_dossier_instructeur_dossier_path(dossier.procedure, dossier), method: :patch, data: { confirm: "Voulez vous vraiment supprimer le dossier #{dossier.id} ? Cette action est irréversible. \nNous vous suggérons de télécharger le dossier au format PDF au préalable." } do
+            %span.icon.delete
+            .dropdown-description
+              %h4 Supprimer le dossier
+              L’usager sera notifié que son dossier est supprimé.
 

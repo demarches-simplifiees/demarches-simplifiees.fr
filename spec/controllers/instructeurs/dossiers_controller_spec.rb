@@ -210,7 +210,7 @@ describe Instructeurs::DossiersController, type: :controller do
         end
 
         it 'Notification email is sent' do
-          expect(NotificationMailer).to receive(:send_refused_notification)
+          expect(NotificationMailer).to receive(:send_refuse_notification)
             .with(dossier).and_return(NotificationMailer)
           expect(NotificationMailer).to receive(:deliver_later)
 
@@ -250,7 +250,7 @@ describe Instructeurs::DossiersController, type: :controller do
         end
 
         it 'Notification email is sent' do
-          expect(NotificationMailer).to receive(:send_without_continuation_notification)
+          expect(NotificationMailer).to receive(:send_sans_suite_notification)
             .with(dossier).and_return(NotificationMailer)
           expect(NotificationMailer).to receive(:deliver_later)
 
@@ -280,7 +280,7 @@ describe Instructeurs::DossiersController, type: :controller do
         dossier.passer_en_instruction!(instructeur)
         sign_in(instructeur.user)
 
-        expect(NotificationMailer).to receive(:send_closed_notification)
+        expect(NotificationMailer).to receive(:send_accepte_notification)
           .with(dossier)
           .and_return(NotificationMailer)
 

@@ -263,13 +263,16 @@ describe User, type: :model do
 
   describe '#can_be_deleted?' do
     let(:user) { create(:user) }
+    let(:administrateur) { create(:administrateur) }
+    let(:instructeur) { create(:instructeur) }
+    let(:expert) { create(:expert) }
 
     subject { user.can_be_deleted? }
 
     context 'when the user has a dossier in instruction' do
       let!(:dossier) { create(:dossier, :en_instruction, user: user) }
 
-      it { is_expected.to be false }
+      it { is_expected.to be true }
     end
 
     context 'when the user has no dossier in instruction' do
@@ -278,19 +281,19 @@ describe User, type: :model do
 
     context 'when the user is an administrateur' do
       it 'cannot be deleted' do
-        administrateur = create(:administrateur)
-        user = administrateur.user
-
-        expect(user.can_be_deleted?).to be_falsy
+        expect(administrateur.user.can_be_deleted?).to be_falsy
       end
     end
 
     context 'when the user is an instructeur' do
       it 'cannot be deleted' do
-        instructeur = create(:instructeur)
-        user = instructeur.user
+        expect(instructeur.user.can_be_deleted?).to be_falsy
+      end
+    end
 
-        expect(user.can_be_deleted?).to be_falsy
+    context 'when the user is an expert' do
+      it 'cannot be deleted' do
+        expect(expert.user.can_be_deleted?).to be_falsy
       end
     end
   end
@@ -299,14 +302,7 @@ describe User, type: :model do
     let(:super_admin) { create(:super_admin) }
     let(:user) { create(:user) }
 
-    context 'with a dossier in instruction' do
-      let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
-      it 'raises' do
-        expect { user.delete_and_keep_track_dossiers(super_admin) }.to raise_error(RuntimeError)
-      end
-    end
-
-    context 'without a dossier in instruction' do
+    context 'without a dossier with processing strted' do
       let!(:dossier_en_construction) { create(:dossier, :en_construction, user: user) }
       let!(:dossier_brouillon) { create(:dossier, user: user) }
 
@@ -321,28 +317,39 @@ describe User, type: :model do
       end
 
       context 'with a discarded dossier' do
-        let!(:dossier_cache) do
-          create(:dossier, :en_construction, user: user)
-        end
-        let!(:dossier_from_another_user) do
-          create(:dossier, :en_construction, user: create(:user))
-        end
+        let(:dossier_to_discard) { create(:dossier, :en_construction, user: user) }
+        let!(:dossier_from_another_user) { create(:dossier, :en_construction, user: create(:user)) }
 
         it "keep track of dossiers and delete user" do
-          dossier_cache.discard_and_keep_track!(super_admin, :user_request)
+          dossier_to_discard.discard_and_keep_track!(super_admin, :user_request)
           user.delete_and_keep_track_dossiers(super_admin)
 
           expect(DeletedDossier.find_by(dossier_id: dossier_en_construction)).to be_present
           expect(DeletedDossier.find_by(dossier_id: dossier_brouillon)).to be_nil
+          expect(Dossier.find_by(id: dossier_from_another_user.id)).to be_present
           expect(User.find_by(id: user.id)).to be_nil
         end
+      end
+    end
 
-        it "doesn't destroy dossiers of another user" do
-          dossier_cache.discard_and_keep_track!(super_admin, :user_request)
-          user.delete_and_keep_track_dossiers(super_admin)
+    context 'with dossiers with processing strted' do
+      let!(:dossier_en_instruction) { create(:dossier, :en_instruction, user: user) }
+      let!(:dossier_termine) { create(:dossier, :accepte, user: user) }
 
-          expect(Dossier.find_by(id: dossier_from_another_user.id)).to be_present
-        end
+      it "keep track of dossiers and delete user" do
+        user.delete_and_keep_track_dossiers(super_admin)
+
+        expect(dossier_en_instruction.reload).to be_present
+        expect(dossier_en_instruction.user).to be_nil
+        expect(dossier_en_instruction.user_email_for(:display)).to eq(user.email)
+        expect { dossier_en_instruction.user_email_for(:notification) }.to raise_error(RuntimeError)
+
+        expect(dossier_termine.reload).to be_present
+        expect(dossier_termine.user).to be_nil
+        expect(dossier_termine.user_email_for(:display)).to eq(user.email)
+        expect { dossier_termine.user_email_for(:notification) }.to raise_error(RuntimeError)
+
+        expect(User.find_by(id: user.id)).to be_nil
       end
     end
   end
