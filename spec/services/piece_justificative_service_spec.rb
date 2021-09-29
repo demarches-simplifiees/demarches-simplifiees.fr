@@ -84,7 +84,7 @@ describe PiecesJustificativesService do
     end
 
     def dossier_libelle(dossier)
-      "dossier/export-#{dossier.id}.pdf"
+      "export-#{dossier.id}.pdf"
     end
   end
 end

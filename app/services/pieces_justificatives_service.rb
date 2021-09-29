@@ -1,11 +1,10 @@
 class PiecesJustificativesService
   def self.liste_pieces_justificatives(dossier)
-    dossier_export = generate_dossier_export(dossier)
     pjs_champs = pjs_for_champs(dossier)
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier)
 
-    ([dossier_export] + pjs_champs + pjs_commentaires + pjs_dossier)
+    (pjs_champs + pjs_commentaires + pjs_dossier)
       .filter(&:attached?)
   end
 
@@ -54,6 +53,17 @@ class PiecesJustificativesService
     end
   end
 
+  def self.generate_dossier_export(dossier)
+    pdf = ApplicationController
+      .render(template: 'dossiers/show', formats: [:pdf],
+              assigns: {
+                include_infos_administration: true,
+                dossier: dossier
+              })
+    dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
+    dossier.pdf_export_for_instructeur
+  end
+
   private
 
   def self.normalized_filename(index, attachment, filename)
@@ -66,7 +76,7 @@ class PiecesJustificativesService
     end
     # prefix with the folder
     folder = self.folder(attachment)
-    filename = [folder, *sanitized].join('/')
+    filename = [folder, *sanitized].compact.join('/')
     # add optional -Number if filename collide with another
     i = index[filename]
     if i.present?
@@ -79,6 +89,8 @@ class PiecesJustificativesService
   end
 
   def self.folder(attachment)
+    return nil if attachment.name == 'pdf_export_for_instructeur'
+
     case attachment.record_type
     when 'Dossier'
       'dossier'
@@ -89,17 +101,6 @@ class PiecesJustificativesService
     else
       'pieces_justificatives'
     end
-  end
-
-  def self.generate_dossier_export(dossier)
-    pdf = ApplicationController
-      .render(template: 'dossiers/show', formats: [:pdf],
-              assigns: {
-                include_infos_administration: true,
-                dossier: dossier
-              })
-    dossier.pdf_export_for_instructeur.attach(io: StringIO.open(pdf), filename: "export-#{dossier.id}.pdf", content_type: 'application/pdf')
-    dossier.pdf_export_for_instructeur
   end
 
   def self.pjs_champs(dossier)

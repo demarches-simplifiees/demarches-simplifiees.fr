@@ -19,9 +19,8 @@ describe PiecesJustificativesService do
       expect(subject.any? { |piece| piece.name == 'piece_justificative_file' }).to be_falsy
     end
 
-    it 'returns export pdf of the dossier' do
-      expect(champ_identite.piece_justificative_file).to be_attached
-      expect(subject.any? { |piece| piece.name == 'pdf_export_for_instructeur' }).to be_truthy
+    it "doesn't return export pdf of the dossier" do
+      expect(subject.any? { |piece| piece.name == 'pdf_export_for_instructeur' }).to be_falsy
     end
   end
 end
