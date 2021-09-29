@@ -16,12 +16,7 @@ describe PiecesJustificativesService do
     # to be exported
     it 'ensures no titre identite is given' do
       expect(champ_identite.piece_justificative_file).to be_attached
-      expect(subject.any? { |piece| piece.name == 'piece_justificative_file' }).to be_falsy
-    end
-
-    it 'returns export pdf of the dossier' do
-      expect(champ_identite.piece_justificative_file).to be_attached
-      expect(subject.any? { |piece| piece.name == 'pdf_export_for_instructeur' }).to be_truthy
+      expect(subject).to eq([])
     end
   end
 end

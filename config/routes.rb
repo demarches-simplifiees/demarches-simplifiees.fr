@@ -404,8 +404,6 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
           end
         end
-
-        resources :archives, only: [:index, :create, :show], controller: 'archives'
       end
     end
     get "recherche" => "recherche#index"

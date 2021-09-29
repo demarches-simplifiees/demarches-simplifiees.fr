@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { PlusIcon, ArrowCircleDownIcon } from '@heroicons/react/outline';
 
 import { SortableContainer, addChampLabel } from '../utils';
 import TypeDeChamp from './TypeDeChamp';
@@ -38,7 +38,7 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
       </SortableContainer>
       {state.typeDeChamps.length === 0 && (
         <h2>
-          <FontAwesomeIcon icon="arrow-circle-down" />
+          <ArrowCircleDownIcon className="icon-size" />
           &nbsp;&nbsp;Cliquez sur le bouton «&nbsp;
           {addChampLabel(state.isAnnotation)}&nbsp;» pour créer votre premier
           champ.
@@ -56,7 +56,7 @@ function TypeDeChamps({ state: rootState, typeDeChamps }) {
             })
           }
         >
-          <FontAwesomeIcon icon="plus" size="sm" />
+          <PlusIcon className="icon-size" />
           &nbsp;&nbsp;
           {addChampLabel(state.isAnnotation)}
         </button>

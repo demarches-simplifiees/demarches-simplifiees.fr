@@ -165,10 +165,10 @@ feature 'Instructing a dossier:', js: true do
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
       expect(files.size).to be 3
-      expect(files[0].filename.include?('export')).to be_truthy
-      expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
-      expect(files[1].uncompressed_size).to be File.size(path)
-      expect(files[2].filename.include?('horodatage/operation')).to be_truthy
+      expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
+      expect(files[0].uncompressed_size).to be File.size(path)
+      expect(files[1].filename.include?('horodatage/operation')).to be_truthy
+      expect(files[2].filename.include?('dossier/export')).to be_truthy
     end
 
     scenario 'A instructeur can download an archive containing several identical attachments' do
@@ -180,13 +180,13 @@ feature 'Instructing a dossier:', js: true do
 
       expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
       expect(files.size).to be 4
-      expect(files[0].filename.include?('export')).to be_truthy
+      expect(files[0].filename.include?('piece_justificative_0')).to be_truthy
       expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
-      expect(files[2].filename.include?('piece_justificative_0')).to be_truthy
-      expect(files[1].filename).not_to eq files[2].filename
+      expect(files[0].filename).not_to eq files[1].filename
+      expect(files[0].uncompressed_size).to be File.size(path)
       expect(files[1].uncompressed_size).to be File.size(path)
-      expect(files[2].uncompressed_size).to be File.size(path)
-      expect(files[3].filename.include?('horodatage/operation')).to be_truthy
+      expect(files[2].filename.include?('horodatage/operation')).to be_truthy
+      expect(files[3].filename.include?('dossier/export')).to be_truthy
     end
 
     before { DownloadHelpers.clear_downloads }
