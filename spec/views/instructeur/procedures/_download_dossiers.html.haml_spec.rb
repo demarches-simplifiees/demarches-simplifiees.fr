@@ -12,5 +12,15 @@ describe 'instructeurs/procedures/_download_dossiers.html.haml', type: :view do
   context "when procedure has at least 1 dossier" do
     let(:dossier_count) { 1 }
     it { is_expected.to include("Télécharger tous les dossiers") }
+
+    context "With zip archive enabled" do
+      before { Flipper.enable(:archive_zip_globale, procedure) }
+      it { is_expected.to include("Télécharger une archive au format .zip") }
+    end
+
+    context "With zip archive disabled" do
+      before { Flipper.disable(:archive_zip_globale, procedure) }
+      it { is_expected.not_to include("Télécharger une archive au format .zip") }
+    end
   end
 end

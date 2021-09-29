@@ -712,13 +712,6 @@ describe Instructeurs::DossiersController, type: :controller do
         dossier_id: dossier.id
       }
     end
-
-    context 'when zip download is disabled through flipflop' do
-      it 'is forbidden' do
-        subject
-        expect(response).to have_http_status(:forbidden)
-      end
-    end
   end
 
   describe "#delete_dossier" do

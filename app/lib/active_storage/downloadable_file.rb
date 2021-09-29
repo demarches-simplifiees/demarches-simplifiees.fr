@@ -14,19 +14,23 @@ class ActiveStorage::DownloadableFile
     timestamp = attachment.created_at.strftime("%d-%m-%Y-%H-%M")
     id = attachment.id % 10000
 
-    "#{folder}/#{basename}-#{timestamp}-#{id}#{extension}"
+    [folder, "#{basename}-#{timestamp}-#{id}#{extension}"].join
   end
 
   def self.folder(attachment)
+    if attachment.name == 'pdf_export_for_instructeur'
+      return ''
+    end
+
     case attachment.record_type
     when 'Dossier'
-      'dossier'
+      'dossier/'
     when 'DossierOperationLog', 'BillSignature'
-      'horodatage'
+      'horodatage/'
     when 'Commentaire'
-      'messagerie'
+      'messagerie/'
     else
-      'pieces_justificatives'
+      'pieces_justificatives/'
     end
   end
 
