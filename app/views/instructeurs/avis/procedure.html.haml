@@ -38,7 +38,7 @@
               = link_to(instructeur_avis_path(avis.procedure, avis), class: 'cell-link') do
                 %span.icon.folder
                 #{avis.dossier.id}
-            %td= link_to(avis.dossier.user.email, instructeur_avis_path(avis.procedure, avis), class: 'cell-link')
+            %td= link_to(avis.dossier.user_email_for(:display), instructeur_avis_path(avis.procedure, avis), class: 'cell-link')
             %td= link_to(avis.procedure.libelle, instructeur_avis_path(avis.procedure, avis), class: 'cell-link')
     = paginate(@avis)
   - else

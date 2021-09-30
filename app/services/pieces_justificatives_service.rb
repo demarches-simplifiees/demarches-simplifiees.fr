@@ -1,10 +1,18 @@
 class PiecesJustificativesService
-  def self.liste_pieces_justificatives(dossier)
+  def self.liste_documents(dossier)
     pjs_champs = pjs_for_champs(dossier)
     pjs_commentaires = pjs_for_commentaires(dossier)
     pjs_dossier = pjs_for_dossier(dossier)
 
     (pjs_champs + pjs_commentaires + pjs_dossier)
+      .filter(&:attached?)
+  end
+
+  def self.liste_pieces_justificatives(dossier)
+    pjs_champs = pjs_for_champs(dossier)
+    pjs_commentaires = pjs_for_commentaires(dossier)
+
+    (pjs_champs + pjs_commentaires)
       .filter(&:attached?)
   end
 

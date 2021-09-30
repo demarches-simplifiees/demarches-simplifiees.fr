@@ -1,26 +1,47 @@
 describe PiecesJustificativesService do
+  let(:procedure) { create(:procedure, :with_titre_identite) }
+  let(:dossier) { create(:dossier, procedure: procedure) }
+  let(:champ_identite) { dossier.champs.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
+  let(:bill_signature) do
+    bs = build(:bill_signature, :with_serialized, :with_signature)
+    bs.save(validate: false)
+    bs
+  end
+
+  before do
+    champ_identite
+      .piece_justificative_file
+      .attach(io: StringIO.new("toto"), filename: "toto.png", content_type: "image/png")
+    create(:dossier_operation_log, dossier: dossier, bill_signature: bill_signature)
+  end
+
   describe '.liste_pieces_justificatives' do
-    let(:procedure) { create(:procedure, :with_titre_identite) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:champ_identite) { dossier.champs.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
-
-    before do
-      champ_identite
-        .piece_justificative_file
-        .attach(io: StringIO.new("toto"), filename: "toto.png", content_type: "image/png")
-    end
-
     subject { PiecesJustificativesService.liste_pieces_justificatives(dossier) }
 
-    # titre identite is too sensitive
-    # to be exported
-    it 'ensures no titre identite is given' do
+    it "doesn't return sensitive documents like titre_identite" do
       expect(champ_identite.piece_justificative_file).to be_attached
       expect(subject.any? { |piece| piece.name == 'piece_justificative_file' }).to be_falsy
     end
 
     it "doesn't return export pdf of the dossier" do
       expect(subject.any? { |piece| piece.name == 'pdf_export_for_instructeur' }).to be_falsy
+    end
+
+    it "doesn't return operation logs of the dossier" do
+      expect(subject.any? { |piece| piece.name == 'serialized' }).to be_falsy
+    end
+  end
+
+  describe '.liste_documents' do
+    subject { PiecesJustificativesService.liste_documents(dossier) }
+
+    it "doesn't return sensitive documents like titre_identite" do
+      expect(champ_identite.piece_justificative_file).to be_attached
+      expect(subject.any? { |piece| piece.name == 'piece_justificative_file' }).to be_falsy
+    end
+
+    it "returns operation logs of the dossier" do
+      expect(subject.any? { |piece| piece.name == 'serialized' }).to be_truthy
     end
   end
 end
