@@ -6,6 +6,7 @@ gem 'active_model_serializers'
 gem 'activestorage-openstack'
 gem 'active_storage_validations'
 gem 'administrate'
+gem 'administrate-field-enum' # Allow using Field::Enum in administrate
 gem 'after_party'
 gem 'anchored'
 gem 'aws-sdk-s3'
