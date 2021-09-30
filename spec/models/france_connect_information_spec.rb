@@ -9,7 +9,7 @@ describe FranceConnectInformation, type: :model do
 
   describe 'associate_user!' do
     context 'when there is no user with same email' do
-      let(:fci) { create(:france_connect_information) }
+      let(:fci) { build(:france_connect_information) }
       let(:subject) { fci.associate_user! }
 
       it { expect { subject }.to change(User, :count).by(1) }
