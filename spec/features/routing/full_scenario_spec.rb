@@ -63,7 +63,7 @@ feature 'The routing', js: true do
 
     # publish
     publish_procedure(procedure)
-    log_out(old_layout: true)
+    log_out
 
     # 2 users fill a dossier in each group
     user_send_dossier(scientifique_user, 'scientifique')
