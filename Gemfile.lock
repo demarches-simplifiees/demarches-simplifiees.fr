@@ -96,6 +96,8 @@ GEM
       momentjs-rails (~> 2.8)
       sassc-rails (~> 2.1)
       selectize-rails (~> 0.6)
+    administrate-field-enum (0.0.9)
+      administrate (~> 0.12)
     aes_key_wrap (1.1.0)
     after_party (1.11.2)
     anchored (1.1.0)
@@ -790,6 +792,7 @@ DEPENDENCIES
   active_storage_validations
   activestorage-openstack
   administrate
+  administrate-field-enum
   after_party
   anchored
   annotate

@@ -38,7 +38,7 @@
             badge: number_with_html_delimiter(@traites_count),
             notification: @has_termine_notifications)
 
-          = tab_item('tous les dossiers',
+          = tab_item('au total',
             instructeur_procedure_path(@procedure, statut: 'tous'),
             active: @statut == 'tous',
             badge: number_with_html_delimiter(@tous_count))

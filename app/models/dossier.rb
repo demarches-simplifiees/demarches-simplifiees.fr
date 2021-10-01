@@ -7,6 +7,7 @@
 #  archived                                           :boolean          default(FALSE)
 #  autorisation_donnees                               :boolean
 #  brouillon_close_to_expiration_notice_sent_at       :datetime
+#  conservation_extension                             :interval         default(0 seconds)
 #  deleted_user_email_never_send                      :string
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime

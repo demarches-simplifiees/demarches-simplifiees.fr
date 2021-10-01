@@ -101,4 +101,10 @@ module DossierHelper
       end
     end
   end
+
+  def annuaire_link(siren)
+    return 'https://www.ispf.pf/bases/Repertoires/Entreprises/Recherche.aspx' if siren.blank?
+
+    "https://www.ispf.pf/bases/Repertoires/Entreprises/Detail.aspx?numtah=#{siren}"
+  end
 end
