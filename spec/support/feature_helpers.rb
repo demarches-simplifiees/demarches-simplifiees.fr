@@ -142,14 +142,10 @@ module FeatureHelpers
     have_css("##{form_id_for(libelle)}[value=\"#{with}\"]")
   end
 
-  def log_out(old_layout: false)
-    if old_layout
-      page.all('.dropdown-button').first.click
-      click_on 'Se déconnecter'
-    else
-      click_button(title: 'Mon compte')
-      click_on 'Se déconnecter'
-    end
+  def log_out
+    click_button(title: 'Mon compte')
+    click_on 'Se déconnecter'
+
     expect(page).to have_current_path(root_path)
   end
 
