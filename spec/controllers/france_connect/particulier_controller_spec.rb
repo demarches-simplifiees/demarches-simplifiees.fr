@@ -50,67 +50,35 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
 
       context 'when france_connect_particulier_id exist in database' do
-        let!(:france_connect_information) { create(:france_connect_information, user_info) }
+        let!(:france_connect_information) { create(:france_connect_information, :with_user, user_info) }
+        let(:user) { france_connect_information.user }
 
         it { expect { subject }.not_to change { FranceConnectInformation.count } }
 
-        context 'when france_connect_particulier_id have an associate user' do
-          let!(:user) { create(:user, email: email, france_connect_information: france_connect_information) }
-
-          it do
-            subject
-            expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
-          end
-
-          context 'and the user has a stored location' do
-            let(:stored_location) { '/plip/plop' }
-            before { controller.store_location_for(:user, stored_location) }
-
-            it { is_expected.to redirect_to(stored_location) }
-          end
+        it do
+          subject
+          expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
         end
 
-        context 'when france_connect_particulier_id does not have an associate user' do
-          context 'when the email address is not used yet' do
-            it { expect { subject }.to change(User, :count).by(1) }
-            it { is_expected.to redirect_to(root_path) }
-          end
+        context 'and the user has a stored location' do
+          let(:stored_location) { '/plip/plop' }
+          before { controller.store_location_for(:user, stored_location) }
 
-          context 'when the email address is already used' do
-            let!(:user) { create(:user, email: email, france_connect_information: nil) }
+          it { is_expected.to redirect_to(stored_location) }
+        end
 
-            it 'associates the france_connect infos with the existing user' do
-              expect { subject }.not_to change(User, :count)
-              expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
-              expect(subject).to redirect_to(root_path)
-            end
+        context 'and the user is also instructeur' do
+          let!(:instructeur) { create(:instructeur, email: email) }
+          before { subject }
 
-            context 'and the user is also instructeur' do
-              let(:instructeur) { create(:instructeur) }
-              let(:email) { instructeur.email }
-              let(:user) { instructeur.user }
-              before { subject }
+          it { expect(response).to redirect_to(new_user_session_path) }
 
-              it { expect(response).to redirect_to(new_user_session_path) }
-
-              it { expect(flash[:alert]).to be_present }
-            end
-          end
-
-          context 'when a differently cased email address is already used' do
-            let(:email) { 'TEST@test.com' }
-            let!(:user) { create(:user, email: email.downcase, france_connect_information: nil) }
-
-            it 'associates the france_connect infos with the existing user' do
-              expect { subject }.not_to change(User, :count)
-              expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
-              expect(subject).to redirect_to(root_path)
-            end
-          end
+          it { expect(flash[:alert]).to be_present }
         end
       end
 
       context 'when france_connect_particulier_id does not exist in database' do
+        it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
         it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
 
         describe 'FranceConnectInformation attributs' do
