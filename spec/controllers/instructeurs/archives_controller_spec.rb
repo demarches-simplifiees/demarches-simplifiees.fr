@@ -31,13 +31,13 @@ describe Instructeurs::ArchivesController, type: :controller do
     it 'displays archives splitted by month' do
       get :index, { params: { procedure_id: procedure1.id } }
 
-      expect(assigns(:count_dossiers_termines_by_month).to_a).to eq([{"month" => Time.find_zone("UTC").parse("2021-03-01"), "count" => 2}, {"month" => Time.find_zone("UTC").parse("2021-02-01"), "count" => 1}])
-  end
+      expect(assigns(:archives_by_period).to_a).to eq([{ month: Time.find_zone("UTC").parse("2021-03-01"), count: 2, matching_archive: nil }, { month: Time.find_zone("UTC").parse("2021-02-01"), count: 1, matching_archive: nil }])
+    end
 
     it 'splits too big archives' do
       get :index, { params: { procedure_id: procedure1.id } }
 
-      expect(assigns(:count_dossiers_termines_by_period).to_a).to eq([{"day_start" => Time.find_zone("UTC").parse("2021-03-01"), "count" => 2}, {"month" => Time.find_zone("UTC").parse("2021-02-01"), "count" => 1}])
+      expect(assigns(:archives_by_period).to_a).to eq([{ month: Time.find_zone("UTC").parse("2021-03-01"), count: 2, matching_archive: nil }, { month: Time.find_zone("UTC").parse("2021-02-01"), count: 1, matching_archive: nil }])
     end
   end
 

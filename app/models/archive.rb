@@ -32,7 +32,8 @@ class Archive < ApplicationRecord
 
   enum time_span_type: {
     everything: 'everything',
-    monthly:    'monthly'
+    monthly:    'monthly',
+    custom: 'custom'
   }
 
   enum status: {
@@ -72,6 +73,29 @@ class Archive < ApplicationRecord
     when 'custom'
       create_with(groupe_instructeurs: groupe_instructeurs)
         .create_or_find_by(time_span_type: time_span_type, start_day: period[:start_day], end_day: period[:end_day], key: generate_cache_key(groupe_instructeurs))
+    end
+  end
+
+  def self.by_period(procedure, groupe_instructeurs)
+    archives = for_groupe_instructeur(groupe_instructeurs)
+    Traitement.count_dossiers_termines_by_month(groupe_instructeurs).to_a.flat_map do |count_by_month|
+      if procedure.estimate_weight(count_by_month['count']) <= Archive::MAX_CUSTOM_ARCHIVE_WEIGHT
+        {
+          month: count_by_month['month'],
+          matching_archive: archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == count_by_month['month'] },
+          count: count_by_month['count']
+        }
+      else
+        Traitement.count_dossiers_termines_with_archive_size_limit(procedure, groupe_instructeurs, count_by_month['month']).to_a.flat_map do |count_by_month|
+          {
+            month: count_by_month[:month],
+            start_day: count_by_month[:start_day],
+            end_day: count_by_month[:end_day],
+            matching_archive: archives.find { |archive| archive.time_span_type == 'custom' && archive.start_day == count_by_month[:start_day] && archive.end_day == count_by_month[:end_day] },
+            count: count_by_month[:count]
+          }
+        end
+      end
     end
   end
 

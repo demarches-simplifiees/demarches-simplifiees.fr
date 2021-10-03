@@ -6,7 +6,7 @@ module Instructeurs
       @procedure = procedure
       @average_dossier_weight = procedure.average_dossier_weight
 
-      @count_dossiers_termines_by_month = Traitement.count_dossiers_termines_by_month(groupe_instructeurs)
+      @archives_by_period = Archive.by_period(procedure, groupe_instructeurs)
 
       @archives = Archive
         .for_groupe_instructeur(groupe_instructeurs)
