@@ -257,9 +257,9 @@ describe Instructeur, type: :model do
 
   describe '#notifications_for_groupe_instructeurs' do
     # one procedure, one group, 2 instructeurs
-    let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private) }
+    let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private, :for_individual) }
     let(:gi_p1) { procedure.groupe_instructeurs.last }
-    let!(:dossier) { create(:dossier, :followed, groupe_instructeur: gi_p1, state: Dossier.states.fetch(:en_construction)) }
+    let!(:dossier) { create(:dossier, :with_individual, :followed, groupe_instructeur: gi_p1, state: Dossier.states.fetch(:en_construction)) }
     let(:instructeur) { dossier.follows.first.instructeur }
     let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [gi_p1]) }
 
@@ -337,6 +337,17 @@ describe Instructeur, type: :model do
       end
 
       it { is_expected.to match([dossier.id]) }
+    end
+
+    context 'the identity' do
+      context 'when there is a modification on the identity' do
+        before do
+          dossier.update!(identity_updated_at: Time.zone.now)
+          follow.update_attribute('demande_seen_at', seen_at_instructeur)
+        end
+
+        it { is_expected.to match([dossier.id]) }
+      end
     end
 
     context 'the messagerie' do

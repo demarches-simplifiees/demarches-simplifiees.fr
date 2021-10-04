@@ -364,6 +364,7 @@ class Dossier < ApplicationRecord
   scope :with_notifications, -> do
     joins(:follows)
       .where('last_champ_updated_at > follows.demande_seen_at' \
+      ' OR identity_updated_at > follows.demande_seen_at' \
       ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
       ' OR last_champ_private_updated_at > follows.annotations_privees_seen_at' \
       ' OR last_avis_updated_at > follows.avis_seen_at' \
