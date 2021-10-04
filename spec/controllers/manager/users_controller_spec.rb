@@ -68,6 +68,7 @@ describe Manager::UsersController, type: :controller do
 
           expect(preexisting_user.instructeur).to match(instructeur)
           expect(preexisting_user.expert).to match(expert)
+          expect(flash[:notice]).to match("Le compte « email.existant@domaine.fr » a absorbé le compte « ancien.email@domaine.fr ».")
         end
 
         context 'and the preexisting account owns an instructeur and expert as well' do

@@ -28,6 +28,8 @@ module Manager
         else
           preexisting_user.expert.merge(user.expert)
         end
+
+        flash[:notice] = "Le compte « #{targeted_email} » a absorbé le compte « #{user.email} »."
       end
 
       redirect_to edit_manager_user_path(user)
