@@ -2,14 +2,25 @@ module Manager
   class UsersController < Manager::ApplicationController
     def update
       user = User.find(params[:id])
-      new_email = params[:user][:email]
-      user.skip_reconfirmation!
-      user.update(email: new_email)
-      if (user.valid?)
-        flash[:notice] = "L'email a été modifié en « #{new_email} » sans notification ni validation par email."
+
+      preexisting_user = User.find_by(email: targeted_email)
+
+      if preexisting_user.nil?
+        user.skip_reconfirmation!
+        user.update(email: targeted_email)
+
+        if (user.valid?)
+          flash[:notice] = "L'email a été modifié en « #{targeted_email} » sans notification ni validation par email."
+        else
+          flash[:error] = user.errors.full_messages.to_sentence
+        end
       else
-        flash[:error] = "« #{new_email} » n’est pas une adresse valide."
+        user.dossiers.update_all(user_id: preexisting_user.id)
+
+        user.instructeur&.update(user: preexisting_user)
+        user.expert&.update(user: preexisting_user)
       end
+
       redirect_to edit_manager_user_path(user)
     end
 
@@ -71,6 +82,12 @@ module Manager
         flash.alert = "Impossible de débloquer cette addresse email auprès de Sendinblue"
       end
       redirect_to emails_manager_user_path(@user)
+    end
+
+    private
+
+    def targeted_email
+      params[:user][:email]
     end
   end
 end
