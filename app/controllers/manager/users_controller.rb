@@ -2,10 +2,11 @@ module Manager
   class UsersController < Manager::ApplicationController
     def update
       user = User.find(params[:id])
-
       preexisting_user = User.find_by(email: targeted_email)
 
-      if preexisting_user.nil?
+      if user.administrateur.present?
+        flash[:error] = "« #{targeted_email} » est un administrateur. On ne sait pas encore faire."
+      elsif preexisting_user.nil?
         user.skip_reconfirmation!
         user.update(email: targeted_email)
 
