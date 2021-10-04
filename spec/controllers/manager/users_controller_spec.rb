@@ -69,6 +69,35 @@ describe Manager::UsersController, type: :controller do
           expect(preexisting_user.instructeur).to match(instructeur)
           expect(preexisting_user.expert).to match(expert)
         end
+
+        context 'and the preexisting account owns an instructeur and expert as well' do
+          let!(:preexisting_instructeur) { create(:instructeur, user: preexisting_user) }
+          let!(:preexisting_expert) { create(:expert, user: preexisting_user) }
+
+          context 'and the source instructeur has some procedures and dossiers' do
+            let!(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+            let(:dossier) { create(:dossier) }
+            let(:administrateur) { create(:administrateur) }
+            let!(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
+            let!(:bulk_message) { BulkMessage.create!(instructeur: instructeur, body: 'body', sent_at: Time.zone.now) }
+
+            before do
+              user.instructeur.followed_dossiers << dossier
+              user.instructeur.administrateurs << administrateur
+            end
+
+            it 'transferts all the stuff' do
+              subject
+              preexisting_user.reload
+
+              expect(procedure.instructeurs).to match([preexisting_user.instructeur])
+              expect(preexisting_user.instructeur.followed_dossiers).to match([dossier])
+              expect(preexisting_user.instructeur.administrateurs).to match([administrateur])
+              expect(preexisting_user.instructeur.commentaires).to match([commentaire])
+              expect(preexisting_user.instructeur.bulk_messages).to match([bulk_message])
+            end
+          end
+        end
       end
     end
   end
