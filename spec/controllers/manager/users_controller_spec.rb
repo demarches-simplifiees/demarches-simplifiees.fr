@@ -1,4 +1,4 @@
-xdescribe Manager::UsersController, type: :controller do
+describe Manager::UsersController, type: :controller do
   let(:super_admin) { create(:super_admin) }
 
   describe '#show' do
@@ -40,7 +40,7 @@ xdescribe Manager::UsersController, type: :controller do
         subject
 
         expect(User.find_by(id: user.id).email).not_to eq(nouvel_email)
-        expect(flash[:error]).to match("« #{nouvel_email} » n'est pas une adresse valide.")
+        expect(flash[:error]).to match("« #{nouvel_email} » n’est pas une adresse valide.")
       end
     end
   end
