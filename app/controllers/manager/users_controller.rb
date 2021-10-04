@@ -17,7 +17,12 @@ module Manager
       else
         user.dossiers.update_all(user_id: preexisting_user.id)
 
-        user.instructeur&.update(user: preexisting_user)
+        if preexisting_user.instructeur.nil?
+          user.instructeur&.update(user: preexisting_user)
+        else
+          preexisting_user.instructeur.merge(user.instructeur)
+        end
+
         user.expert&.update(user: preexisting_user)
       end
 
