@@ -1,4 +1,4 @@
-xdescribe Manager::ProceduresController, type: :controller do
+describe Manager::ProceduresController, type: :controller do
   let(:super_admin) { create :super_admin }
 
   before { sign_in super_admin }
