@@ -13,14 +13,22 @@ class OmniAuthService
     )
   end
 
+  def self.find_or_retrieve_user_informations(provider, code)
+    fetched_fci = retrieve_user_informations(provider, code)
+    FranceConnectInformation.find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) || fetched_fci
+  end
+
+  private
+
   def self.retrieve_user_informations(provider, code)
     if provider.blank?
       raise "provider should not be nil"
     end
     client = OmniAuthClient.new(Rails.application.secrets[provider], code)
 
-    client_access_token = client.access_token!(client_auth_method: :secret)
-    user_info = client_access_token.userinfo!.raw_attributes
+    user_info = client.access_token!(client_auth_method: :secret)
+      .userinfo!
+      .raw_attributes
 
     FranceConnectInformation.new(
       gender: user_info[:gender],

@@ -139,7 +139,7 @@ Rails.application.routes.draw do
   end
 
   get '/auth/:provider' => 'omniauth#login', as: :omniauth, constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
-  get '/auth/:provider/callback', to: 'omniauth#callback', constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
+  get '/auth/:provider/callback', to: 'omniauth#callback', as: :omniauth_callback, constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
 
   namespace :champs do
     get ':position/siret', to: 'siret#show', as: :siret
