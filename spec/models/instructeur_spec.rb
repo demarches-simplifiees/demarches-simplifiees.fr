@@ -221,6 +221,12 @@ describe Instructeur, type: :model do
       it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
 
+    context 'when there is a modification on identity' do
+      before { dossier.update(identity_updated_at: Time.zone.now) }
+
+      it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
+    end
+
     context 'when there is a modification on groupe instructeur' do
       let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [instructeur], procedure: dossier.procedure) }
       before { dossier.assign_to_groupe_instructeur(groupe_instructeur) }
