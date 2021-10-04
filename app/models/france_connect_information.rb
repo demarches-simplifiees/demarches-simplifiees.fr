@@ -10,10 +10,10 @@
 #  family_name                   :string
 #  gender                        :string
 #  given_name                    :string
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
+#  created_at                    :datetime
+#  updated_at                    :datetime
 #  france_connect_particulier_id :string
-#  user_id                       :integer          not null
+#  user_id                       :integer
 #
 class FranceConnectInformation < ApplicationRecord
   belongs_to :user, optional: true
