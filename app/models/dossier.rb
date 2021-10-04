@@ -15,6 +15,7 @@
 #  en_instruction_at                                  :datetime
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
+#  identity_updated_at                                :datetime
 #  last_avis_updated_at                               :datetime
 #  last_champ_private_updated_at                      :datetime
 #  last_champ_updated_at                              :datetime
