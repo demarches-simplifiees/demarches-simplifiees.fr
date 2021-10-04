@@ -11,6 +11,7 @@ class Expert < ApplicationRecord
   has_many :experts_procedures
   has_many :avis, through: :experts_procedures
   has_many :dossiers, through: :avis
+  has_many :commentaires
 
   default_scope { eager_load(:user) }
 
@@ -33,5 +34,10 @@ class Expert < ApplicationRecord
       result = avis.select(query)[0]
       @avis_summary = { unanswered: result.unanswered, total: result.total }
     end
+  end
+
+  def merge(old_expert)
+    old_expert.experts_procedures.update_all(expert_id: id)
+    old_expert.commentaires.update_all(expert_id: id)
   end
 end
