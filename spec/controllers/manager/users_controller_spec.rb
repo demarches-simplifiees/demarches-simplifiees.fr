@@ -97,6 +97,20 @@ describe Manager::UsersController, type: :controller do
               expect(preexisting_user.instructeur.bulk_messages).to match([bulk_message])
             end
           end
+
+          context 'and the source expert has some avis and commentaires' do
+            let(:dossier) { create(:dossier) }
+            let(:experts_procedure) { create(:experts_procedure, expert: user.expert, procedure: dossier.procedure) }
+            let!(:avis) { create(:avis, dossier: dossier, claimant: create(:instructeur), experts_procedure: experts_procedure) }
+            let!(:commentaire) { create(:commentaire, expert: expert, dossier: dossier) }
+
+            it 'transfers the avis' do
+              subject
+
+              expect(preexisting_user.expert.avis).to match([avis])
+              expect(preexisting_user.expert.commentaires).to match([commentaire])
+            end
+          end
         end
       end
     end

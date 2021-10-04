@@ -23,7 +23,11 @@ module Manager
           preexisting_user.instructeur.merge(user.instructeur)
         end
 
-        user.expert&.update(user: preexisting_user)
+        if preexisting_user.expert.nil?
+          user.expert&.update(user: preexisting_user)
+        else
+          preexisting_user.expert.merge(user.expert)
+        end
       end
 
       redirect_to edit_manager_user_path(user)
