@@ -236,6 +236,24 @@ module NewAdministrateur
       end
     end
 
+    def export_groupe_instructeurs
+      groupe_instructeurs = procedure.groupe_instructeurs
+
+      data = CSV.generate(headers: true) do |csv|
+        column_names = ["Groupe", "Email"]
+        csv << column_names
+        groupe_instructeurs.each do |gi|
+          gi.instructeurs.each do |instructeur|
+            csv << [gi.label, instructeur.email]
+          end
+        end
+      end
+
+      respond_to do |format|
+        format.csv { send_data data, filename: "#{procedure.id}-groupe-instructeurs-#{Date.today}.csv" }
+      end
+    end
+
     private
 
     def create_instructeur(email)
