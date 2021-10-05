@@ -363,6 +363,12 @@ describe Dossier do
       it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_2, avis_1, avis_3]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis_2, avis_1, avis_3]) }
     end
+
+    context 'when they are a advice published on another dossier' do
+      let!(:avis) { create(:avis, dossier: create(:dossier, procedure: procedure), claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
+
+      it { expect(dossier.avis_for_expert(expert_1)).to match([]) }
+    end
   end
 
   describe '#update_state_dates' do
