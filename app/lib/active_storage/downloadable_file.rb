@@ -1,7 +1,7 @@
 class ActiveStorage::DownloadableFile
-  def self.create_list_from_dossier(dossier)
+  def self.create_list_from_dossier(dossier, for_expert = false)
     dossier_export = PiecesJustificativesService.generate_dossier_export(dossier)
-    pjs = [dossier_export] + PiecesJustificativesService.liste_documents(dossier)
+    pjs = [dossier_export] + PiecesJustificativesService.liste_documents(dossier, for_expert)
     pjs.map do |piece_justificative|
       [
         piece_justificative,
