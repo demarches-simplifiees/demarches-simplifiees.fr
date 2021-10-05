@@ -20,6 +20,7 @@ GEM
   specs:
     aasm (5.1.1)
       concurrent-ruby (~> 1.0)
+    acsv (0.0.1)
     actioncable (6.1.4.1)
       actionpack (= 6.1.4.1)
       activesupport (= 6.1.4.1)
@@ -779,6 +780,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
+  acsv
   active_link_to
   active_model_serializers
   active_storage_validations

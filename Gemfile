@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'aasm'
+gem 'acsv'
 gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
 gem 'activestorage-openstack'
