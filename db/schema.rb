@@ -189,6 +189,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_164955) do
     t.jsonb "data"
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
+    t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
