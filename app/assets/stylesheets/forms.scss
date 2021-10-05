@@ -238,7 +238,7 @@
     }
   }
 
-  input[type=text]:not([data-address='true']),
+  input[type=text],
   input[type=email],
   input[type=password],
   input[type=date],
@@ -252,6 +252,10 @@
 
     &.small-margin {
       margin-bottom: $default-spacer;
+    }
+
+    &.no-margin {
+      margin-bottom: 0;
     }
   }
 
@@ -623,7 +627,7 @@
 }
 
 [data-react-class]:not([data-react-class="ComboMultipleDropdownList"]) {
-  [data-reach-combobox-input] {
+  [data-reach-combobox-input]:not(.no-margin) {
     margin-bottom: $default-fields-spacer;
   }
 }

@@ -62,10 +62,7 @@ class Champs::CarteChamp < Champ
   end
 
   def render_options
-    {
-      ign: Flipper.enabled?(:carte_ign, procedure),
-      layers: optional_layers
-    }
+    { layers: optional_layers }
   end
 
   def position

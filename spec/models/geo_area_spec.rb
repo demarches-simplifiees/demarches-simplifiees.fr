@@ -80,4 +80,24 @@ RSpec.describe GeoArea, type: :model do
       it { expect(geo_area.valid?).to be_falsey }
     end
   end
+
+  describe "cadastre properties" do
+    let(:geo_area) { build(:geo_area, :cadastre) }
+    let(:legacy_geo_area) { build(:geo_area, :legacy_cadastre) }
+
+    it "should be backward compatible" do
+      expect("#{geo_area.code_dep}#{geo_area.code_com}").to eq(geo_area.commune)
+      expect(geo_area.code_arr).to eq(geo_area.prefixe)
+      expect(geo_area.surface_parcelle).to eq(geo_area.surface)
+    end
+
+    context "(legacy)" do
+      it "should be forward compatible" do
+        expect("#{legacy_geo_area.code_dep}#{legacy_geo_area.code_com}").to eq(legacy_geo_area.commune)
+        expect(legacy_geo_area.code_arr).to eq(legacy_geo_area.prefixe)
+        expect(legacy_geo_area.surface_parcelle).to eq(legacy_geo_area.surface)
+        expect(legacy_geo_area.cid).to eq(geo_area.cid)
+      end
+    end
+  end
 end
