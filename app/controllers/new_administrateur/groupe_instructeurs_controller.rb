@@ -215,13 +215,13 @@ module NewAdministrateur
       else
         file = group_csv_file.read
         base_encoding = CharlockHolmes::EncodingDetector.detect(file)
-        groupes_emails = CSV.new(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
+        groupes_emails = ACSV::CSV.new(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
           .map { |r| r.to_h.slice('groupe', 'email') }
 
         groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")
 
         if groupes_emails_has_keys.blank?
-          flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/import-groupe-test.csv")}"
+          flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/#{I18n.locale}/import-groupe-test.csv")}"
         else
           add_instructeurs_and_get_errors = InstructeursImportService.import(procedure, groupes_emails)
 
