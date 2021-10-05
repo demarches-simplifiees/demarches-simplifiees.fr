@@ -1,4 +1,4 @@
-describe APIParticulier::CNAFAdapter do
+describe APIParticulier::CnafAdapter do
   let(:adapter) { described_class.new(api_particulier_token, numero_allocataire, code_postal, requested_sources) }
 
   before { stub_const("API_PARTICULIER_URL", "https://particulier-test.api.gouv.fr/api") }
@@ -63,7 +63,7 @@ describe APIParticulier::CNAFAdapter do
       context 'when no sources is requested' do
         let(:requested_sources) { {} }
 
-        it { expect { subject }.to raise_error(APIParticulier::CNAFAdapter::InvalidSchemaError) }
+        it { expect { subject }.to raise_error(APIParticulier::CnafAdapter::InvalidSchemaError) }
       end
     end
   end
