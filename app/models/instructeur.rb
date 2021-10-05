@@ -113,8 +113,10 @@ class Instructeur < ApplicationRecord
       .find_by(instructeur: self, dossier: dossier)
 
     if follow.present?
-      demande = follow.dossier.champs.updated_since?(follow.demande_seen_at).any? || follow.dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at)
-      demande = false if demande.nil?
+      demande = follow.dossier.champs.updated_since?(follow.demande_seen_at).any? ||
+        follow.dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at) ||
+        dossier.identity_updated_at&.>(follow.demande_seen_at) ||
+        false
 
       annotations_privees = follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
 
