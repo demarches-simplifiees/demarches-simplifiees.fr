@@ -8,7 +8,7 @@
     "@rails/actiontext": "^6.1.4-1",
     "@rails/activestorage": "^6.1.4-1",
     "@rails/ujs": "^6.1.4-1",
-    "@rails/webpacker": "5.1.1",
+    "@rails/webpacker": "5.4.3",
     "@reach/combobox": "^0.13.0",
     "@reach/slider": "^0.15.0",
     "@reach/visually-hidden": "^0.15.2",
@@ -39,6 +39,8 @@
     "react_ujs": "^2.6.1",
     "trix": "^1.2.3",
     "use-debounce": "^5.2.0",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
@@ -52,7 +54,7 @@
     "netlify-cli": "^2.61.2",
     "prettier": "^2.3.2",
     "webpack-bundle-analyzer": "^3.7.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3"
   },
   "scripts": {
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript ./config/webpack",
