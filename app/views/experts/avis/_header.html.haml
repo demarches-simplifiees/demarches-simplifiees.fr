@@ -5,6 +5,16 @@
       %li= link_to(dossier.procedure.libelle, procedure_expert_avis_index_path(avis.procedure))
       %li= link_to("Dossier nº #{dossier.id}", expert_avis_path(avis.procedure, avis))
 
+      %span.dropdown.print-menu-opener
+        %button.button.dropdown-button.icon-only{ 'aria-expanded' => 'false', 'aria-controls' => 'print-pj-menu' }
+          %span.icon.attached
+        %ul#print-pj-menu.print-menu.dropdown-content
+          %li
+            - if dossier.export_and_attachments_downloadable?
+              = link_to "Télécharger le dossier et toutes ses pièces jointes", telecharger_pjs_expert_avis_path(avis), target: "_blank", rel: "noopener", class: "menu-item menu-link"
+            - else
+              %p.menu-item Le téléchargement des pièces jointes est désactivé pour les dossiers de plus de #{number_to_human_size Dossier::TAILLE_MAX_ZIP}.
+
     %ul.tabs
       = dynamic_tab_item('Demande', expert_avis_path(avis.procedure, avis))
       = dynamic_tab_item('Avis', instruction_expert_avis_path(avis.procedure, avis), notification: avis.answer.blank?)

@@ -50,5 +50,25 @@ describe ActiveStorage::DownloadableFile do
 
       it { expect(list.length).to eq 2 }
     end
+
+    context 'when the files are asked by an expert with piece justificative and private piece justificative' do
+      let(:expert) { create(:expert) }
+      let(:instructeur) { create(:instructeur) }
+      let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
+      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+      let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
+      let(:champ) { dossier.champs.first }
+      let(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
+
+      subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossier(dossier, true) }
+
+      before do
+        dossier.champs_private << create(:champ_piece_justificative, :with_piece_justificative_file, private: true, dossier: dossier)
+
+        dossier.champs << create(:champ_piece_justificative, :with_piece_justificative_file, dossier: dossier)
+      end
+
+      it { expect(list.length).to eq 2 }
+    end
   end
 end
