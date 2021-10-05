@@ -24,7 +24,7 @@
     = label_tag "Importer par fichier CSV"
     %p.notice Le fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules. L'import n'écrase pas les groupes et les instructeurs existants.
     %p.notice Le poids du fichier doit être inférieur à #{number_to_human_size(csv_max_size)}
-    %p.mt-2.mb-2= link_to "Télécharger l'exemple de fichier CSV", "/import-groupe-test.csv"
+    %p.mt-2.mb-2= link_to "Télécharger l'exemple de fichier CSV", "/csv/#{I18n.locale}/import-groupe-test.csv"
     = file_field_tag :group_csv_file, required: true, accept: 'text/csv', size: "1"
     = submit_tag "Importer le fichier", class: 'button primary send', data: { disable_with: "Envoi..." }
 
