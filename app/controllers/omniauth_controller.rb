@@ -15,19 +15,13 @@ class OmniauthController < ApplicationController
 
   def callback
     provider = params[:provider]
-    fetched_fci = OmniAuthService.retrieve_user_informations(provider, params[:code])
+    fci = OmniAuthService.find_or_retrieve_user_informations(provider, params[:code])
+    fci.associate_user!
 
-    fci = FranceConnectInformation
-      .find_by(france_connect_particulier_id: fetched_fci[:france_connect_particulier_id]) ||
-        fetched_fci.tap(&:save)
-
-    if fci.user.nil?
-      user = User.find_or_create_by!(email: fci.email_france_connect.downcase) do |new_user|
-        new_user.password = Devise.friendly_token[0, 20]
-        new_user.confirmed_at = Time.zone.now
-      end
-
-      fci.update_attribute('user_id', user.id)
+    if fci.user && !fci.user.can_france_connect?
+      fci.destroy
+      redirect_to new_user_session_path, alert: t('errors.messages.omni_auth.forbidden_html', reset_link: new_user_password_path, provider: t("errors.messages.omni_auth.#{provider}"))
+      return
     end
 
     connect(provider, fci.user)
@@ -65,7 +59,7 @@ class OmniauthController < ApplicationController
   end
 
   def redirect_error_connection(provider)
-    flash.alert = t("errors.messages.#{provider}.connexion")
+    flash.alert = t("errors.messages.omni_auth.connexion", provider: t("errors.messages.omni_auth.#{provider}"))
     redirect_to(new_user_session_path)
   end
 end
