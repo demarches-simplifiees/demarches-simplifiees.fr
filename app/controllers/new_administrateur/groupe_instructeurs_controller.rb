@@ -215,7 +215,7 @@ module NewAdministrateur
       else
         file = group_csv_file.read
         base_encoding = CharlockHolmes::EncodingDetector.detect(file)
-        groupes_emails = CSV.new(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
+        groupes_emails = ACSV::CSV.new(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase)
           .map { |r| r.to_h.slice('groupe', 'email') }
 
         groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")
