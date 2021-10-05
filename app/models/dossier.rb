@@ -645,6 +645,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_passer_en_construction
+    update!(conservation_extension: 0.days)
     update!(en_construction_at: Time.zone.now) if self.en_construction_at.nil?
   end
 
@@ -661,6 +662,7 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_construction(instructeur)
+    update!(conservation_extension: 0.days)
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
