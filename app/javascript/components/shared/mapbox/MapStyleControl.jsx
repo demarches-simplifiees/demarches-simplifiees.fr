@@ -37,10 +37,10 @@ export function useMapStyle(
   { onStyleChange, cadastreEnabled }
 ) {
   const [styleId, setStyle] = useState('ortho');
-  const style = useMemo(() => getMapStyle(styleId, optionalLayers), [
-    styleId,
-    optionalLayers
-  ]);
+  const style = useMemo(
+    () => getMapStyle(styleId, optionalLayers),
+    [styleId, optionalLayers]
+  );
 
   useEffect(() => onStyleChange(), [styleId, cadastreEnabled]);
 

@@ -13,13 +13,8 @@ import { useMapbox } from './useMapbox';
 const Mapbox = ReactMapboxGl({});
 
 const MapReader = ({ featureCollection, options }) => {
-  const {
-    isSupported,
-    onLoad,
-    onStyleChange,
-    onMouseEnter,
-    onMouseLeave
-  } = useMapbox(featureCollection);
+  const { isSupported, onLoad, onStyleChange, onMouseEnter, onMouseLeave } =
+    useMapbox(featureCollection);
   const [style, setStyle] = useMapStyle(options.layers, { onStyleChange });
 
   if (!isSupported) {
