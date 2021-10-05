@@ -3,7 +3,7 @@
 
 %h2 Identité du demandeur
 
-= render partial: "shared/dossiers/user_infos", locals: { user: @dossier.user }
+= render partial: "shared/dossiers/user_infos", locals: { user_deleted: @dossier.user_deleted?, email: @dossier.user_email_for(:display) }
 
 - if @dossier.etablissement.present?
   = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: @dossier.etablissement, profile: 'instructeur' }

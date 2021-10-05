@@ -2,4 +2,4 @@
   %tbody
     %tr
       %th.libelle Email :
-      %td= user.email
+      %td= user_deleted ? "#{email} (l‘usager a supprimé son compte)" : email
