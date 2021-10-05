@@ -221,7 +221,7 @@ module NewAdministrateur
         groupes_emails_has_keys = groupes_emails.first.has_key?("groupe") && groupes_emails.first.has_key?("email")
 
         if groupes_emails_has_keys.blank?
-          flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/import-groupe-test.csv")}"
+          flash[:alert] = "Importation impossible, veuillez importer un csv #{view_context.link_to('suivant ce modèle', "/csv/#{I18n.locale}/import-groupe-test.csv")}"
         else
           add_instructeurs_and_get_errors = InstructeursImportService.import(procedure, groupes_emails)
 
