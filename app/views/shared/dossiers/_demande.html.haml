@@ -3,7 +3,14 @@
     .card
       = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier }
 
-  .tab-title= t('views.shared.dossiers.demande.requester_identity')
+  .tab-title
+    = t('views.shared.dossiers.demande.requester_identity')
+
+    - if dossier.identity_updated_at.present? && demande_seen_at&.<(dossier.identity_updated_at)
+      %span.highlighted
+        modifié le
+        = try_format_datetime(dossier.identity_updated_at)
+
   .card
     - if dossier.france_connect_information.present?
       = render partial: "shared/dossiers/france_connect_informations", locals: { user_information: dossier.france_connect_information }
