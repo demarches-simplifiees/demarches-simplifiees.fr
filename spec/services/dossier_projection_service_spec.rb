@@ -162,6 +162,17 @@ describe DossierProjectionService do
 
         it { is_expected.to eq('quinoa') }
       end
+
+      context 'for type_de_champ table and value to.s' do
+        let(:table) { 'type_de_champ' }
+        let(:procedure) { create(:procedure, :with_yes_no) }
+        let(:dossier) { create(:dossier, procedure: procedure) }
+        let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
+
+        before { dossier.champs.first.update(value: 'true') }
+
+        it { is_expected.to eq('Oui') }
+      end
     end
   end
 end
