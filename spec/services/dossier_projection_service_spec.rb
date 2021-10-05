@@ -173,6 +173,17 @@ describe DossierProjectionService do
 
         it { is_expected.to eq('Oui') }
       end
+
+      context 'for type_de_champ table and value to.s which needs data field' do
+        let(:table) { 'type_de_champ' }
+        let(:procedure) { create(:procedure, :with_address) }
+        let(:dossier) { create(:dossier, procedure: procedure) }
+        let(:column) { dossier.procedure.types_de_champ.first.stable_id.to_s }
+
+        before { dossier.champs.first.update(data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
+
+        it { is_expected.to eq('18 a la bonne rue') }
+      end
     end
   end
 end
