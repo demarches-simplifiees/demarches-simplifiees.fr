@@ -5,13 +5,13 @@ feature 'Accessing the website in different languages:' do
 
     scenario 'I can change the language of the page' do
       visit new_user_session_path
-      expect(page).to have_text('Connectez-vous')
+      expect(page).to have_text('Si vous avez')
 
       click_on 'Translate'
       click_on 'EN - English'
 
       # The page is now in English
-      expect(page).to have_text('Sign in')
+      expect(page).to have_text('If you already have')
       # The page URL stayed the same
       expect(page).to have_current_path(new_user_session_path)
     end
