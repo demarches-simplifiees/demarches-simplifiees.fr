@@ -1439,14 +1439,18 @@ describe Dossier do
   end
 
   describe "#destroy" do
-    let(:dossier) { create(:dossier) }
+    let(:transfer) { create(:dossier_transfer) }
+    let(:dossier) { create(:dossier, transfer: transfer) }
+
     before do
+      create(:dossier, transfer: transfer)
       create(:attestation, dossier: dossier)
       create(:attestation, dossier: dossier)
     end
 
     it "can destroy dossier with two attestations" do
       expect(dossier.destroy).to be_truthy
+      expect(transfer.reload).not_to be_nil
     end
   end
 
