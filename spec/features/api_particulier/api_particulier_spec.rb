@@ -125,13 +125,22 @@ feature 'fetch API Particulier Data', js: true do
       click_button('Continuer')
 
       fill_in 'Le numéro d’allocataire CAF', with: numero_allocataire
+      fill_in 'Le code postal', with: 'wrong_code'
+
+      blur
+      expect(page).to have_css('span', text: 'Brouillon enregistré', visible: true)
+
+      dossier = Dossier.last
+      expect(dossier.champs.first.code_postal).to eq('wrong_code')
+
+      click_on 'Déposer le dossier'
+      expect(page).to have_content(/code postal doit posséder 5 caractères/)
+
       fill_in 'Le code postal', with: code_postal
 
       VCR.use_cassette("api_particulier/success/composition_familiale") do
         perform_enqueued_jobs { click_on 'Déposer le dossier' }
       end
-
-      dossier = Dossier.last
 
       visit demande_dossier_path(dossier)
       expect(page).to have_content(/Des données.*ont été reçues depuis la CAF/)
