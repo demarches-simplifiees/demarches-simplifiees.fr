@@ -47,12 +47,12 @@ module Manager
     end
 
     def add_administrateur
-      administrateur = Administrateur.by_email(params[:email])
+      administrateur = Administrateur.by_email(current_super_admin.email)
       if administrateur
-        procedure.administrateurs << administrateur
-        flash[:notice] = "L'administrateur \"#{params[:email]}\" est ajouté à la démarche."
+        AdministrateursProcedure.create(procedure: procedure, administrateur: administrateur, manager: true)
+        flash[:notice] = "L’administrateur \"#{administrateur.email}\" est ajouté à la démarche pour la journée."
       else
-        flash[:alert] = "L'administrateur \"#{params[:email]}\" est introuvable."
+        flash[:alert] = "Vous n’êtes pas connecté en tant qu’administrateur."
       end
       redirect_to manager_procedure_path(procedure)
     end
