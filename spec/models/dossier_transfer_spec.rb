@@ -46,5 +46,16 @@ RSpec.describe DossierTransfer, type: :model do
         it { expect(DossierTransfer.with_dossiers.count).to eq(0) }
       end
     end
+
+    describe 'dossier relationship' do
+      let(:transfer) { create(:dossier_transfer) }
+      let(:dossier) { create(:dossier, user: user, transfer: transfer) }
+
+      it 'nullify transfer relationship on dossier' do
+        expect(dossier.transfer).to eq(transfer)
+        transfer.destroy
+        expect(dossier.reload.transfer).to be_nil
+      end
+    end
   end
 end
