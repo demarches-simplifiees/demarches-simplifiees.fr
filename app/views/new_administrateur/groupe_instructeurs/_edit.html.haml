@@ -33,6 +33,9 @@
     %thead
       %tr
         %th{ colspan: 2 }= t(".existing_groupe", count: groupes_instructeurs.total_count)
+        %th
+          - if groupe_instructeurs_count > 1
+            = link_to "Exporter au format CSV", export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv)
     %tbody
       - groupes_instructeurs.each do |group|
         %tr
@@ -49,7 +52,6 @@
                 = link_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, group), class: 'button', title:'Réaffecter les dossiers à un autre groupe afin de pouvoir le supprimer' do
                   %span.icon.follow
                   déplacer les dossiers
-  - if groupe_instructeurs_count > 1
-    = link_to "Exporter au format CSV", export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv)
+
 
   = paginate groupes_instructeurs
