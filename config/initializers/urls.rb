@@ -1,6 +1,5 @@
 # rubocop:disable DS/ApplicationName
 # API URLs
-API_CARTO_URL = ENV.fetch("API_CARTO_URL", "https://sandbox.geo.api.gouv.fr/apicarto")
 API_ENTREPRISE_URL = ENV.fetch("API_ENTREPRISE_URL", "https://entreprise.api.gouv.fr/v2")
 API_EDUCATION_URL = ENV.fetch("API_EDUCATION_URL", "https://data.education.gouv.fr/api/records/1.0")
 HELPSCOUT_API_URL = ENV.fetch("HELPSCOUT_API_URL", "https://api.helpscout.net/v2")
