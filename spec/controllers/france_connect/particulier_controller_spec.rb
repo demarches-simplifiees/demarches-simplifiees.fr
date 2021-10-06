@@ -79,7 +79,6 @@ describe FranceConnect::ParticulierController, type: :controller do
 
       context 'when france_connect_particulier_id does not exist in database' do
         it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
-        it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
 
         describe 'FranceConnectInformation attributs' do
           let(:stored_fci) { FranceConnectInformation.last }

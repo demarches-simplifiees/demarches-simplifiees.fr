@@ -21,17 +21,13 @@ feature 'France Connect Particulier Connexion' do
   end
 
   context 'when user is on login page' do
-    before do
-      visit new_user_session_path
-    end
+    before { visit new_user_session_path }
 
     scenario 'link to France Connect is present' do
       expect(page).to have_css('.france-connect-login-button')
     end
 
     context 'and click on france connect link' do
-      let(:code) { 'plop' }
-
       context 'when authentification is ok' do
         before do
           allow_any_instance_of(FranceConnectParticulierClient).to receive(:authorization_uri).and_return(france_connect_particulier_callback_path(code: code))
@@ -39,44 +35,22 @@ feature 'France Connect Particulier Connexion' do
         end
 
         context 'when is the first connexion' do
-          let(:france_connect_information) do
-            build(:france_connect_information,
-                  france_connect_particulier_id: france_connect_particulier_id,
-                  given_name: given_name,
-                  family_name: family_name,
-                  birthdate: birthdate,
-                  birthplace: birthplace,
-                  gender: gender,
-                  email_france_connect: email)
-          end
+          let(:france_connect_information) { build(:france_connect_information, user_info) }
 
-          before do
-            page.find('.france-connect-login-button').click
-          end
+          before { page.find('.france-connect-login-button').click }
 
           scenario 'he is redirected to user dossiers page' do
             expect(page).to have_content('Dossiers')
+            expect(User.find_by(email: email)).not_to be nil
           end
         end
 
         context 'when is not the first connexion' do
           let!(:france_connect_information) do
-            create(:france_connect_information,
-                  :with_user,
-                  france_connect_particulier_id: france_connect_particulier_id,
-                  given_name: given_name,
-                  family_name: family_name,
-                  birthdate: birthdate,
-                  birthplace: birthplace,
-                  gender: gender,
-                  email_france_connect: email,
-                  created_at: Time.zone.parse('12/12/2012'),
-                  updated_at: Time.zone.parse('12/12/2012'))
+            create(:france_connect_information, :with_user, user_info.merge(created_at: Time.zone.parse('12/12/2012'), updated_at: Time.zone.parse('12/12/2012')))
           end
 
-          before do
-            page.find('.france-connect-login-button').click
-          end
+          before { page.find('.france-connect-login-button').click }
 
           scenario 'he is redirected to user dossiers page' do
             expect(page).to have_content('Dossiers')
