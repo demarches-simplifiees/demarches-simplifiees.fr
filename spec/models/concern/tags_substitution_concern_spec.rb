@@ -8,6 +8,7 @@ describe TagsSubstitutionConcern, type: :model do
 
   let(:procedure) do
     create(:procedure,
+      :published,
       libelle: 'Une magnifique démarche',
       types_de_champ: types_de_champ,
       types_de_champ_private: types_de_champ_private,
@@ -387,6 +388,33 @@ describe TagsSubstitutionConcern, type: :model do
 
       it "does not treat motivation or date de décision as tags" do
         is_expected.to eq('--motivation-- --date de décision--')
+      end
+    end
+
+    context 'when procedure has revisions' do
+      let(:types_de_champ) { [build(:type_de_champ, libelle: 'mon ancien libellé')] }
+      let(:draft_type_de_champ) { procedure.draft_revision.find_or_clone_type_de_champ(types_de_champ[0].stable_id) }
+
+      before do
+        draft_type_de_champ.update(libelle: 'mon nouveau libellé')
+        dossier.champs.first.update(value: 'valeur')
+        procedure.update!(draft_revision: procedure.create_new_revision, published_revision: procedure.draft_revision)
+      end
+
+      context "when using the champ's original label" do
+        let(:template) { '--mon ancien libellé--' }
+
+        it "replaces the tag" do
+          is_expected.to eq('valeur')
+        end
+      end
+
+      context "when using the champ's revised label" do
+        let(:template) { '--mon nouveau libellé--' }
+
+        it "replaces the tag" do
+          is_expected.to eq('valeur')
+        end
       end
     end
   end
