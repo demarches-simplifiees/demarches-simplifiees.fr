@@ -38,8 +38,9 @@ describe Champs::CnafChamp, type: :model do
     let(:numero_allocataire) { '1234567' }
     let(:code_postal) { '12345' }
     let(:champ) { described_class.new(dossier: create(:dossier), type_de_champ: create(:type_de_champ_cnaf)) }
+    let(:validation_context) { :create }
 
-    subject { champ.valid? }
+    subject { champ.valid?(validation_context) }
 
     before do
       champ.numero_allocataire = numero_allocataire
@@ -81,6 +82,12 @@ describe Champs::CnafChamp, type: :model do
       it do
         is_expected.to be false
         expect(champ.errors.full_messages).to eq(["Numero allocataire doit être composé au maximum de 7 chiffres"])
+      end
+
+      context 'and the validation_context is :brouillon' do
+        let(:validation_context) { :brouillon }
+
+        it { is_expected.to be true }
       end
     end
 

@@ -20,8 +20,8 @@
 #
 class Champs::CnafChamp < Champs::TextChamp
   # see https://github.com/betagouv/api-particulier/blob/master/src/presentation/middlewares/cnaf-input-validation.middleware.ts
-  validates :numero_allocataire, format: { with: /\A\d{1,7}\z/ }, if: -> { code_postal.present? }
-  validates :code_postal, format: { with: /\A\w{5}\z/ }, if: -> { numero_allocataire.present? }
+  validates :numero_allocataire, format: { with: /\A\d{1,7}\z/ }, if: -> { code_postal.present? && validation_context != :brouillon }
+  validates :code_postal, format: { with: /\A\w{5}\z/ }, if: -> { numero_allocataire.present? && validation_context != :brouillon }
 
   store_accessor :value_json, :numero_allocataire, :code_postal
 
@@ -34,12 +34,14 @@ class Champs::CnafChamp < Champs::TextChamp
   end
 
   def fetch_external_data
-    APIParticulier::CnafAdapter.new(
-      procedure.api_particulier_token,
-      numero_allocataire,
-      code_postal,
-      procedure.api_particulier_sources
-    ).to_params
+    if valid?
+      APIParticulier::CnafAdapter.new(
+        procedure.api_particulier_token,
+        numero_allocataire,
+        code_postal,
+        procedure.api_particulier_sources
+      ).to_params
+    end
   end
 
   def external_id
