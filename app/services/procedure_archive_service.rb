@@ -14,10 +14,13 @@ class ProcedureArchiveService
   end
 
   def collect_files_archive(archive, instructeur)
-    if archive.time_span_type == 'everything'
+    case archive.time_span_type
+    when 'everything'
       dossiers = @procedure.dossiers.state_termine
-    else
+    when 'monthly'
       dossiers = @procedure.dossiers.processed_in_month(archive.month)
+    when 'custom'
+      dossiers = @procedure.dossiers.processed_between(archive.end_day, archive.start_day)
     end
 
     files = create_list_of_attachments(dossiers)

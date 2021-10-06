@@ -215,6 +215,12 @@ class Dossier < ApplicationRecord
       .joins(:traitements)
       .where(traitements: { processed_at: month.beginning_of_month..month.end_of_month })
   end
+
+  scope :processed_between, -> (start_day, end_day) do
+    state_termine
+      .joins(:traitements)
+      .where(traitements: { processed_at: start_day.beginning_of_day..end_day.end_of_day })
+  end
   scope :downloadable_sorted, -> {
     state_not_brouillon
       .includes(

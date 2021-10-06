@@ -55,10 +55,13 @@ class Archive < ApplicationRecord
   end
 
   def filename(procedure)
-    if time_span_type == 'everything'
+    case time_span_type
+    when 'everything'
       "procedure-#{procedure.id}.zip"
-    else
+    when 'monthly'
       "procedure-#{procedure.id}-mois-#{I18n.l(month, format: '%Y-%m')}.zip"
+    when 'custom'
+      "procedure-#{procedure.id}-#{I18n.l(start_day, format: '%Y-%m-%d')}-#{I18n.l(end_day, format: '%Y-%m-%d')}.zip"
     end
   end
 
