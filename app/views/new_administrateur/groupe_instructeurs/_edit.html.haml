@@ -1,3 +1,4 @@
+- groupe_instructeurs_count = procedure.groupe_instructeurs.count
 .card
   = form_for procedure,
     url: { action: :update_routing_criteria_name },
@@ -17,7 +18,7 @@
       Ajouter un groupe
     %p.notice Ce groupe sera un choix de la liste « #{procedure.routing_criteria_name} » .
     = f.text_field :label, placeholder: 'ex. Ville de Bordeaux', required: true
-    = f.submit 'Ajouter le groupe', class: 'button primary send'
+    = f.submit 'Ajouter le groupe', class: "button primary send"
 
   - csv_max_size = NewAdministrateur::GroupeInstructeursController::CSV_MAX_SIZE
   = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 form" do
@@ -48,5 +49,7 @@
                 = link_to reaffecter_dossiers_admin_procedure_groupe_instructeur_path(procedure, group), class: 'button', title:'Réaffecter les dossiers à un autre groupe afin de pouvoir le supprimer' do
                   %span.icon.follow
                   déplacer les dossiers
+  - if groupe_instructeurs_count > 1
+    = link_to "Exporter au format CSV", export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv)
 
   = paginate groupes_instructeurs
