@@ -82,7 +82,7 @@ export default [
     type: 'fill',
     source: 'cadastre',
     'source-layer': 'parcelles',
-    filter: ['==', 'id', ''],
+    filter: ['in', 'id', ''],
     paint: {
       'fill-color': 'rgba(1, 129, 0, 1)',
       'fill-opacity': 0.7

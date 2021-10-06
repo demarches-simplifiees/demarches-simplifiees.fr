@@ -85,7 +85,7 @@ describe ChampSerializer do
               source: GeoArea.sources.fetch(:cadastre),
               geometry: geo_json,
               numero: '42',
-              feuille: 'A11'
+              section: 'A11'
             )
             expect(subject[:geo_areas].first.key?(:nom)).to be_falsey
           }

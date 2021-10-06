@@ -19,6 +19,7 @@ import '@reach/combobox/styles.css';
 import { matchSorter } from 'match-sorter';
 import { fire } from '@utils';
 import { XIcon } from '@heroicons/react/outline';
+import isHotkey from 'is-hotkey';
 
 const Context = createContext();
 
@@ -83,7 +84,12 @@ function ComboMultipleDropdownList({
   };
 
   const onKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (
+      isHotkey('enter', event) ||
+      isHotkey(' ', event) ||
+      isHotkey(',', event) ||
+      isHotkey(';', event)
+    ) {
       if (
         term &&
         [...extraOptions, ...options].map(([label]) => label).includes(term)
@@ -94,12 +100,26 @@ function ComboMultipleDropdownList({
     }
   };
 
-  const saveSelection = (selections) => {
-    setSelections(selections);
-    if (hiddenField) {
-      hiddenField.setAttribute('value', JSON.stringify(selections));
-      fire(hiddenField, 'autosave:trigger');
+  const onBlur = (event) => {
+    if (
+      acceptNewValues &&
+      term &&
+      [...extraOptions, ...options].map(([label]) => label).includes(term)
+    ) {
+      event.preventDefault();
+      return onSelect(term);
     }
+  };
+
+  const saveSelection = (fn) => {
+    setSelections((selections) => {
+      selections = fn(selections);
+      if (hiddenField) {
+        hiddenField.setAttribute('value', JSON.stringify(selections));
+        fire(hiddenField, 'autosave:trigger');
+      }
+      return selections;
+    });
   };
 
   const onSelect = (value) => {
@@ -107,15 +127,15 @@ function ComboMultipleDropdownList({
       ([val]) => val == value
     );
     const selectedValue = maybeValue && maybeValue[1];
-    if (value) {
+    if (selectedValue) {
       if (
         acceptNewValues &&
         extraOptions[0] &&
         extraOptions[0][0] == selectedValue
       ) {
-        setNewValues([...newValues, selectedValue]);
+        setNewValues((newValues) => [...newValues, selectedValue]);
       }
-      saveSelection([...selections, selectedValue]);
+      saveSelection((selections) => [...selections, selectedValue]);
     }
     setTerm('');
   };
@@ -123,8 +143,12 @@ function ComboMultipleDropdownList({
   const onRemove = (label) => {
     const optionValue = optionValueByLabel(label);
     if (optionValue) {
-      saveSelection(selections.filter((value) => value != optionValue));
-      setNewValues(newValues.filter((value) => value != optionValue));
+      saveSelection((selections) =>
+        selections.filter((value) => value != optionValue)
+      );
+      setNewValues((newValues) =>
+        newValues.filter((value) => value != optionValue)
+      );
     }
     inputRef.current.focus();
   };
@@ -149,10 +173,11 @@ function ComboMultipleDropdownList({
           value={term}
           onChange={handleChange}
           onKeyDown={onKeyDown}
+          onBlur={onBlur}
           autocomplete={false}
         />
       </ComboboxTokenLabel>
-      {results && (
+      {results && (results.length > 0 || !acceptNewValues) && (
         <ComboboxPopover className="shadow-popup">
           {results.length === 0 && (
             <p>

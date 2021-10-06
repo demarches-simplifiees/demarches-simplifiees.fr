@@ -67,11 +67,49 @@ feature 'Inviting an expert:' do
       expect(page).to have_text('1 avis donné')
     end
 
-    # TODO
-    # scenario 'I can read other experts advices' do
-    # end
-
     # scenario 'I can invite other experts' do
     # end
+  end
+
+  context 'when there are two experts' do
+    let(:expert_1) { create(:expert) }
+    let(:expert_2) { create(:expert) }
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
+    let(:experts_procedure_1) { create(:experts_procedure, expert: expert_1, procedure: procedure) }
+    let(:experts_procedure_2) { create(:experts_procedure, expert: expert_2, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
+    let!(:avis_1) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_1, confidentiel: true) }
+    let!(:avis_2) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
+
+    scenario 'As a expert_1, I can read expert_2 advice because it is not confidential' do
+      login_as expert_1.user, scope: :user
+
+      visit expert_all_avis_path
+      expect(page).to have_text('1 avis à donner')
+      expect(page).to have_text('0 avis donnés')
+
+      click_on '1 avis à donner'
+      click_on avis_1.dossier.user.email
+      within('.tabs') { click_on 'Avis' }
+      expect(page).to have_text("Demandeur : #{avis_1.claimant.email}")
+      expect(page).to have_text("Vous")
+      expect(page).to have_text(avis_2.expert.email.to_s)
+    end
+
+    scenario 'As a expert_2, I cannot read expert_1 advice because it is confidential' do
+      login_as expert_2.user, scope: :user
+
+      visit expert_all_avis_path
+      expect(page).to have_text('1 avis à donner')
+      expect(page).to have_text('0 avis donnés')
+
+      click_on '1 avis à donner'
+      click_on avis_2.dossier.user.email
+      within('.tabs') { click_on 'Avis' }
+      expect(page).to have_text("Demandeur : #{avis_2.claimant.email}")
+      expect(page).to have_text("Vous")
+      expect(page).not_to have_text(avis_1.expert.email.to_s)
+    end
   end
 end
