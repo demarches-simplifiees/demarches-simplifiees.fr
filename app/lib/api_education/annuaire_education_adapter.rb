@@ -15,6 +15,13 @@ class APIEducation::AnnuaireEducationAdapter
     record = data_source[:records].first
     if record.present?
       properties = record[:fields].merge({ geometry: record[:geometry] }).deep_stringify_keys
+      # API sends numbers as strings sometime. Try to parse.
+      if properties['code_type_contrat_prive'].is_a? String
+        code = properties['code_type_contrat_prive'].to_i
+        if code.to_s == properties['code_type_contrat_prive']
+          properties['code_type_contrat_prive'] = code
+        end
+      end
       if schemer.valid?(properties)
         properties
       else
