@@ -232,7 +232,7 @@ class SerializerService
     fragment FileFragment on File {
       filename
       checksum
-      byteSize
+      byteSize: byteSizeBigInt
       contentType
     }
   GRAPHQL

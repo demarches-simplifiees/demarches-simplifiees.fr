@@ -15,18 +15,26 @@ class Champs::CarteController < ApplicationController
 
     if geo_area.nil?
       geo_area = champ.geo_areas.build(source: params_source, properties: {})
-      save_feature!(geo_area, create_params_feature)
-    end
 
-    render json: { feature: geo_area.to_feature }, status: :created
+      if save_feature(geo_area, create_params_feature)
+        render json: { feature: geo_area.to_feature }, status: :created
+      else
+        render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_entity
+      end
+    else
+      render json: { feature: geo_area.to_feature }, status: :ok
+    end
   end
 
   def update
     champ = policy_scope(Champ).find(params[:champ_id])
     geo_area = champ.geo_areas.find(params[:id])
-    save_feature!(geo_area, update_params_feature)
 
-    head :no_content
+    if save_feature(geo_area, update_params_feature)
+      head :no_content
+    else
+      render json: { errors: geo_area.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -66,13 +74,13 @@ class Champs::CarteController < ApplicationController
     end
   end
 
-  def save_feature!(geo_area, feature)
+  def save_feature(geo_area, feature)
     if feature[:geometry]
       geo_area.geometry = feature[:geometry]
     end
     if feature[:properties]
       geo_area.properties.merge!(feature[:properties])
     end
-    geo_area.save!
+    geo_area.save
   end
 end

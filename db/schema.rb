@@ -276,6 +276,7 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.string "api_entreprise_job_exceptions", array: true
     t.interval "conservation_extension", default: "PT0S"
     t.string "deleted_user_email_never_send"
+    t.datetime "declarative_triggered_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"
@@ -533,6 +534,7 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.bigint "procedure_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "published_at"
     t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"
   end
 
