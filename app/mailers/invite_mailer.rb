@@ -3,7 +3,7 @@ class InviteMailer < ApplicationMailer
   layout 'mailers/layout'
 
   def invite_user(invite)
-    subject = "Participez à l'élaboration d'un dossier"
+    subject = "Participez à l'élaboration d’un dossier"
 
     if invite.user.present?
       send_mail(invite, subject, invite.email_sender)

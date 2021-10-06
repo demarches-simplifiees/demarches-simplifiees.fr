@@ -7,6 +7,7 @@ describe InstructeursImportService do
       procedure
         .groupe_instructeurs
         .map { |gi| [gi.label, gi.instructeurs.map(&:email)] }
+        .to_h
     end
 
     subject { service.import(procedure, lines) }
@@ -23,11 +24,10 @@ describe InstructeursImportService do
       it 'imports' do
         errors = subject
 
-        expect(procedure_groupes).to match_array([
-          ["Auvergne Rhone-Alpes", ["john@lennon.fr"]],
-          ["Occitanie", ["paul@mccartney.uk", "ringo@starr.uk"]],
-          ["défaut", []]
-        ])
+        expect(procedure_groupes.keys).to contain_exactly("Auvergne Rhone-Alpes", "Occitanie", "défaut")
+        expect(procedure_groupes["Auvergne Rhone-Alpes"]).to contain_exactly("john@lennon.fr")
+        expect(procedure_groupes["Occitanie"]).to contain_exactly("paul@mccartney.uk", "ringo@starr.uk")
+        expect(procedure_groupes["défaut"]).to be_empty
 
         expect(errors).to match_array([])
       end
@@ -48,10 +48,9 @@ describe InstructeursImportService do
       it 'adds instructeur to existing groupe' do
         subject
 
-        expect(procedure_groupes).to match_array([
-          ["Occitanie", ["george@harisson.uk", "ringo@starr.uk"]],
-          ["défaut", []]
-        ])
+        expect(procedure_groupes.keys).to contain_exactly("Occitanie", "défaut")
+        expect(procedure_groupes["Occitanie"]).to contain_exactly("george@harisson.uk", "ringo@starr.uk")
+        expect(procedure_groupes["défaut"]).to be_empty
       end
     end
 
@@ -67,12 +66,11 @@ describe InstructeursImportService do
       it 'ignores or corrects' do
         errors = subject
 
-        expect(procedure_groupes).to match_array([
-          ["Occitanie", ["paul@mccartney.uk", "ringo@starr.uk"]],
-          ["défaut", []]
-        ])
+        expect(procedure_groupes.keys).to contain_exactly("Occitanie", "défaut")
+        expect(procedure_groupes["Occitanie"]).to contain_exactly("paul@mccartney.uk", "ringo@starr.uk")
+        expect(procedure_groupes["défaut"]).to be_empty
 
-        expect(errors).to match_array(['paul'])
+        expect(errors).to contain_exactly("paul")
       end
     end
 
@@ -88,10 +86,9 @@ describe InstructeursImportService do
       it 'reuses instructeur' do
         subject
 
-        expect(procedure_groupes).to match_array([
-          ["Occitanie", [instructeur.email, "ringo@starr.uk"]],
-          ["défaut", []]
-        ])
+        expect(procedure_groupes.keys).to contain_exactly("Occitanie", "défaut")
+        expect(procedure_groupes["Occitanie"]).to contain_exactly(instructeur.email, "ringo@starr.uk")
+        expect(procedure_groupes["défaut"]).to be_empty
       end
     end
 
@@ -106,10 +103,9 @@ describe InstructeursImportService do
       it 'ignores duplicated instructeur' do
         subject
 
-        expect(procedure_groupes).to match_array([
-          ["Occitanie", ["ringo@starr.uk"]],
-          ["défaut", []]
-        ])
+        expect(procedure_groupes.keys).to contain_exactly("Occitanie", "défaut")
+        expect(procedure_groupes["Occitanie"]).to contain_exactly("ringo@starr.uk")
+        expect(procedure_groupes["défaut"]).to be_empty
       end
     end
 
@@ -124,14 +120,10 @@ describe InstructeursImportService do
       it 'ignores instructeur' do
         errors = subject
 
-        expect(procedure_groupes).to match_array([
-          ["défaut", []]
-        ])
+        expect(procedure_groupes.keys).to contain_exactly("défaut")
+        expect(procedure_groupes["défaut"]).to be_empty
 
-        expect(errors).to match_array([
-          'ringo@starr.uk',
-          'paul@starr.uk'
-        ])
+        expect(errors).to contain_exactly("ringo@starr.uk", "paul@starr.uk")
       end
     end
   end

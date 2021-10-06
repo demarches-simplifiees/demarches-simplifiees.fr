@@ -356,7 +356,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
     context 'when jeton is invalid' do
       let(:token_is_valid) { false }
 
-      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n'est pas valide") }
+      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide") }
       it { expect(flash.notice).to be_nil }
       it { expect(procedure.reload.api_entreprise_token).not_to eq(token) }
     end
@@ -365,7 +365,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       let(:token) { "invalid" }
       let(:token_is_valid) { true } # just to check jwt format by procedure model
 
-      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n'est pas valide") }
+      it { expect(flash.alert).to eq("Mise à jour impossible : le jeton n’est pas valide") }
       it { expect(flash.notice).to be_nil }
       it { expect(procedure.reload.api_entreprise_token).not_to eq(token) }
     end
@@ -490,7 +490,7 @@ describe NewAdministrateur::ProceduresController, type: :controller do
       it { expect(subject.status).to eq 302 }
       it { expect(response.body).to include(admin_procedure_transfert_path(procedure.id)) }
       it { expect(flash[:alert]).to be_present }
-      it { expect(flash[:alert]).to eq("Envoi vers #{email_admin} impossible : cet administrateur n'existe pas") }
+      it { expect(flash[:alert]).to eq("Envoi vers #{email_admin} impossible : cet administrateur n’existe pas") }
     end
 
     context 'when admin is known' do

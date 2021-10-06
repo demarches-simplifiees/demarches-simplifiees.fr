@@ -60,7 +60,7 @@
         %th.libelle Capital social :
         %td= pretty_currency(etablissement.entreprise.capital_social)
       %tr
-        %th.libelle Chiffre d'affaires :
+        %th.libelle Chiffre d’affaires :
         %td
           - if profile == 'instructeur'
             %details
@@ -78,7 +78,7 @@
             locals: { libelle: 'Résultat exercice', key: 'resultat_exercice', etablissement: etablissement }
 
           = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-            locals: { libelle: "Excédent brut d'exploitation", key: 'excedent_brut_exploitation', etablissement: etablissement }
+            locals: { libelle: "Excédent brut d’exploitation", key: 'excedent_brut_exploitation', etablissement: etablissement }
 
           = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
             locals: { libelle: 'Fonds de roulement net global', key: 'fonds_roulement_net_global', etablissement: etablissement }
@@ -148,6 +148,6 @@
           %td= try_format_date(etablissement.association_date_declaration)
 
 %p
-  = link_to '➡ Autres informations sur le site de l\'ISPF',
+  = link_to "➡ Autres informations sur l’organisme sur le site de l’ISPF",
   "http://www.ispf.pf/bases/Repertoires/Entreprises/Detail.aspx?numtah=#{etablissement.siren}",
   target: "_blank"

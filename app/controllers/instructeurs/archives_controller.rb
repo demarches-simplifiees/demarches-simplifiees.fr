@@ -30,7 +30,7 @@ module Instructeurs
 
     def ensure_procedure_enabled
       if !procedure.feature_enabled?(:archive_zip_globale) || procedure.brouillon?
-        flash[:alert] = "L'accès aux archives n'est pas disponible pour cette démarche, merci d'en faire la demande à l'équipe de démarches simplifiees"
+        flash[:alert] = "L'accès aux archives n’est pas disponible pour cette démarche, merci d’en faire la demande à l'équipe de démarches simplifiees"
         return redirect_to instructeur_procedure_path(procedure)
       end
     end

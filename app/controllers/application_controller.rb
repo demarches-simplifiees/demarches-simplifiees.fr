@@ -244,7 +244,7 @@ class ApplicationController < ActionController::Base
     sentry = Rails.application.secrets.sentry
 
     {
-      key: sentry[:client_key],
+      key: sentry[:js_client_key],
       enabled: sentry[:enabled],
       environment: sentry[:environment],
       browser: { modern: BrowserSupport.supported?(browser) },

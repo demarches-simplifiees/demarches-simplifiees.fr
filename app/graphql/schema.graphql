@@ -1498,12 +1498,12 @@ type NumeroDnChamp implements Champ {
 
 enum Order {
   """
-  L‘ordre ascendant.
+  L’ordre ascendant.
   """
   ASC
 
   """
-  L‘ordre descendant.
+  L’ordre descendant.
   """
   DESC
 }
@@ -1539,7 +1539,7 @@ type ParcelleCadastrale implements GeoArea {
   codeDep: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   commune: String!
   description: String
-  feuille: Int! @deprecated(reason: "L‘information n‘est plus disponible.")
+  feuille: Int! @deprecated(reason: "L’information n’est plus disponible.")
   geometry: GeoJSON!
   id: ID!
   nomCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
@@ -1548,7 +1548,7 @@ type ParcelleCadastrale implements GeoArea {
   section: String!
   source: GeoAreaSource!
   surface: String!
-  surfaceIntersection: Float! @deprecated(reason: "L‘information n‘est plus disponible.")
+  surfaceIntersection: Float! @deprecated(reason: "L’information n’est plus disponible.")
   surfaceParcelle: Float! @deprecated(reason: "Utilisez le champ `surface` à la place.")
 }
 

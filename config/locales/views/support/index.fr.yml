@@ -1,7 +1,7 @@
 fr:
   support:
     contact: Contact
-    intro_html: Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.<br>Pensez bien à nous donner le plus d'informations possible pour que nous puissions vous aider au mieux.
+    intro_html: Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.<br>Pensez bien à nous donner le plus d’informations possible pour que nous puissions vous aider au mieux.
     question:
       your_question: Votre question
       choose_question: Choisir une question
@@ -18,7 +18,7 @@ fr:
       instruction_info_html: "<p>Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie.</p>
       <p><a href=%{link_instruction_info}>En savoir plus</a></p>
       <br>
-      <p>Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l'instruction de votre dossier.</p>"
+      <p>Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l’instruction de votre dossier.</p>"
       product_html: "<p>Une idée ? Pensez à consulter notre <strong>tableau de bord des améliorations</strong></p>
       <p><ul><li>Votez pour vos améliorations prioritaires;</li>
       <li>Proposez votre propre idée.</li></ul></p>
@@ -30,10 +30,10 @@ fr:
       notice_pj_product: Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
       notice_pj_other: Une capture d’écran peut nous aider à identifier plus facilement le problème.
   supportadmin:
-    admin_intro_html: "<p>En tant qu'administration, vous pouvez nous contactez via ce formulaire. Nous vous répondrons dans les plus brefs délais, par email ou par téléphone.</p>
+    admin_intro_html: "<p>En tant qu’administration, vous pouvez nous contactez via ce formulaire. Nous vous répondrons dans les plus brefs délais, par email ou par téléphone.</p>
     <br>
     <p><strong>Attention, ce formulaire est réservé uniquement aux organismes publics.</strong>
-    Il ne concerne ni les particuliers, ni les entreprises, ni les associations (sauf celles reconnues d'utilité publique). Si c'est votre cas, rendez-vous sur notre
+    Il ne concerne ni les particuliers, ni les entreprises, ni les associations (sauf celles reconnues d’utilité publique). Si c'est votre cas, rendez-vous sur notre
     <a href=%{contact_path}>formulaire de contact public</a>.</p>"
     contact_team: Contactez notre équipe
     pro_phone_number: Numéro de téléphone professionnel (ligne directe)
