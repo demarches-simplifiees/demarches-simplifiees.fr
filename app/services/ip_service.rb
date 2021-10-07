@@ -12,8 +12,8 @@ class IPService
       if ENV['TRUSTED_NETWORKS'].present?
         ENV['TRUSTED_NETWORKS']
           .split
-          .map { |string| parse_address(string) }
-          .compact
+          .filter_map { |string| parse_address(string) }
+
       else
         []
       end

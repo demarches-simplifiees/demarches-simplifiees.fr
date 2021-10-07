@@ -8,7 +8,7 @@ feature 'Inviting an expert:', js: true do
   let(:expert_password) { 'mot de passe d’expert' }
   let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
   let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
-  let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
+  let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).filter_map(&:value)) }
 
   context 'as an Instructeur' do
     scenario 'I can invite an expert' do
@@ -45,7 +45,7 @@ feature 'Inviting an expert:', js: true do
 
       invitation_email = open_email(expert.email.to_s)
       avis = expert.avis.find_by(dossier: dossier)
-      sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, avis.expert.email)
+      sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, email: avis.expert.email)
       expect(invitation_email.body).to include(sign_up_link)
     end
 

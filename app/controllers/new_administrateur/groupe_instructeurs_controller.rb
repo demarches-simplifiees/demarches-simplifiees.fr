@@ -1,6 +1,8 @@
 module NewAdministrateur
   class GroupeInstructeursController < AdministrateurController
+    include ActiveSupport::NumberHelper
     ITEMS_PER_PAGE = 25
+    CSV_MAX_SIZE = 1.megabytes
 
     def index
       @procedure = procedure
@@ -158,6 +160,31 @@ module NewAdministrateur
         notice: "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
     end
 
+    def import
+      if (group_csv_file.content_type != "text/csv") && (marcel_content_type != "text/csv")
+        flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+
+      elsif group_csv_file.size > CSV_MAX_SIZE
+        flash[:alert] = "Importation impossible : la poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+
+      else
+        groupes_emails = CSV.new(group_csv_file.read, headers: true, header_converters: :downcase)
+          .map { |r| r.to_h.slice('groupe', 'email') }
+
+        add_instructeurs_and_get_errors = InstructeursImportService.import(procedure, groupes_emails)
+
+        if add_instructeurs_and_get_errors.empty?
+          flash[:notice] = "La liste des instructeurs a été importée avec succès"
+        else
+          flash[:alert] = "Import terminé. Cependant les emails suivants ne sont pas pris en compte: #{add_instructeurs_and_get_errors.join(', ')}"
+        end
+
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      end
+    end
+
     private
 
     def create_instructeur(email)
@@ -213,6 +240,14 @@ module NewAdministrateur
       all = current_administrateur.instructeurs.map(&:email)
       assigned = groupe_instructeur.instructeurs.map(&:email)
       (all - assigned).sort
+    end
+
+    def group_csv_file
+      params[:group_csv_file]
+    end
+
+    def marcel_content_type
+      Marcel::MimeType.for(group_csv_file.read, name: group_csv_file.original_filename, declared_type: group_csv_file.content_type)
     end
   end
 end
