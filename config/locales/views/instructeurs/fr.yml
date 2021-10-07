@@ -2,12 +2,18 @@ fr:
   instructeurs:
     procedure:
       export_stale:
-        short: Demander un export au format %{export_format}
-        csv_html: Demander un export au format .csv<br>(uniquement les dossiers, sans les champs répétables)
-        xlsx_html: Demander un export au format .xlsx
-        ods_html: Demander un export au format .ods
-      export_ready_html: Télécharger l’export au format %{export_format}<br>(généré il y a %{export_time})
-      export_pending_html: Un export au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
+        everything_short: Demander un export au format %{export_format}
+        everything_csv_html: Demander un export au format .csv<br>(uniquement les dossiers, sans les champs répétables)
+        everything_xlsx_html: Demander un export au format .xlsx
+        everything_ods_html: Demander un export au format .ods
+        monthly_short: Demander un export des 30 derniers jours au format %{export_format}
+        monthly_csv_html: Demander un export des 30 derniers jours au format .csv<br>(uniquement les dossiers, sans les champs répétables)
+        monthly_xlsx_html: Demander un export des 30 derniers jours au format .xlsx
+        monthly_ods_html: Demander un export des 30 derniers jours au format .ods
+      export_everything_ready_html: Télécharger l’export au format %{export_format}<br>(généré il y a %{export_time})
+      export_everything_pending_html: Un export au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
+      export_monthly_ready_html: Télécharger l’export des 30 derniers jours au format %{export_format}<br>(généré il y a %{export_time})
+      export_monthly_pending_html: Un export des 30 derniers jours au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
       download_archive: Télécharger une archive au format .zip de tous les dossiers et leurs pièces jointes
       archive_pending_html: Archive en cours de création<br>(demandée il y a %{created_period})
       archive_ready_html: Télécharger l’archive<br>(demandée il y a %{generated_period})

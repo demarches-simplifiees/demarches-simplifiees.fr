@@ -109,3 +109,15 @@
     }
   }
 }
+
+ul.revision-changes {
+  list-style: none;
+
+  ul {
+    list-style: none;
+
+    li {
+      padding-top: 0.25 * $default-padding;
+    }
+  }
+}

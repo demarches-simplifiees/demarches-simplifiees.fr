@@ -181,6 +181,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_optional_repetition do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, mandatory: false)
+      end
+    end
+
     trait :with_number do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_number, procedure: procedure)
