@@ -12,7 +12,7 @@ feature 'Inviting an expert:' do
 
     context 'when I don’t already have an account' do
       scenario 'I can sign up' do
-        visit sign_up_expert_avis_path(avis.dossier.procedure, avis, avis.expert.email)
+        visit sign_up_expert_avis_path(avis.dossier.procedure, avis, email: avis.expert.email)
 
         expect(page).to have_field('Email', with: avis.expert.email, disabled: true)
         fill_in 'Mot de passe', with: 'This is a very complicated password !'
@@ -29,7 +29,7 @@ feature 'Inviting an expert:' do
         avis.expert.user.reload
       end
       scenario 'I can sign in' do
-        visit sign_up_expert_avis_path(avis.dossier.procedure, avis, avis.expert.email)
+        visit sign_up_expert_avis_path(avis.dossier.procedure, avis, email: avis.expert.email)
 
         expect(page).to have_current_path(new_user_session_path)
         login_as avis.expert.user, scope: :user

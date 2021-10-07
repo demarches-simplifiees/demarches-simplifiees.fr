@@ -45,7 +45,7 @@ feature 'Inviting an expert:', js: true do
 
       invitation_email = open_email(expert.email.to_s)
       avis = expert.avis.find_by(dossier: dossier)
-      sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, avis.expert.email)
+      sign_up_link = sign_up_expert_avis_path(avis.dossier.procedure, avis, email: avis.expert.email)
       expect(invitation_email.body).to include(sign_up_link)
     end
 

@@ -2,23 +2,28 @@ describe Traitement do
   describe '#count_dossiers_termines_by_month' do
     let(:procedure) { create(:procedure, :published, groupe_instructeurs: [groupe_instructeurs]) }
     let(:groupe_instructeurs) { create(:groupe_instructeur) }
-    let(:result) { Traitement.count_dossiers_termines_by_month(groupe_instructeurs) }
 
     before do
       create_dossier_for_month(procedure, 2021, 3)
       create_dossier_for_month(procedure, 2021, 3)
+      create_archived_dossier_for_month(procedure, 2021, 3)
       create_dossier_for_month(procedure, 2021, 2)
-      Timecop.freeze(Time.zone.local(2021, 3, 5))
+    end
+
+    subject do
+      Timecop.freeze(Time.zone.local(2021, 3, 5)) do
+        Traitement.count_dossiers_termines_by_month(groupe_instructeurs)
+      end
     end
 
     it 'count dossiers_termines by month' do
-      expect(count_for_month(result, 3)).to eq 2
-      expect(count_for_month(result, 2)).to eq 1
+      expect(count_for_month(subject, 3)).to eq 3
+      expect(count_for_month(subject, 2)).to eq 1
     end
 
     it 'returns descending order by month' do
-      expect(result[0]["month"].to_date.month).to eq 3
-      expect(result[1]["month"].to_date.month).to eq 2
+      expect(subject[0]["month"].to_date.month).to eq 3
+      expect(subject[1]["month"].to_date.month).to eq 2
     end
   end
 
@@ -31,7 +36,14 @@ describe Traitement do
   end
 
   def create_dossier_for_month(procedure, year, month)
-    Timecop.freeze(Time.zone.local(year, month, 5))
-    create(:dossier, :accepte, :with_attestation, procedure: procedure)
+    Timecop.freeze(Time.zone.local(year, month, 5)) do
+      create(:dossier, :accepte, :with_attestation, procedure: procedure)
+    end
+  end
+
+  def create_archived_dossier_for_month(procedure, year, month)
+    Timecop.freeze(Time.zone.local(year, month, 5)) do
+      create(:dossier, :accepte, :archived, :with_attestation, procedure: procedure)
+    end
   end
 end

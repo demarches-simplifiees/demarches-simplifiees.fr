@@ -44,4 +44,18 @@ describe PiecesJustificativesService do
       expect(subject.any? { |piece| piece.name == 'serialized' }).to be_truthy
     end
   end
+
+  describe '.generate_dossier_export' do
+    subject { PiecesJustificativesService.generate_dossier_export(dossier) }
+    it "generates pdf export for instructeur" do
+      subject
+      expect(dossier.pdf_export_for_instructeur).to be_attached
+    end
+
+    it "doesn't update dossier" do
+      before_export = Time.zone.now
+      subject
+      expect(dossier.updated_at).to be <= before_export
+    end
+  end
 end
