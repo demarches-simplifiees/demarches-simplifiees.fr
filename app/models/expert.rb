@@ -9,6 +9,7 @@
 class Expert < ApplicationRecord
   has_one :user
   has_many :experts_procedures
+  has_many :procedures, through: :experts_procedures
   has_many :avis, through: :experts_procedures
   has_many :dossiers, through: :avis
   has_many :commentaires
@@ -37,7 +38,22 @@ class Expert < ApplicationRecord
   end
 
   def merge(old_expert)
-    old_expert.experts_procedures.update_all(expert_id: id)
+    procedure_with_new, procedure_without_new = old_expert
+      .procedures
+      .partition { |p| p.experts.exists?(id) }
+
+    ExpertsProcedure
+      .where(expert_id: old_expert.id, procedure: procedure_without_new)
+      .update_all(expert_id: id)
+
+    ExpertsProcedure
+      .where(expert_id: old_expert.id, procedure: procedure_with_new)
+      .destroy_all
+
     old_expert.commentaires.update_all(expert_id: id)
+
+    Avis
+      .where(claimant_id: old_expert.id, claimant_type: Expert.name)
+      .update_all(claimant_id: id)
   end
 end
