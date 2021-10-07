@@ -25,7 +25,7 @@ describe Instructeurs::ArchivesController, type: :controller do
     it 'displays archives' do
       get :index, { params: { procedure_id: procedure1.id } }
 
-      expect(assigns(:dossiers_termines).size).to eq(3)
+      expect(assigns(:nb_dossiers_termines).size).to eq(8)
       expect(assigns(:archives)).to eq([archive1])
     end
   end

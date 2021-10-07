@@ -60,7 +60,7 @@ describe Experts::AvisController, type: :controller do
         it "refuse l'accès au dossier" do
           avis_with_answer.update!(revoked_at: Time.zone.now)
           subject
-          expect(flash.alert).to eq("Vous n'avez plus accès à ce dossier.")
+          expect(flash.alert).to eq("Vous n’avez plus accès à ce dossier.")
           expect(response).to redirect_to(root_path)
         end
       end
@@ -210,7 +210,7 @@ describe Experts::AvisController, type: :controller do
         it { expect(created_avis.introduction_file).to be_attached }
         it { expect(created_avis.introduction_file.filename).to eq("piece_justificative_0.pdf") }
         it { expect(created_avis.dossier.reload.last_avis_updated_at).to eq(now) }
-        it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à toto@totomail.com") }
+        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à toto@totomail.com") }
       end
 
       context 'with multiple emails' do
@@ -220,7 +220,7 @@ describe Experts::AvisController, type: :controller do
 
         it { expect(response).to render_template :instruction }
         it { expect(flash.alert).to eq(["toto.fr : Email n'est pas valide"]) }
-        it { expect(flash.notice).to eq("Une demande d'avis a été envoyée à titi@titimail.com") }
+        it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
       end
 
@@ -263,7 +263,7 @@ describe Experts::AvisController, type: :controller do
           let(:invite_linked_dossiers) { false }
 
           it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-            expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+            expect(flash.notice).to eq("Une demande d’avis a été envoyée à a@b.com")
             expect(Avis.count).to eq(old_avis_count + 1)
             expect(created_avis.dossier).to eq(dossier)
           end
@@ -277,7 +277,7 @@ describe Experts::AvisController, type: :controller do
             let(:invite_linked_dossiers) { true }
 
             it 'sends one avis for the main dossier' do
-              expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+              expect(flash.notice).to eq("Une demande d’avis a été envoyée à a@b.com")
               expect(created_avis.dossier).to eq(dossier)
             end
 
@@ -289,7 +289,7 @@ describe Experts::AvisController, type: :controller do
 
           context 'but the expert can’t access the linked dossier' do
             it 'sends a single avis for the main dossier, but doesn’t give access to the linked dossiers' do
-              expect(flash.notice).to eq("Une demande d'avis a été envoyée à a@b.com")
+              expect(flash.notice).to eq("Une demande d’avis a été envoyée à a@b.com")
               expect(Avis.count).to eq(old_avis_count + 1)
               expect(created_avis.dossier).to eq(dossier)
             end

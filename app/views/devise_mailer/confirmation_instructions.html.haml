@@ -11,13 +11,13 @@
     = link_to(link, link)
 
 - else
-  - content_for(:title, "Changement d'adresse email")
+  - content_for(:title, "Changement d’adresse email")
 
   %p
     Bonjour,
 
   %p
-    Pour confirmer votre changement d'adresse email, veuillez cliquer sur le lien suivant :
+    Pour confirmer votre changement d’adresse email, veuillez cliquer sur le lien suivant :
     = link_to(confirmation_url(@user, confirmation_token: @token), confirmation_url(@user, confirmation_token: @token))
 
 = render partial: "layouts/mailers/signature"

@@ -7,7 +7,7 @@
   Le dossier n°#{@dossier.id} pour la démarche  «&nbsp;
   %strong
     #{@dossier.procedure.libelle}
-  &nbsp;» est commencé mais n'est pas encore déposé.
+  &nbsp;» est commencé mais n’est pas encore déposé.
 %p
   Si vous souhaitez que ce dossier soit pris en compte, il vous faut le déposer avant le
   #{procedure_auto_archive_datetime(@dossier.procedure)}, date limite de dépôt des dossiers.
@@ -17,7 +17,7 @@
   %strong
     'Déposer le dossier'
 %p
-  Si vous ne souhaitez plus déposer le dossier, vous n'avez rien à faire.
+  Si vous ne souhaitez plus déposer le dossier, vous n’avez rien à faire.
 
 = round_button('Afficher votre dossier', dossier_url(@dossier), :primary)
 

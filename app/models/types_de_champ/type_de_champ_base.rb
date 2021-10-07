@@ -8,13 +8,14 @@ class TypesDeChamp::TypeDeChampBase
   end
 
   def tags_for_template
-    tdc = @type_de_champ
+    stable_id = @type_de_champ.stable_id
     [
       {
         libelle: libelle,
+        id: "tdc#{stable_id}",
         description: description,
         lambda: -> (champs) {
-          champs.find { |champ| champ.type_de_champ == tdc }&.for_tag
+          champs.find { |champ| champ.stable_id == stable_id }&.for_tag
         }
       }
     ]

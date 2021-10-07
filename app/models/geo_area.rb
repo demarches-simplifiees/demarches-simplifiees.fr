@@ -22,7 +22,7 @@ class GeoArea < ApplicationRecord
     if value.is_a? String
       ActiveRecord::Coders::YAMLColumn.new(:properties).load(value)
     else
-      value
+      value || {}
     end
   end
 
