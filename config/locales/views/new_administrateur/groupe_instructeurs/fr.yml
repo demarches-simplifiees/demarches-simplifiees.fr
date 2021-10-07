@@ -27,13 +27,3 @@ fr:
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
-    revision_changes:
-      has_changes:
-        one: Un champ a été changé
-        other: "%{count} champs ont été changés"
-      has_private_changes:
-        one: Une annotation privée a été changée
-        other: "%{count} deux annotations privées ont été changées"
-      has_move_changes:
-        one: Un champ a changé de position
-        other: "%{count} champs ont changé de position"

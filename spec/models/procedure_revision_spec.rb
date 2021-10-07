@@ -312,6 +312,53 @@ describe ProcedureRevision do
             to: ["one", "two"]
           }
         ])
+
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(type_champ: :carte)
+        new_revision.find_or_clone_type_de_champ(new_revision.types_de_champ.last.types_de_champ.first.stable_id).update(options: { cadastres: true, znieff: true })
+        expect(procedure.active_revision.compare(new_revision.reload)).to eq([
+          {
+            op: :remove,
+            label: type_de_champ_first.libelle,
+            private: false
+          },
+          {
+            op: :add,
+            label: "Un champ text",
+            private: false
+          },
+          {
+            op: :update,
+            attribute: :description,
+            label: type_de_champ_second.libelle,
+            private: false,
+            from: type_de_champ_second.description,
+            to: "une description"
+          },
+          {
+            op: :update,
+            attribute: :mandatory,
+            label: type_de_champ_second.libelle,
+            private: false,
+            from: false,
+            to: true
+          },
+          {
+            op: :update,
+            attribute: :type_champ,
+            label: "sub type de champ",
+            private: false,
+            from: "text",
+            to: "carte"
+          },
+          {
+            op: :update,
+            attribute: :carte_layers,
+            label: "sub type de champ",
+            private: false,
+            from: [],
+            to: [:cadastres, :znieff]
+          }
+        ])
       end
     end
   end

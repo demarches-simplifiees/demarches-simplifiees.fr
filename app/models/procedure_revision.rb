@@ -112,6 +112,15 @@ class ProcedureRevision < ApplicationRecord
     changes
   end
 
+  def new_dossier
+    Dossier.new(
+      revision: self,
+      champs: build_champs,
+      champs_private: build_champs_private,
+      groupe_instructeur: procedure.defaut_groupe_instructeur
+    )
+  end
+
   private
 
   def compare_types_de_champ(from_tdc, to_tdc)
@@ -205,6 +214,17 @@ class ProcedureRevision < ApplicationRecord
           private: from_type_de_champ.private?,
           from: from_type_de_champ.drop_down_list_options,
           to: to_type_de_champ.drop_down_list_options
+        }
+      end
+    elsif to_type_de_champ.carte?
+      if from_type_de_champ.carte_optional_layers != to_type_de_champ.carte_optional_layers
+        changes << {
+          op: :update,
+          attribute: :carte_layers,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: from_type_de_champ.carte_optional_layers,
+          to: to_type_de_champ.carte_optional_layers
         }
       end
     elsif to_type_de_champ.piece_justificative?
