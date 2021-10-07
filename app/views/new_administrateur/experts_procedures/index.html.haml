@@ -10,7 +10,7 @@
 
     .card
       .card-title Autoriser les instructeurs à solliciter des experts invités
-      %p.notice Si cette fonctionnalité est désactivée, les instructeurs ne pourront plus solliciter d'experts
+      %p.notice Si cette fonctionnalité est désactivée, les instructeurs ne pourront plus solliciter d’experts
       = form_for @procedure,
         method: :put,
         url: allow_expert_review_admin_procedure_path(@procedure),
@@ -43,7 +43,7 @@
             html: { class: 'form' } do |f|
 
             .instructeur-wrapper
-              %p.notice Pendant l'instruction d'un dossier, les instructeurs peuvent demander leur avis à un ou plusieurs experts.
+              %p.notice Pendant l'instruction d’un dossier, les instructeurs peuvent demander leur avis à un ou plusieurs experts.
               %p.notice Entrez les adresses email des experts que vous souhaitez affecter à cette démarche
               - hidden_field_id = SecureRandom.uuid
               = hidden_field_tag :emails, nil, data: { uuid: hidden_field_id }
@@ -60,7 +60,7 @@
           %thead
             %tr
               %th Liste des experts
-              %th Nombre d'avis
+              %th Nombre d’avis
               - if @procedure.experts_require_administrateur_invitation
                 %th Notifier des décisions sur les dossiers
           %tbody
@@ -88,9 +88,9 @@
                   %td.actions= button_to 'retirer',
                     admin_procedure_expert_path(id: expert_procedure, procedure: @procedure),
                     method: :delete,
-                    data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d'avis" },
+                    data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d’avis" },
                     class: 'button'
       - else
         .blank-tab
           %h2.empty-text Aucun expert invité pour le moment.
-          %p.empty-text-details Les instructeurs de cette démarche n'ont pas encore fait appel aux experts.
+          %p.empty-text-details Les instructeurs de cette démarche n’ont pas encore fait appel aux experts.

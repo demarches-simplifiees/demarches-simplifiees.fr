@@ -374,7 +374,7 @@ type Demarche {
   """
   Date de la publication.
   """
-  datePublication: ISO8601DateTime!
+  datePublication: ISO8601DateTime
 
   """
   L’état de dossier pour une démarche déclarative
@@ -1164,7 +1164,8 @@ type Entreprise {
 }
 
 type File {
-  byteSize: Int!
+  byteSize: Int! @deprecated(reason: "Utilisez le champ `byteSizeBigInt` à la place.")
+  byteSizeBigInt: BigInt!
   checksum: String!
   contentType: String!
   filename: String!
@@ -1172,6 +1173,7 @@ type File {
 }
 
 interface GeoArea {
+  description: String
   geometry: GeoJSON!
   id: ID!
   source: GeoAreaSource!
@@ -1497,12 +1499,12 @@ type NumeroDnChamp implements Champ {
 
 enum Order {
   """
-  L‘ordre ascendant.
+  L’ordre ascendant.
   """
   ASC
 
   """
-  L‘ordre descendant.
+  L’ordre descendant.
   """
   DESC
 }
@@ -1537,7 +1539,8 @@ type ParcelleCadastrale implements GeoArea {
   codeCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   codeDep: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
   commune: String!
-  feuille: Int! @deprecated(reason: "L‘information n‘est plus disponible.")
+  description: String
+  feuille: Int! @deprecated(reason: "L’information n’est plus disponible.")
   geometry: GeoJSON!
   id: ID!
   nomCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
@@ -1546,7 +1549,7 @@ type ParcelleCadastrale implements GeoArea {
   section: String!
   source: GeoAreaSource!
   surface: String!
-  surfaceIntersection: Float! @deprecated(reason: "L‘information n‘est plus disponible.")
+  surfaceIntersection: Float! @deprecated(reason: "L’information n’est plus disponible.")
   surfaceParcelle: Float! @deprecated(reason: "Utilisez le champ `surface` à la place.")
 }
 
@@ -1652,11 +1655,16 @@ type Revision {
   Date de la création.
   """
   dateCreation: ISO8601DateTime!
+
+  """
+  Date de la publication.
+  """
+  datePublication: ISO8601DateTime
   id: ID!
 }
 
 type SelectionUtilisateur implements GeoArea {
-  description: String!
+  description: String
   geometry: GeoJSON!
   id: ID!
   source: GeoAreaSource!

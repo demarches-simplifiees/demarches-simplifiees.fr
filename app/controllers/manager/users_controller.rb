@@ -8,7 +8,7 @@ module Manager
       if (user.valid?)
         flash[:notice] = "L'email a été modifié en « #{new_email} » sans notification ni validation par email."
       else
-        flash[:error] = "« #{new_email} » n'est pas une adresse valide."
+        flash[:error] = "« #{new_email} » n’est pas une adresse valide."
       end
       redirect_to edit_manager_user_path(user)
     end
@@ -16,7 +16,7 @@ module Manager
     def resend_confirmation_instructions
       user = User.find(params[:id])
       user.resend_confirmation_instructions
-      flash[:notice] = "L'email d'activation de votre compte a été renvoyé."
+      flash[:notice] = "L'email d’activation de votre compte a été renvoyé."
       redirect_to manager_user_path(user)
     end
 

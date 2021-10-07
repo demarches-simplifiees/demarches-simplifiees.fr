@@ -87,6 +87,30 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_types_de_champ_private : published_types_de_champ_private
   end
 
+  def types_de_champ_for_tags
+    if brouillon?
+      draft_types_de_champ
+    else
+      TypeDeChamp.root
+        .public_only
+        .where(revision: revisions - [draft_revision])
+        .order(:created_at)
+        .uniq
+    end
+  end
+
+  def types_de_champ_private_for_tags
+    if brouillon?
+      draft_types_de_champ_private
+    else
+      TypeDeChamp.root
+        .private_only
+        .where(revision: revisions - [draft_revision])
+        .order(:created_at)
+        .uniq
+    end
+  end
+
   def types_de_champ_for_export
     types_de_champ.reject(&:exclude_from_export?)
   end
@@ -224,10 +248,10 @@ class Procedure < ApplicationRecord
     state :close
     state :depubliee
 
-    event :publish, before: :before_publish, after: :after_publish do
-      transitions from: :brouillon, to: :publiee
-      transitions from: :close, to: :publiee
-      transitions from: :depubliee, to: :publiee
+    event :publish, before: :before_publish do
+      transitions from: :brouillon, to: :publiee, after: :after_publish
+      transitions from: :close, to: :publiee, after: :after_republish
+      transitions from: :depubliee, to: :publiee, after: :after_republish
     end
 
     event :close, after: :after_close do
@@ -528,7 +552,7 @@ class Procedure < ApplicationRecord
   end
 
   def whitelist!
-    update_attribute('whitelisted_at', Time.zone.now)
+    touch(:whitelisted_at)
   end
 
   def closed_mail_template_attestation_inconsistency_state
@@ -584,10 +608,12 @@ class Procedure < ApplicationRecord
     when Procedure.declarative_with_states.fetch(:en_instruction)
       dossiers
         .state_en_construction
+        .where(declarative_triggered_at: nil)
         .find_each(&:passer_automatiquement_en_instruction!)
     when Procedure.declarative_with_states.fetch(:accepte)
       dossiers
         .state_en_construction
+        .where(declarative_triggered_at: nil)
         .find_each(&:accepter_automatiquement!)
     end
   end
@@ -679,6 +705,20 @@ class Procedure < ApplicationRecord
     { column_styles: styles }
   end
 
+  def average_dossier_weight
+    if dossiers.termine.any?
+      dossiers_sample = dossiers.termine.limit(100)
+      total_size = Champ
+        .includes(piece_justificative_file_attachment: :blob)
+        .where(type: Champs::PieceJustificativeChamp.to_s, dossier: dossiers_sample)
+        .sum('active_storage_blobs.byte_size')
+
+      total_size / dossiers_sample.length
+    else
+      nil
+    end
+  end
+
   private
 
   def dossier_column_styles
@@ -737,15 +777,21 @@ class Procedure < ApplicationRecord
   end
 
   def after_publish(canonical_procedure = nil)
-    update!(published_at: Time.zone.now, canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
+    update!(canonical_procedure: canonical_procedure, draft_revision: create_new_revision, published_revision: draft_revision)
+    touch(:published_at)
+    published_revision.touch(:published_at)
+  end
+
+  def after_republish(canonical_procedure = nil)
+    touch(:published_at)
   end
 
   def after_close
-    update!(closed_at: Time.zone.now)
+    touch(:closed_at)
   end
 
   def after_unpublish
-    update!(unpublished_at: Time.zone.now)
+    touch(:unpublished_at)
   end
 
   def update_juridique_required

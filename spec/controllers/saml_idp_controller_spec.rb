@@ -7,7 +7,7 @@ describe SamlIdpController do
 
       it "display alert" do
         action
-        expect(flash[:alert]).to eq("Vous n'êtes pas autorisé à accéder à ce service.")
+        expect(flash[:alert]).to eq("Vous n’êtes pas autorisé à accéder à ce service.")
       end
     end
 

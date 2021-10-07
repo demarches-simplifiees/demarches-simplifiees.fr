@@ -31,7 +31,7 @@ feature 'Inviting an expert:', js: true do
       click_on 'Demander un avis'
       perform_enqueued_jobs
 
-      expect(page).to have_content('Une demande d\'avis a été envoyée')
+      expect(page).to have_content('Une demande d’avis a été envoyée')
       expect(page).to have_content('Avis des invités')
       within('.list-avis') do
         expect(page).to have_content(expert.email.to_s)

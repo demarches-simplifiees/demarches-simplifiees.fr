@@ -96,4 +96,9 @@ class RootController < ApplicationController
       format.js { render js: helpers.remove_element('#new-look-banner') }
     end
   end
+
+  def save_locale
+    cookies[:locale] = params[:locale]
+    redirect_to request.referer
+  end
 end

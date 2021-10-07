@@ -165,6 +165,7 @@ Rails.application.routes.draw do
   get "suivi" => "root#suivi"
   post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
   post "dismiss_new_look" => "root#dismiss_new_look"
+  post "save_locale" => "root#save_locale"
 
   get "contact", to: "support#index"
   post "contact", to: "support#create"
@@ -266,6 +267,10 @@ Rails.application.routes.draw do
   #
 
   scope module: 'users' do
+    namespace :statistiques do
+      get '/:path', action: 'statistiques'
+    end
+
     namespace :commencer do
       get '/test/:path/dossier_vide', action: 'dossier_vide_pdf_test', as: :dossier_vide_test
       get '/test/:path', action: 'commencer_test', as: :test
