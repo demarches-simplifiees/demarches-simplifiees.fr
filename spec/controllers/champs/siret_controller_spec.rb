@@ -106,7 +106,7 @@ describe Champs::SiretController, type: :controller do
         let(:siret) { '111111' }
         let(:api_etablissement_status) { 404 }
 
-        subject! { get :show, params: params, format: 'js' }
+        subject! { get :show, params: params, format: 'js', xhr: true }
 
         it 'clears the etablissement and SIRET on the model' do
           champ.reload
@@ -140,7 +140,7 @@ describe Champs::SiretController, type: :controller do
         let(:api_etablissement_status) { 200 }
         let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
 
-        subject! { get :show, params: params, format: 'js' }
+        subject! { get :show, params: params, format: 'js', xhr: true }
 
         it 'populates the etablissement and SIRET on the model' do
           champ.reload
