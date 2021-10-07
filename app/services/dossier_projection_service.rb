@@ -81,6 +81,7 @@ class DossierProjectionService
           .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
           .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
       when 'followers_instructeurs'
+        # rubocop:disable Style/HashTransformValues
         fields[0][:id_value_h] = Follow
           .active
           .joins(instructeur: :user)
@@ -88,6 +89,7 @@ class DossierProjectionService
           .pluck('dossier_id, users.email')
           .group_by { |dossier_id, _| dossier_id }
           .to_h { |dossier_id, dossier_id_emails| [dossier_id, dossier_id_emails.sort.map { |_, email| email }&.join(', ')] }
+        # rubocop:enable Style/HashTransformValues
       end
     end
 

@@ -56,9 +56,9 @@ class Champs::CarteChamp < Champ
       :zones_humides,
       :znieff,
       :cadastres
-    ].map do |layer|
+    ].filter_map do |layer|
       layer_enabled?(layer) ? layer : nil
-    end.compact
+    end
   end
 
   def render_options
@@ -82,7 +82,7 @@ class Champs::CarteChamp < Champ
     bounding_box = RGeo::Cartesian::BoundingBox.new(factory)
 
     if geo_areas.present?
-      geo_areas.map(&:rgeo_geometry).compact.each do |geometry|
+      geo_areas.filter_map(&:rgeo_geometry).each do |geometry|
         bounding_box.add(geometry)
       end
     elsif dossier.present?

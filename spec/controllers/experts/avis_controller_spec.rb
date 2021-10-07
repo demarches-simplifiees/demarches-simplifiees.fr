@@ -272,7 +272,7 @@ describe Experts::AvisController, type: :controller do
         context 'when the expert also shares the linked dossiers' do
           context 'and the expert can access the linked dossiers' do
             let(:created_avis) { create(:avis, dossier: dossier, claimant: claimant, email: "toto3@gmail.com") }
-            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).map(&:value).compact) }
+            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs.filter(&:dossier_link?).filter_map(&:value)) }
             let(:linked_avis) { create(:avis, dossier: linked_dossier, claimant: claimant) }
             let(:invite_linked_dossiers) { true }
 

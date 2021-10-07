@@ -13,12 +13,6 @@ feature 'As an administrateur I can edit types de champ', js: true do
     fill_in 'champ-0-libelle', with: 'libellé de champ'
     blur
     expect(page).to have_content('Formulaire enregistré')
-
-    page.refresh
-    within '.buttons' do
-      click_on 'Enregistrer'
-    end
-    expect(page).to have_content('Formulaire enregistré')
   end
 
   it "Add multiple champs" do

@@ -22,7 +22,8 @@ class TypesDeChampEditor extends Component {
       defaultTypeDeChampAttributes,
       typeDeChampsTypes: props.typeDeChampsTypes,
       directUploadUrl: props.directUploadUrl,
-      isAnnotation: props.isAnnotation
+      isAnnotation: props.isAnnotation,
+      continuerUrl: props.continuerUrl
     };
   }
 
@@ -35,6 +36,7 @@ class TypesDeChampEditor extends Component {
 
 TypesDeChampEditor.propTypes = {
   baseUrl: PropTypes.string,
+  continuerUrl: PropTypes.string,
   directUploadUrl: PropTypes.string,
   isAnnotation: PropTypes.bool,
   typeDeChamps: PropTypes.array,

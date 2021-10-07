@@ -24,4 +24,8 @@ class Champs::PhoneChamp < Champs::TextChamp
       allow_blank: true,
       message: I18n.t(:not_a_phone, scope: 'activerecord.errors.messages')
     }, unless: -> { Phonelib.valid_for_country?(value, :pf) }
+
+  def to_s
+    value.present? ? Phonelib.parse(value).full_national : ''
+  end
 end

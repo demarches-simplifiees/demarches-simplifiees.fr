@@ -32,7 +32,7 @@ class ProcedureExportService
       [dossier.champs, dossier.champs_private]
         .flatten
         .filter { |champ| champ.is_a?(Champs::SiretChamp) }
-    end.map(&:etablissement).compact + dossiers.map(&:etablissement).compact
+    end.filter_map(&:etablissement) + dossiers.filter_map(&:etablissement)
   end
 
   def avis
