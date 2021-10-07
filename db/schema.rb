@@ -374,7 +374,8 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "key", null: false
-    t.index ["format", "key"], name: "index_exports_on_format_and_key", unique: true
+    t.string "time_span_type", default: "everything", null: false
+    t.index ["format", "time_span_type", "key"], name: "index_exports_on_format_and_time_span_type_and_key", unique: true
   end
 
   create_table "exports_groupe_instructeurs", force: :cascade do |t|
