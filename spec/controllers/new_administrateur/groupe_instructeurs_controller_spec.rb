@@ -349,6 +349,44 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
     end
   end
 
+  describe '#add_groupe_instructeurs_via_csv_file' do
+    subject do
+      post :import, params: { procedure_id: procedure.id, group_csv_file: csv_file }
+    end
+
+    context 'when the csv file is less than 1 mo' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+      before { subject }
+
+      it { expect(response.status).to eq(302) }
+      it { expect(procedure.groupe_instructeurs.last.label).to eq("Afrique") }
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
+    end
+
+    context 'when the csv file length is more than 1 mo' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
+
+      before do
+        allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size).and_return(3.megabytes)
+        subject
+      end
+
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Importation impossible : la poids du fichier est supérieur à 1 Mo") }
+    end
+
+    context 'when the file is not a csv' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
+
+      before { subject }
+
+      it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq("Importation impossible : veuillez importer un fichier CSV") }
+    end
+  end
+
   describe '#update_routing_criteria_name' do
     before do
       patch :update_routing_criteria_name,

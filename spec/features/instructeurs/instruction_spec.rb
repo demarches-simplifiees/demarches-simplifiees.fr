@@ -66,6 +66,15 @@ feature 'Instructing a dossier:', js: true do
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:accepte))
     expect(dossier.motivation).to eq('a good reason')
+
+    click_on procedure.libelle
+    click_on 'traité'
+    click_on 'Actions'
+    accept_confirm do
+      click_on 'Supprimer le dossier'
+    end
+    click_on 'traité'
+    expect(page).not_to have_button('Actions')
   end
 
   scenario 'A instructeur can follow/unfollow a dossier' do

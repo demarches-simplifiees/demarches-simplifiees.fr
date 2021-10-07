@@ -13,6 +13,11 @@ export const queryClient = new QueryClient({
   }
 });
 
+// Avoid hiding similar matches for precise queries (like "Sainte Marie")
+export function searchResultsLimit(term) {
+  return term.length > 5 ? 10 : 5;
+}
+
 function buildURL(scope, term) {
   term = encodeURIComponent(term.replace(/\(|\)/g, ''));
   if (scope === 'adresse') {
@@ -23,8 +28,7 @@ function buildURL(scope, term) {
     if (isNumeric(term)) {
       return `${api_geo_url}/communes?codePostal=${term}&limit=5`;
     }
-    // Avoid hiding similar matches for precise queries (like "Sainte Marie")
-    const limit = term.length > 5 ? 10 : 5;
+    const limit = searchResultsLimit(term);
     return `${api_geo_url}/communes?nom=${term}&boost=population&limit=${limit}`;
   } else if (isNumeric(term)) {
     const code = term.padStart(2, '0');

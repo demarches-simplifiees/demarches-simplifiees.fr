@@ -135,8 +135,8 @@ class ProcedurePresentation < ApplicationRecord
       case table
       when 'self'
         dates = values
-          .map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
-          .compact
+          .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+
         dossiers.filter_by_datetimes(column, dates)
       when TYPE_DE_CHAMP
         dossiers.with_type_de_champ(column)
@@ -147,8 +147,8 @@ class ProcedurePresentation < ApplicationRecord
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values
-            .map { |v| v.to_date rescue nil }
-            .compact
+            .filter_map { |v| v.to_date rescue nil }
+
           dossiers
             .includes(table)
             .where(table.pluralize => { column => dates })
