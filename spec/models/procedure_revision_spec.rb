@@ -1,5 +1,5 @@
 describe ProcedureRevision do
-  let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_repetition) }
+  let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, :with_optional_repetition) }
   let(:revision) { procedure.active_revision }
   let(:type_de_champ) { revision.types_de_champ.first }
   let(:type_de_champ_private) { revision.types_de_champ_private.first }
