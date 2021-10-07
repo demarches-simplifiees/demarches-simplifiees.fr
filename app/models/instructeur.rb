@@ -252,9 +252,29 @@ class Instructeur < ApplicationRecord
   end
 
   def merge(old_instructeur)
-    old_instructeur.assign_to.update_all(instructeur_id: id)
-    old_instructeur.follows.update_all(instructeur_id: id)
-    old_instructeur.administrateurs_instructeurs.update_all(instructeur_id: id)
+    old_instructeur
+      .assign_to
+      .where.not(groupe_instructeur_id: assign_to.pluck(:groupe_instructeur_id))
+      .update_all(instructeur_id: id)
+
+    old_instructeur
+      .follows
+      .where.not(dossier_id: follows.pluck(:dossier_id))
+      .update_all(instructeur_id: id)
+
+    admin_with_new_instructeur, admin_without_new_instructeur = old_instructeur
+      .administrateurs
+      .partition { |admin| admin.instructeurs.exists?(id) }
+
+    admin_without_new_instructeur.each do |admin|
+      admin.instructeurs << self
+      admin.instructeurs.delete(old_instructeur)
+    end
+
+    admin_with_new_instructeur.each do |admin|
+      admin.instructeurs.delete(old_instructeur)
+    end
+
     old_instructeur.commentaires.update_all(instructeur_id: id)
     old_instructeur.bulk_messages.update_all(instructeur_id: id)
   end
