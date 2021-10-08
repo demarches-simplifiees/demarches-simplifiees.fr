@@ -166,14 +166,6 @@ fr:
           connection: Se connecter
           are_you_new: Vous êtes nouveau sur %{app_name} ?
           find_procedure: Trouvez votre démarche
-    commencer:
-      no_procedure:
-        ligne1: Un outil simple
-        ligne2: pour gérer les formulaires
-        ligne3: administratifs dématérialisés.
-    passwords:
-      new:
-        send_me_reset_password_instructions: "Indiquez l’email de votre compte, et nous vous enverrons un lien pour créer un nouveau mot de passe."
       passwords:
         reset_link_sent:
           email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
