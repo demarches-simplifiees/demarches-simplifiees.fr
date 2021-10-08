@@ -354,7 +354,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       post :import, params: { procedure_id: procedure.id, group_csv_file: csv_file }
     end
 
-    context 'when the csv file is less than 1 mo' do
+    context 'when the csv file is less than 1 mo and content type text/csv' do
       let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe-instructeur.csv', 'text/csv') }
 
       before { subject }
@@ -363,6 +363,15 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(procedure.groupe_instructeurs.last.label).to eq("Afrique") }
       it { expect(flash.alert).to be_present }
       it { expect(flash.alert).to eq("Import terminé. Cependant les emails suivants ne sont pas pris en compte: kara") }
+    end
+
+    context 'when the file content type is application/vnd.ms-excel' do
+      let(:csv_file) { fixture_file_upload('spec/fixtures/files/groupe_avec_caracteres_speciaux.csv', "application/vnd.ms-excel") }
+
+      before { subject }
+
+      it { expect(flash.notice).to be_present }
+      it { expect(flash.notice).to eq("La liste des instructeurs a été importée avec succès") }
     end
 
     context 'when the content of csv contains special characters' do
@@ -387,7 +396,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       it { expect(flash.alert).to eq("Importation impossible : la poids du fichier est supérieur à 1 Mo") }
     end
 
-    context 'when the file is not a csv' do
+    context 'when the file content type is not accepted' do
       let(:csv_file) { fixture_file_upload('spec/fixtures/files/french-flag.gif', 'image/gif') }
 
       before { subject }
