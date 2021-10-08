@@ -85,10 +85,4 @@ class Users::SessionsController < Devise::SessionsController
       redirect_to link_sent_path(email: instructeur.email)
     end
   end
-
-  private
-
-  def handle_unverified_request
-    super
-  end
 end
