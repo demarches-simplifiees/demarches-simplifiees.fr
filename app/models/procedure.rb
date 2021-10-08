@@ -55,6 +55,7 @@ class Procedure < ApplicationRecord
   MAX_DUREE_CONSERVATION = 36
   MAX_DUREE_CONSERVATION_EXPORT = 3.hours
 
+  MIN_WEIGHT = 350000
   has_many :revisions, -> { order(:id) }, class_name: 'ProcedureRevision', inverse_of: :procedure
   belongs_to :draft_revision, class_name: 'ProcedureRevision', optional: false
   belongs_to :published_revision, class_name: 'ProcedureRevision', optional: true
@@ -307,9 +308,7 @@ class Procedure < ApplicationRecord
   end
 
   def reset!
-    if locked?
-      raise "Can not reset a locked procedure."
-    else
+    if !locked? || draft_changed?
       draft_revision.dossiers.destroy_all
     end
   end
@@ -428,7 +427,9 @@ class Procedure < ApplicationRecord
       }
     }
     include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
-    procedure = self.deep_clone(include: include_list, &method(:clone_attachments))
+    procedure = self.deep_clone(include: include_list) do |original, kopy|
+      PiecesJustificativesService.clone_attachments(original, kopy)
+    end
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
     procedure.closed_at = nil
@@ -472,29 +473,6 @@ class Procedure < ApplicationRecord
     end
 
     procedure
-  end
-
-  def clone_attachments(original, kopy)
-    if original.is_a?(TypeDeChamp)
-      clone_attachment(:piece_justificative_template, original, kopy)
-    elsif original.is_a?(Procedure)
-      clone_attachment(:logo, original, kopy)
-      clone_attachment(:notice, original, kopy)
-      clone_attachment(:deliberation, original, kopy)
-    end
-  end
-
-  def clone_attachment(attribute, original, kopy)
-    original_attachment = original.send(attribute)
-    if original_attachment.attached?
-      kopy.send(attribute).attach({
-        io: StringIO.new(original_attachment.download),
-        filename: original_attachment.filename,
-        content_type: original_attachment.content_type,
-        # we don't want to run virus scanner on cloned file
-        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
-      })
-    end
   end
 
   def whitelisted?
@@ -724,7 +702,7 @@ class Procedure < ApplicationRecord
         .where(type: Champs::PieceJustificativeChamp.to_s, dossier: dossiers_sample)
         .sum('active_storage_blobs.byte_size')
 
-      total_size / dossiers_sample.length
+      MIN_WEIGHT + total_size / dossiers_sample.length
     else
       nil
     end

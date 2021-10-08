@@ -56,11 +56,8 @@ module NewAdministrateur
     def show
       @procedure = current_administrateur.procedures.find(params[:id])
       @current_administrateur = current_administrateur
-      if @procedure.brouillon?
-        @procedure_lien = commencer_test_url(path: @procedure.path)
-      else
-        @procedure_lien = commencer_url(path: @procedure.path)
-      end
+      @procedure_lien = commencer_url(path: @procedure.path)
+      @procedure_lien_test = commencer_test_url(path: @procedure.path)
     end
 
     def edit
@@ -145,11 +142,8 @@ module NewAdministrateur
     end
 
     def publication
-      if @procedure.brouillon?
-        @procedure_lien = commencer_test_url(path: @procedure.path)
-      else
-        @procedure_lien = commencer_url(path: @procedure.path)
-      end
+      @procedure_lien = commencer_url(path: @procedure.path)
+      @procedure_lien_test = commencer_test_url(path: @procedure.path)
       @procedure.path = @procedure.suggested_path(current_administrateur)
       @current_administrateur = current_administrateur
     end

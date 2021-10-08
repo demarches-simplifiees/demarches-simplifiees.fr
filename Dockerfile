@@ -10,6 +10,7 @@ RUN apk add --update --virtual build-dependencies \
         file \
         gcc \
         git \
+        icu \
         libcurl \
         curl-dev \
         postgresql-dev \
@@ -32,7 +33,7 @@ RUN bundle config --global frozen 1 &&\
 FROM base
 ENV APP_PATH /app
 #----- minimum set of packages including PostgreSQL client, yarn
-RUN apk add --no-cache --update tzdata libcurl postgresql-libs yarn imagemagick
+RUN apk add --no-cache --update tzdata libcurl postgresql-libs yarn imagemagick icu
 
 WORKDIR ${APP_PATH}
 RUN adduser -Dh ${APP_PATH} userapp

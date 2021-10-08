@@ -14,6 +14,7 @@ describe Users::CommencerController, type: :controller do
         expect(subject).to render_template('show')
         expect(assigns(:procedure)).to eq published_procedure
         expect(controller.stored_location_for(:user)).to eq(commencer_path(path: published_procedure.path))
+        expect(assigns(:revision)).to eq published_procedure.published_revision
       end
     end
 
@@ -45,6 +46,7 @@ describe Users::CommencerController, type: :controller do
         expect(subject).to render_template('show')
         expect(assigns(:procedure)).to eq draft_procedure
         expect(controller.stored_location_for(:user)).to eq(commencer_test_path(path: draft_procedure.path))
+        expect(assigns(:revision)).to eq draft_procedure.draft_revision
       end
     end
 

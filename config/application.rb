@@ -41,18 +41,6 @@ module TPS
     default_allowed_tags = ActionView::Base.sanitized_allowed_tags
     config.action_view.sanitized_allowed_tags = default_allowed_tags + ['u']
 
-    # Some mobile browsers have a behaviour where, although they will delete the session
-    # cookie when the browser shutdowns, they will still serve a cached version
-    # of the page on relaunch.
-    # The CSRF token in the HTML is then mismatched with the CSRF token in the session cookie
-    # (because the session cookie has been cleared). This causes form submissions to fail with
-    # a "ActionController::InvalidAuthenticityToken" exception.
-    # To prevent this, tell browsers to never cache the HTML of a page.
-    # (This doesn’t affect assets files, which are still sent with the proper cache headers).
-    #
-    # See https://github.com/rails/rails/issues/21948
-    config.action_dispatch.default_headers['Cache-Control'] = 'no-store, no-cache'
-
     # ActionDispatch's IP spoofing detection is quite limited, and often rejects
     # legitimate requests from misconfigured proxies (such as mobile telcos).
     #

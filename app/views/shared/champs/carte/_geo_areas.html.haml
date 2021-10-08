@@ -5,7 +5,7 @@
       - champ.selections_utilisateur.each do |geo_area|
         = render partial: 'shared/champs/carte/geo_area', locals: { geo_area: geo_area, editing: editing }
 
-- if champ.cadastres?
+- if champ.cadastres.present?
   .areas-title Parcelles cadastrales
   .areas
     %ul

@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactMapboxGl, { ZoomControl } from 'react-mapbox-gl';
 import DrawControl from 'react-mapbox-gl-draw';
-import { MapIcon } from '@heroicons/react/outline';
+import {
+  CursorClickIcon,
+  PlusIcon,
+  LocationMarkerIcon
+} from '@heroicons/react/outline';
+import CoordinateInput from 'react-coordinate-input';
+import { fire } from '@utils';
+import VisuallyHidden from '@reach/visually-hidden';
+import { useId } from '@reach/auto-id';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
@@ -36,10 +44,11 @@ function MapEditor({ featureCollection, url, options, preview }) {
     enabled: !preview,
     cadastreEnabled
   });
-  const [style, setStyle] = useMapStyle(options.layers, {
-    onStyleChange,
-    cadastreEnabled
-  });
+  const { style, layers, setStyle, setLayerEnabled, setLayerOpacity } =
+    useMapStyle(options.layers, {
+      onStyleChange,
+      cadastreEnabled
+    });
 
   if (!isSupported) {
     return (
@@ -133,7 +142,13 @@ function MapEditor({ featureCollection, url, options, preview }) {
             }}
           />
         )}
-        <MapStyleControl style={style.id} setStyle={setStyle} />
+        <MapStyleControl
+          style={style.id}
+          layers={layers}
+          setStyle={setStyle}
+          setLayerEnabled={setLayerEnabled}
+          setLayerOpacity={setLayerOpacity}
+        />
         <ZoomControl />
         {options.layers.includes('cadastres') && (
           <div className="cadastres-selection-control mapboxgl-ctrl-group">
@@ -145,11 +160,92 @@ function MapEditor({ featureCollection, url, options, preview }) {
               title="Sélectionner les parcelles cadastrales"
               className={cadastreEnabled ? 'on' : ''}
             >
-              <MapIcon className="icon-size" />
+              <CursorClickIcon className="icon-size" />
             </button>
           </div>
         )}
       </Mapbox>
+      <PointInput />
+    </>
+  );
+}
+
+function PointInput() {
+  const inputId = useId();
+  const [value, setValue] = useState('');
+  const [feature, setFeature] = useState(null);
+  const getCurrentPosition = () => {
+    navigator.geolocation &&
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        setValue(
+          `${coords.latitude.toPrecision(6)}, ${coords.longitude.toPrecision(
+            6
+          )}`
+        );
+      });
+  };
+  const addPoint = () => {
+    if (feature) {
+      fire(document, 'map:feature:create', feature);
+      setValue('');
+      setFeature(null);
+    }
+  };
+
+  return (
+    <>
+      <label
+        className="areas-title mt-1"
+        htmlFor={inputId}
+        style={{ fontSize: '16px' }}
+      >
+        Ajouter un point sur la carte
+      </label>
+      <div className="flex align-center mt-1 mb-2">
+        {navigator.geolocation ? (
+          <button
+            type="button"
+            className="button mr-1"
+            onClick={getCurrentPosition}
+            title="Localiser votre position"
+          >
+            <VisuallyHidden>Localiser votre position</VisuallyHidden>
+            <LocationMarkerIcon className="icon-size-big" />
+          </button>
+        ) : null}
+        <CoordinateInput
+          id={inputId}
+          className="m-0 mr-1"
+          value={value}
+          onChange={(value, { dd }) => {
+            setValue(value);
+            setFeature(
+              dd.length
+                ? {
+                    type: 'Feature',
+                    geometry: {
+                      type: 'Point',
+                      coordinates: dd.reverse()
+                    },
+                    properties: {}
+                  }
+                : null
+            );
+          }}
+        />
+        <button
+          type="button"
+          className="button"
+          onClick={addPoint}
+          disabled={!feature}
+          title="Ajouter le point avec les coordonnées saisies sur la carte"
+        >
+          <VisuallyHidden>
+            Ajouter le point avec les coordonnées saisies sur la carte
+          </VisuallyHidden>
+          <PlusIcon className="icon-size-big" />
+        </button>
+      </div>
     </>
   );
 }

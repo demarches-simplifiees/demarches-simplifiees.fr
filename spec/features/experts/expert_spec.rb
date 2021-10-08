@@ -11,15 +11,29 @@ feature 'Inviting an expert:' do
     let(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 
     context 'when I don’t already have an account' do
-      scenario 'I can sign up' do
+      let(:password) { 'This is an expert password' }
+
+      before 'Signing up' do
         visit sign_up_expert_avis_path(avis.dossier.procedure, avis, email: avis.expert.email)
 
         expect(page).to have_field('Email', with: avis.expert.email, disabled: true)
-        fill_in 'Mot de passe', with: 'This is a very complicated password !'
+        fill_in 'Mot de passe', with: password
         click_on 'Créer un compte'
+      end
 
+      scenario 'I can see the avis after signing up' do
         expect(page).to have_current_path(expert_all_avis_path)
         expect(page).to have_text('1 avis à donner')
+      end
+
+      scenario 'I can sign-in again afterwards' do
+        click_on 'Se déconnecter'
+
+        visit new_user_session_path
+        sign_in_with avis.expert.email, password
+
+        expect(page).to have_content('Connecté(e).')
+        expect(page).to have_current_path(dossiers_path) # Ideally we'd want `expert_all_avis_path` instead
       end
     end
 

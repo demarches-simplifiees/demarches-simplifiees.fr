@@ -93,6 +93,36 @@ RSpec.configure do |config|
     Flipper.enable(:instructeur_bypass_email_login_token)
   end
 
+  # By default, forgery protection is disabled in the test environment.
+  # (See `config.action_controller.allow_forgery_protection` in `config/test.rb`)
+  #
+  # Examples tagged with the :allow_forgery_protection have the forgery protection enabled anyway.
+  config.around(:each, :allow_forgery_protection) do |example|
+    previous_allow_forgery_protection = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+    begin
+      example.call
+    ensure
+      ActionController::Base.allow_forgery_protection = previous_allow_forgery_protection
+    end
+  end
+
+  # By default, the default HTML templates for exceptions are not rendered in the test environment.
+  # (See `config.action_dispatch.show_exceptions` in `config/test.rb`)
+  #
+  # Examples tagged with the :show_exception_pages render the exception HTML page anyway.
+  config.around(:each, :show_exception_pages) do |example|
+    app = Rails.application
+    previous_show_exceptions = app.env_config['action_dispatch.show_exceptions'] || app.config.action_dispatch.show_exceptions
+
+    begin
+      app.env_config['action_dispatch.show_exceptions'] = true
+      example.call
+    ensure
+      app.env_config['action_dispatch.show_exceptions'] = previous_show_exceptions
+    end
+  end
+
   config.include Shoulda::Matchers::ActiveRecord, type: :model
   config.include Shoulda::Matchers::ActiveModel, type: :model
   config.include Devise::Test::ControllerHelpers, type: :controller
