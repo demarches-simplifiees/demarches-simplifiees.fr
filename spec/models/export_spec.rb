@@ -48,9 +48,9 @@ RSpec.describe Export, type: :model do
     context 'when an export is made for one groupe instructeur' do
       let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
-      it { expect(Export.find_for_groupe_instructeurs([gi_1.id])[1]).to eq(nil) }
-      it { expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id])[1]).to eq(export) }
-      it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id])[1]).to eq(nil) }
+      it { expect(Export.find_for_groupe_instructeurs([gi_1.id])).to eq({}) }
+      it { expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id])).to eq({ csv: { 'everything' => export } }) }
+      it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id])).to eq({}) }
     end
   end
 end

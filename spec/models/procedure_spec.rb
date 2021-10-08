@@ -934,7 +934,7 @@ describe Procedure do
         ])
     end
 
-    let(:dossier) { procedure.new_dossier }
+    let(:dossier) { procedure.active_revision.new_dossier }
 
     it { expect(dossier.procedure).to eq(procedure) }
 

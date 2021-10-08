@@ -146,6 +146,7 @@ module Instructeurs
 
     def download_export
       export_format = params[:export_format]
+      time_span_type = params[:time_span_type] || Export.time_span_types.fetch(:everything)
       groupe_instructeurs = current_instructeur
         .groupe_instructeurs
         .where(procedure: procedure)
@@ -155,11 +156,11 @@ module Instructeurs
         .fetch_values('tous', 'archives')
         .sum
 
-      export = Export.find_or_create_export(export_format, groupe_instructeurs)
+      export = Export.find_or_create_export(export_format, time_span_type, groupe_instructeurs)
 
       if export.ready? && export.old? && params[:force_export]
         export.destroy
-        export = Export.find_or_create_export(export_format, groupe_instructeurs)
+        export = Export.find_or_create_export(export_format, time_span_type, groupe_instructeurs)
       end
 
       if export.ready?
@@ -221,7 +222,7 @@ module Instructeurs
     end
 
     def assign_exports
-      @xlsx_export, @csv_export, @ods_export = Export.find_for_groupe_instructeurs(groupe_instructeur_ids)
+      @exports = Export.find_for_groupe_instructeurs(groupe_instructeur_ids)
     end
 
     def assign_to

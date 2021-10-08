@@ -107,4 +107,10 @@ module DossierHelper
 
     "https://www.ispf.pf/bases/Repertoires/Entreprises/Detail.aspx?numtah=#{siren}"
   end
+
+  def exports_list(exports)
+    Export::FORMATS.map do |(format, time_span_type)|
+      [format, time_span_type, exports[format] && exports[format][time_span_type]]
+    end
+  end
 end

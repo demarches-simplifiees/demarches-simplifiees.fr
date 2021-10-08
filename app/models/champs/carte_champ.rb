@@ -36,29 +36,12 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def layer_enabled?(layer)
-    type_de_champ.options && type_de_champ.options[layer] && type_de_champ.options[layer] != '0'
-  end
-
   def cadastres?
-    layer_enabled?(:cadastres)
+    type_de_champ.layer_enabled?(:cadastres)
   end
 
   def optional_layers
-    [
-      :unesco,
-      :arretes_protection,
-      :conservatoire_littoral,
-      :reserves_chasse_faune_sauvage,
-      :reserves_biologiques,
-      :reserves_naturelles,
-      :natura_2000,
-      :zones_humides,
-      :znieff,
-      :cadastres
-    ].filter_map do |layer|
-      layer_enabled?(layer) ? layer : nil
-    end
+    type_de_champ.carte_optional_layers
   end
 
   def render_options

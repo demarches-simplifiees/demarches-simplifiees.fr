@@ -1,0 +1,45 @@
+fr:
+  new_administrateur:
+    revision_changes:
+      has_changes: Modifications en cours (appliqué à la prochaine publication)
+      add: Le champ « %{label} » a été ajouté
+      remove: Le champ « %{label} » a été supprimé
+      move:
+        one: La position d’un champ a été modifiée
+        other: Les positions de %{count} champs ont été modifiées
+      update_libelle: Le libellé du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} »
+      update_description: La description du champ « %{label} » a été modifiée. La nouvelle description est « %{to} »
+      update_type_champ: Le type du champ « %{label} » a été modifié. Il est maintenant de type « %{to} »
+      update_mandatory:
+        enable: Le champ « %{label} » est maintenant obligatoire
+        disable: Le champ « %{label} » n’est plus obligatoire
+      update_piece_justificative_template: Le modèle de pièce justificative du champ « %{label} » a été modifié
+      update_drop_down_options: Les options de sélection du champ « %{label} » ont été modifiées
+      update_carte_layers: Les référentiels cartographiques du champ « %{label} » ont été modifiés
+      add_private: L’annotation privée « %{label} » a été ajoutée
+      remove_private: L’annotation privée « %{label} » a été supprimée
+      move_private:
+        one: La position d’une annotation privée a été modifiée
+        other: Les positions de %{count} annotations privées ont été modifiées
+      update_libelle_private: Le libellé de l’annotation privée « %{label} » a été modifié. Le nouveau libellé est « %{to} »
+      update_description_private: La description de l’annotation privée « %{label} » a été modifiée. La nouvelle description est « %{to} »
+      update_type_champ_private: Le type de l’annotation privée « %{label} » a été modifié. Elle est maintenant de type « %{to} »
+      update_mandatory_private:
+        enable: L’annotation privée « %{label} » est maintenant obligatoire
+        disable: L’annotation privée « %{label} » n’est plus obligatoire
+      update_piece_justificative_template_private: Le modèle de pièce justificative de l’annotation privée « %{label} » a été modifié
+      update_drop_down_options_private: Les options de sélection de l’annotation privée « %{label} » ont été modifiées
+      update_carte_layers_private: Les référentiels cartographiques de l’annotation privée « %{label} » ont été modifiés
+      add_option: "ajoutés : %{items}"
+      remove_option: "supprimés : %{items}"
+    carte_layers:
+      unesco: UNESCO
+      arretes_protection: Arrêtés de protection
+      conservatoire_littoral: Conservatoire du Littoral
+      reserves_chasse_faune_sauvage: Réserves nationales de chasse et de faune sauvage
+      reserves_biologiques: Réserves biologiques
+      reserves_naturelles: Réserves naturelles
+      natura_2000: Natura 2000
+      zones_humides: Zones humides d’importance internationale
+      znieff: ZNIEFF
+      cadastres: Cadastre

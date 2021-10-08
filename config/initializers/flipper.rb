@@ -33,6 +33,7 @@ features = [
   :instructeur_bypass_email_login_token,
   :make_experts_notifiable,
   :new_look_banner,
+  :procedure_revisions,
   :procedure_routage_api
 ]
 

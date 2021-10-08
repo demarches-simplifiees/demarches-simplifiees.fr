@@ -6,7 +6,7 @@ class InstructeursImportService
     admins = procedure.administrateurs
 
     groupes_emails, error_groupe_emails = groupes_emails
-      .map { |groupe_email| { "groupe" => groupe_email["groupe"].strip, "email" => groupe_email["email"].gsub(/[[:space:]]/, '').downcase } }
+      .map { |groupe_email| { "groupe" => groupe_email["groupe"].present? ? groupe_email["groupe"].strip : nil, "email" => groupe_email["email"].present? ? groupe_email["email"].gsub(/[[:space:]]/, '').downcase : nil } }
       .partition { |groupe_email| Devise.email_regexp.match?(groupe_email['email']) && groupe_email['groupe'].present? }
 
     errors = error_groupe_emails.map { |group_email| group_email['email'] }
