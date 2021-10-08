@@ -122,7 +122,9 @@ feature 'As an administrateur I can edit types de champ', js: true do
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
     within_window(preview_window) do
       expect(page).to have_content('Libellé de champ carte')
-      expect(page).to have_content('Parcelles cadastrales')
+      expect(page).to have_content('Ajouter un point sur la carte')
+      fill_in 'Ajouter un point sur la carte', with: "48°52'27\"N 002°54'32\"E"
+      click_on 'Ajouter le point avec les coordonnées saisies sur la carte'
     end
   end
 
