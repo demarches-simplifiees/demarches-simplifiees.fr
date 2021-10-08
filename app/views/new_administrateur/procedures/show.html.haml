@@ -8,8 +8,8 @@
     %span.icon.preview
     Prévisualiser
 
-  - if @procedure.brouillon?
-    = link_to sanitize_url(@procedure_lien), target: :blank, rel: :noopener, class: 'button' do
+  - if @procedure.brouillon? || @procedure.draft_changed?
+    = link_to sanitize_url(@procedure_lien_test), target: :blank, rel: :noopener, class: 'button' do
       %span.icon.in-progress
       Tester
 

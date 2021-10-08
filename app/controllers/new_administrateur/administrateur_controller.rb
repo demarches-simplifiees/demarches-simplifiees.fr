@@ -27,7 +27,7 @@ module NewAdministrateur
     end
 
     def reset_procedure
-      if @procedure.brouillon?
+      if @procedure.brouillon? || @procedure.draft_changed?
         @procedure.reset!
       end
     end
