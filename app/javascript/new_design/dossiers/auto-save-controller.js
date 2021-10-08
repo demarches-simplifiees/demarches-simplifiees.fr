@@ -10,7 +10,7 @@ export default class AutoSaveController {
 
   // Add a new autosave request to the queue.
   // It will be started after the previous one finishes (to prevent older form data
-  // to overwrite newer data if the server does not repond in order.)
+  // to overwrite newer data if the server does not respond in order.)
   enqueueAutosaveRequest(form) {
     this.latestPromise = this.latestPromise.finally(() => {
       return this._sendAutosaveRequest(form)

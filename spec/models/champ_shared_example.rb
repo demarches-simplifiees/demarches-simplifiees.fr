@@ -11,14 +11,30 @@ shared_examples 'champ_spec' do
 
     context 'when carte mandatory and blank' do
       let(:type_de_champ) { build(:type_de_champ_carte, mandatory: mandatory) }
-      let(:value) { '[]' }
+      let(:champ) { build(:champ_carte, type_de_champ: type_de_champ, value: value) }
+      let(:value) { nil }
       it { expect(champ.mandatory_and_blank?).to be(true) }
     end
 
     context 'when multiple_drop_down_list mandatory and blank' do
       let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, mandatory: mandatory) }
+      let(:champ) { build(:champ_multiple_drop_down_list, type_de_champ: type_de_champ, value: value) }
       let(:value) { '[]' }
       it { expect(champ.mandatory_and_blank?).to be(true) }
+    end
+
+    context 'when repetition blank' do
+      let(:type_de_champ) { build(:type_de_champ_repetition) }
+      let(:champ) { build(:champ_repetition, type_de_champ: type_de_champ, rows: 0) }
+
+      it { expect(champ.blank?).to be(true) }
+    end
+
+    context 'when repetition not blank' do
+      let(:type_de_champ) { build(:type_de_champ_repetition) }
+      let(:champ) { build(:champ_repetition, type_de_champ: type_de_champ) }
+
+      it { expect(champ.blank?).to be(false) }
     end
 
     context 'when not blank' do
