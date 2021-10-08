@@ -15,3 +15,9 @@ fr:
         login_button: "S’identifier avec FranceConnect"
         help_link: "Qu’est-ce que FranceConnect ?"
         separator: 'ou'
+      social_login:
+        google: "Gmail, Google"
+        microsoft: "Hotmail, Office365"
+        tatou: "Votre numéro DN • Tatou"
+        yahoo: "Yahoo!"
+        sipf: "Agent de l'administration"
