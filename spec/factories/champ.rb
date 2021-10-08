@@ -11,7 +11,13 @@ FactoryBot.define do
 
     trait :with_piece_justificative_file do
       after(:build) do |champ, _evaluator|
-        champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+        champ.piece_justificative_file.attach(
+          io: StringIO.new("toto"),
+          filename: "toto.txt",
+          content_type: "text/plain",
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
       end
     end
 
@@ -168,7 +174,13 @@ FactoryBot.define do
       end
 
       after(:build) do |champ, evaluator|
-        champ.piece_justificative_file.attach(io: StringIO.new("x" * evaluator.size), filename: "toto.txt", content_type: "text/plain")
+        champ.piece_justificative_file.attach(
+          io: StringIO.new("x" * evaluator.size),
+          filename: "toto.txt",
+          content_type: "text/plain",
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
       end
     end
 
@@ -180,7 +192,13 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_titre_identite, procedure: dossier.procedure }
 
       after(:build) do |champ, _evaluator|
-        champ.piece_justificative_file.attach(io: StringIO.new("toto"), filename: "toto.png", content_type: "image/png")
+        champ.piece_justificative_file.attach(
+          io: StringIO.new("toto"),
+          filename: "toto.png",
+          content_type: "image/png",
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
       end
     end
 
@@ -215,6 +233,7 @@ FactoryBot.define do
 
       after(:build) do |champ_repetition, evaluator|
         types_de_champ = champ_repetition.type_de_champ.types_de_champ
+
         existing_type_de_champ_text = types_de_champ.find { |tdc| tdc.libelle == 'Nom' }
         type_de_champ_text = existing_type_de_champ_text || build(
           :type_de_champ_text,
@@ -250,22 +269,36 @@ FactoryBot.define do
     factory :champ_repetition_with_piece_jointe, class: 'Champs::RepetitionChamp' do
       type_de_champ { association :type_de_champ_repetition, procedure: dossier.procedure }
 
-      after(:build) do |champ_repetition, _evaluator|
-        type_de_champ_pj0 = build(:type_de_champ_piece_justificative,
+      transient do
+        rows { 2 }
+      end
+
+      after(:build) do |champ_repetition, evaluator|
+        types_de_champ = champ_repetition.type_de_champ.types_de_champ
+        existing_pj0 = types_de_champ.find { |tdc| tdc.libelle == 'Justificatif de domicile' }
+        type_de_champ_pj0 = existing_pj0 || build(
+          :type_de_champ_piece_justificative,
           position: 0,
           parent: champ_repetition.type_de_champ,
-          libelle: 'Justificatif de domicile')
-        type_de_champ_pj1 = build(:type_de_champ_piece_justificative,
-          position: 1,
-          parent: champ_repetition.type_de_champ,
-          libelle: 'Carte d\'identité')
+          libelle: 'Justificatif de domicile'
+        )
 
-        champ_repetition.champs << [
-          build(:champ_piece_justificative, dossier: champ_repetition.dossier, row: 0, type_de_champ: type_de_champ_pj0),
-          build(:champ_piece_justificative, dossier: champ_repetition.dossier, row: 0, type_de_champ: type_de_champ_pj1),
-          build(:champ_piece_justificative, dossier: champ_repetition.dossier, row: 1, type_de_champ: type_de_champ_pj0),
-          build(:champ_piece_justificative, dossier: champ_repetition.dossier, row: 1, type_de_champ: type_de_champ_pj1)
-        ]
+        existing_pj1 = types_de_champ.find { |tdc| tdc.libelle == 'Carte d\'identité' }
+        type_de_champ_pj1 = existing_pj1 || build(
+          :type_de_champ_piece_justificative,
+          position: 0,
+          parent: champ_repetition.type_de_champ,
+          libelle: 'Carte d\'identité'
+        )
+
+        champ_repetition.type_de_champ.types_de_champ << [type_de_champ_pj0, type_de_champ_pj1]
+
+        evaluator.rows.times do |row|
+          champ_repetition.champs << [
+            build(:champ_piece_justificative, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_pj0),
+            build(:champ_piece_justificative, dossier: champ_repetition.dossier, row: row, type_de_champ: type_de_champ_pj1)
+          ]
+        end
       end
     end
   end
