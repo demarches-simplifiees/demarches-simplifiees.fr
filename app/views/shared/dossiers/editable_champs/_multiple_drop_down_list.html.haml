@@ -3,11 +3,10 @@
     = form.collection_check_boxes(:value, champ.enabled_non_empty_options, :to_s, :to_s) do |b|
       .editable-champ.editable-champ-checkbox
         = b.label do
-          = b.check_box({ multiple: true, checked: champ&.value&.include?(b.value) })
+          = b.check_box({ multiple: true, checked: champ&.selected_options&.include?(b.value) })
           = b.text
 
   - else
     - hidden_field_id = SecureRandom.uuid
     = form.hidden_field :value, { data: { uuid: hidden_field_id } }
     = react_component("ComboMultipleDropdownList", options: champ.options, selected: champ.selected_options, disabled: champ.disabled_options, hiddenFieldId: hidden_field_id, label: champ.libelle)
-
