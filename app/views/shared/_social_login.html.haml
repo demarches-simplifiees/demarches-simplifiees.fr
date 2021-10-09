@@ -15,22 +15,22 @@
         - if google
           = link_to '/auth/google', class: "button expand"  do
             = image_tag 'icons/logo_google.svg', alt: 'icone Google'
-            #{prefix} Gmail, Google
+            #{prefix}  #{t('views.shared.social_login.google')}
         - if microsoft
           = link_to '/auth/microsoft', class: "button expand "  do
             = image_tag 'icons/logo_microsoft.svg', alt: 'icone Microsoft'
-            #{prefix} Hotmail, Office365
+            #{prefix}  #{t('views.shared.social_login.microsoft')}
         - if yahoo
           = link_to '/auth/yahoo', class: "button expand "  do
             = image_tag 'icons/logo_yahoo.svg', alt: 'icone Yahoo'
-            #{prefix} Yahoo!
+            #{prefix} #{t('views.shared.social_login.yahoo')}
         - if tatou
           = link_to '/auth/tatou', class: "button expand "  do
             = image_tag 'icons/logo_tatou.svg', alt: 'icone Tàtou'
-            #{prefix} Votre numéro DN • Tatou
+            #{prefix} #{t('views.shared.social_login.tatou')}
         - if sipf
           = link_to '/auth/sipf', class: "button expand "  do
             = image_tag 'icons/logo_sipf.svg', alt: 'icone Polynesie'
-            Vous êtes agent de l'administration
+            = t('views.shared.social_login.sipf')
         - if fc
           = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }

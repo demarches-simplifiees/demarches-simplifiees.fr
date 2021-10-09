@@ -22,6 +22,8 @@ class ProcedurePresentation < ApplicationRecord
   TYPE_DE_CHAMP = 'type_de_champ'
   TYPE_DE_CHAMP_PRIVATE = 'type_de_champ_private'
 
+  FILTERS_VALUE_MAX_LENGTH = 100
+
   belongs_to :assign_to, optional: false
 
   delegate :procedure, to: :assign_to
@@ -30,6 +32,7 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_sort_column
   validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
+  validate :check_filters_max_length
 
   def fields
     fields = [
@@ -80,7 +83,7 @@ class ProcedurePresentation < ApplicationRecord
     ]
   end
 
-  def sorted_ids(dossiers, instructeur)
+  def sorted_ids(dossiers, count, instructeur)
     table, column, order = sort.values_at(TABLE, COLUMN, 'order')
 
     case table
@@ -94,15 +97,27 @@ class ProcedurePresentation < ApplicationRecord
             dossiers_id_with_notification
       end
     when TYPE_DE_CHAMP
-      dossiers
+      ids = dossiers
         .with_type_de_champ(column)
         .order("champs.value #{order}")
         .pluck(:id)
+      if ids.size != count
+        rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
+        order == 'asc' ? ids + rest : rest + ids
+      else
+        ids
+      end
     when TYPE_DE_CHAMP_PRIVATE
-      dossiers
+      ids = dossiers
         .with_type_de_champ_private(column)
         .order("champs.value #{order}")
         .pluck(:id)
+      if ids.size != count
+        rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
+        order == 'asc' ? ids + rest : rest + ids
+      else
+        ids
+      end
     when 'followers_instructeurs'
       assert_supported_column(table, column)
       # LEFT OUTER JOIN allows to keep dossiers without assignated instructeurs yet
@@ -279,6 +294,15 @@ class ProcedurePresentation < ApplicationRecord
     table, column = field.values_at(TABLE, COLUMN)
     if !valid_column?(table, column, extra_columns)
       errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
+    end
+  end
+
+  def check_filters_max_length
+    individual_filters = filters.values.flatten.filter { |f| f.is_a?(Hash) }
+    individual_filters.each do |filter|
+      if filter['value']&.length.to_i > FILTERS_VALUE_MAX_LENGTH
+        errors.add(:filters, :too_long)
+      end
     end
   end
 

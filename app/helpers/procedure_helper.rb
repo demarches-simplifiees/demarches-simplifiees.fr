@@ -8,7 +8,7 @@ module ProcedureHelper
   end
 
   def procedure_libelle(procedure)
-    parts = procedure.brouillon? ? [tag.span('démarche en test', class: 'badge')] : []
+    parts = procedure.brouillon? ? [tag.span(t('helpers.procedure.testing_procedure'), class: 'badge')] : []
     parts << procedure.libelle
     safe_join(parts, ' ')
   end
