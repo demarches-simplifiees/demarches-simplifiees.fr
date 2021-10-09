@@ -7,3 +7,9 @@ en:
         login_button: "Sign in with FranceConnect"
         help_link: What is FranceConnect ?
         separator: or
+      social_login:
+        google: "Gmail, Google"
+        microsoft: "Hotmail, Office365"
+        yahoo: "Yahoo!"
+        tatou: "Your DN number • Tatou"
+        sipf: "Administration officer"

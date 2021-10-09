@@ -67,4 +67,8 @@ class Champs::PieceJustificativeChamp < Champ
   def update_skip_pj_validation
     type_de_champ.update(skip_pj_validation: true)
   end
+
+  def blank?
+    !piece_justificative_file.attached?
+  end
 end

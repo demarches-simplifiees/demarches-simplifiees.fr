@@ -95,14 +95,7 @@ class Champ < ApplicationRecord
   end
 
   def blank?
-    case type_de_champ.type_champ
-    when TypeDeChamp.type_champs.fetch(:carte)
-      geo_areas.blank? || value == '[]'
-    when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
-      value.blank? || value == '[]'
-    else
-      value.blank?
-    end
+    value.blank?
   end
 
   def search_terms

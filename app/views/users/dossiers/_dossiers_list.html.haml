@@ -2,13 +2,13 @@
   %table.table.dossiers-table.hoverable
     %thead
       %tr
-        %th.number-col Nº dossier
-        %th Démarche
+        %th.number-col= t('views.users.dossiers.dossiers_list.n_dossier')
+        %th= t('views.users.dossiers.dossiers_list.procedure')
         - if dossiers.present?
-          %th Demandeur
-        %th.status-col Statut
-        %th.updated-at-col Mis à jour
-        %th.sr-only Actions
+          %th= t('views.users.dossiers.dossiers_list.requester')
+        %th.status-col= t('views.users.dossiers.dossiers_list.status')
+        %th.updated-at-col= t('views.users.dossiers.dossiers_list.updated')
+        %th.sr-only= t('views.users.dossiers.dossiers_list.actions')
     %tbody
       - dossiers.each do |dossier|
         %tr{ data: { 'dossier-id': dossier.id } }
@@ -33,7 +33,7 @@
 
 - else
   .blank-tab
-    %h2.empty-text Aucun dossier.
+    %h2.empty-text Aucun dossier
     %p.empty-text-details
       Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
       %br
