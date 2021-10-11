@@ -39,14 +39,6 @@ class FranceConnect::ParticulierController < ApplicationController
       sign_out :user
     end
 
-    if instructeur_signed_in?
-      sign_out :instructeur
-    end
-
-    if administrateur_signed_in?
-      sign_out :administrateur
-    end
-
     sign_in user
 
     user.update_attribute('loged_in_with_france_connect', User.loged_in_with_france_connects.fetch(:particulier))
