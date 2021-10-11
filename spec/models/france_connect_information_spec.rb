@@ -18,15 +18,5 @@ describe FranceConnectInformation, type: :model do
         expect(fci.user.email).to eq(fci.email_france_connect)
       end
     end
-
-    context 'when a user with same email (but who is not an instructeur) exist' do
-      let(:user) { create(:user) }
-      let(:fci) { build(:france_connect_information, email_france_connect: user.email) }
-      let(:subject) { fci.associate_user! }
-
-      before { subject }
-
-      it { expect(fci.user).to eq(user) }
-    end
   end
 end

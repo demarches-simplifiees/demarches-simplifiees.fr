@@ -11,7 +11,10 @@ class FranceConnect::ParticulierController < ApplicationController
 
   def callback
     fci = FranceConnectService.find_or_retrieve_france_connect_information(params[:code])
-    fci.associate_user!
+
+    if fci.user.nil?
+      fci.associate_user!
+    end
 
     user = fci.user
 
