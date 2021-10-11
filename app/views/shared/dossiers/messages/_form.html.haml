@@ -1,8 +1,9 @@
-= form_for(commentaire, url: form_url, html: { class: 'form' }) do |f|
+= form_for(commentaire, url: form_url, html: { class: 'form', data: { persisted_content_id: @dossier.id } }) do |f|
+  - dossier = commentaire.dossier
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in?
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
-  = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea'
+  = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea persisted-input'
   .flex.justify-between.wrap
     %div
       = f.label :piece_jointe, for: :piece_jointe do
