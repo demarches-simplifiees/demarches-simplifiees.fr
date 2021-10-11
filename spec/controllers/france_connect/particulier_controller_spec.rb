@@ -1,6 +1,6 @@
 describe FranceConnect::ParticulierController, type: :controller do
   let(:birthdate) { '20150821' }
-  let(:email) { 'test@test.com' }
+  let(:email) { 'email_from_fc@test.com' }
 
   let(:user_info) do
     {
@@ -49,31 +49,37 @@ describe FranceConnect::ParticulierController, type: :controller do
           .and_return(FranceConnectInformation.new(user_info))
       end
 
-      context 'when france_connect_particulier_id exist in database' do
-        let!(:france_connect_information) { create(:france_connect_information, :with_user, user_info) }
-        let(:user) { france_connect_information.user }
+      context 'when france_connect_particulier_id exists in database' do
+        let!(:fci) { FranceConnectInformation.create!(user_info.merge(user_id: fc_user.id)) }
 
-        it { expect { subject }.not_to change { FranceConnectInformation.count } }
+        context 'and is linked to an user' do
+          let(:fc_user) { create(:user, email: 'associated_user@a.com') }
 
-        it do
-          subject
-          expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
+          it { expect { subject }.not_to change { FranceConnectInformation.count } }
+
+          it 'signs in with the fci associated user' do
+            subject
+            expect(controller.current_user).to eq(fc_user)
+            expect(fc_user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
+          end
+
+          context 'and the user has a stored location' do
+            let(:stored_location) { '/plip/plop' }
+            before { controller.store_location_for(:user, stored_location) }
+
+            it { is_expected.to redirect_to(stored_location) }
+          end
         end
 
-        context 'and the user has a stored location' do
-          let(:stored_location) { '/plip/plop' }
-          before { controller.store_location_for(:user, stored_location) }
+        context 'and is linked an instructeur' do
+          let(:fc_user) { create(:instructeur, email: 'another_email@a.com').user }
 
-          it { is_expected.to redirect_to(stored_location) }
-        end
-
-        context 'and the user is also instructeur' do
-          let!(:instructeur) { create(:instructeur, email: email) }
           before { subject }
 
-          it { expect(response).to redirect_to(new_user_session_path) }
-
-          it { expect(flash[:alert]).to be_present }
+          it do
+            expect(response).to redirect_to(new_user_session_path)
+            expect(flash[:alert]).to be_present
+          end
         end
       end
 
