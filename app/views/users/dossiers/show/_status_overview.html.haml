@@ -21,22 +21,22 @@
     - elsif dossier.en_construction?
       .en-construction
         %p
-          t('views.users.dossiers.show.status_overview.en_construction_html')
+          = t('views.users.dossiers.show.status_overview.en_construction_html')
 
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
 
         %p
-          t('views.users.dossiers.show.status_overview.use_mailbox_for_questions_html', mailbox_url: messagerie_dossier_url(dossier))
+          = t('views.users.dossiers.show.status_overview.use_mailbox_for_questions_html', mailbox_url: messagerie_dossier_url(dossier))
 
     - elsif dossier.en_instruction?
       .en-instruction
         %p
-          t('views.users.dossiers.show.status_overview.admin_review')
+          = t('views.users.dossiers.show.status_overview.admin_review')
 
         = render partial: 'users/dossiers/show/estimated_delay', locals: { procedure: dossier.procedure }
 
         %p
-          t('views.users.dossiers.show.status_overview.use_mailbox_for_questions_html', mailbox_url: messagerie_dossier_url(dossier))
+          = t('views.users.dossiers.show.status_overview.use_mailbox_for_questions_html', mailbox_url: messagerie_dossier_url(dossier))
 
     - elsif dossier.accepte?
       .accepte
