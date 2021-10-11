@@ -2,6 +2,7 @@
 #
 # Table name: administrateurs_procedures
 #
+#  manager           :boolean
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  administrateur_id :bigint           not null

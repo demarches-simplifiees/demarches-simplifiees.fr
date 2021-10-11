@@ -737,6 +737,94 @@ describe Instructeur, type: :model do
     end
   end
 
+  describe '#merge' do
+    let(:old_instructeur) { create(:instructeur) }
+    let(:new_instructeur) { create(:instructeur) }
+
+    subject { new_instructeur.merge(old_instructeur) }
+
+    context 'when an procedure is assigned to the old instructeur' do
+      let(:procedure) { create(:procedure) }
+
+      before do
+        procedure.defaut_groupe_instructeur.instructeurs << old_instructeur
+        subject
+      end
+
+      it 'transfers the assignment' do
+        expect(new_instructeur.procedures).to match_array(procedure)
+      end
+    end
+
+    context 'when both instructeurs are assigned to the same procedure' do
+      let(:procedure) { create(:procedure) }
+
+      before do
+        procedure.defaut_groupe_instructeur.instructeurs << old_instructeur
+        procedure.defaut_groupe_instructeur.instructeurs << new_instructeur
+        subject
+      end
+
+      it 'keeps the assignment' do
+        expect(new_instructeur.procedures).to match_array(procedure)
+      end
+    end
+
+    context 'when a dossier is followed by an old instructeur' do
+      let(:dossier) { create(:dossier) }
+
+      before do
+        old_instructeur.followed_dossiers << dossier
+        subject
+      end
+
+      it 'transfers the dossier' do
+        expect(new_instructeur.followed_dossiers).to match_array(dossier)
+      end
+    end
+
+    context 'when both instructeurs follow the same dossier' do
+      let(:dossier) { create(:dossier) }
+
+      before do
+        old_instructeur.followed_dossiers << dossier
+        new_instructeur.followed_dossiers << dossier
+        subject
+      end
+
+      it 'does not change anything' do
+        expect(new_instructeur.followed_dossiers.pluck(:id)).to match_array(dossier.id)
+      end
+    end
+
+    context 'when the old instructeur is on on admin list' do
+      let(:administrateur) { create(:administrateur) }
+
+      before do
+        administrateur.instructeurs << old_instructeur
+        subject
+      end
+
+      it 'is replaced by the new one' do
+        expect(administrateur.reload.instructeurs).to match_array(new_instructeur)
+      end
+    end
+
+    context 'when both are on the same admin list' do
+      let(:administrateur) { create(:administrateur) }
+
+      before do
+        administrateur.instructeurs << old_instructeur
+        administrateur.instructeurs << new_instructeur
+        subject
+      end
+
+      it 'removes the old one' do
+        expect(administrateur.reload.instructeurs).to match_array(new_instructeur)
+      end
+    end
+  end
+
   private
 
   def assign(procedure_to_assign, instructeur_assigne: instructeur)
