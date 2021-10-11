@@ -10,6 +10,8 @@
 #  family_name                   :string
 #  gender                        :string
 #  given_name                    :string
+#  merge_token                   :string
+#  merge_token_created_at        :datetime
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  france_connect_particulier_id :string
