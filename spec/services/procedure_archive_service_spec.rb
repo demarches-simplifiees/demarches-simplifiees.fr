@@ -53,6 +53,48 @@ describe ProcedureArchiveService do
         end
         expect(archive.file.attached?).to be_truthy
       end
+
+      context 'with a missing file' do
+        let(:pj) do
+          PiecesJustificativesService::FakeAttachment.new(
+            file: StringIO.new('coucou'),
+            filename: "export-dossier.pdf",
+            name: 'pdf_export_for_instructeur',
+            id: 1,
+            created_at: Time.zone.now
+          )
+        end
+
+        let(:bad_pj) do
+          PiecesJustificativesService::FakeAttachment.new(
+            file: nil,
+            filename: "cni.png",
+            name: 'cni.png',
+            id: 2,
+            created_at: Time.zone.now
+          )
+        end
+
+        let(:documents) { [pj, bad_pj] }
+        before do
+          allow(PiecesJustificativesService).to receive(:liste_documents).and_return(documents)
+        end
+
+        it 'collect files without raising exception' do
+          expect { service.collect_files_archive(archive, instructeur) }.not_to raise_exception
+        end
+
+        it 'add bug report to archive' do
+          service.collect_files_archive(archive, instructeur)
+
+          archive.file.open do |f|
+            files = ZipTricks::FileReader.read_zip_structure(io: f)
+            expect(files.size).to be 4
+            expect(files.last.filename).to include("LISEZMOI")
+            expect(extract(f, files.last)).to match(/Impossible de .*cni.*png/)
+          end
+        end
+      end
     end
 
     context 'for all months' do
@@ -79,5 +121,10 @@ describe ProcedureArchiveService do
   def create_dossier_for_month(year, month)
     Timecop.freeze(Time.zone.local(year, month, 5))
     create(:dossier, :accepte, :with_attestation, procedure: procedure)
+  end
+
+  def extract(zip_file, zip_entry)
+    extractor = zip_entry.extractor_from(zip_file)
+    extractor.extract
   end
 end
