@@ -13,13 +13,14 @@ class FranceConnect::ParticulierController < ApplicationController
     fci = FranceConnectService.find_or_retrieve_france_connect_information(params[:code])
     fci.associate_user!
 
-    if fci.user && !fci.user.can_france_connect?
+    user = fci.user
+
+    if user.can_france_connect?
+      connect_france_connect_particulier(user)
+    else
       fci.destroy
       redirect_to new_user_session_path, alert: t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
-      return
     end
-
-    connect_france_connect_particulier(fci.user)
 
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
