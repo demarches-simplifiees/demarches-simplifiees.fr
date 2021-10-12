@@ -28,7 +28,7 @@ RSpec.describe Expert, type: :model do
       end
 
       it 'transfers the access to the new expert' do
-        expect(procedure.reload.experts). to match_array(new_expert)
+        expect(procedure.reload.experts).to match_array(new_expert)
       end
     end
 
