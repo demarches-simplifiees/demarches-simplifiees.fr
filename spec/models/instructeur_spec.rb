@@ -743,6 +743,12 @@ describe Instructeur, type: :model do
 
     subject { new_instructeur.merge(old_instructeur) }
 
+    context 'when the old instructeur does not exist' do
+      let(:old_instructeur) { nil }
+
+      it { expect { subject }.not_to raise_error }
+    end
+
     context 'when an procedure is assigned to the old instructeur' do
       let(:procedure) { create(:procedure) }
 

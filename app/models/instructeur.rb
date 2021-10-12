@@ -252,6 +252,8 @@ class Instructeur < ApplicationRecord
   end
 
   def merge(old_instructeur)
+    return if old_instructeur.nil?
+
     old_instructeur
       .assign_to
       .where.not(groupe_instructeur_id: assign_to.pluck(:groupe_instructeur_id))
