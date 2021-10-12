@@ -225,7 +225,7 @@ module Instructeurs
       @email_usagers_dossiers = email_usagers_dossiers
       @dossiers_count = @email_usagers_dossiers.count
       @groupe_instructeurs = email_usagers_groupe_instructeurs_label
-      @bulk_messages = BulkMessage.includes(:groupe_instructeurs).where(groupe_instructeurs: { id: current_instructeur.groupe_instructeur_ids })
+      @bulk_messages = BulkMessage.includes(:groupe_instructeurs).where(groupe_instructeurs: { id: current_instructeur.groupe_instructeur_ids, procedure: procedure })
     end
 
     def create_multiple_commentaire
