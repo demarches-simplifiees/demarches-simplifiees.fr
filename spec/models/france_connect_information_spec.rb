@@ -19,4 +19,28 @@ describe FranceConnectInformation, type: :model do
       end
     end
   end
+
+  describe '#valid_for_merge?' do
+    let(:fci) { create(:france_connect_information) }
+
+    subject { fci.valid_for_merge? }
+
+    context 'when the merge token is young enough' do
+      before { fci.merge_token_created_at = 1.minute.ago }
+
+      it { is_expected.to be(true) }
+
+      context 'but the fci is already linked to an user' do
+        before { fci.update(user: create(:user)) }
+
+        it { is_expected.to be(false) }
+      end
+    end
+
+    context 'when the merge token is too old' do
+      before { fci.merge_token_created_at = (FranceConnectInformation::MERGE_VALIDITY + 1.minute).ago }
+
+      it { is_expected.to be(false) }
+    end
+  end
 end
