@@ -16,7 +16,7 @@ class Archive < ApplicationRecord
   include AASM
 
   RETENTION_DURATION = 1.week
-  MAX_CUSTOM_ARCHIVE_WEIGHT = 4.gigabytes
+  MAX_WEIGHT = 4.gigabytes
 
   has_and_belongs_to_many :groupe_instructeurs
 
@@ -82,7 +82,7 @@ class Archive < ApplicationRecord
   def self.by_period(procedure, groupe_instructeurs)
     archives = for_groupe_instructeur(groupe_instructeurs)
     Traitement.count_dossiers_termines_by_month(groupe_instructeurs).to_a.flat_map do |count_by_month|
-      if procedure.estimate_weight(count_by_month['count']) <= Archive::MAX_CUSTOM_ARCHIVE_WEIGHT
+      if procedure.estimate_weight(count_by_month['count']) <= MAX_WEIGHT
         {
           month: count_by_month['month'],
           matching_archive: archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == count_by_month['month'] },

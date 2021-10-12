@@ -72,7 +72,7 @@ class Traitement < ApplicationRecord
       current_day = dossiers["day"]
       start_day = current_day if new_period
       cumul_count += dossiers["count"]
-      if procedure.estimate_weight(cumul_count) >= Archive::MAX_CUSTOM_ARCHIVE_WEIGHT || dossiers["day"] == dossiers_termines_count_by_day.last["day"]
+      if procedure.estimate_weight(cumul_count) >= Archive::MAX_WEIGHT || dossiers["day"] == dossiers_termines_count_by_day.last["day"]
 
         result << { start_day: start_day, end_day: dossiers["day"], count: cumul_count }
         cumul_count = 0
