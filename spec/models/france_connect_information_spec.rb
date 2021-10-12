@@ -43,4 +43,15 @@ describe FranceConnectInformation, type: :model do
       it { is_expected.to be(false) }
     end
   end
+
+  describe '#create_merge_token!' do
+    let(:fci) { create(:france_connect_information) }
+
+    it 'returns a merge_token and register it s creation date' do
+      token = fci.create_merge_token!
+
+      expect(fci.merge_token).to eq(token)
+      expect(fci.merge_token_created_at).not_to be_nil
+    end
+  end
 end

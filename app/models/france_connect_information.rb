@@ -42,6 +42,13 @@ class FranceConnectInformation < ApplicationRecord
     touch # needed to update updated_at column
   end
 
+  def create_merge_token!
+    merge_token = SecureRandom.uuid
+    update(merge_token: merge_token, merge_token_created_at: Time.zone.now)
+
+    merge_token
+  end
+
   def valid_for_merge?
     (MERGE_VALIDITY.ago < merge_token_created_at) && user_id.nil?
   end
