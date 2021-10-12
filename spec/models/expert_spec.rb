@@ -19,6 +19,12 @@ RSpec.describe Expert, type: :model do
 
     subject { new_expert.merge(old_expert) }
 
+    context 'when the old expert does not exist' do
+      let(:old_expert) { nil }
+
+      it { expect { subject }.not_to raise_error }
+    end
+
     context 'when an old expert access a procedure' do
       let(:procedure) { create(:procedure) }
 
@@ -28,7 +34,7 @@ RSpec.describe Expert, type: :model do
       end
 
       it 'transfers the access to the new expert' do
-        expect(procedure.reload.experts). to match_array(new_expert)
+        expect(procedure.reload.experts).to match_array(new_expert)
       end
     end
 
