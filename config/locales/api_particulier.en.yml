@@ -1,32 +1,32 @@
-fr:
+en:
   api_particulier:
     providers:
       cnaf: 
         libelle: Caisse nationale d’allocations familiales (CAF)
         scopes:
           personne: &personne
-            nomPrenom: noms et prénoms
-            dateDeNaissance: date de naissance
-            sexe: sexe
-            M: masculin
-            F: féminin
+            nomPrenom: first and last name
+            dateDeNaissance: birth date
+            sexe: sex
+            M: male
+            F: female
           allocataires:
-            libelle: allocataires
+            libelle: beneficiaries
             <<: *personne
           enfants:
-            libelle: enfants
+            libelle: children
             <<: *personne
           adresse: 
-            libelle: adresse
-            identite: identité
+            libelle: address
+            identite: identity
             complementIdentite: complément d’identité
             complementIdentiteGeo: complément d’identité géographique
-            numeroRue: numéro et rue
+            numeroRue: number and street
             lieuDit: lieu-dit
-            codePostalVille: code postal et ville
-            pays: pays
+            codePostalVille: postcode and city
+            pays: country
           quotient_familial:
             libelle: quotient familial
             quotientFamilial: quotient familial
-            mois: mois
-            annee: année
+            mois: month
+            annee: year

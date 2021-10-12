@@ -1,0 +1,19 @@
+%table.cnaf.horizontal
+  %caption #{t("api_particulier.providers.cnaf.scopes.#{scope}.libelle")} :
+  %thead
+    %tr
+      - for key in ['nomPrenom', 'sexe', 'dateDeNaissance'] do
+        - if personnes.first[key].present?
+          %th{ class: "#{"text-right" if key == 'dateDeNaissance'}" }= t("api_particulier.providers.cnaf.scopes.personne.#{key}")
+  %tbody
+    - personnes.each do |personne|
+      %tr
+      - for key in ['nomPrenom', 'sexe', 'dateDeNaissance'] do
+        - if personne[key].present?
+          - case key
+          - when 'dateDeNaissance'
+            %td.text-right= try_format_datetime(Date.strptime(personne[key], "%d%m%Y"))
+          - when 'sexe'
+            %td= t("api_particulier.providers.cnaf.scopes.personne.#{personne[key]}")
+          - else
+            %td= personne[key]

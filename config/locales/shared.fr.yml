@@ -1,0 +1,16 @@
+fr:
+  shared:
+    dossiers:
+      editable_champs:
+        cnaf:
+          numero_allocataire_label: Le numéro d’allocataire CAF
+          numero_allocataire_notice: Il est généralement composé de 7 chiffres.
+          code_postal_label: Le code postal
+          code_postal_notice: Il est généralement composé de 5 chiffres.
+    champs:
+      cnaf:
+        show:
+          not_filled: non renseigné
+          fetching_data: "La récupération automatique des données pour l’allocataire Nº %{numero_allocataire} avec le code postal %{code_postal} est en cours."
+          data_fetched: "Des données concernant %{sources} liées au compte Nº %{numero_allocataire} avec le code postal %{code_postal} ont été reçues depuis la CAF."
+          data_fetched_title: "Données obtenues de la Caisse nationale d’allocations familiales"

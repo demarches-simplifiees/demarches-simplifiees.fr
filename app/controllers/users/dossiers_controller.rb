@@ -337,8 +337,8 @@ module Users
     def champs_params
       params.permit(dossier: {
         champs_attributes: [
-          :id, :value, :external_id, :primary_value, :secondary_value, :piece_justificative_file, value: [],
-          champs_attributes: [:id, :_destroy, :value, :external_id, :primary_value, :secondary_value, :piece_justificative_file, value: []]
+          :id, :value, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :piece_justificative_file, value: [],
+          champs_attributes: [:id, :_destroy, :value, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :piece_justificative_file, value: []]
         ]
       })
     end
@@ -382,7 +382,8 @@ module Users
         if @dossier.champs.any?(&:changed_for_autosave?)
           @dossier.last_champ_updated_at = Time.zone.now
         end
-        if !@dossier.save
+
+        if !@dossier.save(**validation_options)
           errors += @dossier.errors.full_messages
         elsif change_groupe_instructeur?
           @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
@@ -452,6 +453,17 @@ module Users
 
     def save_draft?
       dossier.brouillon? && !params[:submit_draft]
+    end
+
+    def validation_options
+      if save_draft?
+        { context: :brouillon }
+      else
+        # rubocop:disable Lint/BooleanSymbol
+        # Force ActiveRecord to re-validate associated records.
+        { context: :false }
+        # rubocop:enable Lint/BooleanSymbol
+      end
     end
   end
 end
