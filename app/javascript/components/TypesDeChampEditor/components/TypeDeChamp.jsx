@@ -11,6 +11,7 @@ import MoveButton from './MoveButton';
 import TypeDeChampCarteOption from './TypeDeChampCarteOption';
 import TypeDeChampCarteOptions from './TypeDeChampCarteOptions';
 import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
+import TypeDeChampDropDownOther from './TypeDeChampDropDownOther';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
 import TypeDeChampTypesSelect from './TypeDeChampTypesSelect';
@@ -24,6 +25,7 @@ const TypeDeChamp = sortableElement(
       'linked_drop_down_list'
     ].includes(typeDeChamp.type_champ);
     const isLinkedDropDown = typeDeChamp.type_champ === 'linked_drop_down_list';
+    const isSimpleDropDown = typeDeChamp.type_champ === 'drop_down_list';
     const isFile = typeDeChamp.type_champ === 'piece_justificative';
     const isCarte = typeDeChamp.type_champ === 'carte';
     const isExplication = typeDeChamp.type_champ === 'explication';
@@ -137,6 +139,10 @@ const TypeDeChamp = sortableElement(
             libelleHandler={updateHandlers.drop_down_secondary_libelle}
             descriptionHandler={updateHandlers.drop_down_secondary_description}
           />
+          <TypeDeChampDropDownOther
+            isVisible={isSimpleDropDown}
+            handler={updateHandlers.drop_down_other}
+          />
           <TypeDeChampPieceJustificative
             isVisible={isFile}
             directUploadUrl={state.directUploadUrl}
@@ -241,6 +247,7 @@ const OPTIONS_FIELDS = {
 export const FIELDS = [
   'description',
   'drop_down_list_value',
+  'drop_down_other',
   'libelle',
   'mandatory',
   'parent_id',

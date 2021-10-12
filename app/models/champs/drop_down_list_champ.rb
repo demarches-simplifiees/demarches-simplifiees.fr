@@ -41,4 +41,12 @@ class Champs::DropDownListChamp < Champ
   def enabled_non_empty_options
     drop_down_list_enabled_non_empty_options
   end
+
+  def other_value_present?
+    self.value.present? && self.options.exclude?(self.value)
+  end
+
+  def drop_down_other?
+    drop_down_other
+  end
 end
