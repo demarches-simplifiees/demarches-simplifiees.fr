@@ -473,7 +473,7 @@ ActiveRecord::Schema.define(version: 2021_10_12_100819) do
     t.date "birthdate"
     t.string "birthplace"
     t.string "france_connect_particulier_id"
-    t.integer "user_id", null: false
+    t.integer "user_id"
     t.string "email_france_connect"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

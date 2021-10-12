@@ -15,7 +15,7 @@
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  france_connect_particulier_id :string
-#  user_id                       :integer          not null
+#  user_id                       :integer
 #
 class FranceConnectInformation < ApplicationRecord
   belongs_to :user, optional: true
