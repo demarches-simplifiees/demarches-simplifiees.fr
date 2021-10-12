@@ -18,6 +18,8 @@
 #  user_id                       :integer
 #
 class FranceConnectInformation < ApplicationRecord
+  MERGE_VALIDITY = 15.minutes
+
   belongs_to :user, optional: true
 
   validates :france_connect_particulier_id, presence: true, allow_blank: false, allow_nil: false
@@ -38,5 +40,9 @@ class FranceConnectInformation < ApplicationRecord
 
     update_attribute('user_id', user.id)
     touch # needed to update updated_at column
+  end
+
+  def valid_for_merge?
+    (MERGE_VALIDITY.ago < merge_token_created_at) && user_id.nil?
   end
 end
