@@ -13,7 +13,7 @@ class FranceConnect::ParticulierController < ApplicationController
     fci = FranceConnectService.find_or_retrieve_france_connect_information(params[:code])
 
     if fci.user.nil?
-      fci.associate_user!
+      fci.associate_user!(fci.email_france_connect)
     end
 
     user = fci.user
