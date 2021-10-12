@@ -251,5 +251,22 @@ describe FranceConnect::ParticulierController, type: :controller do
         expect(response.body).to include("window.location.href='/'")
       end
     end
+
+    context 'when an account with the same email exists' do
+      let!(:user) { create(:user, email: email) }
+
+      render_views
+
+      it 'asks for the corresponding password' do
+        subject
+        fci.reload
+
+        expect(fci.user).to be_nil
+        expect(fci.merge_token).not_to be_nil
+        expect(controller.current_user).to be_nil
+
+        expect(response.body).to include('entrez votre mot de passe')
+      end
+    end
   end
 end

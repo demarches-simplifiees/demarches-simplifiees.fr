@@ -73,7 +73,8 @@ class FranceConnect::ParticulierController < ApplicationController
       flash.notice = "Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés"
       connect_france_connect_particulier(@fci.user)
     else
-      # TODO
+      @email = sanitized_email_params
+      @merge_token = merge_token_params
     end
   end
 
