@@ -13,21 +13,31 @@ class FranceConnect::ParticulierController < ApplicationController
     fci = FranceConnectService.find_or_retrieve_france_connect_information(params[:code])
 
     if fci.user.nil?
-      fci.associate_user!(fci.email_france_connect)
-    end
+      preexisting_unlinked_user = User.find_by(email: fci.email_france_connect.downcase)
 
-    user = fci.user
-
-    if user.can_france_connect?
-      connect_france_connect_particulier(user)
+      if preexisting_unlinked_user.nil?
+        fci.associate_user!(fci.email_france_connect)
+        connect_france_connect_particulier(fci.user)
+      else
+        redirect_to france_connect_particulier_merge_path(fci.create_merge_token!)
+      end
     else
-      fci.destroy
-      redirect_to new_user_session_path, alert: t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
+      user = fci.user
+
+      if user.can_france_connect?
+        connect_france_connect_particulier(user)
+      else
+        fci.destroy
+        redirect_to new_user_session_path, alert: t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
+      end
     end
 
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
     redirect_france_connect_error_connection
+  end
+
+  def merge
   end
 
   private
