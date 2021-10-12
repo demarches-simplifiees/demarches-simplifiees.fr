@@ -716,6 +716,10 @@ class Procedure < ApplicationRecord
     published_revision.touch(:published_at)
   end
 
+  def cnaf_enabled?
+    api_particulier_sources['cnaf'].present?
+  end
+
   private
 
   def before_publish
