@@ -9,13 +9,16 @@ describe FranceConnectInformation, type: :model do
 
   describe 'associate_user!' do
     context 'when there is no user with same email' do
+      let(:email) { 'A@email.com' }
       let(:fci) { build(:france_connect_information) }
-      let(:subject) { fci.associate_user! }
+
+      subject { fci.associate_user!(email) }
 
       it { expect { subject }.to change(User, :count).by(1) }
+
       it do
         subject
-        expect(fci.user.email).to eq(fci.email_france_connect)
+        expect(fci.user.email).to eq('a@email.com')
       end
     end
   end

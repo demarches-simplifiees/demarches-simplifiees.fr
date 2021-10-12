@@ -24,10 +24,10 @@ class FranceConnectInformation < ApplicationRecord
 
   validates :france_connect_particulier_id, presence: true, allow_blank: false, allow_nil: false
 
-  def associate_user!
+  def associate_user!(email)
     begin
       user = User.create!(
-        email: email_france_connect.downcase,
+        email: email.downcase,
         password: Devise.friendly_token[0, 20],
         confirmed_at: Time.zone.now
       )
