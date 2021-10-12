@@ -1,6 +1,6 @@
 describe FranceConnect::ParticulierController, type: :controller do
   let(:birthdate) { '20150821' }
-  let(:email) { 'email_from_fc@test.com' }
+  let(:email) { 'EMAIL_from_fc@test.com' }
 
   let(:user_info) do
     {
@@ -50,7 +50,7 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
 
       context 'when france_connect_particulier_id exists in database' do
-        let!(:fci) { FranceConnectInformation.create!(user_info.merge(user_id: fc_user.id)) }
+        let!(:fci) { FranceConnectInformation.create!(user_info.merge(user_id: fc_user&.id)) }
 
         context 'and is linked to an user' do
           let(:fc_user) { create(:user, email: 'associated_user@a.com') }
@@ -79,6 +79,32 @@ describe FranceConnect::ParticulierController, type: :controller do
           it do
             expect(response).to redirect_to(new_user_session_path)
             expect(flash[:alert]).to be_present
+          end
+        end
+
+        context 'and is not linked to an user' do
+          let(:fc_user) { nil }
+
+          context 'and no user with the same email exists' do
+            it 'creates an user with the same email and log in' do
+              expect { subject }.to change { User.count }.by(1)
+
+              user = User.last
+
+              expect(user.email).to eq(email.downcase)
+              expect(controller.current_user).to eq(user)
+              expect(response).to redirect_to(root_path)
+            end
+          end
+
+          context 'and an user with the same email exists' do
+            let!(:preexisting_user) { create(:user, email: email) }
+
+            it 'redirects to the merge process' do
+              expect { subject }.not_to change { User.count }
+
+              expect(response).to redirect_to(france_connect_particulier_merge_path(fci.reload.merge_token))
+            end
           end
         end
       end

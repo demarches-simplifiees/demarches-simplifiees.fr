@@ -124,6 +124,7 @@ Rails.application.routes.draw do
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
+    get 'particulier/merge/:merge_token' => 'particulier#merge', as: :particulier_merge
   end
 
   namespace :champs do
