@@ -30,15 +30,20 @@
         %th.center Télécharger
 
     %tbody
-    - @count_dossiers_termines_by_month.each do |count_by_month|
-      - month = count_by_month["month"].to_date
-      - nb_dossiers_termines = count_by_month["count"]
-      - matching_archive = @archives.find { |archive| archive.time_span_type == 'monthly' && archive.month == month }
+    - @archives_by_period.each do |count_by_month|
+      - month = count_by_month[:month].to_date if count_by_month[:month].present?
+      - start_day = count_by_month[:start_day].to_date if count_by_month[:start_day].present?
+      - end_day = count_by_month[:end_day].to_date if count_by_month[:end_day].present?
+      - nb_dossiers_termines = count_by_month[:count]
+      - matching_archive = count_by_month[:matching_archive]
       - weight = estimate_weight(matching_archive, nb_dossiers_termines, @average_dossier_weight)
 
       %tr
         %td
-          = I18n.l(month, format: "%B %Y").capitalize
+          - if start_day.present?
+            = "#{I18n.l(start_day, format: :long)} - #{I18n.l(end_day, format: :long)}"
+          - else
+            = I18n.l(month, format: "%B %Y").capitalize
         %td.text-right
           = nb_dossiers_termines
         %td.text-right
@@ -51,10 +56,13 @@
                 = t(:archive_ready_html, scope: [:instructeurs, :procedure], generated_period: time_ago_in_words(matching_archive.updated_at))
             - else
               %span.icon.retry
-              = t(:archive_pending_html, scope: [:instructeurs, :procedure], created_period: time_ago_in_words(matching_archive.created_at))
-          - elsif weight < 1.gigabyte
-            = link_to instructeur_archives_path(@procedure, type:'monthly', month: month.strftime('%Y-%m')), method: :post, class: "button" do
+              = t(:archive_pending_html, created_period: time_ago_in_words(matching_archive.created_at), scope: [:instructeurs, :procedure])
+          - elsif start_day.present?
+            = link_to instructeur_archives_path(@procedure, type: 'custom', start_day: start_day.strftime('%Y-%m-%d'), end_day: end_day.strftime('%Y-%m-%d')), method: :post, class: "button" do
               %span.icon.new-folder
               Demander la création
           - else
-            Archive trop volumineuse
+            = link_to instructeur_archives_path(@procedure, type: 'monthly', month: month.strftime('%Y-%m')), method: :post, class: "button" do
+              %span.icon.new-folder
+              Demander la création
+
