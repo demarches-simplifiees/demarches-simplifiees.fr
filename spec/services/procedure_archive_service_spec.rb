@@ -76,8 +76,10 @@ describe ProcedureArchiveService do
         end
 
         let(:documents) { [pj, bad_pj] }
+        let(:zip_entries) { documents.map { |pj| [pj, pj.filename] } }
         before do
           allow(PiecesJustificativesService).to receive(:liste_documents).and_return(documents)
+          allow(PiecesJustificativesService).to receive(:dossier_zip_entries).and_return(zip_entries) # pf
         end
 
         it 'collect files without raising exception' do
