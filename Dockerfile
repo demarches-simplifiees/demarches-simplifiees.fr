@@ -79,6 +79,7 @@ ENV \
     DEMANDE_INSCRIPTION_ADMIN_PAGE_URL="https://www.mes-demarches.gov.pf/commencer/dmra-devenir-administrateur-de-demarches-en-ligne"\
     DOC_URL="https://mes-demarches.gitbook.io/documentation"\
     DS_PROXY_URL=""\
+    ENCRYPTION_SERVICE_SALT=""\
     FACEBOOK_CLIENT_ID=""\
     FACEBOOK_CLIENT_SECRET=""\
     FAVICON_16PX_SRC="favicons/pf16x16.png"\

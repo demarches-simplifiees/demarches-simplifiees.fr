@@ -31,11 +31,12 @@ module ProcedureStatsConcern
   end
 
   def stats_termines_states
+    nb_dossiers_termines = dossiers.state_termine.count
     Rails.cache.fetch("#{cache_key_with_version}/stats_termines_states", expires_in: 12.hours) do
       [
-        ['Acceptés', dossiers.where(state: :accepte).count],
-        ['Refusés', dossiers.where(state: :refuse).count],
-        ['Classés sans suite', dossiers.where(state: :sans_suite).count]
+        ['Acceptés', percentage(dossiers.where(state: :accepte).count, nb_dossiers_termines)],
+        ['Refusés', percentage(dossiers.where(state: :refuse).count, nb_dossiers_termines)],
+        ['Classés sans suite', percentage(dossiers.where(state: :sans_suite).count, nb_dossiers_termines)]
       ]
     end
   end
@@ -52,7 +53,12 @@ module ProcedureStatsConcern
       # rubocop:disable Style/HashTransformValues
       dossier_state_values
         .map do |state|
-          { name: state, data: chart_data.where(state: state).group_by_week { |dossier| dossier.traitements.first.processed_at }.map { |k, v| [k, v.count] }.to_h }
+          {
+            name: state,
+            data: chart_data .where(state: state) .group_by_week do |dossier|
+              dossier.traitements.first.processed_at
+            end.map { |k, v| [k, v.count] }.to_h.transform_keys { |week| pretty_week(week) }
+          }
           # rubocop:enable Style/HashTransformValues
         end
     end
@@ -101,7 +107,15 @@ module ProcedureStatsConcern
     (seconds / 60.0 / 60.0 / 24.0).ceil
   end
 
+  def percentage(value, total)
+    (100 * value / total.to_f).round(1)
+  end
+
   def pretty_month(month)
     I18n.l(month, format: "%B %Y")
+  end
+
+  def pretty_week(week)
+    I18n.l(week, format: '%d %b')
   end
 end
