@@ -38,6 +38,8 @@ class Expert < ApplicationRecord
   end
 
   def merge(old_expert)
+    return if old_expert.nil?
+
     procedure_with_new, procedure_without_new = old_expert
       .procedures
       .partition { |p| p.experts.exists?(id) }
