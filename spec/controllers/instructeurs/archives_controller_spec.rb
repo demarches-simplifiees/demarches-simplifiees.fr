@@ -42,17 +42,40 @@ describe Instructeurs::ArchivesController, type: :controller do
   end
 
   describe '#create' do
-    let(:month) { '21-03' }
-    let(:date_month) { Date.strptime(month, "%Y-%m") }
     let(:archive) { create(:archive) }
-    let(:subject) do
-      post :create, params: { procedure_id: procedure1.id, type: 'monthly', month: month }
+
+    context 'for monthly archive' do
+      let(:month) { '21-03' }
+      let(:date_month) { Date.strptime(month, "%Y-%m") }
+      let(:subject) do
+        post :create, {
+          params: { procedure_id: procedure1.id, type: 'monthly', month: month }
+        }
+      end
+
+      it "performs archive creation job" do
+        allow_any_instance_of(ProcedureArchiveService).to receive(:create_pending_archive).and_return(archive)
+        expect_any_instance_of(ProcedureArchiveService).to receive(:create_pending_archive).with(instructeur, 'monthly', month: date_month)
+        expect { subject }.to have_enqueued_job(ArchiveCreationJob).with(procedure1, archive, instructeur)
+        expect(flash.notice).to include("Votre demande a été prise en compte")
+      end
     end
 
-    it "performs archive creation job" do
-      allow_any_instance_of(ProcedureArchiveService).to receive(:create_pending_archive).and_return(archive)
-      expect { subject }.to have_enqueued_job(ArchiveCreationJob).with(procedure1, archive, instructeur)
-      expect(flash.notice).to include("Votre demande a été prise en compte")
+    context 'for custom archive' do
+      let(:start_day) { '21-03' }
+      let(:end_day) { '18-03' }
+      let(:subject) do
+        post :create, {
+          params: { procedure_id: procedure1.id, type: 'custom', start_day: start_day, end_day: end_day }
+        }
+      end
+
+      it "performs archive creation job" do
+        allow_any_instance_of(ProcedureArchiveService).to receive(:create_pending_archive).and_return(archive)
+        expect_any_instance_of(ProcedureArchiveService).to receive(:create_pending_archive).with(instructeur, 'custom', start_day: start_day, end_day: end_day)
+        expect { subject }.to have_enqueued_job(ArchiveCreationJob).with(procedure1, archive, instructeur)
+        expect(flash.notice).to include("Votre demande a été prise en compte")
+      end
     end
   end
 
