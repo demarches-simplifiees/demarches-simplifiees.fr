@@ -35,6 +35,7 @@
     "react-mapbox-gl-draw": "^2.0.4",
     "react-popper": "^2.2.5",
     "react-query": "^3.9.7",
+    "react-select": "^5.1.0",
     "react-sortable-hoc": "^1.11.0",
     "react_ujs": "^2.6.1",
     "trix": "^1.2.3",

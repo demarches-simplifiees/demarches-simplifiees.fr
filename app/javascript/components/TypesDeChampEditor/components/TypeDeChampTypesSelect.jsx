@@ -1,22 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Select from 'react-select';
 
 function TypeDeChampTypesSelect({ handler, options }) {
+  const opts = options.map(([label, value]) => ({
+    label,
+    value
+  }));
   return (
     <div className="cell">
-      <select
+      <Select
         id={handler.id}
         name={handler.name}
-        onChange={handler.onChange}
-        value={handler.value}
-        className="small-margin small inline"
-      >
-        {options.map(([label, key]) => (
-          <option key={key} value={key}>
-            {label}
-          </option>
-        ))}
-      </select>
+        defaultValue={opts.find((option) => option.value == handler.value)}
+        onChange={(option) => handler.onChange({ target: option })}
+        options={opts}
+        menuPortalTarget={document.body}
+        className="react-select"
+        styles={{
+          control: (provided) => ({ ...provided, width: '300px' })
+        }}
+      />
     </div>
   );
 }
