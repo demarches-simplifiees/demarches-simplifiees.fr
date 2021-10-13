@@ -310,6 +310,11 @@ describe API::V2::GraphqlController do
               motivationAttachment {
                 url
               }
+              demarche {
+                number
+                title
+                state
+              }
               usager {
                 id
                 email
@@ -382,6 +387,11 @@ describe API::V2::GraphqlController do
             dateTraitement: nil,
             motivation: nil,
             motivationAttachment: nil,
+            demarche: {
+              number: dossier.procedure.id,
+              title: dossier.procedure.libelle,
+              state: 'publiee'
+            },
             usager: {
               id: dossier.user.to_typed_id,
               email: dossier.user.email

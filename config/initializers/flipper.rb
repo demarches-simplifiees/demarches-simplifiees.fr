@@ -34,7 +34,8 @@ features = [
   :make_experts_notifiable,
   :new_look_banner,
   :procedure_revisions,
-  :procedure_routage_api
+  :procedure_routage_api,
+  :procedure_process_expired_dossiers_termine
 ]
 
 def database_exists?

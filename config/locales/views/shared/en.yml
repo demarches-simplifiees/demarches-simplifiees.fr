@@ -5,7 +5,7 @@ en:
         title: "With FranceConnect"
         description: "France connect is a solution proposed by the government to secure and simplify the connection to web services."
         login_button: "Sign in with FranceConnect"
-        help_link: What is FranceConnect ?
+        help_link: What is FranceConnect?
         separator: or
       social_login:
         google: "Gmail, Google"
@@ -13,3 +13,8 @@ en:
         yahoo: "Yahoo!"
         tatou: "Your DN number • Tatou"
         sipf: "Administration officer"
+      account:
+        already_user_question: 'Do you already have an account?'
+        already_user: "I already have an account"
+        create: 'Create an account'
+        signin: 'Sign in'

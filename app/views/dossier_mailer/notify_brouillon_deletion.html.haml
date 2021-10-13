@@ -1,7 +1,6 @@
 - content_for(:title, "#{@subject}")
 
-%p
-  Bonjour,
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   = t('.header', count: @dossier_hashes.count)

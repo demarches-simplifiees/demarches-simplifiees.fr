@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 fr:
+  help: 'Aide'
   utils:
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
@@ -34,13 +35,44 @@ fr:
     commentaire:
       send_message_to_instructeur: "Envoyer un message à l’instructeur"
       reply_in_mailbox: "Répondre dans la messagerie."
+  layouts:
+    commencer:
+      no_procedure:
+        line1: Un outil simple
+        line2: pour gérer les formulaires
+        line3: administratifs dématérialisés.
+    locale_dropdown:
+      languages: "Langues"
+    notifications:
+      actions:
+        access: Consulter mon dossier
+        question: J’ai une question
+        reply: Répondre à ce message
+
   views:
     commencer:
       show:
         start_procedure: Commencer la démarche
         existing_dossiers: Vous avez déjà des dossiers pour cette démarche
         show_dossiers: Voir mes dossiers en cours
-        start_new_dossier: Commencer un nouveau dossier
+        already_draft: "Vous avez déjà commencé à remplir un dossier"
+        already_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez commencé à remplir un dossier sur la démarche « %{procedure} »."
+        already_not_draft: "Vous avez déjà déposé un dossier"
+        already_not_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez déposé un dossier sur la démarche « %{procedure} »."
+        continue_file: 'Continuer à remplir mon dossier'
+        start_new_file: 'Commencer un nouveau dossier'
+        show_my_submitted_file: 'Voir mon dossier déposé'
+        want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l'envoyer à l’administration concernée : %{service} - %{adresse}"
+        download_empty_pdf: 'Télécharger un dossier vide au format PDF'
+        social_title: "Rapide, simple et sûr, identifiez vous"        
+    registrations:
+      new:
+        title: "Créez-vous un compte %{name}"
+        email_label: 'Email (nom@site.com)'
+        email_placeholder: 'Votre adresse email'
+        wanna_say: 'Voulez-vous dire'
+        password_label: "Mot de passe"
+        password_placeholder: "%{min_length} caractères minimum"
     invites:
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
@@ -57,12 +89,6 @@ fr:
         want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation ?"
         edit_dossier: "Ces personnes peuvent modifier ce dossier."
         submit_dossier_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
-    layouts:
-      commencer:
-        no_procedure:
-          line1: Un outil simple
-          line2: pour gérer les formulaires
-          line3: administratifs dématérialisés.
     pagination:
       next: Suivant
       last: Dernier
@@ -70,6 +96,9 @@ fr:
       first: Premier
       truncate: '&hellip;'
     shared:
+      greetings:
+        hello: Bonjour,
+        best_regards: Bonne journée,
       dossiers:
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
@@ -349,3 +378,4 @@ fr:
       no_establishment: "Aucun établissement n’est associé à ce dossier"
       identity_saved: "Identité enregistrée"
       no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
+  via_un_compte: "via un compte %{name}"

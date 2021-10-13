@@ -1,0 +1,13 @@
+- content_for(:title, 'New email address')
+
+%p= t(:hello, scope: [:views, :shared, :greetings])
+
+- unconfirmed_email = @resource.try(:unconfirmed_email?)
+- if unconfirmed_email.present?
+  %p
+    We recieved a request to change the email address associated with your account #{@email} on #{APPLICATION_NAME}. The new email address will be #{unconfirmed_email}.
+- else
+  %p
+    A change to the email address associated with your account #{@email} was made on #{APPLICATION_NAME}. You can now connect with the email address #{@resource.email}.
+
+= render partial: "layouts/mailers/signature"

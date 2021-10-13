@@ -400,7 +400,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       end
 
       it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible : la poids du fichier est supérieur à 1 Mo") }
+      it { expect(flash.alert).to eq("Importation impossible : le poids du fichier est supérieur à 1 Mo") }
     end
 
     context 'when the file content type is not accepted' do

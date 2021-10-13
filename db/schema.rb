@@ -599,8 +599,8 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.bigint "draft_revision_id"
     t.bigint "published_revision_id"
     t.boolean "allow_expert_review", default: true, null: false
-    t.string "encrypted_api_particulier_token"
     t.boolean "experts_require_administrateur_invitation", default: false
+    t.string "encrypted_api_particulier_token"
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
@@ -705,7 +705,9 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.string "state"
     t.datetime "processed_at"
     t.string "instructeur_email"
+    t.boolean "process_expired"
     t.index ["dossier_id"], name: "index_traitements_on_dossier_id"
+    t.index ["process_expired"], name: "index_traitements_on_process_expired"
   end
 
   create_table "trusted_device_tokens", force: :cascade do |t|

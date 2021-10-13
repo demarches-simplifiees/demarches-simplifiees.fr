@@ -55,6 +55,21 @@ class Sendinblue::API
     []
   end
 
+  def delete_events(day, opts = {})
+    client = ::SibApiV3Sdk::TransactionalEmailsApi.new
+    event_opts = { start_date: day, end_date: day, limit: 100 }.merge(opts)
+    while (events = client.get_email_event_report(event_opts).events).present?
+      message_ids = events.map(&:message_id).uniq
+      message_ids.each do |message_id|
+        client.smtp_log_message_id_delete(message_id)
+      end
+    end
+    true
+  rescue ::SibApiV3Sdk::ApiError => e
+    Rails.logger.error e.message
+    false
+  end
+
   def unblock_user(email_address)
     client = ::SibApiV3Sdk::TransactionalEmailsApi.new
     client.smtp_blocked_contacts_email_delete(email_address)
