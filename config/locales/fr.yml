@@ -43,6 +43,8 @@ fr:
         line3: administratifs dématérialisés.
     locale_dropdown:
       languages: "Langues"
+    signature:
+      best_regards: Bonne journée,
   views:
     commencer:
       show:
