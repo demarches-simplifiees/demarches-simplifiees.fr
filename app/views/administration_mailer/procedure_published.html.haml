@@ -5,7 +5,7 @@
 
 %p
   Commencer la démarche :
-  = link_to procedure.path, commencer_url(path: @procedure.path)
+  = link_to @procedure.path, commencer_url(path: @procedure.path)
 
 = render partial: "procedure_description", locals: { procedure: @procedure }
 = render partial: "layouts/mailers/signature"
