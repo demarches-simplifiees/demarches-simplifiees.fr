@@ -56,7 +56,7 @@
                 = t(:archive_ready_html, scope: [:instructeurs, :procedure], generated_period: time_ago_in_words(matching_archive.updated_at))
             - else
               %span.icon.retry
-              = t(:archive_pending_html, created_period: time_ago_in_words(matching_archive.created_at), scope: [:instructeurs, :procedure])
+                = t(:archive_pending_html, scope: [:instructeurs, :procedure], created_period: time_ago_in_words(matching_archive.created_at))
           - elsif start_day.present?
             = link_to instructeur_archives_path(@procedure, type: 'custom', start_day: start_day.strftime('%Y-%m-%d'), end_day: end_day.strftime('%Y-%m-%d')), method: :post, class: "button" do
               %span.icon.new-folder
