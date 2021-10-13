@@ -15,11 +15,11 @@
     %label Ce compte #{@fci.email_france_connect} vous appartient-il ?
     %fieldset.radios
       %label{ onclick: "DS.showFusion(event);" }
-        = radio_button_tag :value, true, false, autocomplete: "off"
+        = radio_button_tag :value, true, false, autocomplete: "off", id: 'it-is-mine'
         Oui
 
       %label{ onclick: "DS.showNewAccount(event);" }
-        = radio_button_tag :value, false, false, autocomplete: "off"
+        = radio_button_tag :value, false, false, autocomplete: "off", id: 'it-is-not-mine'
         Non
 
   .fusion.hidden
