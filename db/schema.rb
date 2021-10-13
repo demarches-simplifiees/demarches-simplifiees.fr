@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_06_164955) do
+ActiveRecord::Schema.define(version: 2021_10_12_100819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -814,6 +814,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_164955) do
   add_foreign_key "assign_tos", "groupe_instructeurs"
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
+  add_foreign_key "avis", "dossiers"
   add_foreign_key "avis", "experts_procedures"
   add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
   add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
