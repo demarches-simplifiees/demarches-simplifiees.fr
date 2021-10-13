@@ -21,3 +21,8 @@ fr:
         tatou: "Votre numéro DN • Tatou"
         yahoo: "Yahoo!"
         sipf: "Agent de l'administration"
+      account:
+        already_user_question: 'Vous avez déjà un compte ?'
+        already_user: 'J’ai déjà un compte'
+        create: 'Créer un compte'
+        signin: 'Connexion'

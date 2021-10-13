@@ -1,23 +1,16 @@
 - content_for(:title, @procedure.libelle)
 
 - if !user_signed_in?
-  = render partial: 'shared/social_login', locals: { title: "Rapide, simple et sûr, identifiez vous", prefix: "via " }
+  = render partial: 'shared/social_login', locals: { title: t('views.commencer.show.social_title'), prefix: "via " }
 
 .column.commencer
   .form
     - if !user_signed_in?
-      %p.center
-        via un compte
-        %span.optional-on-small-screens
-          #{APPLICATION_NAME}
+      %p.center= t('via_un_compte', name: APPLICATION_NAME)
       %br
       = link_to new_user_registration_path, class: ['button large expand'] do
-        Créer un compte
-      = link_to new_user_session_path, class: ['button large expand'] do
-        J’ai déjà un compte
-
-      -# %h2.huge-title Ou
-      -# = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+        = t('views.shared.account.create')
+      = link_to t('views.shared.account.already_user'), new_user_session_path, class: ['button large expand']
 
     - else
       - dossiers = current_user.dossiers.where(revision: @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id))
@@ -28,33 +21,28 @@
         = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: ['button large expand primary']
       - elsif drafts.count == 1 && not_drafts.count == 0
         - dossier = drafts.first
-        %h2.huge-title Vous avez déjà commencé à remplir un dossier
+        %h2.huge-title= t('views.commencer.show.already_draft')
         %p
-          Il y a <strong>#{time_ago_in_words(dossier.created_at)}</strong>,
-          vous avez commencé à remplir un dossier sur la démarche « #{dossier.procedure.libelle} ».
-        = link_to 'Continuer à remplir mon dossier', brouillon_dossier_path(dossier), class: ['button large expand primary']
-        = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@revision), class: ['button large expand']
+          = t('views.commencer.show.already_draft_detail_html', time_ago: time_ago_in_words(dossier.created_at), procedure: dossier.procedure.libelle)
+        = link_to t('views.commencer.show.continue_file'), brouillon_dossier_path(dossier), class: ['button large expand primary']
+        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
 
       - elsif not_drafts.count == 1
         - dossier = not_drafts.first
-        %h2.huge-title Vous avez déjà déposé un dossier
+        %h2.huge-title= t('views.commencer.show.already_not_draft')
         %p
-          Il y a <strong>#{time_ago_in_words(dossier.en_construction_at)}</strong>,
-          vous avez déposé un dossier sur la démarche « #{dossier.procedure.libelle} ».
-        = link_to 'Voir mon dossier déposé', dossier_path(dossier), class: ['button large expand primary']
-        = link_to 'Commencer un nouveau dossier', url_for_new_dossier(@revision), class: ['button large expand']
+          = t('views.commencer.show.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.en_construction_at), procedure: dossier.procedure.libelle)
+        = link_to t('views.commencer.show.show_my_submitted_file'), dossier_path(dossier), class: ['button large expand primary']
+        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
 
       - else
         %h2.huge-title= t('views.commencer.show.existing_dossiers')
         = link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: ['button large expand primary']
-        = link_to t('views.commencer.show.start_new_dossier'), url_for_new_dossier(@revision), class: ['button large expand']
+        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: ['button large expand']
 
     - if @procedure.feature_enabled?(:dossier_pdf_vide)
       - pdf_link = @revision.draft? ? commencer_dossier_vide_test_path(path: @procedure.path) : commencer_dossier_vide_path(path: @procedure.path)
       %hr
-      %p
-        Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF,
-        et l'envoyer à l’administration concernée :
-        #{@procedure&.service&.nom} - #{@procedure&.service&.adresse}
+      %p= t('views.commencer.show.want_empty_pdf', service: @procedure&.service&.nom, adresse: @procedure&.service&.adresse)
       %br
-      = link_to 'Télécharger un dossier vide au format PDF', pdf_link, class: ['button large expand']
+      = link_to t('views.commencer.show.download_empty_pdf'), pdf_link, class: ['button large expand']
