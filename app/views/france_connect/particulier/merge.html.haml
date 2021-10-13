@@ -18,7 +18,7 @@
         = radio_button_tag :value, true, false, autocomplete: "off"
         Oui
 
-      %label
+      %label{ onclick: "DS.showNewAccount(event);" }
         = radio_button_tag :value, false, false, autocomplete: "off"
         Non
 
@@ -31,3 +31,13 @@
       = label_tag :password, 'Mot de passe (8 caractères minimum)'
       = password_field_tag :password, nil, autocomplete: 'current-password'
       = submit_tag 'Fusionner les comptes', class: 'button primary'
+
+  .new-account.hidden
+    %p Donnez-nous alors le mail que #{APPLICATION_NAME} utilisera pour vous contacter
+
+    = form_tag france_connect_particulier_merge_with_new_account_path, remote: true, class: 'mt-2 form' do
+      = hidden_field_tag :merge_token, @fci.merge_token
+      = label_tag :email, 'Email (nom@site.com)'
+      = email_field_tag :email
+      = submit_tag 'Utiliser ce mail', class: 'button primary'
+
