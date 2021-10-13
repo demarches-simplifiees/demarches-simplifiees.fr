@@ -85,6 +85,6 @@
         - else
           = render partial: 'shared/help/help_button'
 
-      - if ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true'
+      - if localization_enabled?
         %li
           = render partial: 'layouts/locale_dropdown'
