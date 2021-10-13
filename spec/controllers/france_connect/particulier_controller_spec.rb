@@ -136,16 +136,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     end
   end
 
-  describe '#merge' do
-    let(:fci) { FranceConnectInformation.create!(user_info) }
-    let(:merge_token) { fci.create_merge_token! }
-
-    subject { get :merge, params: { merge_token: merge_token } }
-
-    context 'when the merge token is valid' do
-      it { expect(subject).to have_http_status(:ok) }
-    end
-
+  RSpec.shared_examples "a method that needs a valid merge token" do
     context 'when the merge token is invalid' do
       before do
         merge_token
@@ -153,10 +144,29 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
 
       it do
-        expect(subject).to redirect_to root_path
+        if format == :js
+          subject
+          expect(response.body).to eq("window.location.href='/'")
+        else
+          expect(subject).to redirect_to root_path
+        end
         expect(flash.alert).to eq('Votre compte FranceConnect a expiré, veuillez recommencer.')
       end
     end
+  end
+
+  describe '#merge' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
+    let(:format) { :html }
+
+    subject { get :merge, params: { merge_token: merge_token } }
+
+    context 'when the merge token is valid' do
+      it { expect(subject).to have_http_status(:ok) }
+    end
+
+    it_behaves_like "a method that needs a valid merge token"
 
     context 'when the merge token does not exist' do
       let(:merge_token) { 'i do not exist' }
@@ -164,6 +174,58 @@ describe FranceConnect::ParticulierController, type: :controller do
       it do
         expect(subject).to redirect_to root_path
         expect(flash.alert).to eq('Votre compte FranceConnect a expiré, veuillez recommencer.')
+      end
+    end
+  end
+
+  describe '#merge_with_existing_account' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
+    let(:email) { 'EXISTING_account@a.com ' }
+    let(:password) { 'my-s3cure-p4ssword' }
+    let(:format) { :js }
+
+    subject { post :merge_with_existing_account, params: { merge_token: merge_token, email: email, password: password }, format: format }
+
+    it_behaves_like "a method that needs a valid merge token"
+
+    context 'when the credentials are ok' do
+      let!(:user) { create(:user, email: email, password: password) }
+
+      it 'merges the account, signs in, and delete the merge token' do
+        subject
+        fci.reload
+
+        expect(fci.user).to eq(user)
+        expect(fci.merge_token).to be_nil
+        expect(controller.current_user).to eq(user)
+      end
+
+      context 'but the targeted user is an instructeur' do
+        let!(:user) { create(:instructeur, email: email, password: password).user }
+
+        it 'redirects to the root page' do
+          subject
+          fci.reload
+
+          expect(fci.user).to be_nil
+          expect(fci.merge_token).not_to be_nil
+          expect(controller.current_user).to be_nil
+        end
+      end
+    end
+
+    context 'when the credentials are not ok' do
+      let!(:user) { create(:user, email: email, password: 'another password #$21$%%') }
+
+      it 'increases the failed attempts counter' do
+        subject
+        fci.reload
+
+        expect(fci.user).to be_nil
+        expect(fci.merge_token).not_to be_nil
+        expect(controller.current_user).to be_nil
+        expect(user.reload.failed_attempts).to eq(1)
       end
     end
   end
