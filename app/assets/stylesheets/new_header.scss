@@ -241,6 +241,10 @@ $header-mobile-breakpoint: 550px;
       display: flex;
       color: $black;
 
+      &.active {
+        font-weight: bold;
+      }
+
       &:hover {
         background: $light-grey;
       }
