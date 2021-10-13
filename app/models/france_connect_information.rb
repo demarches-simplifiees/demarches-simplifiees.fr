@@ -52,4 +52,8 @@ class FranceConnectInformation < ApplicationRecord
   def valid_for_merge?
     (MERGE_VALIDITY.ago < merge_token_created_at) && user_id.nil?
   end
+
+  def delete_merge_token!
+    update(merge_token: nil, merge_token_created_at: nil)
+  end
 end

@@ -125,6 +125,7 @@ Rails.application.routes.draw do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
     get 'particulier/merge/:merge_token' => 'particulier#merge', as: :particulier_merge
+    post 'particulier/merge_with_existing_account' => 'particulier#merge_with_existing_account'
   end
 
   namespace :champs do

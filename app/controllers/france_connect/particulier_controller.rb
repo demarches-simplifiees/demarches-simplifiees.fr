@@ -1,6 +1,6 @@
 class FranceConnect::ParticulierController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
-  before_action :securely_retrieve_fci, only: [:merge]
+  before_action :securely_retrieve_fci, only: [:merge, :merge_with_existing_account]
 
   def login
     if FranceConnectService.enabled?
@@ -41,6 +41,28 @@ class FranceConnect::ParticulierController < ApplicationController
   def merge
   end
 
+  def merge_with_existing_account
+    user = User.find_by(email: sanitized_email_params)
+
+    if user.valid_for_authentication? { user.valid_password?(password_params) }
+      if !user.can_france_connect?
+        flash.alert = "#{user.email} ne peut utiliser FranceConnect"
+
+        render js: ajax_redirect(root_path)
+      else
+        @fci.update(user: user)
+        @fci.delete_merge_token!
+
+        flash.notice = "Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés"
+        connect_france_connect_particulier(user)
+      end
+    else
+      flash.alert = 'Mauvais mot de passe'
+
+      render js: helpers.render_flash
+    end
+  end
+
   private
 
   def securely_retrieve_fci
@@ -49,7 +71,10 @@ class FranceConnect::ParticulierController < ApplicationController
     if @fci.nil? || !@fci.valid_for_merge?
       flash.alert = 'Votre compte FranceConnect a expiré, veuillez recommencer.'
 
-      redirect_to root_path
+      respond_to do |format|
+        format.html { redirect_to root_path }
+        format.js { render js: ajax_redirect(root_path) }
+      end
     end
   end
 
@@ -68,7 +93,12 @@ class FranceConnect::ParticulierController < ApplicationController
 
     user.update_attribute('loged_in_with_france_connect', User.loged_in_with_france_connects.fetch(:particulier))
 
-    redirect_to stored_location_for(current_user) || root_path(current_user)
+    redirection_location = stored_location_for(current_user) || root_path(current_user)
+
+    respond_to do |format|
+      format.html { redirect_to redirection_location }
+      format.js { render js: ajax_redirect(root_path) }
+    end
   end
 
   def redirect_france_connect_error_connection
@@ -78,5 +108,13 @@ class FranceConnect::ParticulierController < ApplicationController
 
   def merge_token_params
     params[:merge_token]
+  end
+
+  def password_params
+    params[:password]
+  end
+
+  def sanitized_email_params
+    params[:email]&.gsub(/[[:space:]]/, ' ')&.strip&.downcase
   end
 end
