@@ -229,4 +229,27 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
     end
   end
+
+  describe '#merge_with_new_account' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
+    let(:email) { ' Account@a.com ' }
+    let(:format) { :js }
+
+    subject { post :merge_with_new_account, params: { merge_token: merge_token, email: email }, format: format }
+
+    it_behaves_like "a method that needs a valid merge token"
+
+    context 'when the email does not belong to any user' do
+      it 'creates the account, signs in, and delete the merge token' do
+        subject
+        fci.reload
+
+        expect(fci.user.email).to eq(email.downcase.strip)
+        expect(fci.merge_token).to be_nil
+        expect(controller.current_user).to eq(fci.user)
+        expect(response.body).to include("window.location.href='/'")
+      end
+    end
+  end
 end

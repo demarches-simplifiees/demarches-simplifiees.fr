@@ -1,6 +1,6 @@
 class FranceConnect::ParticulierController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
-  before_action :securely_retrieve_fci, only: [:merge, :merge_with_existing_account]
+  before_action :securely_retrieve_fci, only: [:merge, :merge_with_existing_account, :merge_with_new_account]
 
   def login
     if FranceConnectService.enabled?
@@ -60,6 +60,20 @@ class FranceConnect::ParticulierController < ApplicationController
       flash.alert = 'Mauvais mot de passe'
 
       render js: helpers.render_flash
+    end
+  end
+
+  def merge_with_new_account
+    user = User.find_by(email: sanitized_email_params)
+
+    if user.nil?
+      @fci.associate_user!(sanitized_email_params)
+      @fci.delete_merge_token!
+
+      flash.notice = "Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés"
+      connect_france_connect_particulier(@fci.user)
+    else
+      # TODO
     end
   end
 
