@@ -135,4 +135,36 @@ describe FranceConnect::ParticulierController, type: :controller do
       it { expect(flash[:alert]).to be_present }
     end
   end
+
+  describe '#merge' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
+
+    subject { get :merge, params: { merge_token: merge_token } }
+
+    context 'when the merge token is valid' do
+      it { expect(subject).to have_http_status(:ok) }
+    end
+
+    context 'when the merge token is invalid' do
+      before do
+        merge_token
+        fci.update(merge_token_created_at: 2.years.ago)
+      end
+
+      it do
+        expect(subject).to redirect_to root_path
+        expect(flash.alert).to eq('Votre compte FranceConnect a expiré, veuillez recommencer.')
+      end
+    end
+
+    context 'when the merge token does not exist' do
+      let(:merge_token) { 'i do not exist' }
+
+      it do
+        expect(subject).to redirect_to root_path
+        expect(flash.alert).to eq('Votre compte FranceConnect a expiré, veuillez recommencer.')
+      end
+    end
+  end
 end

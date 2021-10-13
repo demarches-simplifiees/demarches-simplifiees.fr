@@ -1,5 +1,6 @@
 class FranceConnect::ParticulierController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
+  before_action :securely_retrieve_fci, only: [:merge]
 
   def login
     if FranceConnectService.enabled?
@@ -42,6 +43,16 @@ class FranceConnect::ParticulierController < ApplicationController
 
   private
 
+  def securely_retrieve_fci
+    @fci = FranceConnectInformation.find_by(merge_token: merge_token_params)
+
+    if @fci.nil? || !@fci.valid_for_merge?
+      flash.alert = 'Votre compte FranceConnect a expiré, veuillez recommencer.'
+
+      redirect_to root_path
+    end
+  end
+
   def redirect_to_login_if_fc_aborted
     if params[:code].blank?
       redirect_to new_user_session_path
@@ -63,5 +74,9 @@ class FranceConnect::ParticulierController < ApplicationController
   def redirect_france_connect_error_connection
     flash.alert = t('errors.messages.france_connect.connexion')
     redirect_to(new_user_session_path)
+  end
+
+  def merge_token_params
+    params[:merge_token]
   end
 end
