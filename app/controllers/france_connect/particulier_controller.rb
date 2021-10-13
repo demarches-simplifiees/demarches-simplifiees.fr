@@ -26,6 +26,7 @@ class FranceConnect::ParticulierController < ApplicationController
       user = fci.user
 
       if user.can_france_connect?
+        fci.update(updated_at: Time.zone.now)
         connect_france_connect_particulier(user)
       else
         fci.destroy
