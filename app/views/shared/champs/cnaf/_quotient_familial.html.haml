@@ -1,0 +1,14 @@
+%table.cnaf.horizontal
+  %caption #{t("api_particulier.providers.cnaf.scopes.quotient_familial.libelle")} :
+  %thead
+    %tr
+      - for key in ['quotientFamilial', 'mois', 'annee'] do
+        - if quotient_familial[key].present?
+          %th.text-right= t("api_particulier.providers.cnaf.scopes.quotient_familial.#{key}")
+  %tbody
+    %tr
+      - for key in ['quotientFamilial', 'mois', 'annee'] do
+        - if quotient_familial[key].present?
+          %td.text-right= quotient_familial[key]
+        - else
+          %td

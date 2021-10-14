@@ -9,24 +9,52 @@ describe FranceConnectInformation, type: :model do
 
   describe 'associate_user!' do
     context 'when there is no user with same email' do
+      let(:email) { 'A@email.com' }
       let(:fci) { build(:france_connect_information) }
-      let(:subject) { fci.associate_user! }
+
+      subject { fci.associate_user!(email) }
 
       it { expect { subject }.to change(User, :count).by(1) }
+
       it do
         subject
-        expect(fci.user.email).to eq(fci.email_france_connect)
+        expect(fci.user.email).to eq('a@email.com')
+      end
+    end
+  end
+
+  describe '#valid_for_merge?' do
+    let(:fci) { create(:france_connect_information) }
+
+    subject { fci.valid_for_merge? }
+
+    context 'when the merge token is young enough' do
+      before { fci.merge_token_created_at = 1.minute.ago }
+
+      it { is_expected.to be(true) }
+
+      context 'but the fci is already linked to an user' do
+        before { fci.update(user: create(:user)) }
+
+        it { is_expected.to be(false) }
       end
     end
 
-    context 'when a user with same email (but who is not an instructeur) exist' do
-      let(:user) { create(:user) }
-      let(:fci) { build(:france_connect_information, email_france_connect: user.email) }
-      let(:subject) { fci.associate_user! }
+    context 'when the merge token is too old' do
+      before { fci.merge_token_created_at = (FranceConnectInformation::MERGE_VALIDITY + 1.minute).ago }
 
-      before { subject }
+      it { is_expected.to be(false) }
+    end
+  end
 
-      it { expect(fci.user).to eq(user) }
+  describe '#create_merge_token!' do
+    let(:fci) { create(:france_connect_information) }
+
+    it 'returns a merge_token and register it s creation date' do
+      token = fci.create_merge_token!
+
+      expect(fci.merge_token).to eq(token)
+      expect(fci.merge_token_created_at).not_to be_nil
     end
   end
 end

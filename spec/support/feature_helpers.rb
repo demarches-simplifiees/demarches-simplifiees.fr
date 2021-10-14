@@ -142,6 +142,13 @@ module FeatureHelpers
     have_css("##{form_id_for(libelle)}[value=\"#{with}\"]")
   end
 
+  def log_out
+    click_button(title: 'Mon compte')
+    click_on 'Se déconnecter'
+
+    expect(page).to have_current_path(root_path)
+  end
+
   # Keep the brower window open after a test success of failure, to
   # allow inspecting the page or the console.
   #

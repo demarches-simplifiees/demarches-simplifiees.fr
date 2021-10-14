@@ -274,6 +274,12 @@ en:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               # taken_can_be_claimed: est identique à celui d’une autre de vos procedures publiées. Si vous publiez cette procedure, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
               invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
+        "champs/cnaf_champ":
+          attributes:
+            numero_allocataire:
+              invalid: "must be a maximum of 7 digits"
+            code_postal:
+              invalid: "must be 5 characters long"
   errors:
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."

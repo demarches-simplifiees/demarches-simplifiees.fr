@@ -63,7 +63,7 @@ feature 'The routing', js: true do
 
     # publish
     publish_procedure(procedure)
-    log_out(old_layout: true)
+    log_out
 
     # 2 users fill a dossier in each group
     user_send_dossier(scientifique_user, 'scientifique')
@@ -221,16 +221,5 @@ feature 'The routing', js: true do
     click_button 'Définir le mot de passe'
 
     expect(page).to have_text('Mot de passe enregistré')
-  end
-
-  def log_out(old_layout: false)
-    if old_layout
-      page.all('.dropdown-button').first.click
-      click_on 'Se déconnecter'
-    else
-      click_button(title: 'Mon compte')
-      click_on 'Se déconnecter'
-    end
-    expect(page).to have_current_path(root_path)
   end
 end

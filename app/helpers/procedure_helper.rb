@@ -13,7 +13,7 @@ module ProcedureHelper
     safe_join(parts, ' ')
   end
 
-  def procedure_publish_text(procedure, key)
+  def procedure_publish_label(procedure, key)
     # i18n-tasks-use t('modal.publish.body.publish')
     # i18n-tasks-use t('modal.publish.body.reopen')
     # i18n-tasks-use t('modal.publish.submit.publish')

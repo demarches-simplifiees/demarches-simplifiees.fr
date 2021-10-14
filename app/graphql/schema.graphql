@@ -1870,6 +1870,11 @@ enum TypeDeChamp {
   civilite
 
   """
+  Données de la Caisse nationale des allocations familiales
+  """
+  cnaf
+
+  """
   Communes
   """
   communes

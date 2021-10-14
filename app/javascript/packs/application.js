@@ -41,6 +41,11 @@ import {
   acceptEmailSuggestion,
   discardEmailSuggestionBox
 } from '../new_design/user-sign_up';
+import {
+  showFusion,
+  showNewAccount,
+  showNewAccountPasswordConfirmation
+} from '../new_design/fc-fusion';
 
 // This is the global application namespace where we expose helpers used from rails views
 const DS = {
@@ -49,6 +54,9 @@ const DS = {
   showMotivation,
   motivationCancel,
   showImportJustificatif,
+  showFusion,
+  showNewAccount,
+  showNewAccountPasswordConfirmation,
   replaceSemicolonByComma,
   acceptEmailSuggestion,
   discardEmailSuggestionBox
