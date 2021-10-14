@@ -55,7 +55,7 @@ function buildOptions() {
 
 async function defaultQueryFn({ queryKey: [scope, term] }) {
   if (scope == 'pays') {
-    return matchSorter(await getPays(), term, { keys: ['nom'] });
+    return matchSorter(await getPays(), term, { keys: ['label'] });
   }
 
   const url = buildURL(scope, term);
@@ -73,7 +73,7 @@ async function defaultQueryFn({ queryKey: [scope, term] }) {
 let paysCache;
 async function getPays() {
   if (!paysCache) {
-    paysCache = await fetch('/pays.json').then((response) => response.json());
+    paysCache = await fetch('/api/pays').then((response) => response.json());
   }
   return paysCache;
 }
