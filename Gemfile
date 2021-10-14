@@ -89,6 +89,7 @@ gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
 group :test do
+  gem 'axe-core-rspec' # accessibility rspec matchers
   gem 'capybara' # Integration testing
   gem 'capybara-email' # Access emails during integration tests
   gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
@@ -119,7 +120,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'axe-matchers' # accessibility rspec matchers
   gem 'graphql-schema_comparator'
   gem 'mina', git: 'https://github.com/mina-deploy/mina.git', require: false # Deploy
   gem 'pry-byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console

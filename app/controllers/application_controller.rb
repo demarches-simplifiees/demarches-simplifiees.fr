@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   around_action :switch_locale
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,
-    :administrateur_signed_in?, :current_administrateur, :current_account
+    :administrateur_signed_in?, :current_administrateur, :current_account, :localization_enabled?, :set_locale
 
   def staging_authenticate
     if StagingAuthService.enabled? && !authenticate_with_http_basic { |username, password| StagingAuthService.authenticate(username, password) }
@@ -70,6 +70,17 @@ class ApplicationController < ActionController::Base
   end
 
   alias_method :pundit_user, :current_account
+
+  def localization_enabled?
+    ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true' || cookies[:locale].present?
+  end
+
+  def set_locale(locale)
+    if locale && locale.to_sym.in?(I18n.available_locales)
+      cookies[:locale] = locale
+      locale
+    end
+  end
 
   protected
 
@@ -309,14 +320,25 @@ class ApplicationController < ActionController::Base
   end
 
   def switch_locale(&action)
-    locale = nil
-    if cookies[:locale]
-      locale = cookies[:locale]
-    elsif ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true'
-      locale = http_accept_language.compatible_language_from(I18n.available_locales)
-    else
-      locale = I18n.default_locale
-    end
+    locale = extract_locale_from_query_params ||
+      extract_locale_from_cookie ||
+      extract_locale_from_accept_language_header ||
+      I18n.default_locale
+
     I18n.with_locale(locale, &action)
+  end
+
+  def extract_locale_from_query_params
+    set_locale(request.query_parameters[:locale])
+  end
+
+  def extract_locale_from_cookie
+    cookies[:locale]
+  end
+
+  def extract_locale_from_accept_language_header
+    if localization_enabled?
+      http_accept_language.compatible_language_from(I18n.available_locales)
+    end
   end
 end

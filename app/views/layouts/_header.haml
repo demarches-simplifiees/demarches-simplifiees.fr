@@ -68,9 +68,9 @@
       - elsif request.path != new_user_session_path
         - if request.path == new_user_registration_path
           %li.header-text
-            Vous avez déjà un compte ?
+            = t('views.shared.account.already_user_question')
         %li
-          = link_to "Connexion", new_user_session_path, class: "button secondary"
+          = link_to t('views.shared.account.signin'), new_user_session_path, class: "button secondary"
 
       %li
         - if dossier.present? && nav_bar_profile == :user
@@ -85,6 +85,6 @@
         - else
           = render partial: 'shared/help/help_button'
 
-      - if ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true'
+      - if localization_enabled?
         %li
           = render partial: 'layouts/locale_dropdown'

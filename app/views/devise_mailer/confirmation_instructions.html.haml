@@ -2,8 +2,7 @@
 - if @user.unconfirmed_email.nil?
   - content_for(:title, 'Activez votre compte')
 
-  %p
-    Bonjour,
+  %p= t(:hello, scope: [:views, :shared, :greetings])
 
   %p
     Pour activer votre compte sur #{APPLICATION_NAME}, veuillez cliquer sur le lien suivant :
@@ -13,8 +12,7 @@
 - else
   - content_for(:title, "Changement d’adresse email")
 
-  %p
-    Bonjour,
+  %p= t(:hello, scope: [:views, :shared, :greetings])
 
   %p
     Pour confirmer votre changement d’adresse email, veuillez cliquer sur le lien suivant :

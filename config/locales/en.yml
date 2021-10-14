@@ -30,6 +30,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  help: 'Help'
   utils:
     deconnexion: "Log out"
     pj: "Attachments"
@@ -44,6 +45,19 @@ en:
     commentaire:
       send_message_to_instructeur: "Send a message to the instructor"
       reply_in_mailbox: "Reply in mailbox"
+  layouts:
+    commencer:
+      no_procedure:
+        line1: A simple tool
+        line2: to manage dematerialized
+        line3: administrative forms.
+    locale_dropdown:
+      languages: "Languages"
+    notifications:
+      actions:
+        access: View your File
+        question: I have a question
+        reply: Reply to this message
   views:
     commencer:
       show:
@@ -51,6 +65,24 @@ en:
         existing_dossiers: You already have files for this procedure
         show_dossiers: View my current files
         start_new_dossier: Start a new file
+        already_draft: "You already started to fill a file"
+        already_draft_detail_html: "You started to fill a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
+        already_not_draft: "You already submitted a file"
+        already_not_draft_detail_html: "You submitted a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>."
+        continue_file: "Continue to fill my file"
+        start_new_file: "Start a new file"
+        show_my_submitted_file: 'Show my submitted file'
+        want_empty_pdf: "You prefer to submit a paper form? You can download an empty PDF file, and send it to the right administration : %{service} - %{adresse}"
+        download_empty_pdf: 'Download an empty PDF file'
+        social_title: "Quick, simple and safe"
+    registrations:
+      new:
+        title: "Create an account %{name}"
+        email_label: 'Email (name@site.com)'
+        email_placeholder: 'Your email address'
+        wanna_say: 'Do you mean to say'
+        password_label: "Password"
+        password_placeholder: "%{min_length} characters minimum"
     invites:
       dropdown:
         invite_to_edit: Invite someone to edit this file
@@ -67,12 +99,6 @@ en:
         want_to_withdraw_permission: "Would you like to withdraw the permission?"
         edit_dossier: "These people can edit this file."
         submit_dossier_yourself: "You must submit the file yourself when it is complete."
-    layouts:
-      commencer:
-        no_procedure:
-          line1: A simple tool
-          line2: to manage dematerialized
-          line3: administrative forms.
     pagination:
       next: Next
       last: Last
@@ -80,6 +106,9 @@ en:
       first: First
       truncate: '&hellip;'
     shared:
+      greetings:
+        hello: Dear Sir or Madam,
+        best_regards: Best Regards,
       dossiers:
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
@@ -318,3 +347,4 @@ en:
       no_establishment: "There is no establishment tied to this file"
       identity_saved: "Identity data is registred"
       no_longer_available: "The certificate is no longer available on this file."
+  via_un_compte: "using %{name} account"

@@ -1,8 +1,7 @@
 - content_for :procedure_logo do
   = render 'layouts/mailers/logo', url: @logo_url
 
-%p
-  Bonjour,
+%p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
   Votre dossier va être réexaminé, la précédente décision sur ce dossier est caduque.

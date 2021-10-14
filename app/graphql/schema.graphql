@@ -406,7 +406,7 @@ interface Demandeur {
 }
 
 """
-Une demarche
+Une démarche
 """
 type Demarche {
   annotationDescriptors: [ChampDescriptor!]!
@@ -438,7 +438,7 @@ type Demarche {
   datePublication: ISO8601DateTime
 
   """
-  L’état de dossier pour une démarche déclarative
+  Pour une démarche déclarative, état cible des dossiers à valider automatiquement
   """
   declarative: DossierDeclarativeState
 
@@ -551,7 +551,7 @@ type Demarche {
   id: ID!
 
   """
-  Le numero de la démarche.
+  Numero de la démarche.
   """
   number: Int!
   publishedRevision: Revision
@@ -559,12 +559,70 @@ type Demarche {
   service: Service!
 
   """
-  L’état de la démarche.
+  État de la démarche.
   """
   state: DemarcheState!
 
   """
-  Le titre de la démarche.
+  Titre de la démarche.
+  """
+  title: String!
+}
+
+"""
+Une démarche (métadonnées)
+Ceci est une version abrégée du type `Demarche`, qui n’expose que les métadonnées.
+Cela évite l’accès récursif aux dossiers.
+"""
+type DemarcheDescriptor {
+  """
+  Date de la création.
+  """
+  dateCreation: ISO8601DateTime!
+
+  """
+  Date de la dépublication.
+  """
+  dateDepublication: ISO8601DateTime
+
+  """
+  Date de la dernière modification.
+  """
+  dateDerniereModification: ISO8601DateTime!
+
+  """
+  Date de la fermeture.
+  """
+  dateFermeture: ISO8601DateTime
+
+  """
+  Date de la publication.
+  """
+  datePublication: ISO8601DateTime
+
+  """
+  Pour une démarche déclarative, état cible des dossiers à valider automatiquement
+  """
+  declarative: DossierDeclarativeState
+
+  """
+  Description de la démarche.
+  """
+  description: String!
+  id: ID!
+
+  """
+  Numero de la démarche.
+  """
+  number: Int!
+
+  """
+  État de la démarche.
+  """
+  state: DemarcheState!
+
+  """
+  Titre de la démarche.
   """
   title: String!
 }
@@ -650,6 +708,7 @@ type Dossier {
   """
   dateTraitement: ISO8601DateTime
   demandeur: Demandeur!
+  demarche: DemarcheDescriptor!
 
   """
   L’URL du GeoJSON contenant les données cartographiques du dossier.

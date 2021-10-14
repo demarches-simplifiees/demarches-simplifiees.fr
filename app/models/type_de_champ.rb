@@ -67,7 +67,7 @@ class TypeDeChamp < ApplicationRecord
   has_many :revision_types_de_champ, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_many :revisions, through: :revision_types_de_champ
 
-  delegate :tags_for_template, to: :dynamic_type
+  delegate :tags_for_template, :libelle_for_export, to: :dynamic_type
 
   class WithIndifferentAccess
     def self.load(options)

@@ -146,11 +146,11 @@ FactoryBot.define do
         if processed_at.present?
           dossier.en_construction_at ||= processed_at - 2.minutes
           dossier.en_instruction_at ||= processed_at - 1.minute
-          dossier.traitements.build(state: Dossier.states.fetch(:accepte), processed_at: processed_at, motivation: evaluator.motivation)
+          dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: processed_at)
         else
           dossier.en_construction_at ||= dossier.created_at + 1.minute
           dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
-          dossier.traitements.build(state: Dossier.states.fetch(:accepte), processed_at: dossier.en_instruction_at + 1.minute, motivation: evaluator.motivation)
+          dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: dossier.en_instruction_at + 1.minute)
         end
         dossier.save!
       end
@@ -162,7 +162,7 @@ FactoryBot.define do
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
         dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
-        dossier.traitements.build(state: Dossier.states.fetch(:refuse), processed_at: dossier.en_instruction_at + 1.minute)
+        dossier.traitements.refuser(processed_at: dossier.en_instruction_at + 1.minute)
         dossier.save!
       end
     end
@@ -173,7 +173,7 @@ FactoryBot.define do
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
         dossier.en_construction_at ||= dossier.created_at + 1.minute
         dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
-        dossier.traitements.build(state: Dossier.states.fetch(:sans_suite), processed_at: dossier.en_instruction_at + 1.minute)
+        dossier.traitements.classer_sans_suite(processed_at: dossier.en_instruction_at + 1.minute)
         dossier.save!
       end
     end
