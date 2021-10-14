@@ -57,9 +57,9 @@ class Champs::PieceJustificativeChamp < Champ
       url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: id })
       display = piece_justificative_file.filename
       if piece_justificative_file.image?
-        tag.img('', { src: url, width: '100', id: piece_justificative_file.id, display: display })
+        tag.img '', src: url, width: '100', id: piece_justificative_file.id, display: display
       else
-        tag.a(display, { href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe" })
+        tag.a display, href: url, target: '_blank', rel: 'noopener', title: "Télécharger la pièce jointe"
       end
     end
   end
