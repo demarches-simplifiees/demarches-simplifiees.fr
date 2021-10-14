@@ -207,27 +207,9 @@ Rails.application.routes.draw do
     get 'procedures/archived', to: redirect('/admin/procedures?statut=archivees')
     get 'procedures/draft', to: redirect('/admin/procedures?statut=brouillons')
 
-    resources :procedures, only: [:destroy] do
-      collection do
-        get 'new_from_existing' => 'procedures#new_from_existing', as: :new_from_existing
-      end
-
-      member do
-        delete :delete_logo
-        delete :delete_deliberation
-        delete :delete_notice
-      end
-
-      put 'archive' => 'procedures#archive', as: :archive
-      get 'publish_validate' => 'procedures#publish_validate', as: :publish_validate
-      put 'clone' => 'procedures#clone', as: :clone
-    end
-
     namespace :assigns do
       get 'show' # delete after fixed tests admin/instructeurs/show_spec without this line
     end
-
-    resources :instructeurs, only: [:index, :create, :destroy]
   end
 
   #
@@ -421,7 +403,11 @@ Rails.application.routes.draw do
   #
 
   namespace :admin, module: 'new_administrateur' do
-    resources :procedures, except: [:destroy] do
+    resources :procedures do
+      collection do
+        get 'new_from_existing'
+      end
+
       member do
         get 'apercu'
         get 'champs'
@@ -434,6 +420,8 @@ Rails.application.routes.draw do
         put :experts_require_administrateur_invitation
       end
 
+      put 'clone'
+      put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
       get 'transfert' => 'procedures#transfert', as: :transfert
