@@ -205,6 +205,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_cnaf do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_cnaf, procedure: procedure)
+      end
+    end
+
     trait :with_explication do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ_explication, procedure: procedure)

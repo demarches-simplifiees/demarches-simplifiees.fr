@@ -85,6 +85,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def ajax_redirect(path)
+    "window.location.href='#{path}'"
+  end
+
   protected
 
   def feature_enabled?(feature_name)

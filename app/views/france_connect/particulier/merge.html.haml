@@ -1,0 +1,44 @@
+= content_for :title, "Fusion des comptes FC et #{APPLICATION_NAME}"
+
+.container
+  %h1.page-title Fusion des comptes FranceConnect et #{APPLICATION_NAME}
+
+  %p
+    Bonjour,
+    %br
+    %br
+    Votre compte FranceConnect utilise <b class='bold'>#{@fci.email_france_connect}</b> comme email de contact.
+    %br
+    Or il existe un compte sur #{APPLICATION_NAME} avec cet email.
+
+  .form.mt-2
+    %label Ce compte #{@fci.email_france_connect} vous appartient-il ?
+    %fieldset.radios
+      %label{ onclick: "DS.showFusion(event);" }
+        = radio_button_tag :value, true, false, autocomplete: "off", id: 'it-is-mine'
+        Oui
+
+      %label{ onclick: "DS.showNewAccount(event);" }
+        = radio_button_tag :value, false, false, autocomplete: "off", id: 'it-is-not-mine'
+        Non
+
+  .fusion.hidden
+    %p Pour les fusionner, entrez votre mot de passe
+
+    = form_tag france_connect_particulier_merge_with_existing_account_path, remote: true, class: 'mt-2 form' do
+      = hidden_field_tag :merge_token, @fci.merge_token
+      = hidden_field_tag :email, @fci.email_france_connect
+      = label_tag :password, 'Mot de passe (8 caractères minimum)'
+      = password_field_tag :password, nil, autocomplete: 'current-password'
+      = submit_tag 'Fusionner les comptes', class: 'button primary'
+
+  .new-account.hidden
+    %p Donnez-nous alors le mail que #{APPLICATION_NAME} utilisera pour vous contacter
+
+    = form_tag france_connect_particulier_merge_with_new_account_path, remote: true, class: 'mt-2 form' do
+      = hidden_field_tag :merge_token, @fci.merge_token
+      = label_tag :email, 'Email (nom@site.com)'
+      = email_field_tag :email
+      = submit_tag 'Utiliser ce mail', class: 'button primary'
+
+  .new-account-password-confirmation.hidden

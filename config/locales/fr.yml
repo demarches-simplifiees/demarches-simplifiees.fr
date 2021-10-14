@@ -280,6 +280,12 @@ fr:
               taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               taken_can_be_claimed: est identique à celui d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
               invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
+        "champs/cnaf_champ":
+          attributes:
+            numero_allocataire:
+              invalid: "doit être composé au maximum de 7 chiffres"
+            code_postal:
+              invalid: "doit posséder 5 caractères"
   errors:
     messages:
       saml_not_authorized: "Vous n’êtes pas autorisé à accéder à ce service."

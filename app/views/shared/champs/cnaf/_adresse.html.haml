@@ -1,0 +1,10 @@
+%table.cnaf
+  %caption #{t("api_particulier.providers.cnaf.scopes.adresse.libelle")} :
+  - for key in ['identite', 'complementIdentite', 'numeroRue', 'complementIdentiteGeo', 'lieuDit', 'codePostalVille', 'pays'] do
+    - if adresse[key].present?
+      %tr
+        %th= t("api_particulier.providers.cnaf.scopes.adresse.#{key}")
+        %td= adresse[key]
+
+
+

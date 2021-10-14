@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_06_164955) do
+ActiveRecord::Schema.define(version: 2021_10_12_100819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,6 +189,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_164955) do
     t.jsonb "data"
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
+    t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["private"], name: "index_champs_on_private"
@@ -472,11 +473,14 @@ ActiveRecord::Schema.define(version: 2021_10_06_164955) do
     t.date "birthdate"
     t.string "birthplace"
     t.string "france_connect_particulier_id"
-    t.integer "user_id", null: false
+    t.integer "user_id"
     t.string "email_france_connect"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "data"
+    t.string "merge_token"
+    t.datetime "merge_token_created_at"
+    t.index ["merge_token"], name: "index_france_connect_informations_on_merge_token"
     t.index ["user_id"], name: "index_france_connect_informations_on_user_id"
   end
 
@@ -813,6 +817,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_164955) do
   add_foreign_key "assign_tos", "groupe_instructeurs"
   add_foreign_key "attestation_templates", "procedures"
   add_foreign_key "attestations", "dossiers"
+  add_foreign_key "avis", "dossiers"
   add_foreign_key "avis", "experts_procedures"
   add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
   add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
