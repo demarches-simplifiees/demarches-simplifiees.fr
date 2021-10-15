@@ -36,13 +36,17 @@ class Traitement < ApplicationRecord
       .to_sql
 
     sql = <<~EOF
-      select date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.now.formatted_offset}'::INTERVAL) as month, count(r1.processed_at)
+      select date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE :timezone_offset::INTERVAL) as month, count(r1.processed_at)
       from (#{last_traitements_per_dossier}) as r1
-      group by date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.now.formatted_offset}'::INTERVAL)
+      group by date_trunc('month', r1.processed_at::TIMESTAMPTZ AT TIME ZONE :timezone_offset::INTERVAL)
       order by month desc
     EOF
 
-    ActiveRecord::Base.connection.execute(sql)
+    sanitized_query = ActiveRecord::Base.sanitize_sql([
+      sql,
+      timezone_offset: timezone_offset
+    ])
+    ActiveRecord::Base.connection.execute(sanitized_query)
   end
 
   def self.count_dossiers_termines_by_days_for_month(groupe_instructeurs, month)
@@ -53,13 +57,17 @@ class Traitement < ApplicationRecord
       .to_sql
 
     sql = <<~EOF
-      select date_trunc('day', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.now.formatted_offset}'::INTERVAL) as day, count(r1.processed_at)
+      select date_trunc('day', r1.processed_at::TIMESTAMPTZ AT TIME ZONE :timezone_offset::INTERVAL) as day, count(r1.processed_at)
       from (#{last_traitements_per_dossier}) as r1
-      group by date_trunc('day', r1.processed_at::TIMESTAMPTZ AT TIME ZONE '#{Time.zone.now.formatted_offset}'::INTERVAL)
+      group by date_trunc('day', r1.processed_at::TIMESTAMPTZ AT TIME ZONE :timezone_offset::INTERVAL)
       order by day desc
     EOF
 
-    ActiveRecord::Base.connection.execute(sql)
+    sanitized_query = ActiveRecord::Base.sanitize_sql([
+      sql,
+      timezone_offset: timezone_offset
+    ])
+    ActiveRecord::Base.connection.execute(sanitized_query)
   end
 
   def self.count_dossiers_termines_with_archive_size_limit(procedure, groupe_instructeurs, month)
@@ -83,5 +91,11 @@ class Traitement < ApplicationRecord
     end
 
     result
+  end
+
+  private
+
+  def self.timezone_offset
+    Time.zone.now.formatted_offset
   end
 end
