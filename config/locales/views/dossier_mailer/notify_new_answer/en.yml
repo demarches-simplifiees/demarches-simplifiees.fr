@@ -1,4 +1,4 @@
-fr:
+en:
   dossier_mailer:
     notify_new_answer:
       subject: New message on your file nº %{dossier_id} « %{libelle_demarche} »
