@@ -374,7 +374,6 @@ class Dossier < ApplicationRecord
   before_save :build_default_champs, if: Proc.new { revision_id_was.nil? }
   before_save :update_search_terms
 
-  after_save :send_dossier_en_instruction
   after_save :send_web_hook
   after_create_commit :send_draft_notification_email
 
@@ -684,10 +683,13 @@ class Dossier < ApplicationRecord
     update!(en_construction_at: Time.zone.now) if self.en_construction_at.nil?
   end
 
-  def after_passer_en_instruction(instructeur)
+  def after_passer_en_instruction(instructeur, disable_notification: false)
     instructeur.follow(self)
 
     update!(en_instruction_at: Time.zone.now) if self.en_instruction_at.nil?
+    if !procedure.declarative_accepte? && !disable_notification
+      NotificationMailer.send_en_instruction_notification(self).deliver_later
+    end
     log_dossier_operation(instructeur, :passer_en_instruction)
   end
 
@@ -703,17 +705,19 @@ class Dossier < ApplicationRecord
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
-  def after_repasser_en_instruction(instructeur)
+  def after_repasser_en_instruction(instructeur, disable_notification: false)
     self.archived = false
     self.en_instruction_at = Time.zone.now
     attestation&.destroy
 
     save!
-    DossierMailer.notify_revert_to_instruction(self).deliver_later
+    if !disable_notification
+      DossierMailer.notify_revert_to_instruction(self).deliver_later
+    end
     log_dossier_operation(instructeur, :repasser_en_instruction)
   end
 
-  def after_accepter(instructeur, motivation, justificatif = nil)
+  def after_accepter(instructeur, motivation, justificatif: nil, disable_notification: false)
     self.traitements.accepter(motivation: motivation, instructeur: instructeur)
 
     if justificatif
@@ -726,7 +730,9 @@ class Dossier < ApplicationRecord
 
     save!
     remove_titres_identite!
-    NotificationMailer.send_accepte_notification(self).deliver_later
+    if !disable_notification
+      NotificationMailer.send_accepte_notification(self).deliver_later
+    end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :accepter, self)
   end
@@ -746,7 +752,7 @@ class Dossier < ApplicationRecord
     log_automatic_dossier_operation(:accepter, self)
   end
 
-  def after_refuser(instructeur, motivation, justificatif = nil)
+  def after_refuser(instructeur, motivation, justificatif: nil, disable_notification: false)
     self.traitements.refuser(motivation: motivation, instructeur: instructeur)
 
     if justificatif
@@ -755,12 +761,14 @@ class Dossier < ApplicationRecord
 
     save!
     remove_titres_identite!
-    NotificationMailer.send_refuse_notification(self).deliver_later
+    if !disable_notification
+      NotificationMailer.send_refuse_notification(self).deliver_later
+    end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :refuser, self)
   end
 
-  def after_classer_sans_suite(instructeur, motivation, justificatif = nil)
+  def after_classer_sans_suite(instructeur, motivation, justificatif: nil, disable_notification: false)
     self.traitements.classer_sans_suite(motivation: motivation, instructeur: instructeur)
 
     if justificatif
@@ -769,7 +777,9 @@ class Dossier < ApplicationRecord
 
     save!
     remove_titres_identite!
-    NotificationMailer.send_sans_suite_notification(self).deliver_later
+    if !disable_notification
+      NotificationMailer.send_sans_suite_notification(self).deliver_later
+    end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :classer_sans_suite, self)
   end
@@ -989,12 +999,6 @@ class Dossier < ApplicationRecord
         automatic_operation: true,
         subject: subject
       )
-    end
-  end
-
-  def send_dossier_en_instruction
-    if saved_change_to_state? && en_instruction? && !procedure.declarative_accepte?
-      NotificationMailer.send_en_instruction_notification(self).deliver_later
     end
   end
 

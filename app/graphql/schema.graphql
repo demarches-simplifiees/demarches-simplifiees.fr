@@ -750,6 +750,11 @@ input DossierAccepterInput {
   clientMutationId: String
 
   """
+  Désactiver l’envoi de l’email de notification après l’opération
+  """
+  disableNotification: Boolean = false
+
+  """
   Dossier ID
   """
   dossierId: ID!
@@ -846,6 +851,11 @@ input DossierClasserSansSuiteInput {
   A unique identifier for the client performing the mutation.
   """
   clientMutationId: String
+
+  """
+  Désactiver l’envoi de l’email de notification après l’opération
+  """
+  disableNotification: Boolean = false
 
   """
   Dossier ID
@@ -1166,6 +1176,11 @@ input DossierPasserEnInstructionInput {
   clientMutationId: String
 
   """
+  Désactiver l’envoi de l’email de notification après l’opération
+  """
+  disableNotification: Boolean = false
+
+  """
   Dossier ID
   """
   dossierId: ID!
@@ -1196,6 +1211,11 @@ input DossierRefuserInput {
   A unique identifier for the client performing the mutation.
   """
   clientMutationId: String
+
+  """
+  Désactiver l’envoi de l’email de notification après l’opération
+  """
+  disableNotification: Boolean = false
 
   """
   Dossier ID

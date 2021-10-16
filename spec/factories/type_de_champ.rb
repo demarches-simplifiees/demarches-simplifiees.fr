@@ -145,7 +145,13 @@ FactoryBot.define do
       type_champ { TypeDeChamp.type_champs.fetch(:piece_justificative) }
 
       after(:build) do |type_de_champ, _evaluator|
-        type_de_champ.piece_justificative_template.attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
+        type_de_champ.piece_justificative_template.attach(
+          io: StringIO.new("toto"),
+          filename: "toto.txt",
+          content_type: "text/plain",
+          # we don't want to run virus scanner on this file
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        )
       end
     end
     factory :type_de_champ_titre_identite do
