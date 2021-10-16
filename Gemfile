@@ -44,6 +44,7 @@ gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
 gem 'http_accept_language'
+gem 'i18n_data'
 gem 'i18n-tasks', require: false
 gem 'iban-tools'
 gem 'image_processing'

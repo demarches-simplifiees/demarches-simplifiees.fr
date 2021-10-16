@@ -12,7 +12,7 @@ function ComboPaysSearch(params) {
         hiddenFieldId={params.hiddenFieldId}
         scope="pays"
         minimumInputLength={0}
-        transformResult={({ nom }) => [nom, nom]}
+        transformResult={({ code, value, label }) => [code, value, label]}
       />
     </QueryClientProvider>
   );

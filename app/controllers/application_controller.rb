@@ -78,6 +78,9 @@ class ApplicationController < ActionController::Base
   def set_locale(locale)
     if locale && locale.to_sym.in?(I18n.available_locales)
       cookies[:locale] = locale
+      if user_signed_in?
+        current_user.update(locale: locale)
+      end
       locale
     end
   end
@@ -322,6 +325,7 @@ class ApplicationController < ActionController::Base
   def switch_locale(&action)
     locale = extract_locale_from_query_params ||
       extract_locale_from_cookie ||
+      extract_locale_from_user ||
       extract_locale_from_accept_language_header ||
       I18n.default_locale
 
@@ -330,6 +334,10 @@ class ApplicationController < ActionController::Base
 
   def extract_locale_from_query_params
     set_locale(request.query_parameters[:locale])
+  end
+
+  def extract_locale_from_user
+    current_user&.locale
   end
 
   def extract_locale_from_cookie

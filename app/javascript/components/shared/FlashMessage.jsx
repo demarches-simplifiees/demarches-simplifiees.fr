@@ -1,5 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 export function FlashMessage({ message, level, sticky, fixed }) {
   return createPortal(
@@ -22,3 +23,10 @@ function flashClassName(level, sticky = false, fixed = false) {
   }
   return className.join(' ');
 }
+
+FlashMessage.propTypes = {
+  message: PropTypes.string,
+  level: PropTypes.string,
+  sticky: PropTypes.bool,
+  fixed: PropTypes.bool
+};

@@ -5,13 +5,14 @@ feature 'As an instructeur', js: true do
 
   before do
     login_as administrateur.user, scope: :user
-    visit admin_instructeurs_path
 
-    fill_in :instructeur_email, with: instructeur_email
+    visit admin_procedure_path(procedure)
+    find('#groupe-instructeurs').click
 
-    perform_enqueued_jobs do
-      click_button 'Ajouter'
-    end
+    find("input[aria-label='email instructeur'").send_keys(instructeur_email, :enter)
+    perform_enqueued_jobs { click_on 'Affecter' }
+
+    expect(page).to have_text("Les instructeurs ont bien été affectés à la démarche")
   end
 
   scenario 'I can register' do
