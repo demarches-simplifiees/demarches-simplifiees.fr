@@ -14,6 +14,14 @@ describe Champs::LinkedDropDownListChamp do
     it { expect(champ.value).to eq('["tata","tutu"]') }
   end
 
+  describe '#primary_value=' do
+    let!(:champ) { described_class.new(primary_value: 'tata', secondary_value: 'tutu') }
+
+    before { champ.primary_value = '' }
+
+    it { expect(champ.value).to eq('["",""]') }
+  end
+
   describe '#to_s' do
     let(:champ) { described_class.new(primary_value: primary_value, secondary_value: secondary_value) }
     let(:primary_value) { nil }
