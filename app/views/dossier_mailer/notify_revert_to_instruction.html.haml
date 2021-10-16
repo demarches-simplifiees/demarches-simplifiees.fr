@@ -4,7 +4,7 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('.body', dossier_id: @dossier.id, libelle_demarche: @dossier.procedure.libelle)
+  = t('.body_html', dossier_id: @dossier.id, libelle_demarche: @dossier.procedure.libelle)
   = link_to dossier_url(@dossier), dossier_url(@dossier), target: '_blank', rel: 'noopener'
 - if @dossier.procedure.service.present?
   %p

@@ -13,7 +13,7 @@
     "@reach/slider": "^0.15.0",
     "@reach/visually-hidden": "^0.15.2",
     "autocomplete.js": "^0.37.0",
-    "@sentry/browser": "6.11.0",
+    "@sentry/browser": "6.12.0",
     "@tmcw/togeojson": "^4.3.0",
     "babel-plugin-macros": "^2.8.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",

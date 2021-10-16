@@ -41,7 +41,11 @@ class Champs::LinkedDropDownListChamp < Champ
   end
 
   def primary_value=(value)
-    pack_value(value, secondary_value)
+    if value.blank?
+      pack_value("", "")
+    else
+      pack_value(value, secondary_value)
+    end
   end
 
   def secondary_value=(value)
