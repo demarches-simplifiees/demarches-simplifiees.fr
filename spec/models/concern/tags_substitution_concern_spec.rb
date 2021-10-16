@@ -320,7 +320,7 @@ describe TagsSubstitutionConcern, type: :model do
         Timecop.freeze(Time.zone.local(2004, 5, 6))
         dossier.passer_en_instruction!(instructeur)
         Timecop.freeze(Time.zone.local(2007, 8, 9))
-        dossier.accepter!(instructeur, nil, nil)
+        dossier.accepter!(instructeur, nil)
         Timecop.return
       end
 

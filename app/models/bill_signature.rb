@@ -30,6 +30,7 @@ class BillSignature < ApplicationRecord
       io: StringIO.new(operations_bill_json),
       filename: "demarches-simplifiees-operations-#{day.to_date.iso8601}.json",
       content_type: 'application/json',
+      # we don't want to run virus scanner on this file
       metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     )
 
@@ -52,7 +53,9 @@ class BillSignature < ApplicationRecord
     self.signature.attach(
       io: StringIO.new(signature),
       filename: "demarches-simplifiees-signature-#{day.to_date.iso8601}.der",
-      content_type: 'application/x-x509-ca-cert'
+      content_type: 'application/x-x509-ca-cert',
+      # we don't want to run virus scanner on this file
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     )
   end
 

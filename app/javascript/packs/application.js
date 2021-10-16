@@ -12,6 +12,7 @@ import '../shared/autocomplete';
 import '../shared/remote-input';
 import '../shared/franceconnect';
 import '../shared/toggle-target';
+import '../shared/ujs-error-handling';
 
 import '../new_design/chartkick';
 import '../new_design/dropdown';
