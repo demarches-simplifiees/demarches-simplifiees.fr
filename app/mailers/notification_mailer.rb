@@ -24,7 +24,9 @@ class NotificationMailer < ApplicationMailer
     @logo_url = attach_logo(@dossier.procedure)
     @rendered_template = sanitize_html(@body)
 
-    mail(subject: @subject, to: @email, template_name: 'send_notification')
+    I18n.with_locale(@dossier.user_locale) do
+      mail(subject: @subject, to: @email, template_name: 'send_notification')
+    end
   end
 
   def self.send_en_construction_notification(dossier)
@@ -55,12 +57,14 @@ class NotificationMailer < ApplicationMailer
     if @dossier.user_deleted?
       mail.perform_deliveries = false
     else
-      mail_template = @dossier.procedure.mail_template_for(params[:state])
+      I18n.with_locale(@dossier.user_locale) do
+        mail_template = @dossier.procedure.mail_template_for(params[:state])
 
-      @email = @dossier.user_email_for(:notification)
-      @subject = mail_template.subject_for_dossier(@dossier)
-      @body = mail_template.body_for_dossier(@dossier)
-      @actions = mail_template.actions_for_dossier(@dossier)
+        @email = @dossier.user_email_for(:notification)
+        @subject = mail_template.subject_for_dossier(@dossier)
+        @body = mail_template.body_for_dossier(@dossier)
+        @actions = mail_template.actions_for_dossier(@dossier)
+      end
     end
   end
 

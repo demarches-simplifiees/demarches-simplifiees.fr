@@ -3,7 +3,7 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = "Vous suiviez jusqu'à maintenant le dossier n°#{@dossier_id} de la démarche #{@demarche}."
+  = "Vous suiviez jusqu'à maintenant le dossier n° #{@dossier.id} de la démarche #{@dossier.procedure.libelle}."
   L’usager a modifié le groupe de routage. Son dossier appartient maintenant à un groupe instructeur dont vous ne faites pas partie.
 %p
   Suite à cette modification, vous ne suivez plus ce dossier.

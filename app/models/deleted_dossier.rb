@@ -47,4 +47,8 @@ class DeletedDossier < ApplicationRecord
   def procedure_removed?
     reason == self.class.reasons.fetch(:procedure_removed)
   end
+
+  def user_locale
+    User.find_by(id: user_id)&.locale || I18n.default_locale
+  end
 end
