@@ -30,17 +30,6 @@ describe Manager::UsersController, type: :controller do
 
           expect(User.find_by(id: user.id).email).to eq(nouvel_email)
         end
-
-        context 'and the user is an administrateur' do
-          let(:user) { create(:administrateur).user }
-
-          it 'rejects the modification' do
-            subject
-
-            expect(flash[:error]).to match("« nouvel.email@domaine.fr » est un administrateur. On ne sait pas encore faire.")
-            expect(user.reload.email).not_to eq(nouvel_email)
-          end
-        end
       end
 
       describe 'with an invalid email' do

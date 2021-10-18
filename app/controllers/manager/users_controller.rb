@@ -4,9 +4,8 @@ module Manager
       user = User.find(params[:id])
       preexisting_user = User.find_by(email: targeted_email)
 
-      if user.administrateur.present?
-        flash[:error] = "« #{targeted_email} » est un administrateur. On ne sait pas encore faire."
       elsif preexisting_user.nil?
+      if preexisting_user.nil?
         user.skip_reconfirmation!
         user.update(email: targeted_email)
 
@@ -18,16 +17,16 @@ module Manager
       else
         user.dossiers.update_all(user_id: preexisting_user.id)
 
-        if preexisting_user.instructeur.nil?
-          user.instructeur&.update(user: preexisting_user)
-        else
-          preexisting_user.instructeur.merge(user.instructeur)
-        end
-
-        if preexisting_user.expert.nil?
-          user.expert&.update(user: preexisting_user)
-        else
-          preexisting_user.expert.merge(user.expert)
+        [
+          [user.instructeur, preexisting_user.instructeur],
+          [user.expert, preexisting_user.expert],
+          [user.administrateur, preexisting_user.administrateur]
+        ].each do |old_role, preexisting_role|
+          if preexisting_role.nil?
+            old_role&.update(user: preexisting_user)
+          else
+            preexisting_role.merge(old_role)
+          end
         end
 
         flash[:notice] = "Le compte « #{targeted_email} » a absorbé le compte « #{user.email} »."
