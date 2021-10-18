@@ -90,12 +90,24 @@ describe Users::ProfilController, type: :controller do
       let!(:user) { create(:instructeur, email: instructeur_email).user }
 
       before do
-        patch :update_email, params: { user: { email: 'loulou@lou.com' } }
+        patch :update_email, params: { user: { email: requested_email } }
         user.reload
       end
 
-      it { expect(user.unconfirmed_email).to be_nil }
-      it { expect(response).to redirect_to(profil_path) }
+      context 'when the requested email is allowed' do
+        let(:requested_email) { 'legit@gouv.fr' }
+
+        it { expect(user.unconfirmed_email).to eq('legit@gouv.fr') }
+        it { expect(response).to redirect_to(profil_path) }
+        it { expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation')) }
+      end
+
+      context 'when the requested email is not allowed' do
+        let(:requested_email) { 'weird@gmail.com' }
+
+        it { expect(response).to redirect_to(profil_path) }
+        it { expect(flash.alert).to include('contactez le support') }
+      end
     end
   end
 
