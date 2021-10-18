@@ -2,10 +2,9 @@ module Manager
   class UsersController < Manager::ApplicationController
     def update
       user = User.find(params[:id])
-      preexisting_user = User.find_by(email: targeted_email)
+      targeted_user = User.find_by(email: targeted_email)
 
-      elsif preexisting_user.nil?
-      if preexisting_user.nil?
+      if targeted_user.nil?
         user.skip_reconfirmation!
         user.update(email: targeted_email)
 
@@ -15,17 +14,17 @@ module Manager
           flash[:error] = user.errors.full_messages.to_sentence
         end
       else
-        user.dossiers.update_all(user_id: preexisting_user.id)
+        user.dossiers.update_all(user_id: targeted_user.id)
 
         [
-          [user.instructeur, preexisting_user.instructeur],
-          [user.expert, preexisting_user.expert],
-          [user.administrateur, preexisting_user.administrateur]
-        ].each do |old_role, preexisting_role|
-          if preexisting_role.nil?
-            old_role&.update(user: preexisting_user)
+          [user.instructeur, targeted_user.instructeur],
+          [user.expert, targeted_user.expert],
+          [user.administrateur, targeted_user.administrateur]
+        ].each do |old_role, targeted_role|
+          if targeted_role.nil?
+            old_role&.update(user: targeted_user)
           else
-            preexisting_role.merge(old_role)
+            targeted_role.merge(old_role)
           end
         end
 
