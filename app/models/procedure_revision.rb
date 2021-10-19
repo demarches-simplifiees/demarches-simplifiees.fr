@@ -221,6 +221,28 @@ class ProcedureRevision < ApplicationRecord
           stable_id: from_type_de_champ.stable_id
         }
       end
+      if to_type_de_champ.linked_drop_down_list?
+        if from_type_de_champ.drop_down_secondary_libelle != to_type_de_champ.drop_down_secondary_libelle
+          changes << {
+            op: :update,
+            attribute: :drop_down_secondary_libelle,
+            label: from_type_de_champ.libelle,
+            private: from_type_de_champ.private?,
+            from: from_type_de_champ.drop_down_secondary_libelle,
+            to: to_type_de_champ.drop_down_secondary_libelle
+          }
+        end
+        if from_type_de_champ.drop_down_secondary_description != to_type_de_champ.drop_down_secondary_description
+          changes << {
+            op: :update,
+            attribute: :drop_down_secondary_description,
+            label: from_type_de_champ.libelle,
+            private: from_type_de_champ.private?,
+            from: from_type_de_champ.drop_down_secondary_description,
+            to: to_type_de_champ.drop_down_secondary_description
+          }
+        end
+      end
     elsif to_type_de_champ.carte?
       if from_type_de_champ.carte_optional_layers != to_type_de_champ.carte_optional_layers
         changes << {
