@@ -14,6 +14,7 @@ import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
 import TypeDeChampTypesSelect from './TypeDeChampTypesSelect';
+import TypeDeChampDropDownSecondary from './TypeDeChampDropDownSecondary';
 
 const TypeDeChamp = sortableElement(
   ({ typeDeChamp, dispatch, idx: index, isFirstItem, isLastItem, state }) => {
@@ -22,6 +23,7 @@ const TypeDeChamp = sortableElement(
       'multiple_drop_down_list',
       'linked_drop_down_list'
     ].includes(typeDeChamp.type_champ);
+    const isLinkedDropDown = typeDeChamp.type_champ === 'linked_drop_down_list';
     const isFile = typeDeChamp.type_champ === 'piece_justificative';
     const isCarte = typeDeChamp.type_champ === 'carte';
     const isExplication = typeDeChamp.type_champ === 'explication';
@@ -129,6 +131,11 @@ const TypeDeChamp = sortableElement(
           <TypeDeChampDropDownOptions
             isVisible={isDropDown}
             handler={updateHandlers.drop_down_list_value}
+          />
+          <TypeDeChampDropDownSecondary
+            isVisible={isLinkedDropDown}
+            libelleHandler={updateHandlers.drop_down_secondary_libelle}
+            descriptionHandler={updateHandlers.drop_down_secondary_description}
           />
           <TypeDeChampPieceJustificative
             isVisible={isFile}
@@ -240,6 +247,8 @@ export const FIELDS = [
   'piece_justificative_template',
   'private',
   'type_champ',
+  'drop_down_secondary_libelle',
+  'drop_down_secondary_description',
   ...Object.keys(OPTIONS_FIELDS)
 ];
 
