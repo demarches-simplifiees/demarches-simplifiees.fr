@@ -89,7 +89,8 @@ group :test do
   gem 'capybara' # Integration testing
   gem 'capybara-email' # Access emails during integration tests
   gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
-  gem 'capybara-selenium'
+  # gem 'capybara-selenium'
+  gem 'cuprite'
   gem 'database_cleaner'
   gem 'factory_bot'
   gem 'launchy'
@@ -97,7 +98,7 @@ group :test do
   gem 'shoulda-matchers', require: false
   gem 'timecop'
   gem 'vcr'
-  gem 'webdrivers', '~> 4.0'
+  # gem 'webdrivers', '~> 4.0'
   gem 'webmock'
 end
 
