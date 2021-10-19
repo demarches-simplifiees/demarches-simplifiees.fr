@@ -96,6 +96,36 @@ class Administrateur < ApplicationRecord
     destroy
   end
 
+  def merge(old_admin)
+    return if old_admin.nil?
+
+    procedures_with_new_admin, procedures_without_new_admin = old_admin.procedures
+      .partition { |p| p.administrateurs.exists?(id) }
+
+    procedures_with_new_admin.each do |p|
+      p.administrateurs.delete(old_admin)
+    end
+
+    procedures_without_new_admin.each do |p|
+      p.administrateurs << self
+      p.administrateurs.delete(old_admin)
+    end
+
+    old_admin.services.update_all(administrateur_id: id)
+
+    instructeurs_with_new_admin, instructeurs_without_new_admin = old_admin.instructeurs
+      .partition { |i| i.administrateurs.exists?(id) }
+
+    instructeurs_with_new_admin.each do |i|
+      i.administrateurs.delete(old_admin)
+    end
+
+    instructeurs_without_new_admin.each do |i|
+      i.administrateurs << self
+      i.administrateurs.delete(old_admin)
+    end
+  end
+
   # required to display feature flags field in manager
   def features
   end
