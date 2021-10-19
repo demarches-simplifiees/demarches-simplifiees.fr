@@ -1,4 +1,4 @@
-feature 'wcag rules for usager', js: true do
+xfeature 'wcag rules for usager', js: true do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_all_champs, :with_service, :for_individual, :published) }
   let(:password) { 'a very complicated password' }
   let(:litteraire_user) { create(:user, password: password) }
