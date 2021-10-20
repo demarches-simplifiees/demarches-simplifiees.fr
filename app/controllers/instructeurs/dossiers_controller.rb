@@ -197,7 +197,7 @@ module Instructeurs
 
     def update_annotations
       dossier = current_instructeur.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
-      dossier.assign_attributes(remove_changes_forbidden_by_paraphe(champs_private_params, dossier.champs_private))
+      dossier.assign_attributes(remove_changes_forbidden_by_visa(champs_private_params, dossier.champs_private))
       if dossier.champs_private.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
         flash.notice = 'Modifications sauvegardées'
@@ -235,8 +235,8 @@ module Instructeurs
 
     private
 
-    def checked_paraphe?(c)
-      c.type_champ == 'paraphe' && c.value.present?
+    def checked_visa?(c)
+      c.type_champ == 'visa' && c.value.present?
     end
 
     def dossier
@@ -257,10 +257,10 @@ module Instructeurs
       ])
     end
 
-    def remove_changes_forbidden_by_paraphe(params, champs)
-      paraphe = champs.reverse_each.find { |c| checked_paraphe?(c) }
-      if paraphe.present?
-        switch_point = paraphe.id.to_s
+    def remove_changes_forbidden_by_visa(params, champs)
+      visa = champs.reverse_each.find { |c| checked_visa?(c) }
+      if visa.present?
+        switch_point = visa.id.to_s
         notfound = true
         params[:champs_private_attributes].reject! do |_k, v|
           notfound &&= v[:id] != switch_point

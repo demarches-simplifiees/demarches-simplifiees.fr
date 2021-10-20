@@ -1,9 +1,9 @@
 .row
   = form.check_box :value,
-    { required: champ.mandatory?, disabled: !champ.user_accredited?(current_user), checked: champ.value.present?, data: { paraphe: "true" } },
+    { required: champ.mandatory?, disabled: !champ.user_accredited?(current_user), checked: champ.value.present?, data: { visa: "true" } },
     current_user.email,
     ''
-  .paraphe-info
+  .visa-info
     - if champ.value.present?
       validé par
       = champ.value

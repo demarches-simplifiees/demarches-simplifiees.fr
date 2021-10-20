@@ -55,7 +55,7 @@ class TypeDeChamp < ApplicationRecord
     titre_identite: 'titre_identite',
     iban: 'iban',
     annuaire_education: 'annuaire_education',
-    paraphe: 'paraphe'
+    visa: 'visa'
   }
 
   belongs_to :revision, class_name: 'ProcedureRevision', optional: true
@@ -225,12 +225,8 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:carte)
   end
 
-  def paraphe?
-    type_champ == TypeDeChamp.type_champs.fetch(:paraphe)
-  end
-
-  def public?
-    !private?
+  def visa?
+    type_champ == TypeDeChamp.type_champs.fetch(:visa)
   end
 
   def public?
@@ -296,7 +292,7 @@ class TypeDeChamp < ApplicationRecord
       layer_enabled?(layer) ? layer : nil
     end.sort
   end
-  
+
   def accredited_user_string
     if accredited_user_list.present?
       accredited_user_list.reject(&:empty?).join("\r\n")
@@ -329,7 +325,7 @@ class TypeDeChamp < ApplicationRecord
     options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
   end
 
-  FEATURE_FLAGS = { 'paraphe' => 'paraphe' }
+  FEATURE_FLAGS = { 'visa' => 'visa' }
 
   def self.type_de_champ_types_for(procedure, user)
     has_legacy_number = (procedure.types_de_champ + procedure.types_de_champ_private).any?(&:legacy_number?)

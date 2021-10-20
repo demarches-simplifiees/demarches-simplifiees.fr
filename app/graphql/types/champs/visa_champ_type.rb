@@ -1,5 +1,5 @@
 module Types::Champs
-  class ParapheChampType < Types::BaseObject
+  class VisaChampType < Types::BaseObject
     implements Types::ChampType
 
     field :signed_by, String, null: false

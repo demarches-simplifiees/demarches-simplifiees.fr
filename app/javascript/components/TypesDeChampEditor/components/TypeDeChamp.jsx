@@ -41,7 +41,7 @@ const TypeDeChamp = sortableElement(
     const isHeaderSection = typeDeChamp.type_champ === 'header_section';
     const isTitreIdentite = typeDeChamp.type_champ === 'titre_identite';
     const isRepetition = typeDeChamp.type_champ === 'repetition';
-    const isParaphe = typeDeChamp.type_champ === 'paraphe';
+    const isVisa = typeDeChamp.type_champ === 'visa';
     const canBeMandatory =
       !isHeaderSection && !isExplication && !state.isAnnotation;
 
@@ -203,7 +203,7 @@ const TypeDeChamp = sortableElement(
             <TypeDeChampDateOption label="Fin" handler={updateHandlers.max} />
           </TypeDeChampDateOptions>
           <TypeDeChampEmailList
-            isVisible={isParaphe}
+            isVisible={isVisa}
             handler={updateHandlers.accredited_user_string}
           />
           <TypeDeChampRepetitionOptions
@@ -319,7 +319,7 @@ const EXCLUDE_FROM_REPETITION = [
   'dossier_link',
   'repetition',
   'siret',
-  'paraphe'
+  'visa'
 ];
 
 export default TypeDeChamp;

@@ -1709,7 +1709,7 @@ type PageInfo {
   startCursor: String
 }
 
-type ParapheChamp implements Champ {
+type VisaChamp implements Champ {
   id: ID!
 
   """
@@ -2080,9 +2080,9 @@ enum TypeDeChamp {
   numero_dn
 
   """
-  Paraphe
+  Visa
   """
-  paraphe
+  visa
 
   """
   Pays

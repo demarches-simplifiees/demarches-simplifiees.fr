@@ -17,7 +17,7 @@
 #  parent_id                      :bigint
 #  type_de_champ_id               :integer
 #
-class Champs::ParapheChamp < Champ
+class Champs::VisaChamp < Champ
   def search_terms
     if value.present?
       [libelle]

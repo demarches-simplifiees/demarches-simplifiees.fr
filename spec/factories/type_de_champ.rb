@@ -172,8 +172,8 @@ FactoryBot.define do
     factory :type_de_champ_te_fenua do
       type_champ { TypeDeChamp.type_champs.fetch(:te_fenua) }
     end
-    factory :type_de_champ_paraphe do
-      type_champ { TypeDeChamp.type_champs.fetch(:paraphe) }
+    factory :type_de_champ_visa do
+      type_champ { TypeDeChamp.type_champs.fetch(:visa) }
     end
 
     factory :type_de_champ_repetition do

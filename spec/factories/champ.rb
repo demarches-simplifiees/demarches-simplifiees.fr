@@ -218,8 +218,8 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_annuaire_education, procedure: dossier.procedure }
     end
 
-    factory :champ_paraphe, class: 'Champs::ParapheChamp' do
-      type_de_champ { association :type_de_champ_paraphe, procedure: dossier.procedure }
+    factory :champ_visa, class: 'Champs::VisaChamp' do
+      type_de_champ { association :type_de_champ_visa, procedure: dossier.procedure }
     end
 
     factory :champ_siret, class: 'Champs::SiretChamp' do

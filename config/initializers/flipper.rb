@@ -32,7 +32,7 @@ features = [
   :hide_instructeur_email,
   :instructeur_bypass_email_login_token,
   :new_look_banner,
-  :paraphe,
+  :visa,
   :procedure_revisions,
   :procedure_routage_api,
   :procedure_process_expired_dossiers_termine
