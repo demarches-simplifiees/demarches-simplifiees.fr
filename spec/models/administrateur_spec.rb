@@ -75,4 +75,92 @@ describe Administrateur, type: :model do
       expect(Administrateur.find_by(id: administrateur.id)).to be_nil
     end
   end
+
+  describe '#merge' do
+    let(:new_admin) { create(:administrateur) }
+    let(:old_admin) { create(:administrateur) }
+
+    subject { new_admin.merge(old_admin) }
+
+    context 'when the old admin does not exist' do
+      let(:old_admin) { nil }
+
+      it { expect { subject }.not_to raise_error }
+    end
+
+    context 'when the old admin has a procedure' do
+      let(:procedure) { create(:procedure) }
+
+      before do
+        old_admin.procedures << procedure
+        subject
+        [new_admin, old_admin].map(&:reload)
+      end
+
+      it 'transfers the procedure' do
+        expect(new_admin.procedures).to match_array(procedure)
+        expect(old_admin.procedures).to be_empty
+      end
+    end
+
+    context 'when both admins share a procedure' do
+      let(:procedure) { create(:procedure) }
+
+      before do
+        new_admin.procedures << procedure
+        old_admin.procedures << procedure
+        subject
+        [new_admin, old_admin].map(&:reload)
+      end
+
+      it 'removes the procedure from the old one' do
+        expect(old_admin.procedures).to be_empty
+      end
+    end
+
+    context 'when the old admin has a service' do
+      let(:service) { create(:service, administrateur: old_admin) }
+
+      before do
+        service
+        subject
+        [new_admin, old_admin].map(&:reload)
+      end
+
+      it 'transfers the service' do
+        expect(new_admin.services).to match_array(service)
+      end
+    end
+
+    context 'when the old admin has an instructeur' do
+      let(:instructeur) { create(:instructeur) }
+
+      before do
+        old_admin.instructeurs << instructeur
+        subject
+        [new_admin, old_admin].map(&:reload)
+      end
+
+      it 'transfers the instructeur' do
+        expect(new_admin.instructeurs).to match_array(instructeur)
+        expect(old_admin.instructeurs).to be_empty
+      end
+    end
+
+    context 'when both admins share an instructeur' do
+      let(:instructeur) { create(:instructeur) }
+
+      before do
+        old_admin.instructeurs << instructeur
+        new_admin.instructeurs << instructeur
+        subject
+        [new_admin, old_admin].map(&:reload)
+      end
+
+      it 'transfers the instructeur' do
+        expect(new_admin.instructeurs).to match_array(instructeur)
+        expect(old_admin.instructeurs).to be_empty
+      end
+    end
+  end
 end

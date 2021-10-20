@@ -10,6 +10,19 @@ fr:
           one: "Le nouveau propriétaire %{email} doit confirmer le transfert d'un dossier en suivant les instructions reçues dans son mail."
           other: "Le nouveau propriétaire %{email} doit confirmer le transfert de vos %{count} dossiers en suivant les instructions reçues dans son mail."
         transfer_confirmation: "Confirmez-vous le transfert ?"
+        email_explications_html: >
+          <b class="bold">%{application_name}</b> doit s'assurer que votre compte est utilisé dans un cadre professionnel.
+          <br>
+          <br>
+          Nous pouvons autoriser automatiquement les changements d'email vers les domaines suivants&nbsp;:
+          <br>
+          %{legit_admin_domains}
+          <br>
+          <br>
+          Si ce n'est pas votre cas, contactez le support&nbsp;:
+          <a href="mailto:%{contact_email}">%{contact_email}</a>
+      update_email:
+        email_not_allowed: "L’email %{requested_email} ne peut être utilisé, contactez le support : <a href='mailto:%{contact_email}'>%{contact_email}</a>"
       transfer_all_dossiers:
         new_transfer: 
           one: "Le transfert d'un dossier à %{email} est en cours"

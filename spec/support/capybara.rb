@@ -49,6 +49,20 @@ Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
 end
 
 RSpec.configure do |config|
+  # Set the user preferred language before Javascript feature specs.
+  #
+  # Features specs without Javascript run in a Rack stack, and respect the Accept-Language value.
+  # However specs using Javascript are run into a Headless Chrome, which doesn't support setting
+  # the default Accept-Language value reliably.
+  # So instead we set the locale cookie explicitly before each Javascript test.
+  config.before(:each, js: true) do
+    visit '/' # Webdriver needs visiting a page before setting the cookie
+    Capybara.current_session.driver.browser.manage.add_cookie(
+      name: :locale,
+      value: Rails.application.config.i18n.default_locale
+    )
+  end
+
   # Examples tagged with :capybara_ignore_server_errors will allow Capybara
   # to continue when an exception in raised by Rails.
   # This allows to test for error cases.
