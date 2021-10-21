@@ -45,6 +45,22 @@ class DossierTransfer < ApplicationRecord
     User.find_by(email: email)&.locale || I18n.default_locale
   end
 
+  def destroy_and_nullify
+    transaction do
+      # Rails cascading is not working with default scopes. Doing nullify cascade manually.
+      Dossier.with_discarded.where(transfer: self).update_all(dossier_transfer_id: nil)
+      destroy
+    end
+  end
+
+  def self.destroy_stale
+    transaction do
+      # Rails cascading is not working with default scopes. Doing nullify cascade manually.
+      Dossier.with_discarded.where(transfer: stale).update_all(dossier_transfer_id: nil)
+      stale.destroy_all
+    end
+  end
+
   private
 
   def send_notification
