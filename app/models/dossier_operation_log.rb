@@ -36,6 +36,10 @@ class DossierOperationLog < ApplicationRecord
   belongs_to :dossier, optional: true
   belongs_to :bill_signature, optional: true
 
+  scope :not_deletion, -> { where.not(operation: operations.fetch(:supprimer)) }
+  scope :discarded_en_construction_expired, -> { where(dossier: Dossier.discarded_en_construction_expired).not_deletion }
+  scope :discarded_termine_expired, -> { where(dossier: Dossier.discarded_termine_expired).not_deletion }
+
   def self.create_and_serialize(params)
     dossier = params.fetch(:dossier)
 

@@ -960,6 +960,21 @@ class Dossier < ApplicationRecord
     user&.locale || I18n.default_locale
   end
 
+  def self.purge_discarded
+    discarded_brouillon_expired.destroy_all
+
+    transaction do
+      DossierOperationLog.discarded_en_construction_expired.destroy_all
+      discarded_en_construction_expired.destroy_all
+    end
+
+    transaction do
+      DossierOperationLog.discarded_termine_expired.destroy_all
+      Avis.discarded_termine_expired.destroy_all
+      discarded_termine_expired.destroy_all
+    end
+  end
+
   private
 
   def defaut_groupe_instructeur?
