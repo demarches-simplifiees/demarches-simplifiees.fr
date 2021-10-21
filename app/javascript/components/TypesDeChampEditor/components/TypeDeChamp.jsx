@@ -22,6 +22,7 @@ import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
 import TypeDeChampTypesSelect from './TypeDeChampTypesSelect';
 import TypeDeChampHeaderSectionOptions from './TypeDeChampHeaderSectionOptions';
+import TypeDeChampEmailList from './TypeDeChampEmailList';
 
 const TypeDeChamp = sortableElement(
   ({ typeDeChamp, dispatch, idx: index, isFirstItem, isLastItem, state }) => {
@@ -40,6 +41,7 @@ const TypeDeChamp = sortableElement(
     const isHeaderSection = typeDeChamp.type_champ === 'header_section';
     const isTitreIdentite = typeDeChamp.type_champ === 'titre_identite';
     const isRepetition = typeDeChamp.type_champ === 'repetition';
+    const isVisa = typeDeChamp.type_champ === 'visa';
     const canBeMandatory =
       !isHeaderSection && !isExplication && !state.isAnnotation;
 
@@ -195,15 +197,15 @@ const TypeDeChamp = sortableElement(
               label="Niveau"
               handler={updateHandlers.level}
             />
-            <TypeDeChampLevelOption
-              label="Niveau2"
-              handler={updateHandlers.level}
-            />
           </TypeDeChampHeaderSectionOptions>
           <TypeDeChampDateOptions isVisible={isDate}>
             <TypeDeChampDateOption label="Début" handler={updateHandlers.min} />
             <TypeDeChampDateOption label="Fin" handler={updateHandlers.max} />
           </TypeDeChampDateOptions>
+          <TypeDeChampEmailList
+            isVisible={isVisa}
+            handler={updateHandlers.accredited_user_string}
+          />
           <TypeDeChampRepetitionOptions
             isVisible={isRepetition}
             state={{
@@ -303,6 +305,7 @@ export const FIELDS = [
   'zones_manuelles',
   'min',
   'max',
+  'accredited_user_string',
   'type_champ',
   ...Object.keys(OPTIONS_FIELDS)
 ];
@@ -315,7 +318,8 @@ const EXCLUDE_FROM_REPETITION = [
   'carte',
   'dossier_link',
   'repetition',
-  'siret'
+  'siret',
+  'visa'
 ];
 
 export default TypeDeChamp;

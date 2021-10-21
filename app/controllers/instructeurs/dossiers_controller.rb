@@ -21,8 +21,8 @@ module Instructeurs
 
     def geo_data
       send_data dossier.to_feature_collection.to_json,
-        type: 'application/json',
-        filename: "dossier-#{dossier.id}-features.json"
+                type: 'application/json',
+                filename: "dossier-#{dossier.id}-features.json"
     end
 
     def apercu_attestation
@@ -197,7 +197,7 @@ module Instructeurs
 
     def update_annotations
       dossier = current_instructeur.dossiers.includes(champs_private: :type_de_champ).find(params[:dossier_id])
-      dossier.assign_attributes(champs_private_params)
+      dossier.assign_attributes(remove_changes_forbidden_by_visa(champs_private_params, dossier.champs_private))
       if dossier.champs_private.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
         flash.notice = 'Modifications sauvegardées'
@@ -235,6 +235,10 @@ module Instructeurs
 
     private
 
+    def checked_visa?(c)
+      c.type_champ == 'visa' && c.value.present?
+    end
+
     def dossier
       @dossier ||= current_instructeur
         .dossiers
@@ -251,6 +255,18 @@ module Instructeurs
         :id, :primary_value, :secondary_value, :piece_justificative_file, :value, value: [],
         champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, value: []]
       ])
+    end
+
+    def remove_changes_forbidden_by_visa(params, champs)
+      visa = champs.reverse_each.find { |c| checked_visa?(c) }
+      if visa.present?
+        switch_point = visa.id.to_s
+        notfound = true
+        params[:champs_private_attributes].reject! do |_k, v|
+          notfound &&= v[:id] != switch_point
+        end
+      end
+      params
     end
 
     def mark_demande_as_read

@@ -306,5 +306,20 @@ FactoryBot.define do
         end
       end
     end
+
+    trait :with_visa do
+      with_all_annotations
+
+      after(:build) do |procedure, evaluator|
+        (libelle, type_champ) = TypeDeChamp.type_champs.fetch(:visa)
+        accredited_user_string = ''
+        if evaluator.instructeurs.size > 1
+          all_instructors_but_first = evaluator.instructeurs[1..-1]
+          accredited_user_string = all_instructors_but_first.map(&:email).join("\n")
+        end
+        build(:type_de_champ_visa, procedure: procedure, private: true, libelle: 'visa_to_test', position: procedure.active_revision.types_de_champ.size, accredited_user_string: accredited_user_string)
+        build(:type_de_champ_text, procedure: procedure, private: true, libelle: 'text_after_visa_to_test', position: procedure.active_revision.types_de_champ.size)
+      end
+    end
   end
 end

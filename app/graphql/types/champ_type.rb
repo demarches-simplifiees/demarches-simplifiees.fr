@@ -49,6 +49,8 @@ module Types
           Types::Champs::CiviliteChampType
         when ::Champs::TitreIdentiteChamp
           Types::Champs::TitreIdentiteChampType
+        when ::Champs::VisaChamp
+          Types::Champs::VisaChampType
         else
           Types::Champs::TextChampType
         end

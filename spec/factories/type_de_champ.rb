@@ -18,9 +18,9 @@ FactoryBot.define do
         type_de_champ.revision = evaluator.procedure.active_revision
 
         build(:procedure_revision_type_de_champ,
-          position: evaluator.position,
-          revision: evaluator.procedure.active_revision,
-          type_de_champ: type_de_champ)
+              position: evaluator.position,
+              revision: evaluator.procedure.active_revision,
+              type_de_champ: type_de_champ)
 
         if type_de_champ.private?
           type_de_champ.revision.types_de_champ_private << type_de_champ
@@ -172,6 +172,10 @@ FactoryBot.define do
     factory :type_de_champ_te_fenua do
       type_champ { TypeDeChamp.type_champs.fetch(:te_fenua) }
     end
+    factory :type_de_champ_visa do
+      type_champ { TypeDeChamp.type_champs.fetch(:visa) }
+    end
+
     factory :type_de_champ_repetition do
       type_champ { TypeDeChamp.type_champs.fetch(:repetition) }
       mandatory { true }

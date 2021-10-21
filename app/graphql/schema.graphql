@@ -1709,6 +1709,21 @@ type PageInfo {
   startCursor: String
 }
 
+type VisaChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  signedBy: String!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+}
+
 type ParcelleCadastrale implements GeoArea {
   codeArr: String! @deprecated(reason: "Utilisez le champ `prefixe` à la place.")
   codeCom: String! @deprecated(reason: "Utilisez le champ `commune` à la place.")
@@ -2063,6 +2078,11 @@ enum TypeDeChamp {
   Numéro DN
   """
   numero_dn
+
+  """
+  Visa
+  """
+  visa
 
   """
   Pays
