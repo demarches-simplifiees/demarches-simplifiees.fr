@@ -36,6 +36,7 @@
 class Dossier < ApplicationRecord
   self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
+  include DossierRebaseConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
