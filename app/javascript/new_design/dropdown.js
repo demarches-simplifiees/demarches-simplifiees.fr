@@ -32,6 +32,11 @@ const radioInputs = Array.from(
 const radioNotices = Array.from(
   document.querySelectorAll('.drop_down_other_radio_notice')
 );
+
+const selectNotices = Array.from(
+  document.querySelectorAll('.drop_down_other_select_notice')
+);
+
 const selectInputs = Array.from(
   document.querySelectorAll('.text_field_drop_down_other_select')
 );
@@ -53,6 +58,7 @@ const selectObject = selects.map((select, index) => {
   return {
     select: select,
     input: selectInputs[index],
+    notice: selectNotices[index],
     key: select.getAttribute('name')
   };
 });
@@ -61,10 +67,10 @@ for (const el of selectObject) {
   selects.forEach((select) => {
     select.addEventListener('change', () => {
       if (el.select.value === 'Autre') {
-        el.input.style.display = 'block';
+        el.notice.style.display = 'block';
         el.input.setAttribute('name', el.key);
       } else {
-        el.input.style.display = 'none';
+        el.notice.style.display = 'none';
         el.input.setAttribute('name', '');
       }
     });

@@ -22,7 +22,11 @@
 
   - else
     = form.select :value,
-      champ.options,
-      disabled: champ.disabled_options,
-      required: champ.mandatory?
+      champ.drop_down_other? ? champ.options.concat(["Autre"]) : champ.options,
+      { selected: champ.other_value_present? ? "Autre" : champ.value,
+        required: champ.mandatory? },
+      { class: champ.drop_down_other? ? "select_drop_down_other" : ""}
 
+    - if champ.drop_down_other?
+      .notice.drop_down_other_select_notice{ style: "#{champ.other_value_present? ? "display:block" : "display:none"}" }
+        = render partial: "shared/dossiers/drop_down_other_input", locals: { champ: champ, class_name: "text_field_drop_down_other_select" }
