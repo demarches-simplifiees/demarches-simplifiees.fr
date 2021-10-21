@@ -5,13 +5,24 @@
         %label
           = form.radio_button :value, option
           = option
+
       - if !champ.mandatory?
         %label.blank-radio
           = form.radio_button :value, ''
           Non renseigné
+      - if champ.drop_down_other?
+        %label
+          = form.radio_button :value, '', class: "radio_button_drop_down_other", id: "radio_button_drop_down_other_#{champ.id}", checked: champ.other_value_present?
+          Autre
+
+    - if champ.drop_down_other?
+      .notice.drop_down_other_radio_notice{ style: "#{champ.other_value_present? ? "display:block" : "display:none"}" }
+        %p Veuillez saisir votre autre choix
+        = render partial: "shared/dossiers/drop_down_other_input", locals: { champ: champ, class_name: "text_field_drop_down_other_radio" }
 
   - else
     = form.select :value,
       champ.options,
       disabled: champ.disabled_options,
       required: champ.mandatory?
+
