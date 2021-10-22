@@ -243,6 +243,17 @@ class ProcedureRevision < ApplicationRecord
           }
         end
       end
+      if from_type_de_champ.drop_down_other != to_type_de_champ.drop_down_other
+        changes << {
+          op: :update,
+          attribute: :drop_down_other,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: from_type_de_champ.drop_down_other,
+          to: to_type_de_champ.drop_down_other,
+          stable_id: from_type_de_champ.stable_id
+        }
+      end
     elsif to_type_de_champ.carte?
       if from_type_de_champ.carte_optional_layers != to_type_de_champ.carte_optional_layers
         changes << {

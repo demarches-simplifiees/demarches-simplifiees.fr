@@ -17,6 +17,9 @@ fr:
         disabled: Le champ « %{label} » n’est plus obligatoire
       update_piece_justificative_template: Le modèle de pièce justificative du champ « %{label} » a été modifié
       update_drop_down_options: Les options de sélection du champ « %{label} » ont été modifiées
+      update_drop_down_other:
+        enabled: Le champ « %{label} » comporte maintenant un choix « Autre »
+        disabled: Le champ « %{label} » ne comporte plus de choix « Autre »
       update_carte_layers: Les référentiels cartographiques du champ « %{label} » ont été modifiés
       add_private: L’annotation privée « %{label} » a été ajoutée
       remove_private: L’annotation privée « %{label} » a été supprimée
