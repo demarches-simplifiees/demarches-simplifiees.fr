@@ -191,7 +191,7 @@ class User < ApplicationRecord
       .where.not(operation: DossierOperationLog.operations.fetch(:supprimer))
       .destroy_all
     dossiers.with_discarded.discarded.destroy_all
-    dossiers.update_all(deleted_user_email_never_send: email, user_id: nil)
+    dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
     destroy!
   end
 
