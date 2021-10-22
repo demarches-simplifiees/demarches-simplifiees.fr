@@ -194,6 +194,22 @@ class User < ApplicationRecord
     end
   end
 
+  def merge(old_user)
+    old_user.dossiers.update_all(user_id: id)
+
+    [
+      [old_user.instructeur, instructeur],
+      [old_user.expert, expert],
+      [old_user.administrateur, administrateur]
+    ].each do |old_role, targeted_role|
+      if targeted_role.nil?
+        old_role&.update(user: self)
+      else
+        targeted_role.merge(old_role)
+      end
+    end
+  end
+
   private
 
   def link_invites!

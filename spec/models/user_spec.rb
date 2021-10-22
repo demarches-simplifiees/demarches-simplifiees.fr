@@ -417,4 +417,50 @@ describe User, type: :model do
       end
     end
   end
+
+  describe '#merge' do
+    let(:old_user) { create(:user) }
+    let(:targeted_user) { create(:user) }
+
+    subject { targeted_user.merge(old_user) }
+
+    context 'and the old account has a dossier' do
+      let!(:dossier) { create(:dossier, user: old_user) }
+
+      it 'transfers the dossier' do
+        subject
+
+        expect(targeted_user.dossiers).to match([dossier])
+      end
+    end
+
+    context 'and the old account belongs to an instructeur, expert and administrateur' do
+      let!(:expert) { create(:expert, user: old_user) }
+      let!(:administrateur) { create(:administrateur, user: old_user) }
+      let!(:instructeur) { old_user.instructeur }
+
+      it 'transfers instructeur account' do
+        subject
+        targeted_user.reload
+
+        expect(targeted_user.instructeur).to match(instructeur)
+        expect(targeted_user.expert).to match(expert)
+        expect(targeted_user.administrateur).to match(administrateur)
+      end
+
+      context 'and the targeted account owns an instructeur and expert as well' do
+        let!(:targeted_administrateur) { create(:administrateur, user: targeted_user) }
+        let!(:targeted_instructeur) { targeted_user.instructeur }
+        let!(:targeted_expert) { create(:expert, user: targeted_user) }
+
+        it 'merge the account' do
+          expect(targeted_instructeur).to receive(:merge).with(instructeur)
+          expect(targeted_expert).to receive(:merge).with(expert)
+          expect(targeted_administrateur).to receive(:merge).with(administrateur)
+
+          subject
+        end
+      end
+    end
+  end
 end
