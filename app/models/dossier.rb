@@ -678,6 +678,7 @@ class Dossier < ApplicationRecord
       end
     end
 
+    update!(dossier_transfer_id: nil)
     discard!
   end
 
