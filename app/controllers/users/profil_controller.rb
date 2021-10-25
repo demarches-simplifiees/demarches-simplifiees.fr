@@ -1,5 +1,7 @@
 module Users
   class ProfilController < UserController
+    before_action :ensure_update_email_is_authorized, only: :update_email
+
     def show
       @waiting_transfers = current_user.dossiers.joins(:transfer).group('dossier_transfers.email').count.to_a
     end
@@ -11,9 +13,7 @@ module Users
     end
 
     def update_email
-      if current_user.instructeur? && !target_email_allowed?
-        flash.alert = t('.email_not_allowed', contact_email: CONTACT_EMAIL, requested_email: requested_email)
-      elsif current_user.update(update_email_params)
+      if current_user.update(update_email_params)
         flash.notice = t('devise.registrations.update_needs_confirmation')
       elsif current_user.errors&.details&.dig(:email)&.any? { |e| e[:error] == :taken }
         UserMailer.account_already_taken(current_user, requested_email).deliver_later
@@ -33,6 +33,13 @@ module Users
     end
 
     private
+
+    def ensure_update_email_is_authorized
+      if current_user.instructeur? && !target_email_allowed?
+        flash.alert = t('users.profil.ensure_update_email_is_authorized.email_not_allowed', contact_email: CONTACT_EMAIL, requested_email: requested_email)
+        redirect_to profil_path
+      end
+    end
 
     def update_email_params
       params.require(:user).permit(:email)
