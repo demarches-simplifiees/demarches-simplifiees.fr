@@ -90,7 +90,6 @@ group :test do
   gem 'capybara-email' # Access emails during integration tests
   gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
   gem 'capybara-selenium'
-  gem 'database_cleaner'
   gem 'factory_bot'
   gem 'launchy'
   gem 'rails-controller-testing'
