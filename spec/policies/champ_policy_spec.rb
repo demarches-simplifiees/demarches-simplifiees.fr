@@ -52,7 +52,7 @@ describe ChampPolicy do
   end
 
   context 'when the user also has instruction rights' do
-    let(:instructeur) { create(:instructeur, email: signed_in_user.email, password: signed_in_user.password) }
+    let(:instructeur) { create(:instructeur, user: signed_in_user) }
     let(:account) { { user: signed_in_user, instructeur: instructeur } }
 
     context 'as the dossier instructeur and owner' do
