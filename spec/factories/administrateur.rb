@@ -1,13 +1,18 @@
 FactoryBot.define do
   sequence(:administrateur_email) { |n| "admin#{n}@admin.com" }
   factory :administrateur do
+    user { association :user, email: email, password: password }
+
     transient do
       email { generate(:administrateur_email) }
       password { 'Mon [hien 4im3 {es banane$' }
+      instructeur { build(:instructeur, user: user) }
     end
 
-    initialize_with do
-      User.create_or_promote_to_administrateur(email, password).administrateur
+    after(:build) do |administrateur, evaluator|
+      if administrateur.user
+        administrateur.user.instructeur = evaluator.instructeur
+      end
     end
   end
 

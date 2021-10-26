@@ -47,8 +47,8 @@ describe Commentaire do
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     context 'with a commentaire created by a instructeur' do
+      let(:instructeur) { create :instructeur, email: 'some_user@exemple.fr' }
       let(:commentaire) { build :commentaire, instructeur: instructeur, dossier: dossier }
-      let(:instructeur) { build :instructeur, email: 'some_user@exemple.fr' }
 
       context 'when the procedure shows instructeurs email' do
         before { Flipper.disable(:hide_instructeur_email, procedure) }

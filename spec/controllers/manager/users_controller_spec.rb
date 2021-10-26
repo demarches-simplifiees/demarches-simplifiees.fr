@@ -61,7 +61,7 @@ describe Manager::UsersController, type: :controller do
       context 'and the old account belongs to an instructeur, expert and administrateur' do
         let!(:instructeur) { create(:instructeur, user: user) }
         let!(:expert) { create(:expert, user: user) }
-        let!(:administrateur) { create(:administrateur, user: user) }
+        let!(:administrateur) { create(:administrateur, user: user, instructeur: instructeur) }
 
         it 'transfers instructeur account' do
           subject
