@@ -3,9 +3,6 @@ require 'capybara-screenshot/rspec'
 require 'capybara/email/rspec'
 require 'selenium/webdriver'
 
-Capybara.javascript_driver = :headless_chrome
-Capybara.ignore_hidden_elements = false
-
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
 end
@@ -36,6 +33,8 @@ end
 
 Capybara.default_max_wait_time = 2
 
+Capybara.ignore_hidden_elements = false
+
 # Save a snapshot of the HTML page when an integration test fails
 Capybara::Screenshot.autosave_on_failure = true
 # Keep only the screenshots generated from the last failing test suite
@@ -46,13 +45,21 @@ Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
 end
 
 RSpec.configure do |config|
-  # Set the user preferred language before Javascript feature specs.
+  config.before(:each, type: :system) do
+    driven_by :rack_test
+  end
+
+  config.before(:each, type: :system, js: true) do
+    driven_by :headless_chrome
+  end
+
+  # Set the user preferred language before Javascript system specs.
   #
-  # Features specs without Javascript run in a Rack stack, and respect the Accept-Language value.
+  # System specs without Javascript run in a Rack stack, and respect the Accept-Language value.
   # However specs using Javascript are run into a Headless Chrome, which doesn't support setting
   # the default Accept-Language value reliably.
   # So instead we set the locale cookie explicitly before each Javascript test.
-  config.before(:each, js: true) do
+  config.before(:each, type: :system, js: true) do
     visit '/' # Webdriver needs visiting a page before setting the cookie
     Capybara.current_session.driver.browser.manage.add_cookie(
       name: :locale,
