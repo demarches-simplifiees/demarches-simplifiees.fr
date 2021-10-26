@@ -37,7 +37,7 @@ class DossierTransfer < ApplicationRecord
         }
       end)
       transfer.dossiers.update_all(user_id: current_user.id)
-      transfer.destroy
+      transfer.destroy_and_nullify
     end
   end
 
@@ -48,7 +48,7 @@ class DossierTransfer < ApplicationRecord
   def destroy_and_nullify
     transaction do
       # Rails cascading is not working with default scopes. Doing nullify cascade manually.
-      Dossier.with_discarded.where(transfer: self).update_all(dossier_transfer_id: nil)
+      dossiers.with_discarded.update_all(dossier_transfer_id: nil)
       destroy
     end
   end
