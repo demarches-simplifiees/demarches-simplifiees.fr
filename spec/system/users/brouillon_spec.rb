@@ -32,6 +32,7 @@ describe 'The user' do
     select_combobox('pays', 'aust', 'Australie')
     select_combobox('regions', 'Ma', 'Martinique')
     select_combobox('departements', 'Ai', '02 - Aisne')
+    select_combobox('communes', 'Ai', '02 - Aisne')
     select_combobox('communes', 'Ambl', 'Ambléon (01300)')
 
     check('engagement')
