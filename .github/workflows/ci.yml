@@ -80,7 +80,7 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
         run: |
-          bundle exec rake db:create db:schema:load db:migrate
+          bin/rails db:create db:schema:load db:migrate
 
       - name: Setup environment variables
         run: |
