@@ -9,30 +9,28 @@ jobs:
   linters:
     name: Linters
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: tps_test
+          POSTGRES_DB: tps_test
+          POSTGRES_PASSWORD: tps_test
+        ports: [ "5432:5432" ]
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-          cache: yarn
-
-      - name: Install node modules
-        run: yarn install --frozen-lockfile
+      - name: Setup the app code and dependancies
+        uses: ./.github/actions/ci-setup-rails
 
       - name: Run linters
         run: |
           bundle exec rake lint
+          bundle exec rake zeitwerk:check
 
-  tests:
-    name: Tests
+  unit_tests:
+    name: Unit tests
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -45,70 +43,50 @@ jobs:
 
     strategy:
       matrix:
-        pattern:
-          - bin/rake zeitwerk:check
-          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=0 -split-total=6)
-          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=1 -split-total=6)
-          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=2 -split-total=6)
-          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=3 -split-total=6)
-          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=4 -split-total=6)
-          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=5 -split-total=6)
-          - bin/rspec $(./split_tests -line-count -glob='spec/system/**/*_spec.rb' -split-index=0 -split-total=2)
-          - bin/rspec $(./split_tests -line-count -glob='spec/system/**/*_spec.rb' -split-index=1 -split-total=2)
+        split_index: [0, 1, 2, 3, 4, 5]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
+      - name: Setup the app runtime and dependencies
+        uses: ./.github/actions/ci-setup-rails
 
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-          cache: 'yarn'
-
-      - name: Install Node modules
-        run: yarn install --frozen-lockfile
-
-      - name: Setup split_tests binary
-        run: |
-          curl --no-progress-meter -L https://github.com/leonid-shevtsov/split_tests/releases/download/v0.3.0/split_tests.linux.gz | gunzip -c > split_tests
-          chmod +x split_tests
-
-      - name: Setup test database
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
-        run: |
-          bin/rails db:create db:schema:load db:migrate
-
-      - name: Setup environment variables
-        run: |
-          cp config/env.example .env
-
-      - name: Assets cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            public/assets
-            public/packs-test
-            tmp/cache/webpacker
-          key: asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
-          restore-keys: |
-            asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
-            asset-cache-${{ runner.os }}-${{ github.ref }}-
-            asset-cache-${{ runner.os }}-
-
-      - name: Precompile assets
-        env:
-          RAILS_ENV: test
-        run: |
-          rm bin/yarn
-          bin/rails assets:precompile --trace
+      - name: Pre-compile assets
+        uses: ./.github/actions/ci-setup-assets
 
       - name: Run tests
-        run: ${{ matrix.pattern }}
+        run: |
+          SPEC_FILES=$(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=${{ matrix.split_index }} -split-total=6)
+          echo "Running tests for bin/rspec $SPEC_FILES"
+          bin/rspec $SPEC_FILES
+
+  system_tests:
+    name: System tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: tps_test
+          POSTGRES_DB: tps_test
+          POSTGRES_PASSWORD: tps_test
+        ports: ["5432:5432"]
+
+    strategy:
+      matrix:
+        split_index: [0, 1]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup the app runtime and dependencies
+        uses: ./.github/actions/ci-setup-rails
+
+      - name: Pre-compile assets
+        uses: ./.github/actions/ci-setup-assets
+
+      - name: Run tests
+        run: |
+          SPEC_FILES=$(./split_tests -line-count -glob='spec/system/**/*_spec.rb' -split-index=${{ matrix.split_index }} -split-total=2)
+          echo "Running tests for bin/rspec $SPEC_FILES"
+          bin/rspec $SPEC_FILES
