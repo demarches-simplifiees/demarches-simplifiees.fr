@@ -9,6 +9,8 @@ fr:
         other: Les positions de %{count} champs ont été modifiées
       update_libelle: Le libellé du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} »
       update_description: La description du champ « %{label} » a été modifiée. La nouvelle description est « %{to} »
+      update_drop_down_secondary_libelle: Le libellé secondaire du champ « %{label} » a été modifié. Le nouveau libellé est « %{to} »
+      update_drop_down_secondary_description: La description secondaire du champ « %{label} » a été modifiée. La nouvelle description est « %{to} »
       update_type_champ: Le type du champ « %{label} » a été modifié. Il est maintenant de type « %{to} »
       update_mandatory:
         enabled: Le champ « %{label} » est maintenant obligatoire
@@ -23,6 +25,8 @@ fr:
         other: Les positions de %{count} annotations privées ont été modifiées
       update_libelle_private: Le libellé de l’annotation privée « %{label} » a été modifié. Le nouveau libellé est « %{to} »
       update_description_private: La description de l’annotation privée « %{label} » a été modifiée. La nouvelle description est « %{to} »
+      update_drop_down_secondary_libelle_private: Le libellé secondaire de l’annotation « %{label} » a été modifié. Le nouveau libellé est « %{to} »
+      update_drop_down_secondary_description_private: La description secondaire de l’annotation « %{label} » a été modifiée. La nouvelle description est « %{to} »
       update_type_champ_private: Le type de l’annotation privée « %{label} » a été modifié. Elle est maintenant de type « %{to} »
       update_mandatory_private:
         enabled: L’annotation privée « %{label} » est maintenant obligatoire
