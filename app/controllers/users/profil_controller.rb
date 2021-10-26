@@ -18,8 +18,12 @@ module Users
 
       if requested_user.present?
         current_user.ask_for_merge(requested_user)
+        current_user.update(unconfirmed_email: nil)
+
         flash.notice = t('devise.registrations.update_needs_confirmation')
       elsif current_user.update(update_email_params)
+        current_user.update(requested_merge_into: nil)
+
         flash.notice = t('devise.registrations.update_needs_confirmation')
       else
         flash.alert = current_user.errors.full_messages
