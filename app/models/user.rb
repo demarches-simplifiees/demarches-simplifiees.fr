@@ -220,6 +220,11 @@ class User < ApplicationRecord
     end
   end
 
+  def ask_for_merge(requested_user)
+    update(requested_merge_into: requested_user)
+    UserMailer.ask_for_merge(self, requested_user.email).deliver_later
+  end
+
   private
 
   def link_invites!

@@ -14,11 +14,12 @@ module Users
     end
 
     def update_email
-      if current_user.update(update_email_params)
+      requested_user = User.find_by(email: requested_email)
+
+      if requested_user.present?
+        current_user.ask_for_merge(requested_user)
         flash.notice = t('devise.registrations.update_needs_confirmation')
-      elsif current_user.errors&.details&.dig(:email)&.any? { |e| e[:error] == :taken }
-        UserMailer.account_already_taken(current_user, requested_email).deliver_later
-        # avoid leaking information about whether an account with this email exists or not
+      elsif current_user.update(update_email_params)
         flash.notice = t('devise.registrations.update_needs_confirmation')
       else
         flash.alert = current_user.errors.full_messages

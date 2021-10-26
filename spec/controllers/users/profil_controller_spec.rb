@@ -63,16 +63,19 @@ describe Users::ProfilController, type: :controller do
       let(:existing_user) { create(:user) }
 
       before do
+        expect_any_instance_of(User).to receive(:ask_for_merge).with(existing_user)
+
         perform_enqueued_jobs do
           patch :update_email, params: { user: { email: existing_user.email } }
         end
         user.reload
       end
 
-      it { expect(user.unconfirmed_email).to be_nil }
-      it { expect(ActionMailer::Base.deliveries.last.to).to eq([existing_user.email]) }
-      it { expect(response).to redirect_to(profil_path) }
-      it { expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation')) }
+      it 'launches the merge process' do
+        expect(user.unconfirmed_email).to be_nil
+        expect(response).to redirect_to(profil_path)
+        expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation'))
+      end
     end
 
     context 'when the mail is incorrect' do
