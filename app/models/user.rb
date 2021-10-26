@@ -182,17 +182,16 @@ class User < ApplicationRecord
       raise "Cannot delete this user because they are also instructeur, expert or administrateur"
     end
 
-    Invite.where(dossier: dossiers.with_discarded).destroy_all
-    dossiers.state_en_construction.each do |dossier|
-      dossier.discard_and_keep_track!(administration, :user_removed)
+    transaction do
+      Invite.where(dossier: dossiers.with_discarded).destroy_all
+      dossiers.state_en_construction.each do |dossier|
+        dossier.discard_and_keep_track!(administration, :user_removed)
+      end
+      DossierOperationLog.where(dossier: dossiers.with_discarded.discarded).not_deletion.destroy_all
+      dossiers.with_discarded.discarded.destroy_all
+      dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
+      destroy!
     end
-    DossierOperationLog
-      .where(dossier: dossiers.with_discarded.discarded)
-      .where.not(operation: DossierOperationLog.operations.fetch(:supprimer))
-      .destroy_all
-    dossiers.with_discarded.discarded.destroy_all
-    dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
-    destroy!
   end
 
   private
