@@ -3,6 +3,7 @@ module Users
     before_action :ensure_update_email_is_authorized, only: :update_email
 
     def show
+      @waiting_merge_emails = waiting_merge_emails
       @waiting_transfers = current_user.dossiers.joins(:transfer).group('dossier_transfers.email').count.to_a
     end
 
@@ -32,7 +33,31 @@ module Users
       redirect_to profil_path
     end
 
+    def accept_merge
+      users_requesting_merge.each { |user| current_user.merge(user) }
+      users_requesting_merge.update_all(requested_merge_into_id: nil)
+
+      flash.notice = "Vous avez absorbé le compte #{waiting_merge_emails.join(', ')}"
+      redirect_to profil_path
+    end
+
+    def refuse_merge
+      users = users_requesting_merge
+      users.update_all(requested_merge_into_id: nil)
+
+      flash.notice = 'La fusion a été refusé'
+      redirect_to profil_path
+    end
+
     private
+
+    def waiting_merge_emails
+      users_requesting_merge.pluck(:email)
+    end
+
+    def users_requesting_merge
+      @requesting_merge ||= User.where(requested_merge_into: current_user)
+    end
 
     def ensure_update_email_is_authorized
       if current_user.instructeur? && !target_email_allowed?
