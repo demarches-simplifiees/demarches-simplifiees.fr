@@ -196,24 +196,26 @@ class User < ApplicationRecord
   end
 
   def merge(old_user)
-    old_user.dossiers.update_all(user_id: id)
-    old_user.invites.update_all(user_id: id)
-    old_user.merge_logs.update_all(user_id: id)
+    transaction do
+      old_user.dossiers.update_all(user_id: id)
+      old_user.invites.update_all(user_id: id)
+      old_user.merge_logs.update_all(user_id: id)
 
-    [
-      [old_user.instructeur, instructeur],
-      [old_user.expert, expert],
-      [old_user.administrateur, administrateur]
-    ].each do |old_role, targeted_role|
-      if targeted_role.nil?
-        old_role&.update(user: self)
-      else
-        targeted_role.merge(old_role)
+      [
+        [old_user.instructeur, instructeur],
+        [old_user.expert, expert],
+        [old_user.administrateur, administrateur]
+      ].each do |old_role, targeted_role|
+        if targeted_role.nil?
+          old_role&.update(user: self)
+        else
+          targeted_role.merge(old_role)
+        end
       end
-    end
 
-    merge_logs.create(from_user_id: old_user.id, from_user_email: old_user.email)
-    old_user.destroy
+      merge_logs.create(from_user_id: old_user.id, from_user_email: old_user.email)
+      old_user.destroy
+    end
   end
 
   private
