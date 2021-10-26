@@ -80,9 +80,13 @@ class Instructeur < ApplicationRecord
     end
   end
 
-  def remove_from_procedure(procedure)
-    if procedure.defaut_groupe_instructeur.in?(groupe_instructeurs)
-      groupe_instructeurs.destroy(procedure.defaut_groupe_instructeur)
+  def remove_from_groupe_instructeur(groupe_instructeur)
+    if groupe_instructeur.in?(groupe_instructeurs)
+      groupe_instructeurs.destroy(groupe_instructeur)
+      follows
+        .joins(:dossier)
+        .where(dossiers: { groupe_instructeur: groupe_instructeur })
+        .update_all(unfollowed_at: Time.zone.now)
     end
   end
 
