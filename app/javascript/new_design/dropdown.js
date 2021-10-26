@@ -20,30 +20,3 @@ delegate('click', '.dropdown-button', (event) => {
     button.setAttribute('aria-expanded', !buttonExpanded);
   }
 });
-
-function onChangeSelectWithOther(target) {
-  const parent = target.closest('.editable-champ-drop_down_list');
-  const inputGroup = parent?.querySelector('.drop_down_other');
-  if (inputGroup) {
-    const input = inputGroup.querySelector('input');
-    if (target.value === '__other__') {
-      show(inputGroup);
-      input.disabled = false;
-    } else {
-      hide(inputGroup);
-      input.disabled = true;
-    }
-  }
-}
-
-delegate('change', '.editable-champ-drop_down_list select', (event) => {
-  onChangeSelectWithOther(event.target);
-});
-
-delegate(
-  'click',
-  '.editable-champ-drop_down_list input[type="radio"]',
-  (event) => {
-    onChangeSelectWithOther(event.target);
-  }
-);
