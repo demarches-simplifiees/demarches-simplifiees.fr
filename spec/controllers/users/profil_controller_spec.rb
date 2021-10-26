@@ -126,4 +126,38 @@ describe Users::ProfilController, type: :controller do
       expect(flash.notice).to eq("Le transfert de 3 dossiers à #{next_owner} est en cours")
     end
   end
+
+  context 'POST #accept_merge' do
+    let!(:requesting_user) { create(:user, requested_merge_into: user) }
+
+    subject { post :accept_merge }
+
+    it 'merges the account' do
+      expect_any_instance_of(User).to receive(:merge)
+
+      subject
+      requesting_user.reload
+
+      expect(requesting_user.requested_merge_into).to be_nil
+      expect(flash.notice).to include('Vous avez absorbé')
+      expect(response).to redirect_to(profil_path)
+    end
+  end
+
+  context 'POST #refuse_merge' do
+    let!(:requesting_user) { create(:user, requested_merge_into: user) }
+
+    subject { post :refuse_merge }
+
+    it 'merges the account' do
+      expect_any_instance_of(User).not_to receive(:merge)
+
+      subject
+      requesting_user.reload
+
+      expect(requesting_user.requested_merge_into).to be_nil
+      expect(flash.notice).to include('La fusion a été refusé')
+      expect(response).to redirect_to(profil_path)
+    end
+  end
 end
