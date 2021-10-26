@@ -52,7 +52,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def other_value_present?
-    value.present? && drop_down_list_options.exclude?(value)
+    drop_down_other? && value.present? && drop_down_list_options.exclude?(value)
   end
 
   def drop_down_other?
