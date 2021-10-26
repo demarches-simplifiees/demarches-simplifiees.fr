@@ -21,11 +21,12 @@
       Votre email est actuellement
       %span.email-address= current_user.email
 
-    - if current_user.unconfirmed_email.present?
+    - waiting_email = current_user.unconfirmed_email || current_user.requested_merge_into&.email
 
+    - if waiting_email.present?
       %p.mb-4
         Changement en attente :
-        %span.email-address= current_user.unconfirmed_email
+        %span.email-address= waiting_email
         %br
         Pour finaliser votre changement d’adresse, vérifiez vos emails et cliquez sur le lien de confirmation.
 

@@ -49,12 +49,16 @@ describe Users::ProfilController, type: :controller do
 
   describe 'PATCH #update_email' do
     context 'when everything is fine' do
+      let(:previous_request) { create(:user) }
+
       before do
+        user.update(requested_merge_into: previous_request)
         patch :update_email, params: { user: { email: 'loulou@lou.com' } }
         user.reload
       end
 
       it { expect(user.unconfirmed_email).to eq('loulou@lou.com') }
+      it { expect(user.requested_merge_into).to be_nil }
       it { expect(response).to redirect_to(profil_path) }
       it { expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation')) }
     end
@@ -63,6 +67,8 @@ describe Users::ProfilController, type: :controller do
       let(:existing_user) { create(:user) }
 
       before do
+        user.update(unconfirmed_email: 'unconfirmed@mail.com')
+
         expect_any_instance_of(User).to receive(:ask_for_merge).with(existing_user)
 
         perform_enqueued_jobs do
