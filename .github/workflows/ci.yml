@@ -47,15 +47,14 @@ jobs:
       matrix:
         pattern:
           - bin/rake zeitwerk:check
-          - bin/rspec spec/controllers/*_spec.rb
-          - bin/rspec spec/controllers/[a-l]**/*_spec.rb
-          - bin/rspec spec/controllers/[m-z]**/*_spec.rb
-          - bin/rspec spec/system
-          - bin/rspec spec/helpers spec/lib spec/middlewares
-          - bin/rspec spec/mailers spec/jobs spec/policies
-          - bin/rspec spec/models
-          - bin/rspec spec/serializers spec/services
-          - bin/rspec spec/views
+          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=0 -split-total=6)
+          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=1 -split-total=6)
+          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=2 -split-total=6)
+          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=3 -split-total=6)
+          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=4 -split-total=6)
+          - bin/rspec $(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=5 -split-total=6)
+          - bin/rspec $(./split_tests -line-count -glob='spec/system/**/*_spec.rb' -split-index=0 -split-total=2)
+          - bin/rspec $(./split_tests -line-count -glob='spec/system/**/*_spec.rb' -split-index=1 -split-total=2)
 
     steps:
       - name: Checkout code
@@ -74,6 +73,11 @@ jobs:
 
       - name: Install Node modules
         run: yarn install --frozen-lockfile
+
+      - name: Setup split_tests binary
+        run: |
+          curl --no-progress-meter -L https://github.com/leonid-shevtsov/split_tests/releases/download/v0.3.0/split_tests.linux.gz | gunzip -c > split_tests
+          chmod +x split_tests
 
       - name: Setup test database
         env:
