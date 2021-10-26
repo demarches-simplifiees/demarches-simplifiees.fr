@@ -24,7 +24,7 @@ FactoryBot.define do
       if evaluator.administrateur
         procedure.administrateurs = [evaluator.administrateur]
       elsif procedure.administrateurs.empty?
-        procedure.administrateurs = [create(:administrateur)]
+        procedure.administrateurs = [build(:administrateur)]
       end
       procedure.draft_revision = build(:procedure_revision, procedure: procedure)
 
