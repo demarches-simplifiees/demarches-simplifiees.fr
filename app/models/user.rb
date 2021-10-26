@@ -47,6 +47,7 @@ class User < ApplicationRecord
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :deleted_dossiers
+  has_many :merge_logs, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
   belongs_to :instructeur, optional: true, dependent: :destroy
   belongs_to :administrateur, optional: true, dependent: :destroy
@@ -197,6 +198,7 @@ class User < ApplicationRecord
   def merge(old_user)
     old_user.dossiers.update_all(user_id: id)
     old_user.invites.update_all(user_id: id)
+    old_user.merge_logs.update_all(user_id: id)
 
     [
       [old_user.instructeur, instructeur],
@@ -210,6 +212,7 @@ class User < ApplicationRecord
       end
     end
 
+    merge_logs.create(from_user_id: old_user.id, from_user_email: old_user.email)
     old_user.destroy
   end
 
