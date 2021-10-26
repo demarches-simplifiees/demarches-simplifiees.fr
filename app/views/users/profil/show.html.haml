@@ -20,13 +20,14 @@
     %p
       Votre email est actuellement
       %span.email-address= current_user.email
+
     - if current_user.unconfirmed_email.present?
-      .card.warning
-        .card-title
-          Changement en attente :
-          %span.email-address= current_user.unconfirmed_email
-        %p
-          Pour finaliser votre changement d’adresse, vérifiez vos emails et cliquez sur le lien de confirmation.
+
+      %p.mb-4
+        Changement en attente :
+        %span.email-address= current_user.unconfirmed_email
+        %br
+        Pour finaliser votre changement d’adresse, vérifiez vos emails et cliquez sur le lien de confirmation.
 
     - if current_user.instructeur?
       %p.mb-4
