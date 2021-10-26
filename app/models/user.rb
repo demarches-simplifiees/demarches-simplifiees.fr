@@ -28,6 +28,7 @@
 #  administrateur_id            :bigint
 #  expert_id                    :bigint
 #  instructeur_id               :bigint
+#  requested_merge_into_id      :bigint
 #
 class User < ApplicationRecord
   include EmailSanitizableConcern
@@ -52,6 +53,7 @@ class User < ApplicationRecord
   belongs_to :instructeur, optional: true, dependent: :destroy
   belongs_to :administrateur, optional: true, dependent: :destroy
   belongs_to :expert, optional: true, dependent: :destroy
+  belongs_to :requested_merge_into, class_name: 'User', optional: true
 
   accepts_nested_attributes_for :france_connect_information
 
