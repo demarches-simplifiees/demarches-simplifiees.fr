@@ -90,5 +90,24 @@ jobs:
         run: |
           cp config/env.example .env
 
+      - name: Assets cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            public/assets
+            public/packs-test
+            tmp/cache/webpacker
+          key: asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
+          restore-keys: |
+            asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
+            asset-cache-${{ runner.os }}-${{ github.ref }}-
+            asset-cache-${{ runner.os }}-
+
+      - name: Precompile assets
+        env:
+          RAILS_ENV: test
+        run: |
+          bin/rails assets:precompile --trace
+
       - name: Run tests
         run: ${{ matrix.pattern }}
