@@ -34,9 +34,6 @@ Capybara.register_driver :headless_chrome do |app|
   end
 end
 
-# FIXME: remove this line when https://github.com/rspec/rspec-rails/issues/1897 has been fixed
-Capybara.server = :puma, { Silent: true }
-
 Capybara.default_max_wait_time = 2
 
 # Save a snapshot of the HTML page when an integration test fails
