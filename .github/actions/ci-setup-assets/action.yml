@@ -1,0 +1,26 @@
+name: 'Setup Rails assets'
+description: 'Pre-compile and cache the app assets'
+
+runs:
+  using: composite
+  steps:
+    - name: Assets cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          public/assets
+          public/packs-test
+          tmp/cache/webpacker
+        key: asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
+        restore-keys: |
+          asset-cache-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
+          asset-cache-${{ runner.os }}-${{ github.ref }}-
+          asset-cache-${{ runner.os }}-
+
+    - name: Precompile assets
+      env:
+        RAILS_ENV: test
+      run: |
+        rm bin/yarn
+        bin/rails assets:precompile --trace
+      shell: bash
