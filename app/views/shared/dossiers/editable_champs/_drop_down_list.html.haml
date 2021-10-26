@@ -10,23 +10,13 @@
         %label.blank-radio
           = form.radio_button :value, ''
           Non renseigné
+
       - if champ.drop_down_other?
         %label
-          = form.radio_button :value, '', class: "radio_button_drop_down_other", id: "radio_button_drop_down_other_#{champ.id}", checked: champ.other_value_present?
+          = form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: champ.other_value_present?
           Autre
-
-    - if champ.drop_down_other?
-      .notice.drop_down_other_radio_notice{ style: "#{champ.other_value_present? ? "display:block" : "display:none"}" }
-        %p Veuillez saisir votre autre choix
-        = render partial: "shared/dossiers/drop_down_other_input", locals: { champ: champ, class_name: "text_field_drop_down_other_radio" }
-
   - else
-    = form.select :value,
-      champ.drop_down_other? ? champ.options.concat(["Autre"]) : champ.options,
-      { selected: champ.other_value_present? ? "Autre" : champ.value,
-        required: champ.mandatory? },
-      { class: champ.drop_down_other? ? "select_drop_down_other" : ""}
+    = form.select :value, champ.options, { selected: champ.selected, required: champ.mandatory? }
 
-    - if champ.drop_down_other?
-      .notice.drop_down_other_select_notice{ style: "#{champ.other_value_present? ? "display:block" : "display:none"}" }
-        = render partial: "shared/dossiers/drop_down_other_input", locals: { champ: champ, class_name: "text_field_drop_down_other_select" }
+  - if champ.drop_down_other?
+    = render partial: "shared/dossiers/drop_down_other_input", locals: { form: form, champ: champ }
