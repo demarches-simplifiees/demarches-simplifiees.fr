@@ -162,9 +162,6 @@ GEM
     capybara-screenshot (1.0.25)
       capybara (>= 1.0, < 4)
       launchy
-    capybara-selenium (0.0.6)
-      capybara
-      selenium-webdriver
     case_transform (0.2)
       activesupport
     caxlsx (3.1.0)
@@ -792,7 +789,6 @@ DEPENDENCIES
   capybara
   capybara-email
   capybara-screenshot
-  capybara-selenium
   charlock_holmes
   chartkick
   chunky_png
@@ -867,6 +863,7 @@ DEPENDENCIES
   sanitize-url
   sassc-rails
   scss_lint
+  selenium-webdriver
   sentry-delayed_job
   sentry-rails
   sentry-ruby

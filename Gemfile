@@ -89,10 +89,10 @@ group :test do
   gem 'capybara' # Integration testing
   gem 'capybara-email' # Access emails during integration tests
   gem 'capybara-screenshot' # Save a dump of the page when an integration test fails
-  gem 'capybara-selenium'
   gem 'factory_bot'
   gem 'launchy'
   gem 'rails-controller-testing'
+  gem 'selenium-webdriver'
   gem 'shoulda-matchers', require: false
   gem 'timecop'
   gem 'vcr'
