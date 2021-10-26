@@ -107,6 +107,7 @@ jobs:
         env:
           RAILS_ENV: test
         run: |
+          rm bin/yarn
           bin/rails assets:precompile --trace
 
       - name: Run tests
