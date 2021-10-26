@@ -1,5 +1,4 @@
-%input{ type: "text",
-  value: champ.other_value_present? ? champ.value : "",
-  class: class_name,
-  maxlength: "200",
-  placeholder: "Saisissez ici" }
+.drop_down_other{ class: champ.other_value_present? ? '' : 'hidden' }
+  .notice
+    %p Veuillez saisir votre autre choix
+  = form.text_field :value_other, { maxlength: "200", placeholder: "Saisissez ici", disabled: !champ.other_value_present? }
