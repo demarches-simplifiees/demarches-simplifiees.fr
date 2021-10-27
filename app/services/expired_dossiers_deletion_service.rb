@@ -19,22 +19,16 @@ class ExpiredDossiersDeletionService
       .brouillon_close_to_expiration
       .without_brouillon_expiration_notice_sent
 
-    dossiers_close_to_expiration
-      .with_notifiable_procedure
-      .includes(:user, :procedure)
-      .group_by(&:user)
-      .each do |(user, dossiers)|
-        DossierMailer.notify_brouillon_near_deletion(
-          dossiers,
-          user.email
-        ).deliver_later
+    user_notifications = group_by_user_email(dossiers_close_to_expiration)
 
-        # mark as sent dossiers from current notification
-        Dossier.where(id: dossiers).update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
-      end
-
-    # mark as sent dossiers without notification
     dossiers_close_to_expiration.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
+
+    user_notifications.each do |(email, dossiers)|
+      DossierMailer.notify_brouillon_near_deletion(
+        dossiers,
+        email
+      ).deliver_later
+    end
   end
 
   def self.send_en_construction_expiration_notices
@@ -52,24 +46,17 @@ class ExpiredDossiersDeletionService
   end
 
   def self.delete_expired_brouillons_and_notify
-    dossiers_to_remove = Dossier.brouillon_expired
+    user_notifications = group_by_user_email(Dossier.brouillon_expired)
+      .map { |(email, dossiers)| [email, dossiers.map(&:hash_for_deletion_mail)] }
 
-    dossiers_to_remove
-      .with_notifiable_procedure
-      .includes(:user, :procedure)
-      .group_by(&:user)
-      .each do |(user, dossiers)|
-        DossierMailer.notify_brouillon_deletion(
-          dossiers.map(&:hash_for_deletion_mail),
-          user.email
-        ).deliver_later
+    Dossier.brouillon_expired.destroy_all
 
-        # destroy dossiers from current notification
-        Dossier.where(id: dossiers).destroy_all
-      end
-
-    # destroy dossiers without notification
-    dossiers_to_remove.destroy_all
+    user_notifications.each do |(email, dossiers_hash)|
+      DossierMailer.notify_brouillon_deletion(
+        dossiers_hash,
+        email
+      ).deliver_later
+    end
   end
 
   def self.delete_expired_en_construction_and_notify
@@ -83,57 +70,58 @@ class ExpiredDossiersDeletionService
   private
 
   def self.send_expiration_notices(dossiers_close_to_expiration, close_to_expiration_flag)
-    dossiers_close_to_expiration
-      .with_notifiable_procedure
-      .includes(:user)
-      .group_by(&:user)
-      .each do |(user, dossiers)|
-        DossierMailer.notify_near_deletion_to_user(
-          dossiers,
-          user.email
-        ).deliver_later
-      end
+    user_notifications = group_by_user_email(dossiers_close_to_expiration)
+    administration_notifications = group_by_fonctionnaire_email(dossiers_close_to_expiration)
 
-    group_by_fonctionnaire_email(dossiers_close_to_expiration).each do |(email, dossiers)|
-      DossierMailer.notify_near_deletion_to_administration(
-        dossiers.to_a,
-        email
-      ).deliver_later
-
-      # mark as sent dossiers from current notification
-      Dossier.where(id: dossiers.to_a).update_all(close_to_expiration_flag => Time.zone.now)
-    end
-
-    # mark as sent dossiers without notification
     dossiers_close_to_expiration.update_all(close_to_expiration_flag => Time.zone.now)
+
+    user_notifications.each do |(email, dossiers)|
+      DossierMailer.notify_near_deletion_to_user(dossiers, email).deliver_later
+    end
+    administration_notifications.each do |(email, dossiers)|
+      DossierMailer.notify_near_deletion_to_administration(dossiers, email).deliver_later
+    end
   end
 
   def self.delete_expired_and_notify(dossiers_to_remove, notify_on_closed_procedures_to_user: false)
-    dossiers_to_remove.each(&:expired_keep_track!)
+    user_notifications = group_by_user_email(dossiers_to_remove, notify_on_closed_procedures_to_user: notify_on_closed_procedures_to_user)
+      .map { |(email, dossiers)| [email, dossiers.map(&:id)] }
+    administration_notifications = group_by_fonctionnaire_email(dossiers_to_remove)
+      .map { |(email, dossiers)| [email, dossiers.map(&:id)] }
 
-    dossiers_to_remove
-      .with_notifiable_procedure(notify_on_closed: notify_on_closed_procedures_to_user)
-      .includes(:user)
-      .group_by(&:user)
-      .each do |(user, dossiers)|
-        DossierMailer.notify_automatic_deletion_to_user(
-          DeletedDossier.where(dossier_id: dossiers.map(&:id)).to_a,
-          user.email
-        ).deliver_later
+    deleted_dossier_ids = []
+    dossiers_to_remove.find_each do |dossier|
+      if dossier.expired_keep_track_and_destroy!
+        deleted_dossier_ids << dossier.id
       end
-
-    self.group_by_fonctionnaire_email(dossiers_to_remove).each do |(email, dossiers)|
-      DossierMailer.notify_automatic_deletion_to_administration(
-        DeletedDossier.where(dossier_id: dossiers.map(&:id)).to_a,
-        email
-      ).deliver_later
-
-      # destroy dossiers from current notification
-      Dossier.where(id: dossiers.to_a).destroy_all
     end
 
-    # destroy dossiers without notification
-    dossiers_to_remove.destroy_all
+    user_notifications.each do |(email, dossier_ids)|
+      dossier_ids = dossier_ids.intersection(deleted_dossier_ids)
+      if dossier_ids.present?
+        DossierMailer.notify_automatic_deletion_to_user(
+          DeletedDossier.where(dossier_id: dossier_ids).to_a,
+          email
+        ).deliver_later
+      end
+    end
+    administration_notifications.each do |(email, dossier_ids)|
+      dossier_ids = dossier_ids.intersection(deleted_dossier_ids)
+      if dossier_ids.present?
+        DossierMailer.notify_automatic_deletion_to_administration(
+          DeletedDossier.where(dossier_id: dossier_ids).to_a,
+          email
+        ).deliver_later
+      end
+    end
+  end
+
+  def self.group_by_user_email(dossiers, notify_on_closed_procedures_to_user: false)
+    dossiers
+      .with_notifiable_procedure(notify_on_closed: notify_on_closed_procedures_to_user)
+      .includes(:user, :procedure)
+      .group_by(&:user)
+      .map { |(user, dossiers)| [user.email, dossiers] }
   end
 
   def self.group_by_fonctionnaire_email(dossiers)
@@ -143,5 +131,6 @@ class ExpiredDossiersDeletionService
       .each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |dossier, h|
         (dossier.followers_instructeurs + dossier.procedure.administrateurs).each { |destinataire| h[destinataire.email] << dossier }
       end
+      .map { |(email, dossiers)| [email, dossiers.to_a] }
   end
 end
