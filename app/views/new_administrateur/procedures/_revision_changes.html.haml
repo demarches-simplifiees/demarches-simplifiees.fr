@@ -41,6 +41,11 @@
               %li= t(:add_option, scope: [:new_administrateur, :revision_changes], items: added.map{ |term| "« #{term.strip} »" }.join(", "))
             - if removed.present?
               %li= t(:remove_option, scope: [:new_administrateur, :revision_changes], items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
+      - when :drop_down_other
+        - if change[:from] == false
+          %li.mb-1= t("new_administrateur.revision_changes.update_drop_down_other#{postfix}.enabled", label: change[:label])
+        - else
+          %li.mb-1= t("new_administrateur.revision_changes.update_drop_down_other#{postfix}.disabled", label: change[:label])
       - when :carte_layers
         - added = change[:to].sort - change[:from].sort
         - removed = change[:from].sort - change[:to].sort

@@ -57,6 +57,7 @@ module NewAdministrateur
           ],
           methods: [
             :drop_down_list_value,
+            :drop_down_other,
             :drop_down_secondary_libelle,
             :drop_down_secondary_description,
             :piece_justificative_template_filename,
@@ -75,6 +76,7 @@ module NewAdministrateur
         :parent_id,
         :private,
         :drop_down_list_value,
+        :drop_down_other,
         :drop_down_secondary_libelle,
         :drop_down_secondary_description,
         :piece_justificative_template,
@@ -98,6 +100,7 @@ module NewAdministrateur
         :description,
         :mandatory,
         :drop_down_list_value,
+        :drop_down_other,
         :drop_down_secondary_libelle,
         :drop_down_secondary_description,
         :piece_justificative_template,
