@@ -722,7 +722,7 @@ Rails/DelegateAllowBlank:
 Rails/DynamicFindBy:
   Enabled: true
   Exclude:
-    - "spec/features/**/*.rb"
+    - "spec/system/**/*.rb"
 
 Rails/EnumUniqueness:
   Enabled: true

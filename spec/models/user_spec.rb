@@ -372,7 +372,7 @@ describe User, type: :model do
     end
 
     context 'for administrateurs' do
-      let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur)) }
+      let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: create(:administrateur, user: nil)) }
 
       context 'when the password is too short' do
         let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }

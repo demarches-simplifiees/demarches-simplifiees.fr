@@ -59,7 +59,7 @@ jobs:
           - bin/rspec spec/controllers/*_spec.rb
           - bin/rspec spec/controllers/[a-l]**/*_spec.rb
           - bin/rspec spec/controllers/[m-z]**/*_spec.rb
-          - bin/rspec spec/features
+          - bin/rspec spec/system
           - bin/rspec spec/helpers spec/lib spec/middlewares
           - bin/rspec spec/mailers spec/jobs spec/policies
           - bin/rspec spec/models

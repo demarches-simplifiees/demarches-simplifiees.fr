@@ -162,9 +162,6 @@ GEM
     capybara-screenshot (1.0.25)
       capybara (>= 1.0, < 4)
       launchy
-    capybara-selenium (0.0.6)
-      capybara
-      selenium-webdriver
     case_transform (0.2)
       activesupport
     caxlsx (3.1.0)
@@ -189,12 +186,6 @@ GEM
     css_parser (1.9.0)
       addressable
     daemons (1.3.1)
-    database_cleaner (2.0.1)
-      database_cleaner-active_record (~> 2.0.0)
-    database_cleaner-active_record (2.0.0)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
-    database_cleaner-core (2.0.1)
     datetime_picker_rails (0.0.7)
       momentjs-rails (>= 2.8.1)
     deep_cloneable (3.0.0)
@@ -798,13 +789,11 @@ DEPENDENCIES
   capybara
   capybara-email
   capybara-screenshot
-  capybara-selenium
   charlock_holmes
   chartkick
   chunky_png
   clamav-client
   daemons
-  database_cleaner
   deep_cloneable
   delayed_cron_job
   delayed_job_active_record
@@ -874,6 +863,7 @@ DEPENDENCIES
   sanitize-url
   sassc-rails
   scss_lint
+  selenium-webdriver
   sentry-delayed_job
   sentry-rails
   sentry-ruby

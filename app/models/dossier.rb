@@ -36,6 +36,7 @@
 class Dossier < ApplicationRecord
   self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
+  include DossierRebaseConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -677,6 +678,7 @@ class Dossier < ApplicationRecord
       end
     end
 
+    update!(dossier_transfer_id: nil)
     discard!
   end
 
@@ -956,6 +958,21 @@ class Dossier < ApplicationRecord
 
   def user_locale
     user&.locale || I18n.default_locale
+  end
+
+  def self.purge_discarded
+    discarded_brouillon_expired.destroy_all
+
+    transaction do
+      DossierOperationLog.discarded_en_construction_expired.destroy_all
+      discarded_en_construction_expired.destroy_all
+    end
+
+    transaction do
+      DossierOperationLog.discarded_termine_expired.destroy_all
+      Avis.discarded_termine_expired.destroy_all
+      discarded_termine_expired.destroy_all
+    end
   end
 
   private

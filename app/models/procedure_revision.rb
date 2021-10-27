@@ -134,11 +134,11 @@ class ProcedureRevision < ApplicationRecord
       to_sids = to_h.keys
 
       removed = (from_sids - to_sids).map do |sid|
-        { op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, position: from_sids.index(sid) }
+        { op: :remove, label: from_h[sid].libelle, private: from_h[sid].private?, position: from_sids.index(sid), stable_id: sid }
       end
 
       added = (to_sids - from_sids).map do |sid|
-        { op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, position: to_sids.index(sid) }
+        { op: :add, label: to_h[sid].libelle, private: to_h[sid].private?, position: to_sids.index(sid), stable_id: sid }
       end
 
       kept = from_sids.intersection(to_sids)
@@ -147,7 +147,7 @@ class ProcedureRevision < ApplicationRecord
         .map { |sid| [sid, from_sids.index(sid), to_sids.index(sid)] }
         .filter { |_, from_index, to_index| from_index != to_index }
         .map do |sid, from_index, to_index|
-        { op: :move, label: from_h[sid].libelle, private: from_h[sid].private?, from: from_index, to: to_index, position: to_index }
+        { op: :move, label: from_h[sid].libelle, private: from_h[sid].private?, from: from_index, to: to_index, position: to_index, stable_id: sid }
       end
 
       changed = kept
@@ -172,7 +172,8 @@ class ProcedureRevision < ApplicationRecord
         label: from_type_de_champ.libelle,
         private: from_type_de_champ.private?,
         from: from_type_de_champ.type_champ,
-        to: to_type_de_champ.type_champ
+        to: to_type_de_champ.type_champ,
+        stable_id: from_type_de_champ.stable_id
       }
     end
     if from_type_de_champ.libelle != to_type_de_champ.libelle
@@ -182,7 +183,8 @@ class ProcedureRevision < ApplicationRecord
         label: from_type_de_champ.libelle,
         private: from_type_de_champ.private?,
         from: from_type_de_champ.libelle,
-        to: to_type_de_champ.libelle
+        to: to_type_de_champ.libelle,
+        stable_id: from_type_de_champ.stable_id
       }
     end
     if from_type_de_champ.description != to_type_de_champ.description
@@ -192,7 +194,8 @@ class ProcedureRevision < ApplicationRecord
         label: from_type_de_champ.libelle,
         private: from_type_de_champ.private?,
         from: from_type_de_champ.description,
-        to: to_type_de_champ.description
+        to: to_type_de_champ.description,
+        stable_id: from_type_de_champ.stable_id
       }
     end
     if from_type_de_champ.mandatory? != to_type_de_champ.mandatory?
@@ -202,7 +205,8 @@ class ProcedureRevision < ApplicationRecord
         label: from_type_de_champ.libelle,
         private: from_type_de_champ.private?,
         from: from_type_de_champ.mandatory?,
-        to: to_type_de_champ.mandatory?
+        to: to_type_de_champ.mandatory?,
+        stable_id: from_type_de_champ.stable_id
       }
     end
     if to_type_de_champ.drop_down_list?
@@ -213,7 +217,41 @@ class ProcedureRevision < ApplicationRecord
           label: from_type_de_champ.libelle,
           private: from_type_de_champ.private?,
           from: from_type_de_champ.drop_down_list_options,
-          to: to_type_de_champ.drop_down_list_options
+          to: to_type_de_champ.drop_down_list_options,
+          stable_id: from_type_de_champ.stable_id
+        }
+      end
+      if to_type_de_champ.linked_drop_down_list?
+        if from_type_de_champ.drop_down_secondary_libelle != to_type_de_champ.drop_down_secondary_libelle
+          changes << {
+            op: :update,
+            attribute: :drop_down_secondary_libelle,
+            label: from_type_de_champ.libelle,
+            private: from_type_de_champ.private?,
+            from: from_type_de_champ.drop_down_secondary_libelle,
+            to: to_type_de_champ.drop_down_secondary_libelle
+          }
+        end
+        if from_type_de_champ.drop_down_secondary_description != to_type_de_champ.drop_down_secondary_description
+          changes << {
+            op: :update,
+            attribute: :drop_down_secondary_description,
+            label: from_type_de_champ.libelle,
+            private: from_type_de_champ.private?,
+            from: from_type_de_champ.drop_down_secondary_description,
+            to: to_type_de_champ.drop_down_secondary_description
+          }
+        end
+      end
+      if from_type_de_champ.drop_down_other != to_type_de_champ.drop_down_other
+        changes << {
+          op: :update,
+          attribute: :drop_down_other,
+          label: from_type_de_champ.libelle,
+          private: from_type_de_champ.private?,
+          from: from_type_de_champ.drop_down_other,
+          to: to_type_de_champ.drop_down_other,
+          stable_id: from_type_de_champ.stable_id
         }
       end
     elsif to_type_de_champ.carte?
@@ -224,7 +262,8 @@ class ProcedureRevision < ApplicationRecord
           label: from_type_de_champ.libelle,
           private: from_type_de_champ.private?,
           from: from_type_de_champ.carte_optional_layers,
-          to: to_type_de_champ.carte_optional_layers
+          to: to_type_de_champ.carte_optional_layers,
+          stable_id: from_type_de_champ.stable_id
         }
       end
     elsif to_type_de_champ.piece_justificative?
@@ -235,7 +274,8 @@ class ProcedureRevision < ApplicationRecord
           label: from_type_de_champ.libelle,
           private: from_type_de_champ.private?,
           from: from_type_de_champ.piece_justificative_template_filename,
-          to: to_type_de_champ.piece_justificative_template_filename
+          to: to_type_de_champ.piece_justificative_template_filename,
+          stable_id: from_type_de_champ.stable_id
         }
       end
     elsif to_type_de_champ.repetition?
