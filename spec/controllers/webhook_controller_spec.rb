@@ -40,7 +40,7 @@ describe WebhookController, type: :controller do
 
       context 'when there are an associated Instructeur and Administrateur' do
         let!(:instructeur) { create(:instructeur,    user: user) }
-        let!(:admin)       { create(:administrateur, user: user) }
+        let!(:admin)       { create(:administrateur, user: user, instructeur: instructeur) }
 
         it 'returns a link to the Instructeur profile in the Manager' do
           expect(payload).to have_key('html')

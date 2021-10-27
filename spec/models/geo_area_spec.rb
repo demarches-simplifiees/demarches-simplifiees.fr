@@ -1,30 +1,30 @@
 RSpec.describe GeoArea, type: :model do
   describe '#area' do
-    let(:geo_area) { build(:geo_area, :polygon) }
+    let(:geo_area) { build(:geo_area, :polygon, champ: nil) }
 
     it { expect(geo_area.area).to eq(103.6) }
   end
 
   describe '#area (hourglass polygon)' do
-    let(:geo_area) { build(:geo_area, :hourglass_polygon) }
+    let(:geo_area) { build(:geo_area, :hourglass_polygon, champ: nil) }
 
     it { expect(geo_area.area).to eq(32.4) }
   end
 
   describe '#length' do
-    let(:geo_area) { build(:geo_area, :line_string) }
+    let(:geo_area) { build(:geo_area, :line_string, champ: nil) }
 
     it { expect(geo_area.length).to eq(21.2) }
   end
 
   describe '#location' do
-    let(:geo_area) { build(:geo_area, :point) }
+    let(:geo_area) { build(:geo_area, :point, champ: nil) }
 
     it { expect(geo_area.location).to eq("46°32'19\"N 2°25'42\"E") }
   end
 
   describe '#rgeo_geometry' do
-    let(:geo_area) { build(:geo_area, :polygon) }
+    let(:geo_area) { build(:geo_area, :polygon, champ: nil) }
     let(:polygon) do
       {
         "type" => "Polygon",
@@ -46,44 +46,47 @@ RSpec.describe GeoArea, type: :model do
     it { expect(geo_area.geometry).to eq(polygon) }
 
     context 'polygon_with_extra_coordinate' do
-      let(:geo_area) { build(:geo_area, :polygon_with_extra_coordinate) }
+      let(:geo_area) { build(:geo_area, :polygon_with_extra_coordinate, champ: nil) }
 
       it { expect(geo_area.geometry).not_to eq(polygon) }
       it { expect(geo_area.safe_geometry).to eq(polygon) }
     end
   end
 
-  describe '#valid?' do
-    let(:geo_area) { build(:geo_area, :polygon) }
+  describe 'validations' do
+    context 'geometry' do
+      subject! { geo_area.validate }
 
-    context 'polygon' do
-      it { expect(geo_area.valid?).to be_truthy }
-    end
+      context 'polygon' do
+        let(:geo_area) { build(:geo_area, :polygon, champ: nil) }
+        it { expect(geo_area.errors).not_to have_key(:geometry) }
+      end
 
-    context 'hourglass_polygon' do
-      let(:geo_area) { build(:geo_area, :hourglass_polygon) }
-      it { expect(geo_area.valid?).to be_falsey }
-    end
+      context 'hourglass_polygon' do
+        let(:geo_area) { build(:geo_area, :hourglass_polygon, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
 
-    context 'line_string' do
-      let(:geo_area) { build(:geo_area, :line_string) }
-      it { expect(geo_area.valid?).to be_truthy }
-    end
+      context 'line_string' do
+        let(:geo_area) { build(:geo_area, :line_string, champ: nil) }
+        it { expect(geo_area.errors).not_to have_key(:geometry) }
+      end
 
-    context 'point' do
-      let(:geo_area) { build(:geo_area, :point) }
-      it { expect(geo_area.valid?).to be_truthy }
-    end
+      context 'point' do
+        let(:geo_area) { build(:geo_area, :point, champ: nil) }
+        it { expect(geo_area.errors).not_to have_key(:geometry) }
+      end
 
-    context 'invalid_right_hand_rule_polygon' do
-      let(:geo_area) { build(:geo_area, :invalid_right_hand_rule_polygon) }
-      it { expect(geo_area.valid?).to be_falsey }
+      context 'invalid_right_hand_rule_polygon' do
+        let(:geo_area) { build(:geo_area, :invalid_right_hand_rule_polygon, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
     end
   end
 
   describe "cadastre properties" do
-    let(:geo_area) { build(:geo_area, :cadastre) }
-    let(:legacy_geo_area) { build(:geo_area, :legacy_cadastre) }
+    let(:geo_area) { build(:geo_area, :cadastre, champ: nil) }
+    let(:legacy_geo_area) { build(:geo_area, :legacy_cadastre, champ: nil) }
 
     it "should be backward compatible" do
       expect("#{geo_area.code_dep}#{geo_area.code_com}").to eq(geo_area.commune)
@@ -103,7 +106,7 @@ RSpec.describe GeoArea, type: :model do
 
   describe 'description' do
     context 'when properties is nil' do
-      let(:geo_area) { build(:geo_area, properties: nil) }
+      let(:geo_area) { build(:geo_area, properties: nil, champ: nil) }
 
       it { expect(geo_area.description).to be_nil }
     end

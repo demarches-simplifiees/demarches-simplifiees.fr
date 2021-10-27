@@ -5,13 +5,18 @@
         %label
           = form.radio_button :value, option
           = option
+
       - if !champ.mandatory?
         %label.blank-radio
           = form.radio_button :value, ''
           Non renseigné
 
+      - if champ.drop_down_other?
+        %label
+          = form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: champ.other_value_present?
+          Autre
   - else
-    = form.select :value,
-      champ.options,
-      disabled: champ.disabled_options,
-      required: champ.mandatory?
+    = form.select :value, champ.options, selected: champ.selected, required: champ.mandatory?
+
+  - if champ.drop_down_other?
+    = render partial: "shared/dossiers/drop_down_other_input", locals: { form: form, champ: champ }

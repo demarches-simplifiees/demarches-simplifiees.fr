@@ -49,6 +49,7 @@ class Avis < ApplicationRecord
   scope :for_dossier, -> (dossier_id) { where(dossier_id: dossier_id) }
   scope :by_latest, -> { order(updated_at: :desc) }
   scope :updated_since?, -> (date) { where('avis.updated_at > ?', date) }
+  scope :discarded_termine_expired, -> { unscope(:joins).where(dossier: Dossier.discarded_termine_expired) }
 
   # The form allows subtmitting avis requests to several emails at once,
   # hence this virtual attribute.

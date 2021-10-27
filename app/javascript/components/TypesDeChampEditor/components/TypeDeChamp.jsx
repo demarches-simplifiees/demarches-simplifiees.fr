@@ -11,9 +11,11 @@ import MoveButton from './MoveButton';
 import TypeDeChampCarteOption from './TypeDeChampCarteOption';
 import TypeDeChampCarteOptions from './TypeDeChampCarteOptions';
 import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
+import TypeDeChampDropDownOther from './TypeDeChampDropDownOther';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
 import TypeDeChampTypesSelect from './TypeDeChampTypesSelect';
+import TypeDeChampDropDownSecondary from './TypeDeChampDropDownSecondary';
 
 const TypeDeChamp = sortableElement(
   ({ typeDeChamp, dispatch, idx: index, isFirstItem, isLastItem, state }) => {
@@ -22,6 +24,8 @@ const TypeDeChamp = sortableElement(
       'multiple_drop_down_list',
       'linked_drop_down_list'
     ].includes(typeDeChamp.type_champ);
+    const isLinkedDropDown = typeDeChamp.type_champ === 'linked_drop_down_list';
+    const isSimpleDropDown = typeDeChamp.type_champ === 'drop_down_list';
     const isFile = typeDeChamp.type_champ === 'piece_justificative';
     const isCarte = typeDeChamp.type_champ === 'carte';
     const isExplication = typeDeChamp.type_champ === 'explication';
@@ -130,6 +134,15 @@ const TypeDeChamp = sortableElement(
             isVisible={isDropDown}
             handler={updateHandlers.drop_down_list_value}
           />
+          <TypeDeChampDropDownSecondary
+            isVisible={isLinkedDropDown}
+            libelleHandler={updateHandlers.drop_down_secondary_libelle}
+            descriptionHandler={updateHandlers.drop_down_secondary_description}
+          />
+          <TypeDeChampDropDownOther
+            isVisible={isSimpleDropDown}
+            handler={updateHandlers.drop_down_other}
+          />
           <TypeDeChampPieceJustificative
             isVisible={isFile}
             directUploadUrl={state.directUploadUrl}
@@ -234,12 +247,15 @@ const OPTIONS_FIELDS = {
 export const FIELDS = [
   'description',
   'drop_down_list_value',
+  'drop_down_other',
   'libelle',
   'mandatory',
   'parent_id',
   'piece_justificative_template',
   'private',
   'type_champ',
+  'drop_down_secondary_libelle',
+  'drop_down_secondary_description',
   ...Object.keys(OPTIONS_FIELDS)
 ];
 

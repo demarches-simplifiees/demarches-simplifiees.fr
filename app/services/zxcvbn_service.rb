@@ -1,4 +1,32 @@
 class ZxcvbnService
+  @tester_mutex = Mutex.new
+
+  class << self
+    # Returns an Zxcvbn instance cached between classes instances and between threads.
+    #
+    # The tester weights ~20 Mo, and we'd like to save some memory – so rather
+    # that storing it in a per-thread accessor, we prefer to use a mutex
+    # to cache it between threads.
+    def tester
+      @tester_mutex.synchronize do
+        @tester ||= build_tester
+      end
+    end
+
+    private
+
+    # Returns a fully initializer tester from the on-disk dictionary.
+    #
+    # This is slow: loading and parsing the dictionary may take around 1s.
+    def build_tester
+      dictionaries = YAML.safe_load(File.read(Rails.root.join("config", "initializers", "zxcvbn_dictionnaries.yaml")))
+
+      tester = Zxcvbn::Tester.new
+      tester.add_word_lists(dictionaries)
+      tester
+    end
+  end
+
   def initialize(password)
     @password = password
   end
@@ -18,6 +46,6 @@ class ZxcvbnService
   private
 
   def compute_zxcvbn
-    Zxcvbn.test(@password, [], ZXCVBN_DICTIONNARIES)
+    self.class.tester.test(@password)
   end
 end
