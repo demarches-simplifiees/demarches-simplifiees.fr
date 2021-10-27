@@ -26,9 +26,12 @@ class Champs::RepetitionChamp < Champ
     champs.group_by(&:row).values
   end
 
-  def add_row(row = 0)
-    type_de_champ.types_de_champ.each do |type_de_champ|
-      self.champs << type_de_champ.champ.build(row: row)
+  def add_row
+    transaction do
+      row = (blank? ? -1 : champs.last.row) + 1
+      type_de_champ.types_de_champ.each do |type_de_champ|
+        self.champs << type_de_champ.champ.build(row: row)
+      end
     end
   end
 

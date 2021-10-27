@@ -1497,7 +1497,11 @@ describe Dossier do
 
       datetime_champ.update(value: Date.today.to_s)
       text_champ.update(value: 'bonjour')
-      repetition_champ.add_row(repetition_champ.champs.last.row + 2)
+      # Add two rows then remove previous to last row in order to create a "hole" in the sequence
+      repetition_champ.add_row
+      repetition_champ.add_row
+      repetition_champ.champs.where(row: repetition_champ.champs.last.row - 1).destroy_all
+      repetition_champ.reload
     end
 
     it "updates the brouillon champs with the latest revision changes" do
