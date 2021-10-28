@@ -48,9 +48,9 @@ class User < ApplicationRecord
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :deleted_dossiers
   has_one :france_connect_information, dependent: :destroy
-  belongs_to :instructeur, optional: true
-  belongs_to :administrateur, optional: true
-  belongs_to :expert, optional: true
+  belongs_to :instructeur, optional: true, dependent: :destroy
+  belongs_to :administrateur, optional: true, dependent: :destroy
+  belongs_to :expert, optional: true, dependent: :destroy
 
   accepts_nested_attributes_for :france_connect_information
 
