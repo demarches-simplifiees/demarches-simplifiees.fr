@@ -196,6 +196,7 @@ class User < ApplicationRecord
 
   def merge(old_user)
     old_user.dossiers.update_all(user_id: id)
+    old_user.invites.update_all(user_id: id)
 
     [
       [old_user.instructeur, instructeur],
