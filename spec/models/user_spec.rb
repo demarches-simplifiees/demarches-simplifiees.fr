@@ -424,13 +424,15 @@ describe User, type: :model do
 
     subject { targeted_user.merge(old_user) }
 
-    context 'and the old account has a dossier' do
+    context 'and the old account has some stuff' do
       let!(:dossier) { create(:dossier, user: old_user) }
+      let!(:invite) { create(:invite, user: old_user) }
 
       it 'transfers the dossier' do
         subject
 
         expect(targeted_user.dossiers).to match([dossier])
+        expect(targeted_user.invites).to match([invite])
       end
     end
 
