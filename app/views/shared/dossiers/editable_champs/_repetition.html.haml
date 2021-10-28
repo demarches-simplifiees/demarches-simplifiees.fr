@@ -18,7 +18,7 @@
             Supprimer l’élément
 
 - if champ.persisted?
-  = link_to champs_repetition_path(form.index), class: 'button add-row', data: { remote: true, method: 'POST', params: { champ_id: champ&.id }.to_query } do
+  = link_to champs_repetition_path(form.index), class: 'button add-row', data: { remote: true, disable: true, method: 'POST', params: { champ_id: champ&.id }.to_query } do
     %span.icon.add
     Ajouter un élément pour « #{champ.libelle} »
 - else
