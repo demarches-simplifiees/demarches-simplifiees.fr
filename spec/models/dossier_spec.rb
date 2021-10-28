@@ -1497,6 +1497,7 @@ describe Dossier do
 
       datetime_champ.update(value: Date.today.to_s)
       text_champ.update(value: 'bonjour')
+      repetition_champ.add_row(repetition_champ.champs.last.row + 2)
     end
 
     it "updates the brouillon champs with the latest revision changes" do
@@ -1505,8 +1506,9 @@ describe Dossier do
 
       expect(dossier.revision).to eq(procedure.published_revision)
       expect(dossier.champs.size).to eq(4)
-      expect(repetition_champ.rows.size).to eq(1)
+      expect(repetition_champ.rows.size).to eq(2)
       expect(repetition_champ.rows[0].size).to eq(1)
+      expect(repetition_champ.rows[1].size).to eq(1)
 
       procedure.publish_revision!
       perform_enqueued_jobs
@@ -1520,8 +1522,9 @@ describe Dossier do
       expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
       expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
       expect(rebased_datetime_champ.value).to be_nil
-      expect(rebased_repetition_champ.rows.size).to eq(1)
+      expect(rebased_repetition_champ.rows.size).to eq(2)
       expect(rebased_repetition_champ.rows[0].size).to eq(2)
+      expect(rebased_repetition_champ.rows[1].size).to eq(2)
       expect(rebased_text_champ.rebased_at).not_to be_nil
       expect(rebased_datetime_champ.rebased_at).not_to be_nil
     end
