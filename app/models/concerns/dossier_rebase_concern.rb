@@ -64,7 +64,7 @@ module DossierRebaseConcern
   def add_new_champs_for_revision(published_type_de_champ)
     if published_type_de_champ.parent
       find_champs_by_stable_id(published_type_de_champ.parent.stable_id).each do |champ_repetition|
-        champ_repetition.rows.size.times do |row|
+        champ_repetition.champs.map(&:row).uniq.each do |row|
           champ = published_type_de_champ.champ.build(row: row)
           champ_repetition.champs << champ
         end
