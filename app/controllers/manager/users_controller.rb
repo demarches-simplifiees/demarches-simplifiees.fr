@@ -14,19 +14,7 @@ module Manager
           flash[:error] = user.errors.full_messages.to_sentence
         end
       else
-        user.dossiers.update_all(user_id: targeted_user.id)
-
-        [
-          [user.instructeur, targeted_user.instructeur],
-          [user.expert, targeted_user.expert],
-          [user.administrateur, targeted_user.administrateur]
-        ].each do |old_role, targeted_role|
-          if targeted_role.nil?
-            old_role&.update(user: targeted_user)
-          else
-            targeted_role.merge(old_role)
-          end
-        end
+        targeted_user.merge(user)
 
         flash[:notice] = "Le compte « #{targeted_email} » a absorbé le compte « #{user.email} »."
       end
