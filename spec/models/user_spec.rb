@@ -459,6 +459,11 @@ describe User, type: :model do
           expect(targeted_administrateur).to receive(:merge).with(administrateur)
 
           subject
+
+          expect { instructeur.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { expert.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { administrateur.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { old_user.reload }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
     end

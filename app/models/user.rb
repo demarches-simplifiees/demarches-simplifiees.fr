@@ -208,6 +208,8 @@ class User < ApplicationRecord
         targeted_role.merge(old_role)
       end
     end
+
+    old_user.destroy
   end
 
   private
