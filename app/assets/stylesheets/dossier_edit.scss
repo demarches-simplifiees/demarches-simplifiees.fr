@@ -9,7 +9,7 @@ $dossier-actions-bar-border-width: 1px;
   }
 
   h1 {
-    font-size: 22px;
+    font-size: 2rem;
 
     .icon.folder {
       vertical-align: -3px;
@@ -17,8 +17,8 @@ $dossier-actions-bar-border-width: 1px;
   }
 
   .dossier-form-actions {
-    margin-top: $default-padding;
-    margin-bottom: $default-padding;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
     text-align: right;
   }
 }
@@ -38,6 +38,7 @@ $dossier-actions-bar-border-width: 1px;
 
     .button.notice {
       flex-shrink: 0; // Display the button label on a single line
+      margin-top: 1rem;
     }
   }
 
