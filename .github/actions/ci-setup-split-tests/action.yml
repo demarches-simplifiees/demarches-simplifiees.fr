@@ -1,0 +1,30 @@
+name: 'Setup split-tests'
+description: 'Setup the environment for splitting tests'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup split_tests binary
+      run: |
+        curl --no-progress-meter -L https://github.com/leonid-shevtsov/split_tests/releases/download/v0.3.0/split_tests.linux.gz | gunzip -c > split_tests
+        chmod +x split_tests
+      shell: bash
+
+    - name: generate UNIQUE_RUN_ID variable based on timestamp
+      run: echo UNIQUE_RUN_ID=split-tests-unique-id--$(date +%s) >> $GITHUB_ENV
+      shell: bash
+
+    - name: Restore previous runs timings
+      uses: actions/cache@v2
+      with:
+        path: tmp/*.junit.xml
+        key: single-spec-report-${{ env.UNIQUE_RUN_ID }}
+        restore-keys: |
+          specs-reports-${{ github.ref }}-${{ github.sha }}-${{ github.run_id }}
+          specs-reports-${{ github.ref }}-${{ github.sha }}-
+          specs-reports-${{ github.ref }}-
+          specs-reports-
+
+    - name: Display previous runs timings used for splitting tests
+      run: ls tmp/*.junit.xml || true
+      shell: bash

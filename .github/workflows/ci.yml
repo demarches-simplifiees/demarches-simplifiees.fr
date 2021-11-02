@@ -43,7 +43,7 @@ jobs:
 
     strategy:
       matrix:
-        split_index: [0, 1, 2, 3, 4, 5]
+        instances: [0, 1, 2, 3, 4, 5]
 
     steps:
       - uses: actions/checkout@v2
@@ -54,11 +54,19 @@ jobs:
       - name: Pre-compile assets
         uses: ./.github/actions/ci-setup-assets
 
+      - uses: ./.github/actions/ci-setup-split-tests
+
       - name: Run tests
         run: |
-          SPEC_FILES=$(./split_tests -line-count -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=${{ matrix.split_index }} -split-total=6)
+          SPEC_FILES=$(./split_tests -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=${{ strategy.job-index }} -split-total=${{ strategy.job-total }} -junit -junit-path=tmp/*.junit.xml)
           echo "Running tests for bin/rspec $SPEC_FILES"
-          bin/rspec $SPEC_FILES
+          bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
   system_tests:
     name: System tests
@@ -74,7 +82,7 @@ jobs:
 
     strategy:
       matrix:
-        split_index: [0, 1]
+        instances: [0, 1]
 
     steps:
       - uses: actions/checkout@v2
@@ -85,8 +93,36 @@ jobs:
       - name: Pre-compile assets
         uses: ./.github/actions/ci-setup-assets
 
+      - uses: ./.github/actions/ci-setup-split-tests
+
       - name: Run tests
         run: |
-          SPEC_FILES=$(./split_tests -line-count -glob='spec/system/**/*_spec.rb' -split-index=${{ matrix.split_index }} -split-total=2)
+          SPEC_FILES=$(./split_tests -glob='spec/system/**/*_spec.rb' -split-index=${{ strategy.job-index }} -split-total=${{ strategy.job-total }} -junit -junit-path=tmp/*.junit.xml)
           echo "Running tests for bin/rspec $SPEC_FILES"
-          bin/rspec $SPEC_FILES
+          bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+  save_test_reports:
+    name: Save test reports
+    needs: [unit_tests, system_tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: test-reports
+          path: tmp
+
+      - name: Save test reports
+        uses: actions/cache@v2
+        with:
+          path: tmp/*.junit.xml
+          key: specs-reports-${{ github.ref }}-${{ github.sha }}-${{ github.run_id }}
