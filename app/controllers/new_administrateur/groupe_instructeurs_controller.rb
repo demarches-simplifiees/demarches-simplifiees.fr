@@ -63,7 +63,7 @@ module NewAdministrateur
     end
 
     def destroy
-      if !groupe_instructeur.dossiers.empty?
+      if !groupe_instructeur.dossiers.with_discarded.empty?
         flash[:alert] = "Impossible de supprimer un groupe avec des dossiers. Il faut le réaffecter avant"
       elsif procedure.groupe_instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un groupe instructeur sur chaque procédure"
