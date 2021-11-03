@@ -2,16 +2,7 @@ describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
-  let(:dossier) do
-    dossier = create(:dossier,
-      :en_construction,
-      :with_populated_champs,
-      :with_populated_annotations,
-      :with_individual,
-      procedure: procedure)
-    create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
-    dossier
-  end
+  let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
   let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
   let(:dossiers) { [dossier2, dossier1, dossier] }
@@ -298,6 +289,17 @@ describe API::V2::GraphqlController do
     end
 
     describe "dossier" do
+      let(:dossier) do
+        dossier = create(:dossier,
+                         :en_construction,
+                         :with_populated_champs,
+                         :with_populated_annotations,
+                         :with_individual,
+                         procedure: procedure)
+        create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
+        dossier
+      end
+
       context "with individual" do
         let(:query) do
           "{
