@@ -54,7 +54,10 @@ jobs:
       - name: Pre-compile assets
         uses: ./.github/actions/ci-setup-assets
 
-      - uses: ./.github/actions/ci-setup-split-tests
+      - name: Setup split tests
+        uses: ./.github/actions/ci-setup-split-tests
+        with:
+          results_path: tmp/*.junit.xml
 
       - name: Run tests
         run: |
@@ -93,7 +96,10 @@ jobs:
       - name: Pre-compile assets
         uses: ./.github/actions/ci-setup-assets
 
-      - uses: ./.github/actions/ci-setup-split-tests
+      - name: Setup split tests
+        uses: ./.github/actions/ci-setup-split-tests
+        with:
+          results_path: tmp/*.junit.xml
 
       - name: Run tests
         run: |
@@ -101,7 +107,7 @@ jobs:
           echo "Running tests for bin/rspec $SPEC_FILES"
           bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
-      - name: Upload Test Results
+      - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
           name: test-reports
@@ -115,14 +121,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download Artifacts
+      - name: Collect test results from all runs
         uses: actions/download-artifact@v2
         with:
           name: test-reports
           path: tmp
 
-      - name: Save test reports
-        uses: actions/cache@v2
+      - name: Save test results and timing data, to better split future tests
+        uses: ./.github/actions/ci-save-split-tests
         with:
-          path: tmp/*.junit.xml
-          key: specs-reports-${{ github.ref }}-${{ github.sha }}-${{ github.run_id }}
+          results_path: tmp/*.junit.xml

@@ -1,6 +1,11 @@
 name: 'Setup split-tests'
 description: 'Setup the environment for splitting tests'
 
+inputs:
+  results_path:
+    description: 'Glob pattern to the JUnit files to save'
+    required: true
+
 runs:
   using: composite
   steps:
@@ -17,7 +22,7 @@ runs:
     - name: Restore previous runs timings
       uses: actions/cache@v2
       with:
-        path: tmp/*.junit.xml
+        path: ${{ inputs.results_path }}
         key: single-spec-report-${{ env.UNIQUE_RUN_ID }}
         restore-keys: |
           specs-reports-${{ github.ref }}-${{ github.sha }}-${{ github.run_id }}
@@ -26,5 +31,5 @@ runs:
           specs-reports-
 
     - name: Display previous runs timings used for splitting tests
-      run: ls tmp/*.junit.xml || true
+      run: ls ${{ inputs.results_path }} || true
       shell: bash
