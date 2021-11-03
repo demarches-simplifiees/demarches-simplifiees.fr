@@ -5,8 +5,7 @@ describe API::V2::GraphqlController do
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
   let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
-  #let(:dossiers) { [dossier2, dossier1, dossier] }
-  let(:dossiers) { [dossier2, dossier1, dossier] }
+  let(:dossiers) { [dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
   def compute_checksum_in_chunks(io)
@@ -162,6 +161,8 @@ describe API::V2::GraphqlController do
       end
 
       describe "filter dossiers" do
+        let(:dossiers) { [dossier, dossier1, dossier2] }
+
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -189,6 +190,7 @@ describe API::V2::GraphqlController do
       end
 
       describe "filter archived dossiers" do
+        let(:dossiers) { [dossier, dossier1, dossier2] }
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -911,6 +913,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierPasserEnInstruction' do
+        let(:dossiers) { [dossier2, dossier1, dossier] }
         let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
         let(:instructeur_id) { instructeur.to_typed_id }
         let(:disable_notification) { false }
