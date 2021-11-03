@@ -116,7 +116,7 @@ describe API::V2::GraphqlController do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
     end
 
-    context "demarche" do
+    describe "demarche" do
       it "should be returned" do
         expect(gql_errors).to eq(nil)
         expect(gql_data).to eq(demarche: {
@@ -166,7 +166,7 @@ describe API::V2::GraphqlController do
         })
       end
 
-      context "filter dossiers" do
+      describe "filter dossiers" do
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -193,7 +193,7 @@ describe API::V2::GraphqlController do
         end
       end
 
-      context "filter archived dossiers" do
+      describe "filter archived dossiers" do
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -210,7 +210,8 @@ describe API::V2::GraphqlController do
 
         context 'with archived=true' do
           let(:archived_filter) { 'true' }
-          it "only archived dossiers should be returned" do
+
+          it 'returns only archived dossiers' do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(demarche: {
               id: procedure.to_typed_id,
@@ -224,7 +225,8 @@ describe API::V2::GraphqlController do
 
         context 'with archived=false' do
           let(:archived_filter) { 'false' }
-          it "only not archived dossiers should be returned" do
+
+          it 'returns only non-archived dossiers' do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(demarche: {
               id: procedure.to_typed_id,
@@ -237,7 +239,7 @@ describe API::V2::GraphqlController do
         end
       end
 
-      context "filter by minRevision" do
+      describe "filter by minRevision" do
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -266,7 +268,7 @@ describe API::V2::GraphqlController do
         end
       end
 
-      context "filter by maxRevision" do
+      describe "filter by maxRevision" do
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -296,7 +298,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "dossier" do
+    describe "dossier" do
       context "with individual" do
         let(:query) do
           "{
@@ -661,7 +663,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "deletedDossiers" do
+    describe "deletedDossiers" do
       let(:query) do
         "{
           demarche(number: #{procedure.id}) {
@@ -699,7 +701,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "champ" do
+    describe "champ" do
       let(:champ) { create(:champ_piece_justificative, dossier: dossier) }
       let(:byte_size) { 2712286911 }
 
@@ -766,7 +768,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "groupeInstructeur" do
+    describe "groupeInstructeur" do
       let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
       let(:query) do
         "{
@@ -796,7 +798,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "mutations" do
+    describe "mutations" do
       describe 'dossierEnvoyerMessage' do
         context 'success' do
           let(:query) do
@@ -1563,7 +1565,7 @@ describe API::V2::GraphqlController do
       expect(gql_errors).not_to eq(nil)
     end
 
-    context "dossier" do
+    describe "dossier" do
       let(:query) { "{ dossier(number: #{dossier.id}) { id number usager { email } } }" }
 
       it "should return error" do
@@ -1572,7 +1574,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "mutation" do
+    describe "mutation" do
       let(:query) do
         "mutation {
           dossierEnvoyerMessage(input: {
