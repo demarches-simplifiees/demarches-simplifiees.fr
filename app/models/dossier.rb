@@ -606,7 +606,7 @@ class Dossier < ApplicationRecord
   end
 
   def keep_track_on_deletion?
-    !procedure.brouillon?
+    !procedure.brouillon? && !brouillon?
   end
 
   def expose_legacy_carto_api?
@@ -645,53 +645,65 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def expired_keep_track!
-    if keep_track_on_deletion?
-      DeletedDossier.create_from_dossier(self, :expired)
-      log_automatic_dossier_operation(:supprimer, self)
+  def expired_keep_track_and_destroy!
+    transaction do
+      if keep_track_on_deletion?
+        DeletedDossier.create_from_dossier(self, :expired)
+        log_automatic_dossier_operation(:supprimer, self)
+      end
+      destroy!
     end
+    true
+  rescue
+    false
   end
 
   def discard_and_keep_track!(author, reason)
-    if keep_track_on_deletion?
-      if en_construction?
-        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+    user_email = user_deleted? ? nil : user_email_for(:notification)
+    deleted_dossier = nil
 
+    transaction do
+      if keep_track_on_deletion?
+        log_dossier_operation(author, :supprimer, self)
+        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+      end
+
+      update!(dossier_transfer_id: nil)
+      discard!
+    end
+
+    if deleted_dossier.present?
+      if en_construction?
         administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
         administration_emails.each do |email|
           DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
         end
+      end
 
-        if !user_deleted?
-          DossierMailer.notify_deletion_to_user(deleted_dossier, user_email_for(:notification)).deliver_later
+      if user_email.present?
+        if reason == :user_request
+          DossierMailer.notify_deletion_to_user(deleted_dossier, user_email).deliver_later
+        else
+          DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user_email).deliver_later
         end
-
-        log_dossier_operation(author, :supprimer, self)
-      elsif termine?
-        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
-
-        if !user_deleted?
-          DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user_email_for(:notification)).deliver_later
-        end
-
-        log_dossier_operation(author, :supprimer, self)
       end
     end
-
-    update!(dossier_transfer_id: nil)
-    discard!
   end
 
-  def restore(author, only_discarded_with_procedure = false)
+  def restore(author)
     if discarded?
-      deleted_dossier = DeletedDossier.find_by(dossier_id: id)
-
-      if !only_discarded_with_procedure || deleted_dossier&.procedure_removed?
-        if undiscard && keep_track_on_deletion? && en_construction?
-          deleted_dossier&.destroy
+      transaction do
+        if undiscard && keep_track_on_deletion?
+          deleted_dossier&.destroy!
           log_dossier_operation(author, :restaurer, self)
         end
       end
+    end
+  end
+
+  def restore_if_discarded_with_procedure(author)
+    if deleted_dossier&.procedure_removed?
+      restore(author)
     end
   end
 
@@ -976,6 +988,10 @@ class Dossier < ApplicationRecord
   end
 
   private
+
+  def deleted_dossier
+    @deleted_dossier ||= DeletedDossier.find_by(dossier_id: id)
+  end
 
   def defaut_groupe_instructeur?
     groupe_instructeur == procedure.defaut_groupe_instructeur
