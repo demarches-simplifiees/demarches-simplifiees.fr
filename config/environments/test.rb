@@ -76,4 +76,10 @@ Rails.application.configure do
     debounce_delay: 500,
     status_visible_duration: 500
   }
+
+  # BCrypt is slow by design - but during tests we want to make it faster
+  # to compute hashes of passwords.
+  silence_warnings do
+    BCrypt::Engine::DEFAULT_COST = BCrypt::Engine::MIN_COST
+  end
 end
