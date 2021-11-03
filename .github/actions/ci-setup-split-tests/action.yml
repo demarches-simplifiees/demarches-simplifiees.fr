@@ -15,15 +15,23 @@ runs:
         chmod +x split_tests
       shell: bash
 
-    - name: generate UNIQUE_RUN_ID variable based on timestamp
-      run: echo UNIQUE_RUN_ID=split-tests-unique-id--$(date +%s) >> $GITHUB_ENV
+    - name: Generate an unique random value
+      run: echo random_value=$RANDOM >> $GITHUB_ENV
       shell: bash
 
+    # Restore previous runs timing from the cache.
+    #
+    # NB: at the end of the job, the `actions/cache@v2` action will attempt
+    # to save the results back to the same key. However at this stage only
+    # tests results for a single run will be available.
+    # To avoid the cache being overwritten with this single result, we define
+    # a random cache key, which will be used to save the data.
+    # The actual retrieval uses the `restore-keys` instead.
     - name: Restore previous runs timings
       uses: actions/cache@v2
       with:
         path: ${{ inputs.results_path }}
-        key: single-spec-report-${{ env.UNIQUE_RUN_ID }}
+        key: single-spec-report-${{ github.sha }}-${{ env.random_value }}
         restore-keys: |
           specs-reports-${{ github.ref }}-${{ github.sha }}-${{ github.run_id }}
           specs-reports-${{ github.ref }}-${{ github.sha }}-
