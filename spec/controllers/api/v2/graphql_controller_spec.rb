@@ -1,10 +1,11 @@
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
   let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
+  #let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:dossiers) { [dossier2, dossier1, dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
@@ -107,53 +108,57 @@ describe API::V2::GraphqlController do
     end
 
     describe "demarche" do
-      it "should be returned" do
-        expect(gql_errors).to eq(nil)
-        expect(gql_data).to eq(demarche: {
-          id: procedure.to_typed_id,
-          number: procedure.id,
-          title: procedure.libelle,
-          description: procedure.description,
-          state: 'publiee',
-          dateFermeture: nil,
-          dateCreation: procedure.created_at.iso8601,
-          dateDerniereModification: procedure.updated_at.iso8601,
-          groupeInstructeurs: [
-            {
-              instructeurs: [{ email: instructeur.email }],
-              label: "défaut"
-            }
-          ],
-          revisions: procedure.revisions.map { |revision| { id: revision.to_typed_id } },
-          draftRevision: { id: procedure.draft_revision.to_typed_id },
-          publishedRevision: {
-            id: procedure.published_revision.to_typed_id,
-            champDescriptors: procedure.published_types_de_champ.map do |tdc|
+      describe "query a demarche" do
+        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
+
+        it "returns the demarche" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            title: procedure.libelle,
+            description: procedure.description,
+            state: 'publiee',
+            dateFermeture: nil,
+            dateCreation: procedure.created_at.iso8601,
+            dateDerniereModification: procedure.updated_at.iso8601,
+            groupeInstructeurs: [
               {
-                type: tdc.type_champ
+                instructeurs: [{ email: instructeur.email }],
+                label: "défaut"
               }
-            end
-          },
-          service: {
-            nom: procedure.service.nom,
-            typeOrganisme: procedure.service.type_organisme,
-            organisme: procedure.service.organisme
-          },
-          champDescriptors: procedure.types_de_champ.map do |tdc|
-            {
-              id: tdc.to_typed_id,
-              label: tdc.libelle,
-              type: tdc.type_champ,
-              description: tdc.description,
-              required: tdc.mandatory?,
-              champDescriptors: tdc.repetition? ? tdc.reload.types_de_champ.map { |tdc| { id: tdc.to_typed_id, type: tdc.type_champ } } : nil,
-              options: tdc.drop_down_list? ? tdc.drop_down_list_options.reject(&:empty?) : nil
+            ],
+            revisions: procedure.revisions.map { |revision| { id: revision.to_typed_id } },
+            draftRevision: { id: procedure.draft_revision.to_typed_id },
+            publishedRevision: {
+              id: procedure.published_revision.to_typed_id,
+              champDescriptors: procedure.published_types_de_champ.map do |tdc|
+                {
+                  type: tdc.type_champ
+                }
+              end
+            },
+            service: {
+              nom: procedure.service.nom,
+              typeOrganisme: procedure.service.type_organisme,
+              organisme: procedure.service.organisme
+            },
+            champDescriptors: procedure.types_de_champ.map do |tdc|
+              {
+                id: tdc.to_typed_id,
+                label: tdc.libelle,
+                type: tdc.type_champ,
+                description: tdc.description,
+                required: tdc.mandatory?,
+                champDescriptors: tdc.repetition? ? tdc.reload.types_de_champ.map { |tdc| { id: tdc.to_typed_id, type: tdc.type_champ } } : nil,
+                options: tdc.drop_down_list? ? tdc.drop_down_list_options.reject(&:empty?) : nil
+              }
+            end,
+            dossiers: {
+              nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
             }
-          end,
-          dossiers: {
-            nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
-          }
-        })
+          })
+        end
       end
 
       describe "filter dossiers" do
@@ -300,7 +305,8 @@ describe API::V2::GraphqlController do
         dossier
       end
 
-      context "with individual" do
+      context "for individual" do
+        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
         let(:query) do
           "{
             dossier(number: #{dossier.id}) {
@@ -452,7 +458,7 @@ describe API::V2::GraphqlController do
         end
       end
 
-      context "with entreprise" do
+      context "for entreprise" do
         let(:procedure_for_entreprise) { create(:procedure, :published, administrateurs: [admin]) }
         let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure_for_entreprise) }
 
@@ -725,7 +731,7 @@ describe API::V2::GraphqlController do
         }
       end
 
-      context "when file is really big" do
+      context "when the file is really big" do
         before do
           champ.piece_justificative_file.blob.update(byte_size: byte_size)
         end
@@ -1325,6 +1331,8 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierModifierAnnotation' do
+        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_annotations, administrateurs: [admin]) }
+
         describe 'text' do
           let(:query) do
             "mutation {
