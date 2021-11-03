@@ -5,8 +5,8 @@ describe API::V2::GraphqlController do
   let(:dossier) do
     dossier = create(:dossier,
       :en_construction,
-      :with_all_champs,
-      :with_all_annotations,
+      :with_populated_champs,
+      :with_populated_annotations,
       :with_individual,
       procedure: procedure)
     create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
