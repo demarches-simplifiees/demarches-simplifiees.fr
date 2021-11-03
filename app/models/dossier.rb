@@ -918,12 +918,12 @@ class Dossier < ApplicationRecord
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
 
-    columns + champs_for_export(types_de_champ)
+    columns + self.class.champs_for_export(champs + champs_private, types_de_champ)
   end
 
-  def champs_for_export(types_de_champ)
+  def self.champs_for_export(champs, types_de_champ)
     # Index values by stable_id
-    values = (champs + champs_private).reject(&:exclude_from_export?)
+    values = champs.reject(&:exclude_from_export?)
       .index_by(&:stable_id)
       .transform_values(&:for_export)
 
