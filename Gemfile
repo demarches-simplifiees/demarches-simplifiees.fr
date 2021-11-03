@@ -43,6 +43,7 @@ gem 'graphql-rails_logger'
 gem 'groupdate'
 gem 'haml-rails'
 gem 'hashie'
+gem 'hexapdf'
 gem 'http_accept_language'
 gem 'i18n_data'
 gem 'i18n-tasks', require: false

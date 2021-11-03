@@ -22,13 +22,15 @@ delegate('change', VISA_SELECTOR, (evt) => {
 });
 
 async function visa_initialize() {
-  window.setTimeout(() => {
-    let visas = document.querySelectorAll('input[data-visa]:checked');
-    if (visas.length > 0) {
-      let last_visa = visas[visas.length - 1];
-      freeze_field_above(last_visa);
-    }
-  }, 1000);
+  let visas = document.querySelectorAll('input[data-visa]:checked');
+  if (visas.length > 0) {
+    let last_visa = visas[visas.length - 1];
+    freeze_field_above(last_visa);
+  }
 }
 
 addEventListener('DOMContentLoaded', visa_initialize);
+// for react components
+addEventListener('DOMContentLoaded', () =>
+  window.setTimeout(() => visa_initialize(), 1000)
+);
