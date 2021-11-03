@@ -879,7 +879,7 @@ describe Users::DossiersController, type: :controller do
       let(:dossier) do
         create(:dossier,
           :accepte,
-          :with_all_champs,
+          :with_populated_champs,
           :with_motivation,
           :with_commentaires,
           procedure: procedure,
