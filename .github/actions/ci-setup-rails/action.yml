@@ -29,9 +29,3 @@ runs:
         DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
       run: bin/rails db:create db:schema:load db:migrate
       shell: bash
-
-    - name: Setup split_tests binary
-      run: |
-        curl --no-progress-meter -L https://github.com/leonid-shevtsov/split_tests/releases/download/v0.3.0/split_tests.linux.gz | gunzip -c > split_tests
-        chmod +x split_tests
-      shell: bash
