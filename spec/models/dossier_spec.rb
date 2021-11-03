@@ -1461,6 +1461,42 @@ describe Dossier do
       expect(dossier.destroy).to be_truthy
       expect(transfer.reload).not_to be_nil
     end
+
+    context 'discarded' do
+      context 'en_construction' do
+        let(:dossier) { create(:dossier, :en_construction) }
+
+        before do
+          create(:avis, dossier: dossier)
+          Timecop.travel(2.weeks.ago) do
+            dossier.discard!
+          end
+          dossier.reload
+        end
+
+        it "can destroy dossier with avis" do
+          Avis.discarded_en_construction_expired.destroy_all
+          expect(dossier.destroy).to be_truthy
+        end
+      end
+
+      context 'termine' do
+        let(:dossier) { create(:dossier, :accepte) }
+
+        before do
+          create(:avis, dossier: dossier)
+          Timecop.travel(2.weeks.ago) do
+            dossier.discard!
+          end
+          dossier.reload
+        end
+
+        it "can destroy dossier with avis" do
+          Avis.discarded_termine_expired.destroy_all
+          expect(dossier.destroy).to be_truthy
+        end
+      end
+    end
   end
 
   describe "#spreadsheet_columns" do
