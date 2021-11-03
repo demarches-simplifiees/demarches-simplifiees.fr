@@ -1,7 +1,7 @@
 describe 'user access to the list of their dossiers' do
   let(:user) { create(:user) }
   let!(:dossier_brouillon)       { create(:dossier, user: user) }
-  let!(:dossier_en_construction) { create(:dossier, :with_all_champs, :en_construction, user: user) }
+  let!(:dossier_en_construction) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
   let!(:dossier_en_instruction)  { create(:dossier, :en_instruction, user: user) }
   let!(:dossier_archived)        { create(:dossier, :en_instruction, :archived, user: user) }
   let(:dossiers_per_page) { 25 }
@@ -121,7 +121,7 @@ describe 'user access to the list of their dossiers' do
     end
 
     context "when user search for something inside the dossier" do
-      let(:dossier_en_construction2) { create(:dossier, :with_all_champs, :en_construction, user: user) }
+      let(:dossier_en_construction2) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
       before do
         page.find_by_id('q').set(dossier_en_construction.champs.first.value)
       end

@@ -1,21 +1,11 @@
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
   let(:token) { admin.renew_api_token }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
-  let(:dossier) do
-    dossier = create(:dossier,
-      :en_construction,
-      :with_all_champs,
-      :with_all_annotations,
-      :with_individual,
-      procedure: procedure)
-    create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
-    dossier
-  end
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
+  let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
   let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
-  let(:dossier_brouillon) { create(:dossier, :with_individual, procedure: procedure) }
-  let(:dossiers) { [dossier2, dossier1, dossier] }
+  let(:dossiers) { [dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
   def compute_checksum_in_chunks(io)
@@ -116,57 +106,63 @@ describe API::V2::GraphqlController do
       request.env['HTTP_AUTHORIZATION'] = authorization_header
     end
 
-    context "demarche" do
-      it "should be returned" do
-        expect(gql_errors).to eq(nil)
-        expect(gql_data).to eq(demarche: {
-          id: procedure.to_typed_id,
-          number: procedure.id,
-          title: procedure.libelle,
-          description: procedure.description,
-          state: 'publiee',
-          dateFermeture: nil,
-          dateCreation: procedure.created_at.iso8601,
-          dateDerniereModification: procedure.updated_at.iso8601,
-          groupeInstructeurs: [
-            {
-              instructeurs: [{ email: instructeur.email }],
-              label: "défaut"
-            }
-          ],
-          revisions: procedure.revisions.map { |revision| { id: revision.to_typed_id } },
-          draftRevision: { id: procedure.draft_revision.to_typed_id },
-          publishedRevision: {
-            id: procedure.published_revision.to_typed_id,
-            champDescriptors: procedure.published_types_de_champ.map do |tdc|
+    describe "demarche" do
+      describe "query a demarche" do
+        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
+
+        it "returns the demarche" do
+          expect(gql_errors).to eq(nil)
+          expect(gql_data).to eq(demarche: {
+            id: procedure.to_typed_id,
+            number: procedure.id,
+            title: procedure.libelle,
+            description: procedure.description,
+            state: 'publiee',
+            dateFermeture: nil,
+            dateCreation: procedure.created_at.iso8601,
+            dateDerniereModification: procedure.updated_at.iso8601,
+            groupeInstructeurs: [
               {
-                type: tdc.type_champ
+                instructeurs: [{ email: instructeur.email }],
+                label: "défaut"
               }
-            end
-          },
-          service: {
-            nom: procedure.service.nom,
-            typeOrganisme: procedure.service.type_organisme,
-            organisme: procedure.service.organisme
-          },
-          champDescriptors: procedure.types_de_champ.map do |tdc|
-            {
-              id: tdc.to_typed_id,
-              label: tdc.libelle,
-              type: tdc.type_champ,
-              description: tdc.description,
-              required: tdc.mandatory?,
-              champDescriptors: tdc.repetition? ? tdc.reload.types_de_champ.map { |tdc| { id: tdc.to_typed_id, type: tdc.type_champ } } : nil,
-              options: tdc.drop_down_list? ? tdc.drop_down_list_options.reject(&:empty?) : nil
+            ],
+            revisions: procedure.revisions.map { |revision| { id: revision.to_typed_id } },
+            draftRevision: { id: procedure.draft_revision.to_typed_id },
+            publishedRevision: {
+              id: procedure.published_revision.to_typed_id,
+              champDescriptors: procedure.published_types_de_champ.map do |tdc|
+                {
+                  type: tdc.type_champ
+                }
+              end
+            },
+            service: {
+              nom: procedure.service.nom,
+              typeOrganisme: procedure.service.type_organisme,
+              organisme: procedure.service.organisme
+            },
+            champDescriptors: procedure.types_de_champ.map do |tdc|
+              {
+                id: tdc.to_typed_id,
+                label: tdc.libelle,
+                type: tdc.type_champ,
+                description: tdc.description,
+                required: tdc.mandatory?,
+                champDescriptors: tdc.repetition? ? tdc.reload.types_de_champ.map { |tdc| { id: tdc.to_typed_id, type: tdc.type_champ } } : nil,
+                options: tdc.drop_down_list? ? tdc.drop_down_list_options.reject(&:empty?) : nil
+              }
+            end,
+            dossiers: {
+              nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
             }
-          end,
-          dossiers: {
-            nodes: dossiers.map { |dossier| { id: dossier.to_typed_id } }
-          }
-        })
+          })
+        end
       end
 
-      context "filter dossiers" do
+      describe "filter dossiers" do
+        let(:dossiers) { [dossier, dossier1, dossier2] }
+
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -193,7 +189,8 @@ describe API::V2::GraphqlController do
         end
       end
 
-      context "filter archived dossiers" do
+      describe "filter archived dossiers" do
+        let(:dossiers) { [dossier, dossier1, dossier2] }
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -210,7 +207,8 @@ describe API::V2::GraphqlController do
 
         context 'with archived=true' do
           let(:archived_filter) { 'true' }
-          it "only archived dossiers should be returned" do
+
+          it 'returns only archived dossiers' do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(demarche: {
               id: procedure.to_typed_id,
@@ -224,7 +222,8 @@ describe API::V2::GraphqlController do
 
         context 'with archived=false' do
           let(:archived_filter) { 'false' }
-          it "only not archived dossiers should be returned" do
+
+          it 'returns only non-archived dossiers' do
             expect(gql_errors).to eq(nil)
             expect(gql_data).to eq(demarche: {
               id: procedure.to_typed_id,
@@ -237,7 +236,7 @@ describe API::V2::GraphqlController do
         end
       end
 
-      context "filter by minRevision" do
+      describe "filter by minRevision" do
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -266,7 +265,7 @@ describe API::V2::GraphqlController do
         end
       end
 
-      context "filter by maxRevision" do
+      describe "filter by maxRevision" do
         let(:query) do
           "{
             demarche(number: #{procedure.id}) {
@@ -296,8 +295,20 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "dossier" do
-      context "with individual" do
+    describe "dossier" do
+      let(:dossier) do
+        dossier = create(:dossier,
+                         :en_construction,
+                         :with_populated_champs,
+                         :with_populated_annotations,
+                         :with_individual,
+                         procedure: procedure)
+        create(:commentaire, :with_file, dossier: dossier, email: 'test@test.com')
+        dossier
+      end
+
+      context "for individual" do
+        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
         let(:query) do
           "{
             dossier(number: #{dossier.id}) {
@@ -449,7 +460,7 @@ describe API::V2::GraphqlController do
         end
       end
 
-      context "with entreprise" do
+      context "for entreprise" do
         let(:procedure_for_entreprise) { create(:procedure, :published, administrateurs: [admin]) }
         let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure_for_entreprise) }
 
@@ -661,7 +672,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "deletedDossiers" do
+    describe "deletedDossiers" do
       let(:query) do
         "{
           demarche(number: #{procedure.id}) {
@@ -699,7 +710,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "champ" do
+    describe "champ" do
       let(:champ) { create(:champ_piece_justificative, dossier: dossier) }
       let(:byte_size) { 2712286911 }
 
@@ -722,7 +733,7 @@ describe API::V2::GraphqlController do
         }
       end
 
-      context "when file is really big" do
+      context "when the file is really big" do
         before do
           champ.piece_justificative_file.blob.update(byte_size: byte_size)
         end
@@ -766,7 +777,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "groupeInstructeur" do
+    describe "groupeInstructeur" do
       let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
       let(:query) do
         "{
@@ -796,7 +807,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "mutations" do
+    describe "mutations" do
       describe 'dossierEnvoyerMessage' do
         context 'success' do
           let(:query) do
@@ -902,6 +913,7 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierPasserEnInstruction' do
+        let(:dossiers) { [dossier2, dossier1, dossier] }
         let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
         let(:instructeur_id) { instructeur.to_typed_id }
         let(:disable_notification) { false }
@@ -1322,6 +1334,8 @@ describe API::V2::GraphqlController do
       end
 
       describe 'dossierModifierAnnotation' do
+        let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_annotations, administrateurs: [admin]) }
+
         describe 'text' do
           let(:query) do
             "mutation {
@@ -1563,7 +1577,7 @@ describe API::V2::GraphqlController do
       expect(gql_errors).not_to eq(nil)
     end
 
-    context "dossier" do
+    describe "dossier" do
       let(:query) { "{ dossier(number: #{dossier.id}) { id number usager { email } } }" }
 
       it "should return error" do
@@ -1572,7 +1586,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context "mutation" do
+    describe "mutation" do
       let(:query) do
         "mutation {
           dossierEnvoyerMessage(input: {
