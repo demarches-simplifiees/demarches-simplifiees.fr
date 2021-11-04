@@ -99,20 +99,16 @@ class Procedure < ApplicationRecord
   end
 
   def types_de_champ_for_procedure_presentation
-    explanatory_types_de_champ = [:header_section, :explication, :repetition].map { |k| TypeDeChamp.type_champs.fetch(k) }
-
     if brouillon?
-      TypeDeChamp
-        .joins(:revisions)
-        .where.not(type_champ: explanatory_types_de_champ)
-        .where(procedure_revisions: { id: draft_revision_id })
+      TypeDeChamp.fillable
+        .joins(:revision_types_de_champ)
+        .where(revision_types_de_champ: { revision: draft_revision })
         .order(:private, :position)
     else
       # fetch all type_de_champ.stable_id for all the revisions expect draft
       # and for each stable_id take the bigger (more recent) type_de_champ.id
-      recent_ids = TypeDeChamp
+      recent_ids = TypeDeChamp.fillable
         .joins(:revisions)
-        .where.not(type_champ: explanatory_types_de_champ)
         .where(procedure_revisions: { procedure_id: id })
         .where.not(procedure_revisions: { id: draft_revision_id })
         .group(:stable_id)
@@ -139,6 +135,7 @@ class Procedure < ApplicationRecord
     else
       TypeDeChamp.root
         .public_only
+        .fillable
         .where(revision: revisions - [draft_revision])
         .order(:created_at)
         .uniq
@@ -151,6 +148,7 @@ class Procedure < ApplicationRecord
     else
       TypeDeChamp.root
         .private_only
+        .fillable
         .where(revision: revisions - [draft_revision])
         .order(:created_at)
         .uniq
@@ -672,7 +670,7 @@ class Procedure < ApplicationRecord
   def restore(author)
     if discarded? && undiscard
       dossiers.with_discarded.discarded.find_each do |dossier|
-        dossier.restore(author, true)
+        dossier.restore_if_discarded_with_procedure(author)
       end
     end
   end

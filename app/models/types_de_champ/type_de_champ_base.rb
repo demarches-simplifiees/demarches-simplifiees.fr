@@ -1,14 +1,14 @@
 class TypesDeChamp::TypeDeChampBase
   include ActiveModel::Validations
 
-  delegate :description, :libelle, to: :@type_de_champ
+  delegate :description, :libelle, :stable_id, to: :@type_de_champ
 
   def initialize(type_de_champ)
     @type_de_champ = type_de_champ
   end
 
   def tags_for_template
-    stable_id = @type_de_champ.stable_id
+    stable_id = self.stable_id
     [
       {
         libelle: libelle,
@@ -21,7 +21,7 @@ class TypesDeChamp::TypeDeChampBase
     ]
   end
 
-  def libelle_for_export(index)
+  def libelle_for_export(index = 0)
     libelle
   end
 
