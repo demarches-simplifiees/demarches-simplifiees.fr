@@ -649,6 +649,7 @@ class Dossier < ApplicationRecord
     transaction do
       if keep_track_on_deletion?
         DeletedDossier.create_from_dossier(self, :expired)
+        dossier_operation_logs.destroy_all
         log_automatic_dossier_operation(:supprimer, self)
       end
       destroy!
