@@ -977,6 +977,7 @@ class Dossier < ApplicationRecord
 
     transaction do
       DossierOperationLog.discarded_en_construction_expired.destroy_all
+      Avis.discarded_en_construction_expired.destroy_all
       discarded_en_construction_expired.destroy_all
     end
 
