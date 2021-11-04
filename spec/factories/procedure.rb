@@ -139,6 +139,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_private_piece_justificative do
+      after(:build) do |procedure, _evaluator|
+        build(:type_de_champ_piece_justificative, :private, procedure: procedure)
+      end
+    end
+
     trait :with_type_de_champ_mandatory do
       after(:build) do |procedure, _evaluator|
         build(:type_de_champ, mandatory: true, procedure: procedure)
