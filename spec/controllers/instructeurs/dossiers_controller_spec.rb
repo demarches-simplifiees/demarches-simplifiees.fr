@@ -340,14 +340,10 @@ describe Instructeurs::DossiersController, type: :controller do
         end
 
         before do
-          Timecop.freeze(Time.zone.now)
-
           expect_any_instance_of(AttestationTemplate)
             .to receive(:attestation_for)
-            .with(have_attributes(motivation: "Yallah", processed_at: Time.zone.now))
+            .with(have_attributes(motivation: "Yallah"))
         end
-
-        after { Timecop.return }
 
         it { subject }
       end
