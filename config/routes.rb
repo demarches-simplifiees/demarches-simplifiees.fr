@@ -467,6 +467,7 @@ Rails.application.routes.draw do
       get 'regions' => 'api_geo_test#regions'
       get 'communes' => 'api_geo_test#communes'
       get 'departements' => 'api_geo_test#departements'
+      get 'departements/:code/communes' => 'api_geo_test#communes'
     end
   end
 
