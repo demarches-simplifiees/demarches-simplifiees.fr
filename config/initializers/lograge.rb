@@ -14,6 +14,7 @@ Rails.application.configure do
         user_email: event.payload[:user_email],
         user_roles: event.payload[:user_roles],
         user_agent: event.payload[:user_agent],
+        graphql_operation: event.payload[:graphql_operation],
         browser: event.payload[:browser],
         browser_version: event.payload[:browser_version],
         platform: event.payload[:platform]
