@@ -49,6 +49,8 @@ class User < ApplicationRecord
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :deleted_dossiers
   has_many :merge_logs, dependent: :destroy
+  has_many :requested_merge_from, class_name: 'User', dependent: :nullify, inverse_of: :requested_merge_into, foreign_key: :requested_merge_into_id
+
   has_one :france_connect_information, dependent: :destroy
   belongs_to :instructeur, optional: true, dependent: :destroy
   belongs_to :administrateur, optional: true, dependent: :destroy
