@@ -5,18 +5,30 @@
 #profil-page.container
   %h1 Profil
 
+  - if @waiting_merge_emails.any?
+    .card
+      .card-title Demande de fusion de comptes
+      %p
+        Acceptez-vous d’absorber le compte de
+        %span.email-address= @waiting_merge_emails.join(', ')
+
+      = link_to 'Refuser la fusion', refuse_merge_path, method: :post, class: 'button', data: { confirm: "Confirmez-vous le refus ?" }
+      = link_to 'Accepter la fusion', accept_merge_path, method: :post, class: 'button', data: { confirm: "Confirmez-vous la fusion des comptes ?" }
+
   .card
     .card-title Coordonnées
     %p
       Votre email est actuellement
       %span.email-address= current_user.email
-    - if current_user.unconfirmed_email.present?
-      .card.warning
-        .card-title
-          Changement en attente :
-          %span.email-address= current_user.unconfirmed_email
-        %p
-          Pour finaliser votre changement d’adresse, vérifiez vos emails et cliquez sur le lien de confirmation.
+
+    - waiting_email = current_user.unconfirmed_email || current_user.requested_merge_into&.email
+
+    - if waiting_email.present?
+      %p.mb-4
+        Changement en attente :
+        %span.email-address= waiting_email
+        %br
+        Pour finaliser votre changement d’adresse, vérifiez vos emails et cliquez sur le lien de confirmation.
 
     - if current_user.instructeur?
       %p.mb-4
