@@ -61,7 +61,7 @@ module Users
     end
 
     def users_requesting_merge
-      @requesting_merge ||= User.where(requested_merge_into: current_user)
+      @requesting_merge ||= current_user.requested_merge_from
     end
 
     def ensure_update_email_is_authorized
