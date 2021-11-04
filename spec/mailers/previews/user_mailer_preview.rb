@@ -8,8 +8,8 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.new_account_warning(user, procedure)
   end
 
-  def account_already_taken
-    UserMailer.account_already_taken(user, 'dircab@territoires.gouv.fr')
+  def ask_for_merge
+    UserMailer.ask_for_merge(user, 'dircab@territoires.gouv.fr')
   end
 
   private

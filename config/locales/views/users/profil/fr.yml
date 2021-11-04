@@ -21,7 +21,7 @@ fr:
           <br>
           Si ce n'est pas votre cas, contactez le support&nbsp;:
           <a href="mailto:%{contact_email}">%{contact_email}</a>
-      update_email:
+      ensure_update_email_is_authorized:
         email_not_allowed: "L’email %{requested_email} ne peut être utilisé, contactez le support : <a href='mailto:%{contact_email}'>%{contact_email}</a>"
       transfer_all_dossiers:
         new_transfer: 
