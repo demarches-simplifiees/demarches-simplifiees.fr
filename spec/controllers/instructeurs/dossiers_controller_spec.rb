@@ -560,8 +560,8 @@ describe Instructeurs::DossiersController, type: :controller do
       let(:dossier) do
         create(:dossier,
           :accepte,
-          :with_all_champs,
-          :with_all_annotations,
+          :with_populated_champs,
+          :with_populated_annotations,
           :with_motivation,
           :with_entreprise,
           :with_commentaires, procedure: procedure)
@@ -593,7 +593,7 @@ describe Instructeurs::DossiersController, type: :controller do
         build(:type_de_champ_repetition, :with_types_de_champ, position: 3)
       ], instructeurs: instructeurs)
     end
-    let(:dossier) { create(:dossier, :en_construction, :with_all_annotations, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:another_instructeur) { create(:instructeur) }
     let(:now) { Time.zone.parse('01/01/2100') }
 
