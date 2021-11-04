@@ -387,13 +387,18 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
 
       it 'should keep first en_construction_at date' do
         Timecop.return
         dossier.passer_en_instruction!(instructeur)
         dossier.repasser_en_construction!(instructeur)
 
-        expect(dossier.en_construction_at).to eq(beginning_of_day)
+        expect(dossier.traitements.size).to eq(3)
+        expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
+        expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
+        expect(dossier.en_construction_at).to be > beginning_of_day
       end
     end
 
@@ -408,13 +413,18 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction)) }
       it { expect(dossier.en_instruction_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_instruction)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
 
       it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
         Timecop.return
         dossier.repasser_en_construction!(instructeur)
         dossier.passer_en_instruction!(instructeur)
 
-        expect(dossier.en_instruction_at).to eq(beginning_of_day)
+        expect(dossier.traitements.size).to eq(3)
+        expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
+        expect(dossier.traitement.processed_at.round).to eq(dossier.en_instruction_at.round)
+        expect(dossier.en_instruction_at).to be > beginning_of_day
       end
     end
 
@@ -427,8 +437,9 @@ describe Dossier do
       end
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:accepte)) }
-      it { expect(dossier.traitements.last.processed_at).to eq(beginning_of_day) }
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:accepte)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
     end
 
     context 'when dossier is refuse' do
@@ -441,6 +452,8 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:refuse)) }
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:refuse)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
     end
 
     context 'when dossier is sans_suite' do
@@ -453,6 +466,8 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:sans_suite)) }
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:sans_suite)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
     end
   end
 
@@ -997,7 +1012,7 @@ describe Dossier do
   end
 
   describe '#passer_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:instructeur) { create(:instructeur) }
@@ -1006,6 +1021,7 @@ describe Dossier do
 
     it { expect(dossier.state).to eq('en_instruction') }
     it { expect(dossier.followers_instructeurs).to include(instructeur) }
+    it { expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('passer_en_instruction') }
     it { expect(last_operation.automatic_operation?).to be_falsey }
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
@@ -1014,7 +1030,7 @@ describe Dossier do
   end
 
   describe '#passer_automatiquement_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:instructeur) { create(:instructeur) }
@@ -1022,6 +1038,7 @@ describe Dossier do
     before { dossier.passer_automatiquement_en_instruction! }
 
     it { expect(dossier.followers_instructeurs).not_to include(instructeur) }
+    it { expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('passer_en_instruction') }
     it { expect(last_operation.automatic_operation?).to be_truthy }
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
@@ -1119,7 +1136,7 @@ describe Dossier do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1136,6 +1153,7 @@ describe Dossier do
     it { expect(dossier.processed_at).to be_nil }
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.attestation).to be_nil }
+    it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
     it { expect(JSON.parse(last_operation.serialized.download)['author']['email']).to eq(instructeur.email) }
     it { expect(DossierMailer).to have_received(:notify_revert_to_instruction).with(dossier) }
