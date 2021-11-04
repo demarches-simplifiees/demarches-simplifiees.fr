@@ -67,7 +67,10 @@ gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'react-rails'
+gem 'rgeo' # To render maps as PDF
 gem 'rgeo-geojson'
+gem 'rgeo-proj4'
+gem 'ffi-geos'
 gem 'rqrcode'
 gem 'ruby-saml-idp'
 gem 'sanitize-url'
