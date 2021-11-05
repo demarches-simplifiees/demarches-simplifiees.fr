@@ -280,6 +280,8 @@ Rails.application.routes.draw do
     get 'renew-api-token' => redirect('/profil')
     patch 'update_email' => 'profil#update_email'
     post 'transfer_all_dossiers' => 'profil#transfer_all_dossiers'
+    post 'accept_merge' => 'profil#accept_merge'
+    post 'refuse_merge' => 'profil#refuse_merge'
   end
 
   #
@@ -467,6 +469,7 @@ Rails.application.routes.draw do
       get 'regions' => 'api_geo_test#regions'
       get 'communes' => 'api_geo_test#communes'
       get 'departements' => 'api_geo_test#departements'
+      get 'departements/:code/communes' => 'api_geo_test#communes'
     end
   end
 

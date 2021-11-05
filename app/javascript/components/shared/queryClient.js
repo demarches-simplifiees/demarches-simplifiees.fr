@@ -26,17 +26,21 @@ export const queryClient = new QueryClient({
   }
 });
 
-function buildURL(scope, term) {
+function buildURL(scope, term, extra) {
   term = encodeURIComponent(term.replace(/\(|\)/g, ''));
   if (scope === 'adresse') {
     return `${api_adresse_url}/search?q=${term}&limit=${API_ADRESSE_QUERY_LIMIT}`;
   } else if (scope === 'annuaire-education') {
     return `${api_education_url}/search?dataset=fr-en-annuaire-education&q=${term}&rows=${API_EDUCATION_QUERY_LIMIT}`;
   } else if (scope === 'communes') {
+    const limit = `limit=${API_GEO_COMMUNES_QUERY_LIMIT}`;
+    const url = extra
+      ? `${api_geo_url}/communes?codeDepartement=${extra}&${limit}&`
+      : `${api_geo_url}/communes?${limit}&`;
     if (isNumeric(term)) {
-      return `${api_geo_url}/communes?codePostal=${term}&limit=${API_GEO_COMMUNES_QUERY_LIMIT}`;
+      return `${url}codePostal=${term}`;
     }
-    return `${api_geo_url}/communes?nom=${term}&boost=population&limit=${API_GEO_COMMUNES_QUERY_LIMIT}`;
+    return `${url}nom=${term}&boost=population`;
   } else if (isNumeric(term)) {
     const code = term.padStart(2, '0');
     return `${api_geo_url}/${scope}?code=${code}&limit=${API_GEO_QUERY_LIMIT}`;
@@ -53,12 +57,12 @@ function buildOptions() {
   return [{}, null];
 }
 
-async function defaultQueryFn({ queryKey: [scope, term] }) {
+async function defaultQueryFn({ queryKey: [scope, term, extra] }) {
   if (scope == 'pays') {
     return matchSorter(await getPays(), term, { keys: ['label'] });
   }
 
-  const url = buildURL(scope, term);
+  const url = buildURL(scope, term, extra);
   const [options, controller] = buildOptions();
   const promise = fetch(url, options).then((response) => {
     if (response.ok) {

@@ -17,10 +17,10 @@ RSpec.describe UserMailer, type: :mailer do
     end
   end
 
-  describe '.account_already_taken' do
+  describe '.ask_for_merge' do
     let(:requested_email) { 'new@exemple.fr' }
 
-    subject { described_class.account_already_taken(user, requested_email) }
+    subject { described_class.ask_for_merge(user, requested_email) }
 
     it { expect(subject.to).to eq([requested_email]) }
     it { expect(subject.body).to include(requested_email) }

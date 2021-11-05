@@ -16,19 +16,27 @@ function expandResultsWithForeignDepartement(term, results) {
   ];
 }
 
-function ComboDepartementsSearch(params) {
+export function ComboDepartementsSearch(params) {
+  return (
+    <ComboSearch
+      {...params}
+      scope="departements"
+      minimumInputLength={1}
+      transformResult={({ code, nom }) => [code, `${code} - ${nom}`]}
+      transformResults={expandResultsWithForeignDepartement}
+    />
+  );
+}
+
+function ComboDepartementsSearchDefault(params) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ComboSearch
+      <ComboDepartementsSearch
         required={params.mandatory}
         hiddenFieldId={params.hiddenFieldId}
-        scope="departements"
-        minimumInputLength={1}
-        transformResult={({ code, nom }) => [code, `${code} - ${nom}`]}
-        transformResults={expandResultsWithForeignDepartement}
       />
     </QueryClientProvider>
   );
 }
 
-export default ComboDepartementsSearch;
+export default ComboDepartementsSearchDefault;
