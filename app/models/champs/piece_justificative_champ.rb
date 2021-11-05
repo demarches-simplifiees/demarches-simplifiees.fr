@@ -54,7 +54,7 @@ class Champs::PieceJustificativeChamp < Champ
 
   def for_tag
     if piece_justificative_file.attached? && (piece_justificative_file.virus_scanner.safe? || piece_justificative_file.virus_scanner.pending?)
-      url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: id })
+      url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: id, h: encoded_date(:created_at) })
       display = piece_justificative_file.filename
       if piece_justificative_file.image?
         tag.img '', src: url, width: '100', id: piece_justificative_file.id, display: display

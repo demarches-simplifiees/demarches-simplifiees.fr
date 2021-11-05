@@ -1,8 +1,118 @@
 describe Champs::PieceJustificativeController, type: :controller do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :published, :with_piece_justificative) }
+  let(:procedure) { create(:procedure, :published, :with_piece_justificative, :with_private_piece_justificative, :with_instructeur) }
   let(:dossier) { create(:dossier, user: user, procedure: procedure) }
   let(:champ) { dossier.champs.first }
+
+  describe '#download' do
+    let(:instructeur) { procedure.defaut_groupe_instructeur.instructeurs.first }
+    let(:annotation) { dossier.champs_private.first }
+    before do
+      sign_in instructeur.user
+      put :update, params: {
+        position: '1',
+        champ_id: annotation.id,
+        blob_signed_id: file
+      }, format: 'js'
+      sign_out instructeur.user
+      sign_in current_user
+    end
+
+    let(:params) do
+      annotation.reload
+      {
+        champ_id: annotation.id.to_s,
+        h: annotation.encoded_date(:created_at)
+      }
+    end
+    subject do
+      get :download, params: params, xhr: true
+    end
+
+    shared_examples_for "he can download qrcoded pdf" do
+      it 'it should be able to download a qrcoded pdf' do
+        subject
+        expect(response.status).to eq(200) # generated pdfs
+      end
+    end
+
+    shared_examples_for "he can download original pdf" do
+      it 'he should be able to download original pdf' do
+        subject
+        expect(response.status).to eq(302)
+        expect(response.location).to include('active_storage')
+      end
+    end
+
+    shared_examples_for "he can't download pdf" do
+      it "it shouldn't be able to download a qrcoded pdf" do
+        subject
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("#{ActiveStorage::Current.host}/")
+      end
+    end
+
+    context 'when user wants to download pdf piece_justificative,' do
+      let(:current_user) { user }
+      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+
+      context 'when procedure qrcoding is not activated,' do
+        before { Flipper.disable(:qrcoded_pdf, procedure) }
+        it_behaves_like "he can download original pdf"
+      end
+
+      context 'when procedure qrcoding is activated,' do
+        before { Flipper.enable(:qrcoded_pdf, procedure) }
+        it_behaves_like "he can download qrcoded pdf"
+
+        context 'when created_date is not given,' do
+          let(:params) { { champ_id: annotation.id.to_s } }
+          it_behaves_like "he can download qrcoded pdf"
+        end
+      end
+    end
+
+    context 'when instructeur wants to download pdf piece_justificative,' do
+      let(:current_user) { instructeur.user }
+      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+
+      context 'when procedure qrcoding is not activated,' do
+        before { Flipper.disable(:qrcoded_pdf, procedure) }
+        it_behaves_like "he can download original pdf"
+      end
+
+      context 'when procedure qrcoding is activated,' do
+        before { Flipper.enable(:qrcoded_pdf, procedure) }
+        it_behaves_like "he can download qrcoded pdf"
+
+        context 'when created_date is not given,' do
+          let(:params) { { champ_id: annotation.id.to_s } }
+          it_behaves_like "he can download qrcoded pdf"
+        end
+      end
+    end
+
+    context 'when Another User wants to download pdf piece_justificative,' do
+      let(:current_user) { create(:user) }
+      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+
+      context 'when procedure qrcoding is not activated,' do
+        before { Flipper.disable(:qrcoded_pdf, procedure) }
+        it_behaves_like "he can download original pdf"
+      end
+
+      context 'when procedure qrcoding is activated,' do
+        before { Flipper.enable(:qrcoded_pdf, procedure) }
+        it_behaves_like "he can download qrcoded pdf"
+      end
+
+      context 'when created_date is not given,' do
+        let(:params) { { champ_id: annotation.id.to_s } }
+        before { Flipper.enable(:qrcoded_pdf, procedure) }
+        it_behaves_like "he can't download pdf"
+      end
+    end
+  end
 
   describe '#update' do
     render_views

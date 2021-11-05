@@ -34,6 +34,7 @@
 class Dossier < ApplicationRecord
   self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
+  include DateEncodingConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -794,21 +795,6 @@ class Dossier < ApplicationRecord
       .map do |champ|
         "Le champ #{champ.libelle.truncate(200)} doit être rempli."
       end
-  end
-
-  def match_encoded_date?(field, encoded_date)
-    datetime = send(field)
-    if (match = encoded_date.match(/([0-9a-f]{8})-([0-9a-f]{0,8})/))
-      seconds, nseconds = match.captures.map { |x| x.to_i(16) }
-      seconds == datetime.to_i && nseconds == datetime.nsec
-    else
-      false
-    end
-  end
-
-  def encoded_date(field)
-    datetime = send(field)
-    datetime.to_i.to_s(16) + '-' + datetime.nsec.to_s(16)
   end
 
   def log_modifier_annotations!(instructeur)

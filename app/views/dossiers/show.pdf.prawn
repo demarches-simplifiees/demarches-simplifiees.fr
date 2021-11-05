@@ -140,7 +140,7 @@ def add_single_champ(pdf, champ)
   when 'Champs::RepetitionChamp'
     raise 'There should not be a RepetitionChamp here !'
   when 'Champs::PieceJustificativeChamp'
-    url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: champ.id })
+    url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: champ.id, h: champ.encoded_date(:created_at) })
     link = if champ.piece_justificative_file.present?
       display = champ.piece_justificative_file.filename
       content_tag :a, display, { href: url, target: '_blank', rel: 'noopener' }

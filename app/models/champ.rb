@@ -73,6 +73,8 @@ class Champ < ApplicationRecord
 
   validates :type_de_champ_id, uniqueness: { scope: [:dossier_id, :row] }
 
+  include DateEncodingConcern
+
   def public?
     !private?
   end
