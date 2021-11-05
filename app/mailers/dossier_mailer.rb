@@ -67,7 +67,7 @@ class DossierMailer < ApplicationMailer
 
   def notify_brouillon_near_deletion(dossiers, to_email)
     I18n.with_locale(dossiers.first.user_locale) do
-      @subject = default_i18n_subject(count: dossiers.count)
+      @subject = default_i18n_subject(count: dossiers.size)
       @dossiers = dossiers
 
       mail(to: to_email, subject: @subject)
@@ -75,7 +75,7 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_brouillon_deletion(dossier_hashes, to_email)
-    @subject = default_i18n_subject(count: dossier_hashes.count)
+    @subject = default_i18n_subject(count: dossier_hashes.size)
     @dossier_hashes = dossier_hashes
 
     mail(to: to_email, subject: @subject)
@@ -109,7 +109,7 @@ class DossierMailer < ApplicationMailer
   def notify_automatic_deletion_to_user(deleted_dossiers, to_email)
     I18n.with_locale(deleted_dossiers.first.user_locale) do
       @state = deleted_dossiers.first.state
-      @subject = default_i18n_subject(count: deleted_dossiers.count)
+      @subject = default_i18n_subject(count: deleted_dossiers.size)
       @deleted_dossiers = deleted_dossiers
 
       mail(to: to_email, subject: @subject)
@@ -117,7 +117,7 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_automatic_deletion_to_administration(deleted_dossiers, to_email)
-    @subject = default_i18n_subject(count: deleted_dossiers.count)
+    @subject = default_i18n_subject(count: deleted_dossiers.size)
     @deleted_dossiers = deleted_dossiers
 
     mail(to: to_email, subject: @subject)
@@ -126,7 +126,7 @@ class DossierMailer < ApplicationMailer
   def notify_near_deletion_to_user(dossiers, to_email)
     I18n.with_locale(dossiers.first.user_locale) do
       @state = dossiers.first.state
-      @subject = default_i18n_subject(count: dossiers.count, state: @state)
+      @subject = default_i18n_subject(count: dossiers.size, state: @state)
       @dossiers = dossiers
 
       mail(to: to_email, subject: @subject)
@@ -135,7 +135,7 @@ class DossierMailer < ApplicationMailer
 
   def notify_near_deletion_to_administration(dossiers, to_email)
     @state = dossiers.first.state
-    @subject = default_i18n_subject(count: dossiers.count, state: @state)
+    @subject = default_i18n_subject(count: dossiers.size, state: @state)
     @dossiers = dossiers
 
     mail(to: to_email, subject: @subject)
@@ -161,6 +161,15 @@ class DossierMailer < ApplicationMailer
       @dossier = dossier
 
       mail(to: dossier.user_email_for(:notification), subject: @subject)
+    end
+  end
+
+  def notify_transfer(transfer)
+    I18n.with_locale(transfer.user_locale) do
+      @subject = default_i18n_subject(count: transfer.dossiers.size)
+      @transfer = transfer
+
+      mail(to: transfer.email, subject: @subject)
     end
   end
 

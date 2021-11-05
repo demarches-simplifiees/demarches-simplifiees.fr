@@ -285,12 +285,16 @@ Rails.application.routes.draw do
         post 'ask_deletion'
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
+        get 'transferer', to: 'dossiers#transferer'
       end
 
       collection do
+        get 'transferer', to: 'dossiers#transferer_all'
         get 'recherche'
+        resources :transfers, only: [:create, :update, :destroy]
       end
     end
+
     resource :feedback, only: [:create]
     get 'demarches' => 'demarches#index'
 
