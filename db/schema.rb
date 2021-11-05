@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_04_102349) do
+ActiveRecord::Schema.define(version: 2021_11_05_135200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 2021_11_04_102349) do
     t.text "key", null: false
     t.date "start_day"
     t.date "end_day"
-    t.index ["key", "time_span_type", "month"], name: "index_archives_on_key_and_time_span_type_and_month", unique: true
+    t.index ["key", "time_span_type", "month", "start_day", "end_day"], name: "index_archives_on_key_and_period", unique: true
   end
 
   create_table "archives_groupe_instructeurs", force: :cascade do |t|
