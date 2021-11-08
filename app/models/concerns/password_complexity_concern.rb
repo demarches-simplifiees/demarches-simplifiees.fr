@@ -7,6 +7,10 @@ module PasswordComplexityConcern
     true
   end
 
+  def min_password_complexity
+    PASSWORD_COMPLEXITY_FOR_ADMIN
+  end
+
   included do
     # Add a validator for password complexity.
     #

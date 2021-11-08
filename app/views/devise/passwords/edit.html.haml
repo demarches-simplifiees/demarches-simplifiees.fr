@@ -7,16 +7,21 @@
   .one-column-centered
     = devise_error_messages!
 
-    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: 'form' }) do |f|
+    - if populated_resource.present?
+      = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :patch, class: 'form' }) do |f|
 
-      %h1 Changement de mot de passe
+        %h1 Changement de mot de passe
 
-      = f.hidden_field :reset_password_token
+        = f.hidden_field :reset_password_token
 
-      = f.label 'Nouveau mot de passe'
-      = render 'password_complexity/field', { form: f, test_complexity: populated_resource.validate_password_complexity? }
+        = f.label 'Nouveau mot de passe'
+        = render 'password_complexity/field', { form: f, min_complexity: populated_resource.min_password_complexity }
 
-      = f.label 'Confirmez le nouveau mot de passe'
-      = f.password_field :password_confirmation, autocomplete: 'off'
+        = f.label 'Confirmez le nouveau mot de passe'
+        = f.password_field :password_confirmation, autocomplete: 'off'
 
-      = f.submit 'Changer le mot de passe', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi…" }
+        = f.submit 'Changer le mot de passe', class: 'button large primary expand', id: "submit-password", data: { disable_with: "Envoi…" }
+    - else
+      %p
+        Ce lien n'est plus valable. Vous pouvez
+        = link_to 'redemander un nouveau mot de passe', new_password_path(resource_name)

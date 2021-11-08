@@ -1,7 +1,7 @@
 describe PasswordComplexityController, type: :controller do
   describe '#show' do
     let(:params) do
-      { user: { password: 'moderately complex password' } }
+      { complexity: 3, user: { password: 'moderately complex password' } }
     end
 
     subject { get :show, format: :js, params: params, xhr: true }
@@ -13,7 +13,7 @@ describe PasswordComplexityController, type: :controller do
 
     context 'with a different resource name' do
       let(:params) do
-        { super_admin: { password: 'moderately complex password' } }
+        { complexity: 4, super_admin: { password: 'moderately complex password' } }
       end
 
       it 'computes a password score' do

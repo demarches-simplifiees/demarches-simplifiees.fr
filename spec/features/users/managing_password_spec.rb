@@ -20,7 +20,7 @@ feature 'Managing password:' do
       expect(page).to have_content 'Changement de mot de passe'
 
       fill_in 'user_password', with: new_password
-      # fill_in 'user_password_confirmation', with: new_password
+      fill_in 'user_password_confirmation', with: new_password
       click_on 'Changer le mot de passe'
       expect(page).to have_content('Votre mot de passe a bien été modifié.')
     end

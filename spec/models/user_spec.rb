@@ -5,10 +5,10 @@ describe User, type: :model do
     let!(:invite2) { create(:invite, email: email) }
     let(:user) do
       create(:user,
-        email: email,
-        password: TEST_PASSWORD,
-        confirmation_token: '123',
-        confirmed_at: nil)
+             email: email,
+             password: TEST_PASSWORD,
+             confirmation_token: '123',
+             confirmed_at: nil)
     end
 
     it 'when confirming a user, it links the pending invitations to this user' do
@@ -364,16 +364,13 @@ describe User, type: :model do
     # 3 - safely unguessable: moderate protection from offline slow-hash scenario. (guesses < 10^10)
     # 4 - very unguessable: strong protection from offline slow-hash scenario. (guesses >= 10^10)
     passwords = ['password', '12pass23', 'démarches ', 'démarches-simple', '{My-$3cure-p4ssWord}']
-    min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
 
     subject do
       user.valid?
       user.errors.full_messages
     end
 
-    context 'for administrateurs' do
-      let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur)) }
-
+    shared_examples 'password_spec' do |min_complexity|
       context 'when the password is too short' do
         let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
 
@@ -397,23 +394,24 @@ describe User, type: :model do
       end
     end
 
-    context 'for simple users' do
-      let(:user) { build(:user, email: 'user@exemple.fr', password: password) }
-
-      context 'when the password is too short' do
-        let(:password) { 's' * (PASSWORD_MIN_LENGTH - 1) }
-
-        it 'reports an error about password length (but not about complexity)' do
-          expect(subject).to eq(["Le mot de passe est trop court"])
-        end
+    context 'for administrateurs' do
+      it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_ADMIN do
+        let(:user) { build(:user, email: 'admin@exemple.fr', password: password, administrateur: build(:administrateur)) }
+        let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_ADMIN }
       end
+    end
 
-      context 'when the password is long enough, but simple' do
-        let(:password) { 'simple-password' }
+    context 'for instructeurs' do
+      it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR do
+        let(:user) { build(:user, email: 'admin@exemple.fr', password: password, instructeur: build(:instructeur)) }
+        let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR }
+      end
+    end
 
-        it 'doesn’t enforce the password complexity' do
-          expect(subject).to be_empty
-        end
+    context 'for users' do
+      it_should_behave_like 'password_spec', PASSWORD_COMPLEXITY_FOR_USER do
+        let(:user) { build(:user, email: 'admin@exemple.fr', password: password) }
+        let(:min_complexity) { PASSWORD_COMPLEXITY_FOR_USER }
       end
     end
   end

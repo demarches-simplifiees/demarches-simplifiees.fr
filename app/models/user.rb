@@ -65,7 +65,17 @@ class User < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
 
   def validate_password_complexity?
-    administrateur?
+    min_password_complexity.positive?
+  end
+
+  def min_password_complexity
+    if administrateur?
+      PASSWORD_COMPLEXITY_FOR_ADMIN
+    elsif instructeur?
+      PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR
+    else
+      PASSWORD_COMPLEXITY_FOR_USER
+    end
   end
 
   # Override of Devise::Models::Confirmable#send_confirmation_instructions

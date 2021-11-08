@@ -1,6 +1,6 @@
-= form.password_field :password, autofocus: true, autocomplete: 'off', placeholder: 'Mot de passe', data: { remote: test_complexity, url: show_password_complexity_path }
+= form.password_field :password, autofocus: true, autocomplete: 'off', placeholder: 'Mot de passe', data: { remote: min_complexity.positive?, url: show_password_complexity_path(min_complexity) }
 
-- if test_complexity
+- if min_complexity.positive?
   #complexity-bar.password-complexity
 
   .explication

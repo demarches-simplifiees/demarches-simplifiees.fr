@@ -7,7 +7,7 @@
         - when 0..1
           Mot de passe très vulnérable.
         - when 2...@min_complexity
-          Mot de passe vulnérable.
+          Mot de passe vulnérable. #{@score}
         - when @min_complexity...4
           Mot de passe acceptable. Vous pouvez valider...<br> ou améliorer votre mot de passe.
         - else

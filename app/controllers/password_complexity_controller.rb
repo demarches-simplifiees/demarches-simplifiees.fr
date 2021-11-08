@@ -2,7 +2,7 @@ class PasswordComplexityController < ApplicationController
   def show
     @score, @words, @length = ZxcvbnService.new(password_param).complexity
     @min_length = PASSWORD_MIN_LENGTH
-    @min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
+    @min_complexity = params[:complexity]&.to_i || PASSWORD_COMPLEXITY_FOR_ADMIN
   end
 
   private

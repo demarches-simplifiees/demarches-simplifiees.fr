@@ -12,18 +12,18 @@ describe Users::ActivateController, type: :controller do
       context 'for a simple user' do
         it do
           expect(controller).to have_received(:trust_device)
-          expect(assigns(:test_password_strength)).to eq(test_password_strength_path(PASSWORD_COMPLEXITY_FOR_USER))
+          expect(assigns(:min_complexity)).to eq(PASSWORD_COMPLEXITY_FOR_USER)
         end
       end
 
       context 'for an instructeur' do
         let(:user) { create(:instructeur).user }
-        it { expect(assigns(:test_password_strength)).to eq(test_password_strength_path(PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR)) }
+        it { expect(assigns(:min_complexity)).to eq(PASSWORD_COMPLEXITY_FOR_INSTRUCTEUR) }
       end
 
-      context 'administrateur strength path' do
+      context 'for an administrateur' do
         let(:user) { create(:administrateur).user }
-        it { expect(assigns(:test_password_strength)).to eq(test_password_strength_path(PASSWORD_COMPLEXITY_FOR_ADMIN)) }
+        it { expect(assigns(:min_complexity)).to eq(PASSWORD_COMPLEXITY_FOR_ADMIN) }
       end
     end
 
@@ -35,9 +35,10 @@ describe Users::ActivateController, type: :controller do
   end
 
   describe '#create' do
-    let!(:user) { create(:user) }
+    let!(:instructeur) { create(:instructeur) }
+    let!(:user) { instructeur.user }
     let(:token) { user.send(:set_reset_password_token) }
-    let(:password) { 'another-password-ok?' }
+    let(:password) { TEST_PASSWORD }
 
     before { post :create, params: { user: { reset_password_token: token, password: password } } }
 
