@@ -4,7 +4,7 @@ demarches-simplifiees.fr est un [logiciel libre](https://fr.wikipedia.org/wiki/L
 
 Si vous souhaitez apporter des améliorations à demarches-simplifiees.fr, c’est possible !
 
-Le mieux pour cela est de **proposer une modification dans la base de code principale**. Une fois acceptée, votre améliorations sera ainsi disponible pour l’ensemble des utilisateurs de demarches-simplifiees.fr.
+Le mieux pour cela est de **proposer une modification dans la base de code principale**. Une fois acceptée, votre amélioration sera ainsi disponible pour l’ensemble des utilisateurs de demarches-simplifiees.fr.
 
 Voici la marche à suivre recommandée pour effectuer une modification.
 
@@ -22,7 +22,7 @@ Une fois que la discussion est établie, et que les éléments techniques sont d
 
 Quelques conseils : pensez à bien décrire l’objectif et l’implémentation de votre PR au moment de la créer. Et si vos changements sont importants, découpez-les en plusieurs petites PRs successives, qui seront plus faciles à relire. N’oubliez pas d’ajouter des tests automatisés pour vous assurer que vos changements fonctionnent bien.
 
-Chaque PR ouverte déclenche l’exécution des tests automatisés, et la vérification du format du code. Si vos tests ou votre formattage est en rouge, corrigez les erreurs avant de continuer.
+Chaque PR ouverte déclenche l’exécution des tests automatisés, et la vérification du format du code. Si vos tests ou votre formatage sont en rouge, corrigez les erreurs avant de continuer.
 
 Une personne de l’équipe de développement fera une relecture, en demandant éventuellement des détails ou des changements. Si personne n’a réagi au bout de 5 jours, n’hésitez pas à relancer en ajoutant un commentaire à la PR.
 
@@ -51,7 +51,7 @@ Toutefois, certains acteurs (le ministère des armées, l’administration auton
 
 Votre contribution sera plus rapidement traitée si elle s'appuie sur nos habitudes de développement.
 
-Nous travaillons à rendre explicites un maximum de nos pratiques de dev, aussi il est chaudement recommandé
+Nous travaillons à rendre explicite un maximum de nos pratiques de dev, aussi il est chaudement recommandé
 de prendre connaissance des [bonnes pratiques de code](doc/Contributions/Pratiques-de-dev.md).
 
 Merci de votre intérêt pour le projet !
