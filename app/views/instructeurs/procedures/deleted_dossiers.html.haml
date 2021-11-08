@@ -32,8 +32,8 @@
           %tr
             %th.notification-col
             %th.number-col N° dossier
-            %th.status-col Raison de suppression
-            %th.status-col Date de suppression
+            %th Raison de suppression
+            %th Date de suppression
         %tbody
           - @deleted_dossiers.each do |deleted_dossier|
             %tr
@@ -41,9 +41,9 @@
                 %span.icon.folder
               %td.number-col
                 = deleted_dossier.dossier_id
-              %td.reason-col
+              %td
                 = deletion_reason_badge(deleted_dossier.reason)
-              %td.date-col.deleted-cell
+              %td.deleted-cell
                 = l(deleted_dossier.deleted_at, format: '%d/%m/%y')
       = paginate @deleted_dossiers
     - else
