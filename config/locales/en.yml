@@ -360,4 +360,5 @@ en:
       no_establishment: "There is no establishment tied to this file"
       identity_saved: "Identity data is registred"
       no_longer_available: "The certificate is no longer available on this file."
+      always_verify_site: "Always verify carefully you are on"
   via_un_compte: "using %{name} account"
