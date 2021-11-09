@@ -313,9 +313,9 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.interval "conservation_extension", default: "PT0S"
     t.string "deleted_user_email_never_send"
     t.datetime "declarative_triggered_at"
+    t.bigint "dossier_transfer_id"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
-    t.bigint "dossier_transfer_id"
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
@@ -619,6 +619,7 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.boolean "allow_expert_review", default: true, null: false
     t.boolean "experts_require_administrateur_invitation", default: false
     t.string "encrypted_api_particulier_token"
+    t.text "api_particulier_scopes", default: [], array: true
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
