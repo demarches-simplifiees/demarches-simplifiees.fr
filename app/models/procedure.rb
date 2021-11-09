@@ -267,7 +267,7 @@ class Procedure < ApplicationRecord
     if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
-  validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/, message: "n'est pas un jeton valide" }, allow_blank: true
+  validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
