@@ -1,0 +1,31 @@
+name: 'Setup Rails app'
+description: 'Setup the environment for running the Rails app'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        cache: 'yarn'
+
+    - name: Install Node modules
+      run: yarn install --frozen-lockfile
+      shell: bash
+
+    - name: Setup environment variables
+      run: cp config/env.example .env
+      shell: bash
+
+    - name: Setup test database
+      env:
+        RAILS_ENV: test
+        DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
+      run: bin/rails db:create db:schema:load db:migrate
+      shell: bash
