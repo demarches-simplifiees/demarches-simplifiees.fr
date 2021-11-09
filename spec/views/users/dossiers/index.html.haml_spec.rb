@@ -12,6 +12,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     assign(:user_dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_invites, Kaminari.paginate_array(dossiers_invites).page(1))
     assign(:dossiers_supprimes, Kaminari.paginate_array(user_dossiers).page(1))
+    assign(:dossier_transfers, Kaminari.paginate_array([]).page(1))
     assign(:statut, statut)
     render
   end

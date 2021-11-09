@@ -191,6 +191,7 @@ en:
           edit_dossier: "Edit the file"
           start_other_dossier: "Start an other file"
           delete_dossier: "Delete the file"
+          transfer_dossier: "Transfer the file"
           edit_draft: "Edit the draft"
           actions: "Actions"
       sessions:
@@ -331,6 +332,10 @@ en:
       zero: deleted file
       one: deleted file
       other: deleted files
+    dossiers_transferes:
+      zero: transfer request
+      one: transfer request
+      other: transfer requests
     dossier_trouve:
       zero: 0 file found
       one: 1 file found
@@ -360,4 +365,5 @@ en:
       no_establishment: "There is no establishment tied to this file"
       identity_saved: "Identity data is registred"
       no_longer_available: "The certificate is no longer available on this file."
+      always_verify_site: "Always verify carefully you are on"
   via_un_compte: "using %{name} account"

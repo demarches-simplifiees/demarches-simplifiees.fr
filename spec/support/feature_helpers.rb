@@ -64,9 +64,9 @@ module FeatureHelpers
 
   def click_reset_password_link_for(email)
     reset_password_email = open_email(email)
-    token_params = reset_password_email.body.match(/reset_password_token=[^"]+/)
+    reset_password_url = reset_password_email.body.match(/http[s]?:\/\/[^\/]+(\/[^\s]+reset_password_token=[^\s"]+)/)[1]
 
-    visit "/users/password/edit?#{token_params}"
+    visit reset_password_url
   end
 
   # Add a new type de champ in the procedure editor

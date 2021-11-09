@@ -1,7 +1,8 @@
+- has_edit_action = !dossier.read_only?
 - has_delete_action = dossier.can_be_deleted_by_user?
 - has_new_dossier_action = dossier.procedure.accepts_new_dossiers?
-
-- has_actions = has_delete_action || has_new_dossier_action
+- has_transfer_action = dossier.user == current_user
+- has_actions = has_edit_action || has_delete_action || has_new_dossier_action || has_transfer_action
 
 - if has_actions
   .dropdown.user-dossier-actions
@@ -9,7 +10,7 @@
       = t('views.users.dossiers.dossier_action.actions')
     #actions-menu.dropdown-content.fade-in-down
       %ul.dropdown-items
-        - if !dossier.read_only?
+        - if has_edit_action
           - if dossier.brouillon?
             %li
               = link_to(url_for_dossier(dossier)) do
@@ -22,6 +23,13 @@
                 %span.icon.edit
                 .dropdown-description
                   = t('views.users.dossiers.dossier_action.edit_dossier')
+
+        - if has_transfer_action
+          %li
+            = link_to transferer_dossier_path(dossier) do
+              %span.icon.person
+              .dropdown-description
+                = t('views.users.dossiers.dossier_action.transfer_dossier')
 
         - if has_new_dossier_action
           %li

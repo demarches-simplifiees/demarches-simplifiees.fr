@@ -16,7 +16,7 @@ module Manager
       if super_admin_signed_in? && current_super_admin.otp_required_for_login?
         super
       elsif super_admin_signed_in?
-        redirect_to edit_super_admin_otp_path
+        SUPER_ADMIN_OTP_ENABLED ? (redirect_to edit_super_admin_otp_path) : super
       else
         redirect_to new_super_admin_session_path
       end
