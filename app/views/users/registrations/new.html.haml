@@ -26,6 +26,6 @@
 
       = f.label :password, t('views.registrations.new.password_label', min_length: PASSWORD_MIN_LENGTH), id: :user_password_label
 
-      = render partial: 'shared/password/edit_password', locals: { form: f, test_password_strength: test_password_strength_path(PASSWORD_COMPLEXITY_FOR_USER) }
+      = render 'password_complexity/field', { form: f, test_complexity: true, min_complexity: PASSWORD_COMPLEXITY_FOR_USER }
 
-      = f.submit t('views.shared.account.create'), class: "button large primary expand"
+      = f.submit t('views.shared.account.create'), class: "button large primary expand", id: 'submit-password'

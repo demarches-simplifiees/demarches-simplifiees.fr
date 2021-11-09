@@ -181,6 +181,7 @@ fr:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier"
           delete_dossier: "Supprimer le dossier"
+          transfer_dossier: "Transferer le dossier"
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
       sessions:
@@ -349,6 +350,10 @@ fr:
       zero: dossier supprimé
       one: dossier supprimé
       other: dossiers supprimés
+    dossiers_transferes:
+      zero: demande de transfert
+      one: demande de transfert
+      other: demandes de transfert
     dossier_trouve:
       zero: 0 dossier trouvé
       one: 1 dossier trouvé

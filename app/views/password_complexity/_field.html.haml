@@ -1,0 +1,9 @@
+= form.password_field :password, autofocus: true, autocomplete: 'off', placeholder: 'Mot de passe', data: { remote: min_complexity.positive?, url: show_password_complexity_path(min_complexity) }
+
+- if min_complexity.positive?
+  #complexity-bar.password-complexity
+
+  .explication
+    #complexity-label{ style: 'font-weight: bold' }
+      Inscrivez un mot de passe.
+    Une courte phrase avec ponctuation peut être un mot de passe très sécurisé.
