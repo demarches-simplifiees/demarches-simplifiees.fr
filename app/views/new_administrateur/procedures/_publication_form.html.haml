@@ -30,14 +30,5 @@
                           autocomplete: 'off',
                           placeholder: 'https://exemple.gouv.fr/ma_demarche')
 
-    - procedure.validate(:publication)
-    - errors = procedure.errors
-    -# Ignore the :taken error if the path can be claimed
-    - if errors.details[:path]&.pluck(:error)&.include?(:taken) && procedure.path_available?(administrateur, procedure.path)
-      - errors.delete(:path)
-
-    - options = { class: "button primary", id: 'publish' }
-    - if errors.details[:path].present?
-      - options[:disabled] = :disabled
     .flex.justify-end
-      = submit_tag procedure_publish_label(procedure, :submit), options
+      = submit_tag procedure_publish_label(procedure, :submit), { class: "button primary", id: 'publish' }
