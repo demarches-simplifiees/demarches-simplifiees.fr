@@ -1,0 +1,22 @@
+@import "constants";
+@import "table";
+
+
+.qrcode {
+  table {
+    @extend .table;
+  }
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .date {
+    font-size: 12px;
+    color: $dark-grey;
+    text-align: end;
+    display: block;
+  }
+}

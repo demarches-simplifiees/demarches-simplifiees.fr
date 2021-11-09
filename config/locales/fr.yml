@@ -383,4 +383,5 @@ fr:
       no_establishment: "Aucun établissement n’est associé à ce dossier"
       identity_saved: "Identité enregistrée"
       no_longer_available: "L’attestation n'est plus disponible sur ce dossier."
+      always_verify_site: "Vérifiez toujours que vous êtes sur le site"
   via_un_compte: "via un compte %{name}"
