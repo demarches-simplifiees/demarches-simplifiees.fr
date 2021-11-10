@@ -418,8 +418,8 @@ fr:
         token_description: "Il doit contenir au minimum 15 caractères."
       update:
         token_ok: "Le jeton a bien été mis à jour"
-        no_scopes_token: "Mise à jour impossible : le jeton n'a pas acces aux données.<br /><br />Vérifier le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
-        not_found_token: "Mise à jour impossible : le jeton n'a pas été trouvé ou n'est pas actif<br /><br />Vérifier le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
+        no_scopes_token: "Mise à jour impossible : le jeton n'a pas acces aux données.<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
+        not_found_token: "Mise à jour impossible : le jeton n'a pas été trouvé ou n'est pas actif<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
         network_error:  "Mise à jour impossible : une erreur réseau est survenue"
       api_particulier:
         already_configured: "Déjà rempli"
