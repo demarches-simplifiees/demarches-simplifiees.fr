@@ -1,0 +1,84 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://particulier.api.gouv.fr/api/v2/avis-imposition?numeroFiscal=2097699999077&referenceAvis=2097699999077
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Accept:
+      - application/json
+      X-Api-Key:
+      - d7e9c9f4c3ca00caadde31f50fd4521a
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 16 Mar 2021 17:01:19 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '747'
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - timeout=5
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Range,Content-Range,X-Content-Range,X-API-Key
+      Etag:
+      - W/"2eb-A0NiRd+gbJKIAT0y4tR4j9tjXb0"
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=15552000
+      - max-age=15552000
+      Vary:
+      - Origin, Accept
+      X-Gravitee-Request-Id:
+      - 7bfb7f99-ac2d-4443-bb7f-99ac2d0443c5
+      X-Gravitee-Transaction-Id:
+      - f5dca8b3-2ab7-4c9a-9ca8-b32ab70c9a2b
+    body:
+      encoding: ASCII-8BIT
+      string: '{
+        "declarant1": {
+          "nom": "FERRI",
+          "nomNaissance": "FERRI",
+          "prenoms": "Karine",
+          "dateNaissance": "12/08/1978"
+        },
+        "declarant2": {
+          "nom": "",
+          "nomNaissance": "",
+          "prenoms": "",
+          "dateNaissance": "12/08/1978"
+        },
+        "dateRecouvrement": "09/10/2020",
+        "dateEtablissement": "07/07/2020",
+        "nombreParts": 1,
+        "situationFamille": "Célibataire",
+        "nombrePersonnesCharge": 0,
+        "revenuBrutGlobal": 38814,
+        "revenuImposable": 38814,
+        "impotRevenuNetAvantCorrections": 38814,
+        "montantImpot": 38814,
+        "revenuFiscalReference": 38814,
+        "foyerFiscal": {
+          "annee": 2020,
+          "adresse": "13 rue de la Plage 97615 Pamanzi"
+        },
+        "anneeImpots": "99",
+        "anneeRevenus": "2020",
+        "situationPartielle": "SUP DOM"
+      }'
+  recorded_at: Tue, 16 Mar 2021 17:01:18 GMT
+recorded_with: VCR 6.0.0
