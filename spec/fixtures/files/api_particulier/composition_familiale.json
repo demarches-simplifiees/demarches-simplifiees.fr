@@ -1,0 +1,35 @@
+{
+  "allocataires": [
+    {
+      "dateDeNaissance": "07011991",
+      "nomPrenom": "ERIC SNOW", 
+      "sexe": "M"
+    }, 
+    {
+      "dateDeNaissance": "15011992", 
+      "nomPrenom": "SANSA SNOW", 
+      "sexe": "F"
+    }
+  ],
+  "enfants": [
+    {
+      "nomPrenom": "PAUL SNOW",
+      "dateDeNaissance": "04012018",
+      "sexe": "M"
+    }
+  ],
+  "quotient_familial" : {
+    "quotientFamilial": 1856,
+    "annee": 2021,
+    "mois": 6
+  },
+  "adresse": {
+    "codePostalVille": "92110 Clichy",
+    "identite": "Mr SNOW Eric",
+    "complementIdentite": "ne connait rien",
+    "numeroRue": "109  rue La Boétie",
+    "pays": "FRANCE",
+    "complementIdentiteGeo": "au nord de paris",
+    "lieuDit": "glagla"
+  }
+}

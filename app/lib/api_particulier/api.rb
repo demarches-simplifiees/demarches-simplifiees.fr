@@ -2,6 +2,7 @@ class APIParticulier::API
   include APIParticulier::Error
 
   INTROSPECT_RESOURCE_NAME = "introspect"
+  COMPOSITION_FAMILIALE_RESOURCE_NAME = "v2/composition-familiale"
 
   TIMEOUT = 20
 
@@ -10,7 +11,13 @@ class APIParticulier::API
   end
 
   def scopes
-    get(INTROSPECT_RESOURCE_NAME)[:scopes]
+    get(INTROSPECT_RESOURCE_NAME)['scopes']
+  end
+
+  def composition_familiale(numero_allocataire, code_postal)
+    get(COMPOSITION_FAMILIALE_RESOURCE_NAME,
+                   numeroAllocataire: numero_allocataire,
+                   codePostal: code_postal)
   end
 
   private
@@ -24,7 +31,7 @@ class APIParticulier::API
       timeout: TIMEOUT)
 
     if response.success?
-      JSON.parse(response.body, symbolize_names: true)
+      JSON.parse(response.body)
     elsif response.code == 401
       raise Unauthorized.new(response)
     else

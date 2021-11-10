@@ -4,18 +4,18 @@ describe NewAdministrateur::SourcesParticulierController, type: :controller do
   before { sign_in(admin.user) }
 
   describe "#show" do
-    let(:procedure) { create(:procedure, administrateur: admin, api_particulier_scopes: ['cnaf_enfants'], api_particulier_sources: { cnaf: { enfants: ['noms_prenoms'] } }) }
+    let(:procedure) { create(:procedure, administrateur: admin, api_particulier_scopes: ['cnaf_enfants'], api_particulier_sources: { cnaf: { enfants: ['nomPrenom'] } }) }
 
     render_views
 
     subject { get :show, params: { procedure_id: procedure.id } }
 
     it 'renders the sources form' do
-      expect(subject.body).to include(I18n.t('api_particulier.providers.cnaf.scopes.enfants.date_de_naissance'))
-      expect(subject.body).to have_selector("input#api_particulier_sources_cnaf_enfants_[value=noms_prenoms][checked=checked]")
+      expect(subject.body).to include(I18n.t('api_particulier.providers.cnaf.scopes.enfants.dateDeNaissance'))
+      expect(subject.body).to have_selector("input#api_particulier_sources_cnaf_enfants_[value=nomPrenom][checked=checked]")
 
-      expect(subject.body).to have_selector("input#api_particulier_sources_cnaf_enfants_[value=date_de_naissance]")
-      expect(subject.body).not_to have_selector("input#api_particulier_sources_cnaf_enfants_[value=date_de_naissance][checked=checked]")
+      expect(subject.body).to have_selector("input#api_particulier_sources_cnaf_enfants_[value=dateDeNaissance]")
+      expect(subject.body).not_to have_selector("input#api_particulier_sources_cnaf_enfants_[value=dateDeNaissance][checked=checked]")
     end
   end
 
@@ -47,12 +47,12 @@ describe NewAdministrateur::SourcesParticulierController, type: :controller do
     context 'when an authorized source is requested' do
       let(:requested_sources) do
         {
-          api_particulier_sources: { cnaf: { enfants: ['noms_prenoms'] } }
+          api_particulier_sources: { cnaf: { enfants: ['nomPrenom'] } }
         }
       end
 
       it 'saves the source' do
-        expect(procedure.api_particulier_sources).to eq("cnaf" => { "enfants" => ["noms_prenoms"] })
+        expect(procedure.api_particulier_sources).to eq("cnaf" => { "enfants" => ["nomPrenom"] })
         expect(flash.notice).to eq(I18n.t(".new_administrateur.sources_particulier.update.sources_ok"))
       end
     end
