@@ -188,6 +188,7 @@ fr:
           start_other_dossier: "Commencer un autre dossier"
           delete_dossier: "Supprimer le dossier"
           transfer_dossier: "Transferer le dossier"
+          cacher_dossier: 'Cacher le dossier'
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
       sessions:
@@ -334,10 +335,14 @@ fr:
       zero: archivé
       one: archivé
       other: archivés
-    mes_dossiers:
-      zero: mon dossier
-      one: mon dossier
-      other: mes dossiers
+    en_cours:
+      zero: en cours
+      one: en cours
+      other: en cours
+    traites:
+      zero: traité
+      one: traité
+      other: traités
     dossiers_invites:
       zero: dossier invité
       one: dossier invité
