@@ -20,26 +20,26 @@
 
     &.active {
       background-color: #FFFFFF;
-      border-top: 2px solid $blue;
+      border-top: 2px solid $blue-france-500;
       border-left: 1px solid $border-grey;
       border-right: 1px solid $border-grey;
 
       a {
-        color: $blue;
+        color: $blue-france-500;
       }
 
       .badge {
-        color: $blue;
+        color: $blue-france-500;
       }
     }
 
     &:hover {
       a {
-        color: $blue;
+        color: $blue-france-500;
       }
 
       .badge {
-        color: $blue;
+        color: $blue-france-500;
       }
     }
 
