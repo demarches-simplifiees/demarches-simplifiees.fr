@@ -23,6 +23,22 @@
         = f.email_field :email, value: nil, placeholder: 'Nouvelle adresse email', required: true
         = f.submit "Changer mon adresse", class: 'button primary'
 
+  - if !instructeur_signed_in?
+    .card
+      .card-title= t('.transfer_title')
+      = t('.transfer_explication_html')
+
+      = form_tag transfer_all_dossiers_path, class: 'form'  do
+        = email_field_tag :next_owner, nil, required: true
+        = submit_tag "Transférer tous mes dossiers", class: 'button primary', data: { confirm: t('.transfer_confirmation') }
+
+      - if @waiting_transfers.any?
+        .card.warning
+          .card-title= t('.waiting_transfers')
+          %ul
+            - @waiting_transfers.each do |email, nb_dossier|
+              %li= t('.one_waiting_transfer', email: email, count: nb_dossier)
+
   - if current_administrateur.present?
     .card
       .card-title Jeton d’identification de l’API (token)

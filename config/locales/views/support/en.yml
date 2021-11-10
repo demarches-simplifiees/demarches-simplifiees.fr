@@ -1,0 +1,56 @@
+en:
+  support:
+    index:
+      contact: Contact
+      intro_html: Contact us via this form and we will answer you as quickly as possible.<br>Make sure you provide all the required information so we can help you in the best way.
+      your_question: Your question
+      our_answer: 👉 Our answer
+      notice_pj_product: A screenshot can help us identify the element to improve.
+      notice_pj_other: A screenshot can help us identify the issue.
+      procedure_info:
+        question: I've encountered a problem while completing my application
+        answer_html: "<p>Are you sure that all the mandatory fields (<span class= mandatory> * </span>) are properly filled?
+              <p>If you have questions about the information requested, contact the service in charge of the procedure.</p>
+              <p><a href=%{link_procedure_info}>Find more information</a></p>"
+      instruction_info:
+        question: I have a question about the instruction of my application
+        answer_html: "<p>If you have questions about the instruction of your application (response delay for example), contact directly the instructor via our mail system.</p>
+              <p><a href=%{link_instruction_info}>Find more information</a></p>
+              <br>
+              <p>If you are facing technical issues on the website, use the form below. We will not be able to inform you about the instruction of your application.</p>"
+      product:
+        question: I have an idea to improve the website
+        answer_html: "<p>Got an idea? Please check our <strong>enhancement dashboard</strong></p>
+              <p><ul><li>Vote for your priority improvements</li>
+              <li>Share your own ideas</li></ul></p>
+              <p><strong><a href=%{link_product}>➡ Access the enhancement dashboard</a></strong></p>"
+      lost_user:
+        question: I am having trouble finding the procedure I am looking for
+        answer_html: "<p>We invite you to contact the administration in charge of the procedure so they can provide you the link.
+              It should look like this: %{base_url}/commencer/NOM_DE_LA_DEMARCHE.</p>
+              <br>
+              <p>You can find here the most popular procedures (licence, detr, etc.) :</p>
+              <p><a href=%{link_lost_user}>%{link_lost_user}</a></p>"
+      other:
+        question: Other topic
+    admin:
+      your_question: Your question
+      admin_intro_html: "<p>As an administration, you can contact us through this form. We'll answer you as quickly as possibly by e-mail or phone.</p>
+      <br>
+      <p><strong>Caution, this form is dedicated to public bodies only.</strong>
+      It does not concern individuals, companies nor associations (except those recognised of public utility). If you belong to one of these categories, contact us <a href=%{contact_path}>here</a>.</p>"
+      contact_team: Contact our team
+      pro_phone_number: Professional phone number (direct line)
+      pro_mail: Professional email address
+      admin question:
+        question: I have a question about %{app_name}
+      admin demande rdv:
+        question: I request an appointment for an online presentation of %{app_name}
+      admin soucis:
+        question: I am facing a technical issue on %{app_name}
+      admin suggestion produit:
+        question: I have a suggestion for an evolution
+      admin demande compte:
+        question: I want to open an admin account with an Orange, Wanadoo, etc. email
+      admin autre:
+        question: Other topic

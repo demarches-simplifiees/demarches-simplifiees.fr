@@ -18,13 +18,12 @@
 #  type_de_champ_id               :integer
 #
 class Champs::PieceJustificativeChamp < Champ
-  include ActionView::Helpers::TagHelper
-
-  MAX_SIZE = 200.megabytes
+  include FileValidationConcern
+  FILE_MAX_SIZE = 200.megabytes
 
   validates :piece_justificative_file,
-            size: { less_than: MAX_SIZE },
-            if: -> { !type_de_champ.skip_pj_validation }
+    size: file_size_validation(FILE_MAX_SIZE),
+    if: -> { !type_de_champ.skip_pj_validation }
 
   validates :piece_justificative_file,
     content_type: AUTHORIZED_CONTENT_TYPES,

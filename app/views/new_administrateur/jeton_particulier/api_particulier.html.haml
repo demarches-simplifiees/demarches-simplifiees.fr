@@ -1,0 +1,34 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    Procedure.human_attribute_name(:jeton_api_particulier)] }
+
+.container
+  .flex
+    = link_to admin_procedure_api_particulier_jeton_path, class: 'card-admin' do
+      - if @procedure.api_particulier_token.blank?
+        %div
+          %span.icon.clock
+          %p.card-admin-status-todo= t('.needs_configuration')
+      - else
+        %div
+          %span.icon.accept
+          %p.card-admin-status-accept= t('.already_configured')
+      %div
+        %p.card-admin-title
+          = Procedure.human_attribute_name(:jeton_api_particulier)
+      %p.button= t('views.shared.actions.edit')
+
+    - if @procedure.api_particulier_scopes.present?
+      = link_to admin_procedure_api_particulier_sources_path, class: 'card-admin' do
+        - if @procedure.api_particulier_token.blank?
+          %div
+            %span.icon.clock
+            %p.card-admin-status-todo= t('.needs_configuration')
+        - else
+          %div
+            %span.icon.accept
+            %p.card-admin-status-accept= t('.already_configured')
+        %div
+          %p.card-admin-title= t('new_administrateur.sources_particulier.show.data_sources')
+        %p.button= t('views.shared.actions.edit')

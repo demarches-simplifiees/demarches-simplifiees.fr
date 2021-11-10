@@ -326,7 +326,7 @@ describe Procedure do
 
   describe 'clone' do
     let(:service) { create(:service) }
-    let(:procedure) { create(:procedure, received_mail: received_mail, service: service, types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj, type_de_champ_repetition], types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2, type_de_champ_private_repetition]) }
+    let(:procedure) { create(:procedure, received_mail: received_mail, service: service, types_de_champ: [type_de_champ_0, type_de_champ_1, type_de_champ_2, type_de_champ_pj, type_de_champ_repetition], types_de_champ_private: [type_de_champ_private_0, type_de_champ_private_1, type_de_champ_private_2, type_de_champ_private_repetition], api_particulier_token: '123456789012345', api_particulier_scopes: ['cnaf_famille']) }
     let(:type_de_champ_0) { build(:type_de_champ, position: 0) }
     let(:type_de_champ_1) { build(:type_de_champ, position: 1) }
     let(:type_de_champ_2) { build(:type_de_champ_drop_down_list, position: 2) }
@@ -469,6 +469,11 @@ describe Procedure do
       it "should discard the existing groupe instructeurs" do
         expect(subject.groupe_instructeurs.size).not_to eq(procedure.groupe_instructeurs.size)
         expect(subject.groupe_instructeurs.where(label: "groupe_1").first).to be nil
+      end
+
+      it "should discard api_particulier_scopes and token" do
+        expect(subject.encrypted_api_particulier_token).to be_nil
+        expect(subject.api_particulier_scopes).to be_empty
       end
 
       it 'should have a default groupe instructeur' do

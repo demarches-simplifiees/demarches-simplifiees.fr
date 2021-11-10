@@ -29,8 +29,8 @@ data:
   # External locale data (e.g. gems).
   # This data is not considered unused and is never written to.
   external:
-    ## Example (replace %#= with %=):
-    # - "<%#= %x[bundle show vagrant].chomp %>/templates/locales/%{locale}.yml"
+    - "<%= %x[bundle info --path administrate].chomp %>/config/locales/*%{locale}.yml"
+    - "<%= %x[bundle info --path devise-i18n].chomp %>/rails/locales/*%{locale}.yml"
 
   ## Specify the router (see Readme for details). Valid values: conservative_router, pattern_router, or a custom class.
   # router: conservative_router
@@ -96,9 +96,11 @@ search:
 
 ## Consider these keys used:
 ignore_unused:
+- 'activerecord.models.*'
 - 'activerecord.attributes.*'
 - 'activerecord.errors.*'
 - 'errors.messages.blank'
+- 'errors.messages.content_type_invalid'
 - 'pluralize.*'
 - 'views.pagination.*'
 - 'time.formats.default'
