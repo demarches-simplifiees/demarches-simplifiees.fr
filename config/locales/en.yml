@@ -357,7 +357,7 @@ en:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
       no_access: "You do not have access to this file"
       no_longer_editable: "Your file can no longer be edited"
-      always_verify_site: "Always verify carefully you are on"
+      verify_site: "Verify you are on "
       create_commentaire:
         message_send: "Your message has been sent to the instructor in charge of your file."
       ask_deletion:
