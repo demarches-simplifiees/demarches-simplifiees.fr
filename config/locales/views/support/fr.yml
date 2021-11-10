@@ -1,0 +1,56 @@
+fr:
+  support:
+    index:
+      contact: Contact
+      intro_html: Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.<br>Pensez bien à nous donner le plus d’informations possible pour que nous puissions vous aider au mieux.
+      your_question: Votre question
+      our_answer: 👉 Notre réponse
+      notice_pj_product: Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
+      notice_pj_other: Une capture d’écran peut nous aider à identifier plus facilement le problème.
+      procedure_info:
+        question: J’ai un problème lors du remplissage de mon dossier
+        answer_html: "<p>Avez-vous bien vérifié que tous les champs obligatoires (<span class= mandatory> * </span>) sont remplis ?
+        <p>Si vous avez des questions sur les informations à saisir, contactez les services en charge de la démarche.</p>
+        <p><a href=%{link_procedure_info}>En savoir plus</a></p>"
+      instruction_info:
+        question: J’ai une question sur l’instruction de mon dossier
+        answer_html: "<p>Si vous avez des questions sur l’instruction de votre dossier (par exemple sur les délais), nous vous invitons à contacter directement les services qui instruisent votre dossier par votre messagerie.</p>
+        <p><a href=%{link_instruction_info}>En savoir plus</a></p>
+        <br>
+        <p>Si vous souhaitez poser une question pour un problème technique sur le site, utilisez le formulaire ci-dessous. Nous ne pourrons pas vous renseigner sur l’instruction de votre dossier.</p>"
+      product:
+        question: J’ai une idée d’amélioration pour votre site
+        answer_html: "<p>Une idée ? Pensez à consulter notre <strong>tableau de bord des améliorations</strong></p>
+        <p><ul><li>Votez pour vos améliorations prioritaires;</li>
+        <li>Proposez votre propre idée.</li></ul></p>
+        <p><strong><a href=%{link_product}>➡ Accéder au tableau des améliorations</a></strong></p>"
+      lost_user:
+        question: Je ne trouve pas la démarche que je veux faire
+        answer_html: "<p>Nous vous invitons à contacter l’administration en charge de votre démarche pour qu’elle vous indique le lien à suivre. Celui-ci devrait ressembler à cela : %{base_url}/commencer/NOM_DE_LA_DEMARCHE.</p>
+        <br>
+        <p>Vous pouvez aussi consulter ici la liste de nos démarches les plus frequentes (permis, detr etc) :</p>
+        <p><a href=%{link_lost_user}>%{link_lost_user}</a></p>"
+      other:
+        question: Autre sujet
+    admin:
+      your_question: Votre question
+      admin_intro_html: "<p>En tant qu’administration, vous pouvez nous contactez via ce formulaire. Nous vous répondrons dans les plus brefs délais, par email ou par téléphone.</p>
+      <br>
+      <p><strong>Attention, ce formulaire est réservé uniquement aux organismes publics.</strong>
+      Il ne concerne ni les particuliers, ni les entreprises, ni les associations (sauf celles reconnues d’utilité publique). Si c'est votre cas, rendez-vous sur notre
+      <a href=%{contact_path}>formulaire de contact public</a>.</p>"
+      contact_team: Contactez notre équipe
+      pro_phone_number: Numéro de téléphone professionnel (ligne directe)
+      pro_mail: Adresse e-mail professionnelle
+      admin question:
+        question: J’ai une question sur %{app_name}
+      admin demande rdv:
+        question: Demande de RDV pour une présentation à distance de %{app_name}
+      admin soucis:
+        question: J’ai un problème technique avec %{app_name}
+      admin suggestion produit:
+        question: J’ai une proposition d’évolution
+      admin demande compte:
+        question: Je souhaite ouvrir un compte administrateur avec un email Orange, Wanadoo, etc.
+      admin autre:
+        question: Autre sujet

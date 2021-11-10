@@ -3,22 +3,22 @@ class Helpscout::FormAdapter
 
   def self.options
     [
-      [I18n.t(TYPE_INFO, scope: [:support, :question]), TYPE_INFO, FAQ_CONTACTER_SERVICE_EN_CHARGE_URL],
-      [I18n.t(TYPE_PERDU, scope: [:support, :question]), TYPE_PERDU, LISTE_DES_DEMARCHES_URL],
-      [I18n.t(TYPE_INSTRUCTION, scope: [:support, :question]), TYPE_INSTRUCTION, FAQ_OU_EN_EST_MON_DOSSIER_URL],
-      [I18n.t(TYPE_AMELIORATION, scope: [:support, :question]), TYPE_AMELIORATION, FEATURE_UPVOTE_URL],
-      [I18n.t(TYPE_AUTRE, scope: [:support, :question]), TYPE_AUTRE]
+      [I18n.t(:question, scope: [:support, :index, TYPE_INFO]), TYPE_INFO, FAQ_CONTACTER_SERVICE_EN_CHARGE_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_PERDU]), TYPE_PERDU, LISTE_DES_DEMARCHES_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_INSTRUCTION]), TYPE_INSTRUCTION, FAQ_OU_EN_EST_MON_DOSSIER_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_AMELIORATION]), TYPE_AMELIORATION, FEATURE_UPVOTE_URL],
+      [I18n.t(:question, scope: [:support, :index, TYPE_AUTRE]), TYPE_AUTRE]
     ]
   end
 
   def self.admin_options
     [
-      [I18n.t(ADMIN_TYPE_QUESTION, scope: [:supportadmin], app_name: APPLICATION_NAME), ADMIN_TYPE_QUESTION],
-      [I18n.t(ADMIN_TYPE_RDV, scope: [:supportadmin], app_name: APPLICATION_NAME), ADMIN_TYPE_RDV],
-      [I18n.t(ADMIN_TYPE_SOUCIS, scope: [:supportadmin], app_name: APPLICATION_NAME), ADMIN_TYPE_SOUCIS],
-      [I18n.t(ADMIN_TYPE_PRODUIT, scope: [:supportadmin]), ADMIN_TYPE_PRODUIT],
-      [I18n.t(ADMIN_TYPE_DEMANDE_COMPTE, scope: [:supportadmin]), ADMIN_TYPE_DEMANDE_COMPTE],
-      [I18n.t(ADMIN_TYPE_AUTRE, scope: [:supportadmin]), ADMIN_TYPE_AUTRE]
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_QUESTION], app_name: APPLICATION_NAME), ADMIN_TYPE_QUESTION],
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_RDV], app_name: APPLICATION_NAME), ADMIN_TYPE_RDV],
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_SOUCIS], app_name: APPLICATION_NAME), ADMIN_TYPE_SOUCIS],
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_PRODUIT]), ADMIN_TYPE_PRODUIT],
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_DEMANDE_COMPTE]), ADMIN_TYPE_DEMANDE_COMPTE],
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_AUTRE]), ADMIN_TYPE_AUTRE]
     ]
   end
 

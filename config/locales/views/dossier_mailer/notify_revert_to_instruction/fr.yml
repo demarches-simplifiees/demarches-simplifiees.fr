@@ -3,7 +3,7 @@ fr:
     notify_revert_to_instruction:
       subject: Votre dossier nº %{dossier_id} sur la démarche « %{libelle_demarche} » est en train d’être réexaminé
       body_html: |
-        Votre dossier va être réexaminé, la précédente décision sur ce dossier est caduque.
+        Votre dossier nº %{dossier_id} va être réexaminé, la précédente décision sur ce dossier est caduque.
         Vous pouvez retrouver le dossier que vous avez créé pour la démarche <b>« %{libelle_demarche} »</b> à l'adresse suivante :
       contact: |
         Pour obtenir le détail de cette modification de la décision, vous pouvez contacter par email :
