@@ -621,6 +621,7 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.string "encrypted_api_particulier_token"
     t.text "api_particulier_scopes", default: [], array: true
     t.jsonb "api_particulier_sources", default: {}
+    t.boolean "routing_enabled"
     t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"

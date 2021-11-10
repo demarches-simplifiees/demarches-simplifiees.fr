@@ -433,6 +433,7 @@ Rails.application.routes.draw do
 
         collection do
           patch 'update_routing_criteria_name'
+          patch 'update_routing_enabled'
           post 'import'
         end
       end

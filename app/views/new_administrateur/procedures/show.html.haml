@@ -107,14 +107,8 @@
         %p.card-admin-subtitle Gestion de la démarche
       %p.button Modifier
 
-
-    - if feature_enabled?(:administrateur_routage)
-      - instructeur_link = admin_procedure_groupe_instructeurs_path(@procedure)
-    - else
-      - instructeur_link = admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur)
-
-    = link_to instructeur_link, id: 'groupe-instructeurs', class: 'card-admin' do
-      - if feature_enabled?(:administrateur_routage) || @procedure.instructeurs.count > 1
+    = link_to admin_procedure_groupe_instructeurs_path(@procedure), id: 'groupe-instructeurs', class: 'card-admin' do
+      - if @procedure.routee? || @procedure.instructeurs.count > 1
         %div
           %span.icon.accept
           %p.card-admin-status-accept Validé
@@ -124,12 +118,12 @@
           %p.card-admin-status-todo À faire
       %div
         %p.card-admin-title
-          - if feature_enabled?(:administrateur_routage)
+          - if @procedure.routee?
             %span.badge.baseline= @procedure.groupe_instructeurs.count
           - else
             %span.badge.baseline= @procedure.instructeurs.count
 
-          = feature_enabled?(:administrateur_routage) ? "Groupe Instructeurs" : "#{"Instructeur".pluralize(@procedure.instructeurs.count)}"
+          = @procedure.routee? ? "Groupe Instructeurs" : "#{"Instructeur".pluralize(@procedure.instructeurs.count)}"
         %p.card-admin-subtitle Suivi des dossiers
       %p.button Modifier
 

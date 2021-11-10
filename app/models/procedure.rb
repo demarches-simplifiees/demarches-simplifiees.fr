@@ -35,6 +35,7 @@
 #  path                                      :string           not null
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
+#  routing_enabled                           :boolean
 #  test_started_at                           :datetime
 #  unpublished_at                            :datetime
 #  web_hook_url                              :string
@@ -630,7 +631,7 @@ class Procedure < ApplicationRecord
   end
 
   def routee?
-    groupe_instructeurs.size > 1
+    routing_enabled? || groupe_instructeurs.size > 1
   end
 
   def defaut_groupe_instructeur_for_new_dossier
