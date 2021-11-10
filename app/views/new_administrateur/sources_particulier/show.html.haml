@@ -1,0 +1,28 @@
+= render partial: 'new_administrateur/breadcrumbs',
+  locals: { steps: [link_to('Démarches', admin_procedures_path),
+                    link_to(@procedure.libelle, admin_procedure_path(@procedure)),
+                    link_to(Procedure.human_attribute_name(:jeton_api_particulier), admin_procedure_api_particulier_path(@procedure)),
+                    t('.data_sources')] }
+
+.container
+  %h1.page-title= t('.title')
+
+.container#sources-particulier-form.mb-2
+  = form_with model: @procedure, url: admin_procedure_api_particulier_sources_path, local: true, html: { class: 'form' } do |f|
+    .explication= t('.explication_html')
+
+    - @available_sources.each do |provider_key, scopes|
+      %h2.header-section= t("api_particulier.providers.#{provider_key}.libelle")
+
+      - scopes.each do |scope_key, sources|
+        %h3.explication-libelle= t("api_particulier.providers.#{provider_key}.scopes.#{scope_key}.libelle")
+        %ul.procedure-admin-api-particulier-sources
+          - sources.each do |source_key, enabled_hash|
+            - enabled = (@procedure.api_particulier_sources.dig(provider_key, scope_key)&.include?(source_key)).present?
+            %li
+              %label
+                = check_box_tag "api_particulier_sources[#{provider_key}][#{scope_key}][]", "#{source_key}", enabled
+                #{t("api_particulier.providers.#{provider_key}.scopes.#{scope_key}.#{source_key}")}
+
+    .text-right
+      = f.button t('views.shared.actions.save'), class: 'button primary send'
