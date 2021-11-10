@@ -2,9 +2,10 @@ describe 'users/dossiers/index.html.haml', type: :view do
   let(:user) { create(:user) }
   let(:dossier_brouillon) { create(:dossier, state: Dossier.states.fetch(:brouillon), user: user) }
   let(:dossier_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), user: user) }
-  let(:user_dossiers) { [dossier_brouillon, dossier_en_construction] }
+  let(:dossier_termine) { create(:dossier, state: Dossier.states.fetch(:accepte), user: user) }
+  let(:user_dossiers) { [dossier_brouillon, dossier_en_construction, dossier_termine] }
   let(:dossiers_invites) { [] }
-  let(:statut) { 'mes-dossiers' }
+  let(:statut) { 'en-cours' }
 
   before do
     allow(view).to receive(:new_demarche_url).and_return('#')
@@ -12,6 +13,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
     assign(:user_dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_invites, Kaminari.paginate_array(dossiers_invites).page(1))
     assign(:dossiers_supprimes, Kaminari.paginate_array(user_dossiers).page(1))
+    assign(:dossiers_traites, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossier_transfers, Kaminari.paginate_array([]).page(1))
     assign(:dossiers_close_to_expiration, Kaminari.paginate_array([]).page(1))
     assign(:statut, statut)
@@ -19,7 +21,7 @@ describe 'users/dossiers/index.html.haml', type: :view do
   end
 
   it 'affiche la liste des dossiers' do
-    expect(rendered).to have_selector('.dossiers-table tbody tr', count: 2)
+    expect(rendered).to have_selector('.dossiers-table tbody tr', count: 3)
   end
 
   it 'affiche les informations des dossiers' do
@@ -67,8 +69,16 @@ describe 'users/dossiers/index.html.haml', type: :view do
 
     it 'affiche la barre d’onglets' do
       expect(rendered).to have_selector('ul.tabs')
-      expect(rendered).to have_selector('ul.tabs li', count: 3)
+      expect(rendered).to have_selector('ul.tabs li', count: 4)
       expect(rendered).to have_selector('ul.tabs li.active', count: 1)
+    end
+  end
+
+  context 'where there is a traite dossier' do
+    let(:dossiers_traites) { create_list(:dossier, 1) }
+
+    it "displays the hide by user at button" do
+      expect(rendered).to have_text("Supprimer le dossier")
     end
   end
 end

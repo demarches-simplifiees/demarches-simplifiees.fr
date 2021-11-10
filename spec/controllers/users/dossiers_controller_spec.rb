@@ -793,14 +793,14 @@ describe Users::DossiersController, type: :controller do
     context 'when the user does not have any dossiers' do
       before { get(:index) }
 
-      it { expect(assigns(:statut)).to eq('mes-dossiers') }
+      it { expect(assigns(:statut)).to eq('en-cours') }
     end
 
     context 'when the user only have its own dossiers' do
       let!(:own_dossier) { create(:dossier, user: user) }
 
       before { get(:index) }
-      it { expect(assigns(:statut)).to eq('mes-dossiers') }
+      it { expect(assigns(:statut)).to eq('en-cours') }
       it { expect(assigns(:user_dossiers)).to match([own_dossier]) }
     end
 
@@ -813,14 +813,16 @@ describe Users::DossiersController, type: :controller do
       it { expect(assigns(:dossiers_invites)).to match([invite.dossier]) }
     end
 
-    context 'when the user has both' do
+    context 'when the user has dossiers invites, own and traites' do
+      let!(:procedure) { create(:procedure, :published) }
       let!(:own_dossier) { create(:dossier, user: user) }
+      let!(:own_dossier2) { create(:dossier, user: user, state: "accepte", procedure: procedure) }
       let!(:invite) { create(:invite, dossier: create(:dossier), user: user) }
 
       context 'and there is no statut param' do
         before { get(:index) }
 
-        it { expect(assigns(:statut)).to eq('mes-dossiers') }
+        it { expect(assigns(:statut)).to eq('en-cours') }
       end
 
       context 'and there is "dossiers-invites" param' do
@@ -829,10 +831,24 @@ describe Users::DossiersController, type: :controller do
         it { expect(assigns(:statut)).to eq('dossiers-invites') }
       end
 
-      context 'and there is "mes-dossiers" param' do
-        before { get(:index, params: { statut: 'mes-dossiers' }) }
+      context 'and there is "en-cours" param' do
+        before { get(:index, params: { statut: 'en-cours' }) }
 
-        it { expect(assigns(:statut)).to eq('mes-dossiers') }
+        it { expect(assigns(:statut)).to eq('en-cours') }
+      end
+
+      context 'and there is "traites" param' do
+        before { get(:index, params: { statut: 'traites' }) }
+
+        it { expect(assigns(:statut)).to eq('traites') }
+      end
+
+      context 'and the traité dossier has been hidden by user' do
+        before do
+          own_dossier2.update!(hidden_by_user_at: Time.zone.now)
+          get(:index, params: { statut: 'traites' })
+        end
+        it { expect(assigns(:statut)).to eq('en-cours') }
       end
     end
 
