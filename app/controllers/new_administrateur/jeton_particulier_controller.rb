@@ -18,8 +18,7 @@ module NewAdministrateur
         flash.now.alert = t('.no_scopes_token')
         render :show
       else
-        @procedure.api_particulier_scopes = scopes
-        @procedure.save!
+        @procedure.update!(api_particulier_scopes: scopes, api_particulier_sources: {})
 
         redirect_to admin_procedure_api_particulier_sources_path(procedure_id: @procedure.id),
           notice: t('.token_ok')
