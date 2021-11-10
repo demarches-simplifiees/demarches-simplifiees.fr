@@ -21,7 +21,7 @@ describe Champs::PieceJustificativeChamp do
     subject { champ_pj }
 
     context "by default" do
-      it { is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::MAX_SIZE) }
+      it { is_expected.to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::FILE_MAX_SIZE) }
       it { is_expected.to validate_content_type_of(:piece_justificative_file).rejecting('application/x-ms-dos-executable') }
       it { expect(champ_pj.type_de_champ.skip_pj_validation).to be_falsy }
     end
@@ -29,7 +29,7 @@ describe Champs::PieceJustificativeChamp do
     context "when validation is disabled" do
       before { champ_pj.type_de_champ.update(skip_pj_validation: true) }
 
-      it { is_expected.not_to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::MAX_SIZE) }
+      it { is_expected.not_to validate_size_of(:piece_justificative_file).less_than(Champs::PieceJustificativeChamp::FILE_MAX_SIZE) }
     end
 
     context "when content-type validation is disabled" do
