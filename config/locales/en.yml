@@ -326,10 +326,10 @@ en:
       zero: archived
       one: archived
       other: archived
-    mes_dossiers:
-      zero: my file
-      one: my file
-      other: my files
+    en_cours:
+      zero: in progress
+      one: in progress
+      other: in progres
     dossiers_invites:
       zero: guest file
       one: guest file
