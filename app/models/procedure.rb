@@ -25,6 +25,7 @@
 #  experts_require_administrateur_invitation :boolean          default(FALSE)
 #  for_individual                            :boolean          default(FALSE)
 #  hidden_at                                 :datetime
+#  instructeurs_self_management_enabled      :boolean
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
 #  lien_demarche                             :string
@@ -636,6 +637,10 @@ class Procedure < ApplicationRecord
 
   def routee?
     routing_enabled? || groupe_instructeurs.size > 1
+  end
+
+  def instructeurs_self_management?
+    routee? || instructeurs_self_management_enabled?
   end
 
   def defaut_groupe_instructeur_for_new_dossier
