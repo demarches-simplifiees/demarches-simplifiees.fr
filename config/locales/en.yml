@@ -196,8 +196,7 @@ en:
           actions: "Actions"
       sessions:
         new:
-          sign_in: Sign in
-          sign_in_pf: If you already have %{app_name} account
+          sign_in: If you already have %{app_name} account
           social_sign_in: To connect quicly and securely
           email: Email address (name@site.com)
           password: Password (minimum length %{min_length} characters)

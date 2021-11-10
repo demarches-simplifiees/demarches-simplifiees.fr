@@ -190,8 +190,7 @@ fr:
           actions: "Actions"
       sessions:
         new:
-          sign_in: Connectez-vous
-          sign_in_pf: Si vous avez un compte %{app_name}
+          sign_in: Si vous avez un compte %{app_name}
           social_sign_in: "Pour se connecter rapidement"
           email: Email (nom@site.com)
           password: Mot de passe (%{min_length} caractères minimum)
