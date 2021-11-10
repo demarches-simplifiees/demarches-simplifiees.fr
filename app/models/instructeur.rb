@@ -73,19 +73,15 @@ class Instructeur < ApplicationRecord
   end
 
   def assign_to_procedure(procedure)
-    begin
-      assign_to.create({
-        procedure: procedure,
-        groupe_instructeur: procedure.defaut_groupe_instructeur
-      })
-      true
-    rescue ActiveRecord::RecordNotUnique
-      false
+    if !procedure.defaut_groupe_instructeur.in?(groupe_instructeurs)
+      groupe_instructeurs << procedure.defaut_groupe_instructeur
     end
   end
 
   def remove_from_procedure(procedure)
-    !!(procedure.defaut_groupe_instructeur.in?(groupe_instructeurs) && groupe_instructeurs.destroy(procedure.defaut_groupe_instructeur))
+    if procedure.defaut_groupe_instructeur.in?(groupe_instructeurs)
+      groupe_instructeurs.destroy(procedure.defaut_groupe_instructeur)
+    end
   end
 
   def last_week_overview

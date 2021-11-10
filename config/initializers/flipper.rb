@@ -25,8 +25,8 @@ end
 
 # A list of features to be deployed on first push
 features = [
-  :administrateur_routage,
   :administrateur_web_hook,
+  :api_particulier,
   :dossier_pdf_vide,
   :expert_not_allowed_to_invite,
   :hide_instructeur_email,
