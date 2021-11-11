@@ -1,5 +1,5 @@
 import { QueryClient } from 'react-query';
-import { isNumeric } from '@utils';
+import { getJSON, isNumeric } from '@utils';
 import { matchSorter } from 'match-sorter';
 
 const API_EDUCATION_QUERY_LIMIT = 5;
@@ -73,7 +73,7 @@ async function defaultQueryFn({ queryKey: [scope, term] }) {
 let paysCache;
 async function getPays() {
   if (!paysCache) {
-    paysCache = await fetch('/api/pays').then((response) => response.json());
+    paysCache = await getJSON('/api/pays', null);
   }
   return paysCache;
 }

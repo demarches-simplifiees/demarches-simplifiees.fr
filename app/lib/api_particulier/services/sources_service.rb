@@ -52,10 +52,10 @@ module APIParticulier
       def providers
         {
           'cnaf' => {
-            'allocataires' => ['noms_prenoms', 'date_de_naissance', 'sexe'],
-            'enfants' => ['noms_prenoms', 'date_de_naissance', 'sexe'],
-            'adresse' => ['identite', 'complement_d_identite', 'complement_d_identite_geo', 'numero_et_rue', 'lieu_dit', 'code_postal_et_ville', 'pays'],
-            'quotient_familial' => ['quotient_familial', 'annee', 'mois']
+            'allocataires' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
+            'enfants' => ['nomPrenom', 'dateDeNaissance', 'sexe'],
+            'adresse' => ['identite', 'complementIdentite', 'complementIdentiteGeo', 'numeroRue', 'lieuDit', 'codePostalVille', 'pays'],
+            'quotient_familial' => ['quotientFamilial', 'annee', 'mois']
           }
         }
       end

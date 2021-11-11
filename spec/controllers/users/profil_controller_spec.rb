@@ -110,7 +110,7 @@ describe Users::ProfilController, type: :controller do
 
     it "transfer all dossiers" do
       expect(created_transfer.email).to eq(next_owner)
-      expect(created_transfer.dossiers).to eq(dossiers)
+      expect(created_transfer.dossiers).to match_array(dossiers)
       expect(flash.notice).to eq("Le transfert de 3 dossiers à #{next_owner} est en cours")
     end
   end
