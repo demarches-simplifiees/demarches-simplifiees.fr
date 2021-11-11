@@ -1,0 +1,17 @@
+name: 'Save split-tests'
+description: 'Save Junit test results and timing data, to better split future tests'
+
+inputs:
+  results_path:
+    description: 'Glob pattern to the JUnit files to save'
+    required: true
+
+# This should be run once the results from all runs are collected.
+runs:
+  using: composite
+  steps:
+    - name: Save test reports
+      uses: actions/cache@v2
+      with:
+        path: ${{ inputs.results_path }}
+        key: tests-reports-${{ github.ref }}-${{ github.sha }}-${{ github.run_id }}
