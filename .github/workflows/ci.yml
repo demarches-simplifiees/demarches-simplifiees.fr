@@ -9,39 +9,28 @@ jobs:
   linters:
     name: Linters
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: tps_test
+          POSTGRES_DB: tps_test
+          POSTGRES_PASSWORD: tps_test
+        ports: [ "5432:5432" ]
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Find yarn cache location
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: JS package cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install packages
-        run: |
-          yarn install --frozen-lockfile
+      - name: Setup the app code and dependancies
+        uses: ./.github/actions/ci-setup-rails
 
       - name: Run linters
         run: |
           bundle exec rake lint
+          bundle exec rake zeitwerk:check
 
-  tests:
-    name: Tests
+  unit_tests:
+    name: Unit tests
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -54,55 +43,91 @@ jobs:
 
     strategy:
       matrix:
-        pattern:
-          - bin/rake zeitwerk:check
-          - bin/rspec spec/controllers/*_spec.rb
-          - bin/rspec spec/controllers/[a-l]**/*_spec.rb
-          - bin/rspec spec/controllers/[m-z]**/*_spec.rb
-          - bin/rspec spec/system
-          - bin/rspec spec/helpers spec/lib spec/middlewares
-          - bin/rspec spec/mailers spec/jobs spec/policies
-          - bin/rspec spec/models
-          - bin/rspec spec/serializers spec/services
-          - bin/rspec spec/views
+        instances: [0, 1, 2, 3, 4, 5]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup the app runtime and dependencies
+        uses: ./.github/actions/ci-setup-rails
+
+      - name: Pre-compile assets
+        uses: ./.github/actions/ci-setup-assets
+
+      - name: Setup split tests
+        uses: ./.github/actions/ci-setup-split-tests
         with:
-          bundler-cache: true
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Find yarn cache location
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: JS package cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install packages
-        run: |
-          yarn install --frozen-lockfile
-
-      - name: Setup test database
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: "postgres://tps_test@localhost:5432/tps_test"
-        run: |
-          bundle exec rake db:create db:schema:load db:migrate
-
-      - name: Setup environment variables
-        run: |
-          cp config/env.example .env
+          results_path: tmp/*.junit.xml
 
       - name: Run tests
-        run: ${{ matrix.pattern }}
+        run: |
+          SPEC_FILES=$(./split_tests -glob='spec/**/*_spec.rb' -exclude-glob='spec/system/**' -split-index=${{ strategy.job-index }} -split-total=${{ strategy.job-total }} -junit -junit-path=tmp/*.junit.xml)
+          echo "Running tests for bin/rspec $SPEC_FILES"
+          bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+      - name: Upload test results for this instance
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+  system_tests:
+    name: System tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: tps_test
+          POSTGRES_DB: tps_test
+          POSTGRES_PASSWORD: tps_test
+        ports: ["5432:5432"]
+
+    strategy:
+      matrix:
+        instances: [0, 1]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup the app runtime and dependencies
+        uses: ./.github/actions/ci-setup-rails
+
+      - name: Pre-compile assets
+        uses: ./.github/actions/ci-setup-assets
+
+      - name: Setup split tests
+        uses: ./.github/actions/ci-setup-split-tests
+        with:
+          results_path: tmp/*.junit.xml
+
+      - name: Run tests
+        run: |
+          SPEC_FILES=$(./split_tests -glob='spec/system/**/*_spec.rb' -split-index=${{ strategy.job-index }} -split-total=${{ strategy.job-total }} -junit -junit-path=tmp/*.junit.xml)
+          echo "Running tests for bin/rspec $SPEC_FILES"
+          bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+      - name: Upload test results for this instance
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+  save_test_reports:
+    name: Save test reports
+    needs: [unit_tests, system_tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Collect test results from all instances
+        uses: actions/download-artifact@v2
+        with:
+          name: test-reports
+          path: tmp
+
+      - name: Save test results and timing data, to better split future tests
+        uses: ./.github/actions/ci-save-split-tests
+        with:
+          results_path: tmp/*.junit.xml
