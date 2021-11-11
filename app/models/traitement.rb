@@ -13,9 +13,13 @@
 class Traitement < ApplicationRecord
   belongs_to :dossier, optional: false
 
+  scope :en_construction, -> { where(state: Dossier.states.fetch(:en_construction)) }
+  scope :en_instruction, -> { where(state: Dossier.states.fetch(:en_instruction)) }
+  scope :termine, -> { where(state: Dossier::TERMINE) }
+
   scope :termine_close_to_expiration, -> do
     joins(dossier: :procedure)
-      .where(state: Dossier::TERMINE)
+      .termine
       .where(process_expired: true)
       .where('dossiers.state' => Dossier::TERMINE)
       .where("traitements.processed_at + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: Dossier::INTERVAL_BEFORE_EXPIRATION })
@@ -23,6 +27,7 @@ class Traitement < ApplicationRecord
 
   scope :for_traitement_time_stats, -> (procedure) do
     includes(:dossier)
+      .termine
       .where(dossier: procedure.dossiers)
       .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
       .order(:processed_at)
@@ -31,6 +36,7 @@ class Traitement < ApplicationRecord
   def self.count_dossiers_termines_by_month(groupe_instructeurs)
     last_traitements_per_dossier = Traitement
       .select('max(traitements.processed_at) as processed_at')
+      .termine
       .where(dossier: Dossier.state_termine.where(groupe_instructeur: groupe_instructeurs))
       .group(:dossier_id)
       .to_sql
