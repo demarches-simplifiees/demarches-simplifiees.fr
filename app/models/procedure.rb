@@ -692,7 +692,9 @@ class Procedure < ApplicationRecord
   end
 
   def create_new_revision
-    draft_revision.deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
+    draft_revision
+      .deep_clone(include: [:revision_types_de_champ, :revision_types_de_champ_private])
+      .tap(&:save!)
   end
 
   def average_dossier_weight
