@@ -18,7 +18,9 @@
 #  type_de_champ_id               :integer
 #
 class Champs::PieceJustificativeChamp < Champ
+  include ActionView::Helpers::TagHelper
   include FileValidationConcern
+
   FILE_MAX_SIZE = 200.megabytes
 
   validates :piece_justificative_file,
