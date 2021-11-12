@@ -262,14 +262,14 @@ describe Instructeur, type: :model do
   end
 
   describe '#notifications_for_groupe_instructeurs' do
-    # one procedure, one group, 2 instructeurs
+    # a procedure, one group, 2 instructeurs
     let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private, :for_individual) }
     let(:gi_p1) { procedure.groupe_instructeurs.last }
-    let!(:dossier) { create(:dossier, :with_individual, :followed, groupe_instructeur: gi_p1, state: Dossier.states.fetch(:en_construction)) }
+    let!(:dossier) { create(:dossier, :with_individual, :followed, procedure: procedure, groupe_instructeur: gi_p1, state: Dossier.states.fetch(:en_construction)) }
     let(:instructeur) { dossier.follows.first.instructeur }
     let!(:instructeur_2) { create(:instructeur, groupe_instructeurs: [gi_p1]) }
 
-    # one other procedure, dossier followed by a third instructeur
+    # another procedure, dossier followed by a third instructeur
     let!(:dossier_on_procedure_2) { create(:dossier, :followed, state: Dossier.states.fetch(:en_construction)) }
     let!(:instructeur_on_procedure_2) { dossier_on_procedure_2.follows.first.instructeur }
     let(:gi_p2) { dossier.groupe_instructeur }
