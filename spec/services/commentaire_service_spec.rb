@@ -103,8 +103,9 @@ describe CommentaireService do
         expect { subject }.to change { commentaire.reload.body }.from(an_instance_of(String)).to("Message supprimé")
       end
       it 'set deleted_at' do
-        Timecop.freeze do
-          expect { subject }.to change { commentaire.reload.deleted_at }.from(nil).to(Time.zone.now)
+        now = Time.zone.now
+        Timecop.freeze(now) do
+          expect { subject }.to change { commentaire.reload.deleted_at }.from(nil).to(now)
         end
       end
     end

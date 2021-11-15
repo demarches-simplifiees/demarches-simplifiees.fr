@@ -47,6 +47,10 @@ class Commentaire < ApplicationRecord
     end
   end
 
+  def soft_deleted?
+    !!deleted_at
+  end
+
   def header
     "#{redacted_email}, #{I18n.l(created_at, format: '%d %b %Y %H:%M')}"
   end
@@ -79,6 +83,10 @@ class Commentaire < ApplicationRecord
     someone.present? && email == someone&.email
   end
 
+  def soft_deletable?
+    sent_by?(connected_user) && sent_by_instructeur? && !soft_deleted?
+  end
+
   def file_url
     if piece_jointe.attached? && piece_jointe.virus_scanner.safe?
       Rails.application.routes.url_helpers.url_for(piece_jointe)
@@ -99,7 +107,7 @@ class Commentaire < ApplicationRecord
   end
 
   def notify_user
-    DossierMailer.notify_new_answer(dossier, body).deliver_later
+    DossierMailer.notify_new_answer(dossier, body).deliver_later(wait: 10.minutes)
   end
 
   def messagerie_available?
