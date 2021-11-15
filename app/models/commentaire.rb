@@ -75,7 +75,7 @@ class Commentaire < ApplicationRecord
   end
 
   def sent_by?(someone)
-    email == someone&.email
+    someone.present? && email == someone&.email
   end
 
   def file_url
