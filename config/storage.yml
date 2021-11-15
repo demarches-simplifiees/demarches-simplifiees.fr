@@ -21,3 +21,15 @@ s3:
   secret_access_key: "<%= ENV['S3_SECRET_KEY'] %>"
   region: "<%= ENV['S3_REGION'] %>"
   force_path_style: true
+
+local_mirror:
+  service: Mirror
+  primary: local
+  mirrors:
+    - s3
+
+s3_mirror:
+  service: Mirror
+  primary: s3
+  mirrors:
+    - local

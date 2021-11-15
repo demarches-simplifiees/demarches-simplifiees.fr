@@ -23,7 +23,7 @@ class S3Synchronization < ApplicationRecord
     POOL_SIZE = 25
 
     def synchronize(under_rake, until_time)
-      if Rails.configuration.active_storage.service == :local
+      if Set[:local_mirror, :local].include?(Rails.configuration.active_storage.service)
         upload(:local, :s3, under_rake, until_time)
       else
         upload(:s3, :local, under_rake, until_time)
@@ -31,8 +31,12 @@ class S3Synchronization < ApplicationRecord
       AdministrationMailer.s3_synchronization_report.deliver_now
     end
 
+    def switch_service(from_service, to_service)
+      blobs_to_switch(from_service).update_all(service_name: to_service)
+    end
+
     def switch_synchronize
-      if Rails.configuration.active_storage.service == :local
+      if Set[:local_mirror, :local].include?(Rails.configuration.active_storage.service)
         upload(:s3, :local, false, nil)
       else
         upload(:local, :s3, false, nil)
@@ -41,6 +45,7 @@ class S3Synchronization < ApplicationRecord
     end
 
     def upload(from, to, under_rake, until_time)
+      puts "Synchronizing from #{from} to #{to}#{until_time ? ' until ' + until_time : ''}"
       ActiveStorage::Blob.service
       configs = Rails.configuration.active_storage.service_configurations
       from_service = ActiveStorage::Service.configure from, configs
@@ -60,13 +65,22 @@ class S3Synchronization < ApplicationRecord
       pool.shutdown
       pool.wait_for_termination
       progress.finish if progress
-     end
+    end
 
     private
 
     def blobs_to_upload(from_service)
+      blobs(from_service, [false, nil])
+    end
+
+    def blobs_to_switch(from_service)
+      blobs(from_service, true)
+    end
+
+    def blobs(from_service, checked)
       ActiveStorage::Blob.joins('left join s3_synchronizations on  s3_synchronizations.active_storage_blob_id = active_storage_blobs.id')
-        .where(s3_synchronizations: { checked: [false, nil] })
+                         .where(s3_synchronizations: { checked: checked })
+                         .where(service_name: from_service)
     end
 
     def upload_blob_if_present(from_service, configs, to, progress, until_time, blob)
