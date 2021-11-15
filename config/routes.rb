@@ -152,7 +152,6 @@ Rails.application.routes.draw do
   get "patron" => "root#patron"
   get "suivi" => "root#suivi"
   post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
-  post "dismiss_new_look" => "root#dismiss_new_look"
   post "save_locale" => "root#save_locale"
 
   get "contact", to: "support#index"

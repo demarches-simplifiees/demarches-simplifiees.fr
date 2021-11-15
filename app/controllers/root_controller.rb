@@ -88,15 +88,6 @@ class RootController < ApplicationController
     end
   end
 
-  def dismiss_new_look
-    dismiss_new_look_banner
-
-    respond_to do |format|
-      format.html { redirect_back(fallback_location: root_path) }
-      format.js { render js: helpers.remove_element('#new-look-banner') }
-    end
-  end
-
   def save_locale
     set_locale(params[:locale])
     redirect_back(fallback_location: root_path)

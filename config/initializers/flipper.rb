@@ -31,7 +31,6 @@ features = [
   :expert_not_allowed_to_invite,
   :hide_instructeur_email,
   :instructeur_bypass_email_login_token,
-  :new_look_banner,
   :qrcoded_pdf,
   :visa,
   :procedure_revisions,
