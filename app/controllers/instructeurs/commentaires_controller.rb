@@ -2,7 +2,6 @@
 
 module Instructeurs
   class CommentairesController < ProceduresController
-
     def destroy
       result = CommentaireService.soft_delete(current_instructeur, params.permit(:dossier_id, :id))
       if result.status

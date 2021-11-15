@@ -23,12 +23,12 @@ class CommentaireService
 
     def soft_delete(user, params)
       commentaire = Dossier.find(params[:dossier_id])
-                           .commentaires
-                           .find(params[:id])
+        .commentaires
+        .find(params[:id])
       if commentaire.sent_by?(user)
-        commentaire.piece_jointe.purge_later  if commentaire.piece_jointe.attached?
+        commentaire.piece_jointe.purge_later if commentaire.piece_jointe.attached?
         commentaire.update!(body: I18n.t('views.shared.commentaires.destroy.deleted_body'),
-                            deleted_at: Time.now.utc)
+                            deleted_at: Time.zone.now.utc)
         OpenStruct.new(status: true)
       else
         OpenStruct.new(status: false,

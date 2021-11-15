@@ -33,7 +33,6 @@ describe CommentaireService do
         expect(commentaire.piece_jointe.attached?).to be_truthy
       end
     end
-
   end
 
   describe '.soft_delete' do
@@ -64,8 +63,12 @@ describe CommentaireService do
     context 'when commentaire does not belongs to instructeur' do
       let(:user) { create(:instructeur) }
       let(:dossier) { create(:dossier) }
-      let(:params) { { dossier_id: dossier.id,
-                       id: create(:commentaire, dossier: dossier, instructeur: create(:instructeur)).id } }
+      let(:params) {
+  {
+    dossier_id: dossier.id,
+                 id: create(:commentaire, dossier: dossier, instructeur: create(:instructeur)).id
+  }
+}
       it 'returns error struct' do
         expect(subject.status).to eq(false)
       end
@@ -83,21 +86,25 @@ describe CommentaireService do
                instructeur: user,
                piece_jointe: fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf'))
       end
-      let(:params) { { dossier_id: dossier.id,
-                       id: commentaire.id } }
+      let(:params) {
+  {
+    dossier_id: dossier.id,
+                 id: commentaire.id
+  }
+}
       it 'returns error struct' do
         expect(subject.status).to eq(true)
       end
       it 'sets commentaire.body to deleted message' do
         allow(commentaire.piece_jointe).to receive(:purge_later)
-        expect{ subject}.to change { commentaire.reload.body}.from(an_instance_of(String)).to("Message supprimé")
+        expect { subject }.to change { commentaire.reload.body }.from(an_instance_of(String)).to("Message supprimé")
       end
       it 'sets commentaire.body to deleted message' do
-        expect{ subject}.to change { commentaire.reload.body}.from(an_instance_of(String)).to("Message supprimé")
+        expect { subject }.to change { commentaire.reload.body }.from(an_instance_of(String)).to("Message supprimé")
       end
       it 'set deleted_at' do
         Timecop.freeze do
-          expect{ subject}.to change { commentaire.reload.deleted_at}.from(nil).to(Time.now.utc)
+          expect { subject }.to change { commentaire.reload.deleted_at }.from(nil).to(Time.zone.now.utc)
         end
       end
     end

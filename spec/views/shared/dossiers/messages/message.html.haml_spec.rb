@@ -57,31 +57,31 @@ describe 'shared/dossiers/messages/message.html.haml', type: :view do
       context 'on a procedure where commentaire had been written by connected instructeur' do
         let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message') }
 
-        it { is_expected.to have_selector("form[action=\"#{form_url}\"]")}
+        it { is_expected.to have_selector("form[action=\"#{form_url}\"]") }
       end
 
       context 'on a procedure where commentaire had been written by connected instructeur and deleted' do
         let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message', deleted_at: 2.days.ago) }
 
-        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]")}
+        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
       end
 
       context 'on a procedure where commentaire had been written by connected an user' do
         let(:commentaire) { create(:commentaire, email: create(:user).email, body: 'Second message') }
 
-        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]")}
+        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
       end
 
       context 'on a procedure where commentaire had been written by connected an expert' do
         let(:commentaire) { create(:commentaire, expert: create(:expert), body: 'Second message') }
 
-        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]")}
+        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
       end
 
       context 'on a procedure where commentaire had been written another instructeur' do
         let(:commentaire) { create(:commentaire, instructeur: create(:instructeur), body: 'Second message') }
 
-        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]")}
+        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
       end
     end
   end
