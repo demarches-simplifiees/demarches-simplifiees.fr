@@ -65,12 +65,12 @@ describe CommentaireService do
       let(:user) { create(:instructeur) }
       let(:dossier) { create(:dossier) }
       let(:params) { { dossier_id: dossier.id,
-                       commentaire_id: create(:commentaire, dossier: dossier, instructeur: create(:instructeur)).id } }
+                       id: create(:commentaire, dossier: dossier, instructeur: create(:instructeur)).id } }
       it 'returns error struct' do
         expect(subject.status).to eq(false)
       end
       it 'returns error message' do
-        expect(subject.error_message).to eq("Impossible de supprimer le commentaire, celui ci ne vous appartient pas")
+        expect(subject.error_message).to eq("Impossible de supprimer le message, celui ci ne vous appartient pas")
       end
     end
 
@@ -84,7 +84,7 @@ describe CommentaireService do
                piece_jointe: fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf'))
       end
       let(:params) { { dossier_id: dossier.id,
-                       commentaire_id: commentaire.id } }
+                       id: commentaire.id } }
       it 'returns error struct' do
         expect(subject.status).to eq(true)
       end

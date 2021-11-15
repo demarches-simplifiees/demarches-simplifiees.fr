@@ -24,13 +24,13 @@ class CommentaireService
     def soft_delete(user, params)
       commentaire = Dossier.find(params[:dossier_id])
                            .commentaires
-                           .find(params[:commentaire_id])
+                           .find(params[:id])
       if commentaire.sent_by?(user)
         commentaire.piece_jointe.purge_later  if commentaire.piece_jointe.attached?
         commentaire.update!(body: "Message supprimé", deleted_at: Time.now.utc)
         OpenStruct.new(status: true)
       else
-        OpenStruct.new(status: false, error_message: "Impossible de supprimer le commentaire, celui ci ne vous appartient pas")
+        OpenStruct.new(status: false, error_message: "Impossible de supprimer le message, celui ci ne vous appartient pas")
       end
     rescue ActiveRecord::RecordNotFound => e
       return OpenStruct.new(status: false, error_message: "#{e.model.humanize} introuvable")

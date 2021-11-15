@@ -11,8 +11,10 @@
   .rich-text= pretty_commentaire(commentaire)
 
   .message-extras.flex.justify-start
-    - if commentaire.sent_by?(connected_user) && commentaire.sent_by_instructeur?
-      %div{"data-test-delete-id" => 1} Suppr
+    - if commentaire.sent_by?(connected_user) && commentaire.sent_by_instructeur? && commentaire.deleted_at.nil?
+      = button_to  instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete do
+        Supprimer
+
     - if commentaire.piece_jointe.attached?
       .attachment-link
         = render partial: "shared/attachment/show", locals: { attachment: commentaire.piece_jointe.attachment }

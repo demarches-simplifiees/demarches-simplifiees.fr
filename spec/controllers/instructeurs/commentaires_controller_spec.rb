@@ -7,18 +7,18 @@ describe Instructeurs::CommentairesController, type: :controller do
   before { sign_in(instructeur.user) }
 
   describe 'destroy' do
-    let(:commentaire) { create(:commentaire, instructeur: instructeur)}
+    let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier)}
     subject { delete :destroy, params: { dossier_id: dossier.id, procedure_id: procedure.id, id: commentaire.id } }
     it 'redirect to dossier' do
       expect(subject).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
     end
     it 'flash success' do
       subject
-      expect(flash[:success]).to eq('Votre commentaire a bien été supprimé')
+      expect(flash[:notice]).to eq('Votre message a été supprimé')
     end
 
     context 'when it fails' do
-      let(:error) { OpenStruct.new(status: false, error_messages: "boom") }
+      let(:error) { OpenStruct.new(status: false, error_message: "boom") }
       before do
         expect(CommentaireService).to receive(:soft_delete).and_return(error)
       end
@@ -27,7 +27,7 @@ describe Instructeurs::CommentairesController, type: :controller do
       end
       it 'flash success' do
         subject
-        expect(flash[:error]).to eq("Votre commentaire ne peut être supprimé: #{error.error_messages}")
+        expect(flash[:alert]).to eq("Votre message ne peut être supprimé: #{error.error_message}")
       end
     end
   end
