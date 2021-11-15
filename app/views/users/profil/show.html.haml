@@ -5,7 +5,7 @@
 #profil-page.container
   %h1 Profil
 
-  - if @waiting_merge_emails.any?
+  - if @waiting_merge_emails&.any?
     .card
       .card-title Demande de fusion de comptes
       %p
