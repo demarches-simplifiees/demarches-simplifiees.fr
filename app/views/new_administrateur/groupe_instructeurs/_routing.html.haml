@@ -2,4 +2,17 @@
   .card-title Routage
   %p.notice= t('.notice_html')
 
-  = link_to 'Activer le routage', update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure), class: 'button primary', method: 'patch'
+  = link_to t('.button.routing_enable'), update_routing_enabled_admin_procedure_groupe_instructeurs_path(procedure), class: 'button primary mt-1', method: 'patch'
+
+  .card-title.mt-4 L‘autogestion des instructeurs
+  %p.notice= t('.self_managment_notice_html')
+
+  = form_for procedure,
+    method: :patch,
+    url: update_instructeurs_self_management_enabled_admin_procedure_groupe_instructeurs_path(procedure),
+    html: { class: 'form procedure-form__column--form no-background' } do |f|
+    %label.toggle-switch
+      = f.check_box :instructeurs_self_management_enabled, class: 'toggle-switch-checkbox', onchange: 'this.form.submit()'
+      %span.toggle-switch-control.round
+      %span.toggle-switch-label.on
+      %span.toggle-switch-label.off

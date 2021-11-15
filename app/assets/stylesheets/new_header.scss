@@ -9,7 +9,7 @@ $header-mobile-breakpoint: 550px;
 
 // FIXME: Rename when the header is generalized
 .new-header {
-  background-color: $red;
+  background-color: $white;
 }
 
 .new-header-with-border {
@@ -27,6 +27,7 @@ $header-mobile-breakpoint: 550px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  color: $blue-france-500;
 
   img {
     margin-right: 0px;
@@ -67,13 +68,10 @@ $header-mobile-breakpoint: 550px;
     font-size: 18px;
     color: $nav-bar-fg;
 
-    &.active {
-      border-bottom: 2px solid $nav-bar-fg;
-    }
-
+    &.active,
     &:hover {
-      color: $nav-bar-link;
-      border-bottom: 2px solid $nav-bar-link;
+      color: $blue-france-500;
+      border-bottom: 2px solid $blue-france-500;
 
       &.contact-link {
         position: relative;
@@ -92,7 +90,7 @@ $header-mobile-breakpoint: 550px;
   position: absolute;
   left: -165px;
   background: #FFFFFF;
-  border: 2px solid $blue;
+  border: 2px solid $blue-france-500;
   border-radius: 5px;
   padding: 15px;
   width: 400px;
@@ -122,7 +120,7 @@ $header-mobile-breakpoint: 550px;
 
   &::before {
     border-color: rgba(255, 255, 255, 0);
-    border-bottom-color: $blue;
+    border-bottom-color: $blue-france-500;
     border-width: 18px;
     margin-left: -18px;
   }
@@ -251,9 +249,3 @@ $header-mobile-breakpoint: 550px;
     }
   }
 }
-
-.header-text {
-  color: $nav-bar-fg;
-  background: $nav-bar-bg;
-}
-
