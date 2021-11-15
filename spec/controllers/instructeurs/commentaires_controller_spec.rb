@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 describe Instructeurs::CommentairesController, type: :controller do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: [instructeur]) }
@@ -7,7 +8,7 @@ describe Instructeurs::CommentairesController, type: :controller do
   before { sign_in(instructeur.user) }
 
   describe 'destroy' do
-    let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier)}
+    let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
     subject { delete :destroy, params: { dossier_id: dossier.id, procedure_id: procedure.id, id: commentaire.id } }
     it 'redirect to dossier' do
       expect(subject).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
