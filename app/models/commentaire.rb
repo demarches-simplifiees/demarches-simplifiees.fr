@@ -112,8 +112,8 @@ class Commentaire < ApplicationRecord
     NotifyNewAnswerWithDelayJob.set(wait: 5.minutes).perform_later(dossier, body, self)
   end
 
-  def notify_user_with
-    DossierMailer.notify_with_delay_new_commentaire_to_user(dossier, body, self).deliver_later
+  def notify_user
+    DossierMailer.notify_new_answer(dossier, body).deliver_later
   end
 
   def messagerie_available?
