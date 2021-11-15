@@ -27,13 +27,16 @@ class CommentaireService
                            .find(params[:id])
       if commentaire.sent_by?(user)
         commentaire.piece_jointe.purge_later  if commentaire.piece_jointe.attached?
-        commentaire.update!(body: "Message supprimé", deleted_at: Time.now.utc)
+        commentaire.update!(body: I18n.t('views.shared.commentaires.destroy.deleted_body'),
+                            deleted_at: Time.now.utc)
         OpenStruct.new(status: true)
       else
-        OpenStruct.new(status: false, error_message: "Impossible de supprimer le message, celui ci ne vous appartient pas")
+        OpenStruct.new(status: false,
+                       error_message: I18n.t('views.shared.commentaires.destroy.alert_reasons.acl'))
       end
     rescue ActiveRecord::RecordNotFound => e
-      return OpenStruct.new(status: false, error_message: "#{e.model.humanize} introuvable")
+      return OpenStruct.new(status: false,
+                            error_message: I18n.t('views.shared.commentaires.destroy.alert_reasons.ar_not_found', model_name: e.model.humanize))
     end
   end
 end

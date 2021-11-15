@@ -14,7 +14,7 @@ describe Instructeurs::CommentairesController, type: :controller do
     end
     it 'flash success' do
       subject
-      expect(flash[:notice]).to eq('Votre message a été supprimé')
+      expect(flash[:notice]).to eq(I18n.t('views.shared.commentaires.destroy.notice'))
     end
 
     context 'when it fails' do
@@ -27,7 +27,7 @@ describe Instructeurs::CommentairesController, type: :controller do
       end
       it 'flash success' do
         subject
-        expect(flash[:alert]).to eq("Votre message ne peut être supprimé: #{error.error_message}")
+        expect(flash[:alert]).to eq(I18n.t('views.shared.commentaires.destroy.alert', reason: error.error_message))
       end
     end
   end

@@ -12,8 +12,9 @@
 
   .message-extras.flex.justify-start
     - if commentaire.sent_by?(connected_user) && commentaire.sent_by_instructeur? && commentaire.deleted_at.nil?
-      = button_to  instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete do
-        Supprimer
+      = button_to  instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete, class: 'button danger', data: { confirm: t('views.shared.commentaires.destroy.confirm') } do
+        %span.icon.delete
+        = t('views.shared.commentaires.destroy.button')
 
     - if commentaire.piece_jointe.attached?
       .attachment-link

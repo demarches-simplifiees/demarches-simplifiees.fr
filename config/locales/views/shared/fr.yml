@@ -20,3 +20,13 @@ fr:
         already_user: 'J’ai déjà un compte'
         create: 'Créer un compte'
         signin: 'Connexion'
+      commentaires:
+        destroy:
+          button: 'Supprimer le message'
+          confirm: "Êtes-vous sûr de vouloir supprimer ce message ?"
+          deleted_body: Message supprimé
+          notice: 'Votre message a été supprimé'
+          alert: 'Votre message ne peut être supprimé: #{result.error_message}'
+          alert_reasons:
+            acl: "Impossible de supprimer le message, celui ci ne vous appartient pas"
+            ar_not_found: "%{model_name} introuvable"
