@@ -83,7 +83,7 @@ class Commentaire < ApplicationRecord
     someone.present? && email == someone&.email
   end
 
-  def soft_deletable?
+  def soft_deletable?(connected_user)
     sent_by?(connected_user) && sent_by_instructeur? && !soft_deleted?
   end
 
