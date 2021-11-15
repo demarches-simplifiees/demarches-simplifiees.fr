@@ -104,7 +104,7 @@ describe CommentaireService do
       end
       it 'set deleted_at' do
         Timecop.freeze do
-          expect { subject }.to change { commentaire.reload.deleted_at }.from(nil).to(Time.zone.now.utc)
+          expect { subject }.to change { commentaire.reload.deleted_at }.from(nil).to(Time.zone.now)
         end
       end
     end

@@ -28,7 +28,7 @@ class CommentaireService
       if commentaire.sent_by?(user)
         commentaire.piece_jointe.purge_later if commentaire.piece_jointe.attached?
         commentaire.update!(body: I18n.t('views.shared.commentaires.destroy.deleted_body'),
-                            deleted_at: Time.zone.now.utc)
+                            deleted_at: Time.zone.now)
         OpenStruct.new(status: true)
       else
         OpenStruct.new(status: false,
