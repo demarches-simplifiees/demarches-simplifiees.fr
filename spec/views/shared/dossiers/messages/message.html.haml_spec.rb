@@ -46,5 +46,36 @@ describe 'shared/dossiers/messages/message.html.haml', type: :view do
         it { is_expected.not_to have_text(instructeur.email) }
       end
     end
+
+    describe 'delete message button for instructeur' do
+      let(:instructeur) { create(:instructeur) }
+      let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, :en_construction, commentaires: [commentaire], procedure: procedure) }
+      subject { render 'shared/dossiers/messages/message.html.haml', commentaire: commentaire, messagerie_seen_at: seen_at, connected_user: instructeur, show_reply_button: true }
+
+      context 'on a procedure where commentaire had been written by connected instructeur' do
+        let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message') }
+
+        it { is_expected.to have_css("div[data-test-delete-id=1]")}
+      end
+
+      context 'on a procedure where commentaire had been written by connected an user' do
+        let(:commentaire) { create(:commentaire, email: create(:user).email, body: 'Second message') }
+
+        it { is_expected.not_to have_css("div[data-test-delete-id=1]")}
+      end
+
+      context 'on a procedure where commentaire had been written by connected an expert' do
+        let(:commentaire) { create(:commentaire, expert: create(:expert), body: 'Second message') }
+
+        it { is_expected.not_to have_css("div[data-test-delete-id=1]")}
+      end
+
+      context 'on a procedure where commentaire had been written another instructeur' do
+        let(:commentaire) { create(:commentaire, instructeur: create(:instructeur), body: 'Second message') }
+
+        it { is_expected.not_to have_css("div[data-test-delete-id=1]")}
+      end
+    end
   end
 end
