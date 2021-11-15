@@ -113,7 +113,7 @@ class Commentaire < ApplicationRecord
   end
 
   def notify_user_with
-    DossierMailer.notify_with_delay_new_commentaire_to_user(dossier, body, self).deliver_later(job_options)
+    DossierMailer.notify_with_delay_new_commentaire_to_user(dossier, body, self).deliver_later
   end
 
   def messagerie_available?
