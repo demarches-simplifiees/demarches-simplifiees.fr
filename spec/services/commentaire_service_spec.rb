@@ -33,5 +33,64 @@ describe CommentaireService do
         expect(commentaire.piece_jointe.attached?).to be_truthy
       end
     end
+
+  end
+
+  describe '.soft_delete' do
+    subject { CommentaireService.soft_delete(user, params) }
+
+    context 'when dossier not found' do
+      let(:user) { create(:instructeur) }
+      let(:params) { {} }
+      it 'returns error struct' do
+        expect(subject.status).to eq(false)
+      end
+      it 'returns error message' do
+        expect(subject.error_message).to eq("Dossier introuvable")
+      end
+    end
+
+    context 'when commentaire not found' do
+      let(:user) { create(:instructeur) }
+      let(:params) { { dossier_id: create(:dossier).id } }
+      it 'returns error struct' do
+        expect(subject.status).to eq(false)
+      end
+      it 'returns error message' do
+        expect(subject.error_message).to eq("Commentaire introuvable")
+      end
+    end
+
+    context 'when commentaire does not belongs to instructeur' do
+      let(:user) { create(:instructeur) }
+      let(:dossier) { create(:dossier) }
+      let(:params) { { dossier_id: dossier.id,
+                       commentaire_id: create(:commentaire, dossier: dossier, instructeur: create(:instructeur)).id } }
+      it 'returns error struct' do
+        expect(subject.status).to eq(false)
+      end
+      it 'returns error message' do
+        expect(subject.error_message).to eq("Impossible de supprimer le commentaire, celui ci ne vous appartient pas")
+      end
+    end
+
+    context 'when commentaire belongs to instructeur' do
+      let(:user) { create(:instructeur) }
+      let(:dossier) { create(:dossier) }
+      let(:commentaire) { create(:commentaire, dossier: dossier, instructeur: user) }
+      let(:params) { { dossier_id: dossier.id,
+                       commentaire_id: commentaire.id } }
+      it 'returns error struct' do
+        expect(subject.status).to eq(true)
+      end
+      it 'sets commentaire.body to deleted message' do
+        expect{ subject}.to change { commentaire.reload.body}.from(an_instance_of(String)).to("Message supprimé")
+      end
+      it 'set deleted_at' do
+        Timecop.freeze do
+          expect{ subject}.to change { commentaire.reload.deleted_at}.from(nil).to(Time.now.utc)
+        end
+      end
+    end
   end
 end
