@@ -86,8 +86,8 @@ describe Commentaire do
     context "with a commentaire created by a instructeur" do
       let(:commentaire) { CommentaireService.build(instructeur, dossier, body: "Mon commentaire") }
 
-      it "calls notify_user" do
-        expect(commentaire).to receive(:notify_user)
+      it "calls notify_user with delay so instructeur can destroy his comment in case of failure" do
+        expect(commentaire).to receive(:notify_user_with_delay)
         commentaire.save
       end
     end
