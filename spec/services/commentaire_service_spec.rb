@@ -77,11 +77,20 @@ describe CommentaireService do
     context 'when commentaire belongs to instructeur' do
       let(:user) { create(:instructeur) }
       let(:dossier) { create(:dossier) }
-      let(:commentaire) { create(:commentaire, dossier: dossier, instructeur: user) }
+      let(:commentaire) do
+        create(:commentaire,
+               dossier: dossier,
+               instructeur: user,
+               piece_jointe: fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf'))
+      end
       let(:params) { { dossier_id: dossier.id,
                        commentaire_id: commentaire.id } }
       it 'returns error struct' do
         expect(subject.status).to eq(true)
+      end
+      it 'sets commentaire.body to deleted message' do
+        allow(commentaire.piece_jointe).to receive(:purge_later)
+        expect{ subject}.to change { commentaire.reload.body}.from(an_instance_of(String)).to("Message supprimé")
       end
       it 'sets commentaire.body to deleted message' do
         expect{ subject}.to change { commentaire.reload.body}.from(an_instance_of(String)).to("Message supprimé")
