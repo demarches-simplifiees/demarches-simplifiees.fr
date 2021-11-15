@@ -40,6 +40,12 @@ describe Commentaire do
     end
   end
 
+  describe "sent_by?" do
+    let(:commentaire) { build(:commentaire, instructeur: build(:instructeur)) }
+    subject { commentaire.sent_by?(nil) }
+    it { is_expected.to be_falsy }
+  end
+
   describe "#redacted_email" do
     subject { commentaire.redacted_email }
 
