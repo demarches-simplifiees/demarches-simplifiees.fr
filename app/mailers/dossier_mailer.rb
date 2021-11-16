@@ -22,7 +22,8 @@ class DossierMailer < ApplicationMailer
   end
 
   def notify_new_answer
-    dossier = params[:commentaire].dossier
+    commentaire = params[:commentaire]
+    dossier = commentaire.dossier
     I18n.with_locale(dossier.user_locale) do
       @dossier = dossier
       @service = dossier.procedure.service

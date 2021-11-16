@@ -20,22 +20,5 @@ class CommentaireService
       end
       Commentaire.new(attributes)
     end
-
-    def soft_delete(user, params)
-      commentaire = Dossier.find(params[:dossier_id])
-        .commentaires
-        .find(params[:id])
-      if commentaire.sent_by?(user)
-        commentaire.piece_jointe.purge_later if commentaire.piece_jointe.attached?
-        commentaire.body = ''
-        OpenStruct.new(status: commentaire.discard, error_message: commentaire.errors.full_messages.join(', '))
-      else
-        OpenStruct.new(status: false,
-                       error_message: I18n.t('views.shared.commentaires.destroy.alert_reasons.acl'))
-      end
-    rescue ActiveRecord::RecordNotFound => e
-      return OpenStruct.new(status: false,
-                            error_message: I18n.t('views.shared.commentaires.destroy.alert_reasons.ar_not_found', model_name: e.model.humanize))
-    end
   end
 end

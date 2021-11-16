@@ -26,7 +26,7 @@ class Commentaire < ApplicationRecord
 
   has_one_attached :piece_jointe
 
-  validates :body, presence: { message: "ne peut être vide" }
+  validates :body, presence: { message: "ne peut être vide" }, unless: :discarded?
 
   FILE_MAX_SIZE = 20.megabytes
   validates :piece_jointe,
@@ -105,10 +105,8 @@ class Commentaire < ApplicationRecord
     end
   end
 
-  def notify_user(job_options)
-    DossierMailer.with(commentaire: self)
-      .notify_new_answer
-      .deliver_later(job_options)
+  def notify_user(job_options = {})
+    DossierMailer.with(commentaire: self).notify_new_answer.deliver_later(job_options)
   end
 
   def messagerie_available?

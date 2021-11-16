@@ -8,27 +8,29 @@ describe Instructeurs::CommentairesController, type: :controller do
   before { sign_in(instructeur.user) }
 
   describe 'destroy' do
-    let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
-    subject { delete :destroy, params: { dossier_id: dossier.id, procedure_id: procedure.id, id: commentaire.id } }
-    it 'redirect to dossier' do
-      expect(subject).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
-    end
-    it 'flash success' do
-      subject
-      expect(flash[:notice]).to eq(I18n.t('views.shared.commentaires.destroy.notice'))
-    end
+    context 'when it works' do
+      let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
+      subject { delete :destroy, params: { dossier_id: dossier.id, procedure_id: procedure.id, id: commentaire.id } }
 
-    context 'when it fails' do
-      let(:error) { OpenStruct.new(status: false, error_message: "boom") }
-      before do
-        expect(CommentaireService).to receive(:soft_delete).and_return(error)
-      end
       it 'redirect to dossier' do
         expect(subject).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
       end
       it 'flash success' do
         subject
-        expect(flash[:alert]).to eq(I18n.t('views.shared.commentaires.destroy.alert', reason: error.error_message))
+        expect(flash[:notice]).to eq(I18n.t('views.shared.commentaires.destroy.notice'))
+      end
+    end
+
+    context 'when dossier had been discarded' do
+      let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier, discarded_at: 2.hours.ago) }
+      subject { delete :destroy, params: { dossier_id: dossier.id, procedure_id: procedure.id, id: commentaire.id } }
+
+      it 'redirect to dossier' do
+        expect(subject).to redirect_to(messagerie_instructeur_dossier_path(dossier.procedure, dossier))
+      end
+      it 'flash success' do
+        subject
+        expect(flash[:alert]).to eq(I18n.t('views.shared.commentaires.destroy.alert_reasons.already_discarded'))
       end
     end
   end
