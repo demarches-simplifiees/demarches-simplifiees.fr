@@ -20,7 +20,12 @@ class S3Synchronization < ApplicationRecord
   scope :checked_stats, -> { uploaded_stats.where('checked') }
 
   class << self
-    POOL_SIZE = 25
+    POOL_SIZE = 10
+
+    def reset
+      S3Synchronization.delete_all
+      ActiveRecord::Base.connection.reset_pk_sequence!(:S3Synchronisations)
+    end
 
     def synchronize(under_rake, until_time)
       if Set[:local_mirror, :local].include?(Rails.configuration.active_storage.service)
@@ -79,8 +84,8 @@ class S3Synchronization < ApplicationRecord
 
     def blobs(from_service, checked)
       ActiveStorage::Blob.joins('left join s3_synchronizations on  s3_synchronizations.active_storage_blob_id = active_storage_blobs.id')
-                         .where(s3_synchronizations: { checked: checked })
-                         .where(service_name: from_service)
+        .where(s3_synchronizations: { checked: checked })
+        .where(service_name: from_service)
     end
 
     def upload_blob_if_present(from_service, configs, to, progress, until_time, blob)
