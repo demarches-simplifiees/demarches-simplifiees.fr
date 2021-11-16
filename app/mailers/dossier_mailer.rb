@@ -6,6 +6,7 @@ class DossierMailer < ApplicationMailer
 
   layout 'mailers/layout'
   default from: NO_REPLY_EMAIL
+  after_action :prevent_perform_deliveries, only: [:notify_new_answer]
 
   def notify_new_draft(dossier)
     I18n.with_locale(dossier.user_locale) do
@@ -20,12 +21,13 @@ class DossierMailer < ApplicationMailer
     end
   end
 
-  def notify_new_answer(dossier, body = nil)
+  def notify_new_answer
+    dossier = params[:commentaire].dossier
     I18n.with_locale(dossier.user_locale) do
       @dossier = dossier
       @service = dossier.procedure.service
       @logo_url = attach_logo(dossier.procedure)
-      @body = body
+      @body = commentaire.body
       @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
       mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
@@ -167,6 +169,10 @@ class DossierMailer < ApplicationMailer
   end
 
   protected
+
+  def prevent_perform_deliveries
+    mail.perform_deliveries = false if params[:commentaire].discarded?
+  end
 
   # This is an override of `default_i18n_subject` method
   # https://api.rubyonrails.org/v5.0.0/classes/ActionMailer/Base.html#method-i-default_i18n_subject

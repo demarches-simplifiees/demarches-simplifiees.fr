@@ -99,18 +99,16 @@ class Commentaire < ApplicationRecord
     #   the notification system will properly
     # - Otherwise, a instructeur posted a commentaire, we need to notify the user
     if sent_by_instructeur?
-      notify_user_with_delay
+      notify_user(wait: 5.minutes)
     elsif sent_by_expert?
       notify_user
     end
   end
 
-  def notify_user_with_delay
-    NotifyNewAnswerWithDelayJob.set(wait: 5.minutes).perform_later(dossier, body, self)
-  end
-
-  def notify_user
-    DossierMailer.notify_new_answer(dossier, body).deliver_later
+  def notify_user(job_options)
+    DossierMailer.with(commentaire: self)
+      .notify_new_answer
+      .deliver_later(job_options)
   end
 
   def messagerie_available?

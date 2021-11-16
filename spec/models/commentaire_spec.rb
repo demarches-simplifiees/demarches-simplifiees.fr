@@ -87,7 +87,7 @@ describe Commentaire do
       let(:commentaire) { CommentaireService.build(instructeur, dossier, body: "Mon commentaire") }
 
       it "calls notify_user with delay so instructeur can destroy his comment in case of failure" do
-        expect(commentaire).to receive(:notify_user_with_delay)
+        expect(commentaire).to receive(:notify_user).with(wait: 5.minutes)
         commentaire.save
       end
     end
@@ -96,7 +96,7 @@ describe Commentaire do
       let(:commentaire) { CommentaireService.build(expert, dossier, body: "Mon commentaire") }
 
       it "calls notify_user" do
-        expect(commentaire).to receive(:notify_user)
+        expect(commentaire).to receive(:notify_user).with(no_args)
         commentaire.save
       end
     end
@@ -105,7 +105,7 @@ describe Commentaire do
       let(:commentaire) { CommentaireService.build_with_email(CONTACT_EMAIL, dossier, body: "Mon commentaire") }
 
       it "does not call notify_user" do
-        expect(commentaire).not_to receive(:notify_user)
+        expect(commentaire).not_to receive(:notify_user).with(no_args)
         commentaire.save
       end
     end
