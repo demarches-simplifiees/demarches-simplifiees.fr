@@ -29,4 +29,4 @@ en:
           alert: 'Can not destroy message: #{result.error_message}'
           alert_reasons:
             acl: "Can not destroy message: it does not belong to you"
-            ar_not_found: "%{model_name} not found"
+            already_discarded: "Can not destroy message: it was already destroyed"
