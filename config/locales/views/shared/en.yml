@@ -26,7 +26,6 @@ en:
           confirm: "Are you sure you want to destroy this message ?"
           deleted_body: Message deleted
           notice: 'Your message had been deleted'
-          alert: 'Can not destroy message: #{result.error_message}'
           alert_reasons:
             acl: "Can not destroy message: it does not belong to you"
             already_discarded: "Can not destroy message: it was already destroyed"
