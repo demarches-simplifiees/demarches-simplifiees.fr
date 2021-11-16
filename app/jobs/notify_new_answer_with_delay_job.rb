@@ -4,7 +4,7 @@ class NotifyNewAnswerWithDelayJob < ApplicationJob
   discard_on ActiveRecord::RecordNotFound
 
   def perform(dossier, body, commentaire)
-    return if commentaire.soft_deleted?
+    return if commentaire.discarded?
     DossierMailer.notify_new_answer(dossier, body).deliver_now
   end
 end
