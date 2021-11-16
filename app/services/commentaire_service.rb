@@ -27,9 +27,8 @@ class CommentaireService
         .find(params[:id])
       if commentaire.sent_by?(user)
         commentaire.piece_jointe.purge_later if commentaire.piece_jointe.attached?
-        commentaire.update!(body: I18n.t('views.shared.commentaires.destroy.deleted_body'),
-                            deleted_at: Time.zone.now)
-        OpenStruct.new(status: true)
+        commentaire.body = ''
+        OpenStruct.new(status: commentaire.discard, error_message: commentaire.errors.full_messages.join(', '))
       else
         OpenStruct.new(status: false,
                        error_message: I18n.t('views.shared.commentaires.destroy.alert_reasons.acl'))

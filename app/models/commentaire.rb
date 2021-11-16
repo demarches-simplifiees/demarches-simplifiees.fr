@@ -4,7 +4,7 @@
 #
 #  id             :integer          not null, primary key
 #  body           :string
-#  deleted_at     :datetime
+#  discarded_at   :datetime
 #  email          :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
@@ -14,6 +14,7 @@
 #
 class Commentaire < ApplicationRecord
   include FileValidationConcern
+  include Discard::Model
 
   self.ignored_columns = [:user_id]
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
@@ -45,10 +46,6 @@ class Commentaire < ApplicationRecord
     else
       read_attribute(:email)
     end
-  end
-
-  def soft_deleted?
-    !!deleted_at
   end
 
   def header
@@ -84,7 +81,7 @@ class Commentaire < ApplicationRecord
   end
 
   def soft_deletable?(connected_user)
-    sent_by?(connected_user) && sent_by_instructeur? && !soft_deleted?
+    sent_by?(connected_user) && sent_by_instructeur? && !discarded?
   end
 
   def file_url

@@ -219,7 +219,7 @@ ActiveRecord::Schema.define(version: 2021_11_15_112933) do
     t.bigint "user_id"
     t.bigint "instructeur_id"
     t.bigint "expert_id"
-    t.datetime "deleted_at"
+    t.datetime "discarded_at"
     t.index ["dossier_id"], name: "index_commentaires_on_dossier_id"
     t.index ["expert_id"], name: "index_commentaires_on_expert_id"
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"

@@ -96,15 +96,14 @@ describe CommentaireService do
         expect(subject.status).to eq(true)
       end
       it 'sets commentaire.body to deleted message' do
-        allow(commentaire.piece_jointe).to receive(:purge_later)
-        expect { subject }.to change { commentaire.reload.body }.from(an_instance_of(String)).to("Message supprimé")
+        expect_any_instance_of(ActiveStorage::Attached::One).to receive(:purge_later)
+        subject
       end
       it 'sets commentaire.body to deleted message' do
-        expect { subject }.to change { commentaire.reload.body }.from(an_instance_of(String)).to("Message supprimé")
+        expect { subject }.to change { commentaire.reload.body }.from(an_instance_of(String)).to("")
       end
       it 'sets deleted_at' do
-        subject
-        expect(commentaire.reload.deleted_at).not_to be_nil
+        expect {subject }.to change { commentaire.reload.discarded?}.from(false).to(true)
       end
     end
   end

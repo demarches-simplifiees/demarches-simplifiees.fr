@@ -60,10 +60,11 @@ describe 'shared/dossiers/messages/message.html.haml', type: :view do
         it { is_expected.to have_selector("form[action=\"#{form_url}\"]") }
       end
 
-      context 'on a procedure where commentaire had been written by connected instructeur and deleted' do
-        let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message', deleted_at: 2.days.ago) }
+      context 'on a procedure where commentaire had been written by connected instructeur and discarded' do
+        let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message', discarded_at: 2.days.ago) }
 
         it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+        it { is_expected.not_to have_selector(".rich-text", text: I18n.t(t('views.shared.commentaires.destroy.deleted_body'))) }
       end
 
       context 'on a procedure where commentaire had been written by connected an user' do
