@@ -426,13 +426,14 @@ describe User, type: :model do
 
     context 'and the old account has some stuff' do
       let!(:dossier) { create(:dossier, user: old_user) }
+      let!(:hidden_dossier) { create(:dossier, user: old_user, hidden_at: Time.zone.now) }
       let!(:invite) { create(:invite, user: old_user) }
       let!(:merge_log) { MergeLog.create(user: old_user, from_user_id: 1, from_user_email: 'a') }
 
       it 'transfers the dossier' do
         subject
 
-        expect(targeted_user.dossiers).to match([dossier])
+        expect(targeted_user.dossiers.with_discarded).to match([dossier, hidden_dossier])
         expect(targeted_user.invites).to match([invite])
         expect(targeted_user.merge_logs.first).to eq(merge_log)
 
