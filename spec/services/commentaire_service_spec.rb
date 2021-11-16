@@ -103,7 +103,7 @@ describe CommentaireService do
         expect { subject }.to change { commentaire.reload.body }.from(an_instance_of(String)).to("")
       end
       it 'sets deleted_at' do
-        expect {subject }.to change { commentaire.reload.discarded?}.from(false).to(true)
+        expect { subject }.to change { commentaire.reload.discarded? }.from(false).to(true)
       end
     end
   end
