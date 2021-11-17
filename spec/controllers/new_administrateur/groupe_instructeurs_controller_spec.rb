@@ -418,7 +418,7 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       before { subject }
 
       it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/import-groupe-test.csv\">suivant ce modèle</a>") }
+      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/#{I18n.locale}/import-groupe-test.csv\">suivant ce modèle</a>") }
     end
   end
 

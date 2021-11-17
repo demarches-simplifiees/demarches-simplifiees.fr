@@ -314,6 +314,7 @@ ActiveRecord::Schema.define(version: 2021_10_04_234434) do
     t.string "deleted_user_email_never_send"
     t.datetime "declarative_triggered_at"
     t.bigint "dossier_transfer_id"
+    t.datetime "identity_updated_at"
     t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
     t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"

@@ -194,12 +194,15 @@ describe Users::DossiersController, type: :controller do
   describe 'update_identite' do
     let(:procedure) { create(:procedure, :for_individual) }
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
+    let(:now) { Time.zone.parse('01/01/2100') }
 
     subject { post :update_identite, params: { id: dossier.id, individual: individual_params } }
 
     before do
       sign_in(user)
-      subject
+      Timecop.freeze(now) do
+        subject
+      end
     end
 
     context 'with correct individual and dossier params' do
@@ -207,6 +210,7 @@ describe Users::DossiersController, type: :controller do
 
       it do
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
+        expect(dossier.reload.identity_updated_at).to eq(now)
       end
     end
 
