@@ -12,6 +12,10 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.ask_for_merge(user, 'dircab@territoires.gouv.fr')
   end
 
+  def france_connect_merge_confirmation
+    UserMailer.france_connect_merge_confirmation('new.exemple.fr', '123456')
+  end
+
   private
 
   def user
