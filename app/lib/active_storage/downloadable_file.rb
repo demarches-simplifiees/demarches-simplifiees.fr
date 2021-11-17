@@ -1,6 +1,6 @@
 class ActiveStorage::DownloadableFile
-  def self.create_list_from_dossier(dossier)
-    PiecesJustificativesService.zip_entries(dossier)
+  def self.create_list_from_dossier(dossier, for_expert)
+    PiecesJustificativesService.zip_entries(dossier, for_expert)
   end
 
   private
