@@ -1,4 +1,5 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useMemo, useState } from 'react';
+import { fire } from '@utils';
 
 export function useDeferredSubmit(input) {
   const calledRef = useRef(false);
@@ -30,4 +31,24 @@ export function useDeferredSubmit(input) {
     calledRef.current = true;
   };
   return awaitFormSubmit;
+}
+
+export function useHiddenField(id, name = 'value') {
+  const hiddenField = useMemo(
+    () => document.querySelector(`input[data-id="${id}"][data-name="${name}"]`),
+    [id, name]
+  );
+  const [value, setValue] = useState(() => hiddenField?.value);
+
+  return [
+    value,
+    (value) => {
+      if (hiddenField) {
+        hiddenField.setAttribute('value', value);
+        setValue(value);
+        fire(hiddenField, 'autosave:trigger');
+      }
+    },
+    hiddenField
+  ];
 }
