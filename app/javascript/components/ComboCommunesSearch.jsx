@@ -49,11 +49,30 @@ const [placeholderDepartement, placeholderCommune] =
   ];
 
 function ComboCommunesSearch(params) {
-  const [departementCode, setDepartementCode] = useState();
+  const hiddenDepartementFieldId = `${params.hiddenFieldId}:departement`;
+  const hiddenDepartementField = useMemo(
+    () =>
+      document.querySelector(`input[data-attr="${hiddenDepartementFieldId}"]`),
+    [params.hiddenFieldId]
+  );
+  const hiddenCodeDepartementField = useMemo(
+    () =>
+      document.querySelector(
+        `input[data-attr="${params.hiddenFieldId}:code_departement"]`
+      ),
+    [params.hiddenFieldId]
+  );
   const inputId = useMemo(
     () =>
       document.querySelector(`input[data-uuid="${params.hiddenFieldId}"]`)?.id,
     [params.hiddenFieldId]
+  );
+  const [departementCode, setDepartementCode] = useState(
+    () => hiddenCodeDepartementField?.value
+  );
+  const departementValue = useMemo(
+    () => hiddenDepartementField?.value,
+    [hiddenDepartementField]
   );
   const departementDescribedBy = `${inputId}_departement_notice`;
   const communeDescribedBy = `${inputId}_commune_notice`;
@@ -68,12 +87,17 @@ function ComboCommunesSearch(params) {
           </p>
         </div>
         <ComboDepartementsSearch
+          value={departementValue}
           inputId={!departementCode ? inputId : null}
           aria-describedby={departementDescribedBy}
           placeholder={placeholderDepartement}
-          mandatory={params.mandatory}
-          onChange={(_, result) => {
+          required={params.mandatory}
+          onChange={(value, result) => {
             setDepartementCode(result?.code);
+            if (hiddenDepartementField && hiddenCodeDepartementField) {
+              hiddenDepartementField.setAttribute('value', value);
+              hiddenCodeDepartementField.setAttribute('value', result?.code);
+            }
           }}
         />
       </div>

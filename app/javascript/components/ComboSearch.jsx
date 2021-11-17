@@ -51,7 +51,7 @@ function ComboSearch({
       ),
     [hiddenFieldId]
   );
-  const initialValue = hiddenValueField && hiddenValueField.value;
+  const initialValue = hiddenValueField ? hiddenValueField.value : props.value;
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
   const [value, setValue] = useState(initialValue);
@@ -177,6 +177,7 @@ function ComboSearch({
 }
 
 ComboSearch.propTypes = {
+  value: PropTypes.string,
   hiddenFieldId: PropTypes.string,
   scope: PropTypes.string,
   minimumInputLength: PropTypes.number,
