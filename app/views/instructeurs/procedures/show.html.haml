@@ -97,7 +97,7 @@
                 #custom-menu.dropdown-content.fade-in-down
                   = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
                     - hidden_field_id = SecureRandom.uuid
-                    = hidden_field_tag :values, nil, data: { uuid: hidden_field_id }
+                    = hidden_field_tag :values, nil, data: { id: hidden_field_id, name: 'value' }
                     = react_component("ComboMultipleDropdownList", options: @displayed_fields_options, selected: @displayed_fields_selected, disabled: [], hiddenFieldId: hidden_field_id, label: 'colonne')
 
                     = submit_tag "Enregistrer", class: 'button'

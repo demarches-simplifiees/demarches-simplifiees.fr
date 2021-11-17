@@ -8,5 +8,5 @@
 
   - else
     - hidden_field_id = SecureRandom.uuid
-    = form.hidden_field :value, { data: { uuid: hidden_field_id } }
+    = form.hidden_field :value, { data: { id: hidden_field_id, name: 'value' } }
     = react_component("ComboMultipleDropdownList", options: champ.options, selected: champ.selected_options, disabled: champ.disabled_options, hiddenFieldId: hidden_field_id, label: champ.libelle)

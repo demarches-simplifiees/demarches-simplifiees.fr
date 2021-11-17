@@ -8,7 +8,7 @@
 
   = form_for avis, url: url, html: { class: 'form', data: { persisted_content_id: "instructeur-ask-avis-for-dossier-#{@dossier.id}" } } do |f|
     - hidden_field_id = SecureRandom.uuid
-    = hidden_field_tag  'avis[emails]', nil, data: { uuid: hidden_field_id }
+    = hidden_field_tag  'avis[emails]', nil, data: { id: hidden_field_id, name: 'value' }
     = react_component("ComboMultipleDropdownList",
         options: @dossier.procedure.experts_require_administrateur_invitation ? @experts_emails : [],
         selected: [],

@@ -1,4 +1,4 @@
 - hidden_field_id = SecureRandom.uuid
-= form.hidden_field :value, { data: { uuid: hidden_field_id } }
-= form.hidden_field :external_id, { data: { reference: true } }
+= form.hidden_field :value, { data: { id: hidden_field_id, name: 'value' } }
+= form.hidden_field :external_id, { data: { id: hidden_field_id, name: 'external_id' } }
 = react_component("ComboAdresseSearch", mandatory: champ.mandatory?, hiddenFieldId: hidden_field_id)

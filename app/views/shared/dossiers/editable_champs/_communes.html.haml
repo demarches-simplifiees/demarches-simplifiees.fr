@@ -1,6 +1,6 @@
 - hidden_field_id = SecureRandom.uuid
-= form.hidden_field :value, { data: { uuid: hidden_field_id } }
-= form.hidden_field :external_id, { data: { reference: true } }
-= form.hidden_field :departement, { data: { attr: "#{hidden_field_id}:departement" } }
-= form.hidden_field :code_departement, { data: { attr: "#{hidden_field_id}:code_departement" } }
+= form.hidden_field :value, { data: { id: hidden_field_id, name: 'value' } }
+= form.hidden_field :external_id, { data: { id: hidden_field_id, name: 'external_id' } }
+= form.hidden_field :departement, { data: { id: hidden_field_id, name: 'departement' } }
+= form.hidden_field :code_departement, { data: { id: hidden_field_id, name: 'code_departement' } }
 = react_component("ComboCommunesSearch", mandatory: champ.mandatory?, hiddenFieldId: hidden_field_id)
