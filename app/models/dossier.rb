@@ -60,8 +60,11 @@ class Dossier < ApplicationRecord
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
-  INTERVAL_BEFORE_EXPIRATION = '2 weeks'
-  INTERVAL_EXPIRATION = '1 month 5 days'
+  REMAINING_WEEKS_BEFORE_EXPIRATION = 2
+  INTERVAL_BEFORE_EXPIRATION = "#{REMAINING_WEEKS_BEFORE_EXPIRATION} weeks"
+  MONTHS_AFTER_EXPIRATION = 1
+  DAYS_AFTER_EXPIRATION = 5
+  INTERVAL_EXPIRATION = "#{MONTHS_AFTER_EXPIRATION} month #{DAYS_AFTER_EXPIRATION} days"
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
@@ -304,7 +307,7 @@ class Dossier < ApplicationRecord
   scope :termine_close_to_expiration, -> do
     state_termine
       .joins(:procedure)
-      .where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
+      .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
 
   scope :brouillon_expired, -> do
@@ -522,16 +525,42 @@ class Dossier < ApplicationRecord
     !brouillon? && !user_deleted? && !archived
   end
 
-  def en_construction_close_to_expiration?
-    self.class.en_construction_close_to_expiration.exists?(id: self)
+  def close_to_expiration_at
+    if brouillon?
+      created_at
+    elsif en_construction?
+      en_construction
+    elsif en_instruction?
+      en_instruction
+    else
+      processed_at
+    end + conservation_extension + duree_conservation_dossiers_dans_ds.months - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
   end
 
-  def brouillon_close_to_expiration?
-    self.class.brouillon_close_to_expiration.exists?(id: self)
+  def duration_after_notice
+    MONTHS_AFTER_EXPIRATION.month + DAYS_AFTER_EXPIRATION.days
+  end
+
+  def expiration_date
+    if brouillon? && brouillon_close_to_expiration_notice_sent_at.present?
+      brouillon_close_to_expiration_notice_sent_at + duration_after_notice
+    elsif en_construction? && en_construction_close_to_expiration_notice_sent_at.present?
+      en_construction_close_to_expiration_notice_sent_at + duration_after_notice
+    elsif termine? && termine_close_to_expiration_notice_sent_at.present?
+      termine_close_to_expiration_notice_sent_at + duration_after_notice
+    end
   end
 
   def close_to_expiration?
-    en_construction_close_to_expiration? || brouillon_close_to_expiration?
+    !en_instruction? && close_to_expiration_at < Time.zone.now
+  end
+
+  def close_to_expiration_notice_sent?
+    expiration_date.present?
+  end
+
+  def expiration_can_be_extended?
+    brouillon? || en_construction?
   end
 
   def show_groupe_instructeur_details?
