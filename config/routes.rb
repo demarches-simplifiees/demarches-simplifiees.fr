@@ -125,6 +125,8 @@ Rails.application.routes.draw do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
     get 'particulier/merge/:merge_token' => 'particulier#merge', as: :particulier_merge
+    get 'particulier/mail_merge_with_existing_account/:merge_token' => 'particulier#mail_merge_with_existing_account', as: :particulier_mail_merge_with_existing_account
+    post 'particulier/resend_and_renew_merge_confirmation' => 'particulier#resend_and_renew_merge_confirmation', as: :particulier_resend_and_renew_merge_confirmation
     post 'particulier/merge_with_existing_account' => 'particulier#merge_with_existing_account'
     post 'particulier/merge_with_new_account' => 'particulier#merge_with_new_account'
   end

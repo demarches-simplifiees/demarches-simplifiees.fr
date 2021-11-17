@@ -23,14 +23,21 @@
         Non
 
   .fusion.hidden
-    %p Pour les fusionner, entrez votre mot de passe
+    %p Pour fusionner ces comptes, veuillez cliquer sur le lien présent dans le mail que nous venons de vous envoyer.
 
-    = form_tag france_connect_particulier_merge_with_existing_account_path, remote: true, class: 'mt-2 form' do
+    = form_tag france_connect_particulier_merge_with_existing_account_path, remote: true, class: 'mt-2 form fconnect-form' do
       = hidden_field_tag :merge_token, @fci.merge_token
       = hidden_field_tag :email, @fci.email_france_connect
+
       = label_tag :password, 'Mot de passe (8 caractères minimum)'
-      = password_field_tag :password, nil, autocomplete: 'current-password'
+      = password_field_tag :password, nil, autocomplete: 'current-password', class: 'mb-1'
+      .mb-2
+        Mot de passe oublié ?
+        = link_to france_connect_particulier_resend_and_renew_merge_confirmation_path(merge_token: @fci.merge_token), method: :post do
+          Confirmer mon compte par mail
+
       = submit_tag 'Fusionner les comptes', class: 'button primary'
+
 
   .new-account.hidden
     %p Donnez-nous alors le mail que #{APPLICATION_NAME} utilisera pour vous contacter
@@ -38,7 +45,8 @@
     = form_tag france_connect_particulier_merge_with_new_account_path, remote: true, class: 'mt-2 form' do
       = hidden_field_tag :merge_token, @fci.merge_token
       = label_tag :email, 'Email (nom@site.com)'
-      = email_field_tag :email
+      = email_field_tag :email, "", required: true
       = submit_tag 'Utiliser ce mail', class: 'button primary'
+
 
   .new-account-password-confirmation.hidden

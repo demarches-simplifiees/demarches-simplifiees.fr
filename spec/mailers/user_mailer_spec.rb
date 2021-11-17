@@ -25,4 +25,14 @@ RSpec.describe UserMailer, type: :mailer do
     it { expect(subject.to).to eq([requested_email]) }
     it { expect(subject.body).to include(requested_email) }
   end
+
+  describe '.france_connect_merge_confirmation' do
+    let(:email) { 'new.exemple.fr' }
+    let(:code) { '123456' }
+
+    subject { described_class.france_connect_merge_confirmation(email, code) }
+
+    it { expect(subject.to).to eq([email]) }
+    it { expect(subject.body).to include(france_connect_particulier_mail_merge_with_existing_account_url(merge_token: code)) }
+  end
 end
