@@ -80,7 +80,6 @@ module Instructeurs
 
       recipients.each do |recipient|
         recipient.follow(dossier)
-        recipient.follow(dossier)
         InstructeurMailer.send_dossier(current_instructeur, dossier, recipient).deliver_later
       end
 

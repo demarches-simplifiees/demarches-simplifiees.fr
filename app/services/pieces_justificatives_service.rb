@@ -21,7 +21,7 @@ class PiecesJustificativesService
       .sum(&:byte_size)
   end
 
-  def self.zip_entries(dossier, for_expert)
+  def self.zip_entries(dossier, for_expert = false)
     pdf = pjs_zip_entries([generate_dossier_export(dossier)])
     pjs = pdf + champs_zip_entries(dossier, for_expert) + commentaires_zip_entries(dossier) + dossier_zip_entries(dossier, for_expert)
     index = {}

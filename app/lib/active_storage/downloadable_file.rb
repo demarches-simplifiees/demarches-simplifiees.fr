@@ -1,6 +1,7 @@
 class ActiveStorage::DownloadableFile
-  def self.create_list_from_dossier(dossier, for_expert)
-    PiecesJustificativesService.zip_entries(dossier, for_expert)
+  def self.create_list_from_dossier(dossier, for_expert = false)
+    pjs = PiecesJustificativesService.zip_entries(dossier, for_expert)
+    pjs.map { |pj| [pj[0], "dossier-#{dossier.id}/" + pj[1]] }
   end
 
   private
