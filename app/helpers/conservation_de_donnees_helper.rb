@@ -1,6 +1,6 @@
 module ConservationDeDonneesHelper
   def politiques_conservation_de_donnees(procedure)
-    [conservation_dans_ds(procedure), conservation_hors_ds(procedure)].compact
+    [conservation_dans_ds(procedure)].compact
   end
 
   private
@@ -8,12 +8,6 @@ module ConservationDeDonneesHelper
   def conservation_dans_ds(procedure)
     if procedure.duree_conservation_dossiers_dans_ds.present?
       "Dans #{APPLICATION_NAME} : #{procedure.duree_conservation_dossiers_dans_ds} mois"
-    end
-  end
-
-  def conservation_hors_ds(procedure)
-    if procedure.duree_conservation_dossiers_hors_ds.present?
-      "Par l’administration : #{procedure.duree_conservation_dossiers_hors_ds} mois"
     end
   end
 end

@@ -11,6 +11,11 @@
   .rich-text= pretty_commentaire(commentaire)
 
   .message-extras.flex.justify-start
+    - if commentaire.soft_deletable?(connected_user)
+      = button_to  instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete, class: 'button danger', data: { confirm: t('views.shared.commentaires.destroy.confirm') } do
+        %span.icon.delete
+        = t('views.shared.commentaires.destroy.button')
+
     - if commentaire.piece_jointe.attached?
       .attachment-link
         = render partial: "shared/attachment/show", locals: { attachment: commentaire.piece_jointe.attachment }
