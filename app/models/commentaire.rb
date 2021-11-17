@@ -4,6 +4,7 @@
 #
 #  id             :integer          not null, primary key
 #  body           :string
+#  discarded_at   :datetime
 #  email          :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
@@ -13,6 +14,7 @@
 #
 class Commentaire < ApplicationRecord
   include FileValidationConcern
+  include Discard::Model
 
   self.ignored_columns = [:user_id]
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
@@ -24,7 +26,7 @@ class Commentaire < ApplicationRecord
 
   has_one_attached :piece_jointe
 
-  validates :body, presence: { message: "ne peut être vide" }
+  validates :body, presence: { message: "ne peut être vide" }, unless: :discarded?
 
   FILE_MAX_SIZE = 20.megabytes
   validates :piece_jointe,
@@ -75,7 +77,11 @@ class Commentaire < ApplicationRecord
   end
 
   def sent_by?(someone)
-    email == someone.email
+    someone.present? && email == someone&.email
+  end
+
+  def soft_deletable?(connected_user)
+    sent_by?(connected_user) && sent_by_instructeur? && !discarded?
   end
 
   def file_url
@@ -92,13 +98,15 @@ class Commentaire < ApplicationRecord
     # - If a user or an invited user posted a commentaire, do nothing,
     #   the notification system will properly
     # - Otherwise, a instructeur posted a commentaire, we need to notify the user
-    if sent_by_instructeur? || sent_by_expert?
+    if sent_by_instructeur?
+      notify_user(wait: 5.minutes)
+    elsif sent_by_expert?
       notify_user
     end
   end
 
-  def notify_user
-    DossierMailer.notify_new_answer(dossier, body).deliver_later
+  def notify_user(job_options = {})
+    DossierMailer.with(commentaire: self).notify_new_answer.deliver_later(job_options)
   end
 
   def messagerie_available?
