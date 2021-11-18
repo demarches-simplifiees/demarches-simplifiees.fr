@@ -125,7 +125,7 @@ class Dossier < ApplicationRecord
   has_many :types_de_champ, through: :revision
   has_many :types_de_champ_private, through: :revision
 
-  belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers, dependent: :destroy
+  belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
 
   accepts_nested_attributes_for :champs
