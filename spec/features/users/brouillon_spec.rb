@@ -16,6 +16,7 @@ feature 'The user' do
     fill_in('date', with: '12-12-2012')
     select_date_and_time(Time.zone.parse('06/01/2030 7h05'), form_id_for_datetime('datetime'))
     fill_in('number', with: '42')
+    find_field('checkbox').scroll_to(:center)
     check('checkbox')
     choose('Madame')
     fill_in('email', with: 'loulou@yopmail.com')

@@ -305,6 +305,7 @@ Rails.application.routes.draw do
             post 'commentaire' => 'avis#create_commentaire'
             post 'avis' => 'avis#create_avis'
             get 'bilans_bdf'
+            get 'telecharger_pjs' => 'avis#telecharger_pjs'
 
             get 'sign_up' => 'avis#sign_up'
             post 'sign_up' => 'avis#update_expert'
@@ -436,6 +437,7 @@ Rails.application.routes.draw do
           patch 'update_routing_enabled'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'
+          get 'export_groupe_instructeurs'
         end
       end
 

@@ -24,6 +24,7 @@ storage/
 /public/packs
 /public/packs-test
 /node_modules
+/yarn-error.log
 yarn-debug.log*
 .yarn-integrity
 /.vscode
@@ -31,7 +32,6 @@ yarn-debug.log*
 /public/assets
 /public/tmp/
 vendor/*
-/yarn-error.log
 /docs
 
 # Local Netlify folder

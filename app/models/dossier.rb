@@ -15,6 +15,7 @@
 #  en_instruction_at                                  :datetime
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
+#  identity_updated_at                                :datetime
 #  last_avis_updated_at                               :datetime
 #  last_champ_private_updated_at                      :datetime
 #  last_champ_updated_at                              :datetime
@@ -124,7 +125,7 @@ class Dossier < ApplicationRecord
   has_many :types_de_champ, through: :revision
   has_many :types_de_champ_private, through: :revision
 
-  belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers, dependent: :destroy
+  belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
 
   accepts_nested_attributes_for :champs
@@ -364,6 +365,7 @@ class Dossier < ApplicationRecord
   scope :with_notifications, -> do
     joins(:follows)
       .where('last_champ_updated_at > follows.demande_seen_at' \
+      ' OR identity_updated_at > follows.demande_seen_at' \
       ' OR groupe_instructeur_updated_at > follows.demande_seen_at' \
       ' OR last_champ_private_updated_at > follows.annotations_privees_seen_at' \
       ' OR last_avis_updated_at > follows.avis_seen_at' \
@@ -583,7 +585,7 @@ class Dossier < ApplicationRecord
   end
 
   def log_operations?
-    !procedure.brouillon?
+    !procedure.brouillon? && !brouillon?
   end
 
   def keep_track_on_deletion?

@@ -84,7 +84,7 @@ module Users
       @dossier = dossier
 
       if @dossier.individual.update(individual_params)
-        @dossier.update!(autorisation_donnees: true)
+        @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
         flash.notice = t('.identity_saved')
 
         redirect_to brouillon_dossier_path(@dossier)
