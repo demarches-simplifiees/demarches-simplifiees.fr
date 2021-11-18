@@ -1,7 +1,7 @@
 namespace :after_party do
   desc 'Deployment task: last'
   task s3_switch: :environment do
-    if ENV.fetch('STORAGE_SWITCH', '').present?
+    if Flipper.enabled?(:switch_to_s3)
       puts "Running deploy task 's3_switch'"
       S3Synchronization.switch_synchronize
 
