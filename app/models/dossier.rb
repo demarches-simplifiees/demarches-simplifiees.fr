@@ -585,7 +585,7 @@ class Dossier < ApplicationRecord
   end
 
   def log_operations?
-    !procedure.brouillon?
+    !procedure.brouillon? && !brouillon?
   end
 
   def keep_track_on_deletion?
