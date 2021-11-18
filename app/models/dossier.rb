@@ -529,12 +529,12 @@ class Dossier < ApplicationRecord
     if brouillon?
       created_at
     elsif en_construction?
-      en_construction
+      en_construction_at
     elsif en_instruction?
-      en_instruction
+      en_instruction_at
     else
       processed_at
-    end + conservation_extension + duree_conservation_dossiers_dans_ds.months - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+    end + conservation_extension + procedure.duree_conservation_dossiers_dans_ds.months - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
   end
 
   def duration_after_notice
