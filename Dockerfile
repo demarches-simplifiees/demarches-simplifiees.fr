@@ -106,6 +106,7 @@ ENV \
     HELPSCOUT_MAILBOX_ID=""\
     HELPSCOUT_WEBHOOK_SECRET=""\
     LOGRAGE_ENABLED="disabled"\
+    MAILER_LOGO_SRC="header/logo-md-wide.png"\
     MAILJET_API_KEY=""\
     MAILJET_SECRET_KEY=""\
     MAILTRAP_ENABLED="disabled"\
