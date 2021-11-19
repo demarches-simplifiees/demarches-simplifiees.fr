@@ -193,11 +193,21 @@ describe Dossier do
         expect(dossier.champs.count).to eq(1)
         expect(dossier.champs_private.count).to eq(1)
       end
+    end
+
+    describe '#build_default_individual' do
+      let(:dossier) { build(:dossier, procedure: procedure, user: user) }
+
+      subject do
+        dossier.individual = nil
+        dossier.build_default_individual
+      end
 
       context 'when the dossier belongs to a procedure for individuals' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, for_individual: true) }
+        let(:procedure) { create(:procedure, for_individual: true) }
 
         it 'creates a default individual' do
+          subject
           expect(dossier.individual).to be_present
           expect(dossier.individual.nom).to be_nil
           expect(dossier.individual.prenom).to be_nil
@@ -209,6 +219,7 @@ describe Dossier do
           let(:user) { build(:user, france_connect_information: france_connect_information) }
 
           it 'fills the individual with the informations from France Connect' do
+            subject
             expect(dossier.individual.nom).to eq('DUBOIS')
             expect(dossier.individual.prenom).to eq('Angela Claire Louise')
             expect(dossier.individual.gender).to eq(Individual::GENDER_FEMALE)
@@ -217,9 +228,10 @@ describe Dossier do
       end
 
       context 'when the dossier belongs to a procedure for moral personas' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, for_individual: false) }
+        let(:procedure) { create(:procedure, for_individual: false) }
 
         it 'doesn’t create a individual' do
+          subject
           expect(dossier.individual).to be_nil
         end
       end
