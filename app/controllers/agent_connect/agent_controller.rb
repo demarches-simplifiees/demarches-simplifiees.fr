@@ -1,5 +1,7 @@
 # doc: https://github.com/france-connect/Documentation-AgentConnect
 class AgentConnect::AgentController < ApplicationController
+  before_action :redirect_to_login_if_fc_aborted, only: [:callback]
+
   def index
   end
 
@@ -36,5 +38,16 @@ class AgentConnect::AgentController < ApplicationController
 
   def santized_email(user_info)
     user_info['email'].strip.downcase
+  end
+
+  def redirect_to_login_if_fc_aborted
+    if params[:code].blank?
+      redirect_to new_user_session_path
+    end
+  end
+
+  def redirect_france_connect_error_connection
+    flash.alert = t('errors.messages.france_connect.connexion')
+    redirect_to(new_user_session_path)
   end
 end
