@@ -18,7 +18,7 @@ function freeze_field_above(visa) {
 }
 
 delegate('change', VISA_SELECTOR, (evt) => {
-  evt.target.closest('form').submit();
+  evt.target.closest('form').querySelector('input[type=submit]').click();
 });
 
 async function visa_initialize() {
