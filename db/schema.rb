@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_15_112933) do
+ActiveRecord::Schema.define(version: 2021_11_19_112046) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -534,6 +535,8 @@ ActiveRecord::Schema.define(version: 2021_11_15_112933) do
     t.text "encrypted_login_token"
     t.datetime "login_token_created_at"
     t.boolean "bypass_email_login_token", default: false, null: false
+    t.string "agent_connect_id"
+    t.index ["agent_connect_id"], name: "index_instructeurs_on_agent_connect_id", unique: true
   end
 
   create_table "invites", id: :serial, force: :cascade do |t|
