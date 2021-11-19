@@ -320,8 +320,8 @@ describe ProcedurePresentation do
 
       let(:procedure) { create(:procedure, :for_individual) }
 
-      let!(:first_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'M', prenom: 'Alain', nom: 'Antonelli')) }
-      let!(:last_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'Mme', prenom: 'Zora', nom: 'Zemmour')) }
+      let!(:first_dossier) { create(:dossier, procedure: procedure, individual: build(:individual, gender: 'M', prenom: 'Alain', nom: 'Antonelli')) }
+      let!(:last_dossier) { create(:dossier, procedure: procedure, individual: build(:individual, gender: 'Mme', prenom: 'Zora', nom: 'Zemmour')) }
 
       context 'for gender column' do
         let(:column) { 'gender' }
@@ -617,8 +617,8 @@ describe ProcedurePresentation do
 
     context 'for individual table' do
       let(:procedure) { create(:procedure, :for_individual) }
-      let!(:kept_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'Mme', prenom: 'Josephine', nom: 'Baker')) }
-      let!(:discarded_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'M', prenom: 'Jean', nom: 'Tremblay')) }
+      let!(:kept_dossier) { create(:dossier, procedure: procedure, individual: build(:individual, gender: 'Mme', prenom: 'Josephine', nom: 'Baker')) }
+      let!(:discarded_dossier) { create(:dossier, procedure: procedure, individual: build(:individual, gender: 'M', prenom: 'Jean', nom: 'Tremblay')) }
 
       context 'for gender column' do
         let(:filter) { [{ 'table' => 'individual', 'column' => 'gender', 'value' => 'Mme' }] }
@@ -646,7 +646,7 @@ describe ProcedurePresentation do
           ]
         end
 
-        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, individual: create(:individual, gender: 'M', prenom: 'Romuald', nom: 'Pistis')) }
+        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, individual: build(:individual, gender: 'M', prenom: 'Romuald', nom: 'Pistis')) }
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)

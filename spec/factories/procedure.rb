@@ -1,5 +1,6 @@
 FactoryBot.define do
   sequence(:published_path) { |n| "fake_path#{n}" }
+
   factory :procedure do
     sequence(:libelle) { |n| "Procedure #{n}" }
     description { "Demande de subvention à l'intention des associations" }
@@ -26,24 +27,17 @@ FactoryBot.define do
       elsif procedure.administrateurs.empty?
         procedure.administrateurs = [build(:administrateur)]
       end
-      procedure.draft_revision = build(:procedure_revision, procedure: procedure)
 
-      evaluator.types_de_champ.each do |type_de_champ|
-        type_de_champ.revision = procedure.draft_revision
-        type_de_champ.private = false
-        type_de_champ.revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
-          revision: procedure.draft_revision,
-          position: type_de_champ.order_place,
-          type_de_champ: type_de_champ)
-      end
+      initial_revision = build(:procedure_revision, procedure: procedure)
+      add_types_de_champs(evaluator.types_de_champ, to: initial_revision, scope: :public)
+      add_types_de_champs(evaluator.types_de_champ_private, to: initial_revision, scope: :private)
 
-      evaluator.types_de_champ_private.each do |type_de_champ|
-        type_de_champ.revision = procedure.draft_revision
-        type_de_champ.private = true
-        type_de_champ.revision.revision_types_de_champ_private << build(:procedure_revision_type_de_champ,
-          revision: procedure.draft_revision,
-          position: type_de_champ.order_place,
-          type_de_champ: type_de_champ)
+      if procedure.brouillon?
+        procedure.draft_revision = initial_revision
+      else
+        procedure.published_revision = initial_revision
+        procedure.published_revision.published_at = Time.zone.now
+        procedure.draft_revision = build(:procedure_revision, from_original: initial_revision)
       end
     end
 
@@ -71,11 +65,12 @@ FactoryBot.define do
     end
 
     factory :simple_procedure do
+      published
+
+      for_individual { true }
+
       after(:build) do |procedure, _evaluator|
-        procedure.for_individual = true
         build(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true, procedure: procedure)
-        procedure.path = generate(:published_path)
-        procedure.publish!
       end
     end
 
@@ -218,26 +213,27 @@ FactoryBot.define do
     end
 
     trait :published do
-      after(:build) do |procedure, _evaluator|
-        procedure.path = generate(:published_path)
-        procedure.publish!
-      end
+      aasm_state { :publiee }
+      path { generate(:published_path) }
+      published_at { Time.zone.now }
+      unpublished_at { nil }
+      closed_at { nil }
     end
 
     trait :closed do
-      after(:build) do |procedure, _evaluator|
-        procedure.path = generate(:published_path)
-        procedure.publish!
-        procedure.close!
-      end
+      published
+
+      aasm_state { :close }
+      published_at { Time.zone.now - 1.second }
+      closed_at { Time.zone.now }
     end
 
     trait :unpublished do
-      after(:build) do |procedure, _evaluator|
-        procedure.path = generate(:published_path)
-        procedure.publish!
-        procedure.unpublish!
-      end
+      published
+
+      aasm_state { :depubliee }
+      published_at { Time.zone.now - 1.second }
+      unpublished_at { Time.zone.now }
     end
 
     trait :discarded do
@@ -306,5 +302,19 @@ FactoryBot.define do
         end
       end
     end
+  end
+end
+
+def add_types_de_champs(types_de_champ, to: nil, scope: :public)
+  revision = to
+  association_name = scope == :private ? :revision_types_de_champ_private : :revision_types_de_champ
+
+  types_de_champ.each do |type_de_champ|
+    type_de_champ.revision = revision
+    type_de_champ.private = (scope == :private)
+    type_de_champ.revision.public_send(association_name) << build(:procedure_revision_type_de_champ,
+                                                                  revision: revision,
+                                                                  position: type_de_champ.order_place,
+                                                                  type_de_champ: type_de_champ)
   end
 end

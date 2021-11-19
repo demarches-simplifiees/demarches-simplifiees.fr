@@ -1,6 +1,6 @@
 RSpec.describe ApplicationMailer, type: :mailer do
   describe 'dealing with invalid emails' do
-    let(:dossier) { create(:dossier, procedure: build(:simple_procedure)) }
+    let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
     subject { DossierMailer.notify_new_draft(dossier) }
 
     describe 'invalid emails are not sent' do
