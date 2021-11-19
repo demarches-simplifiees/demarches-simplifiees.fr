@@ -13,6 +13,8 @@ FactoryBot.define do
     lien_site_web { "https://mon-site.gouv" }
     path { SecureRandom.uuid }
 
+    administrateurs { administrateur.present? ? [administrateur] : [association(:administrateur)] }
+
     transient do
       administrateur { }
       instructeurs { [] }
@@ -22,12 +24,6 @@ FactoryBot.define do
     end
 
     after(:build) do |procedure, evaluator|
-      if evaluator.administrateur
-        procedure.administrateurs = [evaluator.administrateur]
-      elsif procedure.administrateurs.empty?
-        procedure.administrateurs = [build(:administrateur)]
-      end
-
       initial_revision = build(:procedure_revision, procedure: procedure)
       add_types_de_champs(evaluator.types_de_champ, to: initial_revision, scope: :public)
       add_types_de_champs(evaluator.types_de_champ_private, to: initial_revision, scope: :private)
