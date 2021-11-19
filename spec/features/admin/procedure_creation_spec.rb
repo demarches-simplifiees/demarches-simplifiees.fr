@@ -77,10 +77,11 @@ feature 'As an administrateur I wanna create a new procedure', js: true do
 
       click_on Procedure.last.libelle
 
-      find('#preview-procedure').click
-
-      expect(page).to have_current_path(apercu_admin_procedure_path(Procedure.last))
-      expect(page).to have_field('libelle de champ')
+      preview_window = window_opened_by { find('#preview-procedure').click }
+      within_window(preview_window) do
+        expect(page).to have_current_path(apercu_admin_procedure_path(Procedure.last))
+        expect(page).to have_field('libelle de champ')
+      end
     end
 
     scenario 'After adding champ and file, make publication' do

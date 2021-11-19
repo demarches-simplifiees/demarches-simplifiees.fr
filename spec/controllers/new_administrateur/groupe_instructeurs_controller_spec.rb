@@ -418,7 +418,32 @@ describe NewAdministrateur::GroupeInstructeursController, type: :controller do
       before { subject }
 
       it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/import-groupe-test.csv\">suivant ce modèle</a>") }
+      it { expect(flash.alert).to eq("Importation impossible, veuillez importer un csv <a href=\"/csv/#{I18n.locale}/import-groupe-test.csv\">suivant ce modèle</a>") }
+    end
+  end
+
+  describe '#export_groupe_instructeurs' do
+    let(:procedure) { create(:procedure, :published) }
+    let(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 1 2') }
+    let(:instructeur_assigned_1) { create :instructeur, email: 'instructeur_1@ministere_a.gouv.fr', administrateurs: [admin] }
+    let(:instructeur_assigned_2) { create :instructeur, email: 'instructeur_2@ministere_b.gouv.fr', administrateurs: [admin] }
+
+    subject do
+      get :export_groupe_instructeurs, params: { procedure_id: procedure.id, format: :csv }
+    end
+
+    before do
+      procedure.administrateurs << admin
+      gi_1_2.instructeurs << [instructeur_assigned_1, instructeur_assigned_2]
+    end
+
+    it 'generates a CSV file containing the instructeurs and groups' do
+      expect(subject.status).to eq(200)
+      expect(subject.stream.body.split("\n").size).to eq(3)
+      expect(subject.stream.body).to include("groupe instructeur 1 2")
+      expect(subject.stream.body).to include(instructeur_assigned_1.email)
+      expect(subject.stream.body).to include(instructeur_assigned_2.email)
+      expect(subject.header["Content-Disposition"]).to include("#{procedure.id}-groupe-instructeurs-#{Date.today}.csv")
     end
   end
 

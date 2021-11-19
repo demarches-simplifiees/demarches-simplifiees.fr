@@ -1,8 +1,8 @@
 class PiecesJustificativesService
-  def self.liste_documents(dossier)
-    pjs_champs = pjs_for_champs(dossier)
+  def self.liste_documents(dossier, for_expert)
+    pjs_champs = pjs_for_champs(dossier, for_expert)
     pjs_commentaires = pjs_for_commentaires(dossier)
-    pjs_dossier = pjs_for_dossier(dossier)
+    pjs_dossier = pjs_for_dossier(dossier, for_expert)
 
     (pjs_champs + pjs_commentaires + pjs_dossier)
       .filter(&:attached?)
@@ -21,9 +21,9 @@ class PiecesJustificativesService
       .sum(&:byte_size)
   end
 
-  def self.zip_entries(dossier)
+  def self.zip_entries(dossier, for_expert = false)
     pdf = pjs_zip_entries([generate_dossier_export(dossier)])
-    pjs = pdf + champs_zip_entries(dossier) + commentaires_zip_entries(dossier) + dossier_zip_entries(dossier)
+    pjs = pdf + champs_zip_entries(dossier, for_expert) + commentaires_zip_entries(dossier) + dossier_zip_entries(dossier, for_expert)
     index = {}
     pjs.map do |blob, filename|
       [
@@ -169,8 +169,8 @@ class PiecesJustificativesService
     end
   end
 
-  def self.pjs_champs(dossier)
-    allowed_champs = dossier.champs + dossier.champs_private
+  def self.pjs_champs(dossier, for_expert = false)
+    allowed_champs = for_expert ? dossier.champs : dossier.champs + dossier.champs_private
 
     allowed_child_champs = allowed_champs
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
@@ -180,8 +180,8 @@ class PiecesJustificativesService
       .filter { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) }
   end
 
-  def self.pjs_for_champs(dossier)
-    pjs_champs(dossier).map(&:piece_justificative_file)
+  def self.pjs_for_champs(dossier, for_expert = false)
+    pjs_champs(dossier, for_expert).map(&:piece_justificative_file)
   end
 
   def self.pjs_for_commentaires(dossier)
@@ -190,30 +190,35 @@ class PiecesJustificativesService
       .map(&:piece_jointe)
   end
 
-  def self.pjs_for_dossier(dossier)
-    bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
-
-    [
+  def self.pjs_for_dossier(dossier, for_expert = false)
+    pjs = [
       dossier.justificatif_motivation,
       dossier.attestation&.pdf,
       dossier.etablissement&.entreprise_attestation_sociale,
-      dossier.etablissement&.entreprise_attestation_fiscale,
-      dossier.dossier_operation_logs.map(&:serialized),
-      bill_signatures.map(&:serialized),
-      bill_signatures.map(&:signature)
+      dossier.etablissement&.entreprise_attestation_fiscale
     ].flatten.compact
+
+    if !for_expert
+      bill_signatures = dossier.dossier_operation_logs.filter_map(&:bill_signature).uniq
+      pjs += [
+        dossier.dossier_operation_logs.map(&:serialized),
+        bill_signatures.map(&:serialized),
+        bill_signatures.map(&:signature)
+      ].flatten.compact
+    end
+    pjs
   end
 
-  def self.dossier_zip_entries(dossier)
-    pjs_zip_entries(pjs_for_dossier(dossier))
+  def self.dossier_zip_entries(dossier, for_expert)
+    pjs_zip_entries(pjs_for_dossier(dossier, for_expert))
   end
 
   def self.commentaires_zip_entries(dossier)
     pjs_zip_entries(pjs_for_commentaires(dossier))
   end
 
-  def self.champs_zip_entries(dossier)
-    pjs_champs(dossier)
+  def self.champs_zip_entries(dossier, for_expert = false)
+    pjs_champs(dossier, for_expert)
       .filter { |champ| champ.piece_justificative_file.attached? }
       .map { |champ| [champ.piece_justificative_file, pieces_justificative_filename(champ)] }
   end
