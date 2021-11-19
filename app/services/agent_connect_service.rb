@@ -13,4 +13,12 @@ class AgentConnectService
       acr_values: 'eidas1'
     )
   end
+
+  def self.user_info(code)
+    client = AgentConnectClient.new(code)
+
+    client.access_token!(client_auth_method: :secret)
+      .userinfo!
+      .raw_attributes
+  end
 end

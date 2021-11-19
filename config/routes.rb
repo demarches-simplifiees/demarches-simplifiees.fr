@@ -132,6 +132,7 @@ Rails.application.routes.draw do
   namespace :agent_connect do
     get '' => 'agent#index'
     get 'login' => 'agent#login'
+    get 'callback' => 'agent#callback'
   end
 
   namespace :champs do
