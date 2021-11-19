@@ -304,10 +304,21 @@ class Dossier < ApplicationRecord
       .joins(:procedure)
       .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
+
+  # TODO/MFO
+  #   maybe reconsider `termine_close_to_expiration` implementation, but for now this implementation is missing
+  #   1. the check on traitements.processed_at? -> is is replicated on dossier?
+  #   2. the check on process_expired
+  # scope :termine_close_to_expiration, -> do
+  #   state_termine
+  #     .joins(:procedure)
+  #     .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  # end
+  # TODO/MFO
   scope :termine_close_to_expiration, -> do
     state_termine
       .joins(:procedure)
-      .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
   end
 
   scope :brouillon_expired, -> do
