@@ -289,20 +289,35 @@ class Dossier < ApplicationRecord
       .where.not(user_id: nil)
   end
 
+  scope :interval_brouillon_close_to_expiration, -> do
+    where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
   scope :brouillon_close_to_expiration, -> do
-    state_brouillon
-      .joins(:procedure)
-      .where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    state_brouillon.joins(:procedure).interval_brouillon_close_to_expiration
+  end
+
+  scope :interval_en_construction_close_to_expiration, -> do
+    where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :en_construction_close_to_expiration, -> do
-    state_en_construction
-      .joins(:procedure)
-      .where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    state_en_construction.joins(:procedure).interval_en_construction_close_to_expiration
+  end
+
+  scope :interval_en_instruction_close_to_expiration, -> do
+    where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
   scope :en_instruction_close_to_expiration, -> do
-    state_en_instruction
+    state_en_instruction.joins(:procedure).interval_en_instruction_close_to_expiration
+  end
+
+
+  scope :interval_termine_close_to_expiration, -> do
+    where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
+  end
+  scope :termine_close_to_expiration, -> do
+    state_termine
       .joins(:procedure)
-      .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+      .interval_termine_close_to_expiration
   end
 
   # TODO/MFO
