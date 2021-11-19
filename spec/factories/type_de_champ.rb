@@ -166,6 +166,9 @@ FactoryBot.define do
     factory :type_de_champ_annuaire_education do
       type_champ { TypeDeChamp.type_champs.fetch(:annuaire_education) }
     end
+    factory :type_de_champ_cnaf do
+      type_champ { TypeDeChamp.type_champs.fetch(:cnaf) }
+    end
     factory :type_de_champ_carte do
       type_champ { TypeDeChamp.type_champs.fetch(:carte) }
     end

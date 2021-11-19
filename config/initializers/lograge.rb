@@ -1,5 +1,3 @@
-require_relative './active_job_log_subscriber'
-
 Rails.application.configure do
   config.lograge.formatter = Lograge::Formatters::Logstash.new
   config.lograge.base_controller_class = ['ActionController::Base', 'Manager::ApplicationController']
@@ -33,6 +31,6 @@ Rails.application.configure do
   config.lograge.logger = ActiveSupport::Logger.new(Rails.root.join('log', "logstash_#{Rails.env}.log"))
 
   if config.lograge.enabled
-    ActiveJobLogSubscriber.attach_to(:active_job)
+    ActiveJob::ApplicationLogSubscriber.attach_to(:active_job)
   end
 end

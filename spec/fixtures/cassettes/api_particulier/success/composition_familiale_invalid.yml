@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://particulier-test.api.gouv.fr/api/v2/composition-familiale?codePostal=92110&numeroAllocataire=5843972
+    uri: https://particulier.api.gouv.fr/api/v2/composition-familiale?codePostal=92110&numeroAllocataire=5843972
     body:
       encoding: US-ASCII
       string: ''
