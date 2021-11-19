@@ -90,9 +90,7 @@ FactoryBot.define do
     end
 
     trait :with_commentaires do
-      after(:create) do |dossier, _evaluator|
-        dossier.commentaires += create_list(:commentaire, 2)
-      end
+      commentaires { [build(:commentaire), build(:commentaire)] }
     end
 
     trait :followed do
