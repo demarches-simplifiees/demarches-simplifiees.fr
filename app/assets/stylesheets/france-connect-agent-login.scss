@@ -1,0 +1,11 @@
+@import "colors";
+@import "constants";
+
+.france-connect-agent-login-button {
+  background-image: image-url("logo-agent-connect.png");
+  display: block;
+  height: 60px;
+  width: 230px;
+  margin: 20px auto;
+  font-size: 0;
+}
