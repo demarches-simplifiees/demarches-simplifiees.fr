@@ -5,6 +5,8 @@ FactoryBot.define do
 
     user { association :user }
     groupe_instructeur { procedure.routee? ? nil : procedure.defaut_groupe_instructeur }
+    revision { procedure.active_revision }
+    individual { association(:individual, :empty, dossier: instance, strategy: :build) if procedure.for_individual? }
 
     transient do
       for_individual? { false }
@@ -13,16 +15,6 @@ FactoryBot.define do
       # (due to some internal ActiveRecord error).
       # TODO: find a way to find the issue and just `build` the procedure.
       procedure { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, for_individual: for_individual?) }
-    end
-
-    after(:build) do |dossier, evaluator|
-      procedure = evaluator.procedure
-
-      dossier.revision = procedure.active_revision
-
-      if procedure.for_individual? && dossier.individual.blank?
-        build(:individual, :empty, dossier: dossier)
-      end
     end
 
     trait :with_entreprise do
