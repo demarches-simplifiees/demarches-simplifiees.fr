@@ -61,6 +61,16 @@ describe Dossier do
 
       it { is_expected.not_to include(expiring_dossier) }
     end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
   end
 
   describe 'en_construction_close_to_expiration' do
@@ -87,6 +97,16 @@ describe Dossier do
 
       it { is_expected.not_to include(expiring_dossier) }
     end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
   end
 
   describe 'en_instruction_close_to_expiration' do
@@ -103,6 +123,43 @@ describe Dossier do
       is_expected.to include(expiring_dossier)
       is_expected.to include(just_expired_dossier)
       is_expected.to include(long_expired_dossier)
+    end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
+    end
+  end
+
+  describe 'termine_close_to_expiration' do
+    let(:procedure) { create(:procedure, :published, duree_conservation_dossiers_dans_ds: 6) }
+    let!(:young_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte)]) }
+    let!(:expiring_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: 175.days.ago)]) }
+    let!(:just_expired_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: (6.months + 1.hour + 10.seconds).ago)]) }
+    let!(:long_expired_dossier) { create(:dossier, :accepte, procedure: procedure, traitements: [build(:traitement, :accepte, processed_at: 1.year.ago)]) }
+
+    subject { Dossier.termine_close_to_expiration }
+
+    it do
+      is_expected.not_to include(young_dossier)
+      is_expected.to include(expiring_dossier)
+      is_expected.to include(just_expired_dossier)
+      is_expected.to include(long_expired_dossier)
+    end
+
+    context 'when .close_to_expiration' do
+      subject { Dossier.close_to_expiration }
+      it do
+        is_expected.not_to include(young_dossier)
+        is_expected.to include(expiring_dossier)
+        is_expected.to include(just_expired_dossier)
+        is_expected.to include(long_expired_dossier)
+      end
     end
   end
 

@@ -330,10 +330,14 @@ class Dossier < ApplicationRecord
   #     .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   # end
   # TODO/MFO
-  scope :termine_close_to_expiration, -> do
-    state_termine
-      .joins(:procedure)
-      .where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
+
+  scope :close_to_expiration, -> do
+    joins(:procedure).scoping do
+      state_brouillon.and(interval_brouillon_close_to_expiration)
+        .or(state_en_construction.and(interval_en_construction_close_to_expiration))
+        .or(state_en_instruction.and(interval_en_instruction_close_to_expiration))
+        .or(state_termine.and(interval_termine_close_to_expiration))
+    end
   end
 
   scope :brouillon_expired, -> do
