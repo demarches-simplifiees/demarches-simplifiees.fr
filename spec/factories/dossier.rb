@@ -4,6 +4,7 @@ FactoryBot.define do
     state { Dossier.states.fetch(:brouillon) }
 
     user { association :user }
+    groupe_instructeur { procedure.routee? ? nil : procedure.defaut_groupe_instructeur }
 
     transient do
       for_individual? { false }
@@ -18,11 +19,6 @@ FactoryBot.define do
       procedure = evaluator.procedure
 
       dossier.revision = procedure.active_revision
-
-      # Assign the procedure to the dossier through the groupe_instructeur
-      if dossier.groupe_instructeur.nil?
-        dossier.groupe_instructeur = procedure.routee? ? nil : procedure.defaut_groupe_instructeur
-      end
 
       if procedure.for_individual? && dossier.individual.blank?
         build(:individual, :empty, dossier: dossier)
