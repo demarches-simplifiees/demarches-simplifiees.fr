@@ -80,9 +80,7 @@ FactoryBot.define do
     end
 
     trait :with_service do
-      after(:build) do |procedure, _evaluator|
-        procedure.service = create(:service)
-      end
+      service { association :service, administrateur: administrateurs.first }
     end
 
     trait :with_instructeur do
@@ -98,9 +96,7 @@ FactoryBot.define do
     end
 
     trait :for_individual do
-      after(:build) do |procedure, _evaluator|
-        procedure.for_individual = true
-      end
+      for_individual { true }
     end
 
     trait :with_auto_archive do
