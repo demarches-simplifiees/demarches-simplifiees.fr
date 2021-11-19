@@ -290,53 +290,37 @@ class Dossier < ApplicationRecord
   end
 
   scope :interval_brouillon_close_to_expiration, -> do
-    where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    state_brouillon.where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
   end
-  scope :brouillon_close_to_expiration, -> do
-    state_brouillon.joins(:procedure).interval_brouillon_close_to_expiration
+  scope :interval_en_construction_close_to_expiration, -> do
+    state_en_construction.where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+  scope :interval_en_instruction_close_to_expiration, -> do
+    state_en_instruction.where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+  scope :interval_termine_close_to_expiration, -> do
+    state_termine.where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
   end
 
-  scope :interval_en_construction_close_to_expiration, -> do
-    where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  scope :brouillon_close_to_expiration, -> do
+    joins(:procedure).interval_brouillon_close_to_expiration
   end
   scope :en_construction_close_to_expiration, -> do
-    state_en_construction.joins(:procedure).interval_en_construction_close_to_expiration
-  end
-
-  scope :interval_en_instruction_close_to_expiration, -> do
-    where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    joins(:procedure).interval_en_construction_close_to_expiration
   end
   scope :en_instruction_close_to_expiration, -> do
-    state_en_instruction.joins(:procedure).interval_en_instruction_close_to_expiration
-  end
-
-
-  scope :interval_termine_close_to_expiration, -> do
-    where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
+    joins(:procedure).interval_en_instruction_close_to_expiration
   end
   scope :termine_close_to_expiration, -> do
-    state_termine
-      .joins(:procedure)
-      .interval_termine_close_to_expiration
+    joins(:procedure).interval_termine_close_to_expiration
   end
-
-  # TODO/MFO
-  #   maybe reconsider `termine_close_to_expiration` implementation, but for now this implementation is missing
-  #   1. the check on traitements.processed_at? -> is is replicated on dossier?
-  #   2. the check on process_expired
-  # scope :termine_close_to_expiration, -> do
-  #   state_termine
-  #     .joins(:procedure)
-  #     .where("dossiers.processed_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
-  # end
-  # TODO/MFO
 
   scope :close_to_expiration, -> do
     joins(:procedure).scoping do
-      state_brouillon.and(interval_brouillon_close_to_expiration)
-        .or(state_en_construction.and(interval_en_construction_close_to_expiration))
-        .or(state_en_instruction.and(interval_en_instruction_close_to_expiration))
-        .or(state_termine.and(interval_termine_close_to_expiration))
+      interval_brouillon_close_to_expiration
+        .or(interval_en_construction_close_to_expiration)
+        .or(interval_en_instruction_close_to_expiration)
+        .or(interval_termine_close_to_expiration)
     end
   end
 
