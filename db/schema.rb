@@ -473,11 +473,14 @@ ActiveRecord::Schema.define(version: 2021_10_12_100819) do
     t.date "birthdate"
     t.string "birthplace"
     t.string "france_connect_particulier_id"
-    t.integer "user_id", null: false
+    t.integer "user_id"
     t.string "email_france_connect"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "data"
+    t.string "merge_token"
+    t.datetime "merge_token_created_at"
+    t.index ["merge_token"], name: "index_france_connect_informations_on_merge_token"
     t.index ["user_id"], name: "index_france_connect_informations_on_user_id"
   end
 
