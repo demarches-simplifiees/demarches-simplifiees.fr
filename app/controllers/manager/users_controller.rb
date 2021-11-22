@@ -2,11 +2,9 @@ module Manager
   class UsersController < Manager::ApplicationController
     def update
       user = User.find(params[:id])
-      preexisting_user = User.find_by(email: targeted_email)
+      targeted_user = User.find_by(email: targeted_email)
 
-      if user.administrateur.present?
-        flash[:error] = "« #{targeted_email} » est un administrateur. On ne sait pas encore faire."
-      elsif preexisting_user.nil?
+      if targeted_user.nil?
         user.skip_reconfirmation!
         user.update(email: targeted_email)
 
@@ -16,18 +14,18 @@ module Manager
           flash[:error] = user.errors.full_messages.to_sentence
         end
       else
-        user.dossiers.update_all(user_id: preexisting_user.id)
+        user.dossiers.update_all(user_id: targeted_user.id)
 
-        if preexisting_user.instructeur.nil?
-          user.instructeur&.update(user: preexisting_user)
-        else
-          preexisting_user.instructeur.merge(user.instructeur)
-        end
-
-        if preexisting_user.expert.nil?
-          user.expert&.update(user: preexisting_user)
-        else
-          preexisting_user.expert.merge(user.expert)
+        [
+          [user.instructeur, targeted_user.instructeur],
+          [user.expert, targeted_user.expert],
+          [user.administrateur, targeted_user.administrateur]
+        ].each do |old_role, targeted_role|
+          if targeted_role.nil?
+            old_role&.update(user: targeted_user)
+          else
+            targeted_role.merge(old_role)
+          end
         end
 
         flash[:notice] = "Le compte « #{targeted_email} » a absorbé le compte « #{user.email} »."

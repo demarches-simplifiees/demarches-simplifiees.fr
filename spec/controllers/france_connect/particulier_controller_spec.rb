@@ -189,6 +189,17 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     it_behaves_like "a method that needs a valid merge token"
 
+    context 'when the user is not found' do
+      it 'does not log' do
+        subject
+        fci.reload
+
+        expect(fci.user).to be_nil
+        expect(fci.merge_token).not_to be_nil
+        expect(controller.current_user).to be_nil
+      end
+    end
+
     context 'when the credentials are ok' do
       let!(:user) { create(:user, email: email, password: password) }
 

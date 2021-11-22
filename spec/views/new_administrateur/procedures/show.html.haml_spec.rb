@@ -34,7 +34,7 @@ describe 'new_administrateur/procedures/show.html.haml', type: :view do
       render
     end
 
-    describe 'archive button is visible', js: true do
+    describe 'archive button is visible' do
       it { expect(rendered).not_to have_css('#publish-procedure-link') }
       it { expect(rendered).to have_css('#close-procedure-link') }
     end

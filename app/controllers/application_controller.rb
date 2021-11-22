@@ -72,7 +72,11 @@ class ApplicationController < ActionController::Base
   alias_method :pundit_user, :current_account
 
   def localization_enabled?
-    ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true' || cookies[:locale].present?
+    ENV.fetch('LOCALIZATION_ENABLED', 'false') == 'true' || cookies[:locale].present? || !browser_prefers_french?
+  end
+
+  def browser_prefers_french?
+    http_accept_language.compatible_language_from(I18n.available_locales) == 'fr'
   end
 
   def set_locale(locale)
