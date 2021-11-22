@@ -7,6 +7,14 @@ fr:
           numero_allocataire_notice: Il est généralement composé de 7 chiffres.
           code_postal_label: Le code postal
           code_postal_notice: Il est généralement composé de 5 chiffres.
+      header:
+        expires_at:
+          brouillon: "Expirera le %{date}"
+          en_construction: "Expirera le %{date}"
+          en_instruction: "Ce dossier est en instruction, il n'expirera pas"
+          accepte: "Expirera le %{date}"
+          refuse: "Expirera le %{date}"
+          sans_suite: "Expirera le %{date}"
     champs:
       cnaf:
         show:
