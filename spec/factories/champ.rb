@@ -222,6 +222,10 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_visa, procedure: dossier.procedure }
     end
 
+    factory :champ_cnaf, class: 'Champs::CnafChamp' do
+      type_de_champ { association :type_de_champ_cnaf, procedure: dossier.procedure }
+    end
+
     factory :champ_siret, class: 'Champs::SiretChamp' do
       association :type_de_champ, factory: [:type_de_champ_siret]
       association :etablissement, factory: [:etablissement]

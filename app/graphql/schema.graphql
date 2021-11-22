@@ -1988,6 +1988,10 @@ enum TypeDeChamp {
   Commune de Polynésie
   """
   commune_de_polynesie
+  """
+  Données de la Caisse nationale des allocations familiales
+  """
+  cnaf
 
   """
   Communes

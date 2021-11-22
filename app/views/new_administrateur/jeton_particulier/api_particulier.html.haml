@@ -5,7 +5,7 @@
 
 .container
   .flex
-    = link_to admin_procedure_api_particulier_jeton_path, class: 'card-admin' do
+    = link_to admin_procedure_api_particulier_jeton_path, class: 'card-admin', id: 'add-jeton' do
       - if @procedure.api_particulier_token.blank?
         %div
           %span.icon.clock

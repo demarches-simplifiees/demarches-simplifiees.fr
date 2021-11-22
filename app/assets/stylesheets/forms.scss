@@ -340,6 +340,7 @@
   }
 
   input[type=email],
+  input[type=password],
   input[type=number],
   input[type=tel], {
     max-width: 500px;
@@ -490,6 +491,17 @@
         padding: $default-padding;
         margin-bottom: 2 * $default-padding;
       }
+    }
+  }
+
+  .cnaf-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 700px;
+
+    input {
+      width: inherit;
     }
   }
 

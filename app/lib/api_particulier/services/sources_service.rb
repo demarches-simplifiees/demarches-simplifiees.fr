@@ -8,6 +8,7 @@ module APIParticulier
       def available_sources
         @procedure.api_particulier_scopes
           .map { |provider_and_scope| raw_scopes[provider_and_scope] }
+          .compact
           .map { |provider, scope| extract_sources(provider, scope) }
           .reduce({}) { |acc, el| acc.deep_merge(el) }
       end

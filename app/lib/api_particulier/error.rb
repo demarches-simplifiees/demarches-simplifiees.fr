@@ -14,7 +14,7 @@ module APIParticulier
         msg = <<~TEXT
           url: #{url}
           HTTP error code: #{http_error_code}
-          #{response.body}
+          #{response.body.force_encoding('UTF-8')}
           curl message: #{curl_message}
           total time: #{total_time}
           connect time: #{connect_time}

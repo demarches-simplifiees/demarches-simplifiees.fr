@@ -40,4 +40,4 @@
     - if errors.details[:path].present?
       - options[:disabled] = :disabled
     .flex.justify-end
-      = submit_tag procedure_publish_text(procedure, :submit), options
+      = submit_tag procedure_publish_label(procedure, :submit), options

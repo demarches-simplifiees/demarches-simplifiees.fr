@@ -1,6 +1,6 @@
 describe FranceConnect::ParticulierController, type: :controller do
   let(:birthdate) { '20150821' }
-  let(:email) { 'test@test.com' }
+  let(:email) { 'EMAIL_from_fc@test.com' }
 
   let(:user_info) do
     {
@@ -49,36 +49,67 @@ describe FranceConnect::ParticulierController, type: :controller do
           .and_return(FranceConnectInformation.new(user_info))
       end
 
-      context 'when france_connect_particulier_id exist in database' do
-        let!(:france_connect_information) { create(:france_connect_information, :with_user, user_info) }
-        let(:user) { france_connect_information.user }
+      context 'when france_connect_particulier_id exists in database' do
+        let!(:fci) { FranceConnectInformation.create!(user_info.merge(user_id: fc_user&.id)) }
 
-        it { expect { subject }.not_to change { FranceConnectInformation.count } }
+        context 'and is linked to an user' do
+          let(:fc_user) { create(:user, email: 'associated_user@a.com') }
 
-        it do
-          subject
-          expect(user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
+          it { expect { subject }.not_to change { FranceConnectInformation.count } }
+
+          it 'signs in with the fci associated user' do
+            subject
+            expect(controller.current_user).to eq(fc_user)
+            expect(fc_user.reload.loged_in_with_france_connect).to eq(User.loged_in_with_france_connects.fetch(:particulier))
+          end
+
+          context 'and the user has a stored location' do
+            let(:stored_location) { '/plip/plop' }
+            before { controller.store_location_for(:user, stored_location) }
+
+            it { is_expected.to redirect_to(stored_location) }
+          end
         end
 
-        context 'and the user has a stored location' do
-          let(:stored_location) { '/plip/plop' }
-          before { controller.store_location_for(:user, stored_location) }
+        context 'and is linked an instructeur' do
+          let(:fc_user) { create(:instructeur, email: 'another_email@a.com').user }
 
-          it { is_expected.to redirect_to(stored_location) }
-        end
-
-        context 'and the user is also instructeur' do
-          let!(:instructeur) { create(:instructeur, email: email) }
           before { subject }
 
-          it { expect(response).to redirect_to(new_user_session_path) }
+          it do
+            expect(response).to redirect_to(new_user_session_path)
+            expect(flash[:alert]).to be_present
+          end
+        end
 
-          it { expect(flash[:alert]).to be_present }
+        context 'and is not linked to an user' do
+          let(:fc_user) { nil }
+
+          context 'and no user with the same email exists' do
+            it 'creates an user with the same email and log in' do
+              expect { subject }.to change { User.count }.by(1)
+
+              user = User.last
+
+              expect(user.email).to eq(email.downcase)
+              expect(controller.current_user).to eq(user)
+              expect(response).to redirect_to(root_path)
+            end
+          end
+
+          context 'and an user with the same email exists' do
+            let!(:preexisting_user) { create(:user, email: email) }
+
+            it 'redirects to the merge process' do
+              expect { subject }.not_to change { User.count }
+
+              expect(response).to redirect_to(france_connect_particulier_merge_path(fci.reload.merge_token))
+            end
+          end
         end
       end
 
       context 'when france_connect_particulier_id does not exist in database' do
-        it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
         it { expect { subject }.to change { FranceConnectInformation.count }.by(1) }
 
         describe 'FranceConnectInformation attributs' do
@@ -102,6 +133,140 @@ describe FranceConnect::ParticulierController, type: :controller do
       it { expect(response).to redirect_to(new_user_session_path) }
 
       it { expect(flash[:alert]).to be_present }
+    end
+  end
+
+  RSpec.shared_examples "a method that needs a valid merge token" do
+    context 'when the merge token is invalid' do
+      before do
+        merge_token
+        fci.update(merge_token_created_at: 2.years.ago)
+      end
+
+      it do
+        if format == :js
+          subject
+          expect(response.body).to eq("window.location.href='/'")
+        else
+          expect(subject).to redirect_to root_path
+        end
+        expect(flash.alert).to eq('Votre compte FranceConnect a expiré, veuillez recommencer.')
+      end
+    end
+  end
+
+  describe '#merge' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
+    let(:format) { :html }
+
+    subject { get :merge, params: { merge_token: merge_token } }
+
+    context 'when the merge token is valid' do
+      it { expect(subject).to have_http_status(:ok) }
+    end
+
+    it_behaves_like "a method that needs a valid merge token"
+
+    context 'when the merge token does not exist' do
+      let(:merge_token) { 'i do not exist' }
+
+      it do
+        expect(subject).to redirect_to root_path
+        expect(flash.alert).to eq('Votre compte FranceConnect a expiré, veuillez recommencer.')
+      end
+    end
+  end
+
+  describe '#merge_with_existing_account' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
+    let(:email) { 'EXISTING_account@a.com ' }
+    let(:password) { TEST_PASSWORD }
+    let(:format) { :js }
+
+    subject { post :merge_with_existing_account, params: { merge_token: merge_token, email: email, password: password }, format: format }
+
+    it_behaves_like "a method that needs a valid merge token"
+
+    context 'when the credentials are ok' do
+      let!(:user) { create(:user, email: email, password: password) }
+
+      it 'merges the account, signs in, and delete the merge token' do
+        subject
+        fci.reload
+
+        expect(fci.user).to eq(user)
+        expect(fci.merge_token).to be_nil
+        expect(controller.current_user).to eq(user)
+      end
+
+      context 'but the targeted user is an instructeur' do
+        let!(:user) { create(:instructeur, email: email, password: password).user }
+
+        it 'redirects to the root page' do
+          subject
+          fci.reload
+
+          expect(fci.user).to be_nil
+          expect(fci.merge_token).not_to be_nil
+          expect(controller.current_user).to be_nil
+        end
+      end
+    end
+
+    context 'when the credentials are not ok' do
+      let!(:user) { create(:user, email: email, password: 'another password #$21$%%') }
+
+      it 'increases the failed attempts counter' do
+        subject
+        fci.reload
+
+        expect(fci.user).to be_nil
+        expect(fci.merge_token).not_to be_nil
+        expect(controller.current_user).to be_nil
+        expect(user.reload.failed_attempts).to eq(1)
+      end
+    end
+  end
+
+  describe '#merge_with_new_account' do
+    let(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
+    let(:email) { ' Account@a.com ' }
+    let(:format) { :js }
+
+    subject { post :merge_with_new_account, params: { merge_token: merge_token, email: email }, format: format }
+
+    it_behaves_like "a method that needs a valid merge token"
+
+    context 'when the email does not belong to any user' do
+      it 'creates the account, signs in, and delete the merge token' do
+        subject
+        fci.reload
+
+        expect(fci.user.email).to eq(email.downcase.strip)
+        expect(fci.merge_token).to be_nil
+        expect(controller.current_user).to eq(fci.user)
+        expect(response.body).to include("window.location.href='/'")
+      end
+    end
+
+    context 'when an account with the same email exists' do
+      let!(:user) { create(:user, email: email) }
+
+      render_views
+
+      it 'asks for the corresponding password' do
+        subject
+        fci.reload
+
+        expect(fci.user).to be_nil
+        expect(fci.merge_token).not_to be_nil
+        expect(controller.current_user).to be_nil
+
+        expect(response.body).to include('entrez votre mot de passe')
+      end
     end
   end
 end

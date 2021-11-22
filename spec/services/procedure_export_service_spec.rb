@@ -85,6 +85,7 @@ describe ProcedureExportService do
           "iban",
           "annuaire_education",
           "visa",
+          "cnaf",
           "text"
         ]
       end
@@ -181,6 +182,7 @@ describe ProcedureExportService do
           "iban",
           "annuaire_education",
           "visa",
+          "cnaf",
           "text"
         ]
       end
@@ -271,6 +273,7 @@ describe ProcedureExportService do
             "iban",
             "annuaire_education",
             "visa",
+            "cnaf",
             "text"
           ]
         end

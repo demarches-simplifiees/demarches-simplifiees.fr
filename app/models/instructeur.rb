@@ -10,7 +10,8 @@
 #  updated_at               :datetime
 #
 class Instructeur < ApplicationRecord
-  has_and_belongs_to_many :administrateurs
+  has_many :administrateurs_instructeurs
+  has_many :administrateurs, through: :administrateurs_instructeurs
 
   has_many :assign_to, dependent: :destroy
   has_many :groupe_instructeurs, through: :assign_to
@@ -19,6 +20,7 @@ class Instructeur < ApplicationRecord
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
 
+  has_many :commentaires
   has_many :dossiers, -> { state_not_brouillon }, through: :groupe_instructeurs
   has_many :follows, -> { active }, inverse_of: :instructeur
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :instructeur
@@ -247,6 +249,36 @@ class Instructeur < ApplicationRecord
     ])
 
     Dossier.connection.select_all(sanitized_query).first
+  end
+
+  def merge(old_instructeur)
+    return if old_instructeur.nil?
+
+    old_instructeur
+      .assign_to
+      .where.not(groupe_instructeur_id: assign_to.pluck(:groupe_instructeur_id))
+      .update_all(instructeur_id: id)
+
+    old_instructeur
+      .follows
+      .where.not(dossier_id: follows.pluck(:dossier_id))
+      .update_all(instructeur_id: id)
+
+    admin_with_new_instructeur, admin_without_new_instructeur = old_instructeur
+      .administrateurs
+      .partition { |admin| admin.instructeurs.exists?(id) }
+
+    admin_without_new_instructeur.each do |admin|
+      admin.instructeurs << self
+      admin.instructeurs.delete(old_instructeur)
+    end
+
+    admin_with_new_instructeur.each do |admin|
+      admin.instructeurs.delete(old_instructeur)
+    end
+
+    old_instructeur.commentaires.update_all(instructeur_id: id)
+    old_instructeur.bulk_messages.update_all(instructeur_id: id)
   end
 
   private
