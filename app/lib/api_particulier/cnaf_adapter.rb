@@ -1,4 +1,4 @@
-class APIParticulier::CNAFAdapter
+class APIParticulier::CnafAdapter
   class InvalidSchemaError < ::StandardError
     def initialize(errors)
       super(errors.map(&:to_json).join("\n"))

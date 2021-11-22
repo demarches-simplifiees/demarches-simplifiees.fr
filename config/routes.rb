@@ -124,10 +124,16 @@ Rails.application.routes.draw do
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
+    get 'particulier/merge/:merge_token' => 'particulier#merge', as: :particulier_merge
+    post 'particulier/merge_with_existing_account' => 'particulier#merge_with_existing_account'
+    post 'particulier/merge_with_new_account' => 'particulier#merge_with_new_account'
   end
 
   get '/auth/:provider' => 'omniauth#login', as: :omniauth, constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
   get '/auth/:provider/callback', to: 'omniauth#callback', as: :omniauth_callback, constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
+  get '/auth/:provider/merge/:merge_token' => 'omniauth#merge', as: :omniauth_merge, constraints: { :provider => /google|microsoft|yahoo|tatou|sipf/ }
+  post '/auth/merge_with_existing_account' => 'omniauth#merge_with_existing_account', as: 'omniauth_merge_with_existing_account'
+  post '/auth/merge_with_new_account' => 'omniauth#merge_with_new_account', as: 'omniauth_merge_with_new_account'
 
   namespace :champs do
     get ':position/siret', to: 'siret#show', as: :siret

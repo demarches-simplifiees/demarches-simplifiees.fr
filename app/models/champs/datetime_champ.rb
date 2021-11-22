@@ -9,6 +9,7 @@
 #  row                            :integer
 #  type                           :string
 #  value                          :string
+#  value_json                     :jsonb
 #  created_at                     :datetime
 #  updated_at                     :datetime
 #  dossier_id                     :integer
