@@ -4,7 +4,6 @@ require 'capybara/email/rspec'
 require 'selenium/webdriver'
 
 Capybara.javascript_driver      = ENV.fetch('CAPYBARA_DRIVER', 'headless_chrome').to_sym
-Capybara.ignore_hidden_elements = false
 
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
@@ -34,8 +33,6 @@ Capybara.register_driver :headless_chrome do |app|
   end
 end
 
-#---- From https://gist.github.com/danwhitston/5cea26ae0861ce1520695cff3c2c3315#using-capybara-with-a-remote-selenium-server
-
 Capybara.register_driver :wsl do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--window-size=1440,900')
@@ -56,10 +53,9 @@ Capybara.register_driver :wsl do |app|
                                  options:              options)
 end
 
-# FIXME: remove this line when https://github.com/rspec/rspec-rails/issues/1897 has been fixed
-Capybara.server = :puma, { Silent: true }
-
 Capybara.default_max_wait_time = 2
+
+Capybara.ignore_hidden_elements = false
 
 # Save a snapshot of the HTML page when an integration test fails
 Capybara::Screenshot.autosave_on_failure = true
@@ -71,13 +67,21 @@ Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
 end
 
 RSpec.configure do |config|
-  # Set the user preferred language before Javascript feature specs.
+  config.before(:each, type: :system) do
+    driven_by :rack_test
+  end
+
+  config.before(:each, type: :system, js: true) do
+    driven_by :headless_chrome
+  end
+
+  # Set the user preferred language before Javascript system specs.
   #
-  # Features specs without Javascript run in a Rack stack, and respect the Accept-Language value.
+  # System specs without Javascript run in a Rack stack, and respect the Accept-Language value.
   # However specs using Javascript are run into a Headless Chrome, which doesn't support setting
   # the default Accept-Language value reliably.
   # So instead we set the locale cookie explicitly before each Javascript test.
-  config.before(:each, js: true) do
+  config.before(:each, type: :system, js: true) do
     visit '/' # Webdriver needs visiting a page before setting the cookie
     Capybara.current_session.driver.browser.manage.add_cookie(
       name: :locale,

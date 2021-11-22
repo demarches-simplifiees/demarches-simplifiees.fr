@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_20_104237) do
+ActiveRecord::Schema.define(version: 2021_10_20_114237) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(version: 2021_10_20_104237) do
     t.string "external_id"
     t.string "fetch_external_data_exceptions", array: true
     t.jsonb "value_json"
+    t.datetime "rebased_at"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"

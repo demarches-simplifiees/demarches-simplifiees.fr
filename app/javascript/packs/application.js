@@ -33,6 +33,7 @@ import '../new_design/champs/visa';
 import '../new_design/champs/carte';
 import '../new_design/champs/linked-drop-down-list';
 import '../new_design/champs/repetition';
+import '../new_design/champs/drop-down-list';
 
 import {
   toggleCondidentielExplanation,

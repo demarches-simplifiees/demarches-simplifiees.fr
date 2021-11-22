@@ -14,6 +14,10 @@
         %li.mb-1= t("update_type_champ#{postfix}", label: change[:label], to: t("activerecord.attributes.type_de_champ.type_champs.#{change[:to]}"), scope: [:new_administrateur, :revision_changes])
       - when :description
         %li.mb-1= t("update_description#{postfix}", label: change[:label], to: change[:to], scope: [:new_administrateur, :revision_changes])
+      - when :drop_down_secondary_libelle
+        %li.mb-1= t("update_drop_down_secondary_libelle#{postfix}", label: change[:label], to: change[:to], scope: [:new_administrateur, :revision_changes])
+      - when :drop_down_secondary_description
+        %li.mb-1= t("update_drop_down_secondary_description#{postfix}", label: change[:label], to: change[:to], scope: [:new_administrateur, :revision_changes])
       - when :mandatory
         - if change[:from] == false
           -# i18n-tasks-use t('new_administrateur.revision_changes.update_mandatory.enabled')
@@ -37,6 +41,11 @@
               %li= t(:add_option, scope: [:new_administrateur, :revision_changes], items: added.map{ |term| "« #{term.strip} »" }.join(", "))
             - if removed.present?
               %li= t(:remove_option, scope: [:new_administrateur, :revision_changes], items: removed.map{ |term| "« #{term.strip} »" }.join(", "))
+      - when :drop_down_other
+        - if change[:from] == false
+          %li.mb-1= t("new_administrateur.revision_changes.update_drop_down_other#{postfix}.enabled", label: change[:label])
+        - else
+          %li.mb-1= t("new_administrateur.revision_changes.update_drop_down_other#{postfix}.disabled", label: change[:label])
       - when :carte_layers
         - added = change[:to].sort - change[:from].sort
         - removed = change[:from].sort - change[:to].sort
