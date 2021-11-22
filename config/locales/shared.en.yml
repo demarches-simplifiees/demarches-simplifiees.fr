@@ -7,6 +7,14 @@ en:
           numero_allocataire_notice: It is usually composed of 7 digits.
           code_postal_label: postal code
           code_postal_notice: It is usually composed of 5 digits.
+      header:
+        expires_at:
+          brouillon: "Expires at %{date}"
+          en_construction: "Expires at %{date}"
+          en_instruction: "This file is being instructed, the administration will answer as soon as possible"
+          accepte: "Expires at %{date}"
+          refuse: "Expires at %{date}"
+          sans_suite: "Expires at %{date}"
     champs:
       cnaf:
         show:

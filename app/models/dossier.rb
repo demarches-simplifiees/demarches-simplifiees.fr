@@ -539,20 +539,32 @@ class Dossier < ApplicationRecord
     !brouillon? && !user_deleted? && !archived
   end
 
-  def close_to_expiration_at
+  def expirable?
+    [brouillon?, en_construction?, termine?].any?
+  end
+
+  def approximative_expiration_date_reference
     if brouillon?
       created_at
     elsif en_construction?
       en_construction_at
-    elsif en_instruction?
-      en_instruction_at
-    else
+    elsif termine?
       processed_at
-    end + conservation_extension + procedure.duree_conservation_dossiers_dans_ds.months - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+    else
+      fail "approximative_expiration_date_reference should not be called in state #{self.state}"
+    end
   end
 
-  def duration_after_notice
-    MONTHS_AFTER_EXPIRATION.month + DAYS_AFTER_EXPIRATION.days
+  def approximative_expiration_date
+    [
+      approximative_expiration_date_reference,
+      conservation_extension,
+      procedure.duree_conservation_dossiers_dans_ds.months
+    ].sum - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+  end
+
+  def close_to_expiration?
+    approximative_expiration_date < Time.zone.now
   end
 
   def expiration_date
@@ -565,12 +577,8 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def close_to_expiration?
-    !en_instruction? && close_to_expiration_at < Time.zone.now
-  end
-
-  def close_to_expiration_notice_sent?
-    expiration_date.present?
+  def duration_after_notice
+    MONTHS_AFTER_EXPIRATION.month + DAYS_AFTER_EXPIRATION.days
   end
 
   def expiration_can_be_extended?

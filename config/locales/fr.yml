@@ -156,6 +156,7 @@ fr:
             request: "Demande"
             mailbox: "Messagerie"
             dossier_number: "Dossier nº %{dossier_id}"
+            created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
             print: "imprimer"
             print_dossier: "Tout le dossier"
