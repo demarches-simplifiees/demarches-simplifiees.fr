@@ -231,25 +231,7 @@ class Dossier < ApplicationRecord
           :published_types_de_champ_private
         ],
         avis: [:claimant, :expert],
-        etablissement: :champ,
-        champs: {
-          type_de_champ: [],
-          etablissement: :champ,
-          piece_justificative_file_attachment: :blob,
-          champs: [
-            type_de_champ: [],
-            piece_justificative_file_attachment: :blob
-          ]
-        },
-        champs_private: {
-          type_de_champ: [],
-          etablissement: :champ,
-          piece_justificative_file_attachment: :blob,
-          champs: [
-            type_de_champ: [],
-            piece_justificative_file_attachment: :blob
-          ]
-        }
+        etablissement: :champ
       ).order(en_construction_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
@@ -387,6 +369,41 @@ class Dossier < ApplicationRecord
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
+
+  EXPORT_BATCH_SIZE = 5000
+
+  def self.downloadable_sorted_batch
+    dossiers = downloadable_sorted.to_a
+    (dossiers.size.to_f / EXPORT_BATCH_SIZE).ceil.times do |i|
+      start_index = i * EXPORT_BATCH_SIZE
+      end_index = start_index + EXPORT_BATCH_SIZE - 1
+      load_champs(dossiers[start_index..end_index])
+    end
+    dossiers
+  end
+
+  def self.load_champs(dossiers)
+    ::ActiveRecord::Associations::Preloader.new.preload(dossiers, {
+      champs: {
+        type_de_champ: [],
+        etablissement: :champ,
+        piece_justificative_file_attachment: :blob,
+        champs: [
+          type_de_champ: [],
+          piece_justificative_file_attachment: :blob
+        ]
+      },
+      champs_private: {
+        type_de_champ: [],
+        etablissement: :champ,
+        piece_justificative_file_attachment: :blob,
+        champs: [
+          type_de_champ: [],
+          piece_justificative_file_attachment: :blob
+        ]
+      }
+    })
+  end
 
   def user_deleted?
     persisted? && user_id.nil?
