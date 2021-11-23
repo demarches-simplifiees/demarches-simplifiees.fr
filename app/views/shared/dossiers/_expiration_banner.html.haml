@@ -1,17 +1,14 @@
 - if dossier.expirable? && dossier.close_to_expiration?
   .card.warning.mt-2.mb-3
-    .card-title Votre dossier va expirer
+    .card-title= t('shared.dossiers.header.banner.title')
     %p
     - if dossier.brouillon?
-      Votre dossier est en brouillon, mais va bientôt expirer. Cela signifie qu’il va bientôt être supprimé sans avoir été déposé.
-      Si vous souhaitez le conserver afin de poursuivre la démarche, vous pouvez le conserver
-      un mois de plus en cliquant sur le bouton ci-dessous.
+      = t('shared.dossiers.header.banner.states.brouillon')
     - elsif dossier.en_construction?
-      Votre dossier est en attente de prise en charge par l'administration. Le delais de prise en charge maximale est de 6 mois. Vous pouvez toutefois entendre cette durée d'un mois en cliquant sur le bouton suivant.
+      = t('shared.dossiers.header.banner.states.en_construction')
     - elsif dossier.termine?
-      Le traitement de votre dossier est terminé, mais il va bientôt expirer. Cela signifie qu’il va bientôt être supprimé.
-      Si vous souhaitez conserver une trace, vous pouvez le télécharger au format PDF.
+      = t('shared.dossiers.header.banner.states.termine')
 
     - if dossier.expiration_can_be_extended?
       %br
-      = button_to 'Repousser sa suppression', users_dossier_repousser_expiration_path(dossier), class: 'button secondary mt-2'
+      = button_to t('shared.dossiers.header.banner.button_delay_expiration'), users_dossier_repousser_expiration_path(dossier), class: 'button secondary mt-2'
