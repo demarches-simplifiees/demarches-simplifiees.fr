@@ -106,6 +106,16 @@ describe FranceConnect::ParticulierController, type: :controller do
               expect(response).to redirect_to(france_connect_particulier_merge_path(fci.reload.merge_token))
             end
           end
+          context 'and an instructeur with the same email exists' do
+            let!(:preexisting_user) { create(:instructeur, email: email) }
+
+            it 'redirects to the merge process' do
+              expect { subject }.not_to change { User.count }
+
+              expect(response).to redirect_to(new_user_session_path)
+              expect(flash[:alert]).to eq(I18n.t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path))
+            end
+          end
         end
       end
 
