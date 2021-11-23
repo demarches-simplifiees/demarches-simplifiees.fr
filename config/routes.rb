@@ -129,6 +129,12 @@ Rails.application.routes.draw do
     post 'particulier/merge_with_new_account' => 'particulier#merge_with_new_account'
   end
 
+  namespace :agent_connect do
+    get '' => 'agent#index'
+    get 'login' => 'agent#login'
+    get 'callback' => 'agent#callback'
+  end
+
   namespace :champs do
     get ':position/siret', to: 'siret#show', as: :siret
     get ':position/dossier_link', to: 'dossier_link#show', as: :dossier_link

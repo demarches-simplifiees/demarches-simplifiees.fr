@@ -1,0 +1,6 @@
+.container
+  %h1.mt-2.mb-2= t('.connect')
+
+  %p= t('.intro_html', app_name: APPLICATION_NAME)
+
+  = link_to t('.cta'), agent_connect_login_path, class: "france-connect-agent-login-button"
