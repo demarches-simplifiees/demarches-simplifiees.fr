@@ -13,7 +13,7 @@ class UserMailerPreview < ActionMailer::Preview
   end
 
   def france_connect_merge_confirmation
-    UserMailer.france_connect_merge_confirmation('new.exemple.fr', '123456')
+    UserMailer.france_connect_merge_confirmation('new.exemple.fr', '123456', 15.minutes.from_now)
   end
 
   private
