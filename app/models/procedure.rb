@@ -712,7 +712,7 @@ class Procedure < ApplicationRecord
   private
 
   def before_publish
-    update!(closed_at: nil, unpublished_at: nil)
+    assign_attributes(closed_at: nil, unpublished_at: nil)
   end
 
   def after_publish(canonical_procedure = nil)
