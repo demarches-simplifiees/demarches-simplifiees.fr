@@ -1,12 +1,5 @@
 - if champ.options?
-  - if champ.allows_other_value?
-    = form.select :value,
-        champ.options,
-        { disabled: champ.disabled_options },
-        multiple: false,
-        class: 'select2',
-        'data-tags': true
-  - elsif champ.render_as_radios?
+  - if champ.render_as_radios?
     %fieldset.radios
       - champ.enabled_non_empty_options.each do |option|
         %label
