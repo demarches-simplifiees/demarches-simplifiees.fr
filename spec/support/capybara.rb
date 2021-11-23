@@ -72,7 +72,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system, js: true) do
-    driven_by :headless_chrome
+    driven_by ENV['CAPYBARA_DRIVER']&.to_sym || :headless_chrome
   end
 
   # Set the user preferred language before Javascript system specs.
