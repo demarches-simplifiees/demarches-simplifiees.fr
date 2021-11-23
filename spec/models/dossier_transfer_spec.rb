@@ -46,16 +46,36 @@ RSpec.describe DossierTransfer, type: :model do
         it { expect(DossierTransfer.with_dossiers.count).to eq(0) }
       end
     end
+  end
 
-    describe 'dossier relationship' do
-      let(:transfer) { create(:dossier_transfer) }
-      let(:dossier) { create(:dossier, user: user, transfer: transfer) }
+  describe '#destroy_and_nullify' do
+    let(:transfer) { create(:dossier_transfer) }
+    let(:dossier) { create(:dossier, user: user, transfer: transfer) }
+    let(:discarded_dossier) { create(:dossier, user: user, transfer: dossier.transfer) }
 
-      it 'nullify transfer relationship on dossier' do
-        expect(dossier.transfer).to eq(transfer)
-        transfer.destroy
-        expect(dossier.reload.transfer).to be_nil
-      end
+    before do
+      discarded_dossier.discard!
+    end
+
+    it 'nullify transfer relationship on dossier' do
+      expect(dossier.transfer).to eq(transfer)
+      transfer.destroy_and_nullify
+      expect(dossier.reload.transfer).to be_nil
+    end
+  end
+
+  describe '#destroy_stale' do
+    let(:transfer) { create(:dossier_transfer, created_at: 1.month.ago) }
+    let(:dossier) { create(:dossier, user: user, transfer: transfer) }
+    let(:discarded_dossier) { create(:dossier, user: user, transfer: dossier.transfer) }
+
+    before do
+      discarded_dossier.discard!
+    end
+
+    it 'nullify the transfer on discarded dossier' do
+      DossierTransfer.destroy_stale
+      expect(DossierTransfer.count).to eq(0)
     end
   end
 end

@@ -18,11 +18,13 @@ import TypeDeChampLevelOption from './TypeDeChampLevelOption';
 import TypeDeChampDateOption from './TypeDeChampDateOption';
 import TypeDeChampDateOptions from './TypeDeChampDateOptions';
 import TypeDeChampDropDownOptions from './TypeDeChampDropDownOptions';
+import TypeDeChampDropDownOther from './TypeDeChampDropDownOther';
 import TypeDeChampPieceJustificative from './TypeDeChampPieceJustificative';
 import TypeDeChampRepetitionOptions from './TypeDeChampRepetitionOptions';
 import TypeDeChampTypesSelect from './TypeDeChampTypesSelect';
 import TypeDeChampHeaderSectionOptions from './TypeDeChampHeaderSectionOptions';
 import TypeDeChampEmailList from './TypeDeChampEmailList';
+import TypeDeChampDropDownSecondary from './TypeDeChampDropDownSecondary';
 
 const TypeDeChamp = sortableElement(
   ({ typeDeChamp, dispatch, idx: index, isFirstItem, isLastItem, state }) => {
@@ -32,6 +34,8 @@ const TypeDeChamp = sortableElement(
       'multiple_drop_down_list',
       'linked_drop_down_list'
     ].includes(typeDeChamp.type_champ);
+    const isLinkedDropDown = typeDeChamp.type_champ === 'linked_drop_down_list';
+    const isSimpleDropDown = typeDeChamp.type_champ === 'drop_down_list';
     const isFile = typeDeChamp.type_champ === 'piece_justificative';
     const isCarte = typeDeChamp.type_champ === 'carte';
     const isTeFenua = typeDeChamp.type_champ === 'te_fenua';
@@ -151,6 +155,15 @@ const TypeDeChamp = sortableElement(
           <TypeDeChampDropDownOptions
             isVisible={isDropDown}
             handler={updateHandlers.drop_down_list_value}
+          />
+          <TypeDeChampDropDownSecondary
+            isVisible={isLinkedDropDown}
+            libelleHandler={updateHandlers.drop_down_secondary_libelle}
+            descriptionHandler={updateHandlers.drop_down_secondary_description}
+          />
+          <TypeDeChampDropDownOther
+            isVisible={isSimpleDropDown}
+            handler={updateHandlers.drop_down_other}
           />
           <TypeDeChampPieceJustificative
             isVisible={isFile}
@@ -295,6 +308,7 @@ export const FIELDS = [
   'batiments',
   'description',
   'drop_down_list_value',
+  'drop_down_other',
   'level',
   'libelle',
   'mandatory',
@@ -307,6 +321,8 @@ export const FIELDS = [
   'max',
   'accredited_user_string',
   'type_champ',
+  'drop_down_secondary_libelle',
+  'drop_down_secondary_description',
   ...Object.keys(OPTIONS_FIELDS)
 ];
 

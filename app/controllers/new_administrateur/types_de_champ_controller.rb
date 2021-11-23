@@ -66,6 +66,9 @@ module NewAdministrateur
             :accredited_user_string,
             # base fields
             :drop_down_list_value,
+            :drop_down_other,
+            :drop_down_secondary_libelle,
+            :drop_down_secondary_description,
             :piece_justificative_template_filename,
             :piece_justificative_template_url,
             :editable_options
@@ -91,6 +94,9 @@ module NewAdministrateur
         :parent_id,
         :private,
         :drop_down_list_value,
+        :drop_down_other,
+        :drop_down_secondary_libelle,
+        :drop_down_secondary_description,
         :piece_justificative_template,
         editable_options: [
           :cadastres,
@@ -122,6 +128,9 @@ module NewAdministrateur
         :description,
         :mandatory,
         :drop_down_list_value,
+        :drop_down_other,
+        :drop_down_secondary_libelle,
+        :drop_down_secondary_description,
         :piece_justificative_template,
         editable_options: [
           :cadastres,

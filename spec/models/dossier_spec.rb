@@ -1459,4 +1459,71 @@ describe Dossier do
 
     it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["État du dossier", "Brouillon"]) }
   end
+
+  describe "#rebase" do
+    let(:procedure) { create(:procedure, :with_type_de_champ_mandatory, :with_yes_no, :with_repetition, :with_datetime) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+
+    let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
+
+    let(:text_type_de_champ) { procedure.types_de_champ.find(&:mandatory?) }
+    let(:text_champ) { dossier.champs.find(&:mandatory?) }
+    let(:rebased_text_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+
+    let(:datetime_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+    let(:datetime_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
+    let(:rebased_datetime_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:date) } }
+
+    let(:repetition_type_de_champ) { procedure.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+    let(:repetition_text_type_de_champ) { repetition_type_de_champ.types_de_champ.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+    let(:repetition_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+    let(:rebased_repetition_champ) { dossier.champs.find { |c| c.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+
+    before do
+      procedure.publish!
+      procedure.draft_revision.add_type_de_champ({
+        type_champ: TypeDeChamp.type_champs.fetch(:text),
+        libelle: "Un champ text"
+      })
+      procedure.draft_revision.find_or_clone_type_de_champ(text_type_de_champ).update(mandatory: false, libelle: "nouveau libelle")
+      procedure.draft_revision.find_or_clone_type_de_champ(datetime_type_de_champ).update(type_champ: TypeDeChamp.type_champs.fetch(:date))
+      procedure.draft_revision.find_or_clone_type_de_champ(repetition_text_type_de_champ).update(libelle: "nouveau libelle dans une repetition")
+      procedure.draft_revision.add_type_de_champ({
+        type_champ: TypeDeChamp.type_champs.fetch(:checkbox),
+        libelle: "oui ou non",
+        parent_id: repetition_type_de_champ.stable_id
+      })
+      procedure.draft_revision.remove_type_de_champ(yes_no_type_de_champ.stable_id)
+
+      datetime_champ.update(value: Date.today.to_s)
+      text_champ.update(value: 'bonjour')
+    end
+
+    it "updates the brouillon champs with the latest revision changes" do
+      revision_id = dossier.revision_id
+      libelle = text_type_de_champ.libelle
+
+      expect(dossier.revision).to eq(procedure.published_revision)
+      expect(dossier.champs.size).to eq(4)
+      expect(repetition_champ.rows.size).to eq(1)
+      expect(repetition_champ.rows[0].size).to eq(1)
+
+      procedure.publish_revision!
+      perform_enqueued_jobs
+      procedure.reload
+      dossier.reload
+
+      expect(procedure.revisions.size).to eq(3)
+      expect(dossier.revision).to eq(procedure.published_revision)
+      expect(dossier.champs.size).to eq(4)
+      expect(rebased_text_champ.value).to eq(text_champ.value)
+      expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
+      expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
+      expect(rebased_datetime_champ.value).to be_nil
+      expect(rebased_repetition_champ.rows.size).to eq(1)
+      expect(rebased_repetition_champ.rows[0].size).to eq(2)
+      expect(rebased_text_champ.rebased_at).not_to be_nil
+      expect(rebased_datetime_champ.rebased_at).not_to be_nil
+    end
+  end
 end

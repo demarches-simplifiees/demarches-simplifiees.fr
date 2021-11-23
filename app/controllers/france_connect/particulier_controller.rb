@@ -45,7 +45,7 @@ class FranceConnect::ParticulierController < ApplicationController
   def merge_with_existing_account
     user = User.find_by(email: sanitized_email_params)
 
-    if user.valid_for_authentication? { user.valid_password?(password_params) }
+    if user.present? && user.valid_for_authentication? { user.valid_password?(password_params) }
       if !user.can_france_connect?
         flash.alert = "#{user.email} ne peut utiliser FranceConnect"
 

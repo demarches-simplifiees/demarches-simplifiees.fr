@@ -37,6 +37,7 @@ class Dossier < ApplicationRecord
   self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
   include DateEncodingConcern
+  include DossierRebaseConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -231,25 +232,7 @@ class Dossier < ApplicationRecord
           :published_types_de_champ_private
         ],
         avis: [:claimant, :expert],
-        etablissement: :champ,
-        champs: {
-          type_de_champ: [],
-          etablissement: :champ,
-          piece_justificative_file_attachment: :blob,
-          champs: [
-            type_de_champ: [],
-            piece_justificative_file_attachment: :blob
-          ]
-        },
-        champs_private: {
-          type_de_champ: [],
-          etablissement: :champ,
-          piece_justificative_file_attachment: :blob,
-          champs: [
-            type_de_champ: [],
-            piece_justificative_file_attachment: :blob
-          ]
-        }
+        etablissement: :champ
       ).order(en_construction_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
@@ -387,6 +370,41 @@ class Dossier < ApplicationRecord
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :groupe_instructeur, presence: true, if: -> { !brouillon? }
+
+  EXPORT_BATCH_SIZE = 5000
+
+  def self.downloadable_sorted_batch
+    dossiers = downloadable_sorted.to_a
+    (dossiers.size.to_f / EXPORT_BATCH_SIZE).ceil.times do |i|
+      start_index = i * EXPORT_BATCH_SIZE
+      end_index = start_index + EXPORT_BATCH_SIZE - 1
+      load_champs(dossiers[start_index..end_index])
+    end
+    dossiers
+  end
+
+  def self.load_champs(dossiers)
+    ::ActiveRecord::Associations::Preloader.new.preload(dossiers, {
+      champs: {
+        type_de_champ: [],
+        etablissement: :champ,
+        piece_justificative_file_attachment: :blob,
+        champs: [
+          type_de_champ: [],
+          piece_justificative_file_attachment: :blob
+        ]
+      },
+      champs_private: {
+        type_de_champ: [],
+        etablissement: :champ,
+        piece_justificative_file_attachment: :blob,
+        champs: [
+          type_de_champ: [],
+          piece_justificative_file_attachment: :blob
+        ]
+      }
+    })
+  end
 
   def user_deleted?
     persisted? && user_id.nil?
@@ -669,6 +687,7 @@ class Dossier < ApplicationRecord
       end
     end
 
+    update!(dossier_transfer_id: nil)
     discard!
   end
 
@@ -949,6 +968,21 @@ class Dossier < ApplicationRecord
 
   def user_locale
     user&.locale || I18n.default_locale
+  end
+
+  def self.purge_discarded
+    discarded_brouillon_expired.destroy_all
+
+    transaction do
+      DossierOperationLog.discarded_en_construction_expired.destroy_all
+      discarded_en_construction_expired.destroy_all
+    end
+
+    transaction do
+      DossierOperationLog.discarded_termine_expired.destroy_all
+      Avis.discarded_termine_expired.destroy_all
+      discarded_termine_expired.destroy_all
+    end
   end
 
   private

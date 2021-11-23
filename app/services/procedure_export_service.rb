@@ -3,7 +3,7 @@ class ProcedureExportService
 
   def initialize(procedure, dossiers)
     @procedure = procedure
-    @dossiers = dossiers.downloadable_sorted
+    @dossiers = dossiers.downloadable_sorted_batch
     @tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
   end
 

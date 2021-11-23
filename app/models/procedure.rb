@@ -731,6 +731,9 @@ class Procedure < ApplicationRecord
   def publish_revision!
     update!(draft_revision: create_new_revision, published_revision: draft_revision)
     published_revision.touch(:published_at)
+    dossiers.state_brouillon.find_each do |dossier|
+      DossierRebaseJob.perform_later(dossier)
+    end
   end
 
   def cnaf_enabled?
