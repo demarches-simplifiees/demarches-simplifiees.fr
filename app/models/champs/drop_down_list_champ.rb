@@ -6,6 +6,7 @@
 #  data                           :jsonb
 #  fetch_external_data_exceptions :string           is an Array
 #  private                        :boolean          default(FALSE), not null
+#  rebased_at                     :datetime
 #  row                            :integer
 #  type                           :string
 #  value                          :string
@@ -20,6 +21,7 @@
 #
 class Champs::DropDownListChamp < Champ
   THRESHOLD_NB_OPTIONS_AS_RADIO = 5
+  OTHER = '__other__'
 
   def render_as_radios?
     enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_RADIO
@@ -30,7 +32,15 @@ class Champs::DropDownListChamp < Champ
   end
 
   def options
-    drop_down_list_options.filter { |option| option.casecmp('autre') != 0 } | [value]
+    if drop_down_other?
+      drop_down_list_options + [["Autre", OTHER]]
+    else
+      drop_down_list_options
+    end
+  end
+
+  def selected
+    other_value_present? ? OTHER : value
   end
 
   def disabled_options
@@ -41,7 +51,25 @@ class Champs::DropDownListChamp < Champ
     drop_down_list_enabled_non_empty_options
   end
 
-  def allows_other_value?
-    drop_down_list_options.find { |option| option.casecmp('autre') == 0 }
+  def other_value_present?
+    drop_down_other? && value.present? && drop_down_list_options.exclude?(value)
+  end
+
+  def drop_down_other?
+    drop_down_other
+  end
+
+  def value=(value)
+    if value != OTHER
+      write_attribute(:value, value)
+    end
+  end
+
+  def value_other=(value)
+    write_attribute(:value, value)
+  end
+
+  def value_other
+    other_value_present? ? value : ""
   end
 end

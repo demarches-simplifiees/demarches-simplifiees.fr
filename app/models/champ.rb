@@ -6,6 +6,7 @@
 #  data                           :jsonb
 #  fetch_external_data_exceptions :string           is an Array
 #  private                        :boolean          default(FALSE), not null
+#  rebased_at                     :datetime
 #  row                            :integer
 #  type                           :string
 #  value                          :string
@@ -37,9 +38,12 @@ class Champ < ApplicationRecord
     :mandatory?,
     :description,
     :drop_down_list_options,
+    :drop_down_other,
     :drop_down_list_options?,
     :drop_down_list_disabled_options,
     :drop_down_list_enabled_non_empty_options,
+    :drop_down_secondary_libelle,
+    :drop_down_secondary_description,
     :exclude_from_export?,
     :exclude_from_view?,
     :repetition?,
