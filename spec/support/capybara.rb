@@ -3,7 +3,7 @@ require 'capybara-screenshot/rspec'
 require 'capybara/email/rspec'
 require 'selenium/webdriver'
 
-Capybara.javascript_driver      = ENV.fetch('CAPYBARA_DRIVER', 'headless_chrome').to_sym
+Capybara.javascript_driver = ENV.fetch('CAPYBARA_DRIVER', 'headless_chrome').to_sym
 
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
