@@ -203,6 +203,8 @@ en:
           connection: Sign in
           are_you_new: First time on %{app_name}?
           find_procedure: Find your procedure
+          instructor_or_admin: Instructor or Administrator ?
+          connect_with_agent_connect: Connect with AgentConnect
       passwords:
         reset_link_sent:
           got_it: Got it!
