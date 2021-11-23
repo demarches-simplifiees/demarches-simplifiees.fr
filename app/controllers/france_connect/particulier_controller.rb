@@ -19,6 +19,9 @@ class FranceConnect::ParticulierController < ApplicationController
       if preexisting_unlinked_user.nil?
         fci.associate_user!(fci.email_france_connect)
         connect_france_connect_particulier(fci.user)
+      elsif !preexisting_unlinked_user.can_france_connect?
+        fci.destroy
+        redirect_to new_user_session_path, alert: t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
       else
         merge_token = fci.create_merge_token!
         redirect_to france_connect_particulier_merge_path(merge_token)
