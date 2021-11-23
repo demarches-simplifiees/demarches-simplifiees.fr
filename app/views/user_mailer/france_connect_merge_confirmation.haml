@@ -10,7 +10,7 @@
 %p
   Vous pouvez aussi visiter ce lien : #{link_to france_connect_particulier_mail_merge_with_existing_account_url(merge_token: @merge_token), france_connect_particulier_mail_merge_with_existing_account_url(merge_token: @merge_token)}
 
-%p Ce lien est valide #{distance_of_time_in_words(FranceConnectInformation::MERGE_VALIDITY)}, jusqu'à #{I18n.l(@merge_token_created_at, format: "%d-%m-%Y à %H:%M (%Z)")}
+%p Ce lien est valide #{distance_of_time_in_words(FranceConnectInformation::MERGE_VALIDITY)}, jusqu'à #{@merge_token_created_at.strftime("%d-%m-%Y à %H:%M (%Z)")}
 
 %p
   Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer ce message. Et si vous avez besoin d’assistance, n’hésitez pas à nous contacter à

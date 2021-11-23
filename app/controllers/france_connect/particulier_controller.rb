@@ -51,18 +51,18 @@ class FranceConnect::ParticulierController < ApplicationController
 
     if user.present? && user.valid_for_authentication? { user.valid_password?(password_params) }
       if !user.can_france_connect?
-        flash.alert = "#{user.email} ne peut utiliser FranceConnect"
+        flash.alert = t('errors.messages.france_connect.forbidden_html', reset_link: new_user_password_path)
 
         render js: ajax_redirect(root_path)
       else
         @fci.update(user: user)
         @fci.delete_merge_token!
 
-        flash.notice = "Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés"
+        flash.notice = t('france_connect.particulier.flash.connection_done', application_name: APPLICATION_NAME)
         connect_france_connect_particulier(user)
       end
     else
-      flash.alert = 'Mauvais mot de passe'
+      flash.alert = t('france_connect.particulier.flash.invalid_password')
 
       render js: helpers.render_flash
     end
@@ -74,7 +74,7 @@ class FranceConnect::ParticulierController < ApplicationController
       @fci.update(user: user)
       @fci.delete_merge_token!
 
-      flash.notice = "Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés"
+      flash.notice = t('france_connect.particulier.flash.connection_done', application_name: APPLICATION_NAME)
       connect_france_connect_particulier(user)
     else # same behaviour as redirect nicely with message when instructeur/administrateur
       @fci.destroy
@@ -89,7 +89,7 @@ class FranceConnect::ParticulierController < ApplicationController
       @fci.associate_user!(sanitized_email_params)
       @fci.delete_merge_token!
 
-      flash.notice = "Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés"
+      flash.notice = t('france_connect.particulier.flash.connection_done', application_name: APPLICATION_NAME)
       connect_france_connect_particulier(@fci.user)
     else
       @email = sanitized_email_params
@@ -99,9 +99,9 @@ class FranceConnect::ParticulierController < ApplicationController
 
   def resend_and_renew_merge_confirmation
     merge_token = @fci.create_merge_token!
-    UserMailer.france_connect_merge_confirmation(@fci.email_france_connect, merge_token).deliver_later
+    UserMailer.france_connect_merge_confirmation(@fci.email_france_connect, merge_token, @fci.merge_token_created_at).deliver_later
     redirect_to france_connect_particulier_merge_path(merge_token),
-                notice: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
+                notice: t('france_connect.particulier.flash.confirmation_mail_sent')
   end
 
   private
@@ -110,7 +110,7 @@ class FranceConnect::ParticulierController < ApplicationController
     @fci = FranceConnectInformation.find_by(merge_token: merge_token_params)
 
     if @fci.nil? || !@fci.valid_for_merge?
-      flash.alert = "Le délai pour fusionner les comptes FranceConnect et #{APPLICATION_NAME} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
+      flash.alert = t('france_connect.particulier.flash.merger_token_expired', application_name: APPLICATION_NAME)
 
       respond_to do |format|
         format.html { redirect_to root_path }

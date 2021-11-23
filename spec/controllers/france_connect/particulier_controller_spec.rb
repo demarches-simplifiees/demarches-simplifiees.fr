@@ -267,6 +267,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         expect(fci.user).to eq(user)
         expect(fci.merge_token).to be_nil
         expect(controller.current_user).to eq(user)
+        expect(flash[:notice]).to eq("Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés")
       end
 
       context 'but the targeted user is an instructeur' do
