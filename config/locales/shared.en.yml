@@ -15,6 +15,13 @@ en:
           accepte: "Expires at %{date}"
           refuse: "Expires at %{date}"
           sans_suite: "Expires at %{date}"
+        banner:
+          title: Your file will expire
+          states:
+            brouillon: Your file is still in draft and will soon expire. So it will be deleted soon without being instructed. If you want to pursue your procedure you can submit it now. Otherwise you are able to delay its expiration by clicking on the underneath button.
+            en_construction: Your file is pending for instruction. The maximum delay is 6 months, but your can extend the duration by a month by clicking on the underneath button.
+            termine: Your file had been processed and will soon expire.So it will be deleted soon. If you want to keep it, your can dowload a PDF file of it.
+          button_delay_expiration: "Delay deletion"
     champs:
       cnaf:
         show:
