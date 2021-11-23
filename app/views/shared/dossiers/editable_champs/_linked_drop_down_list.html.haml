@@ -5,7 +5,7 @@
     { data: { secondary_options: champ.secondary_options } }
   %span
     = form.label :secondary_value do
-      = champ.drop_down_secondary_libelle.presence || (champ.libelle + ' \: précisez')
+      = champ.drop_down_secondary_libelle.presence || (champ.libelle + ' : précisez')
       - if champ.mandatory?
         %span.mandatory *
     - if champ.drop_down_secondary_description.present?
