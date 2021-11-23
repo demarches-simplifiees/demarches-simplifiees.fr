@@ -17,8 +17,6 @@
 class DeletedDossier < ApplicationRecord
   belongs_to :procedure, -> { with_discarded }, inverse_of: :deleted_dossiers, optional: false
 
-  validates :dossier_id, uniqueness: true
-
   scope :order_by_updated_at, -> (order = :desc) { order(created_at: order) }
   scope :deleted_since,       -> (since) { where('deleted_dossiers.deleted_at >= ?', since) }
 
@@ -32,16 +30,17 @@ class DeletedDossier < ApplicationRecord
   }
 
   def self.create_from_dossier(dossier, reason)
-    create!(
+    # We have some bad data because of partially deleted dossiers in the past.
+    # For now use find_or_create_by! to avoid errors.
+    create_with(
       reason: reasons.fetch(reason),
-      dossier_id: dossier.id,
       groupe_instructeur_id: dossier.groupe_instructeur_id,
       revision_id: dossier.revision_id,
       user_id: dossier.user_id,
       procedure: dossier.procedure,
       state: dossier.state,
       deleted_at: Time.zone.now
-    )
+    ).create_or_find_by!(dossier_id: dossier.id)
   end
 
   def procedure_removed?

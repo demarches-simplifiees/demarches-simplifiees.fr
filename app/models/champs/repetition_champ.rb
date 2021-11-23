@@ -22,6 +22,7 @@
 class Champs::RepetitionChamp < Champ
   include ActionView::Helpers::TagHelper
   accepts_nested_attributes_for :champs, allow_destroy: true
+  delegate :libelle_for_export, to: :type_de_champ
 
   def rows
     champs.group_by(&:row).values
@@ -69,13 +70,6 @@ class Champs::RepetitionChamp < Champ
     end
   end
 
-  # We have to truncate the label here as spreadsheets have a (30 char) limit on length.
-  def libelle_for_export
-    str = "(#{stable_id}) #{libelle}"
-    # /\*?[] are invalid Excel worksheet characters
-    ActiveStorage::Filename.new(str.delete('[]*?')).sanitized
-  end
-
   class Row < Hashie::Dash
     property :index
     property :dossier_id
@@ -85,19 +79,11 @@ class Champs::RepetitionChamp < Champ
       self[attribute]
     end
 
-    def spreadsheet_columns
+    def spreadsheet_columns(types_de_champ)
       [
         ['Dossier ID', :dossier_id],
         ['Ligne', :index]
-      ] + exported_champs
-    end
-
-    private
-
-    def exported_champs
-      champs.reject(&:exclude_from_export?).map do |champ|
-        [champ.libelle, champ.for_export]
-      end
+      ] + Dossier.champs_for_export(champs, types_de_champ)
     end
   end
 end
