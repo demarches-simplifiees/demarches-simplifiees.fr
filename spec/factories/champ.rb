@@ -190,7 +190,7 @@ FactoryBot.define do
     end
 
     factory :champ_siret, class: 'Champs::SiretChamp' do
-      association :type_de_champ, factory: [:type_de_champ_siret]
+      type_de_champ { association :type_de_champ_siret, procedure: dossier.procedure }
       association :etablissement, factory: [:etablissement]
       value { '44011762001530' }
     end
