@@ -1,4 +1,3 @@
-
 describe Champs::IbanChamp do
   describe '#valid?' do
     it do
