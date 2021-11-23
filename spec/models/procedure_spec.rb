@@ -695,6 +695,50 @@ describe Procedure do
     end
   end
 
+  describe "#publish_revision!" do
+    let(:procedure) { create(:procedure, :published) }
+    let(:tdc_attributes) { { type_champ: :number, libelle: 'libelle 1' } }
+    let(:publication_date) { Time.zone.local(2021, 1, 1, 12, 00, 00) }
+
+    before do
+      procedure.draft_revision.add_type_de_champ(tdc_attributes)
+    end
+
+    subject do
+      Timecop.freeze(publication_date) do
+        procedure.publish_revision!
+      end
+    end
+
+    it 'publishes the new revision' do
+      subject
+      expect(procedure.published_revision).to be_present
+      expect(procedure.published_revision.published_at).to eq(publication_date)
+      expect(procedure.published_revision.types_de_champ.first.libelle).to eq('libelle 1')
+    end
+
+    it 'creates a new draft revision' do
+      expect { subject }.to change(ProcedureRevision, :count).by(1)
+      expect(procedure.draft_revision).to be_present
+      expect(procedure.draft_revision.revision_types_de_champ).to be_present
+      expect(procedure.draft_revision.types_de_champ).to be_present
+      expect(procedure.draft_revision.types_de_champ.first.libelle).to eq('libelle 1')
+    end
+
+    context 'when the procedure has dossiers' do
+      let(:dossier_draft) { create(:dossier, :brouillon, procedure: procedure) }
+      let(:dossier_submitted) { create(:dossier, :en_construction, procedure: procedure) }
+
+      before { [dossier_draft, dossier_submitted] }
+
+      it 'enqueues rebase jobs for draft dossiers' do
+        subject
+        expect(DossierRebaseJob).to have_been_enqueued.with(dossier_draft)
+        expect(DossierRebaseJob).not_to have_been_enqueued.with(dossier_submitted)
+      end
+    end
+  end
+
   describe "#unpublish!" do
     let(:procedure) { create(:procedure, :published) }
     let(:now) { Time.zone.now.beginning_of_minute }
