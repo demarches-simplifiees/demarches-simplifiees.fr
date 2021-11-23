@@ -1,5 +1,4 @@
-
-feature 'Using Visa field', js: true do
+describe 'Using Visa field', js: true do
   include ActiveJob::TestHelper
 
   let(:password) { TEST_PASSWORD }
