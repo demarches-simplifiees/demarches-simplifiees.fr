@@ -38,3 +38,4 @@ vendor/*
 .netlify
 *.xcf
 /cors.json
+/cors-prod.json
