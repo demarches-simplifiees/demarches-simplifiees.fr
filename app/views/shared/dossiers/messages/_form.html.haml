@@ -5,11 +5,13 @@
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
   = f.text_area :body, rows: 5, placeholder: placeholder, required: true, class: 'message-textarea persisted-input'
   .flex.justify-between.wrap
+    - disable_piece_jointe = defined?(disable_piece_jointe) ? disable_piece_jointe : false
     %div
-      = f.label :piece_jointe, for: :piece_jointe do
-        = t('views.shared.dossiers.messages.form.attach_dossier')
-        %span.notice= t('views.shared.dossiers.messages.form.attachment_size')
-      = f.file_field :piece_jointe, id: 'piece_jointe', direct_upload: true
+      - if !disable_piece_jointe
+        = f.label :piece_jointe, for: :piece_jointe do
+          = t('views.shared.dossiers.messages.form.attach_dossier')
+          %span.notice= t('views.shared.dossiers.messages.form.attachment_size')
+        = f.file_field :piece_jointe, id: 'piece_jointe', direct_upload: true
 
     %div
       = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'button primary send', data: { disable: true }

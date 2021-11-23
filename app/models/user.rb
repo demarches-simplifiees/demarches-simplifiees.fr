@@ -53,10 +53,11 @@ class User < ApplicationRecord
   has_many :invites, dependent: :destroy
   has_many :dossiers_invites, through: :invites, source: :dossier
   has_many :deleted_dossiers
+  has_many :merge_logs, dependent: :destroy
   has_one :france_connect_information, dependent: :destroy
-  belongs_to :instructeur, optional: true
-  belongs_to :administrateur, optional: true
-  belongs_to :expert, optional: true
+  belongs_to :instructeur, optional: true, dependent: :destroy
+  belongs_to :administrateur, optional: true, dependent: :destroy
+  belongs_to :expert, optional: true, dependent: :destroy
 
   accepts_nested_attributes_for :france_connect_information
 
@@ -207,6 +208,29 @@ class User < ApplicationRecord
       dossiers.with_discarded.discarded.destroy_all
       dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
       destroy!
+    end
+  end
+
+  def merge(old_user)
+    transaction do
+      old_user.dossiers.update_all(user_id: id)
+      old_user.invites.update_all(user_id: id)
+      old_user.merge_logs.update_all(user_id: id)
+
+      [
+        [old_user.instructeur, instructeur],
+        [old_user.expert, expert],
+        [old_user.administrateur, administrateur]
+      ].each do |old_role, targeted_role|
+        if targeted_role.nil?
+          old_role&.update(user: self)
+        else
+          targeted_role.merge(old_role)
+        end
+      end
+
+      merge_logs.create(from_user_id: old_user.id, from_user_email: old_user.email)
+      old_user.destroy
     end
   end
 
