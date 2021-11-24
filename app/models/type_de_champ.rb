@@ -336,13 +336,12 @@ class TypeDeChamp < ApplicationRecord
       # otherwise return all types_de_champ in their latest state
       types_de_champ = TypeDeChamp
         .fillable
-        .joins(:parent)
-        .where(parent: { stable_id: stable_id })
+        .joins(parent: :revision_types_de_champ)
+        .where(parent: { stable_id: stable_id }, revision_types_de_champ: { revision_id: revision })
 
       TypeDeChamp
         .where(id: types_de_champ.group(:stable_id).select('MAX(types_de_champ.id)'))
-        .joins(parent: :revision_types_de_champ)
-        .order(:order_place, 'procedure_revision_types_de_champ.revision_id': :desc)
+        .order(:order_place, id: :desc)
     end
   end
 

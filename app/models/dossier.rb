@@ -84,6 +84,18 @@ class Dossier < ApplicationRecord
   has_many :avis, inverse_of: :dossier, dependent: :destroy
   has_many :experts, through: :avis
   has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy do
+    def passer_en_construction(processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:en_construction),
+        process_expired: false,
+        processed_at: processed_at)
+    end
+
+    def passer_en_instruction(processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:en_instruction),
+        process_expired: false,
+        processed_at: processed_at)
+    end
+
     def accepter_automatiquement(processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:accepte),
         process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
@@ -114,6 +126,7 @@ class Dossier < ApplicationRecord
         processed_at: processed_at)
     end
   end
+  has_one :traitement, -> { order(processed_at: :desc) }, inverse_of: false
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
 
@@ -222,7 +235,7 @@ class Dossier < ApplicationRecord
         :user,
         :individual,
         :followers_instructeurs,
-        :traitements,
+        :traitement,
         :groupe_instructeur,
         procedure: [
           :groupe_instructeurs,
@@ -259,7 +272,7 @@ class Dossier < ApplicationRecord
       justificatif_motivation_attachment: :blob,
       attestation: [],
       avis: { piece_justificative_file_attachment: :blob },
-      traitements: [],
+      traitement: [],
       etablissement: [],
       individual: [],
       user: [])
@@ -343,7 +356,7 @@ class Dossier < ApplicationRecord
       .where.not(user: users_who_submitted)
   end
 
-  scope :for_api_v2, -> { includes(procedure: [:administrateurs, :attestation_template], etablissement: [], individual: [], traitements: []) }
+  scope :for_api_v2, -> { includes(procedure: [:administrateurs, :attestation_template], etablissement: [], individual: [], traitement: []) }
 
   scope :with_notifications, -> do
     joins(:follows)
@@ -424,12 +437,12 @@ class Dossier < ApplicationRecord
 
   def motivation
     return nil if !termine?
-    traitements.any? ? traitements.last.motivation : read_attribute(:motivation)
+    traitement&.motivation || read_attribute(:motivation)
   end
 
   def processed_at
     return nil if !termine?
-    traitements.any? ? traitements.last.processed_at : read_attribute(:processed_at)
+    traitement&.processed_at || read_attribute(:processed_at)
   end
 
   def update_search_terms
@@ -658,6 +671,7 @@ class Dossier < ApplicationRecord
     transaction do
       if keep_track_on_deletion?
         DeletedDossier.create_from_dossier(self, :expired)
+        dossier_operation_logs.destroy_all
         log_automatic_dossier_operation(:supprimer, self)
       end
       destroy!
@@ -717,14 +731,23 @@ class Dossier < ApplicationRecord
   end
 
   def after_passer_en_construction
-    update!(conservation_extension: 0.days)
-    update!(en_construction_at: Time.zone.now) if self.en_construction_at.nil?
+    self.conservation_extension = 0.days
+    self.en_construction_at = self.traitements
+      .passer_en_construction
+      .processed_at
+    save!
   end
 
   def after_passer_en_instruction(instructeur, disable_notification: false)
     instructeur.follow(self)
 
-    update!(en_instruction_at: Time.zone.now) if self.en_instruction_at.nil?
+    self.en_construction_close_to_expiration_notice_sent_at = nil
+    self.conservation_extension = 0.days
+    self.en_instruction_at = self.traitements
+      .passer_en_instruction
+      .processed_at
+    save!
+
     if !procedure.declarative_accepte? && !disable_notification
       NotificationMailer.send_en_instruction_notification(self).deliver_later
     end
@@ -732,20 +755,32 @@ class Dossier < ApplicationRecord
   end
 
   def after_passer_automatiquement_en_instruction
-    self.en_instruction_at ||= Time.zone.now
-    self.declarative_triggered_at = Time.zone.now
+    self.en_construction_close_to_expiration_notice_sent_at = nil
+    self.conservation_extension = 0.days
+    self.en_instruction_at = self.declarative_triggered_at = self.traitements
+      .passer_en_instruction
+      .processed_at
     save!
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
   def after_repasser_en_construction(instructeur)
-    update!(conservation_extension: 0.days)
+    self.en_construction_close_to_expiration_notice_sent_at = nil
+    self.conservation_extension = 0.days
+    self.en_construction_at = self.traitements
+      .passer_en_construction
+      .processed_at
+    save!
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
   def after_repasser_en_instruction(instructeur, disable_notification: false)
     self.archived = false
-    self.en_instruction_at = Time.zone.now
+    self.termine_close_to_expiration_notice_sent_at = nil
+    self.conservation_extension = 0.days
+    self.en_instruction_at = self.traitements
+      .passer_en_instruction
+      .processed_at
     attestation&.destroy
 
     save!
@@ -756,7 +791,10 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter(instructeur, motivation, justificatif: nil, disable_notification: false)
-    self.traitements.accepter(motivation: motivation, instructeur: instructeur)
+    self.processed_at = self.traitements
+      .accepter(motivation: motivation, instructeur: instructeur)
+      .processed_at
+    save!
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -776,9 +814,10 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter_automatiquement
-    self.traitements.accepter_automatiquement
-    self.en_instruction_at ||= Time.zone.now
-    self.declarative_triggered_at = Time.zone.now
+    self.processed_at = self.en_instruction_at = self.declarative_triggered_at = self.traitements
+      .accepter_automatiquement
+      .processed_at
+    save!
 
     if attestation.nil?
       self.attestation = build_attestation
@@ -791,7 +830,10 @@ class Dossier < ApplicationRecord
   end
 
   def after_refuser(instructeur, motivation, justificatif: nil, disable_notification: false)
-    self.traitements.refuser(motivation: motivation, instructeur: instructeur)
+    self.processed_at = self.traitements
+      .refuser(motivation: motivation, instructeur: instructeur)
+      .processed_at
+    save!
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -807,7 +849,10 @@ class Dossier < ApplicationRecord
   end
 
   def after_classer_sans_suite(instructeur, motivation, justificatif: nil, disable_notification: false)
-    self.traitements.classer_sans_suite(motivation: motivation, instructeur: instructeur)
+    self.processed_at = self.traitements
+      .classer_sans_suite(motivation: motivation, instructeur: instructeur)
+      .processed_at
+    save!
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)

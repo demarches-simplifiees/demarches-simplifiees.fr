@@ -366,13 +366,22 @@ describe ProcedureExportService do
         expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export])
       end
 
-      it 'should have headers' do
-        expect(repetition_sheet.headers).to eq([
-          "Dossier ID",
-          "Ligne",
-          "Nom",
-          "Age"
-        ])
+      context 'with cloned procedure' do
+        let(:other_parent) { create(:type_de_champ_repetition, stable_id: champ_repetition.stable_id) }
+
+        before do
+          create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision)
+          create(:type_de_champ, parent: other_parent)
+        end
+
+        it 'should have headers' do
+          expect(repetition_sheet.headers).to eq([
+            "Dossier ID",
+            "Ligne",
+            "Nom",
+            "Age"
+          ])
+        end
       end
 
       it 'should have data' do
