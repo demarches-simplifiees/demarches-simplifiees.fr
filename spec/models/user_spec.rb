@@ -415,4 +415,63 @@ describe User, type: :model do
       end
     end
   end
+
+  describe '#merge' do
+    let(:old_user) { create(:user) }
+    let(:targeted_user) { create(:user) }
+
+    subject { targeted_user.merge(old_user) }
+
+    context 'and the old account has some stuff' do
+      let!(:dossier) { create(:dossier, user: old_user) }
+      let!(:invite) { create(:invite, user: old_user) }
+      let!(:merge_log) { MergeLog.create(user: old_user, from_user_id: 1, from_user_email: 'a') }
+
+      it 'transfers the dossier' do
+        subject
+
+        expect(targeted_user.dossiers).to match([dossier])
+        expect(targeted_user.invites).to match([invite])
+        expect(targeted_user.merge_logs.first).to eq(merge_log)
+
+        added_merge_log = targeted_user.merge_logs.last
+        expect(added_merge_log.from_user_id).to eq(old_user.id)
+        expect(added_merge_log.from_user_email).to eq(old_user.email)
+      end
+    end
+
+    context 'and the old account belongs to an instructeur, expert and administrateur' do
+      let!(:expert) { create(:expert, user: old_user) }
+      let!(:administrateur) { create(:administrateur, user: old_user) }
+      let!(:instructeur) { old_user.instructeur }
+
+      it 'transfers instructeur account' do
+        subject
+        targeted_user.reload
+
+        expect(targeted_user.instructeur).to match(instructeur)
+        expect(targeted_user.expert).to match(expert)
+        expect(targeted_user.administrateur).to match(administrateur)
+      end
+
+      context 'and the targeted account owns an instructeur and expert as well' do
+        let!(:targeted_administrateur) { create(:administrateur, user: targeted_user) }
+        let!(:targeted_instructeur) { targeted_user.instructeur }
+        let!(:targeted_expert) { create(:expert, user: targeted_user) }
+
+        it 'merge the account' do
+          expect(targeted_instructeur).to receive(:merge).with(instructeur)
+          expect(targeted_expert).to receive(:merge).with(expert)
+          expect(targeted_administrateur).to receive(:merge).with(administrateur)
+
+          subject
+
+          expect { instructeur.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { expert.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { administrateur.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { old_user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+  end
 end

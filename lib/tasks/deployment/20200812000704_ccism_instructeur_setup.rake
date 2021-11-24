@@ -39,7 +39,7 @@ namespace :after_party do
           instructeur.unfollow(dossier) if ids_to_unassign.include?(dossier.procedure.id)
         end
         procedures_to_assign.each { |procedure| instructeur.assign_to_procedure(procedure) }
-        procedures_to_unassign.each { |procedure| instructeur.remove_from_procedure(procedure) }
+        procedures_to_unassign.each { |procedure| instructeur.remove_from_groupe_instructeur(procedure.defaut_groupe_instructeur) }
       end
       progress.inc
     end

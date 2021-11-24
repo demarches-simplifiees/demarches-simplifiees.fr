@@ -64,9 +64,14 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#remove_instructeur' do
-    let!(:new_instructeur) { create(:instructeur) }
+    let(:new_instructeur) { create(:instructeur) }
+    let(:dossier) { create(:dossier) }
 
-    before { gi_1_1.instructeurs << instructeur << new_instructeur }
+    before do
+      gi_1_1.instructeurs << instructeur << new_instructeur
+      gi_1_1.dossiers << dossier
+      new_instructeur.followed_dossiers << dossier
+    end
 
     def remove_instructeur(instructeur)
       delete :remove_instructeur,
@@ -82,6 +87,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
 
       it { expect(gi_1_1.instructeurs).to include(instructeur) }
       it { expect(gi_1_1.reload.instructeurs.count).to eq(1) }
+      it { expect(new_instructeur.reload.follows.count).to eq(0) }
       it { expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_1)) }
     end
 

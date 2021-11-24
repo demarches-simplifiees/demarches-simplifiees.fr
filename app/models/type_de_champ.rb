@@ -93,6 +93,8 @@ class TypeDeChamp < ApplicationRecord
   scope :ordered, -> { order(order_place: :asc) }
   scope :root, -> { where(parent_id: nil) }
   scope :repetition, -> { where(type_champ: type_champs.fetch(:repetition)) }
+  scope :not_repetition, -> { where.not(type_champ: type_champs.fetch(:repetition)) }
+  scope :fillable, -> { where.not(type_champ: [type_champs.fetch(:header_section), type_champs.fetch(:explication)]) }
 
   has_many :champ, inverse_of: :type_de_champ, dependent: :destroy do
     def build(params = {})
@@ -324,6 +326,23 @@ class TypeDeChamp < ApplicationRecord
 
   def editable_options
     options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS)
+  end
+
+  def types_de_champ_for_revision(revision)
+    if revision.draft?
+      # if we are asking for children on a draft revision, just use current child types_de_champ
+      types_de_champ.fillable
+    else
+      # otherwise return all types_de_champ in their latest state
+      types_de_champ = TypeDeChamp
+        .fillable
+        .joins(parent: :revision_types_de_champ)
+        .where(parent: { stable_id: stable_id }, revision_types_de_champ: { revision_id: revision })
+
+      TypeDeChamp
+        .where(id: types_de_champ.group(:stable_id).select('MAX(types_de_champ.id)'))
+        .order(:order_place, id: :desc)
+    end
   end
 
   FEATURE_FLAGS = { 'visa' => 'visa' }

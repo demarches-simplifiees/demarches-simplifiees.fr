@@ -18,6 +18,47 @@ class API::V2::GraphqlController < API::V2::BaseController
 
   private
 
+  def append_info_to_payload(payload)
+    super
+
+    payload.merge!({
+      graphql_operation: operation_log(params[:query], params[:operationName], params[:variables])
+    })
+  end
+
+  def operation_log(query, operation_name, variables)
+    return "NoQuery" if query.nil?
+
+    operation = GraphQL.parse(query).children.find do |node|
+      if node.is_a?(GraphQL::Language::Nodes::OperationDefinition)
+        node.name == operation_name
+      end
+    end
+
+    return "InvalidQuery" if operation.nil?
+    return "IntrospectionQuery" if operation.name == "IntrospectionQuery"
+
+    message = operation.operation_type
+    if operation.name
+      message += ": #{operation.name} { "
+    end
+    message += operation.selections.map(&:name).join(', ')
+    message += " }"
+    if variables.present?
+      message += " "
+      message += variables.to_unsafe_h.flat_map do |(name, value)|
+        if name == "input"
+          value.map do |(name, value)|
+            "#{name}: \"#{value.to_s.truncate(10)}\""
+          end
+        else
+          "#{name}: \"#{value.to_s.truncate(10)}\""
+        end
+      end.join(', ')
+    end
+    message
+  end
+
   def process_action(*args)
     super
   rescue ActionDispatch::Http::Parameters::ParseError => exception

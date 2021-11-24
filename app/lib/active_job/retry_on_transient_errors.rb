@@ -5,7 +5,8 @@ module ActiveJob::RetryOnTransientErrors
     Excon::Error::InternalServerError,
     Excon::Error::GatewayTimeout,
     Excon::Error::BadRequest,
-    Excon::Error::Socket
+    Excon::Error::Socket,
+    ActiveRecord::StaleObjectError
   ]
 
   included do

@@ -84,6 +84,18 @@ class Dossier < ApplicationRecord
   has_many :avis, inverse_of: :dossier, dependent: :destroy
   has_many :experts, through: :avis
   has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy do
+    def passer_en_construction(processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:en_construction),
+        process_expired: false,
+        processed_at: processed_at)
+    end
+
+    def passer_en_instruction(processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:en_instruction),
+        process_expired: false,
+        processed_at: processed_at)
+    end
+
     def accepter_automatiquement(processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:accepte),
         process_expired: proxy_association.owner.procedure.feature_enabled?(:procedure_process_expired_dossiers_termine),
@@ -114,6 +126,7 @@ class Dossier < ApplicationRecord
         processed_at: processed_at)
     end
   end
+  has_one :traitement, -> { order(processed_at: :desc) }, inverse_of: false
 
   has_many :dossier_operation_logs, -> { order(:created_at) }, inverse_of: :dossier
 
@@ -222,7 +235,7 @@ class Dossier < ApplicationRecord
         :user,
         :individual,
         :followers_instructeurs,
-        :traitements,
+        :traitement,
         :groupe_instructeur,
         procedure: [
           :groupe_instructeurs,
@@ -259,7 +272,7 @@ class Dossier < ApplicationRecord
       justificatif_motivation_attachment: :blob,
       attestation: [],
       avis: { piece_justificative_file_attachment: :blob },
-      traitements: [],
+      traitement: [],
       etablissement: [],
       individual: [],
       user: [])
@@ -343,7 +356,7 @@ class Dossier < ApplicationRecord
       .where.not(user: users_who_submitted)
   end
 
-  scope :for_api_v2, -> { includes(procedure: [:administrateurs, :attestation_template], etablissement: [], individual: [], traitements: []) }
+  scope :for_api_v2, -> { includes(procedure: [:administrateurs, :attestation_template], etablissement: [], individual: [], traitement: []) }
 
   scope :with_notifications, -> do
     joins(:follows)
@@ -424,12 +437,12 @@ class Dossier < ApplicationRecord
 
   def motivation
     return nil if !termine?
-    traitements.any? ? traitements.last.motivation : read_attribute(:motivation)
+    traitement&.motivation || read_attribute(:motivation)
   end
 
   def processed_at
     return nil if !termine?
-    traitements.any? ? traitements.last.processed_at : read_attribute(:processed_at)
+    traitement&.processed_at || read_attribute(:processed_at)
   end
 
   def update_search_terms
@@ -607,7 +620,7 @@ class Dossier < ApplicationRecord
   end
 
   def keep_track_on_deletion?
-    !procedure.brouillon?
+    !procedure.brouillon? && !brouillon?
   end
 
   def expose_legacy_carto_api?
@@ -654,65 +667,87 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def expired_keep_track!
-    if keep_track_on_deletion?
-      DeletedDossier.create_from_dossier(self, :expired)
-      log_automatic_dossier_operation(:supprimer, self)
+  def expired_keep_track_and_destroy!
+    transaction do
+      if keep_track_on_deletion?
+        DeletedDossier.create_from_dossier(self, :expired)
+        dossier_operation_logs.destroy_all
+        log_automatic_dossier_operation(:supprimer, self)
+      end
+      destroy!
     end
+    true
+  rescue
+    false
   end
 
   def discard_and_keep_track!(author, reason)
-    if keep_track_on_deletion?
-      if en_construction?
-        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+    user_email = user_deleted? ? nil : user_email_for(:notification)
+    deleted_dossier = nil
 
+    transaction do
+      if keep_track_on_deletion?
+        log_dossier_operation(author, :supprimer, self)
+        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
+      end
+
+      update!(dossier_transfer_id: nil)
+      discard!
+    end
+
+    if deleted_dossier.present?
+      if en_construction?
         administration_emails = followers_instructeurs.present? ? followers_instructeurs.map(&:email) : procedure.administrateurs.map(&:email)
         administration_emails.each do |email|
           DossierMailer.notify_deletion_to_administration(deleted_dossier, email).deliver_later
         end
+      end
 
-        if !user_deleted?
-          DossierMailer.notify_deletion_to_user(deleted_dossier, user_email_for(:notification)).deliver_later
+      if user_email.present?
+        if reason == :user_request
+          DossierMailer.notify_deletion_to_user(deleted_dossier, user_email).deliver_later
+        else
+          DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user_email).deliver_later
         end
-
-        log_dossier_operation(author, :supprimer, self)
-      elsif termine?
-        deleted_dossier = DeletedDossier.create_from_dossier(self, reason)
-
-        if !user_deleted?
-          DossierMailer.notify_instructeur_deletion_to_user(deleted_dossier, user_email_for(:notification)).deliver_later
-        end
-
-        log_dossier_operation(author, :supprimer, self)
       end
     end
-
-    update!(dossier_transfer_id: nil)
-    discard!
   end
 
-  def restore(author, only_discarded_with_procedure = false)
+  def restore(author)
     if discarded?
-      deleted_dossier = DeletedDossier.find_by(dossier_id: id)
-
-      if !only_discarded_with_procedure || deleted_dossier&.procedure_removed?
-        if undiscard && keep_track_on_deletion? && en_construction?
-          deleted_dossier&.destroy
+      transaction do
+        if undiscard && keep_track_on_deletion?
+          deleted_dossier&.destroy!
           log_dossier_operation(author, :restaurer, self)
         end
       end
     end
   end
 
+  def restore_if_discarded_with_procedure(author)
+    if deleted_dossier&.procedure_removed?
+      restore(author)
+    end
+  end
+
   def after_passer_en_construction
-    update!(conservation_extension: 0.days)
-    update!(en_construction_at: Time.zone.now) if self.en_construction_at.nil?
+    self.conservation_extension = 0.days
+    self.en_construction_at = self.traitements
+      .passer_en_construction
+      .processed_at
+    save!
   end
 
   def after_passer_en_instruction(instructeur, disable_notification: false)
     instructeur.follow(self)
 
-    update!(en_instruction_at: Time.zone.now) if self.en_instruction_at.nil?
+    self.en_construction_close_to_expiration_notice_sent_at = nil
+    self.conservation_extension = 0.days
+    self.en_instruction_at = self.traitements
+      .passer_en_instruction
+      .processed_at
+    save!
+
     if !procedure.declarative_accepte? && !disable_notification
       NotificationMailer.send_en_instruction_notification(self).deliver_later
     end
@@ -720,20 +755,32 @@ class Dossier < ApplicationRecord
   end
 
   def after_passer_automatiquement_en_instruction
-    self.en_instruction_at ||= Time.zone.now
-    self.declarative_triggered_at = Time.zone.now
+    self.en_construction_close_to_expiration_notice_sent_at = nil
+    self.conservation_extension = 0.days
+    self.en_instruction_at = self.declarative_triggered_at = self.traitements
+      .passer_en_instruction
+      .processed_at
     save!
     log_automatic_dossier_operation(:passer_en_instruction)
   end
 
   def after_repasser_en_construction(instructeur)
-    update!(conservation_extension: 0.days)
+    self.en_construction_close_to_expiration_notice_sent_at = nil
+    self.conservation_extension = 0.days
+    self.en_construction_at = self.traitements
+      .passer_en_construction
+      .processed_at
+    save!
     log_dossier_operation(instructeur, :repasser_en_construction)
   end
 
   def after_repasser_en_instruction(instructeur, disable_notification: false)
     self.archived = false
-    self.en_instruction_at = Time.zone.now
+    self.termine_close_to_expiration_notice_sent_at = nil
+    self.conservation_extension = 0.days
+    self.en_instruction_at = self.traitements
+      .passer_en_instruction
+      .processed_at
     attestation&.destroy
 
     save!
@@ -744,7 +791,10 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter(instructeur, motivation, justificatif: nil, disable_notification: false)
-    self.traitements.accepter(motivation: motivation, instructeur: instructeur)
+    self.processed_at = self.traitements
+      .accepter(motivation: motivation, instructeur: instructeur)
+      .processed_at
+    save!
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -764,9 +814,10 @@ class Dossier < ApplicationRecord
   end
 
   def after_accepter_automatiquement
-    self.traitements.accepter_automatiquement
-    self.en_instruction_at ||= Time.zone.now
-    self.declarative_triggered_at = Time.zone.now
+    self.processed_at = self.en_instruction_at = self.declarative_triggered_at = self.traitements
+      .accepter_automatiquement
+      .processed_at
+    save!
 
     if attestation.nil?
       self.attestation = build_attestation
@@ -779,7 +830,10 @@ class Dossier < ApplicationRecord
   end
 
   def after_refuser(instructeur, motivation, justificatif: nil, disable_notification: false)
-    self.traitements.refuser(motivation: motivation, instructeur: instructeur)
+    self.processed_at = self.traitements
+      .refuser(motivation: motivation, instructeur: instructeur)
+      .processed_at
+    save!
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -795,7 +849,10 @@ class Dossier < ApplicationRecord
   end
 
   def after_classer_sans_suite(instructeur, motivation, justificatif: nil, disable_notification: false)
-    self.traitements.classer_sans_suite(motivation: motivation, instructeur: instructeur)
+    self.processed_at = self.traitements
+      .classer_sans_suite(motivation: motivation, instructeur: instructeur)
+      .processed_at
+    save!
 
     if justificatif
       self.justificatif_motivation.attach(justificatif)
@@ -916,12 +973,12 @@ class Dossier < ApplicationRecord
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
 
-    columns + champs_for_export(types_de_champ)
+    columns + self.class.champs_for_export(champs + champs_private, types_de_champ)
   end
 
-  def champs_for_export(types_de_champ)
+  def self.champs_for_export(champs, types_de_champ)
     # Index values by stable_id
-    values = (champs + champs_private).reject(&:exclude_from_export?)
+    values = champs.reject(&:exclude_from_export?)
       .index_by(&:stable_id)
       .transform_values(&:for_export)
 
@@ -975,6 +1032,7 @@ class Dossier < ApplicationRecord
 
     transaction do
       DossierOperationLog.discarded_en_construction_expired.destroy_all
+      Avis.discarded_en_construction_expired.destroy_all
       discarded_en_construction_expired.destroy_all
     end
 
@@ -986,6 +1044,10 @@ class Dossier < ApplicationRecord
   end
 
   private
+
+  def deleted_dossier
+    @deleted_dossier ||= DeletedDossier.find_by(dossier_id: id)
+  end
 
   def defaut_groupe_instructeur?
     groupe_instructeur == procedure.defaut_groupe_instructeur

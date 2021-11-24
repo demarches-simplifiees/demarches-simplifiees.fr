@@ -173,7 +173,7 @@ describe TagsSubstitutionConcern, type: :model do
       before do
         repetition = dossier.champs
           .find { |champ| champ.libelle == 'Répétition' }
-        repetition.add_row(1)
+        repetition.add_row
         paul_champs, pierre_champs = repetition.rows
 
         paul_champs.first.update(value: 'Paul')

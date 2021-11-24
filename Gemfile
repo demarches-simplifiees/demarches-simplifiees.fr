@@ -98,6 +98,7 @@ group :test do
   gem 'factory_bot'
   gem 'launchy'
   gem 'rails-controller-testing'
+  gem 'rspec_junit_formatter'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', require: false
   gem 'timecop'

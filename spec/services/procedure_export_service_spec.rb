@@ -32,7 +32,7 @@ describe ProcedureExportService do
     end
 
     describe 'Dossiers sheet' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
 
       let(:nominal_headers) do
         [
@@ -129,7 +129,7 @@ describe ProcedureExportService do
 
     describe 'Etablissement sheet' do
       let(:procedure) { create(:procedure, :published, :with_all_champs) }
-      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_entreprise, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_entreprise, procedure: procedure) }
 
       let(:dossier_etablissement) { etablissements_sheet.data[1] }
       let(:champ_etablissement) { etablissements_sheet.data[0] }
@@ -333,7 +333,7 @@ describe ProcedureExportService do
     end
 
     describe 'Avis sheet' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
+      let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
       let!(:avis) { create(:avis, :with_answer, dossier: dossier) }
 
       it 'should have headers' do
@@ -356,8 +356,8 @@ describe ProcedureExportService do
     describe 'Repetitions sheet' do
       let!(:dossiers) do
         [
-          create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure),
-          create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure)
+          create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure),
+          create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure)
         ]
       end
       let(:champ_repetition) { dossiers.first.champs.find { |champ| champ.type_champ == 'repetition' } }
@@ -366,13 +366,22 @@ describe ProcedureExportService do
         expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export])
       end
 
-      it 'should have headers' do
-        expect(repetition_sheet.headers).to eq([
-          "Dossier ID",
-          "Ligne",
-          "Nom",
-          "Age"
-        ])
+      context 'with cloned procedure' do
+        let(:other_parent) { create(:type_de_champ_repetition, stable_id: champ_repetition.stable_id) }
+
+        before do
+          create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision)
+          create(:type_de_champ, parent: other_parent)
+        end
+
+        it 'should have headers' do
+          expect(repetition_sheet.headers).to eq([
+            "Dossier ID",
+            "Ligne",
+            "Nom",
+            "Age"
+          ])
+        end
       end
 
       it 'should have data' do
@@ -405,7 +414,7 @@ describe ProcedureExportService do
       end
 
       context 'with non unique labels' do
-        let(:dossier) { create(:dossier, :en_instruction, :with_all_champs, :with_individual, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
         let(:champ_repetition) { dossier.champs.find { |champ| champ.type_champ == 'repetition' } }
         let(:type_de_champ_repetition) { create(:type_de_champ_repetition, procedure: procedure, libelle: champ_repetition.libelle) }
         let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }

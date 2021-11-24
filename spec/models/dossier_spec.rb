@@ -387,13 +387,18 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
       it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
 
       it 'should keep first en_construction_at date' do
         Timecop.return
         dossier.passer_en_instruction!(instructeur)
         dossier.repasser_en_construction!(instructeur)
 
-        expect(dossier.en_construction_at).to eq(beginning_of_day)
+        expect(dossier.traitements.size).to eq(3)
+        expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
+        expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
+        expect(dossier.en_construction_at).to be > beginning_of_day
       end
     end
 
@@ -408,13 +413,18 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction)) }
       it { expect(dossier.en_instruction_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_instruction)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
 
       it 'should keep first en_instruction_at date if dossier is set to en_construction again' do
         Timecop.return
         dossier.repasser_en_construction!(instructeur)
         dossier.passer_en_instruction!(instructeur)
 
-        expect(dossier.en_instruction_at).to eq(beginning_of_day)
+        expect(dossier.traitements.size).to eq(3)
+        expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
+        expect(dossier.traitement.processed_at.round).to eq(dossier.en_instruction_at.round)
+        expect(dossier.en_instruction_at).to be > beginning_of_day
       end
     end
 
@@ -427,8 +437,9 @@ describe Dossier do
       end
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:accepte)) }
-      it { expect(dossier.traitements.last.processed_at).to eq(beginning_of_day) }
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:accepte)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
     end
 
     context 'when dossier is refuse' do
@@ -441,6 +452,8 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:refuse)) }
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:refuse)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
     end
 
     context 'when dossier is sans_suite' do
@@ -453,6 +466,8 @@ describe Dossier do
 
       it { expect(dossier.state).to eq(Dossier.states.fetch(:sans_suite)) }
       it { expect(dossier.processed_at).to eq(beginning_of_day) }
+      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:sans_suite)) }
+      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
     end
   end
 
@@ -997,7 +1012,7 @@ describe Dossier do
   end
 
   describe '#passer_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:instructeur) { create(:instructeur) }
@@ -1006,6 +1021,7 @@ describe Dossier do
 
     it { expect(dossier.state).to eq('en_instruction') }
     it { expect(dossier.followers_instructeurs).to include(instructeur) }
+    it { expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('passer_en_instruction') }
     it { expect(last_operation.automatic_operation?).to be_falsey }
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
@@ -1014,7 +1030,7 @@ describe Dossier do
   end
 
   describe '#passer_automatiquement_en_instruction!' do
-    let(:dossier) { create(:dossier, :en_construction) }
+    let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { JSON.parse(last_operation.serialized.download) }
     let(:instructeur) { create(:instructeur) }
@@ -1022,6 +1038,7 @@ describe Dossier do
     before { dossier.passer_automatiquement_en_instruction! }
 
     it { expect(dossier.followers_instructeurs).not_to include(instructeur) }
+    it { expect(dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('passer_en_instruction') }
     it { expect(last_operation.automatic_operation?).to be_truthy }
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
@@ -1119,7 +1136,7 @@ describe Dossier do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1136,6 +1153,7 @@ describe Dossier do
     it { expect(dossier.processed_at).to be_nil }
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.attestation).to be_nil }
+    it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
     it { expect(JSON.parse(last_operation.serialized.download)['author']['email']).to eq(instructeur.email) }
     it { expect(DossierMailer).to have_received(:notify_revert_to_instruction).with(dossier) }
@@ -1341,14 +1359,20 @@ describe Dossier do
   end
 
   describe "champs_for_export" do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune) }
+    let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition) }
     let(:text_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
     let(:yes_no_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
     let(:datetime_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
     let(:explication_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
     let(:commune_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:communes) } }
+    let(:repetition_type_de_champ) { procedure.types_de_champ.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+    let(:repetition_champ) { dossier.champs.find(&:repetition?) }
+    let(:repetition_second_revision_champ) { dossier_second_revision.champs.find(&:repetition?) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
+    let(:dossier_champs_for_export) { Dossier.champs_for_export(dossier.champs, procedure.types_de_champ_for_procedure_presentation.not_repetition) }
+    let(:dossier_second_revision_champs_for_export) { Dossier.champs_for_export(dossier_second_revision.champs, procedure.types_de_champ_for_procedure_presentation.not_repetition) }
+    let(:repetition_second_revision_champs_for_export) { Dossier.champs_for_export(repetition_second_revision_champ.champs, procedure.types_de_champ_for_procedure_presentation.repetition) }
 
     context "when procedure published" do
       before do
@@ -1358,16 +1382,19 @@ describe Dossier do
         procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
         procedure.draft_revision.find_or_clone_type_de_champ(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
         procedure.draft_revision.find_or_clone_type_de_champ(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
+        procedure.draft_revision.find_or_clone_type_de_champ(repetition_type_de_champ.stable_id).update(libelle: 'Repetition')
         procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
         dossier.reload
         procedure.reload
       end
 
       it "should have champs from all revisions" do
-        expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle, commune_type_de_champ.libelle])
-        expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, 'Commune de naissance', "New text field"])
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code insee)", "New text field"])
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation)).to eq(dossier_second_revision.champs_for_export(dossier_second_revision.procedure.types_de_champ_for_procedure_presentation))
+        expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle, commune_type_de_champ.libelle, repetition_type_de_champ.libelle])
+        expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, 'Commune de naissance', "Repetition", "New text field"])
+        expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code insee)", "New text field"])
+        expect(dossier_champs_for_export).to eq(dossier_second_revision_champs_for_export)
+        expect(repetition_second_revision_champs_for_export.map { |(libelle)| libelle }).to eq(procedure.types_de_champ_for_procedure_presentation.repetition.map(&:libelle_for_export))
+        expect(repetition_second_revision_champs_for_export.first.size).to eq(2)
       end
     end
 
@@ -1375,7 +1402,7 @@ describe Dossier do
       let(:procedure) { create(:procedure, :with_type_de_champ, :with_explication) }
 
       it "should not contain non-exportable types de champ" do
-        expect(dossier.champs_for_export(dossier.procedure.types_de_champ_for_procedure_presentation).map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
+        expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
       end
     end
   end
@@ -1452,6 +1479,42 @@ describe Dossier do
       expect(dossier.destroy).to be_truthy
       expect(transfer.reload).not_to be_nil
     end
+
+    context 'discarded' do
+      context 'en_construction' do
+        let(:dossier) { create(:dossier, :en_construction) }
+
+        before do
+          create(:avis, dossier: dossier)
+          Timecop.travel(2.weeks.ago) do
+            dossier.discard!
+          end
+          dossier.reload
+        end
+
+        it "can destroy dossier with avis" do
+          Avis.discarded_en_construction_expired.destroy_all
+          expect(dossier.destroy).to be_truthy
+        end
+      end
+
+      context 'termine' do
+        let(:dossier) { create(:dossier, :accepte) }
+
+        before do
+          create(:avis, dossier: dossier)
+          Timecop.travel(2.weeks.ago) do
+            dossier.discard!
+          end
+          dossier.reload
+        end
+
+        it "can destroy dossier with avis" do
+          Avis.discarded_termine_expired.destroy_all
+          expect(dossier.destroy).to be_truthy
+        end
+      end
+    end
   end
 
   describe "#spreadsheet_columns" do
@@ -1497,6 +1560,11 @@ describe Dossier do
 
       datetime_champ.update(value: Date.today.to_s)
       text_champ.update(value: 'bonjour')
+      # Add two rows then remove previous to last row in order to create a "hole" in the sequence
+      repetition_champ.add_row
+      repetition_champ.add_row
+      repetition_champ.champs.where(row: repetition_champ.champs.last.row - 1).destroy_all
+      repetition_champ.reload
     end
 
     it "updates the brouillon champs with the latest revision changes" do
@@ -1505,8 +1573,9 @@ describe Dossier do
 
       expect(dossier.revision).to eq(procedure.published_revision)
       expect(dossier.champs.size).to eq(4)
-      expect(repetition_champ.rows.size).to eq(1)
+      expect(repetition_champ.rows.size).to eq(2)
       expect(repetition_champ.rows[0].size).to eq(1)
+      expect(repetition_champ.rows[1].size).to eq(1)
 
       procedure.publish_revision!
       perform_enqueued_jobs
@@ -1520,8 +1589,9 @@ describe Dossier do
       expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
       expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
       expect(rebased_datetime_champ.value).to be_nil
-      expect(rebased_repetition_champ.rows.size).to eq(1)
+      expect(rebased_repetition_champ.rows.size).to eq(2)
       expect(rebased_repetition_champ.rows[0].size).to eq(2)
+      expect(rebased_repetition_champ.rows[1].size).to eq(2)
       expect(rebased_text_champ.rebased_at).not_to be_nil
       expect(rebased_datetime_champ.rebased_at).not_to be_nil
     end
