@@ -54,7 +54,6 @@ class Procedure < ApplicationRecord
   self.ignored_columns = [:duree_conservation_dossiers_hors_ds]
   include ProcedureStatsConcern
   include EncryptableConcern
-  include FileValidationConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -253,7 +252,7 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: file_size_validation(FILE_MAX_SIZE), if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
+  ], size: { less_than: FILE_MAX_SIZE }, if: -> { new_record? || created_at > Date.new(2020, 2, 28) }
 
   validates :deliberation, content_type: [
     "application/msword",
@@ -264,11 +263,11 @@ class Procedure < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: file_size_validation(FILE_MAX_SIZE), if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
+  ], size: { less_than: FILE_MAX_SIZE }, if: -> { new_record? || created_at > Date.new(2020, 4, 29) }
 
   LOGO_MAX_SIZE = 5.megabytes
   validates :logo, content_type: ['image/png', 'image/jpg', 'image/jpeg'],
-    size: file_size_validation(LOGO_MAX_SIZE),
+    size: { less_than: LOGO_MAX_SIZE },
     if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
 
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
