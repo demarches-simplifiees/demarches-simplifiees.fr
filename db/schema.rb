@@ -554,6 +554,14 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.index ["user_id"], name: "index_merge_logs_on_user_id"
   end
 
+  create_table "zones", force: :cascade do |t|
+    t.string "acronym", null: false
+    t.string "label"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["acronym"], name: "index_zones_on_acronym", unique: true
+  end
+
   create_table "module_api_cartos", id: :serial, force: :cascade do |t|
     t.integer "procedure_id"
     t.boolean "use_api_carto", default: false
@@ -823,13 +831,6 @@ ActiveRecord::Schema.define(version: 2021_11_27_143736) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_without_continuation_mails_on_procedure_id"
-  end
-
-  create_table "zones", force: :cascade do |t|
-    t.string "acronym"
-    t.string "label"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
