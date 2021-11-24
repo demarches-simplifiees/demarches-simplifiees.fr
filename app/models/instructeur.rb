@@ -8,6 +8,7 @@
 #  login_token_created_at   :datetime
 #  created_at               :datetime
 #  updated_at               :datetime
+#  agent_connect_id         :string
 #
 class Instructeur < ApplicationRecord
   has_many :administrateurs_instructeurs

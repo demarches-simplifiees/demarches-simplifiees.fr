@@ -1,0 +1,11 @@
+en:
+  agent_connect:
+    agent:
+      index:
+        connect: Connect with AgentConnect
+        intro_html: |
+          AgentConnect allows <b class='bold'>instructors et administrators</b> to use their usual login credentials to connect to %{app_name}.
+          <br />
+          <br />
+          Only agents of <b class='bold'>the Ministry of Ecological Transition</b> can currently benefit from it.
+        cta: Connect with AgentConnect

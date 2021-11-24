@@ -2,27 +2,19 @@ FactoryBot.define do
   factory :dossier do
     autorisation_donnees { true }
     state { Dossier.states.fetch(:brouillon) }
-    association :user
+
+    user { association :user }
+    groupe_instructeur { procedure.routee? ? nil : procedure.defaut_groupe_instructeur }
+    revision { procedure.active_revision }
+    individual { association(:individual, :empty, dossier: instance, strategy: :build) if procedure.for_individual? }
 
     transient do
-      procedure { nil }
-    end
-
-    after(:build) do |dossier, evaluator|
-      if evaluator.procedure.present?
-        procedure = evaluator.procedure
-      else
-        procedure = create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private)
-      end
-
-      dossier.revision = procedure.active_revision
-
-      # Assign the procedure to the dossier through the groupe_instructeur
-      if dossier.groupe_instructeur.nil?
-        dossier.groupe_instructeur = procedure.routee? ? nil : procedure.defaut_groupe_instructeur
-      end
-
-      dossier.build_default_individual
+      for_individual? { false }
+      # For now a dossier must use a `create`d procedure, even if the dossier is only built (and not created).
+      # This is because saving the dossier fails when the procedure has not been saved beforehand
+      # (due to some internal ActiveRecord error).
+      # TODO: find a way to find the issue and just `build` the procedure.
+      procedure { create(:procedure, :published, :with_type_de_champ, :with_type_de_champ_private, for_individual: for_individual?) }
     end
 
     trait :with_entreprise do
@@ -42,12 +34,11 @@ FactoryBot.define do
     end
 
     trait :with_individual do
-      after(:build) do |dossier, evaluator|
-        # If the procedure was implicitely created by the factory,
-        # mark it automatically as for_individual.
-        if evaluator.procedure.nil?
-          dossier.procedure.update(for_individual: true)
-        end
+      transient do
+        for_individual? { true }
+      end
+
+      after(:build) do |dossier, _evaluator|
         if !dossier.procedure.for_individual?
           raise 'Inconsistent factory: attempting to create a dossier :with_individual on a procedure that is not `for_individual?`'
         end
@@ -99,9 +90,7 @@ FactoryBot.define do
     end
 
     trait :with_commentaires do
-      after(:create) do |dossier, _evaluator|
-        dossier.commentaires += create_list(:commentaire, 2)
-      end
+      commentaires { [build(:commentaire), build(:commentaire)] }
     end
 
     trait :followed do
