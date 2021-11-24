@@ -10,6 +10,7 @@
 #  conservation_extension                             :interval         default(0 seconds)
 #  declarative_triggered_at                           :datetime
 #  deleted_user_email_never_send                      :string
+#  depose_at                                          :datetime
 #  en_construction_at                                 :datetime
 #  en_construction_close_to_expiration_notice_sent_at :datetime
 #  en_instruction_at                                  :datetime
@@ -776,7 +777,7 @@ class Dossier < ApplicationRecord
 
   def after_passer_en_construction
     self.conservation_extension = 0.days
-    self.en_construction_at = self.traitements
+    self.depose_at = self.en_construction_at = self.traitements
       .passer_en_construction
       .processed_at
     save!
@@ -1095,6 +1096,7 @@ class Dossier < ApplicationRecord
   def create_missing_traitemets
     if en_construction_at.present? && traitements.en_construction.empty?
       self.traitements.passer_en_construction(processed_at: en_construction_at)
+      self.depose_at ||= en_construction_at
     end
     if en_instruction_at.present? && traitements.en_instruction.empty?
       self.traitements.passer_en_instruction(processed_at: en_instruction_at)
