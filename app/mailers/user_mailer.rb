@@ -12,10 +12,10 @@ class UserMailer < ApplicationMailer
     mail(to: user.email, subject: @subject, procedure: @procedure)
   end
 
-  def account_already_taken(user, requested_email)
+  def ask_for_merge(user, requested_email)
     @user = user
     @requested_email = requested_email
-    @subject = "Changement d’adresse email"
+    @subject = "Fusion de compte"
 
     mail(to: requested_email, subject: @subject)
   end

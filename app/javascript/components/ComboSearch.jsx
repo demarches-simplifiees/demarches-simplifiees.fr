@@ -1,4 +1,10 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect
+} from 'react';
 import { useDebounce } from 'use-debounce';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
@@ -19,21 +25,24 @@ function defaultTransformResults(_, results) {
 }
 
 function ComboSearch({
-  placeholder,
-  required,
   hiddenFieldId,
   onChange,
   scope,
+  inputId,
+  scopeExtra,
   minimumInputLength,
   transformResult,
   allowInputValues = false,
   transformResults = defaultTransformResults,
-  className
+  ...props
 }) {
-  const label = scope;
   const hiddenValueField = useMemo(
     () => document.querySelector(`input[data-uuid="${hiddenFieldId}"]`),
     [hiddenFieldId]
+  );
+  const comboInputId = useMemo(
+    () => hiddenValueField?.id || inputId,
+    [inputId, hiddenValueField]
   );
   const hiddenIdField = useMemo(
     () =>
@@ -81,15 +90,18 @@ function ComboSearch({
   const handleOnChange = useCallback(
     ({ target: { value } }) => {
       setValue(value);
-      if (value.length >= minimumInputLength) {
+      if (!value) {
+        setExternalId('');
+        setExternalValue('');
+        if (onChange) {
+          onChange(null);
+        }
+      } else if (value.length >= minimumInputLength) {
         setSearchTerm(value.trim());
         if (allowInputValues) {
           setExternalId('');
           setExternalValue(value);
         }
-      } else if (!value) {
-        setExternalId('');
-        setExternalValue('');
       }
     },
     [minimumInputLength]
@@ -102,11 +114,14 @@ function ComboSearch({
     awaitFormSubmit.done();
   }, []);
 
-  const { isSuccess, data } = useQuery([scope, debouncedSearchTerm], {
-    enabled: !!debouncedSearchTerm,
-    notifyOnStatusChange: false,
-    refetchOnMount: false
-  });
+  const { isSuccess, data } = useQuery(
+    [scope, debouncedSearchTerm, scopeExtra],
+    {
+      enabled: !!debouncedSearchTerm,
+      notifyOnStatusChange: false,
+      refetchOnMount: false
+    }
+  );
   const results = isSuccess ? transformResults(debouncedSearchTerm, data) : [];
 
   const onBlur = useCallback(() => {
@@ -118,15 +133,20 @@ function ComboSearch({
     }
   }, [data]);
 
+  useEffect(() => {
+    document
+      .querySelector(`#${comboInputId}[type="hidden"]`)
+      ?.removeAttribute('id');
+  }, [comboInputId]);
+
   return (
-    <Combobox aria-label={label} onSelect={handleOnSelect}>
+    <Combobox onSelect={handleOnSelect}>
       <ComboboxInput
-        className={className}
-        placeholder={placeholder}
+        {...props}
+        id={comboInputId}
         onChange={handleOnChange}
         onBlur={onBlur}
         value={value}
-        required={required}
       />
       {isSuccess && (
         <ComboboxPopover className="shadow-popup">
@@ -157,8 +177,6 @@ function ComboSearch({
 }
 
 ComboSearch.propTypes = {
-  placeholder: PropTypes.string,
-  required: PropTypes.bool,
   hiddenFieldId: PropTypes.string,
   scope: PropTypes.string,
   minimumInputLength: PropTypes.number,
@@ -166,7 +184,8 @@ ComboSearch.propTypes = {
   transformResults: PropTypes.func,
   allowInputValues: PropTypes.bool,
   onChange: PropTypes.func,
-  className: PropTypes.string
+  inputId: PropTypes.string,
+  scopeExtra: PropTypes.string
 };
 
 export default ComboSearch;

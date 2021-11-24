@@ -104,13 +104,11 @@ module SystemHelpers
   end
 
   def select_combobox(champ, fill_with, value)
-    input = find("input[aria-label=\"#{champ}\"")
-    input.click
-    input.fill_in with: fill_with
+    fill_in champ, with: fill_with
     selector = "li[data-option-value=\"#{value}\"]"
     find(selector).click
     expect(page).to have_css(selector)
-    expect(page).to have_hidden_field(champ, with: value)
+    expect(page).to have_css("[type=\"hidden\"][value=\"#{value}\"]")
   end
 
   def select_multi_combobox(champ, fill_with, value)
