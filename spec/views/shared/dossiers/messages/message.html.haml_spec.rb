@@ -46,5 +46,44 @@ describe 'shared/dossiers/messages/message.html.haml', type: :view do
         it { is_expected.not_to have_text(instructeur.email) }
       end
     end
+
+    describe 'delete message button for instructeur' do
+      let(:instructeur) { create(:instructeur) }
+      let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, :en_construction, commentaires: [commentaire], procedure: procedure) }
+      subject { render 'shared/dossiers/messages/message.html.haml', commentaire: commentaire, messagerie_seen_at: seen_at, connected_user: instructeur, show_reply_button: true }
+      let(:form_url) { instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire) }
+
+      context 'on a procedure where commentaire had been written by connected instructeur' do
+        let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message') }
+
+        it { is_expected.to have_selector("form[action=\"#{form_url}\"]") }
+      end
+
+      context 'on a procedure where commentaire had been written by connected instructeur and discarded' do
+        let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message', discarded_at: 2.days.ago) }
+
+        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+        it { is_expected.not_to have_selector(".rich-text", text: I18n.t(t('views.shared.commentaires.destroy.deleted_body'))) }
+      end
+
+      context 'on a procedure where commentaire had been written by connected an user' do
+        let(:commentaire) { create(:commentaire, email: create(:user).email, body: 'Second message') }
+
+        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+      end
+
+      context 'on a procedure where commentaire had been written by connected an expert' do
+        let(:commentaire) { create(:commentaire, expert: create(:expert), body: 'Second message') }
+
+        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+      end
+
+      context 'on a procedure where commentaire had been written another instructeur' do
+        let(:commentaire) { create(:commentaire, instructeur: create(:instructeur), body: 'Second message') }
+
+        it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+      end
+    end
   end
 end

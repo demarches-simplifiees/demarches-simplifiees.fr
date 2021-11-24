@@ -40,6 +40,12 @@ describe Commentaire do
     end
   end
 
+  describe "sent_by?" do
+    let(:commentaire) { build(:commentaire, instructeur: build(:instructeur)) }
+    subject { commentaire.sent_by?(nil) }
+    it { is_expected.to be_falsy }
+  end
+
   describe "#redacted_email" do
     subject { commentaire.redacted_email }
 
@@ -80,8 +86,8 @@ describe Commentaire do
     context "with a commentaire created by a instructeur" do
       let(:commentaire) { CommentaireService.build(instructeur, dossier, body: "Mon commentaire") }
 
-      it "calls notify_user" do
-        expect(commentaire).to receive(:notify_user)
+      it "calls notify_user with delay so instructeur can destroy his comment in case of failure" do
+        expect(commentaire).to receive(:notify_user).with(wait: 5.minutes)
         commentaire.save
       end
     end
@@ -90,7 +96,7 @@ describe Commentaire do
       let(:commentaire) { CommentaireService.build(expert, dossier, body: "Mon commentaire") }
 
       it "calls notify_user" do
-        expect(commentaire).to receive(:notify_user)
+        expect(commentaire).to receive(:notify_user).with(no_args)
         commentaire.save
       end
     end
@@ -99,7 +105,7 @@ describe Commentaire do
       let(:commentaire) { CommentaireService.build_with_email(CONTACT_EMAIL, dossier, body: "Mon commentaire") }
 
       it "does not call notify_user" do
-        expect(commentaire).not_to receive(:notify_user)
+        expect(commentaire).not_to receive(:notify_user).with(no_args)
         commentaire.save
       end
     end

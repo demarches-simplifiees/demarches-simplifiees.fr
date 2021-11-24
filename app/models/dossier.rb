@@ -84,14 +84,16 @@ class Dossier < ApplicationRecord
   has_many :avis, inverse_of: :dossier, dependent: :destroy
   has_many :experts, through: :avis
   has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy do
-    def passer_en_construction(processed_at: Time.zone.now)
+    def passer_en_construction(instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_construction),
+        instructeur_email: instructeur&.email,
         process_expired: false,
         processed_at: processed_at)
     end
 
-    def passer_en_instruction(processed_at: Time.zone.now)
+    def passer_en_instruction(instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_instruction),
+        instructeur_email: instructeur&.email,
         process_expired: false,
         processed_at: processed_at)
     end
@@ -744,7 +746,7 @@ class Dossier < ApplicationRecord
     self.en_construction_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
     self.en_instruction_at = self.traitements
-      .passer_en_instruction
+      .passer_en_instruction(instructeur: instructeur)
       .processed_at
     save!
 
@@ -768,7 +770,7 @@ class Dossier < ApplicationRecord
     self.en_construction_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
     self.en_construction_at = self.traitements
-      .passer_en_construction
+      .passer_en_construction(instructeur: instructeur)
       .processed_at
     save!
     log_dossier_operation(instructeur, :repasser_en_construction)
@@ -779,7 +781,7 @@ class Dossier < ApplicationRecord
     self.termine_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
     self.en_instruction_at = self.traitements
-      .passer_en_instruction
+      .passer_en_instruction(instructeur: instructeur)
       .processed_at
     attestation&.destroy
 

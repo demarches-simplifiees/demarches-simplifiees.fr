@@ -5,7 +5,7 @@
 #profil-page.container
   %h1 Profil
 
-  - if @waiting_merge_emails.any?
+  - if @waiting_merge_emails.present?
     .card
       .card-title Demande de fusion de comptes
       %p
@@ -37,7 +37,7 @@
           application_name: APPLICATION_NAME,
           legit_admin_domains: LEGIT_ADMIN_DOMAINS.join(', '))
 
-    = form_for @current_user, url: update_email_path, method: :patch, html: { class: 'form' } do |f|
+    = form_for current_user, url: update_email_path, method: :patch, html: { class: 'form' } do |f|
       = f.email_field :email, value: nil, placeholder: 'Nouvelle adresse email', required: true
       = f.submit "Changer mon adresse", class: 'button primary'
 
@@ -50,7 +50,7 @@
         = email_field_tag :next_owner, nil, required: true
         = submit_tag "Transférer tous mes dossiers", class: 'button primary', data: { confirm: t('.transfer_confirmation') }
 
-      - if @waiting_transfers.any?
+      - if @waiting_transfers.present?
         .card.warning
           .card-title= t('.waiting_transfers')
           %ul
