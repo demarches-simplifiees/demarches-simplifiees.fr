@@ -49,7 +49,7 @@ RSpec.describe DossierHelper, type: :helper do
       let(:procedure) { create(:simple_procedure, :for_individual) }
 
       context "when the individual is not provided" do
-        let(:individual) { nil }
+        let(:individual) { build(:individual, :empty) }
         it { is_expected.to be_blank }
       end
 

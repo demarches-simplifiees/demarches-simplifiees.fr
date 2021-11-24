@@ -200,6 +200,8 @@ fr:
           connection: Se connecter
           are_you_new: Vous êtes nouveau sur %{app_name} ?
           find_procedure: Trouvez votre démarche
+          instructor_or_admin: Vous êtes instructeur ou administrateur ?
+          connect_with_agent_connect: Se connecter avec AgentConnect
       passwords:
         reset_link_sent:
           email_sent_html: "Nous vous avons envoyé un email à l’adresse <strong>%{email}</strong>."
