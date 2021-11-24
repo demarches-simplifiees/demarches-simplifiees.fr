@@ -809,6 +809,8 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_construction(instructeur)
+    create_missing_traitemets
+
     self.en_construction_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
     self.en_construction_at = self.traitements
@@ -819,6 +821,8 @@ class Dossier < ApplicationRecord
   end
 
   def after_repasser_en_instruction(instructeur, disable_notification: false)
+    create_missing_traitemets
+
     self.archived = false
     self.termine_close_to_expiration_notice_sent_at = nil
     self.conservation_extension = 0.days
@@ -1087,6 +1091,15 @@ class Dossier < ApplicationRecord
   end
 
   private
+
+  def create_missing_traitemets
+    if en_construction_at.present? && traitements.en_construction.empty?
+      self.traitements.passer_en_construction(processed_at: en_construction_at)
+    end
+    if en_instruction_at.present? && traitements.en_instruction.empty?
+      self.traitements.passer_en_instruction(processed_at: en_instruction_at)
+    end
+  end
 
   def deleted_dossier
     @deleted_dossier ||= DeletedDossier.find_by(dossier_id: id)
