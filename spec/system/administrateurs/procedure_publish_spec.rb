@@ -31,16 +31,41 @@ describe 'Publishing a procedure', js: true do
   end
 
   context 'when a procedure isn’t published yet' do
-    scenario 'an admin can publish it' do
+    before do
       visit admin_procedures_path(statut: "brouillons")
       click_on procedure.libelle
       find('#publish-procedure-link').click
+    end
+
+    scenario 'an admin can publish it' do
       expect(find_field('procedure_path').value).to eq procedure.path
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'Publier'
 
       expect(page).to have_text('Démarche publiée')
       expect(page).to have_selector('#preview-procedure')
+    end
+
+    context 'when the procedure has invalid champs' do
+      let(:empty_repetition) { build(:type_de_champ_repetition, types_de_champ: []) }
+      let!(:procedure) do
+        create(:procedure,
+               :with_path,
+               :with_service,
+               instructeurs: instructeurs,
+               administrateur: administrateur,
+               types_de_champ: [empty_repetition])
+      end
+
+      scenario 'an error message prevents the publication' do
+        expect(page).to have_content('Des problèmes empêchent la publication de la démarche')
+        expect(page).to have_content("Le bloc répétable « #{empty_repetition.libelle} » doit comporter au moins un champ")
+
+        expect(find_field('procedure_path').value).to eq procedure.path
+        fill_in 'lien_site_web', with: 'http://some.website'
+
+        expect(page).to have_button('Publier', disabled: true)
+      end
     end
   end
 
