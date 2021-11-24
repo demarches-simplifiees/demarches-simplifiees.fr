@@ -128,6 +128,9 @@ fr:
           form: "Formulaire"
           edit_siret: "Modifier le SIRET"
           edit_identity: "Modifier l’identité"
+    instructeurs:
+      dossiers:
+        deleted_by_user: "Dossier supprimé par l'usager"
     users:
       dossiers:
         autosave:
@@ -187,8 +190,8 @@ fr:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un autre dossier"
           delete_dossier: "Supprimer le dossier"
+          hide_dossier: "Supprimer de votre interface"
           transfer_dossier: "Transferer le dossier"
-          cacher_dossier: 'Cacher le dossier'
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
       sessions:

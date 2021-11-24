@@ -132,6 +132,9 @@ en:
           form: "Form"
           edit_siret: "Edit SIRET"
           edit_identity: "Edit identity data"
+    instructeurs:
+      dossiers:
+        deleted_by_user: "File deleted by user"
     users:
       dossiers:
         autosave:
@@ -191,6 +194,7 @@ en:
           edit_dossier: "Edit the file"
           start_other_dossier: "Start an other file"
           delete_dossier: "Delete the file"
+          hide_dossier: "Delete from your screen"
           transfer_dossier: "Transfer the file"
           edit_draft: "Edit the draft"
           actions: "Actions"
@@ -329,7 +333,11 @@ en:
     en_cours:
       zero: in progress
       one: in progress
-      other: in progres
+      other: in progress
+    traites:
+      zero: finished
+      one: finished
+      other: finished
     dossiers_invites:
       zero: guest file
       one: guest file
