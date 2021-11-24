@@ -84,8 +84,8 @@ describe Instructeur, type: :model do
     end
   end
 
-  describe "#remove_from_procedure" do
-    subject { instructeur.remove_from_procedure(procedure_to_remove) }
+  describe "#remove_from_groupe_instructeur" do
+    subject { instructeur.remove_from_groupe_instructeur(procedure_to_remove.defaut_groupe_instructeur) }
 
     context "with an assigned procedure" do
       let(:procedure_to_remove) { procedure }

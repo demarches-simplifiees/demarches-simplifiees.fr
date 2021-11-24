@@ -1,10 +1,10 @@
 describe RechercheController, type: :controller do
-  let(:dossier) { create(:dossier, :en_construction, :with_all_annotations) }
+  let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations) }
   let(:dossier2) { create(:dossier, :en_construction, procedure: dossier.procedure) }
   let(:instructeur) { create(:instructeur) }
 
   let(:dossier_with_expert) { avis.dossier }
-  let(:avis) { create(:avis, dossier: create(:dossier, :en_construction, :with_all_annotations)) }
+  let(:avis) { create(:avis, dossier: create(:dossier, :en_construction, :with_populated_annotations)) }
 
   let(:user) { instructeur.user }
 

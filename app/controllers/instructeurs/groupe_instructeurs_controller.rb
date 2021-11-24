@@ -14,17 +14,16 @@ module Instructeurs
     end
 
     def add_instructeur
-      @instructeur = Instructeur.by_email(instructeur_email) ||
+      instructeur = Instructeur.by_email(instructeur_email) ||
         create_instructeur(instructeur_email)
 
-      if groupe_instructeur.instructeurs.include?(@instructeur)
+      if groupe_instructeur.instructeurs.include?(instructeur)
         flash[:alert] = "L’instructeur « #{instructeur_email} » est déjà dans le groupe."
-
       else
-        groupe_instructeur.instructeurs << @instructeur
+        groupe_instructeur.instructeurs << instructeur
         flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
         GroupeInstructeurMailer
-          .add_instructeurs(groupe_instructeur, [@instructeur], current_user.email)
+          .add_instructeurs(groupe_instructeur, [instructeur], current_user.email)
           .deliver_later
       end
 
@@ -34,14 +33,16 @@ module Instructeurs
     def remove_instructeur
       if groupe_instructeur.instructeurs.one?
         flash[:alert] = "Suppression impossible : il doit y avoir au moins un instructeur dans le groupe"
-
       else
-        @instructeur = Instructeur.find(instructeur_id)
-        groupe_instructeur.instructeurs.destroy(@instructeur)
-        flash[:notice] = "L’instructeur « #{@instructeur.email} » a été retiré du groupe."
-        GroupeInstructeurMailer
-          .remove_instructeur(groupe_instructeur, @instructeur, current_user.email)
-          .deliver_later
+        instructeur = Instructeur.find(instructeur_id)
+        if instructeur.remove_from_groupe_instructeur(groupe_instructeur)
+          flash[:notice] = "L’instructeur « #{instructeur.email} » a été retiré du groupe."
+          GroupeInstructeurMailer
+            .remove_instructeur(groupe_instructeur, instructeur, current_user.email)
+            .deliver_later
+        else
+          flash[:alert] = "L’instructeur « #{instructeur.email} » n’est pas dans le groupe."
+        end
       end
 
       redirect_to instructeur_groupe_path(procedure, groupe_instructeur)

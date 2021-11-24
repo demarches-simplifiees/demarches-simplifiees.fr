@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_20_114237) do
+ActiveRecord::Schema.define(version: 2021_11_04_102349) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2021_10_20_114237) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.string "service_name", null: false
+    t.integer "lock_version"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -546,6 +547,15 @@ ActiveRecord::Schema.define(version: 2021_10_20_114237) do
     t.index ["email", "dossier_id"], name: "index_invites_on_email_and_dossier_id", unique: true
   end
 
+  create_table "merge_logs", force: :cascade do |t|
+    t.bigint "from_user_id", null: false
+    t.string "from_user_email", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_merge_logs_on_user_id"
+  end
+
   create_table "module_api_cartos", id: :serial, force: :cascade do |t|
     t.integer "procedure_id"
     t.boolean "use_api_carto", default: false
@@ -795,11 +805,13 @@ ActiveRecord::Schema.define(version: 2021_10_20_114237) do
     t.bigint "administrateur_id"
     t.bigint "expert_id"
     t.string "locale"
+    t.bigint "requested_merge_into_id"
     t.index ["administrateur_id"], name: "index_users_on_administrateur_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expert_id"], name: "index_users_on_expert_id"
     t.index ["instructeur_id"], name: "index_users_on_instructeur_id"
+    t.index ["requested_merge_into_id"], name: "index_users_on_requested_merge_into_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
@@ -851,6 +863,7 @@ ActiveRecord::Schema.define(version: 2021_10_20_114237) do
   add_foreign_key "geo_areas", "champs"
   add_foreign_key "groupe_instructeurs", "procedures"
   add_foreign_key "initiated_mails", "procedures"
+  add_foreign_key "merge_logs", "users"
   add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "procedure_revision_types_de_champ", "types_de_champ"
@@ -868,5 +881,6 @@ ActiveRecord::Schema.define(version: 2021_10_20_114237) do
   add_foreign_key "users", "administrateurs"
   add_foreign_key "users", "experts"
   add_foreign_key "users", "instructeurs"
+  add_foreign_key "users", "users", column: "requested_merge_into_id"
   add_foreign_key "without_continuation_mails", "procedures"
 end

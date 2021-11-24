@@ -49,12 +49,16 @@ describe Users::ProfilController, type: :controller do
 
   describe 'PATCH #update_email' do
     context 'when everything is fine' do
+      let(:previous_request) { create(:user) }
+
       before do
+        user.update(requested_merge_into: previous_request)
         patch :update_email, params: { user: { email: 'loulou@lou.com' } }
         user.reload
       end
 
       it { expect(user.unconfirmed_email).to eq('loulou@lou.com') }
+      it { expect(user.requested_merge_into).to be_nil }
       it { expect(response).to redirect_to(profil_path) }
       it { expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation')) }
     end
@@ -63,16 +67,21 @@ describe Users::ProfilController, type: :controller do
       let(:existing_user) { create(:user) }
 
       before do
+        user.update(unconfirmed_email: 'unconfirmed@mail.com')
+
+        expect_any_instance_of(User).to receive(:ask_for_merge).with(existing_user)
+
         perform_enqueued_jobs do
           patch :update_email, params: { user: { email: existing_user.email } }
         end
         user.reload
       end
 
-      it { expect(user.unconfirmed_email).to be_nil }
-      it { expect(ActionMailer::Base.deliveries.last.to).to eq([existing_user.email]) }
-      it { expect(response).to redirect_to(profil_path) }
-      it { expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation')) }
+      it 'launches the merge process' do
+        expect(user.unconfirmed_email).to be_nil
+        expect(response).to redirect_to(profil_path)
+        expect(flash.notice).to eq(I18n.t('devise.registrations.update_needs_confirmation'))
+      end
     end
 
     context 'when the mail is incorrect' do
@@ -124,6 +133,40 @@ describe Users::ProfilController, type: :controller do
       expect(created_transfer.email).to eq(next_owner)
       expect(created_transfer.dossiers).to match_array(dossiers)
       expect(flash.notice).to eq("Le transfert de 3 dossiers à #{next_owner} est en cours")
+    end
+  end
+
+  context 'POST #accept_merge' do
+    let!(:requesting_user) { create(:user, requested_merge_into: user) }
+
+    subject { post :accept_merge }
+
+    it 'merges the account' do
+      expect_any_instance_of(User).to receive(:merge)
+
+      subject
+      requesting_user.reload
+
+      expect(requesting_user.requested_merge_into).to be_nil
+      expect(flash.notice).to include('Vous avez absorbé')
+      expect(response).to redirect_to(profil_path)
+    end
+  end
+
+  context 'POST #refuse_merge' do
+    let!(:requesting_user) { create(:user, requested_merge_into: user) }
+
+    subject { post :refuse_merge }
+
+    it 'merges the account' do
+      expect_any_instance_of(User).not_to receive(:merge)
+
+      subject
+      requesting_user.reload
+
+      expect(requesting_user.requested_merge_into).to be_nil
+      expect(flash.notice).to include('La fusion a été refusé')
+      expect(response).to redirect_to(profil_path)
     end
   end
 end

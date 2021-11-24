@@ -256,7 +256,7 @@ describe API::V1::DossiersController do
 
           describe 'repetition' do
             let(:procedure) { create(:procedure, :with_repetition, administrateur: admin) }
-            let(:dossier) { create(:dossier, :en_construction, :with_all_champs, procedure: procedure) }
+            let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
 
             subject { super().first[:rows] }
 
