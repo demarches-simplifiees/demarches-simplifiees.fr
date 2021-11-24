@@ -1,0 +1,6 @@
+%table.dgfip
+  %caption #{t("api_particulier.providers.dgfip.scopes.#{scope}.libelle")} :
+  - complements.slice('erreurCorrectif', 'situationPartielle').keys.each do |key|
+    %tr
+      %th= t("api_particulier.providers.dgfip.scopes.#{scope}.#{key}")
+      %td= complements[key]

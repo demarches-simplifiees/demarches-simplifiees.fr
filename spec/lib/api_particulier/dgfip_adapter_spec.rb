@@ -17,26 +17,13 @@ describe APIParticulier::DgfipAdapter do
         context 'and all the sources are requested' do
           let(:requested_sources) do
             {
-              'dgfip' => {
-                'avis_imposition' => [
-                  { 'declarant1' => ['dateNaissance', 'nom', 'nomNaissance', 'prenoms'] },
-                  { 'declarant2' => ['dateNaissance', 'nom', 'nomNaissance', 'prenoms'] },
-                  'anneeImpots',
-                  'anneeRevenus',
-                  'dateEtablissement',
-                  'dateRecouvrement',
-                  'erreurCorrectif',
-                  'impotRevenuNetAvantCorrections',
-                  'montantImpot',
-                  'nombreParts',
-                  'nombrePersonnesCharge',
-                  'revenuBrutGlobal',
-                  'revenuFiscalReference',
-                  'revenuImposable',
-                  'situationFamille',
-                  'situationPartielle'
-                ],
-                'foyer_fiscal' => ['adresse', 'annee']
+              "dgfip" => {
+                "declarant1" => ["nom", "nomNaissance", "prenoms", "dateNaissance"],
+                "declarant2" => ["nom", "nomNaissance", "prenoms", "dateNaissance"],
+                "echeance_avis" => ["dateRecouvrement", "dateEtablissement"],
+                "foyer_fiscal" => ["adresse", "annee", "nombreParts", "nombrePersonnesCharge", "situationFamille"],
+                "agregats_fiscaux" => ["revenuBrutGlobal", "revenuImposable", "impotRevenuNetAvantCorrections", "montantImpot", "revenuFiscalReference", "anneeImpots", "anneeRevenus"],
+                "complements" => ["erreurCorrectif", "situationPartielle"]
               }
             }
           end
@@ -53,15 +40,15 @@ describe APIParticulier::DgfipAdapter do
         end
 
         context 'when a declarer name is requested' do
-          let(:requested_sources) { { 'dgfip' => { 'avis_imposition' => [{ 'declarant1' => ['nom'] }] } } }
+          let(:requested_sources) { { 'dgfip' => { 'declarant1' => ['nom'] } } }
 
-          it { is_expected.to eq('avis_imposition' => { 'declarant1' => { 'nom' => 'FERRI' } }) }
+          it { is_expected.to eq('declarant1' => { 'nom' => 'FERRI' }) }
         end
 
         context 'when a revenue is requested' do
-          let(:requested_sources) { { 'dgfip' => { 'avis_imposition' => ['revenuBrutGlobal'] } } }
+          let(:requested_sources) { { 'dgfip' => { 'agregats_fiscaux' => ['revenuBrutGlobal'] } } }
 
-          it { is_expected.to eq('avis_imposition' => { 'revenuBrutGlobal' => 38814 }) }
+          it { is_expected.to eq('agregats_fiscaux' => { 'revenuBrutGlobal' => 38814 }) }
         end
       end
     end
