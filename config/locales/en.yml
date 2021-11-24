@@ -160,6 +160,7 @@ en:
             request: "Request"
             mailbox: "Mailbox"
             dossier_number: "File n. %{dossier_id}"
+            created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"
             print: "print"
             print_dossier: "All the file"
@@ -341,6 +342,10 @@ en:
       zero: transfer request
       one: transfer request
       other: transfer requests
+    dossiers_close_to_expiration:
+      zero: expiring file
+      one: expiring file
+      other: expiring files
     dossier_trouve:
       zero: 0 file found
       one: 1 file found

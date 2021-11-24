@@ -60,8 +60,11 @@ class Dossier < ApplicationRecord
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
-  INTERVAL_BEFORE_EXPIRATION = '2 weeks'
-  INTERVAL_EXPIRATION = '1 month 5 days'
+  REMAINING_WEEKS_BEFORE_EXPIRATION = 2
+  INTERVAL_BEFORE_EXPIRATION = "#{REMAINING_WEEKS_BEFORE_EXPIRATION} weeks"
+  MONTHS_AFTER_EXPIRATION = 1
+  DAYS_AFTER_EXPIRATION = 5
+  INTERVAL_EXPIRATION = "#{MONTHS_AFTER_EXPIRATION} month #{DAYS_AFTER_EXPIRATION} days"
 
   has_one :etablissement, dependent: :destroy
   has_one :individual, validate: false, dependent: :destroy
@@ -286,25 +289,39 @@ class Dossier < ApplicationRecord
       .where.not(user_id: nil)
   end
 
+  scope :interval_brouillon_close_to_expiration, -> do
+    state_brouillon.where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+  scope :interval_en_construction_close_to_expiration, -> do
+    state_en_construction.where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+  scope :interval_en_instruction_close_to_expiration, -> do
+    state_en_instruction.where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+  end
+  scope :interval_termine_close_to_expiration, -> do
+    state_termine.where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
+  end
+
   scope :brouillon_close_to_expiration, -> do
-    state_brouillon
-      .joins(:procedure)
-      .where("dossiers.created_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    joins(:procedure).interval_brouillon_close_to_expiration
   end
   scope :en_construction_close_to_expiration, -> do
-    state_en_construction
-      .joins(:procedure)
-      .where("dossiers.en_construction_at + dossiers.conservation_extension + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    joins(:procedure).interval_en_construction_close_to_expiration
   end
   scope :en_instruction_close_to_expiration, -> do
-    state_en_instruction
-      .joins(:procedure)
-      .where("dossiers.en_instruction_at + (duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: INTERVAL_BEFORE_EXPIRATION })
+    joins(:procedure).interval_en_instruction_close_to_expiration
   end
   scope :termine_close_to_expiration, -> do
-    state_termine
-      .joins(:procedure)
-      .where(id: Traitement.termine_close_to_expiration.select(:dossier_id).distinct)
+    joins(:procedure).interval_termine_close_to_expiration
+  end
+
+  scope :close_to_expiration, -> do
+    joins(:procedure).scoping do
+      interval_brouillon_close_to_expiration
+        .or(interval_en_construction_close_to_expiration)
+        .or(interval_en_instruction_close_to_expiration)
+        .or(interval_termine_close_to_expiration)
+    end
   end
 
   scope :brouillon_expired, -> do
@@ -522,16 +539,50 @@ class Dossier < ApplicationRecord
     !brouillon? && !user_deleted? && !archived
   end
 
-  def en_construction_close_to_expiration?
-    self.class.en_construction_close_to_expiration.exists?(id: self)
+  def expirable?
+    [brouillon?, en_construction?, termine?].any?
   end
 
-  def brouillon_close_to_expiration?
-    self.class.brouillon_close_to_expiration.exists?(id: self)
+  def approximative_expiration_date_reference
+    if brouillon?
+      created_at
+    elsif en_construction?
+      en_construction_at
+    elsif termine?
+      processed_at
+    else
+      fail "approximative_expiration_date_reference should not be called in state #{self.state}"
+    end
+  end
+
+  def approximative_expiration_date
+    [
+      approximative_expiration_date_reference,
+      conservation_extension,
+      procedure.duree_conservation_dossiers_dans_ds.months
+    ].sum - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
   end
 
   def close_to_expiration?
-    en_construction_close_to_expiration? || brouillon_close_to_expiration?
+    approximative_expiration_date < Time.zone.now
+  end
+
+  def expiration_date
+    if brouillon? && brouillon_close_to_expiration_notice_sent_at.present?
+      brouillon_close_to_expiration_notice_sent_at + duration_after_notice
+    elsif en_construction? && en_construction_close_to_expiration_notice_sent_at.present?
+      en_construction_close_to_expiration_notice_sent_at + duration_after_notice
+    elsif termine? && termine_close_to_expiration_notice_sent_at.present?
+      termine_close_to_expiration_notice_sent_at + duration_after_notice
+    end
+  end
+
+  def duration_after_notice
+    MONTHS_AFTER_EXPIRATION.month + DAYS_AFTER_EXPIRATION.days
+  end
+
+  def expiration_can_be_extended?
+    brouillon? || en_construction?
   end
 
   def show_groupe_instructeur_details?

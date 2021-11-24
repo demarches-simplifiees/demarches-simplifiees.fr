@@ -1,0 +1,14 @@
+- if dossier.expirable? && dossier.close_to_expiration?
+  .card.warning.mt-2.mb-3
+    .card-title= t('shared.dossiers.header.banner.title')
+    %p
+    - if dossier.brouillon?
+      = t('shared.dossiers.header.banner.states.brouillon')
+    - elsif dossier.en_construction?
+      = t('shared.dossiers.header.banner.states.en_construction')
+    - elsif dossier.termine?
+      = t('shared.dossiers.header.banner.states.termine')
+
+    - if dossier.expiration_can_be_extended?
+      %br
+      = button_to t('shared.dossiers.header.banner.button_delay_expiration'), users_dossier_repousser_expiration_path(dossier), class: 'button secondary mt-2'

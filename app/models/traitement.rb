@@ -17,20 +17,20 @@ class Traitement < ApplicationRecord
   scope :en_instruction, -> { where(state: Dossier.states.fetch(:en_instruction)) }
   scope :termine, -> { where(state: Dossier::TERMINE) }
 
-  scope :termine_close_to_expiration, -> do
-    joins(dossier: :procedure)
-      .termine
-      .where(process_expired: true)
-      .where('dossiers.state' => Dossier::TERMINE)
-      .where("traitements.processed_at + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: Dossier::INTERVAL_BEFORE_EXPIRATION })
-  end
-
   scope :for_traitement_time_stats, -> (procedure) do
     includes(:dossier)
       .termine
       .where(dossier: procedure.dossiers)
       .where.not('dossiers.en_construction_at' => nil, :processed_at => nil)
       .order(:processed_at)
+  end
+
+  scope :termine_close_to_expiration, -> do
+    joins(dossier: :procedure)
+      .termine
+      .where(process_expired: true)
+      .where('dossiers.state' => Dossier::TERMINE)
+      .where("traitements.processed_at + (procedures.duree_conservation_dossiers_dans_ds * INTERVAL '1 month') - INTERVAL :expires_in < :now", { now: Time.zone.now, expires_in: Dossier::INTERVAL_BEFORE_EXPIRATION })
   end
 
   def self.count_dossiers_termines_by_month(groupe_instructeurs)

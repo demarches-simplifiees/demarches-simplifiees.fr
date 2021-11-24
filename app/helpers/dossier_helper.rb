@@ -98,6 +98,11 @@ module DossierHelper
     end
   end
 
+  def safe_expiration_date(dossier)
+    date =  dossier.expiration_date.presence || dossier.approximative_expiration_date
+    l(date, format: '%d/%m/%Y')
+  end
+
   def annuaire_link(siren)
     base_url = "https://annuaire-entreprises.data.gouv.fr"
     return base_url if siren.blank?
