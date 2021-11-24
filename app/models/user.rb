@@ -217,7 +217,7 @@ class User < ApplicationRecord
 
   def merge(old_user)
     transaction do
-      old_user.dossiers.update_all(user_id: id)
+      old_user.dossiers.with_discarded.update_all(user_id: id)
       old_user.invites.update_all(user_id: id)
       old_user.merge_logs.update_all(user_id: id)
 

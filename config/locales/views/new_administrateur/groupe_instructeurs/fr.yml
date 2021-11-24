@@ -43,4 +43,5 @@ fr:
           L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.
         button:
           routing_enable: Activer le routage
+          routing_disable: Désactiver le routage
           self_managment_toggle: Activer l’autogestion des instructeurs

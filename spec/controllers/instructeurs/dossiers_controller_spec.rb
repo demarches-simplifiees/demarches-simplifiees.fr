@@ -382,6 +382,11 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe '#messagerie' do
+    subject { get :messagerie, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+    it { expect(response).to have_http_status(:ok) }
+  end
+
   describe "#create_commentaire" do
     let(:saved_commentaire) { dossier.commentaires.first }
     let(:body) { "avant\napres" }

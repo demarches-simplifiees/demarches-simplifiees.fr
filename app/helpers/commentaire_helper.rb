@@ -24,6 +24,8 @@ module CommentaireHelper
   end
 
   def pretty_commentaire(commentaire)
-    commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
+    return t('views.shared.commentaires.destroy.deleted_body') if commentaire.discarded?
+    body_formatted = commentaire.sent_by_system? ? sanitize_html(commentaire.body) : string_to_html(commentaire.body)
+    sanitize(body_formatted)
   end
 end
